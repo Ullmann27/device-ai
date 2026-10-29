@@ -39,7 +39,7 @@ internal object Ewm1Lexicon {
         "november", "dezember", "frühling", "sommer", "herbst", "winter", "kilometer", "meter", "liter", "prozent",
         "stunden", "minuten", "sorte", "art", "modell", "marke", "typ", "rasse", "stand", "status", "technik", "sprache",
         "ort", "stadt", "land", "leute", "personen", "mal", "rolle", "grund", "frage", "antwort", "heuer", "geburtstag",
-        "leistung", "kapazität", "menge", "anzahl", "stück", "wh", "kwh", "kwp", "gb", "mb", "farblich"
+        "leistung", "kapazität", "menge", "anzahl", "stück", "wh", "kwh", "kwp", "gb", "mb", "farblich", "teil"
     )
 
     val TIME = setOf(
@@ -54,7 +54,7 @@ internal object Ewm1Lexicon {
     val COLORS = setOf(
         "rot", "blau", "grün", "gelb", "schwarz", "weiß", "grau", "braun", "orange", "lila", "violett", "rosa", "pink",
         "türkis", "beige", "silber", "gold", "golden", "bunt", "getigert", "gefleckt", "mintgrün", "dunkelrot",
-        "hellblau", "dunkelblau", "hellgrün", "dunkelgrün", "schwarz-weiß"
+        "hellblau", "dunkelblau", "hellgrün", "dunkelgrün", "schwarz-weiß", "schwarzweiß", "kupferfarben", "silbern"
     )
 
     val NUMBER_WORDS = mapOf(
@@ -90,6 +90,9 @@ internal object Ewm1Lexicon {
         "urheber" to setOf("erstellt", "geschrieben", "gemacht", "stammt", "entwickelt", "verfasst", "gebaut", "programmiert",
             "erstellen", "angelegt"),
         "leitung" to setOf("leitet", "geleitet", "leiten", "zuständig", "verantwortlich", "leiter", "leiterin", "chef", "chefin"),
+        "inhalt" to setOf("inhalt", "enthält", "enthalten", "beinhaltet", "steht", "drin"),
+        "standort" to setOf("steht", "stehen", "aufgestellt", "liegt", "liegen", "befindet", "hängt", "hängen", "untergebracht",
+            "abgestellt", "parkt"),
         "besorgen" to setOf("holt", "holen", "kauft", "kaufen", "besorgt", "besorgen", "bekommt", "bezieht"),
         "muster" to setOf("muster", "kariert", "gestreift", "gepunktet", "geblümt", "einfarbig", "gemustert"),
         "verwandt" to setOf("kinder", "kind", "sohn", "söhne", "tochter", "töchter", "enkel", "bruder", "schwester",
@@ -126,6 +129,10 @@ internal object Ewm1Lexicon {
     val PRONOUN_THING = setOf("das", "da", "dort", "darin", "darauf", "dafür", "dazu", "damit", "daran", "davon", "dorthin")
     val PLACE_PREPOSITIONS = setOf("in", "im", "nach", "aus")
     val QUANTIFIERS = setOf("viel", "viele", "wenig", "wenige", "mehr", "kein", "keine", "keinen", "zwei", "drei", "beide")
+    /** "wie viel/groß/lange …" only ask for an amount; "wie schwer/voll …" ask for a property the memory may lack. */
+    val TYPE_CUE_ADJ = setOf("viel", "viele", "groß", "lange", "alt", "oft", "hoch", "weit", "spät", "früh", "wenig", "wenige", "teuer")
+    val PERSON_VERBS = setOf("wohnt", "wohnen", "lebt", "leben", "arbeitet", "arbeiten", "heißt", "studiert", "spielt", "isst",
+        "trinkt", "geht", "kommt", "fährt", "leitet", "betreut", "kocht")
     val KIND_NOUNS = setOf("rasse", "sorte", "modell", "marke", "typ", "art")
     val TITLES = setOf("dr", "prof", "herr", "mag", "ing")
     val TIME_SYNONYMS = listOf(setOf("früh", "morgen", "morgens", "vormittag"), setOf("abend", "abends"),

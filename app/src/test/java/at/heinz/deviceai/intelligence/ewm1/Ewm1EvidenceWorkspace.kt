@@ -35,11 +35,11 @@ internal data class Ewm1Mention(val key: String, val label: String, val start: I
 
 /** One stored memory sentence, read conservatively. Nothing here becomes a new fact. */
 internal class Ewm1Fact(val id: String, val text: String, val order: Int, genitiveBase: (String) -> String = { it },
-               keyOf: (Ewm1Mention) -> String = { it.key }) {
+               keyOf: (Ewm1Mention) -> String = { it.key }, private val ownHeads: Set<String> = emptySet()) {
     val tokens = Ewm1Tokens.of(text)
     val mentions: List<Ewm1Mention> = readMentions(tokens).map { it.copy(key = genitiveBase(it.key)) }.map { it.copy(key = keyOf(it)) }
-    val keys: Set<String> = mentions.flatMap { m -> listOf(m.key) + m.label.split(' ', '-').map { genitiveBase(lower(it)) } }
-        .filter { it.length >= 2 }.toSet()
+    val keys: Set<String> = mentions.flatMap { m -> listOf(m.key) + m.label.split(' ', '-').map { genitiveBase(lower(it)) }
+        .filter { it == m.key || it !in ownHeads } }.filter { it.length >= 2 }.toSet()
     val subject: String? = mentions.firstOrNull()?.key
     val contentStems: Set<String> = tokens.filter { !it.capitalized && it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 }
         .map { stem(it.lower) }.toSet()
@@ -56,8 +56,10 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
                 val t = tokens[i]
                 if (!isNominal(t)) { i++; continue }
                 var j = i
+                // A possessor never follows an article: "der Kurs Töpfer-Kreis" is class + name, "Nikos Hund" possessor + thing.
+                val articled = tokens.getOrNull(i - 1)?.lower in Ewm1Lexicon.ARTICLES
                 while (j + 1 < tokens.size && isNominal(tokens[j + 1]) && !tokens[j + 1].breakBefore && !isRole(tokens[j].lower) &&
-                    !isGenitive(tokens[j])) j++
+                    !(isGenitive(tokens[j]) && (!articled || tokens[j].apostrophe))) j++
                 val run = tokens.subList(i, j + 1)
                 val head = run.last()
                 val determiner = tokens.getOrNull(i - 1)?.lower?.takeIf { it in Ewm1Lexicon.ARTICLES }
@@ -96,7 +98,8 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
             .mapValues { (_, ms) -> ms.map { stem(base(it.qualifier!!)) }.toSet() }
         val keyOf = { m: Ewm1Mention -> if (m.qualifier != null && (qualifiers[m.key]?.size ?: 0) >= 2)
             stem(base(m.qualifier)) + " " + m.key else m.key }
-        facts = rawFacts.mapIndexed { i, (id, text) -> Ewm1Fact(id, text, i, base, keyOf) }
+        val heads = raw.map { base(it.key) }.toSet()
+        facts = rawFacts.mapIndexed { i, (id, text) -> Ewm1Fact(id, text, i, base, keyOf, heads) }
     }
     val byId = facts.associateBy { it.id }
     /** role or nominal key -> entity keys it denotes, with the fact that states the link */
@@ -159,6 +162,10 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
             if (between == listOf("heißt") || between == listOf("namens") ||
                 between.lastOrNull() == "namens" && between.size <= 3) {
                 link(m.key, next.key, f.id); roleGender(m.key)?.let { cue(next.key, it) }; names += next.key
+            }
+            // "Alex Berger wird auch Alex genannt."
+            if (between.firstOrNull() == "wird" && between.size <= 2 && t.getOrNull(next.end + 1)?.lower == "genannt") {
+                link(next.key, m.key, f.id); names += m.key
             }
             // "Meine Hausärztin ist Dr. Leitner." / "Unser Auto ist ein VW Touran." / "Martin ist mein Nachbar."
             if (between.firstOrNull() == "ist" && between.drop(1).all { it in Ewm1Lexicon.ARTICLES || it == "beste" || it == "dr" }) {
@@ -223,6 +230,7 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
         if (q == key) return true
         if (q.length >= 4 && q.endsWith("s") && q.dropLast(1) == key) return true
         if (q.length >= 4 && key.length >= 4 && stem(q) == stem(key)) return true
+        if (' ' in q) return false
         if (' ' in key && matches(q, key.substringAfter(' '))) return true
         // German compounds name their head last: a "Schäferhund" is a Hund, a "Kursgebühr" is no Kurs.
         if (q.length >= 3 && key.length >= q.length + 3 && key.endsWith(q)) return key.length - q.length <= 12

@@ -44,6 +44,7 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
 
     private enum class Origin { EXPLICIT, PRONOUN, INHERITED, NONE }
     private var questionStems: Set<String> = emptySet()
+    private val TRACE = System.getenv("EWM1_TRACE") == "1"
 
     fun reset() { focus.clear(); turn = 0; lastAttr = emptyList(); lastType = "ANY"; lastTargets = emptySet() }
 
@@ -80,11 +81,18 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
             val demonstrative = lowerTokens.getOrNull(m.start - 1) in setOf("dieser", "diese", "dieses", "diesem", "diesen", "dieses") ||
                 (lowerTokens.getOrNull(m.start - 1) in setOf("des", "der") && lowerTokens.getOrNull(m.start - 2) in setOf("dieses", "dieser"))
             if (demonstrative && resolved.isNotEmpty()) {
-                val e = instanceOfClass(headToken.text)
-                if (e != null) { known[m.end] = setOf(e) + memory.resolve(e); knownSpan[m.end] = m.start..m.end; instances += m.end; continue }
+                val sameInput = known.values.flatten().firstOrNull { k -> instanceOfClassKey(k, headToken.text) }
+                val e = sameInput ?: instanceOfClass(headToken.text)
+                if (e != null) { known[m.end] = setOf(e); knownSpan[m.end] = m.start..m.end; instances += m.end; continue }
             }
             if (m.start == m.end && m.determiner == null && memory.ambiguousName(headToken.text)) { ambiguous = true; continue }
-            val instance = m.end > m.start || m.determiner == null || atomic || resolved.any { it in memory.names }
+            val instance = m.end > m.start || atomic || resolved.any { it in memory.names } ||
+                (m.determiner == null && headToken.lower in memory.names)
+            // A bare name that denotes several stored people ("Alex") needs a question back.
+            if (m.start == m.end && m.determiner == null && resolved.count { it in memory.names } >= 2 &&
+                headToken.lower !in memory.names.filter { n -> memory.aliases[headToken.lower]?.containsKey(n) != true }) {
+                ambiguous = true; continue
+            }
             if (resolved.isNotEmpty()) {
                 known[m.end] = resolved; knownSpan[m.end] = m.start..m.end
                 if (instance && !headToken.sentenceInitial || resolved.any { it in memory.names }) instances += m.end
@@ -116,9 +124,9 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
             val group = lastGroup()
             focus.removeAll { it.entity in rejected }
             // "Nicht Nuri, der andere der zwei Hunde": the remaining member of the group just talked about
-            if (positive.isEmpty() && lowerTokens.any { it in setOf("andere", "anderen", "anderer", "anderes") }) {
-                val other = group.filter { it !in rejected }
-                if (other.size == 1) { positive = mapOf(-1 to (setOf(other.single()) + memory.resolve(other.single()))); instances += -1 }
+            if (positive.keys.none { it in instances } && lowerTokens.any { it in setOf("andere", "anderen", "anderer", "anderes") }) {
+                val other = group.filter { it !in rejected && memory.resolve(it).none { r -> r in rejected } }
+                if (other.size == 1) { positive = mapOf(-1 to (setOf(other.single()) + memory.resolve(other.single()))) + positive; instances += -1 }
             }
         }
         if (ambiguous && positive.isEmpty()) {
@@ -127,12 +135,14 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
         }
 
         // 2. Attribute words and expected answer type ("wie viel/groß/lange" are type cues, not attributes).
-        val typeCue = tokens.indices.filter { i -> i > 0 && lowerTokens[i - 1] == "wie" && Ewm1Lexicon.groupsOf(lowerTokens[i]).isEmpty() }.toSet()
-        val mentionIdx = known.keys + typeCue + tokens.indices.filter { lowerTokens[it] in Ewm1Lexicon.PRONOUN_THING }
+        val typeCue = tokens.indices.filter { i -> i > 0 && lowerTokens[i - 1] == "wie" && Ewm1Lexicon.groupsOf(lowerTokens[i]).isEmpty() &&
+            lowerTokens[i] in Ewm1Lexicon.TYPE_CUE_ADJ }.toSet()
+        val mentionIdx = knownSpan.values.flatMap { it.toList() }.toSet() + known.keys + typeCue +
+            tokens.indices.filter { lowerTokens[it] in Ewm1Lexicon.PRONOUN_THING }
         // Clarifications before the question ("Den südlichen Teil, X, meine ich.") name referents, not the asked relation.
         val questionSentence = tokens.lastOrNull()?.sentence ?: 0
-        var attr = tokens.filter { it.sentence == questionSentence && it.index !in mentionIdx && it.lower !in Ewm1Lexicon.FUNCTION &&
-            it.lower.length >= 3 && it.text !in unknownNames }.map { it.lower }
+        var attr = tokens.filter { (it.sentence == questionSentence || it.text in unknownNouns) && it.index !in mentionIdx &&
+            it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 && it.text !in unknownNames }.map { it.lower }
         questionStems = tokens.map { stem(it.lower) }.toSet()
         var type = answerType(lowerTokens)
         val strongOf = { a: List<String> -> a.filter { it !in Ewm1Lexicon.GENERIC && it !in Ewm1Lexicon.TIME } }
@@ -166,12 +176,14 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
         val possessive = pronoun != null && pronoun.lower in setOf("sein", "seine", "seinen", "seinem", "seiner", "seines", "ihr", "ihre",
             "ihren", "ihrem", "ihrer", "dessen", "deren")
         val namedInstance = positiveIdx.any { it in instances }
+        if (TRACE) System.err.println("TRACE known=$known instances=$instances pronoun=${pronoun?.text} plural=$plural attr=$attr type=$type focus=$focus")
         if (plural && !undBetween && positiveIdx.count { it in instances } < 2) {
             val group = lastGroup()
             if (group.size >= 2) { targets = targets + group.map { setOf(it) }; origin = Origin.PRONOUN }
         } else if (pronoun != null && !namedInstance) {
             // "Hat er Kinder?", "Welche Farbe hat ihr Napf?", "Wie viele Fische sind darin?": referent plus the named thing
             val resolved = resolvePronoun(pronoun.lower, strongOf(attr), type)
+            if (TRACE) System.err.println("TRACE pronoun ${pronoun.lower} -> $resolved")
             when {
                 resolved == null -> {}
                 resolved.size > 1 -> { lastAttr = attr; lastType = type; return Ewm1Pack("CLARIFY", "AMBIGUOUS_REFERENCE", input,
@@ -325,7 +337,7 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
 
     private fun isPronoun(t: Ewm1Token, all: List<Ewm1Token>): Boolean {
         val w = t.lower
-        if (w in setOf("er", "ihn", "ihm", "sie", "es", "seine", "sein", "seinen", "seinem", "seiner", "ihre", "ihren", "ihrem",
+        if (w in setOf("er", "ihn", "ihm", "sie", "es", "seine", "sein", "seinen", "seinem", "seiner", "ihr", "ihre", "ihren", "ihrem",
                 "ihrer", "dessen", "deren", "da", "dort", "darin", "darauf", "dafür", "dazu", "damit", "daran", "davon", "dorthin")) {
             if (w == "ihr" && t.index == 0) return false
             if (w == "da" && all.getOrNull(t.index + 1)?.lower == "der") return true
@@ -352,8 +364,13 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
                 (p !in setOf("er", "ihn", "ihm") || memory.genderOf(f.entity).contains('m') || f.entity in memory.names)
         }
         if (compatible.isEmpty()) return null
-        val top = compatible.maxOf { it.recency }
-        val best = compatible.filter { it.recency == top }.map { it.entity }.distinct()
+        // "Von wo arbeitet er?": people work and live, backends do not
+        val animate = compatible.filter { it.entity.startsWith("?") || it.entity in memory.names || Ewm1Fact.isRole(it.entity) }
+        val personVerb = questionStems.any { q -> Ewm1Lexicon.PERSON_VERBS.any { stem(it) == q } }
+        val pool = if (!thing && personVerb && animate.isNotEmpty()) animate else compatible
+        val top = pool.maxOf { it.recency }
+        val best = pool.filter { it.recency == top }.map { it.entity }.distinct()
+            .let { b -> b.filter { e -> b.none { o -> o != e && memory.aliases[e]?.containsKey(o) == true } } }
         if (best.size == 1) return setOf(best.single())
         val strong = attr.filter { it !in Ewm1Lexicon.GENERIC && it !in Ewm1Lexicon.TIME }
         val fitting = best.filter { e -> !e.startsWith("?") && memory.factsMentioning(e).any { acceptable(it, strong, type) && (strong.isEmpty() || relation(it, strong) > 0) } }
@@ -365,12 +382,14 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
     }
 
     /** Most recent focused thing written with this class word ("das Handy Kiesel" for "dieses Handy"). */
-    private fun instanceOfClass(classWord: String): String? {
+    private fun instanceOfClassKey(e: String, classWord: String): Boolean {
         val c = stem(classWord)
-        fun ofClass(e: String) = e.startsWith("$c ") || memory.facts.any { f -> f.mentions.any { m ->
+        return e.startsWith("$c ") || memory.facts.any { f -> f.mentions.any { m ->
             m.key == e && m.qualifier != null && (stem(m.qualifier) == c || stem(m.qualifier).endsWith(c) || c.endsWith(stem(m.qualifier))) } }
-        return focus.filter { !it.entity.startsWith("?") && ofClass(it.entity) }.maxByOrNull { it.recency }?.entity
     }
+
+    private fun instanceOfClass(classWord: String): String? =
+        focus.filter { !it.entity.startsWith("?") && instanceOfClassKey(it.entity, classWord) }.maxByOrNull { it.recency }?.entity
 
     private fun lastGroup(): List<String> {
         if (focus.isEmpty()) return emptyList()
