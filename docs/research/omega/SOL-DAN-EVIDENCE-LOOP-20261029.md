@@ -56,3 +56,16 @@ Stand: 2026-10-29. Diese Änderungen liegen auf dem isolierten PR238-Branch, **n
 - GitHub Actions Lauf [40897134373](https://github.com/Ullmann27/device-ai/actions/runs/40897134373) zu `9a3180d871e8c6843852dad92b6eb917c158d903`: **FAILURE vor Teststart**. Der Job `validate` besitzt keine ausgeführten Steps, keinen zugeordneten Runner; Logabruf ergab BlobNotFound. Die konkrete Plattform-Ursache konnte hier nicht verifiziert werden. Dieser Run ist ausdrücklich **kein** Kotlin-/Node-Green und **kein** reproduzierter Code-Testfehler.
 - Weiterhin ausstehend: echter lokaler oder freigegebener Android-/Node-Testlauf genau dieses PR-HEAD, JUnit-/Node-Rohprotokolle, Kotlin-Compile und Lint, Prüfung der Laufzeit-Sicherheitsgrenzen auf dem Fold7. Auch PR237-Belege gelten nicht als Testergebnis für PR238.
 - Main, Eigentümerdaten, Signatur/P12, Installationspakete, Opus-Versiegelungsdaten und PR236 unverändert. Kein autonomes Merge oder ungeprüfte Aktivierung.
+
+
+## Anschluss 29. Oktober – Widerrufsschutz der Quellenprüfung
+
+Zusätzlich auf PR238 implementiert (Commits `4c4848e`, `83a97d6`, `2e3b395`, `ee56273`):
+
+- Die gespeicherte Modellchat-Recherche darf nur mit der **originalen noch gültigen In-Memory-Freigabe** in `INTERNET · LERNSTOFF PRÜFEN` erscheinen. `WebLearningInbox.eligibleModelChatDossier` vergleicht den gespeicherten vollständigen Datensatz mit dem aktuell autorisierten Datensatz. Nach einem Neustart oder Widerruf liegt keine entsprechende aktive Freigabe vor: fail-closed.
+- `AgentActivity` merkt sich den letzten tatsächlich erfolgreichen Publisher nur bei einer angenommenen erfolgreichen Modellantwort. Beim Öffnen eines Kandidaten sowie **unmittelbar vor** `WebLearningJournal.approve` und dem Neuron-Coach-Übergang wird die autorisierte Quelle erneut geprüft. Andere Besitzer-Recherchen bleiben auf ihrem vorhandenen Prüfpfad.
+- Ergänzte negative Tests für fehlende Freigabe, manipuliertes Dossier und veraltete Version. Ein zusätzlicher Test prüft den exakten Speicher-/Laderundweg.
+- Eine zwischenzeitliche Widerrufsmöglichkeit während der Dateispeicherung bleibt technisch gesondert zu untersuchen; der UI-Lernpfad schaltet danach ohne aktive Freigabe ab. Dies ist keine Berechtigung zur automatischen Gewichtsanpassung.
+- Die konkurrierende Implementierung PR239 betrifft denselben Übergang. Nicht blind zusätzlich mergen; erst konsolidieren und auf tatsächliche Regressionsfälle prüfen.
+- Vorheriger Render-Host-QA-Lauf für `688fbd6898fa6c39c6c6dc195d6f4896e3df0829`: Build-Log meldet `CONTINUUM_WEB_REVIEW_QA_PASS`. Dieser Beleg bezieht sich **nur auf den alten Commit**, nicht auf die jetzt ergänzten Schutzänderungen.
+- Für den neuen HEAD stehen Render-Android-/Node-Testnachweise, Android-Lint und Fold7-Laufzeitprüfung bis zum erfolgreichen exakten Ergebnis noch aus. Kein APK-/Release-/Main-Merge.
