@@ -130,12 +130,33 @@ class ContinuumBrainBridgeTest {
         core.revokeOwnerFact("Anna wohnt in Linz.")
         val after=ContinuumBrainBridge.decide(dir,core,"conv-revoke","Wo wohnt Anna?",baseline(dir,core,"conv-revoke","Wo wohnt Anna?"))
         assertFalse(after.outcome.answer.contains("Anna wohnt in Linz."))
-        // revoked between the brain's decision and the display: today's outcome stays, the fact is not shown
-        val today=baseline(dir,core,"conv-race","Was spielt Anna?")
+        // If a fact is revoked after baseline rendering, the baseline can contain that fact.
+        // Never display the stale baseline even when the brain notices the revocation.
+        val today=ContinuumChatOutcome("Dazu finde ich in meinem Gedächtnis:\n\nAnna spielt Cello.",
+            "CONTINUUM · Modell x","trace",true,ContinuumBaselineSource.MEMORY,
+            listOf(idOf(core,"Anna spielt Cello.")))
+        assertTrue("pre-revocation baseline cites Cello",today.answer.contains("Anna spielt Cello."))
         ContinuumBrainBridge.beforeRevocationCheck={ core.revokeOwnerFact("Anna spielt Cello.") }
         val raced=ContinuumBrainBridge.decide(dir,core,"conv-race","Was spielt Anna?",today)
         assertEquals(ContinuumBrainStatus.FALLBACK_REVOKED,raced.status)
-        assertSame(today,raced.outcome)
+        assertEquals(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,raced.outcome.answer)
+        assertFalse("revoked text must never reappear",raced.outcome.answer.contains("Anna spielt Cello."))
+        assertFalse(raced.outcome.grounded)
+        assertEquals(ContinuumBaselineSource.NONE,raced.outcome.source)
+        assertTrue(raced.outcome.memoryIds.isEmpty())
+    }
+
+    @Test fun switchingBrainOffDuringAnInFlightAnswerKeepsTheBaseline() {
+        val (dir,core)=app(*family)
+        val settings=ContinuumBrainSettings(dir)
+        settings.set(ContinuumBrainMode.ON)
+        val today=ContinuumChatOutcome("Bisherige Antwort","Bisheriger Beleg","trace",
+            false,ContinuumBaselineSource.NONE)
+        ContinuumBrainBridge.beforeRevocationCheck={ settings.set(ContinuumBrainMode.OFF) }
+        val result=ContinuumBrainBridge.decide(dir,core,"conv-mode-off","Wo wohnt Anna?",today)
+        assertEquals(ContinuumBrainMode.OFF,settings.mode())
+        assertEquals(ContinuumBrainStatus.OFF,result.status)
+        assertSame(today,result.outcome)
     }
 
     @Test fun sessionStateBelongsToOneConversationAndCanBeForgotten() {
@@ -148,9 +169,13 @@ class ContinuumBrainBridgeTest {
         assertTrue(followUp.outcome.answer.contains("Anna spielt Cello."))
         // another conversation has no referent for "sie"
         val other=ContinuumBrainBridge.decide(dir,core,"conv-b","Was spielt sie?",none)
+        assertEquals("new conversation must not guess who \"sie\" is",ContinuumBrainStatus.ON_KEPT_BASELINE,other.status)
+        assertSame(none,other.outcome)
         assertFalse(other.outcome.answer.contains("Anna spielt Cello."))
         ContinuumBrainBridge.forget("conv-a")
         val forgotten=ContinuumBrainBridge.decide(dir,core,"conv-a","Was spielt sie?",none)
+        assertEquals("forgotten conversation must have no referent",ContinuumBrainStatus.ON_KEPT_BASELINE,forgotten.status)
+        assertSame(none,forgotten.outcome)
         assertFalse(forgotten.outcome.answer.contains("Anna spielt Cello."))
     }
 

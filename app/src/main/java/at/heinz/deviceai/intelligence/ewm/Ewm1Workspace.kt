@@ -187,7 +187,12 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
             // "Hat er Kinder?", "Welche Farbe hat ihr Napf?", "Wie viele Fische sind darin?": referent plus the named thing
             val resolved = resolvePronoun(pronoun.lower, strongOf(attr), type)
             when {
-                resolved == null -> {}
+                // Never search all owner facts for a pronoun without a referent in THIS conversation.
+                // The global SWB1 ranker may otherwise select a named person solely from similar wording.
+                resolved == null -> {
+                    lastAttr = attr; lastType = type; lastTargets = emptySet()
+                    return abstain("UNRESOLVED_PRONOUN", input)
+                }
                 resolved.size > 1 -> { lastAttr = attr; lastType = type; return Ewm1Pack("CLARIFY", "AMBIGUOUS_REFERENCE", input,
                     emptyList(), emptyList(), emptyList(), focusList()) }
                 resolved.single().startsWith("?") -> { lastAttr = attr; lastType = type; return abstain("UNKNOWN_REFERENT", input) }
