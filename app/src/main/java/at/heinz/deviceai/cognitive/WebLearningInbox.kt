@@ -16,6 +16,15 @@ data class WebLearningCandidate(
 
 object WebLearningInbox {
     /**
+     * Do not reopen a persisted model-chat dossier unless it is exactly the
+     * evidence retained by its still-authorized, in-memory owner grant.
+     * After process restart or consent revocation, active is null.
+     */
+    fun eligibleModelChatDossier(
+        stored: ResearchDossier?, active: ResearchDossier?
+    ): ResearchDossier? = stored?.takeIf { active != null && it == active }
+
+    /**
      * Chat-tool research and owner-initiated deep research have independent
      * storage. Pick the newest dossier with reviewable source candidates while
      * preserving both persisted histories.
