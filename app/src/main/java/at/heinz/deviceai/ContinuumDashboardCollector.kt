@@ -147,7 +147,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 // (ContinuumMemoryDialogue: history.lastOrNull()?.topic); a loaded model's window is not reported.
                 context = if (live.modelName != null) null else "1 Zug (Thema)",
                 mode = if (live.modelName != null) "Lokales Sprachmodell" else "Startkern ohne Sprachmodell",
-                lastUpdate = timeline.maxByOrNull { it.third }?.let { ContinuumDashboardState.ago(now - it.third) }
+                lastUpdate = timeline.maxByOrNull { it.createdAt }?.let { ContinuumDashboardState.ago(now - it.createdAt) }
             ),
             learning = ContinuumDashboardState.LearningStatus(
                 today = today,
