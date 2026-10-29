@@ -28,6 +28,25 @@ internal object ContinuumOwnerUpdateCatalog {
         "signerSha256", "approved", "notes"
     )
 
+    /**
+     * A published placeholder means there is no signed, approved APK yet.
+     * Never treat an incomplete release manifest as an installable update.
+     */
+    fun parseAvailable(json: String): ContinuumOwnerUpdateRelease? {
+        if (json.toByteArray(Charsets.UTF_8).size !in 1..MAX_JSON_BYTES)
+            throw IllegalArgumentException("Manifestgröße ungültig")
+        val objectValue = JSONObject(json)
+        val props = mutableSetOf<String>()
+        val iterator = objectValue.keys()
+        while (iterator.hasNext()) props += iterator.next()
+        if (props == setOf("schema", "available") &&
+            objectValue.get("schema") is Number &&
+            objectValue.getInt("schema") == 1 &&
+            objectValue.get("available") is Boolean &&
+            !objectValue.getBoolean("available")) return null
+        return parse(json)
+    }
+
     fun parse(json: String): ContinuumOwnerUpdateRelease {
         require(json.toByteArray(Charsets.UTF_8).size in 1..MAX_JSON_BYTES) {
             "Manifestgröße ungültig"
