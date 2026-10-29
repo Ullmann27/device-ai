@@ -6208,12 +6208,18 @@ class AgentActivity : Activity() {
                     // Review-only source dossier; an actual SUCCEEDED ToolGate
                     // receipt and a still-active owner grant are checked again
                     // by the publisher. Do not promote claims or train a model.
-                    modelWebResults.lastOrNull()?.let { web ->
-                        runCatching {
-                            web.publishForReview(receiptStore,
-                                FileResearchDossierStore(java.io.File(filesDir, "research")))
-                        }.onSuccess { count -> publishedWebCandidates = count }
-                            .onFailure { webPublishError = true }
+                    // Two independently approved web calls may be used in one
+                    // model turn. A later empty/failed dossier must not hide
+                    // earlier valid evidence. The inbox stores one review
+                    // dossier, so prefer the newest eligible source set.
+                    val reviewStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+                    for (web in modelWebResults.asReversed()) {
+                        val staged = runCatching { web.publishForReview(receiptStore, reviewStore) }
+                            .onFailure { webPublishError = true }.getOrDefault(0)
+                        if (staged > 0) {
+                            publishedWebCandidates = staged
+                            break
+                        }
                     }
                 }
                 run
