@@ -15,6 +15,18 @@ data class WebLearningCandidate(
 )
 
 object WebLearningInbox {
+    /**
+     * Chat-tool research and owner-initiated deep research have independent
+     * storage. Pick the newest dossier with reviewable source candidates while
+     * preserving both persisted histories.
+     */
+    fun selectLatestReviewDossier(
+        ownerResearch: ResearchDossier?,
+        modelChatResearch: ResearchDossier?
+    ): ResearchDossier? = listOfNotNull(ownerResearch, modelChatResearch)
+        .sortedByDescending { it.updatedAt }
+        .firstOrNull { candidates(it).isNotEmpty() }
+
     /** Bounded recall of explicitly reviewed source-notes; not a claim of objective truth. */
     fun summarizeSavedNotes(notes: List<WebLearningCandidate>): String {
         if (notes.isEmpty()) return "Ich habe noch keine ausdrücklich übernommenen Internet-Quellenhinweise. " +
