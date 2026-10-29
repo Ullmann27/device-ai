@@ -100,6 +100,14 @@ data class ExtendedCurriculumReport(
     }
 }
 
+/** Content-free activity metadata, including rejected/accepted training status. */
+data class ContinuumLearningActivity(
+    val type: LearningExperienceType,
+    val provenance: LearningProvenance,
+    val createdAt: Long,
+    val status: LearningStatus
+)
+
 enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
 
 data class ContinuumLearningStatus(
@@ -881,6 +889,16 @@ class ContinuumLearningCore(
      * Read-only and content-free: no text of owner facts or sources leaves the core through this call. */
     fun experienceTimeline():List<Triple<LearningExperienceType,LearningProvenance,Long>> = synchronized(CORE_LOCK) {
         store.all().map { Triple(it.type,it.provenance,it.createdAt) }
+    }
+
+    /**
+     * Dashboard activity including the actual recorded outcome, never the source text
+     * or owner's private memory. Rejected candidates remain events, not improvements.
+     */
+    fun experienceTimelineWithStatus():List<ContinuumLearningActivity> = synchronized(CORE_LOCK) {
+        store.all().map {
+            ContinuumLearningActivity(it.type,it.provenance,it.createdAt,it.status)
+        }
     }
 
     /** Most recent training/import/rollback decisions (newest first) with their measurements. */
