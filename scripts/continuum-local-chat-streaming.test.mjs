@@ -28,3 +28,9 @@ test('Stop clears preview synchronously and queued rendering checks cancellation
   assert.match(render, /cancellation\?\.throwIfCancelled\(\)/);
   assert.match(render, /localRuntime\.loadedModel\?\.id/);
 });
+
+test('native text deltas preserve standalone whitespace while ignoring empty chunks', () => {
+  const runtime = readFileSync(new URL('../app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt', import.meta.url), 'utf8');
+  assert.match(runtime, /text\.text\.isEmpty\(\) \|\| finished\.get\(\)/);
+  assert.doesNotMatch(runtime, /text\.text\.isBlank\(\)/);
+});
