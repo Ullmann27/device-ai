@@ -130,12 +130,18 @@ class ContinuumBrainBridgeTest {
         core.revokeOwnerFact("Anna wohnt in Linz.")
         val after=ContinuumBrainBridge.decide(dir,core,"conv-revoke","Wo wohnt Anna?",baseline(dir,core,"conv-revoke","Wo wohnt Anna?"))
         assertFalse(after.outcome.answer.contains("Anna wohnt in Linz."))
-        // revoked between the brain's decision and the display: today's outcome stays, the fact is not shown
+        // If a fact is revoked after baseline rendering, the baseline can contain that fact.
+        // Never display the stale baseline even when the brain notices the revocation.
         val today=baseline(dir,core,"conv-race","Was spielt Anna?")
+        assertTrue("pre-revocation baseline cites Cello",today.answer.contains("Anna spielt Cello."))
         ContinuumBrainBridge.beforeRevocationCheck={ core.revokeOwnerFact("Anna spielt Cello.") }
         val raced=ContinuumBrainBridge.decide(dir,core,"conv-race","Was spielt Anna?",today)
         assertEquals(ContinuumBrainStatus.FALLBACK_REVOKED,raced.status)
-        assertSame(today,raced.outcome)
+        assertEquals(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,raced.outcome.answer)
+        assertFalse("revoked text must never reappear",raced.outcome.answer.contains("Anna spielt Cello."))
+        assertFalse(raced.outcome.grounded)
+        assertEquals(ContinuumBaselineSource.NONE,raced.outcome.source)
+        assertTrue(raced.outcome.memoryIds.isEmpty())
     }
 
     @Test fun sessionStateBelongsToOneConversationAndCanBeForgotten() {
