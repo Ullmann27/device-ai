@@ -107,7 +107,9 @@ function readLedger(bytes) {
     if ([...value].some(byte => byte < 0x20 || byte > 0x7e)) fail('LEDGER_ASCII_FIELD');
     return value.toString('ascii');
   }
-  const decoder = new TextDecoder('utf-8', { fatal: true });
+  // Kotlin's UTF8 String decoder preserves U+FEFF at the start of a field.
+  // In TextDecoder, ignoreBOM:true keeps those bytes as field data for identity hashing.
+  const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   function text() {
     const size = int();
     if (size < 0 || size > 8192) fail('LEDGER_TEXT_SIZE');
@@ -213,7 +215,8 @@ async function main() {
     const name = 'capture-' + index + '.unverified.bin';
     // Keep even a failed/partial local capture; nothing is removed or written on the source device.
     if (Buffer.isBuffer(result.stdout)) {
-      save(name, result.stdout);
+      // spawnSync checks maxBuffer after appending a chunk: bound the retained prefix explicitly.
+      save(name, result.stdout.subarray(0, MAX_BYTES + 1));
       metadata.captureFiles.push(name);
       writeMetadata(metadata);
     }
