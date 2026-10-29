@@ -16,7 +16,7 @@ EXP02/05/06/11/12. PR134/179/198/224 geprüft; Opus-Forschung/versiegelte Tests 
 
 ## Prüfstatus 29. Oktober 2026
 
-Die GitHub-Actions-Workflowdatei `.github/workflows/continuum-dan-pr238-qa.yml` wurde hinzugefügt. Die Läufe [40897134373](https://github.com/Ullmann27/device-ai/actions/runs/40897134373) und [40897299844](https://github.com/Ullmann27/device-ai/actions/runs/40897299844) sind **FAILED vor Ausführung irgendeines Schritts** (GitHub-Jobs meldeten leere `steps` und `runner_id=0`). Das ist **kein** Beleg für einen Kotlin- oder Node-Testfehler; die genaue Infrastrukturursache ist bisher nicht gesichert. Tests für PR238 dürfen deshalb nur als `NOT_RUN` gelten.
+Die GitHub-Actions-Workflowdatei `.github/workflows/continuum-dan-pr238-qa.yml` wurde hinzugefügt. Die Läufe [40897134373](https://github.com/Ullmann27/device-ai/actions/runs/40897134373), [40897299844](https://github.com/Ullmann27/device-ai/actions/runs/40897299844) und [40897508127](https://github.com/Ullmann27/device-ai/actions/runs/40897508127) sind **FAILED vor Ausführung irgendeines Schritts** (GitHub-Jobs meldeten leere `steps` und `runner_id=0`). Das ist **kein** Beleg für einen Kotlin- oder Node-Testfehler; die genaue Infrastrukturursache ist bisher nicht gesichert. Tests für PR238 dürfen deshalb nur als `NOT_RUN` gelten.
 
 Die aus PR237 dokumentierten 1.234 Android-JUnit-Tests und 226 Node-Tests betreffen den dort geprüften vorherigen Code-Stand, **nicht** die neuen Änderungen dieses PRs.
 
