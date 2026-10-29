@@ -527,6 +527,7 @@ class AgentActivity : Activity() {
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
+        modelWebLearningReview.clear()
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
         mainHandler.removeCallbacks(foregroundLearningCheck)
