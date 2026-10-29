@@ -5192,7 +5192,7 @@ class AgentActivity : Activity() {
             addAssistantMessage("Quellen-Lernspeicher beschädigt. Kein Inhalt übernommen; alte Daten nicht überschrieben.")
             return
         }
-        val candidates = dossier?.let(WebLearningInbox::candidates).orEmpty()
+        val candidates = liveCandidates.ifEmpty { dossier?.let(WebLearningInbox::candidates).orEmpty() }
         if (candidates.isEmpty()) {
             AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
                 .setMessage("Noch keine gespeicherten Recherche-Aussagen vorhanden. " +
