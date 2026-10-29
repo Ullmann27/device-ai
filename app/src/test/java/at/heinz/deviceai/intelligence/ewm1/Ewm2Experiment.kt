@@ -27,6 +27,8 @@ object Ewm2Experiment {
             require(args.size == 4 && Regex("[a-f0-9]{40}").matches(args[3]) && !File(args[2]).exists())
         }
         val verbose = args[0] == "DEV" && System.getenv("EWM1_VERBOSE") == "1"
+        // DEV only: list turns where the router changes what the plain EWM workspace would have done (regression check)
+        val diff = args[0] == "DEV" && System.getenv("EWM2_DIFF") == "1"
         val bytes = Ctx1Experiment.swb1()
         val counts = linkedMapOf("K0" to linkedMapOf<String, Int>(), "K1" to linkedMapOf())
         val nanos = ArrayList<Long>()
@@ -49,6 +51,8 @@ object Ewm2Experiment {
                 val core = ContinuumMemoryDialogue(File(dir, "m$d").apply { mkdirs() }); core.clear()
                 val brain = Ewm1Brain(exps.map { it.id to it.content }, Ewm1SourceIndex(records)) { q, subset ->
                     ContinuumMemoryDialogue.rank(bytes, q.take(1000), exps.filter { it.id in subset }).map { it.id } }
+                val plain = if (diff) Ewm1Workspace(exps.map { it.id to it.content }) { q, subset ->
+                    ContinuumMemoryDialogue.rank(bytes, q.take(1000), exps.filter { it.id in subset }).map { it.id } } else null
                 val turns = dialog.getJSONArray("turns")
                 for (i in 0 until turns.length()) {
                     val t = turns.getJSONObject(i); val input = t.getString("text")
@@ -67,6 +71,9 @@ object Ewm2Experiment {
                         val o = Ewm1Experiment.outcome(expected, gold, cited, clarified)
                         counts.getValue(sys).merge(o, 1, Int::plus); counts.getValue(sys).merge("kind:$kind:$o", 1, Int::plus)
                     }
+                    plain?.decide(input)?.let { p -> if (p.decision != ans.decision || p.cited != ans.cited)
+                        println("DIFF [${dialog.getString("id")}#$i] $input: plain ${p.decision}/${p.reason} ${p.cited.map(byId::getValue)}" +
+                            " -> brain ${ans.route}/${ans.decision}/${ans.reason} $k1 (expected $expected)") }
                     if (verbose) println("[${dialog.getString("id")}#$i $kind] $input -> ${ans.route}/${ans.decision}/${ans.reason} $k1 (K0 $k0)")
                 }
             }
