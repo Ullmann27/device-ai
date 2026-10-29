@@ -41,6 +41,20 @@ Das Host-QA-Gate prüft die Konsistenz der in PR #242 abgelegten **berichteten**
 - Fehlende, widersprüchliche oder nicht unabhängig geprüfte Belege ergeben **ABSTAIN/NOT_RUN** und niemals Erfolg.
 - Keine stillschweigenden neuen Prozente oder behaupteten Fold7-/Gemma-Gewinne.
 
+
+## Zusätzliche reproduzierbare Sicherheitsprüfungen
+
+Die Host-QA-Auswertung überprüft neben den Testzählern alle **517 tatsächlich archivierten Textartefakte** gegen `docs/evidence/system-integration-20261029/sha256-manifest.json`. Es werden ausschließlich reguläre Dateien innerhalb des Belegordners gelesen, durch `O_NOFOLLOW|O_NONBLOCK` ohne FIFO-Blockaden. Ein Dateihashfehler, fehlender Beleg oder Link-Trick führt zum Abbruch. Die SHA-256-Übereinstimmung authentifiziert nicht den Urheber des GitHub-Manifests.
+
+Für die spätere Besitzer-Geräteabnahme wurde ein **12-Fälle-Fold7-Protokoll** ergänzt. Die Template-Erstellung und die Prüfung lösen weder Installation noch Signierung oder Hardwareaktionen aus:
+
+```sh
+node scripts/continuum-fold7-acceptance.mjs --template e06e17a4e8ba12a1dce3d5308e5eb455cda30b6d
+node scripts/continuum-fold7-acceptance.mjs --check /ABSOLUTER/PFAD/zum/manuell-ausgefuellten-geraetebericht.json e06e17a4e8ba12a1dce3d5308e5eb455cda30b6d
+```
+
+Selbst zwölf lokal eingetragene PASS-Werte mit Hashes bleiben **nicht unabhängig beglaubigte Angaben** und erlauben keinen Release. Für echte Geräte-/Signaturfreigabe muss später ein separater Besitzer-/Prüfprozess stattfinden.
+
 ## Nächste reale Lücke
 
 Der nächste aktive Schritt benötigt einen bereits eingerichteten Fold7-Checkout und den in PR #242 dokumentierten unsignierten QA-Befehl. Erst dessen Rohbelege und eine gesonderte Besitzerfreigabe ermöglichen die weitere Geräte-/APK-Abnahme. Bis dahin bleibt dieses Labor unabhängig von der Produktions-App.
