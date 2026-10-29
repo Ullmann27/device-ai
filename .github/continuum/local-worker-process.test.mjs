@@ -153,17 +153,18 @@ for(const stopMode of ['SIGTERM','TIMEOUT'])test(stopMode+' removes a descendant
 });
 
 /** WIP/NOT_RUN source checkpoint against PR218 0b2a9ddd; no process result is claimed. */
-for(const stoppedBy of ['STOP_FILE','ABORTED_SIGNAL'])test(stoppedBy+' refuses a cycle before test intent or child launch',{timeout:12000},()=>{
+for(const mode of ['--once','--loop'])for(const stoppedBy of ['STOP_FILE','ABORTED_SIGNAL'])test(mode+' '+stoppedBy+' refuses a cycle before test intent or child launch',{timeout:12000},()=>{
  const f=fixture();
  try{
   fs.mkdirSync(f.out,{recursive:true});
   let result;
   if(stoppedBy==='STOP_FILE'){
    fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
-   result=run(f);
+   result=spawnSync(process.execPath,[f.script,mode,f.out],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
   }else{
    const driver=path.join(f.top,'pre-aborted.mjs');
-   fs.writeFileSync(driver,"import {runOneCycle} from "+JSON.stringify(f.script)+";const stop=new AbortController();stop.abort();await runOneCycle("+JSON.stringify(f.out)+",{signal:stop.signal});\n");
+   const api=mode==='--loop'?'runWorker':'runOneCycle';
+   fs.writeFileSync(driver,"import {"+api+"} from "+JSON.stringify(f.script)+";const stop=new AbortController();stop.abort();await "+api+"("+JSON.stringify(f.out)+",{signal:stop.signal});\n");
    result=spawnSync(process.execPath,[driver],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
   }
   assert.equal(result.status,1,result.stderr);
@@ -207,14 +208,14 @@ test('a dangling lease-directory parent is refused without creating its target',
  }finally{fs.rmSync(f.top,{recursive:true,force:true});}
 });
 
-test('pre-start STOP preserves another live checkout lease',{timeout:12000},()=>{
+for(const mode of ['--once','--loop'])test(mode+' pre-start STOP preserves another live checkout lease',{timeout:12000},()=>{
  const f=fixture();let owner;
  try{
   owner=workerLease(path.join(f.repo,'.git'));
   const file=path.join(f.repo,'.git','continuum-health-worker.json');
   const before=fs.readFileSync(file,'utf8');
   fs.mkdirSync(f.out,{recursive:true});fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
-  const result=run(f);
+  const result=spawnSync(process.execPath,[f.script,mode,f.out],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
   assert.equal(result.status,1,result.stderr);
   assert.match(result.stderr,/OWNER_INTERRUPTED_BEFORE_START/);
   assert.equal(fs.readFileSync(file,'utf8'),before,'no acquire, child bind or release may alter the active owner');

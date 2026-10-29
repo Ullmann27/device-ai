@@ -100,6 +100,8 @@ async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
 export async function runOneCycle(outDirectory,config={}){return runCycle(outDirectory,config);}
 export async function runWorker(outDirectory,{signal,...supplied}={}){
  const config=options(supplied),out=directory(outDirectory);let cycles=0,failures=0;
+ // A stopped scheduler must not recover a stale lease or signal its old child.
+ if(signal?.aborted||fs.existsSync(join(out,'STOP')))throw Error('OWNER_INTERRUPTED_BEFORE_START');
  const stop=new AbortController();const combined=signal?AbortSignal.any([signal,stop.signal]):stop.signal;
  const poll=setInterval(()=>{if(fs.existsSync(join(out,'STOP')))stop.abort();},100);
  let lease;
