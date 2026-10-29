@@ -15,7 +15,11 @@ export function processIdentity(pid=process.pid){
 }
 const alive=id=>id && JSON.stringify(processIdentity(id.pid))===JSON.stringify(id);
 const host=()=>crypto.createHash('sha256').update(os.hostname()).digest('hex');
-function regular(file){if(fs.existsSync(file)&&!fs.lstatSync(file).isFile())throw Error('UNSAFE_LEASE_PATH');}
+function regular(file){
+ let stat;
+ try{stat=fs.lstatSync(file);}catch(error){if(error.code==='ENOENT')return;throw error;}
+ if(!stat.isFile())throw Error('UNSAFE_LEASE_PATH');
+}
 function transaction(action,file,payload){
  regular(file);const old=fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):null;
  if(action==='acquire'){
@@ -39,7 +43,11 @@ function transaction(action,file,payload){
  return {};
 }
 export function workerLease(gitDirectory){
- const file=join(gitDirectory,'continuum-health-worker.json');const gate=file+'.mutex';
+ // Resolve the existing Git directory before opening flock or lease entries.
+ // A dangling parent fails here; permission errors are never treated as absence.
+ const directory=fs.realpathSync(gitDirectory);
+ if(!fs.statSync(directory).isDirectory())throw Error('UNSAFE_LEASE_DIRECTORY');
+ const file=join(directory,'continuum-health-worker.json');const gate=file+'.mutex';
  regular(gate);const token=crypto.randomUUID();const identity=processIdentity();
  const act=(action,more={})=>{
   const r=spawnSync('flock',['-n','-E','73',gate,process.execPath,SELF,action,file,JSON.stringify({token,process:identity,...more})],{encoding:'utf8',timeout:5000,maxBuffer:8192,env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});
