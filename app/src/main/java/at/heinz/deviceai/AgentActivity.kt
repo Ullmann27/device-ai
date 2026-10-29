@@ -3450,7 +3450,7 @@ class AgentActivity : Activity() {
                     "\nWiderrufene Quelldatensätze: " + plan.backup.records.count {
                         it.status == at.heinz.deviceai.learning.LearningStatus.REVOKED } +
                     "\nDatei-SHA-256: " + plan.backup.sha256 +
-                    "\nFormat: " + (if (plan.backup.claimedSourcePackage == "unverified.legacy")
+                    "\nFormat: " + (if (java.nio.ByteBuffer.wrap(bytes, 0, 4).int == 0x4c455832)
                         "Originales LEX2-Lernprotokoll · Herkunft nicht authentifiziert"
                     else "Portabler Lernexport · Herkunftsangabe nicht authentifiziert") +
                     "\nNeue Datensätze zur Einzelprüfung: " + plan.additionsForReview.size +
@@ -6628,6 +6628,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        // Clear synchronously; already queued native deltas also check the
+        // cancellation state before they may create or update a draft.
+        activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
         webToolGate.cancel()
         activeWebResearchSession?.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
@@ -6686,10 +6689,16 @@ class AgentActivity : Activity() {
         val previewToken = Any()
         runOnUiThread {
             if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
-                localStreamPreviewRow?.let { chatContainer.removeView(it) }
-                localStreamPreviewRow = null
-                localStreamPreviewText = null
-                activeLocalStreamToken = previewToken
+                val stillActive = try {
+                    cancellation?.throwIfCancelled()
+                    true
+                } catch (_: java.util.concurrent.CancellationException) { false }
+                if (stillActive) {
+                    localStreamPreviewRow?.let { chatContainer.removeView(it) }
+                    localStreamPreviewRow = null
+                    localStreamPreviewText = null
+                    activeLocalStreamToken = previewToken
+                }
             }
         }
         try {
@@ -6806,6 +6815,8 @@ class AgentActivity : Activity() {
     ) {
         if (isFinishing || isDestroyed || activeLocalStreamToken !== token ||
             activeChatCancellation !== cancellation) return
+        try { cancellation?.throwIfCancelled() }
+        catch (_: java.util.concurrent.CancellationException) { return }
         val text = localStreamPreviewText ?: textView("", 14.5f, TEXT).also { preview ->
             preview.setPadding(dp(13), dp(10), dp(13), dp(10))
             preview.setTextIsSelectable(true)
@@ -6818,7 +6829,8 @@ class AgentActivity : Activity() {
             localStreamPreviewText = preview
             chatContainer.addView(row, matchWidth(top = 8))
         }
-        text.text = "GEMMA · ANTWORTENTWURF · NOCH UNGEPRÜFT" +
+        text.text = (localRuntime.loadedModel?.id ?: "Lokales Modell") +
+            " · ANTWORTENTWURF · NOCH UNGEPRÜFT" +
             "\nErster Text: " + (firstTextMillis?.toString() ?: "—") + " ms" +
             " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
             "\n\n" + draft.take(8_000)
