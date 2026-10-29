@@ -199,8 +199,12 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // requested attribute. This narrow birth-date gate does not change the
         // cross-runtime ranker or any weights; it only controls displayed citations.
         private val BIRTH_ATTRIBUTE=Regex("""(?iu)\b(?:geburtstag|geburtsdatum|geboren|geburt)\b""")
+        private val BIRTH_DATE_EVIDENCE=Regex("""(?iu)\b(?:geburtstag|geburtsdatum|geboren)\b""")
+        private val RESIDENCE_QUESTION=Regex("""(?iu)^wo\s+(?:wohnt|wohnst|wohnen|lebt|lebst|leben)\b""")
         internal fun ownerMemoryAnswersAskedAttribute(question:String,fact:String):Boolean =
-            !BIRTH_ATTRIBUTE.containsMatchIn(question) || BIRTH_ATTRIBUTE.containsMatchIn(fact)
+            !BIRTH_ATTRIBUTE.containsMatchIn(question) ||
+                RESIDENCE_QUESTION.containsMatchIn(question.trim()) ||
+                BIRTH_DATE_EVIDENCE.containsMatchIn(fact)
 
         internal fun requireConversationId(id:String?) {
             require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
