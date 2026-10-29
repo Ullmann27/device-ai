@@ -20,3 +20,11 @@ test('stream completion removes only its own transient row', () => {
   assert.match(clear, /removeView/);
   assert.match(clear, /activeLocalStreamToken = null/);
 });
+
+test('Stop clears preview synchronously and queued rendering checks cancellation state', () => {
+  const stop = activity.split('private fun cancelLocalRequest()')[1].split('private fun generateLocal(')[0];
+  assert.match(stop, /activeLocalStreamToken\?\.let \{ clearLocalStreamPreview\(it\) \}/);
+  const render = activity.split('private fun updateLocalStreamPreview(')[1].split('private fun clearLocalStreamPreview(')[0];
+  assert.match(render, /cancellation\?\.throwIfCancelled\(\)/);
+  assert.match(render, /localRuntime\.loadedModel\?\.id/);
+});
