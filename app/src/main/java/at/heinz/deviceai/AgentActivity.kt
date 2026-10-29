@@ -5240,7 +5240,11 @@ class AgentActivity : Activity() {
             }.show()
     }
 
-    private fun showWebLearningCandidate(note: WebLearningCandidate) {
+    private fun showWebLearningCandidate(note: WebLearningCandidate, fromModelResearch: Boolean = false) {
+        if (fromModelResearch && !modelWebLearningReview.canReview(note)) {
+            addAssistantMessage("Internetfreigabe widerrufen; kein Quellenhinweis übernommen.")
+            return
+        }
         val message = buildString {
             append(note.text).append("\n\nQuelle: ").append(note.sourceUrl)
             append("\nInhalts-Hash: ").append(note.sourceHash.take(16))
