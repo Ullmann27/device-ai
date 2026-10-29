@@ -61,6 +61,8 @@ data class LocalToolResponse(val toolName: String, val response: String) {
 interface LocalModelRuntime {
     val state: LocalModelState
     val loadedModel: ImportedLocalModel?
+    /** Bounded numeric diagnostics; no native model/request/response data. */
+    val inferenceProfiles: List<LocalInferenceProfile> get() = emptyList()
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
@@ -83,6 +85,9 @@ class LiteRtLmLocalModelRuntime(
         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
     }
     private val lock = Any()
+    private val inferenceProfiler = LocalInferenceProfiles()
+    override val inferenceProfiles: List<LocalInferenceProfile>
+        get() = inferenceProfiler.snapshots()
 
     @Volatile
     override var state: LocalModelState = LocalModelState.EMPTY
@@ -96,6 +101,7 @@ class LiteRtLmLocalModelRuntime(
     private var conversation: Conversation? = null
     private var inferenceConversation: Conversation? = null
     private var inferenceActive = false
+    private var activeInferenceProfile: LocalInferenceProfileRecorder? = null
     private var pendingUnload: ((Result<Unit>) -> Unit)? = null
 
     init { require(systemPrompt.isNotBlank() && systemPrompt.length <= 4_096) }
@@ -188,42 +194,65 @@ class LiteRtLmLocalModelRuntime(
         isolatedThinking: Boolean,
         freshPrompt: Boolean = false
     ) {
+        val profile = inferenceProfiler.begin(when {
+            isolatedThinking -> LocalInferenceKind.ISOLATED_THINKING
+            freshPrompt -> LocalInferenceKind.CHAT
+            else -> LocalInferenceKind.TOOL_CONTINUATION
+        })
         val activeConversation: Conversation
         val startNanos = System.nanoTime()
         val inputTokens: Int?
         synchronized(lock) {
             check(state == LocalModelState.READY) { "A local model is not ready." }
+            profile.mark(LocalInferenceStage.CONVERSATION_SELECTION_ENTER)
             activeConversation = if (isolatedThinking) {
-                checkNotNull(engine).createConversation(
-                    ConversationConfig(
-                        systemInstruction = Contents.of(
-                            "You are a data-only reasoning worker for Device AI. " +
-                                "You have no tools and no authority to act."
-                        ),
+                profile.measure(LocalInferenceStage.CONVERSATION_CREATE_ENTER,
+                    LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
+                    checkNotNull(engine).createConversation(
+                        ConversationConfig(
+                            systemInstruction = Contents.of(
+                                "You are a data-only reasoning worker for Device AI. " +
+                                    "You have no tools and no authority to act."
+                            ),
                         tools = emptyList(),
                         automaticToolCalling = false,
                         maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                     )
                 )
+                }
             } else {
                 try {
                     selectLocalConversation(conversation, freshPrompt, create = {
-                        checkNotNull(engine).createConversation(ConversationConfig(
-                            systemInstruction = Contents.of(systemPrompt),
-                            tools = ToolRegistry.all().map(::registeredToolProvider),
-                            automaticToolCalling = false,
-                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
-                        ))
-                    }, close = { if (it.isAlive) it.close() }).also { conversation = it }
+                        profile.measure(LocalInferenceStage.CONVERSATION_CREATE_ENTER,
+                            LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
+                            checkNotNull(engine).createConversation(ConversationConfig(
+                                systemInstruction = Contents.of(systemPrompt),
+                                tools = ToolRegistry.all().map(::registeredToolProvider),
+                                automaticToolCalling = false,
+                                maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
+                            ))
+                        }
+                    }, close = {
+                        profile.measure(LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_ENTER,
+                            LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_EXIT) {
+                            if (it.isAlive) it.close()
+                        }
+                    }).also { conversation = it }
                 } catch (failure: Exception) {
+                    profile.mark(LocalInferenceStage.INVOCATION_THROW)
                     state = LocalModelState.FAILED
                     throw failure
                 }
             }
+            profile.mark(LocalInferenceStage.CONVERSATION_SELECTION_EXIT)
             inferenceConversation = activeConversation
+            activeInferenceProfile = profile
             inferenceActive = true
             state = LocalModelState.GENERATING
-            inputTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
+            inputTokens = profile.measure(LocalInferenceStage.INPUT_TOKEN_COUNT_ENTER,
+                LocalInferenceStage.INPUT_TOKEN_COUNT_EXIT) {
+                runCatching { activeConversation.getTokenCount() }.getOrNull()
+            }
         }
         // Serializes streamed chunks, terminal events and visible callback delivery.
         val callbackLock = Any()
@@ -234,6 +263,19 @@ class LiteRtLmLocalModelRuntime(
         val finished = AtomicBoolean()
         val outputLimitReached = AtomicBoolean()
         val toolTurnGate = LocalToolTurnGate()
+
+        fun deliverTerminal(event: LocalInferenceEvent) {
+            val terminal = when (event) {
+                is LocalInferenceEvent.Completed -> LocalInferenceTerminal.COMPLETED
+                LocalInferenceEvent.Cancelled -> LocalInferenceTerminal.CANCELLED
+                else -> LocalInferenceTerminal.FAILED
+            }
+            profile.runtimeTerminal(terminal)
+            profile.measure(LocalInferenceStage.RUNTIME_TERMINAL_DELIVERY_ENTER,
+                LocalInferenceStage.RUNTIME_TERMINAL_DELIVERY_EXIT) {
+                deliver(callback, event)
+            }
+        }
 
         fun finish(event: LocalInferenceEvent?) {
             if (!finished.compareAndSet(false, true)) return
@@ -252,24 +294,28 @@ class LiteRtLmLocalModelRuntime(
                     }
                     finishInference()
                     if (closed.isFailure) {
-                        deliver(callback, LocalInferenceEvent.Failed(
+                        deliverTerminal(LocalInferenceEvent.Failed(
                             "Isolated conversation could not be released safely."))
-                    } else if (event != null) deliver(callback, event)
+                    } else if (event != null) deliverTerminal(event)
                 }
             } else {
                 synchronized(lock) {
                     if (inferenceConversation === activeConversation) inferenceConversation = null
                 }
                 finishInference()
-                if (event != null) deliver(callback, event)
+                if (event != null) deliverTerminal(event)
             }
         }
 
         try {
+            profile.mark(LocalInferenceStage.NATIVE_DISPATCH_ENTER)
             activeConversation.sendMessageAsync(
                 message,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
+                        message.contents.contents.filterIsInstance<Content.Text>().forEach {
+                            profile.nativeText(it.text.length)
+                        }
                         synchronized(callbackLock) {
                             if (finished.get() || terminalOverrideRequested.get()) return
                             if (message.toolCalls.isNotEmpty()) {
@@ -277,7 +323,9 @@ class LiteRtLmLocalModelRuntime(
                                     // Signal the terminal failure before cancelling: some native
                                     // engines deliver onError reentrantly from cancelProcess().
                                     terminalOverrideRequested.set(true)
-                                    runCatching { activeConversation.cancelProcess() }
+                                    profile.cancel(LocalInferenceCancelOrigin.TOOL_BATCH_REJECTED) {
+                                        runCatching { activeConversation.cancelProcess() }
+                                    }
                                     finish(LocalInferenceEvent.Failed(
                                         "More than one tool proposal occurred in a single model turn; none are authorized."))
                                     return
@@ -303,7 +351,9 @@ class LiteRtLmLocalModelRuntime(
                                 if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
                                     if (outputLimitReached.compareAndSet(false, true)) {
                                         terminalOverrideRequested.set(true)
-                                        runCatching { activeConversation.cancelProcess() }
+                                        profile.cancel(LocalInferenceCancelOrigin.OUTPUT_LIMIT) {
+                                            runCatching { activeConversation.cancelProcess() }
+                                        }
                                         finish(LocalInferenceEvent.Failed(
                                             "Local model response exceeded the output limit."))
                                     }
@@ -318,43 +368,56 @@ class LiteRtLmLocalModelRuntime(
                     }
 
                     override fun onDone() {
-                        synchronized(callbackLock) {
-                            if (finished.get() || terminalOverrideRequested.get()) return
-                            val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
-                            val outputTokens = runCatching {
-                                activeConversation.getTokenCount() -
-                                    (inputTokens ?: activeConversation.getTokenCount())
-                            }.getOrNull()?.coerceAtLeast(0)
-                            finish(
-                                LocalInferenceEvent.Completed(
-                                    LocalInferenceMetrics(
-                                        promptCharacters = promptCharacters,
-                                        responseCharacters = responseCharacters[0],
-                                        streamedChunks = chunks[0],
-                                        inputTokens = inputTokens,
-                                        outputTokens = outputTokens,
-                                        firstTokenLatencyMillis = firstTokenNanos?.let {
-                                            (it - startNanos).coerceAtLeast(0) / 1_000_000
-                                        },
-                                        totalLatencyMillis = elapsed
+                        profile.nativeTerminal(LocalInferenceTerminal.COMPLETED)
+                        try {
+                            synchronized(callbackLock) {
+                                if (finished.get() || terminalOverrideRequested.get()) return
+                                val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
+                                val outputTokens = runCatching {
+                                    activeConversation.getTokenCount() -
+                                        (inputTokens ?: activeConversation.getTokenCount())
+                                }.getOrNull()?.coerceAtLeast(0)
+                                finish(
+                                    LocalInferenceEvent.Completed(
+                                        LocalInferenceMetrics(
+                                            promptCharacters = promptCharacters,
+                                            responseCharacters = responseCharacters[0],
+                                            streamedChunks = chunks[0],
+                                            inputTokens = inputTokens,
+                                            outputTokens = outputTokens,
+                                            firstTokenLatencyMillis = firstTokenNanos?.let {
+                                                (it - startNanos).coerceAtLeast(0) / 1_000_000
+                                            },
+                                            totalLatencyMillis = elapsed
+                                        )
                                     )
                                 )
-                            )
+                            }
+                        } finally {
+                            profile.mark(LocalInferenceStage.NATIVE_TERMINAL_CALLBACK_EXIT)
                         }
                     }
 
                     override fun onError(throwable: Throwable) {
-                        synchronized(callbackLock) {
-                            if (finished.get() || terminalOverrideRequested.get()) return
-                            finish(
-                                if (throwable is CancellationException) LocalInferenceEvent.Cancelled
-                                else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
-                            )
+                        profile.nativeTerminal(if (throwable is CancellationException)
+                            LocalInferenceTerminal.CANCELLED else LocalInferenceTerminal.FAILED)
+                        try {
+                            synchronized(callbackLock) {
+                                if (finished.get() || terminalOverrideRequested.get()) return
+                                finish(
+                                    if (throwable is CancellationException) LocalInferenceEvent.Cancelled
+                                    else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
+                                )
+                            }
+                        } finally {
+                            profile.mark(LocalInferenceStage.NATIVE_TERMINAL_CALLBACK_EXIT)
                         }
                     }
                 }
             )
+            profile.mark(LocalInferenceStage.NATIVE_DISPATCH_RETURN)
         } catch (failure: Throwable) {
+            profile.mark(LocalInferenceStage.NATIVE_DISPATCH_THROW)
             synchronized(callbackLock) {
                 if (!finished.get() && !terminalOverrideRequested.get())
                     finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
@@ -365,25 +428,32 @@ class LiteRtLmLocalModelRuntime(
     override fun cancel() {
         val active = synchronized(lock) {
             if (state != LocalModelState.GENERATING && state != LocalModelState.UNLOADING) null
-            else inferenceConversation ?: conversation
-        }
-        runCatching { active?.cancelProcess() }
+            else (inferenceConversation ?: conversation) to activeInferenceProfile
+        } ?: return
+        val cancelNative = { runCatching { active.first?.cancelProcess() } }
+        val profile = active.second
+        if (profile == null) cancelNative()
+        else profile.cancel(LocalInferenceCancelOrigin.CALLER, cancelNative)
     }
 
     override fun unload(callback: (Result<Unit>) -> Unit) {
         val activeConversation: Conversation?
+        val cancelProfile: LocalInferenceProfileRecorder?
         val deferredToInferenceCompletion: Boolean
         synchronized(lock) {
             check(state != LocalModelState.LOADING && state != LocalModelState.UNLOADING) {
                 "Local model lifecycle operation is already in progress."
             }
             activeConversation = inferenceConversation ?: conversation
+            cancelProfile = activeInferenceProfile
             deferredToInferenceCompletion = inferenceActive
             state = LocalModelState.UNLOADING
             if (deferredToInferenceCompletion) pendingUnload = callback
         }
         if (deferredToInferenceCompletion) {
-            runCatching { activeConversation?.cancelProcess() }
+            val cancelNative = { runCatching { activeConversation?.cancelProcess() } }
+            if (cancelProfile == null) cancelNative()
+            else cancelProfile.cancel(LocalInferenceCancelOrigin.UNLOAD, cancelNative)
             return
         }
         background.execute { closeResources(callback) }
@@ -392,6 +462,7 @@ class LiteRtLmLocalModelRuntime(
     private fun finishInference() {
         val shouldUnload = synchronized(lock) {
             inferenceActive = false
+            activeInferenceProfile = null
             if (pendingUnload != null) true
             else {
                 if (state == LocalModelState.GENERATING) state = LocalModelState.READY
@@ -413,6 +484,7 @@ class LiteRtLmLocalModelRuntime(
             val oldEngine = engine
             conversation = null
             inferenceConversation = null
+            activeInferenceProfile = null
             engine = null
             loadedModel = null
             Triple(oldConversation, oldInference, oldEngine)
