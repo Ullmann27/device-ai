@@ -13,6 +13,9 @@ import {sha256,sealFixtures,learnConservativeGuards,guardedShadowChoice,
 const SEALED='23a3a3bbc3d4769ccaaa92d5a73c6032dd4beee631cde12b0768208932d30831';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const out=process.argv[2];
+if(path.isAbsolute(out??'')&&(path.resolve(out)!==out||
+ fs.realpathSync(path.dirname(out))!==path.dirname(out)))
+ throw Error('NONCANONICAL_OUTPUT_PATH');
 if(process.argv.length!==3||!path.isAbsolute(out??'')||fs.existsSync(out)||
  out===root||out.startsWith(root+path.sep))throw Error('FRESH_ABSOLUTE_EXTERNAL_OUTPUT_REQUIRED');
 function git(...args) {
