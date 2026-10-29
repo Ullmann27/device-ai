@@ -1,0 +1,141 @@
+{
+  "schema": "continuum-source-readback-v1",
+  "codeHead": "36b8d5a1643b435d691cd1605273d72f34ed9f9d",
+  "checks": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blobSha": "475d2059f5475c9c045e380c6d632489936ba1c6",
+      "characters": 451962,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+      "blobSha": "404bc6c5a94a3183afc2ddf945ee4f066e8702f7",
+      "characters": 15798,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/PersonalLearningTransfer.kt",
+      "blobSha": "bb5535c08f083ffc4ad85948991c29466a32738f",
+      "characters": 11501,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "blobSha": "13b7ded35185acf3ca05b8816bbe907c93f6eaa7",
+      "characters": 22270,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/HistoricalLearningLedgerTest.kt",
+      "blobSha": "373a14d038d2eab45617a9c8befeb1448a1ab424",
+      "characters": 5911,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.sh",
+      "blobSha": "91f5d5355dc9202fdf452ee6f5533951b056edbc",
+      "characters": 12339,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.test.mjs",
+      "blobSha": "51fb3d26d36201ccebddcef84041afc255bbc7cf",
+      "characters": 16141,
+      "remoteEquality": "PASS",
+      "parseStatus": "PASS: V8 parse only, not Node execution"
+    },
+    {
+      "path": "scripts/continuum-local-chat-streaming.test.mjs",
+      "blobSha": "7e8d51d4264b12ebdf28add34d0e8d200ee9f543",
+      "characters": 2410,
+      "remoteEquality": "PASS",
+      "parseStatus": "PASS: V8 parse only, not Node execution"
+    },
+    {
+      "path": "scripts/continuum-historical-ledger-review.test.mjs",
+      "blobSha": "80b8b64a56eb9e2d32d45a053302421a26b64425",
+      "characters": 1926,
+      "remoteEquality": "PASS",
+      "parseStatus": "PASS: V8 parse only, not Node execution"
+    },
+    {
+      "path": "scripts/continuum-fusion-full-regression.sh",
+      "blobSha": "c747fe053cca7bdd436c1658ec89f2be84158e90",
+      "characters": 7831,
+      "remoteEquality": "PASS",
+      "parseStatus": null
+    },
+    {
+      "path": "scripts/continuum-local-development-worker.mjs",
+      "blobSha": "78dad36b2da811991369a14da04db8c3e3d90e27",
+      "characters": 12336,
+      "remoteEquality": "PASS",
+      "parseStatus": "SKIP: Function parser is not an ES-module/shebang parser; initial transformed-source attempt returned SyntaxError, not a source/runtime failure."
+    },
+    {
+      "path": ".github/continuum/local-worker-process.test.mjs",
+      "blobSha": "2f34bafce7f379cf4dcfd7c02402faa7492ed638",
+      "characters": 13217,
+      "remoteEquality": "PASS",
+      "parseStatus": "PASS: V8 parse only, not Node execution"
+    }
+  ],
+  "staticParse": [
+    {
+      "path": "scripts/continuum-generation16-rescue.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.sh",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-local-chat-streaming.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    },
+    {
+      "path": "scripts/continuum-historical-ledger-review.test.mjs",
+      "check": "V8 JavaScript parse only",
+      "status": "PASS"
+    }
+  ],
+  "sourceInspection": [
+    {
+      "name": "stream cancellation-state guard",
+      "status": "PASS"
+    },
+    {
+      "name": "synchronous Stop preview clearing",
+      "status": "PASS"
+    },
+    {
+      "name": "model label from loaded model",
+      "status": "PASS"
+    },
+    {
+      "name": "raw preview wired",
+      "status": "PASS"
+    },
+    {
+      "name": "no automatic personal apply",
+      "status": "PASS"
+    }
+  ],
+  "runtimeChecks": "NOT_RUN / execution environment UNAVAILABLE",
+  "deviceChecks": "NOT_RUN / no authorized Fold7 connection",
+  "nativeCandidateExcluded": {
+    "pr": 221,
+    "head": "3a5c91446ca3cc13e5f311ef13d9983978705ed1",
+    "reason": "Potential native/callback lock inversion; not integrated. Main runtime receives only whitespace preservation."
+  }
+}
