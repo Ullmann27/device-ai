@@ -90,6 +90,12 @@ Rückfall jederzeit: heutiger Pfad (B0 → Archiv-Fallback, AgentActivity.kt ~Z.
 
 ## 4. Bauordnung (gilt für alle)
 
+- **Nichts ist gesperrt.** Jede KI und jeder Mensch darf jedes AP übernehmen, jeden Code lesen, ändern und neu messen.
+  Die Rollen oben sind Vorschläge gegen doppelte Arbeit, keine Rechte. Abstimmung über Draft-PR + Handoff-Datei.
+- „Versiegelt“ heißt nur: Prüfsumme vor dem Code festgehalten. Die Datei bleibt les- und änderbar; eine Änderung macht
+  sie lediglich als unabhängigen Nachweis ungültig und muss im Commit genannt werden.
+- Regelmäßig committen und pushen (spätestens alle 10 Minuten Arbeit), WIP/UNVERIFIED kennzeichnen.
+
 - Kein Force-Push, kein Merge nach `main` ohne Heinz, keine Änderungen an Besitzerzertifikat/Signaturschlüsseln.
 - Keine persönlichen Rohdaten, Gen16-Inhalte oder Modellgewichte im Repository; Tests nur mit synthetischen Daten.
 - Generation 16 wird nie zurückgesetzt, gelöscht oder überschrieben; SWB1 sind keine Gemma-Gewichte.
@@ -98,17 +104,21 @@ Rückfall jederzeit: heutiger Pfad (B0 → Archiv-Fallback, AgentActivity.kt ~Z.
 - Status immer getrennt: **analysiert · implementiert · getestet · auf dem Fold7 bestätigt**; fehlt das SDK: `SDK_UNAVAILABLE`.
 - Kleine Commits, früh pushen, Draft-PR, Übergabe in `docs/research/omega/<AGENT>-HANDOFF.md`.
 
-## 5. Prüfbefehle
+## 5. Prüfbefehle (alles im Repository, nichts nur lokal)
 
 ```bash
-# Gesamter Kotlin-Unit-Harness ohne Gradle/SDK (bewiesener Weg in der Cloud-Umgebung)
-LANG=C.UTF-8 CONTINUUM_ANDROID_DEPS=<jar-ordner> CONTINUUM_JUNIT_JARS=<junit-4.13.2.jar>:<hamcrest-core-1.3.jar> \
-  scripts/android-kotlin-unit-check.sh out/kunit
-# EWM-Runner (Klassenpfad wie der Harness: out/kunit/main, out/kunit/test, Android-/JUnit-Jars, app/src/main/assets)
-java -Dfile.encoding=UTF-8 -cp <klassenpfad> at.heinz.deviceai.intelligence.ewm1.Ewm2Experiment DEV docs/research/ewm1/ewm2-dev5-20261029.json
-EWM2_DIFF=1 java … Ewm2Experiment DEV docs/research/ctx3-independent-test3-20261024.json   # Router darf 0 Züge ändern
-java … Ewm1Experiment DEV docs/research/ewm1/ewm1-dev4-20261029.json
-# Mit Android-SDK (hier nicht ausführbar: SDK_UNAVAILABLE)
+# 1) Gesamter Kotlin-Unit-Harness ohne Gradle/SDK (bewiesener Weg in der Cloud-Umgebung)
+export LANG=C.UTF-8 CONTINUUM_ANDROID_DEPS=<jar-ordner> CONTINUUM_JUNIT_JARS=<junit-4.13.2.jar>:<hamcrest-core-1.3.jar>
+scripts/android-kotlin-unit-check.sh /tmp/kunit            # Ausgabe außerhalb des Repos
+# 2) EWM-Forschung reproduzieren (Skript scripts/continuum-ewm-jvm.sh, Kopfkommentar erklärt alles)
+scripts/continuum-ewm-jvm.sh /tmp/kunit build && scripts/continuum-ewm-jvm.sh /tmp/kunit unit      # 19/19
+scripts/continuum-ewm-jvm.sh /tmp/kunit dev                 # DEV4 42/0, TEST3 145/7, DEV5 12/0, DEV5b 20/0, Router-Diff 0
+scripts/continuum-ewm-jvm.sh /tmp/kunit mutants             # Liste docs/research/ewm1/ewm2-mutants.tsv, 9/10 erkannt
+EWM_AT=0d2b021b scripts/continuum-ewm-jvm.sh /tmp/kunit build                                       # eingefrorenes EWM1
+EWM_AT=0d2b021b scripts/continuum-ewm-jvm.sh /tmp/kunit run Ewm1Experiment DEV \
+  docs/research/ewm1/ewm2-test5-memory-derivative-20261029.json | grep '^{"B0' > /tmp/e1.json
+scripts/continuum-ewm-jvm.sh /tmp/kunit h7 docs/research/ewm1/ewm2-test5-report-20261029.json /tmp/e1.json   # H7 PASSED
+# 3) Mit Android-SDK (in der Cloud-Umgebung bisher nicht ausführbar: SDK_UNAVAILABLE)
 ./gradlew :app:testDebugUnitTest --tests 'at.heinz.deviceai.intelligence.ewm1.*'
 ```
 
