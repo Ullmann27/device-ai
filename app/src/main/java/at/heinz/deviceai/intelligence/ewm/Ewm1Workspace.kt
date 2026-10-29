@@ -1,5 +1,6 @@
 // Product copy of the EWM2 research class (PR #224, code freeze e1669271): same logic; only the package,
-// the removed EWM1_TRACE debug output and the removed research-only N0 baseline differ.
+// the removed EWM1_TRACE debug output and the removed research-only N0 baseline differ, plus one product fix
+// marked below (unresolved pronoun asks back; measured: no change on DEV4, TEST3, DEV5, DEV5b).
 package at.heinz.deviceai.intelligence.ewm
 
 import at.heinz.deviceai.intelligence.ewm.Ewm1Lexicon.lower
@@ -187,6 +188,11 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
             // "Hat er Kinder?", "Welche Farbe hat ihr Napf?", "Wie viele Fische sind darin?": referent plus the named thing
             val resolved = resolvePronoun(pronoun.lower, strongOf(attr), type)
             when {
+                // Product fix (integration, not in the research freeze): "Was spielt sie?" with no referent in this
+                // conversation asks back instead of matching only the verb. No change on DEV4/TEST3/DEV5/DEV5b.
+                resolved == null && targets.isEmpty() && pronoun.lower in PERSONAL_PRONOUNS -> {
+                    lastAttr = attr; lastType = type
+                    return Ewm1Pack("CLARIFY", "UNRESOLVED_REFERENCE", input, emptyList(), emptyList(), emptyList(), focusList()) }
                 resolved == null -> {}
                 resolved.size > 1 -> { lastAttr = attr; lastType = type; return Ewm1Pack("CLARIFY", "AMBIGUOUS_REFERENCE", input,
                     emptyList(), emptyList(), emptyList(), focusList()) }
@@ -280,6 +286,8 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
     }
 
     private val HARD_TYPES = setOf("COLOR", "NUMBER", "TIME", "KIND")
+    private val PERSONAL_PRONOUNS = setOf("er", "ihn", "ihm", "sie", "sein", "seine", "seinen", "seinem", "seiner",
+        "ihr", "ihre", "ihren", "ihrem", "ihrer", "dessen", "deren")
 
     /** Relation support, plus one point when the fact has the expected answer type (soft types rank, never exclude). */
     private fun relation(f: Ewm1Fact, attr: List<String>): Int = attr.count { a -> supports(f, a) }
