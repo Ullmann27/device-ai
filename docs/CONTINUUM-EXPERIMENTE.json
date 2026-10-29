@@ -180,6 +180,15 @@
       "entry": "docs/research/ewm1/EWM1-RESULT-20261029.md",
       "depends": "Owner approval; switch default OFF; new sealed TEST5 for further changes",
       "gate": "Fewer wrong citations than B0 without losing correct ones; claim check false alarms <= 15%; never promote sources to owner facts"
+    },
+    {
+      "id": "EXP-17",
+      "title": "EWM2 brain router: owner memory and public sources in one evidence package",
+      "status": "RESEARCH_SHADOW",
+      "present": "Test source set only (intelligence/ewm1: Ewm1Brain, Ewm2Experiment). Preregistered 82d5a2c6 (TEST5 sealed 06bc2184), code freeze e1669271, single TEST5 run 2026-10-29: H6 routing PASSED (K1 39 correct / 0 wrong vs today's chat path 30 / 18, p95 5.1 ms), H7 repairs PASSED (error-class turns 20/20 vs frozen EWM1 13/20; other memory turns wrong 0 vs 3). Full Kotlin unit harness 1192/1192 outside Gradle. Synthetic single-author data; no Gemma or device run.",
+      "entry": "docs/research/ewm1/EWM2-RESULT-20261029.md",
+      "depends": "Owner approval; ContinuumBrainMode default OFF then SHADOW; work packages in docs/research/ewm1/EWM-ARCHITEKTEN-AUFTRAG-20261029.md",
+      "gate": "SHADOW on the Fold7 with K1 wrong <= K0 wrong and no source shown as owner fact; new TEST6 written by a different instance before further method changes"
     }
   ]
 }
