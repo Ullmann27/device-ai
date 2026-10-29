@@ -118,4 +118,16 @@ class LocalInferenceProfileTest {
         assertTrue(result.safeSummary().contains("JVM_HEAP_ONLY"))
         assertTrue(result.safeSummary().length <= 2_500)
     }
+
+    @Test fun countersSaturateInsteadOfWrappingAndSummaryRemainsBounded() {
+        val run = profiles().begin(LocalInferenceKind.CHAT)
+        run.nativeText(Int.MAX_VALUE)
+        run.nativeText(2)
+        now += 1
+        LocalInferenceStage.values().forEach { run.mark(it) }
+        val result = run.snapshot()
+        assertEquals(Int.MAX_VALUE, result.nativeTextCharacters)
+        assertEquals(2, result.nativeTextChunks)
+        assertTrue(result.safeSummary().length <= 2_500)
+    }
 }
