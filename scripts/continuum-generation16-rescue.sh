@@ -180,7 +180,7 @@ async function main() {
   fs.chmodSync(output, 0o700);
   metadata = { schemaVersion: 1, status: 'UNVERIFIED', package: PACKAGE, sourcePath: SOURCE,
     expectedRecordCount: EXPECTED_RECORDS, createdAt: new Date().toISOString(), sourceWrites: false,
-    captureFiles: [] };
+    captureFiles: [], captureDetails: [] };
   writeMetadata(metadata);
   await serverAvailable(options.port);
   const devices = checked(adb(options, null, ['devices', '-l']), 'ADB_LIST_FAILED').toString('utf8');
@@ -216,8 +216,11 @@ async function main() {
     // Keep even a failed/partial local capture; nothing is removed or written on the source device.
     if (Buffer.isBuffer(result.stdout)) {
       // spawnSync checks maxBuffer after appending a chunk: bound the retained prefix explicitly.
-      save(name, result.stdout.subarray(0, MAX_BYTES + 1));
+      const retained = result.stdout.subarray(0, MAX_BYTES + 1);
+      save(name, retained);
       metadata.captureFiles.push(name);
+      metadata.captureDetails.push({ file: name, returnedBytes: result.stdout.length,
+        retainedBytes: retained.length, truncated: retained.length < result.stdout.length });
       writeMetadata(metadata);
     }
     captures.push(checked(result, 'CAPTURE_' + index + '_FAILED'));
