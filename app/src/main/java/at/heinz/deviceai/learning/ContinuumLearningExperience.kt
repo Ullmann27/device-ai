@@ -275,6 +275,14 @@ class FileLearningExperienceStore(private val directory:File) {
 
     companion object {
         const val MAX_RECORDS=256
+
+        /** Validate a separately backed-up original LEX2 file without opening or
+         * writing a ledger. This is integrity checking, never consent recovery.
+         * Keep the same bounded codec as the active store; no parallel parser.
+         */
+        internal fun inspectSnapshot(bytes:ByteArray):List<LearningExperience> =
+            LearningExperienceCodec.decode(bytes)
+
         private val FILE_LOCK=Any()
     }
 }
