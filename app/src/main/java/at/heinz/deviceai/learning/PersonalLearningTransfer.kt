@@ -129,13 +129,37 @@ object PersonalLearningTransfer {
         }
     }
 
+    /** Review either our portable export or an ORIGINAL, byte-preserved LEX2
+     * snapshot obtained through an authorized backup. LEX2 has no source-package
+     * field: never invent authenticated historic provenance from a filename.
+     * No source/target file is written and no trust label is promoted here.
+     */
+    fun inspectDocument(bytes: ByteArray): PersonalLearningBackup {
+        require(bytes.size in 4..MAX_BYTES) { "Invalid learning document size" }
+        if (ByteBuffer.wrap(bytes, 0, 4).int != 0x4c455832) return inspect(bytes)
+        val records = try {
+            FileLearningExperienceStore.inspectSnapshot(bytes)
+        } catch (_: Exception) {
+            throw IllegalArgumentException("Invalid historical learning ledger")
+        }
+        return PersonalLearningBackup("unverified.legacy", records, digest(bytes).hex())
+    }
+
+    fun previewDocument(bytes: ByteArray, target: FileLearningExperienceStore): PersonalLearningMergePlan =
+        previewDocument(bytes, target.all())
+
+    fun previewDocument(bytes: ByteArray, targetRecords: List<LearningExperience>): PersonalLearningMergePlan =
+        preview(inspectDocument(bytes), targetRecords)
+
     fun preview(bytes: ByteArray, target: FileLearningExperienceStore): PersonalLearningMergePlan =
         preview(bytes, target.all())
 
-    fun preview(bytes: ByteArray, targetRecords: List<LearningExperience>): PersonalLearningMergePlan {
+    fun preview(bytes: ByteArray, targetRecords: List<LearningExperience>): PersonalLearningMergePlan =
+        preview(inspect(bytes), targetRecords)
+
+    private fun preview(backup: PersonalLearningBackup, targetRecords: List<LearningExperience>): PersonalLearningMergePlan {
         require(targetRecords.size <= FileLearningExperienceStore.MAX_RECORDS)
         require(targetRecords.map { it.id }.distinct().size == targetRecords.size)
-        val backup = inspect(bytes)
         val target = targetRecords.associateBy { it.id }
         val additions = mutableListOf<LearningExperience>()
         val revocations = mutableListOf<String>()

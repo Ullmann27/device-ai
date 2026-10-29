@@ -210,6 +210,11 @@ class AgentActivity : Activity() {
     // Current chat only; model text has no owner-fact authority and is never stored as a memory.
     private var lastLocalReply: LocalReplySnapshot? = null
     private val localConversationContext = at.heinz.deviceai.cognitive.LocalConversationContext()
+    // Presentation only: native text is an unverified draft until the existing
+    // orchestrator/quality checks complete. Never speak or save this preview.
+    private var activeLocalStreamToken: Any? = null
+    private var localStreamPreviewRow: LinearLayout? = null
+    private var localStreamPreviewText: TextView? = null
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -3425,16 +3430,29 @@ class AgentActivity : Activity() {
                 java.io.File(filesDir, "learning-core-v2"))
             if (export) {
                 val bytes = at.heinz.deviceai.learning.PersonalLearningTransfer.export(packageName, store)
-                (contentResolver.openOutputStream(uri) ?: error("Sicherungsdatei nicht schreibbar"))
-                    .use { it.write(bytes) }
-                "Lernprotokoll gesichert. Enthalten sind Erfahrungen und Widerrufe dieses Lernkerns. " +
-                    "Chats, Einstellungen und Modellgewichte sind separat zu sichern."
+                val inspected = at.heinz.deviceai.learning.PersonalLearningTransfer.inspect(bytes)
+                (contentResolver.openOutputStream(uri, "wt") ?: error("Sicherungsdatei nicht schreibbar"))
+                    .use { it.write(bytes); it.flush() }
+                val verified = (contentResolver.openInputStream(uri) ?: error("Sicherung nicht rücklesbar"))
+                    .use { at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(it) }
+                require(java.security.MessageDigest.isEqual(bytes, verified)) { "Sicherungsprüfung fehlgeschlagen" }
+                "Lernprotokoll gesichert und bytegleich rückgelesen: " + inspected.records.size +
+                    " Einträge · " + bytes.size + " Bytes · SHA-256 " + inspected.sha256 +
+                    "\nDie Datei kann private Angaben enthalten. Chats, Startkern-Fakten, Einstellungen, " +
+                    "Modellgewichte und gerätegebundene Identität sind nicht enthalten."
             } else {
                 val bytes = (contentResolver.openInputStream(uri) ?: error("Datei nicht lesbar")).use { input ->
                     at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(input)
                 }
-                val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.preview(bytes, store)
+                val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.previewDocument(bytes, store)
                 "ÜBERNAHMEPRÜFUNG · KEINE DATEN GESCHRIEBEN" +
+                    "\nQuelldatensätze insgesamt: " + plan.backup.records.size +
+                    "\nWiderrufene Quelldatensätze: " + plan.backup.records.count {
+                        it.status == at.heinz.deviceai.learning.LearningStatus.REVOKED } +
+                    "\nDatei-SHA-256: " + plan.backup.sha256 +
+                    "\nFormat: " + (if (java.nio.ByteBuffer.wrap(bytes, 0, 4).int == 0x4c455832)
+                        "Originales LEX2-Lernprotokoll · Herkunft nicht authentifiziert"
+                    else "Portabler Lernexport · Herkunftsangabe nicht authentifiziert") +
                     "\nNeue Datensätze zur Einzelprüfung: " + plan.additionsForReview.size +
                     "\nWiderrufe zur Prüfung: " + plan.revocationsForReview.size +
                     "\nDuplikate: " + plan.duplicateCount +
@@ -3446,7 +3464,7 @@ class AgentActivity : Activity() {
             }
         }) { result ->
             AlertDialog.Builder(this).setTitle("Persönliches Lernprotokoll")
-                .setMessage(result.getOrElse { "Vorgang nicht abgeschlossen: " + failureName(it) })
+                .setMessage(result.getOrElse { "Vorgang nicht bestätigt: " + failureName(it) + ". Quelldaten unverändert; Zieldatei unabhängig prüfen." })
                 .setPositiveButton("Schließen", null).show()
         }
     }
@@ -6610,6 +6628,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        // Clear synchronously; already queued native deltas also check the
+        // cancellation state before they may create or update a draft.
+        activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
         webToolGate.cancel()
         activeWebResearchSession?.cancel()
         approvedModelWebSession.getAndSet(null)?.cancel()
@@ -6664,6 +6685,23 @@ class AgentActivity : Activity() {
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
         var firstTextNanos: Long? = null
+        var lastPreviewNanos = generationStartedNanos
+        val previewToken = Any()
+        runOnUiThread {
+            if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
+                val stillActive = try {
+                    cancellation?.throwIfCancelled()
+                    true
+                } catch (_: java.util.concurrent.CancellationException) { false }
+                if (stillActive) {
+                    localStreamPreviewRow?.let { chatContainer.removeView(it) }
+                    localStreamPreviewRow = null
+                    localStreamPreviewText = null
+                    activeLocalStreamToken = previewToken
+                }
+            }
+        }
+        try {
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
@@ -6673,6 +6711,20 @@ class AgentActivity : Activity() {
                             if (firstTextNanos == null) firstTextNanos = System.nanoTime()
                             streamedChunks++
                             response.append(event.text.take(8_000 - response.length))
+                            val now = System.nanoTime()
+                            if (streamedChunks == 1 ||
+                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(250)) {
+                                lastPreviewNanos = now
+                                val draft = response.toString()
+                                val chunks = streamedChunks
+                                val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                                val first = firstTextNanos?.let {
+                                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L }
+                                runOnUiThread {
+                                    updateLocalStreamPreview(previewToken, cancellation,
+                                        draft, chunks, elapsed, first)
+                                }
+                            }
                         }
                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
                         is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
@@ -6751,6 +6803,46 @@ class AgentActivity : Activity() {
             )
         }
         return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
+        } finally {
+            runOnUiThread { clearLocalStreamPreview(previewToken) }
+        }
+    }
+
+    private fun updateLocalStreamPreview(
+        token: Any,
+        cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation?,
+        draft: String, chunks: Int, elapsedMillis: Long, firstTextMillis: Long?
+    ) {
+        if (isFinishing || isDestroyed || activeLocalStreamToken !== token ||
+            activeChatCancellation !== cancellation) return
+        try { cancellation?.throwIfCancelled() }
+        catch (_: java.util.concurrent.CancellationException) { return }
+        val text = localStreamPreviewText ?: textView("", 14.5f, TEXT).also { preview ->
+            preview.setPadding(dp(13), dp(10), dp(13), dp(10))
+            preview.setTextIsSelectable(true)
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                background = rounded(ASSISTANT_BUBBLE, 18, BORDER)
+                addView(preview, matchWidth())
+            }
+            localStreamPreviewRow = row
+            localStreamPreviewText = preview
+            chatContainer.addView(row, matchWidth(top = 8))
+        }
+        text.text = (localRuntime.loadedModel?.id ?: "Lokales Modell") +
+            " · ANTWORTENTWURF · NOCH UNGEPRÜFT" +
+            "\nErster Text: " + (firstTextMillis?.toString() ?: "—") + " ms" +
+            " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
+            "\n\n" + draft.take(8_000)
+        scrollToBottom()
+    }
+
+    private fun clearLocalStreamPreview(token: Any) {
+        if (activeLocalStreamToken !== token) return
+        localStreamPreviewRow?.let { chatContainer.removeView(it) }
+        localStreamPreviewRow = null
+        localStreamPreviewText = null
+        activeLocalStreamToken = null
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
