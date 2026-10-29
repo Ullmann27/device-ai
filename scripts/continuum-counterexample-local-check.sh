@@ -14,6 +14,8 @@ root="$(cd -- "$(dirname -- "$0")/.." && pwd -P)"
 [[ "$(git -C "$root" rev-parse --verify HEAD)" == "$expected" ]] || fail 'SHA mismatch'
 [[ -z "$(git -C "$root" status --porcelain)" ]] || fail 'Dirty source tree'
 [[ "$out" != "$root" && "$out" != "$root"/* ]] || fail 'Output inside source tree'
+parent="$(cd -- "$(dirname -- "$out")" && pwd -P)" || fail 'Output parent unavailable'
+[[ "$parent" == "$(dirname -- "$out")" ]] || fail 'Noncanonical or symlink output parent'
 [[ ! -e "$out" ]] || fail 'Use a new output directory'
 command -v node >/dev/null 2>&1 || fail 'Node required'
 node_major="$(node -p 'Number(process.versions.node.split(".")[0])')"
