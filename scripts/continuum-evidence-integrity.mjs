@@ -11,9 +11,15 @@ export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500}={}
   throw Error('INVALID_MANIFEST_REQUEST');
  const root=fs.realpathSync(directory);
  if(!fs.statSync(root).isDirectory())throw Error('EVIDENCE_ROOT_NOT_DIRECTORY');
- const file=path.join(root,'sha256-manifest.json'),stat=fs.lstatSync(file);
- if(!stat.isFile()||stat.size>250_000)throw Error('INVALID_MANIFEST_FILE');
- const bytes=fs.readFileSync(file),files=JSON.parse(bytes.toString('utf8'));
+ const file=path.join(root,'sha256-manifest.json');
+ const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW|fs.constants.O_NONBLOCK);
+ let bytes;
+ try{
+  const stat=fs.fstatSync(fd);
+  if(!stat.isFile()||stat.size>250_000)throw Error('INVALID_MANIFEST_FILE');
+  bytes=fs.readFileSync(fd);
+ }finally{fs.closeSync(fd);}
+ const files=JSON.parse(bytes.toString('utf8'));
  if(!files||Array.isArray(files)||typeof files!=='object')throw Error('INVALID_MANIFEST_OBJECT');
  const entries=Object.entries(files);
  if(entries.length<minFiles||entries.length>maxFiles||
