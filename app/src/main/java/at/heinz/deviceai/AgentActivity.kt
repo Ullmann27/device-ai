@@ -316,6 +316,8 @@ class AgentActivity : Activity() {
     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
     private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
+    // Review permission stays in memory; old chat dossiers cannot re-authorize themselves.
+    @Volatile private var modelWebReviewRunner: ApprovedWebResearchToolRunner? = null
     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
     private var researchArmed = false
     private var researchResumeRequested = false
@@ -5173,19 +5175,31 @@ class AgentActivity : Activity() {
 
     private fun showWebLearningInbox() {
         onLearningIo({
-            WebLearningInbox.selectLatestReviewDossier(
-                runCatching { FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest() }.getOrNull(),
-                runCatching { FileResearchDossierStore(java.io.File(filesDir, "model-chat-research")).loadLatest() }.getOrNull()
-            ) to runCatching { WebLearningJournal(this).notes() }
+            val ownerResearch = runCatching {
+                FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest()
+            }.getOrNull()
+            val storedChatResearch = runCatching {
+                FileResearchDossierStore(java.io.File(filesDir, "model-chat-research")).loadLatest()
+            }.getOrNull()
+            val authorizedChatResearch = WebLearningInbox.eligibleModelChatDossier(
+                storedChatResearch, modelWebReviewRunner?.dossier
+            )
+            val selected = WebLearningInbox.selectLatestReviewDossier(
+                ownerResearch, authorizedChatResearch
+            )
+            Triple(selected, runCatching { WebLearningJournal(this).notes() },
+                selected != null && selected === authorizedChatResearch)
         }) { result ->
-            val (dossier, learned) = result.getOrElse { null to Result.failure(it) }
-            showWebLearningInboxDialog(dossier, learned)
+            val (dossier, learned, fromModelChat) =
+                result.getOrElse { Triple(null, Result.failure(it), false) }
+            showWebLearningInboxDialog(dossier, learned, fromModelChat)
         }
     }
 
     private fun showWebLearningInboxDialog(
         dossier: at.heinz.deviceai.cognitive.ResearchDossier?,
-        learned: Result<List<WebLearningCandidate>>
+        learned: Result<List<WebLearningCandidate>>,
+        fromModelChat: Boolean
     ) {
         if (learned.isFailure) {
             addAssistantMessage("Quellen-Lernspeicher beschädigt. Kein Inhalt übernommen; alte Daten nicht überschrieben.")
@@ -5212,7 +5226,9 @@ class AgentActivity : Activity() {
         // Render the clickable list alone; the detail dialog explains consent.
         AlertDialog.Builder(this)
             .setTitle("Internet-Lernstoff · ${candidates.size} Quellen · ${learned.getOrNull().orEmpty().size}/24 gespeichert")
-            .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
+            .setItems(titles) { _, which ->
+                showWebLearningCandidate(candidates[which], fromModelChat, dossier?.id)
+            }
             .setNegativeButton("Schließen", null)
             .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
             .show()
@@ -5239,7 +5255,23 @@ class AgentActivity : Activity() {
             }.show()
     }
 
-    private fun showWebLearningCandidate(note: WebLearningCandidate) {
+    private fun canReviewModelWebCandidate(
+        note: WebLearningCandidate, expectedDossierId: String?
+    ): Boolean {
+        val stillAuthorized = modelWebReviewRunner?.dossier ?: return false
+        return stillAuthorized.id == expectedDossierId &&
+            note in WebLearningInbox.candidates(stillAuthorized)
+    }
+
+    private fun showWebLearningCandidate(
+        note: WebLearningCandidate,
+        fromModelChat: Boolean = false,
+        expectedDossierId: String? = null
+    ) {
+        if (fromModelChat && !canReviewModelWebCandidate(note, expectedDossierId)) {
+            addAssistantMessage("Internetfreigabe widerrufen; kein Quellenhinweis übernommen.")
+            return
+        }
         val message = buildString {
             append(note.text).append("\n\nQuelle: ").append(note.sourceUrl)
             append("\nInhalts-Hash: ").append(note.sourceHash.take(16))
@@ -5251,12 +5283,20 @@ class AgentActivity : Activity() {
             .setMessage(message)
             .setNegativeButton("Nicht übernehmen", null)
             .setNeutralButton("Neuron-Coach") { _, _ ->
+                if (fromModelChat && !canReviewModelWebCandidate(note, expectedDossierId)) {
+                    addAssistantMessage("Internetfreigabe widerrufen; keine Lernvorlage erstellt.")
+                    return@setNeutralButton
+                }
                 // Safe bridge: external text is *only* a user-reviewed lesson proposal,
                 // never a system instruction, an automatic label or a device action.
                 beginNeuralCoach()
                 if (neuralCoach.isActive()) handleNeuralCoachInput(note.text.take(320))
             }
             .setPositiveButton("Als Quellenhinweis merken") { _, _ ->
+                if (fromModelChat && !canReviewModelWebCandidate(note, expectedDossierId)) {
+                    addAssistantMessage("Internetfreigabe widerrufen; kein Quellenhinweis gespeichert.")
+                    return@setPositiveButton
+                }
                 val stored = runCatching { WebLearningJournal(this).approve(note) }.getOrDefault(false)
                 addAssistantMessage(if (stored)
                     "Quellenhinweis mit URL und Inhalts-Hash gespeichert. Noch keine bestätigte Wahrheit. " +
@@ -6031,6 +6071,7 @@ class AgentActivity : Activity() {
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
         val modelWebResults = java.util.concurrent.CopyOnWriteArrayList<ApprovedWebResearchToolRunner>()
         var publishedWebCandidates = 0
+        var publishedWebRunner: ApprovedWebResearchToolRunner? = null
         var webPublishError = false
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, observations ->
@@ -6220,6 +6261,7 @@ class AgentActivity : Activity() {
                             .onFailure { webPublishError = true }.getOrDefault(0)
                         if (staged > 0) {
                             publishedWebCandidates = staged
+                            publishedWebRunner = web
                             break
                         }
                     }
@@ -6239,7 +6281,11 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val successful=run.blocker==null && run.response.isNotBlank()
-                    if (publishedWebCandidates > 0) addToolActivity(
+                    if (successful && publishedWebRunner?.dossier != null) {
+                        modelWebReviewRunner = publishedWebRunner
+                    }
+                    if (publishedWebCandidates > 0 && modelWebReviewRunner === publishedWebRunner &&
+                        modelWebReviewRunner?.dossier != null) addToolActivity(
                         "WEB · ${publishedWebCandidates} Quellen-Lernkandidaten bereit unter INTERNET · LERNSTOFF PRÜFEN; nichts automatisch gelernt")
                     if (webPublishError) addToolActivity(
                         "WEB · Quellenübergabe nicht bestätigt; keine automatische Übernahme")
