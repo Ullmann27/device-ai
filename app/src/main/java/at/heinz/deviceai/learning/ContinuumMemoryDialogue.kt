@@ -64,7 +64,8 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // dialogue evidence presented for explicit subject-definition questions.
         val hits=retrievedHits.filter {
             it.kind!="Bestätigte Nutzererinnerung" ||
-                ownerMemoryAnswersDefinition(text,it.text)
+                (ownerMemoryAnswersDefinition(text,it.text) &&
+                    ownerMemoryAnswersAskedAttribute(text,it.text))
         }
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
         // A greeting must not accidentally cite memories containing the word "Hallo".
@@ -193,6 +194,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 .lowercase(Locale.ROOT).replace(Regex("""\s+""")," ")
             return normalize(query.groupValues[1])==normalize(claim.groupValues[1])
         }
+
+        // A lexical match on a person's name is not evidence for an unrelated
+        // requested attribute. This narrow birth-date gate does not change the
+        // cross-runtime ranker or any weights; it only controls displayed citations.
+        private val BIRTH_ATTRIBUTE=Regex("""(?iu)\b(?:geburtstag|geburtsdatum|geboren|geburt)\b""")
+        internal fun ownerMemoryAnswersAskedAttribute(question:String,fact:String):Boolean =
+            !BIRTH_ATTRIBUTE.containsMatchIn(question) || BIRTH_ATTRIBUTE.containsMatchIn(fact)
 
         internal fun requireConversationId(id:String?) {
             require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
