@@ -25,12 +25,14 @@ function ledger(count = 256, mutateRecord = false, mixed = false) {
       mixed && index === 3 ? ['INTENT_LABEL', 'USER_CONFIRMED', 'OWNER_CONFIRMED', 'CONFIRMED'] :
       ['USER_FACT', 'USER_CONFIRMED', 'OWNER_CONFIRMED', index === 0 ? 'REVOKED' : 'CONFIRMED'];
     const content = SECRET + ' ' + index + ' Ü 😃';
+    const annotation = mixed && index === 4 ? 'noncanonical annotation' : null;
     const digest = crypto.createHash('sha256');
-    for (const value of [...tags.slice(0, 3), content, '', '']) digest.update(value).update(Buffer.from([0]));
+    for (const value of [...tags.slice(0, 3), content, annotation ?? '', '']) digest.update(value).update(Buffer.from([0]));
     const hash = digest.digest('hex');
     chunks.push(ascii('lx-' + hash.slice(0, 24)), ...tags.map(ascii),
       text(mutateRecord && index === 0 ? content + ' changed' : content),
-      Buffer.from([0, 0]), ascii(hash), long(100), long(101));
+      ...(annotation === null ? [Buffer.from([0])] : [Buffer.from([1]), text(annotation)]),
+      Buffer.from([0]), ascii(hash), long(100), long(101));
   }
   const payload = Buffer.concat(chunks);
   return Buffer.concat([payload, crypto.createHash('sha256').update(payload).digest()]);
@@ -175,7 +177,7 @@ test('two process captures validate all 256 records without exposing contents or
 test('safe counts distinguish canonical owner facts from source observations and other record types', async () => {
   const result = await runCase({ bytes: ledger(256, false, true) });
   assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(result.metadata.auditCounts.ownerUserFacts, { total: 253, confirmed: 252, revoked: 1 });
+  assert.deepEqual(result.metadata.auditCounts.ownerUserFacts, { total: 252, confirmed: 251, revoked: 1 });
   assert.equal(result.metadata.auditCounts.byType.USER_FACT, 254);
   assert.equal(result.metadata.auditCounts.byType.TRAINING_AUDIT, 1);
   assert.equal(result.metadata.auditCounts.byType.INTENT_LABEL, 1);
