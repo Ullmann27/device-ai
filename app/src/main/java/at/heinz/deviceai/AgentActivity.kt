@@ -5185,7 +5185,8 @@ class AgentActivity : Activity() {
 
     private fun showWebLearningInboxDialog(
         dossier: at.heinz.deviceai.cognitive.ResearchDossier?,
-        learned: Result<List<WebLearningCandidate>>
+        learned: Result<List<WebLearningCandidate>>,
+        liveCandidates: List<WebLearningCandidate>
     ) {
         if (learned.isFailure) {
             addAssistantMessage("Quellen-Lernspeicher beschädigt. Kein Inhalt übernommen; alte Daten nicht überschrieben.")
