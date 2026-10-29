@@ -5178,8 +5178,8 @@ class AgentActivity : Activity() {
             Triple(runCatching { FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest() }.getOrNull(),
                 runCatching { WebLearningJournal(this).notes() }, modelWebLearningReview.candidates())
         }) { result ->
-            val (dossier, learned) = result.getOrElse { null to Result.failure(it) }
-            showWebLearningInboxDialog(dossier, learned)
+            val (dossier, learned, liveCandidates) = result.getOrElse { Triple(null, Result.failure(it), emptyList()) }
+            showWebLearningInboxDialog(dossier, learned, liveCandidates)
         }
     }
 
