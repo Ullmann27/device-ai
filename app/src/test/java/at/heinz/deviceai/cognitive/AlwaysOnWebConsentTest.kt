@@ -186,6 +186,61 @@ class AlwaysOnWebConsentTest {
         assertNull(runner.dossier)
     }
 
+    @Test fun modelChatResearchRequiresDurableSuccessReceiptBeforeReviewPublication() {
+        val directory = java.nio.file.Files.createTempDirectory("continuum-web-review-").toFile()
+        try {
+            val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+            val call = WebToolRequest.Search("solar energy")
+            val session = ApprovedWebToolGate(consent).authorizeAlwaysOn(call, ResearchMode.QUICK)!!
+            val runner = runner(session)
+            val receipts = FileToolExecutionReceiptStore(java.io.File(directory, "receipts"))
+            var stored = 0
+            val review = ResearchDossierRepository { stored++ }
+
+            assertEquals(0, runner.publishForReview(receipts, review))
+            val execution = ToolGate(ToolPolicy(timeoutMillis = 20_000), runner, receiptStore = receipts)
+                .execute(call.proposal().invocation("web-publish-confirmed"), userConfirmed = true)
+            assertEquals(execution.record.decisionReason,
+                ToolExecutionStatus.SUCCEEDED, execution.record.status)
+
+            val tampered = object : ToolExecutionReceiptStore by receipts {
+                override fun get(callId: String): ToolExecutionReceipt? =
+                    receipts.get(callId)?.copy(outputSha256 = "0".repeat(64))
+            }
+            assertEquals("Unmatched output must not be published", 0,
+                runner.publishForReview(tampered, review))
+            assertEquals(0, stored)
+            assertTrue("Real source candidates must reach the existing review-only inbox",
+                runner.publishForReview(receipts, review) > 0)
+            assertEquals(1, stored)
+            consent.setMode(InternetAccessMode.OFF)
+            assertEquals("Consent revocation must reject subsequent publication", 0,
+                runner.publishForReview(receipts, review))
+            assertEquals(1, stored)
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
+    @Test fun rejectedWebToolCannotPublishResearchToLearningInbox() {
+        val directory = java.nio.file.Files.createTempDirectory("continuum-web-rejected-").toFile()
+        try {
+            val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+            val call = WebToolRequest.Search("solar energy")
+            val session = ApprovedWebToolGate(consent).authorizeAlwaysOn(call, ResearchMode.QUICK)!!
+            val runner = runner(session)
+            val receipts = FileToolExecutionReceiptStore(java.io.File(directory, "receipts"))
+            var stored = 0
+            val denied = ToolGate(ToolPolicy(timeoutMillis = 20_000), runner, receiptStore = receipts)
+                .execute(call.proposal().invocation("web-publish-denied"), userConfirmed = false)
+            assertEquals(ToolExecutionStatus.REJECTED, denied.record.status)
+            assertEquals(0, runner.publishForReview(receipts, ResearchDossierRepository { stored++ }))
+            assertEquals(0, stored)
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
     private fun runner(session: ApprovedWebResearchSession,
         synthesizer: ResearchSynthesizer = DeterministicResearchSynthesizer()): ApprovedWebResearchToolRunner {
         val discovery = object : ResearchDiscoveryProvider {
