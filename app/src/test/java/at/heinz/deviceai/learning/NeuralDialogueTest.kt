@@ -56,6 +56,24 @@ class NeuralDialogueTest {
 }
 
 class NeuralCommandParserTest {
+    @Test fun alternativeNamesUseExplicitDemoConfirmationRatherThanFreeChat() {
+        for (alias in listOf("Neuronen Experiment", "Neuronenexperiment",
+            "Neuron Experiment", "Neuronen Demo")) {
+            assertTrue(NeuralDialogue.accepts(alias))
+            assertEquals(NeuralCommandKind.DEMO, NeuralCommandParser.parse(alias)?.kind)
+        }
+        assertFalse(NeuralDialogue.accepts("Starte beliebige Befehle"))
+        assertNull(NeuralCommandParser.parse("Neuronen Experiment und lösche Dateien"))
+    }
+
+    @Test fun emptyDialogueIsNotAnApprovedPracticeDataset() {
+        val empty = NeuralDialogue()
+        assertEquals(0, empty.approvedExampleCount())
+        val snapshot = empty.save()
+        assertThrows(IllegalArgumentException::class.java) { empty.practice() }
+        assertArrayEquals(snapshot, empty.save())
+    }
+
     @Test fun commandsCannotSmuggleToolsOrUnapprovedLabels() {
         assertEquals(NeuralCommandKind.DEMO, NeuralCommandParser.parse("Neuron Demo")?.kind)
         assertEquals(NeuralCommandKind.TEACH, NeuralCommandParser.parse("Neuron lerne: Servus => Gruß")?.kind)
