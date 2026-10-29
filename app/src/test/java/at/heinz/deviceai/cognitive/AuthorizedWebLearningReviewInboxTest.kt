@@ -28,6 +28,15 @@ class AuthorizedWebLearningReviewInboxTest {
         assertTrue(inbox.candidates().isEmpty())
     }
 
+    @Test fun anotherSearchClearsEarlierReview() {
+        val inbox = AuthorizedWebLearningReviewInbox()
+        assertTrue(inbox.publish(dossier()) { true })
+        val previous = inbox.candidates().single()
+        assertFalse(inbox.publish(dossier()) { false })
+        assertFalse(inbox.canReview(previous))
+        assertTrue(inbox.candidates().isEmpty())
+    }
+
     @Test fun cannotPublishWhenNotAuthorized() {
         val inbox = AuthorizedWebLearningReviewInbox()
         assertFalse(inbox.publish(dossier()) { false })
