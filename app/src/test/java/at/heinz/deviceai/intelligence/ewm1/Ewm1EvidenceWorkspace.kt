@@ -269,8 +269,15 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
             ms.flatMap { m -> m.label.split(' ', '-').map { lower(it) } }.filter { it.length >= 2 }.toSet() + k }
     }
 
+    /** Parts of a multiword name that belong to no other name ("ThinkPad" of "ThinkPad X1", not "Bad" of "Bad Ischl"). */
+    private val uniqueParts: Map<String, Set<String>> by lazy {
+        val owners = HashMap<String, MutableSet<String>>()
+        for ((k, parts) in labelParts) for (p in parts) if (p != k) owners.getOrPut(p) { linkedSetOf() } += k
+        labelParts.mapValues { (k, parts) -> parts.filter { p -> p.length >= 4 && owners[p]?.size == 1 }.toSet() + k }
+    }
+
     fun resolve(word: String): Set<String> {
-        val direct = allKeys.filter { matches(word, it) }.toSet()
+        val direct = allKeys.filter { matches(word, it) }.toSet().let { d -> d + d.flatMap { uniqueParts[it].orEmpty() } }
         val viaAlias = direct.flatMap { aliases[it]?.keys.orEmpty() }.flatMap { labelParts[it] ?: setOf(it) }.toSet()
         val viaGroup = direct.flatMap { groups[it].orEmpty() }.toSet()
         return direct + viaAlias + viaGroup

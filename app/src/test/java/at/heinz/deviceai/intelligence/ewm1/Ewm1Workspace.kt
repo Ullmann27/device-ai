@@ -86,8 +86,9 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
                 if (e != null) { known[m.end] = setOf(e); knownSpan[m.end] = m.start..m.end; instances += m.end; continue }
             }
             if (m.start == m.end && m.determiner == null && memory.ambiguousName(headToken.text)) { ambiguous = true; continue }
-            val instance = m.end > m.start || atomic || resolved.any { it in memory.names } ||
-                (m.determiner == null && headToken.lower in memory.names)
+            // Instance = the word itself names a thing; alias expansion ("Hund" -> Marlo, Jaro) does not make "sein Hund" a name.
+            val direct = memory.allKeys.filter { memory.matches(headToken.text, it) }
+            val instance = m.end > m.start || atomic || direct.any { it in memory.names }
             // A bare name that denotes several stored people ("Alex") needs a question back.
             if (m.start == m.end && m.determiner == null && resolved.count { it in memory.names } >= 2 &&
                 headToken.lower !in memory.names.filter { n -> memory.aliases[headToken.lower]?.containsKey(n) != true }) {
