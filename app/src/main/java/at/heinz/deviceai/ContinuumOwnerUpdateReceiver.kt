@@ -25,8 +25,7 @@ class ContinuumOwnerUpdateReceiver : BroadcastReceiver() {
                 val action: Intent? = if (Build.VERSION.SDK_INT >= 33) {
                     intent.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
                 } else {
-                    @Suppress("DEPRECATION")
-                    (intent.getParcelableExtra(Intent.EXTRA_INTENT) as? Intent)
+                    intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
                 }
                 if (action != null) {
                     action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
