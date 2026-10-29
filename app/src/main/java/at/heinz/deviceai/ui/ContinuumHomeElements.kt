@@ -185,7 +185,7 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
     }
 
     companion object {
-        const val QUALITY_LABEL = "Prüffragen"
+        const val QUALITY_LABEL = "SWB1-Tests"
 
         /** Segmented level bar; without a measurement all segments stay dark (no invented level). */
         fun drawSegmentBar(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, percent: Int?, segments: Int = 20, phase: Float? = null) {
@@ -231,11 +231,11 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
         val figureStyle = t(500, 18.98f)
         p.drawText(figure, 13.9f, 68f, figureStyle, ContinuumSurfaces.figureFill(52f, 68f))
         val labelX = 13.9f + p.measureText(figure, figureStyle) + 6.5f
-        p.drawText("Lernereignisse", labelX, 57.8f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
+        p.drawText("Ereignisse", labelX, 57.8f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
         p.drawText("heute", labelX, 68.4f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
-            val color = if (change > 0) ContinuumTheme.GREEN else if (change < 0) ContinuumTheme.RED else ContinuumTheme.TEXT_MUTED
+            val color = ContinuumTheme.CYAN_SOFT // Activity volume, NOT proof of improvement
             val label = (if (up) "+" else "") + change + "%"
             val style = t(500, 8.34f)
             val chipW = 19f + p.measureText(label, style)
@@ -264,7 +264,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
 
     override fun describe(s: ContinuumDashboardState) = with(s.learning) {
         "Lernen und Forschung: ${ContinuumDashboardState.count(today)} Lernereignisse heute" +
-            (changePercent?.let { ", $it Prozent gegenüber gestern" } ?: "") +
+            (changePercent?.let { ", $it Prozent Aktivitätsänderung gegenüber gestern (kein Qualitätsmaß)" } ?: "") +
             recent.take(3).joinToString("") { ". ${it.title}, ${it.ago}" }
     }
 }
