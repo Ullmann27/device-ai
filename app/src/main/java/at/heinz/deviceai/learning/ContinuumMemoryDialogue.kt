@@ -89,7 +89,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
         }
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
-            selected.isEmpty() -> "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+            selected.isEmpty() -> NO_EVIDENCE_ANSWER
             else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
                 "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
@@ -197,6 +197,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
         internal fun requireConversationId(id:String?) {
             require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
         }
+        /** The answer when no current evidence fits; the EWM brain uses the same words when it abstains. */
+        const val NO_EVIDENCE_ANSWER="Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+
         fun hash(bytes:ByteArray):String=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
         /** Mirrors .github/continuum/dialogue-retrieval.mjs exactly (cross-runtime fixture).

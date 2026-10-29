@@ -622,6 +622,13 @@ class ContinuumLearningCore(
         }
     }
 
+    /** One consistent, read-only view for the EWM brain: the active SWB1 bytes (for the unchanged
+     * B0 ranking) and exactly the facts of [activeOwnerFacts]. Revoked or rejected facts are never
+     * part of it; nothing is written and no source observation becomes an owner fact. */
+    fun brainView():Pair<ByteArray,List<LearningExperience>> = synchronized(CORE_LOCK) {
+        loadModel().save() to activeOwnerFacts()
+    }
+
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
         dialogue.clear()
         store.updateMatching(

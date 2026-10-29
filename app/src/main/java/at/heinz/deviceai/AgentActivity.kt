@@ -2398,6 +2398,13 @@ class AgentActivity : Activity() {
             runLocalSmokeTest(direct)
             return
         }
+        // EWM2 brain switch: an explicit owner command; ON needs a second confirmation. Default is OFF.
+        at.heinz.deviceai.learning.ContinuumBrainCommand.parse(request)?.let { command ->
+            input.text.clear()
+            addUserMessage(request)
+            handleBrainCommand(command)
+            return
+        }
         // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
         // showGroqMentorDialog always requires a second owner confirmation.
         val groqQuestion = GroqInvocationRouter.extractQuestion(request)
@@ -2619,6 +2626,8 @@ class AgentActivity : Activity() {
                 scopedLocalPromptSession=null
                 setBusy(true)
                 onLearningIo({
+                    // The brain's discourse state of this conversation is dropped with the corrected context.
+                    at.heinz.deviceai.learning.ContinuumBrainBridge.forget(correctionSession)
                     ContinuumLearningCore(filesDir).resetDialogueConversation(correctionSession) {
                         sessionResetLifetime.get()
                     }
@@ -2846,9 +2855,22 @@ class AgentActivity : Activity() {
                     (if(turn.contextReset)
                         " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"
                         else "")
-                Triple(Triple(answer,evidence+" · "+cognitive.trace+
+                // Today's outcome, unchanged. The EWM2 brain (owner switch, default OFF) returns this exact
+                // object in OFF and SHADOW; in ON its evidence decides, and any failure keeps this outcome.
+                val baseline=at.heinz.deviceai.learning.ContinuumChatOutcome(answer,evidence,cognitive.trace+
                     (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),
-                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null),
+                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null,
+                    when {
+                        archiveAnswer!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.ARCHIVE
+                        legacyFallback && fallback!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.WEB_NOTES
+                        turn.grounded -> at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY
+                        else -> at.heinz.deviceai.learning.ContinuumBaselineSource.NONE
+                    },turn.memoryIds,archiveHit?.source?.id)
+                val shown=runCatching {
+                    at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,
+                        request.take(512),baseline).outcome
+                }.getOrDefault(baseline)
+                Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),
                     cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)
             }
             runOnUiThread {
@@ -4869,6 +4891,55 @@ class AgentActivity : Activity() {
     }
 
     /** [work] on the learning I/O thread, [done] on the UI thread while the activity is alive. */
+    /** Owner switch of the EWM2 brain. OFF and SHADOW never change an answer; ON is confirmed separately. */
+    private fun handleBrainCommand(command: String) {
+        val settings = at.heinz.deviceai.learning.ContinuumBrainSettings(filesDir)
+        val label = { mode: at.heinz.deviceai.learning.ContinuumBrainMode ->
+            when (mode) {
+                at.heinz.deviceai.learning.ContinuumBrainMode.OFF -> "AUS"
+                at.heinz.deviceai.learning.ContinuumBrainMode.SHADOW -> "SCHATTEN"
+                at.heinz.deviceai.learning.ContinuumBrainMode.ON -> "AN"
+            }
+        }
+        val apply = { mode: at.heinz.deviceai.learning.ContinuumBrainMode ->
+            onLearningIo({ settings.set(mode) }) { result ->
+                addAssistantMessage(result.fold({
+                    when (mode) {
+                        at.heinz.deviceai.learning.ContinuumBrainMode.OFF ->
+                            "EWM2-Gehirn ausgeschaltet. Der bisherige Chatweg antwortet unverändert."
+                        at.heinz.deviceai.learning.ContinuumBrainMode.SHADOW ->
+                            "EWM2-Gehirn im Schattenmodus: Es rechnet neben dem bisherigen Weg mit, deine Antworten " +
+                                "bleiben unverändert. Gespeichert werden nur inhaltsfreie Zählwerte („Gehirnmodus“ zeigt sie)."
+                        at.heinz.deviceai.learning.ContinuumBrainMode.ON ->
+                            "EWM2-Gehirn eingeschaltet. Bestätigte Erinnerungen vor Quellen, Quellen gekennzeichnet, " +
+                                "ehrliches Nichtwissen statt Vermutung. „Gehirnmodus aus“ schaltet jederzeit zurück."
+                    }
+                }, { "Gehirnmodus konnte nicht gespeichert werden (" + failureName(it) + "). Es bleibt beim bisherigen Modus." }))
+            }
+        }
+        when (command) {
+            at.heinz.deviceai.learning.ContinuumBrainCommand.STATUS -> onLearningIo({
+                settings.mode() to at.heinz.deviceai.learning.ContinuumBrainShadowLog(filesDir).summary()
+            }) { result ->
+                addAssistantMessage(result.fold({ (mode, summary) ->
+                    "EWM2-Gehirn · Modus " + label(mode) + ".\n" + summary +
+                        "\nBefehle: „Gehirnmodus aus“, „Gehirnmodus schatten“, „Gehirnmodus an“."
+                }, { "Gehirnstatus nicht lesbar (" + failureName(it) + ")." }))
+            }
+            at.heinz.deviceai.learning.ContinuumBrainMode.ON.name -> AlertDialog.Builder(this)
+                .setTitle("EWM2-Gehirn einschalten?")
+                .setMessage("Das neue Gehirn entscheidet dann bei jeder Frage zwischen deinen bestätigten Erinnerungen, " +
+                    "dem lokalen Wissensarchiv und ehrlichem Nichtwissen. Widerrufene Fakten werden nie verwendet, " +
+                    "Quellen werden nie zu deinen Fakten. Bei jedem Fehler antwortet der bisherige Weg.\n\n" +
+                    "Gemessen nur auf synthetischen Testdaten, noch nicht auf diesem Gerät bestätigt. " +
+                    "Empfehlung: zuerst „Gehirnmodus schatten“. Zurück jederzeit mit „Gehirnmodus aus“.")
+                .setNegativeButton("Abbrechen") { _, _ -> addAssistantMessage("Gehirnmodus unverändert.") }
+                .setPositiveButton("EINSCHALTEN") { _, _ -> apply(at.heinz.deviceai.learning.ContinuumBrainMode.ON) }
+                .show()
+            else -> apply(at.heinz.deviceai.learning.ContinuumBrainMode.valueOf(command))
+        }
+    }
+
     private fun <T> onLearningIo(work: () -> T, done: (Result<T>) -> Unit) {
         try {
             learningIoExecutor.execute {
