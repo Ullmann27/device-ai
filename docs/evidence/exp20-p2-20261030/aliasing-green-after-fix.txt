@@ -1,0 +1,16 @@
+GIT_PARENT=b35566e7a4c61de0dfa232ff8eb1ba618107bcf4 + working-tree fix; BoundedCtrnn.kt blob 63ad99a107caeb34196c3a205c5927f7e6f5ac70
+BUILD_OK 0091cceef6f3778d068521feb321e4e937dccd7aceeeb503f39427716606d33a sources=30
+BUILD_EXIT=0
+JUnit version 4.13.2
+...........................
+Time: 25.038
+
+OK (27 tests)
+
+JUNIT_EXIT=0
+--- P1 bench rerun (numerics must reproduce P1 checksum -0.5282165832982594)
+EXP20-P1 H20b host=OpenJDK 64-Bit Server VM 21.0.12.1 cpus=4 n=16
+CTRNN p50_ns=730.1 p95_ns=1093.8 allocated_bytes=0
+EMA p50_ns=277.9 p95_ns=332.2 allocated_bytes=0
+state_bytes_ctrnn=2560 state_bytes_ema=256 checksum=-0.5282165832982594
+BENCH_EXIT=0
