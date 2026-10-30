@@ -1,6 +1,12 @@
 import { solve, applyProgram, runTypedModel, oracle } from '../mastercode-shadow/search.mjs';
 import { fixtures } from '../mastercode-shadow/fixtures.mjs';
-import { executeShadowEvolutionCycle, evolutionDigest } from './evolution-core.mjs';
+import { executeShadowEvolutionCycle, evolutionDigest, summarizeExistingLedger } from './evolution-core.mjs';
+import { verifyLedger } from '../../.github/continuum/repair-ledger.mjs';
+
+/** Read-only connection to the authoritative CCC1 repair-ledger schema. */
+export function reviewVerifiedCcc1Ledger(ledger) {
+  return summarizeExistingLedger(verifyLedger(structuredClone(ledger)));
+}
 
 /** The adapter is intentionally a single opt-in, non-persistent research cycle; no worker is started. */
 export function runMastercodeSelfPlayOnce(trustedSnapshot, { cycleId = 1, maxEvaluations = 6 } = {}) {
