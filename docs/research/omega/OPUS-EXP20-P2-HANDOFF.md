@@ -1,6 +1,7 @@
 # EXP-20 P2/P3 · Übergabe (Opus, 30.10.2026)
 
 > **Neu (M1):** Meilenstein-Bericht, Antworten auf die 8 Forschungsfragen und Weiterarbeitungsauftrag M2 stehen in [EXP-20-MILESTONE-M1-AND-NEXT-20261030.md](../exp20/EXP-20-MILESTONE-M1-AND-NEXT-20261030.md). Regression M1: [milestone-m1-regression.txt](../../evidence/exp20-p2-20261030/milestone-m1-regression.txt).
+> **Weiterbearbeitungsauftrag (M5 Semantik, mit Aufwand in 10-%-Einheiten):** [OPUS-CONTINUATION-BRIEF-M5-20261030.md](OPUS-CONTINUATION-BRIEF-M5-20261030.md). P4-Ergebnis (Hopfield/Quantisierung): [EXP-20-P4-RESULT](../exp20/EXP-20-P4-RESULT-20261030.md).
 
 **Status: abgeschlossen auf Host-Labor-Niveau. Nichts davon ist produktiv integriert.**
 
