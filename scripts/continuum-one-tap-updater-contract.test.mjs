@@ -17,7 +17,8 @@ test('same original owner app, update activity in full production manifest', () 
   assert.match(manifest, /android:name="\.ContinuumOwnerUpdateActivity"/);
   assert.match(manifest, /android:exported="false"/);
   assert.match(manifest, /android:name="\.ContinuumOwnerUpdateReceiver"/);
-  assert.match(agent, /ContinuumOwnerUpdateActivity/);
+  assert.match(agent, /CenterAction\("UPDATES PRÜFEN UND LADEN", accent = true\)/);
+  assert.match(agent, /startActivity\(Intent\(this, ContinuumOwnerUpdateActivity::class\.java\)\)/);
 });
 
 test('one owner tap checks then downloads: never requires a second in-app button', () => {
