@@ -16,7 +16,7 @@ export function canStartShadowSelfPlay(s) {
       s.connectedToTrustedHost !== true || s.activeWorker !== false ||
       !boundedInt(s.batteryPercent, 100) || s.batteryPercent < 40 ||
       typeof s.thermalHeadroom !== 'number' || !Number.isFinite(s.thermalHeadroom) ||
-      s.thermalHeadroom < 0.5 || s.thermalHeadroom > 1 ||
+      s.thermalHeadroom < 0 || s.thermalHeadroom > 0.5 ||
       !boundedInt(s.availableTimeMs, 3_600_000) || s.availableTimeMs < 5_000) {
     return Object.freeze({ eligible: false, reason: 'REQUIRE_IDLE_CHARGING_HEADROOM_OWNER_OPT_IN' });
   }
