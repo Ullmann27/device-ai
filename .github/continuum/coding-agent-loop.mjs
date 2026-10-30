@@ -101,18 +101,20 @@ export function createScriptedBrain(actions){
  * OpenAI-compatible chat-completions brain (llama.cpp server, local by default), called synchronously like the
  * existing local coding brain. A non-local endpoint needs the owner's explicit consent (allowRemote).
  */
-export function createChatCompletionsBrain({endpoint='http://127.0.0.1:8089/v1/chat/completions',model='local',
+export function createChatCompletionsBrain({endpoint='http://127.0.0.1:8089/v1/chat/completions',model='local',apiKey=null,
   timeoutMs=AGENT_LIMITS.brainTimeoutMs,allowRemote=false,temperature=0.2,maxTokens=1024,run=spawnSync}={}){
   const url=new URL(endpoint);
   if(!['127.0.0.1','localhost','[::1]'].includes(url.hostname)&&!allowRemote)fail('CODING_REMOTE_BRAIN_NOT_CONSENTED');
   const child="import fs from 'node:fs';const q=JSON.parse(fs.readFileSync(0,'utf8'));"+
-    "try{const r=await fetch(q.url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(q.body),signal:AbortSignal.timeout(q.timeoutMs)});"+
+    "const h={'content-type':'application/json'};if(q.key)h.authorization='Bearer '+q.key;"+
+    "try{const r=await fetch(q.url,{method:'POST',headers:h,body:JSON.stringify(q.body),signal:AbortSignal.timeout(q.timeoutMs)});"+
     "process.stdout.write(JSON.stringify({status:r.status,text:(await r.text()).slice(0,200000)}));}"+
     "catch(e){process.stdout.write(JSON.stringify({status:0,text:String(e?.name??'ERROR')}));}";
   return ({system,messages})=>{
     const body={model,temperature,max_tokens:maxTokens,messages:[{role:'system',content:system},...messages],
       response_format:{type:'json_object',schema:ACTION_SCHEMA}};
-    const r=run(process.execPath,['--input-type=module','-e',child],{input:JSON.stringify({url:url.href,body,timeoutMs}),
+    // The key travels on stdin only: never in argv, the environment of the child, a log or the evidence.
+    const r=run(process.execPath,['--input-type=module','-e',child],{input:JSON.stringify({url:url.href,body,timeoutMs,key:apiKey}),
       encoding:'utf8',timeout:timeoutMs+5000,maxBuffer:1<<20,shell:false});
     let reply;try{reply=JSON.parse(r.stdout);}catch{fail('CODING_MODEL_UNAVAILABLE');}
     if(reply.status===0)fail(/Timeout|Abort/.test(reply.text)?'CODING_MODEL_TIMEOUT':'CODING_MODEL_UNAVAILABLE');
@@ -162,11 +164,18 @@ export function createScratchTestRunner({wt,base,chain,executor=null,deadline=Da
  * brain({system,messages,tools,step,maxSteps}) returns one action ({tool,args}) or its JSON text.
  * runTests(filesMap) is optional and owner-enabled; without it run_tests reports UNAVAILABLE.
  */
-export function createAgentCandidateProvider({task,brain,runTests=null,limits={},onStep=null,now=Date.now}={}){
+export function createAgentCandidateProvider({task,brain,runTests=null,limits={},onStep=null,evidenceDir=null,now=Date.now}={}){
   const spec=validateCodingTask(task);
   const L={...AGENT_LIMITS,...limits};
   if(typeof brain!=='function')fail('LOCAL_PROVIDER_UNAVAILABLE');
+  let run=0;
+  const record=entry=>{
+    if(!evidenceDir)return;
+    fs.mkdirSync(evidenceDir,{recursive:true,mode:0o700});
+    fs.appendFileSync(path.join(evidenceDir,`agent-run-${run}.jsonl`),JSON.stringify(entry)+'\n',{mode:0o600});
+  };
   const provider=({wt,base,deadline,diagnostics=[],history=[]})=>{
+    run++;
     if(base!==spec.sourceCommit)fail('CODING_TASK_BINDING_MISMATCH');
     const tracked=(git(wt,['ls-tree','-r','--name-only','-z',base],{timeoutMs:30000})??fail('CODING_CONTEXT_DEADLINE')).split('\0').filter(Boolean);
     const trackedSet=new Set(tracked);
@@ -291,6 +300,7 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
           steps.push({step,tool:'finish',observationSha256:null});
           const transcript=JSON.stringify(messages)+JSON.stringify(action);
           onStep?.({step,tool:'finish',patches:patches.length});
+          record({schema:'continuum-coding-agent-step',version:1,taskId:spec.id,step,tool:'finish',patches:proposal.patches.map(p=>p.file)});
           return {mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,localRequests:1,
             context:{commit:base,contextSha256:sha256(observations.join('\0')),ranges:ranges.slice(0,24)},
             plan:proposal.plan,hypothesis:proposal.hypothesis,patches:proposal.patches,
@@ -306,10 +316,25 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
       observations.push(observation);
       steps.push({step,tool:valid?action.tool:'INVALID',observationSha256:sha256(observation),observationChars:observation.length});
       onStep?.({step,tool:valid?action.tool:'INVALID',observation});
+      record({schema:'continuum-coding-agent-step',version:1,taskId:spec.id,step,tool:valid?action.tool:'INVALID',
+        args:valid?JSON.stringify(action.args).slice(0,2000):null,observation:observation.slice(0,2000),observationSha256:sha256(observation)});
       messages.push({role:'assistant',content:typeof reply==='string'?reply.slice(0,4000):JSON.stringify(action).slice(0,4000)},
         {role:'user',content:`OBSERVATION (${valid?action.tool:'error'}), step ${step}/${L.maxSteps}:\n${observation}`});
     }
     fail('CODING_MODEL_BUDGET_EXHAUSTED');
   };
   return Object.assign(provider,{taskSpec:spec,allowedPaths:spec.allowedPaths});
+}
+
+/**
+ * providerFactory for coding-orchestrator.mjs (enabled only by CONTINUUM_CODING_AGENT_LOOP=1): the agent loop with the
+ * owner's local OpenAI-compatible brain (CONTINUUM_LOCAL_BRAIN_ENDPOINT, CONTINUUM_LOCAL_BRAIN_MODEL,
+ * CONTINUUM_LOCAL_BRAIN_API_KEY). run_tests stays unavailable here: the session's own chain and isolation decide.
+ */
+export function createAgentProviderFromEnv({task,env=process.env,evidenceDir=null}={}){
+  const apiKey=env.CONTINUUM_LOCAL_BRAIN_API_KEY??'';
+  if(!/^[A-Za-z0-9_-]{32,128}$/.test(apiKey))fail('LOCAL_AUTH_REQUIRED');
+  const brain=createChatCompletionsBrain({endpoint:env.CONTINUUM_LOCAL_BRAIN_ENDPOINT||undefined,
+    model:env.CONTINUUM_LOCAL_BRAIN_MODEL||'local',apiKey});
+  return createAgentCandidateProvider({task,brain,evidenceDir});
 }

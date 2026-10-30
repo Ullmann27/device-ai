@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createAgentCandidateProvider,createScriptedBrain,createChatCompletionsBrain,createScratchTestRunner,
-  minimalPatch,isReadablePath} from './coding-agent-loop.mjs';
+  createAgentProviderFromEnv,minimalPatch,isReadablePath} from './coding-agent-loop.mjs';
 import {createWorktree,removeWorktree,repairSession} from './repair-loop.mjs';
 
 const SECRET='TOP-SECRET-VALUE-4711';
@@ -167,5 +167,25 @@ test('run_tests keeps the session execution policy: a general edit does not run 
       assert.match(failed,/^FAILED\nnode-continuum: FAILED executed=2 failed=1/);
       assert.match(failed,/geometry\.test\.mjs/,'failing test location reaches the brain');
     }finally{runner.close();}
+  }finally{removeWorktree(f.root,wt);cleanup(f);}
+});
+
+test('the orchestrator factory needs the local brain key, passes it on stdin only and records each step',()=>{
+  const f=fixture(),wt=createWorktree(f.root,f.head);
+  try{
+    assert.throws(()=>createAgentProviderFromEnv({task:f.task,env:{}}),/LOCAL_AUTH_REQUIRED/);
+    const key='k'.repeat(40);
+    assert.equal(createAgentProviderFromEnv({task:f.task,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:key}}).taskSpec.id,f.task.id);
+    let seenArgs,seenInput;
+    const brain=createChatCompletionsBrain({apiKey:key,run:(cmd,args,opts)=>{seenArgs=args;seenInput=opts.input;
+      return {stdout:JSON.stringify({status:200,text:JSON.stringify({choices:[{message:{content:'{"tool":"check","args":{}}'}}]})})};}});
+    brain({system:'',messages:[]});
+    assert.ok(!seenArgs.join(' ').includes(key),'key never in argv');assert.equal(JSON.parse(seenInput).key,key);
+    const evidenceDir=path.join(f.dir,'evidence');
+    createAgentCandidateProvider({task:f.task,brain:createScriptedBrain([competent[3],competent[6]]),evidenceDir})(
+      {wt,base:f.head,deadline:Date.now()+60000,diagnostics:[],history:[]});
+    const lines=fs.readFileSync(path.join(evidenceDir,'agent-run-1.jsonl'),'utf8').trim().split('\n').map(l=>JSON.parse(l));
+    assert.deepEqual(lines.map(l=>l.tool),['edit_file','finish']);
+    assert.ok(!fs.readFileSync(path.join(evidenceDir,'agent-run-1.jsonl'),'utf8').includes(key));
   }finally{removeWorktree(f.root,wt);cleanup(f);}
 });
