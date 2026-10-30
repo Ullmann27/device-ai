@@ -244,6 +244,10 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
         if (later.relationGroups.isNotEmpty() && earlier.relationGroups.isNotEmpty() &&
             later.relationGroups.intersect(earlier.relationGroups).isEmpty()) return false
         fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
+        // "Ab nächstem Monat wohne ich in Graz.": a state that starts later does not end the present one (no date is invented).
+        val future = later.tokens.any { it.lower in setOf("demnächst", "bald", "künftig", "zukünftig", "nächste", "nächsten",
+            "nächstem", "nächster", "nächstes", "übermorgen") }
+        if (future && later.relationGroups.any { it == "wohnen" || it == "arbeiten" }) return false
         // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared
         // relation ("Ich arbeite in Wien." survives "Ich wohne nicht mehr in Wien.").
         if (sameSubject && later.holder in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||

@@ -50,6 +50,15 @@ class Ewm1OwnerSupersessionTest {
     @Test fun anotherRelationInTheSameCityIsNoUpdate() = assertEquals(emptyMap<String, Set<String>>(),
         replaced("Max wohnt nicht mehr in Wien.", facts = listOf("f0" to "Max arbeitet in Wien.")))
 
+    @Test fun aFutureMoveDoesNotEndMyPresentResidence() =
+        assertEquals(emptyMap<String, Set<String>>(), replaced("Ab nächstem Monat wohne ich in Graz."))
+
+    @Test fun aFutureJobOfAnotherPersonKeepsHerPresentOne() = assertEquals(emptyMap<String, Set<String>>(),
+        replaced("Max arbeitet demnächst in Graz.", facts = listOf("f0" to "Max arbeitet in Wien.")))
+
+    @Test fun aPostponedAppointmentToNextWeekStillReplacesTheOldDate() = assertEquals(mapOf("neu0" to setOf("f0")),
+        replaced("Der Elternabend wurde auf nächsten Mittwoch verschoben.", facts = listOf("f0" to "Der Elternabend ist am Montag.")))
+
     @Test fun mySpouseAndIAreNotMeAlone() = assertEquals(emptyMap<String, Set<String>>(),
         replaced("Inzwischen wohne ich in Graz.", facts = listOf("f0" to "Mein Mann und ich wohnen in Wien.")))
 
