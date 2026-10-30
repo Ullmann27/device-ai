@@ -26,6 +26,7 @@ CLOSURE=(
   at/heinz/deviceai/cognitive/CognitiveGenome.kt
   at/heinz/deviceai/cognitive/ContinuumIntelligence.kt
   at/heinz/deviceai/cognitive/Deliberation.kt
+  at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt
   at/heinz/deviceai/cognitive/IdentityDrift.kt
   at/heinz/deviceai/cognitive/IdentityState.kt
   at/heinz/deviceai/cognitive/IdentityUpdateValidator.kt
