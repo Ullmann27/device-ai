@@ -1,0 +1,64 @@
+name: Continuum NVIDIA One-Shot Public Coding Test
+
+# Owner-only explicit trigger. No network request on push or PR.
+# IMPORTANT: workflow_dispatch is available after this workflow is reviewed
+# and included on the repository default branch.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type RUN_PUBLIC_SYNTHETIC to authorize one NVIDIA developer API call"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-nvidia-once
+  cancel-in-progress: false
+
+jobs:
+  nvidia-one-shot:
+    if: ${{ inputs.confirm == 'RUN_PUBLIC_SYNTHETIC' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Fetch reviewed source only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Independently run synthetic coding suite offline
+        run: |
+          node --test \
+            .github/continuum/nvidia-nim-public-coding-lab.test.mjs \
+            .github/continuum/nvidia-nim-public-coding-oracle.test.mjs
+          node scripts/continuum-nvidia-coding-lab.mjs --check
+
+      - name: Verify manually configured secret is present
+        shell: bash
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          if [[ -z "$NVIDIA_API_KEY" ]]; then
+            echo "NVIDIA_SECRET_NOT_CONFIGURED: add a newly rotated key as the Actions secret NVIDIA_API_KEY"
+            exit 2
+          fi
+          echo "NVIDIA_SECRET_PRESENT (value not shown)"
+
+      - name: One real public synthetic NVIDIA API request
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: node scripts/continuum-nvidia-coding-lab.mjs --run
+
+      - name: Owner review required
+        if: always()
+        run: |
+          echo "This workflow never applies candidate patches, alters Continuum memory, books GPUs or signs an APK."
+          echo "A green synthetic score is not an independently verified repository repair."
