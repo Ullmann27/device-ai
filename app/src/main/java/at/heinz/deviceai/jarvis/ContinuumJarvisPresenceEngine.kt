@@ -68,7 +68,11 @@ data class OwnerShutoffGrant(
     val deviceId: String,
     val validUntilMs: Long,
     val ownerAuthenticated: Boolean,
-    val toolGateApproved: Boolean
+    val toolGateApproved: Boolean,
+    /** A fresh, authenticated preflight must confirm no other occupant returned and shutoff remains supported. */
+    val confirmedEmptyHouse: Boolean,
+    val preflightTelemetryVerified: Boolean,
+    val preflightObservedAtMs: Long
 )
 
 /** A voice transcript alone does NOT authenticate the speaker and cannot grant tool privileges. */
@@ -87,6 +91,7 @@ data class DeviceReadBack(
     val deviceId: String,
     val isCurrentlyActive: Boolean,
     val observedAtMs: Long,
+    val observedCommandId: String,
     /** True means the adapter checked freshness and provenance; it is not a physical safety certificate. */
     val independentlyVerifiedTelemetry: Boolean
 )
@@ -109,7 +114,7 @@ class ContinuumJarvisPresenceEngine(
     private val maximumSensorAgeMs: Long = 30_000L
 ) {
     private val pendingProposals = LinkedHashMap<String, ProactiveInitiativePrompt>()
-    private val suppressedDeviceAlerts = LinkedHashSet<String>()
+    private val suppressedDeviceAlerts = LinkedHashMap<String, Long>()
 
     init {
         require(consentValidityWindowMs in 1_000L..180_000L)
@@ -139,7 +144,7 @@ class ContinuumJarvisPresenceEngine(
                 appliance.lastTelemetryTimestampMs < 0L ||
                 appliance.lastTelemetryTimestampMs > now + 2_000L ||
                 now - appliance.lastTelemetryTimestampMs > maximumSensorAgeMs ||
-                appliance.deviceId in suppressedDeviceAlerts) continue
+                (suppressedDeviceAlerts[appliance.deviceId]?.let { now >= it && now - it < 300_000L } == true)) continue
 
             val empty = occupancy == HouseholdOccupancyState.HOUSE_CONFIRMED_EMPTY
             val canShutoff = empty && appliance.capability != DeviceActuationCapability.TELEMETRY_READ_ONLY
@@ -165,7 +170,7 @@ class ContinuumJarvisPresenceEngine(
             )
             if (pendingProposals.size >= 32) pendingProposals.remove(pendingProposals.keys.first())
             pendingProposals[proposal.proposalId] = proposal
-            suppressedDeviceAlerts.add(appliance.deviceId)
+            suppressedDeviceAlerts[appliance.deviceId] = now
             return proposal
         }
         return null
@@ -195,8 +200,10 @@ class ContinuumJarvisPresenceEngine(
         // The real implementation MUST connect to verified owner identification and existing ToolGate.
         val grant = runCatching { approvalGate.authorize(p, ownerUtteranceDe, nowMs) }.getOrNull()
         if (grant == null || grant.proposalId != p.proposalId || grant.deviceId != p.targetDeviceId ||
-            !grant.ownerAuthenticated || !grant.toolGateApproved || grant.validUntilMs < nowMs ||
-            grant.validUntilMs > p.expiresAtMs)
+            !grant.ownerAuthenticated || !grant.toolGateApproved || !grant.confirmedEmptyHouse ||
+            !grant.preflightTelemetryVerified || grant.preflightObservedAtMs < nowMs - maximumSensorAgeMs ||
+            grant.preflightObservedAtMs > nowMillis() + 2_000L || grant.validUntilMs < nowMillis() ||
+            grant.validUntilMs > p.expiresAtMs || nowMillis() >= p.expiresAtMs)
             return result(proposalId, p.targetDeviceId, VerifiedActuationStatus.REJECTED, false,
                 "Für die Abschaltung liegt keine gültige Besitzer- und Werkzeugfreigabe vor.")
 
@@ -210,6 +217,7 @@ class ContinuumJarvisPresenceEngine(
         val reading = runCatching { toolBridge.readBackCurrentActiveState(p.targetDeviceId) }.getOrNull()
         val confirmed = reading != null && reading.deviceId == p.targetDeviceId &&
             reading.independentlyVerifiedTelemetry && !reading.isCurrentlyActive &&
+            reading.observedCommandId == dispatch.commandId &&
             reading.observedAtMs >= dispatch.acceptedAtMs &&
             reading.observedAtMs <= nowMillis() + 2_000L &&
             nowMillis() - reading.observedAtMs <= maximumSensorAgeMs
@@ -239,7 +247,8 @@ class ContinuumJarvisPresenceEngine(
 
     private fun prune(nowMs: Long) {
         pendingProposals.entries.removeAll { nowMs >= it.value.expiresAtMs }
-        while (suppressedDeviceAlerts.size > 64) suppressedDeviceAlerts.remove(suppressedDeviceAlerts.first())
+        suppressedDeviceAlerts.entries.removeAll { it.value > nowMs || nowMs - it.value >= 300_000L }
+        while (suppressedDeviceAlerts.size > 64) suppressedDeviceAlerts.remove(suppressedDeviceAlerts.keys.first())
     }
 
     private fun validDeviceId(id: String): Boolean = id.length in 3..96 &&
