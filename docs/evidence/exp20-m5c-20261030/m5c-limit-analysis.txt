@@ -1,0 +1,12 @@
+EXP-20 M5c CRE1 limit analysis
+L1 parity: role-swap pairs=80 bit-identical memory embeddings=64 exact score ties=68 max|diff|=2.220446049250313E-16
+L1 m5b-trained: role-swap pairs=80 bit-identical memory embeddings=64 exact score ties=71 max|diff|=1.6653345369377348E-16
+L3 TRAIN distinct CRE1 features=1527; share of CRE1 feature weight never seen in TRAIN (M5b VAL S, post-hoc):
+  day far: unseen weight of the day phrase                   n=32  mean=0.555 min=0.262 max=0.777
+  day near: unseen weight of the day phrase                  n=32  mean=0.165 min=0.165 max=0.165
+  place far: unseen weight of the place phrase               n=32  mean=0.592 min=0.461 max=0.784
+  place near: unseen weight of the place phrase              n=32  mean=0.314 min=0.123 max=0.648
+  query day far / place far: unseen weight of the whole query n=16  mean=0.447 min=0.335 max=0.582
+  query day far / place near: unseen weight of the whole query n=16  mean=0.336 min=0.219 max=0.441
+  query day near / place far: unseen weight of the whole query n=16  mean=0.330 min=0.282 max=0.384
+  query day near / place near: unseen weight of the whole query n=16  mean=0.250 min=0.140 max=0.352
