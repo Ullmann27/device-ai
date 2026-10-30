@@ -49,3 +49,23 @@ Der in PR #154 dokumentierte DeepSeek-Hub-Plan hat 48 deklarierte Gewichtsshards
 7. Erst nach Gerätetest, unabhängigen Tests, Datenschutz-/Besitzerfreigabe und signiertem Build ins Original-APK integrieren.
 
 Der neue Code erschließt aktuell **noch keine zusätzliche reale GPU-Rechenleistung**. Er reduziert das konkrete Risiko falsch kalkulierter und nicht ausführbarer Mietrouten und bereitet die belegbare Integration vor. Keine externe GPU, API-Schlüssel oder Rechnung wurden angelegt.
+
+## Kostenoptimierte erste praktische Remote-Versuche (recherchiert 30.10.2026)
+
+NVIDIA Developer Program: NVIDIA beschreibt die Nutzung gehosteter NIM-API-Endpunkte für Entwicklung/Prototypen als kostenfrei innerhalb geltender Nutzungslimits. Das sind echte NVIDIA-Cloud-GPU-Inferenz-Endpunkte, aber kein frei mietbarer dauerhafter 500-GB-RAM-Bereich und nicht für produktiven Betrieb ohne entsprechende Lizenz/Vertrag. Der Besitzer benötigt eigene NVIDIA-Developer-Registrierung und gültige API-Berechtigung. Kein Konto oder Token wurde angelegt.
+https://docs.api.nvidia.com/nim/docs/product
+https://docs.api.nvidia.com/nim/docs/run-anywhere
+
+Hugging Face ZeroGPU: Öffentliche Spaces können gemäß aktueller Hugging-Face-Preisliste dynamisch kostenlose GPUs bis zur angegebenen Produktklasse nutzen. Das ist keine beliebig buchbare, dedizierte Continuum-Instanz, sondern kontingentierter Space-Betrieb mit Regeln und begrenztem Ressourcenfenster.
+https://huggingface.co/pricing
+
+Hugging Face Jobs sind hingegen kostenpflichtige CPU-/GPU-Jobs (auch cpu-basic), derzeit laut offizieller Preisliste per Minute. Nie ohne separate Besitzerfreigabe starten.
+https://huggingface.co/docs/hub/en/jobs-pricing
+
+Runpod: Aktueller öffentlicher Listenpreis Stand 08.10.2026 nennt u.a. H200 141GB für $5.29 je GPU-Stunde auf Pods und A40 48GB für $0.59 je GPU-Stunde. Vier H200 würden rein arithmetisch $21.16 je Stunde kosten, **ohne** Storage, Netz-, Steuer- oder Startzeitkosten; selbst 4x141GB beweisen noch nicht, dass ein konkreter 500-GB-Checkpoint dort ausführbar ist. Preise sind Momentaufnahmen, keine verbindlichen Buchungsangebote.
+https://www.runpod.io/pricing
+
+Vast.ai bietet einen dynamischen Marktplatz mit On-Demand- und interruptibler GPU-Miete. Interruptible ist preisgünstiger, kann aber die laufende KI-Arbeit jederzeit unterbrechen. Der Coding-Agent muss deshalb dauerhaft checkpointen und darf einen Abbruch nicht als Erfolg einstufen.
+https://vast.ai/article/Rental-Types
+
+Beste Reihenfolge: zuerst begrenzten kostenlosen NVIDIA-Prototyp-Endpoint für einen öffentlichen synthetischen Test nutzen, sofern verfügbar und vom Besitzer explizit freigegeben; danach billige bedarfsabhängige kleine GPU mit vLLM und erst mit gemessener Nutzeneffizienz große Tensor-Parallel-Hosts. Keine Terms-of-Service-Umgehung oder fremde GPU-Nutzung.
