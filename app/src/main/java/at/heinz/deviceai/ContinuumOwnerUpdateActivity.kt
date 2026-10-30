@@ -129,7 +129,7 @@ class ContinuumOwnerUpdateActivity : Activity() {
                 checkButton.isEnabled = true
                 result.fold(
                     onSuccess = {
-                        setMessage(it + "\nBitte im Android-Installationsdialog auf Aktualisieren tippen.")
+                        setMessage(it + "\nAndroid verarbeitet das Update. Falls eine Systembestätigung erscheint, bitte dort Aktualisieren auswählen.")
                     },
                     onFailure = {
                         setMessage("Aktualisierung gestoppt: " +
