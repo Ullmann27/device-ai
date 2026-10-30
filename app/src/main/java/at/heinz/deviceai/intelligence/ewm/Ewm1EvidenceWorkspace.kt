@@ -46,28 +46,49 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
     val mentions: List<Ewm1Mention> = readMentions(tokens).map { it.copy(key = genitiveBase(it.key)) }.map { it.copy(key = keyOf(it)) }
     val keys: Set<String> = mentions.flatMap { m -> listOf(m.key) + m.label.split(' ', '-').map { genitiveBase(lower(it)) }
         .filter { it == m.key || it !in ownHeads } }.filter { it.length >= 2 }.toSet()
-    val subject: String? = mentions.firstOrNull()?.key
     /**
-     * Who a statement is about, for supersession only: "ich"/"wir" when the first clause has that nominative pronoun
+     * Grammatical holder of the statement: "ich"/"wir" when the first clause has that nominative pronoun
      * ("Inzwischen wohne ich in Graz."), otherwise the first mention that is no sentence-initial time or update adverb.
      */
-    val holder: String? = run {
+    val subject: String? = run {
         val firstClause = tokens.takeWhile { it.index == 0 || !it.breakBefore }
         val pronoun = firstClause.indexOfFirst { it.lower == "ich" || it.lower == "wir" }
-        val coordinated = firstClause.getOrNull(pronoun - 1)?.lower in setOf("und", "oder", "wie", "als") ||
-            firstClause.getOrNull(pronoun + 1)?.lower in setOf("und", "oder")
-        if (pronoun >= 0 && !coordinated) firstClause[pronoun].lower
+        if (pronoun >= 0) firstClause[pronoun].lower
         else mentions.firstOrNull { m -> !(m.start == 0 && m.end == 0 &&
             (tokens[0].lower in Ewm1Lexicon.UPDATE_MARKERS || tokens[0].lower in Ewm1Lexicon.TIME)) }?.key
+    }
+    /** False for reported speech and for coordinated subjects ("Anna und Ben ...", "Mein Mann und ich ..."): whose fact it is stays open. */
+    val subjectKnown: Boolean = run {
+        val at = tokens.indexOfFirst { it.lower == subject } .takeIf { it >= 0 }
+            ?: mentions.firstOrNull { it.key == subject }?.end
+        val coordinated = at != null && (tokens.getOrNull(at - 1)?.lower in setOf("und", "oder") ||
+            tokens.getOrNull(at + 1)?.lower in setOf("und", "oder") && tokens.getOrNull(at + 2)?.let { n ->
+                n.capitalized || n.lower in setOf("ich", "wir") || n.lower.startsWith("mein") || n.lower.startsWith("unser") } == true)
+        val reported = text.any { it in "„“\"«»" } || tokens.any { it.lower in Ewm1Lexicon.SAYING }
+        subject != null && !coordinated && !reported
     }
     val contentStems: Set<String> = tokens.filter { !it.capitalized && it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 }
         .map { stem(it.lower) }.toSet()
     val groups: Set<String> = tokens.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
     /** Relation groups of the predicate: the kinship word naming the holder ("Meine Schwester ist …") states no relation. */
     val relationGroups: Set<String> = run {
-        val own = mentions.firstOrNull { it.key == holder }?.let { it.start..it.end }
+        val own = mentions.firstOrNull { it.key == subject }?.let { it.start..it.end }
         tokens.filter { own == null || it.index !in own || !isRole(it.lower) }.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
     }
+    /** Content words that name the predicate: no time, update, tense or degree words. */
+    val predicateStems: Set<String> = tokens.filter { !it.capitalized && it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 &&
+        it.lower !in Ewm1Lexicon.TIME && it.lower !in Ewm1Lexicon.GENERIC && it.lower !in Ewm1Lexicon.UPDATE_MARKERS &&
+        it.lower !in Ewm1Lexicon.PAST_CUES && it.lower !in Ewm1Lexicon.FUTURE_CUES && it.lower !in Ewm1Lexicon.DEGREE }
+        .map { stem(it.lower) }.toSet()
+    /** 'p' past ("war gestern", "früher wohnte"), 'f' future ("ab nächstem Monat"), 'n' present; a present cue wins. */
+    val tense: Char = when {
+        tokens.any { it.lower in Ewm1Lexicon.PRESENT_CUES } -> 'n'
+        tokens.any { it.lower in Ewm1Lexicon.PAST_CUES } -> 'p'
+        tokens.any { it.lower in Ewm1Lexicon.FUTURE_CUES } -> 'f'
+        else -> 'n'
+    }
+    /** "nicht in Graz, sondern in Linz": an explicit correction. */
+    val correction: Boolean = tokens.any { it.lower == "sondern" } && tokens.any { it.lower in Ewm1Lexicon.NEGATIONS }
     val lowerText = lower(text)
     val hasUpdateMarker = Ewm1Lexicon.UPDATE_MARKERS.any { marker ->
         if (' ' in marker) lowerText.contains(marker) else tokens.any { it.lower == marker } }
@@ -225,39 +246,51 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
             if (members.size >= 2) { groups.getOrPut(lower(r.groupValues[1])) { linkedSetOf() } += members; names += members }
         }
         // Possessive pronoun after the subject: "Dr. Huber hat ihre Praxis …", "… wegen seiner Zähne"
-        f.subject?.let { s ->
+        f.subject?.takeIf { it != "ich" && it != "wir" }?.let { s ->
             if (t.any { it.lower in setOf("ihre", "ihren", "ihrer", "ihrem") } && t.none { it.lower in setOf("wir", "ich") }) cue(s, 'f')
             if (t.any { it.lower in setOf("seine", "seinen", "seiner", "seinem") }) cue(s, 'm')
         }
     }
 
+    /**
+     * SUPERSEDES_STATE: a present statement replaces an earlier present statement of the same holder and relation.
+     * CORRECTS_EVENT: "nicht ..., sondern ..." replaces the same past event (same time anchor).
+     * Everything else coexists: past events and history stay, unknown holders and future states change nothing.
+     */
     private fun replaces(later: Ewm1Fact, earlier: Ewm1Fact): Boolean {
-        val sameSubject = later.holder != null && later.holder == earlier.holder
+        if (!later.subjectKnown || !earlier.subjectKnown) return false
+        val sameSubject = later.subject != null && later.subject == earlier.subject
         val sharedGroup = later.relationGroups.intersect(earlier.relationGroups).filter { it != "zeitpunkt" }
         val sharedStems = later.contentStems.intersect(earlier.contentStems)
+        val samePredicate = sharedGroup.isNotEmpty() || later.predicateStems.intersect(earlier.predicateStems).isNotEmpty()
+        // Neither statement names a predicate of its own ("Der Elternabend ist am Montag."): its time or place is the content.
+        val bare = (later.relationGroups + earlier.relationGroups).all { it == "zeitpunkt" } &&
+            later.predicateStems.isEmpty() && earlier.predicateStems.isEmpty()
         // The holder's own name ("meine Schwester Anna") is no other entity both statements share.
-        val holderNames = setOfNotNull(later.holder) + later.holder?.let { h ->
+        val holderNames = setOfNotNull(later.subject) + later.subject?.let { h ->
             aliases[h]?.keys.orEmpty() + aliases.filterValues { h in it.keys }.keys }.orEmpty()
         val sharedOtherEntity = (later.mentions.map { it.key }.toSet() - holderNames)
             .intersect(earlier.mentions.map { it.key }.toSet())
+        fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
         // Two statements of different thesaurus relations ("arbeitet" / "wohnt nicht mehr") never replace each other.
         if (later.relationGroups.isNotEmpty() && earlier.relationGroups.isNotEmpty() &&
             later.relationGroups.intersect(earlier.relationGroups).isEmpty()) return false
-        fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
+        if (later.tense == 'p' || earlier.tense == 'p') {
+            val sharedAnchor = later.tokens.map { it.lower }.filter { it in Ewm1Lexicon.TIME }
+                .intersect(earlier.tokens.map { it.lower }.toSet())
+            return sameSubject && later.tense == 'p' && earlier.tense == 'p' && later.correction && sharedAnchor.isNotEmpty() &&
+                (samePredicate || bare)
+        }
         // "Ab nächstem Monat wohne ich in Graz.": a state that starts later does not end the present one (no date is invented).
-        val future = later.tokens.any { it.lower in setOf("demnächst", "bald", "künftig", "zukünftig", "nächste", "nächsten",
-            "nächstem", "nächster", "nächstes", "übermorgen") }
-        if (future && later.relationGroups.any { it == "wohnen" || it == "arbeiten" }) return false
-        // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared
-        // relation ("Ich arbeite in Wien." survives "Ich wohne nicht mehr in Wien.").
-        if (sameSubject && later.holder in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||
-            later.hasUpdateMarker && (sharedGroup.isNotEmpty() ||
-                later.relationGroups.isEmpty() && earlier.relationGroups.isEmpty() && sharedStems.isNotEmpty())
+        if (later.tense == 'f' && later.relationGroups.any { it == "wohnen" || it == "arbeiten" }) return false
+        // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared relation.
+        if (sameSubject && later.subject in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||
+            (later.hasUpdateMarker || later.correction) && samePredicate
         return if (sameSubject) {
-            (later.hasUpdateMarker && (sharedGroup.isNotEmpty() || sharedStems.isNotEmpty() || sharedOtherEntity.isNotEmpty() ||
-                "zeitpunkt" in later.groups.intersect(earlier.groups) || (timed(later) && timed(earlier)))) ||
+            ((later.hasUpdateMarker || later.correction) && (samePredicate ||
+                bare && (sharedOtherEntity.isNotEmpty() || "zeitpunkt" in later.groups.intersect(earlier.groups) || (timed(later) && timed(earlier))))) ||
                 sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED }
-        } else if (later.holder == null && earlier.holder == null) {
+        } else if (later.subject == null && earlier.subject == null) {
             later.hasUpdateMarker && (sharedStems.size + later.tokens.map { it.lower }.toSet()
                 .intersect(earlier.tokens.filter { it.lower in Ewm1Lexicon.GENERIC || it.lower in Ewm1Lexicon.TIME }.map { it.lower }.toSet()).size) >= 2
         } else false
