@@ -1,0 +1,4 @@
+EXP20-P1 H20b host=OpenJDK 64-Bit Server VM 21.0.12.1 cpus=4 n=16
+CTRNN p50_ns=567.4 p95_ns=909.1 allocated_bytes=0
+EMA p50_ns=162.5 p95_ns=279.8 allocated_bytes=0
+state_bytes_ctrnn=2560 state_bytes_ema=256 checksum=-0.5282165832982594
