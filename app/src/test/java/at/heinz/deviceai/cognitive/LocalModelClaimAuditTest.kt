@@ -55,4 +55,30 @@ class LocalModelClaimAuditTest {
         listOf("Anna", "Graz", "2023").forEach { assertEquals(false, encoded.contains(it)) }
         assertEquals(0, decoded.modelInvocations)
     }
+    @Test fun aNameBoundToTheWrongPersonIsFlagged() {
+        val r = LocalGroundedRecall("Anna wohnt in Graz und Markus arbeitet in Linz.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_UNSUPPORTED, LocalModelClaimAudit.stage("Markus arbeitet in Graz.", r))
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Markus arbeitet in Linz.", r))
+    }
+
+    @Test fun restatingTheSupersededPartIsFlaggedTheCurrentPartIsNot() {
+        val r = LocalGroundedRecall("Bis 2023 wohnte Anna in Linz, seit 2024 wohnt sie in Graz.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_UNSUPPORTED, LocalModelClaimAudit.stage("Anna wohnt in Linz.", r))
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Anna wohnt in Graz.", r))
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Bis 2023 wohnte Anna in Linz.", r))
+    }
+
+    @Test fun anActionTheEvidenceNeverMentionsIsFlagged() {
+        val r = LocalGroundedRecall("Anna hat am Montag mit Markus telefoniert.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_UNSUPPORTED, LocalModelClaimAudit.stage("Anna hat Markus verlassen.", r))
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Anna hat am Montag mit Markus telefoniert.", r))
+    }
+
+    @Test fun evidenceThatContradictsItselfIsReportedAsConflictWhateverTheAnswer() {
+        val r = LocalGroundedRecall("Anna hat 12 Euro bezahlt. Laut Beleg hat Anna 17 Euro bezahlt.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_CONFLICT, LocalModelClaimAudit.stage("Anna hat 12 Euro bezahlt.", r))
+        // two clauses about different people with different numbers are not a conflict
+        val ok = LocalGroundedRecall("Anna hat 12 Euro bezahlt und Markus hat 17 Euro bezahlt.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Anna hat 12 Euro bezahlt.", ok))
+    }
 }
