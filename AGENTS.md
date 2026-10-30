@@ -1,3 +1,5 @@
+> **Weiterarbeit (Opus 5.5, 30.10.2026):** M8-Coding-Agent auf diesem Branch: `docs/handoff/WEITERARBEIT-M8-20261030.md`; Gesamtplan auf `claude/continuum-jarvis-exp20-p2-kxrxy2`: `docs/handoff/OPUS-WEITERARBEIT-20261030.md`.
+
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
 ## VERBINDLICH: JARVIS-Resilienz und Neurodynamik (EXP-16 bis EXP-23)
