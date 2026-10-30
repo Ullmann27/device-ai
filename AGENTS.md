@@ -1,5 +1,9 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## AKTUELL 30.10.2026 (spät): M5-Stand – zuerst lesen
+
+[EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md](docs/research/exp20/EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md): echter CRE1-Runner Exit 0, CRE1-Blind-Datengate PASS (VAL 15/128); **Semantik-Vorbedingung FAIL für alle vorhandenen Encoder** (VAL-S ≤ 15/64, Zufall bei Gleichstand 16/64) → **M5 NICHT ERREICHT**, SEALED geschlossen. Hybrid+CRE1 existiert bereits als Diagnose-Schatten (`AuthorizedConversationMemoryShadow`). Nächster Schritt: neu registrierter Datensatz M5b mit disjunkten Paraphrasen-Familien; M6 nur vorbereitet.
+
 ## AKTUELL 30.10.2026: EXP-20 abgeschlossen (Host-Labor) → nächster Schritt M5 „Semantik“
 
 **ChatGPT 6 und jeder nächste Agent: zuerst [GPT6-HANDOFF-FROM-OPUS-EXP20-20261030.md](docs/research/omega/GPT6-HANDOFF-FROM-OPUS-EXP20-20261030.md) und [OPUS-CONTINUATION-BRIEF-M5-20261030.md](docs/research/omega/OPUS-CONTINUATION-BRIEF-M5-20261030.md) lesen und strikt danach arbeiten.** Draft-PR #256 (Branch `claude/continuum-jarvis-exp20-p2-kxrxy2`). Ergebnis: Router A bleibt; CTRNN ≈ EMA; DG-SDR, INT8/Sign-Schlüssel verworfen; Hopfield-2-Gewinn = Medoid-Artefakt; einziger Kandidat ist der vorhandene `HybridMemoryRetriever` mit CRE1-`semanticScorer` (Bestätigung auf neuen Daten offen). `app/src/main` unverändert; keine APK, kein Fold7-Nachweis.
