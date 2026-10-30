@@ -65,6 +65,8 @@ object JarvisVoiceDispatchGate {
         startedInSession: String?, currentSession: String
     ): JarvisVoiceDispatch = when {
         decision.routing == JarvisVoiceRouting.IGNORE -> JarvisVoiceDispatch.IGNORE
+        // A result from a closed or unknown chat is discarded, not drafted into the next chat.
+        startedInSession == null || startedInSession != currentSession -> JarvisVoiceDispatch.IGNORE
         decision.routing == JarvisVoiceRouting.DIALOGUE_ONLY && !busy && !executorShutdown && activityAlive &&
             startedInSession != null && startedInSession == currentSession -> JarvisVoiceDispatch.AUTO_DIALOGUE
         else -> JarvisVoiceDispatch.DRAFT
