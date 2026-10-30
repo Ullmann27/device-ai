@@ -72,7 +72,7 @@
 # kotlinc 2.0.20 aus dem JetBrains-GitHub-Release (ZIP-SHA-256 5f5d2a8ad6a718a002acd0775b67a9e27035872fdbd4b0791e3cb3ea00095931)
 export KOTLINC=.../kotlinc/bin/kotlinc JUNIT_JAR=/opt/gradle-8.14.3/lib/junit-4.13.2.jar HAMCREST_JAR=/opt/gradle-8.14.3/lib/hamcrest-core-1.3.jar OUT=/tmp/exp20
 WITH_ARGON_TEST=1 scripts/exp20-p2-host-run.sh build
-scripts/exp20-p2-host-run.sh junit at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest at.heinz.deviceai.research.exp20.BoundedCtrnnTest at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest at.heinz.deviceai.research.exp20.p2.P2InfraTest at.heinz.deviceai.research.exp20.p2.P2SafetyAuditTest   # erwartet 40/40
+scripts/exp20-p2-host-run.sh junit at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest at.heinz.deviceai.research.exp20.BoundedCtrnnTest at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest at.heinz.deviceai.research.exp20.p2.P2InfraTest at.heinz.deviceai.research.exp20.p2.P2SafetyAuditTest at.heinz.deviceai.research.exp20.p3.P4MathTest   # erwartet 42/42
 node --input-type=module -e "import('./.github/continuum/cre-parity.mjs').then(m=>m.prepare('/tmp/cre1'))"   # CRE1-Parity-Checkpoint, SHA-256 2290194d…0db6
 ```
 
