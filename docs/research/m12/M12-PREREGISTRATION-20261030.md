@@ -28,3 +28,9 @@ Labels entstehen per Konstruktion (bekannter eingesetzter Fehler oder bekannte t
 **Kriterium verfehlt** (≤ 2/30 Fehlalarme). Alle 5 Fehlalarme betreffen „umgestellte Reihenfolge“ (z. B. „Nach Dornbirn fliegt Tobias am 6. Oktober.“).
 **Ursache:** Die neue Teilsatz-Trennung behandelt den Ordinalpunkt „6.“ als Satzende. Ort und Person landen dadurch in verschiedenen Teilsätzen, und die Attributbindung schlägt fälschlich an. Im DEV-Satz stand der Ort nie hinter einem Datum, deshalb blieb der Fehler dort unsichtbar.
 **Konsequenz:** v2 ist **nicht** validiert. Die Korrektur wird gegen einen **neuen, vor der Korrektur versiegelten** Satz HOLDOUT2 geprüft. HOLDOUT1 wird nicht erneut für eine Erfolgsaussage verwendet.
+
+## HOLDOUT2 (versiegelt vor der Korrektur)
+
+**Siegel:** `30d78cab1a270f62179fd3aa0896064c9428f226039f3a6ea90469aa8e345d25` (80 Fälle, neue Vorlagen und Füllwörter, Datumsangaben an wechselnden Stellen).
+Messung **vor** der Korrektur: v1 28/50 erkannt, 0/30 Fehlalarme · v2 (0fb1a510) 48/50 erkannt, **5/30 Fehlalarme** (alle „Pronomen-Antwort“, dieselbe Ordinalpunkt-Ursache).
+Die einzige geplante Korrektur ist der Ordinalpunkt in der Teilsatz- und Satztrennung. Kriterium unverändert: ≤ 2/30 Fehlalarme bei mehr erkannten Fehlern als v1. HOLDOUT2 läuft danach genau einmal.

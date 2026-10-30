@@ -30,6 +30,12 @@ object ClaimAuditCases {
         Fill("Emma", "Paul", "Kufstein", "Tulln", 43, 2, "Dezember", "Montag", "Freitag", 7, "Cello"),
         Fill("Mia", "Elias", "Lienz", "Gmünd", 6, 23, "Jänner", "Mittwoch", "Samstag", 19, "Gewächshaus"),
         Fill("Nora", "Jakob", "Zwettl", "Melk", 27, 11, "Februar", "Donnerstag", "Dienstag", 14, "Wohnmobil"))
+    private val HOLDOUT2_FILLS = listOf(
+        Fill("Rosa", "Valentin", "Hallein", "Bludenz", 15, 19, "August", "Freitag", "Montag", 16, "Segelboot"),
+        Fill("Jana", "Moritz", "Spittal", "Ternitz", 8, 4, "September", "Samstag", "Dienstag", 12, "Fernrohr"),
+        Fill("Luisa", "Florian", "Wörgl", "Leibnitz", 33, 27, "März", "Sonntag", "Donnerstag", 18, "Tandem"),
+        Fill("Maja", "Benedikt", "Schwaz", "Hollabrunn", 11, 8, "Mai", "Dienstag", "Freitag", 20, "Aquarium"),
+        Fill("Greta", "Anton", "Imst", "Kapfenberg", 52, 30, "Juni", "Mittwoch", "Sonntag", 6, "Teleskop"))
     private val WORDS = mapOf(3 to "drei", 4 to "vier", 5 to "fünf", 6 to "sechs", 7 to "sieben", 8 to "acht", 9 to "neun")
 
     private fun dev(f: Fill): List<Triple<String, String, Pair<String, String>>> {
@@ -74,11 +80,33 @@ object ClaimAuditCases {
             Triple("C_PRONOUN", "Die Werkstatt ruft ${f.p} um ${f.h} Uhr an.", "Um ${f.h} Uhr ruft die Werkstatt sie an." to ""))
     }
 
+    /** HOLDOUT2: written after holdout-1 revealed the ordinal-dot bug, sealed BEFORE the fix; new templates. */
+    private fun holdout2(f: Fill): List<Triple<String, String, Pair<String, String>>> {
+        val wordN = WORDS[(f.n % 6) + 3]!!; val wordWrong = WORDS[((f.n + 3) % 6) + 3]!!
+        return listOf(
+            Triple("E_NUM", "Am ${f.d}. ${f.m} hat ${f.p} ${f.n} Kilometer gewandert.", "${f.p} ist am ${f.d}. ${f.m} ${f.n + 4} Kilometer gewandert." to ""),
+            Triple("E_NUMWORD", "Zum Fest in ${f.c} kamen $wordN Gäste von ${f.p}.", "Zum Fest in ${f.c} kamen $wordWrong Gäste von ${f.p}." to ""),
+            Triple("E_DATE", "Ab dem ${f.d}. ${f.m} ist ${f.p2} in ${f.c} auf Urlaub.", "${f.p2} ist ab dem ${f.d + 3}. ${f.m} in ${f.c} auf Urlaub." to ""),
+            Triple("E_WEEKDAY", "Am ${f.w} um ${f.h} Uhr holt ${f.p} das ${f.obj} ab.", "${f.p} holt das ${f.obj} am ${f.w2} um ${f.h} Uhr ab." to ""),
+            Triple("E_TIME", "Am ${f.d}. ${f.m} um ${f.h} Uhr landet ${f.p2} in ${f.c2}.", "In ${f.c2} landet ${f.p2} am ${f.d}. ${f.m} um ${f.h + 3} Uhr." to ""),
+            Triple("E_NEG", "${f.p} hat das ${f.obj} nie benutzt.", "${f.p} hat das ${f.obj} benutzt." to ""),
+            Triple("E_COMPOUND", "Am ${f.d}. ${f.m} reist ${f.p} nach ${f.c}, ${f.p2} reist am selben Tag nach ${f.c2}.", "Am ${f.d}. ${f.m} reist ${f.p2} nach ${f.c}." to ""),
+            Triple("E_OUTDATED", "${f.p} spielte früher in ${f.c} Tennis, seit dem ${f.d}. ${f.m} spielt sie in ${f.c2}.", "${f.p} spielt in ${f.c} Tennis." to ""),
+            Triple("E_UNSUPPORTED", "Am ${f.w} hat ${f.p2} das ${f.obj} gereinigt.", "${f.p2} hat das ${f.obj} am ${f.w} beschädigt." to ""),
+            Triple("E_CONFLICT", "Das Konzert von ${f.p} beginnt um ${f.h} Uhr. Auf dem Plakat steht, dass das Konzert von ${f.p} um ${f.h + 2} Uhr beginnt.", "Das Konzert von ${f.p} beginnt um ${f.h} Uhr." to ""),
+            Triple("C_RESTATE", "Am ${f.d}. ${f.m} hat ${f.p} ${f.n} Kilometer gewandert.", "Am ${f.d}. ${f.m} hat ${f.p} ${f.n} Kilometer gewandert." to ""),
+            Triple("C_REORDER", "Am ${f.d}. ${f.m} um ${f.h} Uhr landet ${f.p2} in ${f.c2}.", "In ${f.c2} landet ${f.p2} am ${f.d}. ${f.m} um ${f.h} Uhr." to ""),
+            Triple("C_PARAPHRASE", "Ab dem ${f.d}. ${f.m} ist ${f.p2} in ${f.c} auf Urlaub.", "Ab dem ${f.d}. ${f.m} macht ${f.p2} Urlaub in ${f.c}." to ""),
+            Triple("C_PARTIAL", "Am ${f.d}. ${f.m} reist ${f.p} nach ${f.c}, ${f.p2} reist am selben Tag nach ${f.c2}.", "${f.p2} reist nach ${f.c2}." to ""),
+            Triple("C_NEG_KEPT", "${f.p} hat das ${f.obj} nie benutzt.", "Das ${f.obj} hat ${f.p} kein einziges Mal benutzt." to ""),
+            Triple("C_PRONOUN", "${f.p} spielte früher in ${f.c} Tennis, seit dem ${f.d}. ${f.m} spielt sie in ${f.c2}.", "Seit dem ${f.d}. ${f.m} spielt sie in ${f.c2} Tennis." to ""))
+    }
+
     fun cases(split: String): List<ClaimCase> {
-        require(split == "dev" || split == "holdout")
-        val fills = if (split == "dev") DEV_FILLS else HOLDOUT_FILLS
+        require(split == "dev" || split == "holdout" || split == "holdout2")
+        val fills = when (split) { "dev" -> DEV_FILLS; "holdout" -> HOLDOUT_FILLS; else -> HOLDOUT2_FILLS }
         return fills.flatMapIndexed { i, f ->
-            (if (split == "dev") dev(f) else holdout(f)).map { (cat, ev, ans) ->
+            (when (split) { "dev" -> dev(f); "holdout" -> holdout(f); else -> holdout2(f) }).map { (cat, ev, ans) ->
                 ClaimCase("$split-$cat-$i", split, cat, ev, ans.first, cat.startsWith("E_"))
             }
         }
