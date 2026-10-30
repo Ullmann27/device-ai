@@ -1,3 +1,5 @@
+> **Weiterarbeit (Opus 5.5, 30.10.2026):** EWM-Ersetzungsfix v2 (Patchkandidat) auf diesem Branch: `docs/handoff/WEITERARBEIT-EWM-20261030.md`; Gesamtplan auf `claude/continuum-jarvis-exp20-p2-kxrxy2`: `docs/handoff/OPUS-WEITERARBEIT-20261030.md`.
+
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
 ## AKTUELL 30.10.2026 (spät): M5-Stand – zuerst lesen
