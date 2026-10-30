@@ -78,6 +78,8 @@ test('one HTTPS request sends only immutable synthetic prompt, validates respons
    assert.equal(body.messages[1].content,task.prompt);
    assert.equal(body.messages[1].content.includes(KEY),false);
    assert.equal(body.stream,false);
+   assert.equal(body.chat_template_kwargs.enable_thinking,false);
+   assert.equal(body.temperature,0);
    return stream(packet());
   }});
  assert.equal(calls,1);
@@ -100,6 +102,11 @@ test('wrong model, malformed model output and HTTP failure stop without fake suc
   fetchImpl:async()=>stream(bad)}),/NVIDIA_PROPOSAL_FORMAT_INVALID/);
  await assert.rejects(runNvidiaPublicCodingLab({apiKey:KEY,
   fetchImpl:async()=>new Response('quota reached',{status:429})}),/NVIDIA_ENDPOINT_UNAVAILABLE_HTTP_429/);
+});
+test('truncated NVIDIA answer cannot count as a successful repair',async()=>{
+ const p=packet();p.choices[0].finish_reason='length';
+ await assert.rejects(runNvidiaPublicCodingLab({apiKey:KEY,
+  fetchImpl:async()=>stream(p)}),/NVIDIA_RESPONSE_TRUNCATED/);
 });
 test('oversized provider response and improper timeout are rejected',async()=>{
  await assert.rejects(runNvidiaPublicCodingLab({apiKey:KEY,
