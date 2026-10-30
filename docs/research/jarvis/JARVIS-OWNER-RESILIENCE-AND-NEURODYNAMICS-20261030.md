@@ -10,7 +10,7 @@ Ein persönlicher, langlebiger, möglichst lokal arbeitender JARVIS-Begleiter mi
 
 **EXP-16 · Geräteübergreifender Zustand & Datenschutz.**
 - Forschungsoption: authentisierte Ende-zu-Ende-Verschlüsselung, Gerätebindung, signierte Zustandsversionen, Merkle-/Hash-Nachweise, geprüfte Backups, Replay-Schutz, Ablauf/Widerruf.
-- Optional nach messbarem Bedarf: Shamir Threshold Secret Sharing als Wiederherstellungsmechanismus, ZKP für **exakt definierte** Prüfbehauptungen. ZK-SNARKs replizieren weder Fakten noch beweisen sie die Wahrheit eines Weltmodells; synchronisierter Inhalt benötigt weiterhin einen autorisierten Datentransfer.
+- Optional nach messbarem Bedarf: Shamir Threshold Secret Sharing als Wiederherstellungsmechanismus, Zero-Knowledge-Proofs (ZKP) für **exakt definierte** Prüfbehauptungen. ZK-SNARKs replizieren weder Fakten noch beweisen sie die Wahrheit eines Weltmodells; synchronisierter Inhalt benötigt weiterhin einen autorisierten Datentransfer.
 - **Nur autorisierte Backups**; nie heimliche Selbstvervielfältigung oder Umgehung von Stop-, Lösch-, Widerrufs- oder Shutdown-Befehlen. Bei Entzug aller Berechtigungen Ende aller Aktionen. Wiederherstellung nach Neustart nur auf ausdrücklichen Besitzerwunsch.
 
 **EXP-17 · Evolutionsbasierte Software-Reparatur.**
