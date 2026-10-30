@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateLedger,decideReservation,reserveGithubBudget,executeReservedResearch,
- LEDGER_BRANCH,LEDGER_PATH,MAX_PER_UTC_DAY} from './continuum-nvidia-scheduled.mjs';
+ LEDGER_BRANCH,LEDGER_PATH,MAX_PER_UTC_DAY,claimGithubExecution} from './continuum-nvidia-scheduled.mjs';
 const blank=()=>({schema:'continuum-nvidia-schedule-ledger',version:1,reservations:[]});
 const at=s=>Date.parse('2026-10-30T'+s+'Z');
 const r=(hh,id,i)=>({runId:id,atMillis:at(hh),utcDate:'2026-10-30',sequence:i});
@@ -77,4 +77,41 @@ test('unreserved call input invalid without contacting a model',async()=>{
    callReview:async()=>{calls++}}));
  }
  assert.equal(calls,0);
+});
+test('NVIDIA execution claim is durable, single-use and GitHub-SHA guarded',async()=>{
+ let ledger=blank(),sha='a'.repeat(40),puts=0;
+ ledger.reservations.push(r('00:07:00','110',0));
+ const fetchImpl=async(_url,opts)=>{
+  if(opts.method==='GET')return json(200,{sha,encoding:'base64',
+   content:Buffer.from(JSON.stringify(ledger)).toString('base64')});
+  puts++;
+  const b=JSON.parse(opts.body);
+  assert.equal(b.sha,sha);
+  assert.equal(b.branch,LEDGER_BRANCH);
+  ledger=JSON.parse(Buffer.from(b.content,'base64').toString('utf8'));
+  sha='b'.repeat(40);
+  return json(200,{commit:{sha}});
+ };
+ const args={repoFull:'Ullmann27/device-ai',token,runId:'110',sequence:0,
+  nowMs:at('00:08:00'),fetchImpl};
+ await assert.rejects(claimGithubExecution({...args,runId:'999'}),/RESERVATION_NOT_FOUND/);
+ assert.equal(puts,0);
+ const first=await claimGithubExecution(args);
+ assert.equal(first.claimed,true);
+ assert.equal(ledger.reservations[0].claimedAtMillis,at('00:08:00'));
+ assert.equal(puts,1);
+ await assert.rejects(claimGithubExecution(args),/RESERVATION_ALREADY_CLAIMED/);
+ assert.equal(puts,1);
+});
+test('GitHub SHA conflict prevents remote provider invocation',async()=>{
+ let modelCalls=0;
+ const fetchImpl=async(_url,opts)=>opts.method==='GET'?
+  json(200,{sha:'a'.repeat(40),encoding:'base64',
+   content:Buffer.from(JSON.stringify({...blank(),reservations:[r('00:07:00','110',0)]})).toString('base64')}):
+  json(409,{message:'conflict'});
+ await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
+  outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
+  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_HTTP_409/);
+ assert.equal(modelCalls,0);
 });
