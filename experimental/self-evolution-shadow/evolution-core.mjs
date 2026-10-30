@@ -43,10 +43,13 @@ export function mutateTypedPolicy(task, faultId) {
 
 /** Only test evidence bound to exactly one candidate is scored; absence is not a negative label. */
 export function classifyIndependentEvidence(task, candidate, proof) {
-  if (!proof || proof.evaluator !== 'independent' ||
+  if (!task || !Array.isArray(task.blind) || task.blind.length < 1 ||
+      task.blind.length > 100_000 || !proof || proof.evaluator !== 'independent' ||
       proof.taskHash !== hex(task) || proof.candidateHash !== hex(candidate) ||
       !SHA256.test(proof.testSetHash ?? '') || proof.testSetHash !== hex(task.blind) ||
       !boundedInt(proof.executedTests, 100_000) ||
+      proof.executedTests !== task.blind.length ||
+      (proof.skippedTests !== undefined && proof.skippedTests !== 0) ||
       !boundedInt(proof.failedTests, 100_000) || proof.failedTests > proof.executedTests ||
       proof.runnerError === true || proof.timedOut === true || proof.infrastructureAbort === true) {
     return Object.freeze({ classification: 'NEUTRAL', reason: 'MISSING_OR_UNTRUSTED_TEST_EVIDENCE' });
@@ -80,7 +83,8 @@ export function summarizeExistingLedger(ledger) {
     throw Error('INVALID_REPAIR_LEDGER');
   const observations = [];
   for (const attempt of ledger.attempts) {
-    if (!attempt || !STRATEGY.test((attempt.strategy ?? '').toLowerCase().replaceAll('_', '-').slice(0, 64))) continue;
+    if (!attempt || typeof attempt.strategy !== 'string' ||
+        !STRATEGY.test(attempt.strategy.toLowerCase().replaceAll('_', '-').slice(0, 64))) continue;
     const explicitRed = (Array.isArray(attempt.tests) ? attempt.tests : []).some(t => t && t.passed === false &&
       t.evidenceComplete !== false && !t.signal && !t.error && !t.timedOut &&
       [t.total, t.executed, t.failed, t.skipped].every(Number.isSafeInteger) &&
