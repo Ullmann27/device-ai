@@ -29,10 +29,11 @@ object M5BlindGateSelfTest {
             check((0..7).all { i -> positions.count { it == i } == 16 })
         }
         checkCase("VAL-gate-fails-above-threshold") {
-            val ok = M5Cre1BlindGate.Summary(M5Data.Split.VAL, 128, 22, 25, 0)
+            val ok = M5Cre1BlindGate.Summary(M5Data.Split.VAL, 128, 22, 22, 0)
             val fail = ok.copy(strictHits = 23)
             check(M5Cre1BlindGate.gatePassed(ok))
             check(!M5Cre1BlindGate.gatePassed(fail))
+            check(!M5Cre1BlindGate.gatePassed(ok.copy(forcedHits = 23)))
             check(!M5Cre1BlindGate.gatePassed(ok.copy(split = M5Data.Split.DEV)))
         }
         checkCase("query-text-not-given-to-embedder") {
