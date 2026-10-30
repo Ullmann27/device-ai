@@ -13,7 +13,7 @@ const fill=(dir)=>{
  return {seal,sha};
 };
 test('reads complete regular outputs without modifying them',()=>{
- const dir=root();try{const {seal,sha}=fill(dir);assert.equal(checkRecordedDirectory(dir,sha,seal).valid,true)}finally{fs.rmSync(dir,{recursive:true,force:true})}
+ const dir=root();try{const {seal,sha}=fill(dir);const result=checkRecordedDirectory(dir,sha,seal);assert.equal(result.valid,true);assert.equal(result.moduleReplication.moduleReplicated,0);assert.equal(result.moduleReplication.trainingAuthorized,false)}finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
 test('refuses an evidence symlink, not following outside file content',()=>{
  const dir=root();try{const {seal,sha}=fill(dir);fs.renameSync(path.join(dir,'summary.json'),path.join(dir,'real.json'));fs.symlinkSync(path.join(dir,'real.json'),path.join(dir,'summary.json'));
