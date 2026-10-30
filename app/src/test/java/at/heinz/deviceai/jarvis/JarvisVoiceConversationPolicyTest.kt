@@ -7,7 +7,7 @@ import org.junit.Test
 class JarvisVoiceConversationPolicyTest {
     @Test fun explicitKnowledgeQuestionsReachToolFreeDialogue() {
         listOf(
-            "Hallo", "Hey Jarvis, wie geht es dir?", "Was ist das?",
+            "Hallo", "Hallo Jarvis", "Hey Jarvis, wie geht es dir?", "Was ist das?",
             "Und wie funktioniert das?", "Jarvis, warum ist das so?",
             "Erkläre mir Keratokonus", "Erzähl mir von Kotlin",
             "Wann wurde Android entwickelt?", "Danke"
@@ -28,7 +28,7 @@ class JarvisVoiceConversationPolicyTest {
             "Wo ist mein Konto?", "Sende das an Slack", "Starte die Kamera",
             "Was weißt du über mein Bankkonto?", "Wie komme ich ins Internet?",
             "Sperre mein Schloss", "Freigabe erteilen",
-            "Was ist ein API-Key?", "Jarvis, installiere Software"
+            "Was ist ein API-Key?", "Jarvis, installiere Software", "Was ist meine Adresse?", "Wie lautet meine IBAN?", "Was ist meine Telefonnummer?"
         ).forEach { text ->
             assertEquals(text, JarvisVoiceRouting.MANUAL_REVIEW,
                 JarvisVoiceConversationPolicy.evaluate(text).routing)
