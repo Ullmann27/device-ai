@@ -15,6 +15,11 @@ object M5DataSelfTest {
             for (split in M5Data.Split.values()) for (kind in M5Data.Kind.values())
                 check(rows.count { it.split == split && it.kind == kind && it.role == "QUERY" } == 64)
         }
+        pass("DEV-VAL-memories-disjoint") {
+            val dev = rows.filter { it.split == M5Data.Split.DEV && it.role != "QUERY" }.map { it.text }.toSet()
+            val valid = rows.filter { it.split == M5Data.Split.VAL && it.role != "QUERY" }.map { it.text }.toSet()
+            check((dev intersect valid).isEmpty())
+        }
         pass("no-P3-phrases") {
             check(rows.none { it.text.contains("zum Wochenausklang") || it.text.contains("unten im Haus") })
         }
