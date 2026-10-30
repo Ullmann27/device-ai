@@ -31,7 +31,8 @@ export const AGENT_TOOLS=Object.freeze([
   {name:'edit_file',args:{path:'one of the allowed files',old_text:'exact text that occurs once',new_text:'replacement'},about:'Replace exactly one occurrence. Re-read the file when unsure.'},
   {name:'check',args:{},about:'Syntax check of the edited JavaScript files and the size of the current change.'},
   {name:'run_tests',args:{},about:'Run the task test chain on your edits, when the owner enabled it for this run.'},
-  {name:'finish',args:{plan:'1-8 short steps you took',hypothesis:'why the change satisfies the goal'},about:'Submit the edits. The fixed test chain decides.'}
+  {name:'finish',args:{plan:'1-8 short steps you took',hypothesis:'why the change satisfies the goal'},about:'Submit the edits. The fixed test chain decides.'},
+  {name:'propose_scope',args:{files:'1-3 source files to change',acceptance:'1-8 checkable criteria',kind:'BUGFIX|FEATURE|REFACTOR|TEST'},about:'Survey only: ask the owner to grant these files.'}
 ]);
 const TOOL_NAMES=new Set(AGENT_TOOLS.map(t=>t.name));
 
@@ -181,6 +182,14 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
   const provider=({wt,base,deadline,diagnostics=[],history=[]})=>{
     run++;
     if(base!==spec.sourceCommit)fail('CODING_TASK_BINDING_MISMATCH');
+    return agentRun({wt,base,deadline,diagnostics,history,spec,brain,runTests,L,onStep,record,now});
+  };
+  return Object.assign(provider,{taskSpec:spec,allowedPaths:spec.allowedPaths});
+}
+
+/** One bounded loop over the tools of one task commit; spec=null is the read-only scouting mode. */
+function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTests=null,L,onStep=null,record=()=>{},now=Date.now,
+  intro=null,scout=false}){
     const tracked=(git(wt,['ls-tree','-r','--name-only','-z',base],{timeoutMs:30000})??fail('CODING_CONTEXT_DEADLINE')).split('\0').filter(Boolean);
     const trackedSet=new Set(tracked);
     const baseText=new Map(),overlay=new Map(),ranges=[],observations=[],steps=[];
@@ -225,6 +234,7 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
         return `${file} lines ${from}-${to} of ${lines.length}${overlay.has(file)?' (with your edits)':''}:\n`+clip(body,L.maxObservationChars);
       },
       edit_file:({path:file,old_text,new_text})=>{
+        if(scout)return 'Edit refused: this is a read-only survey; use propose_scope.';
         if(!spec.allowedPaths.includes(file)||!isCodingPath(file))return `Edit refused: only ${spec.allowedPaths.join(', ')} may change.`;
         if(typeof old_text!=='string'||!old_text||typeof new_text!=='string'||old_text===new_text)return 'Edit refused: old_text must be non-empty and differ from new_text.';
         const text=current(file);
@@ -262,7 +272,7 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
         return clip(`${result.blocked?'NOT RUN':result.passed?'ALL PASSED':'FAILED'}\n${result.summary??''}`,L.maxObservationChars);
       }
     };
-    const intro=[
+    intro??=[
       `Task ${spec.id} (${spec.kind}) at commit ${base.slice(0,12)}: ${spec.goal}`,
       'Acceptance criteria:\n'+spec.acceptance.map(a=>'- '+a).join('\n'),
       `Allowed files (only these may change): ${spec.allowedPaths.join(', ')}. Test chain: ${spec.chain}.`,
@@ -270,17 +280,35 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
       history.length?'Earlier attempts on this task (all failed or were rejected):\n'+history.slice(-3).map(h=>`- ${h.outcome}: ${String(h.diagnostic??'').slice(0,400)}`).join('\n'):''
     ].filter(Boolean).join('\n\n');
     const messages=[{role:'user',content:intro}];
+    const toolNames=scout?new Set(['list_files','search','read_file','propose_scope']):TOOL_NAMES;
     for(let step=1;step<=L.maxSteps;step++){
       if(now()>=deadline)fail('CODING_DEADLINE_EXHAUSTED');
       brainCalls++;
       const reply=brain({system:AGENT_SYSTEM_PROMPT,messages:structuredClone(messages),tools:AGENT_TOOLS,step,maxSteps:L.maxSteps});
       let action=reply;
       if(typeof reply==='string'){try{action=JSON.parse(reply.trim().replace(/^```(?:json)?\s*|\s*```$/g,''));}catch{action=null;}}
-      const valid=action&&typeof action==='object'&&TOOL_NAMES.has(action.tool)&&action.args&&typeof action.args==='object'&&!Array.isArray(action.args);
+      const valid=action&&typeof action==='object'&&toolNames.has(action.tool)&&action.args&&typeof action.args==='object'&&!Array.isArray(action.args);
       let observation;
-      if(!valid){
+      const known=!valid&&action&&typeof action==='object'&&TOOL_NAMES.has(action.tool);
+      const named=valid||known?action.tool:'INVALID';
+      if(known){
+        observation=`${action.tool} is not available in this phase${scout?' (read-only survey): use list_files, search, read_file and propose_scope':''}.`;
+      }else if(!valid){
         if(++invalid>=L.maxInvalidReplies)fail('CODING_RESPONSE_INVALID');
         observation='Invalid reply. Answer with one JSON object {"thought":"...","tool":"<name>","args":{...}}.';
+      }else if(action.tool==='propose_scope'){
+        invalid=0;
+        const files=Array.isArray(action.args.files)?[...new Set(action.args.files)]:[];
+        const acceptance=Array.isArray(action.args.acceptance)?action.args.acceptance.filter(v=>typeof v==='string'&&v.trim()).map(v=>v.slice(0,300)).slice(0,8):[];
+        const kind=['BUGFIX','FEATURE','REFACTOR','TEST'].includes(action.args.kind)?action.args.kind:'BUGFIX';
+        const bad=files.filter(f=>!isCodingPath(f)||!trackedSet.has(f));
+        if(files.length>=1&&files.length<=3&&!bad.length&&acceptance.length&&files.every(f=>f.endsWith('.kt'))===files.some(f=>f.endsWith('.kt'))){
+          record({schema:'continuum-coding-agent-step',version:1,brainKind:brain.kind??'UNKNOWN',step,tool:'propose_scope',files});
+          return {schema:'continuum-coding-agent-scope',version:1,brainKind:brain.kind??'UNKNOWN',commit:base,files,acceptance,kind,
+            chain:files[0].endsWith('.kt')?'android':'node',steps:step,observationsSha256:sha256(observations.join('\0'))};
+        }
+        observation='Scope refused: 1-3 tracked source files that the worker may change (no tests, agent control files or secrets; '+
+          'not .kt mixed with .js), plus 1-8 acceptance criteria.'+(bad.length?' Not allowed: '+bad.join(', '):'');
       }else if(action.tool==='finish'){
         invalid=0;
         const patches=[],problems=[];
@@ -318,16 +346,14 @@ export function createAgentCandidateProvider({task,brain,runTests=null,limits={}
       }
       observation=clip(String(observation),L.maxObservationChars);
       observations.push(observation);
-      steps.push({step,tool:valid?action.tool:'INVALID',observationSha256:sha256(observation),observationChars:observation.length});
-      onStep?.({step,tool:valid?action.tool:'INVALID',observation});
-      record({schema:'continuum-coding-agent-step',version:1,taskId:spec.id,brainKind:brain.kind??'UNKNOWN',step,tool:valid?action.tool:'INVALID',
+      steps.push({step,tool:named,observationSha256:sha256(observation),observationChars:observation.length});
+      onStep?.({step,tool:named,observation});
+      record({schema:'continuum-coding-agent-step',version:1,taskId:spec?.id??null,brainKind:brain.kind??'UNKNOWN',step,tool:named,
         args:valid?JSON.stringify(action.args).slice(0,2000):null,observation:observation.slice(0,2000),observationSha256:sha256(observation)});
       messages.push({role:'assistant',content:typeof reply==='string'?reply.slice(0,4000):JSON.stringify(action).slice(0,4000)},
-        {role:'user',content:`OBSERVATION (${valid?action.tool:'error'}), step ${step}/${L.maxSteps}:\n${observation}`});
+        {role:'user',content:`OBSERVATION (${named}), step ${step}/${L.maxSteps}:\n${observation}`});
     }
     fail('CODING_MODEL_BUDGET_EXHAUSTED');
-  };
-  return Object.assign(provider,{taskSpec:spec,allowedPaths:spec.allowedPaths});
 }
 
 /**
@@ -341,4 +367,18 @@ export function createAgentProviderFromEnv({task,env=process.env,evidenceDir=nul
   const brain=createChatCompletionsBrain({endpoint:env.CONTINUUM_LOCAL_BRAIN_ENDPOINT||undefined,
     model:env.CONTINUUM_LOCAL_BRAIN_MODEL||'local',apiKey});
   return createAgentCandidateProvider({task,brain,evidenceDir});
+}
+
+/**
+ * Read-only survey for a plain owner request ("Behebe ...") before any grant: the brain lists, searches and reads, then
+ * proposes 1-3 changeable files and acceptance criteria. The proposal grants nothing; the owner confirms it first.
+ */
+export function scoutRequest({wt,base,request,brain,limits={},deadline=Date.now()+600000,onStep=null,evidenceDir=null}){
+  if(typeof request!=='string'||!request.trim()||request.length>600)fail('CODING_TASK_INVALID');
+  const record=entry=>{if(!evidenceDir)return;fs.mkdirSync(evidenceDir,{recursive:true,mode:0o700});
+    fs.appendFileSync(path.join(evidenceDir,'agent-scout.jsonl'),JSON.stringify(entry)+'\n',{mode:0o600});};
+  const intro=`Owner request: ${request.trim()}\n\nSurvey the repository at commit ${base.slice(0,12)} with list_files, search and read_file. `+
+    'Find the code that must change and how it is tested, then call propose_scope with the files to change and checkable acceptance criteria. '+
+    'You cannot edit anything in this phase.';
+  return agentRun({wt,base,deadline,spec:null,brain,L:{...AGENT_LIMITS,...limits},onStep,record,intro,scout:true});
 }

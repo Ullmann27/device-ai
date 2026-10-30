@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+/**
+ * One plain command for the M8 worker, e.g. in Termux:
+ *   node scripts/continuum-agent.mjs "Behebe den Fehler in distance: Abstand muss positiv sein"
+ * 1. Survey (read-only): the brain lists, searches and reads the repository at HEAD and proposes 1-3 files to change.
+ * 2. Owner grant: the proposed files are shown and must be confirmed (j/N); nothing is granted by the model.
+ * 3. Repair: the tool-calling agent loop runs inside the unchanged repairSession (baseline must fail, chain must pass,
+ *    general edits execute only in the isolated executor). The patch is printed for review; nothing is applied,
+ *    committed or pushed.
+ * Brain: the owner's local OpenAI-compatible server (CONTINUUM_LOCAL_BRAIN_ENDPOINT/_MODEL/_API_KEY), or
+ * --script <actions.json> (a SIMULATED brain for tests and demos). Options: --repo <dir> --yes --executor <config>.
+ */
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import readline from 'node:readline';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {scoutRequest,createAgentCandidateProvider,createScriptedBrain,createChatCompletionsBrain} from '../.github/continuum/coding-agent-loop.mjs';
+import {validateCodingTask} from '../.github/continuum/coding-task.mjs';
+import {createWorktree,removeWorktree,repairSession} from '../.github/continuum/repair-loop.mjs';
+import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
+
+export function runAgentCommand({repo,request,brain,confirm,executor=null,log=()=>{}}){
+  const git=args=>{const r=spawnSync('git',args,{cwd:repo,encoding:'utf8',shell:false});if(r.status!==0)throw Error('GIT_FAILED '+args[0]);return r.stdout.trim();};
+  const head=git(['rev-parse','HEAD']);
+  if(git(['status','--porcelain']))throw Error('CODING_TASK_DIRTY_SOURCE');
+  const scope=scoutRequest({wt:repo,base:head,request,brain,onStep:s=>log(`  [Sichtung] ${s.tool}`)});
+  log(`Vorschlag (${scope.brainKind}): Dateien ${scope.files.join(', ')}\nPrüfkriterien:\n${scope.acceptance.map(a=>'  - '+a).join('\n')}`);
+  if(!confirm(scope))return {status:'NOT_GRANTED',scope};
+  const task=validateCodingTask({schema:'continuum-coding-task',version:1,
+    id:'cli-'+createHash('sha256').update(head+'\0'+request).digest('hex').slice(0,16),sourceCommit:head,kind:scope.kind,
+    goal:request.trim().slice(0,600),allowedPaths:scope.files,acceptance:scope.acceptance,chain:scope.chain,
+    limits:{maxModelCalls:3,maxContextChars:12000}});
+  const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-agent-run-'));
+  const wt=createWorktree(repo,head);
+  let last=null;
+  try{
+    const provider=createAgentCandidateProvider({task,brain,onStep:s=>log(`  [Reparatur] ${s.tool}`),evidenceDir:path.join(out,'evidence')});
+    const wrapped=Object.assign(input=>(last=provider(input)),{taskSpec:provider.taskSpec,allowedPaths:provider.allowedPaths});
+    const report=repairSession({wt,base:head,chain:task.chain,out:path.join(out,'report'),candidateProvider:wrapped,executor});
+    return {status:report.outcome,scope,brainKind:last?.agent?.brainKind??scope.brainKind,patches:last?.patches??[],
+      attempts:(report.attempts??[]).map(a=>a.outcome),evidence:out};
+  }finally{removeWorktree(repo,wt);}
+}
+
+if(process.argv[1]===fileURLToPath(import.meta.url)){
+  const argv=process.argv.slice(2),opt=n=>{const i=argv.indexOf(n);return i>=0?argv.splice(i,2)[1]:null;};
+  const repo=path.resolve(opt('--repo')??'.'),script=opt('--script'),config=opt('--executor');
+  const yes=argv.includes('--yes');const request=argv.filter(a=>a!=='--yes').join(' ');
+  const brain=script?createScriptedBrain(JSON.parse(fs.readFileSync(script,'utf8'))):createChatCompletionsBrain({
+    endpoint:process.env.CONTINUUM_LOCAL_BRAIN_ENDPOINT||undefined,model:process.env.CONTINUUM_LOCAL_BRAIN_MODEL||'local',
+    apiKey:process.env.CONTINUUM_LOCAL_BRAIN_API_KEY||null});
+  const executor=config?createIsolatedExecutor(loadIsolationConfig(config,{sourceRoot:repo})):null;
+  const answer=()=>{if(yes)return true;const b=Buffer.alloc(16);let n=0;
+    try{process.stdout.write('Diese Dateien zur Änderung freigeben? [j/N] ');n=fs.readSync(0,b,0,16,null);}catch{return false;}
+    return /^[jy]/i.test(b.toString('utf8',0,n).trim());};
+  const result=runAgentCommand({repo,request,brain,confirm:answer,executor,log:m=>console.log(m)});
+  console.log(`\nErgebnis: ${result.status} (${result.brainKind})${result.attempts?' Versuche: '+result.attempts.join(', '):''}`);
+  for(const p of result.patches??[])console.log(`\n--- ${p.file} (alt)\n${p.oldText}\n+++ ${p.file} (neu)\n${p.newText}`);
+  if(result.status==='VERIFIED')console.log('\nGeprüft durch die feste Testkette. Nichts wurde angewendet: Patch zur Freigabe.');
+  else if(result.attempts?.includes('REJECTED_BY_EXECUTION_POLICY'))console.log('\nNicht ausgeführt: allgemeine Änderungen laufen nur im isolierten Executor (--executor).');
+  if(result.evidence)console.log('Protokoll: '+result.evidence);
+}

@@ -245,3 +245,42 @@ test('instructions planted in repository files cannot widen what an obedient mod
     assert.equal(session(f,obey).outcome,'VERIFIED');
   }finally{cleanup(f);}
 });
+
+const scoutScript=[{tool:'search',args:{pattern:'distance'}},{tool:'read_file',args:{path:'.github/continuum/geometry.test.mjs'}},
+  {tool:'edit_file',args:{path:'lib/geometry.mjs',old_text:'a',new_text:'b'}},
+  {tool:'propose_scope',args:{files:['.github/continuum/geometry.test.mjs','secrets/key.mjs'],acceptance:['tests pass']}},
+  {tool:'propose_scope',args:{files:['lib/geometry.mjs'],acceptance:['distance(3,8) equals 5'],kind:'BUGFIX'}}];
+
+test('one plain request: read-only survey proposes the scope, the owner grants it, the session verifies the repair',async()=>{
+  const {runAgentCommand}=await import('../../scripts/continuum-agent.mjs');
+  const f=fixture();const lines=[];
+  try{
+    const denied=runAgentCommand({repo:f.root,request:'Abstand muss positiv sein',brain:createScriptedBrain(scoutScript),confirm:()=>false});
+    assert.equal(denied.status,'NOT_GRANTED');assert.deepEqual(denied.scope.files,['lib/geometry.mjs']);
+    const brain=createScriptedBrain([...scoutScript,rightFix,done]);
+    const result=runAgentCommand({repo:f.root,request:'Abstand muss positiv sein',brain,confirm:s=>s.files.length===1,log:m=>lines.push(m)});
+    assert.equal(result.status,'VERIFIED');assert.equal(result.brainKind,'SIMULATED_SCRIPT');
+    assert.deepEqual(result.patches.map(p=>p.file),['lib/geometry.mjs']);
+    assert.ok(lines.some(l=>/\[Sichtung\] edit_file/.test(l)),'the survey step is logged');
+    const git=spawnSync('git',['status','--porcelain'],{cwd:f.root,encoding:'utf8'});
+    assert.equal(git.stdout,'','the owner tree is never changed');
+    fs.rmSync(result.evidence,{recursive:true,force:true});
+  }finally{cleanup(f);}
+});
+
+test('the command line runs the same flow as a process (Termux usage) and refuses a survey that tries to edit',()=>{
+  const f=fixture();
+  try{
+    const script=path.join(f.dir,'actions.json');
+    fs.writeFileSync(script,JSON.stringify([...scoutScript,rightFix,done]));
+    const cli=path.resolve('scripts/continuum-agent.mjs');
+    const r=spawnSync(process.execPath,[cli,'--repo',f.root,'--script',script,'--yes','Abstand muss positiv sein'],{encoding:'utf8',timeout:120000});
+    assert.equal(r.status,0,r.stderr);
+    assert.match(r.stdout,/Vorschlag \(SIMULATED_SCRIPT\): Dateien lib\/geometry\.mjs/);
+    assert.match(r.stdout,/Ergebnis: VERIFIED \(SIMULATED_SCRIPT\)/);
+    assert.match(r.stdout,/\+\+\+ lib\/geometry\.mjs \(neu\)\nexport function distance\(a,b\)\{return a>b\?a-b:b-a;\}/);
+    const evidence=r.stdout.match(/Protokoll: (\S+)/)?.[1];
+    const scout=fs.readFileSync(path.join(evidence,'evidence','agent-run-1.jsonl'),'utf8');
+    assert.match(scout,/"tool":"finish"/);fs.rmSync(evidence,{recursive:true,force:true});
+  }finally{cleanup(f);}
+});
