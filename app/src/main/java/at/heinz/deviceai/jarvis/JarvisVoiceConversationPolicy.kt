@@ -49,3 +49,24 @@ object JarvisVoiceConversationPolicy {
         )
     }
 }
+
+/** What one recognizer result may do. Only AUTO_DIALOGUE starts a turn; DRAFT leaves editable text. */
+enum class JarvisVoiceDispatch { AUTO_DIALOGUE, DRAFT, IGNORE }
+
+object JarvisVoiceDispatchGate {
+    /**
+     * Android delivers onActivityResult immediately BEFORE onResume, so a foreground flag cleared in onPause is
+     * always false here and must not be a condition (that made every DIALOGUE_ONLY result a draft). The answer's
+     * speech is still gated on foreground later. [startedInSession] binds the result to the chat whose explicit
+     * mic tap started it; a result for another (or unknown) chat never starts a turn.
+     */
+    fun decide(
+        decision: JarvisVoiceDecision, busy: Boolean, executorShutdown: Boolean, activityAlive: Boolean,
+        startedInSession: String?, currentSession: String
+    ): JarvisVoiceDispatch = when {
+        decision.routing == JarvisVoiceRouting.IGNORE -> JarvisVoiceDispatch.IGNORE
+        decision.routing == JarvisVoiceRouting.DIALOGUE_ONLY && !busy && !executorShutdown && activityAlive &&
+            startedInSession != null && startedInSession == currentSession -> JarvisVoiceDispatch.AUTO_DIALOGUE
+        else -> JarvisVoiceDispatch.DRAFT
+    }
+}

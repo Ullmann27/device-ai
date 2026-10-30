@@ -1,0 +1,208 @@
+TAP version 13
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 1 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 13.487434
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 2 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 8.827087
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 3 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 11.056082
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 4 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.298579
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 5 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 42.48587
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 6 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.36329
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 7 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 54.105256
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 8 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 2.497283
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 9 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 0.82776
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 10 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 0.846477
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 11 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 1.072636
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 12 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 1.156516
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 13 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 1.806733
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 14 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 0.153159
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 15 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 0.452608
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 16 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 0.847465
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 17 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 0.737125
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 18 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 0.304497
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 19 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.284939
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 20 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.452869
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 21 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.725136
+  type: 'test'
+  ...
+# Subtest: coding agent has one integrated entry from Android home, no second app
+ok 22 - coding agent has one integrated entry from Android home, no second app
+  ---
+  duration_ms: 27.311281
+  type: 'test'
+  ...
+# Subtest: developer speech uses actual German Android recognizer and a unique callback
+ok 23 - developer speech uses actual German Android recognizer and a unique callback
+  ---
+  duration_ms: 2.009408
+  type: 'test'
+  ...
+# Subtest: voice text is always previewed; neither recognition nor chat command executes code
+ok 24 - voice text is always previewed; neither recognition nor chat command executes code
+  ---
+  duration_ms: 1.357731
+  type: 'test'
+  ...
+# Subtest: existing mobile builder remains opt-in, not falsely labelled an app generator
+ok 25 - existing mobile builder remains opt-in, not falsely labelled an app generator
+  ---
+  duration_ms: 0.493489
+  type: 'test'
+  ...
+# Subtest: tap-to-talk is explicit; never an always-listening background service
+ok 26 - tap-to-talk is explicit; never an always-listening background service
+  ---
+  duration_ms: 1.968377
+  type: 'test'
+  ...
+# Subtest: recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+ok 27 - recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+  ---
+  duration_ms: 5.587913
+  type: 'test'
+  ...
+# Subtest: the existing model-capable path remains available only outside voice auto-dispatch
+ok 28 - the existing model-capable path remains available only outside voice auto-dispatch
+  ---
+  duration_ms: 0.785418
+  type: 'test'
+  ...
+# Subtest: a user-started mic tap interrupts TTS and returns to Android recognizer
+ok 29 - a user-started mic tap interrupts TTS and returns to Android recognizer
+  ---
+  duration_ms: 1.230085
+  type: 'test'
+  ...
+# Subtest: policy requires manual review for device tools, memory writes and secrets
+ok 30 - policy requires manual review for device tools, memory writes and secrets
+  ---
+  duration_ms: 0.324873
+  type: 'test'
+  ...
+# Subtest: voice mode is not persisted as an owner, gateway or device permission
+ok 31 - voice mode is not persisted as an owner, gateway or device permission
+  ---
+  duration_ms: 0.518599
+  type: 'test'
+  ...
+# Subtest: the voice dispatch never depends on a flag that onPause clears and onResume sets
+ok 32 - the voice dispatch never depends on a flag that onPause clears and onResume sets
+  ---
+  duration_ms: 1.027999
+  type: 'test'
+  ...
+# Subtest: one recognizer at a time and every result is bound to the chat that started it
+ok 33 - one recognizer at a time and every result is bound to the chat that started it
+  ---
+  duration_ms: 0.887946
+  type: 'test'
+  ...
+1..33
+# tests 33
+# suites 0
+# pass 33
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 452.149523

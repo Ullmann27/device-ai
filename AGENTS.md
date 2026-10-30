@@ -15,6 +15,14 @@ Keiner dieser vier Vorteile ist ohne reale Gegenmessung bewiesen: CTRNN ist nich
 **Harte unveränderliche Grenzen:** Die bestehenden `CognitiveGenome`-Invarianten `allowSelfReplication=false`, `allowHiddenPersistence=false` und `allowShutdownEvasion=false` bewahren. Besitzer-Stop, Rechtewiderruf und Löschen gehen vor. Nur genehmigte Backups und Wiederherstellung; nie heimliche Replikation, Ausweichen um Shutdown/Sperren, kompromittierte Zugriffsrechte oder autonome Produktion-Patches. OwnerGate + ToolGate bleiben zwingend. Kein neues zweites Gehirn, kein heimliches Training/Weight-Update, kein ungeprüftes Merge nach main. CTRNN/EWC/STDP/HDC/MPS/ZKP sind Forschungsoptionen, keine nachgewiesene lokale Superintelligenz. Fold7-Sicherheit/Leistung nur aus realer Messung behaupten. **Aktuell: keine neue APK oder Fold7-Abnahme.**
 
 
+## JARVIS VOICE-1 · Blocker behoben (PR #252 auf #251, 30.10.2026)
+
+- **Blocker:** Der automatische Sprachdialog startete nie, weil `onActivityResult` pausiert läuft und das verlangte Vordergrund-Flag deshalb immer falsch war.
+- **Was geändert ist:** Das Tor ist behoben, die Sitzungsbindung ergänzt, Doppelstart und TTS-Echo sind abgesichert, und die seit #250 rote Wiring-Prüfung ist wieder grün.
+- **Belege:** Wiring 123/123, Kotlin-Hostprüfung 1316/1316. **Nicht gelaufen:** Gradle, APK, Fold7.
+- **Bericht:** [JARVIS-VOICE-1-FIX-20261030.md](docs/research/jpi1/JARVIS-VOICE-1-FIX-20261030.md). Er enthält auch die Prüfung der #249-Thermal-Korrektur.
+- **EXP-20-Pilot P1** (nur Labor): [Ergebnis](docs/research/exp20/EXP-20-P1-RESULT-20261030.md). Numerisch stabil, aber 3,5× teurer als EMA. Kein Routing- oder Fold7-Nachweis.
+
 ## JARVIS VOICE-1 · Fortschritt ab PR #250 (noch nicht auf Fold7 abgenommen)
 
 **Neue praktische Ein-Gerät-Sprachrunde:** [vollständiger Implementierungs-/Abnahmebericht](docs/research/jpi1/JARVIS-VOICE-1-IMPLEMENTATION-20261030.md) und [übernehmbare GPT-6-Übergabe](docs/research/omega/GPT6-JARVIS-VOICE1-HANDOFF-20261030.md). Der bereits bestehende Android-Recognizer kann nach explizitem Langdruck auf das Mikrofon einfache Fragen direkt in die vorhandene `runContinuumDialogue`-Pipeline leiten, ohne eigenen Gedächtniskern oder ToolGate-Freigabe. Bestehendes TextToSpeech liefert Antworten nur bei `TON AN`. Gerätebefehle und personenbezogene Geheimnisse bleiben manuell. **38/38 isolierte Kotlin-Sprachpolicy-Prüffälle bestanden; keine Android-Gradle-/Node-Gesamtprüfung, keine APK, keine Fold7-Abnahme.** Draft-PR #250 ist auf PR #247 gestapelt, nicht direkt auf PR #249. `main` nicht anfassen. Für sicheren nächsten Schritt die Testgate-Anweisungen und Einschränkungen in der Übergabe befolgen.

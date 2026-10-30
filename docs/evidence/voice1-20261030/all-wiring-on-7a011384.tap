@@ -1,0 +1,754 @@
+TAP version 13
+# Subtest: persistent ALWAYS_ON is explicit, revocable and uses the existing web gate
+ok 1 - persistent ALWAYS_ON is explicit, revocable and uses the existing web gate
+  ---
+  duration_ms: 1.601133
+  type: 'test'
+  ...
+# Subtest: local model receives web policy and keeps bounded tool requests
+ok 2 - local model receives web policy and keeps bounded tool requests
+  ---
+  duration_ms: 1.064713
+  type: 'test'
+  ...
+# Subtest: orb states follow real work and Android TTS callbacks
+ok 3 - orb states follow real work and Android TTS callbacks
+  ---
+  duration_ms: 1.58676
+  type: 'test'
+  ...
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 4 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 6.121979
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 5 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 7.638184
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 6 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 36.002937
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 7 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.390222
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 8 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 32.152394
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 9 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.345613
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 10 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 57.319838
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 11 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 3.222782
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 12 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 1.027481
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 13 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 2.449591
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 14 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 3.179947
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 15 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 1.877235
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 16 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 2.85952
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 17 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 0.559107
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 18 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 0.854915
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 19 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 0.896672
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 20 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 4.332948
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 21 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 0.411124
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 22 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.560246
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 23 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.677269
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 24 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 1.002769
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 25 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 27.62094
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 26 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.586703
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 27 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.469651
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 28 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.742584
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 29 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.56073
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 30 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.441479
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 31 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.258816
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 32 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.590064
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 33 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.556838
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 34 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.666489
+  type: 'test'
+  ...
+# Subtest: retrieval-only orthography never becomes a command or a memory write
+ok 35 - retrieval-only orthography never becomes a command or a memory write
+  ---
+  duration_ms: 5.770162
+  type: 'test'
+  ...
+# Subtest: local direct smoke is distinct from tool-free thinking smoke
+ok 36 - local direct smoke is distinct from tool-free thinking smoke
+  ---
+  duration_ms: 2.356112
+  type: 'test'
+  ...
+# Subtest: research counter reflects durable archive not just mentor insertion
+ok 37 - research counter reflects durable archive not just mentor insertion
+  ---
+  duration_ms: 0.395833
+  type: 'test'
+  ...
+# Subtest: baseline repair writes independently reviewed evidence to the persistent backlog
+ok 38 - baseline repair writes independently reviewed evidence to the persistent backlog
+  ---
+  duration_ms: 6.020019
+  type: 'test'
+  ...
+# Subtest: repair metadata cannot advertise local generative inference that did not run
+ok 39 - repair metadata cannot advertise local generative inference that did not run
+  ---
+  duration_ms: 0.391924
+  type: 'test'
+  ...
+# Subtest: local model keeps isolated thinking resource until close and rejects cross-chunk tools
+ok 40 - local model keeps isolated thinking resource until close and rejects cross-chunk tools
+  ---
+  duration_ms: 0.463207
+  type: 'test'
+  ...
+# Subtest: mandatory Android parity and separate repair E2E gate remain enforced
+ok 41 - mandatory Android parity and separate repair E2E gate remain enforced
+  ---
+  duration_ms: 0.282321
+  type: 'test'
+  ...
+# Subtest: coding agent has one integrated entry from Android home, no second app
+ok 42 - coding agent has one integrated entry from Android home, no second app
+  ---
+  duration_ms: 3.48094
+  type: 'test'
+  ...
+# Subtest: developer speech uses actual German Android recognizer and a unique callback
+ok 43 - developer speech uses actual German Android recognizer and a unique callback
+  ---
+  duration_ms: 1.643096
+  type: 'test'
+  ...
+# Subtest: voice text is always previewed; neither recognition nor chat command executes code
+ok 44 - voice text is always previewed; neither recognition nor chat command executes code
+  ---
+  duration_ms: 1.147566
+  type: 'test'
+  ...
+# Subtest: existing mobile builder remains opt-in, not falsely labelled an app generator
+ok 45 - existing mobile builder remains opt-in, not falsely labelled an app generator
+  ---
+  duration_ms: 0.452301
+  type: 'test'
+  ...
+# Subtest: one correlation follows actual main-chat memory, runtime and tool paths (source wiring)
+ok 46 - one correlation follows actual main-chat memory, runtime and tool paths (source wiring)
+  ---
+  duration_ms: 7.850316
+  type: 'test'
+  ...
+# Subtest: model reply quality never authorizes an owner-memory write (source boundary)
+ok 47 - model reply quality never authorizes an owner-memory write (source boundary)
+  ---
+  duration_ms: 5.302779
+  type: 'test'
+  ...
+# Subtest: bounded multi-step request keeps the existing gate and never promotes legacy shell strings
+ok 48 - bounded multi-step request keeps the existing gate and never promotes legacy shell strings
+  ---
+  duration_ms: 0.864359
+  type: 'test'
+  ...
+# Subtest: explicit scope correction invalidates grounded and model context before acknowledgement (source boundary)
+ok 49 - explicit scope correction invalidates grounded and model context before acknowledgement (source boundary)
+  ---
+  duration_ms: 5.729573
+  type: 'test'
+  ...
+# Subtest: single hologram frame callback advances phase independently of Canvas onDraw
+ok 50 - single hologram frame callback advances phase independently of Canvas onDraw
+  ---
+  duration_ms: 3.821762
+  type: 'test'
+  ...
+# Subtest: Android window visibility and focus can restore orbital clock without cached view visibility
+ok 51 - Android window visibility and focus can restore orbital clock without cached view visibility
+  ---
+  duration_ms: 0.394972
+  type: 'test'
+  ...
+# Subtest: foreground lifecycle explicitly pauses, cancels, and resumes hologram
+ok 52 - foreground lifecycle explicitly pauses, cancels, and resumes hologram
+  ---
+  duration_ms: 6.006531
+  type: 'test'
+  ...
+# Subtest: local model prompt never reads a profile-wide old dialogue after session change
+ok 53 - local model prompt never reads a profile-wide old dialogue after session change
+  ---
+  duration_ms: 0.471187
+  type: 'test'
+  ...
+# Subtest: each AgentActivity chat turn captures only its session-scoped local-model topic
+ok 54 - each AgentActivity chat turn captures only its session-scoped local-model topic
+  ---
+  duration_ms: 10.27535
+  type: 'test'
+  ...
+# Subtest: Qwen chat validates replies without unconditional 0.8 success
+ok 55 - Qwen chat validates replies without unconditional 0.8 success
+  ---
+  duration_ms: 1.275442
+  type: 'test'
+  ...
+# Subtest: context is bounded, clearly untrusted, and never authorizes tools or factual memories
+ok 56 - context is bounded, clearly untrusted, and never authorizes tools or factual memories
+  ---
+  duration_ms: 1.022655
+  type: 'test'
+  ...
+# Subtest: low cost evaluator refuses mechanical repeats but cannot claim truth
+ok 57 - low cost evaluator refuses mechanical repeats but cannot claim truth
+  ---
+  duration_ms: 0.209827
+  type: 'test'
+  ...
+# Subtest: CDX1 is strictly opt-in and bounded by existing JobScheduler budget
+ok 58 - CDX1 is strictly opt-in and bounded by existing JobScheduler budget
+  ---
+  duration_ms: 4.091288
+  type: 'test'
+  ...
+# Subtest: The UI presents explicit enable and disable actions
+ok 59 - The UI presents explicit enable and disable actions
+  ---
+  duration_ms: 1.558103
+  type: 'test'
+  ...
+# Subtest: Research-only CDX1 events never authorize productive chat
+ok 60 - Research-only CDX1 events never authorize productive chat
+  ---
+  duration_ms: 0.314227
+  type: 'test'
+  ...
+# Subtest: The CDX1 auto-study policy does not introduce tools, network or separate schedules
+ok 61 - The CDX1 auto-study policy does not introduce tools, network or separate schedules
+  ---
+  duration_ms: 0.225039
+  type: 'test'
+  ...
+# Subtest: mentor access remains encrypted on-device between app restarts
+ok 62 - mentor access remains encrypted on-device between app restarts
+  ---
+  duration_ms: 1.234818
+  type: 'test'
+  ...
+# Subtest: one 401 may renew a previously owner-approved pairing, never auto-enrol a new device
+ok 63 - one 401 may renew a previously owner-approved pairing, never auto-enrol a new device
+  ---
+  duration_ms: 2.059821
+  type: 'test'
+  ...
+# Subtest: retry of pairing probe is bounded and never silently duplicates Groq questions
+ok 64 - retry of pairing probe is bounded and never silently duplicates Groq questions
+  ---
+  duration_ms: 0.408932
+  type: 'test'
+  ...
+# Subtest: a new backend URL cannot inherit the previous backend bearer credential
+ok 65 - a new backend URL cannot inherit the previous backend bearer credential
+  ---
+  duration_ms: 0.366403
+  type: 'test'
+  ...
+# Subtest: development center gives an optional coding mentor with explicit question confirmation
+ok 66 - development center gives an optional coding mentor with explicit question confirmation
+  ---
+  duration_ms: 3.369241
+  type: 'test'
+  ...
+# Subtest: responses and HTTP connections close without retrying failed work and secrets
+ok 67 - responses and HTTP connections close without retrying failed work and secrets
+  ---
+  duration_ms: 0.511422
+  type: 'test'
+  ...
+# Subtest: external mentor has an explicit per-request consent UI
+ok 68 - external mentor has an explicit per-request consent UI
+  ---
+  duration_ms: 2.401829
+  type: 'test'
+  ...
+# Subtest: Android only sends bounded question text to the private backend
+ok 69 - Android only sends bounded question text to the private backend
+  ---
+  duration_ms: 0.783547
+  type: 'test'
+  ...
+# Subtest: server never accepts mentor request without owner grant and bearer authentication
+ok 70 - server never accepts mentor request without owner grant and bearer authentication
+  ---
+  duration_ms: 9.328268
+  type: 'test'
+  ...
+# Subtest: external reply is labelled unverified and cannot write memory or perform tools
+ok 71 - external reply is labelled unverified and cannot write memory or perform tools
+  ---
+  duration_ms: 0.976704
+  type: 'test'
+  ...
+# Subtest: confirmed recall remains exact when supplementary model context is not representable
+not ok 72 - confirmed recall remains exact when supplementary model context is not representable
+  ---
+  duration_ms: 17.982714
+  type: 'test'
+  location: '/home/user/device-ai/.claude/worktrees/voice1-base/.github/continuum/grounded-recall-android-wiring.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(call.length>250 && call.length<5000)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///home/user/device-ai/.claude/worktrees/voice1-base/.github/continuum/grounded-recall-android-wiring.test.mjs:11:9)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: frozen CDX1 probe set includes exactly 20 evidence-supported and five missing-fact questions
+ok 73 - frozen CDX1 probe set includes exactly 20 evidence-supported and five missing-fact questions
+  ---
+  duration_ms: 1.728113
+  type: 'test'
+  ...
+# Subtest: answer scoring requires literal evidence rather than loss improvement or training counters
+ok 74 - answer scoring requires literal evidence rather than loss improvement or training counters
+  ---
+  duration_ms: 0.522334
+  type: 'test'
+  ...
+# Subtest: existing core lock protects the full read-only inference audit
+ok 75 - existing core lock protects the full read-only inference audit
+  ---
+  duration_ms: 0.569353
+  type: 'test'
+  ...
+# Subtest: Android monitor audit is opt-in and off-main-thread, never marked as trained
+ok 76 - Android monitor audit is opt-in and off-main-thread, never marked as trained
+  ---
+  duration_ms: 0.40918
+  type: 'test'
+  ...
+# Subtest: research audit never invents an offline result from a missing model
+ok 77 - research audit never invents an offline result from a missing model
+  ---
+  duration_ms: 0.322271
+  type: 'test'
+  ...
+# Subtest: tap-to-talk is explicit; never an always-listening background service
+ok 78 - tap-to-talk is explicit; never an always-listening background service
+  ---
+  duration_ms: 15.275766
+  type: 'test'
+  ...
+# Subtest: recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+ok 79 - recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+  ---
+  duration_ms: 0.925015
+  type: 'test'
+  ...
+# Subtest: the existing model-capable path remains available only outside voice auto-dispatch
+ok 80 - the existing model-capable path remains available only outside voice auto-dispatch
+  ---
+  duration_ms: 16.677719
+  type: 'test'
+  ...
+# Subtest: a user-started mic tap interrupts TTS and returns to Android recognizer
+ok 81 - a user-started mic tap interrupts TTS and returns to Android recognizer
+  ---
+  duration_ms: 1.443224
+  type: 'test'
+  ...
+# Subtest: policy requires manual review for device tools, memory writes and secrets
+ok 82 - policy requires manual review for device tools, memory writes and secrets
+  ---
+  duration_ms: 0.443131
+  type: 'test'
+  ...
+# Subtest: voice mode is not persisted as an owner, gateway or device permission
+ok 83 - voice mode is not persisted as an owner, gateway or device permission
+  ---
+  duration_ms: 0.595917
+  type: 'test'
+  ...
+# Subtest: Gemma path: runLocal audits a grounded answer before the trace is published, answer unchanged
+ok 84 - Gemma path: runLocal audits a grounded answer before the trace is published, answer unchanged
+  ---
+  duration_ms: 10.684005
+  type: 'test'
+  ...
+# Subtest: dialogue path: LocalConversationContext feeds the improved F1 kernel through the existing shadow
+ok 85 - dialogue path: LocalConversationContext feeds the improved F1 kernel through the existing shadow
+  ---
+  duration_ms: 10.49923
+  type: 'test'
+  ...
+# Subtest: memory path: the EWM2 shadow comparison runs the timeline check and the sibling resolver on the same active facts
+ok 86 - memory path: the EWM2 shadow comparison runs the timeline check and the sibling resolver on the same active facts
+  ---
+  duration_ms: 0.815917
+  type: 'test'
+  ...
+# Subtest: worker path: owner lease release and host-vs-code diagnosis are reachable from existing entry points
+ok 87 - worker path: owner lease release and host-vs-code diagnosis are reachable from existing entry points
+  ---
+  duration_ms: 0.52188
+  type: 'test'
+  ...
+# Subtest: research labs stay research: no production module imports them
+ok 88 - research labs stay research: no production module imports them
+  ---
+  duration_ms: 1.063255
+  type: 'test'
+  ...
+# Subtest: requires owner grant for Termux command permission
+ok 89 - requires owner grant for Termux command permission
+  ---
+  duration_ms: 1.659957
+  type: 'test'
+  ...
+# Subtest: local build launcher is preview-gated, production disabled
+ok 90 - local build launcher is preview-gated, production disabled
+  ---
+  duration_ms: 0.351085
+  type: 'test'
+  ...
+# Subtest: fixed Termux command entrypoint with no raw chat or shell
+ok 91 - fixed Termux command entrypoint with no raw chat or shell
+  ---
+  duration_ms: 0.499564
+  type: 'test'
+  ...
+# Subtest: requires explicit owner confirmation before expensive build
+ok 92 - requires explicit owner confirmation before expensive build
+  ---
+  duration_ms: 0.615946
+  type: 'test'
+  ...
+# Subtest: does not claim successful build or installation just for dispatching
+ok 93 - does not claim successful build or installation just for dispatching
+  ---
+  duration_ms: 0.422885
+  type: 'test'
+  ...
+# Subtest: callback target is explicit, preview-only and not exported
+ok 94 - callback target is explicit, preview-only and not exported
+  ---
+  duration_ms: 5.942404
+  type: 'test'
+  ...
+# Subtest: only one local job can be outstanding; callback binds id and operation
+ok 95 - only one local job can be outstanding; callback binds id and operation
+  ---
+  duration_ms: 0.556288
+  type: 'test'
+  ...
+# Subtest: result requires official Termux bundle including real exit and error
+ok 96 - result requires official Termux bundle including real exit and error
+  ---
+  duration_ms: 0.360054
+  type: 'test'
+  ...
+# Subtest: user receives a receipt only, no installation or private build log persisted
+ok 97 - user receives a receipt only, no installation or private build log persisted
+  ---
+  duration_ms: 0.577362
+  type: 'test'
+  ...
+# Subtest: live Android APK build still requires independent device check
+ok 98 - live Android APK build still requires independent device check
+  ---
+  duration_ms: 0.342356
+  type: 'test'
+  ...
+# Subtest: only successful verified builds may report a fixed owner installation folder
+ok 99 - only successful verified builds may report a fixed owner installation folder
+  ---
+  duration_ms: 0.382775
+  type: 'test'
+  ...
+# Subtest: Android callback keeps request identity in URI and verifies build provenance
+ok 100 - Android callback keeps request identity in URI and verifies build provenance
+  ---
+  duration_ms: 4.974608
+  type: 'test'
+  ...
+# Subtest: coding job is owner-confirmed and arguments stay within the fixed Node/Termux plan
+ok 101 - coding job is owner-confirmed and arguments stay within the fixed Node/Termux plan
+  ---
+  duration_ms: 1.330636
+  type: 'test'
+  ...
+# Subtest: coding and existing builder operations share immutable callback identity and one owner lease
+ok 102 - coding and existing builder operations share immutable callback identity and one owner lease
+  ---
+  duration_ms: 0.360611
+  type: 'test'
+  ...
+# Subtest: a coding result never enters the APK-build success policy or persists raw stdout
+ok 103 - a coding result never enters the APK-build success policy or persists raw stdout
+  ---
+  duration_ms: 0.283544
+  type: 'test'
+  ...
+# Subtest: existing build remains explicitly gated, and coding cannot install or merge
+ok 104 - existing build remains explicitly gated, and coding cannot install or merge
+  ---
+  duration_ms: 0.38087
+  type: 'test'
+  ...
+# Subtest: running coding job exposes a selectable UUID for explicit Termux cancellation
+ok 105 - running coding job exposes a selectable UUID for explicit Termux cancellation
+  ---
+  duration_ms: 0.224717
+  type: 'test'
+  ...
+# Subtest: actual Android DEMO arm only starts temporary sandbox and never persists
+ok 106 - actual Android DEMO arm only starts temporary sandbox and never persists
+  ---
+  duration_ms: 1.46801
+  type: 'test'
+  ...
+# Subtest: real isolated helper never accepts restored production state or persists weights
+ok 107 - real isolated helper never accepts restored production state or persists weights
+  ---
+  duration_ms: 0.338496
+  type: 'test'
+  ...
+# Subtest: native regression sources protect trained, empty and interrupted model states
+ok 108 - native regression sources protect trained, empty and interrupted model states
+  ---
+  duration_ms: 0.338465
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 109 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.247404
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 110 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 0.350972
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 111 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 6.16063
+  type: 'test'
+  ...
+# Subtest: owner can open the native live monitor without exported Android access
+ok 112 - owner can open the native live monitor without exported Android access
+  ---
+  duration_ms: 1.133038
+  type: 'test'
+  ...
+# Subtest: visualisation differentiates actual weight training, research and recent completion
+ok 113 - visualisation differentiates actual weight training, research and recent completion
+  ---
+  duration_ms: 0.259227
+  type: 'test'
+  ...
+# Subtest: training state is persisted by channel and stale starts are not shown as live
+ok 114 - training state is persisted by channel and stale starts are not shown as live
+  ---
+  duration_ms: 0.142745
+  type: 'test'
+  ...
+# Subtest: public research records the real source and audit lifecycle and keeps the 15-minute plan
+ok 115 - public research records the real source and audit lifecycle and keeps the 15-minute plan
+  ---
+  duration_ms: 0.355604
+  type: 'test'
+  ...
+# Subtest: offline job records deferral, failures and interrupts without rewriting model weights
+ok 116 - offline job records deferral, failures and interrupts without rewriting model weights
+  ---
+  duration_ms: 0.179849
+  type: 'test'
+  ...
+# Subtest: CDX1 audits are separate and the signed mentor update advances to code 15 without changing main
+ok 117 - CDX1 audits are separate and the signed mentor update advances to code 15 without changing main
+  ---
+  duration_ms: 0.379196
+  type: 'test'
+  ...
+# Subtest: Android confirmed task is passed only to the existing in-app Termux Builder
+ok 118 - Android confirmed task is passed only to the existing in-app Termux Builder
+  ---
+  duration_ms: 30.828695
+  type: 'test'
+  ...
+# Subtest: existing protected Android Termux receiver binds both callback identity and reviewed task digest
+ok 119 - existing protected Android Termux receiver binds both callback identity and reviewed task digest
+  ---
+  duration_ms: 0.686035
+  type: 'test'
+  ...
+# Subtest: Node Termux accepts fixed operations and never promotes an unevidenced success status
+ok 120 - Node Termux accepts fixed operations and never promotes an unevidenced success status
+  ---
+  duration_ms: 1.840458
+  type: 'test'
+  ...
+# Subtest: approved task source commit stays bound through Android prepare, run, callback and restart
+ok 121 - approved task source commit stays bound through Android prepare, run, callback and restart
+  ---
+  duration_ms: 4.531034
+  type: 'test'
+  ...
+1..121
+# tests 121
+# suites 0
+# pass 120
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2074.060389
