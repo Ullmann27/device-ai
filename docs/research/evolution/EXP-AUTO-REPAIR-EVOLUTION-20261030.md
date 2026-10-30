@@ -26,7 +26,7 @@ Eine Operatorenkette benötigt mindestens zwei verschiedene erfolgreiche Aufgabe
 
 ## Messstand
 
-Lokale Node.js 22.16.0 Kernprüfungen: 13 PASS, 0 FAIL, 0 SKIP für evolution-core.test.mjs. Eine weitere Testsuite mastercode-adapter.test.mjs enthält vier geschriebene Aufrufketten-Vertragstests für den vorhandenen Sucher und echten Ledger-Validator; sie ist NICHT auf dem GitHub-HEAD ausgeführt. Keine vollständige Node-, CCC1-, Kotlin-, Android-, Gemma- oder Fold7-Abnahme auf diesem Zweig; keine produktive APK.
+Lokale Node.js 22.16.0 Kernprüfungen: 15 PASS, 0 FAIL, 0 SKIP für evolution-core.test.mjs. Eine weitere Testsuite mastercode-adapter.test.mjs enthält vier geschriebene Aufrufketten-Vertragstests für den vorhandenen Sucher und echten Ledger-Validator; sie ist NICHT auf dem GitHub-HEAD ausgeführt. Keine vollständige Node-, CCC1-, Kotlin-, Android-, Gemma- oder Fold7-Abnahme auf diesem Zweig; keine produktive APK.
 
 In einem vollständigen Checkout prüfen:
 
