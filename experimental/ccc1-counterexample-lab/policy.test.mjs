@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {fixtureSet} from './fixtures.mjs';
 import {sha256,sealFixtures,learnConservativeGuards,
- guardedShadowChoice,summarizeTrial} from './policy.mjs';
+ guardedShadowChoice,summarizeTrial,tapOracle} from './policy.mjs';
 
 const sample=fixtureSet('training')[0];
 const ranked=[{strategy:'JS_TYPO_REFERENCE'},{strategy:'JS_MISSING_IMPORT'}];
@@ -64,4 +64,15 @@ test('paired strategies must be checked against the same original source',()=>{
 test('source-derived features reject forged import availability',()=>{
  const altered={...sample,feature:'BOTH_AVAILABLE'};
  assert.throws(()=>guardedShadowChoice(altered,ranked,{}),/FORGED_SOURCE_FEATURE/);
+});
+
+test('the test oracle needs exit status and TAP counters to agree',()=>{
+ const tap=(p,f)=>'TAP version 13\n# tests 1\n# pass '+p+'\n# fail '+f+'\n';
+ assert.equal(tapOracle(0,tap(1,0)),true);
+ assert.equal(tapOracle(1,tap(0,1)),false);
+ // exit 0 while TAP reports a failure (or the reverse) is not evidence of either outcome
+ assert.throws(()=>tapOracle(0,tap(0,1)),/INCONSISTENT/);
+ assert.throws(()=>tapOracle(1,tap(1,0)),/INCONSISTENT/);
+ assert.throws(()=>tapOracle(0,'# tests 2\n# pass 2\n# fail 0\n'),/INCOMPLETE/);
+ assert.throws(()=>tapOracle(0,'# tests 1\n# pass 1\n'),/INCONSISTENT/);
 });

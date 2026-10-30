@@ -8,7 +8,7 @@ import {rankCandidates} from '../../.github/continuum/repair-loop.mjs';
 import {repairExperienceKey} from '../../.github/continuum/repair-experience.mjs';
 import {fixtureSet} from './fixtures.mjs';
 import {sha256,sealFixtures,learnConservativeGuards,guardedShadowChoice,
- summarizeTrial,validateObservation} from './policy.mjs';
+ summarizeTrial,validateObservation,tapOracle} from './policy.mjs';
 
 const SEALED='23a3a3bbc3d4769ccaaa92d5a73c6032dd4beee631cde12b0768208932d30831';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -49,9 +49,7 @@ function testCandidate(task,strategy,cohort,arm) {
   if(result.signal||result.error||![0,1].includes(result.status))
    throw Error('EXECUTION_INDETERMINATE');
   const log=(result.stdout??'')+(result.stderr??'');
-  if(!/^# tests 1$/m.test(log)||!/^# (?:pass 1|fail 1)$/m.test(log)||
-   !/^# (?:pass 0|fail 0)$/m.test(log))throw Error('TEST_ORACLE_INCOMPLETE');
-  const passed=result.status===0;
+  const passed=tapOracle(result.status,log);
   const record=validateObservation({task:task.id,contextKey:task.contextKey,
    feature:task.feature,strategy,sourceSha256:sha256(task.source),
    passed,exitCode:result.status,executedTests:1,processExited:true,runId});
