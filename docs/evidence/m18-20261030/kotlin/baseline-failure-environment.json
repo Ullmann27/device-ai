@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "failures": [
+    {
+      "test": "at.heinz.deviceai.ShellExecutionTest.successfulGermanOutputRoundTripsThroughStrictVersionedWire",
+      "verdict": "HOST_ENVIRONMENT_SUSPECTED",
+      "reasons": [
+        "ENCODING_ARTEFACT"
+      ]
+    },
+    {
+      "test": "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.concurrentProcessReviewsAcceptOnlyOneDigest",
+      "verdict": "CODE_OR_TEST_FAILURE",
+      "reasons": []
+    }
+  ],
+  "hints": [
+    "JAVA_TOOL_OPTIONS_BANNER: child JVMs print it on stderr; tests that read child stderr may misread it"
+  ],
+  "hostSuspected": 1,
+  "codeOrTest": 1,
+  "passGranted": false,
+  "learningLabel": null
+}

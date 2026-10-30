@@ -34,6 +34,14 @@ export function validateObservation(r) {
   r.processExited!==true||!/^[a-f0-9]{64}$/.test(r.runId??''))throw Error('UNSUPPORTED_OR_INCOMPLETE_ORACLE');
  return r;
 }
+/** One frozen acceptance test: the exit status and both TAP counters must tell the same story, else no oracle. */
+export function tapOracle(status,log) {
+ if(typeof log!=='string'||!/^# tests 1$/m.test(log))throw Error('TEST_ORACLE_INCOMPLETE');
+ const has=line=>new RegExp('^# '+line+'$','m').test(log);
+ if(status===0&&has('pass 1')&&has('fail 0'))return true;
+ if(status===1&&has('pass 0')&&has('fail 1'))return false;
+ throw Error('TEST_ORACLE_INCONSISTENT');
+}
 /** Research-only rule; locally generated observations never authorize CCC1 learning. */
 export function learnConservativeGuards(observations,minimumCases=2) {
  if(!Array.isArray(observations)||observations.length>500||!Number.isSafeInteger(minimumCases)||

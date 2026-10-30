@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-value-local-0",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "04fb9e73dade0b814facbb671b6d66d7d06a260df4dbb3bfbc9c009f7bc24939",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "e38fbf730dcc28ba051d403d542d47bf59672eaf7979192cd58d7134425598a7"
+  },
+  "fixtureHash": "75df556b49aee3450f3f7041430b4084692894ffbc2f53a9a067c96d53348022",
+  "testOutput": "TAP version 13\n# file:///tmp/ccc1-counterexample-O12BBv/target.mjs:1\n# import {count} from './helper.mjs';\n#         ^^^^^\n# SyntaxError: The requested module './helper.mjs' does not provide an export named 'count'\n#     at ModuleJob._instantiate (node:internal/modules/esm/module_job:226:21)\n#     at async ModuleJob.run (node:internal/modules/esm/module_job:335:5)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)\n# Node.js v22.22.0\n# Subtest: acceptance.test.mjs\nnot ok 1 - acceptance.test.mjs\n  ---\n  duration_ms: 50.188567\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-O12BBv/acceptance.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 62.297246\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

@@ -1,0 +1,1 @@
+{"schema":1,"host":"Linux amd64 JVM 21.0.12.1","device":"NOT_FOLD7","turnsPerDialogue":40,"runs":60,"contextTurnMicros":{"off":{"median":14.8,"p95":19.5},"shadow":{"median":79.9,"p95":127.5}},"shadowExtraMicrosPerTurnMedian":65.1,"claimAuditMicros":{"answerChars":1168,"evidenceChars":1704,"median":691.2,"p95":999.6}}

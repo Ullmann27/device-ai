@@ -41,10 +41,12 @@ class ResearchFeedbackMultiprocessTest {
             val probe = ResearchFeedbackReviewProbe::class.java.name
 
             for (id in listOf("one", "two")) {
+                // stderr stays separate: a JVM started with JAVA_TOOL_OPTIONS prints "Picked up ..." there,
+                // which must not be mistaken for the probe's verdict on stdout.
                 processes += ProcessBuilder(
                     javaExecutable, "-cp", classpath, probe,
                     root.absolutePath, id, candidate.experience.id, candidate.reviewDigest
-                ).redirectErrorStream(true).start()
+                ).redirectError(File(root, "$id.stderr")).start()
             }
 
             val limit = System.nanoTime() + TimeUnit.SECONDS.toNanos(15)
@@ -54,10 +56,11 @@ class ResearchFeedbackMultiprocessTest {
                 .all { File(root, it).exists() })
             File(root, "go").writeText("go")
 
-            val outcomes = processes.map { process ->
+            val outcomes = processes.mapIndexed { index, process ->
                 assertTrue("Child process timed out", process.waitFor(20, TimeUnit.SECONDS))
                 val output = process.inputStream.bufferedReader().readText().trim()
-                assertEquals("Child failed: $output", 0, process.exitValue())
+                val stderr = File(root, listOf("one", "two")[index] + ".stderr").takeIf { it.exists() }?.readText().orEmpty()
+                assertEquals("Child failed: $output $stderr", 0, process.exitValue())
                 output
             }
             assertEquals(1, outcomes.count { it == "CONFIRMED" })

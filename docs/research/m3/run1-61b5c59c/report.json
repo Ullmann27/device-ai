@@ -1,0 +1,350 @@
+{
+  "schema": 1,
+  "mode": "RESEARCH_SHADOW_ONLY",
+  "tasks": 18,
+  "arms": {
+    "baseline": {
+      "attempts": 18,
+      "passed": 6,
+      "failed": 12,
+      "abstentions": 0,
+      "testRuns": 18
+    },
+    "broad": {
+      "attempts": 18,
+      "passed": 6,
+      "failed": 12,
+      "abstentions": 0,
+      "testRuns": 18
+    },
+    "context": {
+      "attempts": 18,
+      "passed": 6,
+      "failed": 12,
+      "abstentions": 0,
+      "testRuns": 18
+    },
+    "guarded": {
+      "attempts": 9,
+      "passed": 6,
+      "failed": 3,
+      "abstentions": 9,
+      "testRuns": 9
+    },
+    "guardedVerify": {
+      "attempts": 18,
+      "passed": 12,
+      "failed": 6,
+      "abstentions": 0,
+      "testRuns": 30
+    },
+    "verifyOnly": {
+      "attempts": 18,
+      "passed": 12,
+      "failed": 6,
+      "abstentions": 0,
+      "testRuns": 30
+    }
+  },
+  "byFamily": {
+    "member-local": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      }
+    },
+    "member-import": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 0,
+        "passed": 0,
+        "failed": 0,
+        "abstentions": 3,
+        "testRuns": 0
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 6
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 6
+      }
+    },
+    "arity-local": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 3
+      }
+    },
+    "arity-import": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 0,
+        "passed": 0,
+        "failed": 0,
+        "abstentions": 3,
+        "testRuns": 0
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 6
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 3,
+        "failed": 0,
+        "abstentions": 0,
+        "testRuns": 6
+      }
+    },
+    "negative-local": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 6
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 6
+      }
+    },
+    "negative-import": {
+      "baseline": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "broad": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "context": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 3
+      },
+      "guarded": {
+        "attempts": 0,
+        "passed": 0,
+        "failed": 0,
+        "abstentions": 3,
+        "testRuns": 0
+      },
+      "guardedVerify": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 6
+      },
+      "verifyOnly": {
+        "attempts": 3,
+        "passed": 0,
+        "failed": 3,
+        "abstentions": 0,
+        "testRuns": 6
+      }
+    }
+  },
+  "productionActivationAllowed": false,
+  "learningAllowed": false,
+  "sourceSha": "61b5c59c1d48637aa6370ef243a8cfecd0f14a51",
+  "novelSeal": "5a306c87c02be2fe9fe2bfe8da9beb0e8711c9de1d339e5a280f2f281adcfe68",
+  "trainingRecords": 36,
+  "trainingRecordsSha256": "eadc660dc42332283ca8e9feb46f6302adcffd1b021e26964d3c3116ee00705c",
+  "guards": {
+    "node.js.call|BOTH_AVAILABLE": {
+      "choice": null,
+      "trainingCases": 6,
+      "disagreement": true
+    },
+    "node.js.call|NO_HELPER_EXPORT": {
+      "choice": "JS_TYPO_REFERENCE",
+      "trainingCases": 3,
+      "disagreement": false
+    },
+    "node.js.value|BOTH_AVAILABLE": {
+      "choice": null,
+      "trainingCases": 6,
+      "disagreement": true
+    },
+    "node.js.value|NO_HELPER_EXPORT": {
+      "choice": "JS_TYPO_REFERENCE",
+      "trainingCases": 3,
+      "disagreement": false
+    }
+  },
+  "evidenceFiles": 159,
+  "limitations": [
+    "Synthetic JS fixtures authored by one instance; families are new forms, not new real projects",
+    "Two fixed candidate strategies; no generated code",
+    "Child processes are not an OS sandbox",
+    "No external attestation; no CCC1 ledger write; no Fold7 execution"
+  ]
+}

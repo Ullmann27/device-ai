@@ -1,0 +1,203 @@
+TAP version 13
+# Subtest: the real encoding artefact is recognised; the fragile multiprocess test stays a code/test failure
+ok 1 - the real encoding artefact is recognised; the fragile multiprocess test stays a code/test failure
+  ---
+  duration_ms: 2.327014
+  type: 'test'
+  ...
+# Subtest: a genuine value mismatch is never blamed on the host
+ok 2 - a genuine value mismatch is never blamed on the host
+  ---
+  duration_ms: 0.401027
+  type: 'test'
+  ...
+# Subtest: network, disk, memory and timeout signatures are host suspicions, each named
+ok 3 - network, disk, memory and timeout signatures are host suspicions, each named
+  ---
+  duration_ms: 1.742244
+  type: 'test'
+  ...
+# Subtest: invalid input is rejected
+ok 4 - invalid input is rejected
+  ---
+  duration_ms: 0.489261
+  type: 'test'
+  ...
+# Subtest: sealed holdout stable under order, sensitive to tampering
+ok 5 - sealed holdout stable under order, sensitive to tampering
+  ---
+  duration_ms: 14.71601
+  type: 'test'
+  ...
+# Subtest: fixture feature cannot be forged contrary to helper exports
+ok 6 - fixture feature cannot be forged contrary to helper exports
+  ---
+  duration_ms: 0.484273
+  type: 'test'
+  ...
+# Subtest: fake, incomplete or mismatched oracle results fail closed
+ok 7 - fake, incomplete or mismatched oracle results fail closed
+  ---
+  duration_ms: 0.820633
+  type: 'test'
+  ...
+# Subtest: consistent paired evidence permits a shadow-only recommendation
+ok 8 - consistent paired evidence permits a shadow-only recommendation
+  ---
+  duration_ms: 0.54882
+  type: 'test'
+  ...
+# Subtest: contradictory same-feature outcomes result in abstention
+ok 9 - contradictory same-feature outcomes result in abstention
+  ---
+  duration_ms: 0.674658
+  type: 'test'
+  ...
+# Subtest: unknown history abstains and invalid ranking is rejected
+ok 10 - unknown history abstains and invalid ranking is rejected
+  ---
+  duration_ms: 0.234002
+  type: 'test'
+  ...
+# Subtest: holdout summary refuses changed identity and repeated cases
+ok 11 - holdout summary refuses changed identity and repeated cases
+  ---
+  duration_ms: 1.910055
+  type: 'test'
+  ...
+# Subtest: paired strategies must be checked against the same original source
+ok 12 - paired strategies must be checked against the same original source
+  ---
+  duration_ms: 0.319857
+  type: 'test'
+  ...
+# Subtest: source-derived features reject forged import availability
+ok 13 - source-derived features reject forged import availability
+  ---
+  duration_ms: 0.341441
+  type: 'test'
+  ...
+# Subtest: the test oracle needs exit status and TAP counters to agree
+ok 14 - the test oracle needs exit status and TAP counters to agree
+  ---
+  duration_ms: 0.921361
+  type: 'test'
+  ...
+# Subtest: the novel cohort is sealed, disjoint from training/holdout and uses new names and forms
+ok 15 - the novel cohort is sealed, disjoint from training/holdout and uses new names and forms
+  ---
+  duration_ms: 21.580687
+  type: 'test'
+  ...
+# Subtest: negative controls are right for neither candidate (checked by evaluating both candidates)
+ok 16 - negative controls are right for neither candidate (checked by evaluating both candidates)
+  ---
+  duration_ms: 59.499248
+  type: 'test'
+  ...
+# Subtest: verification stops at the first pass, respects the budget and never turns "not tried" into success
+ok 17 - verification stops at the first pass, respects the budget and never turns "not tried" into success
+  ---
+  duration_ms: 2.047732
+  type: 'test'
+  ...
+# Subtest: a negative control reported as success aborts the summary
+ok 18 - a negative control reported as success aborts the summary
+  ---
+  duration_ms: 1.75023
+  type: 'test'
+  ...
+# Subtest: checks exact evidence bytes, no false external attestation
+ok 19 - checks exact evidence bytes, no false external attestation
+  ---
+  duration_ms: 5.934082
+  type: 'test'
+  ...
+# Subtest: fails when original test evidence changes
+ok 20 - fails when original test evidence changes
+  ---
+  duration_ms: 5.153231
+  type: 'test'
+  ...
+# Subtest: rejects symlinks and parent traversal
+ok 21 - rejects symlinks and parent traversal
+  ---
+  duration_ms: 8.245997
+  type: 'test'
+  ...
+# Subtest: FIFO masquerading as a log is rejected without blocking
+ok 22 - FIFO masquerading as a log is rejected without blocking
+  ---
+  duration_ms: 9.17798
+  type: 'test'
+  ...
+# Subtest: default device checklist honestly reports NOT_RUN
+ok 23 - default device checklist honestly reports NOT_RUN
+  ---
+  duration_ms: 1.256513
+  type: 'test'
+  ...
+# Subtest: falsely marked pass without evidence is rejected
+ok 24 - falsely marked pass without evidence is rejected
+  ---
+  duration_ms: 0.538156
+  type: 'test'
+  ...
+# Subtest: even twelve self-reported passes do not authorize release
+ok 25 - even twelve self-reported passes do not authorize release
+  ---
+  duration_ms: 1.474228
+  type: 'test'
+  ...
+# Subtest: foreign source and reordered cases are rejected
+ok 26 - foreign source and reordered cases are rejected
+  ---
+  duration_ms: 0.40966
+  type: 'test'
+  ...
+# Subtest: host evidence never grants device, native Gemma, APK or production merge
+ok 27 - host evidence never grants device, native Gemma, APK or production merge
+  ---
+  duration_ms: 1.373398
+  type: 'test'
+  ...
+# Subtest: source mismatch, incomplete Android suite or missing test evidence rejects
+ok 28 - source mismatch, incomplete Android suite or missing test evidence rejects
+  ---
+  duration_ms: 0.604467
+  type: 'test'
+  ...
+# Subtest: absence of on-device testing cannot be relabelled as proven
+ok 29 - absence of on-device testing cannot be relabelled as proven
+  ---
+  duration_ms: 0.301131
+  type: 'test'
+  ...
+# Subtest: the gate reads only verified bytes: consistent evidence passes with three files
+ok 30 - the gate reads only verified bytes: consistent evidence passes with three files
+  ---
+  duration_ms: 48.647837
+  type: 'test'
+  ...
+# Subtest: a FIFO summary is rejected without hanging the gate
+ok 31 - a FIFO summary is rejected without hanging the gate
+  ---
+  duration_ms: 46.213927
+  type: 'test'
+  ...
+# Subtest: a symlinked summary is rejected even when the target has the manifest hash
+ok 32 - a symlinked summary is rejected even when the target has the manifest hash
+  ---
+  duration_ms: 42.282376
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 401.16425
+EXIT 0

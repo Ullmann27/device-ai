@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-negative-local-1",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "0adfbac8a56bbf2f62bab237741428c92db51266c45b9d6c2e16c604483c034c",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "e7ae58e26a392010224ed7537f9fae58ab1034d8a9fe391a59389296a33e49a7"
+  },
+  "fixtureHash": "daa7111cb9ab09cec9a89043de0888f90cc4048f3e227c433f4165a77412eea2",
+  "testOutput": "TAP version 13\n# file:///tmp/ccc1-counterexample-il1upd/target.mjs:1\n# import {score} from './helper.mjs';\n#         ^^^^^\n# SyntaxError: The requested module './helper.mjs' does not provide an export named 'score'\n#     at ModuleJob._instantiate (node:internal/modules/esm/module_job:226:21)\n#     at async ModuleJob.run (node:internal/modules/esm/module_job:335:5)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)\n# Node.js v22.22.0\n# Subtest: acceptance.test.mjs\nnot ok 1 - acceptance.test.mjs\n  ---\n  duration_ms: 40.87807\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-il1upd/acceptance.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.641809\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

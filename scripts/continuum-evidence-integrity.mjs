@@ -5,9 +5,10 @@ const digest=data=>createHash('sha256').update(data).digest('hex');
 const SHA=/^[0-9a-f]{64}$/;
 const REQUIRED=['qa-summary.json','tested-source-manifest.json','final-qa/summary.json'];
 /** Local evidence-byte check, not authentication of the manifest author. */
-export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500}={}) {
+export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500,capture=[]}={}) {
  if(typeof directory!=='string'||!Number.isSafeInteger(minFiles)||
-  !Number.isSafeInteger(maxFiles)||minFiles<1||maxFiles<minFiles||maxFiles>10000)
+  !Number.isSafeInteger(maxFiles)||minFiles<1||maxFiles<minFiles||maxFiles>10000||
+  !Array.isArray(capture)||capture.some(name=>!REQUIRED.includes(name)))
   throw Error('INVALID_MANIFEST_REQUEST');
  const root=fs.realpathSync(directory);
  if(!fs.statSync(root).isDirectory())throw Error('EVIDENCE_ROOT_NOT_DIRECTORY');
@@ -25,6 +26,7 @@ export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500}={}
  if(entries.length<minFiles||entries.length>maxFiles||
   REQUIRED.some(name=>!Object.hasOwn(files,name)))throw Error('EVIDENCE_INCOMPLETE');
  let totalBytes=0;
+ const captured={};
  for(const [name,expected] of entries){
   if(typeof expected!=='string'||!SHA.test(expected)||
    !/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,230}$/.test(name)||
@@ -41,7 +43,10 @@ export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500}={}
   }finally{fs.closeSync(fd);}
   if(digest(data)!==expected)throw Error('EVIDENCE_HASH_MISMATCH: '+name);
   totalBytes+=data.length;
+  if(capture.includes(name))captured[name]=data;
  }
+ // Callers parse these exact verified bytes; re-reading the path after the check would reopen the FIFO/symlink race.
  return Object.freeze({status:'BYTES_MATCH_LOCAL_MANIFEST',count:entries.length,
-  totalBytes,manifestSha256:digest(bytes),signatureValidated:false,externallyAttested:false});
+  totalBytes,manifestSha256:digest(bytes),signatureValidated:false,externallyAttested:false,
+  verifiedBytes:Object.freeze(captured)});
 }

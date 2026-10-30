@@ -1,14 +1,14 @@
 /** Entirely opt-in synthetic experiment. NEVER changes worker, ledger, branch, or APK. */
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
+import {testCandidate as testOracleCandidate} from './oracle.mjs';
 import {rankCandidates} from '../../.github/continuum/repair-loop.mjs';
 import {repairExperienceKey} from '../../.github/continuum/repair-experience.mjs';
 import {fixtureSet} from './fixtures.mjs';
 import {sha256,sealFixtures,learnConservativeGuards,guardedShadowChoice,
- summarizeTrial,validateObservation} from './policy.mjs';
+ summarizeTrial} from './policy.mjs';
 
 const SEALED='23a3a3bbc3d4769ccaaa92d5a73c6032dd4beee631cde12b0768208932d30831';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -33,34 +33,7 @@ fs.mkdirSync(out,{recursive:false,mode:0o700});
 const evidence=path.join(out,'evidence');
 fs.mkdirSync(evidence,{mode:0o700});
 function testCandidate(task,strategy,cohort,arm) {
- const cwd=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-counterexample-'));
- const runId=sha256([sourceSha,cohort,arm,task.id,strategy].join('|'));
- try {
-  fs.writeFileSync(path.join(cwd,'target.mjs'),task.candidates[strategy],{mode:0o600});
-  fs.writeFileSync(path.join(cwd,'helper.mjs'),task.helper,{mode:0o600});
-  fs.writeFileSync(path.join(cwd,'acceptance.test.mjs'),
-   "import test from 'node:test';\nimport assert from 'node:assert/strict';\n"+
-   "import {amount} from './target.mjs';\n"+
-   "test('frozen acceptance',()=>assert.equal(amount(),"+task.expected+"));\n",{mode:0o600});
-  const result=spawnSync(process.execPath,['--test','--test-reporter=tap','acceptance.test.mjs'],{
-   cwd,encoding:'utf8',timeout:8000,maxBuffer:200000,
-   env:{PATH:process.env.PATH??'',HOME:cwd,TMPDIR:cwd},
-   windowsHide:true,killSignal:'SIGKILL'});
-  if(result.signal||result.error||![0,1].includes(result.status))
-   throw Error('EXECUTION_INDETERMINATE');
-  const log=(result.stdout??'')+(result.stderr??'');
-  if(!/^# tests 1$/m.test(log)||!/^# (?:pass 1|fail 1)$/m.test(log)||
-   !/^# (?:pass 0|fail 0)$/m.test(log))throw Error('TEST_ORACLE_INCOMPLETE');
-  const passed=result.status===0;
-  const record=validateObservation({task:task.id,contextKey:task.contextKey,
-   feature:task.feature,strategy,sourceSha256:sha256(task.source),
-   passed,exitCode:result.status,executedTests:1,processExited:true,runId});
-  fs.writeFileSync(path.join(evidence,runId+'.json'),
-   JSON.stringify({record,fixtureHash:sha256(JSON.stringify(task)),
-    testOutput:log.slice(0,16000),externalProcess:true,
-    osSandbox:false,permissionGranted:false},null,2)+'\n',{mode:0o600});
-  return record;
- } finally {fs.rmSync(cwd,{recursive:true,force:true});}
+ return testOracleCandidate({task,strategy,cohort,arm,sourceSha,evidenceDir:evidence});
 }
 const strategies=['JS_TYPO_REFERENCE','JS_MISSING_IMPORT'];
 const observations=[];

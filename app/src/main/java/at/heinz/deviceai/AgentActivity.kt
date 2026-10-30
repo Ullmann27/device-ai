@@ -6296,6 +6296,9 @@ class AgentActivity : Activity() {
                         "WEB · ${publishedWebCandidates} Quellen-Lernkandidaten bereit unter INTERNET · LERNSTOFF PRÜFEN; nichts automatisch gelernt")
                     if (webPublishError) addToolActivity(
                         "WEB · Quellenübergabe nicht bestätigt; keine automatische Übernahme")
+                    // SHADOW: check the finished answer against the retrieval it was given; only a trace stage.
+                    if (successful && groundedRecall != null)
+                        turnTrace.event(at.heinz.deviceai.cognitive.LocalModelClaimAudit.stage(run.response, groundedRecall))
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)

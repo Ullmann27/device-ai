@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "branch": "opus/continuum-m1-m8-20261030",
+  "testedCode": "c0a281418f76ced01f980d98ec7aae037260d833",
+  "note": "later commits on the branch change only docs/ and evidence",
+  "base": {"pr243": "ebba7e163b035d6d9b1c8a6955599104a2b3a309", "pr242": "7924ba0793963dd84eef61517359a743071829bf"},
+  "kotlinHarness": {"command": "scripts/android-kotlin-unit-check.sh", "classes": 240, "checks": 4, "tests": 1271, "failures": 0, "exit": 0,
+    "baselineAtPr243": {"tests": 1265, "failures": 2, "cause": "host artefacts (POSIX locale, JAVA_TOOL_OPTIONS), fixed in f12b1c9c"}},
+  "nodeCanonical": {"files": 21, "pass": 226, "fail": 0, "skip": 0, "exit": 0},
+  "nodeWorkerCcc1F3": {"files": 35, "pass": 390, "fail": 0, "skip": 0, "exit": 0, "includes": "autonomous-teamleader: unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs"},
+  "nodePr243AndPr244Gates": {"files": 6, "pass": 32, "fail": 0, "exit": 0},
+  "python": {"pass": 10, "exit": 0},
+  "pr243TrialAtHead": {"baseline": "16/24", "broad": "16/24", "context": "16/24", "guarded": "8/8 with 16 abstentions", "unchangedVsPr243": true},
+  "m3TransferRun": "docs/research/m3/run1-61b5c59c",
+  "m7HostMeasurement": "docs/research/m7",
+  "notRun": ["Gradle build", "Android lint", "APK build/sign/install", "native Gemma inference", "Fold7", "instrumentation"],
+  "notRunReason": "dl.google.com blocked (HTTP 403) in this environment; no device access",
+  "executedOnDevice": false, "modelInferenceVerified": false, "qualityImprovementProven": false, "productionMergeAuthorized": false
+}

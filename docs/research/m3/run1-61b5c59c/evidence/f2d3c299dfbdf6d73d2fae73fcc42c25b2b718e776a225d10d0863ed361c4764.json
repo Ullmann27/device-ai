@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-value-local-1",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "c88910b416eafb35ea0e569639fa549b2d6c3a0319f8fe0dae35a43a578d5211",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "f2d3c299dfbdf6d73d2fae73fcc42c25b2b718e776a225d10d0863ed361c4764"
+  },
+  "fixtureHash": "3cd232ff7827fc14788c838895299ca51a7180853b5603f73bd18b3e92942797",
+  "testOutput": "TAP version 13\n# file:///tmp/ccc1-counterexample-amoj7B/target.mjs:1\n# import {price} from './helper.mjs';\n#         ^^^^^\n# SyntaxError: The requested module './helper.mjs' does not provide an export named 'price'\n#     at ModuleJob._instantiate (node:internal/modules/esm/module_job:226:21)\n#     at async ModuleJob.run (node:internal/modules/esm/module_job:335:5)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)\n# Node.js v22.22.0\n# Subtest: acceptance.test.mjs\nnot ok 1 - acceptance.test.mjs\n  ---\n  duration_ms: 61.601819\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-amoj7B/acceptance.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 70.138228\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

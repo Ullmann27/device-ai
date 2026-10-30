@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-value-deceptive-1",
+    "contextKey": "node.js.value",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "c88910b416eafb35ea0e569639fa549b2d6c3a0319f8fe0dae35a43a578d5211",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "c32c0fc4a349afae9c9376e8b46bd3630beebd1b3e6f99455cfa40d9b5429bdc"
+  },
+  "fixtureHash": "f0c48f14d00d437e7949aa36e99ac3f9119ee8601849ed85b44970fbca7afa2f",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.732395\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 62.600374\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

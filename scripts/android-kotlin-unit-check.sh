@@ -40,13 +40,21 @@ mapfile -t checks < <(cd "$out/test" && find . -name '*Checks.class' | sed 's#^\
 run_cp="$out/test:$out/main:$out/stubclasses:$stdlib:$junit:$cp:src/test/resources:src/main/resources"
 cd "$root/app"
 status=0
-java -Xmx2g -cp "$run_cp" org.junit.runner.JUnitCore "${classes[@]}" >"$out/junit.txt" 2>&1 || status=1
+# Like Android (and a UTF-8 desktop), run under a UTF-8 locale so process arguments keep umlauts; a POSIX/ASCII
+# locale makes the JVM encode ProcessBuilder arguments as '?' (sun.jnu.encoding), which is a host artefact.
+utf8_locale=$(locale -a 2>/dev/null | grep -i -m1 -E '^(C|en_US)\.utf-?8$' || true)
+LC_ALL=${utf8_locale:-${LC_ALL:-}} java -Xmx2g -cp "$run_cp" org.junit.runner.JUnitCore "${classes[@]}" >"$out/junit.txt" 2>&1 || status=1
 for check in "${checks[@]}"; do java -cp "$run_cp" "$check" >>"$out/checks.txt" 2>&1 || { echo "check failed: $check" >>"$out/checks.txt"; status=1; }; done
 summary=$(grep -E '^(OK \(|Tests run:)' "$out/junit.txt" | tail -1)
 echo "classes=${#classes[@]} checks=${#checks[@]} junit: $summary"
 if [ "$status" -ne 0 ]; then
   grep -E '^[0-9]+\) ' "$out/junit.txt" | head -20 || true
   grep 'check failed' "$out/checks.txt" || true
+  # Diagnosis only (exit status unchanged): name failures that carry a concrete host signature.
+  if command -v node >/dev/null; then
+    node "$root/.github/continuum/test-failure-environment.mjs" "$out/junit.txt" >"$out/failure-environment.json" 2>&1 &&
+      node -e 'const r=require(process.argv[1]);console.log("failure diagnosis: host-suspected="+r.hostSuspected+" code-or-test="+r.codeOrTest+(r.hints.length?" hints="+r.hints.length:"")+" (see failure-environment.json; never a pass)")' "$out/failure-environment.json" || true
+  fi
   echo "KOTLIN_UNIT_CHECK_FAILED: see $out/junit.txt and $out/checks.txt"; exit 1
 fi
 echo "KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)"
