@@ -19,6 +19,7 @@ import {fileURLToPath} from 'node:url';
 import {createAgentCandidateProvider,createScriptedBrain,createChatCompletionsBrain} from '../.github/continuum/coding-agent-loop.mjs';
 import {createWorktree,removeWorktree,repairSession} from '../.github/continuum/repair-loop.mjs';
 import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
+import {EXTRA_TASKS} from './continuum-agent-benchmark-extra.mjs';
 
 const T="import test from 'node:test';import assert from 'node:assert/strict';\n";
 const edit=(file,oldText,newText)=>({tool:'edit_file',args:{path:file,old_text:oldText,new_text:newText}});
@@ -50,6 +51,8 @@ export const TASKS=Object.freeze([
     test:"import {greeting} from '../../lib/greeting.mjs';\ntest('greeting',()=>{assert.equal(greeting(' Anna '),'Hallo Anna!');assert.equal(greeting(null),'Hallo Gast!');assert.equal(greeting('  '),'Hallo Gast!');});\n",
     oracle:[{tool:'read_file',args:{path:'lib/greeting.mjs'}},
       edit('lib/greeting.mjs',"return 'Hallo '+name.trim()+'!';","const clean=typeof name==='string'?name.trim():'';\n  return 'Hallo '+(clean||'Gast')+'!';"),{tool:'check',args:{}},finish]}
+,
+  ...EXTRA_TASKS
 ]);
 
 function fixture(task){
