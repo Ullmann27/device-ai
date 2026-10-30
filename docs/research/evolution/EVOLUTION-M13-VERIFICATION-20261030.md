@@ -14,6 +14,8 @@ Das Gate verlangt die vier M13-Dateien summary.json, hypotheses.json, train-rows
 
 Die CLI öffnet die vier Dateien mit O_NOFOLLOW und O_NONBLOCK auf POSIX, prüft reguläre Dateien und verweigert FIFO, Symlinks, leere sowie über 16 MiB große Daten. Das schützt vor den bekannten Hänge- und Symlink-Fällen.
 
+**Statistische Grenze:** Mehrere Kandidaten innerhalb derselben Aufgabe oder desselben Moduls sind korreliert. Der von M13 verwendete Binomialwert behandelt solche Zeilen jedoch wie unabhängige Versuche. Das Gate überprüft lediglich die aufgezeichnete Berechnung, nicht diese Unabhängigkeitsannahme. Ein belastbarer Signifikanznachweis erfordert unabhängige Aufgaben-/Modul-Holdouts und eine geeignete statistische Auswertung.
+
 **Wichtig:** Der Ergebnisstatus CONSISTENT_WITH_RECORDED_M13 bedeutet nur Widerspruchsfreiheit der aufgezeichneten Belege. Es ist kein kryptografischer Herkunftsbeweis und keine unabhängige Wiederholung der Originaltests.
 
 ## Wiederaufnahme auf einem tatsächlich angeschlossenen lokalen Host
