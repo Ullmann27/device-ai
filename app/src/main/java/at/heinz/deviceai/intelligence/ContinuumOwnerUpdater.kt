@@ -225,6 +225,13 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         params.setAppPackageName(ContinuumSignedUpdatePolicy.OWNER_PACKAGE)
         params.setSize(release.descriptor.byteLength)
+        // Reuse the official Android self-update facility rather than another updater.
+        // Only reached after explicit owner tap, original-signer verification, and
+        // a strictly newer version of this SAME app. The OS may still require a
+        // system confirmation: STATUS_PENDING_USER_ACTION remains handled.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
+        }
         val id = installer.createSession(params)
         try {
             installer.openSession(id).use { session ->
