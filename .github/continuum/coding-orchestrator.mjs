@@ -2,6 +2,7 @@
 import fs from 'node:fs';import path from 'node:path';
 import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
 import {createCodingCandidateProvider} from './coding-provider.mjs';
+import {createAgentProviderFromEnv} from './coding-agent-loop.mjs';
 import {startTask,runTask} from './ccc1-orchestrator.mjs';
 import {Ccc1Reasoner} from './ccc1-interpreter.mjs';
 import {REPAIR_CAPABILITY} from './ccc1-envelope.mjs';
@@ -54,7 +55,8 @@ export function prepareCodingTask({project,stateDir,task}){
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
  requireIsolation=false,expectedTaskFingerprint=null,
- providerFactory=options=>createCodingCandidateProvider(options),env=process.env}={}){
+ providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),
+ env=process.env}={}){
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
  if(requireIsolation && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
