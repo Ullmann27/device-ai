@@ -1931,7 +1931,7 @@ class AgentActivity : Activity() {
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
-            CenterAction("AUF UPDATES PRÜFEN", accent = true) {
+            CenterAction("UPDATES PRÜFEN UND LADEN", accent = true) {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
             },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
