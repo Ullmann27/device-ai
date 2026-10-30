@@ -27,7 +27,7 @@ jobs:
       - name: Checkout pinned reviewed research implementation
         uses: actions/checkout@v4
         with:
-          ref: 7863d16c2868d127a74db625e5010a27fda2fbe6
+          ref: a66d79ad1b2ce85134b53c1b5cb85b127fa66040
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
