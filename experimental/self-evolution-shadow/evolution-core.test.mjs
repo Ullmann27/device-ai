@@ -10,7 +10,7 @@ const healthy = (id='test-domain') => ({id,policy:{sliceEndAdjustment:0,clampNon
 const ready={ownerOptIn:true,idle:true,charging:true,connectedToTrustedHost:true,
   activeWorker:false,batteryPercent:80,thermalHeadroom:.9,availableTimeMs:30000};
 const candidate={chain:['correct-slice-end','clamp-negative-quota']};
-function proof(task,candidate,{passed=true,exitCode=passed?0:1,executedTests=4,
+function proof(task,candidate,{passed=true,exitCode=passed?0:1,executedTests=task.blind.length,
   failedTests=passed?0:1,blindPass=passed,runnerError=false}={}){
   return {evaluator:'independent',taskHash:evolutionDigest(task),candidateHash:evolutionDigest(candidate),
     testSetHash:evolutionDigest(task.blind),executedTests,failedTests,
@@ -129,4 +129,27 @@ test('malformed historic ledger tests cannot be interpreted as a proved negative
   const ledger={schemaVersion:2,experiences:[],sessions:[],attempts:[
     {strategy:'JS_TYPO_REFERENCE',outcome:'FAILED_TESTS',tests:'not-an-array'}]};
   assert.equal(summarizeExistingLedger(ledger).observations[0].kind,'NEUTRAL');
+});
+
+
+test('a claimed green verdict cannot cover fewer or more executions than the sealed blind suite',()=>{
+  const t=mutateTypedPolicy(healthy(),'combined');
+  const exact=proof(t,candidate);
+  assert.equal(classifyIndependentEvidence(t,candidate,exact).classification,'VERIFIED_EXPERIMENTAL');
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,executedTests:4}).classification,'NEUTRAL');
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,executedTests:0}).classification,'NEUTRAL');
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,skippedTests:1}).classification,'NEUTRAL');
+});
+test('an impossible green or incomplete negative report is inconclusive',()=>{
+  const t=mutateTypedPolicy(healthy(),'combined');
+  const exact=proof(t,candidate);
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,blindPass:true,failedTests:1}).classification,'NEUTRAL');
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,exitCode:0,failedTests:1}).classification,'NEUTRAL');
+  assert.equal(classifyIndependentEvidence(t,candidate,{...exact,failedTests:0,blindPass:false,exitCode:1}).classification,'NEUTRAL');
+  assert.equal(classifyIndependentEvidence({...t,blind:null},candidate,exact).classification,'NEUTRAL');
+});
+test('malformed source strategy entries are ignored rather than crashing standalone ledger analysis',()=>{
+  const ledger={schemaVersion:2,attempts:[{strategy:42,outcome:'FAILED_TESTS',tests:[]}],
+    experiences:[],sessions:[]};
+  assert.deepEqual(summarizeExistingLedger(ledger).observations,[]);
 });
