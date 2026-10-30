@@ -43,7 +43,8 @@ test('only the existing original-signer static release channel may be updated',(
   assert.match(source,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
   assert.match(source,/refs\/heads\/.*TARGET_BRANCH/);
   assert.match(source,/git\(checkout,'push','origin','HEAD:refs\/heads\/'\+TARGET_BRANCH\)/);
-  assert.doesNotMatch(source,/--force(?:-with-lease)?/);
+  // --force is allowed only for deleting a temporary detached worktree, never pushing.
+  assert.doesNotMatch(source,/git\(checkout,'push'[^;]*--force/);
 });
 
 test('pub requires reviewed grant and re-verifies original APK before writing a branch',()=>{
