@@ -1,5 +1,10 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## JARVIS VOICE-1 · Fortschritt ab PR #250 (noch nicht auf Fold7 abgenommen)
+
+**Neue praktische Ein-Gerät-Sprachrunde:** [vollständiger Implementierungs-/Abnahmebericht](docs/research/jpi1/JARVIS-VOICE-1-IMPLEMENTATION-20261030.md) und [übernehmbare GPT-6-Übergabe](docs/research/omega/GPT6-JARVIS-VOICE1-HANDOFF-20261030.md). Der bereits bestehende Android-Recognizer kann nach explizitem Langdruck auf das Mikrofon einfache Fragen direkt in die vorhandene `runContinuumDialogue`-Pipeline leiten, ohne eigenen Gedächtniskern oder ToolGate-Freigabe. Bestehendes TextToSpeech liefert Antworten nur bei `TON AN`. Gerätebefehle und personenbezogene Geheimnisse bleiben manuell. **38/38 isolierte Kotlin-Sprachpolicy-Prüffälle bestanden; keine Android-Gradle-/Node-Gesamtprüfung, keine APK, keine Fold7-Abnahme.** Draft-PR #250 ist auf PR #247 gestapelt, nicht direkt auf PR #249. `main` nicht anfassen. Für sicheren nächsten Schritt die Testgate-Anweisungen und Einschränkungen in der Übergabe befolgen.
+
+
 ## PRIORITÄT 27.10.2026: BESTEHENDE FORSCHUNGS-CODEPROJEKTE SYSTEMATISCH INS CONTINUUM-GEHIRN INTEGRIEREN (M4)
 
 **Expliziter Besitzerauftrag:** Internationale Forschungsprojekte und offene Codesammlungen (Google AI Edge Gallery, Jandal, LocalChat, Mem0, A-MEM, sqlite-vec, LongMemEval-V2, mini-SWE-agent, Aider, OpenHands und ARM64-Build-Tools) dürfen bei späteren Entwicklungsrunden **nicht vergessen werden**. Zentrale, mit Quellcode-Links und tatsächlichen Zielpfaden versehene Übergabe: [`docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md`](docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md). Neueste M4-Draft-Integration **PR #198** auf **PR #197**. Nach jeder weiteren Quelle den Katalog pflegen, Quell-Lizenz/Commit prüfen, vorhandene Architektur zuerst abgleichen, dann kleinen isolierten Kotlin/Node-Adapter mit echten Negativ-/Holdout-/Datenschutztests in den bestehenden Gehirn- und CCC1-Aufrufpfad führen. **Nicht** sämtlichen Fremdcode kopieren oder Integrations- und Funktionserfolg behaupten, bevor echte Build-, Geräte- und Qualitätsbelege vorliegen.
