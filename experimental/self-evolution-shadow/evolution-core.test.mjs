@@ -116,3 +116,17 @@ test('negative gradient is only a shadow prior from single-operator verified rec
   assert.equal(p.sampleCounts['correct-slice-end'].failures,0);
   assert.equal(p.persisted,false);assert.equal(p.modelWeightsChanged,false);
 });
+
+test('circular or enormous solver results are neutral and never crash the research cycle',()=>{
+  const circular={chain:['correct-slice-end']};circular.self=circular;
+  for(const result of [circular,{chain:['correct-slice-end'],payload:'x'.repeat(100001)}]){
+    const r=executeShadowEvolutionCycle({snapshot:ready,baselineTasks:[healthy()],
+      solver:()=>result,independentVerifier:()=>null});
+    assert.equal(r.neutral,1);assert.equal(r.verified,0);
+  }
+});
+test('malformed historic ledger tests cannot be interpreted as a proved negative failure',()=>{
+  const ledger={schemaVersion:2,experiences:[],sessions:[],attempts:[
+    {strategy:'JS_TYPO_REFERENCE',outcome:'FAILED_TESTS',tests:'not-an-array'}]};
+  assert.equal(summarizeExistingLedger(ledger).observations[0].kind,'NEUTRAL');
+});
