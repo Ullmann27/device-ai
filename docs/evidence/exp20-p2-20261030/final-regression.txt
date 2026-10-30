@@ -1,0 +1,14 @@
+GIT_HEAD=2df9ecbf1cd5baa05057a4c51349c6baad1aa035 2026-10-30T09:28:59Z
+CMD: WITH_ARGON_TEST=1 scripts/exp20-p2-host-run.sh build && scripts/exp20-p2-host-run.sh junit <4 classes>
+BUILD_OK 85a14d5a7aae5d514d1f7784dd3d67174caa5eaa008a65b0585875f878559b7e sources=47
+BUILD_EXIT=0
+JUnit version 4.13.2
+.....................................
+Time: 25.194
+
+OK (37 tests)
+
+JUNIT_EXIT=0
+--- Android Gradle: testDebugUnitTest/lintDebug/assembleDebug NOT_RUN (dl.google.com via proxy: curl: (56) CONNECT tunnel failed, response 403
+000)
+--- app/src/main changes on this branch vs #253 base: 0 files
