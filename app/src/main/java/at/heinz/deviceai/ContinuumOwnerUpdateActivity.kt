@@ -1,7 +1,6 @@
 package at.heinz.deviceai
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -10,22 +9,19 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import at.heinz.deviceai.intelligence.ContinuumOwnerUpdateCatalog
 import at.heinz.deviceai.intelligence.ContinuumOwnerUpdateRelease
 import at.heinz.deviceai.intelligence.ContinuumOwnerUpdater
 
 /**
  * User-visible update entry point in the ORIGINAL main application only.
- * Never automatically downloads or installs; Android keeps install consent.
+ * A single owner tap checks and downloads an approved APK; Android keeps install consent.
  */
 class ContinuumOwnerUpdateActivity : Activity() {
     private lateinit var updater: ContinuumOwnerUpdater
     private lateinit var status: TextView
     private lateinit var checkButton: Button
-    private lateinit var installButton: Button
     private lateinit var settingsButton: Button
     private lateinit var progress: ProgressBar
-    private var selected: ContinuumOwnerUpdateRelease? = null
 
     override fun onCreate(state: Bundle?) {
         super.onCreate(state)
@@ -54,13 +50,8 @@ class ContinuumOwnerUpdateActivity : Activity() {
             max = 100
         }
         checkButton = Button(this).apply {
-            text = "Auf Updates prüfen"
+            text = "Updates prüfen und laden"
             setOnClickListener { checkForUpdate() }
-        }
-        installButton = Button(this).apply {
-            text = "Herunterladen und aktualisieren"
-            isEnabled = false
-            setOnClickListener { confirmUpdate() }
         }
         settingsButton = Button(this).apply {
             text = "Android-Installationsfreigabe"
@@ -71,7 +62,7 @@ class ContinuumOwnerUpdateActivity : Activity() {
             }
         }
         listOf(heading, help, status, progress, checkButton,
-            installButton, settingsButton).forEach { child ->
+            settingsButton).forEach { child ->
             panel.addView(child, LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -89,8 +80,6 @@ class ContinuumOwnerUpdateActivity : Activity() {
     }
 
     private fun checkForUpdate() {
-        selected = null
-        installButton.isEnabled = false
         checkButton.isEnabled = false
         setMessage("Verbinde sicher mit dem freigegebenen Updatekanal …")
         updater.check { result ->
@@ -106,14 +95,11 @@ class ContinuumOwnerUpdateActivity : Activity() {
                         is ContinuumOwnerUpdater.Check.Rejected ->
                             setMessage("Update nicht freigegeben: " + check.explanation)
                         is ContinuumOwnerUpdater.Check.Available -> {
-                            selected = check.release
-                            installButton.isEnabled = true
                             setMessage("Freigegeben: Continuum Lokal " +
-                                check.release.versionName + " (VersionCode " +
-                                check.release.descriptor.versionCode + ").\n" +
-                                check.release.notes + "\n" +
-                                "Größe: " + check.release.descriptor.byteLength / (1024 * 1024) +
-                                " MiB. Vor der Installation werden APK und Originalsignatur geprüft.")
+                                check.release.versionName + ". APK wird überprüft und geladen.")
+                            // The owner's one explicit click authorized the check and download.
+                            // Android PackageInstaller still requires its own user confirmation.
+                            downloadAndInstall(check.release)
                         }
                     }
                 },
@@ -124,20 +110,7 @@ class ContinuumOwnerUpdateActivity : Activity() {
         }
     }
 
-    private fun confirmUpdate() {
-        val release = selected ?: return
-        AlertDialog.Builder(this)
-            .setTitle("Continuum Lokal aktualisieren?")
-            .setMessage("Die APK wird aus dem freigegebenen HTTPS-Kanal geladen, " +
-                "vollständig geprüft und dem Android-Installer übergeben. " +
-                "Deine Daten werden nicht exportiert oder gelöscht. Fortfahren?")
-            .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Herunterladen") { _, _ -> downloadAndInstall(release) }
-            .show()
-    }
-
     private fun downloadAndInstall(release: ContinuumOwnerUpdateRelease) {
-        installButton.isEnabled = false
         checkButton.isEnabled = false
         settingsButton.visibility = View.GONE
         progress.visibility = View.VISIBLE
