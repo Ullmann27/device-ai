@@ -14,7 +14,7 @@ const gate=source('scripts/continuum-fold7-owner-update-gate.sh');
 const body=ui.split('private fun showOneAppMigrationCenter() {')[1]?.split('private fun showContinuumLearningDashboard() {')[0]??'';
 
 test('single owner app ID is the standalone continuumlocal package',()=>{
-  assert.match(gradle,/applicationId\s*=\s*if\s*\(continuumLocalStandalone\s*\|\|\s*continuumLocalStandaloneQa\)\s*"at\.heinz\.deviceai\.continuumlocal"/);
+  assert.match(gradle,/applicationId\s*=\s*if\s*\(continuumLocalStandalone\s*\|\|\s*continuumLocalStandaloneQa\s*\|\|\s*continuumLocalRenderUnsigned\)\s*"at\.heinz\.deviceai\.continuumlocal"/);
 });
 test('a separate no-install QA suffix is not the owner package',()=>{
   assert.match(gradle,/applicationIdSuffix\s*=\s*"\.qa"/);

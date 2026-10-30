@@ -27,7 +27,7 @@ test('reject any unsupported command or versionCode before using private signing
 });
 
 test('new app ID is distinct from original and is stable across debug and release', () => {
-  assert.match(gradle, /applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"/);
+  assert.match(gradle, /applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa \|\| continuumLocalRenderUnsigned\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"/);
   assert.match(gradle, /signingConfig = signingConfigs\.getByName\("continuumLocal"\)/);
   assert.match(gradle, /buildTypes\.getByName\("release"\)/);
   assert.equal(/applicationIdSuffix = "\.continuumlocal"/.test(gradle), false);

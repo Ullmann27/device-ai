@@ -19,6 +19,12 @@ cd "$root"
   die 'Existing complete Continuum main app source missing'
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] ||
   die 'Build only a clean, reviewed Git checkout'
+# The one-time owner bootstrap must not produce an APK lacking the update
+# button. This test runs before the owner P12 password is requested.
+[[ -f scripts/continuum-one-tap-updater-contract.test.mjs ]] ||
+  die 'ONE_TAP_UPDATE_CONTRACT_MISSING: refusing a release without the update button'
+node --test scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-release-stage.test.mjs ||
+  die 'ONE_TAP_UPDATE_CONTRACT_FAILED: refusing a release without a verified update path'
 sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git source SHA'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] ||
