@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "source": "4ad9afda1bd9d9b983c23e5a73fa0489181712d6",
+  "result": "RESEARCH_ONLY_NOT_RELEASE_QA",
+  "tasks": 24,
+  "arms": {
+    "baseline": {
+      "attempts": 24,
+      "passed": 16,
+      "failed": 8,
+      "abstentions": 0
+    },
+    "broad": {
+      "attempts": 24,
+      "passed": 16,
+      "failed": 8,
+      "abstentions": 0
+    },
+    "context": {
+      "attempts": 24,
+      "passed": 16,
+      "failed": 8,
+      "abstentions": 0
+    },
+    "guarded": {
+      "attempts": 8,
+      "passed": 8,
+      "failed": 0,
+      "abstentions": 16
+    }
+  },
+  "device": "NOT_RUN",
+  "apk": "NOT_BUILT",
+  "productionMergeAuthorized": false
+}
