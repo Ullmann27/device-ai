@@ -25,3 +25,19 @@
 
 ## Fortsetzung
 Nach Code-Commit: SHA-Readback für jede Datei, CI-Anlauf falls ausführbar; unabhängig davon Buildlog und echte Root-Cause beschaffen. Danach erst EWM-v2-Sealed-Holdout (M6) und M8 Modellbenchmark getrennt bearbeiten.
+
+
+## Umsetzung dieser Sitzung (auf GitHub gepusht, unabhängig von Android-Build)
+- `092ced91ff7be950ed33262dd86b83378cc0fd23`: Autorisierungs-, URL- und Metadatenprüfung findet vor dem Resultat `OLD_OR_EQUAL_VERSION` statt.
+- `4da5c6567a4cec595fd393c7324251dd24f733cf`: `Check.Current` nur nach erfolgreicher Policy-Prüfung; `PackageInstaller`-Session-ID statt fester PendingIntent-Kennung; Fortschritts-Snapshot vor UI-Dispatch.
+- `74250c6d9141c1f17248b6bcee36810240ed17d7`: JSON-Version und Bytegröße als exakte Ganzzahlen; VersionName muss zu VersionCode passen.
+- `e375d784a425289f82fb4d89757e2d6e33c42eb2`, `94440238cd5a4cab41b07d87be71345c44252a7f`: insgesamt 3 neue JUnit-Testmethoden (altes Manifest/ungenehmigtes Manifest/falscher Host/Signer, Dezimalwerte, Versionskonsistenz).
+- `d6f6cc915840067fb9928abea19907adb5db3783`: bestehende direkte Policy-Verträge für bereits alte Versionsnummern 27/28 nach statischem Review erhalten; ein neu angebotenes Release unter Code 29 wird dennoch zurückgewiesen.
+
+**Unabhängige Build-/JUnit-Ausführung:** `NOT_RUN` in dieser Sitzung. Die GitHub-Connector-Schnittstelle kann die Quell-Dateien ändern, aber keine Android-Gradle-Toolchain auf dem Fold7 ausführen. Änderungen deshalb weiter `WIP/UNVERIFIED`, kein Besitzer-Release.
+
+## Nächste unabhängige Prüfung
+1. Auf demselben Branch die 5 Kotlin-Dateien per `git show` und PR-Diff gegen den Parent vergleichen; Compile-, Test- und Lint-Ausführung auf einem realen Android-SDK-Host oder vorhandenen Fold7-Termux durchführen.
+2. Wenn Test- und Compile-Exitcodes 0: Test gegen schädliche/ungenehmigte `latest.json`, tatsächlich übertragene APK und Android-Installer-Status. Bestehende manuelle Test- und Datenbestände vor jedem Update sichern.
+3. Bereits vorhandene `scripts/continuum-fold7-standalone-apk.sh build 29` nicht durch eine PC-Pflicht ersetzen. Ein originalsignierter Download oder ein Update ist **nicht** durch diesen PR entstanden.
+4. Für M6 separat den fremd formulierten Holdout vor der Auswertung versiegeln; für M8 erst unabhängigen echten Modellbenchmark, dann isolierte Android-Ausführung. Keine unzulässigen Änderungen an der lokalen Modell- oder Repair-Autorität.
