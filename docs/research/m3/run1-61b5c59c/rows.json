@@ -1,0 +1,650 @@
+[
+  {
+    "task": "novel-member-local-0",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-member-local-1",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-member-local-2",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-member-import-0",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.value",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-member-import-1",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.value",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-member-import-2",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.value",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-arity-local-0",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.call",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-arity-local-1",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.call",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-arity-local-2",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.call",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "broad": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "context": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guarded": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 1,
+      "strategy": "JS_TYPO_REFERENCE"
+    }
+  },
+  {
+    "task": "novel-arity-import-0",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-arity-import-1",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-arity-import-2",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    },
+    "verifyOnly": {
+      "passed": true,
+      "runs": 2,
+      "strategy": "JS_MISSING_IMPORT"
+    }
+  },
+  {
+    "task": "novel-negative-local-0",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  },
+  {
+    "task": "novel-negative-local-1",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  },
+  {
+    "task": "novel-negative-local-2",
+    "feature": "NO_HELPER_EXPORT",
+    "contextKey": "node.js.value",
+    "guardReason": "FIXTURE_CONSENSUS_ONLY",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  },
+  {
+    "task": "novel-negative-import-0",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  },
+  {
+    "task": "novel-negative-import-1",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  },
+  {
+    "task": "novel-negative-import-2",
+    "feature": "BOTH_AVAILABLE",
+    "contextKey": "node.js.call",
+    "guardReason": "CONTRADICTORY_COUNTEREXAMPLES",
+    "baseline": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "broad": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "context": {
+      "passed": false,
+      "runs": 1,
+      "strategy": null
+    },
+    "guarded": {
+      "passed": null,
+      "runs": 0,
+      "strategy": null
+    },
+    "guardedVerify": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    },
+    "verifyOnly": {
+      "passed": false,
+      "runs": 2,
+      "strategy": null
+    }
+  }
+]

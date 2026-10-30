@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-call-deceptive-1",
+    "contextKey": "node.js.call",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "9dac3dcf2520444459a767ee11e8b2b066d56fbfec36b601adf89e502b23b622",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "e53415c20378d5581b0a6952e1bc9687102df2b97f2f6afea36904f85db6fd94"
+  },
+  "fixtureHash": "d5c716739b947c1cd18ccae7ab8801783ab620a7f90c91fc2c281595b88dc135",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.732859\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 69.535223\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

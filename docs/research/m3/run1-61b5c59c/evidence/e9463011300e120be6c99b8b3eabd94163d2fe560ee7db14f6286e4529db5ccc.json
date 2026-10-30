@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-call-local-2",
+    "contextKey": "node.js.call",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "145e72aab3effd855918122e364b7147bd7674c4c906071b881760558f2be413",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "e9463011300e120be6c99b8b3eabd94163d2fe560ee7db14f6286e4529db5ccc"
+  },
+  "fixtureHash": "2e5014f75e7d4dc33268eb6987ebac39046833dac4b6084a65975e9e9d1092ba",
+  "testOutput": "TAP version 13\n# file:///tmp/ccc1-counterexample-dFCkZf/target.mjs:1\n# import {total} from './helper.mjs';\n#         ^^^^^\n# SyntaxError: The requested module './helper.mjs' does not provide an export named 'total'\n#     at ModuleJob._instantiate (node:internal/modules/esm/module_job:226:21)\n#     at async ModuleJob.run (node:internal/modules/esm/module_job:335:5)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)\n# Node.js v22.22.0\n# Subtest: acceptance.test.mjs\nnot ok 1 - acceptance.test.mjs\n  ---\n  duration_ms: 43.930774\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-dFCkZf/acceptance.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 53.241786\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

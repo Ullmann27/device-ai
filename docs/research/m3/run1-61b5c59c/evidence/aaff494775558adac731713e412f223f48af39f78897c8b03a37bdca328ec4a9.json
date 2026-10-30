@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-value-import-0",
+    "contextKey": "node.js.value",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "04fb9e73dade0b814facbb671b6d66d7d06a260df4dbb3bfbc9c009f7bc24939",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "aaff494775558adac731713e412f223f48af39f78897c8b03a37bdca328ec4a9"
+  },
+  "fixtureHash": "83741a95b5fdf68dfff58a044d30e385aea1d426a36f71e58aa480f0ba964603",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.740529\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 59.595098\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

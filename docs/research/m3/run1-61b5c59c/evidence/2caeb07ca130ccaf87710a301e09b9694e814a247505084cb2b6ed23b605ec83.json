@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-call-local-2",
+    "contextKey": "node.js.call",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "145e72aab3effd855918122e364b7147bd7674c4c906071b881760558f2be413",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "2caeb07ca130ccaf87710a301e09b9694e814a247505084cb2b6ed23b605ec83"
+  },
+  "fixtureHash": "2e5014f75e7d4dc33268eb6987ebac39046833dac4b6084a65975e9e9d1092ba",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 2.952355\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 65.180435\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

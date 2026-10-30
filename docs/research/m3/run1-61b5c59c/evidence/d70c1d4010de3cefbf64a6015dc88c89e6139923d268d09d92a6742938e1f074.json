@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-arity-import-0",
+    "contextKey": "node.js.call",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "5ce7b9bfebd5e264e45a22d84175be81eb27a83190a34f404552650a283ca978",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "d70c1d4010de3cefbf64a6015dc88c89e6139923d268d09d92a6742938e1f074"
+  },
+  "fixtureHash": "9b7d76ab7f013d2e8b09ecde66b384438268c17f30d5a5330f75952508f179a2",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.745885\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 61.244855\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

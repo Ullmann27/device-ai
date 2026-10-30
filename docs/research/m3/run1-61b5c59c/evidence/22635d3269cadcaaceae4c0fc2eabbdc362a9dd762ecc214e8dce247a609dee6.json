@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "training-value-local-1",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "c88910b416eafb35ea0e569639fa549b2d6c3a0319f8fe0dae35a43a578d5211",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "22635d3269cadcaaceae4c0fc2eabbdc362a9dd762ecc214e8dce247a609dee6"
+  },
+  "fixtureHash": "3cd232ff7827fc14788c838895299ca51a7180853b5603f73bd18b3e92942797",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.938657\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 62.420451\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

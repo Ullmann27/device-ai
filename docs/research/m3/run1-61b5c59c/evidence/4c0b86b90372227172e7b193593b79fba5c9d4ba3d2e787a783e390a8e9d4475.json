@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-member-local-2",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "177beaba799da3b5603e00cee6c8839df48c2d772e777da53bd04a289102f189",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "4c0b86b90372227172e7b193593b79fba5c9d4ba3d2e787a783e390a8e9d4475"
+  },
+  "fixtureHash": "94e4d1b10dd37a9ca061b04784d802058801bc26b58791f3947758cb838643d1",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.727817\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 61.941993\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

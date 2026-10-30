@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-negative-local-0",
+    "contextKey": "node.js.value",
+    "feature": "NO_HELPER_EXPORT",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "af771b359c51818ec8303bc9344dabc3b83605528b7274d8b8b435c63d5547c9",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "11eaac748b46c15595d93b3384f6912fa24f1dbbb2caafa7e649c7d1601dcc3b"
+  },
+  "fixtureHash": "aa99fc35810d84012f9af79aabfaf7068df2cdba0f57366901ca976b5db851f9",
+  "testOutput": "TAP version 13\n# file:///tmp/ccc1-counterexample-EDbba8/target.mjs:1\n# import {step} from './helper.mjs';\n#         ^^^^\n# SyntaxError: The requested module './helper.mjs' does not provide an export named 'step'\n#     at ModuleJob._instantiate (node:internal/modules/esm/module_job:226:21)\n#     at async ModuleJob.run (node:internal/modules/esm/module_job:335:5)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)\n# Node.js v22.22.0\n# Subtest: acceptance.test.mjs\nnot ok 1 - acceptance.test.mjs\n  ---\n  duration_ms: 43.275652\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-EDbba8/acceptance.test.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 51.574803\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-member-import-1",
+    "contextKey": "node.js.value",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_MISSING_IMPORT",
+    "sourceSha256": "0e508f2e4eb6bb3b47d3d1c1fa94067e8e4e05c99370e6265bf9cc15453cc1e3",
+    "passed": true,
+    "exitCode": 0,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "ed54174fbe4eafca93f0306abd18da90f3ce30e63b91f8f333daf67bc49ef0da"
+  },
+  "fixtureHash": "e041d6cb84b4d9c5fbbb2a35d1f5991acb50bfab7756937634c5f71a2a4608b6",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nok 1 - frozen acceptance\n  ---\n  duration_ms: 0.792762\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 65.237099\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}

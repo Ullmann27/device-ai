@@ -1,0 +1,19 @@
+{
+  "record": {
+    "task": "novel-arity-import-2",
+    "contextKey": "node.js.call",
+    "feature": "BOTH_AVAILABLE",
+    "strategy": "JS_TYPO_REFERENCE",
+    "sourceSha256": "56565054ae5e9ae15f8e9a322b651fd334461ed86924bf739a0af01b86418100",
+    "passed": false,
+    "exitCode": 1,
+    "executedTests": 1,
+    "processExited": true,
+    "runId": "994871d73e91b3be9ae384ff58006ecba02cf29f77c2bbe7dbfb34e925316706"
+  },
+  "fixtureHash": "5e1820476597310ee6b86f0fdc7cb472205d43c0d919af17a90d14cc476b78b1",
+  "testOutput": "TAP version 13\n# Subtest: frozen acceptance\nnot ok 1 - frozen acceptance\n  ---\n  duration_ms: 1.816961\n  type: 'test'\n  location: '/tmp/ccc1-counterexample-Jc3pO4/acceptance.test.mjs:4:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    35 !== 29\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 29\n  actual: 35\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/ccc1-counterexample-Jc3pO4/acceptance.test.mjs:4:37)\n    Test.runInAsyncScope (node:async_hooks:214:14)\n    Test.run (node:internal/test_runner/test:1047:25)\n    Test.start (node:internal/test_runner/test:944:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 77.311818\n",
+  "externalProcess": true,
+  "osSandbox": false,
+  "permissionGranted": false
+}
