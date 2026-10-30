@@ -2,7 +2,12 @@ import { createHash } from 'node:crypto';
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const STRATEGY = /^[a-z][a-z0-9-]{2,63}$/;
-const hex = value => createHash('sha256').update(JSON.stringify(value) ?? 'null').digest('hex');
+const hex = value => {
+  let raw;
+  try { raw = JSON.stringify(value); } catch { return null; }
+  if (typeof raw !== 'string' || raw.length > 100_000) return null;
+  return createHash('sha256').update(raw).digest('hex');
+};
 const boundedInt = (n, max) => Number.isSafeInteger(n) && n >= 0 && n <= max;
 
 /** No real scheduler or authority is granted here. Caller must obtain trusted device snapshots. */
@@ -23,6 +28,7 @@ export function mutateTypedPolicy(task, faultId) {
   if (!task || !STRATEGY.test(task.id ?? '') || !task.policy ||
       task.policy.sliceEndAdjustment !== 0 || task.policy.clampNonnegative !== true ||
       !Array.isArray(task.visible) || !Array.isArray(task.blind) ||
+      !SHA256.test(hex(task) ?? '') ||
       !['slice-boundary', 'negative-clamp', 'combined'].includes(faultId)) {
     throw Error('UNVERIFIED_BASELINE_OR_MUTATION');
   }
@@ -75,7 +81,7 @@ export function summarizeExistingLedger(ledger) {
   const observations = [];
   for (const attempt of ledger.attempts) {
     if (!attempt || !STRATEGY.test((attempt.strategy ?? '').toLowerCase().replaceAll('_', '-').slice(0, 64))) continue;
-    const explicitRed = (attempt.tests ?? []).some(t => t && t.passed === false &&
+    const explicitRed = (Array.isArray(attempt.tests) ? attempt.tests : []).some(t => t && t.passed === false &&
       t.evidenceComplete !== false && !t.signal && !t.error && !t.timedOut &&
       [t.total, t.executed, t.failed, t.skipped].every(Number.isSafeInteger) &&
       t.executed > 0 && t.failed > 0 && t.failed <= t.executed &&
