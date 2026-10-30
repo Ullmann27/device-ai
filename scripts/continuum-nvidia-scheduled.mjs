@@ -106,7 +106,7 @@ export async function claimGithubExecution({repoFull,token,runId,sequence,
     typeof readback.content!=='string')
   stop('GITHUB_LEDGER_CLAIM_UNVERIFIED');
  let persisted;
- try{persisted=JSON.parse(Buffer.from(readback.content.replace(/\\s+/g,''),'base64').toString('utf8'));}
+ try{persisted=JSON.parse(Buffer.from(readback.content.replace(/\s+/g,''),'base64').toString('utf8'));}
  catch{stop('GITHUB_LEDGER_CLAIM_UNVERIFIED');}
  verifyPersistedClaim(validateLedger(persisted),{runId,sequence,claimedAtMillis:nowMs});
  return Object.freeze({claimed:true,sequence});
