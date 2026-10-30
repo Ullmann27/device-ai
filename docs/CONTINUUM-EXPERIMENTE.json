@@ -3,6 +3,22 @@
   "project": "Ullmann27/device-ai",
   "updated": "2026-10-30",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
+  "bioNeuronalResearchGoals": {
+    "ownerRequested": true,
+    "status": "PROPOSED_SHADOW_NOT_VERIFIED_ON_FOLD7",
+    "permanentGuidance": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+    "advantagesToInvestigate": [
+      "Measured event-driven or sparse local ARM64 energy and RAM efficiency, not automatic near-zero power",
+      "Reduced catastrophic forgetting through Fisher/EWC with old-task and new-task retention tests, not guaranteed no forgetting",
+      "Compact but lossy temporal CTRNN context hints without replacing EWM2 facts or source provenance",
+      "Local inference and offline-first privacy verified separately for ASR, inference, TTS, tools, sync, telemetry and logs"
+    ],
+    "boundToExperiments": ["EXP-20", "EXP-21", "EXP-22", "EXP-23"],
+    "defaultAction": "SHADOW_ONLY_OWNER_REVIEW_REQUIRED",
+    "deviceAcceptance": "UNVERIFIED",
+    "weightUpdateAuthorized": false,
+    "mainMergeAuthorized": false
+  },
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "externalResearchIntegration": {
     "ownerRequested": true,
