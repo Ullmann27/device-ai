@@ -141,3 +141,14 @@ OUT=/tmp/exp20 scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp2
 3. **M5c-Spur G-role:** Arme B und C gegen Bag-Referenzen auf neuem TRAIN/DEV/VAL.
 4. **Besitzerentscheidung zu Arm D:** vortrainierter lokaler Satz-Encoder, nach Lizenz-, Größen- und Fold7-Prüfung.
 5. **EWM-Versionierung:** Gültigkeitsbeginn und Einschränkung früherer Aussagen (R6), ohne zweiten Speicher.
+
+## Nachtrag 30.10.2026 (3): M8 Worker – werkzeugbasierter Coding-Agent-Loop
+- **Branch:** `claude/m8-coding-agent-loop-kxrxy2` @ `4d259ce4`, Basis `ed408a7`, offen für die Weiterarbeit.
+- **Übergabe:** `docs/research/m8/M8-CODING-AGENT-LOOP-20261030.md` auf diesem Branch.
+- **Neu:** Das Brain kann jetzt auflisten, suchen, lesen, exakt editieren, prüfen und optional testen, bevor es einen normalen Vorschlag abgibt. Die bestehende Prüfkette (Ausgangsbasis rot, volle Kette, Isolation, Belege) bleibt unverändert.
+- **Opt-in:** `CONTINUUM_CODING_AGENT_LOOP=1`.
+- **Belege (Host):**
+  - Loop-Tests 8/8, Nachbarsuiten 152/152.
+  - Benchmark: 6/6 Aufgaben gültig; Orakel 3/3 numerisch `VERIFIED`, 3 allgemeine Aufgaben ohne Isolation blockiert.
+  - Es lief **kein echtes Modell**.
+- **M8-Blocker:** Auf dem Fold7 gibt es keinen isolierten Executor. Nächster Schritt ist CI als Sandbox oder ein Android-`isolatedProcess`; danach die echte Brain-Messung mit `--brain chat --executor`.
