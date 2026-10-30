@@ -71,7 +71,8 @@ object M5Cre1BlindGate {
     }
 
     fun gatePassed(s: Summary): Boolean =
-        s.split == M5Data.Split.VAL && s.groups == 128 && s.strictRate <= MAX_STRICT_VAL_TOP1
+        s.split == M5Data.Split.VAL && s.groups == 128 &&
+            s.strictRate <= MAX_STRICT_VAL_TOP1 && s.forcedRate <= MAX_STRICT_VAL_TOP1
 
     private fun sha256(bytes: ByteArray): String = MessageDigest.getInstance("SHA-256")
         .digest(bytes).joinToString("") { "%02x".format(it) }
