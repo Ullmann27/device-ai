@@ -7,7 +7,9 @@ object M6B4ResidualGaps {
             "alias" to listOf("Meine Schwester Anna wohnt in Linz.", "Inzwischen wohnt Anna in Graz."),
             "pronoun" to listOf("Meine Schwester Anna wohnt in Linz.", "Sie wohnt jetzt in Graz."),
             "subclause" to listOf("Ich wohne in Wien.", "Weil es billiger ist, wohne ich jetzt in Graz."),
-            "datedvalidity" to listOf("Ich wohne in Wien.", "Ab nächstem Monat wohne ich in Graz."))
+            "datedvalidity" to listOf("Ich wohne in Wien.", "Ab nächstem Monat wohne ich in Graz."),
+            "pricedomain" to listOf("Der Kurs kostet 50 Euro.", "Der Kurs kostet für Mitglieder 40 Euro."),
+            "historythenstate" to listOf("Anna wohnte in Graz.", "Anna wohnt inzwischen in Wien."))
         for ((n, f) in cases) println("$n supersedes=${Ewm1Memory(f.mapIndexed { i, t -> "f$i" to t }).supersedes}")
     }
 }

@@ -5,9 +5,9 @@ another person's move leaves my residence          expected={}               obs
 correction without date                            expected={f3=[f1]}        observed={f3=[f1]}        AS_EXPECTED
 unrelated dated fact replaces nothing              expected={}               observed={}               AS_EXPECTED
 diagnosis of the inputs to Ewm1Memory.replaces() for the first-person facts:
-  f1  subject=wien     updateMarker=false groups=[wohnen] stems=[wohn]  "Ich wohne in Wien."
+  f1  subject=ich      updateMarker=false groups=[wohnen] stems=[wohn]  "Ich wohne in Wien."
   f2  subject=schwester updateMarker=false groups=[verwandt, wohnen] stems=[wohn]  "Meine Schwester Anna wohnt in Linz."
-  f3  subject=post     updateMarker=false groups=[arbeiten] stems=[arbeit]  "Ich arbeite bei der Post."
-  f4  subject=graz     updateMarker=true  groups=[wohnen] stems=[wohn]  "Seit Dienstag wohne ich in Graz."
-  g3  subject=inzwischen updateMarker=true  groups=[wohnen] stems=[wohn]  "Inzwischen wohne ich in Graz."
+  f3  subject=ich      updateMarker=false groups=[arbeiten] stems=[arbeit]  "Ich arbeite bei der Post."
+  f4  subject=ich      updateMarker=true  groups=[wohnen] stems=[wohn]  "Seit Dienstag wohne ich in Graz."
+  g3  subject=ich      updateMarker=true  groups=[wohnen] stems=[wohn]  "Inzwischen wohne ich in Graz."
 summary: 5/5 as expected. Note: 'seit Dienstag' never becomes a start date - Ewm1Memory has no temporal validity interval.

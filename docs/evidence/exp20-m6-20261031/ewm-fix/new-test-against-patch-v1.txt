@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+.E........E.....E....E..E........E...................
+Time: 0.351
+There were 6 failures:
+1) anExplicitCorrectionOfTheSamePastEventCorrectsIt(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{neu0=[f0]}> but was:<{}>
+2) twoTimeAnchorsAloneRelateNothing(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
+3) aCoordinatedSubjectIsNotReplacedByOneOfItsMembers(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
+4) aSharedCityAloneDoesNotLetAStateReplaceAPastVisit(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
+5) aKnownNewerStatementIsNeverHiddenByIncompleteRetrieval(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<[neu]> but was:<[wohnort]>
+6) aQuotedFirstPersonBelongsToTheQuotedSpeaker(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[wohnort]}>
+
+FAILURES!!!
+Tests run: 47,  Failures: 6
+

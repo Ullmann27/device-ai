@@ -32,7 +32,7 @@
 4. **Lücke 2:** Ein optionales `validFrom` an `Ewm1Fact` ist erst nach Lücke 1 und einem eigenen Vertrag sinnvoll. Es braucht **keinen** zweiten Faktenspeicher.
 
 ## Nachtrag 30.10.: Fix als Patchkandidat
-Siehe [EXP-20-M6-B4-EWM-FIX-20261030.md](EXP-20-M6-B4-EWM-FIX-20261030.md): Vorprüfung 3/5 → 5/5, Raster FP 195 → 48, FN 228 → 0, Regression 772/772; auf eigenem Branch, nicht übernommen.
+Siehe [EXP-20-M6-B4-EWM-FIX-20261030.md](EXP-20-M6-B4-EWM-FIX-20261030.md) (v2): Vorprüfung 3/5 → 5/5; Orakel mit 50 976 Paaren P 0,219 → 1,000, R 0,387 → 1,000; Regression 788/788; auf eigenem Branch, nicht übernommen.
 
 ## Bedeutung für M6
 Der geplante selektive Reset (M6-B4) braucht kein neuronales Signal, solange die vorhandene, deterministische Ersetzungslogik bei Ich-Aussagen nicht greift. **Zuerst diesen nachgewiesenen Fehler beheben**, dann Predictive-Coding- oder EMA-Varianten dagegen vergleichen.

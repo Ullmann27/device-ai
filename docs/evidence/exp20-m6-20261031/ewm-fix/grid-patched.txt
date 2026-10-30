@@ -1,18 +1,39 @@
-EXP-20 M6-B4 supersession grid (gold = declarative rule, see source)
-cases=7872 TP=348 FP=48 FN=0 TN=7476 bystanderLost=0 accuracy=0.9939
-errors by later holder/form (errors/cases):
-  anna/nichtmehr         6/144
-  anna/seit              18/288
-  max/nichtmehr          6/144
-  max/seit               18/288
+EXP-20 M6-B4 oracle grid v2 (gold = reference relation on frames, see source)
+cases=50976 TP=666   FP=0     FN=0     TN=50310  precision=1.000 recall=1.000
+gold relations: {COEXISTS=50310, CORRECTS_EVENT=36, SUPERSEDES_STATE=630}
+bystanders lost=0  metamorphic: insertion changed=0 order changed=0 paraphrase groups inconsistent=0/5184
+by category:
+  form bericht                       TP=0     FP=0     FN=0     TN=864    precision=- recall=-
+  form frueher                       TP=0     FP=0     FN=0     TN=5184   precision=- recall=-
+  form korrektur                     TP=144   FP=0     FN=0     TN=6768   precision=1.000 recall=1.000
+  form nichtmehr                     TP=54    FP=0     FN=0     TN=2538   precision=1.000 recall=1.000
+  form none                          TP=36    FP=0     FN=0     TN=8604   precision=1.000 recall=1.000
+  form update                        TP=432   FP=0     FN=0     TN=20304  precision=1.000 recall=1.000
+  form zitat                         TP=0     FP=0     FN=0     TN=864    precision=- recall=-
+  form zukunft                       TP=0     FP=0     FN=0     TN=5184   precision=- recall=-
+  holder different                   TP=0     FP=0     FN=0     TN=41040  precision=- recall=-
+  holder same                        TP=666   FP=0     FN=0     TN=9270   precision=1.000 recall=1.000
+  relation COEXISTS                  TP=0     FP=0     FN=0     TN=50310  precision=- recall=-
+  relation CORRECTS_EVENT            TP=36    FP=0     FN=0     TN=0      precision=1.000 recall=1.000
+  relation SUPERSEDES_STATE          TP=630   FP=0     FN=0     TN=0      precision=1.000 recall=1.000
+  transition EVENT(n)->EVENT(n)      TP=0     FP=0     FN=0     TN=216    precision=- recall=-
+  transition EVENT(n)->EVENT(p)      TP=0     FP=0     FN=0     TN=432    precision=- recall=-
+  transition EVENT(n)->STATE(f)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition EVENT(n)->STATE(n)      TP=0     FP=0     FN=0     TN=4428   precision=- recall=-
+  transition EVENT(n)->STATE(p)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition EVENT(p)->EVENT(n)      TP=0     FP=0     FN=0     TN=216    precision=- recall=-
+  transition EVENT(p)->EVENT(p)      TP=36    FP=0     FN=0     TN=396    precision=1.000 recall=1.000
+  transition EVENT(p)->STATE(f)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition EVENT(p)->STATE(n)      TP=0     FP=0     FN=0     TN=4428   precision=- recall=-
+  transition EVENT(p)->STATE(p)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition STATE(n)->EVENT(n)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition STATE(n)->EVENT(p)      TP=0     FP=0     FN=0     TN=1296   precision=- recall=-
+  transition STATE(n)->STATE(f)      TP=0     FP=0     FN=0     TN=1944   precision=- recall=-
+  transition STATE(n)->STATE(n)      TP=630   FP=0     FN=0     TN=12654  precision=1.000 recall=1.000
+  transition STATE(n)->STATE(p)      TP=0     FP=0     FN=0     TN=1944   precision=- recall=-
+  transition STATE(p)->EVENT(n)      TP=0     FP=0     FN=0     TN=648    precision=- recall=-
+  transition STATE(p)->EVENT(p)      TP=0     FP=0     FN=0     TN=1296   precision=- recall=-
+  transition STATE(p)->STATE(f)      TP=0     FP=0     FN=0     TN=1944   precision=- recall=-
+  transition STATE(p)->STATE(n)      TP=0     FP=0     FN=0     TN=13284  precision=- recall=-
+  transition STATE(p)->STATE(p)      TP=0     FP=0     FN=0     TN=1944   precision=- recall=-
 error kinds (count, first example):
-  FP anna/besuch -> anna/arbeiten/nichtmehr           3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna arbeitet nicht mehr in Wien."
-  FP anna/besuch -> anna/arbeiten/seit                6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag arbeitet meine Schwester Anna in Graz."
-  FP anna/besuch -> anna/tennis/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag spielt meine Schwester Anna in Graz Tennis."
-  FP anna/besuch -> anna/wohnen/nichtmehr             3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna wohnt nicht mehr in Wien."
-  FP anna/besuch -> anna/wohnen/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag wohnt meine Schwester Anna in Graz."
-  FP max/besuch -> max/arbeiten/nichtmehr             3  "Max war gestern in Wien." -> "Max arbeitet nicht mehr in Wien."
-  FP max/besuch -> max/arbeiten/seit                  6  "Max war gestern in Wien." -> "Seit Dienstag arbeitet Max in Graz."
-  FP max/besuch -> max/tennis/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag spielt Max in Graz Tennis."
-  FP max/besuch -> max/wohnen/nichtmehr               3  "Max war gestern in Wien." -> "Max wohnt nicht mehr in Wien."
-  FP max/besuch -> max/wohnen/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag wohnt Max in Graz."

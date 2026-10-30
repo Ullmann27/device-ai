@@ -1,24 +1,36 @@
 JUnit version 4.13.2
-....E....E.E.E....E.E.....E..E
-Time: 0.205
-There were 8 failures:
-1) aSentenceInitialAdverbIsNotTheSubject(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+.E.....E..E.E....E..E.E..E..E..E...E.E.........E...E.........
+Time: 0.297
+There were 14 failures:
+1) anExplicitCorrectionOfTheSamePastEventCorrectsIt(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{neu0=[f0]}> but was:<{}>
+2) successiveMovesFormAChain(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{neu0=[f0], neu1=[f0, neu0]}> but was:<{}>
+3) aSentenceInitialAdverbIsNotTheSubject(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{neu0=[wohnort]}> but was:<{}>
-2) mySistersStayChangesNothingOfMine(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+4) twoTimeAnchorsAloneRelateNothing(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
+5) mySistersStayChangesNothingOfMine(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{}> but was:<{neu0=[anna]}>
-3) anotherRelationInTheSameCityIsNoUpdate(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+6) anotherRelationInTheSameCityIsNoUpdate(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
-4) herOwnNameIsNoSharedDetailSoHerNewJobKeepsHerResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+7) herOwnNameIsNoSharedDetailSoHerNewJobKeepsHerResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
-5) mittlerweileWithInvertedPronounReplacesMyResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+8) aSharedCityAloneDoesNotLetAStateReplaceAPastVisit(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{}> but was:<{neu0=[f0]}>
+9) aKnownNewerStatementIsNeverHiddenByIncompleteRetrieval(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<[neu]> but was:<[wohnort]>
+10) mySpousesMoveKeepsMySonsResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+java.lang.AssertionError: expected:<{neu0=[f0]}> but was:<{}>
+11) mittlerweileWithInvertedPronounReplacesMyResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{neu0=[wohnort]}> but was:<{}>
-6) aNamedPersonAfterAnAdverbKeepsHerOwnHistory(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+12) aNamedPersonAfterAnAdverbKeepsHerOwnHistory(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{neu0=[f0]}> but was:<{}>
-7) ourHouseholdMoveReplacesOurResidenceButNotOurStove(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+13) ourHouseholdMoveReplacesOurResidenceButNotOurStove(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{neu0=[f0]}> but was:<{}>
-8) aDatedRelocationReplacesOnlyMyOldResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
+14) aDatedRelocationReplacesOnlyMyOldResidence(at.heinz.deviceai.intelligence.ewm.Ewm1OwnerSupersessionTest)
 java.lang.AssertionError: expected:<{neu0=[wohnort]}> but was:<{}>
 
 FAILURES!!!
-Tests run: 22,  Failures: 8
+Tests run: 47,  Failures: 14
 
