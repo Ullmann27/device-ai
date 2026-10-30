@@ -6,6 +6,9 @@ on:
     paths:
       - .github/continuum/continuum-cloud-gpu-admission.mjs
       - .github/continuum/continuum-cloud-gpu-admission.test.mjs
+      - .github/continuum/nvidia-nim-synthetic-benchmark.mjs
+      - .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs
+      - scripts/continuum-nvidia-nim-benchmark.mjs
       - .github/workflows/continuum-cloud-gpu-admission.yml
   workflow_dispatch:
 
@@ -27,6 +30,7 @@ jobs:
         run: |
           node --test \
             .github/continuum/continuum-cloud-gpu-admission.test.mjs \
+            .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs \
             .github/continuum/compute-fabric-model-adapter.test.mjs \
             .github/continuum/continuum-virtual-model-fabric.test.mjs \
             .github/continuum/coding-provider-remote.test.mjs
@@ -34,3 +38,6 @@ jobs:
         run: |
           node --check .github/continuum/continuum-cloud-gpu-admission.mjs
           node --check .github/continuum/continuum-cloud-gpu-admission.test.mjs
+          node --check .github/continuum/nvidia-nim-synthetic-benchmark.mjs
+          node --check .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs
+          node scripts/continuum-nvidia-nim-benchmark.mjs --check
