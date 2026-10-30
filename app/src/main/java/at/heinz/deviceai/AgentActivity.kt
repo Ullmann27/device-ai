@@ -2219,6 +2219,7 @@ class AgentActivity : Activity() {
 
     private fun buildQuickActions(): View {
         val actions = listOf(
+            "Updates" to "",
             "KI-Modell" to "",
             "Teamleiter" to "",
             "System" to "",
@@ -2230,6 +2231,7 @@ class AgentActivity : Activity() {
         fun createAction(label: String, command: String): Button =
             chip(label).apply {
                 contentDescription = when (label) {
+                    "Updates" -> "Sichere originalsignierte Continuum-Lokal-Updates prüfen und herunterladen"
                     "KI-Modell" -> "Lokales Sprachmodell einrichten oder verwalten"
                     "Teamleiter" -> "Lokalen Continuum Teamleiter jetzt prüfen"
                     "System" -> "Systemstatus und Berechtigungen öffnen"
@@ -2239,6 +2241,7 @@ class AgentActivity : Activity() {
                 setOnClickListener {
                     quickActionsDialog?.dismiss()
                     when (label) {
+                        "Updates" -> startActivity(Intent(this@AgentActivity, ContinuumOwnerUpdateActivity::class.java))
                         "KI-Modell" -> showModelCenter()
                         "Teamleiter" -> runDeviceTeamleaderCheck()
                         "System" -> showSystemCenter()

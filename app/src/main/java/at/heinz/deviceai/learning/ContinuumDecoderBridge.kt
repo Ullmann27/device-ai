@@ -254,8 +254,10 @@ class ContinuumDecoderBridge(private val directory: File) {
         prompt: String, encoderSnapshot: ByteArray, maxBytes: Int = 48
     ): DecoderGeneration? {
         val model = loadOrNull() ?: return null
+        // Match the fixed legacy conditioner used by trainExperiment.
+        // Evidence-paired CDX1 uses its separate per-example conditioning path.
         val condition = TrainableSubwordEncoder.restore(encoderSnapshot)
-            .representation(prompt.take(320))
+            .representation("research context")
         return model.generate(prompt, maxBytes, condition)
     }
 
