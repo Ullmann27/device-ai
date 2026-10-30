@@ -1,0 +1,7 @@
+GIT_PARENT=d0d747d0e2ce4e1f401cac14123c60effbf00317 + docs only; JAR=3922e3437ae5183b56f714556fac612b9db629ee5ac726aa3f66500a378722b5
+Time: 26.074
+
+OK (40 tests)
+
+JUNIT_EXIT=0
+app/src/main changed vs ed408a7: 0 files

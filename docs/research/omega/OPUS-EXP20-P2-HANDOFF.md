@@ -1,5 +1,7 @@
 # EXP-20 P2/P3 · Übergabe (Opus, 30.10.2026)
 
+> **Neu (M1):** Meilenstein-Bericht, Antworten auf die 8 Forschungsfragen und Weiterarbeitungsauftrag M2 stehen in [EXP-20-MILESTONE-M1-AND-NEXT-20261030.md](../exp20/EXP-20-MILESTONE-M1-AND-NEXT-20261030.md). Regression M1: [milestone-m1-regression.txt](../../evidence/exp20-p2-20261030/milestone-m1-regression.txt).
+
 **Status: abgeschlossen auf Host-Labor-Niveau. Nichts davon ist produktiv integriert.**
 
 - **Branch:** `claude/continuum-jarvis-exp20-p2-kxrxy2`.
@@ -49,7 +51,7 @@
    - C: 149 / 883.
    - A0: 174 / 788.
    - A_DSK: 124 / 745.
-   - Fehlertypen je Arm stehen in [EXP-20-P2-RESULT](../exp20/EXP-20-P2-RESULT-20261030.md). `UNAUTHORIZED_ACTION_SUGGESTION` = 0 für alle; strukturell bewiesen über 6 400 Signalkombinationen.
+   - Fehlertypen je Arm stehen in [EXP-20-P2-RESULT](../exp20/EXP-20-P2-RESULT-20261030.md). `UNAUTHORIZED_ACTION_SUGGESTION` = 0 für alle; strukturell geprüft über 7 680 Signalkombinationen (früher fälschlich 6 400 angegeben); mit gesetzter Referenzmarke wählt die Policy in allen 7 680 Fällen CLARIFY (`P2SafetyAuditTest`).
 6. **Effekte** (Holm, Cluster-Bootstrap):
    - C–A: −1,4 pp [−9,3; +6,8], `INCONCLUSIVE`.
    - C–B: +1,1 pp [−2,5; +4,6] (90 %: [−1,8; +3,9]), `EQUIVALENT`.
