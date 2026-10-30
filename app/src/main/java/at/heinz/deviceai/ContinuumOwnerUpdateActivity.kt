@@ -98,7 +98,7 @@ class ContinuumOwnerUpdateActivity : Activity() {
                             setMessage("Freigegeben: Continuum Lokal " +
                                 check.release.versionName + ". APK wird überprüft und geladen.")
                             // The owner's one explicit click authorized the check and download.
-                            // Android PackageInstaller still requires its own user confirmation.
+                            // Android PackageInstaller decides whether an additional system dialog is needed.
                             downloadAndInstall(check.release)
                         }
                     }
@@ -129,7 +129,7 @@ class ContinuumOwnerUpdateActivity : Activity() {
                 checkButton.isEnabled = true
                 result.fold(
                     onSuccess = {
-                        setMessage(it + "\nBitte im Android-Installationsdialog auf Aktualisieren tippen.")
+                        setMessage(it + "\nAndroid verarbeitet das Update. Falls eine Systembestätigung erscheint, bitte dort Aktualisieren auswählen.")
                     },
                     onFailure = {
                         setMessage("Aktualisierung gestoppt: " +
