@@ -19,14 +19,29 @@ cd "$root"
   die 'Existing complete Continuum main app source missing'
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] ||
   die 'Build only a clean, reviewed Git checkout'
+# A clean checkout alone does not authorize the original P12 to sign its source.
+# Require an exact owner-reviewed commit even when this builder is invoked directly.
+sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
+[[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git source SHA'
+[[ "${CONTINUUM_OWNER_LOCAL_APPROVED_SHA:-}" == "$sha" ]] ||
+  die 'EXACT_OWNER_SOURCE_APPROVAL_REQUIRED: export the reviewed full commit SHA'
+branch="$(git symbolic-ref --quiet --short HEAD)" ||
+  die 'Detached HEAD cannot be an owner release candidate'
+case "$branch" in main|master|prod|production|release|main/*|master/*|prod/*|production/*|release/*)
+  die 'A protected branch cannot be an owner release candidate' ;;
+esac
+origin="$(git remote get-url origin)" || die 'Original GitHub remote unavailable'
+case "$origin" in
+  https://github.com/Ullmann27/device-ai|https://github.com/Ullmann27/device-ai.git|git@github.com:Ullmann27/device-ai.git|ssh://git@github.com/Ullmann27/device-ai.git) ;;
+  *) die 'Untrusted Git remote cannot use the original owner P12' ;;
+esac
+unset origin branch
 # The one-time owner bootstrap must not produce an APK lacking the update
 # button. This test runs before the owner P12 password is requested.
 [[ -f scripts/continuum-one-tap-updater-contract.test.mjs ]] ||
   die 'ONE_TAP_UPDATE_CONTRACT_MISSING: refusing a release without the update button'
 node --test scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-release-stage.test.mjs ||
   die 'ONE_TAP_UPDATE_CONTRACT_FAILED: refusing a release without a verified update path'
-sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
-[[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git source SHA'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] ||
   die 'Do not load historic owner-signing credentials into the standalone build'
 
