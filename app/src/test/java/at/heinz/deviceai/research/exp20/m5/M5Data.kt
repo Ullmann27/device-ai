@@ -94,6 +94,11 @@ object M5Data {
                 val j = r.nextInt(i + 1)
                 val tmp = order[i]; order[i] = order[j]; order[j] = tmp
             }
+            // Independent orthogonal balancing of target factor (g % 8) and candidate position (g / 8).
+            // Blind position-only predictors must remain at the exact 1/8 baseline in each stratum.
+            val targetPosition = (g / 8 + split.ordinal + kind.ordinal) % 8
+            val oldPosition = order.indexOf(target)
+            val moved = order[targetPosition]; order[targetPosition] = target; order[oldPosition] = moved
             for ((position, factor) in order.withIndex()) {
                 val memory = "${person(factor)} $task ${day(factor).first} ${place(factor).first}."
                 rows += Row(group, split, kind, if (factor == target) "TRUE" else "CANDIDATE", "C$position", memory)
@@ -129,8 +134,8 @@ object M5Data {
                 val memoryOrder = group.filter { it.role != "QUERY" }
                 positions[memoryOrder.indexOfFirst { it.role == "TRUE" }]++
             }
-            // Order is independently shuffled; every slot must occur (not necessarily perfectly balanced).
-            require(positions.all { it > 0 }) { "$split/$kind: target placement exposes label" }
+            // Exact balance: a position-only predictor must win exactly 1/8, not just roughly.
+            require(positions.all { it == GROUPS_PER_KIND_PER_SPLIT / 8 }) { "$split/$kind: positional label imbalance" }
         }
     }
 
