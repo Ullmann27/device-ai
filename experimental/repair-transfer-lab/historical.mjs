@@ -35,6 +35,9 @@ for(const sha of COMMITS){
   const lo=Math.min(...hunks.map(h=>h[0]))-5,hi=Math.max(...hunks.map(h=>h[1]))+5;
   const runner=new LabRunner({root:wt,timeoutMs:20000});
   const extra=fs.existsSync(path.join(wt,'.github/continuum/fixtures'))?['.github/continuum/fixtures']:[];
+  // only the fix's test files that actually import the repaired module are its oracle
+  tests.splice(0,tests.length,...tests.filter(t=>runner.files(t,extra).includes(source)));
+  if(!tests.length){results.push({commit:sha.slice(0,8),source,bugReproduced:false,reason:'NO_TEST_IMPORTS_THE_MODULE'});continue;}
   const runAll=src=>tests.map(t=>runner.run({testRel:t,moduleRel:source,source:src,extra}));
   const before=runAll(buggy),afterFix=runAll(fixed);
   const red=before.some(r=>!r.passed),fixGreen=afterFix.every(r=>r.passed);
