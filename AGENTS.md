@@ -1,3 +1,5 @@
+> **Aktueller GPT-6-Lagebericht + revidierter M4–M9-Plan (30.10.2026):** `docs/handoff/GPT6-CONTINUUM-LAGE-MEILENSTEINE-20261030.md` – GitHub-Stand, drei Opus-Zweige, M8-Testloop, EWM, Fold7-Diagnose, **bestehender Render-Updateweg**, Freigabegates. Vor neuem Planen zuerst diesen Ist-Stand mit Live-HEAD abgleichen.
+
 > **Gesamt-Weiterarbeitsauftrag (Opus 5.5, 30.10.2026):** `docs/handoff/OPUS-WEITERARBEIT-20261030.md` – drei offene Branches (EXP-20, EWM-Fix v2, M8-Coding-Agent), Reihenfolge, Rollen, Regeln.
 
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
