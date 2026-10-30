@@ -16,7 +16,9 @@ test("owner candidate advances beyond published 0.3.22/code23 without a new appl
   // Current owner build keeps the historical default and explicitly opts into 26+.
   assert.match(gradle,/versionCode = continuumOwnerLocalVersion \?: 25/);
   assert.match(gradle,/versionName = if \(continuumOwnerLocalVersion != null\) "0\.3\.\$\{continuumOwnerLocalVersion - 1\}" else "0\.3\.24"/);
-  assert.match(gradle, /applicationId = "at\.heinz\.deviceai"/);
+  // Both existing package IDs are pinned exactly: the owner app and the standalone Continuum Lokal app; no third ID.
+  assert.match(gradle, /applicationId = if \([^)\n]*\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"\n/);
+  assert.equal((gradle.match(/applicationId = /g)??[]).length, 1);
   assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
   assert.match(manifest, /android:enabled="\$\{mobileBuilderEnabled\}"/);
 });
