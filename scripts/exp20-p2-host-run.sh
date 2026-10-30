@@ -33,6 +33,7 @@ CLOSURE=(
   at/heinz/deviceai/cognitive/MemoryEcology.kt
   at/heinz/deviceai/cognitive/SelfModel.kt
   at/heinz/deviceai/intelligence/ewm/Ewm1Lexicon.kt
+  at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
   at/heinz/deviceai/learning/ContinuumLearningExperience.kt
   at/heinz/deviceai/learning/interactive/ResearchFeedback.kt
   at/heinz/deviceai/learning/interactive/ResearchFeedbackFileLock.kt
