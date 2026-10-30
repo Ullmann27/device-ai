@@ -1,0 +1,5 @@
+{
+  "schema": "continuum-nvidia-schedule-ledger",
+  "version": 1,
+  "reservations": []
+}
