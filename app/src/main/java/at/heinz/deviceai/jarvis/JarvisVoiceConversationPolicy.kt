@@ -14,7 +14,7 @@ object JarvisVoiceConversationPolicy {
     private val followUpPrefix = Regex("(?iu)^(?:und|aber)\\s+")
     private val knowledgeQuestion = Regex("(?iu)^(?:was|warum|wieso|weshalb|wer|wen|wem|wo|woher|wohin|wann|wie|welche|welcher|welches|wieviel|wie\\s+viel|wie\\s+viele)\\b")
     private val explanation = Regex("(?iu)^(?:erklär(?:e)?\\s+mir|erzähl(?:e)?\\s+mir)\\b")
-    private val greeting = Regex("(?iu)^(?:hallo|guten\\s+(?:morgen|tag|abend)|danke|vielen\\s+dank|wie\\s+geht\\s+es\\s+dir)[.!? ]*$")
+    private val greeting = Regex("(?iu)^(?:hallo|(?:hallo|hey)\\s+jarvis|guten\\s+(?:morgen|tag|abend)|danke|vielen\\s+dank|wie\\s+geht\\s+es\\s+dir)[.!? ]*$")
     private val forbidden = Regex(
         "(?iu)\\b(?:löschen?|lösch(?:e|en)?|entfern(?:e|en)?|vergiss|vergessen|" +
             "merk(?:e|en)?|speicher(?:n|e)?|installier(?:e|en)?|aktivier(?:e|en)?|" +
@@ -25,7 +25,7 @@ object JarvisVoiceConversationPolicy {
             "push|commit|freigeben|freigabe|genehmig(?:e|en)?|" +
             "passwort|passwörter|pin|api[- ]?key|token|geheimnis|" +
             "herd|kochfeld|smartthings|home assistant|gerät(?:e|en)?|" +
-            "schloss|alarm|kamera|mikrofon|datei(?:en)?|bankkonto|bankkonten|konto|bank|browser|internet)\\b"
+            "schloss|alarm|kamera|mikrofon|datei(?:en)?|bankkonto|bankkonten|konto|bank|browser|internet|adresse|anschrift|iban|kontonummer|telefonnummer|geburtsdatum|sozialversicherungsnummer|wohnort)\\b"
     )
 
     fun evaluate(recognized: String?): JarvisVoiceDecision {
