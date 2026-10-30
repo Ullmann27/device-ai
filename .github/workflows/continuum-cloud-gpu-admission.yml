@@ -13,6 +13,9 @@ on:
       - .github/continuum/nvidia-nim-public-coding-oracle.test.mjs
       - scripts/continuum-nvidia-nim-benchmark.mjs
       - scripts/continuum-nvidia-coding-lab.mjs
+      - scripts/continuum-nvidia-ultra-review.mjs
+      - scripts/continuum-nvidia-ultra-review.test.mjs
+      - docs/research/omega/NVIDIA-ULTRA-JARVIS-MASTER-RESEARCH-20261030.md
       - .github/workflows/continuum-cloud-gpu-admission.yml
   workflow_dispatch:
 
@@ -37,6 +40,7 @@ jobs:
             .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs \
             .github/continuum/nvidia-nim-public-coding-lab.test.mjs \
             .github/continuum/nvidia-nim-public-coding-oracle.test.mjs \
+            scripts/continuum-nvidia-ultra-review.test.mjs \
             .github/continuum/compute-fabric-model-adapter.test.mjs \
             .github/continuum/continuum-virtual-model-fabric.test.mjs \
             .github/continuum/coding-provider-remote.test.mjs
@@ -51,4 +55,7 @@ jobs:
           node --check .github/continuum/nvidia-nim-public-coding-oracle.test.mjs
           node --check scripts/continuum-nvidia-coding-lab.mjs
           node scripts/continuum-nvidia-coding-lab.mjs --check
+          node --check scripts/continuum-nvidia-ultra-review.mjs
+          node --check scripts/continuum-nvidia-ultra-review.test.mjs
+          node scripts/continuum-nvidia-ultra-review.mjs --check
           node scripts/continuum-nvidia-nim-benchmark.mjs --check
