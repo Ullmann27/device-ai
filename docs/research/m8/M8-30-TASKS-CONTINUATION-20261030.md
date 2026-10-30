@@ -30,3 +30,9 @@ Erwartung (kein Testergebnis): `--validate` sollte 30/30 gültige rot/grün-Repa
 - Kein produktiver Agent-Berechtigungswechsel; kein Shell-Zugriff durch das Modell; kein automatischer Main-Merge, Signieren oder Installieren.
 - Rollback: diesen Draft-PR nicht übernehmen.
 - Diese Runde: `NODE_VALIDATE=NOT_RUN`, `DOCKER_ISOLATION=NOT_RUN`, `REAL_MODEL=NOT_RUN`, `FOLD7=NOT_RUN`.
+
+## Unabhängiger Fixture-Test ergänzt
+- `scripts/continuum-agent-benchmark-extra.test.mjs` führt 30 tatsächliche Baseline-Rot-/Referenz-Grün-Proben mit der vorhandenen `validateTasks()`-Funktion aus.
+- Zusätzlich prüft ein eigenständiger Test alle IDs, Scope-Grenzen, Referenz-Edits und Tool-Aktionen, ohne Modell-Outputs auszuwerten.
+- Direkt ausführbar: `node --test scripts/continuum-agent-benchmark-extra.test.mjs`.
+- **Wichtig:** Der Testcode ist gepusht, aber in dieser Umgebung mangels authentifiziertem Repository-Checkout **noch nicht ausgeführt**. Status `NOT_RUN`, bis ein Node-Exitcode und Testprotokoll vorliegen.
