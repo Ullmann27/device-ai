@@ -40,7 +40,7 @@ if(process.argv.length!==3||!['--check','--run'].includes(op)){
   const reason=String(error?.message??'');
   const whitelist=new Set(['NVIDIA_AUTH_REQUIRED','NVIDIA_CODING_LAB_CONFIG_INVALID',
    'NVIDIA_REQUEST_TOO_LARGE','NVIDIA_RESPONSE_INVALID',
-   'NVIDIA_RESPONSE_TOO_LARGE','NVIDIA_PROPOSAL_FORMAT_INVALID']);
+   'NVIDIA_RESPONSE_TOO_LARGE','NVIDIA_RESPONSE_TRUNCATED','NVIDIA_PROPOSAL_FORMAT_INVALID']);
   process.stderr.write((whitelist.has(reason)||/^NVIDIA_ENDPOINT_UNAVAILABLE_HTTP_[0-9]{3}$/.test(reason)?
    reason:'NVIDIA_CODING_LAB_UNAVAILABLE')+'\n');
   process.exitCode=2;
