@@ -1,0 +1,13 @@
+# Optional Aider experiment; run only in an isolated checkout/worktree.
+# Vendor-backed parameters are forwarded via LiteLLM extra_params;
+# success on actual NVIDIA service must be verified on first use.
+- name: openai/nvidia/nemotron-3-ultra-550b-a55b
+  edit_format: diff
+  use_repo_map: false
+  extra_params:
+    max_tokens: 16384
+    temperature: 1
+    top_p: 0.95
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: true
