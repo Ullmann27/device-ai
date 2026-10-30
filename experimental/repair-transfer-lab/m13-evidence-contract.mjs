@@ -52,25 +52,37 @@ export function auditRecordedM13({summary,hypotheses,trainRows,devRows,expectedS
   const trainModules=new Set(trainRows.map(r=>r.module));
   const overlapped=[...new Set(devRows.map(r=>r.module))].filter(m=>trainModules.has(m));
   if(overlapped.length) return reject('TRAIN_DEV_MODULE_OVERLAP');
+  const aggregate = rows => {
+    const cells = new Map(), strategies = new Map();
+    for (const r of rows) {
+      const key = JSON.stringify([r.kind,r.strategy]);
+      const cell = cells.get(key) ?? {n:0,s:0};
+      cell.n++; if(r.success)cell.s++;cells.set(key,cell);
+      const base = strategies.get(r.strategy) ?? {n:0,s:0};
+      base.n++;if(r.success)base.s++;strategies.set(r.strategy,base);
+    }
+    return {cells,strategies};
+  };
+  const train = aggregate(trainRows), dev = aggregate(devRows);
   for(const h of hypotheses) {
-    const tr=trainRows.filter(r=>r.kind===h.kind&&r.strategy===h.strategy);
-    const dr=devRows.filter(r=>r.kind===h.kind&&r.strategy===h.strategy);
-    const baseDev=devRows.filter(r=>r.strategy===h.strategy);
-    const baseTrain=trainRows.filter(r=>r.strategy===h.strategy);
-    const ts=tr.filter(r=>r.success).length, ds=dr.filter(r=>r.success).length;
+    const key=JSON.stringify([h.kind,h.strategy]);
+    const tr=train.cells.get(key) ?? {n:0,s:0};
+    const dr=dev.cells.get(key) ?? {n:0,s:0};
+    const baseTrain=train.strategies.get(h.strategy) ?? {n:0,s:0};
+    const baseDev=dev.strategies.get(h.strategy) ?? {n:0,s:0};
     if(!finiteCount(h.training.n) || !finiteCount(h.training.successes) ||
-      h.training.n!==tr.length || h.training.successes!==ts ||
-      !approx(h.training.rate,rate(ts,tr.length)) ||
-      !approx(h.training.baseRate,rate(baseTrain.filter(r=>r.success).length,baseTrain.length)) ||
+      h.training.n!==tr.n || h.training.successes!==tr.s ||
+      !approx(h.training.rate,rate(tr.s,tr.n)) ||
+      !approx(h.training.baseRate,rate(baseTrain.s,baseTrain.n)) ||
       !finiteCount(h.dev.n) || !finiteCount(h.dev.successes) ||
-      h.dev.n!==dr.length || h.dev.successes!==ds) return reject('HYPOTHESIS_ROW_COUNT_MISMATCH');
+      h.dev.n!==dr.n || h.dev.successes!==dr.s) return reject('HYPOTHESIS_ROW_COUNT_MISMATCH');
     if(h.status==='CONFIRMED') {
-      if(dr.length<6 || !baseDev.length || !approx(h.dev.rate,rate(ds,dr.length)) ||
-        !approx(h.dev.baseRate,rate(baseDev.filter(r=>r.success).length,baseDev.length)))
+      if(dr.n<6 || !baseDev.n || !approx(h.dev.rate,rate(dr.s,dr.n)) ||
+        !approx(h.dev.baseRate,rate(baseDev.s,baseDev.n)))
         return reject('CONFIRMED_WITH_INSUFFICIENT_OR_MISMATCHED_DEV_EVIDENCE');
-      const pBase=rate(baseDev.filter(r=>r.success).length,baseDev.length);
-      const p=h.direction==='PREFER'?upperBinomialTail(ds,dr.length,pBase):
-        upperBinomialTail(dr.length-ds,dr.length,1-pBase);
+      const pBase=rate(baseDev.s,baseDev.n);
+      const p=h.direction==='PREFER'?upperBinomialTail(dr.s,dr.n,pBase):
+        upperBinomialTail(dr.n-dr.s,dr.n,1-pBase);
       if(!Number.isFinite(p) || !(p<0.05) || !approx(h.dev.pOneSided,p))
         return reject('CONFIRMATION_NOT_STATISTICALLY_REPRODUCED');
     }
