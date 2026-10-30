@@ -36,6 +36,9 @@ CLOSURE=(
   at/heinz/deviceai/learning/interactive/ResearchFeedback.kt
   at/heinz/deviceai/learning/interactive/ResearchFeedbackFileLock.kt
   at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt
+  at/heinz/deviceai/learning/Cre1InferenceEncoder.kt
+  at/heinz/deviceai/learning/LearningSnapshot.kt
+  at/heinz/deviceai/learning/TrainableSubwordEncoder.kt
   at/heinz/deviceai/research/argon4/ComputeAllocationPolicy.kt
   at/heinz/deviceai/research/argon4/DialogStateKernel.kt
   at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt

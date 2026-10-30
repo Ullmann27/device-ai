@@ -1,0 +1,1081 @@
+group	type	role	text
+0	L	QUERY	Was macht Herr Egger am Sonntag im Keller?
+0	L	TRUE	Herr Egger räumt die Regale auf am Sonntag im Keller.
+0	L	NEAR_PERSON	Herr Mair räumt die Regale auf am Sonntag im Keller.
+0	L	NEAR_PLACE	Herr Egger räumt die Regale auf am Sonntag im Garten.
+0	L	NEAR_DAY	Herr Egger räumt die Regale auf am Mittwoch im Keller.
+0	L	UNRELATED	Herr Holzer gießt die Pflanzen am Freitag in der Garage.
+0	L	UNRELATED	Frau Kofler streicht den Zaun am Sonntag im Keller.
+0	L	UNRELATED	Frau Lehner gießt die Pflanzen am Mittwoch im Garten.
+0	L	UNRELATED	Frau Lindner gießt die Pflanzen am Montag im Keller.
+1	L	QUERY	Was macht Frau Brandl am Samstag im Garten?
+1	L	TRUE	Frau Brandl prüft die Bremsen am Samstag im Garten.
+1	L	NEAR_PERSON	Frau Haider prüft die Bremsen am Samstag im Garten.
+1	L	NEAR_PLACE	Frau Brandl prüft die Bremsen am Samstag auf dem Dachboden.
+1	L	NEAR_DAY	Frau Brandl prüft die Bremsen am Mittwoch im Garten.
+1	L	UNRELATED	Frau Wallner gießt die Pflanzen am Freitag auf dem Dachboden.
+1	L	UNRELATED	Frau Lindner räumt die Regale auf am Montag auf dem Dachboden.
+1	L	UNRELATED	Frau Holzer streicht den Zaun am Sonntag im Garten.
+1	L	UNRELATED	Frau Mair räumt die Regale auf am Sonntag im Büro.
+2	L	QUERY	Was macht Herr Brandl am Samstag auf dem Dachboden?
+2	L	TRUE	Herr Brandl holt das Paket ab am Samstag auf dem Dachboden.
+2	L	NEAR_PERSON	Herr Lehner holt das Paket ab am Samstag auf dem Dachboden.
+2	L	NEAR_PLACE	Herr Brandl holt das Paket ab am Samstag im Keller.
+2	L	NEAR_DAY	Herr Brandl holt das Paket ab am Freitag auf dem Dachboden.
+2	L	UNRELATED	Herr Ortner streicht den Zaun am Mittwoch im Keller.
+2	L	UNRELATED	Herr Rainer repariert die Heizung am Mittwoch im Keller.
+2	L	UNRELATED	Herr Holzer repariert die Heizung am Montag im Garten.
+2	L	UNRELATED	Herr Lindner räumt die Regale auf am Sonntag im Büro.
+3	L	QUERY	Was macht Herr Egger am Freitag auf dem Dachboden?
+3	L	TRUE	Herr Egger räumt die Regale auf am Freitag auf dem Dachboden.
+3	L	NEAR_PERSON	Herr Holzer räumt die Regale auf am Freitag auf dem Dachboden.
+3	L	NEAR_PLACE	Herr Egger räumt die Regale auf am Freitag im Keller.
+3	L	NEAR_DAY	Herr Egger räumt die Regale auf am Mittwoch auf dem Dachboden.
+3	L	UNRELATED	Herr Lindner gießt die Pflanzen am Freitag auf dem Dachboden.
+3	L	UNRELATED	Frau Rainer repariert die Heizung am Freitag im Keller.
+3	L	UNRELATED	Herr Brandl gießt die Pflanzen am Samstag auf dem Dachboden.
+3	L	UNRELATED	Frau Kofler gießt die Pflanzen am Samstag auf dem Dachboden.
+4	L	QUERY	Was macht Herr Schuster am Sonntag im Büro?
+4	L	TRUE	Herr Schuster holt das Paket ab am Sonntag im Büro.
+4	L	NEAR_PERSON	Herr Wallner holt das Paket ab am Sonntag im Büro.
+4	L	NEAR_PLACE	Herr Schuster holt das Paket ab am Sonntag auf dem Dachboden.
+4	L	NEAR_DAY	Herr Schuster holt das Paket ab am Samstag im Büro.
+4	L	UNRELATED	Frau Haider repariert die Heizung am Samstag im Garten.
+4	L	UNRELATED	Herr Kofler streicht den Zaun am Sonntag im Garten.
+4	L	UNRELATED	Frau Egger gießt die Pflanzen am Montag im Büro.
+4	L	UNRELATED	Herr Lehner prüft die Bremsen am Samstag in der Garage.
+5	L	QUERY	Was macht Herr Lehner am Samstag auf dem Dachboden?
+5	L	TRUE	Herr Lehner räumt die Regale auf am Samstag auf dem Dachboden.
+5	L	NEAR_PERSON	Herr Ortner räumt die Regale auf am Samstag auf dem Dachboden.
+5	L	NEAR_PLACE	Herr Lehner räumt die Regale auf am Samstag in der Garage.
+5	L	NEAR_DAY	Herr Lehner räumt die Regale auf am Mittwoch auf dem Dachboden.
+5	L	UNRELATED	Frau Haider prüft die Bremsen am Montag auf dem Dachboden.
+5	L	UNRELATED	Frau Mair repariert die Heizung am Freitag auf dem Dachboden.
+5	L	UNRELATED	Frau Wallner repariert die Heizung am Sonntag im Keller.
+5	L	UNRELATED	Herr Kofler repariert die Heizung am Samstag in der Garage.
+6	L	QUERY	Was macht Frau Kofler am Sonntag in der Garage?
+6	L	TRUE	Frau Kofler prüft die Bremsen am Sonntag in der Garage.
+6	L	NEAR_PERSON	Frau Rainer prüft die Bremsen am Sonntag in der Garage.
+6	L	NEAR_PLACE	Frau Kofler prüft die Bremsen am Sonntag im Büro.
+6	L	NEAR_DAY	Frau Kofler prüft die Bremsen am Freitag in der Garage.
+6	L	UNRELATED	Frau Holzer räumt die Regale auf am Freitag im Keller.
+6	L	UNRELATED	Frau Ortner repariert die Heizung am Freitag im Büro.
+6	L	UNRELATED	Frau Haider gießt die Pflanzen am Montag im Büro.
+6	L	UNRELATED	Frau Schuster holt das Paket ab am Mittwoch in der Garage.
+7	L	QUERY	Was macht Frau Haider am Montag im Keller?
+7	L	TRUE	Frau Haider prüft die Bremsen am Montag im Keller.
+7	L	NEAR_PERSON	Frau Mair prüft die Bremsen am Montag im Keller.
+7	L	NEAR_PLACE	Frau Haider prüft die Bremsen am Montag im Garten.
+7	L	NEAR_DAY	Frau Haider prüft die Bremsen am Sonntag im Keller.
+7	L	UNRELATED	Frau Lehner räumt die Regale auf am Mittwoch im Keller.
+7	L	UNRELATED	Herr Kofler gießt die Pflanzen am Mittwoch im Keller.
+7	L	UNRELATED	Frau Ortner holt das Paket ab am Samstag in der Garage.
+7	L	UNRELATED	Frau Lindner holt das Paket ab am Sonntag im Garten.
+8	L	QUERY	Was macht Frau Lehner am Freitag im Garten?
+8	L	TRUE	Frau Lehner holt das Paket ab am Freitag im Garten.
+8	L	NEAR_PERSON	Frau Rainer holt das Paket ab am Freitag im Garten.
+8	L	NEAR_PLACE	Frau Lehner holt das Paket ab am Freitag im Büro.
+8	L	NEAR_DAY	Frau Lehner holt das Paket ab am Sonntag im Garten.
+8	L	UNRELATED	Herr Wallner gießt die Pflanzen am Mittwoch im Keller.
+8	L	UNRELATED	Frau Egger streicht den Zaun am Sonntag im Büro.
+8	L	UNRELATED	Frau Ortner prüft die Bremsen am Montag im Garten.
+8	L	UNRELATED	Herr Kofler gießt die Pflanzen am Mittwoch im Keller.
+9	L	QUERY	Was macht Frau Ortner am Sonntag im Garten?
+9	L	TRUE	Frau Ortner räumt die Regale auf am Sonntag im Garten.
+9	L	NEAR_PERSON	Frau Kofler räumt die Regale auf am Sonntag im Garten.
+9	L	NEAR_PLACE	Frau Ortner räumt die Regale auf am Sonntag im Keller.
+9	L	NEAR_DAY	Frau Ortner räumt die Regale auf am Samstag im Garten.
+9	L	UNRELATED	Frau Egger holt das Paket ab am Samstag im Garten.
+9	L	UNRELATED	Herr Lindner repariert die Heizung am Mittwoch im Büro.
+9	L	UNRELATED	Frau Mair gießt die Pflanzen am Montag im Garten.
+9	L	UNRELATED	Herr Haider prüft die Bremsen am Mittwoch im Büro.
+10	L	QUERY	Was macht Herr Wallner am Mittwoch im Keller?
+10	L	TRUE	Herr Wallner holt das Paket ab am Mittwoch im Keller.
+10	L	NEAR_PERSON	Herr Brandl holt das Paket ab am Mittwoch im Keller.
+10	L	NEAR_PLACE	Herr Wallner holt das Paket ab am Mittwoch im Garten.
+10	L	NEAR_DAY	Herr Wallner holt das Paket ab am Samstag im Keller.
+10	L	UNRELATED	Herr Schuster prüft die Bremsen am Samstag im Keller.
+10	L	UNRELATED	Herr Ortner repariert die Heizung am Sonntag im Keller.
+10	L	UNRELATED	Herr Lindner räumt die Regale auf am Mittwoch in der Garage.
+10	L	UNRELATED	Frau Holzer räumt die Regale auf am Mittwoch im Garten.
+11	L	QUERY	Was macht Frau Brandl am Samstag im Büro?
+11	L	TRUE	Frau Brandl räumt die Regale auf am Samstag im Büro.
+11	L	NEAR_PERSON	Frau Schuster räumt die Regale auf am Samstag im Büro.
+11	L	NEAR_PLACE	Frau Brandl räumt die Regale auf am Samstag im Garten.
+11	L	NEAR_DAY	Frau Brandl räumt die Regale auf am Sonntag im Büro.
+11	L	UNRELATED	Frau Rainer prüft die Bremsen am Freitag auf dem Dachboden.
+11	L	UNRELATED	Frau Mair repariert die Heizung am Freitag im Büro.
+11	L	UNRELATED	Herr Lindner holt das Paket ab am Mittwoch im Garten.
+11	L	UNRELATED	Frau Ortner repariert die Heizung am Montag im Garten.
+12	L	QUERY	Was macht Herr Egger am Montag im Garten?
+12	L	TRUE	Herr Egger holt das Paket ab am Montag im Garten.
+12	L	NEAR_PERSON	Herr Holzer holt das Paket ab am Montag im Garten.
+12	L	NEAR_PLACE	Herr Egger holt das Paket ab am Montag im Keller.
+12	L	NEAR_DAY	Herr Egger holt das Paket ab am Mittwoch im Garten.
+12	L	UNRELATED	Frau Lindner räumt die Regale auf am Samstag im Garten.
+12	L	UNRELATED	Frau Lehner streicht den Zaun am Mittwoch in der Garage.
+12	L	UNRELATED	Frau Kofler gießt die Pflanzen am Freitag in der Garage.
+12	L	UNRELATED	Frau Brandl repariert die Heizung am Mittwoch im Büro.
+13	L	QUERY	Was macht Frau Ortner am Freitag in der Garage?
+13	L	TRUE	Frau Ortner prüft die Bremsen am Freitag in der Garage.
+13	L	NEAR_PERSON	Frau Schuster prüft die Bremsen am Freitag in der Garage.
+13	L	NEAR_PLACE	Frau Ortner prüft die Bremsen am Freitag im Büro.
+13	L	NEAR_DAY	Frau Ortner prüft die Bremsen am Mittwoch in der Garage.
+13	L	UNRELATED	Herr Haider räumt die Regale auf am Mittwoch in der Garage.
+13	L	UNRELATED	Herr Brandl gießt die Pflanzen am Freitag im Keller.
+13	L	UNRELATED	Frau Rainer gießt die Pflanzen am Montag im Büro.
+13	L	UNRELATED	Herr Kofler gießt die Pflanzen am Freitag in der Garage.
+14	L	QUERY	Was macht Frau Holzer am Samstag im Keller?
+14	L	TRUE	Frau Holzer räumt die Regale auf am Samstag im Keller.
+14	L	NEAR_PERSON	Frau Wallner räumt die Regale auf am Samstag im Keller.
+14	L	NEAR_PLACE	Frau Holzer räumt die Regale auf am Samstag auf dem Dachboden.
+14	L	NEAR_DAY	Frau Holzer räumt die Regale auf am Sonntag im Keller.
+14	L	UNRELATED	Herr Kofler holt das Paket ab am Sonntag auf dem Dachboden.
+14	L	UNRELATED	Frau Mair holt das Paket ab am Sonntag auf dem Dachboden.
+14	L	UNRELATED	Frau Egger streicht den Zaun am Montag in der Garage.
+14	L	UNRELATED	Frau Lindner streicht den Zaun am Mittwoch im Garten.
+15	L	QUERY	Was macht Herr Lehner am Montag in der Garage?
+15	L	TRUE	Herr Lehner räumt die Regale auf am Montag in der Garage.
+15	L	NEAR_PERSON	Herr Mair räumt die Regale auf am Montag in der Garage.
+15	L	NEAR_PLACE	Herr Lehner räumt die Regale auf am Montag im Garten.
+15	L	NEAR_DAY	Herr Lehner räumt die Regale auf am Mittwoch in der Garage.
+15	L	UNRELATED	Frau Lindner holt das Paket ab am Freitag im Garten.
+15	L	UNRELATED	Herr Schuster streicht den Zaun am Mittwoch im Keller.
+15	L	UNRELATED	Frau Ortner repariert die Heizung am Samstag im Keller.
+15	L	UNRELATED	Herr Brandl holt das Paket ab am Sonntag in der Garage.
+16	L	QUERY	Was macht Frau Kofler am Samstag im Garten?
+16	L	TRUE	Frau Kofler holt das Paket ab am Samstag im Garten.
+16	L	NEAR_PERSON	Frau Holzer holt das Paket ab am Samstag im Garten.
+16	L	NEAR_PLACE	Frau Kofler holt das Paket ab am Samstag im Büro.
+16	L	NEAR_DAY	Frau Kofler holt das Paket ab am Mittwoch im Garten.
+16	L	UNRELATED	Frau Schuster räumt die Regale auf am Montag in der Garage.
+16	L	UNRELATED	Frau Mair räumt die Regale auf am Mittwoch im Keller.
+16	L	UNRELATED	Frau Haider streicht den Zaun am Samstag auf dem Dachboden.
+16	L	UNRELATED	Herr Egger prüft die Bremsen am Mittwoch im Keller.
+17	L	QUERY	Was macht Herr Brandl am Sonntag im Büro?
+17	L	TRUE	Herr Brandl räumt die Regale auf am Sonntag im Büro.
+17	L	NEAR_PERSON	Herr Wallner räumt die Regale auf am Sonntag im Büro.
+17	L	NEAR_PLACE	Herr Brandl räumt die Regale auf am Sonntag im Garten.
+17	L	NEAR_DAY	Herr Brandl räumt die Regale auf am Mittwoch im Büro.
+17	L	UNRELATED	Herr Lehner holt das Paket ab am Montag im Garten.
+17	L	UNRELATED	Frau Rainer repariert die Heizung am Sonntag im Büro.
+17	L	UNRELATED	Frau Egger repariert die Heizung am Sonntag im Büro.
+17	L	UNRELATED	Herr Ortner streicht den Zaun am Sonntag in der Garage.
+18	L	QUERY	Was macht Herr Mair am Freitag in der Garage?
+18	L	TRUE	Herr Mair prüft die Bremsen am Freitag in der Garage.
+18	L	NEAR_PERSON	Herr Egger prüft die Bremsen am Freitag in der Garage.
+18	L	NEAR_PLACE	Herr Mair prüft die Bremsen am Freitag auf dem Dachboden.
+18	L	NEAR_DAY	Herr Mair prüft die Bremsen am Samstag in der Garage.
+18	L	UNRELATED	Herr Schuster räumt die Regale auf am Sonntag in der Garage.
+18	L	UNRELATED	Herr Haider räumt die Regale auf am Samstag im Keller.
+18	L	UNRELATED	Herr Holzer gießt die Pflanzen am Samstag in der Garage.
+18	L	UNRELATED	Herr Ortner gießt die Pflanzen am Mittwoch im Büro.
+19	L	QUERY	Was macht Frau Lindner am Samstag in der Garage?
+19	L	TRUE	Frau Lindner prüft die Bremsen am Samstag in der Garage.
+19	L	NEAR_PERSON	Frau Kofler prüft die Bremsen am Samstag in der Garage.
+19	L	NEAR_PLACE	Frau Lindner prüft die Bremsen am Samstag im Garten.
+19	L	NEAR_DAY	Frau Lindner prüft die Bremsen am Mittwoch in der Garage.
+19	L	UNRELATED	Herr Schuster gießt die Pflanzen am Mittwoch im Garten.
+19	L	UNRELATED	Frau Holzer räumt die Regale auf am Montag in der Garage.
+19	L	UNRELATED	Herr Wallner gießt die Pflanzen am Freitag in der Garage.
+19	L	UNRELATED	Herr Mair repariert die Heizung am Mittwoch im Garten.
+20	L	QUERY	Was macht Herr Rainer am Sonntag in der Garage?
+20	L	TRUE	Herr Rainer holt das Paket ab am Sonntag in der Garage.
+20	L	NEAR_PERSON	Herr Mair holt das Paket ab am Sonntag in der Garage.
+20	L	NEAR_PLACE	Herr Rainer holt das Paket ab am Sonntag im Garten.
+20	L	NEAR_DAY	Herr Rainer holt das Paket ab am Samstag in der Garage.
+20	L	UNRELATED	Herr Holzer prüft die Bremsen am Montag im Garten.
+20	L	UNRELATED	Herr Ortner räumt die Regale auf am Freitag in der Garage.
+20	L	UNRELATED	Frau Wallner streicht den Zaun am Mittwoch im Büro.
+20	L	UNRELATED	Herr Kofler räumt die Regale auf am Samstag im Büro.
+21	L	QUERY	Was macht Herr Holzer am Montag im Garten?
+21	L	TRUE	Herr Holzer prüft die Bremsen am Montag im Garten.
+21	L	NEAR_PERSON	Herr Kofler prüft die Bremsen am Montag im Garten.
+21	L	NEAR_PLACE	Herr Holzer prüft die Bremsen am Montag in der Garage.
+21	L	NEAR_DAY	Herr Holzer prüft die Bremsen am Samstag im Garten.
+21	L	UNRELATED	Frau Egger räumt die Regale auf am Mittwoch in der Garage.
+21	L	UNRELATED	Herr Lindner holt das Paket ab am Mittwoch im Garten.
+21	L	UNRELATED	Frau Wallner repariert die Heizung am Mittwoch im Garten.
+21	L	UNRELATED	Herr Brandl gießt die Pflanzen am Montag in der Garage.
+22	L	QUERY	Was macht Herr Brandl am Sonntag im Garten?
+22	L	TRUE	Herr Brandl räumt die Regale auf am Sonntag im Garten.
+22	L	NEAR_PERSON	Herr Haider räumt die Regale auf am Sonntag im Garten.
+22	L	NEAR_PLACE	Herr Brandl räumt die Regale auf am Sonntag in der Garage.
+22	L	NEAR_DAY	Herr Brandl räumt die Regale auf am Mittwoch im Garten.
+22	L	UNRELATED	Frau Mair holt das Paket ab am Samstag in der Garage.
+22	L	UNRELATED	Herr Rainer streicht den Zaun am Samstag auf dem Dachboden.
+22	L	UNRELATED	Frau Kofler repariert die Heizung am Sonntag im Keller.
+22	L	UNRELATED	Herr Wallner gießt die Pflanzen am Mittwoch im Garten.
+23	L	QUERY	Was macht Herr Ortner am Samstag im Garten?
+23	L	TRUE	Herr Ortner holt das Paket ab am Samstag im Garten.
+23	L	NEAR_PERSON	Herr Rainer holt das Paket ab am Samstag im Garten.
+23	L	NEAR_PLACE	Herr Ortner holt das Paket ab am Samstag im Keller.
+23	L	NEAR_DAY	Herr Ortner holt das Paket ab am Freitag im Garten.
+23	L	UNRELATED	Herr Holzer prüft die Bremsen am Mittwoch auf dem Dachboden.
+23	L	UNRELATED	Herr Egger räumt die Regale auf am Freitag in der Garage.
+23	L	UNRELATED	Frau Haider repariert die Heizung am Freitag im Keller.
+23	L	UNRELATED	Frau Wallner räumt die Regale auf am Samstag in der Garage.
+24	L	QUERY	Was macht Frau Mair am Mittwoch im Garten?
+24	L	TRUE	Frau Mair prüft die Bremsen am Mittwoch im Garten.
+24	L	NEAR_PERSON	Frau Holzer prüft die Bremsen am Mittwoch im Garten.
+24	L	NEAR_PLACE	Frau Mair prüft die Bremsen am Mittwoch im Keller.
+24	L	NEAR_DAY	Frau Mair prüft die Bremsen am Montag im Garten.
+24	L	UNRELATED	Herr Lehner räumt die Regale auf am Mittwoch im Garten.
+24	L	UNRELATED	Frau Wallner repariert die Heizung am Sonntag im Keller.
+24	L	UNRELATED	Frau Ortner repariert die Heizung am Montag im Büro.
+24	L	UNRELATED	Frau Rainer räumt die Regale auf am Samstag in der Garage.
+25	L	QUERY	Was macht Herr Schuster am Freitag in der Garage?
+25	L	TRUE	Herr Schuster holt das Paket ab am Freitag in der Garage.
+25	L	NEAR_PERSON	Herr Lehner holt das Paket ab am Freitag in der Garage.
+25	L	NEAR_PLACE	Herr Schuster holt das Paket ab am Freitag im Keller.
+25	L	NEAR_DAY	Herr Schuster holt das Paket ab am Montag in der Garage.
+25	L	UNRELATED	Frau Brandl repariert die Heizung am Mittwoch im Büro.
+25	L	UNRELATED	Frau Holzer gießt die Pflanzen am Montag in der Garage.
+25	L	UNRELATED	Frau Ortner gießt die Pflanzen am Freitag im Keller.
+25	L	UNRELATED	Frau Kofler prüft die Bremsen am Montag in der Garage.
+26	L	QUERY	Was macht Frau Holzer am Freitag im Garten?
+26	L	TRUE	Frau Holzer prüft die Bremsen am Freitag im Garten.
+26	L	NEAR_PERSON	Frau Lehner prüft die Bremsen am Freitag im Garten.
+26	L	NEAR_PLACE	Frau Holzer prüft die Bremsen am Freitag in der Garage.
+26	L	NEAR_DAY	Frau Holzer prüft die Bremsen am Sonntag im Garten.
+26	L	UNRELATED	Frau Wallner holt das Paket ab am Montag im Büro.
+26	L	UNRELATED	Frau Lindner streicht den Zaun am Freitag auf dem Dachboden.
+26	L	UNRELATED	Frau Brandl gießt die Pflanzen am Sonntag auf dem Dachboden.
+26	L	UNRELATED	Frau Haider streicht den Zaun am Freitag im Garten.
+27	L	QUERY	Was macht Herr Haider am Mittwoch im Büro?
+27	L	TRUE	Herr Haider prüft die Bremsen am Mittwoch im Büro.
+27	L	NEAR_PERSON	Herr Egger prüft die Bremsen am Mittwoch im Büro.
+27	L	NEAR_PLACE	Herr Haider prüft die Bremsen am Mittwoch im Garten.
+27	L	NEAR_DAY	Herr Haider prüft die Bremsen am Freitag im Büro.
+27	L	UNRELATED	Frau Kofler gießt die Pflanzen am Mittwoch in der Garage.
+27	L	UNRELATED	Frau Schuster gießt die Pflanzen am Sonntag im Garten.
+27	L	UNRELATED	Herr Wallner repariert die Heizung am Sonntag auf dem Dachboden.
+27	L	UNRELATED	Frau Holzer gießt die Pflanzen am Montag in der Garage.
+28	L	QUERY	Was macht Frau Wallner am Samstag in der Garage?
+28	L	TRUE	Frau Wallner prüft die Bremsen am Samstag in der Garage.
+28	L	NEAR_PERSON	Frau Ortner prüft die Bremsen am Samstag in der Garage.
+28	L	NEAR_PLACE	Frau Wallner prüft die Bremsen am Samstag auf dem Dachboden.
+28	L	NEAR_DAY	Frau Wallner prüft die Bremsen am Montag in der Garage.
+28	L	UNRELATED	Herr Haider gießt die Pflanzen am Sonntag in der Garage.
+28	L	UNRELATED	Herr Kofler holt das Paket ab am Mittwoch auf dem Dachboden.
+28	L	UNRELATED	Frau Schuster gießt die Pflanzen am Samstag im Garten.
+28	L	UNRELATED	Herr Egger holt das Paket ab am Samstag im Garten.
+29	L	QUERY	Was macht Frau Rainer am Mittwoch in der Garage?
+29	L	TRUE	Frau Rainer holt das Paket ab am Mittwoch in der Garage.
+29	L	NEAR_PERSON	Frau Mair holt das Paket ab am Mittwoch in der Garage.
+29	L	NEAR_PLACE	Frau Rainer holt das Paket ab am Mittwoch im Garten.
+29	L	NEAR_DAY	Frau Rainer holt das Paket ab am Samstag in der Garage.
+29	L	UNRELATED	Frau Holzer streicht den Zaun am Samstag im Garten.
+29	L	UNRELATED	Herr Wallner streicht den Zaun am Samstag in der Garage.
+29	L	UNRELATED	Frau Brandl räumt die Regale auf am Montag auf dem Dachboden.
+29	L	UNRELATED	Herr Lindner repariert die Heizung am Samstag in der Garage.
+30	L	QUERY	Was macht Frau Mair am Mittwoch im Garten?
+30	L	TRUE	Frau Mair holt das Paket ab am Mittwoch im Garten.
+30	L	NEAR_PERSON	Frau Haider holt das Paket ab am Mittwoch im Garten.
+30	L	NEAR_PLACE	Frau Mair holt das Paket ab am Mittwoch auf dem Dachboden.
+30	L	NEAR_DAY	Frau Mair holt das Paket ab am Sonntag im Garten.
+30	L	UNRELATED	Herr Lindner räumt die Regale auf am Freitag im Keller.
+30	L	UNRELATED	Herr Brandl prüft die Bremsen am Sonntag im Keller.
+30	L	UNRELATED	Frau Holzer repariert die Heizung am Montag im Keller.
+30	L	UNRELATED	Frau Lehner repariert die Heizung am Freitag in der Garage.
+31	L	QUERY	Was macht Frau Mair am Mittwoch im Büro?
+31	L	TRUE	Frau Mair prüft die Bremsen am Mittwoch im Büro.
+31	L	NEAR_PERSON	Frau Rainer prüft die Bremsen am Mittwoch im Büro.
+31	L	NEAR_PLACE	Frau Mair prüft die Bremsen am Mittwoch im Keller.
+31	L	NEAR_DAY	Frau Mair prüft die Bremsen am Freitag im Büro.
+31	L	UNRELATED	Frau Egger räumt die Regale auf am Mittwoch in der Garage.
+31	L	UNRELATED	Herr Ortner holt das Paket ab am Freitag in der Garage.
+31	L	UNRELATED	Frau Haider streicht den Zaun am Samstag in der Garage.
+31	L	UNRELATED	Frau Holzer gießt die Pflanzen am Mittwoch im Keller.
+32	L	QUERY	Was macht Herr Ortner am Montag auf dem Dachboden?
+32	L	TRUE	Herr Ortner räumt die Regale auf am Montag auf dem Dachboden.
+32	L	NEAR_PERSON	Herr Lehner räumt die Regale auf am Montag auf dem Dachboden.
+32	L	NEAR_PLACE	Herr Ortner räumt die Regale auf am Montag in der Garage.
+32	L	NEAR_DAY	Herr Ortner räumt die Regale auf am Samstag auf dem Dachboden.
+32	L	UNRELATED	Frau Wallner streicht den Zaun am Freitag im Garten.
+32	L	UNRELATED	Frau Egger streicht den Zaun am Freitag in der Garage.
+32	L	UNRELATED	Frau Rainer repariert die Heizung am Mittwoch auf dem Dachboden.
+32	L	UNRELATED	Herr Haider gießt die Pflanzen am Mittwoch auf dem Dachboden.
+33	L	QUERY	Was macht Herr Rainer am Samstag im Büro?
+33	L	TRUE	Herr Rainer räumt die Regale auf am Samstag im Büro.
+33	L	NEAR_PERSON	Herr Lindner räumt die Regale auf am Samstag im Büro.
+33	L	NEAR_PLACE	Herr Rainer räumt die Regale auf am Samstag in der Garage.
+33	L	NEAR_DAY	Herr Rainer räumt die Regale auf am Freitag im Büro.
+33	L	UNRELATED	Herr Egger streicht den Zaun am Samstag in der Garage.
+33	L	UNRELATED	Frau Holzer gießt die Pflanzen am Sonntag im Büro.
+33	L	UNRELATED	Frau Brandl prüft die Bremsen am Sonntag auf dem Dachboden.
+33	L	UNRELATED	Herr Kofler repariert die Heizung am Mittwoch auf dem Dachboden.
+34	L	QUERY	Was macht Herr Lehner am Montag in der Garage?
+34	L	TRUE	Herr Lehner räumt die Regale auf am Montag in der Garage.
+34	L	NEAR_PERSON	Herr Mair räumt die Regale auf am Montag in der Garage.
+34	L	NEAR_PLACE	Herr Lehner räumt die Regale auf am Montag im Garten.
+34	L	NEAR_DAY	Herr Lehner räumt die Regale auf am Sonntag in der Garage.
+34	L	UNRELATED	Frau Holzer gießt die Pflanzen am Samstag im Keller.
+34	L	UNRELATED	Frau Wallner holt das Paket ab am Mittwoch auf dem Dachboden.
+34	L	UNRELATED	Frau Kofler streicht den Zaun am Sonntag im Büro.
+34	L	UNRELATED	Frau Rainer prüft die Bremsen am Sonntag im Garten.
+35	L	QUERY	Was macht Herr Kofler am Montag im Büro?
+35	L	TRUE	Herr Kofler prüft die Bremsen am Montag im Büro.
+35	L	NEAR_PERSON	Herr Lindner prüft die Bremsen am Montag im Büro.
+35	L	NEAR_PLACE	Herr Kofler prüft die Bremsen am Montag im Garten.
+35	L	NEAR_DAY	Herr Kofler prüft die Bremsen am Freitag im Büro.
+35	L	UNRELATED	Frau Wallner streicht den Zaun am Montag im Garten.
+35	L	UNRELATED	Frau Rainer streicht den Zaun am Mittwoch auf dem Dachboden.
+35	L	UNRELATED	Herr Haider streicht den Zaun am Freitag in der Garage.
+35	L	UNRELATED	Herr Brandl holt das Paket ab am Sonntag auf dem Dachboden.
+36	L	QUERY	Was macht Frau Egger am Sonntag im Büro?
+36	L	TRUE	Frau Egger holt das Paket ab am Sonntag im Büro.
+36	L	NEAR_PERSON	Frau Kofler holt das Paket ab am Sonntag im Büro.
+36	L	NEAR_PLACE	Frau Egger holt das Paket ab am Sonntag im Garten.
+36	L	NEAR_DAY	Frau Egger holt das Paket ab am Freitag im Büro.
+36	L	UNRELATED	Herr Mair prüft die Bremsen am Montag in der Garage.
+36	L	UNRELATED	Frau Holzer repariert die Heizung am Samstag in der Garage.
+36	L	UNRELATED	Frau Schuster gießt die Pflanzen am Montag im Garten.
+36	L	UNRELATED	Frau Haider prüft die Bremsen am Freitag im Büro.
+37	L	QUERY	Was macht Herr Haider am Freitag im Keller?
+37	L	TRUE	Herr Haider prüft die Bremsen am Freitag im Keller.
+37	L	NEAR_PERSON	Herr Lindner prüft die Bremsen am Freitag im Keller.
+37	L	NEAR_PLACE	Herr Haider prüft die Bremsen am Freitag in der Garage.
+37	L	NEAR_DAY	Herr Haider prüft die Bremsen am Samstag im Keller.
+37	L	UNRELATED	Frau Kofler holt das Paket ab am Mittwoch auf dem Dachboden.
+37	L	UNRELATED	Herr Holzer repariert die Heizung am Sonntag in der Garage.
+37	L	UNRELATED	Frau Ortner repariert die Heizung am Montag in der Garage.
+37	L	UNRELATED	Frau Brandl holt das Paket ab am Freitag im Garten.
+38	L	QUERY	Was macht Herr Haider am Montag im Büro?
+38	L	TRUE	Herr Haider holt das Paket ab am Montag im Büro.
+38	L	NEAR_PERSON	Herr Holzer holt das Paket ab am Montag im Büro.
+38	L	NEAR_PLACE	Herr Haider holt das Paket ab am Montag in der Garage.
+38	L	NEAR_DAY	Herr Haider holt das Paket ab am Samstag im Büro.
+38	L	UNRELATED	Herr Egger prüft die Bremsen am Freitag in der Garage.
+38	L	UNRELATED	Frau Lehner prüft die Bremsen am Samstag im Keller.
+38	L	UNRELATED	Frau Schuster räumt die Regale auf am Sonntag im Keller.
+38	L	UNRELATED	Herr Mair streicht den Zaun am Sonntag im Garten.
+39	L	QUERY	Was macht Frau Mair am Samstag auf dem Dachboden?
+39	L	TRUE	Frau Mair räumt die Regale auf am Samstag auf dem Dachboden.
+39	L	NEAR_PERSON	Frau Rainer räumt die Regale auf am Samstag auf dem Dachboden.
+39	L	NEAR_PLACE	Frau Mair räumt die Regale auf am Samstag im Garten.
+39	L	NEAR_DAY	Frau Mair räumt die Regale auf am Montag auf dem Dachboden.
+39	L	UNRELATED	Herr Kofler holt das Paket ab am Samstag im Keller.
+39	L	UNRELATED	Herr Brandl holt das Paket ab am Freitag im Büro.
+39	L	UNRELATED	Frau Haider prüft die Bremsen am Samstag im Keller.
+39	L	UNRELATED	Herr Lindner prüft die Bremsen am Montag in der Garage.
+40	L	QUERY	Was macht Herr Lindner am Mittwoch im Büro?
+40	L	TRUE	Herr Lindner räumt die Regale auf am Mittwoch im Büro.
+40	L	NEAR_PERSON	Herr Egger räumt die Regale auf am Mittwoch im Büro.
+40	L	NEAR_PLACE	Herr Lindner räumt die Regale auf am Mittwoch im Garten.
+40	L	NEAR_DAY	Herr Lindner räumt die Regale auf am Montag im Büro.
+40	L	UNRELATED	Frau Kofler prüft die Bremsen am Freitag in der Garage.
+40	L	UNRELATED	Herr Lehner gießt die Pflanzen am Samstag im Keller.
+40	L	UNRELATED	Frau Rainer repariert die Heizung am Montag im Büro.
+40	L	UNRELATED	Frau Mair holt das Paket ab am Samstag in der Garage.
+41	L	QUERY	Was macht Frau Lindner am Freitag im Garten?
+41	L	TRUE	Frau Lindner räumt die Regale auf am Freitag im Garten.
+41	L	NEAR_PERSON	Frau Kofler räumt die Regale auf am Freitag im Garten.
+41	L	NEAR_PLACE	Frau Lindner räumt die Regale auf am Freitag im Büro.
+41	L	NEAR_DAY	Frau Lindner räumt die Regale auf am Montag im Garten.
+41	L	UNRELATED	Herr Ortner prüft die Bremsen am Samstag im Büro.
+41	L	UNRELATED	Frau Wallner gießt die Pflanzen am Sonntag im Garten.
+41	L	UNRELATED	Frau Haider streicht den Zaun am Freitag im Garten.
+41	L	UNRELATED	Frau Brandl prüft die Bremsen am Freitag im Garten.
+42	L	QUERY	Was macht Frau Brandl am Mittwoch im Garten?
+42	L	TRUE	Frau Brandl holt das Paket ab am Mittwoch im Garten.
+42	L	NEAR_PERSON	Frau Lehner holt das Paket ab am Mittwoch im Garten.
+42	L	NEAR_PLACE	Frau Brandl holt das Paket ab am Mittwoch in der Garage.
+42	L	NEAR_DAY	Frau Brandl holt das Paket ab am Sonntag im Garten.
+42	L	UNRELATED	Frau Haider repariert die Heizung am Samstag auf dem Dachboden.
+42	L	UNRELATED	Herr Wallner prüft die Bremsen am Mittwoch im Büro.
+42	L	UNRELATED	Herr Mair prüft die Bremsen am Mittwoch im Keller.
+42	L	UNRELATED	Herr Kofler prüft die Bremsen am Freitag in der Garage.
+43	L	QUERY	Was macht Herr Kofler am Montag im Büro?
+43	L	TRUE	Herr Kofler holt das Paket ab am Montag im Büro.
+43	L	NEAR_PERSON	Herr Holzer holt das Paket ab am Montag im Büro.
+43	L	NEAR_PLACE	Herr Kofler holt das Paket ab am Montag im Keller.
+43	L	NEAR_DAY	Herr Kofler holt das Paket ab am Freitag im Büro.
+43	L	UNRELATED	Herr Lehner streicht den Zaun am Sonntag im Keller.
+43	L	UNRELATED	Herr Rainer gießt die Pflanzen am Mittwoch in der Garage.
+43	L	UNRELATED	Frau Egger streicht den Zaun am Samstag auf dem Dachboden.
+43	L	UNRELATED	Herr Brandl gießt die Pflanzen am Samstag auf dem Dachboden.
+44	L	QUERY	Was macht Herr Lindner am Mittwoch in der Garage?
+44	L	TRUE	Herr Lindner räumt die Regale auf am Mittwoch in der Garage.
+44	L	NEAR_PERSON	Herr Rainer räumt die Regale auf am Mittwoch in der Garage.
+44	L	NEAR_PLACE	Herr Lindner räumt die Regale auf am Mittwoch im Keller.
+44	L	NEAR_DAY	Herr Lindner räumt die Regale auf am Freitag in der Garage.
+44	L	UNRELATED	Frau Wallner streicht den Zaun am Montag im Büro.
+44	L	UNRELATED	Herr Lehner holt das Paket ab am Sonntag im Büro.
+44	L	UNRELATED	Herr Holzer gießt die Pflanzen am Mittwoch im Keller.
+44	L	UNRELATED	Herr Ortner prüft die Bremsen am Mittwoch in der Garage.
+45	L	QUERY	Was macht Herr Brandl am Freitag im Keller?
+45	L	TRUE	Herr Brandl räumt die Regale auf am Freitag im Keller.
+45	L	NEAR_PERSON	Herr Wallner räumt die Regale auf am Freitag im Keller.
+45	L	NEAR_PLACE	Herr Brandl räumt die Regale auf am Freitag im Büro.
+45	L	NEAR_DAY	Herr Brandl räumt die Regale auf am Mittwoch im Keller.
+45	L	UNRELATED	Herr Haider repariert die Heizung am Samstag im Keller.
+45	L	UNRELATED	Frau Egger streicht den Zaun am Montag auf dem Dachboden.
+45	L	UNRELATED	Frau Mair prüft die Bremsen am Sonntag auf dem Dachboden.
+45	L	UNRELATED	Herr Lehner gießt die Pflanzen am Mittwoch im Keller.
+46	L	QUERY	Was macht Frau Wallner am Samstag im Keller?
+46	L	TRUE	Frau Wallner prüft die Bremsen am Samstag im Keller.
+46	L	NEAR_PERSON	Frau Schuster prüft die Bremsen am Samstag im Keller.
+46	L	NEAR_PLACE	Frau Wallner prüft die Bremsen am Samstag im Garten.
+46	L	NEAR_DAY	Frau Wallner prüft die Bremsen am Sonntag im Keller.
+46	L	UNRELATED	Frau Kofler repariert die Heizung am Freitag in der Garage.
+46	L	UNRELATED	Herr Mair repariert die Heizung am Freitag im Keller.
+46	L	UNRELATED	Frau Ortner holt das Paket ab am Mittwoch im Garten.
+46	L	UNRELATED	Herr Holzer räumt die Regale auf am Samstag im Büro.
+47	L	QUERY	Was macht Frau Egger am Sonntag auf dem Dachboden?
+47	L	TRUE	Frau Egger räumt die Regale auf am Sonntag auf dem Dachboden.
+47	L	NEAR_PERSON	Frau Rainer räumt die Regale auf am Sonntag auf dem Dachboden.
+47	L	NEAR_PLACE	Frau Egger räumt die Regale auf am Sonntag im Garten.
+47	L	NEAR_DAY	Frau Egger räumt die Regale auf am Montag auf dem Dachboden.
+47	L	UNRELATED	Frau Mair gießt die Pflanzen am Sonntag auf dem Dachboden.
+47	L	UNRELATED	Frau Ortner repariert die Heizung am Sonntag im Keller.
+47	L	UNRELATED	Frau Lindner repariert die Heizung am Montag im Garten.
+47	L	UNRELATED	Frau Wallner holt das Paket ab am Mittwoch im Keller.
+48	L	QUERY	Was macht Frau Brandl am Mittwoch auf dem Dachboden?
+48	L	TRUE	Frau Brandl räumt die Regale auf am Mittwoch auf dem Dachboden.
+48	L	NEAR_PERSON	Frau Mair räumt die Regale auf am Mittwoch auf dem Dachboden.
+48	L	NEAR_PLACE	Frau Brandl räumt die Regale auf am Mittwoch im Garten.
+48	L	NEAR_DAY	Frau Brandl räumt die Regale auf am Sonntag auf dem Dachboden.
+48	L	UNRELATED	Herr Lindner streicht den Zaun am Freitag in der Garage.
+48	L	UNRELATED	Frau Kofler holt das Paket ab am Samstag im Keller.
+48	L	UNRELATED	Frau Wallner holt das Paket ab am Mittwoch im Büro.
+48	L	UNRELATED	Frau Holzer repariert die Heizung am Sonntag im Garten.
+49	L	QUERY	Was macht Frau Ortner am Mittwoch auf dem Dachboden?
+49	L	TRUE	Frau Ortner holt das Paket ab am Mittwoch auf dem Dachboden.
+49	L	NEAR_PERSON	Frau Mair holt das Paket ab am Mittwoch auf dem Dachboden.
+49	L	NEAR_PLACE	Frau Ortner holt das Paket ab am Mittwoch in der Garage.
+49	L	NEAR_DAY	Frau Ortner holt das Paket ab am Samstag auf dem Dachboden.
+49	L	UNRELATED	Frau Haider streicht den Zaun am Montag im Büro.
+49	L	UNRELATED	Herr Lehner räumt die Regale auf am Montag im Keller.
+49	L	UNRELATED	Herr Egger prüft die Bremsen am Montag auf dem Dachboden.
+49	L	UNRELATED	Frau Wallner streicht den Zaun am Montag im Garten.
+50	L	QUERY	Was macht Herr Holzer am Mittwoch im Garten?
+50	L	TRUE	Herr Holzer holt das Paket ab am Mittwoch im Garten.
+50	L	NEAR_PERSON	Herr Mair holt das Paket ab am Mittwoch im Garten.
+50	L	NEAR_PLACE	Herr Holzer holt das Paket ab am Mittwoch in der Garage.
+50	L	NEAR_DAY	Herr Holzer holt das Paket ab am Freitag im Garten.
+50	L	UNRELATED	Frau Haider repariert die Heizung am Freitag im Keller.
+50	L	UNRELATED	Frau Egger streicht den Zaun am Samstag in der Garage.
+50	L	UNRELATED	Frau Kofler streicht den Zaun am Montag im Keller.
+50	L	UNRELATED	Frau Ortner gießt die Pflanzen am Mittwoch auf dem Dachboden.
+51	L	QUERY	Was macht Frau Lindner am Mittwoch auf dem Dachboden?
+51	L	TRUE	Frau Lindner räumt die Regale auf am Mittwoch auf dem Dachboden.
+51	L	NEAR_PERSON	Frau Holzer räumt die Regale auf am Mittwoch auf dem Dachboden.
+51	L	NEAR_PLACE	Frau Lindner räumt die Regale auf am Mittwoch im Garten.
+51	L	NEAR_DAY	Frau Lindner räumt die Regale auf am Freitag auf dem Dachboden.
+51	L	UNRELATED	Herr Ortner streicht den Zaun am Sonntag auf dem Dachboden.
+51	L	UNRELATED	Herr Schuster prüft die Bremsen am Samstag in der Garage.
+51	L	UNRELATED	Frau Egger repariert die Heizung am Freitag auf dem Dachboden.
+51	L	UNRELATED	Herr Wallner streicht den Zaun am Samstag im Büro.
+52	L	QUERY	Was macht Frau Lindner am Samstag im Garten?
+52	L	TRUE	Frau Lindner prüft die Bremsen am Samstag im Garten.
+52	L	NEAR_PERSON	Frau Brandl prüft die Bremsen am Samstag im Garten.
+52	L	NEAR_PLACE	Frau Lindner prüft die Bremsen am Samstag im Büro.
+52	L	NEAR_DAY	Frau Lindner prüft die Bremsen am Freitag im Garten.
+52	L	UNRELATED	Frau Holzer gießt die Pflanzen am Montag im Garten.
+52	L	UNRELATED	Frau Lehner streicht den Zaun am Freitag im Keller.
+52	L	UNRELATED	Herr Kofler holt das Paket ab am Freitag in der Garage.
+52	L	UNRELATED	Frau Haider streicht den Zaun am Freitag in der Garage.
+53	L	QUERY	Was macht Herr Lehner am Mittwoch im Garten?
+53	L	TRUE	Herr Lehner räumt die Regale auf am Mittwoch im Garten.
+53	L	NEAR_PERSON	Herr Haider räumt die Regale auf am Mittwoch im Garten.
+53	L	NEAR_PLACE	Herr Lehner räumt die Regale auf am Mittwoch im Büro.
+53	L	NEAR_DAY	Herr Lehner räumt die Regale auf am Montag im Garten.
+53	L	UNRELATED	Herr Brandl gießt die Pflanzen am Samstag auf dem Dachboden.
+53	L	UNRELATED	Frau Egger prüft die Bremsen am Samstag im Büro.
+53	L	UNRELATED	Frau Rainer holt das Paket ab am Montag im Keller.
+53	L	UNRELATED	Frau Wallner holt das Paket ab am Freitag im Keller.
+54	L	QUERY	Was macht Frau Ortner am Mittwoch auf dem Dachboden?
+54	L	TRUE	Frau Ortner prüft die Bremsen am Mittwoch auf dem Dachboden.
+54	L	NEAR_PERSON	Frau Lehner prüft die Bremsen am Mittwoch auf dem Dachboden.
+54	L	NEAR_PLACE	Frau Ortner prüft die Bremsen am Mittwoch im Büro.
+54	L	NEAR_DAY	Frau Ortner prüft die Bremsen am Samstag auf dem Dachboden.
+54	L	UNRELATED	Frau Kofler räumt die Regale auf am Mittwoch im Büro.
+54	L	UNRELATED	Frau Holzer gießt die Pflanzen am Montag auf dem Dachboden.
+54	L	UNRELATED	Frau Brandl streicht den Zaun am Sonntag im Garten.
+54	L	UNRELATED	Frau Rainer holt das Paket ab am Samstag in der Garage.
+55	L	QUERY	Was macht Herr Rainer am Sonntag im Keller?
+55	L	TRUE	Herr Rainer räumt die Regale auf am Sonntag im Keller.
+55	L	NEAR_PERSON	Herr Ortner räumt die Regale auf am Sonntag im Keller.
+55	L	NEAR_PLACE	Herr Rainer räumt die Regale auf am Sonntag im Büro.
+55	L	NEAR_DAY	Herr Rainer räumt die Regale auf am Montag im Keller.
+55	L	UNRELATED	Frau Wallner holt das Paket ab am Montag im Büro.
+55	L	UNRELATED	Frau Kofler gießt die Pflanzen am Montag auf dem Dachboden.
+55	L	UNRELATED	Frau Schuster prüft die Bremsen am Freitag im Keller.
+55	L	UNRELATED	Herr Brandl streicht den Zaun am Sonntag im Büro.
+56	L	QUERY	Was macht Herr Mair am Sonntag im Büro?
+56	L	TRUE	Herr Mair prüft die Bremsen am Sonntag im Büro.
+56	L	NEAR_PERSON	Herr Wallner prüft die Bremsen am Sonntag im Büro.
+56	L	NEAR_PLACE	Herr Mair prüft die Bremsen am Sonntag im Garten.
+56	L	NEAR_DAY	Herr Mair prüft die Bremsen am Samstag im Büro.
+56	L	UNRELATED	Herr Haider repariert die Heizung am Samstag in der Garage.
+56	L	UNRELATED	Herr Kofler holt das Paket ab am Freitag im Garten.
+56	L	UNRELATED	Frau Ortner räumt die Regale auf am Montag im Büro.
+56	L	UNRELATED	Frau Lehner gießt die Pflanzen am Samstag im Büro.
+57	L	QUERY	Was macht Frau Rainer am Sonntag im Garten?
+57	L	TRUE	Frau Rainer holt das Paket ab am Sonntag im Garten.
+57	L	NEAR_PERSON	Frau Egger holt das Paket ab am Sonntag im Garten.
+57	L	NEAR_PLACE	Frau Rainer holt das Paket ab am Sonntag im Büro.
+57	L	NEAR_DAY	Frau Rainer holt das Paket ab am Mittwoch im Garten.
+57	L	UNRELATED	Frau Brandl prüft die Bremsen am Samstag im Keller.
+57	L	UNRELATED	Herr Lindner prüft die Bremsen am Sonntag auf dem Dachboden.
+57	L	UNRELATED	Herr Schuster streicht den Zaun am Samstag im Keller.
+57	L	UNRELATED	Herr Haider prüft die Bremsen am Sonntag auf dem Dachboden.
+58	L	QUERY	Was macht Herr Schuster am Mittwoch im Keller?
+58	L	TRUE	Herr Schuster holt das Paket ab am Mittwoch im Keller.
+58	L	NEAR_PERSON	Herr Lehner holt das Paket ab am Mittwoch im Keller.
+58	L	NEAR_PLACE	Herr Schuster holt das Paket ab am Mittwoch im Garten.
+58	L	NEAR_DAY	Herr Schuster holt das Paket ab am Montag im Keller.
+58	L	UNRELATED	Herr Egger gießt die Pflanzen am Freitag in der Garage.
+58	L	UNRELATED	Herr Rainer räumt die Regale auf am Samstag im Keller.
+58	L	UNRELATED	Frau Mair gießt die Pflanzen am Montag im Büro.
+58	L	UNRELATED	Herr Wallner repariert die Heizung am Montag im Büro.
+59	L	QUERY	Was macht Herr Haider am Sonntag in der Garage?
+59	L	TRUE	Herr Haider prüft die Bremsen am Sonntag in der Garage.
+59	L	NEAR_PERSON	Herr Kofler prüft die Bremsen am Sonntag in der Garage.
+59	L	NEAR_PLACE	Herr Haider prüft die Bremsen am Sonntag auf dem Dachboden.
+59	L	NEAR_DAY	Herr Haider prüft die Bremsen am Mittwoch in der Garage.
+59	L	UNRELATED	Herr Rainer repariert die Heizung am Montag im Garten.
+59	L	UNRELATED	Herr Brandl holt das Paket ab am Samstag im Büro.
+59	L	UNRELATED	Frau Ortner gießt die Pflanzen am Freitag im Büro.
+59	L	UNRELATED	Frau Holzer holt das Paket ab am Freitag im Keller.
+60	S	QUERY	Was macht Herr Lehner am letzten Tag des Wochenendes beim Stellplatz fürs Auto?
+60	S	TRUE	Herr Lehner räumt die Regale auf am Sonntag in der Garage.
+60	S	NEAR_PERSON	Herr Brandl räumt die Regale auf am Sonntag in der Garage.
+60	S	NEAR_PLACE	Herr Lehner räumt die Regale auf am Sonntag auf dem Dachboden.
+60	S	NEAR_DAY	Herr Lehner räumt die Regale auf am Mittwoch in der Garage.
+60	S	UNRELATED	Herr Kofler prüft die Bremsen am Samstag im Büro.
+60	S	UNRELATED	Frau Mair streicht den Zaun am Montag im Garten.
+60	S	UNRELATED	Herr Egger streicht den Zaun am Freitag auf dem Dachboden.
+60	S	UNRELATED	Herr Haider streicht den Zaun am Samstag im Büro.
+61	S	QUERY	Was macht Frau Rainer zu Wochenbeginn ganz oben unterm Dach?
+61	S	TRUE	Frau Rainer holt das Paket ab am Montag auf dem Dachboden.
+61	S	NEAR_PERSON	Frau Wallner holt das Paket ab am Montag auf dem Dachboden.
+61	S	NEAR_PLACE	Frau Rainer holt das Paket ab am Montag im Garten.
+61	S	NEAR_DAY	Frau Rainer holt das Paket ab am Sonntag auf dem Dachboden.
+61	S	UNRELATED	Frau Lehner gießt die Pflanzen am Montag im Garten.
+61	S	UNRELATED	Frau Kofler gießt die Pflanzen am Samstag im Büro.
+61	S	UNRELATED	Frau Haider repariert die Heizung am Samstag in der Garage.
+61	S	UNRELATED	Herr Egger räumt die Regale auf am Mittwoch auf dem Dachboden.
+62	S	QUERY	Was macht Herr Schuster zu Wochenbeginn draußen im Grünen?
+62	S	TRUE	Herr Schuster prüft die Bremsen am Montag im Garten.
+62	S	NEAR_PERSON	Herr Egger prüft die Bremsen am Montag im Garten.
+62	S	NEAR_PLACE	Herr Schuster prüft die Bremsen am Montag auf dem Dachboden.
+62	S	NEAR_DAY	Herr Schuster prüft die Bremsen am Mittwoch im Garten.
+62	S	UNRELATED	Frau Holzer repariert die Heizung am Sonntag in der Garage.
+62	S	UNRELATED	Frau Lehner streicht den Zaun am Samstag im Garten.
+62	S	UNRELATED	Frau Brandl räumt die Regale auf am Sonntag auf dem Dachboden.
+62	S	UNRELATED	Frau Haider streicht den Zaun am Montag in der Garage.
+63	S	QUERY	Was macht Frau Lindner zum Wochenausklang beim Stellplatz fürs Auto?
+63	S	TRUE	Frau Lindner räumt die Regale auf am Freitag in der Garage.
+63	S	NEAR_PERSON	Frau Wallner räumt die Regale auf am Freitag in der Garage.
+63	S	NEAR_PLACE	Frau Lindner räumt die Regale auf am Freitag im Garten.
+63	S	NEAR_DAY	Frau Lindner räumt die Regale auf am Mittwoch in der Garage.
+63	S	UNRELATED	Herr Brandl holt das Paket ab am Mittwoch in der Garage.
+63	S	UNRELATED	Frau Holzer gießt die Pflanzen am Montag im Büro.
+63	S	UNRELATED	Frau Ortner streicht den Zaun am Samstag im Keller.
+63	S	UNRELATED	Frau Haider streicht den Zaun am Montag in der Garage.
+64	S	QUERY	Was macht Frau Mair am ersten Tag des Wochenendes beim Stellplatz fürs Auto?
+64	S	TRUE	Frau Mair räumt die Regale auf am Samstag in der Garage.
+64	S	NEAR_PERSON	Frau Kofler räumt die Regale auf am Samstag in der Garage.
+64	S	NEAR_PLACE	Frau Mair räumt die Regale auf am Samstag im Garten.
+64	S	NEAR_DAY	Frau Mair räumt die Regale auf am Montag in der Garage.
+64	S	UNRELATED	Herr Egger streicht den Zaun am Freitag im Garten.
+64	S	UNRELATED	Herr Haider gießt die Pflanzen am Mittwoch im Keller.
+64	S	UNRELATED	Frau Holzer gießt die Pflanzen am Mittwoch im Büro.
+64	S	UNRELATED	Herr Wallner holt das Paket ab am Freitag im Garten.
+65	S	QUERY	Was macht Herr Brandl am ersten Tag des Wochenendes draußen im Grünen?
+65	S	TRUE	Herr Brandl prüft die Bremsen am Samstag im Garten.
+65	S	NEAR_PERSON	Herr Haider prüft die Bremsen am Samstag im Garten.
+65	S	NEAR_PLACE	Herr Brandl prüft die Bremsen am Samstag in der Garage.
+65	S	NEAR_DAY	Herr Brandl prüft die Bremsen am Montag im Garten.
+65	S	UNRELATED	Frau Rainer holt das Paket ab am Samstag im Garten.
+65	S	UNRELATED	Herr Kofler räumt die Regale auf am Sonntag im Keller.
+65	S	UNRELATED	Frau Egger räumt die Regale auf am Freitag im Büro.
+65	S	UNRELATED	Herr Lehner streicht den Zaun am Mittwoch im Büro.
+66	S	QUERY	Was macht Frau Rainer zu Wochenbeginn am Arbeitsplatz?
+66	S	TRUE	Frau Rainer räumt die Regale auf am Montag im Büro.
+66	S	NEAR_PERSON	Frau Mair räumt die Regale auf am Montag im Büro.
+66	S	NEAR_PLACE	Frau Rainer räumt die Regale auf am Montag im Garten.
+66	S	NEAR_DAY	Frau Rainer räumt die Regale auf am Freitag im Büro.
+66	S	UNRELATED	Frau Lindner gießt die Pflanzen am Montag auf dem Dachboden.
+66	S	UNRELATED	Herr Ortner streicht den Zaun am Freitag im Büro.
+66	S	UNRELATED	Frau Holzer gießt die Pflanzen am Freitag im Keller.
+66	S	UNRELATED	Frau Kofler streicht den Zaun am Mittwoch in der Garage.
+67	S	QUERY	Was macht Frau Ortner in der Wochenmitte beim Stellplatz fürs Auto?
+67	S	TRUE	Frau Ortner holt das Paket ab am Mittwoch in der Garage.
+67	S	NEAR_PERSON	Frau Wallner holt das Paket ab am Mittwoch in der Garage.
+67	S	NEAR_PLACE	Frau Ortner holt das Paket ab am Mittwoch im Garten.
+67	S	NEAR_DAY	Frau Ortner holt das Paket ab am Sonntag in der Garage.
+67	S	UNRELATED	Frau Egger räumt die Regale auf am Montag auf dem Dachboden.
+67	S	UNRELATED	Herr Schuster räumt die Regale auf am Montag auf dem Dachboden.
+67	S	UNRELATED	Frau Lindner räumt die Regale auf am Freitag im Büro.
+67	S	UNRELATED	Herr Rainer räumt die Regale auf am Freitag im Büro.
+68	S	QUERY	Was macht Frau Holzer zu Wochenbeginn am Arbeitsplatz?
+68	S	TRUE	Frau Holzer räumt die Regale auf am Montag im Büro.
+68	S	NEAR_PERSON	Frau Lindner räumt die Regale auf am Montag im Büro.
+68	S	NEAR_PLACE	Frau Holzer räumt die Regale auf am Montag in der Garage.
+68	S	NEAR_DAY	Frau Holzer räumt die Regale auf am Sonntag im Büro.
+68	S	UNRELATED	Frau Kofler prüft die Bremsen am Freitag in der Garage.
+68	S	UNRELATED	Herr Rainer repariert die Heizung am Samstag im Büro.
+68	S	UNRELATED	Herr Brandl holt das Paket ab am Samstag im Büro.
+68	S	UNRELATED	Frau Lehner repariert die Heizung am Montag im Büro.
+69	S	QUERY	Was macht Frau Wallner in der Wochenmitte unten im Haus?
+69	S	TRUE	Frau Wallner holt das Paket ab am Mittwoch im Keller.
+69	S	NEAR_PERSON	Frau Rainer holt das Paket ab am Mittwoch im Keller.
+69	S	NEAR_PLACE	Frau Wallner holt das Paket ab am Mittwoch im Büro.
+69	S	NEAR_DAY	Frau Wallner holt das Paket ab am Freitag im Keller.
+69	S	UNRELATED	Herr Schuster repariert die Heizung am Sonntag in der Garage.
+69	S	UNRELATED	Frau Mair streicht den Zaun am Sonntag im Büro.
+69	S	UNRELATED	Frau Haider prüft die Bremsen am Freitag in der Garage.
+69	S	UNRELATED	Frau Lehner räumt die Regale auf am Freitag im Garten.
+70	S	QUERY	Was macht Herr Haider am ersten Tag des Wochenendes beim Stellplatz fürs Auto?
+70	S	TRUE	Herr Haider prüft die Bremsen am Samstag in der Garage.
+70	S	NEAR_PERSON	Herr Schuster prüft die Bremsen am Samstag in der Garage.
+70	S	NEAR_PLACE	Herr Haider prüft die Bremsen am Samstag im Keller.
+70	S	NEAR_DAY	Herr Haider prüft die Bremsen am Freitag in der Garage.
+70	S	UNRELATED	Herr Lehner gießt die Pflanzen am Montag im Büro.
+70	S	UNRELATED	Herr Egger räumt die Regale auf am Mittwoch in der Garage.
+70	S	UNRELATED	Frau Mair streicht den Zaun am Sonntag in der Garage.
+70	S	UNRELATED	Herr Kofler gießt die Pflanzen am Sonntag in der Garage.
+71	S	QUERY	Was macht Herr Lindner am ersten Tag des Wochenendes ganz oben unterm Dach?
+71	S	TRUE	Herr Lindner prüft die Bremsen am Samstag auf dem Dachboden.
+71	S	NEAR_PERSON	Herr Egger prüft die Bremsen am Samstag auf dem Dachboden.
+71	S	NEAR_PLACE	Herr Lindner prüft die Bremsen am Samstag in der Garage.
+71	S	NEAR_DAY	Herr Lindner prüft die Bremsen am Sonntag auf dem Dachboden.
+71	S	UNRELATED	Frau Ortner gießt die Pflanzen am Montag im Keller.
+71	S	UNRELATED	Frau Lehner räumt die Regale auf am Montag im Büro.
+71	S	UNRELATED	Frau Brandl gießt die Pflanzen am Montag auf dem Dachboden.
+71	S	UNRELATED	Herr Kofler holt das Paket ab am Montag im Garten.
+72	S	QUERY	Was macht Frau Schuster am letzten Tag des Wochenendes ganz oben unterm Dach?
+72	S	TRUE	Frau Schuster räumt die Regale auf am Sonntag auf dem Dachboden.
+72	S	NEAR_PERSON	Frau Mair räumt die Regale auf am Sonntag auf dem Dachboden.
+72	S	NEAR_PLACE	Frau Schuster räumt die Regale auf am Sonntag im Garten.
+72	S	NEAR_DAY	Frau Schuster räumt die Regale auf am Mittwoch auf dem Dachboden.
+72	S	UNRELATED	Frau Lehner gießt die Pflanzen am Freitag im Büro.
+72	S	UNRELATED	Herr Haider repariert die Heizung am Sonntag im Garten.
+72	S	UNRELATED	Frau Lindner holt das Paket ab am Sonntag im Garten.
+72	S	UNRELATED	Frau Holzer prüft die Bremsen am Samstag im Garten.
+73	S	QUERY	Was macht Herr Rainer am letzten Tag des Wochenendes beim Stellplatz fürs Auto?
+73	S	TRUE	Herr Rainer holt das Paket ab am Sonntag in der Garage.
+73	S	NEAR_PERSON	Herr Egger holt das Paket ab am Sonntag in der Garage.
+73	S	NEAR_PLACE	Herr Rainer holt das Paket ab am Sonntag im Büro.
+73	S	NEAR_DAY	Herr Rainer holt das Paket ab am Mittwoch in der Garage.
+73	S	UNRELATED	Herr Lehner streicht den Zaun am Sonntag auf dem Dachboden.
+73	S	UNRELATED	Herr Mair prüft die Bremsen am Mittwoch im Keller.
+73	S	UNRELATED	Herr Ortner streicht den Zaun am Sonntag im Garten.
+73	S	UNRELATED	Frau Schuster streicht den Zaun am Sonntag auf dem Dachboden.
+74	S	QUERY	Was macht Frau Rainer zum Wochenausklang ganz oben unterm Dach?
+74	S	TRUE	Frau Rainer räumt die Regale auf am Freitag auf dem Dachboden.
+74	S	NEAR_PERSON	Frau Egger räumt die Regale auf am Freitag auf dem Dachboden.
+74	S	NEAR_PLACE	Frau Rainer räumt die Regale auf am Freitag in der Garage.
+74	S	NEAR_DAY	Frau Rainer räumt die Regale auf am Sonntag auf dem Dachboden.
+74	S	UNRELATED	Herr Schuster prüft die Bremsen am Montag auf dem Dachboden.
+74	S	UNRELATED	Frau Haider gießt die Pflanzen am Sonntag im Büro.
+74	S	UNRELATED	Frau Kofler gießt die Pflanzen am Montag im Garten.
+74	S	UNRELATED	Herr Brandl gießt die Pflanzen am Freitag in der Garage.
+75	S	QUERY	Was macht Frau Rainer zum Wochenausklang draußen im Grünen?
+75	S	TRUE	Frau Rainer gießt die Pflanzen am Freitag im Garten.
+75	S	NEAR_PERSON	Frau Lehner gießt die Pflanzen am Freitag im Garten.
+75	S	NEAR_PLACE	Frau Rainer gießt die Pflanzen am Freitag in der Garage.
+75	S	NEAR_DAY	Frau Rainer gießt die Pflanzen am Mittwoch im Garten.
+75	S	UNRELATED	Herr Mair streicht den Zaun am Samstag auf dem Dachboden.
+75	S	UNRELATED	Herr Ortner prüft die Bremsen am Freitag im Garten.
+75	S	UNRELATED	Herr Lindner repariert die Heizung am Sonntag in der Garage.
+75	S	UNRELATED	Herr Wallner repariert die Heizung am Freitag im Keller.
+76	S	QUERY	Was macht Herr Holzer zum Wochenausklang beim Stellplatz fürs Auto?
+76	S	TRUE	Herr Holzer gießt die Pflanzen am Freitag in der Garage.
+76	S	NEAR_PERSON	Herr Wallner gießt die Pflanzen am Freitag in der Garage.
+76	S	NEAR_PLACE	Herr Holzer gießt die Pflanzen am Freitag auf dem Dachboden.
+76	S	NEAR_DAY	Herr Holzer gießt die Pflanzen am Montag in der Garage.
+76	S	UNRELATED	Frau Schuster streicht den Zaun am Montag in der Garage.
+76	S	UNRELATED	Herr Egger holt das Paket ab am Sonntag im Garten.
+76	S	UNRELATED	Herr Rainer repariert die Heizung am Freitag im Keller.
+76	S	UNRELATED	Herr Haider holt das Paket ab am Montag in der Garage.
+77	S	QUERY	Was macht Herr Brandl am ersten Tag des Wochenendes ganz oben unterm Dach?
+77	S	TRUE	Herr Brandl gießt die Pflanzen am Samstag auf dem Dachboden.
+77	S	NEAR_PERSON	Herr Schuster gießt die Pflanzen am Samstag auf dem Dachboden.
+77	S	NEAR_PLACE	Herr Brandl gießt die Pflanzen am Samstag im Keller.
+77	S	NEAR_DAY	Herr Brandl gießt die Pflanzen am Montag auf dem Dachboden.
+77	S	UNRELATED	Herr Haider streicht den Zaun am Sonntag im Garten.
+77	S	UNRELATED	Herr Wallner streicht den Zaun am Mittwoch in der Garage.
+77	S	UNRELATED	Frau Lindner streicht den Zaun am Sonntag auf dem Dachboden.
+77	S	UNRELATED	Herr Kofler räumt die Regale auf am Mittwoch auf dem Dachboden.
+78	S	QUERY	Was macht Herr Holzer am ersten Tag des Wochenendes unten im Haus?
+78	S	TRUE	Herr Holzer gießt die Pflanzen am Samstag im Keller.
+78	S	NEAR_PERSON	Herr Brandl gießt die Pflanzen am Samstag im Keller.
+78	S	NEAR_PLACE	Herr Holzer gießt die Pflanzen am Samstag im Büro.
+78	S	NEAR_DAY	Herr Holzer gießt die Pflanzen am Sonntag im Keller.
+78	S	UNRELATED	Frau Lindner räumt die Regale auf am Samstag im Keller.
+78	S	UNRELATED	Frau Schuster holt das Paket ab am Montag im Büro.
+78	S	UNRELATED	Herr Haider holt das Paket ab am Samstag im Garten.
+78	S	UNRELATED	Herr Rainer räumt die Regale auf am Sonntag im Büro.
+79	S	QUERY	Was macht Herr Lehner in der Wochenmitte am Arbeitsplatz?
+79	S	TRUE	Herr Lehner repariert die Heizung am Mittwoch im Büro.
+79	S	NEAR_PERSON	Herr Mair repariert die Heizung am Mittwoch im Büro.
+79	S	NEAR_PLACE	Herr Lehner repariert die Heizung am Mittwoch auf dem Dachboden.
+79	S	NEAR_DAY	Herr Lehner repariert die Heizung am Montag im Büro.
+79	S	UNRELATED	Frau Wallner räumt die Regale auf am Samstag im Keller.
+79	S	UNRELATED	Herr Egger prüft die Bremsen am Mittwoch im Garten.
+79	S	UNRELATED	Herr Rainer gießt die Pflanzen am Mittwoch im Keller.
+79	S	UNRELATED	Frau Haider räumt die Regale auf am Montag im Büro.
+80	S	QUERY	Was macht Frau Lehner zum Wochenausklang am Arbeitsplatz?
+80	S	TRUE	Frau Lehner repariert die Heizung am Freitag im Büro.
+80	S	NEAR_PERSON	Frau Mair repariert die Heizung am Freitag im Büro.
+80	S	NEAR_PLACE	Frau Lehner repariert die Heizung am Freitag im Garten.
+80	S	NEAR_DAY	Frau Lehner repariert die Heizung am Montag im Büro.
+80	S	UNRELATED	Herr Ortner streicht den Zaun am Freitag auf dem Dachboden.
+80	S	UNRELATED	Frau Egger streicht den Zaun am Freitag in der Garage.
+80	S	UNRELATED	Frau Haider holt das Paket ab am Sonntag auf dem Dachboden.
+80	S	UNRELATED	Frau Kofler gießt die Pflanzen am Samstag im Garten.
+81	S	QUERY	Was macht Frau Mair am letzten Tag des Wochenendes ganz oben unterm Dach?
+81	S	TRUE	Frau Mair repariert die Heizung am Sonntag auf dem Dachboden.
+81	S	NEAR_PERSON	Frau Holzer repariert die Heizung am Sonntag auf dem Dachboden.
+81	S	NEAR_PLACE	Frau Mair repariert die Heizung am Sonntag im Garten.
+81	S	NEAR_DAY	Frau Mair repariert die Heizung am Samstag auf dem Dachboden.
+81	S	UNRELATED	Frau Lehner holt das Paket ab am Freitag im Keller.
+81	S	UNRELATED	Frau Schuster streicht den Zaun am Mittwoch im Büro.
+81	S	UNRELATED	Herr Lindner räumt die Regale auf am Sonntag in der Garage.
+81	S	UNRELATED	Frau Rainer prüft die Bremsen am Freitag im Garten.
+82	S	QUERY	Was macht Frau Lindner in der Wochenmitte ganz oben unterm Dach?
+82	S	TRUE	Frau Lindner repariert die Heizung am Mittwoch auf dem Dachboden.
+82	S	NEAR_PERSON	Frau Ortner repariert die Heizung am Mittwoch auf dem Dachboden.
+82	S	NEAR_PLACE	Frau Lindner repariert die Heizung am Mittwoch im Büro.
+82	S	NEAR_DAY	Frau Lindner repariert die Heizung am Montag auf dem Dachboden.
+82	S	UNRELATED	Herr Haider gießt die Pflanzen am Mittwoch im Keller.
+82	S	UNRELATED	Herr Wallner gießt die Pflanzen am Samstag auf dem Dachboden.
+82	S	UNRELATED	Herr Rainer holt das Paket ab am Sonntag im Büro.
+82	S	UNRELATED	Frau Brandl prüft die Bremsen am Mittwoch im Büro.
+83	S	QUERY	Was macht Frau Schuster am ersten Tag des Wochenendes ganz oben unterm Dach?
+83	S	TRUE	Frau Schuster streicht den Zaun am Samstag auf dem Dachboden.
+83	S	NEAR_PERSON	Frau Haider streicht den Zaun am Samstag auf dem Dachboden.
+83	S	NEAR_PLACE	Frau Schuster streicht den Zaun am Samstag im Keller.
+83	S	NEAR_DAY	Frau Schuster streicht den Zaun am Freitag auf dem Dachboden.
+83	S	UNRELATED	Herr Lehner holt das Paket ab am Samstag auf dem Dachboden.
+83	S	UNRELATED	Frau Lindner gießt die Pflanzen am Freitag im Garten.
+83	S	UNRELATED	Herr Kofler prüft die Bremsen am Mittwoch im Garten.
+83	S	UNRELATED	Frau Rainer gießt die Pflanzen am Sonntag im Garten.
+84	S	QUERY	Was macht Herr Mair in der Wochenmitte ganz oben unterm Dach?
+84	S	TRUE	Herr Mair repariert die Heizung am Mittwoch auf dem Dachboden.
+84	S	NEAR_PERSON	Herr Haider repariert die Heizung am Mittwoch auf dem Dachboden.
+84	S	NEAR_PLACE	Herr Mair repariert die Heizung am Mittwoch im Keller.
+84	S	NEAR_DAY	Herr Mair repariert die Heizung am Freitag auf dem Dachboden.
+84	S	UNRELATED	Frau Brandl räumt die Regale auf am Montag im Garten.
+84	S	UNRELATED	Herr Rainer räumt die Regale auf am Montag auf dem Dachboden.
+84	S	UNRELATED	Herr Lindner streicht den Zaun am Freitag im Büro.
+84	S	UNRELATED	Frau Kofler streicht den Zaun am Freitag im Büro.
+85	S	QUERY	Was macht Frau Holzer zum Wochenausklang unten im Haus?
+85	S	TRUE	Frau Holzer gießt die Pflanzen am Freitag im Keller.
+85	S	NEAR_PERSON	Frau Ortner gießt die Pflanzen am Freitag im Keller.
+85	S	NEAR_PLACE	Frau Holzer gießt die Pflanzen am Freitag auf dem Dachboden.
+85	S	NEAR_DAY	Frau Holzer gießt die Pflanzen am Samstag im Keller.
+85	S	UNRELATED	Frau Lindner räumt die Regale auf am Montag im Keller.
+85	S	UNRELATED	Frau Wallner streicht den Zaun am Sonntag in der Garage.
+85	S	UNRELATED	Herr Egger repariert die Heizung am Freitag im Garten.
+85	S	UNRELATED	Frau Haider repariert die Heizung am Freitag im Büro.
+86	S	QUERY	Was macht Frau Haider in der Wochenmitte unten im Haus?
+86	S	TRUE	Frau Haider streicht den Zaun am Mittwoch im Keller.
+86	S	NEAR_PERSON	Frau Schuster streicht den Zaun am Mittwoch im Keller.
+86	S	NEAR_PLACE	Frau Haider streicht den Zaun am Mittwoch in der Garage.
+86	S	NEAR_DAY	Frau Haider streicht den Zaun am Samstag im Keller.
+86	S	UNRELATED	Frau Lehner holt das Paket ab am Sonntag im Büro.
+86	S	UNRELATED	Frau Egger repariert die Heizung am Montag im Keller.
+86	S	UNRELATED	Herr Kofler holt das Paket ab am Sonntag in der Garage.
+86	S	UNRELATED	Frau Holzer prüft die Bremsen am Freitag in der Garage.
+87	S	QUERY	Was macht Herr Mair zum Wochenausklang draußen im Grünen?
+87	S	TRUE	Herr Mair streicht den Zaun am Freitag im Garten.
+87	S	NEAR_PERSON	Herr Lindner streicht den Zaun am Freitag im Garten.
+87	S	NEAR_PLACE	Herr Mair streicht den Zaun am Freitag auf dem Dachboden.
+87	S	NEAR_DAY	Herr Mair streicht den Zaun am Montag im Garten.
+87	S	UNRELATED	Frau Egger holt das Paket ab am Samstag im Garten.
+87	S	UNRELATED	Herr Rainer prüft die Bremsen am Montag auf dem Dachboden.
+87	S	UNRELATED	Herr Wallner repariert die Heizung am Montag im Garten.
+87	S	UNRELATED	Herr Kofler repariert die Heizung am Mittwoch auf dem Dachboden.
+88	S	QUERY	Was macht Frau Haider am letzten Tag des Wochenendes ganz oben unterm Dach?
+88	S	TRUE	Frau Haider gießt die Pflanzen am Sonntag auf dem Dachboden.
+88	S	NEAR_PERSON	Frau Ortner gießt die Pflanzen am Sonntag auf dem Dachboden.
+88	S	NEAR_PLACE	Frau Haider gießt die Pflanzen am Sonntag im Büro.
+88	S	NEAR_DAY	Frau Haider gießt die Pflanzen am Mittwoch auf dem Dachboden.
+88	S	UNRELATED	Herr Brandl repariert die Heizung am Samstag in der Garage.
+88	S	UNRELATED	Frau Schuster räumt die Regale auf am Sonntag im Garten.
+88	S	UNRELATED	Frau Holzer holt das Paket ab am Mittwoch im Garten.
+88	S	UNRELATED	Herr Rainer repariert die Heizung am Freitag im Keller.
+89	S	QUERY	Was macht Herr Rainer am letzten Tag des Wochenendes unten im Haus?
+89	S	TRUE	Herr Rainer repariert die Heizung am Sonntag im Keller.
+89	S	NEAR_PERSON	Herr Holzer repariert die Heizung am Sonntag im Keller.
+89	S	NEAR_PLACE	Herr Rainer repariert die Heizung am Sonntag auf dem Dachboden.
+89	S	NEAR_DAY	Herr Rainer repariert die Heizung am Samstag im Keller.
+89	S	UNRELATED	Frau Kofler prüft die Bremsen am Samstag im Büro.
+89	S	UNRELATED	Herr Lehner streicht den Zaun am Mittwoch im Keller.
+89	S	UNRELATED	Herr Wallner prüft die Bremsen am Montag im Büro.
+89	S	UNRELATED	Frau Egger prüft die Bremsen am Montag im Keller.
+90	S	QUERY	Was macht Herr Lehner zum Wochenausklang unten im Haus?
+90	S	TRUE	Herr Lehner repariert die Heizung am Freitag im Keller.
+90	S	NEAR_PERSON	Herr Egger repariert die Heizung am Freitag im Keller.
+90	S	NEAR_PLACE	Herr Lehner repariert die Heizung am Freitag im Garten.
+90	S	NEAR_DAY	Herr Lehner repariert die Heizung am Samstag im Keller.
+90	S	UNRELATED	Herr Schuster gießt die Pflanzen am Sonntag im Keller.
+90	S	UNRELATED	Herr Brandl prüft die Bremsen am Samstag in der Garage.
+90	S	UNRELATED	Herr Wallner prüft die Bremsen am Samstag auf dem Dachboden.
+90	S	UNRELATED	Herr Mair räumt die Regale auf am Montag auf dem Dachboden.
+91	S	QUERY	Was macht Herr Egger zum Wochenausklang am Arbeitsplatz?
+91	S	TRUE	Herr Egger streicht den Zaun am Freitag im Büro.
+91	S	NEAR_PERSON	Herr Ortner streicht den Zaun am Freitag im Büro.
+91	S	NEAR_PLACE	Herr Egger streicht den Zaun am Freitag im Garten.
+91	S	NEAR_DAY	Herr Egger streicht den Zaun am Mittwoch im Büro.
+91	S	UNRELATED	Frau Mair repariert die Heizung am Montag in der Garage.
+91	S	UNRELATED	Frau Wallner holt das Paket ab am Montag auf dem Dachboden.
+91	S	UNRELATED	Herr Rainer gießt die Pflanzen am Freitag auf dem Dachboden.
+91	S	UNRELATED	Frau Schuster prüft die Bremsen am Sonntag im Garten.
+92	S	QUERY	Was macht Frau Lindner zu Wochenbeginn draußen im Grünen?
+92	S	TRUE	Frau Lindner streicht den Zaun am Montag im Garten.
+92	S	NEAR_PERSON	Frau Lehner streicht den Zaun am Montag im Garten.
+92	S	NEAR_PLACE	Frau Lindner streicht den Zaun am Montag auf dem Dachboden.
+92	S	NEAR_DAY	Frau Lindner streicht den Zaun am Mittwoch im Garten.
+92	S	UNRELATED	Frau Kofler repariert die Heizung am Samstag im Büro.
+92	S	UNRELATED	Herr Holzer repariert die Heizung am Samstag auf dem Dachboden.
+92	S	UNRELATED	Herr Ortner gießt die Pflanzen am Mittwoch im Keller.
+92	S	UNRELATED	Herr Egger repariert die Heizung am Sonntag in der Garage.
+93	S	QUERY	Was macht Herr Schuster zum Wochenausklang ganz oben unterm Dach?
+93	S	TRUE	Herr Schuster gießt die Pflanzen am Freitag auf dem Dachboden.
+93	S	NEAR_PERSON	Herr Holzer gießt die Pflanzen am Freitag auf dem Dachboden.
+93	S	NEAR_PLACE	Herr Schuster gießt die Pflanzen am Freitag im Keller.
+93	S	NEAR_DAY	Herr Schuster gießt die Pflanzen am Mittwoch auf dem Dachboden.
+93	S	UNRELATED	Herr Lindner repariert die Heizung am Sonntag im Garten.
+93	S	UNRELATED	Frau Rainer prüft die Bremsen am Montag auf dem Dachboden.
+93	S	UNRELATED	Herr Wallner streicht den Zaun am Sonntag auf dem Dachboden.
+93	S	UNRELATED	Herr Ortner prüft die Bremsen am Samstag im Büro.
+94	S	QUERY	Was macht Herr Brandl zu Wochenbeginn unten im Haus?
+94	S	TRUE	Herr Brandl gießt die Pflanzen am Montag im Keller.
+94	S	NEAR_PERSON	Herr Ortner gießt die Pflanzen am Montag im Keller.
+94	S	NEAR_PLACE	Herr Brandl gießt die Pflanzen am Montag im Garten.
+94	S	NEAR_DAY	Herr Brandl gießt die Pflanzen am Sonntag im Keller.
+94	S	UNRELATED	Herr Schuster räumt die Regale auf am Samstag in der Garage.
+94	S	UNRELATED	Frau Holzer holt das Paket ab am Montag auf dem Dachboden.
+94	S	UNRELATED	Herr Lindner repariert die Heizung am Freitag im Büro.
+94	S	UNRELATED	Frau Kofler holt das Paket ab am Mittwoch im Keller.
+95	S	QUERY	Was macht Frau Haider zu Wochenbeginn beim Stellplatz fürs Auto?
+95	S	TRUE	Frau Haider streicht den Zaun am Montag in der Garage.
+95	S	NEAR_PERSON	Frau Lehner streicht den Zaun am Montag in der Garage.
+95	S	NEAR_PLACE	Frau Haider streicht den Zaun am Montag im Büro.
+95	S	NEAR_DAY	Frau Haider streicht den Zaun am Mittwoch in der Garage.
+95	S	UNRELATED	Frau Kofler repariert die Heizung am Samstag im Garten.
+95	S	UNRELATED	Herr Ortner holt das Paket ab am Samstag in der Garage.
+95	S	UNRELATED	Herr Mair räumt die Regale auf am Freitag im Garten.
+95	S	UNRELATED	Frau Schuster repariert die Heizung am Samstag auf dem Dachboden.
+96	S	QUERY	Was macht Herr Holzer in der Wochenmitte ganz oben unterm Dach?
+96	S	TRUE	Herr Holzer streicht den Zaun am Mittwoch auf dem Dachboden.
+96	S	NEAR_PERSON	Herr Rainer streicht den Zaun am Mittwoch auf dem Dachboden.
+96	S	NEAR_PLACE	Herr Holzer streicht den Zaun am Mittwoch im Büro.
+96	S	NEAR_DAY	Herr Holzer streicht den Zaun am Samstag auf dem Dachboden.
+96	S	UNRELATED	Frau Egger holt das Paket ab am Mittwoch im Büro.
+96	S	UNRELATED	Frau Mair repariert die Heizung am Freitag im Büro.
+96	S	UNRELATED	Frau Schuster prüft die Bremsen am Freitag im Büro.
+96	S	UNRELATED	Herr Lehner gießt die Pflanzen am Montag im Büro.
+97	S	QUERY	Was macht Frau Brandl in der Wochenmitte draußen im Grünen?
+97	S	TRUE	Frau Brandl repariert die Heizung am Mittwoch im Garten.
+97	S	NEAR_PERSON	Frau Egger repariert die Heizung am Mittwoch im Garten.
+97	S	NEAR_PLACE	Frau Brandl repariert die Heizung am Mittwoch auf dem Dachboden.
+97	S	NEAR_DAY	Frau Brandl repariert die Heizung am Montag im Garten.
+97	S	UNRELATED	Herr Rainer prüft die Bremsen am Montag im Keller.
+97	S	UNRELATED	Frau Schuster streicht den Zaun am Freitag im Keller.
+97	S	UNRELATED	Herr Ortner prüft die Bremsen am Samstag auf dem Dachboden.
+97	S	UNRELATED	Herr Wallner räumt die Regale auf am Mittwoch im Büro.
+98	S	QUERY	Was macht Frau Kofler zum Wochenausklang beim Stellplatz fürs Auto?
+98	S	TRUE	Frau Kofler gießt die Pflanzen am Freitag in der Garage.
+98	S	NEAR_PERSON	Frau Haider gießt die Pflanzen am Freitag in der Garage.
+98	S	NEAR_PLACE	Frau Kofler gießt die Pflanzen am Freitag auf dem Dachboden.
+98	S	NEAR_DAY	Frau Kofler gießt die Pflanzen am Sonntag in der Garage.
+98	S	UNRELATED	Herr Lindner repariert die Heizung am Sonntag in der Garage.
+98	S	UNRELATED	Herr Egger streicht den Zaun am Samstag auf dem Dachboden.
+98	S	UNRELATED	Herr Wallner prüft die Bremsen am Freitag im Keller.
+98	S	UNRELATED	Frau Brandl prüft die Bremsen am Sonntag im Büro.
+99	S	QUERY	Was macht Herr Egger am letzten Tag des Wochenendes am Arbeitsplatz?
+99	S	TRUE	Herr Egger repariert die Heizung am Sonntag im Büro.
+99	S	NEAR_PERSON	Herr Lindner repariert die Heizung am Sonntag im Büro.
+99	S	NEAR_PLACE	Herr Egger repariert die Heizung am Sonntag im Keller.
+99	S	NEAR_DAY	Herr Egger repariert die Heizung am Montag im Büro.
+99	S	UNRELATED	Herr Brandl räumt die Regale auf am Samstag auf dem Dachboden.
+99	S	UNRELATED	Herr Wallner prüft die Bremsen am Sonntag im Garten.
+99	S	UNRELATED	Herr Holzer gießt die Pflanzen am Freitag in der Garage.
+99	S	UNRELATED	Herr Mair streicht den Zaun am Montag im Garten.
+100	S	QUERY	Was macht Frau Holzer am ersten Tag des Wochenendes am Arbeitsplatz?
+100	S	TRUE	Frau Holzer repariert die Heizung am Samstag im Büro.
+100	S	NEAR_PERSON	Frau Kofler repariert die Heizung am Samstag im Büro.
+100	S	NEAR_PLACE	Frau Holzer repariert die Heizung am Samstag im Garten.
+100	S	NEAR_DAY	Frau Holzer repariert die Heizung am Sonntag im Büro.
+100	S	UNRELATED	Herr Ortner prüft die Bremsen am Mittwoch in der Garage.
+100	S	UNRELATED	Herr Wallner prüft die Bremsen am Mittwoch im Büro.
+100	S	UNRELATED	Herr Haider holt das Paket ab am Samstag auf dem Dachboden.
+100	S	UNRELATED	Frau Brandl prüft die Bremsen am Sonntag in der Garage.
+101	S	QUERY	Was macht Frau Haider zu Wochenbeginn unten im Haus?
+101	S	TRUE	Frau Haider streicht den Zaun am Montag im Keller.
+101	S	NEAR_PERSON	Frau Kofler streicht den Zaun am Montag im Keller.
+101	S	NEAR_PLACE	Frau Haider streicht den Zaun am Montag im Büro.
+101	S	NEAR_DAY	Frau Haider streicht den Zaun am Samstag im Keller.
+101	S	UNRELATED	Frau Ortner repariert die Heizung am Mittwoch im Keller.
+101	S	UNRELATED	Herr Brandl gießt die Pflanzen am Mittwoch auf dem Dachboden.
+101	S	UNRELATED	Frau Lindner gießt die Pflanzen am Sonntag auf dem Dachboden.
+101	S	UNRELATED	Frau Schuster repariert die Heizung am Samstag in der Garage.
+102	S	QUERY	Was macht Frau Wallner in der Wochenmitte am Arbeitsplatz?
+102	S	TRUE	Frau Wallner gießt die Pflanzen am Mittwoch im Büro.
+102	S	NEAR_PERSON	Frau Kofler gießt die Pflanzen am Mittwoch im Büro.
+102	S	NEAR_PLACE	Frau Wallner gießt die Pflanzen am Mittwoch im Garten.
+102	S	NEAR_DAY	Frau Wallner gießt die Pflanzen am Freitag im Büro.
+102	S	UNRELATED	Frau Mair repariert die Heizung am Freitag im Büro.
+102	S	UNRELATED	Frau Lehner holt das Paket ab am Sonntag in der Garage.
+102	S	UNRELATED	Herr Lindner repariert die Heizung am Sonntag auf dem Dachboden.
+102	S	UNRELATED	Herr Rainer repariert die Heizung am Sonntag auf dem Dachboden.
+103	S	QUERY	Was macht Frau Lehner am ersten Tag des Wochenendes beim Stellplatz fürs Auto?
+103	S	TRUE	Frau Lehner gießt die Pflanzen am Samstag in der Garage.
+103	S	NEAR_PERSON	Frau Egger gießt die Pflanzen am Samstag in der Garage.
+103	S	NEAR_PLACE	Frau Lehner gießt die Pflanzen am Samstag auf dem Dachboden.
+103	S	NEAR_DAY	Frau Lehner gießt die Pflanzen am Freitag in der Garage.
+103	S	UNRELATED	Herr Holzer streicht den Zaun am Freitag in der Garage.
+103	S	UNRELATED	Frau Schuster prüft die Bremsen am Freitag in der Garage.
+103	S	UNRELATED	Herr Brandl streicht den Zaun am Montag auf dem Dachboden.
+103	S	UNRELATED	Herr Ortner prüft die Bremsen am Montag auf dem Dachboden.
+104	S	QUERY	Was macht Herr Kofler zu Wochenbeginn ganz oben unterm Dach?
+104	S	TRUE	Herr Kofler repariert die Heizung am Montag auf dem Dachboden.
+104	S	NEAR_PERSON	Herr Brandl repariert die Heizung am Montag auf dem Dachboden.
+104	S	NEAR_PLACE	Herr Kofler repariert die Heizung am Montag im Keller.
+104	S	NEAR_DAY	Herr Kofler repariert die Heizung am Sonntag auf dem Dachboden.
+104	S	UNRELATED	Herr Holzer prüft die Bremsen am Mittwoch im Büro.
+104	S	UNRELATED	Frau Wallner gießt die Pflanzen am Freitag im Büro.
+104	S	UNRELATED	Frau Ortner prüft die Bremsen am Freitag im Garten.
+104	S	UNRELATED	Frau Egger holt das Paket ab am Montag in der Garage.
+105	S	QUERY	Was macht Frau Lehner zu Wochenbeginn ganz oben unterm Dach?
+105	S	TRUE	Frau Lehner gießt die Pflanzen am Montag auf dem Dachboden.
+105	S	NEAR_PERSON	Frau Ortner gießt die Pflanzen am Montag auf dem Dachboden.
+105	S	NEAR_PLACE	Frau Lehner gießt die Pflanzen am Montag im Büro.
+105	S	NEAR_DAY	Frau Lehner gießt die Pflanzen am Freitag auf dem Dachboden.
+105	S	UNRELATED	Frau Rainer streicht den Zaun am Samstag im Keller.
+105	S	UNRELATED	Frau Mair räumt die Regale auf am Montag in der Garage.
+105	S	UNRELATED	Herr Holzer repariert die Heizung am Montag in der Garage.
+105	S	UNRELATED	Frau Lindner streicht den Zaun am Montag auf dem Dachboden.
+106	S	QUERY	Was macht Herr Ortner zum Wochenausklang unten im Haus?
+106	S	TRUE	Herr Ortner gießt die Pflanzen am Freitag im Keller.
+106	S	NEAR_PERSON	Herr Lindner gießt die Pflanzen am Freitag im Keller.
+106	S	NEAR_PLACE	Herr Ortner gießt die Pflanzen am Freitag auf dem Dachboden.
+106	S	NEAR_DAY	Herr Ortner gießt die Pflanzen am Mittwoch im Keller.
+106	S	UNRELATED	Frau Wallner prüft die Bremsen am Freitag im Garten.
+106	S	UNRELATED	Herr Lehner streicht den Zaun am Montag im Büro.
+106	S	UNRELATED	Herr Schuster prüft die Bremsen am Mittwoch im Keller.
+106	S	UNRELATED	Herr Kofler repariert die Heizung am Freitag im Keller.
+107	S	QUERY	Was macht Frau Ortner zum Wochenausklang am Arbeitsplatz?
+107	S	TRUE	Frau Ortner repariert die Heizung am Freitag im Büro.
+107	S	NEAR_PERSON	Frau Lehner repariert die Heizung am Freitag im Büro.
+107	S	NEAR_PLACE	Frau Ortner repariert die Heizung am Freitag im Keller.
+107	S	NEAR_DAY	Frau Ortner repariert die Heizung am Montag im Büro.
+107	S	UNRELATED	Herr Schuster streicht den Zaun am Sonntag im Garten.
+107	S	UNRELATED	Frau Rainer holt das Paket ab am Freitag auf dem Dachboden.
+107	S	UNRELATED	Herr Holzer gießt die Pflanzen am Montag im Büro.
+107	S	UNRELATED	Frau Haider holt das Paket ab am Montag im Büro.
+108	S	QUERY	Was macht Frau Wallner am ersten Tag des Wochenendes draußen im Grünen?
+108	S	TRUE	Frau Wallner streicht den Zaun am Samstag im Garten.
+108	S	NEAR_PERSON	Frau Schuster streicht den Zaun am Samstag im Garten.
+108	S	NEAR_PLACE	Frau Wallner streicht den Zaun am Samstag auf dem Dachboden.
+108	S	NEAR_DAY	Frau Wallner streicht den Zaun am Sonntag im Garten.
+108	S	UNRELATED	Herr Ortner holt das Paket ab am Samstag im Büro.
+108	S	UNRELATED	Frau Lehner repariert die Heizung am Montag auf dem Dachboden.
+108	S	UNRELATED	Herr Haider prüft die Bremsen am Sonntag im Keller.
+108	S	UNRELATED	Herr Kofler repariert die Heizung am Freitag im Keller.
+109	S	QUERY	Was macht Herr Haider zu Wochenbeginn am Arbeitsplatz?
+109	S	TRUE	Herr Haider streicht den Zaun am Montag im Büro.
+109	S	NEAR_PERSON	Herr Egger streicht den Zaun am Montag im Büro.
+109	S	NEAR_PLACE	Herr Haider streicht den Zaun am Montag im Garten.
+109	S	NEAR_DAY	Herr Haider streicht den Zaun am Samstag im Büro.
+109	S	UNRELATED	Frau Schuster räumt die Regale auf am Freitag im Keller.
+109	S	UNRELATED	Frau Ortner repariert die Heizung am Samstag auf dem Dachboden.
+109	S	UNRELATED	Herr Rainer räumt die Regale auf am Mittwoch auf dem Dachboden.
+109	S	UNRELATED	Frau Lindner räumt die Regale auf am Montag im Büro.
+110	S	QUERY	Was macht Frau Ortner am letzten Tag des Wochenendes ganz oben unterm Dach?
+110	S	TRUE	Frau Ortner gießt die Pflanzen am Sonntag auf dem Dachboden.
+110	S	NEAR_PERSON	Frau Rainer gießt die Pflanzen am Sonntag auf dem Dachboden.
+110	S	NEAR_PLACE	Frau Ortner gießt die Pflanzen am Sonntag im Büro.
+110	S	NEAR_DAY	Frau Ortner gießt die Pflanzen am Freitag auf dem Dachboden.
+110	S	UNRELATED	Frau Schuster räumt die Regale auf am Samstag im Büro.
+110	S	UNRELATED	Herr Kofler prüft die Bremsen am Samstag im Keller.
+110	S	UNRELATED	Frau Holzer räumt die Regale auf am Mittwoch im Büro.
+110	S	UNRELATED	Frau Egger prüft die Bremsen am Montag im Büro.
+111	S	QUERY	Was macht Herr Holzer am ersten Tag des Wochenendes beim Stellplatz fürs Auto?
+111	S	TRUE	Herr Holzer gießt die Pflanzen am Samstag in der Garage.
+111	S	NEAR_PERSON	Herr Brandl gießt die Pflanzen am Samstag in der Garage.
+111	S	NEAR_PLACE	Herr Holzer gießt die Pflanzen am Samstag im Keller.
+111	S	NEAR_DAY	Herr Holzer gießt die Pflanzen am Sonntag in der Garage.
+111	S	UNRELATED	Herr Kofler repariert die Heizung am Samstag im Büro.
+111	S	UNRELATED	Herr Haider streicht den Zaun am Samstag im Garten.
+111	S	UNRELATED	Frau Lindner holt das Paket ab am Mittwoch im Garten.
+111	S	UNRELATED	Herr Wallner räumt die Regale auf am Montag auf dem Dachboden.
+112	S	QUERY	Was macht Herr Mair am ersten Tag des Wochenendes am Arbeitsplatz?
+112	S	TRUE	Herr Mair gießt die Pflanzen am Samstag im Büro.
+112	S	NEAR_PERSON	Herr Ortner gießt die Pflanzen am Samstag im Büro.
+112	S	NEAR_PLACE	Herr Mair gießt die Pflanzen am Samstag auf dem Dachboden.
+112	S	NEAR_DAY	Herr Mair gießt die Pflanzen am Mittwoch im Büro.
+112	S	UNRELATED	Herr Kofler streicht den Zaun am Mittwoch auf dem Dachboden.
+112	S	UNRELATED	Herr Lehner holt das Paket ab am Sonntag auf dem Dachboden.
+112	S	UNRELATED	Herr Schuster prüft die Bremsen am Mittwoch im Büro.
+112	S	UNRELATED	Herr Rainer prüft die Bremsen am Sonntag im Keller.
+113	S	QUERY	Was macht Frau Lindner am letzten Tag des Wochenendes am Arbeitsplatz?
+113	S	TRUE	Frau Lindner gießt die Pflanzen am Sonntag im Büro.
+113	S	NEAR_PERSON	Frau Brandl gießt die Pflanzen am Sonntag im Büro.
+113	S	NEAR_PLACE	Frau Lindner gießt die Pflanzen am Sonntag in der Garage.
+113	S	NEAR_DAY	Frau Lindner gießt die Pflanzen am Samstag im Büro.
+113	S	UNRELATED	Frau Lehner prüft die Bremsen am Freitag im Keller.
+113	S	UNRELATED	Herr Haider räumt die Regale auf am Samstag auf dem Dachboden.
+113	S	UNRELATED	Herr Kofler räumt die Regale auf am Freitag im Keller.
+113	S	UNRELATED	Herr Ortner repariert die Heizung am Samstag im Keller.
+114	S	QUERY	Was macht Herr Ortner zu Wochenbeginn ganz oben unterm Dach?
+114	S	TRUE	Herr Ortner gießt die Pflanzen am Montag auf dem Dachboden.
+114	S	NEAR_PERSON	Herr Lindner gießt die Pflanzen am Montag auf dem Dachboden.
+114	S	NEAR_PLACE	Herr Ortner gießt die Pflanzen am Montag im Büro.
+114	S	NEAR_DAY	Herr Ortner gießt die Pflanzen am Freitag auf dem Dachboden.
+114	S	UNRELATED	Frau Brandl räumt die Regale auf am Mittwoch auf dem Dachboden.
+114	S	UNRELATED	Frau Lehner räumt die Regale auf am Mittwoch in der Garage.
+114	S	UNRELATED	Herr Mair räumt die Regale auf am Sonntag im Garten.
+114	S	UNRELATED	Herr Haider streicht den Zaun am Montag im Keller.
+115	S	QUERY	Was macht Herr Schuster am ersten Tag des Wochenendes draußen im Grünen?
+115	S	TRUE	Herr Schuster streicht den Zaun am Samstag im Garten.
+115	S	NEAR_PERSON	Herr Ortner streicht den Zaun am Samstag im Garten.
+115	S	NEAR_PLACE	Herr Schuster streicht den Zaun am Samstag im Keller.
+115	S	NEAR_DAY	Herr Schuster streicht den Zaun am Mittwoch im Garten.
+115	S	UNRELATED	Frau Kofler holt das Paket ab am Mittwoch im Garten.
+115	S	UNRELATED	Herr Holzer prüft die Bremsen am Sonntag im Garten.
+115	S	UNRELATED	Herr Lindner prüft die Bremsen am Samstag im Keller.
+115	S	UNRELATED	Herr Brandl räumt die Regale auf am Montag im Keller.
+116	S	QUERY	Was macht Herr Rainer zu Wochenbeginn am Arbeitsplatz?
+116	S	TRUE	Herr Rainer repariert die Heizung am Montag im Büro.
+116	S	NEAR_PERSON	Herr Brandl repariert die Heizung am Montag im Büro.
+116	S	NEAR_PLACE	Herr Rainer repariert die Heizung am Montag auf dem Dachboden.
+116	S	NEAR_DAY	Herr Rainer repariert die Heizung am Sonntag im Büro.
+116	S	UNRELATED	Frau Kofler streicht den Zaun am Samstag in der Garage.
+116	S	UNRELATED	Frau Lehner räumt die Regale auf am Samstag im Büro.
+116	S	UNRELATED	Herr Mair gießt die Pflanzen am Sonntag im Keller.
+116	S	UNRELATED	Herr Haider holt das Paket ab am Mittwoch im Garten.
+117	S	QUERY	Was macht Herr Lindner zum Wochenausklang unten im Haus?
+117	S	TRUE	Herr Lindner gießt die Pflanzen am Freitag im Keller.
+117	S	NEAR_PERSON	Herr Schuster gießt die Pflanzen am Freitag im Keller.
+117	S	NEAR_PLACE	Herr Lindner gießt die Pflanzen am Freitag im Garten.
+117	S	NEAR_DAY	Herr Lindner gießt die Pflanzen am Mittwoch im Keller.
+117	S	UNRELATED	Herr Wallner repariert die Heizung am Freitag im Büro.
+117	S	UNRELATED	Herr Holzer streicht den Zaun am Samstag im Büro.
+117	S	UNRELATED	Herr Rainer streicht den Zaun am Samstag im Keller.
+117	S	UNRELATED	Herr Egger räumt die Regale auf am Montag in der Garage.
+118	S	QUERY	Was macht Frau Brandl zu Wochenbeginn draußen im Grünen?
+118	S	TRUE	Frau Brandl gießt die Pflanzen am Montag im Garten.
+118	S	NEAR_PERSON	Frau Mair gießt die Pflanzen am Montag im Garten.
+118	S	NEAR_PLACE	Frau Brandl gießt die Pflanzen am Montag im Büro.
+118	S	NEAR_DAY	Frau Brandl gießt die Pflanzen am Sonntag im Garten.
+118	S	UNRELATED	Herr Wallner streicht den Zaun am Mittwoch im Garten.
+118	S	UNRELATED	Herr Holzer holt das Paket ab am Freitag im Keller.
+118	S	UNRELATED	Herr Egger streicht den Zaun am Montag im Keller.
+118	S	UNRELATED	Herr Lehner prüft die Bremsen am Mittwoch im Büro.
+119	S	QUERY	Was macht Frau Rainer zu Wochenbeginn unten im Haus?
+119	S	TRUE	Frau Rainer gießt die Pflanzen am Montag im Keller.
+119	S	NEAR_PERSON	Frau Ortner gießt die Pflanzen am Montag im Keller.
+119	S	NEAR_PLACE	Frau Rainer gießt die Pflanzen am Montag auf dem Dachboden.
+119	S	NEAR_DAY	Frau Rainer gießt die Pflanzen am Samstag im Keller.
+119	S	UNRELATED	Frau Lehner holt das Paket ab am Montag in der Garage.
+119	S	UNRELATED	Frau Brandl prüft die Bremsen am Samstag auf dem Dachboden.
+119	S	UNRELATED	Frau Egger räumt die Regale auf am Mittwoch im Garten.
+119	S	UNRELATED	Frau Holzer holt das Paket ab am Mittwoch auf dem Dachboden.
