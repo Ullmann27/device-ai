@@ -1,0 +1,26 @@
+GIT_HEAD=8a668bbea797b9d77e5e205daf75f35b3ed67899 (BoundedCtrnn.kt blob df42b1454f42bf00cc6019892bd69d74113eafeb, unmodified P1)
+TEST_BLOB=7483eedbe42c875bfb31c7c18ac74b9928d618b0
+info: kotlinc-jvm 2.0.20 (JRE 21.0.12.1+1-1-24.04.4-Ubuntu)
+openjdk version "21.0.12.1" 2026-08-18
+        val tid = Thread.currentThread().id
+                                         ^^
+BUILD_OK 773db7af2974b4e8e58f15eeba793f7d16e13f7ae9045e752e0c838e5715def3 sources=30
+BUILD_EXIT=0
+JUnit version 4.13.2
+.E.E.E
+Time: 0.036
+There were 3 failures:
+1) externalWritesAfterConstructionDoNotChangeTheNetwork(at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest)
+java.lang.AssertionError: state must stay finite
+	at at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest.externalWritesAfterConstructionDoNotChangeTheNetwork(BoundedCtrnnAliasingTest.kt:28)
+2) leakyBaselineRejectsInvalidTauAtConstruction(at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest)
+java.lang.AssertionError: tau=0.0 accepted
+	at at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest.leakyBaselineRejectsInvalidTauAtConstruction(BoundedCtrnnAliasingTest.kt:36)
+3) leakyBaselineIsNotChangedByExternalTauWrites(at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest)
+java.lang.AssertionError: |h| <= max input 0.5, got -2.425825972048953E8
+	at at.heinz.deviceai.research.exp20.BoundedCtrnnAliasingTest.leakyBaselineIsNotChangedByExternalTauWrites(BoundedCtrnnAliasingTest.kt:45)
+
+FAILURES!!!
+Tests run: 3,  Failures: 3
+
+JUNIT_EXIT=1
