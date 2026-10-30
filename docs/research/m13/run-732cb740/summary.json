@@ -1,0 +1,15 @@
+{
+ "schema": 1,
+ "sourceSha": "732cb740f6e85dbe495884ef3950b77236401a57",
+ "seal": "7a160a0ec6d73ae65c3ac7ade7475e355c2d18a497c1fbd6ad5bae970adcf211",
+ "executions": 3572,
+ "trainCandidates": 2652,
+ "devCandidates": 967,
+ "hypotheses": 17,
+ "byStatus": {
+  "CONFIRMED": 1,
+  "REFUTED": 1,
+  "INCONCLUSIVE": 15
+ },
+ "rule": "Hypotheses never change ranking, ledger or permissions; CONFIRMED means a dev re-measurement on other modules, p<0.05 one-sided."
+}

@@ -79,7 +79,8 @@ class ContinuumBrainSettings(appDirectory:File) {
 class ContinuumBrainShadowLog(appDirectory:File) {
     private val file=File(appDirectory,"learning-core-v2/ewm-brain/shadow-v1.jsonl")
 
-    fun record(answer:Ewm1Brain.Answer?,baseline:ContinuumChatOutcome,millis:Long,at:Long) {
+    fun record(answer:Ewm1Brain.Answer?,baseline:ContinuumChatOutcome,millis:Long,at:Long,
+               timeline:String?=null,relationResolvable:Boolean?=null) {
         val entry=JSONObject().put("t",at)
             .put("route",answer?.route ?: "ERROR")
             .put("decision",answer?.decision ?: "ERROR")
@@ -87,6 +88,9 @@ class ContinuumBrainShadowLog(appDirectory:File) {
             .put("k0",baseline.source.name)
             .put("agree",agreement(answer,baseline))
             .put("ms",millis)
+        // M11/M16: enum-only research signals; no fact id or text is written
+        timeline?.let { entry.put("tl",it.take(20)) }
+        relationResolvable?.let { entry.put("rel",it) }
         file.parentFile?.let { check(it.isDirectory || it.mkdirs()) }
         val kept=lines().takeLast(MAX_LINES-1)
         val temp=File(file.parentFile,"shadow-v1.jsonl.tmp")
@@ -111,6 +115,9 @@ class ContinuumBrainShadowLog(appDirectory:File) {
             " · Rückfragen "+((agree["K1_CLARIFIES"] ?: 0)+(agree["K1_CLARIFIES_K0_NONE"] ?: 0))+
             " · beide ohne Beleg "+(agree["BOTH_NONE"] ?: 0)+
             " · Fehler "+(agree["ERROR"] ?: 0)+
+            " · Zeitlinie: veraltet zitiert "+rows.count { it.optString("tl")=="REPLACE" }+
+            ", widersprüchlich "+rows.count { it.optString("tl")=="CLARIFY" }+
+            " · Verwandtschaftsfrage auflösbar "+rows.count { it.optBoolean("rel") }+
             " · Rechenzeit Median "+ms[ms.size/2]+" ms, p95 "+ms[(ms.size*95)/100]+" ms."
     }
 
@@ -185,7 +192,15 @@ object ContinuumBrainBridge {
         val asked=runCatching { ask(appDirectory,core,conversationId,request) }.getOrNull()
         val millis=(System.nanoTime()-started)/1_000_000L
         if(mode==ContinuumBrainMode.SHADOW) {
-            runCatching { ContinuumBrainShadowLog(appDirectory).record(asked?.first,baseline,millis,nowMillis) }
+            runCatching {
+                // M11 research signals over the SAME active facts; the shown outcome stays the baseline object
+                val active=core.activeOwnerFacts().map { it.id to it.content }
+                val answer=asked?.first
+                val timeline=if(answer!=null && answer.decision=="QUERY" && answer.route=="MEMORY")
+                    at.heinz.deviceai.cognitive.MemoryTimeline.check(answer.cited,active).decision else "NO_MEMORY_ANSWER"
+                val relation=at.heinz.deviceai.cognitive.MemoryQuestionResolver.resolve(request.trim().take(512),active)!=null
+                ContinuumBrainShadowLog(appDirectory).record(answer,baseline,millis,nowMillis,timeline,relation)
+            }
             return ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.SHADOW)
         }
         val (answer,facts)=asked ?: return ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.FALLBACK_ERROR)

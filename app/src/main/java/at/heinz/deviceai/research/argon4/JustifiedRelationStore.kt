@@ -128,6 +128,8 @@ class JustifiedRelationStore(private val maxDerived: Int = 2_000, private val ma
         private val CHILD = Regex("^Meine (?:Tochter|Sohn) heißt (\\p{Lu}\\p{L}+)\\.?$|^Mein Sohn heißt (\\p{Lu}\\p{L}+)\\.?$")
         private val LIVES = Regex("^(\\p{Lu}\\p{L}+) wohnt in (\\p{Lu}\\p{L}+)\\.?$")
         private val LIES = Regex("^(\\p{Lu}\\p{L}+) liegt in (\\p{Lu}\\p{L}+)\\.?$")
+        private val SISTER_OF = Regex("^(\\p{Lu}\\p{L}+) ist die Schwester von (\\p{Lu}\\p{L}+)\\.?$")
+        private val BROTHER_OF = Regex("^(\\p{Lu}\\p{L}+) ist der Bruder von (\\p{Lu}\\p{L}+)\\.?$")
 
         /** Deliberately narrow sentence patterns; anything else is not turned into a triple (no guessing). */
         fun parse(text: String): Triple? {
@@ -137,6 +139,8 @@ class JustifiedRelationStore(private val maxDerived: Int = 2_000, private val ma
             CHILD.matchEntire(t)?.let { m -> val n = m.groupValues[1].ifEmpty { m.groupValues[2] }; return Triple(n, "kind_von", "BESITZER") }
             LIVES.matchEntire(t)?.let { return Triple(it.groupValues[1], "wohnt_in", it.groupValues[2]) }
             LIES.matchEntire(t)?.let { return Triple(it.groupValues[1], "liegt_in", it.groupValues[2]) }
+            SISTER_OF.matchEntire(t)?.let { return Triple(it.groupValues[1], "schwester_von", it.groupValues[2]) }
+            BROTHER_OF.matchEntire(t)?.let { return Triple(it.groupValues[1], "bruder_von", it.groupValues[2]) }
             return null
         }
     }

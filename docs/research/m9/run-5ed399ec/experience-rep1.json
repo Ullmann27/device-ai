@@ -1,0 +1,396 @@
+{
+ "general": {
+  "NEG:INSERT": {
+   "s": 13,
+   "n": 1133
+  },
+  "REL:SWAP": {
+   "s": 18,
+   "n": 294
+  },
+  "ARITH:SWAP": {
+   "s": 0,
+   "n": 73
+  },
+  "CONST:INC": {
+   "s": 6,
+   "n": 274
+  },
+  "CONST:DEC": {
+   "s": 12,
+   "n": 147
+  },
+  "NEG:REMOVE": {
+   "s": 13,
+   "n": 146
+  },
+  "LOGIC:SWAP": {
+   "s": 42,
+   "n": 394
+  },
+  "EQ:SWAP": {
+   "s": 20,
+   "n": 191
+  }
+ },
+ "context": {
+  "RUNTIME_TypeError|NEG:INSERT": {
+   "s": 1,
+   "n": 135
+  },
+  "RUNTIME_TypeError|REL:SWAP": {
+   "s": 2,
+   "n": 30
+  },
+  "RUNTIME_TypeError|ARITH:SWAP": {
+   "s": 0,
+   "n": 8
+  },
+  "NUM_OFF1|NEG:INSERT": {
+   "s": 0,
+   "n": 15
+  },
+  "NUM_OFF1|REL:SWAP": {
+   "s": 1,
+   "n": 4
+  },
+  "NUM_OFF1|CONST:INC": {
+   "s": 0,
+   "n": 4
+  },
+  "NUM_OFF1|CONST:DEC": {
+   "s": 0,
+   "n": 2
+  },
+  "NUM_OFF1|NEG:REMOVE": {
+   "s": 0,
+   "n": 2
+  },
+  "NUM_OFF1|LOGIC:SWAP": {
+   "s": 1,
+   "n": 2
+  },
+  "NUM_OFF1|ARITH:SWAP": {
+   "s": 0,
+   "n": 1
+  },
+  "STRUCT|NEG:INSERT": {
+   "s": 3,
+   "n": 283
+  },
+  "STRUCT|CONST:INC": {
+   "s": 0,
+   "n": 83
+  },
+  "STRUCT|CONST:DEC": {
+   "s": 4,
+   "n": 54
+  },
+  "STRUCT|ARITH:SWAP": {
+   "s": 0,
+   "n": 29
+  },
+  "STRUCT|EQ:SWAP": {
+   "s": 6,
+   "n": 20
+  },
+  "STRUCT|LOGIC:SWAP": {
+   "s": 9,
+   "n": 25
+  },
+  "RUNTIME_TypeError|CONST:INC": {
+   "s": 0,
+   "n": 23
+  },
+  "RUNTIME_TypeError|LOGIC:SWAP": {
+   "s": 2,
+   "n": 30
+  },
+  "RUNTIME_TypeError|CONST:DEC": {
+   "s": 1,
+   "n": 12
+  },
+  "RUNTIME_TypeError|NEG:REMOVE": {
+   "s": 4,
+   "n": 9
+  },
+  "STRUCT|REL:SWAP": {
+   "s": 2,
+   "n": 28
+  },
+  "STRUCT|NEG:REMOVE": {
+   "s": 1,
+   "n": 15
+  },
+  "LOAD_FAILURE|NEG:INSERT": {
+   "s": 0,
+   "n": 57
+  },
+  "LOAD_FAILURE|EQ:SWAP": {
+   "s": 0,
+   "n": 8
+  },
+  "LOAD_FAILURE|LOGIC:SWAP": {
+   "s": 0,
+   "n": 12
+  },
+  "LOAD_FAILURE|NEG:REMOVE": {
+   "s": 3,
+   "n": 8
+  },
+  "RUNTIME_TypeError|EQ:SWAP": {
+   "s": 1,
+   "n": 18
+  },
+  "STR|NEG:INSERT": {
+   "s": 4,
+   "n": 288
+  },
+  "STR|NEG:REMOVE": {
+   "s": 2,
+   "n": 39
+  },
+  "STR|LOGIC:SWAP": {
+   "s": 13,
+   "n": 139
+  },
+  "STR|EQ:SWAP": {
+   "s": 7,
+   "n": 98
+  },
+  "STR|REL:SWAP": {
+   "s": 7,
+   "n": 52
+  },
+  "STR|CONST:INC": {
+   "s": 3,
+   "n": 71
+  },
+  "STR|CONST:DEC": {
+   "s": 4,
+   "n": 30
+  },
+  "LOAD_FAILURE|REL:SWAP": {
+   "s": 0,
+   "n": 12
+  },
+  "LOAD_FAILURE|CONST:INC": {
+   "s": 0,
+   "n": 8
+  },
+  "THROWS|NEG:INSERT": {
+   "s": 3,
+   "n": 214
+  },
+  "THROWS|EQ:SWAP": {
+   "s": 3,
+   "n": 25
+  },
+  "THROWS|LOGIC:SWAP": {
+   "s": 9,
+   "n": 109
+  },
+  "THROWS|NEG:REMOVE": {
+   "s": 2,
+   "n": 41
+  },
+  "THROWS|REL:SWAP": {
+   "s": 3,
+   "n": 110
+  },
+  "THROWS|CONST:INC": {
+   "s": 0,
+   "n": 57
+  },
+  "THROWS|CONST:DEC": {
+   "s": 2,
+   "n": 30
+  },
+  "THROWS|ARITH:SWAP": {
+   "s": 0,
+   "n": 20
+  },
+  "APP_ERROR|NEG:INSERT": {
+   "s": 2,
+   "n": 141
+  },
+  "APP_ERROR|NEG:REMOVE": {
+   "s": 1,
+   "n": 32
+  },
+  "APP_ERROR|LOGIC:SWAP": {
+   "s": 8,
+   "n": 77
+  },
+  "APP_ERROR|REL:SWAP": {
+   "s": 3,
+   "n": 58
+  },
+  "APP_ERROR|CONST:INC": {
+   "s": 3,
+   "n": 28
+  },
+  "APP_ERROR|CONST:DEC": {
+   "s": 1,
+   "n": 17
+  },
+  "LOAD_FAILURE|ARITH:SWAP": {
+   "s": 0,
+   "n": 9
+  },
+  "LOAD_FAILURE|CONST:DEC": {
+   "s": 0,
+   "n": 2
+  },
+  "APP_ERROR|EQ:SWAP": {
+   "s": 3,
+   "n": 22
+  },
+  "APP_ERROR|ARITH:SWAP": {
+   "s": 0,
+   "n": 6
+  }
+ },
+ "overfit": {
+  "RUNTIME_TypeError|REL:SWAP": {
+   "s": 0,
+   "n": 2
+  },
+  "NUM_OFF1|LOGIC:SWAP": {
+   "s": 0,
+   "n": 1
+  },
+  "NUM_OFF1|REL:SWAP": {
+   "s": 0,
+   "n": 1
+  },
+  "STRUCT|EQ:SWAP": {
+   "s": 0,
+   "n": 6
+  },
+  "STRUCT|NEG:INSERT": {
+   "s": 0,
+   "n": 3
+  },
+  "STRUCT|LOGIC:SWAP": {
+   "s": 0,
+   "n": 9
+  },
+  "RUNTIME_TypeError|LOGIC:SWAP": {
+   "s": 8,
+   "n": 10
+  },
+  "STRUCT|CONST:DEC": {
+   "s": 0,
+   "n": 4
+  },
+  "STRUCT|NEG:REMOVE": {
+   "s": 0,
+   "n": 1
+  },
+  "LOAD_FAILURE|NEG:REMOVE": {
+   "s": 0,
+   "n": 3
+  },
+  "STRUCT|REL:SWAP": {
+   "s": 0,
+   "n": 2
+  },
+  "RUNTIME_TypeError|NEG:REMOVE": {
+   "s": 0,
+   "n": 4
+  },
+  "STR|LOGIC:SWAP": {
+   "s": 0,
+   "n": 13
+  },
+  "STR|REL:SWAP": {
+   "s": 0,
+   "n": 7
+  },
+  "STR|NEG:INSERT": {
+   "s": 0,
+   "n": 4
+  },
+  "STR|EQ:SWAP": {
+   "s": 0,
+   "n": 7
+  },
+  "STR|CONST:INC": {
+   "s": 0,
+   "n": 3
+  },
+  "STR|CONST:DEC": {
+   "s": 0,
+   "n": 4
+  },
+  "STR|NEG:REMOVE": {
+   "s": 0,
+   "n": 2
+  },
+  "THROWS|REL:SWAP": {
+   "s": 2,
+   "n": 5
+  },
+  "APP_ERROR|LOGIC:SWAP": {
+   "s": 0,
+   "n": 8
+  },
+  "APP_ERROR|NEG:INSERT": {
+   "s": 0,
+   "n": 2
+  },
+  "APP_ERROR|REL:SWAP": {
+   "s": 0,
+   "n": 3
+  },
+  "APP_ERROR|CONST:INC": {
+   "s": 0,
+   "n": 3
+  },
+  "THROWS|NEG:INSERT": {
+   "s": 0,
+   "n": 3
+  },
+  "THROWS|EQ:SWAP": {
+   "s": 0,
+   "n": 3
+  },
+  "THROWS|LOGIC:SWAP": {
+   "s": 2,
+   "n": 11
+  },
+  "THROWS|CONST:DEC": {
+   "s": 0,
+   "n": 2
+  },
+  "THROWS|NEG:REMOVE": {
+   "s": 0,
+   "n": 2
+  },
+  "APP_ERROR|EQ:SWAP": {
+   "s": 0,
+   "n": 3
+  },
+  "APP_ERROR|CONST:DEC": {
+   "s": 0,
+   "n": 1
+  },
+  "RUNTIME_TypeError|NEG:INSERT": {
+   "s": 1,
+   "n": 2
+  },
+  "RUNTIME_TypeError|CONST:DEC": {
+   "s": 0,
+   "n": 1
+  },
+  "RUNTIME_TypeError|EQ:SWAP": {
+   "s": 0,
+   "n": 1
+  },
+  "APP_ERROR|NEG:REMOVE": {
+   "s": 0,
+   "n": 1
+  }
+ }
+}

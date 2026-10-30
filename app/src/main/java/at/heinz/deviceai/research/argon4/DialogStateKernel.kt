@@ -75,8 +75,18 @@ class DialogStateKernel(
             when {
                 // "Wie spät ist es?", "Es regnet.", "Wann war das?": impersonal/event readings need no referent
                 pool.isEmpty() && lower in setOf("es", "das", "dies") -> continue
+                // M11: a person question whose pronoun fits no person must ask back instead of binding "den Witz"
+                personPredicate && lower in setOf("er", "ihn", "ihm", "sie") && pool.none { it.kind == Kind.PERSON } -> {
+                    val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false, "NO_PERSON_REFERENT:$lower")
+                    remember(text, ms.drop(applied), r); return r
+                }
                 pool.isEmpty() -> {
                     val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false, "NO_REFERENT:$lower")
+                    remember(text, ms.drop(applied), r); return r
+                }
+                // M11: "er/sie" never binds a person whose gender nobody stated ("Wie lange kocht Reis?" made "Reis" a name)
+                lower in setOf("er", "ihn", "ihm", "sie") && pool[0].kind == Kind.PERSON && pool[0].gender == null -> {
+                    val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false, "GENDER_UNKNOWN:$lower:" + pool[0].label)
                     remember(text, ms.drop(applied), r); return r
                 }
                 pool.size > 1 && score(pool[0], lower) - score(pool[1], lower) < MARGIN -> {
@@ -130,7 +140,9 @@ class DialogStateKernel(
         val label = target.split(Regex("\\s+")).last()
         if (!label.first().isUpperCase()) return Resolution(text, text, Decision.CLARIFY, emptyList(), temporal, true, "CORRECTION_TARGET_UNCLEAR")
         val key = Ewm1Lexicon.lower(label)
-        touch(Mention(key, label, entities[key]?.kind ?: Kind.PERSON, entities[key]?.gender), countMention = true)
+        // M11: "ich meinte meinen Bruder Max" names a role, so Max becomes a masculine person and the latest referent
+        val named = mentions(words(m.groupValues[1].trim().trimEnd('.', '!', '?')), false).lastOrNull { it.key == key }
+        touch(named ?: Mention(key, label, entities[key]?.kind ?: Kind.PERSON, entities[key]?.gender), countMention = true)
         // The wrongly bound referent is excluded for this word from now on; the question is asked again with the target.
         val wrong = previous.bindings.lastOrNull()
         var rewritten = question
@@ -162,7 +174,8 @@ class DialogStateKernel(
                 (gender == null || e.gender == null || e.gender in gender) &&
                 // "er/sie" for a thing needs the article's gender; an unknown-gender thing is not a person referent
                 !(e.kind == Kind.THING && gender != null && e.gender == null) &&
-                turn - e.lastTurn <= WINDOW
+                // M11: a person whose gender a role named ("mein Bruder Max") survives longer interruptions
+                turn - e.lastTurn <= if (e.kind == Kind.PERSON && e.gender != null) PERSON_WINDOW else WINDOW
         }.sortedByDescending { score(it, word) }
     }
 
@@ -291,6 +304,7 @@ class DialogStateKernel(
 
     companion object {
         private const val WINDOW = 12
+        private const val PERSON_WINDOW = 32
         private const val MARGIN = 0.08
         private val PERSONAL = setOf(Kind.PERSON)
         private val ANY = setOf(Kind.PERSON, Kind.THING)
@@ -308,7 +322,10 @@ class DialogStateKernel(
         private val ADJECTIVE_ENDING = Regex("\\p{Ll}{2,}(e|en|er|es|em)")
         private val NOUN_SUFFIX = Regex(".{3,}(ung|heit|keit|schaft|ion|tät|nis|ismus|ment|ik|ie|ur|ei|ese|enz|anz)")
         private val PERSON_WORDS = setOf("beruflich", "besucht", "besuchen", "erzählt", "gesagt", "kommt", "fährt", "arbeitet",
-            "lebt", "heißt", "geboren", "alt", "geht", "ruft", "schreibt", "denkt", "meint", "mag")
+            "lebt", "heißt", "geboren", "alt", "geht", "ruft", "schreibt", "denkt", "meint", "mag",
+            // M11: intent and speech verbs ("Was wollte er?", "Was macht er dort?") ask about a person, not "den Tipp"
+            "wollte", "will", "möchte", "macht", "machte", "plant", "sagt", "sagte", "fragt", "fragte", "angerufen",
+            "weiß", "wusste", "verheiratet")
         private val GENDERED = setOf("er", "ihn", "ihm", "sie", "ihr", "ihre", "ihren", "ihrem", "ihrer", "deren",
             "sein", "seine", "seinen", "seinem", "seiner", "dessen")
         private fun nounShaped(word: String) = NOUN_SUFFIX.matches(word)
@@ -316,7 +333,7 @@ class DialogStateKernel(
             "jahr", "tag", "uhr", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag")
         private val TOPIC_SWITCH = Regex("(?iu)^(anderes|neues) thema\\b")
         private val CORRECTION = Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war|nicht \\p{L}+,? sondern)\\s+(.+)$")
-        private val FOLLOW_UP = Regex("(?iu)^(und|und dann|danach|davor|außerdem)\\b|\\b(damals|dabei|danach)\\b")
+        private val FOLLOW_UP = Regex("(?iu)^(und|und dann|danach|davor|außerdem)\\b|\\b(damals|dabei|danach)\\b|\\ban (dem|diesem|jenem) (tag|abend|morgen|wochenende)\\b")
         private val QUESTION_START = Regex("(?iu)^(wer|wie|was|wo|wann|warum|wieso|welche[rsnm]?|hat|ist|sind|kannst|weißt)\\b")
         private val FUTURE = Regex("(?iu)\\b(werde|wirst|wird|werden|kommende[nr]?|nächste[nr]?)\\b")
         private val NUMBERS = mapOf("zwei" to 2, "drei" to 3, "vier" to 4, "fünf" to 5)

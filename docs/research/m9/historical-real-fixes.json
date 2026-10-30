@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "cohort": "HISTORICAL_REAL_FIXES",
+ "commits": 5,
+ "bugsReproduced": 4,
+ "agentRepaired": 0,
+ "fixWithinVocabulary": 0,
+ "anyCandidateRepairs": 0,
+ "results": [
+  {
+   "commit": "4c697c8f",
+   "source": ".github/continuum/repair-ledger.mjs",
+   "tests": [
+    ".github/continuum/repair-ledger-durability.test.mjs"
+   ],
+   "window": [
+    56,
+    66
+   ],
+   "bugReproduced": true,
+   "fixGreenHere": true,
+   "candidates": 14,
+   "diagnosis": "STR",
+   "agentRepaired": false,
+   "agentExact": false,
+   "visibleRuns": 10,
+   "anyCandidateInVocabularyRepairs": false,
+   "fixWithinVocabulary": false
+  },
+  {
+   "commit": "81ccc374",
+   "source": ".github/continuum/repair-strategies.mjs",
+   "tests": [
+    ".github/continuum/repair-context-experience.test.mjs"
+   ],
+   "window": [
+    184,
+    194
+   ],
+   "bugReproduced": true,
+   "fixGreenHere": true,
+   "candidates": 19,
+   "diagnosis": "BOOL",
+   "agentRepaired": false,
+   "agentExact": false,
+   "visibleRuns": 10,
+   "anyCandidateInVocabularyRepairs": false,
+   "fixWithinVocabulary": false
+  },
+  {
+   "commit": "3e8e0ef7",
+   "source": ".github/continuum/isolated-profile-runner.mjs",
+   "tests": [
+    ".github/continuum/isolated-report-cap.test.mjs"
+   ],
+   "window": [
+    35,
+    45
+   ],
+   "bugReproduced": true,
+   "fixGreenHere": false
+  },
+  {
+   "commit": "0fc7a3e9",
+   "source": ".github/continuum/research-learning-cycle.mjs",
+   "tests": [
+    ".github/continuum/cre1-blacklab-optimizer.test.mjs",
+    ".github/continuum/research-learning-cycle.test.mjs"
+   ],
+   "window": [
+    192,
+    202
+   ],
+   "bugReproduced": true,
+   "fixGreenHere": true,
+   "candidates": 17,
+   "diagnosis": "RUNTIME_TypeError",
+   "agentRepaired": false,
+   "agentExact": false,
+   "visibleRuns": 10,
+   "anyCandidateInVocabularyRepairs": false,
+   "fixWithinVocabulary": false
+  },
+  {
+   "commit": "ed6a0423",
+   "source": ".github/continuum/contrastive-views.mjs",
+   "tests": [
+    ".github/continuum/contrastive-views.test.mjs"
+   ],
+   "window": [
+    56,
+    66
+   ],
+   "bugReproduced": true,
+   "fixGreenHere": true,
+   "candidates": 61,
+   "diagnosis": "THROWS",
+   "agentRepaired": false,
+   "agentExact": false,
+   "visibleRuns": 10,
+   "anyCandidateInVocabularyRepairs": false,
+   "fixWithinVocabulary": false
+  }
+ ]
+}

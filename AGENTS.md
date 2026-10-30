@@ -1,5 +1,10 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## PRIORITÄT 30.10.2026: WEITERARBEIT AB PR #245 (M9–M16)
+
+**Einstieg für jede KI:** [`docs/research/CONTINUUM-WEITERARBEIT-PLAN-20261030.md`](docs/research/CONTINUUM-WEITERARBEIT-PLAN-20261030.md). Er enthält den Stapel #238→#245, die Regeln, die fortsetzbaren Experimente X1–X8 mit Befehlen, Siegeln und Kriterien sowie die strategische Jarvis-Herausforderung („verifizierter Selbstverbesserungs-Kreislauf auf dem eigenen Gerät“). Neue Gehirnbausteine (Aussagenprüfer v2, F1-Kern, Zeitlinie/Resolver) laufen **SHADOW**. Aktivieren darf sie nur der Besitzer, nach einer Fold7-Messung.
+
+
 ## PRIORITÄT 27.10.2026: BESTEHENDE FORSCHUNGS-CODEPROJEKTE SYSTEMATISCH INS CONTINUUM-GEHIRN INTEGRIEREN (M4)
 
 **Expliziter Besitzerauftrag:** Internationale Forschungsprojekte und offene Codesammlungen (Google AI Edge Gallery, Jandal, LocalChat, Mem0, A-MEM, sqlite-vec, LongMemEval-V2, mini-SWE-agent, Aider, OpenHands und ARM64-Build-Tools) dürfen bei späteren Entwicklungsrunden **nicht vergessen werden**. Zentrale, mit Quellcode-Links und tatsächlichen Zielpfaden versehene Übergabe: [`docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md`](docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md). Neueste M4-Draft-Integration **PR #198** auf **PR #197**. Nach jeder weiteren Quelle den Katalog pflegen, Quell-Lizenz/Commit prüfen, vorhandene Architektur zuerst abgleichen, dann kleinen isolierten Kotlin/Node-Adapter mit echten Negativ-/Holdout-/Datenschutztests in den bestehenden Gehirn- und CCC1-Aufrufpfad führen. **Nicht** sämtlichen Fremdcode kopieren oder Integrations- und Funktionserfolg behaupten, bevor echte Build-, Geräte- und Qualitätsbelege vorliegen.

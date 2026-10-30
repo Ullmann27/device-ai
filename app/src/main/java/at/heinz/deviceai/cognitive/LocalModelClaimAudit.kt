@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import at.heinz.deviceai.intelligence.ewm.Ewm1ClaimCheck
+import at.heinz.deviceai.intelligence.ewm.Ewm1Lexicon
 
 /**
  * SHADOW audit of a finished local-model answer against the retrieval it was given in the same turn.
@@ -11,39 +12,132 @@ import at.heinz.deviceai.intelligence.ewm.Ewm1ClaimCheck
  * whole evidence, which was right for its one-fact answers but flags every answer once a multi-sentence retrieval
  * contains any "nicht"; the frozen check itself is not changed.)
  *
+ * M12 adds four deterministic checks, developed on the DEV cases only (holdout sealed beforehand):
+ *  - attribute binding per clause: a name the answer ties to a subject must occur in an evidence clause about it;
+ *  - outdated statements: the answer restates the "bis/früher" part of evidence that also has a "seit/inzwischen" part;
+ *  - new actions: a participle ("gestohlen", "verheiratet") whose core occurs nowhere in the evidence;
+ *  - self-contradicting evidence: two evidence clauses about the same thing with different numbers or time words
+ *    (stage CLAIM_AUDIT_CONFLICT, whatever the answer says).
+ *
  * The result is ONE trace stage in the existing metadata-only turn trace, nothing else: the visible answer, the
  * prompt, model calls, tools and memories are unchanged, and no token of the answer or the evidence is stored.
  *
- * Limits, stated so nobody reads more into it: this is token and polarity matching, not entailment. A flag means
- * "a detail is not carried by the retrieval" (the model may have added a legitimate conclusion); a pass does not
- * prove the answer correct. It becomes a quality signal only together with owner feedback on the same trace.
+ * Limits, stated so nobody reads more into it: this is token, clause and polarity matching, not entailment. A flag
+ * means "a detail is not carried by the retrieval" (the model may have added a legitimate conclusion); a pass does
+ * not prove the answer correct. It becomes a quality signal only together with owner feedback on the same trace.
  */
 object LocalModelClaimAudit {
     /** Answers longer than the model's bounded reply are not audited (the stage then says so). */
     const val MAX_ANSWER_CHARS = 8_000
     private val POLARITY = setOf("Verneinung fehlt", "unbelegte Verneinung", "Ja trotz Verneinung")
-    private val SENTENCE_END = Regex("(?<=[.!?])\\s+")
+    // "am 6. Oktober": a dot right after a digit is an ordinal, not a sentence or clause end (holdout-1 false alarms)
+    private val SENTENCE_END = Regex("(?<=[!?]|(?<!\\d)\\.)\\s+")
+    private val CLAUSE_BREAK = Regex("(?<=[!?;,]|(?<!\\d)\\.)\\s+|\\s+(?=(?:und|während|aber|sowie|sondern|doch|inzwischen|seit)\\s)")
     private val CONTENT_WORD = Regex("\\p{L}{4,}")
+    private val WORD = Regex("\\p{L}[\\p{L}\\p{N}-]*|\\p{N}+")
+    private val PAST = setOf("bis", "früher", "ehemals", "zuvor", "damals", "vorher", "einst", "ursprünglich", "vormals")
+    private val CURRENT = setOf("seit", "inzwischen", "mittlerweile", "jetzt", "heute", "nun", "aktuell", "neuerdings")
+    private val SEPARABLE = Regex("^(?:ab|an|auf|aus|ein|mit|nach|vor|zu|zurück|weg|her|hin|los|fest)?ge(\\p{L}{3,}?)(?:et|t|en)$")
+    private val PRONOUNS = setOf("er", "sie", "es", "ihn", "ihm", "ihr")
+    private val INSEPARABLE = Regex("^(?:ver|be|er|ent|zer|miss)(\\p{L}{3,}?)(?:et|t|en)$")
 
     fun stage(answer: String, recall: LocalGroundedRecall): TraceStage {
         if (answer.isBlank() || answer.length > MAX_ANSWER_CHARS) return TraceStage.CLAIM_AUDIT_SKIPPED
         return runCatching {
-            if (unsupportedDetails(answer, listOf(recall.answer, recall.provenance)) ||
-                polarityMismatch(answer, sentences(recall.answer))) TraceStage.CLAIM_AUDIT_UNSUPPORTED
-            else TraceStage.CLAIM_AUDIT_SUPPORTED
+            // M15: every evidence clause is tokenised once (the checks below used to re-tokenise it per pair)
+            val evidence = clauses(recall.answer).map(::Clause)
+            when {
+                selfContradicting(evidence) -> TraceStage.CLAIM_AUDIT_CONFLICT
+                unsupportedDetails(answer, listOf(recall.answer, recall.provenance)) ||
+                    polarityMismatch(answer, sentences(recall.answer)) ||
+                    unboundAttribute(answer, evidence) ||
+                    outdated(answer, evidence) ||
+                    newAction(answer, recall.answer) -> TraceStage.CLAIM_AUDIT_UNSUPPORTED
+                else -> TraceStage.CLAIM_AUDIT_SUPPORTED
+            }
         }.getOrDefault(TraceStage.CLAIM_AUDIT_SKIPPED)
+    }
+
+    /** Features of one clause, computed once per audit. */
+    private class Clause(val text: String) {
+        val words: List<String> = words(text)
+        val names: Set<String> = names(text)
+        val numbers: Set<String> = numbers(text)
+        val times: List<String> = words.filter { it in Ewm1Lexicon.TIME && it !in setOf("uhr", "jeden", "jede") }
+        val marked: Boolean = words.any { it in PAST || it in CURRENT }
+        val past: Boolean = words.any { it in PAST }
+        val current: Boolean = words.any { it in CURRENT }
+        val pronoun: Boolean = words.any { it in PRONOUNS }
+        val contentWords: Set<String> = contentWords(text)
     }
 
     private fun unsupportedDetails(answer: String, evidence: List<String>): Boolean =
         Ewm1ClaimCheck.check(answer, evidence).unsupported.any { it !in POLARITY }
 
-    private fun polarityMismatch(answer: String, evidence: List<String>): Boolean = sentences(answer).any { sentence ->
-        val words = contentWords(sentence)
-        val best = evidence.maxByOrNull { e -> contentWords(e).count { it in words } }
-        best != null && contentWords(best).any { it in words } &&
-            Ewm1ClaimCheck.check(sentence, listOf(best)).unsupported.any { it in POLARITY }
+    private fun polarityMismatch(answer: String, evidence: List<String>): Boolean {
+        val ev = evidence.map { it to contentWords(it) }
+        return sentences(answer).any { sentence ->
+            val words = contentWords(sentence)
+            val best = ev.maxByOrNull { (_, cw) -> cw.count { it in words } }
+            best != null && best.second.any { it in words } &&
+                Ewm1ClaimCheck.check(sentence, listOf(best.first)).unsupported.any { it in POLARITY }
+        }
     }
 
+    /** "Markus arbeitet in Graz" while the only evidence clause about Markus names Linz. */
+    private fun unboundAttribute(answer: String, evidence: List<Clause>): Boolean {
+        // "..., seit 2024 wohnt sie in Graz": a clause led by a pronoun continues the previous clause's subject
+        val bound = evidence.indices.map { i ->
+            if (i > 0 && evidence[i].pronoun) evidence[i].names + evidence[i - 1].names else evidence[i].names
+        }
+        return clauses(answer).any { clause ->
+            val names = names(clause)
+            if (names.size < 2) return@any false
+            val subject = names.firstOrNull { n -> bound.any { n in it } } ?: return@any false
+            val about = bound.filter { subject in it }
+            names.filter { it != subject && bound.any { e -> it in e } }.any { other -> about.none { other in it } }
+        }
+    }
+
+    /** The answer restates a clause marked as past while the same evidence also holds a current clause. */
+    private fun outdated(answer: String, evidence: List<Clause>): Boolean {
+        if (evidence.none { it.current }) return false
+        return clauses(answer).any { clause ->
+            val names = names(clause)
+            if (names.isEmpty() || words(clause).any { it in PAST || it in CURRENT }) return@any false
+            val best = evidence.maxByOrNull { e -> e.names.count { it in names } } ?: return@any false
+            best.names.count { it in names } >= minOf(2, names.size) && best.past
+        }
+    }
+
+    /** A participle naming an action or state whose core never occurs in the evidence. */
+    private fun newAction(answer: String, evidence: String): Boolean {
+        val evidenceWords = words(evidence)
+        return words(answer).any { w ->
+            val core = (SEPARABLE.matchEntire(w) ?: INSEPARABLE.matchEntire(w))?.groupValues?.get(1) ?: return@any false
+            w.length >= 6 && core.length >= 3 && evidenceWords.none { it.contains(core) }
+        }
+    }
+
+    /** Two clauses about the same thing (shared name or noun) with different numbers or time words, no past/current marker. */
+    private fun selfContradicting(evidence: List<Clause>): Boolean {
+        val plain = evidence.filter { !it.marked }
+        for (i in plain.indices) for (j in i + 1 until plain.size) {
+            val a = plain[i]; val b = plain[j]
+            if (a.names.none { it in b.names }) continue
+            if (a.numbers.isNotEmpty() && b.numbers.isNotEmpty() && a.numbers.none { it in b.numbers }) return true
+            if (a.times.isNotEmpty() && b.times.isNotEmpty() && a.times.none { it in b.times }) return true
+        }
+        return false
+    }
+
+    private fun names(text: String): Set<String> = WORD.findAll(text).map { it.value }
+        .filter { it[0].isUpperCase() && it.length >= 3 }.map { it.lowercase() }
+        .filter { it !in Ewm1Lexicon.FUNCTION && it !in Ewm1Lexicon.GENERIC && it !in Ewm1Lexicon.TIME && it !in PAST && it !in CURRENT && it != "laut" }
+        .toSet()
+    private fun numbers(text: String): Set<String> = WORD.findAll(text).mapNotNull { Ewm1Lexicon.numberValue(it.value) }.toSet()
+    private fun words(text: String): List<String> = WORD.findAll(text).map { it.value.lowercase() }.toList()
+    private fun clauses(text: String): List<String> = text.split(CLAUSE_BREAK).map { it.trim() }.filter { it.isNotEmpty() }
     private fun sentences(text: String): List<String> = text.split(SENTENCE_END).map { it.trim() }.filter { it.isNotEmpty() }
     private fun contentWords(text: String): Set<String> = CONTENT_WORD.findAll(text.lowercase()).map { it.value }.toSet()
 }

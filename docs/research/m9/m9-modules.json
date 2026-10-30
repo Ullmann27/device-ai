@@ -1,0 +1,374 @@
+[
+ {
+  "split": "train",
+  "test": ".github/continuum/repair-diagnostics.test.mjs",
+  "module": ".github/continuum/repair-diagnostics.mjs",
+  "extra": [
+   ".github/continuum/fixtures/node-reporter"
+  ],
+  "originalSha256": "d8c938b6fa5187e8c8fc74d4993f2d3104779c5766d9b625f051e2e79f51612d",
+  "baselinePassed": true,
+  "tests": 17,
+  "topLevel": 17,
+  "parts": {
+   "visible": [
+    "JUnit ReferenceError from Node v20.20.0 is a code diagnostic at the faulty line",
+    "TAP module-load ReferenceError from Node v20.20.0 is located in the loaded module",
+    "TAP module-load ReferenceError from Node v22.16.0 is located in the loaded module",
+    "a test file that crashes while loading under Node v22.16.0 is named by its repository path",
+    "a test file that crashes while loading under Node v22.22.0 is named by its repository path",
+    "a crashed test file outside the repository gets no re-runnable path",
+    "classification is not over-generous",
+    "an error without its own repository frame cannot borrow the next error's frame",
+    "JUnit directory combines stable hashes from multiple Gradle XML suites"
+   ],
+   "verifier": [
+    "a test file that crashes while loading under Node v20.20.0 is named by its repository path",
+    "JUnit ReferenceError from Node v22.22.0 is a code diagnostic at the faulty line",
+    "the same fault yields one fingerprint regardless of the Node release",
+    "skipped JUnit cases are fingerprinted without copying their names"
+   ],
+   "final": [
+    "JUnit ReferenceError from Node v22.16.0 is a code diagnostic at the faulty line",
+    "TAP module-load ReferenceError from Node v22.22.0 is located in the loaded module",
+    "header variants and nested causes are recognized",
+    "a skipped JUnit case without stable testcase identity cannot be accepted"
+   ]
+  }
+ },
+ {
+  "split": "train",
+  "test": ".github/continuum/retrieval-identifiers.test.mjs",
+  "module": ".github/continuum/dialogue-retrieval.mjs",
+  "originalSha256": "90ec2441c6ccbd02d0b030ef7d3beb08be2db792710f4c65cbb43473df0968f6",
+  "baselinePassed": true,
+  "tests": 10,
+  "topLevel": 10,
+  "parts": {
+   "visible": [
+    "single identifier ORION-47 remains retrievable but ORION-48 cannot use its evidence",
+    "single identifier R1 remains retrievable but R2 cannot use its evidence",
+    "single identifier PRJ-04 remains retrievable but PRJ-4 cannot use its evidence",
+    "single identifier V4.1 remains retrievable but V4.2 cannot use its evidence",
+    "spaced numbered entity uses exact name-plus-number source identity",
+    "split-number rule mirrors android without breaking ordinary years"
+   ],
+   "verifier": [
+    "single identifier A-7 remains retrievable but A-8 cannot use its evidence",
+    "unrelated short identifier cannot borrow a generic shared verb"
+   ],
+   "final": [
+    "single identifier SN_15 remains retrievable but SN_16 cannot use its evidence",
+    "identifier boundaries are literal rather than substring matches"
+   ]
+  }
+ },
+ {
+  "split": "train",
+  "test": ".github/continuum/research-evidence-gate.test.mjs",
+  "module": ".github/continuum/research-evidence-gate.mjs",
+  "originalSha256": "6dd6366e477525dd93a71df8073d301b38d1fdadba13d4f57704fe53621d5d89",
+  "baselinePassed": true,
+  "tests": 10,
+  "topLevel": 10,
+  "parts": {
+   "visible": [
+    "full synthetic RED GREEN fresh and counterexample PASS remain review-only",
+    "default absent verifier abstains even if CCC1 is complete",
+    "missing, substituted and skipped tests cannot turn into CCC1 success",
+    "review is not an owner confirmation, even with a matching feedback fingerprint",
+    "falsification scorecard: naive status-only check misses 12 of 13 corruptions",
+    "metamorphic positive controls preserve the same tests across order changes and additions"
+   ],
+   "verifier": [
+    "independent counterexample defeats apparently green code",
+    "empty or mutated bound identities fail closed"
+   ],
+   "final": [
+    "malformed and replayed verifier evidence fails closed",
+    "no caller input is ever mutated"
+   ]
+  }
+ },
+ {
+  "split": "train",
+  "test": ".github/continuum/coin-wm-v3-numeric-safety.test.mjs",
+  "module": ".github/continuum/coin-wm-v3-shadow-model.mjs",
+  "originalSha256": "c303718ff5954ae301540468593d42dd652c63401c0aa7101a90cef186de322e",
+  "baselinePassed": true,
+  "tests": 9,
+  "topLevel": 9,
+  "parts": {
+   "visible": [
+    "reject finite but unsafe feature magnitudes without mutation",
+    "reject negative transition target without mutation",
+    "overflowing staged update leaves all live weights unchanged",
+    "malformed transition head cannot partially update the model",
+    "overflow after intermediate policy updates rolls back the entire checkpoint"
+   ],
+   "verifier": [
+    "reject transition target greater than one without mutation",
+    "valid endpoint targets and research authority remain unchanged"
+   ],
+   "final": [
+    "score refuses preexisting nonfinite model state",
+    "invalid update counter fails closed without model mutation"
+   ]
+  }
+ },
+ {
+  "split": "train",
+  "test": ".github/continuum/ansk-baseline-triage.test.mjs",
+  "module": ".github/continuum/ansk-baseline-triage.mjs",
+  "originalSha256": "dc0ed6b96dacedb372a2bd1d9092e63cc26e55417f5da109feaeca0a3b50d982",
+  "baselinePassed": true,
+  "tests": 13,
+  "topLevel": 13,
+  "parts": {
+   "visible": [
+    "classifies failing Kotlin source but never copies raw details or secrets",
+    "recognizes exhausted local storage before generic compiler failure",
+    "distinguishes missing Gradle dependency from source compiler errors",
+    "classifies JUnit failure by real failed test count",
+    "untrusted diagnostic labels are ignored and no arbitrary log line escapes",
+    "empty or malformed evidence remains incomplete and outputs bounded enums",
+    "three successful but unidentifiable JUnit skips explain ANSK baseline block"
+   ],
+   "verifier": [
+    "recognizes exhausted memory without claiming a Kotlin repair",
+    "missing JUnit execution evidence is not a successful baseline",
+    "omitted reason uses canonical failed Android baseline instead of generic fallback"
+   ],
+   "final": [
+    "distinguishes missing SDK/toolchain from source compiler errors",
+    "a timed out operation is not silently retried or promoted",
+    "omitted reason preserves missing unit-test evidence in a nominally green chain"
+   ]
+  }
+ },
+ {
+  "split": "train",
+  "test": ".github/continuum/repair-ledger-independent.test.mjs",
+  "module": ".github/continuum/repair-ledger.mjs",
+  "originalSha256": "8dbae4a408a2471b3a9e50ebe1a13b4151e83b73a6fda46f8129c4fbb739cff0",
+  "baselinePassed": true,
+  "tests": 13,
+  "topLevel": 13,
+  "parts": {
+   "visible": [
+    "failed independent patch check records a negative learning signal without fake success",
+    "independently verified patch keeps legitimate positive experience",
+    "non-verified sessions retain their original failure diagnoses",
+    "optional scoped task identity survives ledger serialization and rejects malformed bindings",
+    "syntax checker errors remain audit evidence without becoming failed-strategy labels",
+    "an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed",
+    "candidate replay requires an independently confirmed patch digest"
+   ],
+   "verifier": [
+    "unverified teamleader calls never create positive or negative learning labels",
+    "unverified session cannot poison history through claimed failed alternatives",
+    "infrastructure-only repair failures stay auditable without poisoning strategy learning"
+   ],
+   "final": [
+    "explicit independent rejection is negative, not an unknown outcome",
+    "invalid syntax is retained as negative repair experience without fabricated test execution",
+    "unmatched or unsubstantiated success never becomes trusted repair experience"
+   ]
+  }
+ },
+ {
+  "split": "dev",
+  "test": ".github/continuum/cefr-shadow-benchmark.test.mjs",
+  "module": ".github/continuum/cefr-shadow-benchmark.mjs",
+  "originalSha256": "8e1a7044ed5c33527509903f35bdfdcb46b49c53df23c563f9b6fe2fe458752a",
+  "baselinePassed": true,
+  "tests": 8,
+  "topLevel": 8,
+  "parts": {
+   "visible": [
+    "only after independent worktree proof: evaluate actual winner in both candidate orders",
+    "no positive audit for self-reported patch, failed independent checks or zero tests",
+    "small cohort cannot be mistaken for a validated gain",
+    "duplicate data and mixed model versions fail closed"
+   ],
+   "verifier": [
+    "invalid shadow, duplicated candidate or winner not observed is never an audit",
+    "malformed or tampered rank result cannot be counted as a proxy"
+   ],
+   "final": [
+    "cohort MRR is a ranking proxy and never grants an executable promotion",
+    "invalid cohort size rejects before calculating metrics"
+   ]
+  }
+ },
+ {
+  "split": "dev",
+  "test": ".github/continuum/ansk-recipe-replay.test.mjs",
+  "module": ".github/continuum/ansk-recipe-replay.mjs",
+  "originalSha256": "864fdd84eb69b16c754327478cee7ff30e68be5e52cf9a3e9c2bff7bf8c8e5eb",
+  "baselinePassed": true,
+  "tests": 7,
+  "topLevel": 7,
+  "parts": {
+   "visible": [
+    "integrity-checked research receipt is only a quarantined shadow hint",
+    "a recipe can propose a minimal import on an unseen file without writing it",
+    "replay requires a matching diagnostic and a real symbol in Kotlin code",
+    "already imported symbol and ineligible receipt never generate modifications"
+   ],
+   "verifier": [
+    "receipt tampering is rejected, including attempted privilege escalation",
+    "repeat replay produces deterministic id and the same hunk without learning"
+   ],
+   "final": [
+    "replay never admits unsafe files or reuses a receipt against its own source"
+   ]
+  }
+ },
+ {
+  "split": "dev",
+  "test": ".github/continuum/repair-context-experience.test.mjs",
+  "module": ".github/continuum/repair-experience.mjs",
+  "originalSha256": "0a86031324be82301157536b10f8b0ef05a672e02769ef1660ba54f2e398d1f7",
+  "baselinePassed": true,
+  "tests": 7,
+  "topLevel": 7,
+  "parts": {
+   "visible": [
+    "real generated candidates carry source-derived call/value preconditions only on opt-in node chain",
+    "a source location missing the reference does not invent a context",
+    "call candidates ignore value and broad contradictory histories",
+    "contextual ledger is backward compatible and retains matching independent winner only"
+   ],
+   "verifier": [
+    "commented and optional calls never inherit value-reference history",
+    "counterexamples affect only their context and do not lower whole-file revert safety"
+   ],
+   "final": [
+    "bounded or unsupported call suffixes remain unknown instead of becoming value history"
+   ]
+  }
+ },
+ {
+  "split": "holdout",
+  "test": ".github/continuum/dev-loop-kernel.test.mjs",
+  "module": ".github/continuum/dev-loop-kernel.mjs",
+  "originalSha256": "8ee4e2a8cde94dffef3546e666f24ccb332f3f79baede58f6a33ca7903b7fe23",
+  "baselinePassed": true,
+  "tests": 13,
+  "topLevel": 13,
+  "parts": {
+   "visible": [
+    "a previous independently verified patch never credits a later failed patch or abort",
+    "a read-only cycle cannot patch or execute tests by omitting capability metadata",
+    "an own test is never an independent verification, and evidence must match base and patch",
+    "red local tests cannot reach independent verification; budget and deadline stop the loop",
+    "only independent verification teaches success; executed red tests teach failure; infrastructure is neutral",
+    "Thompson ranking is reproducible, keeps the safety tiers and is a different arm than the frozen control",
+    "weak strategies in the real CCC1 ledger become research questions, never automatic changes"
+   ],
+   "verifier": [
+    "a full cycle ends in an owner decision with an intact hash-chained journal",
+    "abort and rollback work from the middle; rollback must restore the base; terminal states are final",
+    "a strategy change is a preregistered experiment: sealed holdout, one run, exact paired test, kept if negative"
+   ],
+   "final": [
+    "the agent never targets a protected branch, never merges and never widens its capabilities",
+    "a tampered, reordered or truncated journal is detected after a crash",
+    "the exact McNemar p-value matches the binomial tail"
+   ]
+  }
+ },
+ {
+  "split": "holdout",
+  "test": ".github/continuum/repair-cycle-safety.test.mjs",
+  "module": ".github/continuum/repair-cycle-safety.mjs",
+  "originalSha256": "a120b76891c17716b2a342a340dc1074438abc7b43a7d0c119e764bae6524580",
+  "baselinePassed": true,
+  "tests": 16,
+  "topLevel": 16,
+  "parts": {
+   "visible": [
+    "repair depth is zero only when unset or precisely zero",
+    "repair depth denies malformed values that bypassed the positive-depth guard",
+    "no baseline green or zero executed tests means no training tuple",
+    "undetected mutation and mismatched diagnostic file are discarded",
+    "fewer executed tests or new skipped tests in repaired candidate are rejected",
+    "a critic rejection without executed checks is NOT a refuted strategy",
+    "duplicate strategies, invalid candidate IDs or fabricated profile statuses are rejected",
+    "mismatched check chains and failing independently executed tests never pass"
+   ],
+   "verifier": [
+    "all bounded repair outcomes include a completion timestamp",
+    "unsafe or non-Kotlin mutation targets cannot enter research data",
+    "compiler failures are acceptable as provisional negatives only with a localized diagnostic",
+    "prototype does not mutate its input reports or train a model"
+   ],
+   "final": [
+    "triple-phase validator accepts structurally consistent green-red-green and a failed competing candidate",
+    "successful repair requires a separate matching second-run observation",
+    "the selected winner must be unique, paired with a real negative",
+    "per-profile regression cannot be hidden by extra executions in another profile"
+   ]
+  }
+ },
+ {
+  "split": "holdout",
+  "test": ".github/continuum/ansk-lab-contract.test.mjs",
+  "module": ".github/continuum/ansk-lab-contract.mjs",
+  "originalSha256": "ebf8e07bbde8c9602e4e8f641e8e358183cea01fe50a688514e4f8cf3d4590c7",
+  "baselinePassed": true,
+  "tests": 15,
+  "topLevel": 15,
+  "parts": {
+   "visible": [
+    "positive triple-phase lab observation yields only a quarantined shadow recipe",
+    "source path and import name must be fixed Kotlin production files",
+    "primary and independent phases require all profiles and unreduced test coverage",
+    "no source, mutated, patch or independent hash ambiguity passes",
+    "Gradle profiles remain unchanged on non-Termux hardware",
+    "fake or missing pinned Termux toolchain fails closed rather than switching to desktop",
+    "ANSK rejects missing skip identities even if Gradle and 632 executed tests pass",
+    "ANSK rejects swapped skipped tests even when all counts remain unchanged"
+   ],
+   "verifier": [
+    "baseline with zero tests, skips or failing checks never qualifies",
+    "only approved, observed deterministic import strategy is eligible",
+    "structural results cannot grant trust to imported JSON or authorize model training",
+    "ANSK forbids extra skips or fewer executed tests in independent validation"
+   ],
+   "final": [
+    "mutation must genuinely fail at compile with exactly the expected diagnostic",
+    "no caller-owned observation is mutated and schema hash is deterministic",
+    "real Samsung-style baseline accepts three identified skips with 632 executed tests"
+   ]
+  }
+ },
+ {
+  "split": "holdout",
+  "test": "experimental/ccc1-counterexample-lab/policy.test.mjs",
+  "module": "experimental/ccc1-counterexample-lab/policy.mjs",
+  "originalSha256": "dc244af297e37c6c4b588258a0ad98ab8d82f697bca4acf33018cb6a8107b8cf",
+  "baselinePassed": true,
+  "tests": 10,
+  "topLevel": 10,
+  "parts": {
+   "visible": [
+    "sealed holdout stable under order, sensitive to tampering",
+    "fixture feature cannot be forged contrary to helper exports",
+    "contradictory same-feature outcomes result in abstention",
+    "unknown history abstains and invalid ranking is rejected",
+    "source-derived features reject forged import availability",
+    "the test oracle needs exit status and TAP counters to agree"
+   ],
+   "verifier": [
+    "fake, incomplete or mismatched oracle results fail closed",
+    "holdout summary refuses changed identity and repeated cases"
+   ],
+   "final": [
+    "consistent paired evidence permits a shadow-only recommendation",
+    "paired strategies must be checked against the same original source"
+   ]
+  }
+ }
+]

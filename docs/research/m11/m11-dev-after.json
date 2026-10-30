@@ -1,0 +1,230 @@
+{
+ "split": "dev",
+ "seal": "b730d6b034209a78c4f27a2287e888b6f65ca29305c60d484fa9a07547c1da08",
+ "dialogs": {
+  "MULTI_PERSON_LONG": {
+   "kernel": {
+    "CORRECT": 5,
+    "WRONG": 0,
+    "CLARIFY": 1,
+    "NA": 0
+   },
+   "ctrl": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "INTERRUPTION_RETURN": {
+   "kernel": {
+    "CORRECT": 5,
+    "WRONG": 0,
+    "CLARIFY": 1,
+    "NA": 0
+   },
+   "ctrl": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "LATE_CORRECTION": {
+   "kernel": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ctrl": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "FALSE_REFERENCE": {
+   "kernel": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ctrl": {
+    "CORRECT": 0,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 6
+   }
+  },
+  "TEMPORAL_LONG": {
+   "kernel": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ctrl": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  }
+ },
+ "memory": {
+  "OUTDATED": {
+   "ewm2": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "CORRECTED": {
+   "ewm2": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "CONTRADICTORY": {
+   "ewm2": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "TWO_STEP": {
+   "ewm2": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "DISTRACTOR": {
+   "ewm2": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  },
+  "UNANSWERABLE": {
+   "ewm2": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "lexical": {
+    "CORRECT": 0,
+    "WRONG": 6,
+    "CLARIFY": 0,
+    "NA": 0
+   },
+   "ewm2Plus": {
+    "CORRECT": 6,
+    "WRONG": 0,
+    "CLARIFY": 0,
+    "NA": 0
+   }
+  }
+ },
+ "totals": {
+  "kernel": {
+   "CORRECT": 28,
+   "WRONG": 0,
+   "CLARIFY": 2,
+   "NA": 0
+  },
+  "ctrl": {
+   "CORRECT": 6,
+   "WRONG": 18,
+   "CLARIFY": 0,
+   "NA": 6
+  },
+  "ewm2": {
+   "CORRECT": 12,
+   "WRONG": 24,
+   "CLARIFY": 0,
+   "NA": 0
+  },
+  "lexical": {
+   "CORRECT": 12,
+   "WRONG": 24,
+   "CLARIFY": 0,
+   "NA": 0
+  },
+  "ewm2Plus": {
+   "CORRECT": 36,
+   "WRONG": 0,
+   "CLARIFY": 0,
+   "NA": 0
+  }
+ }
+}

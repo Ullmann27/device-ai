@@ -460,3 +460,9 @@ test('a running Android build blocks teamleader before any repair and releases l
   assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'NO_FAILURE');
   assert.equal(driver.calls.repairs,1);
  }));
+
+test('the owner release of a dead build lease is its own exclusive CLI mode',()=>{
+ assert.equal(parseTeamleaderArgs(['--release-dead-lease']).releaseDeadLease,true);
+ assert.throws(()=>parseTeamleaderArgs(['--release-dead-lease','--once']),/exactly one/);
+ assert.throws(()=>parseTeamleaderArgs(['--release-dead-lease','--release-dead-lease']),/Duplicate/);
+});

@@ -237,4 +237,19 @@ class ContinuumBrainBridgeTest {
             ContinuumBaselineSource.MEMORY)
         assertEquals("CONTINUUM · Modell abc · 1 aktuelle Erinnerungen"+" · "+"SWB1=abc · Fakten=1",outcome.evidenceLine)
     }
+    @Test fun shadowRecordsTimelineAndRelationSignalsWithoutContentAndWithoutChangingTheAnswer() {
+        val (dir,core)=app("Mira wohnte bis 2023 in Wels.","Mira wohnt seit 2024 in Enns.","Ilse ist die Schwester von Kurt.")
+        ContinuumBrainSettings(dir).set(ContinuumBrainMode.SHADOW)
+        for(request in listOf("Wo wohnt Mira?","Wo wohnt der Bruder von Ilse?")) {
+            val today=baseline(dir,core,"conv-tl",request)
+            assertSame(today,ContinuumBrainBridge.decide(dir,core,"conv-tl",request,today).outcome)
+        }
+        val log=ContinuumBrainShadowLog(dir).lines()
+        assertEquals(2,log.size)
+        assertTrue(log.all { it.contains("\"tl\":") && it.contains("\"rel\":") })
+        assertTrue(log[1].contains("\"rel\":true"))
+        for(word in listOf("Mira","Wels","Enns","Ilse","Kurt","Schwester"))   // not "Ute": it is a substring of the field name "route"
+            assertFalse("no content in the shadow log: $word",log.any { it.contains(word,ignoreCase=true) })
+        assertTrue(ContinuumBrainShadowLog(dir).summary().contains("Zeitlinie"))
+    }
 }

@@ -9,17 +9,19 @@ import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 import {readLocalIntegrationStatus} from './local-integration-status.mjs';
 import {buildTeamleaderHandoff} from './teamleader-review-handoff.mjs';
+import {releaseDeadContinuumBuildLease} from './shared-build-lease.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
-  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable']);
+  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable','--release-dead-lease']);
  const opts={once:false,loop:false,status:false,retry:false};
  for(let i=0;i<args.length;i++){
   const key=args[i];
   if(!allowed.has(key))throw Error('Unknown Teamleader option '+key);
-  if(['--once','--loop','--status','--retry','--durable'].includes(key)){
-   if(opts[key.slice(2)])throw Error('Duplicate option '+key);
-   opts[key.slice(2)]=true;
+  if(['--once','--loop','--status','--retry','--durable','--release-dead-lease'].includes(key)){
+   const flag=key.slice(2).replace(/-([a-z])/g,(_,ch)=>ch.toUpperCase());
+   if(opts[flag])throw Error('Duplicate option '+key);
+   opts[flag]=true;
   }else{
    if(opts[key.slice(2).replace(/-([a-z])/g,(_,ch)=>ch.toUpperCase())])
     throw Error('Duplicate option '+key);
@@ -28,8 +30,8 @@ export function parseTeamleaderArgs(args){
    opts[key.slice(2).replace(/-([a-z])/g,(_,ch)=>ch.toUpperCase())]=val;
   }
  }
- if([opts.once,opts.loop,opts.status].filter(Boolean).length!==1)
-  throw Error('Choose exactly one of --once, --loop or --status');
+ if([opts.once,opts.loop,opts.status,opts.releaseDeadLease].filter(Boolean).length!==1)
+  throw Error('Choose exactly one of --once, --loop or --status (or the owner step --release-dead-lease)');
  if(opts.retry&&!opts.once)throw Error('--retry requires --once');
  if(opts.durable&&(!opts.loop||opts.maxCycles===undefined))
   throw Error('--durable requires --loop with explicit --max-cycles');
@@ -65,6 +67,14 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
  const stateDir=resolveOutputDestination(opt.state??defaultTeamleaderStateDir(root));
  if(stateDir===root||stateDir.startsWith(root+path.sep))
   throw Error('State must remain outside the source checkout');
+ if(opt.releaseDeadLease){
+  // Owner step after a crash (e.g. Android killed Termux mid-repair): the shared build lease is never freed by age;
+  // this removes it only if it names THIS host and a process that no longer exists. Anything else is refused.
+  const result=releaseDeadContinuumBuildLease(root);
+  process.stdout.write(JSON.stringify({mode:'OWNER_RELEASE_DEAD_BUILD_LEASE',...result},null,2)+'\n');
+  if(!result.released&&result.reason!=='NO_LEASE')process.exitCode=1;
+  return result;
+ }
  if(opt.status){
   const statePath=path.join(stateDir,'teamleader-state.json');
   const state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
