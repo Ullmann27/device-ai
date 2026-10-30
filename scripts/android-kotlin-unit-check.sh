@@ -40,7 +40,10 @@ mapfile -t checks < <(cd "$out/test" && find . -name '*Checks.class' | sed 's#^\
 run_cp="$out/test:$out/main:$out/stubclasses:$stdlib:$junit:$cp:src/test/resources:src/main/resources"
 cd "$root/app"
 status=0
-java -Xmx2g -cp "$run_cp" org.junit.runner.JUnitCore "${classes[@]}" >"$out/junit.txt" 2>&1 || status=1
+# Like Android (and a UTF-8 desktop), run under a UTF-8 locale so process arguments keep umlauts; a POSIX/ASCII
+# locale makes the JVM encode ProcessBuilder arguments as '?' (sun.jnu.encoding), which is a host artefact.
+utf8_locale=$(locale -a 2>/dev/null | grep -i -m1 -E '^(C|en_US)\.utf-?8$' || true)
+LC_ALL=${utf8_locale:-${LC_ALL:-}} java -Xmx2g -cp "$run_cp" org.junit.runner.JUnitCore "${classes[@]}" >"$out/junit.txt" 2>&1 || status=1
 for check in "${checks[@]}"; do java -cp "$run_cp" "$check" >>"$out/checks.txt" 2>&1 || { echo "check failed: $check" >>"$out/checks.txt"; status=1; }; done
 summary=$(grep -E '^(OK \(|Tests run:)' "$out/junit.txt" | tail -1)
 echo "classes=${#classes[@]} checks=${#checks[@]} junit: $summary"
