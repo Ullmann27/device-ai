@@ -1,0 +1,16 @@
+KOTLIN_VERSION
+info: kotlinc-jvm 1.9.0 (JRE 21.0.12.1+1-1-deb13u1-Debian)
+JAVA_VERSION
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)
+BASELINE_SOURCE_BLOB=1f7df97552d0393155f02fc10bc7061b86434a2c
+PATCHED_SOURCE_BLOB=e974aabc4e3d42249d23a1fa1085235614fc144c
+HARNESS_BLOB=dbd2c41cd5108193834c6a8ba3de2a1b44d1d5c4
+BASELINE_COMPILE_EXIT=0
+BASELINE_RUN_EXIT=1
+Exception in thread "main" java.lang.IllegalStateException: FAIL unbound knowledge: expected IGNORE, got DRAFT
+	at at.heinz.deviceai.jarvis.StaleRecognizerSessionHarness.main(StaleRecognizerSessionHarness.kt:39)
+PATCHED_COMPILE_EXIT=0
+PATCHED_RUN_EXIT=0
+VOICE1_STALE_CALLBACK_HARNESS PASS 12/12
