@@ -17,7 +17,8 @@ data class ConnectedApplianceState(
     val activeZoneDescriptionDe: String?,
     val capability: DeviceActuationCapability,
     val lastTelemetryTimestampMs: Long,
-    val highHazardWhenUnattended: Boolean = true
+    val highHazardWhenUnattended: Boolean = true,
+    val telemetryVerified: Boolean = false
 ) {
     init {
         require(deviceId.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")))
@@ -33,7 +34,8 @@ data class SituationalContextSnapshot(
     val activeEndpoint: JarvisActiveEndpoint,
     val householdOccupancy: HouseholdOccupancyState,
     val ownerIsDriving: Boolean,
-    val appliances: List<ConnectedApplianceState>
+    val appliances: List<ConnectedApplianceState>,
+    val occupancyEvidenceVerified: Boolean = false
 ) {
     init {
         require(timestampMs >= 0)
@@ -100,24 +102,26 @@ class ContinuumJarvisPresenceEngine(
     fun evaluateSituationForInitiative(snapshot: SituationalContextSnapshot): ProactiveInitiativePrompt? {
         require(snapshot.timestampMs <= Long.MAX_VALUE - consentValidityWindowMs)
         purgeExpired(snapshot.timestampMs)
-        if (snapshot.householdOccupancy == HouseholdOccupancyState.OWNER_AT_HOME) {
+        val occupancy = if (snapshot.occupancyEvidenceVerified) snapshot.householdOccupancy
+            else HouseholdOccupancyState.OCCUPANCY_UNKNOWN
+        if (occupancy == HouseholdOccupancyState.OWNER_AT_HOME) {
             pending.clear(); lastAlerts.clear(); return null
         }
         // Another known occupant may actively be using the appliance; no unattended-home alert.
-        if (snapshot.householdOccupancy == HouseholdOccupancyState.OWNER_AWAY_OTHERS_PRESENT) return null
+        if (occupancy == HouseholdOccupancyState.OWNER_AWAY_OTHERS_PRESENT) return null
         snapshot.appliances.filterNot { it.isCurrentlyActive }.forEach { lastAlerts.remove(it.deviceId) }
         for (device in snapshot.appliances) {
             if (!device.isCurrentlyActive || !device.highHazardWhenUnattended) continue
             // Never advertise stale telemetry as a current stove status.
-            if (!telemetryFresh(snapshot.timestampMs, device.lastTelemetryTimestampMs)) continue
+            if (!device.telemetryVerified || !telemetryFresh(snapshot.timestampMs, device.lastTelemetryTimestampMs)) continue
             val last = lastAlerts[device.deviceId]
             if (last != null && snapshot.timestampMs >= last && snapshot.timestampMs - last < alertCooldownMs) continue
-            val canOff = snapshot.householdOccupancy == HouseholdOccupancyState.HOUSE_CONFIRMED_EMPTY &&
+            val canOff = occupancy == HouseholdOccupancyState.HOUSE_CONFIRMED_EMPTY &&
                 device.capability != DeviceActuationCapability.TELEMETRY_READ_ONLY
             val place = if (snapshot.ownerIsDriving) "Du bist gerade unterwegs" else "Du bist nicht zu Hause"
             val zone = device.activeZoneDescriptionDe ?: device.displayNameDe
             val msg = when {
-                snapshot.householdOccupancy == HouseholdOccupancyState.OCCUPANCY_UNKNOWN ->
+                occupancy == HouseholdOccupancyState.OCCUPANCY_UNKNOWN ->
                     "${snapshot.ownerName}, wichtiger Hinweis: $place. Die Haussteuerung meldet $zone als eingeschaltet. Ob jemand zu Hause ist, ist unklar. Bitte prüfe den Zustand."
                 canOff -> "${snapshot.ownerName}, kurze Frage. $place, aber zu Hause ist noch $zone eingeschaltet. Möchtest du, dass ich das Gerät über eine freigegebene Steuerung ausschalte?"
                 else -> "${snapshot.ownerName}, wichtiger Hinweis. $place und zu Hause meldet $zone aktiven Betrieb. Dieses Gerät erlaubt keine Fernabschaltung. Bitte prüfe den Zustand."
@@ -171,8 +175,9 @@ class ContinuumJarvisPresenceEngine(
             return reject("SHADOW: Ich habe deine Zustimmung erkannt, aber die reale Geräteabschaltung ist noch nicht freigeschaltet.")
         val device = currentSituation.appliances.singleOrNull { it.deviceId == proposal.targetDeviceId }
         if (currentSituation.timestampMs != nowMs ||
+            !currentSituation.occupancyEvidenceVerified ||
             currentSituation.householdOccupancy != HouseholdOccupancyState.HOUSE_CONFIRMED_EMPTY ||
-            device?.isCurrentlyActive != true ||
+            device?.isCurrentlyActive != true || !device.telemetryVerified ||
             device.capability == DeviceActuationCapability.TELEMETRY_READ_ONLY ||
             !telemetryFresh(nowMs, device.lastTelemetryTimestampMs))
             return reject("Die aktuelle Haushalts- oder Gerätesituation ist nicht sicher bestätigt. Ich ändere nichts.")
