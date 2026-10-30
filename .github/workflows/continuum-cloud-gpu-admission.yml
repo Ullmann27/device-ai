@@ -1,0 +1,36 @@
+name: Continuum Cloud GPU Admission QA
+on:
+  push:
+    branches:
+      - research/continuum-cloud-gpu-admission-20261030
+    paths:
+      - .github/continuum/continuum-cloud-gpu-admission.mjs
+      - .github/continuum/continuum-cloud-gpu-admission.test.mjs
+      - .github/workflows/continuum-cloud-gpu-admission.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Cloud GPU admission and existing model fabric regression
+        run: |
+          node --test \
+            .github/continuum/continuum-cloud-gpu-admission.test.mjs \
+            .github/continuum/compute-fabric-model-adapter.test.mjs \
+            .github/continuum/continuum-virtual-model-fabric.test.mjs \
+            .github/continuum/coding-provider-remote.test.mjs
+      - name: No secrets, no cloud provisioning
+        run: |
+          node --check .github/continuum/continuum-cloud-gpu-admission.mjs
+          node --check .github/continuum/continuum-cloud-gpu-admission.test.mjs
