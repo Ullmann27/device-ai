@@ -81,4 +81,9 @@ class LocalModelClaimAuditTest {
         val ok = LocalGroundedRecall("Anna hat 12 Euro bezahlt und Markus hat 17 Euro bezahlt.", "Erinnerung")
         assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Anna hat 12 Euro bezahlt.", ok))
     }
+    @Test fun anOrdinalDateDotEndsNoClause() {
+        val r = LocalGroundedRecall("Markus fliegt am 6. Oktober nach Graz.", "Erinnerung")
+        assertEquals(TraceStage.CLAIM_AUDIT_SUPPORTED, LocalModelClaimAudit.stage("Nach Graz fliegt Markus am 6. Oktober.", r))
+        assertEquals(TraceStage.CLAIM_AUDIT_UNSUPPORTED, LocalModelClaimAudit.stage("Nach Linz fliegt Markus am 6. Oktober.", r))
+    }
 }

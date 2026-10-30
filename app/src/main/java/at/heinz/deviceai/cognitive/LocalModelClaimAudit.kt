@@ -30,8 +30,9 @@ object LocalModelClaimAudit {
     /** Answers longer than the model's bounded reply are not audited (the stage then says so). */
     const val MAX_ANSWER_CHARS = 8_000
     private val POLARITY = setOf("Verneinung fehlt", "unbelegte Verneinung", "Ja trotz Verneinung")
-    private val SENTENCE_END = Regex("(?<=[.!?])\\s+")
-    private val CLAUSE_BREAK = Regex("(?<=[.!?;,])\\s+|\\s+(?=(?:und|während|aber|sowie|sondern|doch|inzwischen|seit)\\s)")
+    // "am 6. Oktober": a dot right after a digit is an ordinal, not a sentence or clause end (holdout-1 false alarms)
+    private val SENTENCE_END = Regex("(?<=[!?]|(?<!\\d)\\.)\\s+")
+    private val CLAUSE_BREAK = Regex("(?<=[!?;,]|(?<!\\d)\\.)\\s+|\\s+(?=(?:und|während|aber|sowie|sondern|doch|inzwischen|seit)\\s)")
     private val CONTENT_WORD = Regex("\\p{L}{4,}")
     private val WORD = Regex("\\p{L}[\\p{L}\\p{N}-]*|\\p{N}+")
     private val PAST = setOf("bis", "früher", "ehemals", "zuvor", "damals", "vorher", "einst", "ursprünglich", "vormals")
