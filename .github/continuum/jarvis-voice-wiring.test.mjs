@@ -84,3 +84,16 @@ test('one recognizer at a time and every result is bound to the chat that starte
   assert.match(activity,/val voiceStartedIn = if\(requestCode==SPEECH_REQUEST\) voiceRequestSession else null/);
   assert.match(policy,/startedInSession != null && startedInSession == currentSession -> JarvisVoiceDispatch\.AUTO_DIALOGUE/);
 });
+
+
+test('stale speech is rejected before either manual composer or auto-dialogue routing',()=>{
+  const start=activity.indexOf('SPEECH_REQUEST -> if (resultCode == RESULT_OK) {');
+  const end=activity.indexOf('DEV_SPEECH_REQUEST -> if (resultCode == RESULT_OK)',start);
+  assert.ok(start>0 && end>start);
+  const body=activity.slice(start,end);
+  const guard=body.indexOf('if (!spoken.isNullOrBlank() && voiceStartedIn != null && voiceStartedIn == sessionId)');
+  const manual=body.indexOf('input.setText(spoken)');
+  const auto=body.indexOf('JarvisVoiceDispatchGate.decide(');
+  assert.ok(guard>=0 && auto>guard && manual>guard);
+  assert.match(policy,/startedInSession == null \|\| startedInSession != currentSession -> JarvisVoiceDispatch.IGNORE/);
+});
