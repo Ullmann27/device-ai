@@ -44,7 +44,7 @@ Der Publisher installiert oder signiert **nichts**. Er prüft die APK mit `apksi
 ### Ein zusätzlicher, bisher fehlender Schritt: Render ausrollen
 Der vorhandene Render-Dienst hat `autoDeploy=no`. Nach dem Push ist `OWNER_RELEASE_PUSHED_AWAITING_RENDER_DEPLOY` **noch keine Live-Freigabe**. Den Deploymentvorgang ausdrücklich beim bereits bestehenden Dienst `srv-dbf1tr2vcj2c73ehpfog` auslösen und überprüfen, dass **beide** Dateien über HTTPS wirklich abrufbar sind. Den alten Placeholder nur durch das tatsächlich originalsignierte Manifest ersetzen.
 
-Es wurde **kein neuer kostenpflichtiger Dienst** eingerichtet. Die tatsächlichen bestehenden Render-Tarif- und Bandbreitenkosten sind noch zu prüfen; keine Aussage „garantiert 0 €“ ohne Abrechnung.
+Es wurde **kein neuer Dienst** eingerichtet. Laut offizieller Render-Dokumentation sind Static Sites grundsätzlich kostenlos zu deployen, aber sie verbrauchen die enthaltenen Pipeline-Minuten und das Bandbreitenbudget des Workspaces. Bei Überschreitung können Zusatzkosten entstehen; deshalb vor Freigabe den bestehenden Abrechnungs-/Spending-Cap prüfen und nicht von garantiert 0 € ausgehen. Quellen: https://render.com/docs/free und https://render.com/pricing .
 
 ## Owner-Milestone C – Update-Knopf am Gerät prüfen
 1. APK v29 auf dem Fold7 originalsigniert installieren, ohne bisherige App-Daten zu löschen.
