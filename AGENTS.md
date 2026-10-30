@@ -1,5 +1,9 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## AKTUELL 30.10.2026: EXP-20 abgeschlossen (Host-Labor) → nächster Schritt M5 „Semantik“
+
+**ChatGPT 6 und jeder nächste Agent: zuerst [GPT6-HANDOFF-FROM-OPUS-EXP20-20261030.md](docs/research/omega/GPT6-HANDOFF-FROM-OPUS-EXP20-20261030.md) und [OPUS-CONTINUATION-BRIEF-M5-20261030.md](docs/research/omega/OPUS-CONTINUATION-BRIEF-M5-20261030.md) lesen und strikt danach arbeiten.** Draft-PR #256 (Branch `claude/continuum-jarvis-exp20-p2-kxrxy2`). Ergebnis: Router A bleibt; CTRNN ≈ EMA; DG-SDR, INT8/Sign-Schlüssel verworfen; Hopfield-2-Gewinn = Medoid-Artefakt; einziger Kandidat ist der vorhandene `HybridMemoryRetriever` mit CRE1-`semanticScorer` (Bestätigung auf neuen Daten offen). `app/src/main` unverändert; keine APK, kein Fold7-Nachweis.
+
 ## VERBINDLICH: JARVIS-Resilienz und Neurodynamik (EXP-16 bis EXP-23)
 
 **Zentraler Forschungs-, Architektur- und Besitzerkontrollvertrag:** [JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md](docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md). **Vor jeder JARVIS-, NTW1-, CCC1-, JPI1-, Geräte-/Sync-, Energie- oder Lernänderung lesen.** Acht neue Experimente stehen zusätzlich im `docs/CONTINUUM-EXPERIMENTE.json`-Register: EXP-16 sichere, nutzerkontrollierte Geräte-/Zustandskontinuität; EXP-17 evolutionsbasierte Reparatur; EXP-18 HDC-Routing; EXP-19 kryptografische Besitzerautorität; EXP-20 CTRNN; EXP-21 Fisher/EWC; EXP-22 STDP/Metaplastizität; EXP-23 Thermal-/Energie-Budget. Alle neu, **nur PROPOSED_SHADOW**, keine behauptete Implementierung.
