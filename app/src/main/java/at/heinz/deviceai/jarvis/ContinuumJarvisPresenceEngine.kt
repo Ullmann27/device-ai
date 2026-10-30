@@ -44,7 +44,8 @@ data class ProactiveInitiativePrompt(
     val requiresExplicitOwnerConsent: Boolean,
     val canExecuteRemoteShutoff: Boolean,
     val createdAtMs: Long,
-    val expiresAtMs: Long
+    val expiresAtMs: Long,
+    val deliveryMode: JarvisInitiativeDeliveryMode
 )
 
 enum class VerifiedActuationStatus {
@@ -166,7 +167,11 @@ class ContinuumJarvisPresenceEngine(
                 requiresExplicitOwnerConsent = canShutoff,
                 canExecuteRemoteShutoff = canShutoff,
                 createdAtMs = now,
-                expiresAtMs = now + consentValidityWindowMs
+                expiresAtMs = now + consentValidityWindowMs,
+                deliveryMode = JarvisInitiativePolicy.evaluate(
+                    snapshot.ownerIsDriving, snapshot.activeEndpoint, occupancy,
+                    snapshot.occupancyEvidenceVerified, appliance.highHazardWhenUnattended,
+                    appliance.telemetryVerified).delivery
             )
             if (pendingProposals.size >= 32) pendingProposals.remove(pendingProposals.keys.first())
             pendingProposals[proposal.proposalId] = proposal
