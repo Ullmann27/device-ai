@@ -69,3 +69,31 @@ Vast.ai bietet einen dynamischen Marktplatz mit On-Demand- und interruptibler GP
 https://vast.ai/article/Rental-Types
 
 Beste Reihenfolge: zuerst begrenzten kostenlosen NVIDIA-Prototyp-Endpoint für einen öffentlichen synthetischen Test nutzen, sofern verfügbar und vom Besitzer explizit freigegeben; danach billige bedarfsabhängige kleine GPU mit vLLM und erst mit gemessener Nutzeneffizienz große Tensor-Parallel-Hosts. Keine Terms-of-Service-Umgehung oder fremde GPU-Nutzung.
+
+
+## NVIDIA NIM: echte Inferenzintegration vorbereitet, 30. Oktober 2026
+
+Die offizielle NVIDIA-Dokumentation nennt den freien Entwicklungs-Endpunkt POST https://integrate.api.nvidia.com/v1/chat/completions. Benötigt ein individuelles NVIDIA Developer Program API-Token. Weder das GitHub-Repository noch die ChatGPT-Verbindung verfügt derzeit über den dafür notwendigen Token; kein echter GPU-Aufruf wurde ausgeführt.
+
+Neue Dateien:
+- .github/continuum/nvidia-nim-synthetic-benchmark.mjs: harter NVIDIA-HTTPS-Host, drei fest freigegebene Modell-IDs, maximal ein Aufruf je manuellem Auftrag, 24k Anfragebytes, 64k Antwortbytes, 120s maximale Frist, kein Redirect, kein Retry, keine private Gedächtnis-/Code-Übermittlung.
+- .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs: acht unabhängige synthetische Eingabe-/Transport-/Authentifizierungs-/Ergebnisprüfungen mit lokaler Response-Simulation. Benötigt keinen NVIDIA-Schlüssel und erzeugt keine Kosten.
+- scripts/continuum-nvidia-nim-benchmark.mjs: --check zeigt nur den Konfigurationsstatus, --run ist ausdrücklich opt-in und verlangt NVIDIA_API_KEY als Umgebungsvariable. Keinen Schlüssel in Code, Chat, Pull Request, Logs oder GitHub-Workflow ablegen.
+- Erweiterter CI-Workflow für Node 22, bisher nicht durch GitHub Actions bestätigt.
+
+Die Benchmark-Aufgabe generiert deterministisch 192 öffentliche synthetische CSV-Datensätze und lässt das Modell die Summe bestimmter Kategorien modulo 65521 ermitteln. Der lokale unabhängige Erwartungswert beträgt 23677. Das Ergebnis wird nur bei exakter numerischer Übereinstimmung als richtig bewertet; Zeit, Prompt-/Completion-Token und End-to-End-Tokenrate werden ausgewiesen. Die Übertragung synthetischer Datensätze erlaubt keinerlei Schluss auf Vertraulichkeit der NVIDIA-Testdienste. Diese speichern unter Umständen Ein- und Ausgaben.
+
+Reproduzierbar:
+- node --test .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs
+- node scripts/continuum-nvidia-nim-benchmark.mjs --check
+- Erst nach NVIDIA Developer Anmeldung und eigener Zugriffskontrolle: NVIDIA_API_KEY in einem geheimen temporären Umgebungsvariablenbereich setzen; node scripts/continuum-nvidia-nim-benchmark.mjs --run
+
+Offizielle Referenzen:
+https://docs.api.nvidia.com/nim/docs/api-quickstart
+https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b
+https://build.nvidia.com/nvidia/nemotron-3-ultra-550b-a55b
+https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash
+
+Testbericht vor echtem NVIDIA-Zugang: Der unmittelbar von GitHub abgerufene Modulquelltext wurde zusätzlich in einer isolierten JavaScript-Prüfumgebung mit simuliertem Response-Stream geprüft; vier fokussierte Assertions bestanden. Dies ist ausdrücklich weder ein nativer Node-Test noch ein bestätigter NVIDIA-GPU-Aufruf. Die Zahl 20 Token/s aus der Simulation stammt aus vorgegebenen Testwerten und darf nicht als reale Benchmark-Leistung ausgegeben werden.
+
+Vor produktiver Continuum-Nutzung: Berechtigungs-/Geheimnisschutz auf dem Fold7, sichere Einzelauftragsfreigabe, Modellrichtlinien, Token-/Rate-Limits und providerseitiger Kosten-/Kontingentschutz, unabhängig verifizierte NVIDIA-Verbindung und Fold7-Gegenprobe. Keine implizite Übertragung von SWB1 oder CCC1-Daten.
