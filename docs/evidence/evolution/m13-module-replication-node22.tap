@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: reads complete regular outputs without modifying them
+ok 1 - reads complete regular outputs without modifying them
+  ---
+  duration_ms: 3.616019
+  type: 'test'
+  ...
+# Subtest: refuses an evidence symlink, not following outside file content
+ok 2 - refuses an evidence symlink, not following outside file content
+  ---
+  duration_ms: 1.434576
+  type: 'test'
+  ...
+# Subtest: rejects named pipes before reading, without blocking
+ok 3 - rejects named pipes before reading, without blocking
+  ---
+  duration_ms: 4.652936
+  type: 'test'
+  ...
+# Subtest: six genuinely distinct positive modules meet one-sided research threshold
+ok 4 - six genuinely distinct positive modules meet one-sided research threshold
+  ---
+  duration_ms: 2.357203
+  type: 'test'
+  ...
+# Subtest: one module with thousands of green candidates is not independent replication
+ok 5 - one module with thousands of green candidates is not independent replication
+  ---
+  duration_ms: 2.134133
+  type: 'test'
+  ...
+# Subtest: five modules cannot meet the preregistered minimum
+ok 6 - five modules cannot meet the preregistered minimum
+  ---
+  duration_ms: 0.150503
+  type: 'test'
+  ...
+# Subtest: one contradicting module blocks claimed strong replication
+ok 7 - one contradicting module blocks claimed strong replication
+  ---
+  duration_ms: 0.162591
+  type: 'test'
+  ...
+# Subtest: Holm adjustment protects against cherry-picking four simultaneous hypotheses
+ok 8 - Holm adjustment protects against cherry-picking four simultaneous hypotheses
+  ---
+  duration_ms: 7.913287
+  type: 'test'
+  ...
+# Subtest: seven unanimous modules can survive four-way Holm adjustment
+ok 9 - seven unanimous modules can survive four-way Holm adjustment
+  ---
+  duration_ms: 0.430789
+  type: 'test'
+  ...
+# Subtest: train/dev shared module blocks all apparent confirmations
+ok 10 - train/dev shared module blocks all apparent confirmations
+  ---
+  duration_ms: 0.454313
+  type: 'test'
+  ...
+# Subtest: same diagnosis only, with no within-module reference, cannot support a sign comparison
+ok 11 - same diagnosis only, with no within-module reference, cannot support a sign comparison
+  ---
+  duration_ms: 0.132216
+  type: 'test'
+  ...
+# Subtest: DEMOTE direction finds opposite consistently bad module outcomes
+ok 12 - DEMOTE direction finds opposite consistently bad module outcomes
+  ---
+  duration_ms: 0.312262
+  type: 'test'
+  ...
+# Subtest: false original confirmation is not reinterpreted as an accepted finding
+ok 13 - false original confirmation is not reinterpreted as an accepted finding
+  ---
+  duration_ms: 0.330069
+  type: 'test'
+  ...
+# Subtest: duplicate hypothesis identity and invalid rows are rejected
+ok 14 - duplicate hypothesis identity and invalid rows are rejected
+  ---
+  duration_ms: 0.244352
+  type: 'test'
+  ...
+# Subtest: ties are not counted as positive observations
+ok 15 - ties are not counted as positive observations
+  ---
+  duration_ms: 0.207958
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78.77763

@@ -1,5 +1,12 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## Fortsetzung ab PR #249: Forschungsprüfung, keine automatische Aktivierung
+
+- [Self-Improvement-Forschung und Grenzen](docs/research/evolution/EXP-AUTO-REPAIR-EVOLUTION-20261030.md): Rein SHADOW, unveränderte Produktionsrechte, keine NTW1-Gewichtsanpassung, kein Operator-Pruning. Ein Validator-Gate fordert exakt alle zurückgehaltenen Tests ohne SKIPs.
+- [M13-Modulreplikation und Signifikanzschutz](docs/research/evolution/M13-MODULE-REPLICATION-20261030.md): Neues, direkt in die bestehende M13-Ergebnis-CLI eingebundenes SHADOW-Gate. Verlangt modulbasierte Replikation und Holm-Korrektur, bevor ein bisheriger Kandidaten-p-Wert als Forschungsindiz gewertet werden darf. 15/15 gezielte Node-Tests, keine Geräte- oder CCC1-Gesamtprüfung.
+- [M13-Belegprüfung und Wiederanlauf](docs/research/evolution/EVOLUTION-M13-VERIFICATION-20261030.md): Vor einem M13-Erfolgsbericht zuerst `experimental/repair-transfer-lab/m13-evidence-cli.mjs` auf dem vollständig aufgezeichneten externen Ergebnisordner ausführen. GitHub enthält bislang **keinen belegten abgeschlossenen M13-Lauf**; ein zuvor gestarteter Hintergrundprozess gilt nicht als Nachweis.
+- Die an PR #249 angehängten M13-Belegwerkzeuge sind **keine M13-Ausführung und keine produktive CCC1-Integration**. Weiterhin niemals ungeprüft in `main` mergen.
+
 ## PRIORITÄT 30.10.2026: WEITERARBEIT AB PR #245 (M9–M16)
 
 **Einstieg für jede KI:** [`docs/research/CONTINUUM-WEITERARBEIT-PLAN-20261030.md`](docs/research/CONTINUUM-WEITERARBEIT-PLAN-20261030.md). Er enthält den Stapel #238→#245, die Regeln, die fortsetzbaren Experimente X1–X8 mit Befehlen, Siegeln und Kriterien sowie die strategische Jarvis-Herausforderung („verifizierter Selbstverbesserungs-Kreislauf auf dem eigenen Gerät“). Neue Gehirnbausteine (Aussagenprüfer v2, F1-Kern, Zeitlinie/Resolver) laufen **SHADOW**. Aktivieren darf sie nur der Besitzer, nach einer Fold7-Messung.
