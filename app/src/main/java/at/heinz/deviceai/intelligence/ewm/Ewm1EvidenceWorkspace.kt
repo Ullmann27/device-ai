@@ -47,9 +47,27 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
     val keys: Set<String> = mentions.flatMap { m -> listOf(m.key) + m.label.split(' ', '-').map { genitiveBase(lower(it)) }
         .filter { it == m.key || it !in ownHeads } }.filter { it.length >= 2 }.toSet()
     val subject: String? = mentions.firstOrNull()?.key
+    /**
+     * Who a statement is about, for supersession only: "ich"/"wir" when the first clause has that nominative pronoun
+     * ("Inzwischen wohne ich in Graz."), otherwise the first mention that is no sentence-initial time or update adverb.
+     */
+    val holder: String? = run {
+        val firstClause = tokens.takeWhile { it.index == 0 || !it.breakBefore }
+        val pronoun = firstClause.indexOfFirst { it.lower == "ich" || it.lower == "wir" }
+        val coordinated = firstClause.getOrNull(pronoun - 1)?.lower in setOf("und", "oder", "wie", "als") ||
+            firstClause.getOrNull(pronoun + 1)?.lower in setOf("und", "oder")
+        if (pronoun >= 0 && !coordinated) firstClause[pronoun].lower
+        else mentions.firstOrNull { m -> !(m.start == 0 && m.end == 0 &&
+            (tokens[0].lower in Ewm1Lexicon.UPDATE_MARKERS || tokens[0].lower in Ewm1Lexicon.TIME)) }?.key
+    }
     val contentStems: Set<String> = tokens.filter { !it.capitalized && it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 }
         .map { stem(it.lower) }.toSet()
     val groups: Set<String> = tokens.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
+    /** Relation groups of the predicate: the kinship word naming the holder ("Meine Schwester ist …") states no relation. */
+    val relationGroups: Set<String> = run {
+        val own = mentions.firstOrNull { it.key == holder }?.let { it.start..it.end }
+        tokens.filter { own == null || it.index !in own || !isRole(it.lower) }.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
+    }
     val lowerText = lower(text)
     val hasUpdateMarker = Ewm1Lexicon.UPDATE_MARKERS.any { marker ->
         if (' ' in marker) lowerText.contains(marker) else tokens.any { it.lower == marker } }
@@ -214,17 +232,28 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
     }
 
     private fun replaces(later: Ewm1Fact, earlier: Ewm1Fact): Boolean {
-        val sameSubject = later.subject != null && later.subject == earlier.subject
-        val sharedGroup = later.groups.intersect(earlier.groups).filter { it != "zeitpunkt" }
+        val sameSubject = later.holder != null && later.holder == earlier.holder
+        val sharedGroup = later.relationGroups.intersect(earlier.relationGroups).filter { it != "zeitpunkt" }
         val sharedStems = later.contentStems.intersect(earlier.contentStems)
-        val sharedOtherEntity = (later.mentions.map { it.key }.toSet() - setOfNotNull(later.subject))
+        // The holder's own name ("meine Schwester Anna") is no other entity both statements share.
+        val holderNames = setOfNotNull(later.holder) + later.holder?.let { h ->
+            aliases[h]?.keys.orEmpty() + aliases.filterValues { h in it.keys }.keys }.orEmpty()
+        val sharedOtherEntity = (later.mentions.map { it.key }.toSet() - holderNames)
             .intersect(earlier.mentions.map { it.key }.toSet())
+        // Two statements of different thesaurus relations ("arbeitet" / "wohnt nicht mehr") never replace each other.
+        if (later.relationGroups.isNotEmpty() && earlier.relationGroups.isNotEmpty() &&
+            later.relationGroups.intersect(earlier.relationGroups).isEmpty()) return false
         fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
+        // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared
+        // relation ("Ich arbeite in Wien." survives "Ich wohne nicht mehr in Wien.").
+        if (sameSubject && later.holder in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||
+            later.hasUpdateMarker && (sharedGroup.isNotEmpty() ||
+                later.relationGroups.isEmpty() && earlier.relationGroups.isEmpty() && sharedStems.isNotEmpty())
         return if (sameSubject) {
             (later.hasUpdateMarker && (sharedGroup.isNotEmpty() || sharedStems.isNotEmpty() || sharedOtherEntity.isNotEmpty() ||
                 "zeitpunkt" in later.groups.intersect(earlier.groups) || (timed(later) && timed(earlier)))) ||
                 sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED }
-        } else if (later.subject == null && earlier.subject == null) {
+        } else if (later.holder == null && earlier.holder == null) {
             later.hasUpdateMarker && (sharedStems.size + later.tokens.map { it.lower }.toSet()
                 .intersect(earlier.tokens.filter { it.lower in Ewm1Lexicon.GENERIC || it.lower in Ewm1Lexicon.TIME }.map { it.lower }.toSet()).size) >= 2
         } else false
