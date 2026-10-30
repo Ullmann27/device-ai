@@ -1,0 +1,7 @@
+CMD: scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2Numerics docs/evidence/exp20-p2-20261030/data docs/evidence/exp20-p2-20261030/numerics/numerics-result.txt
+GIT_PARENT=9735ddb10b815fd79fc727c32fa57eb6e11f899d P2Numerics.kt sha256=b0f345c2cda8e7aa6bd320ef65fb683026d8aacfda6e2c5e5ebcd93c953ba87a JAR=bda1df85a03ea84da1eedb18e29b1b9b8bfb6c52cf7202160d3b8e0c73a375e9 2026-10-30T09:07:19Z
+EXIT=0
+
+real	0m8.861s
+user	0m11.908s
+sys	0m0.182s

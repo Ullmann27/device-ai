@@ -1,0 +1,2 @@
+975bd6ed04bfd88b69154ff383b3e00c35dfc9919c13caf898cc897b7620f1bf  numerics-result.txt
+7dc1f85e128e554204c917c820b5858e44b08ac5618edda9b16b7925f90f1bb3  numerics-stdout.txt

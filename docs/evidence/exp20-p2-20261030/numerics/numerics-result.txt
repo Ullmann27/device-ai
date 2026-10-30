@@ -1,0 +1,46 @@
+EXP-20 P2 Part N numerics (host JVM 21.0.12.1, amd64)
+n=16 rho=0.9000000000000004 minTau=60.0 maxTau=3600.0 injection=10.0s
+
+N1 reference RK4 h=0.02*minTau vs h=0.01*minTau on 560 VALIDATION dialogs: max ||.||inf=2.648e-10 (valid iff < 1e-9: true)
+DENSE_P1 vs reference at decision: max ||.||inf=1.663e-02
+DENSE_SUBSTEP  max_step ||v-dense||inf=2.000e-02  decision ||v-ref||inf=1.146e-03
+EXPM1          max_step ||v-dense||inf=1.388e-16  decision ||v-ref||inf=1.663e-02
+P1_REIMPL      max_step ||v-dense||inf=0.000e+00  decision ||v-ref||inf=1.663e-02
+LEAK_ONLY_GAP  max_step ||v-dense||inf=3.100e-02  decision ||v-ref||inf=1.314e-02
+SPARSE_1e-3    max_step ||v-dense||inf=2.447e-04  decision ||v-ref||inf=1.656e-02  bound violations=0/2480  column updates=7669/39680 (19.3%)
+SPARSE_1e-2    max_step ||v-dense||inf=1.862e-03  decision ||v-ref||inf=1.677e-02  bound violations=0/2480  column updates=2475/39680 (6.2%)
+
+frozen C readout sha256=a6ed4695bbeb41df14b39dacf01c9f6fdb43b7d5c54c20ac5b3285c02e44ef26 (freeze a6ed4695bbeb41df14b39dacf01c9f6fdb43b7d5c54c20ac5b3285c02e44ef26: true)
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): DENSE_SUBSTEP  226
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): EXPM1          0
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): P1_REIMPL      0
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): LEAK_ONLY_GAP  240
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): SPARSE_1e-3    0
+routing flips vs DENSE_P1 on TRAIN+VALIDATION (1680): SPARSE_1e-2    0
+routing flips vs DENSE_P1 on VALIDATION (560): REFERENCE_ODE  76
+
+N2 relative error against a 50-digit series of 1 - e^-x
+  x=1e-06  1-exp(-x): rel=1.586e-11   -expm1(-x): rel=7.918e-17
+  x=1e-08  1-exp(-x): rel=1.077e-09   -expm1(-x): rel=6.446e-17
+  x=1e-10  1-exp(-x): rel=8.279e-08   -expm1(-x): rel=3.390e-17
+  x=1e-12  1-exp(-x): rel=2.212e-05   -expm1(-x): rel=2.422e-17
+  x=1e-14  1-exp(-x): rel=7.993e-04   -expm1(-x): rel=4.871e-17
+  x=1e-15  1-exp(-x): rel=7.993e-04   -expm1(-x): rel=9.165e-17
+  x=1e-16  1-exp(-x): rel=1.102e-01   -expm1(-x): rel=5.000e-17
+  x=1e-17  1-exp(-x): rel=1.000e+00   -expm1(-x): rel=5.000e-18
+  accumulate tau=1 u=1 dt=1e-06 x 1000000: exact=6.321205588285577e-01  P1 abs err=5.832e-12  expm1 abs err=3.116e-12
+  accumulate tau=1 u=1 dt=1e-17 x 1000000: exact=9.999999999950000e-12  P1 abs err=1.000e-11  expm1 abs err=7.996e-23
+  expm1 form in the P1 random protocol (2000 nets x 200 steps): bound violations=0/6860600, a+(1-a)!=1 exactly in 4469/6860600 updates
+
+N3 degenerate cases on BoundedCtrnn (P1 class, after the aliasing fix)
+  dt=0     step=false unchanged=true
+  dt<0     step=false unchanged=true
+  dt=NaN   step=false unchanged=true
+  dt=+Inf  step=false unchanged=true
+  dt=-Inf  step=false unchanged=true
+  tau=0 rejected=true
+  dt=1e300             step=true state=0.8581489350995122 finite=true
+  tau=1e-300,dt=1      step=true state=0.8581489350995122 finite=true
+  tau=1e-300,dt=1e10   step=true state=0.8581489350995122 finite=true
+  tau=1e300,dt=1e-300  step=true state=0.9 finite=true
+  1e6 repeated injections: finite=true max|h|=1.296760 <= bound 1.900000
