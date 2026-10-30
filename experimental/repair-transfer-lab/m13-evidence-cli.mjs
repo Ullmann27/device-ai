@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {auditRecordedM13} from './m13-evidence-contract.mjs';
+import {auditM13ModuleReplication} from './m13-module-replication.mjs';
 
 const FILES={summary:'summary.json',hypotheses:'hypotheses.json',trainRows:'train-rows.json',devRows:'dev-rows.json'};
 export function checkRecordedDirectory(directory,sourceSha,seal){
@@ -18,7 +19,11 @@ export function checkRecordedDirectory(directory,sourceSha,seal){
       parsed[field]=JSON.parse(fs.readFileSync(fd,{encoding:'utf8'}));
     }finally{fs.closeSync(fd)}
   }
-  return auditRecordedM13({...parsed,expectedSourceSha:sourceSha,expectedSeal:seal});
+  const recorded=auditRecordedM13({...parsed,expectedSourceSha:sourceSha,expectedSeal:seal});
+  if (!recorded.valid) return recorded;
+  // This is explicitly a second research assessment, not an execution or promotion approval.
+  const moduleReplication=auditM13ModuleReplication(parsed);
+  return Object.freeze({...recorded,moduleReplication});
 }
 
 if(process.argv[1] && path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)){
