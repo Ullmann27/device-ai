@@ -1,0 +1,18 @@
+EXP-20 M6-B4 supersession grid (gold = declarative rule, see source)
+cases=7872 TP=348 FP=48 FN=0 TN=7476 bystanderLost=0 accuracy=0.9939
+errors by later holder/form (errors/cases):
+  anna/nichtmehr         6/144
+  anna/seit              18/288
+  max/nichtmehr          6/144
+  max/seit               18/288
+error kinds (count, first example):
+  FP anna/besuch -> anna/arbeiten/nichtmehr           3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna arbeitet nicht mehr in Wien."
+  FP anna/besuch -> anna/arbeiten/seit                6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag arbeitet meine Schwester Anna in Graz."
+  FP anna/besuch -> anna/tennis/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag spielt meine Schwester Anna in Graz Tennis."
+  FP anna/besuch -> anna/wohnen/nichtmehr             3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna wohnt nicht mehr in Wien."
+  FP anna/besuch -> anna/wohnen/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag wohnt meine Schwester Anna in Graz."
+  FP max/besuch -> max/arbeiten/nichtmehr             3  "Max war gestern in Wien." -> "Max arbeitet nicht mehr in Wien."
+  FP max/besuch -> max/arbeiten/seit                  6  "Max war gestern in Wien." -> "Seit Dienstag arbeitet Max in Graz."
+  FP max/besuch -> max/tennis/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag spielt Max in Graz Tennis."
+  FP max/besuch -> max/wohnen/nichtmehr               3  "Max war gestern in Wien." -> "Max wohnt nicht mehr in Wien."
+  FP max/besuch -> max/wohnen/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag wohnt Max in Graz."

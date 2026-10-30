@@ -31,5 +31,8 @@
 3. **Nachher Pflicht:** die vollständige EWM-Regression (Kotlin-Harness, „1218/1218“ laut #227) und die Owner-Fakten-Tests.
 4. **Lücke 2:** Ein optionales `validFrom` an `Ewm1Fact` ist erst nach Lücke 1 und einem eigenen Vertrag sinnvoll. Es braucht **keinen** zweiten Faktenspeicher.
 
+## Nachtrag 30.10.: Fix als Patchkandidat
+Siehe [EXP-20-M6-B4-EWM-FIX-20261030.md](EXP-20-M6-B4-EWM-FIX-20261030.md): Vorprüfung 3/5 → 5/5, Raster FP 195 → 48, FN 228 → 0, Regression 772/772; auf eigenem Branch, nicht übernommen.
+
 ## Bedeutung für M6
 Der geplante selektive Reset (M6-B4) braucht kein neuronales Signal, solange die vorhandene, deterministische Ersetzungslogik bei Ich-Aussagen nicht greift. **Zuerst diesen nachgewiesenen Fehler beheben**, dann Predictive-Coding- oder EMA-Varianten dagegen vergleichen.

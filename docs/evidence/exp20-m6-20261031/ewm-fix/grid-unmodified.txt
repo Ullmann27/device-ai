@@ -1,0 +1,107 @@
+EXP-20 M6-B4 supersession grid (gold = declarative rule, see source)
+cases=7872 TP=120 FP=195 FN=228 TN=7329 bystanderLost=0 accuracy=0.9463
+errors by later holder/form (errors/cases):
+  anna/inzwischen        18/288
+  anna/jetzt             54/288
+  anna/mittlerweile      18/288
+  anna/nichtmehr         27/144
+  anna/seit              54/288
+  anna/zukunft           6/288
+  ich/inzwischen         18/288
+  ich/jetzt              18/288
+  ich/mittlerweile       18/288
+  ich/nichtmehr          9/144
+  ich/none               6/384
+  ich/seit               18/288
+  max/inzwischen         18/288
+  max/mittlerweile       18/288
+  max/nichtmehr          12/144
+  max/seit               18/288
+  max/zukunft            6/288
+  wir/inzwischen         18/288
+  wir/jetzt              18/288
+  wir/mittlerweile       18/288
+  wir/nichtmehr          9/144
+  wir/none               6/384
+  wir/seit               18/288
+error kinds (count, first example):
+  FN anna/arbeiten -> anna/arbeiten/inzwischen        6  "Meine Schwester Anna arbeitet in Wien." -> "Inzwischen arbeitet meine Schwester Anna in Graz."
+  FN anna/arbeiten -> anna/arbeiten/mittlerweile      6  "Meine Schwester Anna arbeitet in Wien." -> "Mittlerweile arbeitet meine Schwester Anna in Graz."
+  FN anna/tennis -> anna/tennis/inzwischen            6  "Meine Schwester Anna spielt in Wien Tennis." -> "Inzwischen spielt meine Schwester Anna in Graz Tennis."
+  FN anna/tennis -> anna/tennis/mittlerweile          6  "Meine Schwester Anna spielt in Wien Tennis." -> "Mittlerweile spielt meine Schwester Anna in Graz Tennis."
+  FN anna/wohnen -> anna/wohnen/inzwischen            6  "Meine Schwester Anna wohnt in Wien." -> "Inzwischen wohnt meine Schwester Anna in Graz."
+  FN anna/wohnen -> anna/wohnen/mittlerweile          6  "Meine Schwester Anna wohnt in Wien." -> "Mittlerweile wohnt meine Schwester Anna in Graz."
+  FN ich/arbeiten -> ich/arbeiten/inzwischen          6  "Ich arbeite in Wien." -> "Inzwischen arbeite ich in Graz."
+  FN ich/arbeiten -> ich/arbeiten/jetzt               6  "Ich arbeite in Wien." -> "Ich arbeite jetzt in Graz."
+  FN ich/arbeiten -> ich/arbeiten/mittlerweile        6  "Ich arbeite in Wien." -> "Mittlerweile arbeite ich in Graz."
+  FN ich/arbeiten -> ich/arbeiten/seit                6  "Ich arbeite in Wien." -> "Seit Dienstag arbeite ich in Graz."
+  FN ich/tennis -> ich/tennis/inzwischen              6  "Ich spiele in Wien Tennis." -> "Inzwischen spiele ich in Graz Tennis."
+  FN ich/tennis -> ich/tennis/jetzt                   6  "Ich spiele in Wien Tennis." -> "Ich spiele jetzt in Graz Tennis."
+  FN ich/tennis -> ich/tennis/mittlerweile            6  "Ich spiele in Wien Tennis." -> "Mittlerweile spiele ich in Graz Tennis."
+  FN ich/tennis -> ich/tennis/seit                    6  "Ich spiele in Wien Tennis." -> "Seit Dienstag spiele ich in Graz Tennis."
+  FN ich/wohnen -> ich/wohnen/inzwischen              6  "Ich wohne in Wien." -> "Inzwischen wohne ich in Graz."
+  FN ich/wohnen -> ich/wohnen/jetzt                   6  "Ich wohne in Wien." -> "Ich wohne jetzt in Graz."
+  FN ich/wohnen -> ich/wohnen/mittlerweile            6  "Ich wohne in Wien." -> "Mittlerweile wohne ich in Graz."
+  FN ich/wohnen -> ich/wohnen/none                    6  "Ich wohne in Wien." -> "Ich wohne in Graz."
+  FN ich/wohnen -> ich/wohnen/seit                    6  "Ich wohne in Wien." -> "Seit Dienstag wohne ich in Graz."
+  FN max/arbeiten -> max/arbeiten/inzwischen          6  "Max arbeitet in Wien." -> "Inzwischen arbeitet Max in Graz."
+  FN max/arbeiten -> max/arbeiten/mittlerweile        6  "Max arbeitet in Wien." -> "Mittlerweile arbeitet Max in Graz."
+  FN max/tennis -> max/tennis/inzwischen              6  "Max spielt in Wien Tennis." -> "Inzwischen spielt Max in Graz Tennis."
+  FN max/tennis -> max/tennis/mittlerweile            6  "Max spielt in Wien Tennis." -> "Mittlerweile spielt Max in Graz Tennis."
+  FN max/wohnen -> max/wohnen/inzwischen              6  "Max wohnt in Wien." -> "Inzwischen wohnt Max in Graz."
+  FN max/wohnen -> max/wohnen/mittlerweile            6  "Max wohnt in Wien." -> "Mittlerweile wohnt Max in Graz."
+  FN wir/arbeiten -> wir/arbeiten/inzwischen          6  "Wir arbeiten in Wien." -> "Inzwischen arbeiten wir in Graz."
+  FN wir/arbeiten -> wir/arbeiten/jetzt               6  "Wir arbeiten in Wien." -> "Wir arbeiten jetzt in Graz."
+  FN wir/arbeiten -> wir/arbeiten/mittlerweile        6  "Wir arbeiten in Wien." -> "Mittlerweile arbeiten wir in Graz."
+  FN wir/arbeiten -> wir/arbeiten/seit                6  "Wir arbeiten in Wien." -> "Seit Dienstag arbeiten wir in Graz."
+  FN wir/tennis -> wir/tennis/inzwischen              6  "Wir spielen in Wien Tennis." -> "Inzwischen spielen wir in Graz Tennis."
+  FN wir/tennis -> wir/tennis/jetzt                   6  "Wir spielen in Wien Tennis." -> "Wir spielen jetzt in Graz Tennis."
+  FN wir/tennis -> wir/tennis/mittlerweile            6  "Wir spielen in Wien Tennis." -> "Mittlerweile spielen wir in Graz Tennis."
+  FN wir/tennis -> wir/tennis/seit                    6  "Wir spielen in Wien Tennis." -> "Seit Dienstag spielen wir in Graz Tennis."
+  FN wir/wohnen -> wir/wohnen/inzwischen              6  "Wir wohnen in Wien." -> "Inzwischen wohnen wir in Graz."
+  FN wir/wohnen -> wir/wohnen/jetzt                   6  "Wir wohnen in Wien." -> "Wir wohnen jetzt in Graz."
+  FN wir/wohnen -> wir/wohnen/mittlerweile            6  "Wir wohnen in Wien." -> "Mittlerweile wohnen wir in Graz."
+  FN wir/wohnen -> wir/wohnen/none                    6  "Wir wohnen in Wien." -> "Wir wohnen in Graz."
+  FN wir/wohnen -> wir/wohnen/seit                    6  "Wir wohnen in Wien." -> "Seit Dienstag wohnen wir in Graz."
+  FP anna/arbeiten -> anna/tennis/jetzt               6  "Meine Schwester Anna arbeitet in Wien." -> "Meine Schwester Anna spielt jetzt in Graz Tennis."
+  FP anna/arbeiten -> anna/tennis/nichtmehr           3  "Meine Schwester Anna arbeitet in Wien." -> "Meine Schwester Anna spielt nicht mehr in Wien Tennis."
+  FP anna/arbeiten -> anna/tennis/seit                6  "Meine Schwester Anna arbeitet in Wien." -> "Seit Dienstag spielt meine Schwester Anna in Graz Tennis."
+  FP anna/arbeiten -> anna/wohnen/jetzt               6  "Meine Schwester Anna arbeitet in Wien." -> "Meine Schwester Anna wohnt jetzt in Graz."
+  FP anna/arbeiten -> anna/wohnen/nichtmehr           3  "Meine Schwester Anna arbeitet in Wien." -> "Meine Schwester Anna wohnt nicht mehr in Wien."
+  FP anna/arbeiten -> anna/wohnen/seit                6  "Meine Schwester Anna arbeitet in Wien." -> "Seit Dienstag wohnt meine Schwester Anna in Graz."
+  FP anna/besuch -> anna/arbeiten/jetzt               6  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna arbeitet jetzt in Graz."
+  FP anna/besuch -> anna/arbeiten/nichtmehr           3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna arbeitet nicht mehr in Wien."
+  FP anna/besuch -> anna/arbeiten/seit                6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag arbeitet meine Schwester Anna in Graz."
+  FP anna/besuch -> anna/tennis/jetzt                 6  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna spielt jetzt in Graz Tennis."
+  FP anna/besuch -> anna/tennis/nichtmehr             3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna spielt nicht mehr in Wien Tennis."
+  FP anna/besuch -> anna/tennis/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag spielt meine Schwester Anna in Graz Tennis."
+  FP anna/besuch -> anna/wohnen/jetzt                 6  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna wohnt jetzt in Graz."
+  FP anna/besuch -> anna/wohnen/nichtmehr             3  "Meine Schwester Anna war gestern in Wien." -> "Meine Schwester Anna wohnt nicht mehr in Wien."
+  FP anna/besuch -> anna/wohnen/seit                  6  "Meine Schwester Anna war gestern in Wien." -> "Seit Dienstag wohnt meine Schwester Anna in Graz."
+  FP anna/tennis -> anna/arbeiten/jetzt               6  "Meine Schwester Anna spielt in Wien Tennis." -> "Meine Schwester Anna arbeitet jetzt in Graz."
+  FP anna/tennis -> anna/arbeiten/nichtmehr           3  "Meine Schwester Anna spielt in Wien Tennis." -> "Meine Schwester Anna arbeitet nicht mehr in Wien."
+  FP anna/tennis -> anna/arbeiten/seit                6  "Meine Schwester Anna spielt in Wien Tennis." -> "Seit Dienstag arbeitet meine Schwester Anna in Graz."
+  FP anna/tennis -> anna/wohnen/jetzt                 6  "Meine Schwester Anna spielt in Wien Tennis." -> "Meine Schwester Anna wohnt jetzt in Graz."
+  FP anna/tennis -> anna/wohnen/nichtmehr             3  "Meine Schwester Anna spielt in Wien Tennis." -> "Meine Schwester Anna wohnt nicht mehr in Wien."
+  FP anna/tennis -> anna/wohnen/seit                  6  "Meine Schwester Anna spielt in Wien Tennis." -> "Seit Dienstag wohnt meine Schwester Anna in Graz."
+  FP anna/wohnen -> anna/arbeiten/jetzt               6  "Meine Schwester Anna wohnt in Wien." -> "Meine Schwester Anna arbeitet jetzt in Graz."
+  FP anna/wohnen -> anna/arbeiten/nichtmehr           3  "Meine Schwester Anna wohnt in Wien." -> "Meine Schwester Anna arbeitet nicht mehr in Wien."
+  FP anna/wohnen -> anna/arbeiten/seit                6  "Meine Schwester Anna wohnt in Wien." -> "Seit Dienstag arbeitet meine Schwester Anna in Graz."
+  FP anna/wohnen -> anna/tennis/jetzt                 6  "Meine Schwester Anna wohnt in Wien." -> "Meine Schwester Anna spielt jetzt in Graz Tennis."
+  FP anna/wohnen -> anna/tennis/nichtmehr             3  "Meine Schwester Anna wohnt in Wien." -> "Meine Schwester Anna spielt nicht mehr in Wien Tennis."
+  FP anna/wohnen -> anna/tennis/seit                  6  "Meine Schwester Anna wohnt in Wien." -> "Seit Dienstag spielt meine Schwester Anna in Graz Tennis."
+  FP anna/wohnen -> anna/wohnen/zukunft               6  "Meine Schwester Anna wohnt in Wien." -> "Ab nächstem Monat wohnt meine Schwester Anna in Graz."
+  FP ich/arbeiten -> wir/arbeiten/nichtmehr           3  "Ich arbeite in Wien." -> "Wir arbeiten nicht mehr in Wien."
+  FP ich/tennis -> wir/tennis/nichtmehr               3  "Ich spiele in Wien Tennis." -> "Wir spielen nicht mehr in Wien Tennis."
+  FP ich/wohnen -> wir/wohnen/nichtmehr               3  "Ich wohne in Wien." -> "Wir wohnen nicht mehr in Wien."
+  FP max/arbeiten -> max/wohnen/nichtmehr             3  "Max arbeitet in Wien." -> "Max wohnt nicht mehr in Wien."
+  FP max/besuch -> max/arbeiten/nichtmehr             3  "Max war gestern in Wien." -> "Max arbeitet nicht mehr in Wien."
+  FP max/besuch -> max/arbeiten/seit                  6  "Max war gestern in Wien." -> "Seit Dienstag arbeitet Max in Graz."
+  FP max/besuch -> max/tennis/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag spielt Max in Graz Tennis."
+  FP max/besuch -> max/wohnen/nichtmehr               3  "Max war gestern in Wien." -> "Max wohnt nicht mehr in Wien."
+  FP max/besuch -> max/wohnen/seit                    6  "Max war gestern in Wien." -> "Seit Dienstag wohnt Max in Graz."
+  FP max/wohnen -> max/arbeiten/nichtmehr             3  "Max wohnt in Wien." -> "Max arbeitet nicht mehr in Wien."
+  FP max/wohnen -> max/wohnen/zukunft                 6  "Max wohnt in Wien." -> "Ab nächstem Monat wohnt Max in Graz."
+  FP wir/arbeiten -> ich/arbeiten/nichtmehr           3  "Wir arbeiten in Wien." -> "Ich arbeite nicht mehr in Wien."
+  FP wir/tennis -> ich/tennis/nichtmehr               3  "Wir spielen in Wien Tennis." -> "Ich spiele nicht mehr in Wien Tennis."
+  FP wir/wohnen -> ich/wohnen/nichtmehr               3  "Wir wohnen in Wien." -> "Ich wohne nicht mehr in Wien."

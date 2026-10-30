@@ -1,0 +1,60 @@
+app/src/main/java/at/heinz/deviceai/jarvis/JarvisVoiceConversationPolicy.kt:71:13: warning: condition is always 'true'.
+            startedInSession != null && startedInSession == currentSession -> JarvisVoiceDispatch.AUTO_DIALOGUE
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+BUILD_OK sources=385 ewm=75bbe29121edd4fe29cd0f9efe0aa152c91d742bf871ff57d9474ef802f47a7f
+JUnit version 4.13.2
+.................................................................................................EVIDENCE_PAIR session=negation-0 ms=9 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-a66d772142959fa6203c273d] cre1ProposedOrder=[lx-a66d772142959fa6203c273d] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Die Testt?r Delta ist ge?ffnet. (Best?tigte Nutzererinnerung)
+EVIDENCE_PAIR session=negation-1 ms=8 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-d72864360a784ba9545e5201] cre1ProposedOrder=[lx-d72864360a784ba9545e5201] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Die Testt?r Delta ist nicht ge?ffnet. (Best?tigte Nutzererinnerung)
+.EVIDENCE_PAIR session=entity-0 ms=14 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-930502f235bfb60080801336] cre1ProposedOrder=[lx-930502f235bfb60080801336] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Projekt Orion legt seine Proben in Kammer Rot ab. (Best?tigte Nutzererinnerung)
+EVIDENCE_PAIR session=entity-1 ms=12 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-4e115f14997e1d8648fa8603] cre1ProposedOrder=[lx-4e115f14997e1d8648fa8603] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Projekt Orion legt seine Proben in Kammer Blau ab. (Best?tigte Nutzererinnerung)
+.EVIDENCE_PAIR session=revoke-before ms=6 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-733c1323e6505caf0f58062e] cre1ProposedOrder=[lx-733c1323e6505caf0f58062e] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Labor Sigma nutzt Schl?ssel Gr?n. (Best?tigte Nutzererinnerung)
+EVIDENCE_PAIR session=revoke-after ms=9 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-0281fa63748f965432e940a8] cre1ProposedOrder=[lx-0281fa63748f965432e940a8] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Labor Sigma nutzt Schl?ssel Lila. (Best?tigte Nutzererinnerung)
+.EVIDENCE_PAIR session=lookalike-0 ms=21 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-5ee4236b426f121e1ff67060] cre1ProposedOrder=[lx-5ee4236b426f121e1ff67060] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Ger?t Kappa 7 steht in Raum Silber. (Best?tigte Nutzererinnerung)
+EVIDENCE_PAIR session=lookalike-1 ms=8 gemma=NOT_RUN gemmaCalls=0 cre1=UNTRAINED_SHADOW ids=[lx-86af6514d8d0282e2964620e] cre1ProposedOrder=[lx-86af6514d8d0282e2964620e] gate=BLOCKED_NO_APPROVED_MANIFEST swb1Hash=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593 modelId=NOT_RUN answer=Dazu finde ich in meinem Ged?chtnis:  Ger?t Kappa 7 steht in Raum Kupfer. (Best?tigte Nutzererinnerung)
+..........................................................DEVELOPMENT PROPOSAL (review only) ? task demo-1
+Judge: RECOMMEND ? Minimal change
+Critic: ACCEPT
+  [INFO] Overflow at Int.MAX_VALUE not handled
+Summary: Increment n
+Suggested tests (NOT EXECUTED, suggestions only):
+  - nextIncrements: next(1)==2
+NOT EXECUTED:
+  - Edits applied to any file
+  - Code compiled
+  - Generated tests executed
+  - APK built or installed
+  - Changes pushed to GitHub
+Job recorded in the development backlog: an app restart mid-job returns it to READY when its lease ends; the proposal waits there (VERIFYING) for executed test evidence.
+Model calls: 4 ? models: scripted-fake@0
+
+# REVIEW ONLY ? NOT APPLIED. Nothing has been written, compiled or tested.
+--- a/app/Counter.kt (sha256 a787f8c4044599440637d51fdb14c8aad98c722dba0cb1b273fabea80a3b19eb)
++++ b/app/Counter.kt
+@@ -1,1 +1,1 @@
+-fun next(n: Int) = n
++fun next(n: Int) = n + 1
+
+..............................................................................................................................................PASS: isolated cognitive decision assertions
+.........................PASS: pipeline, conversation-focus and evidence-graph shadow checks
+.PASS: Cortex shadow safety and deterministic behavior assertions
+..............................................................................................................................................................................................................................................................................................NEURAL_DIALOGUE NeuralDialogueReport(before=NeuralEvaluation(loss=0.701007444326343, correct=6, total=16), after=NeuralEvaluation(loss=9.741802992381196E-4, correct=16, total=16), holdout=NeuralEvaluation(loss=0.009017078519470633, correct=8, total=8), holdoutBefore=NeuralEvaluation(loss=0.7103019927356238, correct=2, total=8), training=NeuralTraining(steps=4000, elapsedNanos=24991654, stoppedEarly=false), unfamiliarBefore=NeuralEvaluation(loss=0.6904853697999958, correct=6, total=12), unfamiliarAfter=NeuralEvaluation(loss=2.7399724553260314, correct=6, total=12)) snapshotBytes=2566
+.............................................................NEURAL_XOR training=NeuralEvaluation(loss=0.7122959282199403, correct=8, total=16) -> NeuralEvaluation(loss=0.005050814221387972, correct=16, total=16) holdout=NeuralEvaluation(loss=0.06743839499672162, correct=16, total=16) bytes=320 steps=4000
+..................................................HYBRID-TEST validationSegments=0 testSegments=0 testBytes=0
+.........PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
+........................................
+Time: 30.719
+
+OK (772 tests)
+

@@ -1,0 +1,271 @@
+From 1921c6fe0ff707973c082ea86b7a4aba0fc97896 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 30 Oct 2026 13:49:59 +0000
+Subject: [PATCH 1/3] test(ewm): owner/third-person supersession regression
+ (red on the unmodified Ewm1Memory: 8/19 fail)
+
+Nineteen cases: dated and adverb-initial relocations of the speaker, 'nicht
+mehr' for residence and workplace, an explicit correction, another person's
+move, 'wir' households, and negative controls (visits, a sister's stay,
+unrelated dated facts, a new activity in the same city, two workplaces,
+mixed two-person facts, 'mein Mann und ich', a holder's own apposition name,
+another relation in the same city). Against the unmodified product file
+8/19 fail; the fix follows in the next commit.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016mth9YBUvdbdA8HPpwcwN6
+---
+ .../ewm/Ewm1OwnerSupersessionTest.kt          | 74 +++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
+
+diff --git a/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt b/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
+new file mode 100644
+index 0000000..0cdcb87
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
+@@ -0,0 +1,74 @@
++package at.heinz.deviceai.intelligence.ewm
++
++import org.junit.Assert.assertEquals
++import org.junit.Test
++
++/**
++ * EXP-20 M6-B4: a later owner statement replaces exactly the earlier statement of the same holder and relation.
++ * Base memory: my residence, my workplace (same city) and my sister's residence.
++ */
++class Ewm1OwnerSupersessionTest {
++    private val base = listOf("wohnort" to "Ich wohne in Wien.", "arbeit" to "Ich arbeite in Wien.",
++        "anna" to "Meine Schwester Anna wohnt in Linz.")
++
++    private fun replaced(vararg later: String, facts: List<Pair<String, String>> = base): Map<String, Set<String>> =
++        Ewm1Memory(facts + later.mapIndexed { i, t -> "neu$i" to t }).supersedes
++            .mapValues { it.value.toSet() }.filterValues { it.isNotEmpty() }
++
++    @Test fun aDatedRelocationReplacesOnlyMyOldResidence() =
++        assertEquals(mapOf("neu0" to setOf("wohnort")), replaced("Seit Dienstag wohne ich in Graz."))
++
++    @Test fun aSentenceInitialAdverbIsNotTheSubject() =
++        assertEquals(mapOf("neu0" to setOf("wohnort")), replaced("Inzwischen wohne ich in Graz."))
++
++    @Test fun mittlerweileWithInvertedPronounReplacesMyResidence() =
++        assertEquals(mapOf("neu0" to setOf("wohnort")), replaced("Mittlerweile wohne ich in Graz."))
++
++    @Test fun nichtMehrEndsMyResidenceButKeepsMyWorkplace() =
++        assertEquals(mapOf("neu0" to setOf("wohnort")), replaced("Ich wohne nicht mehr in Wien."))
++
++    @Test fun nichtMehrAtWorkEndsMyWorkplaceButKeepsMyResidence() =
++        assertEquals(mapOf("neu0" to setOf("arbeit")), replaced("Ich arbeite nicht mehr in Wien."))
++
++    @Test fun anExplicitCorrectionReplacesMyResidence() =
++        assertEquals(mapOf("neu0" to setOf("wohnort")), replaced("Ich wohne nicht in Wien, sondern in Graz."))
++
++    @Test fun anotherPersonsDatedMoveReplacesOnlyHerResidence() =
++        assertEquals(mapOf("neu0" to setOf("anna")), replaced("Seit Dienstag wohnt meine Schwester Anna in Graz."))
++
++    @Test fun aNamedPersonAfterAnAdverbKeepsHerOwnHistory() = assertEquals(mapOf("neu0" to setOf("f0")),
++        replaced("Inzwischen wohnt Anna in Graz.", facts = listOf("f0" to "Anna wohnt in Linz.", "f1" to "Ich wohne in Wien.")))
++
++    @Test fun ourHouseholdMoveReplacesOurResidenceButNotOurStove() = assertEquals(mapOf("neu0" to setOf("f0")),
++        replaced("Inzwischen wohnen wir in Graz.", facts = listOf("f0" to "Wir wohnen in Wien.", "f1" to "Wir haben einen Kachelofen in Wien.")))
++
++    // ---- negative controls: nothing confirmed may be lost
++
++    @Test fun herOwnNameIsNoSharedDetailSoHerNewJobKeepsHerResidence() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Seit Dienstag arbeitet meine Schwester Anna in Graz.", facts = listOf("f0" to "Meine Schwester Anna wohnt in Wien.")))
++
++    @Test fun anotherRelationInTheSameCityIsNoUpdate() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Max wohnt nicht mehr in Wien.", facts = listOf("f0" to "Max arbeitet in Wien.")))
++
++    @Test fun mySpouseAndIAreNotMeAlone() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Inzwischen wohne ich in Graz.", facts = listOf("f0" to "Mein Mann und ich wohnen in Wien.")))
++
++    @Test fun aVisitIsNoRelocation() = assertEquals(emptyMap<String, Set<String>>(), replaced("Ich war gestern in Graz."))
++
++    @Test fun aVisitOnADayIsNoRelocation() = assertEquals(emptyMap<String, Set<String>>(), replaced("Am Montag war ich in Graz."))
++
++    @Test fun mySistersStayChangesNothingOfMine() =
++        assertEquals(emptyMap<String, Set<String>>(), replaced("Meine Schwester ist seit Dienstag in Graz."))
++
++    @Test fun anUnrelatedDatedFactReplacesNothing() =
++        assertEquals(emptyMap<String, Set<String>>(), replaced("Seit Dienstag spiele ich Tennis."))
++
++    @Test fun aNewActivityInTheSameCityKeepsMyWorkplace() =
++        assertEquals(emptyMap<String, Set<String>>(), replaced("Inzwischen spiele ich in Wien Tennis."))
++
++    @Test fun twoWorkplacesWithoutUpdateMarkerCoexist() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Ich arbeite auch bei der Post.", facts = listOf("f0" to "Ich arbeite in Wien.")))
++
++    @Test fun aMixedFactAboutTwoPeopleIsNotReplacedWholesale() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Inzwischen wohne ich in Graz.", facts = listOf("f0" to "Anna wohnt in Linz, ich wohne in Wien.")))
++}
+-- 
+2.43.0
+
+
+From a2d3ce43178ed65b1e9b28c1b4d26c8b92cba057 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 30 Oct 2026 13:49:59 +0000
+Subject: [PATCH 2/3] fix(ewm): supersession uses the statement's holder, not
+ its first capitalised word
+
+Ewm1Memory.replaces() compared Ewm1Fact.subject, i.e. the first capitalised
+nominal. For first-person facts that is the city ('Ich wohne in Wien.' ->
+wien) or a sentence-initial adverb ('Inzwischen wohne ich in Graz.' ->
+inzwischen), so the speaker's relocation never superseded the old residence.
+
+Supersession only (subject, answers and every other rule are unchanged):
+- holder: 'ich'/'wir' when the first clause has that nominative pronoun and it
+  is not coordinated; otherwise the first mention that is no sentence-initial
+  update/time adverb.
+- relationGroups: a kinship word naming the holder ('Meine Schwester ist ...')
+  is no shared relation.
+- the holder's own apposition name is no shared other entity.
+- statements of disjoint thesaurus relations never replace each other.
+- the speaker path needs a shared relation; a shared city or date is not enough.
+
+Host evidence: new test 19/19 (red before: 8/19 fail); 769/769 host JUnit over
+148+1 android-free test classes incl. Ewm2ProductEquivalenceTest; adversarial
+grid of 6720 pairs TP 120->348, FP 183->48, FN 228->0, bystanders lost 0.
+Residual: a third person's past visit can be marked outdated by a later state
+(48/6720); no validity interval is stored. Not built for Android, not on Fold7.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016mth9YBUvdbdA8HPpwcwN6
+---
+ .../intelligence/ewm/Ewm1EvidenceWorkspace.kt | 37 +++++++++++++++++--
+ 1 file changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt b/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
+index 5539516..295e43a 100644
+--- a/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
++++ b/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
+@@ -47,9 +47,27 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
+     val keys: Set<String> = mentions.flatMap { m -> listOf(m.key) + m.label.split(' ', '-').map { genitiveBase(lower(it)) }
+         .filter { it == m.key || it !in ownHeads } }.filter { it.length >= 2 }.toSet()
+     val subject: String? = mentions.firstOrNull()?.key
++    /**
++     * Who a statement is about, for supersession only: "ich"/"wir" when the first clause has that nominative pronoun
++     * ("Inzwischen wohne ich in Graz."), otherwise the first mention that is no sentence-initial time or update adverb.
++     */
++    val holder: String? = run {
++        val firstClause = tokens.takeWhile { it.index == 0 || !it.breakBefore }
++        val pronoun = firstClause.indexOfFirst { it.lower == "ich" || it.lower == "wir" }
++        val coordinated = firstClause.getOrNull(pronoun - 1)?.lower in setOf("und", "oder", "wie", "als") ||
++            firstClause.getOrNull(pronoun + 1)?.lower in setOf("und", "oder")
++        if (pronoun >= 0 && !coordinated) firstClause[pronoun].lower
++        else mentions.firstOrNull { m -> !(m.start == 0 && m.end == 0 &&
++            (tokens[0].lower in Ewm1Lexicon.UPDATE_MARKERS || tokens[0].lower in Ewm1Lexicon.TIME)) }?.key
++    }
+     val contentStems: Set<String> = tokens.filter { !it.capitalized && it.lower !in Ewm1Lexicon.FUNCTION && it.lower.length >= 3 }
+         .map { stem(it.lower) }.toSet()
+     val groups: Set<String> = tokens.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
++    /** Relation groups of the predicate: the kinship word naming the holder ("Meine Schwester ist …") states no relation. */
++    val relationGroups: Set<String> = run {
++        val own = mentions.firstOrNull { it.key == holder }?.let { it.start..it.end }
++        tokens.filter { own == null || it.index !in own || !isRole(it.lower) }.flatMap { Ewm1Lexicon.groupsOf(it.lower) }.toSet()
++    }
+     val lowerText = lower(text)
+     val hasUpdateMarker = Ewm1Lexicon.UPDATE_MARKERS.any { marker ->
+         if (' ' in marker) lowerText.contains(marker) else tokens.any { it.lower == marker } }
+@@ -214,17 +232,28 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
+     }
+ 
+     private fun replaces(later: Ewm1Fact, earlier: Ewm1Fact): Boolean {
+-        val sameSubject = later.subject != null && later.subject == earlier.subject
+-        val sharedGroup = later.groups.intersect(earlier.groups).filter { it != "zeitpunkt" }
++        val sameSubject = later.holder != null && later.holder == earlier.holder
++        val sharedGroup = later.relationGroups.intersect(earlier.relationGroups).filter { it != "zeitpunkt" }
+         val sharedStems = later.contentStems.intersect(earlier.contentStems)
+-        val sharedOtherEntity = (later.mentions.map { it.key }.toSet() - setOfNotNull(later.subject))
++        // The holder's own name ("meine Schwester Anna") is no other entity both statements share.
++        val holderNames = setOfNotNull(later.holder) + later.holder?.let { h ->
++            aliases[h]?.keys.orEmpty() + aliases.filterValues { h in it.keys }.keys }.orEmpty()
++        val sharedOtherEntity = (later.mentions.map { it.key }.toSet() - holderNames)
+             .intersect(earlier.mentions.map { it.key }.toSet())
++        // Two statements of different thesaurus relations ("arbeitet" / "wohnt nicht mehr") never replace each other.
++        if (later.relationGroups.isNotEmpty() && earlier.relationGroups.isNotEmpty() &&
++            later.relationGroups.intersect(earlier.relationGroups).isEmpty()) return false
+         fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
++        // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared
++        // relation ("Ich arbeite in Wien." survives "Ich wohne nicht mehr in Wien.").
++        if (sameSubject && later.holder in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||
++            later.hasUpdateMarker && (sharedGroup.isNotEmpty() ||
++                later.relationGroups.isEmpty() && earlier.relationGroups.isEmpty() && sharedStems.isNotEmpty())
+         return if (sameSubject) {
+             (later.hasUpdateMarker && (sharedGroup.isNotEmpty() || sharedStems.isNotEmpty() || sharedOtherEntity.isNotEmpty() ||
+                 "zeitpunkt" in later.groups.intersect(earlier.groups) || (timed(later) && timed(earlier)))) ||
+                 sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED }
+-        } else if (later.subject == null && earlier.subject == null) {
++        } else if (later.holder == null && earlier.holder == null) {
+             later.hasUpdateMarker && (sharedStems.size + later.tokens.map { it.lower }.toSet()
+                 .intersect(earlier.tokens.filter { it.lower in Ewm1Lexicon.GENERIC || it.lower in Ewm1Lexicon.TIME }.map { it.lower }.toSet()).size) >= 2
+         } else false
+-- 
+2.43.0
+
+
+From b24253411608807b8b2416fb191c958d50b5e3ba Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Fri, 30 Oct 2026 13:59:37 +0000
+Subject: [PATCH 3/3] fix(ewm): a state that starts in the future does not
+ supersede the present one
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The holder fix let 'Ab nächstem Monat wohne ich in Graz.' supersede 'Ich wohne
+in Wien.' at once (single-valued 'wohnen'), so the present residence was
+reported outdated before the move. A later residence/work statement with a
+future cue (demnächst, bald, künftig, nächste/n/m/r/s, übermorgen) no longer
+supersedes; no start date is derived. Appointments postponed to 'nächsten
+Mittwoch' still replace the old date (zeitpunkt path, test added).
+
+Red before this commit: 1/22 (the future move); after: 22/22. Host regression
+772/772. Grid with the future form, 7872 pairs: FP 195->48, FN 228->0.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_016mth9YBUvdbdA8HPpwcwN6
+---
+ .../deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt   | 4 ++++
+ .../intelligence/ewm/Ewm1OwnerSupersessionTest.kt        | 9 +++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt b/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
+index 295e43a..05ba784 100644
+--- a/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
++++ b/app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1EvidenceWorkspace.kt
+@@ -244,6 +244,10 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
+         if (later.relationGroups.isNotEmpty() && earlier.relationGroups.isNotEmpty() &&
+             later.relationGroups.intersect(earlier.relationGroups).isEmpty()) return false
+         fun timed(f: Ewm1Fact) = f.tokens.any { it.lower in Ewm1Lexicon.TIME && it.lower !in setOf("seit", "jeden", "jede", "heuer") }
++        // "Ab nächstem Monat wohne ich in Graz.": a state that starts later does not end the present one (no date is invented).
++        val future = later.tokens.any { it.lower in setOf("demnächst", "bald", "künftig", "zukünftig", "nächste", "nächsten",
++            "nächstem", "nächster", "nächstes", "übermorgen") }
++        if (future && later.relationGroups.any { it == "wohnen" || it == "arbeiten" }) return false
+         // The speaker's statements share the holder by grammar, not by content: a shared city or date is no shared
+         // relation ("Ich arbeite in Wien." survives "Ich wohne nicht mehr in Wien.").
+         if (sameSubject && later.holder in setOf("ich", "wir")) return sharedGroup.any { it in Ewm1Lexicon.SINGLE_VALUED } ||
+diff --git a/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt b/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
+index 0cdcb87..a3a0225 100644
+--- a/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm1OwnerSupersessionTest.kt
+@@ -50,6 +50,15 @@ class Ewm1OwnerSupersessionTest {
+     @Test fun anotherRelationInTheSameCityIsNoUpdate() = assertEquals(emptyMap<String, Set<String>>(),
+         replaced("Max wohnt nicht mehr in Wien.", facts = listOf("f0" to "Max arbeitet in Wien.")))
+ 
++    @Test fun aFutureMoveDoesNotEndMyPresentResidence() =
++        assertEquals(emptyMap<String, Set<String>>(), replaced("Ab nächstem Monat wohne ich in Graz."))
++
++    @Test fun aFutureJobOfAnotherPersonKeepsHerPresentOne() = assertEquals(emptyMap<String, Set<String>>(),
++        replaced("Max arbeitet demnächst in Graz.", facts = listOf("f0" to "Max arbeitet in Wien.")))
++
++    @Test fun aPostponedAppointmentToNextWeekStillReplacesTheOldDate() = assertEquals(mapOf("neu0" to setOf("f0")),
++        replaced("Der Elternabend wurde auf nächsten Mittwoch verschoben.", facts = listOf("f0" to "Der Elternabend ist am Montag.")))
++
+     @Test fun mySpouseAndIAreNotMeAlone() = assertEquals(emptyMap<String, Set<String>>(),
+         replaced("Inzwischen wohne ich in Graz.", facts = listOf("f0" to "Mein Mann und ich wohnen in Wien.")))
+ 
+-- 
+2.43.0
+

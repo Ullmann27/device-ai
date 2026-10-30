@@ -1,0 +1,11 @@
+# residual-gap probe: four sentence pairs through Ewm1Memory.supersedes (expected: alias, pronoun, subclause -> f1 replaces f0; datedvalidity -> nothing)
+unmodified:
+alias supersedes={}
+pronoun supersedes={}
+subclause supersedes={}
+datedvalidity supersedes={}
+patched:
+alias supersedes={}
+pronoun supersedes={}
+subclause supersedes={}
+datedvalidity supersedes={}
