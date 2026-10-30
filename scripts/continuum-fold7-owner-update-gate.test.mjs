@@ -32,6 +32,7 @@ function fixture(action,{origin='https://github.com/Ullmann27/device-ai.git',pac
     // The owner gate must delegate rather than double-running the costly suite.
     write('scripts/continuum-fold7-standalone-apk.sh',
       '#!/usr/bin/env bash\n# -PcontinuumLocalStandalone=true\n'+
+      'cd "$(dirname "$0")/.." || exit 69\n'+
       '[[ "$CONTINUUM_OWNER_LOCAL_APPROVED_SHA" == "$(git rev-parse HEAD)" ]] || exit 69\n'+
       'bash "$(dirname "$0")/continuum-fusion-full-regression.sh" "$CONTINUUM_OWNER_LOCAL_APPROVED_SHA" || exit 69\n'+
       'printf "local-build:%s:%s\\n" "$1" "$2" >> "$TEST_RECORD"\n');
