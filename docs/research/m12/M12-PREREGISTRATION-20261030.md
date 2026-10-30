@@ -17,3 +17,14 @@ Labels entstehen per Konstruktion (bekannter eingesetzter Fehler oder bekannte t
 2. **Erfolgskriterium:** mehr erkannte Fehler auf HOLDOUT bei **höchstens 2/30** Fehlalarmen. Mehr Fehlalarme gelten als Misserfolg, auch wenn mehr erkannt wird.
 3. Die Erkennung bleibt deterministisch, ohne Modellaufruf. Ergebnis ist weiter nur eine Trace-Stufe (SHADOW). Neu ist `CLAIM_AUDIT_CONFLICT` für Belege, die sich selbst widersprechen.
 4. **Antwortpolitiken** werden gemessen: unverändert antworten · markieren · gezielt vertieft prüfen · bei widersprüchlichem Beleg rückfragen.
+
+## Ergebnis Holdout-Lauf 1 (v2 = Commit `0fb1a510`), unverändert berichtet
+
+| | erkannt | Fehlalarme | Widerspruch erkannt |
+|---|---|---|---|
+| v1 (eingefroren) | 30/50 | 0/30 | 0/5 |
+| **v2** | **50/50** | **5/30** | 5/5 |
+
+**Kriterium verfehlt** (≤ 2/30 Fehlalarme). Alle 5 Fehlalarme betreffen „umgestellte Reihenfolge“ (z. B. „Nach Dornbirn fliegt Tobias am 6. Oktober.“).
+**Ursache:** Die neue Teilsatz-Trennung behandelt den Ordinalpunkt „6.“ als Satzende. Ort und Person landen dadurch in verschiedenen Teilsätzen, und die Attributbindung schlägt fälschlich an. Im DEV-Satz stand der Ort nie hinter einem Datum, deshalb blieb der Fehler dort unsichtbar.
+**Konsequenz:** v2 ist **nicht** validiert. Die Korrektur wird gegen einen **neuen, vor der Korrektur versiegelten** Satz HOLDOUT2 geprüft. HOLDOUT1 wird nicht erneut für eine Erfolgsaussage verwendet.
