@@ -12,15 +12,17 @@ class ContinuumJarvisPresenceEngineTest {
     private fun cooktop(
         active: Boolean = true,
         capability: DeviceActuationCapability = DeviceActuationCapability.SAFE_REMOTE_SHUTOFF_ONLY,
-        observed: Long = time
-    ) = ConnectedApplianceState("cooktop-01", "Kochfeld", active, "eine Herdplatte", capability, observed)
+        observed: Long = time,
+        trusted: Boolean = true
+    ) = ConnectedApplianceState("cooktop-01", "Kochfeld", active, "eine Herdplatte", capability, observed, telemetryVerified = trusted)
 
     private fun context(
         occupancy: HouseholdOccupancyState = HouseholdOccupancyState.HOUSE_CONFIRMED_EMPTY,
         appliances: List<ConnectedApplianceState> = listOf(cooktop()),
         now: Long = time,
-        endpoint: JarvisActiveEndpoint = JarvisActiveEndpoint.VEHICLE_HANDSFREE_AUDIO
-    ) = SituationalContextSnapshot(now, "Heinz", endpoint, occupancy, true, appliances)
+        endpoint: JarvisActiveEndpoint = JarvisActiveEndpoint.VEHICLE_HANDSFREE_AUDIO,
+        occupancyVerified: Boolean = true
+    ) = SituationalContextSnapshot(now, "Heinz", endpoint, occupancy, true, appliances, occupancyVerified)
 
     private class FakeBridge(
         var commandAccepted: Boolean = true,
@@ -181,6 +183,22 @@ class ContinuumJarvisPresenceEngineTest {
             val p = ContinuumJarvisPresenceEngine().evaluateSituationForInitiative(context(endpoint = ep))!!
             assertEquals(ep, p.targetEndpoint)
         }
+    }
+
+    @Test fun unverifiedHouseEmptyQuorumNeverPermitsActuation() {
+        val e = ContinuumJarvisPresenceEngine(researchSimulatedActuationEnabled = true)
+        val p = e.evaluateSituationForInitiative(context(occupancyVerified = false))!!
+        assertFalse(p.canExecuteRemoteShutoff)
+        val bridge = FakeBridge()
+        val r = e.handleOwnerVoiceReply(p.proposalId, "Ja, mach bitte", time + 1000,
+            context(now = time + 1000, occupancyVerified = false), true, bridge)
+        assertFalse(r.commandSent)
+        assertEquals(0, bridge.sends)
+    }
+
+    @Test fun unverifiedSensorCannotRaiseAlarm() {
+        val e = ContinuumJarvisPresenceEngine()
+        assertNull(e.evaluateSituationForInitiative(context(appliances=listOf(cooktop(trusted=false)))))
     }
 
     @Test fun commandFailureNeverProducesSuccessReceipt() {
