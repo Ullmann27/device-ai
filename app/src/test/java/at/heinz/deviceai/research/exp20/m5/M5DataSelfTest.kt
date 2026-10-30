@@ -26,7 +26,8 @@ object M5DataSelfTest {
         pass("target-not-fixed-candidate-position") {
             for (split in M5Data.Split.values()) for (kind in M5Data.Kind.values()) {
                 val groups = rows.groupBy { it.group }.values.filter { it[0].split == split && it[0].kind == kind }
-                check(groups.map { it.filter { x -> x.role != "QUERY" }.indexOfFirst { x -> x.role == "TRUE" } }.toSet().size == 8)
+                val positions = groups.map { it.filter { x -> x.role != "QUERY" }.indexOfFirst { x -> x.role == "TRUE" } }
+                check((0..7).all { i -> positions.count { it == i } == 8 })
             }
         }
         pass("no-duplicate-memories") {
