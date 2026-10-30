@@ -1,0 +1,8 @@
+# EXP-20 P2 frozen candidates; fitted on TRAIN only, selected on VALIDATION only
+train.tsv	9164118b9587305058aafa38d2864f54ecf1901f2e018887f1b8edd70e97d9fc
+validation.tsv	305d6c448f922e166771d7a2119e2b42bc4d6b7e08f56de8f6f9d7d0fcaa3821
+A0	1.0	0.4	daae05fce5e10b016482c4ae7fd45c8dd9eb0fc6527c74742de188eeec59b35f
+B	0.001	0.4	e20f32aa9c2a459a2a9dca4342544af7e04418ee7f9af0901afa3b70ca4a9c8f
+C	0.001	0.5	a6ed4695bbeb41df14b39dacf01c9f6fdb43b7d5c54c20ac5b3285c02e44ef26
+A	-	-	-
+A_DSK	-	-	-
