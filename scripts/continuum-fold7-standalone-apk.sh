@@ -23,7 +23,7 @@ cd "$root"
 # button. This test runs before the owner P12 password is requested.
 [[ -f scripts/continuum-one-tap-updater-contract.test.mjs ]] ||
   die 'ONE_TAP_UPDATE_CONTRACT_MISSING: refusing a release without the update button'
-node --test scripts/continuum-one-tap-updater-contract.test.mjs ||
+node --test scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-release-stage.test.mjs ||
   die 'ONE_TAP_UPDATE_CONTRACT_FAILED: refusing a release without a verified update path'
 sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git source SHA'
