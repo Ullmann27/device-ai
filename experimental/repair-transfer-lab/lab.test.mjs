@@ -79,3 +79,23 @@ test('exact binomial two-sided p-values',()=>{
  assert.ok(Math.abs(binomTwoSided(0,6)-2/64)<1e-12);
  assert.ok(binomTwoSided(3,6)>0.99);
 });
+
+test('a test with an endless loop is killed with its whole process group (no orphan keeps running)',async()=>{
+ const fs=await import('node:fs'),os=await import('node:os'),path=await import('node:path'),{spawnSync}=await import('node:child_process');
+ const {LabRunner}=await import('./sandbox.mjs');
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'lab-orphan-'));
+ const marker='orphan_marker_'+process.pid;
+ try{
+  fs.writeFileSync(path.join(root,'loop.mjs'),'export const '+marker+'=1;\nexport function spin(){for(;;){}}\n');
+  const file='orphan'+process.pid+'.test.mjs';   // unique name: only a real leftover test process can match
+  fs.writeFileSync(path.join(root,file),"import test from 'node:test';import {spin} from './loop.mjs';test('spins',()=>spin());\n");
+  const r=new LabRunner({root,timeoutMs:1500});
+  const t0=Date.now();
+  const out=r.run({testRel:file,moduleRel:'loop.mjs',source:fs.readFileSync(path.join(root,'loop.mjs'),'utf8')});
+  assert.equal(out.passed,false);assert.equal(out.status,'TIMEOUT');
+  assert.ok(Date.now()-t0<8000,'returned promptly');
+  await new Promise(res=>setTimeout(res,300));
+  const ps=spawnSync('ps',['-eo','args'],{encoding:'utf8'}).stdout.split('\n');
+  assert.ok(!ps.some(l=>/\bnode\b/.test(l.split(' ')[0])&&l.includes(file)),'no orphaned test process');
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

@@ -10,6 +10,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 const sha=s=>createHash('sha256').update(s).digest('hex');
 const PROBE=fileURLToPath(new URL('./rss-probe.mjs',import.meta.url));
+const GROUP_RUN=fileURLToPath(new URL('./group-run.mjs',import.meta.url));
 const IMPORT_RE=[/\bfrom\s*['"](\.{1,2}\/[^'"]+)['"]/g,/\bimport\s*['"](\.{1,2}\/[^'"]+)['"]/g,
  /\bimport\(\s*['"](\.{1,2}\/[^'"]+)['"]\s*\)/g,/new URL\(\s*['"](\.{1,2}\/[^'"]+)['"]/g];
 
@@ -65,9 +66,9 @@ export class LabRunner {
     if(rel===moduleRel)fs.writeFileSync(target,source,{mode:0o600});else fs.copyFileSync(path.join(this.root,rel),target);
    }
    if(!this.files(testRel,extra).includes(moduleRel))throw Error('MODULE_NOT_IN_TEST_CLOSURE');
-   const args=['--test','--test-reporter=tap',...(pattern?['--test-name-pattern='+pattern]:[]),testRel];
+   const args=[GROUP_RUN,String(this.timeoutMs),'--test','--test-reporter=tap',...(pattern?['--test-name-pattern='+pattern]:[]),testRel];
    const t0=process.hrtime.bigint();
-   const r=spawnSync(process.execPath,args,{cwd:dir,encoding:'utf8',timeout:this.timeoutMs,maxBuffer:4_000_000,killSignal:'SIGKILL',
+   const r=spawnSync(process.execPath,args,{cwd:dir,encoding:'utf8',timeout:this.timeoutMs+10000,maxBuffer:4_000_000,killSignal:'SIGKILL',
     env:{PATH:process.env.PATH??'',HOME:dir,TMPDIR:dir,LC_ALL:'C.UTF-8',NODE_OPTIONS:'--import='+PROBE}});
    const ms=Number(process.hrtime.bigint()-t0)/1e6;
    this.executions++;
@@ -76,8 +77,8 @@ export class LabRunner {
    const tests=num('tests'),pass=num('pass'),fail=num('fail');
    const rssKb=Math.max(0,...[...log.matchAll(/LAB_MAXRSS_KB=(\d+)/g)].map(m=>Number(m[1])));
    // passed only if the process exited 0, ran >=1 test and the TAP counters agree (same rule as PR #243/#244 oracle)
-   const passed=!r.signal&&!r.error&&r.status===0&&tests>0&&pass===tests&&fail===0;
-   const result={passed,status:r.signal?'SIGNAL':r.error?'ERROR':r.status,tests,pass,fail,ms,rssKb,log:log.slice(0,6000)};
+   const passed=!r.signal&&!r.error&&r.status===0&&tests>0&&pass===tests&&fail===0;   // 124 = group killed on timeout
+   const result={passed,status:r.signal||r.status===124?'TIMEOUT':r.error?'ERROR':r.status,tests,pass,fail,ms,rssKb,log:log.slice(0,6000)};
    this.cache.set(key,result);
    return {...result,cached:false};
   }finally{fs.rmSync(dir,{recursive:true,force:true});}

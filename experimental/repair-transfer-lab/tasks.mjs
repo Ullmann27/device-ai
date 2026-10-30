@@ -47,7 +47,7 @@ export function buildTasks({root,runner,log=()=>{}}){
     if(!inverse)continue;                       // outside the repair vocabulary: not a task
     tries++;
     const r=runner.run({testRel:entry.test,moduleRel:entry.module,source:faulted,names:parts.visible,extra:entry.extra});
-    if(r.passed||r.status==='SIGNAL'||!(r.tests>0))continue;   // undetected by visible tests, timeout or load failure
+    if(r.passed||r.status==='TIMEOUT'||!(r.tests>0))continue;   // undetected by visible tests, timeout or load failure
     taken++;
     tasks.push({id:split+'-'+path.basename(entry.module,'.mjs')+'-'+family.toLowerCase()+'-'+taken,split,family,
      test:entry.test,module:entry.module,extra:entry.extra??[],originalSha256:info.originalSha256,
