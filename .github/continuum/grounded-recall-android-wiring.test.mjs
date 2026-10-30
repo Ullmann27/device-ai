@@ -5,7 +5,9 @@ import {fileURLToPath} from 'node:url';
 
 const main=readFileSync(fileURLToPath(new URL('../../app/src/main/java/at/heinz/deviceai/AgentActivity.kt',import.meta.url)),'utf8');
 const recall=readFileSync(fileURLToPath(new URL('../../app/src/main/java/at/heinz/deviceai/cognitive/LocalGroundedRecall.kt',import.meta.url)),'utf8');
-const call=main.slice(main.indexOf('if(LocalFirstPolicy.afterMemory('),main.indexOf('return@onSuccess',main.indexOf('if(LocalFirstPolicy.afterMemory(')));
+// Anchor on the call, not on the opening `if(`: VOICE-1 (#250) prefixes it with `allowLocalModel &&`.
+const anchor=main.indexOf('LocalFirstPolicy.afterMemory(grounded');
+const call=anchor<0?'':main.slice(anchor,main.indexOf('return@onSuccess',anchor));
 
 test('confirmed recall remains exact when supplementary model context is not representable',()=>{
  assert.ok(call.length>250 && call.length<5000);

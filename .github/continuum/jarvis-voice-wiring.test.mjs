@@ -25,8 +25,10 @@ test('recognized speech cannot automatically enter tool-capable sendCurrentInput
   assert.ok(start>0 && end>start);
   const gated=activity.slice(start,end);
   assert.match(gated,/JarvisVoiceConversationPolicy\.evaluate\(spoken\)/);
-  assert.match(gated,/JarvisVoiceRouting\.DIALOGUE_ONLY/);
-  assert.match(gated,/!busy && !localAgentExecutor\.isShutdown && foregroundLearningActive/);
+  // the DIALOGUE_ONLY requirement now lives in the pure, JUnit-tested gate
+  assert.match(policy,/decision\.routing == JarvisVoiceRouting\.DIALOGUE_ONLY && !busy && !executorShutdown && activityAlive/);
+  assert.match(gated,/JarvisVoiceDispatchGate\.decide\(decision, busy,\s*localAgentExecutor\.isShutdown, !isFinishing && !isDestroyed, voiceStartedIn, sessionId\)/);
+  assert.match(gated,/dispatch == at\.heinz\.deviceai\.jarvis\.JarvisVoiceDispatch\.AUTO_DIALOGUE/);
   assert.match(gated,/runContinuumDialogue\(decision\.cleanText, allowLocalModel = false\)/);
   assert.doesNotMatch(gated,/\bsendCurrentInput\(\)|\brunLocal\(/);
 });
@@ -38,7 +40,9 @@ test('the existing model-capable path remains available only outside voice auto-
 });
 
 test('a user-started mic tap interrupts TTS and returns to Android recognizer', () => {
-  assert.match(activity,/if \(voiceSpeaking\) \{\s*voiceEngine\?\.stop\(\)\s*stopVoiceAnimation\(\)/);
+  // unconditional: an utterance queued but not yet started has voiceSpeaking=false and would be heard by the mic
+  assert.match(activity,/voiceEngine\?\.stop\(\)\s*stopVoiceAnimation\(\)\s*startVoiceInput\(\)/);
+  assert.match(activity,/private fun speakBootstrap\(message: String\) \{[\s\S]*?\|\| voiceListening\) return/);
   assert.match(activity,/startVoiceInput\(\)/);
   assert.match(activity,/private fun addHomeGreeting\(value: String\) \{[\s\S]*?speakBootstrap\(value\)/);
 });
@@ -57,4 +61,26 @@ test('voice mode is not persisted as an owner, gateway or device permission',()=
   const prefix=activity.slice(0,activity.indexOf('private fun sendCurrentInput()'));
   assert.match(prefix,/private var jarvisDialogueAutoSend = false/);
   assert.doesNotMatch(prefix,/bootstrapMemory\.jarvisDialogueAutoSend|ToolGate\.authorize\(jarvisDialogueAutoSend\)/);
+});
+
+// Android delivers onActivityResult while the Activity is paused ("An activity can never receive a result in the
+// resumed state", Activity.java). A flag that onPause clears and onResume sets is therefore always false inside the
+// result handler; requiring it made every DIALOGUE_ONLY result a draft (VOICE-1 blocker, reproduced on #251 7a011384).
+test('the voice dispatch never depends on a flag that onPause clears and onResume sets', () => {
+  const body = name => { const i = activity.indexOf(`override fun ${name}()`); return activity.slice(i, activity.indexOf('\n    }\n', i)); };
+  const cleared = [...body('onPause').matchAll(/(\w+) = false/g)].map(m => m[1]);
+  const set = new Set([...body('onResume').matchAll(/(\w+) = true/g)].map(m => m[1]));
+  const resumeFlags = cleared.filter(f => set.has(f));
+  assert.ok(resumeFlags.includes('foregroundLearningActive'), 'lifecycle flags not found');
+  const start = activity.indexOf('SPEECH_REQUEST -> if (resultCode == RESULT_OK) {');
+  const handler = activity.slice(start, activity.indexOf('DEV_SPEECH_REQUEST -> if', start));
+  assert.ok(start > 0 && handler.includes('runContinuumDialogue(decision.cleanText, allowLocalModel = false)'));
+  for (const flag of resumeFlags) assert.doesNotMatch(handler, new RegExp(`\\b${flag}\\b`), flag);
+});
+
+test('one recognizer at a time and every result is bound to the chat that started it', () => {
+  assert.match(activity,/private fun startVoiceInput\(requestCode: Int = SPEECH_REQUEST\) \{\s*\/\/[^\n]*\n\s*if \(voiceListening\) return/);
+  assert.match(activity,/voiceRequestSession = if \(requestCode == SPEECH_REQUEST\) sessionId else null/);
+  assert.match(activity,/val voiceStartedIn = if\(requestCode==SPEECH_REQUEST\) voiceRequestSession else null/);
+  assert.match(policy,/startedInSession != null && startedInSession == currentSession -> JarvisVoiceDispatch\.AUTO_DIALOGUE/);
 });

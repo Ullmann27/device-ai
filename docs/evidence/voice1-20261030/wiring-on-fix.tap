@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: tap-to-talk is explicit; never an always-listening background service
+ok 1 - tap-to-talk is explicit; never an always-listening background service
+  ---
+  duration_ms: 2.03602
+  type: 'test'
+  ...
+# Subtest: recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+ok 2 - recognized speech cannot automatically enter tool-capable sendCurrentInput or runLocal
+  ---
+  duration_ms: 8.978377
+  type: 'test'
+  ...
+# Subtest: the existing model-capable path remains available only outside voice auto-dispatch
+ok 3 - the existing model-capable path remains available only outside voice auto-dispatch
+  ---
+  duration_ms: 0.544445
+  type: 'test'
+  ...
+# Subtest: a user-started mic tap interrupts TTS and returns to Android recognizer
+ok 4 - a user-started mic tap interrupts TTS and returns to Android recognizer
+  ---
+  duration_ms: 0.927248
+  type: 'test'
+  ...
+# Subtest: policy requires manual review for device tools, memory writes and secrets
+ok 5 - policy requires manual review for device tools, memory writes and secrets
+  ---
+  duration_ms: 0.178673
+  type: 'test'
+  ...
+# Subtest: voice mode is not persisted as an owner, gateway or device permission
+ok 6 - voice mode is not persisted as an owner, gateway or device permission
+  ---
+  duration_ms: 0.373086
+  type: 'test'
+  ...
+# Subtest: the voice dispatch never depends on a flag that onPause clears and onResume sets
+ok 7 - the voice dispatch never depends on a flag that onPause clears and onResume sets
+  ---
+  duration_ms: 0.828611
+  type: 'test'
+  ...
+# Subtest: one recognizer at a time and every result is bound to the chat that started it
+ok 8 - one recognizer at a time and every result is bound to the chat that started it
+  ---
+  duration_ms: 0.81346
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 183.758885

@@ -222,6 +222,8 @@ class AgentActivity : Activity() {
     private var voiceListening = false
     // Explicit session-only opt-in. STT transcripts never authenticate the owner or authorize tools.
     private var jarvisDialogueAutoSend = false
+    // Chat whose explicit mic tap started the pending recognizer; taken (and cleared) by its result.
+    private var voiceRequestSession: String? = null
     @Volatile private var voiceUtteranceId: String? = null
     private val voiceSignal = TtsHologramSignal()
     private val voiceFrame = object : Runnable {
@@ -2322,11 +2324,10 @@ class AgentActivity : Activity() {
         val mic = actionButton("🎙", compact = true).apply {
             contentDescription = "Spracheingabe starten; lange drücken für Jarvis-Sprachdialog"
             setOnClickListener {
-                // Explicit new mic tap can interrupt current playback. Never listen in background.
-                if (voiceSpeaking) {
-                    voiceEngine?.stop()
-                    stopVoiceAnimation()
-                }
+                // Explicit new mic tap interrupts playback, also an utterance queued but not yet
+                // started (voiceSpeaking is set only in onStart), so TTS never becomes ASR input.
+                voiceEngine?.stop()
+                stopVoiceAnimation()
                 startVoiceInput()
             }
             setOnLongClickListener {
@@ -5206,7 +5207,8 @@ class AgentActivity : Activity() {
     }
 
     private fun speakBootstrap(message: String) {
-        if (!voiceEnabled || !voiceReady || !foregroundLearningActive) return
+        // While the recognizer listens (e.g. multi-window, where this Activity stays resumed) speech would be heard.
+        if (!voiceEnabled || !voiceReady || !foregroundLearningActive || voiceListening) return
         stopVoiceAnimation()
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
@@ -7984,6 +7986,8 @@ class AgentActivity : Activity() {
     }
 
     private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
+        // One recognizer at a time: a second tap would stack a second result for the same turn.
+        if (voiceListening) return
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
@@ -7994,10 +7998,12 @@ class AgentActivity : Activity() {
         }
         try {
             voiceListening = true
+            voiceRequestSession = if (requestCode == SPEECH_REQUEST) sessionId else null
             refreshHologramState()
             startActivityForResult(intent, requestCode)
         } catch (_: Exception) {
             voiceListening = false
+            voiceRequestSession = null
             refreshHologramState()
             Toast.makeText(this, "Keine Spracheingabe verfügbar.", Toast.LENGTH_LONG).show()
         }
@@ -8006,8 +8012,10 @@ class AgentActivity : Activity() {
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val voiceStartedIn = if(requestCode==SPEECH_REQUEST) voiceRequestSession else null
         if(requestCode==SPEECH_REQUEST || requestCode==DEV_SPEECH_REQUEST) {
             voiceListening=false
+            voiceRequestSession=null
             refreshHologramState()
         }
         when (requestCode) {
@@ -8019,11 +8027,12 @@ class AgentActivity : Activity() {
                     // existing tool-free cognitive reply, never sendCurrentInput/runLocal.
                     if (jarvisDialogueAutoSend && !neuralCoach.isActive()) {
                         val decision = at.heinz.deviceai.jarvis.JarvisVoiceConversationPolicy.evaluate(spoken)
-                        if (decision.routing != at.heinz.deviceai.jarvis.JarvisVoiceRouting.IGNORE) {
+                        val dispatch = at.heinz.deviceai.jarvis.JarvisVoiceDispatchGate.decide(decision, busy,
+                            localAgentExecutor.isShutdown, !isFinishing && !isDestroyed, voiceStartedIn, sessionId)
+                        if (dispatch != at.heinz.deviceai.jarvis.JarvisVoiceDispatch.IGNORE) {
                             input.setText(decision.cleanText)
                             input.setSelection(decision.cleanText.length)
-                            if (decision.routing == at.heinz.deviceai.jarvis.JarvisVoiceRouting.DIALOGUE_ONLY &&
-                                !busy && !localAgentExecutor.isShutdown && foregroundLearningActive) {
+                            if (dispatch == at.heinz.deviceai.jarvis.JarvisVoiceDispatch.AUTO_DIALOGUE) {
                                 input.text.clear()
                                 addUserMessage(decision.cleanText)
                                 runContinuumDialogue(decision.cleanText, allowLocalModel = false)

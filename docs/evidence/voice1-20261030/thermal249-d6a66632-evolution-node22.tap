@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: shadow gate requires explicit opt-in, idle, charging, trusted host, no concurrent worker and thermal headroom
+ok 1 - shadow gate requires explicit opt-in, idle, charging, trusted host, no concurrent worker and thermal headroom
+  ---
+  duration_ms: 3.598636
+  type: 'test'
+  ...
+# Subtest: thermal boundary never mistakes a cooling phone for thermal exhaustion
+ok 2 - thermal boundary never mistakes a cooling phone for thermal exhaustion
+  ---
+  duration_ms: 0.588224
+  type: 'test'
+  ...
+# Subtest: mutation applies only to verified typed baseline, never arbitrary text substitutions
+ok 3 - mutation applies only to verified typed baseline, never arbitrary text substitutions
+  ---
+  duration_ms: 4.488301
+  type: 'test'
+  ...
+# Subtest: positive evidence requires all bound hashes, executed tests and complete blind check
+ok 4 - positive evidence requires all bound hashes, executed tests and complete blind check
+  ---
+  duration_ms: 1.464797
+  type: 'test'
+  ...
+# Subtest: runner crash timeout and zero executed tests remain neutral, not a neural negative gradient
+ok 5 - runner crash timeout and zero executed tests remain neutral, not a neural negative gradient
+  ---
+  duration_ms: 0.761875
+  type: 'test'
+  ...
+# Subtest: negative label requires actual red executed tests and a consistent failing exit code
+ok 6 - negative label requires actual red executed tests and a consistent failing exit code
+  ---
+  duration_ms: 0.484178
+  type: 'test'
+  ...
+# Subtest: autopsy contains evidence hashes, never source code or owner-authorized training flags
+ok 7 - autopsy contains evidence hashes, never source code or owner-authorized training flags
+  ---
+  duration_ms: 0.699726
+  type: 'test'
+  ...
+# Subtest: ledger summary reads existing version 2 evidence without modifying it
+ok 8 - ledger summary reads existing version 2 evidence without modifying it
+  ---
+  duration_ms: 3.725267
+  type: 'test'
+  ...
+# Subtest: macro review requires distinct successful task IDs and never activates/deletes
+ok 9 - macro review requires distinct successful task IDs and never activates/deletes
+  ---
+  duration_ms: 0.984312
+  type: 'test'
+  ...
+# Subtest: one finite self-play cycle with sealed holdout succeeds without model writes
+ok 10 - one finite self-play cycle with sealed holdout succeeds without model writes
+  ---
+  duration_ms: 1.723808
+  type: 'test'
+  ...
+# Subtest: one cycle does not run at all when owner conditions fail
+ok 11 - one cycle does not run at all when owner conditions fail
+  ---
+  duration_ms: 0.25523
+  type: 'test'
+  ...
+# Subtest: a solver exception does not masquerade as verified failure
+ok 12 - a solver exception does not masquerade as verified failure
+  ---
+  duration_ms: 0.413415
+  type: 'test'
+  ...
+# Subtest: strict cycle limits block unbounded self-improvement and excess tasks
+ok 13 - strict cycle limits block unbounded self-improvement and excess tasks
+  ---
+  duration_ms: 0.238807
+  type: 'test'
+  ...
+# Subtest: negative gradient is only a shadow prior from single-operator verified records
+ok 14 - negative gradient is only a shadow prior from single-operator verified records
+  ---
+  duration_ms: 0.341533
+  type: 'test'
+  ...
+# Subtest: circular or enormous solver results are neutral and never crash the research cycle
+ok 15 - circular or enormous solver results are neutral and never crash the research cycle
+  ---
+  duration_ms: 1.953255
+  type: 'test'
+  ...
+# Subtest: malformed historic ledger tests cannot be interpreted as a proved negative failure
+ok 16 - malformed historic ledger tests cannot be interpreted as a proved negative failure
+  ---
+  duration_ms: 0.125766
+  type: 'test'
+  ...
+# Subtest: a claimed green verdict cannot cover fewer or more executions than the sealed blind suite
+ok 17 - a claimed green verdict cannot cover fewer or more executions than the sealed blind suite
+  ---
+  duration_ms: 0.18545
+  type: 'test'
+  ...
+# Subtest: an impossible green or incomplete negative report is inconclusive
+ok 18 - an impossible green or incomplete negative report is inconclusive
+  ---
+  duration_ms: 0.257195
+  type: 'test'
+  ...
+# Subtest: malformed source strategy entries are ignored rather than crashing standalone ledger analysis
+ok 19 - malformed source strategy entries are ignored rather than crashing standalone ledger analysis
+  ---
+  duration_ms: 0.113493
+  type: 'test'
+  ...
+# Subtest: Android thermal headroom counts consumed envelope: high values block shadow experiments
+ok 20 - Android thermal headroom counts consumed envelope: high values block shadow experiments
+  ---
+  duration_ms: 0.112625
+  type: 'test'
+  ...
+# Subtest: MASTER-EXP adapter invokes real bounded composition and independent blind check
+ok 21 - MASTER-EXP adapter invokes real bounded composition and independent blind check
+  ---
+  duration_ms: 85.447474
+  type: 'test'
+  ...
+# Subtest: gating prevents even an experiment when the existing worker is busy
+ok 22 - gating prevents even an experiment when the existing worker is busy
+  ---
+  duration_ms: 0.396163
+  type: 'test'
+  ...
+# Subtest: adapter rejects unbounded cycles and cannot open a perpetual worker
+ok 23 - adapter rejects unbounded cycles and cannot open a perpetual worker
+  ---
+  duration_ms: 0.966876
+  type: 'test'
+  ...
+# Subtest: CCC1 ledger is verified with existing authoritative validator and summarized read-only
+ok 24 - CCC1 ledger is verified with existing authoritative validator and summarized read-only
+  ---
+  duration_ms: 1.562761
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 367.340554

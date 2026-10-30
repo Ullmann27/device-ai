@@ -1,0 +1,11 @@
+classes=245 checks=4 junit: OK (1313 tests)
+KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)
+EXIT 0
+--- junit tail
+......................................................................................................................
+Time: 34.052
+
+OK (1313 tests)
+
+--- kotlinc-main warnings/errors
+0

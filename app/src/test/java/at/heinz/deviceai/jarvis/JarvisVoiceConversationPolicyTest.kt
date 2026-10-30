@@ -55,4 +55,44 @@ class JarvisVoiceConversationPolicyTest {
                 JarvisVoiceConversationPolicy.evaluate(it).routing)
         }
     }
+
+    // VOICE-1 dispatch gate. Android contract (Activity.onActivityResult javadoc): "An activity can never receive a
+    // result in the resumed state ... it will be paused and the result will be delivered, followed by onResume".
+    private class LifecycleModel {
+        var foreground = false
+        var lastDispatch: JarvisVoiceDispatch? = null
+        fun onResume() { foreground = true }
+        fun onPause() { foreground = false }
+        fun onActivityResult(gate: () -> JarvisVoiceDispatch) { lastDispatch = gate() }
+    }
+
+    private val ask = JarvisVoiceConversationPolicy.evaluate("Was ist ein Keratokonus?")
+    private fun gate(decision: JarvisVoiceDecision = ask, busy: Boolean = false, shutdown: Boolean = false,
+                     alive: Boolean = true, started: String? = "chat-1", current: String = "chat-1") =
+        JarvisVoiceDispatchGate.decide(decision, busy, shutdown, alive, started, current)
+
+    @Test fun resultDeliveredWhilePausedStillStartsTheToolFreeTurn() {
+        val activity = LifecycleModel().apply { onResume() }
+        activity.onPause()                       // recognizer activity in front
+        val oldRuleWouldDispatch = activity.foreground   // the removed condition: always false at this point
+        activity.onActivityResult { gate() }
+        activity.onResume()
+        assertEquals(false, oldRuleWouldDispatch)
+        assertEquals(JarvisVoiceDispatch.AUTO_DIALOGUE, activity.lastDispatch)
+    }
+
+    @Test fun busyShutdownDeadActivityOrForeignChatKeepADraft() {
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(busy = true))
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(shutdown = true))
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(alive = false))
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(started = null))          // e.g. Activity recreated meanwhile
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(started = "chat-1", current = "chat-2"))  // late result
+    }
+
+    @Test fun onlyDialogueOnlyDecisionsCanStartATurn() {
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(JarvisVoiceConversationPolicy.evaluate("Schalte den Herd aus")))
+        assertEquals(JarvisVoiceDispatch.DRAFT, gate(JarvisVoiceConversationPolicy.evaluate("Jetzt automatisieren")))
+        assertEquals(JarvisVoiceDispatch.IGNORE, gate(JarvisVoiceConversationPolicy.evaluate("  ")))
+        assertEquals(JarvisVoiceDispatch.IGNORE, gate(JarvisVoiceConversationPolicy.evaluate(null), started = null))
+    }
 }
