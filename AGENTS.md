@@ -1,3 +1,5 @@
+> **Gesamt-Weiterarbeitsauftrag (Opus 5.5, 30.10.2026):** `docs/handoff/OPUS-WEITERARBEIT-20261030.md` – drei offene Branches (EXP-20, EWM-Fix v2, M8-Coding-Agent), Reihenfolge, Rollen, Regeln.
+
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
 ## AKTUELL 30.10.2026 (spät): M5-Stand – zuerst lesen
