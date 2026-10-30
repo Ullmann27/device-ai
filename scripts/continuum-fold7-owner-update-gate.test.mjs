@@ -28,8 +28,13 @@ function fixture(action,{origin='https://github.com/Ullmann27/device-ai.git',pac
   try {
     fs.copyFileSync(source,path.join(scripts,'continuum-fold7-owner-update-gate.sh'));
     write('app/build.gradle.kts',packageId ? 'applicationId = "at.heinz.deviceai.continuumlocal"\n' : 'applicationId = "at.heinz.deviceai.mentorpaired"\n');
+    // Mirror the real standalone builder: it owns the *single* pre-sign QA.
+    // The owner gate must delegate rather than double-running the costly suite.
     write('scripts/continuum-fold7-standalone-apk.sh',
-      '#!/usr/bin/env bash\n# -PcontinuumLocalStandalone=true\nprintf "local-build:%s:%s\\n" "$1" "$2" >> "$TEST_RECORD"\n');
+      '#!/usr/bin/env bash\n# -PcontinuumLocalStandalone=true\n'+
+      '[[ "$CONTINUUM_OWNER_LOCAL_APPROVED_SHA" == "$(git rev-parse HEAD)" ]] || exit 69\n'+
+      'bash "$(dirname "$0")/continuum-fusion-full-regression.sh" "$CONTINUUM_OWNER_LOCAL_APPROVED_SHA" || exit 69\n'+
+      'printf "local-build:%s:%s\\n" "$1" "$2" >> "$TEST_RECORD"\n');
     write('scripts/continuum-fusion-full-regression.sh',
       '#!/usr/bin/env bash\n'+
       '[[ -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" && -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" && -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" ]] || exit 38\n'+
@@ -128,7 +133,7 @@ test('mocked approved owner lane runs full regression before ONLY local standalo
 test('owner refuses to sign when full regression fails',()=>fixture(({run,createSigner,sha,record})=>{
   createSigner();
   const r=run('owner',sha,{CONTINUUM_OWNER_LOCAL_APPROVED_SHA:sha,CONTINUUM_OWNER_NEXT_VERSION_CODE:'27'});
-  assert.equal(r.status,69);assert.match(r.stderr,/Full local regression failed/);
+  assert.equal(r.status,69);assert.match(r.stderr,/Continuum Lokal release build failed/);
   assert.equal(fs.readFileSync(record,'utf8'),`full-regression:${sha}\n`);
 },{regressionFails:true}));
 
