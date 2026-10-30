@@ -15,3 +15,15 @@ export function claimReservedExecution(ledger,{runId,sequence,nowMs}={}){
  return {...ledger,reservations:ledger.reservations.map((r,i)=>
   i===sequence?{...r,claimedAtMillis:nowMs}:r)};
 }
+
+/** Fail closed unless an independent ledger read confirms the exact claim. */
+export function verifyPersistedClaim(ledger,{runId,sequence,claimedAtMillis}={}){
+ const r=ledger?.reservations?.[sequence];
+ if(typeof runId!=='string'||!/^\d{1,30}$/.test(runId)||
+    !Number.isSafeInteger(sequence)||sequence<0||
+    !Number.isSafeInteger(claimedAtMillis)||claimedAtMillis<0||
+    !r||r.runId!==runId||r.sequence!==sequence||
+    r.claimedAtMillis!==claimedAtMillis)
+   throw Error('GITHUB_LEDGER_CLAIM_UNVERIFIED');
+ return true;
+}

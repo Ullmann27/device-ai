@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {claimReservedExecution} from './continuum-nvidia-execution-claim.mjs';
+import {claimReservedExecution,verifyPersistedClaim} from './continuum-nvidia-execution-claim.mjs';
 const t0=Date.parse('2026-10-30T22:00:00Z');
 const blank=()=>({schema:'continuum-nvidia-schedule-ledger',version:1,reservations:[
  {runId:'100',sequence:0,atMillis:t0,utcDate:'2026-10-30'}]});
@@ -23,4 +23,17 @@ test('RED: future and stale reservations cannot authorize model',()=>{
 });
 test('RED: malformed claim metadata is rejected',()=>{
  assert.throws(()=>claimReservedExecution(blank(),{runId:'x',sequence:0,nowMs:t0}),/EXECUTION_CLAIM_INVALID/);
+});
+
+test('GREEN: exact persisted claim readback authorizes continuation',()=>{
+ const ledger=claimReservedExecution(blank(),{runId:'100',sequence:0,nowMs:t0+1});
+ assert.equal(verifyPersistedClaim(ledger,{runId:'100',sequence:0,claimedAtMillis:t0+1}),true);
+});
+test('RED: missing, stale, mismatched and altered claim readback fail closed',()=>{
+ const args={runId:'100',sequence:0,claimedAtMillis:t0+1};
+ const ledger=claimReservedExecution(blank(),{runId:'100',sequence:0,nowMs:t0+1});
+ for(const item of [blank(),null,{...ledger,reservations:[]},
+   {...ledger,reservations:[{...ledger.reservations[0],claimedAtMillis:t0+2}]}])
+   assert.throws(()=>verifyPersistedClaim(item,args),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
+ assert.throws(()=>verifyPersistedClaim(ledger,{...args,runId:'101'}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
 });
