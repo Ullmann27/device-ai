@@ -41,3 +41,11 @@ Nach Code-Commit: SHA-Readback für jede Datei, CI-Anlauf falls ausführbar; una
 2. Wenn Test- und Compile-Exitcodes 0: Test gegen schädliche/ungenehmigte `latest.json`, tatsächlich übertragene APK und Android-Installer-Status. Bestehende manuelle Test- und Datenbestände vor jedem Update sichern.
 3. Bereits vorhandene `scripts/continuum-fold7-standalone-apk.sh build 29` nicht durch eine PC-Pflicht ersetzen. Ein originalsignierter Download oder ein Update ist **nicht** durch diesen PR entstanden.
 4. Für M6 separat den fremd formulierten Holdout vor der Auswertung versiegeln; für M8 erst unabhängigen echten Modellbenchmark, dann isolierte Android-Ausführung. Keine unzulässigen Änderungen an der lokalen Modell- oder Repair-Autorität.
+
+## Nachtrag: Tatsächliche alternative Render-Buildstrecke (29.10.2026, unabhängig geprüft)
+- Service `continuum-p0-updater-qa-20261029` (`srv-dbhk0r1srm7s738208n0`) auf **separatem Basisbranch von PR #236**, Deployment `dep-dbhklqs9v7es73b725r0`, Commit `6bc54545adcef83e801003f5559d377f3a20d9ba`, Render-Status `live`.
+- Buildlogs: `BUILD SUCCESSFUL in 3m 45s` (QA-Tests/Kompilierung), `BUILD SUCCESSFUL in 1m 6s` (separate Preview-APK), `BUILD SUCCESSFUL in 1m 40s` (unsigniertes Owner-Release).
+- Separates Debug-QA-Artefakt mit SHA-256 `8fa6a007fba53ca76f7650e40b67e49a8fe496526df9870b321d8a59dec78370`: **andere Paketidentität**, kein Continuum-Update.
+- Unsigniertes `Continuum Lokal 0.3.28 / versionCode 29` mit SHA-256 `af444010a254219e9fa430300fb63db1fe15acc2a0315d19511c6d023cb5523a`: **nicht installierbar** ohne originale Fold7-P12.
+- **Wichtig:** Diese positiven Ergebnisse gelten nur für `6bc54545...`, **nicht** für unseren neuen PR #257. Der aktuelle PR benötigt eigene Kotlin-JUnit-/Lint-/APK-Buildbelege. GitHub Actions war hier also kein zwingender Blocker; Render konnte die Basisroute bereits bauen.
+- Kein neues Render-Deployment ausgelöst und kein altes veröffentlichtes Update-Manifest freigegeben.
