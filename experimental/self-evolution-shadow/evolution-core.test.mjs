@@ -20,8 +20,18 @@ function proof(task,candidate,{passed=true,exitCode=passed?0:1,executedTests=tas
 test('shadow gate requires explicit opt-in, idle, charging, trusted host, no concurrent worker and thermal headroom',()=>{
   assert.equal(canStartShadowSelfPlay(ready).eligible,true);
   for(const [key,value] of Object.entries({ownerOptIn:false,idle:false,charging:false,
-    connectedToTrustedHost:false,activeWorker:true,batteryPercent:39,thermalHeadroom:.49,availableTimeMs:4999})){
+    connectedToTrustedHost:false,activeWorker:true,batteryPercent:39,thermalHeadroom:.51,availableTimeMs:4999})){
     assert.equal(canStartShadowSelfPlay({...ready,[key]:value}).eligible,false,key);
+  }
+});
+test('thermal boundary never mistakes a cooling phone for thermal exhaustion',()=>{
+  // getThermalHeadroom() measures USED thermal envelope, not remaining battery/headroom.
+  assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom:0}).eligible,true);
+  assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom:.49}).eligible,true);
+  assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom:.5}).eligible,true);
+  for (const thermalHeadroom of [.500001,1,1.2,NaN,Infinity,-.1]) {
+    assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom}).eligible,false,
+      'Higher thermal use or invalid telemetry must block: '+String(thermalHeadroom));
   }
 });
 test('mutation applies only to verified typed baseline, never arbitrary text substitutions',()=>{
