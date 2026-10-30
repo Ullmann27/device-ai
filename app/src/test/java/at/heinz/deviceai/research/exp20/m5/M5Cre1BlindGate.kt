@@ -77,14 +77,21 @@ object M5Cre1BlindGate {
         .digest(bytes).joinToString("") { "%02x".format(it) }
 
     @JvmStatic fun main(args: Array<String>) {
-        require(args.size == 3) { "usage: M5Cre1BlindGate <DEV_VAL.tsv> <frozen-CRE1-checkpoint.cre1> <audit-output.txt>" }
+        require(args.size == 5) { "usage: M5Cre1BlindGate <DEV_VAL.tsv> <frozen-CRE1-checkpoint.cre1> <expected-data-sha256> <expected-checkpoint-sha256> <audit-output.txt>" }
         val data = File(args[0])
         val checkpoint = File(args[1])
-        val output = File(args[2])
+        val dataExpected = args[2].lowercase()
+        val checkpointExpected = args[3].lowercase()
+        require(Regex("[0-9a-f]{64}").matches(dataExpected) && Regex("[0-9a-f]{64}").matches(checkpointExpected)) { "Expected frozen SHA-256 digests" }
+        val output = File(args[4])
         require(data.isFile && checkpoint.isFile && !output.canonicalFile.equals(data.canonicalFile))
         require(!output.canonicalFile.equals(checkpoint.canonicalFile))
-        val rows = M5Data.read(data)
+        val dataActual = M5Data.sha256(data)
+        require(dataActual == dataExpected) { "M5 DEV/VAL dataset changed since freeze" }
         val snapshot = checkpoint.readBytes()
+        val checkpointActual = sha256(snapshot)
+        require(checkpointActual == checkpointExpected) { "CRE1 checkpoint changed since freeze" }
+        val rows = M5Data.read(data)
         val cre = Cre1InferenceEncoder.restore(snapshot)
         val embed: (String) -> DoubleArray = { memory -> cre.embed(memory, "m") }
         val dev = evaluate(rows, M5Data.Split.DEV, embed)
@@ -92,8 +99,8 @@ object M5Cre1BlindGate {
         val passed = gatePassed(validation)
         val report = buildString {
             appendLine("EXP-20 M5: CRE1 QUERY-BLIND MEDOID VALIDITY AUDIT; no SEALED opened")
-            appendLine("DATA_SHA256=${M5Data.sha256(data)}")
-            appendLine("CHECKPOINT_SHA256=${sha256(snapshot)} CHECKPOINT_STEPS=${cre.steps}")
+            appendLine("DATA_SHA256=$dataActual")
+            appendLine("CHECKPOINT_SHA256=$checkpointActual CHECKPOINT_STEPS=${cre.steps}")
             for (s in listOf(dev, validation)) {
                 appendLine("${s.split} strict_top1=${s.strictHits}/${s.groups} " +
                     "forced_top1=${s.forcedHits}/${s.groups} max_ties=${s.maxTies}")
