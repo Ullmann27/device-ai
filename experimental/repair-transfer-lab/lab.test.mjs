@@ -32,6 +32,8 @@ test('diagnosis uses only what a failing TAP run shows',()=>{
  assert.equal(diagnoseTap(tap("  expected: true\n  actual: false\n  operator: 'strictEqual'\n  code: 'ERR_ASSERTION'")).kind,'BOOL');
  assert.equal(diagnoseTap(tap("  error: 'Missing expected exception.'\n  code: 'ERR_ASSERTION'")).kind,'THROWS');
  assert.equal(diagnoseTap(tap("  error: 'boom'\n  name: 'TypeError'")).kind,'RUNTIME_TypeError');
+ assert.equal(diagnoseTap(tap("  exitCode: 1\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'")).kind,'LOAD_FAILURE');
+ assert.equal(diagnoseTap(tap("  error: 'INVALID_ACTIVE_COUNT'\n  code: 'ERR_TEST_FAILURE'")).kind,'APP_ERROR');
  assert.equal(diagnoseTap('ok 1 - fine\n').kind,'OTHER');
 });
 test('test selection: names are split 2:1:1 and escaped exactly',()=>{
