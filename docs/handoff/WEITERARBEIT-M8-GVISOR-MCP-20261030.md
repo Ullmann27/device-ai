@@ -59,3 +59,25 @@
   - Die Updates aus PR #260 auf einen Release-Branch bringen.
   - Der Besitzer signiert in Termux mit der Original-P12; das Passwort gibt nur er ein.
   - Danach mit einem zweiten Release den In-App-Updater auf dem Fold7 prüfen.
+
+## Meilenstein 1 (Teamleader + MCP), erreicht
+- **`teamleader-mcp-preflight.mjs`:** Ein asynchroner Vorbereitungsschritt liest HEAD und Status über den freigegebenen MCP-Git-Server.
+  - Ergebnis ist ein versiegelter Beleg, journalisiert als `<stateDir>/mcp-preflight.jsonl`, außerhalb des Repositorys.
+  - Aufruf: `runTeamleaderCycle({...,toolEvidence})`.
+- **`autonomous-teamleader.mjs`:**
+  - Optionaler Parameter `toolEvidence`. Ohne ihn ändert sich nichts.
+  - Mit ihm: Weicht der Beleg ab (anderer HEAD, Siegel oder Quittungen ungültig), kommt `MCP_TOOL_EVIDENCE_INVALID`, bevor Arbeit beginnt.
+  - Die Quittungen stehen im Ereignis (`tools`). Die Reparaturpipeline bleibt unverändert.
+- **Tests:** `teamleader-mcp-preflight.test.mjs` 3/3, ausgeführt mit echtem MCP-git-Lauf:
+  - Zyklus → Reparaturmechanismus läuft → Beleg im Ereignis → zweiter Zyklus `IDLE`, ohne doppelte Arbeit.
+  - Manipulierte Belege starten nichts; nicht freigegebener Server und widerrufenes Recht liefern keinen Beleg.
+  - Wiederaufnahme: Ein liegen gebliebenes `RUNNING` wird zu `INTERRUPTED` und nicht stillschweigend wiederholt.
+  - Teamleader- und Nachbarsuiten 210/210.
+- **Meilenstein 2 blockiert:** In dieser Umgebung gibt es keine Modellgewichte (HuggingFace nicht erreichbar), keinen Inferenzserver und keine Sandbox (`runsc`/Docker). Es wurde keine Messung ausgeführt.
+- **Nächster Schritt in Termux:**
+  ```
+  scripts/continuum-local-llama-termux.sh
+  CONTINUUM_LOCAL_BRAIN_API_KEY=… node scripts/continuum-agent-benchmark.mjs --brain chat --only num-distance
+  ```
+  Die numerische Aufgabe ist auf dem Host ohne Sandbox erlaubt. Danach mit Executor die `gen-*`-Aufgaben.
+- **Meilenstein 3 nicht begonnen** (Budget). Als Nächstes PR #257, #260 und #258 auf Konflikte prüfen.
