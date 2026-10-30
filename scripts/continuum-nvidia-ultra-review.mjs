@@ -94,7 +94,10 @@ export async function runUltraMasterReview({packet,apiKey,consent,fetchImpl=glob
    if(data==='[DONE]'){done=true;return;}
    let event;try{event=JSON.parse(data);}catch{fail('ULTRA_STREAM_INVALID');}
    if(event?.model&&event.model!==MODEL)fail('ULTRA_MODEL_MISMATCH');
-   if(!Array.isArray(event.choices)||event.choices.length!==1)fail('ULTRA_CHOICES_INVALID');
+   // NVIDIA/OpenAI-compatible streams may emit usage-only chunks with choices=[].
+   // They contain no generated text and must not abort an otherwise valid response.
+   if(!Array.isArray(event.choices)||event.choices.length>1)fail('ULTRA_CHOICES_INVALID');
+   if(event.choices.length===0)return;
    const choice=event.choices[0],delta=choice.delta;
    if(choice.finish_reason!==null&&choice.finish_reason!==undefined)finish=choice.finish_reason;
    if(delta?.tool_calls?.length||delta?.function_call)fail('ULTRA_TOOLS_FORBIDDEN');
