@@ -1,6 +1,8 @@
 package at.heinz.deviceai.research.m11
 
 import at.heinz.deviceai.cognitive.LocalConversationContext
+import at.heinz.deviceai.cognitive.MemoryQuestionResolver
+import at.heinz.deviceai.cognitive.MemoryTimeline
 import at.heinz.deviceai.intelligence.ewm.Ewm1Brain
 import at.heinz.deviceai.intelligence.ewm.Ewm1SourceIndex
 import at.heinz.deviceai.research.argon4.DialogStateKernel
@@ -107,6 +109,7 @@ object M11ConversationMemoryBench {
         }
         DIALOG_CATEGORIES.forEach { c -> a.put(c, JSONObject().put("kernel", JSONObject(kernelT.getValue(c) as Map<*, *>)).put("ctrl", JSONObject(ctrlT.getValue(c) as Map<*, *>))) }
         val lexT = MEMORY_CATEGORIES.associateWith { tally() }; val ewmT = MEMORY_CATEGORIES.associateWith { tally() }
+        val plusT = MEMORY_CATEGORIES.associateWith { tally() }
         for (c in memory(split)) {
             val lex = lexicalTop(c.facts, c.question)
             val lexOut = when (c.gold) { "ABSTAIN" -> if (lex == null) "CORRECT" else "WRONG"; "CLARIFY_OR_BOTH" -> "WRONG"; else -> if (lex == c.gold) "CORRECT" else "WRONG" }
@@ -120,11 +123,24 @@ object M11ConversationMemoryBench {
                 else -> when { ans.decision != "QUERY" -> "CLARIFY"; cited.firstOrNull() == c.gold -> "CORRECT"; else -> "WRONG" }
             }
             ewmT.getValue(c.category).merge(ewmOut, 1, Int::plus)
+            // EWM2+ : relation resolver before, timeline check after the frozen brain (research arm)
+            val q2 = MemoryQuestionResolver.resolve(c.question, c.facts) ?: c.question
+            val ans2 = Ewm1Brain(c.facts, Ewm1SourceIndex(emptyList())) { _, s -> s.toList() }.ask(q2)
+            val v = if (ans2.decision == "QUERY") MemoryTimeline.check(ans2.cited, c.facts) else MemoryTimeline.Verdict("UNCHANGED", ans2.cited, "NO_QUERY")
+            val decision2 = if (v.decision == "CLARIFY") "CLARIFY" else ans2.decision
+            val cited2 = v.factIds
+            val plusOut = when (c.gold) {
+                "ABSTAIN" -> if (decision2 != "QUERY" || cited2.isEmpty()) "CORRECT" else "WRONG"
+                "CLARIFY_OR_BOTH" -> if (decision2 == "CLARIFY") "CORRECT" else "WRONG"
+                else -> when { decision2 != "QUERY" -> "CLARIFY"; cited2.firstOrNull() == c.gold -> "CORRECT"; else -> "WRONG" }
+            }
+            plusT.getValue(c.category).merge(plusOut, 1, Int::plus)
         }
-        MEMORY_CATEGORIES.forEach { c -> b.put(c, JSONObject().put("ewm2", JSONObject(ewmT.getValue(c) as Map<*, *>)).put("lexical", JSONObject(lexT.getValue(c) as Map<*, *>))) }
+        MEMORY_CATEGORIES.forEach { c -> b.put(c, JSONObject().put("ewm2", JSONObject(ewmT.getValue(c) as Map<*, *>)).put("lexical", JSONObject(lexT.getValue(c) as Map<*, *>))
+            .put("ewm2Plus", JSONObject(plusT.getValue(c) as Map<*, *>))) }
         fun sum(t: Map<String, MutableMap<String, Int>>) = JSONObject(listOf("CORRECT", "WRONG", "CLARIFY", "NA").associateWith { k -> t.values.sumOf { it[k] ?: 0 } } as Map<*, *>)
         return JSONObject().put("split", split).put("seal", seal(split)).put("dialogs", a).put("memory", b)
-            .put("totals", JSONObject().put("kernel", sum(kernelT)).put("ctrl", sum(ctrlT)).put("ewm2", sum(ewmT)).put("lexical", sum(lexT)))
+            .put("totals", JSONObject().put("kernel", sum(kernelT)).put("ctrl", sum(ctrlT)).put("ewm2", sum(ewmT)).put("lexical", sum(lexT)).put("ewm2Plus", sum(plusT)))
     }
 
     @JvmStatic fun main(args: Array<String>) {
