@@ -26,6 +26,20 @@ test('reject any unsupported command or versionCode before using private signing
   }
 });
 
+test('direct P12 signer requires explicit exact source authorization and trusted Git origin', () => {
+  assert.match(shell, /CONTINUUM_OWNER_LOCAL_APPROVED_SHA/);
+  assert.match(shell, /EXACT_OWNER_SOURCE_APPROVAL_REQUIRED/);
+  assert.match(shell, /\[\[ "\$\{CONTINUUM_OWNER_LOCAL_APPROVED_SHA:-\}" == "\$sha" \]\]/);
+  assert.match(shell, /git remote get-url origin/);
+  assert.match(shell, /Untrusted Git remote/);
+  assert.match(shell, /git symbolic-ref --quiet --short HEAD/);
+  assert.match(shell, /A protected branch cannot be an owner release candidate/);
+  assert.ok(shell.indexOf('EXACT_OWNER_SOURCE_APPROVAL_REQUIRED') <
+    shell.indexOf("Lokales Signierpasswort:"), 'owner approval must precede P12 access');
+  assert.ok(shell.indexOf('continuum-fusion-full-regression.sh') <
+    shell.indexOf("Lokales Signierpasswort:"), 'full regressions must precede P12 access');
+});
+
 test('new app ID is distinct from original and is stable across debug and release', () => {
   assert.match(gradle, /applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa \|\| continuumLocalRenderUnsigned\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"/);
   assert.match(gradle, /signingConfig = signingConfigs\.getByName\("continuumLocal"\)/);
