@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-27",
+  "updated": "2026-10-30",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "externalResearchIntegration": {
@@ -171,6 +171,78 @@
       "entry": "experimental/omega/repair/numeric-verifier.mjs",
       "depends": "Existing CCC1 owner backlog, coding task, exact patches, repair tests and receipts; Node and Git for host experiment",
       "gate": "Controlled synthetic replay archived: 2/10 versus 8/10 correct, zero model calls, higher actual verifier compute; not a blind generalization result. Real-model fixed-budget holdout and Fold7 execution NOT_RUN. See docs/research/omega/ASTRA-HANDOFF.md."
+    },
+    {
+      "id": "EXP-16",
+      "title": "Owner-approved encrypted multi-device state continuity",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Research E2EE backups, version binding, device revocation; threshold sharing or ZKP only if proof scope is defined",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing owner checkpoints, EXP-12, signed provenance and ToolGate",
+      "gate": "Authenticated owner-approved sync and restore, revoke/stop/wipe tests, no shutdown-evasion"
+    },
+    {
+      "id": "EXP-17",
+      "title": "Owner-reviewed software-genome evolution",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Evolve repair candidates in isolated CCC1 worktrees; never self-replicate, bypass restrictions or auto-promote",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "CognitiveGenome safety invariants, existing CCC1 repair ledger and verifier",
+      "gate": "Historical blind multi-fault repairs + adversarial holdouts, owner review and dependency rollback"
+    },
+    {
+      "id": "EXP-18",
+      "title": "HDC/VSA contextual routing research",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Try bounded 10k-bit hypervector routing versus deterministic ranking and Gemma-based evidence routes; never claim lossless memory",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing NTW1/CCC1 comparison paths and fixed evidence corpus",
+      "gate": "Frozen unseen tasks, matched budgets, accuracy/FPR, CPU/RSS and Fold7 battery metrics"
+    },
+    {
+      "id": "EXP-19",
+      "title": "Cryptographic owner authority and revocation",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Authenticate scoped actions, encrypt local secrets, honor stop/revoke/wipe, owner retains ability to shut down",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing ToolGate, Android Keystore, signed receipts, owner permission boundaries",
+      "gate": "Replay/expiry/lockout/recovery abuse tests, no hardcoded secret and no bypass capability"
+    },
+    {
+      "id": "EXP-20",
+      "title": "Continuous-time neural dynamics (CTRNN) shadow",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Explore bounded stable ODE state transitions as optional context prior, not a replacement for the current LLM",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing NTW1-v3 model state and context compiler",
+      "gate": "Integration stability/ablation, independent holdout and per-turn cost on CPU/Fold7"
+    },
+    {
+      "id": "EXP-21",
+      "title": "Diagonal Fisher/EWC continual-learning shadow",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Empirical Fisher-weighted quadratic regularizer, with checkpoint/rollback and forgetting tests; not a no-forgetting proof",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing NTW1 checkpoints, signed evidence, independent replay",
+      "gate": "Old-vs-new task accuracy, recovery, contamination and drift tests"
+    },
+    {
+      "id": "EXP-22",
+      "title": "STDP/metaplasticity local-learning shadow",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Bounded event-timing adaptation only in an isolated test model; no unsupervised update of productive weights",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Existing isolated learning laboratory and verifiable task labels",
+      "gate": "Adversarial temporal splits, compared accuracy, bounded parameter/thermal cost"
+    },
+    {
+      "id": "EXP-23",
+      "title": "Fold7 energy-/thermal-governed learning experiments",
+      "status": "PROPOSED_SHADOW",
+      "present": "NOT_IMPLEMENTED. Event-driven inference scheduling and bounded gas; use Android thermal APIs with correct headroom direction",
+      "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
+      "depends": "Android PowerManager, existing worker idle/charging gates and on-device toolchain",
+      "gate": "Real device headroom, power, RSS, time, pause/cancel/Doze tests; NaN fail-closed"
     }
   ]
 }
