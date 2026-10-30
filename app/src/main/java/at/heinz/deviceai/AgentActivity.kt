@@ -8022,7 +8022,9 @@ class AgentActivity : Activity() {
             SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
                 val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 val spoken = matches?.firstOrNull()
-                if (!spoken.isNullOrBlank()) {
+                // The original chat must still be current, even when auto-dialogue is OFF.
+                // Otherwise the legacy manual voice composer would import old-session speech.
+                if (!spoken.isNullOrBlank() && voiceStartedIn != null && voiceStartedIn == sessionId) {
                     // An ASR hypothesis is untrusted. Auto-dispatch only into the
                     // existing tool-free cognitive reply, never sendCurrentInput/runLocal.
                     if (jarvisDialogueAutoSend && !neuralCoach.isActive()) {

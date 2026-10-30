@@ -81,12 +81,18 @@ class JarvisVoiceConversationPolicyTest {
         assertEquals(JarvisVoiceDispatch.AUTO_DIALOGUE, activity.lastDispatch)
     }
 
-    @Test fun busyShutdownDeadActivityOrForeignChatKeepADraft() {
+    @Test fun busyShutdownOrDeadActivityKeepEditableDraftOnlyInSameSession() {
         assertEquals(JarvisVoiceDispatch.DRAFT, gate(busy = true))
         assertEquals(JarvisVoiceDispatch.DRAFT, gate(shutdown = true))
         assertEquals(JarvisVoiceDispatch.DRAFT, gate(alive = false))
-        assertEquals(JarvisVoiceDispatch.DRAFT, gate(started = null))          // e.g. Activity recreated meanwhile
-        assertEquals(JarvisVoiceDispatch.DRAFT, gate(started = "chat-1", current = "chat-2"))  // late result
+    }
+
+    @Test fun staleOrUnknownRecognizerSessionCannotPopulateNewChatComposer() {
+        assertEquals(JarvisVoiceDispatch.IGNORE, gate(started = null)) // result after Activity recreation
+        assertEquals(JarvisVoiceDispatch.IGNORE, gate(started = "chat-1", current = "chat-2"))
+        assertEquals(JarvisVoiceDispatch.IGNORE,
+            gate(JarvisVoiceConversationPolicy.evaluate("Schalte den Herd aus"),
+                started = "chat-1", current = "chat-2")) // risk text also must not spill into new chat
     }
 
     @Test fun onlyDialogueOnlyDecisionsCanStartATurn() {
