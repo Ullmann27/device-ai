@@ -24,7 +24,8 @@ class ContinuumJarvisPresenceEngineTest {
 
     private fun gate() = OwnerShutoffApprovalGate { proposal, _, timestamp ->
         OwnerShutoffGrant(proposal.proposalId, proposal.targetDeviceId,
-            timestamp + 20_000L, ownerAuthenticated = true, toolGateApproved = true)
+            timestamp + 20_000L, ownerAuthenticated = true, toolGateApproved = true,
+            confirmedEmptyHouse = true, preflightTelemetryVerified = true, preflightObservedAtMs = timestamp)
     }
 
     private fun bridge(active: Boolean = false, readingAt: Long = now + 500L,
@@ -33,7 +34,7 @@ class ContinuumJarvisPresenceEngineTest {
             override fun requestSafeShutoff(deviceId: String, grant: OwnerShutoffGrant) =
                 ShutoffDispatch(deviceId, "command-01", now + 100L, true)
             override fun readBackCurrentActiveState(deviceId: String) =
-                DeviceReadBack(readingId, active, readingAt, verified)
+                DeviceReadBack(readingId, active, readingAt, "command-01", verified)
         }
 
     @Test fun promptsInVehicleButDoesNotSpeakOrActByItself() {
@@ -146,13 +147,13 @@ class ContinuumJarvisPresenceEngineTest {
     @Test fun wrongDeviceOrMissingToolGateGrantRejected() {
         val e = engine(); val p = e.evaluateSituationForInitiative(snapshot())!!
         val wrong = OwnerShutoffApprovalGate { _, _, _ ->
-            OwnerShutoffGrant(p.proposalId, "another-stove", now + 1_000L, true, true)
+            OwnerShutoffGrant(p.proposalId, "another-stove", now + 1_000L, true, true, true, true, now)
         }
         assertEquals(VerifiedActuationStatus.REJECTED,
             e.handleOwnerVoiceReply(p.proposalId, "Ja, mach bitte", now, wrong, bridge()).status)
         val e2 = engine(); val p2 = e2.evaluateSituationForInitiative(snapshot())!!
         val noTool = OwnerShutoffApprovalGate { _, _, _ ->
-            OwnerShutoffGrant(p2.proposalId, p2.targetDeviceId, now + 1_000L, true, false)
+            OwnerShutoffGrant(p2.proposalId, p2.targetDeviceId, now + 1_000L, true, false, true, true, now)
         }
         assertEquals(VerifiedActuationStatus.REJECTED,
             e2.handleOwnerVoiceReply(p2.proposalId, "Ja, mach bitte", now, noTool, bridge()).status)
@@ -188,4 +189,38 @@ class ContinuumJarvisPresenceEngineTest {
         val result = e.handleOwnerVoiceReply(p.proposalId, "Ja, mach bitte", now, gate(), bridge())
         assertEquals(VerifiedActuationStatus.REJECTED, result.status)
     }
+
+    @Test fun returningFamilyMemberBlocksDelayedShutoff() {
+        val e = engine(); val p = e.evaluateSituationForInitiative(snapshot())!!
+        var called = false
+        val unsafe = OwnerShutoffApprovalGate { proposal, _, at ->
+            OwnerShutoffGrant(proposal.proposalId, proposal.targetDeviceId, at + 10_000L,
+                true, true, confirmedEmptyHouse = false,
+                preflightTelemetryVerified = true, preflightObservedAtMs = at)
+        }
+        val device = object : HomeApplianceToolBridge {
+            override fun requestSafeShutoff(deviceId: String, grant: OwnerShutoffGrant): ShutoffDispatch {
+                called = true
+                return ShutoffDispatch(deviceId, "command-01", now, true)
+            }
+            override fun readBackCurrentActiveState(deviceId: String): DeviceReadBack? = null
+        }
+        val result = e.handleOwnerVoiceReply(p.proposalId, "Ja, mach bitte", now, unsafe, device)
+        assertEquals(VerifiedActuationStatus.REJECTED, result.status)
+        assertFalse(called)
+    }
+
+    @Test fun readbackForOlderCommandCannotClaimSuccessfulShutoff() {
+        val e = engine(); val p = e.evaluateSituationForInitiative(snapshot())!!
+        val device = object : HomeApplianceToolBridge {
+            override fun requestSafeShutoff(deviceId: String, grant: OwnerShutoffGrant) =
+                ShutoffDispatch(deviceId, "command-new", now, true)
+            override fun readBackCurrentActiveState(deviceId: String) =
+                DeviceReadBack(deviceId, false, now + 200L, "command-old", true)
+        }
+        val result = e.handleOwnerVoiceReply(p.proposalId, "Ja, mach bitte", now, gate(), device)
+        assertEquals(VerifiedActuationStatus.COMMAND_SENT_UNVERIFIED, result.status)
+        assertFalse(result.hardwareReadBackConfirmedOff)
+    }
+
 }
