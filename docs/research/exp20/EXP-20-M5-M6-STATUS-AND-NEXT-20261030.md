@@ -122,3 +122,22 @@ OUT=/tmp/exp20 scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp2
    - Entweder ein großes, registriertes Curriculum aus vielen Konstruktionstypen, bewertet auf VAL-fern/fern.
    - Oder eine **Besitzerentscheidung** über ein vortrainiertes lokales Satz-Embedding: Lizenz, Größe, RAM und Fold7-Latenz vorab prüfen; keine Integration ohne Freigabe.
 3. M6-B2/B3 erst danach, auf einem fremden Holdout.
+
+## Nachtrag 30.10.2026 (2): EWM-Reparatur v2 und M5c-Vorregistrierung
+
+| Meilenstein | Zustand | Beleg |
+|---|---|---|
+| M4 Host-Forschungslabor | ERREICHT | unverändert |
+| M5 Robuste Semantik | **NICHT ERREICHT** | Abnahme unverändert; SEALED geschlossen |
+| M5c Grenzanalyse + Vorregistrierung | **ERREICHT (nur Vorregistrierung)** | [M5c-Vorregistrierung](EXP-20-M5C-PREREGISTRATION-20261030.md): CRE1 kann keine Rollen binden (gemessen, auch trainiert) und Wörter nicht ohne Vorwissen übertragen; noch kein M5c-Lauf |
+| M6-B4 deterministische Ersetzung | **PATCHKANDIDAT, nicht übernommen** | [EWM-Fix v2](EXP-20-M6-B4-EWM-FIX-20261030.md): Orakel mit 50 976 Paaren, P 0,219 → 1,000, R 0,387 → 1,000 (Entwicklungsorakel, kein Holdout); Host-Regression 788/788; Branch `claude/ewm-owner-subject-fix-kxrxy2` @ `a3705004` |
+| M6 neuronale Kontextschicht (B2/B3, Predictive Coding) | **GESPERRT** | Kein semantischer Basisstrom (M5 offen). Die deterministische Baseline lässt keinen gemessenen Bedarf erkennen. |
+
+**Nächste Schritte, in dieser Reihenfolge:**
+1. **Besitzer:** Review des EWM-Patches.
+2. **Danach:**
+   - Einen fremd formulierten Ersetzungs-Holdout vorab registrieren und einmal öffnen.
+   - Android-Build und Fold7-Prüfung.
+3. **M5c-Spur G-role:** Arme B und C gegen Bag-Referenzen auf neuem TRAIN/DEV/VAL.
+4. **Besitzerentscheidung zu Arm D:** vortrainierter lokaler Satz-Encoder, nach Lizenz-, Größen- und Fold7-Prüfung.
+5. **EWM-Versionierung:** Gültigkeitsbeginn und Einschränkung früherer Aussagen (R6), ohne zweiten Speicher.
