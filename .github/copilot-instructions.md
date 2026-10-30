@@ -1,4 +1,10 @@
 # Device AI Continuum instructions for code-generation assistants
+
+
+## Mandatory recurring BIO-NEURONAL-4 research direction
+
+Keep the owner's four desired **hypotheses** in scope for every future JARVIS/NTW1/CCC1/context/voice/worker change: (1) lower ARM64 CPU, RAM and energy through measured sparse/event-driven execution; (2) less forgetting via empirical Fisher/EWC regularization with tested older/newer task retention; (3) compact temporal CTRNN context hints while the existing EWM2 evidence/provenance/memory remains authoritative; and (4) offline-first local autonomy/privacy, verified separately for ASR, inference, TTS, tools, sync and logs. See `docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md` section BIO-NEURONAL-4. Do **not** claim CTRNN automatically spikes or saves power, EWC prevents all forgetting, temporal state losslessly stores conversation, or all data necessarily stays on device. Require frozen baseline, independent holdouts, resource-equal negative tests, real Fold7 thermal/energy measures and existing owner/ToolGate/stop/rollback rules before promotion. These are registered research aims, not implemented product guarantees.
+
 Read the repository-root `AGENTS.md`, `docs/CONTINUUM-EXPERIMENTVERTRAG.md` and `docs/CONTINUUM-EXPERIMENTE.json` **before producing or applying source edits**. The project is Android-first: build and validate APKs on the Android phone itself; optional external build workers must not become a dependency. Reuse the existing verified Git/repair/backlog/evidence pipeline. New infrastructure must preserve future experimental adapters (EXP-00 to EXP-12) without speculative feature creep. Never interpret a mock check as a real phone build; never auto-install or merge to main. Report reproducible evidence, tested commits and missing device capabilities.
 
 
