@@ -44,34 +44,51 @@ object LocalModelClaimAudit {
     fun stage(answer: String, recall: LocalGroundedRecall): TraceStage {
         if (answer.isBlank() || answer.length > MAX_ANSWER_CHARS) return TraceStage.CLAIM_AUDIT_SKIPPED
         return runCatching {
-            val evidenceClauses = clauses(recall.answer)
+            // M15: every evidence clause is tokenised once (the checks below used to re-tokenise it per pair)
+            val evidence = clauses(recall.answer).map(::Clause)
             when {
-                selfContradicting(evidenceClauses) -> TraceStage.CLAIM_AUDIT_CONFLICT
+                selfContradicting(evidence) -> TraceStage.CLAIM_AUDIT_CONFLICT
                 unsupportedDetails(answer, listOf(recall.answer, recall.provenance)) ||
                     polarityMismatch(answer, sentences(recall.answer)) ||
-                    unboundAttribute(answer, evidenceClauses) ||
-                    outdated(answer, evidenceClauses) ||
+                    unboundAttribute(answer, evidence) ||
+                    outdated(answer, evidence) ||
                     newAction(answer, recall.answer) -> TraceStage.CLAIM_AUDIT_UNSUPPORTED
                 else -> TraceStage.CLAIM_AUDIT_SUPPORTED
             }
         }.getOrDefault(TraceStage.CLAIM_AUDIT_SKIPPED)
     }
 
+    /** Features of one clause, computed once per audit. */
+    private class Clause(val text: String) {
+        val words: List<String> = words(text)
+        val names: Set<String> = names(text)
+        val numbers: Set<String> = numbers(text)
+        val times: List<String> = words.filter { it in Ewm1Lexicon.TIME && it !in setOf("uhr", "jeden", "jede") }
+        val marked: Boolean = words.any { it in PAST || it in CURRENT }
+        val past: Boolean = words.any { it in PAST }
+        val current: Boolean = words.any { it in CURRENT }
+        val pronoun: Boolean = words.any { it in PRONOUNS }
+        val contentWords: Set<String> = contentWords(text)
+    }
+
     private fun unsupportedDetails(answer: String, evidence: List<String>): Boolean =
         Ewm1ClaimCheck.check(answer, evidence).unsupported.any { it !in POLARITY }
 
-    private fun polarityMismatch(answer: String, evidence: List<String>): Boolean = sentences(answer).any { sentence ->
-        val words = contentWords(sentence)
-        val best = evidence.maxByOrNull { e -> contentWords(e).count { it in words } }
-        best != null && contentWords(best).any { it in words } &&
-            Ewm1ClaimCheck.check(sentence, listOf(best)).unsupported.any { it in POLARITY }
+    private fun polarityMismatch(answer: String, evidence: List<String>): Boolean {
+        val ev = evidence.map { it to contentWords(it) }
+        return sentences(answer).any { sentence ->
+            val words = contentWords(sentence)
+            val best = ev.maxByOrNull { (_, cw) -> cw.count { it in words } }
+            best != null && best.second.any { it in words } &&
+                Ewm1ClaimCheck.check(sentence, listOf(best.first)).unsupported.any { it in POLARITY }
+        }
     }
 
     /** "Markus arbeitet in Graz" while the only evidence clause about Markus names Linz. */
-    private fun unboundAttribute(answer: String, evidence: List<String>): Boolean {
+    private fun unboundAttribute(answer: String, evidence: List<Clause>): Boolean {
         // "..., seit 2024 wohnt sie in Graz": a clause led by a pronoun continues the previous clause's subject
         val bound = evidence.indices.map { i ->
-            if (i > 0 && words(evidence[i]).any { it in PRONOUNS }) names(evidence[i]) + names(evidence[i - 1]) else names(evidence[i])
+            if (i > 0 && evidence[i].pronoun) evidence[i].names + evidence[i - 1].names else evidence[i].names
         }
         return clauses(answer).any { clause ->
             val names = names(clause)
@@ -83,13 +100,13 @@ object LocalModelClaimAudit {
     }
 
     /** The answer restates a clause marked as past while the same evidence also holds a current clause. */
-    private fun outdated(answer: String, evidence: List<String>): Boolean {
-        if (evidence.none { c -> words(c).any { it in CURRENT } }) return false
+    private fun outdated(answer: String, evidence: List<Clause>): Boolean {
+        if (evidence.none { it.current }) return false
         return clauses(answer).any { clause ->
             val names = names(clause)
             if (names.isEmpty() || words(clause).any { it in PAST || it in CURRENT }) return@any false
-            val best = evidence.maxByOrNull { e -> names(e).count { it in names } } ?: return@any false
-            names(best).count { it in names } >= minOf(2, names.size) && words(best).any { it in PAST }
+            val best = evidence.maxByOrNull { e -> e.names.count { it in names } } ?: return@any false
+            best.names.count { it in names } >= minOf(2, names.size) && best.past
         }
     }
 
@@ -103,16 +120,13 @@ object LocalModelClaimAudit {
     }
 
     /** Two clauses about the same thing (shared name or noun) with different numbers or time words, no past/current marker. */
-    private fun selfContradicting(evidence: List<String>): Boolean {
-        val plain = evidence.filter { c -> words(c).none { it in PAST || it in CURRENT } }
+    private fun selfContradicting(evidence: List<Clause>): Boolean {
+        val plain = evidence.filter { !it.marked }
         for (i in plain.indices) for (j in i + 1 until plain.size) {
             val a = plain[i]; val b = plain[j]
-            if (names(a).none { it in names(b) }) continue
-            val numsA = numbers(a); val numsB = numbers(b)
-            if (numsA.isNotEmpty() && numsB.isNotEmpty() && numsA.none { it in numsB }) return true
-            val timeA = words(a).filter { it in Ewm1Lexicon.TIME && it !in setOf("uhr", "jeden", "jede") }
-            val timeB = words(b).filter { it in Ewm1Lexicon.TIME && it !in setOf("uhr", "jeden", "jede") }
-            if (timeA.isNotEmpty() && timeB.isNotEmpty() && timeA.none { it in timeB }) return true
+            if (a.names.none { it in b.names }) continue
+            if (a.numbers.isNotEmpty() && b.numbers.isNotEmpty() && a.numbers.none { it in b.numbers }) return true
+            if (a.times.isNotEmpty() && b.times.isNotEmpty() && a.times.none { it in b.times }) return true
         }
         return false
     }
