@@ -1,6 +1,11 @@
 # Continuum – verbindlicher Experiment- und Architekturvertrag
 Stand: 19.10.2026 | Nachweisanker: [Issue #41](https://github.com/Ullmann27/device-ai/issues/41) | Strategie: [Issue #7](https://github.com/Ullmann27/device-ai/issues/7)
 
+
+## Dauerhaftes BIO-NEURONAL-4-Forschungsziel (Besitzerfestlegung 30.10.2026)
+
+Künftige Experimente, Implementierungsaufträge und Code-Reviews müssen die vier **angestrebten Vorteile** des lokalen bio-neuronalen Wegs ausdrücklich berücksichtigen: **(1)** ressourcensparende ereignisgesteuerte/ggf. spärliche ARM64-Berechnung; **(2)** gemessenes vermindertes Vergessen durch Fisher/EWC; **(3)** kompakte zeitliche Kontexthinweise mit CTRNN ohne Ersatz für EWM2/Belege; **(4)** möglichst offline arbeitendes, datenschutzgerechtes Continuum unter separater Prüfung von ASR, Inferenz, TTS, Tools, Sync und Logs. Diese Vorteile sind Ziele, **keine bestehenden Messresultate oder Garantien**. CTRNN feuert nicht automatisch nur bei Entropiewechseln; EWC schließt Vergessen nicht aus; interne dynamische Zustände sind verlustbehaftet; auf dem Gerät ausgeführte Modellberechnung beweist keinen vollständig offline arbeitenden Sprachstack. Maßgebliche Details, Widerlegungskriterien und Hardware-Gates stehen in `docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md` (BIO-NEURONAL-4). Vergleich nur gegen unveränderte Baseline, echte unabhängige Holdouts und gemessene Ressourcen-/Fold7-Ergebnisse. Keine automatische Produktivaktivierung/Schlüssel-/Gewichtsänderung.
+
 ## Primärziel: **Android ist die Entwicklungsmaschine**
 Die Device-AI-Continuum-App soll auf dem eigenen Android-Gerät Quellcode erfassen, Kotlin/Java/Node-Aufgaben lösen, Fehler reparieren, echte Tests und Build-Tools **auf demselben Gerät** ausführen, signierte APK-Artefakte erzeugen und die Installation über Androids zulässige Wege nach Besitzerfreigabe anstoßen. Der PC ist optionaler zusätzlicher Worker. Android nur als Fernbedienung eines verpflichtenden PC-Workers ist **nicht** das Produktziel. Langfristig sind Rezepte zur Entwicklung für Android, Linux, Windows, Web, Flutter, Godot sowie iOS/macOS mit tatsächlich passenden Toolchains und rechtmäßiger Signierung erwünscht. Eine auf Android nicht vorhandene Toolchain muss `UNAVAILABLE` melden, nicht Erfolg vortäuschen.
 
