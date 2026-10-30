@@ -49,3 +49,10 @@ Nach Code-Commit: SHA-Readback für jede Datei, CI-Anlauf falls ausführbar; una
 - Unsigniertes `Continuum Lokal 0.3.28 / versionCode 29` mit SHA-256 `af444010a254219e9fa430300fb63db1fe15acc2a0315d19511c6d023cb5523a`: **nicht installierbar** ohne originale Fold7-P12.
 - **Wichtig:** Diese positiven Ergebnisse gelten nur für `6bc54545...`, **nicht** für unseren neuen PR #257. Der aktuelle PR benötigt eigene Kotlin-JUnit-/Lint-/APK-Buildbelege. GitHub Actions war hier also kein zwingender Blocker; Render konnte die Basisroute bereits bauen.
 - Kein neues Render-Deployment ausgelöst und kein altes veröffentlichtes Update-Manifest freigegeben.
+
+## Gemeinsamer Abschluss der drei parallelen Meilensteinstränge
+1. **M7 APK und Update-Button:** gestapelter [PR #257](https://github.com/Ullmann27/device-ai/pull/257), manuelle originale APK-Signatur und Fold7 Doppel-Update noch offen. Render hat den **älteren Parent-Commit** gebaut, nicht diese Korrektur.
+2. **M6 Gedächtnis:** [PR #258](https://github.com/Ullmann27/device-ai/pull/258) enthält den 240-Fall-Korpus, Vorregistrierung und einen Git-Blob-/Schema-Validator; **keine** EWM-Holdout-Metrik beansprucht.
+3. **M8 Coding-Agent:** [PR #259](https://github.com/Ullmann27/device-ai/pull/259) erweitert sechs auf 30 Testfehler und ergänzt einen eigenständigen rot/grün-Runner; **keine** echte Modellinferenz oder Android-Isolation beansprucht.
+
+**Stoppbedingungen:** Vor M7-Geräteinstallation Kotlin-/Gradle-Regression; vor M6-Übernahme einmaliger unabhängiger Holdout; vor M8-General-Patch echte OS-Isolation. Kein blindes Cherry-Picking aller offenen Draft-PRs, keine Schreibaktion nach `main` oder signiertes Update ohne Besitzerfreigabe. 200 Entwicklungsaktionen wurden in dieser Sitzung nicht als vollständig erledigt behauptet; jeder GitHub-Commit/Schritt ist einzeln auditierbar.
