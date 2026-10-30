@@ -67,13 +67,15 @@ object M5Data {
             val group = "M5-${split.name}-${kind.name}-${g.toString().padStart(3, '0')}"
             val salt = split.ordinal.toLong() * 1_000_003L + kind.ordinal * 100_003L + g * 997L
             val r = Random(SEED xor salt)
-            val person0 = r.nextInt(people.size)
-            val person1 = randomIndex(r, person0, people.size)
+            // DEV and VAL use disjoint names: no verbatim memory can cross the split boundary.
+            val personPool = if (split == Split.DEV) people.take(12) else people.drop(12)
+            val person0 = r.nextInt(personPool.size)
+            val person1 = randomIndex(r, person0, personPool.size)
             val place0 = r.nextInt(places.size)
             val place1 = randomIndex(r, place0, places.size)
             val day0 = r.nextInt(2)
             val task = tasks[r.nextInt(tasks.size)]
-            val names = listOf(people[person0], people[person1])
+            val names = listOf(personPool[person0], personPool[person1])
             val locs = listOf(places[place0], places[place1])
             val ds = listOf(days[day0], days[1 - day0])
             // Every factor position is the target exactly eight times for each (split,kind).
@@ -116,6 +118,9 @@ object M5Data {
             require(memories.map { it.text }.toSet().size == 8) { "$id: duplicate candidate" }
             require(group.all { it.text.isNotBlank() && '\t' !in it.text && '\n' !in it.text && '\r' !in it.text })
         }
+        val devMemories = rows.filter { it.split == Split.DEV && it.role != "QUERY" }.map { it.text }.toSet()
+        val valMemories = rows.filter { it.split == Split.VAL && it.role != "QUERY" }.map { it.text }.toSet()
+        require(devMemories.intersect(valMemories).isEmpty()) { "DEV/VAL contains duplicate memory text" }
         for (split in Split.values()) for (kind in Kind.values()) {
             val filtered = groups.values.filter { it[0].split == split && it[0].kind == kind }
             require(filtered.size == GROUPS_PER_KIND_PER_SPLIT)
