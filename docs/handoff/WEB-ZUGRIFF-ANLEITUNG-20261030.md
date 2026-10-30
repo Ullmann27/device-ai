@@ -37,3 +37,23 @@
   2. SearXNG-Anbindung als `web_search`.
   3. Optional Playwright für dynamische Seiten.
   4. Erst danach Agent Reach als zusätzliche Quelle für Plattformen vergleichen.
+
+## Besitzerauftrag 30.10.: Hintergrund-Lernen aus dem ganzen Web statt nur Wikipedia (für die nächste APK)
+**Nicht umgesetzt:** Das ist ein Produktiveingriff in mehrere Dateien ohne Android-Build hier. Ansatzpunkte auf #260/#265:
+- `learning/ContinuumPublicStudyPolicy.kt:54-69`: feste `de.wikipedia.org`-API-URLs.
+- `learning/ContinuumPublicStudyScheduler.kt:210`, `learning/ContinuumKnowledgeArchive.kt:72` (Archivart `WIKIPEDIA_EXCERPT`), `learning/MentorSource.kt:9`.
+- `cognitive/WikipediaExtractResearchProvider.kt:30`, `cognitive/WikipediaResearchDiscoveryProvider.kt:31`.
+- `cognitive/PinnedResearchHttpsConnection.kt`: Zertifikat-Pinning prüfen und für weitere Hosts eine eigene, begrenzte Vertrauensregel festlegen.
+
+**Bauauftrag (GPT-6 oder Codex, mit Tests):**
+1. Schnittstelle `ResearchSourceProvider` neben den vorhandenen Wikipedia-Providern; keine zweite Lernpipeline. Implementierungen:
+   - `WebSearchProvider`: selbst betriebenes SearXNG, Endpunkt vom Besitzer.
+   - `WebPageProvider`: HTTPS-Abruf, Text-Extraktion, Größen- und Zeitlimit, robots.txt.
+   - Wikipedia bleibt eine von mehreren Quellen.
+2. Themenabhängige Quellenwahl: Je Lernthema werden Suchtreffer über mehrere Domänen gestreut und Primärquellen bevorzugt. Jede Quelle bekommt eine Vertrauensbewertung (vorhandenes `sourceTrustScorer` in `HybridMemoryRetriever`).
+3. Archivart `WEB_EXCERPT` mit URL, Abrufzeit, SHA-256 und Lizenzhinweis. Auszüge bleiben **Quellen, nie bestätigte Besitzerfakten**; QF2-Quellanker bleiben erhalten.
+4. Schalter „Webzugang immer zulassen“: den vorhandenen `internetConsent`-Modus erweitern, nicht ersetzen.
+   - Hintergrund über die vorhandenen Jobs (`ContinuumPublicStudyScheduler`), mit `ContinuumOfflineLearningBudget` (Thermal, Akku, Speicher). Kein neuer Scheduler.
+   - Der Besitzer kann ihn jederzeit widerrufen.
+5. Sicherheit: Webtext ist nicht vertrauenswürdig (keine Anweisungen ausführen), Domänen-Sperrliste, keine Cookies oder Logins, Ratenlimit, Quittung je Abruf.
+6. Tests: Host-JUnit für Providergrenzen (Timeout, Größe, Sperrliste, eingeschleuster Text bleibt Daten); danach Gradle-Build und Fold7-Lauf mit „immer zulassen“ und Prüfung im Trainings-Monitor.
