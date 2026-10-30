@@ -41,6 +41,8 @@ const {tasks,seal}=JSON.parse(fs.readFileSync(tasksFile,'utf8'));
 if(seal!==expectedSeal||sealTasks(tasks)!==seal)throw Error('TASK_SEAL_MISMATCH');
 for(const t of tasks)if(sha(fs.readFileSync(path.join(root,t.module),'utf8'))!==t.originalSha256)throw Error('MODULE_CHANGED_SINCE_SEAL: '+t.module);
 const reps=Number(repsArg??3);
+// typical test-file runs take 0.1-0.3 s; endless-loop mutants are cut at 6 s (process group killed)
+const RUN_TIMEOUT_MS=6000;
 function prepared(t){
  const original=fs.readFileSync(path.join(root,t.module),'utf8');
  const faulted=applyEdit(original,t.fault);
@@ -52,7 +54,7 @@ function prepared(t){
 const P=new Map(tasks.map(t=>[t.id,prepared(t)]));
 const reports=[];
 for(let rep=1;rep<=reps;rep++){
- const runner=new LabRunner({root});
+ const runner=new LabRunner({root,timeoutMs:RUN_TIMEOUT_MS});
  const runFor=t=>(c,subset)=>{
   const r=runner.run({testRel:t.test,moduleRel:t.module,source:applyEdit(P.get(t.id).faulted,c),names:subset==='full'?null:t.parts[subset],extra:t.extra});
   return {...r,failing:failingNames(r.log)};
@@ -108,7 +110,7 @@ function paired(armA,armB,rows){
   [armA+'FewerRuns']:fewer,[armA+'MoreRuns']:more,pRuns:binomTwoSided(Math.min(fewer,more),fewer+more)};
 }
 const families=[...new Set(hold.map(r=>r.family))];
-const report={schema:1,sourceSha:head,seal,reps,deterministicAcrossReps:deterministic,
+const report={schema:1,sourceSha:head,seal,reps,runTimeoutMs:RUN_TIMEOUT_MS,deterministicAcrossReps:deterministic,
  executionsPerRep:reports.map(r=>r.executions),trainRunsPerRep:reports.map(r=>r.trainRuns),experienceBytes:reports[0].experienceBytes,
  dev:summarize(first.filter(r=>r.split==='dev')),holdout:summarize(hold),
  holdoutKnownFamilies:summarize(hold.filter(r=>r.family!=='ARITH')),holdoutNovelARITH:summarize(hold.filter(r=>r.family==='ARITH')),
