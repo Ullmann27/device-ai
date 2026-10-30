@@ -60,11 +60,20 @@ internal object ContinuumOwnerUpdateCatalog {
         require(obj.get("schema") is Number && obj.getInt("schema") == 1) {
             "Manifestformat nicht unterstützt"
         }
-        require(obj.get("versionCode") is Number && obj.get("byteLength") is Number &&
+        // JSONObject#getInt/getLong silently truncate floating-point JSON numbers.
+        // Require actual JSON integer tokens before converting version or APK length.
+        val rawVersion = obj.get("versionCode")
+        val rawBytes = obj.get("byteLength")
+        require((rawVersion is Int || rawVersion is Long) &&
+            (rawBytes is Int || rawBytes is Long) &&
             obj.get("approved") is Boolean) { "Release-Feldtypen ungültig" }
+        val versionCode = (rawVersion as Number).toLong()
+        val byteLength = (rawBytes as Number).toLong()
+        require(versionCode in 29L..9999L) { "Versionsnummer ungültig" }
 
         val versionName = obj.getString("versionName")
-        require(namePattern.matches(versionName)) { "Versionsname ungültig" }
+        require(namePattern.matches(versionName) &&
+            versionName == "0.3.${versionCode - 1L}") { "Versionsname ungültig" }
         val notes = obj.getString("notes")
         require(notes.length <= 800 && notes.none { it.code < 32 && it != '\n' }) {
             "Releasehinweise ungültig"
@@ -74,10 +83,10 @@ internal object ContinuumOwnerUpdateCatalog {
             ContinuumOwnerReleaseDescriptor(
                 channel = obj.getString("channel"),
                 packageName = obj.getString("packageName"),
-                versionCode = obj.getInt("versionCode"),
+                versionCode = versionCode.toInt(),
                 apkUrl = obj.getString("apkUrl"),
                 apkSha256 = obj.getString("apkSha256"),
-                byteLength = obj.getLong("byteLength"),
+                byteLength = byteLength,
                 sourceCommit = obj.getString("sourceCommit"),
                 signerSha256 = obj.getString("signerSha256"),
                 explicitlyApproved = obj.getBoolean("approved")

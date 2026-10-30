@@ -94,4 +94,31 @@ class ContinuumOwnerUpdateCatalogTest {
             ContinuumOwnerUpdateCatalog.parse(JSONObject(json()).put("versionName", "../unsafe").toString())
         }
     }
+
+    @Test fun fractionalJsonNumbersAreNeverSilentlyRounded() {
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumOwnerUpdateCatalog.parse(
+                JSONObject(json()).put("versionCode", 30.25).toString()
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumOwnerUpdateCatalog.parse(
+                JSONObject(json()).put("byteLength", 100_000_000.5).toString()
+            )
+        }
+    }
+
+    @Test fun releaseNameMustMatchActualVersionCode() {
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumOwnerUpdateCatalog.parse(
+                JSONObject(json()).put("versionName", "0.3.28").toString()
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumOwnerUpdateCatalog.parse(
+                JSONObject(json()).put("versionCode", 28).toString()
+            )
+        }
+    }
+
 }

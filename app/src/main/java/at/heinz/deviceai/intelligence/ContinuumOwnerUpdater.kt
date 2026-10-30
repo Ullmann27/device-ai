@@ -46,14 +46,18 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
                 ContinuumOwnerUpdateCatalog.MAX_JSON_BYTES)
             val release = ContinuumOwnerUpdateCatalog.parseAvailable(json)
                 ?: return@submit Check.NoRelease
-            if (release.descriptor.versionCode <= version) return@submit Check.Current
             val policy = ContinuumSignedUpdatePolicy.check(
                 context.packageName, version, signer,
                 ContinuumOwnerUpdateCatalog.HOST, release.descriptor
             )
-            if (policy !is ContinuumUpdatePreflight.ReadyForActualApkVerification)
-                return@submit Check.Rejected("Freigabeprüfung verweigert: $policy")
-            Check.Available(release)
+            when (policy) {
+                ContinuumUpdatePreflight.ReadyForActualApkVerification -> Check.Available(release)
+                is ContinuumUpdatePreflight.Rejected ->
+                    if (policy.reason == ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
+                        Check.Current
+                    else
+                        Check.Rejected("Freigabeprüfung verweigert: $policy")
+            }
         }
     }
 
@@ -175,8 +179,11 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
                         md.update(chunk, 0, n)
                         out.write(chunk, 0, n)
                         if (total == entry.byteLength || total % (1024 * 1024) < n) {
+                            // Capture the value before posting; 'total' continues changing
+                            // while the main-thread callback waits in its message queue.
+                            val receivedBytes = total
                             android.os.Handler(android.os.Looper.getMainLooper()).post {
-                                progress(total, entry.byteLength)
+                                progress(receivedBytes, entry.byteLength)
                             }
                         }
                     }
@@ -231,8 +238,11 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
                     .setAction(ContinuumOwnerUpdateReceiver.ACTION_INSTALL_RESULT)
                     .putExtra(ContinuumOwnerUpdateReceiver.EXTRA_VERSION,
                         release.descriptor.versionCode)
+                // PackageInstaller session IDs distinguish concurrent/previous updates.
+                // A fixed request code allows an older callback to inherit a newer
+                // expected version via FLAG_UPDATE_CURRENT.
                 val pending = PendingIntent.getBroadcast(
-                    context, 7155, callback,
+                    context, id, callback,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
                 )
                 session.commit(pending.intentSender)
