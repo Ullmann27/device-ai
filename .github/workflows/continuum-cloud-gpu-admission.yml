@@ -10,6 +10,7 @@ on:
       - .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs
       - .github/continuum/nvidia-nim-public-coding-lab.mjs
       - .github/continuum/nvidia-nim-public-coding-lab.test.mjs
+      - .github/continuum/nvidia-nim-public-coding-oracle.test.mjs
       - scripts/continuum-nvidia-nim-benchmark.mjs
       - scripts/continuum-nvidia-coding-lab.mjs
       - .github/workflows/continuum-cloud-gpu-admission.yml
@@ -35,6 +36,7 @@ jobs:
             .github/continuum/continuum-cloud-gpu-admission.test.mjs \
             .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs \
             .github/continuum/nvidia-nim-public-coding-lab.test.mjs \
+            .github/continuum/nvidia-nim-public-coding-oracle.test.mjs \
             .github/continuum/compute-fabric-model-adapter.test.mjs \
             .github/continuum/continuum-virtual-model-fabric.test.mjs \
             .github/continuum/coding-provider-remote.test.mjs
@@ -46,6 +48,7 @@ jobs:
           node --check .github/continuum/nvidia-nim-synthetic-benchmark.test.mjs
           node --check .github/continuum/nvidia-nim-public-coding-lab.mjs
           node --check .github/continuum/nvidia-nim-public-coding-lab.test.mjs
+          node --check .github/continuum/nvidia-nim-public-coding-oracle.test.mjs
           node --check scripts/continuum-nvidia-coding-lab.mjs
           node scripts/continuum-nvidia-coding-lab.mjs --check
           node scripts/continuum-nvidia-nim-benchmark.mjs --check
