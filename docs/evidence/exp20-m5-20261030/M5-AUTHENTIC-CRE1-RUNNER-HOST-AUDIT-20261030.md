@@ -51,3 +51,13 @@ Die drei Umgebungsvariablen müssen auf tatsächlich installierte, geeignete lok
 `main` und `app/src/main` nicht verändert, kein automatischer Merge, keine Gewichtsübernahme, kein neuer Shadow-Hook, keine echte Android-Fold7-Behauptung, kein unsichtbares Training und keine Rückwirkung auf ToolGate/OwnerGate. Der Runner nutzt ausschließlich lokale, bereits im Projekt vorhandene Werkzeuge; keine externen kostenpflichtigen KI-APIs und keine CI-Pipeline.
 
 Siehe die [erste M5-Registrierung](../../research/exp20/EXP-20-M5-PREREGISTRATION-20261030.md), das [vor dem echten Lauf registrierte Tie-Gate](../../research/exp20/EXP-20-M5-BLIND-GATE-PREREG-ADDENDUM-20261030.md) sowie den [M5-Code-/Leakage-Audit](M5-WP1-HOST-AND-LEAKAGE-AUDIT.md).
+
+## Wiederholbarer Fail-Closed-Selbsttest (nachträglich ergänzt, vor echtem Modelllauf)
+
+Neu im gleichen Forschungsbranch: `scripts/exp20-m5-runner-selftest.sh`, Git-Blob-SHA1 `12fc0a1cd092be72b516a747378cd0269617956c`. Das Skript verwendet für drei Negativfälle ein temporäres Mock-Repository und Mock-Node; es wird weder CRE1 noch ein versiegelter Datensatz geöffnet. Auf dem lokalen Host wurde `bash -n scripts/exp20-m5-runner-selftest.sh` mit Exit 0 geprüft und `bash scripts/exp20-m5-runner-selftest.sh` mit Exit 0 ausgeführt:
+
+1. Manipulierter CRE1-Checkpoint: `SHA_MISMATCH`, kein Gate-Bericht.
+2. Scratch innerhalb des Repositorys: Ausführung abgewiesen.
+3. Fehlender Kotlin-Compiler: Abbruch vor Checkpoint-Erzeugung.
+
+Ergebnis `M5_RUNNER_FAIL_CLOSED_TESTS=3/3` (Host), eindeutiger Git-Blob-Readback. Befehl zur Wiederholung im vollständigen Repository: `bash scripts/exp20-m5-runner-selftest.sh`. Dieses Selbsttestergebnis ersetzt **nicht** den tatsächlichen Node/Kotlin-CRE1-VAL-Lauf.
