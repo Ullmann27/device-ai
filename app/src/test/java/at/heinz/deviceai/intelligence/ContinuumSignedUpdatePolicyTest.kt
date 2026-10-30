@@ -78,4 +78,19 @@ class ContinuumSignedUpdatePolicyTest {
         rejected(check(release(byteLength = 2_000_000_001L)),
             ContinuumUpdateRejection.INVALID_RELEASE_METADATA)
     }
+
+    @Test fun staleManifestIsCurrentOnlyAfterAllApprovalAndOriginChecks() {
+        rejected(check(release(versionCode = 28)),
+            ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
+        rejected(check(release(versionCode = 28, approved = false)),
+            ContinuumUpdateRejection.UNAPPROVED_RELEASE)
+        rejected(check(release(versionCode = 28, signer = "c".repeat(64))),
+            ContinuumUpdateRejection.INVALID_RELEASE_METADATA)
+        rejected(check(release(versionCode = 28,
+            apkUrl = "https://evil.example/continuum-local/Continuum-Lokal-${sha}.apk")),
+            ContinuumUpdateRejection.UNTRUSTED_HTTPS_URL)
+        rejected(check(release(versionCode = 28, channel = "QA")),
+            ContinuumUpdateRejection.WRONG_RELEASE_CHANNEL)
+    }
+
 }
