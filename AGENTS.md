@@ -1,5 +1,20 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+
+## DAUERREGEL BIO-NEURONAL-4: Forschungsrichtung und versprochene Vorteile nicht vergessen
+
+**Für alle künftigen Continuum-, JARVIS-, CCC1-, NTW1-, EWM2-, Sprach-, Thermal- und Fold7-Arbeiten verbindlich:** Die vier angestrebten Vorteile des Übergangs zu bio-neuronal inspiriertem lokalem Rechnen sind **(1) Energie-/Ressourceneffizienz, (2) fortlaufendes Lernen mit reduziertem Vergessen durch Fisher/EWC, (3) zeitlich kompakter Kontext durch CTRNN, (4) lokale Unabhängigkeit und Datenschutz**. Nachzulesen samt Hypothesen, Messpflichten und Grenzen in [BIO-NEURONAL-4 der JARVIS-Charta](docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md). **Bei jedem neuen Auftrag neu berücksichtigen**, nicht als erledigt abhaken.
+
+Keiner dieser vier Vorteile ist ohne reale Gegenmessung bewiesen: CTRNN ist nicht von selbst sparse oder ereignisgesteuert; Fisher/EWC kann Vergessen nur reduzieren, nicht ausschließen; dynamischer Zustand ersetzt keine beleggebundene EWM2-Historie; ARM64-Inferenz garantiert weder offline arbeitende ASR/TTS noch, dass Tools/Sync niemals Daten übertragen. Optimierungen nur SHADOW und nach eingefrorener, identisch budgetierter Baseline mit unabhängigen Aufgaben, CPU/RAM/p50/p95/Energie-/Thermalmessungen und tatsächlicher Fold7-Prüfung. Nie die bestehenden Owner-/ToolGate-/Shutdown-Grenzen oder verifizierte gespeicherte Fakten verändern.
+
+
+## VERBINDLICH: JARVIS-Resilienz und Neurodynamik (EXP-16 bis EXP-23)
+
+**Zentraler Forschungs-, Architektur- und Besitzerkontrollvertrag:** [JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md](docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md). **Vor jeder JARVIS-, NTW1-, CCC1-, JPI1-, Geräte-/Sync-, Energie- oder Lernänderung lesen.** Acht neue Experimente stehen zusätzlich im `docs/CONTINUUM-EXPERIMENTE.json`-Register: EXP-16 sichere, nutzerkontrollierte Geräte-/Zustandskontinuität; EXP-17 evolutionsbasierte Reparatur; EXP-18 HDC-Routing; EXP-19 kryptografische Besitzerautorität; EXP-20 CTRNN; EXP-21 Fisher/EWC; EXP-22 STDP/Metaplastizität; EXP-23 Thermal-/Energie-Budget. Alle neu, **nur PROPOSED_SHADOW**, keine behauptete Implementierung.
+
+**Harte unveränderliche Grenzen:** Die bestehenden `CognitiveGenome`-Invarianten `allowSelfReplication=false`, `allowHiddenPersistence=false` und `allowShutdownEvasion=false` bewahren. Besitzer-Stop, Rechtewiderruf und Löschen gehen vor. Nur genehmigte Backups und Wiederherstellung; nie heimliche Replikation, Ausweichen um Shutdown/Sperren, kompromittierte Zugriffsrechte oder autonome Produktion-Patches. OwnerGate + ToolGate bleiben zwingend. Kein neues zweites Gehirn, kein heimliches Training/Weight-Update, kein ungeprüftes Merge nach main. CTRNN/EWC/STDP/HDC/MPS/ZKP sind Forschungsoptionen, keine nachgewiesene lokale Superintelligenz. Fold7-Sicherheit/Leistung nur aus realer Messung behaupten. **Aktuell: keine neue APK oder Fold7-Abnahme.**
+
+
 ## JARVIS VOICE-1 · Fortschritt ab PR #250 (noch nicht auf Fold7 abgenommen)
 
 **Neue praktische Ein-Gerät-Sprachrunde:** [vollständiger Implementierungs-/Abnahmebericht](docs/research/jpi1/JARVIS-VOICE-1-IMPLEMENTATION-20261030.md) und [übernehmbare GPT-6-Übergabe](docs/research/omega/GPT6-JARVIS-VOICE1-HANDOFF-20261030.md). Der bereits bestehende Android-Recognizer kann nach explizitem Langdruck auf das Mikrofon einfache Fragen direkt in die vorhandene `runContinuumDialogue`-Pipeline leiten, ohne eigenen Gedächtniskern oder ToolGate-Freigabe. Bestehendes TextToSpeech liefert Antworten nur bei `TON AN`. Gerätebefehle und personenbezogene Geheimnisse bleiben manuell. **38/38 isolierte Kotlin-Sprachpolicy-Prüffälle bestanden; keine Android-Gradle-/Node-Gesamtprüfung, keine APK, keine Fold7-Abnahme.** Draft-PR #250 ist auf PR #247 gestapelt, nicht direkt auf PR #249. `main` nicht anfassen. Für sicheren nächsten Schritt die Testgate-Anweisungen und Einschränkungen in der Übergabe befolgen.
