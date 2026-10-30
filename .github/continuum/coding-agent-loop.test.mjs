@@ -301,3 +301,28 @@ test('interactive mode: plain requests line by line, confirmation on the next li
     assert.match(no.stdout,/Ergebnis: NOT_GRANTED/);
   }finally{cleanup(f);}
 });
+
+test('the command tests inside its own loop: wrong patch, run_tests fails, in-loop correction, VERIFIED; general code stays blocked',async()=>{
+  const {runAgentCommand}=await import('../../scripts/continuum-agent.mjs');
+  const f=fixture();
+  try{
+    const lines=[];
+    const inLoop=[...scoutScript,wrongFix,{tool:'run_tests',args:{}},
+      {tool:'edit_file',args:{path:'lib/geometry.mjs',old_text:'return b-a;',new_text:'return a>b?a-b:b-a;'}},{tool:'run_tests',args:{}},done];
+    const ok=runAgentCommand({repo:f.root,request:'Abstand muss positiv sein',brain:createScriptedBrain(inLoop),confirm:()=>true,log:m=>lines.push(m)});
+    const tests=lines.filter(l=>/run_tests/.test(l));
+    assert.match(tests[0],/run_tests: FAILED/);assert.match(tests[1],/run_tests: ALL PASSED/);
+    assert.equal(ok.status,'VERIFIED');assert.equal(ok.verified,true);
+    assert.ok(!ok.attempts.includes('FAILED_TESTS'),'corrected inside the loop, not by a second session revision');
+    fs.rmSync(ok.evidence,{recursive:true,force:true});
+    const general=[...scoutScript,{tool:'edit_file',args:{path:'lib/geometry.mjs',old_text:'return a-b;',new_text:'return Math.abs(a-b);'}},
+      {tool:'run_tests',args:{}},done];
+    const blockedLines=[];
+    const blocked=runAgentCommand({repo:f.root,request:'Abstand muss positiv sein',brain:createScriptedBrain(general),confirm:()=>true,log:m=>blockedLines.push(m)});
+    assert.match(blockedLines.find(l=>/run_tests/.test(l)),/run_tests: NOT RUN/);
+    assert.equal(blocked.verified,false);assert.ok(blocked.attempts.includes('REJECTED_BY_EXECUTION_POLICY'));
+    fs.rmSync(blocked.evidence,{recursive:true,force:true});
+    const wts=spawnSync('git',['worktree','list'],{cwd:f.root,encoding:'utf8'}).stdout.trim().split('\n');
+    assert.equal(wts.length,1,'scratch and session worktrees are closed');
+  }finally{cleanup(f);}
+});

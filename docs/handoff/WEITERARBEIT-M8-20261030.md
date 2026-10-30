@@ -50,3 +50,9 @@
 - Keine Ausführung von Modellcode ohne Isolation.
 - „Simuliert“ nie als „autonom“ berichten.
 - OwnerGate, ToolGate und die CognitiveGenome-Invarianten bleiben unverändert.
+
+**Nachtrag (letzter Auftrag):** `scripts/continuum-agent.mjs` übergibt jetzt `createScratchTestRunner` als `runTests`; `close()` läuft im `finally`.
+- Der Agent testet und korrigiert innerhalb seiner Schleife: falscher Patch → `run_tests: FAILED` → Korrektur → `ALL PASSED` → `repairSession` `VERIFIED`.
+- Allgemeiner Code ohne Isolation bleibt `NOT RUN` bzw. `REJECTED_BY_EXECUTION_POLICY`.
+- „Geprüft“ zeigt die CLI nur bei `report.verified`.
+- Test 15/15, nur mit simuliertem Brain.

@@ -19,7 +19,7 @@ import readline from 'node:readline';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {scoutRequest,createAgentCandidateProvider,createScriptedBrain,createChatCompletionsBrain} from '../.github/continuum/coding-agent-loop.mjs';
+import {scoutRequest,createAgentCandidateProvider,createScriptedBrain,createChatCompletionsBrain,createScratchTestRunner} from '../.github/continuum/coding-agent-loop.mjs';
 import {validateCodingTask} from '../.github/continuum/coding-task.mjs';
 import {createWorktree,removeWorktree,repairSession} from '../.github/continuum/repair-loop.mjs';
 import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
@@ -37,14 +37,18 @@ export function runAgentCommand({repo,request,brain,confirm,executor=null,log=()
     limits:{maxModelCalls:3,maxContextChars:12000}});
   const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-agent-run-'));
   const wt=createWorktree(repo,head);
+  // In-loop run_tests: same chain and execution policy as the session (general edits only with the isolated executor).
+  const runner=createScratchTestRunner({wt,base:head,chain:task.chain,executor});
   let last=null;
   try{
-    const provider=createAgentCandidateProvider({task,brain,onStep:s=>log(`  [Reparatur] ${s.tool}`),evidenceDir:path.join(out,'evidence')});
+    const provider=createAgentCandidateProvider({task,brain,runTests:runner.runTests,evidenceDir:path.join(out,'evidence'),
+      onStep:s=>log(`  [Reparatur] ${s.tool}${s.tool==='run_tests'?': '+String(s.observation).split('\n')[0]:''}`)});
     const wrapped=Object.assign(input=>(last=provider(input)),{taskSpec:provider.taskSpec,allowedPaths:provider.allowedPaths});
     const report=repairSession({wt,base:head,chain:task.chain,out:path.join(out,'report'),candidateProvider:wrapped,executor});
-    return {status:report.outcome,scope,brainKind:last?.agent?.brainKind??scope.brainKind,patches:last?.patches??[],
+    return {status:report.outcome,verified:report.outcome==='VERIFIED'&&Boolean(report.verified),scope,
+      brainKind:last?.agent?.brainKind??scope.brainKind,patches:last?.patches??[],
       attempts:(report.attempts??[]).map(a=>a.outcome),evidence:out};
-  }finally{removeWorktree(repo,wt);}
+  }finally{try{runner.close();}finally{removeWorktree(repo,wt);}}
 }
 
 /** Blocking line read from stdin (TTY or pipe); bytes are decoded at the end so umlauts survive. */
@@ -72,7 +76,7 @@ if(process.argv[1]===fileURLToPath(import.meta.url)){
   const show=result=>{
     console.log(`\nErgebnis: ${result.status} (${result.brainKind??result.scope?.brainKind})${result.attempts?' Versuche: '+result.attempts.join(', '):''}`);
     for(const p of result.patches??[])console.log(`\n--- ${p.file} (alt)\n${p.oldText}\n+++ ${p.file} (neu)\n${p.newText}`);
-    if(result.status==='VERIFIED')console.log('\nGeprüft durch die feste Testkette. Nichts wurde angewendet: Patch zur Freigabe.');
+    if(result.verified)console.log('\nGeprüft durch die feste Testkette. Nichts wurde angewendet: Patch zur Freigabe.');
     else if(result.attempts?.includes('REJECTED_BY_EXECUTION_POLICY'))console.log('\nNicht ausgeführt: allgemeine Änderungen laufen nur im isolierten Executor (--executor).');
     if(result.evidence)console.log('Protokoll: '+result.evidence);
   };
