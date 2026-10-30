@@ -153,3 +153,12 @@ test('malformed source strategy entries are ignored rather than crashing standal
     experiences:[],sessions:[]};
   assert.deepEqual(summarizeExistingLedger(ledger).observations,[]);
 });
+
+test('Android thermal headroom counts consumed envelope: high values block shadow experiments',()=>{
+  // Android PowerManager.getThermalHeadroom(0): 0 means low load, 1 severe throttling.
+  assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom:0.2}).eligible,true);
+  for(const value of [0.6,0.9,1.0,1.1,NaN,Infinity,-1]) {
+    assert.equal(canStartShadowSelfPlay({...ready,thermalHeadroom:value}).eligible,false,
+      'High/invalid thermal load must fail closed: '+String(value));
+  }
+});
