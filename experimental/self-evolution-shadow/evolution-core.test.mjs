@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {canStartShadowSelfPlay,mutateTypedPolicy,classifyIndependentEvidence,
   autopsyFromOutcome,summarizeExistingLedger,proposeEvolutionMacros,
-  executeShadowEvolutionCycle,evolutionDigest} from './evolution-core.mjs';
+  executeShadowEvolutionCycle,evolutionDigest,deriveShadowOperatorPriors} from './evolution-core.mjs';
 
 const healthy = (id='test-domain') => ({id,policy:{sliceEndAdjustment:0,clampNonnegative:true},
   visible:[{input:{samples:[1,2,3],start:0,span:3,reserved:0,ceiling:9},expected:3}],
@@ -104,4 +104,15 @@ test('strict cycle limits block unbounded self-improvement and excess tasks',()=
     solver:()=>candidate,independentVerifier:()=>null,cycleId:51}),/UNBOUNDED/);
   assert.throws(()=>executeShadowEvolutionCycle({snapshot:ready,baselineTasks:[healthy()],
     solver:()=>candidate,independentVerifier:()=>null,maxTasks:300}),/UNBOUNDED/);
+});
+
+test('negative gradient is only a shadow prior from single-operator verified records',()=>{
+  const r=[{classification:'VERIFIED_EXPERIMENTAL',chain:['correct-slice-end']},
+    {classification:'VERIFIED_NEGATIVE',chain:['clamp-negative-quota']},
+    {classification:'NEUTRAL',chain:['correct-slice-end']},
+    {classification:'VERIFIED_NEGATIVE',chain:['correct-slice-end','clamp-negative-quota']}];
+  const p=deriveShadowOperatorPriors(r);
+  assert.ok(p.priors['correct-slice-end']>p.priors['clamp-negative-quota']);
+  assert.equal(p.sampleCounts['correct-slice-end'].failures,0);
+  assert.equal(p.persisted,false);assert.equal(p.modelWeightsChanged,false);
 });
