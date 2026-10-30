@@ -44,7 +44,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
     printf 'CONTINUUM_NEURO_DAILY=3\n'
     printf 'CONTINUUM_NEURO_TOTAL=24\n'
     printf 'CONTINUUM_NEURO_MIN_INTERVAL_MS=900000\n'
-    printf 'CONTINUUM_NEURO_COMMIT_EVIDENCE=false\n'
+    printf 'CONTINUUM_NEURO_COMMIT_EVIDENCE=true\n'
   } > "$ENV_FILE"
   chmod 600 "$ENV_FILE"
   unset NVIDIA_NEW_KEY
