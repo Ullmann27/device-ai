@@ -53,3 +53,19 @@
 - „Simuliert“ (`SIMULATED_SCRIPT`) **nie** als autonome Lösung berichten.
 - Die CognitiveGenome-Invarianten, OwnerGate, ToolGate, CCC1 und EWM2 bleiben unverändert, außer mit Freigabe.
 - Nach jedem fertigen Teil: Commit, Push, SHA-Readback; Status und Weiterarbeitsauftrag nachführen.
+
+## Nachtrag: Fold7-Hänger, Ursachenanalyse (Opus 5.5, kurz, ohne Gerätezugriff)
+**Nachgewiesen im Code (Ursache der Hänger erst mit Gerätedaten zu bestätigen):**
+1. **Verzeichnisdurchlauf alle 5 s:** `AgentActivity.dashboardRefresh` löst im Vordergrund alle 5 s `ContinuumDashboardCollector.collect()` aus. `storage()` läuft dabei **jedes Mal rekursiv über das ganze `filesDir`** (bis Tiefe 6, `sizeOf`), ohne Zwischenspeicher. Das geschieht im Hintergrund (`onLearningIo`), also kein ANR, aber Dauerlast für Ein-/Ausgabe und CPU, die mit der Zahl der Archiv-, Belegs-, Modell- und Erfahrungsdateien wächst.
+   - **Fix-Kandidat (nicht umgesetzt, weil ohne Android-Build nicht testbar):** Die Größen pro Bereich höchstens alle 5 min neu berechnen; `StatFs` bleibt live. Dazu kommt ein Test mit Robolectric oder einem reinen `DirectorySizeCache`.
+2. **Periodische Jobs ohne gegenseitigen Ausschluss:** Vier Jobs (`ContinuumPublicStudyScheduler` 24 h, `ContinuumAutonomousScheduler`, `ContinuumDeviceTeamleaderScheduler` 1 h, `NeuralPracticeScheduler` 15 min) verlangen bewusst **weder Laden noch ausreichenden Akkustand**. Sie haben Thermal-, Akku- und Speicher-Wächter (`ContinuumOfflineLearningBudget`), aber **keine gemeinsame Sperre**. Mehrere Lern- oder Trainingsjobs können gleichzeitig laufen.
+   - **Kandidat:** eine prozessweite „ein schwerer Job zur Zeit“-Sperre. Ob nötig, zeigen die Gerätedaten (`jobs-continuum.txt`).
+
+**Nicht gefunden:** `runBlocking` oder ein synchrones Modellladen in `onResume`. Modellkatalog und Dashboard laufen über `onLearningIo`.
+
+**Messung (Hypothesentest „liegt es an Continuum?“):**
+- Aufruf: `scripts/fold7-diagnose.sh fold7-diag --minutes 10 --stop-continuum` (PC mit adb).
+- Phase A misst den Normalbetrieb, Phase B dieselbe Dauer mit gestopptem Continuum. Gestoppt wird mit `force-stop`; es werden keine Daten gelöscht.
+- Hänger mit Uhrzeit notieren und mit `load.tsv` vergleichen, ebenso Thermal-Status, `jobs-continuum.txt` (laufen mehrere Jobs gleichzeitig?) und `anr-headers.txt`.
+- Hänger auch in Phase B ⇒ Continuum ist nicht (allein) die Ursache.
+- Das Skript liest nur Systemmetriken: keine Chats, App-Dateien, Schlüssel oder Passwörter; von ANRs und Abstürzen nur die Kopfzeilen.
