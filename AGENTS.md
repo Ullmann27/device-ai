@@ -1,5 +1,11 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+
+## EXP-20 P2 · Präziser Opus-Auftrag, kein implementiertes Feature
+
+**Verbindlicher Wegweiser, wenn ein neuer Agent bio-neuronale Kontextforschung übernimmt:** [EXP-20-P2-OPUS-PROJEKTAUFTRAG-20261030.md](docs/research/exp20/EXP-20-P2-OPUS-PROJEKTAUFTRAG-20261030.md). Er erklärt den **tatsächlichen** P1-Testpfad `app/src/test/java/at/heinz/deviceai/research/exp20/`, die echten Schnittstellen `ComputeAllocationPolicy.Signals/choose` und `ChatReasoningRouter.advise`, die separaten PRs #249/#252/#253 sowie die korrigierten Bedingungen für analytische Zwischenzeit-Integration, Kontraktion und Sparse-Gating. **Vor jeder P2-Implementierung lesen und eine eigene P2-Präregistrierung committen.** P1 lieferte noch keinen Routing-/Fold7-Vorteil; P2 ist nicht ausgeführt und kein neues Feature. Unveränderte ToolGate-/Owner-/Shutdown-Grenzen gelten weiter.
+
+
 ## VERBINDLICH: JARVIS-Resilienz und Neurodynamik (EXP-16 bis EXP-23)
 
 **Zentraler Forschungs-, Architektur- und Besitzerkontrollvertrag:** [JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md](docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md). **Vor jeder JARVIS-, NTW1-, CCC1-, JPI1-, Geräte-/Sync-, Energie- oder Lernänderung lesen.** Acht neue Experimente stehen zusätzlich im `docs/CONTINUUM-EXPERIMENTE.json`-Register: EXP-16 sichere, nutzerkontrollierte Geräte-/Zustandskontinuität; EXP-17 evolutionsbasierte Reparatur; EXP-18 HDC-Routing; EXP-19 kryptografische Besitzerautorität; EXP-20 CTRNN; EXP-21 Fisher/EWC; EXP-22 STDP/Metaplastizität; EXP-23 Thermal-/Energie-Budget. Alle neu, **nur PROPOSED_SHADOW**, keine behauptete Implementierung.
