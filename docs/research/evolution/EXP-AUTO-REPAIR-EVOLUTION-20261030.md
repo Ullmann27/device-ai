@@ -12,7 +12,7 @@ experimental/self-evolution-shadow/mastercode-adapter.mjs verwendet den VORHANDE
 
 Eine Mutation verändert ausschließlich die zwei typisierten Parameter der vorhandenen MASTER-EXP-Modelldomäne, niemals beliebigen Quelltext mittels globalem String-Replacement. Bis zu drei Aufgaben pro Durchlauf; 1-50 als experimentelle Zyklenummer; höchstens 16 Kandidatenbewertungen pro Aufgabe; keine Endlosschleife. Der Sucher bekommt keine originalen Blindfälle. Die zweite Auswertungsfunktion prüft die tatsächliche Kandidatenkette anhand zurückgehaltener Fälle und eines mathematischen Referenz-Orakels.
 
-Start nur bei explizit positivem Besitzer-Opt-in, Idle, Ladung, freiem Worker, vertrautem Host, Batteriestand mindestens 40 Prozent, thermischem Headroom mindestens 0,5 und Zeitfenster. Diese Eingangssignale werden im Prototyp nicht vom Android-Betriebssystem authentisiert; daher keine Produktivfreigabe aus dieser Policy ableiten.
+Start nur bei explizit positivem Besitzer-Opt-in, Idle, Ladung, freiem Worker, vertrautem Host, Batteriestand mindestens 40 Prozent, beanspruchtem Android-Thermal-Headroom höchstens 0,5 (0 = kühl; 1 = schwere Drosselung) und Zeitfenster. Diese Eingangssignale werden im Prototyp nicht vom Android-Betriebssystem authentisiert; daher keine Produktivfreigabe aus dieser Policy ableiten.
 
 ## EXP-SELF-2 · Negative Autopsie statt blindem Gradienten
 
