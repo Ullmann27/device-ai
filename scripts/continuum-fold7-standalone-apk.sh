@@ -38,10 +38,14 @@ esac
 unset origin branch
 # The one-time owner bootstrap must not produce an APK lacking the update
 # button. This test runs before the owner P12 password is requested.
-[[ -f scripts/continuum-one-tap-updater-contract.test.mjs ]] ||
-  die 'ONE_TAP_UPDATE_CONTRACT_MISSING: refusing a release without the update button'
-node --test scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-release-stage.test.mjs ||
-  die 'ONE_TAP_UPDATE_CONTRACT_FAILED: refusing a release without a verified update path'
+[[ -f scripts/continuum-one-tap-updater-contract.test.mjs &&
+   -f scripts/continuum-owner-release-stage.test.mjs &&
+   -f scripts/continuum-owner-release-publish.test.mjs ]] ||
+  die 'ONE_TAP_UPDATE_CONTRACT_MISSING: update, stage or publish gate absent'
+node --test scripts/continuum-one-tap-updater-contract.test.mjs \
+  scripts/continuum-owner-release-stage.test.mjs \
+  scripts/continuum-owner-release-publish.test.mjs ||
+  die 'ONE_TAP_UPDATE_CONTRACT_FAILED: refusing a release without an audited update path'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] ||
   die 'Do not load historic owner-signing credentials into the standalone build'
 
