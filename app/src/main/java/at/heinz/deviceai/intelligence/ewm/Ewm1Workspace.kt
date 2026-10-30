@@ -272,13 +272,16 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
         return Ewm1Pack("QUERY", "SUPPORTED", rewritten, answer, links.toList().take(2), outdated, focusList())
     }
 
-    /** Newest statement first: a superseded fact never precedes the fact that replaced it. */
+    /**
+     * Newest statement first: a superseded fact never precedes the fact that replaced it, even when retrieval
+     * returned only the old fact (the newer one is in this memory, so it is followed, never hidden).
+     */
     private fun current(ids: List<String>): List<String> {
-        val pool = ids.toSet()
         val out = ArrayList<String>()
         for (id in ids) {
             var newest = id
-            while (memory.supersededBy[newest]?.let { it in pool } == true) newest = memory.supersededBy.getValue(newest)
+            val seen = HashSet<String>()
+            while (seen.add(newest) && memory.supersededBy[newest] != null) newest = memory.supersededBy.getValue(newest)
             if (newest !in out) out += newest
         }
         return out

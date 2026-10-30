@@ -110,6 +110,18 @@ internal object Ewm1Lexicon {
         "ab sofort", "zuletzt", "erst"
     )
 
+    /** Tense orientation for supersession: history and future plans never end a present state. */
+    val PAST_CUES = setOf("früher", "damals", "ehemals", "einst", "gestern", "vorgestern", "letzte", "letzten", "letztem", "letzter",
+        "letztes", "war", "waren", "warst", "wart", "wohnte", "wohnten", "lebte", "lebten", "arbeitete", "arbeiteten", "besuchte",
+        "besuchten", "gewohnt", "gelebt", "gearbeitet", "gewesen")
+    val FUTURE_CUES = setOf("demnächst", "bald", "künftig", "zukünftig", "nächste", "nächsten", "nächstem", "nächster", "nächstes", "übermorgen")
+    val PRESENT_CUES = setOf("seit", "jetzt", "inzwischen", "mittlerweile", "nun", "heute", "neuerdings", "gerade", "derzeit", "momentan")
+    /** Degree and frequency adverbs name no predicate ("gerne", "gerade"). */
+    val DEGREE = setOf("gerne", "gern", "lieber", "gerade", "auch", "oft", "immer", "sehr", "meistens", "manchmal", "wieder", "noch",
+        "schon", "mehr", "derzeit", "momentan")
+    /** Verbs of saying: a reported statement is no statement of the speaker. */
+    val SAYING = setOf("sagt", "sagte", "meint", "meinte", "erzählt", "erzählte", "behauptet", "behauptete", "schreibt", "schrieb")
+
     val NEGATIONS = setOf("nicht", "kein", "keine", "keinen", "keinem", "keiner", "keines", "nie", "niemals", "nichts")
 
     val ANTONYMS = listOf("offen" to "geschlossen", "geöffnet" to "geschlossen", "mehr" to "weniger", "früher" to "später")
