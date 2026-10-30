@@ -56,7 +56,8 @@ internal object ContinuumSignedUpdatePolicy {
         }
         if (release.channel != "OWNER_RELEASE") return reject(ContinuumUpdateRejection.WRONG_RELEASE_CHANNEL)
         if (release.packageName != OWNER_PACKAGE) return reject(ContinuumUpdateRejection.WRONG_PACKAGE)
-        if (release.versionCode <= installedVersionCode) return reject(ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
+        // An old release is only "current" if the WHOLE manifest is authentic-looking,
+        // approved and pinned. Never mask malformed or unapproved metadata as current.
         if (!release.explicitlyApproved) return reject(ContinuumUpdateRejection.UNAPPROVED_RELEASE)
         if (release.versionCode !in 29..9999 ||
             release.byteLength !in 1_000_000L..MAX_APK_BYTES ||
@@ -75,6 +76,9 @@ internal object ContinuumSignedUpdatePolicy {
             (uri.port != -1 && uri.port != 443) || path.contains("..") ||
             !filePattern.matches(path) || !path.endsWith("-${release.apkSha256}.apk")
         ) return reject(ContinuumUpdateRejection.UNTRUSTED_HTTPS_URL)
+        if (release.versionCode <= installedVersionCode) {
+            return reject(ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
+        }
         return ContinuumUpdatePreflight.ReadyForActualApkVerification
     }
 }
