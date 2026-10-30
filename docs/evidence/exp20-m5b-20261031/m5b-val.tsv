@@ -1,0 +1,1153 @@
+group	split	kind	role	candidate	text
+M5B-VAL-L-000	VAL	L	QUERY	-	Was erledigt Frau Auer am Freitag im Lager?
+M5B-VAL-L-000	VAL	L	CANDIDATE	C0	Frau Auer ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C1	Herr Nagl ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C2	Herr Nagl ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-VAL-L-000	VAL	L	TRUE	C3	Frau Auer ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C4	Herr Nagl ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C5	Herr Nagl ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C6	Frau Auer ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-VAL-L-000	VAL	L	CANDIDATE	C7	Frau Auer ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-VAL-L-001	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Montag in der Werkstatt?
+M5B-VAL-L-001	VAL	L	CANDIDATE	C0	Frau Thaler überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C1	Frau Thaler überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C2	Frau Ranftl überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-001	VAL	L	TRUE	C3	Frau Ranftl überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C4	Frau Ranftl überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C5	Frau Thaler überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C6	Frau Thaler überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-001	VAL	L	CANDIDATE	C7	Frau Ranftl überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-VAL-L-002	VAL	L	QUERY	-	Was erledigt Herr Bichler am Donnerstag im Labor?
+M5B-VAL-L-002	VAL	L	CANDIDATE	C0	Herr Pfeifer überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C1	Herr Bichler überprüft die Lieferscheine am Montag im Labor.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C2	Herr Pfeifer überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-002	VAL	L	TRUE	C3	Herr Bichler überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C4	Herr Bichler überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C5	Herr Pfeifer überprüft die Lieferscheine am Montag im Labor.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C6	Herr Bichler überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-002	VAL	L	CANDIDATE	C7	Herr Pfeifer überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-003	VAL	L	QUERY	-	Was erledigt Herr Bichler am Montag in der Garage?
+M5B-VAL-L-003	VAL	L	CANDIDATE	C0	Herr Bichler ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C1	Herr Bichler ordnet die Ersatzschlüssel am Montag in der Kantine.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C2	Herr Bichler ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-VAL-L-003	VAL	L	TRUE	C3	Herr Bichler ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C4	Frau Maurer ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C5	Frau Maurer ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C6	Frau Maurer ordnet die Ersatzschlüssel am Montag in der Kantine.
+M5B-VAL-L-003	VAL	L	CANDIDATE	C7	Frau Maurer ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-VAL-L-004	VAL	L	QUERY	-	Was erledigt Frau Oberhuber am Donnerstag im Lager?
+M5B-VAL-L-004	VAL	L	CANDIDATE	C0	Herr Unger überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C1	Frau Oberhuber überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C2	Herr Unger überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-004	VAL	L	TRUE	C3	Frau Oberhuber überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C5	Herr Unger überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C6	Frau Oberhuber überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-004	VAL	L	CANDIDATE	C7	Frau Oberhuber überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-005	VAL	L	QUERY	-	Was erledigt Frau Maurer am Mittwoch in der Werkstatt?
+M5B-VAL-L-005	VAL	L	CANDIDATE	C0	Frau Maurer zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C1	Frau Oberhuber zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C2	Frau Maurer zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-005	VAL	L	TRUE	C3	Frau Maurer zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C4	Frau Oberhuber zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C5	Frau Maurer zählt die Kartons am Montag im Lager.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C6	Frau Oberhuber zählt die Kartons am Montag im Lager.
+M5B-VAL-L-005	VAL	L	CANDIDATE	C7	Frau Oberhuber zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-VAL-L-006	VAL	L	QUERY	-	Was erledigt Frau Oberhuber am Montag in der Garage?
+M5B-VAL-L-006	VAL	L	CANDIDATE	C0	Frau Oberhuber zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C1	Herr Pfeifer zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C2	Herr Pfeifer zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-006	VAL	L	TRUE	C3	Frau Oberhuber zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C4	Herr Pfeifer zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C5	Frau Oberhuber zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C6	Herr Pfeifer zählt die Kartons am Montag in der Poststelle.
+M5B-VAL-L-006	VAL	L	CANDIDATE	C7	Frau Oberhuber zählt die Kartons am Montag in der Poststelle.
+M5B-VAL-L-007	VAL	L	QUERY	-	Was erledigt Frau Auer am Dienstag im Serverraum?
+M5B-VAL-L-007	VAL	L	CANDIDATE	C0	Herr Schober zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C1	Frau Auer zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C2	Herr Schober zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-007	VAL	L	TRUE	C3	Frau Auer zählt die Kartons am Dienstag im Serverraum.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C4	Herr Schober zählt die Kartons am Montag im Serverraum.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C5	Frau Auer zählt die Kartons am Montag im Serverraum.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C6	Herr Schober zählt die Kartons am Dienstag im Serverraum.
+M5B-VAL-L-007	VAL	L	CANDIDATE	C7	Frau Auer zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-008	VAL	L	QUERY	-	Was erledigt Frau Wallner am Mittwoch in der Garage?
+M5B-VAL-L-008	VAL	L	CANDIDATE	C0	Frau Wallner zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C1	Frau Oberhuber zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C2	Frau Oberhuber zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C3	Frau Wallner zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-008	VAL	L	TRUE	C4	Frau Wallner zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C5	Frau Oberhuber zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C6	Frau Wallner zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-008	VAL	L	CANDIDATE	C7	Frau Oberhuber zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-009	VAL	L	QUERY	-	Was erledigt Frau Thaler am Donnerstag im Lager?
+M5B-VAL-L-009	VAL	L	CANDIDATE	C0	Frau Ranftl ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C1	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C2	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C3	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-VAL-L-009	VAL	L	TRUE	C4	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C5	Frau Ranftl ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C6	Frau Ranftl ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-VAL-L-009	VAL	L	CANDIDATE	C7	Frau Ranftl ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-010	VAL	L	QUERY	-	Was erledigt Herr Unger am Dienstag in der Garage?
+M5B-VAL-L-010	VAL	L	CANDIDATE	C0	Frau Auer ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C1	Frau Auer ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C2	Herr Unger ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C3	Frau Auer ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-VAL-L-010	VAL	L	TRUE	C4	Herr Unger ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C5	Frau Auer ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C6	Herr Unger ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-VAL-L-010	VAL	L	CANDIDATE	C7	Herr Unger ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-VAL-L-011	VAL	L	QUERY	-	Was erledigt Herr Unger am Mittwoch im Labor?
+M5B-VAL-L-011	VAL	L	CANDIDATE	C0	Frau Oberhuber zählt die Kartons am Mittwoch im Labor.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C1	Herr Unger zählt die Kartons am Mittwoch im Serverraum.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C2	Frau Oberhuber zählt die Kartons am Dienstag im Serverraum.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C3	Frau Oberhuber zählt die Kartons am Mittwoch im Serverraum.
+M5B-VAL-L-011	VAL	L	TRUE	C4	Herr Unger zählt die Kartons am Mittwoch im Labor.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C5	Frau Oberhuber zählt die Kartons am Dienstag im Labor.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C6	Herr Unger zählt die Kartons am Dienstag im Serverraum.
+M5B-VAL-L-011	VAL	L	CANDIDATE	C7	Herr Unger zählt die Kartons am Dienstag im Labor.
+M5B-VAL-L-012	VAL	L	QUERY	-	Was erledigt Herr Schober am Dienstag in der Werkstatt?
+M5B-VAL-L-012	VAL	L	CANDIDATE	C0	Frau Ranftl zählt die Kartons am Dienstag in der Garage.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C1	Frau Ranftl zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C2	Frau Ranftl zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C3	Frau Ranftl zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-012	VAL	L	TRUE	C4	Herr Schober zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C5	Herr Schober zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C6	Herr Schober zählt die Kartons am Dienstag in der Garage.
+M5B-VAL-L-012	VAL	L	CANDIDATE	C7	Herr Schober zählt die Kartons am Montag in der Werkstatt.
+M5B-VAL-L-013	VAL	L	QUERY	-	Was erledigt Frau Auer am Freitag im Lager?
+M5B-VAL-L-013	VAL	L	CANDIDATE	C0	Frau Auer zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C1	Frau Auer zählt die Kartons am Montag im Lager.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C2	Herr Ziegler zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C3	Herr Ziegler zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-013	VAL	L	TRUE	C4	Frau Auer zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C5	Herr Ziegler zählt die Kartons am Montag im Lager.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C6	Frau Auer zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-013	VAL	L	CANDIDATE	C7	Herr Ziegler zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-014	VAL	L	QUERY	-	Was erledigt Herr Schober am Donnerstag im Serverraum?
+M5B-VAL-L-014	VAL	L	CANDIDATE	C0	Herr Schober ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C1	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C2	Herr Schober ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C3	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-VAL-L-014	VAL	L	TRUE	C4	Herr Schober ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C5	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C6	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-014	VAL	L	CANDIDATE	C7	Herr Schober ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-VAL-L-015	VAL	L	QUERY	-	Was erledigt Frau Auer am Mittwoch in der Poststelle?
+M5B-VAL-L-015	VAL	L	CANDIDATE	C0	Frau Auer überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C1	Herr Unger überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C2	Frau Auer überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C3	Herr Unger überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-015	VAL	L	TRUE	C4	Frau Auer überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C5	Herr Unger überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C6	Herr Unger überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-015	VAL	L	CANDIDATE	C7	Frau Auer überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-016	VAL	L	QUERY	-	Was erledigt Herr Schober am Freitag im Serverraum?
+M5B-VAL-L-016	VAL	L	CANDIDATE	C0	Frau Auer ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C1	Frau Auer ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C2	Herr Schober ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C3	Herr Schober ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C4	Herr Schober ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-VAL-L-016	VAL	L	TRUE	C5	Herr Schober ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C6	Frau Auer ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-016	VAL	L	CANDIDATE	C7	Frau Auer ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-VAL-L-017	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Mittwoch in der Poststelle?
+M5B-VAL-L-017	VAL	L	CANDIDATE	C0	Herr Nagl überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C1	Frau Ranftl überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C2	Herr Nagl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C3	Herr Nagl überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C4	Frau Ranftl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-017	VAL	L	TRUE	C5	Frau Ranftl überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C6	Herr Nagl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-017	VAL	L	CANDIDATE	C7	Frau Ranftl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-018	VAL	L	QUERY	-	Was erledigt Frau Thaler am Montag im Lager?
+M5B-VAL-L-018	VAL	L	CANDIDATE	C0	Frau Wallner ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C1	Frau Wallner ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C2	Frau Thaler ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C3	Frau Thaler ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C4	Frau Wallner ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-VAL-L-018	VAL	L	TRUE	C5	Frau Thaler ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C6	Frau Thaler ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-VAL-L-018	VAL	L	CANDIDATE	C7	Frau Wallner ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-VAL-L-019	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Dienstag in der Bibliothek?
+M5B-VAL-L-019	VAL	L	CANDIDATE	C0	Frau Ranftl überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C1	Herr Pfeifer überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C2	Herr Pfeifer überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C3	Frau Ranftl überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C4	Herr Pfeifer überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-019	VAL	L	TRUE	C5	Herr Pfeifer überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C6	Frau Ranftl überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-019	VAL	L	CANDIDATE	C7	Frau Ranftl überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-VAL-L-020	VAL	L	QUERY	-	Was erledigt Herr Unger am Dienstag in der Kantine?
+M5B-VAL-L-020	VAL	L	CANDIDATE	C0	Frau Oberhuber zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C1	Herr Unger zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C2	Herr Unger zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C3	Frau Oberhuber zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C4	Frau Oberhuber zählt die Kartons am Freitag in der Werkstatt.
+M5B-VAL-L-020	VAL	L	TRUE	C5	Herr Unger zählt die Kartons am Dienstag in der Kantine.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C6	Frau Oberhuber zählt die Kartons am Dienstag in der Kantine.
+M5B-VAL-L-020	VAL	L	CANDIDATE	C7	Herr Unger zählt die Kartons am Freitag in der Werkstatt.
+M5B-VAL-L-021	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Donnerstag in der Poststelle?
+M5B-VAL-L-021	VAL	L	CANDIDATE	C0	Herr Pfeifer ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C1	Herr Bichler ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C2	Herr Bichler ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C3	Herr Pfeifer ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C4	Herr Bichler ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-VAL-L-021	VAL	L	TRUE	C5	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C6	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-VAL-L-021	VAL	L	CANDIDATE	C7	Herr Bichler ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-VAL-L-022	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Montag im Serverraum?
+M5B-VAL-L-022	VAL	L	CANDIDATE	C0	Herr Bichler überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C1	Herr Bichler überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C2	Herr Bichler überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C3	Frau Ranftl überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C4	Frau Ranftl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-022	VAL	L	TRUE	C5	Frau Ranftl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C6	Herr Bichler überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-022	VAL	L	CANDIDATE	C7	Frau Ranftl überprüft die Lieferscheine am Mittwoch in der Poststelle.
+M5B-VAL-L-023	VAL	L	QUERY	-	Was erledigt Frau Wallner am Donnerstag im Serverraum?
+M5B-VAL-L-023	VAL	L	CANDIDATE	C0	Frau Auer zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C1	Frau Wallner zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C2	Frau Auer zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C3	Frau Auer zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C4	Frau Auer zählt die Kartons am Donnerstag im Serverraum.
+M5B-VAL-L-023	VAL	L	TRUE	C5	Frau Wallner zählt die Kartons am Donnerstag im Serverraum.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C6	Frau Wallner zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-023	VAL	L	CANDIDATE	C7	Frau Wallner zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-024	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Freitag in der Garage?
+M5B-VAL-L-024	VAL	L	CANDIDATE	C0	Herr Pfeifer überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C1	Herr Nagl überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C2	Herr Nagl überprüft die Lieferscheine am Freitag in der Garage.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C3	Herr Pfeifer überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C4	Herr Pfeifer überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C5	Herr Nagl überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-024	VAL	L	TRUE	C6	Herr Pfeifer überprüft die Lieferscheine am Freitag in der Garage.
+M5B-VAL-L-024	VAL	L	CANDIDATE	C7	Herr Nagl überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-025	VAL	L	QUERY	-	Was erledigt Herr Schober am Dienstag im Serverraum?
+M5B-VAL-L-025	VAL	L	CANDIDATE	C0	Herr Bichler überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C1	Herr Schober überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C2	Herr Schober überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C3	Herr Schober überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C4	Herr Bichler überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C5	Herr Bichler überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-025	VAL	L	TRUE	C6	Herr Schober überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-VAL-L-025	VAL	L	CANDIDATE	C7	Herr Bichler überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-026	VAL	L	QUERY	-	Was erledigt Frau Maurer am Montag in der Poststelle?
+M5B-VAL-L-026	VAL	L	CANDIDATE	C0	Herr Nagl überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C1	Herr Nagl überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C2	Frau Maurer überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C3	Herr Nagl überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C4	Frau Maurer überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C5	Frau Maurer überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-VAL-L-026	VAL	L	TRUE	C6	Frau Maurer überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-026	VAL	L	CANDIDATE	C7	Herr Nagl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-027	VAL	L	QUERY	-	Was erledigt Herr Unger am Donnerstag in der Bibliothek?
+M5B-VAL-L-027	VAL	L	CANDIDATE	C0	Herr Unger überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C1	Herr Ziegler überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C2	Herr Ziegler überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C3	Herr Unger überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C4	Herr Ziegler überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C5	Herr Ziegler überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-027	VAL	L	TRUE	C6	Herr Unger überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-027	VAL	L	CANDIDATE	C7	Herr Unger überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-VAL-L-028	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Freitag in der Werkstatt?
+M5B-VAL-L-028	VAL	L	CANDIDATE	C0	Herr Pfeifer zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C1	Frau Auer zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C2	Herr Pfeifer zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C3	Frau Auer zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C4	Frau Auer zählt die Kartons am Freitag in der Werkstatt.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C5	Frau Auer zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-028	VAL	L	TRUE	C6	Herr Pfeifer zählt die Kartons am Freitag in der Werkstatt.
+M5B-VAL-L-028	VAL	L	CANDIDATE	C7	Herr Pfeifer zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-029	VAL	L	QUERY	-	Was erledigt Frau Maurer am Donnerstag im Labor?
+M5B-VAL-L-029	VAL	L	CANDIDATE	C0	Frau Ranftl ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C1	Frau Maurer ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C2	Frau Ranftl ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C3	Frau Maurer ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C4	Frau Maurer ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C5	Frau Ranftl ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-VAL-L-029	VAL	L	TRUE	C6	Frau Maurer ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-029	VAL	L	CANDIDATE	C7	Frau Ranftl ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-VAL-L-030	VAL	L	QUERY	-	Was erledigt Frau Maurer am Mittwoch in der Bibliothek?
+M5B-VAL-L-030	VAL	L	CANDIDATE	C0	Frau Auer überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C1	Frau Auer überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C2	Frau Maurer überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C3	Frau Auer überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C4	Frau Maurer überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C5	Frau Auer überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-030	VAL	L	TRUE	C6	Frau Maurer überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-VAL-L-030	VAL	L	CANDIDATE	C7	Frau Maurer überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-031	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Montag im Serverraum?
+M5B-VAL-L-031	VAL	L	CANDIDATE	C0	Frau Oberhuber überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C1	Frau Ranftl überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C2	Frau Oberhuber überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C3	Frau Oberhuber überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C4	Frau Ranftl überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C5	Frau Oberhuber überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-031	VAL	L	TRUE	C6	Frau Ranftl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-031	VAL	L	CANDIDATE	C7	Frau Ranftl überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-032	VAL	L	QUERY	-	Was erledigt Herr Unger am Mittwoch in der Bibliothek?
+M5B-VAL-L-032	VAL	L	CANDIDATE	C0	Herr Unger ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C1	Herr Nagl ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C2	Herr Nagl ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C3	Herr Unger ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C4	Herr Nagl ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C5	Herr Unger ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-VAL-L-032	VAL	L	CANDIDATE	C6	Herr Nagl ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-VAL-L-032	VAL	L	TRUE	C7	Herr Unger ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-VAL-L-033	VAL	L	QUERY	-	Was erledigt Herr Bichler am Freitag in der Kantine?
+M5B-VAL-L-033	VAL	L	CANDIDATE	C0	Herr Bichler zählt die Kartons am Freitag im Labor.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C1	Frau Wallner zählt die Kartons am Freitag im Labor.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C2	Herr Bichler zählt die Kartons am Donnerstag im Labor.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C3	Frau Wallner zählt die Kartons am Donnerstag im Labor.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C4	Frau Wallner zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C5	Frau Wallner zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-033	VAL	L	CANDIDATE	C6	Herr Bichler zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-033	VAL	L	TRUE	C7	Herr Bichler zählt die Kartons am Freitag in der Kantine.
+M5B-VAL-L-034	VAL	L	QUERY	-	Was erledigt Frau Maurer am Freitag im Lager?
+M5B-VAL-L-034	VAL	L	CANDIDATE	C0	Herr Ziegler zählt die Kartons am Freitag im Labor.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C1	Frau Maurer zählt die Kartons am Montag im Lager.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C2	Frau Maurer zählt die Kartons am Freitag im Labor.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C3	Herr Ziegler zählt die Kartons am Montag im Labor.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C4	Herr Ziegler zählt die Kartons am Montag im Lager.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C5	Herr Ziegler zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-034	VAL	L	CANDIDATE	C6	Frau Maurer zählt die Kartons am Montag im Labor.
+M5B-VAL-L-034	VAL	L	TRUE	C7	Frau Maurer zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-035	VAL	L	QUERY	-	Was erledigt Frau Auer am Mittwoch im Lager?
+M5B-VAL-L-035	VAL	L	CANDIDATE	C0	Frau Auer zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C1	Frau Auer zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C2	Frau Auer zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C3	Frau Oberhuber zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C4	Frau Oberhuber zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C5	Frau Oberhuber zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-VAL-L-035	VAL	L	CANDIDATE	C6	Frau Oberhuber zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-035	VAL	L	TRUE	C7	Frau Auer zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-036	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Donnerstag im Serverraum?
+M5B-VAL-L-036	VAL	L	CANDIDATE	C0	Herr Nagl ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C1	Herr Nagl ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C2	Herr Nagl ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C3	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C4	Herr Pfeifer ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C5	Herr Nagl ordnet die Ersatzschlüssel am Montag in der Poststelle.
+M5B-VAL-L-036	VAL	L	CANDIDATE	C6	Herr Pfeifer ordnet die Ersatzschlüssel am Montag in der Poststelle.
+M5B-VAL-L-036	VAL	L	TRUE	C7	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-037	VAL	L	QUERY	-	Was erledigt Frau Maurer am Freitag im Lager?
+M5B-VAL-L-037	VAL	L	CANDIDATE	C0	Herr Unger zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C1	Frau Maurer zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C2	Frau Maurer zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C3	Frau Maurer zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C4	Herr Unger zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C5	Herr Unger zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-037	VAL	L	CANDIDATE	C6	Herr Unger zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-037	VAL	L	TRUE	C7	Frau Maurer zählt die Kartons am Freitag im Lager.
+M5B-VAL-L-038	VAL	L	QUERY	-	Was erledigt Frau Auer am Donnerstag in der Bibliothek?
+M5B-VAL-L-038	VAL	L	CANDIDATE	C0	Herr Bichler überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C1	Herr Bichler überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C2	Frau Auer überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C3	Herr Bichler überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C4	Herr Bichler überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C5	Frau Auer überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-038	VAL	L	CANDIDATE	C6	Frau Auer überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-038	VAL	L	TRUE	C7	Frau Auer überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-VAL-L-039	VAL	L	QUERY	-	Was erledigt Herr Ziegler am Mittwoch im Lager?
+M5B-VAL-L-039	VAL	L	CANDIDATE	C0	Herr Unger überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C1	Herr Ziegler überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C2	Herr Ziegler überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C3	Herr Unger überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C5	Herr Ziegler überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-039	VAL	L	CANDIDATE	C6	Herr Unger überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-VAL-L-039	VAL	L	TRUE	C7	Herr Ziegler überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-VAL-L-040	VAL	L	QUERY	-	Was erledigt Herr Schober am Donnerstag in der Poststelle?
+M5B-VAL-L-040	VAL	L	TRUE	C0	Herr Schober zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C1	Frau Oberhuber zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C2	Herr Schober zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C3	Frau Oberhuber zählt die Kartons am Freitag in der Poststelle.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C4	Frau Oberhuber zählt die Kartons am Donnerstag im Serverraum.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C5	Frau Oberhuber zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C6	Herr Schober zählt die Kartons am Donnerstag im Serverraum.
+M5B-VAL-L-040	VAL	L	CANDIDATE	C7	Herr Schober zählt die Kartons am Freitag in der Poststelle.
+M5B-VAL-L-041	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Dienstag in der Werkstatt?
+M5B-VAL-L-041	VAL	L	TRUE	C0	Frau Ranftl überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C1	Frau Ranftl überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C2	Frau Ranftl überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C3	Frau Ranftl überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C5	Herr Unger überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C6	Herr Unger überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-041	VAL	L	CANDIDATE	C7	Herr Unger überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-VAL-L-042	VAL	L	QUERY	-	Was erledigt Frau Wallner am Montag in der Bibliothek?
+M5B-VAL-L-042	VAL	L	TRUE	C0	Frau Wallner zählt die Kartons am Montag in der Bibliothek.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C1	Frau Wallner zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C2	Herr Pfeifer zählt die Kartons am Dienstag in der Bibliothek.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C3	Frau Wallner zählt die Kartons am Dienstag in der Bibliothek.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C4	Herr Pfeifer zählt die Kartons am Montag in der Garage.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C5	Herr Pfeifer zählt die Kartons am Dienstag in der Garage.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C6	Herr Pfeifer zählt die Kartons am Montag in der Bibliothek.
+M5B-VAL-L-042	VAL	L	CANDIDATE	C7	Frau Wallner zählt die Kartons am Dienstag in der Garage.
+M5B-VAL-L-043	VAL	L	QUERY	-	Was erledigt Herr Nagl am Dienstag in der Poststelle?
+M5B-VAL-L-043	VAL	L	TRUE	C0	Herr Nagl überprüft die Lieferscheine am Dienstag in der Poststelle.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C1	Frau Maurer überprüft die Lieferscheine am Dienstag in der Poststelle.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C2	Herr Nagl überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C3	Frau Maurer überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C4	Frau Maurer überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C5	Herr Nagl überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C6	Herr Nagl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-VAL-L-043	VAL	L	CANDIDATE	C7	Frau Maurer überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-VAL-L-044	VAL	L	QUERY	-	Was erledigt Herr Schober am Dienstag in der Kantine?
+M5B-VAL-L-044	VAL	L	TRUE	C0	Herr Schober überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C1	Herr Schober überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C2	Frau Wallner überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C3	Frau Wallner überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C4	Frau Wallner überprüft die Lieferscheine am Freitag im Labor.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C5	Herr Schober überprüft die Lieferscheine am Freitag im Labor.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C6	Herr Schober überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-VAL-L-044	VAL	L	CANDIDATE	C7	Frau Wallner überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-045	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Montag in der Garage?
+M5B-VAL-L-045	VAL	L	TRUE	C0	Frau Ranftl überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C1	Herr Nagl überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C2	Frau Ranftl überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C3	Herr Nagl überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C4	Frau Ranftl überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C5	Herr Nagl überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C6	Frau Ranftl überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-045	VAL	L	CANDIDATE	C7	Herr Nagl überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-046	VAL	L	QUERY	-	Was erledigt Frau Auer am Montag in der Garage?
+M5B-VAL-L-046	VAL	L	TRUE	C0	Frau Auer überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C1	Herr Nagl überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C2	Herr Nagl überprüft die Lieferscheine am Montag in der Garage.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C3	Herr Nagl überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C4	Frau Auer überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C5	Herr Nagl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C6	Frau Auer überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-046	VAL	L	CANDIDATE	C7	Frau Auer überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-VAL-L-047	VAL	L	QUERY	-	Was erledigt Herr Pfeifer am Donnerstag im Labor?
+M5B-VAL-L-047	VAL	L	TRUE	C0	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C1	Herr Pfeifer ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C2	Herr Pfeifer ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C3	Frau Oberhuber ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C4	Frau Oberhuber ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C5	Herr Pfeifer ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C6	Frau Oberhuber ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-047	VAL	L	CANDIDATE	C7	Frau Oberhuber ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-VAL-L-048	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Donnerstag in der Kantine?
+M5B-VAL-L-048	VAL	L	CANDIDATE	C0	Frau Thaler zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-048	VAL	L	TRUE	C1	Frau Ranftl zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C2	Frau Ranftl zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C3	Frau Ranftl zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C4	Frau Thaler zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C5	Frau Thaler zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C6	Frau Ranftl zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-048	VAL	L	CANDIDATE	C7	Frau Thaler zählt die Kartons am Donnerstag in der Garage.
+M5B-VAL-L-049	VAL	L	QUERY	-	Was erledigt Frau Auer am Mittwoch im Serverraum?
+M5B-VAL-L-049	VAL	L	CANDIDATE	C0	Herr Pfeifer zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-049	VAL	L	TRUE	C1	Frau Auer zählt die Kartons am Mittwoch im Serverraum.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C2	Frau Auer zählt die Kartons am Freitag in der Garage.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C3	Herr Pfeifer zählt die Kartons am Mittwoch im Serverraum.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C4	Frau Auer zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C5	Herr Pfeifer zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C6	Frau Auer zählt die Kartons am Freitag im Serverraum.
+M5B-VAL-L-049	VAL	L	CANDIDATE	C7	Herr Pfeifer zählt die Kartons am Mittwoch in der Garage.
+M5B-VAL-L-050	VAL	L	QUERY	-	Was erledigt Frau Oberhuber am Freitag im Lager?
+M5B-VAL-L-050	VAL	L	CANDIDATE	C0	Frau Oberhuber überprüft die Lieferscheine am Freitag im Labor.
+M5B-VAL-L-050	VAL	L	TRUE	C1	Frau Oberhuber überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C2	Herr Unger überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C3	Herr Unger überprüft die Lieferscheine am Freitag im Labor.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Freitag im Lager.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C5	Herr Unger überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C6	Frau Oberhuber überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-050	VAL	L	CANDIDATE	C7	Frau Oberhuber überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-051	VAL	L	QUERY	-	Was erledigt Herr Ziegler am Mittwoch in der Garage?
+M5B-VAL-L-051	VAL	L	CANDIDATE	C0	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-VAL-L-051	VAL	L	TRUE	C1	Herr Ziegler ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C2	Herr Ziegler ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C3	Herr Ziegler ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C4	Frau Thaler ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C5	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C6	Frau Thaler ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-VAL-L-051	VAL	L	CANDIDATE	C7	Herr Ziegler ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-VAL-L-052	VAL	L	QUERY	-	Was erledigt Frau Maurer am Donnerstag in der Kantine?
+M5B-VAL-L-052	VAL	L	CANDIDATE	C0	Frau Maurer ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-052	VAL	L	TRUE	C1	Frau Maurer ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C2	Frau Maurer ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C3	Frau Maurer ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C4	Frau Oberhuber ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C5	Frau Oberhuber ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C6	Frau Oberhuber ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-VAL-L-052	VAL	L	CANDIDATE	C7	Frau Oberhuber ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-VAL-L-053	VAL	L	QUERY	-	Was erledigt Herr Unger am Dienstag im Lager?
+M5B-VAL-L-053	VAL	L	CANDIDATE	C0	Frau Thaler überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-053	VAL	L	TRUE	C1	Herr Unger überprüft die Lieferscheine am Dienstag im Lager.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C2	Frau Thaler überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C3	Frau Thaler überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C5	Herr Unger überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C6	Frau Thaler überprüft die Lieferscheine am Montag im Lager.
+M5B-VAL-L-053	VAL	L	CANDIDATE	C7	Herr Unger überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-VAL-L-054	VAL	L	QUERY	-	Was erledigt Herr Bichler am Mittwoch im Lager?
+M5B-VAL-L-054	VAL	L	CANDIDATE	C0	Herr Pfeifer zählt die Kartons am Dienstag in der Kantine.
+M5B-VAL-L-054	VAL	L	TRUE	C1	Herr Bichler zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C2	Herr Pfeifer zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C3	Herr Bichler zählt die Kartons am Dienstag im Lager.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C4	Herr Pfeifer zählt die Kartons am Dienstag im Lager.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C5	Herr Bichler zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C6	Herr Pfeifer zählt die Kartons am Mittwoch im Lager.
+M5B-VAL-L-054	VAL	L	CANDIDATE	C7	Herr Bichler zählt die Kartons am Dienstag in der Kantine.
+M5B-VAL-L-055	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Mittwoch in der Werkstatt?
+M5B-VAL-L-055	VAL	L	CANDIDATE	C0	Frau Maurer zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-055	VAL	L	TRUE	C1	Frau Ranftl zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C2	Frau Ranftl zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C3	Frau Maurer zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C4	Frau Maurer zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C5	Frau Ranftl zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C6	Frau Ranftl zählt die Kartons am Mittwoch in der Kantine.
+M5B-VAL-L-055	VAL	L	CANDIDATE	C7	Frau Maurer zählt die Kartons am Donnerstag in der Kantine.
+M5B-VAL-L-056	VAL	L	QUERY	-	Was erledigt Herr Ziegler am Dienstag im Labor?
+M5B-VAL-L-056	VAL	L	CANDIDATE	C0	Herr Ziegler zählt die Kartons am Montag in der Poststelle.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C1	Frau Thaler zählt die Kartons am Montag im Labor.
+M5B-VAL-L-056	VAL	L	TRUE	C2	Herr Ziegler zählt die Kartons am Dienstag im Labor.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C3	Frau Thaler zählt die Kartons am Dienstag im Labor.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C4	Herr Ziegler zählt die Kartons am Dienstag in der Poststelle.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C5	Herr Ziegler zählt die Kartons am Montag im Labor.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C6	Frau Thaler zählt die Kartons am Dienstag in der Poststelle.
+M5B-VAL-L-056	VAL	L	CANDIDATE	C7	Frau Thaler zählt die Kartons am Montag in der Poststelle.
+M5B-VAL-L-057	VAL	L	QUERY	-	Was erledigt Herr Bichler am Mittwoch im Labor?
+M5B-VAL-L-057	VAL	L	CANDIDATE	C0	Frau Wallner überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C1	Frau Wallner überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-VAL-L-057	VAL	L	TRUE	C2	Herr Bichler überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C3	Herr Bichler überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C4	Frau Wallner überprüft die Lieferscheine am Dienstag im Labor.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C5	Frau Wallner überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C6	Herr Bichler überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-057	VAL	L	CANDIDATE	C7	Herr Bichler überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-VAL-L-058	VAL	L	QUERY	-	Was erledigt Herr Unger am Donnerstag im Serverraum?
+M5B-VAL-L-058	VAL	L	CANDIDATE	C0	Herr Ziegler ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C1	Herr Unger ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-VAL-L-058	VAL	L	TRUE	C2	Herr Unger ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C3	Herr Ziegler ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C4	Herr Unger ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C5	Herr Unger ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C6	Herr Ziegler ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-VAL-L-058	VAL	L	CANDIDATE	C7	Herr Ziegler ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-VAL-L-059	VAL	L	QUERY	-	Was erledigt Herr Unger am Freitag in der Poststelle?
+M5B-VAL-L-059	VAL	L	CANDIDATE	C0	Herr Unger überprüft die Lieferscheine am Freitag in der Garage.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C1	Herr Unger überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-VAL-L-059	VAL	L	TRUE	C2	Herr Unger überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C3	Frau Wallner überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C4	Herr Unger überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C5	Frau Wallner überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C6	Frau Wallner überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-VAL-L-059	VAL	L	CANDIDATE	C7	Frau Wallner überprüft die Lieferscheine am Freitag in der Garage.
+M5B-VAL-L-060	VAL	L	QUERY	-	Was erledigt Frau Ranftl am Donnerstag in der Werkstatt?
+M5B-VAL-L-060	VAL	L	CANDIDATE	C0	Herr Unger zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C1	Frau Ranftl zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-060	VAL	L	TRUE	C2	Frau Ranftl zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C3	Herr Unger zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C4	Herr Unger zählt die Kartons am Dienstag im Lager.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C5	Herr Unger zählt die Kartons am Dienstag in der Werkstatt.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C6	Frau Ranftl zählt die Kartons am Dienstag im Lager.
+M5B-VAL-L-060	VAL	L	CANDIDATE	C7	Frau Ranftl zählt die Kartons am Donnerstag im Lager.
+M5B-VAL-L-061	VAL	L	QUERY	-	Was erledigt Herr Schober am Donnerstag in der Poststelle?
+M5B-VAL-L-061	VAL	L	CANDIDATE	C0	Herr Bichler zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C1	Herr Schober zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-061	VAL	L	TRUE	C2	Herr Schober zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C3	Herr Bichler zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C4	Herr Bichler zählt die Kartons am Freitag in der Bibliothek.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C5	Herr Bichler zählt die Kartons am Freitag in der Poststelle.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C6	Herr Schober zählt die Kartons am Freitag in der Poststelle.
+M5B-VAL-L-061	VAL	L	CANDIDATE	C7	Herr Schober zählt die Kartons am Freitag in der Bibliothek.
+M5B-VAL-L-062	VAL	L	QUERY	-	Was erledigt Frau Wallner am Dienstag in der Bibliothek?
+M5B-VAL-L-062	VAL	L	CANDIDATE	C0	Frau Wallner zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C1	Herr Bichler zählt die Kartons am Dienstag in der Poststelle.
+M5B-VAL-L-062	VAL	L	TRUE	C2	Frau Wallner zählt die Kartons am Dienstag in der Bibliothek.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C3	Frau Wallner zählt die Kartons am Dienstag in der Poststelle.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C4	Herr Bichler zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C5	Herr Bichler zählt die Kartons am Dienstag in der Bibliothek.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C6	Frau Wallner zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-062	VAL	L	CANDIDATE	C7	Herr Bichler zählt die Kartons am Donnerstag in der Poststelle.
+M5B-VAL-L-063	VAL	L	QUERY	-	Was erledigt Herr Nagl am Montag im Serverraum?
+M5B-VAL-L-063	VAL	L	CANDIDATE	C0	Herr Nagl überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C1	Frau Oberhuber überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-063	VAL	L	TRUE	C2	Herr Nagl überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C3	Herr Nagl überprüft die Lieferscheine am Montag in der Kantine.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C4	Frau Oberhuber überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C5	Frau Oberhuber überprüft die Lieferscheine am Montag im Serverraum.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C6	Herr Nagl überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-VAL-L-063	VAL	L	CANDIDATE	C7	Frau Oberhuber überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-VAL-S-000	VAL	S	QUERY	-	Was erledigt Frau Oberhuber an dem fünften Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-000	VAL	S	TRUE	C0	Frau Oberhuber erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C1	Frau Oberhuber erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C2	Herr Ziegler erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C3	Herr Ziegler erneuert die Etiketten am Freitag in der Poststelle.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C4	Frau Oberhuber erneuert die Etiketten am Freitag in der Poststelle.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C5	Herr Ziegler erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C6	Herr Ziegler erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-000	VAL	S	CANDIDATE	C7	Frau Oberhuber erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-001	VAL	S	QUERY	-	Was erledigt Frau Auer gleich zu Wochenbeginn wo Sendungen angenommen werden?
+M5B-VAL-S-001	VAL	S	TRUE	C0	Frau Auer testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C1	Frau Oberhuber testet die Notbeleuchtung am Donnerstag in der Poststelle.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C2	Frau Auer testet die Notbeleuchtung am Donnerstag in der Poststelle.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C3	Frau Auer testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C4	Frau Oberhuber testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C5	Frau Auer testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C6	Frau Oberhuber testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-001	VAL	S	CANDIDATE	C7	Frau Oberhuber testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-VAL-S-002	VAL	S	QUERY	-	Was erledigt Herr Nagl an dem fünften Arbeitstag dieser Woche zwischen den Hochregalen mit Nachschub?
+M5B-VAL-S-002	VAL	S	TRUE	C0	Herr Nagl wartet die Klimaanlage am Freitag im Lager.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C1	Frau Maurer wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C2	Frau Maurer wartet die Klimaanlage am Freitag im Lager.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C3	Herr Nagl wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C4	Frau Maurer wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C5	Herr Nagl wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C6	Herr Nagl wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-002	VAL	S	CANDIDATE	C7	Frau Maurer wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-003	VAL	S	QUERY	-	Was erledigt Herr Bichler gleich zu Wochenbeginn bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-003	VAL	S	TRUE	C0	Herr Bichler testet die Notbeleuchtung am Montag in der Garage.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C1	Herr Nagl testet die Notbeleuchtung am Donnerstag in der Werkstatt.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C2	Herr Bichler testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C4	Herr Nagl testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C5	Herr Nagl testet die Notbeleuchtung am Montag in der Garage.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C6	Herr Bichler testet die Notbeleuchtung am Donnerstag in der Werkstatt.
+M5B-VAL-S-003	VAL	S	CANDIDATE	C7	Herr Nagl testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-004	VAL	S	QUERY	-	Was erledigt Frau Auer an dem fünften Arbeitstag dieser Woche wo Vorräte aufbewahrt werden?
+M5B-VAL-S-004	VAL	S	TRUE	C0	Frau Auer testet die Notbeleuchtung am Freitag im Lager.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C1	Frau Ranftl testet die Notbeleuchtung am Freitag im Lager.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C2	Frau Ranftl testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C3	Frau Auer testet die Notbeleuchtung am Montag im Lager.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C4	Frau Auer testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C5	Frau Ranftl testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C6	Frau Ranftl testet die Notbeleuchtung am Montag im Lager.
+M5B-VAL-S-004	VAL	S	CANDIDATE	C7	Frau Auer testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-005	VAL	S	QUERY	-	Was erledigt Herr Ziegler einen Tag nach dem Montag wo man Maschinen wieder instand setzt?
+M5B-VAL-S-005	VAL	S	TRUE	C0	Herr Ziegler testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C1	Herr Bichler testet die Notbeleuchtung am Freitag in der Werkstatt.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C2	Herr Ziegler testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C5	Herr Ziegler testet die Notbeleuchtung am Freitag in der Werkstatt.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C6	Herr Bichler testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-005	VAL	S	CANDIDATE	C7	Herr Ziegler testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-006	VAL	S	QUERY	-	Was erledigt Frau Thaler an dem dritten Arbeitstag dieser Woche wo Pakete und Kuverts eintreffen?
+M5B-VAL-S-006	VAL	S	TRUE	C0	Frau Thaler erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C1	Herr Pfeifer erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C2	Herr Pfeifer erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C3	Frau Thaler erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C4	Herr Pfeifer erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C5	Herr Pfeifer erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C6	Frau Thaler erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-006	VAL	S	CANDIDATE	C7	Frau Thaler erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-007	VAL	S	QUERY	-	Was erledigt Herr Unger einen Tag nach dem Montag bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-007	VAL	S	TRUE	C0	Herr Unger testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C1	Herr Bichler testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C2	Herr Unger testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C5	Herr Bichler testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C6	Herr Unger testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-007	VAL	S	CANDIDATE	C7	Herr Unger testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-008	VAL	S	QUERY	-	Was erledigt Frau Maurer an dem ersten Arbeitstag dieser Woche wo Sendungen angenommen werden?
+M5B-VAL-S-008	VAL	S	CANDIDATE	C0	Herr Schober wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-008	VAL	S	TRUE	C1	Frau Maurer wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C2	Herr Schober wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C3	Herr Schober wartet die Klimaanlage am Donnerstag im Lager.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C4	Frau Maurer wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C5	Herr Schober wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C6	Frau Maurer wartet die Klimaanlage am Donnerstag im Lager.
+M5B-VAL-S-008	VAL	S	CANDIDATE	C7	Frau Maurer wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-009	VAL	S	QUERY	-	Was erledigt Herr Ziegler genau in der Wochenmitte wo die Rechner surren?
+M5B-VAL-S-009	VAL	S	CANDIDATE	C0	Herr Ziegler erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-009	VAL	S	TRUE	C1	Herr Ziegler erneuert die Etiketten am Mittwoch im Serverraum.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C2	Herr Schober erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C3	Herr Schober erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C4	Herr Ziegler erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C5	Herr Schober erneuert die Etiketten am Mittwoch im Serverraum.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C6	Herr Ziegler erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-009	VAL	S	CANDIDATE	C7	Herr Schober erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-010	VAL	S	QUERY	-	Was erledigt Herr Schober an dem zweiten Arbeitstag dieser Woche bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-010	VAL	S	CANDIDATE	C0	Herr Schober wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-010	VAL	S	TRUE	C1	Herr Schober wartet die Klimaanlage am Dienstag in der Garage.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C2	Frau Wallner wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C3	Herr Schober wartet die Klimaanlage am Dienstag in der Poststelle.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C4	Frau Wallner wartet die Klimaanlage am Dienstag in der Poststelle.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C5	Frau Wallner wartet die Klimaanlage am Dienstag in der Garage.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C6	Frau Wallner wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-010	VAL	S	CANDIDATE	C7	Herr Schober wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-011	VAL	S	QUERY	-	Was erledigt Herr Ziegler gleich zu Wochenbeginn im Raum mit den Romanen und Lexika?
+M5B-VAL-S-011	VAL	S	CANDIDATE	C0	Herr Ziegler testet die Notbeleuchtung am Donnerstag in der Bibliothek.
+M5B-VAL-S-011	VAL	S	TRUE	C1	Herr Ziegler testet die Notbeleuchtung am Montag in der Bibliothek.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C2	Herr Ziegler testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C3	Frau Auer testet die Notbeleuchtung am Donnerstag in der Bibliothek.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C4	Frau Auer testet die Notbeleuchtung am Montag in der Bibliothek.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C5	Frau Auer testet die Notbeleuchtung am Donnerstag im Serverraum.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C6	Frau Auer testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-011	VAL	S	CANDIDATE	C7	Herr Ziegler testet die Notbeleuchtung am Donnerstag im Serverraum.
+M5B-VAL-S-012	VAL	S	QUERY	-	Was erledigt Herr Unger an dem zweiten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-012	VAL	S	CANDIDATE	C0	Herr Unger testet die Notbeleuchtung am Freitag in der Kantine.
+M5B-VAL-S-012	VAL	S	TRUE	C1	Herr Unger testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C2	Herr Unger testet die Notbeleuchtung am Dienstag in der Kantine.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C3	Frau Oberhuber testet die Notbeleuchtung am Dienstag in der Kantine.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C4	Herr Unger testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C5	Frau Oberhuber testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C6	Frau Oberhuber testet die Notbeleuchtung am Freitag in der Kantine.
+M5B-VAL-S-012	VAL	S	CANDIDATE	C7	Frau Oberhuber testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-013	VAL	S	QUERY	-	Was erledigt Frau Thaler einen Tag nach dem Montag wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-013	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-013	VAL	S	TRUE	C1	Frau Thaler wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C2	Frau Thaler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C3	Frau Auer wartet die Klimaanlage am Mittwoch in der Bibliothek.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C4	Frau Thaler wartet die Klimaanlage am Mittwoch in der Bibliothek.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C5	Frau Auer wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C6	Frau Auer wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-013	VAL	S	CANDIDATE	C7	Frau Auer wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-014	VAL	S	QUERY	-	Was erledigt Frau Ranftl an dem ersten Arbeitstag dieser Woche bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-014	VAL	S	CANDIDATE	C0	Frau Wallner erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-014	VAL	S	TRUE	C1	Frau Ranftl erneuert die Etiketten am Montag in der Garage.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C2	Frau Ranftl erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C3	Frau Wallner erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C4	Frau Wallner erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C5	Frau Ranftl erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C6	Frau Wallner erneuert die Etiketten am Montag in der Garage.
+M5B-VAL-S-014	VAL	S	CANDIDATE	C7	Frau Ranftl erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-015	VAL	S	QUERY	-	Was erledigt Herr Pfeifer am letzten Werktag vor dem Wochenende bei den blinkenden Netzwerkgeräten?
+M5B-VAL-S-015	VAL	S	CANDIDATE	C0	Frau Ranftl testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-015	VAL	S	TRUE	C1	Herr Pfeifer testet die Notbeleuchtung am Freitag im Serverraum.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C2	Frau Ranftl testet die Notbeleuchtung am Freitag in der Poststelle.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C3	Frau Ranftl testet die Notbeleuchtung am Freitag im Serverraum.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C4	Herr Pfeifer testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C5	Frau Ranftl testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C6	Herr Pfeifer testet die Notbeleuchtung am Freitag in der Poststelle.
+M5B-VAL-S-015	VAL	S	CANDIDATE	C7	Herr Pfeifer testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-016	VAL	S	QUERY	-	Was erledigt Frau Maurer an dem ersten Arbeitstag dieser Woche wo Vorräte aufbewahrt werden?
+M5B-VAL-S-016	VAL	S	CANDIDATE	C0	Frau Maurer erneuert die Etiketten am Freitag in der Werkstatt.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C1	Herr Pfeifer erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-016	VAL	S	TRUE	C2	Frau Maurer erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C3	Herr Pfeifer erneuert die Etiketten am Freitag in der Werkstatt.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C4	Herr Pfeifer erneuert die Etiketten am Freitag im Lager.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C5	Frau Maurer erneuert die Etiketten am Freitag im Lager.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C6	Herr Pfeifer erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-016	VAL	S	CANDIDATE	C7	Frau Maurer erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-017	VAL	S	QUERY	-	Was erledigt Frau Wallner genau in der Wochenmitte wo Sendungen angenommen werden?
+M5B-VAL-S-017	VAL	S	CANDIDATE	C0	Frau Ranftl testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C1	Frau Ranftl testet die Notbeleuchtung am Dienstag im Labor.
+M5B-VAL-S-017	VAL	S	TRUE	C2	Frau Wallner testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C3	Frau Ranftl testet die Notbeleuchtung am Mittwoch im Labor.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C4	Frau Ranftl testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C5	Frau Wallner testet die Notbeleuchtung am Mittwoch im Labor.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C6	Frau Wallner testet die Notbeleuchtung am Dienstag im Labor.
+M5B-VAL-S-017	VAL	S	CANDIDATE	C7	Frau Wallner testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-018	VAL	S	QUERY	-	Was erledigt Herr Pfeifer an dem dritten Arbeitstag dieser Woche zwischen den Hochregalen mit Nachschub?
+M5B-VAL-S-018	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Mittwoch im Labor.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C1	Frau Thaler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-018	VAL	S	TRUE	C2	Herr Pfeifer wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C3	Frau Thaler wartet die Klimaanlage am Dienstag im Labor.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C4	Herr Pfeifer wartet die Klimaanlage am Mittwoch im Labor.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C5	Frau Thaler wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C6	Herr Pfeifer wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-018	VAL	S	CANDIDATE	C7	Herr Pfeifer wartet die Klimaanlage am Dienstag im Labor.
+M5B-VAL-S-019	VAL	S	QUERY	-	Was erledigt Herr Schober genau in der Wochenmitte bei den Mikroskopen und Pipetten?
+M5B-VAL-S-019	VAL	S	CANDIDATE	C0	Herr Unger erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C1	Herr Schober erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-VAL-S-019	VAL	S	TRUE	C2	Herr Schober erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C3	Herr Unger erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C4	Herr Schober erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C5	Herr Unger erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C6	Herr Unger erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-VAL-S-019	VAL	S	CANDIDATE	C7	Herr Schober erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-020	VAL	S	QUERY	-	Was erledigt Herr Ziegler an dem fünften Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-020	VAL	S	CANDIDATE	C0	Herr Pfeifer wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C1	Herr Ziegler wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-020	VAL	S	TRUE	C2	Herr Ziegler wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C3	Herr Pfeifer wartet die Klimaanlage am Freitag in der Garage.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C4	Herr Ziegler wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C5	Herr Ziegler wartet die Klimaanlage am Freitag in der Garage.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C6	Herr Pfeifer wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-020	VAL	S	CANDIDATE	C7	Herr Pfeifer wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-021	VAL	S	QUERY	-	Was erledigt Herr Bichler gleich zu Wochenbeginn wo Vorräte aufbewahrt werden?
+M5B-VAL-S-021	VAL	S	CANDIDATE	C0	Herr Bichler erneuert die Etiketten am Montag im Labor.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C1	Frau Oberhuber erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-021	VAL	S	TRUE	C2	Herr Bichler erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C3	Herr Bichler erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C4	Herr Bichler erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C5	Frau Oberhuber erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C6	Frau Oberhuber erneuert die Etiketten am Montag im Labor.
+M5B-VAL-S-021	VAL	S	CANDIDATE	C7	Frau Oberhuber erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-022	VAL	S	QUERY	-	Was erledigt Herr Schober an dem ersten Arbeitstag dieser Woche wo das Personal seine Pause beim Speisen verbringt?
+M5B-VAL-S-022	VAL	S	CANDIDATE	C0	Frau Thaler erneuert die Etiketten am Montag in der Kantine.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C1	Herr Schober erneuert die Etiketten am Dienstag in der Kantine.
+M5B-VAL-S-022	VAL	S	TRUE	C2	Herr Schober erneuert die Etiketten am Montag in der Kantine.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C3	Herr Schober erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C4	Frau Thaler erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C5	Herr Schober erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C6	Frau Thaler erneuert die Etiketten am Dienstag in der Kantine.
+M5B-VAL-S-022	VAL	S	CANDIDATE	C7	Frau Thaler erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-023	VAL	S	QUERY	-	Was erledigt Herr Schober gleich zu Wochenbeginn wo Pakete und Kuverts eintreffen?
+M5B-VAL-S-023	VAL	S	CANDIDATE	C0	Herr Bichler testet die Notbeleuchtung am Freitag in der Poststelle.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C1	Herr Schober testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-023	VAL	S	TRUE	C2	Herr Schober testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C5	Herr Schober testet die Notbeleuchtung am Freitag in der Poststelle.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C6	Herr Bichler testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-023	VAL	S	CANDIDATE	C7	Herr Schober testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-024	VAL	S	QUERY	-	Was erledigt Frau Oberhuber an dem fünften Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-024	VAL	S	CANDIDATE	C0	Frau Ranftl erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C1	Frau Oberhuber erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C2	Frau Ranftl erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-024	VAL	S	TRUE	C3	Frau Oberhuber erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C4	Frau Ranftl erneuert die Etiketten am Freitag in der Kantine.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C5	Frau Oberhuber erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C6	Frau Oberhuber erneuert die Etiketten am Freitag in der Kantine.
+M5B-VAL-S-024	VAL	S	CANDIDATE	C7	Frau Ranftl erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-025	VAL	S	QUERY	-	Was erledigt Frau Thaler genau in der Wochenmitte wo Vorräte aufbewahrt werden?
+M5B-VAL-S-025	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C1	Herr Ziegler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C2	Herr Ziegler wartet die Klimaanlage am Freitag im Lager.
+M5B-VAL-S-025	VAL	S	TRUE	C3	Frau Thaler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C4	Frau Thaler wartet die Klimaanlage am Freitag im Lager.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C5	Frau Thaler wartet die Klimaanlage am Freitag in der Werkstatt.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C6	Herr Ziegler wartet die Klimaanlage am Freitag in der Werkstatt.
+M5B-VAL-S-025	VAL	S	CANDIDATE	C7	Herr Ziegler wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-VAL-S-026	VAL	S	QUERY	-	Was erledigt Herr Schober an dem vierten Arbeitstag dieser Woche wo Pakete und Kuverts eintreffen?
+M5B-VAL-S-026	VAL	S	CANDIDATE	C0	Frau Thaler erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C1	Frau Thaler erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C2	Herr Schober erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-026	VAL	S	TRUE	C3	Herr Schober erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C4	Frau Thaler erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C5	Herr Schober erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C6	Herr Schober erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-026	VAL	S	CANDIDATE	C7	Frau Thaler erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-027	VAL	S	QUERY	-	Was erledigt Frau Oberhuber einen Tag nach dem Mittwoch zwischen den Hochregalen mit Nachschub?
+M5B-VAL-S-027	VAL	S	CANDIDATE	C0	Herr Unger erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C1	Frau Oberhuber erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C2	Herr Unger erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-027	VAL	S	TRUE	C3	Frau Oberhuber erneuert die Etiketten am Donnerstag im Lager.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C4	Herr Unger erneuert die Etiketten am Donnerstag in der Werkstatt.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C5	Frau Oberhuber erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C6	Herr Unger erneuert die Etiketten am Donnerstag im Lager.
+M5B-VAL-S-027	VAL	S	CANDIDATE	C7	Frau Oberhuber erneuert die Etiketten am Donnerstag in der Werkstatt.
+M5B-VAL-S-028	VAL	S	QUERY	-	Was erledigt Herr Nagl an dem dritten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-028	VAL	S	CANDIDATE	C0	Frau Auer erneuert die Etiketten am Freitag im Lager.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C1	Frau Auer erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C2	Herr Nagl erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-028	VAL	S	TRUE	C3	Herr Nagl erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C4	Frau Auer erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C5	Herr Nagl erneuert die Etiketten am Freitag im Lager.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C6	Frau Auer erneuert die Etiketten am Freitag in der Bibliothek.
+M5B-VAL-S-028	VAL	S	CANDIDATE	C7	Herr Nagl erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-029	VAL	S	QUERY	-	Was erledigt Frau Thaler gleich zu Wochenbeginn wo Vorräte aufbewahrt werden?
+M5B-VAL-S-029	VAL	S	CANDIDATE	C0	Herr Nagl erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C1	Herr Nagl erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C2	Herr Nagl erneuert die Etiketten am Donnerstag im Lager.
+M5B-VAL-S-029	VAL	S	TRUE	C3	Frau Thaler erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C4	Herr Nagl erneuert die Etiketten am Montag im Lager.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C5	Frau Thaler erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C6	Frau Thaler erneuert die Etiketten am Donnerstag im Lager.
+M5B-VAL-S-029	VAL	S	CANDIDATE	C7	Frau Thaler erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-030	VAL	S	QUERY	-	Was erledigt Herr Nagl an dem dritten Arbeitstag dieser Woche bei den Mikroskopen und Pipetten?
+M5B-VAL-S-030	VAL	S	CANDIDATE	C0	Herr Schober erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C1	Herr Nagl erneuert die Etiketten am Donnerstag im Labor.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C2	Herr Nagl erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-030	VAL	S	TRUE	C3	Herr Nagl erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C4	Herr Nagl erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C5	Herr Schober erneuert die Etiketten am Donnerstag im Labor.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C6	Herr Schober erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-030	VAL	S	CANDIDATE	C7	Herr Schober erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-031	VAL	S	QUERY	-	Was erledigt Frau Ranftl genau in der Wochenmitte bei den blinkenden Netzwerkgeräten?
+M5B-VAL-S-031	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Montag in der Kantine.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C1	Frau Ranftl wartet die Klimaanlage am Mittwoch in der Kantine.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C2	Frau Thaler wartet die Klimaanlage am Montag im Serverraum.
+M5B-VAL-S-031	VAL	S	TRUE	C3	Frau Ranftl wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C4	Frau Thaler wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C5	Frau Thaler wartet die Klimaanlage am Mittwoch in der Kantine.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C6	Frau Ranftl wartet die Klimaanlage am Montag in der Kantine.
+M5B-VAL-S-031	VAL	S	CANDIDATE	C7	Frau Ranftl wartet die Klimaanlage am Montag im Serverraum.
+M5B-VAL-S-032	VAL	S	QUERY	-	Was erledigt Herr Nagl an dem zweiten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-032	VAL	S	CANDIDATE	C0	Herr Nagl erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C1	Herr Unger erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C2	Herr Unger erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C3	Herr Nagl erneuert die Etiketten am Montag in der Bibliothek.
+M5B-VAL-S-032	VAL	S	TRUE	C4	Herr Nagl erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C5	Herr Nagl erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C6	Herr Unger erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-032	VAL	S	CANDIDATE	C7	Herr Unger erneuert die Etiketten am Montag in der Bibliothek.
+M5B-VAL-S-033	VAL	S	QUERY	-	Was erledigt Herr Schober genau in der Wochenmitte wo Vorräte aufbewahrt werden?
+M5B-VAL-S-033	VAL	S	CANDIDATE	C0	Herr Bichler testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C1	Herr Schober testet die Notbeleuchtung am Montag im Lager.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C2	Herr Bichler testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Montag im Lager.
+M5B-VAL-S-033	VAL	S	TRUE	C4	Herr Schober testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C5	Herr Schober testet die Notbeleuchtung am Montag im Serverraum.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C6	Herr Bichler testet die Notbeleuchtung am Mittwoch im Serverraum.
+M5B-VAL-S-033	VAL	S	CANDIDATE	C7	Herr Schober testet die Notbeleuchtung am Mittwoch im Serverraum.
+M5B-VAL-S-034	VAL	S	QUERY	-	Was erledigt Frau Thaler an dem vierten Arbeitstag dieser Woche bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-034	VAL	S	CANDIDATE	C0	Frau Thaler testet die Notbeleuchtung am Mittwoch in der Bibliothek.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C1	Frau Oberhuber testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C2	Frau Oberhuber testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C3	Frau Oberhuber testet die Notbeleuchtung am Donnerstag in der Bibliothek.
+M5B-VAL-S-034	VAL	S	TRUE	C4	Frau Thaler testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C5	Frau Thaler testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C6	Frau Thaler testet die Notbeleuchtung am Donnerstag in der Bibliothek.
+M5B-VAL-S-034	VAL	S	CANDIDATE	C7	Frau Oberhuber testet die Notbeleuchtung am Mittwoch in der Bibliothek.
+M5B-VAL-S-035	VAL	S	QUERY	-	Was erledigt Herr Nagl einen Tag nach dem Montag beim Werkzeug und den Drehbänken?
+M5B-VAL-S-035	VAL	S	CANDIDATE	C0	Herr Unger wartet die Klimaanlage am Donnerstag in der Kantine.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C1	Herr Unger wartet die Klimaanlage am Donnerstag in der Werkstatt.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C2	Herr Unger wartet die Klimaanlage am Dienstag in der Kantine.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C3	Herr Nagl wartet die Klimaanlage am Donnerstag in der Werkstatt.
+M5B-VAL-S-035	VAL	S	TRUE	C4	Herr Nagl wartet die Klimaanlage am Dienstag in der Werkstatt.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C5	Herr Nagl wartet die Klimaanlage am Donnerstag in der Kantine.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C6	Herr Unger wartet die Klimaanlage am Dienstag in der Werkstatt.
+M5B-VAL-S-035	VAL	S	CANDIDATE	C7	Herr Nagl wartet die Klimaanlage am Dienstag in der Kantine.
+M5B-VAL-S-036	VAL	S	QUERY	-	Was erledigt Herr Ziegler an dem zweiten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-036	VAL	S	CANDIDATE	C0	Herr Ziegler erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C1	Herr Bichler erneuert die Etiketten am Mittwoch im Labor.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C2	Herr Ziegler erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C3	Herr Ziegler erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-036	VAL	S	TRUE	C4	Herr Ziegler erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C5	Herr Bichler erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C6	Herr Bichler erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-036	VAL	S	CANDIDATE	C7	Herr Bichler erneuert die Etiketten am Dienstag im Labor.
+M5B-VAL-S-037	VAL	S	QUERY	-	Was erledigt Herr Unger gleich zu Wochenbeginn wo Vorräte aufbewahrt werden?
+M5B-VAL-S-037	VAL	S	CANDIDATE	C0	Herr Unger wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C1	Herr Unger wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C2	Herr Unger wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C3	Frau Ranftl wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-VAL-S-037	VAL	S	TRUE	C4	Herr Unger wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C5	Frau Ranftl wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C6	Frau Ranftl wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-037	VAL	S	CANDIDATE	C7	Frau Ranftl wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-VAL-S-038	VAL	S	QUERY	-	Was erledigt Herr Pfeifer an dem vierten Arbeitstag dieser Woche beim Werkzeug und den Drehbänken?
+M5B-VAL-S-038	VAL	S	CANDIDATE	C0	Herr Pfeifer wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C1	Herr Pfeifer wartet die Klimaanlage am Donnerstag in der Bibliothek.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C2	Frau Wallner wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C3	Frau Wallner wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-038	VAL	S	TRUE	C4	Herr Pfeifer wartet die Klimaanlage am Donnerstag in der Werkstatt.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C5	Frau Wallner wartet die Klimaanlage am Donnerstag in der Bibliothek.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C6	Herr Pfeifer wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-038	VAL	S	CANDIDATE	C7	Frau Wallner wartet die Klimaanlage am Donnerstag in der Werkstatt.
+M5B-VAL-S-039	VAL	S	QUERY	-	Was erledigt Frau Thaler gleich zu Wochenbeginn beim Werkzeug und den Drehbänken?
+M5B-VAL-S-039	VAL	S	CANDIDATE	C0	Frau Thaler erneuert die Etiketten am Dienstag im Serverraum.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C1	Frau Maurer erneuert die Etiketten am Dienstag in der Werkstatt.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C2	Frau Maurer erneuert die Etiketten am Dienstag im Serverraum.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C3	Frau Thaler erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-039	VAL	S	TRUE	C4	Frau Thaler erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C5	Frau Maurer erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C6	Frau Maurer erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-039	VAL	S	CANDIDATE	C7	Frau Thaler erneuert die Etiketten am Dienstag in der Werkstatt.
+M5B-VAL-S-040	VAL	S	QUERY	-	Was erledigt Frau Maurer an dem zweiten Arbeitstag dieser Woche wo Sendungen angenommen werden?
+M5B-VAL-S-040	VAL	S	CANDIDATE	C0	Herr Schober testet die Notbeleuchtung am Dienstag in der Kantine.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C1	Frau Maurer testet die Notbeleuchtung am Donnerstag in der Poststelle.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C2	Frau Maurer testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C3	Herr Schober testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C4	Herr Schober testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-040	VAL	S	TRUE	C5	Frau Maurer testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C6	Herr Schober testet die Notbeleuchtung am Donnerstag in der Poststelle.
+M5B-VAL-S-040	VAL	S	CANDIDATE	C7	Frau Maurer testet die Notbeleuchtung am Dienstag in der Kantine.
+M5B-VAL-S-041	VAL	S	QUERY	-	Was erledigt Frau Auer genau in der Wochenmitte wo die Rechner surren?
+M5B-VAL-S-041	VAL	S	CANDIDATE	C0	Herr Unger wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C1	Frau Auer wartet die Klimaanlage am Donnerstag im Serverraum.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C2	Frau Auer wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C3	Herr Unger wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C4	Herr Unger wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-VAL-S-041	VAL	S	TRUE	C5	Frau Auer wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C6	Frau Auer wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-041	VAL	S	CANDIDATE	C7	Herr Unger wartet die Klimaanlage am Donnerstag im Serverraum.
+M5B-VAL-S-042	VAL	S	QUERY	-	Was erledigt Herr Pfeifer an dem ersten Arbeitstag dieser Woche bei den blinkenden Netzwerkgeräten?
+M5B-VAL-S-042	VAL	S	CANDIDATE	C0	Frau Ranftl erneuert die Etiketten am Freitag im Serverraum.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C1	Frau Ranftl erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C2	Herr Pfeifer erneuert die Etiketten am Montag in der Poststelle.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C3	Herr Pfeifer erneuert die Etiketten am Freitag in der Poststelle.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C4	Frau Ranftl erneuert die Etiketten am Freitag in der Poststelle.
+M5B-VAL-S-042	VAL	S	TRUE	C5	Herr Pfeifer erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C6	Herr Pfeifer erneuert die Etiketten am Freitag im Serverraum.
+M5B-VAL-S-042	VAL	S	CANDIDATE	C7	Frau Ranftl erneuert die Etiketten am Montag im Serverraum.
+M5B-VAL-S-043	VAL	S	QUERY	-	Was erledigt Herr Schober genau in der Wochenmitte beim Werkzeug und den Drehbänken?
+M5B-VAL-S-043	VAL	S	CANDIDATE	C0	Herr Schober erneuert die Etiketten am Montag in der Kantine.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C1	Frau Maurer erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C2	Frau Maurer erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C3	Frau Maurer erneuert die Etiketten am Montag in der Kantine.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C4	Frau Maurer erneuert die Etiketten am Mittwoch in der Werkstatt.
+M5B-VAL-S-043	VAL	S	TRUE	C5	Herr Schober erneuert die Etiketten am Mittwoch in der Werkstatt.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C6	Herr Schober erneuert die Etiketten am Montag in der Werkstatt.
+M5B-VAL-S-043	VAL	S	CANDIDATE	C7	Herr Schober erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-044	VAL	S	QUERY	-	Was erledigt Herr Bichler an dem vierten Arbeitstag dieser Woche wo Sendungen angenommen werden?
+M5B-VAL-S-044	VAL	S	CANDIDATE	C0	Herr Nagl erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C1	Herr Nagl erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C2	Herr Nagl erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C3	Herr Bichler erneuert die Etiketten am Dienstag in der Garage.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C4	Herr Bichler erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-044	VAL	S	TRUE	C5	Herr Bichler erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C6	Herr Nagl erneuert die Etiketten am Dienstag in der Garage.
+M5B-VAL-S-044	VAL	S	CANDIDATE	C7	Herr Bichler erneuert die Etiketten am Dienstag in der Poststelle.
+M5B-VAL-S-045	VAL	S	QUERY	-	Was erledigt Frau Oberhuber gleich zu Wochenbeginn wo Proben analysiert werden?
+M5B-VAL-S-045	VAL	S	CANDIDATE	C0	Frau Oberhuber testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C1	Frau Maurer testet die Notbeleuchtung am Dienstag im Labor.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C2	Frau Maurer testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C3	Frau Oberhuber testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C4	Frau Maurer testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-045	VAL	S	TRUE	C5	Frau Oberhuber testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C6	Frau Maurer testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-045	VAL	S	CANDIDATE	C7	Frau Oberhuber testet die Notbeleuchtung am Dienstag im Labor.
+M5B-VAL-S-046	VAL	S	QUERY	-	Was erledigt Frau Maurer an dem zweiten Arbeitstag dieser Woche bei den Mikroskopen und Pipetten?
+M5B-VAL-S-046	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C1	Frau Thaler wartet die Klimaanlage am Freitag im Labor.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C2	Frau Thaler wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C3	Frau Maurer wartet die Klimaanlage am Freitag in der Bibliothek.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C4	Frau Maurer wartet die Klimaanlage am Freitag im Labor.
+M5B-VAL-S-046	VAL	S	TRUE	C5	Frau Maurer wartet die Klimaanlage am Dienstag im Labor.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C6	Frau Thaler wartet die Klimaanlage am Dienstag im Labor.
+M5B-VAL-S-046	VAL	S	CANDIDATE	C7	Frau Maurer wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-047	VAL	S	QUERY	-	Was erledigt Herr Ziegler genau in der Wochenmitte bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-047	VAL	S	CANDIDATE	C0	Herr Ziegler erneuert die Etiketten am Mittwoch in der Werkstatt.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C1	Herr Schober erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C2	Herr Ziegler erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C3	Herr Schober erneuert die Etiketten am Mittwoch in der Werkstatt.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C4	Herr Ziegler erneuert die Etiketten am Donnerstag in der Werkstatt.
+M5B-VAL-S-047	VAL	S	TRUE	C5	Herr Ziegler erneuert die Etiketten am Mittwoch in der Garage.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C6	Herr Schober erneuert die Etiketten am Mittwoch in der Garage.
+M5B-VAL-S-047	VAL	S	CANDIDATE	C7	Herr Schober erneuert die Etiketten am Donnerstag in der Werkstatt.
+M5B-VAL-S-048	VAL	S	QUERY	-	Was erledigt Herr Ziegler an dem vierten Arbeitstag dieser Woche wo die Rechner surren?
+M5B-VAL-S-048	VAL	S	CANDIDATE	C0	Frau Ranftl erneuert die Etiketten am Donnerstag in der Kantine.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C1	Herr Ziegler erneuert die Etiketten am Mittwoch im Serverraum.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C2	Herr Ziegler erneuert die Etiketten am Donnerstag in der Kantine.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C3	Frau Ranftl erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C4	Frau Ranftl erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C5	Frau Ranftl erneuert die Etiketten am Mittwoch im Serverraum.
+M5B-VAL-S-048	VAL	S	TRUE	C6	Herr Ziegler erneuert die Etiketten am Donnerstag im Serverraum.
+M5B-VAL-S-048	VAL	S	CANDIDATE	C7	Herr Ziegler erneuert die Etiketten am Mittwoch in der Kantine.
+M5B-VAL-S-049	VAL	S	QUERY	-	Was erledigt Frau Ranftl am letzten Werktag vor dem Wochenende wo die Rechner surren?
+M5B-VAL-S-049	VAL	S	CANDIDATE	C0	Herr Bichler erneuert die Etiketten am Dienstag im Serverraum.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C1	Herr Bichler erneuert die Etiketten am Dienstag in der Garage.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C2	Frau Ranftl erneuert die Etiketten am Dienstag in der Garage.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C3	Herr Bichler erneuert die Etiketten am Freitag in der Garage.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C4	Herr Bichler erneuert die Etiketten am Freitag im Serverraum.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C5	Frau Ranftl erneuert die Etiketten am Freitag in der Garage.
+M5B-VAL-S-049	VAL	S	TRUE	C6	Frau Ranftl erneuert die Etiketten am Freitag im Serverraum.
+M5B-VAL-S-049	VAL	S	CANDIDATE	C7	Frau Ranftl erneuert die Etiketten am Dienstag im Serverraum.
+M5B-VAL-S-050	VAL	S	QUERY	-	Was erledigt Frau Auer an dem dritten Arbeitstag dieser Woche beim Werkzeug und den Drehbänken?
+M5B-VAL-S-050	VAL	S	CANDIDATE	C0	Herr Bichler testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C1	Frau Auer testet die Notbeleuchtung am Montag in der Werkstatt.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C2	Herr Bichler testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C3	Frau Auer testet die Notbeleuchtung am Mittwoch im Labor.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Mittwoch im Labor.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C5	Herr Bichler testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-050	VAL	S	TRUE	C6	Frau Auer testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-050	VAL	S	CANDIDATE	C7	Frau Auer testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-051	VAL	S	QUERY	-	Was erledigt Herr Nagl genau in der Wochenmitte zwischen den Hochregalen mit Nachschub?
+M5B-VAL-S-051	VAL	S	CANDIDATE	C0	Herr Nagl wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C1	Frau Oberhuber wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C2	Herr Nagl wartet die Klimaanlage am Donnerstag im Lager.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C3	Herr Nagl wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C4	Frau Oberhuber wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C5	Frau Oberhuber wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-VAL-S-051	VAL	S	TRUE	C6	Herr Nagl wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-051	VAL	S	CANDIDATE	C7	Frau Oberhuber wartet die Klimaanlage am Donnerstag im Lager.
+M5B-VAL-S-052	VAL	S	QUERY	-	Was erledigt Frau Oberhuber an dem vierten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-052	VAL	S	CANDIDATE	C0	Frau Oberhuber erneuert die Etiketten am Montag in der Garage.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C1	Herr Bichler erneuert die Etiketten am Montag in der Garage.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C2	Frau Oberhuber erneuert die Etiketten am Montag in der Bibliothek.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C3	Herr Bichler erneuert die Etiketten am Montag in der Bibliothek.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C4	Frau Oberhuber erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C5	Herr Bichler erneuert die Etiketten am Donnerstag in der Garage.
+M5B-VAL-S-052	VAL	S	TRUE	C6	Frau Oberhuber erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-052	VAL	S	CANDIDATE	C7	Herr Bichler erneuert die Etiketten am Donnerstag in der Bibliothek.
+M5B-VAL-S-053	VAL	S	QUERY	-	Was erledigt Frau Wallner am letzten Werktag vor dem Wochenende wo es mittags warme Gerichte gibt?
+M5B-VAL-S-053	VAL	S	CANDIDATE	C0	Herr Bichler testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C1	Frau Wallner testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C2	Herr Bichler testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C3	Frau Wallner testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Freitag in der Kantine.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C5	Herr Bichler testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-VAL-S-053	VAL	S	TRUE	C6	Frau Wallner testet die Notbeleuchtung am Freitag in der Kantine.
+M5B-VAL-S-053	VAL	S	CANDIDATE	C7	Frau Wallner testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-VAL-S-054	VAL	S	QUERY	-	Was erledigt Frau Thaler an dem ersten Arbeitstag dieser Woche wo Pakete und Kuverts eintreffen?
+M5B-VAL-S-054	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C1	Frau Thaler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C2	Frau Thaler wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C3	Frau Ranftl wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C4	Frau Ranftl wartet die Klimaanlage am Mittwoch im Lager.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C5	Frau Ranftl wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-054	VAL	S	TRUE	C6	Frau Thaler wartet die Klimaanlage am Montag in der Poststelle.
+M5B-VAL-S-054	VAL	S	CANDIDATE	C7	Frau Ranftl wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-VAL-S-055	VAL	S	QUERY	-	Was erledigt Frau Thaler einen Tag nach dem Montag bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-055	VAL	S	CANDIDATE	C0	Frau Thaler testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C1	Frau Ranftl testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C2	Frau Ranftl testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C3	Frau Ranftl testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C4	Frau Thaler testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C5	Frau Ranftl testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-055	VAL	S	TRUE	C6	Frau Thaler testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-055	VAL	S	CANDIDATE	C7	Frau Thaler testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-056	VAL	S	QUERY	-	Was erledigt Frau Wallner an dem ersten Arbeitstag dieser Woche wo die Bücher zum Lesen bereitstehen?
+M5B-VAL-S-056	VAL	S	CANDIDATE	C0	Frau Oberhuber testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C1	Frau Oberhuber testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C2	Frau Oberhuber testet die Notbeleuchtung am Montag in der Bibliothek.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C3	Frau Wallner testet die Notbeleuchtung am Montag im Labor.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C4	Frau Wallner testet die Notbeleuchtung am Freitag im Labor.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C5	Frau Wallner testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-056	VAL	S	CANDIDATE	C6	Frau Oberhuber testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-056	VAL	S	TRUE	C7	Frau Wallner testet die Notbeleuchtung am Montag in der Bibliothek.
+M5B-VAL-S-057	VAL	S	QUERY	-	Was erledigt Frau Thaler genau in der Wochenmitte wo Vorräte aufbewahrt werden?
+M5B-VAL-S-057	VAL	S	CANDIDATE	C0	Frau Thaler erneuert die Etiketten am Dienstag im Lager.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C1	Herr Ziegler erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C2	Frau Thaler erneuert die Etiketten am Dienstag in der Bibliothek.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C3	Herr Ziegler erneuert die Etiketten am Dienstag im Lager.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C4	Frau Thaler erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C5	Herr Ziegler erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-057	VAL	S	CANDIDATE	C6	Herr Ziegler erneuert die Etiketten am Mittwoch in der Bibliothek.
+M5B-VAL-S-057	VAL	S	TRUE	C7	Frau Thaler erneuert die Etiketten am Mittwoch im Lager.
+M5B-VAL-S-058	VAL	S	QUERY	-	Was erledigt Frau Ranftl an dem zweiten Arbeitstag dieser Woche zwischen den Hochregalen mit Nachschub?
+M5B-VAL-S-058	VAL	S	CANDIDATE	C0	Frau Ranftl wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C1	Frau Ranftl wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C2	Frau Ranftl wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C3	Herr Unger wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C4	Herr Unger wartet die Klimaanlage am Montag im Lager.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C5	Herr Unger wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-058	VAL	S	CANDIDATE	C6	Herr Unger wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-VAL-S-058	VAL	S	TRUE	C7	Frau Ranftl wartet die Klimaanlage am Dienstag im Lager.
+M5B-VAL-S-059	VAL	S	QUERY	-	Was erledigt Frau Thaler gleich zu Wochenbeginn bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-059	VAL	S	CANDIDATE	C0	Frau Thaler wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C1	Frau Oberhuber wartet die Klimaanlage am Donnerstag in der Kantine.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C2	Frau Oberhuber wartet die Klimaanlage am Montag in der Kantine.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C3	Frau Oberhuber wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C4	Frau Oberhuber wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C5	Frau Thaler wartet die Klimaanlage am Donnerstag in der Kantine.
+M5B-VAL-S-059	VAL	S	CANDIDATE	C6	Frau Thaler wartet die Klimaanlage am Montag in der Kantine.
+M5B-VAL-S-059	VAL	S	TRUE	C7	Frau Thaler wartet die Klimaanlage am Montag in der Garage.
+M5B-VAL-S-060	VAL	S	QUERY	-	Was erledigt Frau Oberhuber an dem zweiten Arbeitstag dieser Woche wo man Maschinen wieder instand setzt?
+M5B-VAL-S-060	VAL	S	CANDIDATE	C0	Frau Oberhuber testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C1	Herr Ziegler testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C2	Herr Ziegler testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C3	Frau Oberhuber testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C4	Herr Ziegler testet die Notbeleuchtung am Mittwoch in der Garage.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C5	Herr Ziegler testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-060	VAL	S	CANDIDATE	C6	Frau Oberhuber testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-060	VAL	S	TRUE	C7	Frau Oberhuber testet die Notbeleuchtung am Dienstag in der Werkstatt.
+M5B-VAL-S-061	VAL	S	QUERY	-	Was erledigt Herr Bichler einen Tag nach dem Montag wo Vorräte aufbewahrt werden?
+M5B-VAL-S-061	VAL	S	CANDIDATE	C0	Herr Bichler testet die Notbeleuchtung am Freitag im Lager.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C1	Frau Maurer testet die Notbeleuchtung am Freitag im Lager.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C2	Frau Maurer testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C3	Herr Bichler testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C4	Herr Bichler testet die Notbeleuchtung am Dienstag in der Bibliothek.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C5	Frau Maurer testet die Notbeleuchtung am Dienstag im Lager.
+M5B-VAL-S-061	VAL	S	CANDIDATE	C6	Frau Maurer testet die Notbeleuchtung am Freitag in der Bibliothek.
+M5B-VAL-S-061	VAL	S	TRUE	C7	Herr Bichler testet die Notbeleuchtung am Dienstag im Lager.
+M5B-VAL-S-062	VAL	S	QUERY	-	Was erledigt Herr Nagl an dem ersten Arbeitstag dieser Woche bei den geparkten Fahrzeugen des Fuhrparks?
+M5B-VAL-S-062	VAL	S	CANDIDATE	C0	Herr Nagl testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C1	Herr Schober testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C2	Herr Schober testet die Notbeleuchtung am Dienstag in der Garage.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C3	Herr Schober testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C4	Herr Schober testet die Notbeleuchtung am Montag in der Garage.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C5	Herr Nagl testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-VAL-S-062	VAL	S	CANDIDATE	C6	Herr Nagl testet die Notbeleuchtung am Montag in der Poststelle.
+M5B-VAL-S-062	VAL	S	TRUE	C7	Herr Nagl testet die Notbeleuchtung am Montag in der Garage.
+M5B-VAL-S-063	VAL	S	QUERY	-	Was erledigt Frau Wallner genau in der Wochenmitte beim Werkzeug und den Drehbänken?
+M5B-VAL-S-063	VAL	S	CANDIDATE	C0	Frau Wallner testet die Notbeleuchtung am Donnerstag im Lager.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C1	Frau Ranftl testet die Notbeleuchtung am Mittwoch in der Werkstatt.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C2	Frau Wallner testet die Notbeleuchtung am Donnerstag in der Werkstatt.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C3	Frau Wallner testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C4	Frau Ranftl testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C5	Frau Ranftl testet die Notbeleuchtung am Donnerstag im Lager.
+M5B-VAL-S-063	VAL	S	CANDIDATE	C6	Frau Ranftl testet die Notbeleuchtung am Donnerstag in der Werkstatt.
+M5B-VAL-S-063	VAL	S	TRUE	C7	Frau Wallner testet die Notbeleuchtung am Mittwoch in der Werkstatt.
