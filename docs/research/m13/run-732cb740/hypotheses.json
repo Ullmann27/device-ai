@@ -1,0 +1,401 @@
+[
+ {
+  "id": "H-DEMOTE-APP_ERROR-NEG:REMOVE",
+  "direction": "DEMOTE",
+  "kind": "APP_ERROR",
+  "strategy": "NEG:REMOVE",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 32,
+   "successes": 1,
+   "rate": 0.0313,
+   "baseRate": 0.089
+  },
+  "counterexamples": [
+   "train-repair-ledger-neg-2"
+  ],
+  "dev": {
+   "n": 13,
+   "successes": 1,
+   "rate": 0.0769,
+   "baseRate": 0.1194,
+   "pOneSided": 0.52898
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-LOAD_FAILURE-CONST:INC",
+  "direction": "DEMOTE",
+  "kind": "LOAD_FAILURE",
+  "strategy": "CONST:INC",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 8,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0219
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 7,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0357,
+   "pOneSided": 0.775247
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-LOAD_FAILURE-EQ:SWAP",
+  "direction": "DEMOTE",
+  "kind": "LOAD_FAILURE",
+  "strategy": "EQ:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 8,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.1047
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 4,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-LOAD_FAILURE-LOGIC:SWAP",
+  "direction": "DEMOTE",
+  "kind": "LOAD_FAILURE",
+  "strategy": "LOGIC:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 12,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.1066
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 4,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-LOAD_FAILURE-NEG:INSERT",
+  "direction": "DEMOTE",
+  "kind": "LOAD_FAILURE",
+  "strategy": "NEG:INSERT",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 57,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0115
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 45,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0254,
+   "pOneSided": 0.313843
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-LOAD_FAILURE-REL:SWAP",
+  "direction": "DEMOTE",
+  "kind": "LOAD_FAILURE",
+  "strategy": "REL:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 12,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0612
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 4,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-NUM_OFF1-NEG:INSERT",
+  "direction": "DEMOTE",
+  "kind": "NUM_OFF1",
+  "strategy": "NEG:INSERT",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 15,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0115
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-RUNTIME_TypeError-CONST:INC",
+  "direction": "DEMOTE",
+  "kind": "RUNTIME_TypeError",
+  "strategy": "CONST:INC",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 23,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0219
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 15,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0357,
+   "pOneSided": 0.579543
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-STRUCT-CONST:INC",
+  "direction": "DEMOTE",
+  "kind": "STRUCT",
+  "strategy": "CONST:INC",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 83,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0219
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-THROWS-CONST:INC",
+  "direction": "DEMOTE",
+  "kind": "THROWS",
+  "strategy": "CONST:INC",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 57,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0219
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-DEMOTE-THROWS-REL:SWAP",
+  "direction": "DEMOTE",
+  "kind": "THROWS",
+  "strategy": "REL:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 110,
+   "successes": 3,
+   "rate": 0.0273,
+   "baseRate": 0.0612
+  },
+  "counterexamples": [
+   "train-coin-wm-v3-shadow-model-const-2",
+   "train-coin-wm-v3-shadow-model-rel-1",
+   "train-repair-ledger-logic-2"
+  ],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-PREFER-APP_ERROR-CONST:INC",
+  "direction": "PREFER",
+  "kind": "APP_ERROR",
+  "strategy": "CONST:INC",
+  "status": "REFUTED",
+  "training": {
+   "n": 28,
+   "successes": 3,
+   "rate": 0.1071,
+   "baseRate": 0.0219
+  },
+  "counterexamples": [
+   "train-repair-ledger-eq-1",
+   "train-repair-ledger-eq-2",
+   "train-repair-ledger-neg-2",
+   "train-repair-ledger-rel-1"
+  ],
+  "dev": {
+   "n": 14,
+   "successes": 0,
+   "rate": 0,
+   "baseRate": 0.0357,
+   "pOneSided": 1
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-PREFER-LOAD_FAILURE-NEG:REMOVE",
+  "direction": "PREFER",
+  "kind": "LOAD_FAILURE",
+  "strategy": "NEG:REMOVE",
+  "status": "CONFIRMED",
+  "training": {
+   "n": 8,
+   "successes": 3,
+   "rate": 0.375,
+   "baseRate": 0.089
+  },
+  "counterexamples": [],
+  "dev": {
+   "n": 6,
+   "successes": 3,
+   "rate": 0.5,
+   "baseRate": 0.1194,
+   "pOneSided": 0.025745
+  }
+ },
+ {
+  "id": "H-PREFER-RUNTIME_TypeError-NEG:REMOVE",
+  "direction": "PREFER",
+  "kind": "RUNTIME_TypeError",
+  "strategy": "NEG:REMOVE",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 9,
+   "successes": 4,
+   "rate": 0.4444,
+   "baseRate": 0.089
+  },
+  "counterexamples": [
+   "train-repair-diagnostics-logic-1"
+  ],
+  "dev": {
+   "n": 14,
+   "successes": 2,
+   "rate": 0.1429,
+   "baseRate": 0.1194,
+   "pOneSided": 0.511319
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-PREFER-STR-REL:SWAP",
+  "direction": "PREFER",
+  "kind": "STR",
+  "strategy": "REL:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 52,
+   "successes": 7,
+   "rate": 0.1346,
+   "baseRate": 0.0612
+  },
+  "counterexamples": [
+   "train-ansk-baseline-triage-eq-2",
+   "train-research-evidence-gate-const-1",
+   "train-research-evidence-gate-const-2",
+   "train-research-evidence-gate-eq-1",
+   "train-research-evidence-gate-eq-2",
+   "train-research-evidence-gate-logic-1",
+   "train-research-evidence-gate-neg-2"
+  ],
+  "dev": {
+   "n": 58,
+   "successes": 6,
+   "rate": 0.1034,
+   "baseRate": 0.0804,
+   "pOneSided": 0.322116
+  },
+  "boundary": {
+   "feature": "bucket",
+   "gap": 0.25,
+   "high": {
+    "value": "1",
+    "rate": 0.25,
+    "n": 12
+   },
+   "low": {
+    "value": "4+",
+    "rate": 0,
+    "n": 4
+   }
+  }
+ },
+ {
+  "id": "H-PREFER-STRUCT-EQ:SWAP",
+  "direction": "PREFER",
+  "kind": "STRUCT",
+  "strategy": "EQ:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 20,
+   "successes": 6,
+   "rate": 0.3,
+   "baseRate": 0.1047
+  },
+  "counterexamples": [
+   "train-dialogue-retrieval-const-1",
+   "train-dialogue-retrieval-logic-1",
+   "train-dialogue-retrieval-logic-2",
+   "train-repair-diagnostics-const-2"
+  ],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ },
+ {
+  "id": "H-PREFER-STRUCT-LOGIC:SWAP",
+  "direction": "PREFER",
+  "kind": "STRUCT",
+  "strategy": "LOGIC:SWAP",
+  "status": "INCONCLUSIVE",
+  "training": {
+   "n": 25,
+   "successes": 9,
+   "rate": 0.36,
+   "baseRate": 0.1066
+  },
+  "counterexamples": [
+   "train-dialogue-retrieval-const-1",
+   "train-dialogue-retrieval-eq-1",
+   "train-dialogue-retrieval-rel-2",
+   "train-repair-diagnostics-const-1"
+  ],
+  "dev": {
+   "n": 0,
+   "successes": 0,
+   "reason": "TOO_FEW_DEV_OBSERVATIONS"
+  },
+  "boundary": null
+ }
+]

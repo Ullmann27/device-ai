@@ -11,7 +11,7 @@
 | M10 | Selbstkorrektur-Heuristik **widerlegt** (16 statt 19 gelöst, keine Einsparung). Dafür 0 falsche Erfolge. | M9-Bericht |
 | M11 | F1-Kern auf dem Holdout: **4 → 26 richtig, 24 → 0 falsch**. Gedächtnis: **EWM2+ 36/36** gegenüber 12/36. | `m11/M11-RESULT-20261030.md` |
 | M12 | Aussagenprüfer: Holdout 1 **verfehlt** (Ordinalpunkt-Fehler). Holdout 2: **48/50 erkannt (vorher 28), 0/30 Fehlalarme**. | `m12/M12-RESULT-20261030.md` |
-| M13 | Gegenbeispiel-Miner mit unabhängiger Nachmessung gebaut und getestet. **Lauf nicht durchgeführt** (Zeitbudget). | `boundaries.mjs`, `run-m13.mjs` |
+| M13 | Gegenbeispiel-Miner mit unabhängiger Nachmessung gebaut und getestet. Nachtrag: Lauf auf `732cb740` durchgeführt. 17 Hypothesen: 1 CONFIRMED (nicht Bonferroni-fest), 1 REFUTED, 15 INCONCLUSIVE ([Ergebnis](m13/M13-RESULT-20261030.md)). | `boundaries.mjs`, `run-m13.mjs` |
 | M14 | Echte `SIGKILL`-Tests: Lücke „keine Besitzer-Freigabe toter Build-Lease“ geschlossen (`--release-dead-lease`). Kein Doppel-Repair, abgeschnittener Zustand schlägt geschlossen fehl. | `m14/M14-RESULT-20261030.md` |
 | M15 | Prüfer-Regression von 3,8 ms auf **1,4–2,0 ms**, Qualität identisch. Ergebnis-Cache spart **41 %** der Testläufe. | `m15/M15-RESULT-20261030.md` |
 | M16 | Verbunden und per Aufrufketten-Test belegt. Gemma-Pfad → Aussagenprüfer → Trace. Gesprächspfad → F1-Kern (Schatten). EWM2-Schatten → Zeitlinie und Resolver. Worker → Lease-Freigabe und Host-Diagnose. | `.github/continuum/m9-m16-wiring.test.mjs` |
@@ -23,7 +23,7 @@ Kotlin-Harness **1282/1282** (241 Klassen, 4 Checks; #244 hatte 1271). Node kano
 ## Nicht ausgeführt / offen
 
 - Gradle, Lint, APK, Signatur, native Gemma und **Fold7**: in dieser Umgebung nicht verfügbar.
-- Lauf von M13 und ein Prüfpass des Denkrouters nach Flag des Aussagenprüfers: vorbereitet, nicht gelaufen.
+- (M13 ist inzwischen gelaufen, siehe oben.) Ein Prüfpass des Denkrouters nach Flag des Aussagenprüfers: vorbereitet, nicht gelaufen.
 - Kein Sprachmodell: Reparaturen stammen aus einem Vorlagen-Vokabular. Die historische Kohorte zeigt dessen Grenze.
 
 ## Nächster Schritt
