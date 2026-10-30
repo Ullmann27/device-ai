@@ -1,0 +1,33 @@
+GIT_HEAD=79f88ef40f3398f44aa91888a4678bcaaade9f23 2026-10-30T12:58:38Z
+SHA_OK 2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6 /tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-regress/cre1/node-cre1.cre1
+BUILD_OK 7d1909408a738fb564d8049ea48bf6be0a466370062742821b240af03d3396f2 sources=66
+OK (42 tests)
+PASS groups-256-rows-2304
+PASS deterministic-generation
+PASS split-kind-balanced
+PASS DEV-VAL-memories-disjoint
+PASS no-P3-phrases
+PASS target-not-fixed-candidate-position
+PASS no-duplicate-memories
+PASS query-blind-lexical-VAL
+PASS write-read-roundtrip
+PASS stable-file-sha
+PASS reject-corrupt-gold
+PASS reject-malformed-TSV
+M5_WP1_TESTS_PASS=12; CRE1_BLIND=NOT_RUN; SEALED=UNOPENED
+PASS all-identical-embeddings-are-ties
+PASS nonfinite-embeddings-rejected
+PASS mismatched-dimensions-rejected
+PASS query-blind-medoid-can-expose-cheat
+PASS positions-not-forced-by-model
+PASS VAL-gate-fails-above-threshold
+PASS query-text-not-given-to-embedder
+PASS mutating-query-text-cannot-change-query-blind-score
+M5_BLIND_GATE_NEGATIVE_TESTS=8/8 CRE1_CHECKPOINT=NOT_RUN SEALED=UNOPENED
+SHA_OK 7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2 /tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-regress/dev-val.tsv
+M5_JACCARD_AUDIT=PASS DATA_SHA256=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2
+DEV strict_top1=20/128 forced_top1=20/128 max_ties=0
+VAL strict_top1=15/128 forced_top1=15/128 max_ties=0
+PREREG_VAL_GATE=PASS
+COMPLETE host_only=true sealed_opened=false production_modified=false results=/tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-regress/results/cre1-blind-gate.txt
+RUNNER_EXIT=0

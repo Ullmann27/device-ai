@@ -104,3 +104,21 @@ OUT=/tmp/exp20 scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp2
 - ToolGate, OwnerGate, EWM2, VOICE-1.
 - `CognitiveGenome` (`allowSelfReplication`, `allowHiddenPersistence`, `allowShutdownEvasion` = false).
 - Kein Main-Merge, kein Force-Push, keine APK.
+
+## Nachtrag 31.10.2026: M5b und M6-B4-Vorprüfung
+
+| Meilenstein | Zustand | Beleg |
+|---|---|---|
+| M5b disjunkte Paraphrasen-Familien | **ERREICHT (Versuch durchgeführt)** | [M5b-Ergebnis](EXP-20-M5B-RESULT-20261031.md); Datengates PASS (16/128, 17/128) |
+| M5b-A CRE1-Training (nur TRAIN) | **REJECTED als Semantik-Nachweis** | VAL-S 25/64 (Zufall bei Gleichstand 14,8), fern/fern 3/16 ≈ Zufall; gegenüber untrainiert +9,4 pp, `INCONCLUSIVE` |
+| M5b-B deterministische Normalisierung | **REJECTED** | VAL-S 0/64: TRAIN-Regeln greifen bei neuer Oberfläche nicht |
+| M5 gesamt | **NICHT ERREICHT** | Vorbedingung (S ≥ 90 %) von keinem Arm erfüllt; SEALED geschlossen |
+| M6-B4 EWM-Vorprüfung | **ERREICHT (Befund)** | [Vorprüfung](EXP-20-M6-B4-EWM-PRECHECK-20261031.md): Ich-Aussagen werden nie ersetzt, weil das Subjekt falsch erkannt wird (Ort oder Adverb); 3/3 Negativkontrollen korrekt |
+| Regression nach M5b/M6 | **PASS** | echter Runner: 42/42, 12/12, 8/8, beide SHA ok, VAL-Gate PASS |
+
+**Nächste drei Schritte, in dieser Reihenfolge:**
+1. **Den nachgewiesenen EWM-Fehler beheben, nach Review und Besitzerfreigabe:** Ich-Aussagen erhalten das Subjekt `ich`. `M6B4EwmValidityProbe` ist der rote Test, danach muss die volle EWM-Regression laufen. Das ist die einzige konkret belegte Verbesserung des Kontextgedächtnisses.
+2. **Semantik:**
+   - Entweder ein großes, registriertes Curriculum aus vielen Konstruktionstypen, bewertet auf VAL-fern/fern.
+   - Oder eine **Besitzerentscheidung** über ein vortrainiertes lokales Satz-Embedding: Lizenz, Größe, RAM und Fold7-Latenz vorab prüfen; keine Integration ohne Freigabe.
+3. M6-B2/B3 erst danach, auf einem fremden Holdout.

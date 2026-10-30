@@ -2,7 +2,7 @@
 
 ## AKTUELL 30.10.2026 (spät): M5-Stand – zuerst lesen
 
-[EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md](docs/research/exp20/EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md): echter CRE1-Runner Exit 0, CRE1-Blind-Datengate PASS (VAL 15/128); **Semantik-Vorbedingung FAIL für alle vorhandenen Encoder** (VAL-S ≤ 15/64, Zufall bei Gleichstand 16/64) → **M5 NICHT ERREICHT**, SEALED geschlossen. Hybrid+CRE1 existiert bereits als Diagnose-Schatten (`AuthorizedConversationMemoryShadow`). Nächster Schritt: neu registrierter Datensatz M5b mit disjunkten Paraphrasen-Familien; M6 nur vorbereitet.
+[EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md](docs/research/exp20/EXP-20-M5-M6-STATUS-AND-NEXT-20261030.md): echter CRE1-Runner Exit 0, CRE1-Blind-Datengate PASS (VAL 15/128); **Semantik-Vorbedingung FAIL für alle vorhandenen Encoder** (VAL-S ≤ 15/64, Zufall bei Gleichstand 16/64) → **M5 NICHT ERREICHT**, SEALED geschlossen. Hybrid+CRE1 existiert bereits als Diagnose-Schatten (`AuthorizedConversationMemoryShadow`). Nachtrag 31.10.: **M5b durchgeführt, M5 weiter NICHT ERREICHT** (trainiertes CRE1 lernt nur nahe Oberflächen, Normalisierung 0/64); **M6-B4-Vorprüfung: EWM ersetzt Ich-Aussagen nie** (falsches Subjekt) – Fix-Vorschlag, Produktivcode unverändert. Siehe Nachtrag im Statusdokument.
 
 ## AKTUELL 30.10.2026: EXP-20 abgeschlossen (Host-Labor) → nächster Schritt M5 „Semantik“
 
