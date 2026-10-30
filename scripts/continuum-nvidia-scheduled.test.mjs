@@ -115,3 +115,40 @@ test('GitHub SHA conflict prevents remote provider invocation',async()=>{
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_HTTP_409/);
  assert.equal(modelCalls,0);
 });
+
+test('RED: HTTP 200 without durable claim readback cannot invoke NVIDIA',async()=>{
+ let gets=0,modelCalls=0;
+ const old={...blank(),reservations:[r('00:07:00','110',0)]};
+ const fetchImpl=async(_url,opts)=>{
+  if(opts.method==='GET'){
+   gets++;
+   return json(200,{sha:'a'.repeat(40),encoding:'base64',
+    content:Buffer.from(JSON.stringify(old)).toString('base64')});
+  }
+  return json(200,{commit:{sha:'b'.repeat(40)}});
+ };
+ await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
+  outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
+  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
+ assert.equal(gets,2);
+ assert.equal(modelCalls,0);
+});
+test('RED: malformed GitHub write receipt cannot authorize provider use',async()=>{
+ let gets=0,modelCalls=0;
+ const old={...blank(),reservations:[r('00:07:00','110',0)]};
+ const fetchImpl=async(_url,opts)=>{
+  if(opts.method==='GET'){
+   gets++;
+   return json(200,{sha:'a'.repeat(40),encoding:'base64',
+    content:Buffer.from(JSON.stringify(old)).toString('base64')});
+  }
+  return json(200,{});
+ };
+ await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
+  outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
+  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
+ assert.equal(gets,1);
+ assert.equal(modelCalls,0);
+});
