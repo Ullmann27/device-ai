@@ -108,8 +108,8 @@ export async function runNvidiaPublicCodingLab({
  if(typeof fetchImpl!=='function'||!Number.isSafeInteger(timeoutMs)||
     timeoutMs<1000||timeoutMs>120000)throw Error('NVIDIA_CODING_LAB_CONFIG_INVALID');
  const challenge=makeNvidiaPublicCodingChallenge();
- const body=JSON.stringify({model:MODEL,temperature:0.2,top_p:0.95,
-  max_tokens:4096,stream:false,
+ const body=JSON.stringify({model:MODEL,temperature:0,
+  chat_template_kwargs:{enable_thinking:false},max_tokens:4096,stream:false,
   messages:[{role:'system',content:'Respond with JSON only; do not output any private material.'},
    {role:'user',content:challenge.prompt}]
  });
@@ -127,6 +127,7 @@ export async function runNvidiaPublicCodingLab({
   const raw=await readBoundedResponse(response,90000);
   let packet;
   try{packet=parseStrict(raw);}catch{throw Error('NVIDIA_RESPONSE_INVALID');}
+  if(packet?.choices?.[0]?.finish_reason==='length')throw Error('NVIDIA_RESPONSE_TRUNCATED');
   if(packet?.model!==MODEL||!Array.isArray(packet.choices)||packet.choices.length!==1||
      typeof packet.choices[0]?.message?.content!=='string')
    throw Error('NVIDIA_RESPONSE_INVALID');
