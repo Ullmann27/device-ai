@@ -101,7 +101,9 @@ export function validateTasks(){
   return TASKS.map(task=>{
     const f=fixture(task);
     try{
-      const run=()=>spawnSync(process.execPath,['--test',`.github/continuum/${task.id}.test.mjs`],{cwd:f.root,encoding:'utf8',timeout:60000}).status;
+      // A nested node --test inherits NODE_TEST_CONTEXT and would report to the parent runner with exit 0.
+      const env={...process.env};delete env.NODE_TEST_CONTEXT;
+      const run=()=>spawnSync(process.execPath,['--test',`.github/continuum/${task.id}.test.mjs`],{cwd:f.root,encoding:'utf8',timeout:60000,env}).status;
       const baseline=run();
       for(const a of task.oracle.filter(a=>a.tool==='edit_file')){
         const file=path.join(f.root,a.args.path),text=fs.readFileSync(file,'utf8');

@@ -22,9 +22,14 @@ export function validIsolationEvidence(value,profile){
     Number.isSafeInteger(value.memoryMb)&&value.memoryMb>=256&&value.memoryMb<=6144&&
     Number.isSafeInteger(value.pids)&&value.pids>=16&&value.pids<=256&&
     Number.isSafeInteger(value.cpus)&&value.cpus>=1&&value.cpus<=4&&
-    Number.isSafeInteger(value.timeoutMs)&&value.timeoutMs>=1000&&value.timeoutMs<=300_000;
+    Number.isSafeInteger(value.timeoutMs)&&value.timeoutMs>=1000&&value.timeoutMs<=300_000&&
+    (value.runtime===undefined||RUNTIMES.has(value.runtime));
 }
-const CONFIG_KEYS=new Set(['image','nodeHome','jdkHome','gradleHome','androidHome','kotlinHome','gradleModules','timeoutMs','memoryMb','pids','cpus']);
+/** Evidence that the profile ran under gVisor (runtime confirmed by docker inspect after the run). */
+export function isGvisorEvidence(value,profile){return validIsolationEvidence(value,profile)&&value.runtime==='runsc';}
+const CONFIG_KEYS=new Set(['image','nodeHome','jdkHome','gradleHome','androidHome','kotlinHome','gradleModules','timeoutMs','memoryMb','pids','cpus','runtime']);
+// OCI runtimes: runc (Docker default) or runsc (gVisor: a user-space kernel between the sandbox and the host kernel).
+const RUNTIMES=new Set(['runc','runsc']);
 /** Owner-controlled capability configuration, never a task/model-provided command. */
 export function loadIsolationConfig(file,{sourceRoot}={}){
   const absolute=path.resolve(file),stat=fs.lstatSync(absolute);
@@ -71,10 +76,10 @@ function snapshot(root,target){
 }
 const bind=(src,dst)=>['--mount','type=bind,src='+src+',dst='+dst+',readonly'];
 export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=null,androidHome=null,kotlinHome=null,gradleModules=null,
-  timeoutMs=180_000,memoryMb=4096,pids=128,cpus=2}={}){
+  timeoutMs=180_000,memoryMb=4096,pids=128,cpus=2,runtime='runc'}={}){
   if(!IMAGE.test(image??'')||!Number.isSafeInteger(timeoutMs)||timeoutMs<1000||timeoutMs>300_000||
      !Number.isSafeInteger(memoryMb)||memoryMb<256||memoryMb>6144||!Number.isSafeInteger(pids)||pids<16||pids>256||
-     !Number.isSafeInteger(cpus)||cpus<1||cpus>4)throw Error('ISOLATION_INVALID_POLICY');
+     !Number.isSafeInteger(cpus)||cpus<1||cpus>4||!RUNTIMES.has(runtime))throw Error('ISOLATION_INVALID_POLICY');
   const uid=process.getuid?.();const gid=process.getgid?.();
   if(!Number.isSafeInteger(uid)||uid<1||!Number.isSafeInteger(gid)||gid<1)throw Error('ISOLATION_UNPRIVILEGED_UID_REQUIRED');
   const tools={node:ordinaryDirectory(nodeHome)};
@@ -92,9 +97,16 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
   if(dependencies&&path.basename(dependencies)!=='modules-2')throw Error('ISOLATION_INVALID_DEPENDENCY_CACHE');
   const available=docker(['image','inspect',image,'--format','{{.Id}}']);
   if(available.status!==0||available.stdout.trim()!==image)throw Error('ISOLATION_UNAVAILABLE');
+  if(runtime==='runsc'){
+    // gVisor is used only when the daemon reports a registered runsc runtime; otherwise block, never fall back.
+    const info=docker(['info','--format','{{json .Runtimes}}']);let runtimes=null;
+    try{runtimes=JSON.parse(info.stdout);}catch{}
+    if(info.status!==0||!runtimes||typeof runtimes!=='object'||Array.isArray(runtimes)||!Object.hasOwn(runtimes,'runsc'))
+      throw Error('ISOLATION_GVISOR_UNAVAILABLE');
+  }
   const executor={
     policy:Object.freeze({schema:'continuum-isolation-v1',image,network:'none',user:uid+':'+gid,
-      readOnly:true,noNewPrivileges:true,capabilities:[],memoryMb,pids,cpus,timeoutMs}),
+      readOnly:true,noNewPrivileges:true,capabilities:[],memoryMb,pids,cpus,timeoutMs,runtime}),
     execute(profile,root,out,{deadline=null}={}){
       if(!PROFILES.has(profile))throw Error('ISOLATION_UNKNOWN_PROFILE');
       const source=ordinaryDirectory(root);
@@ -109,7 +121,7 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
       try{sourceSha256=snapshot(source,tree);}catch(error){fs.rmSync(stage,{recursive:true,force:true});throw error;}
       for(const dir of ['app/build','.gradle','build'])fs.mkdirSync(path.join(tree,dir),{recursive:true});
       const name='continuum-'+crypto.randomBytes(12).toString('hex');
-      const args=['run','--entrypoint=/usr/bin/env','--name',name,'--network=none','--ipc=none','--cgroupns=private',
+      const args=['run',...(runtime==='runsc'?['--runtime=runsc']:[]),'--entrypoint=/usr/bin/env','--name',name,'--network=none','--ipc=none','--cgroupns=private',
         '--user='+uid+':'+gid,'--read-only','--cap-drop=ALL','--security-opt=no-new-privileges:true',
         '--pids-limit='+pids,'--memory='+memoryMb+'m','--memory-swap='+memoryMb+'m','--cpus='+cpus,
         '--ulimit=nofile=256:256','--ulimit=core=0:0',
@@ -125,13 +137,14 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
       if(dependencies)args.push(...bind(dependencies,'/deps/modules-2'));
       args.push(image,'-i','HOME=/scratch','PATH=/tools/node/bin:/usr/bin:/bin',
         '/tools/node/bin/node','/control/runner.mjs',profile);
-      let result;
+      let result,observedRuntime=null;
       try{
         result=docker(args,{timeout:remaining,maxBuffer:8*1024*1024});
       }finally{
         try{
           const exists=docker(['container','inspect',name]);
           if(exists.status===0){
+            observedRuntime=String(docker(['container','inspect','--format','{{.HostConfig.Runtime}}',name]).stdout??'').trim();
             docker(['container','kill',name]);
             const removed=docker(['container','rm',name]);
             if(removed.status!==0)throw Error('ISOLATION_TEARDOWN_FAILED');
@@ -141,6 +154,8 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
           }
         }finally{fs.rmSync(stage,{recursive:true,force:true});}
       }
+      // The daemon must confirm the runtime that actually ran; a silently substituted runtime is no gVisor evidence.
+      if(runtime==='runsc'&&observedRuntime!=='runsc')throw Error('ISOLATION_RUNTIME_MISMATCH');
       let payload;
       try{payload=JSON.parse(result.stdout);}catch{throw Error('ISOLATION_EXECUTION_FAILED: '+String(result.stderr).slice(-350));}
       if(result.status!==0||result.error||result.signal||payload.schema!=='continuum-isolated-profile-v1'||
