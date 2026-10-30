@@ -1,0 +1,1153 @@
+group	split	kind	role	candidate	text
+M5B-TRAIN-L-000	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Freitag in der Bibliothek?
+M5B-TRAIN-L-000	TRAIN	L	TRUE	C0	Herr Hartl überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C1	Frau Kogler überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C2	Frau Kogler überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C3	Herr Hartl überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C4	Herr Hartl überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C5	Frau Kogler überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C6	Frau Kogler überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-000	TRAIN	L	CANDIDATE	C7	Herr Hartl überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-001	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Dienstag in der Bibliothek?
+M5B-TRAIN-L-001	TRAIN	L	TRUE	C0	Frau Czerny zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C1	Frau Czerny zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C2	Frau Czerny zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C3	Frau Czerny zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C4	Herr Hartl zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C5	Herr Hartl zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C6	Herr Hartl zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-L-001	TRAIN	L	CANDIDATE	C7	Herr Hartl zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-L-002	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Donnerstag im Lager?
+M5B-TRAIN-L-002	TRAIN	L	TRUE	C0	Frau Czerny zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C1	Frau Kogler zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C2	Frau Kogler zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C3	Frau Czerny zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C4	Frau Czerny zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C5	Frau Kogler zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C6	Frau Kogler zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-002	TRAIN	L	CANDIDATE	C7	Frau Czerny zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-003	TRAIN	L	QUERY	-	Was erledigt Frau Kogler am Donnerstag in der Poststelle?
+M5B-TRAIN-L-003	TRAIN	L	TRUE	C0	Frau Kogler ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C1	Frau Kogler ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C2	Frau Kogler ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C4	Frau Kogler ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-003	TRAIN	L	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-004	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Dienstag in der Garage?
+M5B-TRAIN-L-004	TRAIN	L	TRUE	C0	Herr Hartl zählt die Kartons am Dienstag in der Garage.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C1	Herr Hartl zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C2	Herr Hartl zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C3	Frau Iser zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C4	Frau Iser zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C5	Frau Iser zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C6	Herr Hartl zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-004	TRAIN	L	CANDIDATE	C7	Frau Iser zählt die Kartons am Dienstag in der Garage.
+M5B-TRAIN-L-005	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Freitag in der Werkstatt?
+M5B-TRAIN-L-005	TRAIN	L	TRUE	C0	Herr Jank ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C1	Herr Hartl ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C2	Herr Hartl ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C3	Herr Hartl ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C4	Herr Jank ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C5	Herr Jank ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C6	Herr Hartl ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-005	TRAIN	L	CANDIDATE	C7	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-L-006	TRAIN	L	QUERY	-	Was erledigt Frau Amann am Freitag im Labor?
+M5B-TRAIN-L-006	TRAIN	L	TRUE	C0	Frau Amann ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C1	Frau Amann ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C3	Frau Amann ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C4	Frau Amann ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-006	TRAIN	L	CANDIDATE	C7	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-007	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Freitag im Lager?
+M5B-TRAIN-L-007	TRAIN	L	TRUE	C0	Herr Fasching zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C1	Herr Brandstätter zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C2	Herr Brandstätter zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C3	Herr Fasching zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C4	Herr Brandstätter zählt die Kartons am Freitag im Labor.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C5	Herr Fasching zählt die Kartons am Freitag im Labor.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C6	Herr Brandstätter zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-007	TRAIN	L	CANDIDATE	C7	Herr Fasching zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-L-008	TRAIN	L	QUERY	-	Was erledigt Frau Egli am Montag im Lager?
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C0	Frau Egli überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-L-008	TRAIN	L	TRUE	C1	Frau Egli überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C2	Frau Egli überprüft die Lieferscheine am Montag im Labor.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C3	Frau Egli überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C4	Herr Jank überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C5	Herr Jank überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C6	Herr Jank überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-L-008	TRAIN	L	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Montag im Labor.
+M5B-TRAIN-L-009	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Donnerstag in der Bibliothek?
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C0	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-009	TRAIN	L	TRUE	C1	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C2	Herr Hartl überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C4	Herr Hartl überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C5	Herr Lackner überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C6	Herr Lackner überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-009	TRAIN	L	CANDIDATE	C7	Herr Lackner überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-L-010	TRAIN	L	QUERY	-	Was erledigt Herr Lackner am Freitag in der Garage?
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C0	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-L-010	TRAIN	L	TRUE	C1	Herr Lackner ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C4	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C5	Herr Lackner ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C6	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-L-010	TRAIN	L	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-011	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Mittwoch in der Garage?
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C0	Herr Lackner überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-TRAIN-L-011	TRAIN	L	TRUE	C1	Frau Czerny überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C2	Frau Czerny überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C4	Frau Czerny überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C5	Herr Lackner überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C6	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-011	TRAIN	L	CANDIDATE	C7	Frau Czerny überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-TRAIN-L-012	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Mittwoch im Lager?
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C0	Frau Iser ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-L-012	TRAIN	L	TRUE	C1	Herr Jank ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C2	Herr Jank ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C4	Herr Jank ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C5	Frau Iser ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C6	Frau Iser ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-L-012	TRAIN	L	CANDIDATE	C7	Frau Iser ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-013	TRAIN	L	QUERY	-	Was erledigt Herr Lackner am Mittwoch in der Garage?
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C0	Herr Brandstätter überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-TRAIN-L-013	TRAIN	L	TRUE	C1	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C2	Herr Lackner überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Dienstag in der Kantine.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C5	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-L-013	TRAIN	L	CANDIDATE	C7	Herr Brandstätter überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-014	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Freitag im Lager?
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C0	Frau Iser zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-L-014	TRAIN	L	TRUE	C1	Herr Jank zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C2	Frau Iser zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C3	Herr Jank zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C4	Herr Jank zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C5	Herr Jank zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C6	Frau Iser zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-014	TRAIN	L	CANDIDATE	C7	Frau Iser zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-015	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Freitag in der Werkstatt?
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-015	TRAIN	L	TRUE	C1	Frau Iser überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C2	Frau Iser überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C4	Herr Danner überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C5	Herr Danner überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C6	Frau Iser überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-015	TRAIN	L	CANDIDATE	C7	Herr Danner überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-016	TRAIN	L	QUERY	-	Was erledigt Frau Kogler am Montag in der Poststelle?
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C0	Herr Brandstätter überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C1	Herr Brandstätter überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-L-016	TRAIN	L	TRUE	C2	Frau Kogler überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C3	Frau Kogler überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C5	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C6	Frau Kogler überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-016	TRAIN	L	CANDIDATE	C7	Frau Kogler überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-017	TRAIN	L	QUERY	-	Was erledigt Frau Egli am Mittwoch in der Bibliothek?
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-017	TRAIN	L	TRUE	C2	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C4	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-017	TRAIN	L	CANDIDATE	C7	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-018	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Mittwoch in der Werkstatt?
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C1	Herr Danner überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-018	TRAIN	L	TRUE	C2	Frau Iser überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C4	Herr Danner überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C5	Frau Iser überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C6	Herr Danner überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-018	TRAIN	L	CANDIDATE	C7	Frau Iser überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-019	TRAIN	L	QUERY	-	Was erledigt Herr Brandstätter am Freitag in der Poststelle?
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C0	Frau Grill überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C1	Frau Grill überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-019	TRAIN	L	TRUE	C2	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C3	Frau Grill überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C5	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-019	TRAIN	L	CANDIDATE	C7	Frau Grill überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-020	TRAIN	L	QUERY	-	Was erledigt Herr Lackner am Donnerstag im Serverraum?
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C0	Herr Danner zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C1	Herr Lackner zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-020	TRAIN	L	TRUE	C2	Herr Lackner zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C3	Herr Lackner zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C4	Herr Danner zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C5	Herr Danner zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C6	Herr Lackner zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-020	TRAIN	L	CANDIDATE	C7	Herr Danner zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-L-021	TRAIN	L	QUERY	-	Was erledigt Frau Amann am Mittwoch in der Bibliothek?
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C0	Frau Amann überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C1	Herr Lackner überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-021	TRAIN	L	TRUE	C2	Frau Amann überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C3	Frau Amann überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C4	Herr Lackner überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C5	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C6	Frau Amann überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-021	TRAIN	L	CANDIDATE	C7	Herr Lackner überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-022	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Montag im Serverraum?
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C0	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C1	Frau Czerny ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-022	TRAIN	L	TRUE	C2	Frau Czerny ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C3	Herr Lackner ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C4	Frau Czerny ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C6	Herr Lackner ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-L-022	TRAIN	L	CANDIDATE	C7	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-023	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Donnerstag in der Bibliothek?
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C0	Herr Fasching zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C1	Frau Czerny zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-023	TRAIN	L	TRUE	C2	Herr Fasching zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C3	Herr Fasching zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C4	Herr Fasching zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C5	Frau Czerny zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C6	Frau Czerny zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-L-023	TRAIN	L	CANDIDATE	C7	Frau Czerny zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-024	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Freitag in der Kantine?
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C0	Herr Fasching ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C1	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-024	TRAIN	L	TRUE	C3	Frau Czerny ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C4	Frau Czerny ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C6	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-L-024	TRAIN	L	CANDIDATE	C7	Herr Fasching ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-025	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Montag im Serverraum?
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C0	Herr Brandstätter überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C1	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C2	Frau Iser überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-L-025	TRAIN	L	TRUE	C3	Frau Iser überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C5	Frau Iser überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C6	Frau Iser überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-L-025	TRAIN	L	CANDIDATE	C7	Herr Brandstätter überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-L-026	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Dienstag in der Werkstatt?
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C0	Herr Jank zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C1	Herr Jank zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C2	Herr Hartl zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-026	TRAIN	L	TRUE	C3	Herr Hartl zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C4	Herr Hartl zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C5	Herr Jank zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C6	Herr Hartl zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-L-026	TRAIN	L	CANDIDATE	C7	Herr Jank zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-027	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Mittwoch in der Poststelle?
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C0	Herr Jank zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C1	Herr Jank zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C2	Herr Danner zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-027	TRAIN	L	TRUE	C3	Herr Danner zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C4	Herr Jank zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C5	Herr Jank zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C6	Herr Danner zählt die Kartons am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-027	TRAIN	L	CANDIDATE	C7	Herr Danner zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-028	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Montag im Lager?
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C0	Herr Hartl ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C1	Herr Hartl ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C2	Herr Danner ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-L-028	TRAIN	L	TRUE	C3	Herr Danner ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C4	Herr Hartl ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C5	Herr Hartl ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C6	Herr Danner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-028	TRAIN	L	CANDIDATE	C7	Herr Danner ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-029	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Mittwoch in der Poststelle?
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C0	Herr Jank zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C1	Frau Czerny zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C2	Frau Czerny zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-029	TRAIN	L	TRUE	C3	Frau Czerny zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C4	Herr Jank zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C5	Frau Czerny zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C6	Herr Jank zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-029	TRAIN	L	CANDIDATE	C7	Herr Jank zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-L-030	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Donnerstag in der Poststelle?
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C0	Herr Fasching zählt die Kartons am Mittwoch in der Kantine.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C1	Frau Iser zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C2	Frau Iser zählt die Kartons am Mittwoch in der Kantine.
+M5B-TRAIN-L-030	TRAIN	L	TRUE	C3	Herr Fasching zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C4	Herr Fasching zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C5	Herr Fasching zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C6	Frau Iser zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-030	TRAIN	L	CANDIDATE	C7	Frau Iser zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-L-031	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Freitag im Lager?
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C1	Frau Iser überprüft die Lieferscheine am Dienstag im Labor.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C2	Frau Iser überprüft die Lieferscheine am Dienstag im Lager.
+M5B-TRAIN-L-031	TRAIN	L	TRUE	C3	Frau Iser überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C4	Frau Iser überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C5	Herr Danner überprüft die Lieferscheine am Dienstag im Lager.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C6	Herr Danner überprüft die Lieferscheine am Dienstag im Labor.
+M5B-TRAIN-L-031	TRAIN	L	CANDIDATE	C7	Herr Danner überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-032	TRAIN	L	QUERY	-	Was erledigt Frau Grill am Donnerstag in der Kantine?
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C0	Frau Grill überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C1	Herr Lackner überprüft die Lieferscheine am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C2	Herr Lackner überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-L-032	TRAIN	L	TRUE	C4	Frau Grill überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C5	Frau Grill überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C6	Herr Lackner überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-L-032	TRAIN	L	CANDIDATE	C7	Frau Grill überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-L-033	TRAIN	L	QUERY	-	Was erledigt Herr Brandstätter am Montag im Labor?
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C0	Herr Fasching ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C1	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C2	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C3	Herr Fasching ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-L-033	TRAIN	L	TRUE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C5	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C6	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-033	TRAIN	L	CANDIDATE	C7	Herr Brandstätter ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-L-034	TRAIN	L	QUERY	-	Was erledigt Frau Grill am Freitag im Serverraum?
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C0	Frau Grill zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C1	Herr Jank zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C2	Herr Jank zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C3	Herr Jank zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-034	TRAIN	L	TRUE	C4	Frau Grill zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C5	Herr Jank zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C6	Frau Grill zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-L-034	TRAIN	L	CANDIDATE	C7	Frau Grill zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-035	TRAIN	L	QUERY	-	Was erledigt Herr Brandstätter am Donnerstag in der Bibliothek?
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C0	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C3	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-035	TRAIN	L	TRUE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C6	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-035	TRAIN	L	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-036	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Mittwoch in der Kantine?
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C0	Herr Lackner überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C1	Herr Hartl überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C2	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-036	TRAIN	L	TRUE	C4	Herr Hartl überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C5	Herr Hartl überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C6	Herr Hartl überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-036	TRAIN	L	CANDIDATE	C7	Herr Lackner überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-L-037	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Freitag in der Garage?
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C0	Frau Czerny zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C1	Frau Amann zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C2	Frau Amann zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C3	Frau Amann zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-L-037	TRAIN	L	TRUE	C4	Frau Czerny zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C5	Frau Amann zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C6	Frau Czerny zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-L-037	TRAIN	L	CANDIDATE	C7	Frau Czerny zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-038	TRAIN	L	QUERY	-	Was erledigt Frau Grill am Donnerstag in der Garage?
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C0	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C1	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C2	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-038	TRAIN	L	TRUE	C4	Frau Grill ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C5	Frau Grill ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C6	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-038	TRAIN	L	CANDIDATE	C7	Frau Grill ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-039	TRAIN	L	QUERY	-	Was erledigt Herr Brandstätter am Montag im Lager?
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C0	Herr Brandstätter zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C1	Herr Jank zählt die Kartons am Montag im Lager.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C2	Herr Brandstätter zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C3	Herr Brandstätter zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-039	TRAIN	L	TRUE	C4	Herr Brandstätter zählt die Kartons am Montag im Lager.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C5	Herr Jank zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C6	Herr Jank zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-L-039	TRAIN	L	CANDIDATE	C7	Herr Jank zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-040	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Donnerstag in der Garage?
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C1	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C4	Frau Grill ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-L-040	TRAIN	L	TRUE	C5	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C6	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-L-040	TRAIN	L	CANDIDATE	C7	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-L-041	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Freitag in der Werkstatt?
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C0	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C1	Herr Lackner überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C2	Frau Iser überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C4	Frau Iser überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-041	TRAIN	L	TRUE	C5	Frau Iser überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C6	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-041	TRAIN	L	CANDIDATE	C7	Herr Lackner überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-L-042	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Dienstag im Serverraum?
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C0	Frau Grill ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C1	Herr Danner ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C2	Herr Danner ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C4	Frau Grill ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-042	TRAIN	L	TRUE	C5	Herr Danner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C6	Herr Danner ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-L-042	TRAIN	L	CANDIDATE	C7	Frau Grill ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-L-043	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Dienstag in der Garage?
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C0	Herr Jank zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C1	Frau Kogler zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C2	Herr Jank zählt die Kartons am Dienstag in der Poststelle.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C3	Frau Kogler zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C4	Frau Kogler zählt die Kartons am Dienstag in der Poststelle.
+M5B-TRAIN-L-043	TRAIN	L	TRUE	C5	Herr Jank zählt die Kartons am Dienstag in der Garage.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C6	Frau Kogler zählt die Kartons am Dienstag in der Garage.
+M5B-TRAIN-L-043	TRAIN	L	CANDIDATE	C7	Herr Jank zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-L-044	TRAIN	L	QUERY	-	Was erledigt Frau Kogler am Montag im Lager?
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C0	Herr Brandstätter überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C1	Frau Kogler überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C2	Frau Kogler überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C3	Frau Kogler überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-044	TRAIN	L	TRUE	C5	Frau Kogler überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-044	TRAIN	L	CANDIDATE	C7	Herr Brandstätter überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-045	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Dienstag im Lager?
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C0	Frau Egli ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C1	Herr Fasching ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C4	Herr Fasching ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-045	TRAIN	L	TRUE	C5	Herr Fasching ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-L-045	TRAIN	L	CANDIDATE	C7	Herr Fasching ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-046	TRAIN	L	QUERY	-	Was erledigt Frau Egli am Donnerstag in der Poststelle?
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C0	Herr Jank ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C2	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C4	Herr Jank ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-046	TRAIN	L	TRUE	C5	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-046	TRAIN	L	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-L-047	TRAIN	L	QUERY	-	Was erledigt Frau Czerny am Donnerstag im Lager?
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C1	Frau Grill ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C2	Frau Grill ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C4	Frau Grill ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-L-047	TRAIN	L	TRUE	C5	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-L-047	TRAIN	L	CANDIDATE	C7	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-048	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Mittwoch in der Garage?
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C0	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C1	Herr Jank ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C2	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag im Labor.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C5	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-048	TRAIN	L	TRUE	C6	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-L-048	TRAIN	L	CANDIDATE	C7	Herr Jank ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-049	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Mittwoch in der Garage?
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C1	Frau Grill überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C2	Herr Danner überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C3	Frau Grill überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C4	Frau Grill überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C5	Herr Danner überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-049	TRAIN	L	TRUE	C6	Herr Danner überprüft die Lieferscheine am Mittwoch in der Garage.
+M5B-TRAIN-L-049	TRAIN	L	CANDIDATE	C7	Frau Grill überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-L-050	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Freitag in der Garage?
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C0	Herr Jank überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C1	Herr Jank überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C2	Herr Hartl überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C3	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C4	Herr Jank überprüft die Lieferscheine am Donnerstag in der Garage.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C5	Herr Hartl überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-050	TRAIN	L	TRUE	C6	Herr Jank überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-050	TRAIN	L	CANDIDATE	C7	Herr Hartl überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-L-051	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Mittwoch im Serverraum?
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C0	Frau Iser zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C1	Herr Hartl zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C2	Herr Hartl zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C3	Frau Iser zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C4	Herr Hartl zählt die Kartons am Mittwoch in der Garage.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C5	Frau Iser zählt die Kartons am Mittwoch in der Garage.
+M5B-TRAIN-L-051	TRAIN	L	TRUE	C6	Frau Iser zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-L-051	TRAIN	L	CANDIDATE	C7	Herr Hartl zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-L-052	TRAIN	L	QUERY	-	Was erledigt Herr Jank am Mittwoch in der Bibliothek?
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C0	Herr Jank überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C1	Herr Jank überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C2	Frau Grill überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C3	Frau Grill überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C4	Frau Grill überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C5	Frau Grill überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-L-052	TRAIN	L	TRUE	C6	Herr Jank überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-052	TRAIN	L	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-053	TRAIN	L	QUERY	-	Was erledigt Frau Kogler am Dienstag im Labor?
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C0	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C4	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C5	Frau Kogler ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-L-053	TRAIN	L	TRUE	C6	Frau Kogler ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-L-053	TRAIN	L	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-L-054	TRAIN	L	QUERY	-	Was erledigt Frau Amann am Freitag in der Poststelle?
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C0	Frau Kogler ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C1	Frau Amann ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C2	Frau Amann ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C3	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C4	Frau Amann ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C5	Frau Kogler ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-054	TRAIN	L	TRUE	C6	Frau Amann ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-L-054	TRAIN	L	CANDIDATE	C7	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-L-055	TRAIN	L	QUERY	-	Was erledigt Herr Brandstätter am Dienstag in der Werkstatt?
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C0	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C1	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C2	Herr Brandstätter ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C4	Herr Jank ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C5	Herr Jank ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-055	TRAIN	L	TRUE	C6	Herr Brandstätter ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-L-055	TRAIN	L	CANDIDATE	C7	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-L-056	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Mittwoch in der Bibliothek?
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C0	Herr Fasching zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C1	Herr Fasching zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C2	Frau Amann zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C3	Herr Fasching zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C4	Frau Amann zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C5	Frau Amann zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-056	TRAIN	L	CANDIDATE	C6	Frau Amann zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-L-056	TRAIN	L	TRUE	C7	Herr Fasching zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-L-057	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Freitag in der Kantine?
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C0	Frau Kogler zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C1	Herr Hartl zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C2	Herr Hartl zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C3	Frau Kogler zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C4	Frau Kogler zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C5	Herr Hartl zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-057	TRAIN	L	CANDIDATE	C6	Frau Kogler zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-057	TRAIN	L	TRUE	C7	Herr Hartl zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-L-058	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Freitag im Serverraum?
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C0	Frau Kogler zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C1	Frau Kogler zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C2	Herr Danner zählt die Kartons am Freitag in der Werkstatt.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C3	Frau Kogler zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C4	Herr Danner zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C5	Herr Danner zählt die Kartons am Dienstag in der Werkstatt.
+M5B-TRAIN-L-058	TRAIN	L	CANDIDATE	C6	Frau Kogler zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-058	TRAIN	L	TRUE	C7	Herr Danner zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-L-059	TRAIN	L	QUERY	-	Was erledigt Frau Iser am Montag im Serverraum?
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C0	Frau Amann überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C1	Frau Iser überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C2	Frau Amann überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C4	Frau Iser überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C5	Frau Amann überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-L-059	TRAIN	L	CANDIDATE	C6	Frau Amann überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-L-059	TRAIN	L	TRUE	C7	Frau Iser überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-L-060	TRAIN	L	QUERY	-	Was erledigt Herr Hartl am Freitag in der Garage?
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C0	Frau Iser ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C1	Frau Iser ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C2	Herr Hartl ordnet die Ersatzschlüssel am Montag in der Garage.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C3	Herr Hartl ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C4	Frau Iser ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C5	Frau Iser ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-L-060	TRAIN	L	CANDIDATE	C6	Herr Hartl ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-L-060	TRAIN	L	TRUE	C7	Herr Hartl ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-L-061	TRAIN	L	QUERY	-	Was erledigt Herr Fasching am Montag im Labor?
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C0	Herr Fasching zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C1	Herr Brandstätter zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C2	Herr Fasching zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C3	Herr Brandstätter zählt die Kartons am Montag im Labor.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C4	Herr Fasching zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C5	Herr Brandstätter zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-L-061	TRAIN	L	CANDIDATE	C6	Herr Brandstätter zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-L-061	TRAIN	L	TRUE	C7	Herr Fasching zählt die Kartons am Montag im Labor.
+M5B-TRAIN-L-062	TRAIN	L	QUERY	-	Was erledigt Frau Egli am Freitag im Lager?
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C0	Frau Egli ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C1	Herr Danner ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C2	Herr Danner ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C3	Herr Danner ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C4	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C5	Herr Danner ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-L-062	TRAIN	L	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Werkstatt.
+M5B-TRAIN-L-062	TRAIN	L	TRUE	C7	Frau Egli ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-L-063	TRAIN	L	QUERY	-	Was erledigt Herr Danner am Dienstag in der Bibliothek?
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C0	Herr Fasching überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C1	Herr Fasching überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C2	Herr Fasching überprüft die Lieferscheine am Dienstag im Labor.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C3	Herr Fasching überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C4	Herr Danner überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C5	Herr Danner überprüft die Lieferscheine am Freitag im Labor.
+M5B-TRAIN-L-063	TRAIN	L	CANDIDATE	C6	Herr Danner überprüft die Lieferscheine am Dienstag im Labor.
+M5B-TRAIN-L-063	TRAIN	L	TRUE	C7	Herr Danner überprüft die Lieferscheine am Dienstag in der Bibliothek.
+M5B-TRAIN-S-000	TRAIN	S	QUERY	-	Was erledigt Frau Iser am dritten Arbeitstag der Woche wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C0	Frau Iser wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C1	Frau Kogler wartet die Klimaanlage am Donnerstag im Lager.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C2	Frau Kogler wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C3	Frau Kogler wartet die Klimaanlage am Mittwoch im Lager.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C4	Frau Iser wartet die Klimaanlage am Donnerstag im Lager.
+M5B-TRAIN-S-000	TRAIN	S	TRUE	C5	Frau Iser wartet die Klimaanlage am Mittwoch im Lager.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C6	Frau Kogler wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-TRAIN-S-000	TRAIN	S	CANDIDATE	C7	Frau Iser wartet die Klimaanlage am Mittwoch in der Poststelle.
+M5B-TRAIN-S-001	TRAIN	S	QUERY	-	Was erledigt Herr Hartl einen Tag vor dem Donnerstag wo die Firmenautos abgestellt werden?
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C0	Frau Amann wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C1	Frau Amann wartet die Klimaanlage am Donnerstag im Serverraum.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C2	Herr Hartl wartet die Klimaanlage am Mittwoch im Serverraum.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C3	Herr Hartl wartet die Klimaanlage am Donnerstag im Serverraum.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C4	Frau Amann wartet die Klimaanlage am Mittwoch in der Garage.
+M5B-TRAIN-S-001	TRAIN	S	TRUE	C5	Herr Hartl wartet die Klimaanlage am Mittwoch in der Garage.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C6	Herr Hartl wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-001	TRAIN	S	CANDIDATE	C7	Frau Amann wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-002	TRAIN	S	QUERY	-	Was erledigt Frau Kogler am vierten Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C0	Herr Danner testet die Notbeleuchtung am Donnerstag im Serverraum.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C1	Herr Danner testet die Notbeleuchtung am Montag im Labor.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C2	Frau Kogler testet die Notbeleuchtung am Montag im Labor.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C3	Frau Kogler testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C4	Frau Kogler testet die Notbeleuchtung am Montag im Serverraum.
+M5B-TRAIN-S-002	TRAIN	S	TRUE	C5	Frau Kogler testet die Notbeleuchtung am Donnerstag im Serverraum.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C6	Herr Danner testet die Notbeleuchtung am Donnerstag im Labor.
+M5B-TRAIN-S-002	TRAIN	S	CANDIDATE	C7	Herr Danner testet die Notbeleuchtung am Montag im Serverraum.
+M5B-TRAIN-S-003	TRAIN	S	QUERY	-	Was erledigt Frau Iser einen Tag vor dem Dienstag bei den Reagenzgläsern?
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C0	Frau Czerny wartet die Klimaanlage am Donnerstag im Labor.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C1	Frau Iser wartet die Klimaanlage am Montag in der Garage.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C2	Frau Czerny wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C3	Frau Czerny wartet die Klimaanlage am Montag in der Garage.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C4	Frau Iser wartet die Klimaanlage am Donnerstag im Labor.
+M5B-TRAIN-S-003	TRAIN	S	TRUE	C5	Frau Iser wartet die Klimaanlage am Montag im Labor.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C6	Frau Iser wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-003	TRAIN	S	CANDIDATE	C7	Frau Czerny wartet die Klimaanlage am Montag im Labor.
+M5B-TRAIN-S-004	TRAIN	S	QUERY	-	Was erledigt Frau Kogler am vierten Arbeitstag der Woche wo die Briefe sortiert werden?
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C0	Frau Kogler erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C1	Frau Kogler erneuert die Etiketten am Donnerstag in der Garage.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C2	Frau Grill erneuert die Etiketten am Mittwoch in der Garage.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C3	Frau Kogler erneuert die Etiketten am Mittwoch in der Garage.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C4	Frau Grill erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-TRAIN-S-004	TRAIN	S	TRUE	C5	Frau Kogler erneuert die Etiketten am Donnerstag in der Poststelle.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C6	Frau Grill erneuert die Etiketten am Mittwoch in der Poststelle.
+M5B-TRAIN-S-004	TRAIN	S	CANDIDATE	C7	Frau Grill erneuert die Etiketten am Donnerstag in der Garage.
+M5B-TRAIN-S-005	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter einen Tag vor dem Donnerstag wo Maschinen repariert werden?
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C0	Herr Danner wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C1	Herr Danner wartet die Klimaanlage am Montag im Lager.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C2	Herr Brandstätter wartet die Klimaanlage am Mittwoch im Lager.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C3	Herr Danner wartet die Klimaanlage am Mittwoch im Lager.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C4	Herr Brandstätter wartet die Klimaanlage am Montag im Lager.
+M5B-TRAIN-S-005	TRAIN	S	TRUE	C5	Herr Brandstätter wartet die Klimaanlage am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C6	Herr Danner wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-TRAIN-S-005	TRAIN	S	CANDIDATE	C7	Herr Brandstätter wartet die Klimaanlage am Montag in der Werkstatt.
+M5B-TRAIN-S-006	TRAIN	S	QUERY	-	Was erledigt Frau Amann am ersten Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C0	Herr Jank wartet die Klimaanlage am Dienstag im Serverraum.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C1	Frau Amann wartet die Klimaanlage am Dienstag im Serverraum.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C2	Frau Amann wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C3	Frau Amann wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C4	Herr Jank wartet die Klimaanlage am Dienstag in der Bibliothek.
+M5B-TRAIN-S-006	TRAIN	S	TRUE	C5	Frau Amann wartet die Klimaanlage am Montag im Serverraum.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C6	Herr Jank wartet die Klimaanlage am Montag im Serverraum.
+M5B-TRAIN-S-006	TRAIN	S	CANDIDATE	C7	Herr Jank wartet die Klimaanlage am Montag in der Bibliothek.
+M5B-TRAIN-S-007	TRAIN	S	QUERY	-	Was erledigt Herr Lackner einen Tag vor dem Freitag wo eingehende Sendungen verteilt werden?
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C0	Herr Lackner wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C1	Herr Lackner wartet die Klimaanlage am Montag in der Poststelle.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C2	Herr Fasching wartet die Klimaanlage am Donnerstag in der Garage.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C3	Herr Fasching wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C4	Herr Fasching wartet die Klimaanlage am Montag in der Poststelle.
+M5B-TRAIN-S-007	TRAIN	S	TRUE	C5	Herr Lackner wartet die Klimaanlage am Donnerstag in der Poststelle.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C6	Herr Lackner wartet die Klimaanlage am Montag in der Garage.
+M5B-TRAIN-S-007	TRAIN	S	CANDIDATE	C7	Herr Fasching wartet die Klimaanlage am Montag in der Garage.
+M5B-TRAIN-S-008	TRAIN	S	QUERY	-	Was erledigt Frau Egli am vierten Arbeitstag der Woche wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C0	Herr Brandstätter testet die Notbeleuchtung am Montag in der Garage.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C1	Frau Egli testet die Notbeleuchtung am Montag in der Garage.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C2	Frau Egli testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C3	Frau Egli testet die Notbeleuchtung am Montag in der Kantine.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C4	Herr Brandstätter testet die Notbeleuchtung am Montag in der Kantine.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C5	Herr Brandstätter testet die Notbeleuchtung am Donnerstag in der Garage.
+M5B-TRAIN-S-008	TRAIN	S	TRUE	C6	Frau Egli testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-TRAIN-S-008	TRAIN	S	CANDIDATE	C7	Herr Brandstätter testet die Notbeleuchtung am Donnerstag in der Kantine.
+M5B-TRAIN-S-009	TRAIN	S	QUERY	-	Was erledigt Frau Kogler einen Tag vor dem Donnerstag wo die Briefe sortiert werden?
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C0	Frau Kogler testet die Notbeleuchtung am Dienstag im Lager.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C1	Frau Amann testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C2	Frau Amann testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C3	Frau Amann testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C4	Frau Kogler testet die Notbeleuchtung am Dienstag in der Poststelle.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C5	Frau Kogler testet die Notbeleuchtung am Mittwoch im Lager.
+M5B-TRAIN-S-009	TRAIN	S	TRUE	C6	Frau Kogler testet die Notbeleuchtung am Mittwoch in der Poststelle.
+M5B-TRAIN-S-009	TRAIN	S	CANDIDATE	C7	Frau Amann testet die Notbeleuchtung am Dienstag im Lager.
+M5B-TRAIN-S-010	TRAIN	S	QUERY	-	Was erledigt Herr Jank am dritten Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C1	Herr Jank überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C2	Herr Jank überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C3	Herr Danner überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C4	Herr Danner überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C5	Herr Danner überprüft die Lieferscheine am Freitag in der Kantine.
+M5B-TRAIN-S-010	TRAIN	S	TRUE	C6	Herr Jank überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-S-010	TRAIN	S	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-S-011	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter einen Tag vor dem Mittwoch zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C0	Herr Jank ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C1	Herr Jank ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C2	Herr Brandstätter ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C3	Herr Brandstätter ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C5	Herr Jank ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-011	TRAIN	S	TRUE	C6	Herr Brandstätter ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-011	TRAIN	S	CANDIDATE	C7	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-S-012	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter am zweiten Arbeitstag der Woche wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C0	Herr Brandstätter zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C1	Herr Lackner zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C2	Herr Lackner zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C3	Herr Lackner zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C4	Herr Brandstätter zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C5	Herr Lackner zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-012	TRAIN	S	TRUE	C6	Herr Brandstätter zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-012	TRAIN	S	CANDIDATE	C7	Herr Brandstätter zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-S-013	TRAIN	S	QUERY	-	Was erledigt Herr Hartl einen Tag vor dem Donnerstag wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C0	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C1	Frau Grill ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C2	Frau Grill ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C4	Herr Hartl ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C5	Herr Hartl ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-013	TRAIN	S	TRUE	C6	Herr Hartl ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-013	TRAIN	S	CANDIDATE	C7	Herr Hartl ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-TRAIN-S-014	TRAIN	S	QUERY	-	Was erledigt Herr Fasching am zweiten Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C0	Herr Fasching zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C1	Herr Jank zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C2	Herr Jank zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C3	Herr Fasching zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C4	Herr Fasching zählt die Kartons am Dienstag im Labor.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C5	Herr Jank zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-S-014	TRAIN	S	TRUE	C6	Herr Fasching zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-S-014	TRAIN	S	CANDIDATE	C7	Herr Jank zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-015	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Samstag zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C0	Herr Danner ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C1	Frau Amann ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C2	Herr Danner ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C3	Herr Danner ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C4	Frau Amann ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C5	Frau Amann ordnet die Ersatzschlüssel am Freitag in der Garage.
+M5B-TRAIN-S-015	TRAIN	S	TRUE	C6	Herr Danner ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-015	TRAIN	S	CANDIDATE	C7	Frau Amann ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-016	TRAIN	S	QUERY	-	Was erledigt Frau Egli am ersten Arbeitstag der Woche wo die Rechner der Firma laufen?
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C0	Frau Egli ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C1	Frau Iser ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C2	Frau Iser ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C3	Frau Iser ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C4	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-016	TRAIN	S	CANDIDATE	C6	Frau Iser ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-016	TRAIN	S	TRUE	C7	Frau Egli ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-017	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Samstag wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C0	Herr Danner zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C1	Herr Hartl zählt die Kartons am Freitag in der Bibliothek.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C2	Herr Danner zählt die Kartons am Freitag in der Bibliothek.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C3	Herr Hartl zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C4	Herr Hartl zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C5	Herr Danner zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-017	TRAIN	S	CANDIDATE	C6	Herr Hartl zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-017	TRAIN	S	TRUE	C7	Herr Danner zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-018	TRAIN	S	QUERY	-	Was erledigt Herr Jank am fünften Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C0	Frau Kogler zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C1	Herr Jank zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C2	Frau Kogler zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C3	Herr Jank zählt die Kartons am Freitag in der Kantine.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C4	Herr Jank zählt die Kartons am Mittwoch in der Kantine.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C5	Frau Kogler zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-018	TRAIN	S	CANDIDATE	C6	Frau Kogler zählt die Kartons am Mittwoch in der Kantine.
+M5B-TRAIN-S-018	TRAIN	S	TRUE	C7	Herr Jank zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-019	TRAIN	S	QUERY	-	Was erledigt Frau Czerny einen Tag vor dem Mittwoch zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C0	Herr Fasching ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C1	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C2	Herr Fasching ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C3	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C4	Herr Fasching ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-S-019	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-019	TRAIN	S	TRUE	C7	Frau Czerny ordnet die Ersatzschlüssel am Dienstag im Lager.
+M5B-TRAIN-S-020	TRAIN	S	QUERY	-	Was erledigt Herr Lackner am zweiten Arbeitstag der Woche wo die Rechner der Firma laufen?
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C0	Herr Lackner ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C1	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C2	Herr Fasching ordnet die Ersatzschlüssel am Montag im Labor.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C3	Herr Fasching ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C4	Herr Fasching ordnet die Ersatzschlüssel am Dienstag im Labor.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C5	Herr Lackner ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-020	TRAIN	S	CANDIDATE	C6	Herr Fasching ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-020	TRAIN	S	TRUE	C7	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-021	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Donnerstag wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C0	Herr Hartl zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C1	Herr Hartl zählt die Kartons am Dienstag in der Poststelle.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C2	Herr Hartl zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C3	Herr Danner zählt die Kartons am Dienstag in der Poststelle.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C4	Herr Hartl zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C5	Herr Danner zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-021	TRAIN	S	CANDIDATE	C6	Herr Danner zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-S-021	TRAIN	S	TRUE	C7	Herr Danner zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-022	TRAIN	S	QUERY	-	Was erledigt Frau Amann am vierten Arbeitstag der Woche wo die Belegschaft zu Mittag isst?
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C0	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C1	Frau Amann überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C2	Frau Amann überprüft die Lieferscheine am Montag in der Kantine.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C3	Herr Hartl überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C4	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C5	Herr Hartl überprüft die Lieferscheine am Montag in der Kantine.
+M5B-TRAIN-S-022	TRAIN	S	CANDIDATE	C6	Frau Amann überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-022	TRAIN	S	TRUE	C7	Frau Amann überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-023	TRAIN	S	QUERY	-	Was erledigt Frau Czerny einen Tag vor dem Dienstag zwischen den Regalen voller Bücher?
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C0	Frau Egli zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C1	Frau Czerny zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C2	Frau Egli zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C3	Frau Egli zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C4	Frau Czerny zählt die Kartons am Dienstag in der Bibliothek.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C5	Frau Czerny zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-S-023	TRAIN	S	CANDIDATE	C6	Frau Egli zählt die Kartons am Dienstag in der Kantine.
+M5B-TRAIN-S-023	TRAIN	S	TRUE	C7	Frau Czerny zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-024	TRAIN	S	QUERY	-	Was erledigt Frau Grill am dritten Arbeitstag der Woche wo die Firmenautos abgestellt werden?
+M5B-TRAIN-S-024	TRAIN	S	TRUE	C0	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C1	Frau Amann ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C2	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C3	Frau Amann ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C4	Frau Amann ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C5	Frau Grill ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C6	Frau Amann ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-024	TRAIN	S	CANDIDATE	C7	Frau Grill ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-025	TRAIN	S	QUERY	-	Was erledigt Herr Hartl einen Tag vor dem Donnerstag wo die chemischen Proben untersucht werden?
+M5B-TRAIN-S-025	TRAIN	S	TRUE	C0	Herr Hartl zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C1	Herr Hartl zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C2	Herr Hartl zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C3	Herr Fasching zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C4	Herr Fasching zählt die Kartons am Mittwoch im Labor.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C5	Herr Fasching zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C6	Herr Hartl zählt die Kartons am Montag im Labor.
+M5B-TRAIN-S-025	TRAIN	S	CANDIDATE	C7	Herr Fasching zählt die Kartons am Montag im Labor.
+M5B-TRAIN-S-026	TRAIN	S	QUERY	-	Was erledigt Frau Iser am dritten Arbeitstag der Woche zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-026	TRAIN	S	TRUE	C0	Frau Iser zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C1	Herr Lackner zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C2	Frau Iser zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C3	Frau Iser zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C4	Frau Iser zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C5	Herr Lackner zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C6	Herr Lackner zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-026	TRAIN	S	CANDIDATE	C7	Herr Lackner zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-027	TRAIN	S	QUERY	-	Was erledigt Frau Iser einen Tag vor dem Freitag wo eingehende Sendungen verteilt werden?
+M5B-TRAIN-S-027	TRAIN	S	TRUE	C0	Frau Iser zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C1	Frau Iser zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C2	Herr Jank zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C3	Herr Jank zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C4	Frau Iser zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C5	Frau Iser zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C6	Herr Jank zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-027	TRAIN	S	CANDIDATE	C7	Herr Jank zählt die Kartons am Donnerstag in der Poststelle.
+M5B-TRAIN-S-028	TRAIN	S	QUERY	-	Was erledigt Frau Grill am vierten Arbeitstag der Woche wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-028	TRAIN	S	TRUE	C0	Frau Grill überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C1	Frau Grill überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C2	Frau Grill überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C3	Herr Lackner überprüft die Lieferscheine am Mittwoch in der Kantine.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C4	Herr Lackner überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C5	Frau Grill überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C6	Herr Lackner überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-S-028	TRAIN	S	CANDIDATE	C7	Herr Lackner überprüft die Lieferscheine am Donnerstag im Labor.
+M5B-TRAIN-S-029	TRAIN	S	QUERY	-	Was erledigt Frau Egli einen Tag vor dem Mittwoch wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-029	TRAIN	S	TRUE	C0	Frau Egli zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C1	Frau Egli zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C2	Frau Kogler zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C3	Frau Kogler zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C4	Frau Egli zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C5	Frau Kogler zählt die Kartons am Dienstag im Lager.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C6	Frau Kogler zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-029	TRAIN	S	CANDIDATE	C7	Frau Egli zählt die Kartons am Dienstag im Serverraum.
+M5B-TRAIN-S-030	TRAIN	S	QUERY	-	Was erledigt Frau Amann am dritten Arbeitstag der Woche bei den gekühlten Computerschränken?
+M5B-TRAIN-S-030	TRAIN	S	TRUE	C0	Frau Amann überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C1	Frau Amann überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C2	Frau Amann überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C3	Herr Fasching überprüft die Lieferscheine am Mittwoch im Serverraum.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C4	Herr Fasching überprüft die Lieferscheine am Freitag in der Bibliothek.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C5	Herr Fasching überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C6	Herr Fasching überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-030	TRAIN	S	CANDIDATE	C7	Frau Amann überprüft die Lieferscheine am Freitag im Serverraum.
+M5B-TRAIN-S-031	TRAIN	S	QUERY	-	Was erledigt Herr Hartl einen Tag vor dem Donnerstag zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-031	TRAIN	S	TRUE	C0	Herr Hartl zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C1	Herr Jank zählt die Kartons am Mittwoch in der Garage.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C2	Herr Jank zählt die Kartons am Donnerstag in der Garage.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C3	Herr Jank zählt die Kartons am Mittwoch im Lager.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C4	Herr Jank zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C5	Herr Hartl zählt die Kartons am Mittwoch in der Garage.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C6	Herr Hartl zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-031	TRAIN	S	CANDIDATE	C7	Herr Hartl zählt die Kartons am Donnerstag in der Garage.
+M5B-TRAIN-S-032	TRAIN	S	QUERY	-	Was erledigt Herr Jank am dritten Arbeitstag der Woche wo die Vorräte gestapelt sind?
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C0	Herr Fasching überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-S-032	TRAIN	S	TRUE	C1	Herr Jank überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C2	Herr Fasching überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C3	Herr Jank überprüft die Lieferscheine am Montag in der Bibliothek.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C4	Herr Fasching überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C5	Herr Jank überprüft die Lieferscheine am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C6	Herr Fasching überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-S-032	TRAIN	S	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-S-033	TRAIN	S	QUERY	-	Was erledigt Frau Grill einen Tag vor dem Dienstag wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C0	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-033	TRAIN	S	TRUE	C1	Frau Grill ordnet die Ersatzschlüssel am Montag in der Kantine.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C2	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C4	Frau Grill ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C5	Herr Jank ordnet die Ersatzschlüssel am Montag in der Kantine.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C6	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-033	TRAIN	S	CANDIDATE	C7	Frau Grill ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-S-034	TRAIN	S	QUERY	-	Was erledigt Frau Iser am vierten Arbeitstag der Woche wo eingehende Sendungen verteilt werden?
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C0	Frau Kogler überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-034	TRAIN	S	TRUE	C1	Frau Iser überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C2	Frau Iser überprüft die Lieferscheine am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C4	Frau Kogler überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C5	Frau Kogler überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C6	Frau Iser überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-034	TRAIN	S	CANDIDATE	C7	Frau Kogler überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-S-035	TRAIN	S	QUERY	-	Was erledigt Frau Amann einen Tag vor dem Donnerstag zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C0	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-035	TRAIN	S	TRUE	C1	Frau Amann ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C2	Frau Amann ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C3	Frau Amann ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C5	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C6	Frau Amann ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-035	TRAIN	S	CANDIDATE	C7	Herr Brandstätter ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-036	TRAIN	S	QUERY	-	Was erledigt Herr Lackner am ersten Arbeitstag der Woche wo die Rechner der Firma laufen?
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C0	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-036	TRAIN	S	TRUE	C1	Herr Lackner ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C3	Frau Czerny ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C4	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Dienstag in der Werkstatt.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-036	TRAIN	S	CANDIDATE	C7	Herr Lackner ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-037	TRAIN	S	QUERY	-	Was erledigt Frau Czerny einen Tag vor dem Freitag wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-S-037	TRAIN	S	TRUE	C1	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C4	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C5	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-037	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-038	TRAIN	S	QUERY	-	Was erledigt Frau Egli am fünften Arbeitstag der Woche beim Stellplatz der Dienstwagen?
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C0	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-S-038	TRAIN	S	TRUE	C1	Frau Egli überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C2	Herr Brandstätter überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C3	Frau Egli überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C4	Frau Egli überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C5	Herr Brandstätter überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Dienstag in der Werkstatt.
+M5B-TRAIN-S-038	TRAIN	S	CANDIDATE	C7	Frau Egli überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-039	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Samstag zwischen den Regalen voller Bücher?
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C0	Herr Danner ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-S-039	TRAIN	S	TRUE	C1	Herr Danner ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C2	Herr Fasching ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C3	Herr Fasching ordnet die Ersatzschlüssel am Montag in der Bibliothek.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C4	Herr Danner ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C5	Herr Fasching ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C6	Herr Fasching ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-S-039	TRAIN	S	CANDIDATE	C7	Herr Danner ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-040	TRAIN	S	QUERY	-	Was erledigt Frau Egli am zweiten Arbeitstag der Woche wo die Rechner der Firma laufen?
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C0	Frau Grill ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Freitag in der Poststelle.
+M5B-TRAIN-S-040	TRAIN	S	TRUE	C2	Frau Egli ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C4	Frau Grill ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C5	Frau Grill ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-040	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-041	TRAIN	S	QUERY	-	Was erledigt Herr Fasching einen Tag vor dem Dienstag wo die Rechner der Firma laufen?
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C0	Herr Fasching zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C1	Frau Iser zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-S-041	TRAIN	S	TRUE	C2	Herr Fasching zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C3	Herr Fasching zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C4	Frau Iser zählt die Kartons am Montag in der Bibliothek.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C5	Frau Iser zählt die Kartons am Mittwoch im Serverraum.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C6	Herr Fasching zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-041	TRAIN	S	CANDIDATE	C7	Frau Iser zählt die Kartons am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-042	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter am vierten Arbeitstag der Woche zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C0	Frau Czerny zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C1	Frau Czerny zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-042	TRAIN	S	TRUE	C2	Herr Brandstätter zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C3	Herr Brandstätter zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C4	Frau Czerny zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C5	Frau Czerny zählt die Kartons am Freitag im Serverraum.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C6	Herr Brandstätter zählt die Kartons am Freitag im Lager.
+M5B-TRAIN-S-042	TRAIN	S	CANDIDATE	C7	Herr Brandstätter zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-S-043	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter einen Tag vor dem Freitag zwischen den Regalen voller Bücher?
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C1	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-043	TRAIN	S	TRUE	C2	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C3	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C4	Herr Brandstätter ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C5	Herr Brandstätter ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-043	TRAIN	S	CANDIDATE	C7	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Bibliothek.
+M5B-TRAIN-S-044	TRAIN	S	QUERY	-	Was erledigt Frau Egli am vierten Arbeitstag der Woche wo die Briefe sortiert werden?
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C0	Herr Jank ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-044	TRAIN	S	TRUE	C2	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C3	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C4	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C6	Herr Jank ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-S-044	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Garage.
+M5B-TRAIN-S-045	TRAIN	S	QUERY	-	Was erledigt Herr Fasching einen Tag vor dem Donnerstag wo die Briefe sortiert werden?
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C0	Herr Brandstätter zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C1	Herr Fasching zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-045	TRAIN	S	TRUE	C2	Herr Fasching zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C3	Herr Brandstätter zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C4	Herr Fasching zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C5	Herr Brandstätter zählt die Kartons am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C6	Herr Brandstätter zählt die Kartons am Mittwoch in der Poststelle.
+M5B-TRAIN-S-045	TRAIN	S	CANDIDATE	C7	Herr Fasching zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-S-046	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter am ersten Arbeitstag der Woche bei den Reagenzgläsern?
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C0	Frau Egli überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C1	Frau Egli überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-046	TRAIN	S	TRUE	C2	Herr Brandstätter überprüft die Lieferscheine am Montag im Labor.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C3	Herr Brandstätter überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C4	Frau Egli überprüft die Lieferscheine am Montag im Labor.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C5	Herr Brandstätter überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Mittwoch im Labor.
+M5B-TRAIN-S-046	TRAIN	S	CANDIDATE	C7	Frau Egli überprüft die Lieferscheine am Montag in der Werkstatt.
+M5B-TRAIN-S-047	TRAIN	S	QUERY	-	Was erledigt Frau Iser einen Tag vor dem Mittwoch wo eingehende Sendungen verteilt werden?
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C0	Herr Jank überprüft die Lieferscheine am Dienstag in der Poststelle.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C1	Frau Iser überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-S-047	TRAIN	S	TRUE	C2	Frau Iser überprüft die Lieferscheine am Dienstag in der Poststelle.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C3	Frau Iser überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C4	Herr Jank überprüft die Lieferscheine am Freitag in der Garage.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C5	Frau Iser überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C6	Herr Jank überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-047	TRAIN	S	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Freitag in der Poststelle.
+M5B-TRAIN-S-048	TRAIN	S	QUERY	-	Was erledigt Frau Iser am fünften Arbeitstag der Woche wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C0	Frau Iser ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C1	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C2	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-048	TRAIN	S	TRUE	C3	Frau Iser ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C4	Frau Iser ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C5	Frau Kogler ordnet die Ersatzschlüssel am Freitag in der Kantine.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C6	Frau Iser ordnet die Ersatzschlüssel am Mittwoch im Lager.
+M5B-TRAIN-S-048	TRAIN	S	CANDIDATE	C7	Frau Kogler ordnet die Ersatzschlüssel am Freitag im Lager.
+M5B-TRAIN-S-049	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Dienstag wo die Firmenautos abgestellt werden?
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C0	Herr Danner überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C1	Herr Danner überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C2	Herr Brandstätter überprüft die Lieferscheine am Dienstag in der Garage.
+M5B-TRAIN-S-049	TRAIN	S	TRUE	C3	Herr Danner überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C4	Herr Brandstätter überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C5	Herr Brandstätter überprüft die Lieferscheine am Montag in der Garage.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C6	Herr Brandstätter überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-TRAIN-S-049	TRAIN	S	CANDIDATE	C7	Herr Danner überprüft die Lieferscheine am Dienstag im Serverraum.
+M5B-TRAIN-S-050	TRAIN	S	QUERY	-	Was erledigt Herr Brandstätter am fünften Arbeitstag der Woche wo eingehende Sendungen verteilt werden?
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C0	Herr Lackner zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C1	Herr Brandstätter zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C2	Herr Lackner zählt die Kartons am Freitag in der Garage.
+M5B-TRAIN-S-050	TRAIN	S	TRUE	C3	Herr Brandstätter zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C4	Herr Brandstätter zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C5	Herr Lackner zählt die Kartons am Freitag in der Poststelle.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C6	Herr Brandstätter zählt die Kartons am Montag in der Poststelle.
+M5B-TRAIN-S-050	TRAIN	S	CANDIDATE	C7	Herr Lackner zählt die Kartons am Montag in der Garage.
+M5B-TRAIN-S-051	TRAIN	S	QUERY	-	Was erledigt Frau Kogler einen Tag vor dem Dienstag zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C0	Frau Czerny zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C1	Frau Kogler zählt die Kartons am Montag im Labor.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C2	Frau Czerny zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-051	TRAIN	S	TRUE	C3	Frau Kogler zählt die Kartons am Montag im Lager.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C4	Frau Czerny zählt die Kartons am Montag im Labor.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C5	Frau Kogler zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C6	Frau Czerny zählt die Kartons am Donnerstag im Lager.
+M5B-TRAIN-S-051	TRAIN	S	CANDIDATE	C7	Frau Kogler zählt die Kartons am Donnerstag im Labor.
+M5B-TRAIN-S-052	TRAIN	S	QUERY	-	Was erledigt Herr Jank am vierten Arbeitstag der Woche wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C0	Frau Egli überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C1	Herr Jank überprüft die Lieferscheine am Montag in der Kantine.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C2	Frau Egli überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-052	TRAIN	S	TRUE	C3	Herr Jank überprüft die Lieferscheine am Donnerstag in der Kantine.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C4	Frau Egli überprüft die Lieferscheine am Montag in der Kantine.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C5	Frau Egli überprüft die Lieferscheine am Donnerstag im Serverraum.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C6	Herr Jank überprüft die Lieferscheine am Montag im Serverraum.
+M5B-TRAIN-S-052	TRAIN	S	CANDIDATE	C7	Herr Jank überprüft die Lieferscheine am Donnerstag im Serverraum.
+M5B-TRAIN-S-053	TRAIN	S	QUERY	-	Was erledigt Herr Jank einen Tag vor dem Mittwoch wo mittags das Essen ausgegeben wird?
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C0	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C1	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C2	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Poststelle.
+M5B-TRAIN-S-053	TRAIN	S	TRUE	C3	Herr Jank ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C4	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Poststelle.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C6	Herr Jank ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-053	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Dienstag in der Kantine.
+M5B-TRAIN-S-054	TRAIN	S	QUERY	-	Was erledigt Frau Czerny am ersten Arbeitstag der Woche an der Werkbank mit dem Schraubstock?
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C0	Frau Czerny zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C1	Frau Amann zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C2	Frau Czerny zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-S-054	TRAIN	S	TRUE	C3	Frau Czerny zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C4	Frau Amann zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C5	Frau Czerny zählt die Kartons am Montag im Serverraum.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C6	Frau Amann zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-054	TRAIN	S	CANDIDATE	C7	Frau Amann zählt die Kartons am Donnerstag im Serverraum.
+M5B-TRAIN-S-055	TRAIN	S	QUERY	-	Was erledigt Frau Kogler einen Tag vor dem Mittwoch beim Stellplatz der Dienstwagen?
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C0	Frau Iser ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C1	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C2	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-055	TRAIN	S	TRUE	C3	Frau Kogler ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C4	Frau Iser ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C5	Frau Iser ordnet die Ersatzschlüssel am Mittwoch im Serverraum.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C6	Frau Iser ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-055	TRAIN	S	CANDIDATE	C7	Frau Kogler ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-056	TRAIN	S	QUERY	-	Was erledigt Herr Hartl am vierten Arbeitstag der Woche wo die Briefe sortiert werden?
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C0	Herr Fasching überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C1	Herr Hartl überprüft die Lieferscheine am Montag in der Poststelle.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C2	Herr Hartl überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C3	Herr Fasching überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-S-056	TRAIN	S	TRUE	C4	Herr Hartl überprüft die Lieferscheine am Donnerstag in der Poststelle.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C5	Herr Hartl überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C6	Herr Fasching überprüft die Lieferscheine am Donnerstag im Lager.
+M5B-TRAIN-S-056	TRAIN	S	CANDIDATE	C7	Herr Fasching überprüft die Lieferscheine am Montag im Lager.
+M5B-TRAIN-S-057	TRAIN	S	QUERY	-	Was erledigt Frau Czerny einen Tag vor dem Freitag wo die chemischen Proben untersucht werden?
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C0	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C1	Frau Egli ordnet die Ersatzschlüssel am Mittwoch in der Kantine.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C3	Frau Egli ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-S-057	TRAIN	S	TRUE	C4	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag im Labor.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Mittwoch im Labor.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-057	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Kantine.
+M5B-TRAIN-S-058	TRAIN	S	QUERY	-	Was erledigt Frau Kogler am dritten Arbeitstag der Woche beim Stellplatz der Dienstwagen?
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C0	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C1	Herr Lackner ordnet die Ersatzschlüssel am Mittwoch in der Bibliothek.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C2	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C3	Herr Lackner ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-058	TRAIN	S	TRUE	C4	Frau Kogler ordnet die Ersatzschlüssel am Mittwoch in der Garage.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C5	Frau Kogler ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C6	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Garage.
+M5B-TRAIN-S-058	TRAIN	S	CANDIDATE	C7	Frau Kogler ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-059	TRAIN	S	QUERY	-	Was erledigt Frau Czerny einen Tag vor dem Mittwoch zwischen den Regalen voller Bücher?
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C0	Herr Lackner ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C1	Herr Lackner ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C2	Frau Czerny ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C3	Frau Czerny ordnet die Ersatzschlüssel am Freitag im Serverraum.
+M5B-TRAIN-S-059	TRAIN	S	TRUE	C4	Frau Czerny ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C5	Herr Lackner ordnet die Ersatzschlüssel am Dienstag in der Bibliothek.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C6	Frau Czerny ordnet die Ersatzschlüssel am Freitag in der Bibliothek.
+M5B-TRAIN-S-059	TRAIN	S	CANDIDATE	C7	Herr Lackner ordnet die Ersatzschlüssel am Dienstag im Serverraum.
+M5B-TRAIN-S-060	TRAIN	S	QUERY	-	Was erledigt Frau Amann am vierten Arbeitstag der Woche wo die Rechner der Firma laufen?
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C0	Frau Egli ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C1	Frau Amann ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C2	Frau Amann ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C3	Frau Amann ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-060	TRAIN	S	TRUE	C4	Frau Amann ordnet die Ersatzschlüssel am Donnerstag im Serverraum.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C5	Frau Egli ordnet die Ersatzschlüssel am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C6	Frau Egli ordnet die Ersatzschlüssel am Montag in der Werkstatt.
+M5B-TRAIN-S-060	TRAIN	S	CANDIDATE	C7	Frau Egli ordnet die Ersatzschlüssel am Montag im Serverraum.
+M5B-TRAIN-S-061	TRAIN	S	QUERY	-	Was erledigt Frau Amann einen Tag vor dem Donnerstag wo Maschinen repariert werden?
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C0	Frau Amann überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C1	Frau Kogler überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C2	Frau Kogler überprüft die Lieferscheine am Mittwoch im Lager.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C3	Frau Kogler überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-S-061	TRAIN	S	TRUE	C4	Frau Amann überprüft die Lieferscheine am Mittwoch in der Werkstatt.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C5	Frau Amann überprüft die Lieferscheine am Freitag in der Werkstatt.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C6	Frau Amann überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-S-061	TRAIN	S	CANDIDATE	C7	Frau Kogler überprüft die Lieferscheine am Freitag im Lager.
+M5B-TRAIN-S-062	TRAIN	S	QUERY	-	Was erledigt Frau Grill am vierten Arbeitstag der Woche zwischen den Paletten mit Vorräten?
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C0	Herr Hartl ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C1	Frau Grill ordnet die Ersatzschlüssel am Montag in der Poststelle.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C2	Herr Hartl ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C3	Frau Grill ordnet die Ersatzschlüssel am Montag im Lager.
+M5B-TRAIN-S-062	TRAIN	S	TRUE	C4	Frau Grill ordnet die Ersatzschlüssel am Donnerstag im Lager.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C5	Frau Grill ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C6	Herr Hartl ordnet die Ersatzschlüssel am Donnerstag in der Poststelle.
+M5B-TRAIN-S-062	TRAIN	S	CANDIDATE	C7	Herr Hartl ordnet die Ersatzschlüssel am Montag in der Poststelle.
+M5B-TRAIN-S-063	TRAIN	S	QUERY	-	Was erledigt Herr Danner einen Tag vor dem Dienstag an der Werkbank mit dem Schraubstock?
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C0	Frau Amann zählt die Kartons am Montag in der Kantine.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C1	Herr Danner zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C2	Herr Danner zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C3	Frau Amann zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-063	TRAIN	S	TRUE	C4	Herr Danner zählt die Kartons am Montag in der Werkstatt.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C5	Frau Amann zählt die Kartons am Donnerstag in der Kantine.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C6	Frau Amann zählt die Kartons am Donnerstag in der Werkstatt.
+M5B-TRAIN-S-063	TRAIN	S	CANDIDATE	C7	Herr Danner zählt die Kartons am Montag in der Kantine.

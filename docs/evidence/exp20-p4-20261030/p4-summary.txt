@@ -1,0 +1,28 @@
+EXP-20 P4 EXPLORATORY associative/quantised retrieval  data=104cd929e2b4f3ced6a96a7a5cac29a78f0c0366dcb4d10a73b4824abf2f2939 cre1=2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6
+HYBRID_LEX     top1=60/120 (L 60/60, S 0/60) near_conf=60 MRR=0.687
+HYBRID_CRE1    top1=79/120 (L 60/60, S 19/60) near_conf=39 MRR=0.812
+CRE1           top1=71/120 (L 59/60, S 12/60) near_conf=40 MRR=0.750
+HOPFIELD1      top1=71/120 (L 59/60, S 12/60) near_conf=40 MRR=0.750
+HOPFIELD2_B4   top1=99/120 (L 59/60, S 40/60) near_conf=21 MRR=0.906
+HOPFIELD2_B16  top1=82/120 (L 59/60, S 23/60) near_conf=35 MRR=0.815
+INT8           top1=57/120 (L 44/60, S 13/60) near_conf=51 MRR=0.686
+SIGN32         top1=32/120 (L 27/60, S 5/60) near_conf=82 MRR=0.488
+HOPFIELD1 rank mismatches vs CRE1: 0/120 (expected 0: softmax is strictly monotone)
+
+PLANNED COMPARISONS (exact McNemar, Holm over 5)
+  HOPFIELD2_B4 vs CRE1: b=32 c=4 Holm=7.77e-06 diff=+0.2333 95%CI[+0.1500,+0.3250] -> SUPERIOR
+  HOPFIELD2_B16 vs CRE1: b=12 c=1 Holm=0.00684 diff=+0.0917 95%CI[+0.0417,+0.1500] -> SUPERIOR
+  INT8 vs CRE1: b=4 c=18 Holm=0.00684 diff=-0.1167 95%CI[-0.1917,-0.0417] -> INFERIOR
+  SIGN32 vs CRE1: b=5 c=44 Holm=3.80e-08 diff=-0.3250 95%CI[-0.4250,-0.2250] -> INFERIOR
+  HYBRID_CRE1 vs HYBRID_LEX: b=19 c=0 Holm=1.14e-05 diff=+0.1583 95%CI[+0.0917,+0.2250] -> SUPERIOR
+
+COST per query, uncached, host JVM (block means over 100 x 20 queries after 2000 warm-up); bytes per stored key
+  HYBRID_LEX     p50=49.3 us p95=211.6 us  key=0 B (+ text/record kept authoritative)
+  HYBRID_CRE1    p50=547.3 us p95=854.4 us  key=256 B (+ text/record kept authoritative)
+  CRE1           p50=284.7 us p95=412.3 us  key=256 B (+ text/record kept authoritative)
+  HOPFIELD1      p50=293.3 us p95=476.5 us  key=256 B (+ text/record kept authoritative)
+  HOPFIELD2_B4   p50=286.0 us p95=389.1 us  key=256 B (+ text/record kept authoritative)
+  HOPFIELD2_B16  p50=305.2 us p95=461.6 us  key=256 B (+ text/record kept authoritative)
+  INT8           p50=396.7 us p95=641.3 us  key=32 B (+ text/record kept authoritative)
+  SIGN32         p50=293.5 us p95=416.7 us  key=4 B (+ text/record kept authoritative)
+sink=2.0821446047456768E8

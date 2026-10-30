@@ -12,15 +12,20 @@ import kotlin.math.tanh
  * The new state is a convex combination of the old state and a drive bounded by R_i = sum_j |W_ij| + |b_i| + 1,
  * so |h_i| <= max(|h_i(0)|, R_i) for every dt > 0; with rho = max_i sum_j |W_ij| < 1 the step is a contraction in
  * the max norm with factor max_i (a_i + (1 - a_i) rho). No learning: weights are fixed at construction.
+ * P2: tau, W and b are copied before validation, so a later write by the caller cannot change the network.
  */
-class BoundedCtrnn(private val tau: DoubleArray, private val w: Array<DoubleArray>, private val b: DoubleArray) {
-    val size = tau.size
+class BoundedCtrnn(tau: DoubleArray, w: Array<DoubleArray>, b: DoubleArray) {
+    private val tau = tau.copyOf()
+    private val w = Array(w.size) { w[it].copyOf() }
+    private val b = b.copyOf()
+    val size = this.tau.size
     private val h = DoubleArray(size)
     private val activation = DoubleArray(size)
 
-    init {
-        require(size > 0 && w.size == size && b.size == size && w.all { it.size == size })
-        require(tau.all { it.isFinite() && it > 0.0 } && b.all { it.isFinite() } && w.all { r -> r.all { it.isFinite() } })
+    init {   // this.* = the copies; the bare names would be the caller's arrays
+        require(size > 0 && this.w.size == size && this.b.size == size && this.w.all { it.size == size })
+        require(this.tau.all { it.isFinite() && it > 0.0 } && this.b.all { it.isFinite() } &&
+            this.w.all { r -> r.all { it.isFinite() } })
     }
 
     fun state(): DoubleArray = h.copyOf()
@@ -51,8 +56,14 @@ class BoundedCtrnn(private val tau: DoubleArray, private val w: Array<DoubleArra
 }
 
 /** Cost baseline: independent leaky integrators carrying the same temporal context, no recurrence. */
-class LeakyIntegrators(private val tau: DoubleArray) {
-    private val h = DoubleArray(tau.size)
+class LeakyIntegrators(tau: DoubleArray) {
+    private val tau = tau.copyOf()
+    private val h = DoubleArray(this.tau.size)
+
+    init { require(this.tau.isNotEmpty() && this.tau.all { it.isFinite() && it > 0.0 }) }
+
+    fun state(): DoubleArray = h.copyOf()
+    fun reset() = h.fill(0.0)
     fun step(input: DoubleArray, dt: Double): Boolean {
         if (input.size != h.size || !dt.isFinite() || dt <= 0.0) return false
         for (x in input) if (!x.isFinite()) return false

@@ -1,0 +1,65 @@
+GIT_HEAD=e84175a76257b98e93060982c1a100d3315a9397 runner_blob=07349adca4e47a101bd131f51a711192a729fd87 2026-10-30T12:17:34Z
+host: Linux x86_64 openjdk version "21.0.12.1" 2026-08-18 node=v22.22.0 info: kotlinc-jvm 2.0.20 (JRE 21.0.12.1+1-1-24.04.4-Ubuntu)
+STEP_1 generate frozen historical P3 CRE1 parity checkpoint locally (never committed)
+Prepared CRE1 model 8 steps, 7 cases
+SHA_OK 2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6 /tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-real/cre1/node-cre1.cre1
+STEP_2 compile REAL Kotlin research + CRE1 sources from repository, no model stub
+BUILD_OK 1ce84aae0db3f0d27bc6cecef4a7795136d8779c6ad1a52b32152272827feff9 sources=58
+STEP_3 run original host regression and new M5 negative/structure checks
+JUnit version 4.13.2
+.......................................P2SafetyAudit actions with unresolvedReference=true over 7680 combos: {CLARIFY=7680}
+...P4MathTest query-blind centre wins: 344/500 (chance among 8 candidates: 62.5/500)
+
+Time: 28.34
+
+OK (42 tests)
+
+PASS groups-256-rows-2304
+PASS deterministic-generation
+PASS split-kind-balanced
+PASS DEV-VAL-memories-disjoint
+PASS no-P3-phrases
+PASS target-not-fixed-candidate-position
+PASS no-duplicate-memories
+VAL blind lexical strict top1=0/128
+PASS query-blind-lexical-VAL
+PASS write-read-roundtrip
+DATA_SHA256=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2
+PASS stable-file-sha
+PASS reject-corrupt-gold
+PASS reject-malformed-TSV
+M5_WP1_TESTS_PASS=12; CRE1_BLIND=NOT_RUN; SEALED=UNOPENED
+PASS all-identical-embeddings-are-ties
+PASS nonfinite-embeddings-rejected
+PASS mismatched-dimensions-rejected
+PASS query-blind-medoid-can-expose-cheat
+PASS positions-not-forced-by-model
+PASS VAL-gate-fails-above-threshold
+PASS query-text-not-given-to-embedder
+PASS mutating-query-text-cannot-change-query-blind-score
+M5_BLIND_GATE_NEGATIVE_TESTS=8/8 CRE1_CHECKPOINT=NOT_RUN SEALED=UNOPENED
+STEP_4 generate DEV/VAL only and verify dataset SHA
+M5 WP1 generate: rows=2304 groups=256 sha256=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2
+QUERY_BLIND_LEX DEV=0/128 VAL=0/128
+CRE1_QUERY_BLIND_GATE=NOT_RUN; SEALED=NOT_GENERATED; DEVICE=NOT_RUN
+SHA_OK 7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2 /tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-real/dev-val.tsv
+M5_JACCARD split=DEV kind=L top1=64/64
+M5_JACCARD split=DEV kind=S top1=0/64
+M5_JACCARD split=VAL kind=L top1=64/64
+M5_JACCARD split=VAL kind=S top1=0/64
+M5_JACCARD_AUDIT=PASS DATA_SHA256=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2
+CRE1=NOT_RUN SEALED=UNOPENED FOLD7=DEVICE_NOT_RUN
+STEP_5 execute actual CRE1 query-blind VAL gate with two independent immutable hashes
+EXP-20 M5: CRE1 QUERY-BLIND MEDOID VALIDITY AUDIT; no SEALED opened
+DATA_SHA256=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2
+CHECKPOINT_SHA256=2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6 CHECKPOINT_STEPS=8
+DEV strict_top1=20/128 forced_top1=20/128 max_ties=0
+VAL strict_top1=15/128 forced_top1=15/128 max_ties=0
+PREREG_VAL_GATE=PASS
+FORCED_TOP1_IS_DIAGNOSTIC_ONLY; SEALED=UNOPENED; FOLD7=DEVICE_NOT_RUN
+COMPLETE host_only=true sealed_opened=false production_modified=false results=/tmp/claude-0/-home-user/b74056b6-4b44-50ce-b801-ffabb6dbb66a/scratchpad/m5-real/results/cre1-blind-gate.txt
+RUNNER_EXIT=0
+
+real	1m13.629s
+user	2m30.019s
+sys	0m9.250s

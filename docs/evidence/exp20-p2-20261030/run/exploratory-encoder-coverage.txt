@@ -1,0 +1,16 @@
+EXP-20 P2 exploratory encoder coverage (frozen encoder exp20-p2-encoder-v1)
+short referents              DEVICE_OR_PLACE    dev 13/13  holdout 12/16
+short decisions              SHORT_REF          dev 4/4  holdout 3/4
+long referents+decisions     LONG_REF           dev 8/8  holdout 7/8
+long corrections             CORRECTION         dev 3/3  holdout 2/3
+long correction questions    LONG_REF           dev 3/3  holdout 2/3
+generic corrections          CORRECTION         dev 3/3  holdout 2/3
+person corrections           CORRECTION         dev 2/2  holdout 1/2
+switches                     SWITCH             dev 4/4  holdout 3/4
+presence cues                PRESENCE_UNCERTAIN dev 3/3  holdout 2/4
+device referents             DEVICE_OR_PLACE    dev 3/3  holdout 3/4
+device commands              SHORT_REF          dev 3/3  holdout 3/4
+person intros                PERSON_INTRO       dev 7/7  holdout 7/9
+pronoun questions            PERSON_PRONOUN     dev 4/4  holdout 4/4
+fillers                      no cue at all      dev 5/5  holdout 5/5
+self-contained               no cue at all      dev 4/4  holdout 4/4

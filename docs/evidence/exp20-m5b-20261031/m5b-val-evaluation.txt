@@ -1,0 +1,22 @@
+EXP-20 M5b VAL evaluation train=8466dbccfec589fc1c54a0702c6a9e2f9241fbb78100fb415b5e4147a48f52e4 val=7917759c0f56679a2301ab75d8d4257240f716e5cf6549801448c67c9ef6ca30 parity=2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6 trained=2036ac7f29e59255277379f5e0343d6a4426a0f9ebf331afdae22bd3a63b801b steps=328
+GATE query-blind medoid (PARITY) VAL strict top1=16/128 -> PASS
+GATE query-blind medoid (TRAINED) VAL strict top1=17/128 -> PASS
+
+arm                  L        S        S:day-near S:day-far S:place-near S:place-far S:far-far  precondition
+JACCARD              64/64    0/64     0/32       0/32      0/32         0/32        0/16      FAIL
+HYBRID_LEX           64/64    0/64     0/32       0/32      0/32         0/32        0/16      FAIL
+CRE1                 53/64    15/64    6/32       9/32      9/32         6/32        3/16      FAIL
+HYBRID_CRE1          64/64    13/64    6/32       7/32      7/32         6/32        3/16      FAIL
+CRE1_TRAINED         61/64    18/64    11/32      7/32      11/32        7/32        2/16      FAIL
+HYBRID_CRE1_TRAINED  64/64    25/64    15/32      10/32     16/32        9/32        3/16      FAIL
+NORM_JACCARD         64/64    0/64     0/32       0/32      0/32         0/32        0/16      FAIL
+NORM_HYBRID          64/64    0/64     0/32       0/32      0/32         0/32        0/16      FAIL
+QUERY_BLIND_MEDOID   7/64     9/64     6/32       3/32      5/32         4/32        2/16      FAIL
+TIE_CHANCE expected hits: L=64.0/64 S=14.8/64
+
+VAL comparisons (128 groups, exact McNemar, Holm over 4, MDE +5 pp)
+  HYBRID_CRE1_TRAINED vs HYBRID_CRE1: b=21 c=9 Holm=0.0855 diff=+0.0938 95%CI[+0.0078,+0.1797] -> INCONCLUSIVE
+  NORM_HYBRID vs HYBRID_LEX: b=0 c=0 Holm=1.00 diff=+0.0000 95%CI[+0.0000,+0.0000] -> EQUIVALENT
+  HYBRID_CRE1_TRAINED vs NORM_HYBRID: b=25 c=0 Holm=1.79e-07 diff=+0.1953 95%CI[+0.1250,+0.2656] -> SUPERIOR
+  HYBRID_CRE1_TRAINED vs QUERY_BLIND_MEDOID: b=75 c=2 Holm=1.59e-19 diff=+0.5703 95%CI[+0.4766,+0.6563] -> SUPERIOR
+SEALED=UNOPENED FOLD7=DEVICE_NOT_RUN

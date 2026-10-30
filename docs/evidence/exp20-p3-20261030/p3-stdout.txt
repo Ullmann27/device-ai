@@ -1,0 +1,7 @@
+CMD: scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p3.P3Probe run docs/evidence/exp20-p3-20261030/p3-dataset.tsv <scratch>/cre1/node-cre1.cre1 docs/evidence/exp20-p3-20261030/run
+GIT_HEAD=af235e95222313dfb37b3b2a3e3a46bef5232d9a JAR=4f6cb3683c93e05abff520e1b9d53ea578c01c2078c439ac73c1c6d0557f3559 2026-10-30T09:23:19Z
+EXIT=0
+
+real	4m35.100s
+user	4m36.515s
+sys	0m0.676s

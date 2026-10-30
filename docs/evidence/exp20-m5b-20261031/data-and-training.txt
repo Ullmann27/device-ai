@@ -1,0 +1,11 @@
+GIT_HEAD=b005fec2798f41967407553a54b2387fb9350c39 2026-10-30T12:54:20Z node=v22.22.0
+M5B_VAL sha256=7917759c0f56679a2301ab75d8d4257240f716e5cf6549801448c67c9ef6ca30
+TRAIN sha256=8466dbccfec589fc1c54a0702c6a9e2f9241fbb78100fb415b5e4147a48f52e4
+CMD: node scripts/exp20-m5b-train-cre1.mjs <parity> <train.tsv> <trained.cre1>
+{"pairs":128,"memories":1024,"hp":{"epochs":20,"batch":8,"lr":0.01,"tau":0.1,"size":8,"hard":7,"sameRelation":0,"seed":20261031},"result":{"epochs":20,"updates":320,"interrupted":false,"loss":0.036471744864778846},"steps":328,"sha256":"2036ac7f29e59255277379f5e0343d6a4426a0f9ebf331afdae22bd3a63b801b"}
+TRAIN_EXIT=0
+
+real	0m3.944s
+user	0m4.125s
+sys	0m0.185s
+2036ac7f29e59255277379f5e0343d6a4426a0f9ebf331afdae22bd3a63b801b

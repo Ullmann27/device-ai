@@ -1,0 +1,2 @@
+EXP-20 P4 POST-HOC query-blind MEDOID control: top1=75/120 (L 37/60, S 38/60)
+Reading: if this approaches HOPFIELD2_B4 (99/120, S 40/60), the Hopfield gain is explained by TRUE being the medoid of the near-miss star, not by the query.

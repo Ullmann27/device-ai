@@ -212,7 +212,7 @@
       "id": "EXP-20",
       "title": "Continuous-time neural dynamics (CTRNN) shadow",
       "status": "PROPOSED_SHADOW",
-      "present": "NOT_IMPLEMENTED. Explore bounded stable ODE state transitions as optional context prior, not a replacement for the current LLM",
+      "present": "NOT_IMPLEMENTED in app/src/main. Host lab only: P1 numerics passed; P2 (preregistered A/B/C at the real ComputeAllocationPolicy path, sealed same-author holdout) kept A, the unchanged router: CTRNN EQUIVALENT to EMA, neither SUPERIOR to A; sparse variant REJECTED on cost; P3 encoder precondition failed for all local encoders, DG-SDR REJECTED. See docs/research/exp20/EXP-20-P2-RESULT-20261030.md and EXP-20-P3-RESULT-20261030.md",
       "entry": "docs/research/jarvis/JARVIS-OWNER-RESILIENCE-AND-NEURODYNAMICS-20261030.md",
       "depends": "Existing NTW1-v3 model state and context compiler",
       "gate": "Integration stability/ablation, independent holdout and per-turn cost on CPU/Fold7"

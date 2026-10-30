@@ -1,0 +1,1521 @@
+cluster	variant	scenario	split	t_sec	decision	gold	cause	neg_control	text
+dev-S1-040	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-040	0	S1_LOCATION	VALIDATION	57.183	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-040	0	S1_LOCATION	VALIDATION	171.938	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S1-040	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-040	1	S1_LOCATION	VALIDATION	7.982	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S1-040	1	S1_LOCATION	VALIDATION	21.574	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S1-040	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-040	2	S1_LOCATION	VALIDATION	8.983	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-040	2	S1_LOCATION	VALIDATION	13.53	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S1-040	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-040	3	S1_LOCATION	VALIDATION	15.955	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-040	3	S1_LOCATION	VALIDATION	29.919	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-041	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S1-041	0	S1_LOCATION	VALIDATION	21.377	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-041	0	S1_LOCATION	VALIDATION	88.714	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S1-041	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-041	1	S1_LOCATION	VALIDATION	18.901	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-041	1	S1_LOCATION	VALIDATION	23.721	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S1-041	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-041	2	S1_LOCATION	VALIDATION	3.407	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-041	2	S1_LOCATION	VALIDATION	15.853	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S1-041	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S1-041	3	S1_LOCATION	VALIDATION	3.052	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-041	3	S1_LOCATION	VALIDATION	30.547	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S1-042	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-042	0	S1_LOCATION	VALIDATION	27.229	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-042	0	S1_LOCATION	VALIDATION	41.163	1	CLARIFY	LOCATION_SWITCH	0	Ist das dort noch an?
+dev-S1-042	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S1-042	1	S1_LOCATION	VALIDATION	17.228	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-042	1	S1_LOCATION	VALIDATION	21.733	1	CLARIFY	LOCATION_SWITCH	0	Und wie war das zweite davon?
+dev-S1-042	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-042	2	S1_LOCATION	VALIDATION	7.622	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-042	2	S1_LOCATION	VALIDATION	21.088	1	CLARIFY	LOCATION_SWITCH	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-042	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-042	3	S1_LOCATION	VALIDATION	46.029	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-042	3	S1_LOCATION	VALIDATION	159.613	1	CLARIFY	LOCATION_SWITCH	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-043	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-043	0	S1_LOCATION	VALIDATION	5.674	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-043	0	S1_LOCATION	VALIDATION	12.001	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-043	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-043	1	S1_LOCATION	VALIDATION	11.442	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-043	1	S1_LOCATION	VALIDATION	68.801	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-043	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-043	2	S1_LOCATION	VALIDATION	6.799	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-043	2	S1_LOCATION	VALIDATION	35.239	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S1-043	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-043	3	S1_LOCATION	VALIDATION	8.479	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-043	3	S1_LOCATION	VALIDATION	21.354	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-044	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-044	0	S1_LOCATION	VALIDATION	12.043	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-044	0	S1_LOCATION	VALIDATION	16.495	1	PROCEED	NONE	1	Und wie war das zweite davon?
+dev-S1-044	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-044	1	S1_LOCATION	VALIDATION	46.02	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S1-044	1	S1_LOCATION	VALIDATION	53.992	1	PROCEED	NONE	1	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-044	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-044	2	S1_LOCATION	VALIDATION	40.449	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S1-044	2	S1_LOCATION	VALIDATION	46.426	1	PROCEED	NONE	1	Und wie war das zweite davon?
+dev-S1-044	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-044	3	S1_LOCATION	VALIDATION	23.019	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S1-044	3	S1_LOCATION	VALIDATION	31.238	1	PROCEED	NONE	1	Ist das dort noch an?
+dev-S1-045	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-045	0	S1_LOCATION	VALIDATION	5.093	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-045	0	S1_LOCATION	VALIDATION	13.619	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-045	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-045	1	S1_LOCATION	VALIDATION	5.761	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-045	1	S1_LOCATION	VALIDATION	44.471	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S1-045	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-045	2	S1_LOCATION	VALIDATION	95.73	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-045	2	S1_LOCATION	VALIDATION	153.205	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-045	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-045	3	S1_LOCATION	VALIDATION	106.484	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-045	3	S1_LOCATION	VALIDATION	112.823	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-046	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S1-046	0	S1_LOCATION	VALIDATION	8.44	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S1-046	0	S1_LOCATION	VALIDATION	31.021	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S1-046	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-046	1	S1_LOCATION	VALIDATION	15.098	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-046	1	S1_LOCATION	VALIDATION	124.713	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S1-046	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S1-046	2	S1_LOCATION	VALIDATION	16.878	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S1-046	2	S1_LOCATION	VALIDATION	39.993	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S1-046	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S1-046	3	S1_LOCATION	VALIDATION	32.267	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S1-046	3	S1_LOCATION	VALIDATION	93.696	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S1-047	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-047	0	S1_LOCATION	VALIDATION	17.953	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-047	0	S1_LOCATION	VALIDATION	26.035	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S1-047	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-047	1	S1_LOCATION	VALIDATION	15.929	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-047	1	S1_LOCATION	VALIDATION	60.82	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S1-047	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-047	2	S1_LOCATION	VALIDATION	9.001	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-047	2	S1_LOCATION	VALIDATION	100.366	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S1-047	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-047	3	S1_LOCATION	VALIDATION	7.969	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-047	3	S1_LOCATION	VALIDATION	11.976	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S1-048	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-048	0	S1_LOCATION	VALIDATION	15.669	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-048	0	S1_LOCATION	VALIDATION	28.566	1	CLARIFY	LOCATION_SWITCH	0	Was war damit nochmal?
+dev-S1-048	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-048	1	S1_LOCATION	VALIDATION	6.388	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-048	1	S1_LOCATION	VALIDATION	19.379	1	CLARIFY	LOCATION_SWITCH	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-048	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Wohnzimmer steht auf Stufe drei.
+dev-S1-048	2	S1_LOCATION	VALIDATION	3.543	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-048	2	S1_LOCATION	VALIDATION	7.416	1	CLARIFY	LOCATION_SWITCH	0	Und wie war das zweite davon?
+dev-S1-048	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-048	3	S1_LOCATION	VALIDATION	89.747	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-048	3	S1_LOCATION	VALIDATION	102.437	1	CLARIFY	LOCATION_SWITCH	0	Ist das dort noch an?
+dev-S1-049	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-049	0	S1_LOCATION	VALIDATION	8.198	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-049	0	S1_LOCATION	VALIDATION	118.372	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-049	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-049	1	S1_LOCATION	VALIDATION	6.635	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-049	1	S1_LOCATION	VALIDATION	9.77	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-049	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-049	2	S1_LOCATION	VALIDATION	51.604	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-049	2	S1_LOCATION	VALIDATION	96.587	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-049	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-049	3	S1_LOCATION	VALIDATION	39.984	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-049	3	S1_LOCATION	VALIDATION	48.081	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-050	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-050	0	S1_LOCATION	VALIDATION	55.815	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-050	0	S1_LOCATION	VALIDATION	153.586	1	PROCEED	NONE	1	Was war damit nochmal?
+dev-S1-050	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-050	1	S1_LOCATION	VALIDATION	99.849	0	-	NONE	0	Die Heizung im Wohnzimmer steht auf Stufe drei.
+dev-S1-050	1	S1_LOCATION	VALIDATION	119.917	1	PROCEED	NONE	1	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-050	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-050	2	S1_LOCATION	VALIDATION	111.325	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-050	2	S1_LOCATION	VALIDATION	206.49	1	PROCEED	NONE	1	Und wie war das zweite davon?
+dev-S1-050	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-050	3	S1_LOCATION	VALIDATION	6.086	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S1-050	3	S1_LOCATION	VALIDATION	106.192	1	PROCEED	NONE	1	Ist das dort noch an?
+dev-S1-051	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-051	0	S1_LOCATION	VALIDATION	25.966	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-051	0	S1_LOCATION	VALIDATION	61.167	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-051	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-051	1	S1_LOCATION	VALIDATION	29.357	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-051	1	S1_LOCATION	VALIDATION	39.121	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S1-051	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-051	2	S1_LOCATION	VALIDATION	32.642	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-051	2	S1_LOCATION	VALIDATION	35.795	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-051	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-051	3	S1_LOCATION	VALIDATION	37.019	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-051	3	S1_LOCATION	VALIDATION	147.804	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-052	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-052	0	S1_LOCATION	VALIDATION	26.144	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-052	0	S1_LOCATION	VALIDATION	29.428	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-052	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-052	1	S1_LOCATION	VALIDATION	8.868	0	-	NONE	0	Die Heizung im Wohnzimmer steht auf Stufe drei.
+dev-S1-052	1	S1_LOCATION	VALIDATION	19.681	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S1-052	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-052	2	S1_LOCATION	VALIDATION	7.859	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S1-052	2	S1_LOCATION	VALIDATION	13.593	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-052	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-052	3	S1_LOCATION	VALIDATION	17.708	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S1-052	3	S1_LOCATION	VALIDATION	28.817	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S1-053	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-053	0	S1_LOCATION	VALIDATION	56.227	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-053	0	S1_LOCATION	VALIDATION	79.305	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S1-053	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S1-053	1	S1_LOCATION	VALIDATION	49.578	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-053	1	S1_LOCATION	VALIDATION	66.146	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S1-053	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S1-053	2	S1_LOCATION	VALIDATION	4.602	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-053	2	S1_LOCATION	VALIDATION	8.131	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S1-053	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-053	3	S1_LOCATION	VALIDATION	4.141	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-053	3	S1_LOCATION	VALIDATION	102.602	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S1-054	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-054	0	S1_LOCATION	VALIDATION	46.009	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-054	0	S1_LOCATION	VALIDATION	70.156	1	CLARIFY	LOCATION_SWITCH	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-054	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S1-054	1	S1_LOCATION	VALIDATION	11.492	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-054	1	S1_LOCATION	VALIDATION	95.302	1	CLARIFY	LOCATION_SWITCH	0	Was war damit nochmal?
+dev-S1-054	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-054	2	S1_LOCATION	VALIDATION	12.833	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-054	2	S1_LOCATION	VALIDATION	37.821	1	CLARIFY	LOCATION_SWITCH	0	Ist das dort noch an?
+dev-S1-054	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S1-054	3	S1_LOCATION	VALIDATION	4.693	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-054	3	S1_LOCATION	VALIDATION	61.542	1	CLARIFY	LOCATION_SWITCH	0	Was war damit nochmal?
+dev-S1-055	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-055	0	S1_LOCATION	VALIDATION	88.317	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-055	0	S1_LOCATION	VALIDATION	163.354	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-055	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-055	1	S1_LOCATION	VALIDATION	27.756	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-055	1	S1_LOCATION	VALIDATION	32.974	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-055	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-055	2	S1_LOCATION	VALIDATION	117.052	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-055	2	S1_LOCATION	VALIDATION	133.712	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-055	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-055	3	S1_LOCATION	VALIDATION	23.417	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-055	3	S1_LOCATION	VALIDATION	46.625	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S1-056	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-056	0	S1_LOCATION	VALIDATION	10.307	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S1-056	0	S1_LOCATION	VALIDATION	104.327	1	PROCEED	NONE	1	Und wie war das zweite davon?
+dev-S1-056	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-056	1	S1_LOCATION	VALIDATION	74.577	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-056	1	S1_LOCATION	VALIDATION	92.261	1	PROCEED	NONE	1	Und wie war das zweite davon?
+dev-S1-056	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-056	2	S1_LOCATION	VALIDATION	66.53	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S1-056	2	S1_LOCATION	VALIDATION	70.259	1	PROCEED	NONE	1	Kannst du mir das von vorhin nochmal sagen?
+dev-S1-056	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-056	3	S1_LOCATION	VALIDATION	93.865	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S1-056	3	S1_LOCATION	VALIDATION	110.954	1	PROCEED	NONE	1	Was war damit nochmal?
+dev-S1-057	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S1-057	0	S1_LOCATION	VALIDATION	3.516	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-057	0	S1_LOCATION	VALIDATION	52.213	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S1-057	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S1-057	1	S1_LOCATION	VALIDATION	3.135	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-057	1	S1_LOCATION	VALIDATION	9.898	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S1-057	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S1-057	2	S1_LOCATION	VALIDATION	22.06	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-057	2	S1_LOCATION	VALIDATION	39.544	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S1-057	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S1-057	3	S1_LOCATION	VALIDATION	19.417	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-057	3	S1_LOCATION	VALIDATION	39.322	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S1-058	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S1-058	0	S1_LOCATION	VALIDATION	18.493	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S1-058	0	S1_LOCATION	VALIDATION	35.5	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S1-058	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S1-058	1	S1_LOCATION	VALIDATION	8.208	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S1-058	1	S1_LOCATION	VALIDATION	11.893	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S1-058	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S1-058	2	S1_LOCATION	VALIDATION	9.262	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S1-058	2	S1_LOCATION	VALIDATION	26.734	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S1-058	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-058	3	S1_LOCATION	VALIDATION	53.073	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S1-058	3	S1_LOCATION	VALIDATION	146.05	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S1-059	0	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-059	0	S1_LOCATION	VALIDATION	4.991	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S1-059	0	S1_LOCATION	VALIDATION	28.751	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S1-059	1	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-059	1	S1_LOCATION	VALIDATION	5.555	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S1-059	1	S1_LOCATION	VALIDATION	19.1	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S1-059	2	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S1-059	2	S1_LOCATION	VALIDATION	3.966	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S1-059	2	S1_LOCATION	VALIDATION	10.719	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S1-059	3	S1_LOCATION	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S1-059	3	S1_LOCATION	VALIDATION	4.408	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S1-059	3	S1_LOCATION	VALIDATION	53.024	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S2-040	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-040	0	S2_CORRECTION	VALIDATION	38.939	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-040	0	S2_CORRECTION	VALIDATION	138.598	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-040	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-040	1	S2_CORRECTION	VALIDATION	3.048	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-040	1	S2_CORRECTION	VALIDATION	91.416	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-040	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-040	2	S2_CORRECTION	VALIDATION	28.802	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-040	2	S2_CORRECTION	VALIDATION	37.575	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-040	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-040	3	S2_CORRECTION	VALIDATION	3.658	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-040	3	S2_CORRECTION	VALIDATION	7.624	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-041	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schwarz und Frau Eder haben mich angerufen.
+dev-S2-041	0	S2_CORRECTION	VALIDATION	25.141	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-041	0	S2_CORRECTION	VALIDATION	141.197	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S2-041	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Hofer und Herrn Bauer beim Training.
+dev-S2-041	1	S2_CORRECTION	VALIDATION	8.431	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S2-041	1	S2_CORRECTION	VALIDATION	22.747	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-041	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Steiner und Herrn Bauer beim Training.
+dev-S2-041	2	S2_CORRECTION	VALIDATION	42.641	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S2-041	2	S2_CORRECTION	VALIDATION	110.271	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-041	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Pichler und Herrn Berger beim Training.
+dev-S2-041	3	S2_CORRECTION	VALIDATION	37.904	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-041	3	S2_CORRECTION	VALIDATION	94.773	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-042	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Mayr und Frau Wolf haben mich angerufen.
+dev-S2-042	0	S2_CORRECTION	VALIDATION	28.83	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Mayr, nicht Frau Wolf.
+dev-S2-042	0	S2_CORRECTION	VALIDATION	69.279	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-042	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Brunner und Frau Eder haben mich angerufen.
+dev-S2-042	1	S2_CORRECTION	VALIDATION	20.698	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Brunner, nicht Frau Eder.
+dev-S2-042	1	S2_CORRECTION	VALIDATION	25.288	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-042	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Wolf und Frau Schwarz haben mich angerufen.
+dev-S2-042	2	S2_CORRECTION	VALIDATION	69.613	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Wolf, nicht Frau Schwarz.
+dev-S2-042	2	S2_CORRECTION	VALIDATION	125.319	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-042	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Wagner und Herrn Huber beim Training.
+dev-S2-042	3	S2_CORRECTION	VALIDATION	22.449	0	-	NONE	0	Nein, falsch: nur Herr Wagner war dabei, Herr Huber war krank.
+dev-S2-042	3	S2_CORRECTION	VALIDATION	34.754	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-043	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Brunner hat mir eine Nachricht geschickt.
+dev-S2-043	0	S2_CORRECTION	VALIDATION	20.811	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-043	0	S2_CORRECTION	VALIDATION	26.78	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-043	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Kollege Steiner hat mir geschrieben.
+dev-S2-043	1	S2_CORRECTION	VALIDATION	32.907	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-043	1	S2_CORRECTION	VALIDATION	51.304	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-043	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S2-043	2	S2_CORRECTION	VALIDATION	46.232	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-043	2	S2_CORRECTION	VALIDATION	52.387	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-043	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Mayr telefoniert.
+dev-S2-043	3	S2_CORRECTION	VALIDATION	16.252	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-043	3	S2_CORRECTION	VALIDATION	57.375	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-044	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-044	0	S2_CORRECTION	VALIDATION	8.733	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-044	0	S2_CORRECTION	VALIDATION	75.904	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-044	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-044	1	S2_CORRECTION	VALIDATION	10.794	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-044	1	S2_CORRECTION	VALIDATION	14.579	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-044	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-044	2	S2_CORRECTION	VALIDATION	6.414	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-044	2	S2_CORRECTION	VALIDATION	12.437	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-044	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-044	3	S2_CORRECTION	VALIDATION	13.051	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-044	3	S2_CORRECTION	VALIDATION	19.729	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-045	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Berger und Herrn Steiner beim Training.
+dev-S2-045	0	S2_CORRECTION	VALIDATION	3.668	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S2-045	0	S2_CORRECTION	VALIDATION	7.791	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S2-045	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Winkler und Frau Schwarz haben mich angerufen.
+dev-S2-045	1	S2_CORRECTION	VALIDATION	24.051	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-045	1	S2_CORRECTION	VALIDATION	55.646	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S2-045	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Pichler und Herrn Berger beim Training.
+dev-S2-045	2	S2_CORRECTION	VALIDATION	24.325	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-045	2	S2_CORRECTION	VALIDATION	111.067	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-045	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Wolf und Frau Weber haben mich angerufen.
+dev-S2-045	3	S2_CORRECTION	VALIDATION	7.757	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S2-045	3	S2_CORRECTION	VALIDATION	45.747	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S2-046	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Fuchs und Frau Brunner haben mich angerufen.
+dev-S2-046	0	S2_CORRECTION	VALIDATION	3.153	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Fuchs, nicht Frau Brunner.
+dev-S2-046	0	S2_CORRECTION	VALIDATION	14.432	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-046	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Steiner und Herrn Wagner beim Training.
+dev-S2-046	1	S2_CORRECTION	VALIDATION	4.521	0	-	NONE	0	Nein, falsch: nur Herr Steiner war dabei, Herr Wagner war krank.
+dev-S2-046	1	S2_CORRECTION	VALIDATION	106.773	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-046	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Pichler und Herrn Moser beim Training.
+dev-S2-046	2	S2_CORRECTION	VALIDATION	21.214	0	-	NONE	0	Nein, falsch: nur Herr Pichler war dabei, Herr Moser war krank.
+dev-S2-046	2	S2_CORRECTION	VALIDATION	58.429	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-046	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Leitner und Herrn Wagner beim Training.
+dev-S2-046	3	S2_CORRECTION	VALIDATION	29.551	0	-	NONE	0	Nein, falsch: nur Herr Leitner war dabei, Herr Wagner war krank.
+dev-S2-046	3	S2_CORRECTION	VALIDATION	38.239	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S2-047	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Lang hat mir eine Nachricht geschickt.
+dev-S2-047	0	S2_CORRECTION	VALIDATION	83.627	0	-	NONE	0	Nein, das war nicht gestern, sondern heute früh.
+dev-S2-047	0	S2_CORRECTION	VALIDATION	115.954	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-047	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Mayr hat mir eine Nachricht geschickt.
+dev-S2-047	1	S2_CORRECTION	VALIDATION	8.31	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-047	1	S2_CORRECTION	VALIDATION	113.14	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-047	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Winkler hat mir eine Nachricht geschickt.
+dev-S2-047	2	S2_CORRECTION	VALIDATION	4.71	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-047	2	S2_CORRECTION	VALIDATION	35.951	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-047	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Wolf telefoniert.
+dev-S2-047	3	S2_CORRECTION	VALIDATION	21.713	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-047	3	S2_CORRECTION	VALIDATION	100.083	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-048	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-048	0	S2_CORRECTION	VALIDATION	3.972	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-048	0	S2_CORRECTION	VALIDATION	20.224	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-048	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-048	1	S2_CORRECTION	VALIDATION	19.891	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-048	1	S2_CORRECTION	VALIDATION	34.25	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-048	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-048	2	S2_CORRECTION	VALIDATION	5.293	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-048	2	S2_CORRECTION	VALIDATION	62.728	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-048	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-048	3	S2_CORRECTION	VALIDATION	16.813	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-048	3	S2_CORRECTION	VALIDATION	42.499	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-049	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Steiner und Herrn Moser beim Training.
+dev-S2-049	0	S2_CORRECTION	VALIDATION	52.895	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-049	0	S2_CORRECTION	VALIDATION	57.194	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S2-049	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Lang und Frau Wolf haben mich angerufen.
+dev-S2-049	1	S2_CORRECTION	VALIDATION	3.43	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-049	1	S2_CORRECTION	VALIDATION	11.256	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S2-049	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Steiner und Herrn Pichler beim Training.
+dev-S2-049	2	S2_CORRECTION	VALIDATION	4.918	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S2-049	2	S2_CORRECTION	VALIDATION	31.545	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-049	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Leitner und Herrn Huber beim Training.
+dev-S2-049	3	S2_CORRECTION	VALIDATION	15.282	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-049	3	S2_CORRECTION	VALIDATION	93.515	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S2-050	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schmid und Frau Schwarz haben mich angerufen.
+dev-S2-050	0	S2_CORRECTION	VALIDATION	12.22	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Schmid, nicht Frau Schwarz.
+dev-S2-050	0	S2_CORRECTION	VALIDATION	58.905	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-050	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Berger und Herrn Moser beim Training.
+dev-S2-050	1	S2_CORRECTION	VALIDATION	10.763	0	-	NONE	0	Nein, falsch: nur Herr Berger war dabei, Herr Moser war krank.
+dev-S2-050	1	S2_CORRECTION	VALIDATION	121.229	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-050	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schmid und Frau Mayr haben mich angerufen.
+dev-S2-050	2	S2_CORRECTION	VALIDATION	33.782	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Schmid, nicht Frau Mayr.
+dev-S2-050	2	S2_CORRECTION	VALIDATION	58.267	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-050	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Lang und Frau Schwarz haben mich angerufen.
+dev-S2-050	3	S2_CORRECTION	VALIDATION	3.767	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Lang, nicht Frau Schwarz.
+dev-S2-050	3	S2_CORRECTION	VALIDATION	20.603	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-051	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Weber telefoniert.
+dev-S2-051	0	S2_CORRECTION	VALIDATION	66.788	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-051	0	S2_CORRECTION	VALIDATION	90.076	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-051	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Mayr telefoniert.
+dev-S2-051	1	S2_CORRECTION	VALIDATION	6.634	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-051	1	S2_CORRECTION	VALIDATION	11.416	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-051	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S2-051	2	S2_CORRECTION	VALIDATION	5.903	0	-	NONE	0	Nein, das war nicht gestern, sondern heute früh.
+dev-S2-051	2	S2_CORRECTION	VALIDATION	28.569	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-051	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Schwarz hat mir eine Nachricht geschickt.
+dev-S2-051	3	S2_CORRECTION	VALIDATION	99.719	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-051	3	S2_CORRECTION	VALIDATION	102.733	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-052	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Rechnung für den Kühlschrank beträgt 300 Euro.
+dev-S2-052	0	S2_CORRECTION	VALIDATION	39.433	0	-	NONE	0	Falsch, es sind 350 Euro.
+dev-S2-052	0	S2_CORRECTION	VALIDATION	59.794	1	PROCEED	NONE	1	Wie hoch war die Rechnung?
+dev-S2-052	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-052	1	S2_CORRECTION	VALIDATION	80.098	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-052	1	S2_CORRECTION	VALIDATION	91.555	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-052	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-052	2	S2_CORRECTION	VALIDATION	53.602	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-052	2	S2_CORRECTION	VALIDATION	99.491	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-052	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Rechnung für den Kühlschrank beträgt 300 Euro.
+dev-S2-052	3	S2_CORRECTION	VALIDATION	66.365	0	-	NONE	0	Falsch, es sind 350 Euro.
+dev-S2-052	3	S2_CORRECTION	VALIDATION	98.531	1	PROCEED	NONE	1	Wie hoch war die Rechnung?
+dev-S2-053	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schwarz und Frau Schmid haben mich angerufen.
+dev-S2-053	0	S2_CORRECTION	VALIDATION	62.424	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S2-053	0	S2_CORRECTION	VALIDATION	92.892	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S2-053	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Hofer und Herrn Leitner beim Training.
+dev-S2-053	1	S2_CORRECTION	VALIDATION	59.307	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S2-053	1	S2_CORRECTION	VALIDATION	62.429	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-053	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Fuchs und Frau Schmid haben mich angerufen.
+dev-S2-053	2	S2_CORRECTION	VALIDATION	10.675	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S2-053	2	S2_CORRECTION	VALIDATION	25.252	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S2-053	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Winkler und Frau Schmid haben mich angerufen.
+dev-S2-053	3	S2_CORRECTION	VALIDATION	5.236	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-053	3	S2_CORRECTION	VALIDATION	10.203	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S2-054	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Brunner und Frau Lang haben mich angerufen.
+dev-S2-054	0	S2_CORRECTION	VALIDATION	44.681	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Brunner, nicht Frau Lang.
+dev-S2-054	0	S2_CORRECTION	VALIDATION	115.698	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-054	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Brunner und Frau Wolf haben mich angerufen.
+dev-S2-054	1	S2_CORRECTION	VALIDATION	8.125	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Brunner, nicht Frau Wolf.
+dev-S2-054	1	S2_CORRECTION	VALIDATION	27.705	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-054	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Berger und Herrn Huber beim Training.
+dev-S2-054	2	S2_CORRECTION	VALIDATION	12.066	0	-	NONE	0	Nein, falsch: nur Herr Berger war dabei, Herr Huber war krank.
+dev-S2-054	2	S2_CORRECTION	VALIDATION	17.145	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S2-054	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schmid und Frau Lang haben mich angerufen.
+dev-S2-054	3	S2_CORRECTION	VALIDATION	54.791	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Schmid, nicht Frau Lang.
+dev-S2-054	3	S2_CORRECTION	VALIDATION	112.782	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-055	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Brunner telefoniert.
+dev-S2-055	0	S2_CORRECTION	VALIDATION	10.241	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-055	0	S2_CORRECTION	VALIDATION	15.828	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-055	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Berger telefoniert.
+dev-S2-055	1	S2_CORRECTION	VALIDATION	40.983	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-055	1	S2_CORRECTION	VALIDATION	60.385	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-055	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Fuchs telefoniert.
+dev-S2-055	2	S2_CORRECTION	VALIDATION	36.079	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-055	2	S2_CORRECTION	VALIDATION	41.861	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-055	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Kollege Leitner hat mir geschrieben.
+dev-S2-055	3	S2_CORRECTION	VALIDATION	99.025	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-055	3	S2_CORRECTION	VALIDATION	109.627	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-056	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-056	0	S2_CORRECTION	VALIDATION	19.613	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-056	0	S2_CORRECTION	VALIDATION	22.909	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-056	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-056	1	S2_CORRECTION	VALIDATION	6.035	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-056	1	S2_CORRECTION	VALIDATION	81.02	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-056	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Termin in der Werkstatt ist am Mittwoch.
+dev-S2-056	2	S2_CORRECTION	VALIDATION	22.763	0	-	NONE	0	Nein, ich meinte nicht Mittwoch, sondern Donnerstag.
+dev-S2-056	2	S2_CORRECTION	VALIDATION	30.217	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S2-056	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S2-056	3	S2_CORRECTION	VALIDATION	4.651	0	-	NONE	0	Stimmt nicht, bis Juni.
+dev-S2-056	3	S2_CORRECTION	VALIDATION	9.895	1	PROCEED	NONE	1	Bis wann läuft das Projekt?
+dev-S2-057	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Berger und Herrn Pichler beim Training.
+dev-S2-057	0	S2_CORRECTION	VALIDATION	7.63	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S2-057	0	S2_CORRECTION	VALIDATION	11.392	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S2-057	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Leitner und Herrn Hofer beim Training.
+dev-S2-057	1	S2_CORRECTION	VALIDATION	75.796	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S2-057	1	S2_CORRECTION	VALIDATION	116.382	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S2-057	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Eder und Frau Winkler haben mich angerufen.
+dev-S2-057	2	S2_CORRECTION	VALIDATION	8.359	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S2-057	2	S2_CORRECTION	VALIDATION	12.838	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S2-057	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schmid und Frau Winkler haben mich angerufen.
+dev-S2-057	3	S2_CORRECTION	VALIDATION	16.829	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S2-057	3	S2_CORRECTION	VALIDATION	27.046	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S2-058	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Lang und Frau Mayr haben mich angerufen.
+dev-S2-058	0	S2_CORRECTION	VALIDATION	25.017	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Lang, nicht Frau Mayr.
+dev-S2-058	0	S2_CORRECTION	VALIDATION	83.872	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S2-058	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Berger und Herrn Wagner beim Training.
+dev-S2-058	1	S2_CORRECTION	VALIDATION	22.618	0	-	NONE	0	Nein, falsch: nur Herr Berger war dabei, Herr Wagner war krank.
+dev-S2-058	1	S2_CORRECTION	VALIDATION	27.625	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S2-058	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich war mit Herrn Bauer und Herrn Wagner beim Training.
+dev-S2-058	2	S2_CORRECTION	VALIDATION	9.724	0	-	NONE	0	Nein, falsch: nur Herr Bauer war dabei, Herr Wagner war krank.
+dev-S2-058	2	S2_CORRECTION	VALIDATION	20.156	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S2-058	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Frau Schwarz und Frau Eder haben mich angerufen.
+dev-S2-058	3	S2_CORRECTION	VALIDATION	68.032	0	-	NONE	0	Nein, korrigiere: angerufen hat nur Frau Schwarz, nicht Frau Eder.
+dev-S2-058	3	S2_CORRECTION	VALIDATION	180.493	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-059	0	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Eder telefoniert.
+dev-S2-059	0	S2_CORRECTION	VALIDATION	22.398	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-059	0	S2_CORRECTION	VALIDATION	25.653	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-059	1	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Fuchs hat mir eine Nachricht geschickt.
+dev-S2-059	1	S2_CORRECTION	VALIDATION	35.656	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-059	1	S2_CORRECTION	VALIDATION	62.49	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S2-059	2	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Der Kollege Steiner hat mir geschrieben.
+dev-S2-059	2	S2_CORRECTION	VALIDATION	40.212	0	-	NONE	0	Falsch, ich meinte die andere Farbe.
+dev-S2-059	2	S2_CORRECTION	VALIDATION	43.392	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S2-059	3	S2_CORRECTION	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Wolf telefoniert.
+dev-S2-059	3	S2_CORRECTION	VALIDATION	21.567	0	-	NONE	0	Stimmt nicht ganz, es waren vier Stück.
+dev-S2-059	3	S2_CORRECTION	VALIDATION	38.903	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S3-040	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S3-040	0	S3_INTERRUPTION	VALIDATION	110.29	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-040	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-040	1	S3_INTERRUPTION	VALIDATION	10.964	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-040	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S3-040	2	S3_INTERRUPTION	VALIDATION	3215.488	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-040	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-040	3	S3_INTERRUPTION	VALIDATION	5992.019	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-041	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-041	0	S3_INTERRUPTION	VALIDATION	3.88	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S3-041	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-041	1	S3_INTERRUPTION	VALIDATION	49.832	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S3-041	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-041	2	S3_INTERRUPTION	VALIDATION	2877.527	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-041	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-041	3	S3_INTERRUPTION	VALIDATION	6660.01	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S3-042	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-042	0	S3_INTERRUPTION	VALIDATION	32.99	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-042	0	S3_INTERRUPTION	VALIDATION	66.79	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-042	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S3-042	1	S3_INTERRUPTION	VALIDATION	30.771	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-042	1	S3_INTERRUPTION	VALIDATION	37.899	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-042	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-042	2	S3_INTERRUPTION	VALIDATION	4477.789	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-042	2	S3_INTERRUPTION	VALIDATION	4499.093	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S3-042	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S3-042	3	S3_INTERRUPTION	VALIDATION	7861.395	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-042	3	S3_INTERRUPTION	VALIDATION	7868.358	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S3-043	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-043	0	S3_INTERRUPTION	VALIDATION	10.244	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-043	0	S3_INTERRUPTION	VALIDATION	117.645	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S3-043	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-043	1	S3_INTERRUPTION	VALIDATION	19.926	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-043	1	S3_INTERRUPTION	VALIDATION	29.606	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S3-043	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-043	2	S3_INTERRUPTION	VALIDATION	9958.739	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-043	2	S3_INTERRUPTION	VALIDATION	9982.279	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S3-043	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-043	3	S3_INTERRUPTION	VALIDATION	9074.26	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-043	3	S3_INTERRUPTION	VALIDATION	9115.551	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S3-044	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S3-044	0	S3_INTERRUPTION	VALIDATION	87.186	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S3-044	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-044	1	S3_INTERRUPTION	VALIDATION	8.656	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S3-044	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-044	2	S3_INTERRUPTION	VALIDATION	3540.837	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S3-044	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S3-044	3	S3_INTERRUPTION	VALIDATION	2479.035	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-045	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-045	0	S3_INTERRUPTION	VALIDATION	15.62	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S3-045	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-045	1	S3_INTERRUPTION	VALIDATION	12.369	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S3-045	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-045	2	S3_INTERRUPTION	VALIDATION	5037.051	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-045	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-045	3	S3_INTERRUPTION	VALIDATION	3803.674	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S3-046	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S3-046	0	S3_INTERRUPTION	VALIDATION	7.133	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-046	0	S3_INTERRUPTION	VALIDATION	59.305	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S3-046	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-046	1	S3_INTERRUPTION	VALIDATION	24.567	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-046	1	S3_INTERRUPTION	VALIDATION	29.663	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-046	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S3-046	2	S3_INTERRUPTION	VALIDATION	4910.083	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-046	2	S3_INTERRUPTION	VALIDATION	4948.391	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S3-046	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-046	3	S3_INTERRUPTION	VALIDATION	8615.624	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-046	3	S3_INTERRUPTION	VALIDATION	8620.567	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S3-047	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-047	0	S3_INTERRUPTION	VALIDATION	4.403	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S3-047	0	S3_INTERRUPTION	VALIDATION	17.785	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S3-047	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-047	1	S3_INTERRUPTION	VALIDATION	34.719	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S3-047	1	S3_INTERRUPTION	VALIDATION	111.229	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S3-047	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-047	2	S3_INTERRUPTION	VALIDATION	3809.733	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S3-047	2	S3_INTERRUPTION	VALIDATION	3901.395	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S3-047	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-047	3	S3_INTERRUPTION	VALIDATION	5031.11	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-047	3	S3_INTERRUPTION	VALIDATION	5043.841	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-048	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-048	0	S3_INTERRUPTION	VALIDATION	99.824	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-048	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S3-048	1	S3_INTERRUPTION	VALIDATION	9.924	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-048	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-048	2	S3_INTERRUPTION	VALIDATION	3391.697	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-048	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-048	3	S3_INTERRUPTION	VALIDATION	5748.954	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-049	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-049	0	S3_INTERRUPTION	VALIDATION	45.775	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S3-049	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-049	1	S3_INTERRUPTION	VALIDATION	3.555	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S3-049	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-049	2	S3_INTERRUPTION	VALIDATION	6427.081	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S3-049	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-049	3	S3_INTERRUPTION	VALIDATION	2779.613	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-050	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S3-050	0	S3_INTERRUPTION	VALIDATION	61.9	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-050	0	S3_INTERRUPTION	VALIDATION	117.992	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S3-050	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-050	1	S3_INTERRUPTION	VALIDATION	22.116	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-050	1	S3_INTERRUPTION	VALIDATION	29.584	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S3-050	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S3-050	2	S3_INTERRUPTION	VALIDATION	5188.714	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-050	2	S3_INTERRUPTION	VALIDATION	5213.762	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-050	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S3-050	3	S3_INTERRUPTION	VALIDATION	9109.524	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-050	3	S3_INTERRUPTION	VALIDATION	9117.196	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-051	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-051	0	S3_INTERRUPTION	VALIDATION	19.782	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-051	0	S3_INTERRUPTION	VALIDATION	24.629	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S3-051	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-051	1	S3_INTERRUPTION	VALIDATION	9.736	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-051	1	S3_INTERRUPTION	VALIDATION	15.096	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S3-051	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-051	2	S3_INTERRUPTION	VALIDATION	8764.504	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S3-051	2	S3_INTERRUPTION	VALIDATION	8836.307	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S3-051	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-051	3	S3_INTERRUPTION	VALIDATION	9609.702	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-051	3	S3_INTERRUPTION	VALIDATION	9625.98	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S3-052	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S3-052	0	S3_INTERRUPTION	VALIDATION	3.651	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-052	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-052	1	S3_INTERRUPTION	VALIDATION	5.812	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-052	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-052	2	S3_INTERRUPTION	VALIDATION	3977.48	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-052	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Wohnzimmer steht auf Stufe drei.
+dev-S3-052	3	S3_INTERRUPTION	VALIDATION	2870.445	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S3-053	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-053	0	S3_INTERRUPTION	VALIDATION	12.833	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S3-053	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-053	1	S3_INTERRUPTION	VALIDATION	15.969	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S3-053	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-053	2	S3_INTERRUPTION	VALIDATION	3838.02	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S3-053	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-053	3	S3_INTERRUPTION	VALIDATION	5113.335	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S3-054	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-054	0	S3_INTERRUPTION	VALIDATION	12.024	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S3-054	0	S3_INTERRUPTION	VALIDATION	48.363	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S3-054	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S3-054	1	S3_INTERRUPTION	VALIDATION	13.099	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-054	1	S3_INTERRUPTION	VALIDATION	129.509	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S3-054	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S3-054	2	S3_INTERRUPTION	VALIDATION	6059.22	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-054	2	S3_INTERRUPTION	VALIDATION	6120.986	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-054	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S3-054	3	S3_INTERRUPTION	VALIDATION	7323.954	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-054	3	S3_INTERRUPTION	VALIDATION	7443.128	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-055	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-055	0	S3_INTERRUPTION	VALIDATION	42.161	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-055	0	S3_INTERRUPTION	VALIDATION	82.77	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S3-055	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-055	1	S3_INTERRUPTION	VALIDATION	3.427	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-055	1	S3_INTERRUPTION	VALIDATION	31.752	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S3-055	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-055	2	S3_INTERRUPTION	VALIDATION	4727.795	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-055	2	S3_INTERRUPTION	VALIDATION	4733.818	1	PROCEED	NONE	1	Wie weit ist das Projekt?
+dev-S3-055	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-055	3	S3_INTERRUPTION	VALIDATION	4349.424	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S3-055	3	S3_INTERRUPTION	VALIDATION	4353.748	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-056	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S3-056	0	S3_INTERRUPTION	VALIDATION	25.226	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S3-056	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-056	1	S3_INTERRUPTION	VALIDATION	39.869	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-056	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S3-056	2	S3_INTERRUPTION	VALIDATION	8760.467	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-056	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S3-056	3	S3_INTERRUPTION	VALIDATION	9957.937	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-057	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-057	0	S3_INTERRUPTION	VALIDATION	4.139	1	PROCEED	NONE	0	Wie steht es um den Reparaturauftrag?
+dev-S3-057	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Das Projekt Gartenhaus soll bis Mai fertig sein.
+dev-S3-057	1	S3_INTERRUPTION	VALIDATION	33.06	1	PROCEED	NONE	0	Wie weit ist das Projekt?
+dev-S3-057	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-057	2	S3_INTERRUPTION	VALIDATION	2551.366	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S3-057	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-057	3	S3_INTERRUPTION	VALIDATION	7167.12	1	PROCEED	NONE	1	Was ist mit der Bestellung?
+dev-S3-058	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S3-058	0	S3_INTERRUPTION	VALIDATION	11.938	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-058	0	S3_INTERRUPTION	VALIDATION	22.123	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S3-058	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S3-058	1	S3_INTERRUPTION	VALIDATION	90.183	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-058	1	S3_INTERRUPTION	VALIDATION	166.775	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S3-058	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S3-058	2	S3_INTERRUPTION	VALIDATION	2961.321	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-058	2	S3_INTERRUPTION	VALIDATION	3063.524	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S3-058	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S3-058	3	S3_INTERRUPTION	VALIDATION	3568.934	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-058	3	S3_INTERRUPTION	VALIDATION	3643.22	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S3-059	0	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-059	0	S3_INTERRUPTION	VALIDATION	10.771	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-059	0	S3_INTERRUPTION	VALIDATION	93.278	1	PROCEED	NONE	0	Wann ist der Termin nochmal?
+dev-S3-059	1	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Die Bestellung für das neue Fahrrad ist schon bezahlt.
+dev-S3-059	1	S3_INTERRUPTION	VALIDATION	13.408	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S3-059	1	S3_INTERRUPTION	VALIDATION	25.202	1	PROCEED	NONE	0	Was ist mit der Bestellung?
+dev-S3-059	2	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Termin beim Zahnarzt ist am Mittwoch um neun.
+dev-S3-059	2	S3_INTERRUPTION	VALIDATION	10167.997	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S3-059	2	S3_INTERRUPTION	VALIDATION	10198.679	1	PROCEED	NONE	1	Wann ist der Termin nochmal?
+dev-S3-059	3	S3_INTERRUPTION	VALIDATION	0.0	0	-	NONE	0	Der Reparaturauftrag für die Waschmaschine läuft bis Freitag.
+dev-S3-059	3	S3_INTERRUPTION	VALIDATION	7723.503	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S3-059	3	S3_INTERRUPTION	VALIDATION	7757.441	1	PROCEED	NONE	1	Wie steht es um den Reparaturauftrag?
+dev-S4-040	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Hofer hat mir geschrieben.
+dev-S4-040	0	S4_NESTED_ENTITIES	VALIDATION	40.823	0	-	NONE	0	Der Kollege Wagner hat mir geschrieben.
+dev-S4-040	0	S4_NESTED_ENTITIES	VALIDATION	45.647	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-040	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-040	1	S4_NESTED_ENTITIES	VALIDATION	53.97	0	-	NONE	0	Die Nachbarin Schwarz hat mir eine Nachricht geschickt.
+dev-S4-040	1	S4_NESTED_ENTITIES	VALIDATION	66.037	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S4-040	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S4-040	2	S4_NESTED_ENTITIES	VALIDATION	8.11	0	-	NONE	0	Die Nachbarin Fuchs hat mir eine Nachricht geschickt.
+dev-S4-040	2	S4_NESTED_ENTITIES	VALIDATION	14.66	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S4-040	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Huber telefoniert.
+dev-S4-040	3	S4_NESTED_ENTITIES	VALIDATION	9.045	0	-	NONE	0	Ich hab vorhin mit Herrn Berger telefoniert.
+dev-S4-040	3	S4_NESTED_ENTITIES	VALIDATION	43.532	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-041	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Schwarz telefoniert.
+dev-S4-041	0	S4_NESTED_ENTITIES	VALIDATION	10906.48	0	-	NONE	0	Die Nachbarin Lang hat mir eine Nachricht geschickt.
+dev-S4-041	0	S4_NESTED_ENTITIES	VALIDATION	10915.691	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S4-041	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-041	1	S4_NESTED_ENTITIES	VALIDATION	13397.886	0	-	NONE	0	Die Nachbarin Lang hat mir eine Nachricht geschickt.
+dev-S4-041	1	S4_NESTED_ENTITIES	VALIDATION	13425.851	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S4-041	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-041	2	S4_NESTED_ENTITIES	VALIDATION	11491.0	0	-	NONE	0	Ich hab vorhin mit Herrn Bauer telefoniert.
+dev-S4-041	2	S4_NESTED_ENTITIES	VALIDATION	11561.711	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-041	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Leitner telefoniert.
+dev-S4-041	3	S4_NESTED_ENTITIES	VALIDATION	9143.571	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-041	3	S4_NESTED_ENTITIES	VALIDATION	9181.288	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S4-042	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S4-042	0	S4_NESTED_ENTITIES	VALIDATION	3.837	0	-	NONE	0	Ich hab vorhin mit Herrn Hofer telefoniert.
+dev-S4-042	0	S4_NESTED_ENTITIES	VALIDATION	19.878	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-042	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-042	1	S4_NESTED_ENTITIES	VALIDATION	25.098	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-042	1	S4_NESTED_ENTITIES	VALIDATION	34.715	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-042	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-042	2	S4_NESTED_ENTITIES	VALIDATION	3.154	0	-	NONE	0	Ich hab vorhin mit Frau Eder telefoniert.
+dev-S4-042	2	S4_NESTED_ENTITIES	VALIDATION	36.871	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-042	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S4-042	3	S4_NESTED_ENTITIES	VALIDATION	12.025	0	-	NONE	0	Die Nachbarin Eder hat mir eine Nachricht geschickt.
+dev-S4-042	3	S4_NESTED_ENTITIES	VALIDATION	97.279	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-043	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Wagner kümmert sich um das Auto.
+dev-S4-043	0	S4_NESTED_ENTITIES	VALIDATION	28.928	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-043	0	S4_NESTED_ENTITIES	VALIDATION	48.514	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-043	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Pichler kümmert sich um das Auto.
+dev-S4-043	1	S4_NESTED_ENTITIES	VALIDATION	29.988	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-043	1	S4_NESTED_ENTITIES	VALIDATION	111.442	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-043	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Berger kümmert sich um das Auto.
+dev-S4-043	2	S4_NESTED_ENTITIES	VALIDATION	8.936	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-043	2	S4_NESTED_ENTITIES	VALIDATION	12.314	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-043	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Huber kümmert sich um das Auto.
+dev-S4-043	3	S4_NESTED_ENTITIES	VALIDATION	29.083	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-043	3	S4_NESTED_ENTITIES	VALIDATION	59.177	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-044	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Brunner hat mir eine Nachricht geschickt.
+dev-S4-044	0	S4_NESTED_ENTITIES	VALIDATION	9.812	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S4-044	0	S4_NESTED_ENTITIES	VALIDATION	36.848	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S4-044	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Huber hat mir geschrieben.
+dev-S4-044	1	S4_NESTED_ENTITIES	VALIDATION	5.788	0	-	NONE	0	Der Kollege Gruber hat mir geschrieben.
+dev-S4-044	1	S4_NESTED_ENTITIES	VALIDATION	74.147	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-044	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Lang hat mir eine Nachricht geschickt.
+dev-S4-044	2	S4_NESTED_ENTITIES	VALIDATION	49.596	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S4-044	2	S4_NESTED_ENTITIES	VALIDATION	53.525	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S4-044	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-044	3	S4_NESTED_ENTITIES	VALIDATION	14.06	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-044	3	S4_NESTED_ENTITIES	VALIDATION	18.762	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S4-045	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-045	0	S4_NESTED_ENTITIES	VALIDATION	12102.826	0	-	NONE	0	Der Kollege Wagner hat mir geschrieben.
+dev-S4-045	0	S4_NESTED_ENTITIES	VALIDATION	12169.966	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S4-045	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Brunner telefoniert.
+dev-S4-045	1	S4_NESTED_ENTITIES	VALIDATION	9852.175	0	-	NONE	0	Ich hab vorhin mit Frau Wolf telefoniert.
+dev-S4-045	1	S4_NESTED_ENTITIES	VALIDATION	9856.985	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S4-045	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-045	2	S4_NESTED_ENTITIES	VALIDATION	10355.254	0	-	NONE	0	Der Kollege Bauer hat mir geschrieben.
+dev-S4-045	2	S4_NESTED_ENTITIES	VALIDATION	10367.461	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-045	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Hofer hat mir geschrieben.
+dev-S4-045	3	S4_NESTED_ENTITIES	VALIDATION	11706.893	0	-	NONE	0	Ich hab vorhin mit Herrn Huber telefoniert.
+dev-S4-045	3	S4_NESTED_ENTITIES	VALIDATION	11728.543	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-046	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-046	0	S4_NESTED_ENTITIES	VALIDATION	24.22	0	-	NONE	0	Ich hab vorhin mit Herrn Gruber telefoniert.
+dev-S4-046	0	S4_NESTED_ENTITIES	VALIDATION	27.867	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-046	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S4-046	1	S4_NESTED_ENTITIES	VALIDATION	18.858	0	-	NONE	0	Ich hab vorhin mit Frau Weber telefoniert.
+dev-S4-046	1	S4_NESTED_ENTITIES	VALIDATION	99.483	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-046	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-046	2	S4_NESTED_ENTITIES	VALIDATION	11.439	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-046	2	S4_NESTED_ENTITIES	VALIDATION	39.49	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-046	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S4-046	3	S4_NESTED_ENTITIES	VALIDATION	3.044	0	-	NONE	0	Die Nachbarin Schwarz hat mir eine Nachricht geschickt.
+dev-S4-046	3	S4_NESTED_ENTITIES	VALIDATION	72.956	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-047	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Moser kümmert sich um das Auto.
+dev-S4-047	0	S4_NESTED_ENTITIES	VALIDATION	18.809	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-047	0	S4_NESTED_ENTITIES	VALIDATION	36.175	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-047	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Huber kümmert sich um das Auto.
+dev-S4-047	1	S4_NESTED_ENTITIES	VALIDATION	9.7	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-047	1	S4_NESTED_ENTITIES	VALIDATION	62.271	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-047	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Gruber kümmert sich um das Auto.
+dev-S4-047	2	S4_NESTED_ENTITIES	VALIDATION	9.659	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-047	2	S4_NESTED_ENTITIES	VALIDATION	16.036	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-047	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Leitner kümmert sich um das Auto.
+dev-S4-047	3	S4_NESTED_ENTITIES	VALIDATION	10.038	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-047	3	S4_NESTED_ENTITIES	VALIDATION	28.442	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-048	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-048	0	S4_NESTED_ENTITIES	VALIDATION	51.613	0	-	NONE	0	Die Nachbarin Brunner hat mir eine Nachricht geschickt.
+dev-S4-048	0	S4_NESTED_ENTITIES	VALIDATION	143.839	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S4-048	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Berger telefoniert.
+dev-S4-048	1	S4_NESTED_ENTITIES	VALIDATION	35.877	0	-	NONE	0	Ich hab vorhin mit Herrn Bauer telefoniert.
+dev-S4-048	1	S4_NESTED_ENTITIES	VALIDATION	83.242	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-048	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-048	2	S4_NESTED_ENTITIES	VALIDATION	5.319	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-048	2	S4_NESTED_ENTITIES	VALIDATION	27.676	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-048	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Mayr hat mir eine Nachricht geschickt.
+dev-S4-048	3	S4_NESTED_ENTITIES	VALIDATION	7.134	0	-	NONE	0	Ich hab vorhin mit Frau Schwarz telefoniert.
+dev-S4-048	3	S4_NESTED_ENTITIES	VALIDATION	62.855	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S4-049	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-049	0	S4_NESTED_ENTITIES	VALIDATION	11427.616	0	-	NONE	0	Ich hab vorhin mit Herrn Steiner telefoniert.
+dev-S4-049	0	S4_NESTED_ENTITIES	VALIDATION	11459.747	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-049	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Weber hat mir eine Nachricht geschickt.
+dev-S4-049	1	S4_NESTED_ENTITIES	VALIDATION	9304.728	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-049	1	S4_NESTED_ENTITIES	VALIDATION	9314.719	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S4-049	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Gruber hat mir geschrieben.
+dev-S4-049	2	S4_NESTED_ENTITIES	VALIDATION	11009.335	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-049	2	S4_NESTED_ENTITIES	VALIDATION	11013.344	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-049	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-049	3	S4_NESTED_ENTITIES	VALIDATION	13634.03	0	-	NONE	0	Ich hab vorhin mit Herrn Steiner telefoniert.
+dev-S4-049	3	S4_NESTED_ENTITIES	VALIDATION	13642.347	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S4-050	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-050	0	S4_NESTED_ENTITIES	VALIDATION	39.126	0	-	NONE	0	Der Kollege Leitner hat mir geschrieben.
+dev-S4-050	0	S4_NESTED_ENTITIES	VALIDATION	50.874	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-050	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S4-050	1	S4_NESTED_ENTITIES	VALIDATION	58.046	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S4-050	1	S4_NESTED_ENTITIES	VALIDATION	62.76	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-050	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S4-050	2	S4_NESTED_ENTITIES	VALIDATION	7.281	0	-	NONE	0	Die Nachbarin Schmid hat mir eine Nachricht geschickt.
+dev-S4-050	2	S4_NESTED_ENTITIES	VALIDATION	62.72	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-050	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S4-050	3	S4_NESTED_ENTITIES	VALIDATION	4.908	0	-	NONE	0	Ich hab vorhin mit Frau Wolf telefoniert.
+dev-S4-050	3	S4_NESTED_ENTITIES	VALIDATION	26.755	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-051	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Bauer kümmert sich um das Auto.
+dev-S4-051	0	S4_NESTED_ENTITIES	VALIDATION	3.942	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-051	0	S4_NESTED_ENTITIES	VALIDATION	31.862	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-051	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Bauer kümmert sich um das Auto.
+dev-S4-051	1	S4_NESTED_ENTITIES	VALIDATION	20.969	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-051	1	S4_NESTED_ENTITIES	VALIDATION	93.441	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-051	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Gruber kümmert sich um das Auto.
+dev-S4-051	2	S4_NESTED_ENTITIES	VALIDATION	15.715	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-051	2	S4_NESTED_ENTITIES	VALIDATION	18.73	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-051	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Leitner kümmert sich um das Auto.
+dev-S4-051	3	S4_NESTED_ENTITIES	VALIDATION	6.283	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-051	3	S4_NESTED_ENTITIES	VALIDATION	69.717	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-052	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Fuchs hat mir eine Nachricht geschickt.
+dev-S4-052	0	S4_NESTED_ENTITIES	VALIDATION	9.21	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-052	0	S4_NESTED_ENTITIES	VALIDATION	45.9	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S4-052	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Steiner hat mir geschrieben.
+dev-S4-052	1	S4_NESTED_ENTITIES	VALIDATION	6.163	0	-	NONE	0	Ich hab vorhin mit Herrn Leitner telefoniert.
+dev-S4-052	1	S4_NESTED_ENTITIES	VALIDATION	99.266	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S4-052	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Steiner telefoniert.
+dev-S4-052	2	S4_NESTED_ENTITIES	VALIDATION	5.485	0	-	NONE	0	Der Kollege Bauer hat mir geschrieben.
+dev-S4-052	2	S4_NESTED_ENTITIES	VALIDATION	19.756	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-052	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Schmid telefoniert.
+dev-S4-052	3	S4_NESTED_ENTITIES	VALIDATION	11.177	0	-	NONE	0	Die Nachbarin Eder hat mir eine Nachricht geschickt.
+dev-S4-052	3	S4_NESTED_ENTITIES	VALIDATION	38.591	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S4-053	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Moser hat mir geschrieben.
+dev-S4-053	0	S4_NESTED_ENTITIES	VALIDATION	11362.713	0	-	NONE	0	Der Kollege Leitner hat mir geschrieben.
+dev-S4-053	0	S4_NESTED_ENTITIES	VALIDATION	11372.181	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-053	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Weber telefoniert.
+dev-S4-053	1	S4_NESTED_ENTITIES	VALIDATION	9769.646	0	-	NONE	0	Die Nachbarin Schwarz hat mir eine Nachricht geschickt.
+dev-S4-053	1	S4_NESTED_ENTITIES	VALIDATION	9776.15	1	PROCEED	NONE	1	Hat sie sich schon gemeldet?
+dev-S4-053	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Steiner telefoniert.
+dev-S4-053	2	S4_NESTED_ENTITIES	VALIDATION	10444.398	0	-	NONE	0	Ich hab vorhin mit Herrn Wagner telefoniert.
+dev-S4-053	2	S4_NESTED_ENTITIES	VALIDATION	10460.845	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-053	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Steiner hat mir geschrieben.
+dev-S4-053	3	S4_NESTED_ENTITIES	VALIDATION	10886.261	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-053	3	S4_NESTED_ENTITIES	VALIDATION	10898.618	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-054	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S4-054	0	S4_NESTED_ENTITIES	VALIDATION	22.734	0	-	NONE	0	Der Kollege Huber hat mir geschrieben.
+dev-S4-054	0	S4_NESTED_ENTITIES	VALIDATION	131.069	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-054	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S4-054	1	S4_NESTED_ENTITIES	VALIDATION	96.916	0	-	NONE	0	Ich hab vorhin mit Frau Schwarz telefoniert.
+dev-S4-054	1	S4_NESTED_ENTITIES	VALIDATION	103.764	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-054	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S4-054	2	S4_NESTED_ENTITIES	VALIDATION	12.18	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-054	2	S4_NESTED_ENTITIES	VALIDATION	50.196	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-054	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S4-054	3	S4_NESTED_ENTITIES	VALIDATION	114.283	0	-	NONE	0	Ich hab vorhin mit Frau Schmid telefoniert.
+dev-S4-054	3	S4_NESTED_ENTITIES	VALIDATION	209.374	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-055	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Hofer kümmert sich um das Auto.
+dev-S4-055	0	S4_NESTED_ENTITIES	VALIDATION	6.085	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-055	0	S4_NESTED_ENTITIES	VALIDATION	37.519	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-055	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Hofer kümmert sich um das Auto.
+dev-S4-055	1	S4_NESTED_ENTITIES	VALIDATION	75.434	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-055	1	S4_NESTED_ENTITIES	VALIDATION	149.132	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-055	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Gruber kümmert sich um das Auto.
+dev-S4-055	2	S4_NESTED_ENTITIES	VALIDATION	91.118	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-055	2	S4_NESTED_ENTITIES	VALIDATION	100.147	1	PROCEED	NONE	0	Was hat er gesagt?
+dev-S4-055	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Steiner kümmert sich um das Auto.
+dev-S4-055	3	S4_NESTED_ENTITIES	VALIDATION	73.159	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-055	3	S4_NESTED_ENTITIES	VALIDATION	106.449	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-056	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Brunner telefoniert.
+dev-S4-056	0	S4_NESTED_ENTITIES	VALIDATION	56.732	0	-	NONE	0	Ich hab vorhin mit Frau Winkler telefoniert.
+dev-S4-056	0	S4_NESTED_ENTITIES	VALIDATION	79.041	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat sie gesagt?
+dev-S4-056	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Huber telefoniert.
+dev-S4-056	1	S4_NESTED_ENTITIES	VALIDATION	42.451	0	-	NONE	0	Der Kollege Hofer hat mir geschrieben.
+dev-S4-056	1	S4_NESTED_ENTITIES	VALIDATION	98.254	1	CLARIFY	AMBIGUOUS_ENTITY	0	Was hat er gesagt?
+dev-S4-056	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Kollege Berger hat mir geschrieben.
+dev-S4-056	2	S4_NESTED_ENTITIES	VALIDATION	4.514	0	-	NONE	0	Ich hab vorhin mit Herrn Moser telefoniert.
+dev-S4-056	2	S4_NESTED_ENTITIES	VALIDATION	23.482	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat er sich schon gemeldet?
+dev-S4-056	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Frau Weber telefoniert.
+dev-S4-056	3	S4_NESTED_ENTITIES	VALIDATION	32.379	0	-	NONE	0	Die Nachbarin Brunner hat mir eine Nachricht geschickt.
+dev-S4-056	3	S4_NESTED_ENTITIES	VALIDATION	54.308	1	CLARIFY	AMBIGUOUS_ENTITY	0	Hat sie sich schon gemeldet?
+dev-S4-057	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Hofer telefoniert.
+dev-S4-057	0	S4_NESTED_ENTITIES	VALIDATION	12679.037	0	-	NONE	0	Der Kollege Gruber hat mir geschrieben.
+dev-S4-057	0	S4_NESTED_ENTITIES	VALIDATION	12683.881	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S4-057	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Die Nachbarin Mayr hat mir eine Nachricht geschickt.
+dev-S4-057	1	S4_NESTED_ENTITIES	VALIDATION	10323.716	0	-	NONE	0	Ich hab vorhin mit Frau Fuchs telefoniert.
+dev-S4-057	1	S4_NESTED_ENTITIES	VALIDATION	10391.466	1	PROCEED	NONE	1	Was hat sie gesagt?
+dev-S4-057	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Leitner telefoniert.
+dev-S4-057	2	S4_NESTED_ENTITIES	VALIDATION	9958.354	0	-	NONE	0	Der Kollege Moser hat mir geschrieben.
+dev-S4-057	2	S4_NESTED_ENTITIES	VALIDATION	9985.149	1	PROCEED	NONE	1	Was hat er gesagt?
+dev-S4-057	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Ich hab vorhin mit Herrn Steiner telefoniert.
+dev-S4-057	3	S4_NESTED_ENTITIES	VALIDATION	11954.943	0	-	NONE	0	Ich hab vorhin mit Herrn Berger telefoniert.
+dev-S4-057	3	S4_NESTED_ENTITIES	VALIDATION	12004.828	1	PROCEED	NONE	1	Hat er sich schon gemeldet?
+dev-S4-058	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-058	0	S4_NESTED_ENTITIES	VALIDATION	88.227	0	-	NONE	0	Ich hab vorhin mit Herrn Wagner telefoniert.
+dev-S4-058	0	S4_NESTED_ENTITIES	VALIDATION	158.695	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-058	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S4-058	1	S4_NESTED_ENTITIES	VALIDATION	26.536	0	-	NONE	0	Die Nachbarin Wolf hat mir eine Nachricht geschickt.
+dev-S4-058	1	S4_NESTED_ENTITIES	VALIDATION	54.405	1	PROCEED	NONE	0	Hat sie sich schon gemeldet?
+dev-S4-058	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S4-058	2	S4_NESTED_ENTITIES	VALIDATION	3.329	0	-	NONE	0	Ich hab vorhin mit Herrn Pichler telefoniert.
+dev-S4-058	2	S4_NESTED_ENTITIES	VALIDATION	12.51	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-058	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S4-058	3	S4_NESTED_ENTITIES	VALIDATION	11.067	0	-	NONE	0	Die Nachbarin Winkler hat mir eine Nachricht geschickt.
+dev-S4-058	3	S4_NESTED_ENTITIES	VALIDATION	14.737	1	PROCEED	NONE	0	Was hat sie gesagt?
+dev-S4-059	0	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Pichler kümmert sich um das Auto.
+dev-S4-059	0	S4_NESTED_ENTITIES	VALIDATION	38.188	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-059	0	S4_NESTED_ENTITIES	VALIDATION	55.621	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-059	1	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Gruber kümmert sich um das Auto.
+dev-S4-059	1	S4_NESTED_ENTITIES	VALIDATION	114.688	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-059	1	S4_NESTED_ENTITIES	VALIDATION	129.012	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-059	2	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Bauer kümmert sich um das Auto.
+dev-S4-059	2	S4_NESTED_ENTITIES	VALIDATION	16.151	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-059	2	S4_NESTED_ENTITIES	VALIDATION	20.428	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S4-059	3	S4_NESTED_ENTITIES	VALIDATION	0.0	0	-	NONE	0	Der Mechaniker Hofer kümmert sich um das Auto.
+dev-S4-059	3	S4_NESTED_ENTITIES	VALIDATION	117.405	0	-	NONE	0	Die Reparatur der Heizung ist für Montag geplant.
+dev-S4-059	3	S4_NESTED_ENTITIES	VALIDATION	123.512	1	PROCEED	NONE	0	Hat er sich schon gemeldet?
+dev-S5-040	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-040	0	S5_SAME_SIGNALS_DT	VALIDATION	6.701	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-040	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-040	1	S5_SAME_SIGNALS_DT	VALIDATION	9.387	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-040	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-040	2	S5_SAME_SIGNALS_DT	VALIDATION	8296.441	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-040	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-040	3	S5_SAME_SIGNALS_DT	VALIDATION	9854.736	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-041	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S5-041	0	S5_SAME_SIGNALS_DT	VALIDATION	3.058	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-041	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S5-041	1	S5_SAME_SIGNALS_DT	VALIDATION	4.646	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-041	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S5-041	2	S5_SAME_SIGNALS_DT	VALIDATION	7823.349	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-041	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer brennt noch das Licht.
+dev-S5-041	3	S5_SAME_SIGNALS_DT	VALIDATION	8978.277	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-042	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-042	0	S5_SAME_SIGNALS_DT	VALIDATION	3.845	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-042	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-042	1	S5_SAME_SIGNALS_DT	VALIDATION	8.951	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-042	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-042	2	S5_SAME_SIGNALS_DT	VALIDATION	8809.312	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-042	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-042	3	S5_SAME_SIGNALS_DT	VALIDATION	7479.764	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-043	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-043	0	S5_SAME_SIGNALS_DT	VALIDATION	4.585	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-043	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-043	1	S5_SAME_SIGNALS_DT	VALIDATION	9.412	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-043	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-043	2	S5_SAME_SIGNALS_DT	VALIDATION	7557.271	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-043	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-043	3	S5_SAME_SIGNALS_DT	VALIDATION	9844.485	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-044	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-044	0	S5_SAME_SIGNALS_DT	VALIDATION	9.137	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-044	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-044	1	S5_SAME_SIGNALS_DT	VALIDATION	7.564	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-044	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-044	2	S5_SAME_SIGNALS_DT	VALIDATION	7522.756	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-044	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-044	3	S5_SAME_SIGNALS_DT	VALIDATION	10530.028	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-045	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-045	0	S5_SAME_SIGNALS_DT	VALIDATION	5.964	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-045	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-045	1	S5_SAME_SIGNALS_DT	VALIDATION	3.962	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-045	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-045	2	S5_SAME_SIGNALS_DT	VALIDATION	8849.852	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-045	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-045	3	S5_SAME_SIGNALS_DT	VALIDATION	10419.012	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-046	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-046	0	S5_SAME_SIGNALS_DT	VALIDATION	3.699	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-046	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-046	1	S5_SAME_SIGNALS_DT	VALIDATION	8.648	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-046	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-046	2	S5_SAME_SIGNALS_DT	VALIDATION	8933.032	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-046	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-046	3	S5_SAME_SIGNALS_DT	VALIDATION	7759.499	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-047	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-047	0	S5_SAME_SIGNALS_DT	VALIDATION	4.399	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-047	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-047	1	S5_SAME_SIGNALS_DT	VALIDATION	9.741	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-047	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-047	2	S5_SAME_SIGNALS_DT	VALIDATION	7655.445	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-047	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-047	3	S5_SAME_SIGNALS_DT	VALIDATION	9724.759	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-048	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-048	0	S5_SAME_SIGNALS_DT	VALIDATION	8.149	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-048	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-048	1	S5_SAME_SIGNALS_DT	VALIDATION	7.295	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-048	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-048	2	S5_SAME_SIGNALS_DT	VALIDATION	7620.857	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-048	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-048	3	S5_SAME_SIGNALS_DT	VALIDATION	10652.044	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-049	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-049	0	S5_SAME_SIGNALS_DT	VALIDATION	7.176	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-049	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-049	1	S5_SAME_SIGNALS_DT	VALIDATION	3.271	1	PROCEED	NONE	0	Und wie war das zweite davon?
+dev-S5-049	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-049	2	S5_SAME_SIGNALS_DT	VALIDATION	8973.694	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-049	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-049	3	S5_SAME_SIGNALS_DT	VALIDATION	10298.41	1	CLARIFY	STALE_GAP	0	Und wie war das zweite davon?
+dev-S5-050	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-050	0	S5_SAME_SIGNALS_DT	VALIDATION	5.666	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-050	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-050	1	S5_SAME_SIGNALS_DT	VALIDATION	6.204	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-050	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-050	2	S5_SAME_SIGNALS_DT	VALIDATION	7787.989	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-050	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-050	3	S5_SAME_SIGNALS_DT	VALIDATION	8514.879	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-051	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-051	0	S5_SAME_SIGNALS_DT	VALIDATION	3.617	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-051	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-051	1	S5_SAME_SIGNALS_DT	VALIDATION	7.429	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-051	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-051	2	S5_SAME_SIGNALS_DT	VALIDATION	8126.095	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-051	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-051	3	S5_SAME_SIGNALS_DT	VALIDATION	10587.628	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-052	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-052	0	S5_SAME_SIGNALS_DT	VALIDATION	3.108	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-052	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-052	1	S5_SAME_SIGNALS_DT	VALIDATION	9.555	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-052	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-052	2	S5_SAME_SIGNALS_DT	VALIDATION	8137.22	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-052	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-052	3	S5_SAME_SIGNALS_DT	VALIDATION	9789.247	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-053	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-053	0	S5_SAME_SIGNALS_DT	VALIDATION	6.802	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-053	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-053	1	S5_SAME_SIGNALS_DT	VALIDATION	3.343	1	PROCEED	NONE	0	Was war damit nochmal?
+dev-S5-053	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-053	2	S5_SAME_SIGNALS_DT	VALIDATION	7777.449	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-053	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer brennt noch das Licht.
+dev-S5-053	3	S5_SAME_SIGNALS_DT	VALIDATION	9154.708	1	CLARIFY	STALE_GAP	0	Was war damit nochmal?
+dev-S5-054	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-054	0	S5_SAME_SIGNALS_DT	VALIDATION	6.465	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-054	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-054	1	S5_SAME_SIGNALS_DT	VALIDATION	5.273	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-054	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-054	2	S5_SAME_SIGNALS_DT	VALIDATION	10022.913	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-054	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S5-054	3	S5_SAME_SIGNALS_DT	VALIDATION	8841.902	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-055	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-055	0	S5_SAME_SIGNALS_DT	VALIDATION	5.016	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-055	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-055	1	S5_SAME_SIGNALS_DT	VALIDATION	8.217	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-055	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-055	2	S5_SAME_SIGNALS_DT	VALIDATION	8107.309	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-055	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S5-055	3	S5_SAME_SIGNALS_DT	VALIDATION	9304.171	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-056	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-056	0	S5_SAME_SIGNALS_DT	VALIDATION	8.592	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-056	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-056	1	S5_SAME_SIGNALS_DT	VALIDATION	7.117	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-056	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-056	2	S5_SAME_SIGNALS_DT	VALIDATION	7392.073	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-056	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S5-056	3	S5_SAME_SIGNALS_DT	VALIDATION	10749.496	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-057	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-057	0	S5_SAME_SIGNALS_DT	VALIDATION	6.053	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-057	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-057	1	S5_SAME_SIGNALS_DT	VALIDATION	3.73	1	PROCEED	NONE	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-057	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-057	2	S5_SAME_SIGNALS_DT	VALIDATION	8477.436	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-057	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S5-057	3	S5_SAME_SIGNALS_DT	VALIDATION	10769.022	1	CLARIFY	STALE_GAP	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S5-058	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-058	0	S5_SAME_SIGNALS_DT	VALIDATION	7.265	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-058	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-058	1	S5_SAME_SIGNALS_DT	VALIDATION	4.363	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-058	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-058	2	S5_SAME_SIGNALS_DT	VALIDATION	10675.764	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-058	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S5-058	3	S5_SAME_SIGNALS_DT	VALIDATION	9287.451	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-059	0	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-059	0	S5_SAME_SIGNALS_DT	VALIDATION	4.197	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-059	1	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-059	1	S5_SAME_SIGNALS_DT	VALIDATION	6.38	1	PROCEED	NONE	0	Ist das dort noch an?
+dev-S5-059	2	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-059	2	S5_SAME_SIGNALS_DT	VALIDATION	8553.252	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S5-059	3	S5_SAME_SIGNALS_DT	VALIDATION	0.0	0	-	NONE	0	Im Wohnzimmer läuft noch der Fernseher.
+dev-S5-059	3	S5_SAME_SIGNALS_DT	VALIDATION	10069.9	1	CLARIFY	STALE_GAP	0	Ist das dort noch an?
+dev-S6-040	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-040	0	S6_PRESENCE_DRIFT	VALIDATION	32.549	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-040	0	S6_PRESENCE_DRIFT	VALIDATION	92.904	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-040	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-040	1	S6_PRESENCE_DRIFT	VALIDATION	25.587	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-040	1	S6_PRESENCE_DRIFT	VALIDATION	112.121	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-040	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-040	2	S6_PRESENCE_DRIFT	VALIDATION	38.373	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-040	2	S6_PRESENCE_DRIFT	VALIDATION	45.181	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-040	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-040	3	S6_PRESENCE_DRIFT	VALIDATION	19.41	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-040	3	S6_PRESENCE_DRIFT	VALIDATION	38.901	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-041	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-041	0	S6_PRESENCE_DRIFT	VALIDATION	9.892	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S6-041	0	S6_PRESENCE_DRIFT	VALIDATION	20.921	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-041	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-041	1	S6_PRESENCE_DRIFT	VALIDATION	42.305	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-041	1	S6_PRESENCE_DRIFT	VALIDATION	116.691	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-041	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-041	2	S6_PRESENCE_DRIFT	VALIDATION	20.931	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-041	2	S6_PRESENCE_DRIFT	VALIDATION	88.177	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-041	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-041	3	S6_PRESENCE_DRIFT	VALIDATION	35.099	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-041	3	S6_PRESENCE_DRIFT	VALIDATION	55.897	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-042	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-042	0	S6_PRESENCE_DRIFT	VALIDATION	46.375	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-042	0	S6_PRESENCE_DRIFT	VALIDATION	60.802	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-042	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-042	1	S6_PRESENCE_DRIFT	VALIDATION	40.926	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-042	1	S6_PRESENCE_DRIFT	VALIDATION	51.282	1	PROCEED	NONE	0	Mach sie bitte auf.
+dev-S6-042	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S6-042	2	S6_PRESENCE_DRIFT	VALIDATION	85.3	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-042	2	S6_PRESENCE_DRIFT	VALIDATION	172.294	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-042	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-042	3	S6_PRESENCE_DRIFT	VALIDATION	76.823	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-042	3	S6_PRESENCE_DRIFT	VALIDATION	137.506	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-043	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-043	0	S6_PRESENCE_DRIFT	VALIDATION	1090.681	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-043	0	S6_PRESENCE_DRIFT	VALIDATION	1094.256	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-043	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-043	1	S6_PRESENCE_DRIFT	VALIDATION	971.494	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-043	1	S6_PRESENCE_DRIFT	VALIDATION	982.544	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-043	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-043	2	S6_PRESENCE_DRIFT	VALIDATION	950.535	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-043	2	S6_PRESENCE_DRIFT	VALIDATION	963.116	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-043	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-043	3	S6_PRESENCE_DRIFT	VALIDATION	859.847	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-043	3	S6_PRESENCE_DRIFT	VALIDATION	927.457	1	PROCEED	NONE	1	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-044	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-044	0	S6_PRESENCE_DRIFT	VALIDATION	83.608	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-044	0	S6_PRESENCE_DRIFT	VALIDATION	96.43	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-044	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-044	1	S6_PRESENCE_DRIFT	VALIDATION	10.548	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-044	1	S6_PRESENCE_DRIFT	VALIDATION	22.139	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-044	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-044	2	S6_PRESENCE_DRIFT	VALIDATION	112.269	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-044	2	S6_PRESENCE_DRIFT	VALIDATION	115.854	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-044	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-044	3	S6_PRESENCE_DRIFT	VALIDATION	8.847	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-044	3	S6_PRESENCE_DRIFT	VALIDATION	49.783	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-045	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-045	0	S6_PRESENCE_DRIFT	VALIDATION	14.196	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-045	0	S6_PRESENCE_DRIFT	VALIDATION	43.59	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-045	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-045	1	S6_PRESENCE_DRIFT	VALIDATION	102.582	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S6-045	1	S6_PRESENCE_DRIFT	VALIDATION	112.403	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-045	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-045	2	S6_PRESENCE_DRIFT	VALIDATION	8.145	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-045	2	S6_PRESENCE_DRIFT	VALIDATION	22.226	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-045	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-045	3	S6_PRESENCE_DRIFT	VALIDATION	76.977	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-045	3	S6_PRESENCE_DRIFT	VALIDATION	121.291	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-046	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-046	0	S6_PRESENCE_DRIFT	VALIDATION	52.738	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-046	0	S6_PRESENCE_DRIFT	VALIDATION	56.571	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-046	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-046	1	S6_PRESENCE_DRIFT	VALIDATION	46.649	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-046	1	S6_PRESENCE_DRIFT	VALIDATION	81.402	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-046	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S6-046	2	S6_PRESENCE_DRIFT	VALIDATION	11.563	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-046	2	S6_PRESENCE_DRIFT	VALIDATION	23.217	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-046	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-046	3	S6_PRESENCE_DRIFT	VALIDATION	10.321	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-046	3	S6_PRESENCE_DRIFT	VALIDATION	23.211	1	PROCEED	NONE	0	Mach sie bitte auf.
+dev-S6-047	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-047	0	S6_PRESENCE_DRIFT	VALIDATION	958.825	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-047	0	S6_PRESENCE_DRIFT	VALIDATION	973.934	1	PROCEED	NONE	1	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-047	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-047	1	S6_PRESENCE_DRIFT	VALIDATION	1124.622	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-047	1	S6_PRESENCE_DRIFT	VALIDATION	1154.069	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-047	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-047	2	S6_PRESENCE_DRIFT	VALIDATION	1100.053	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-047	2	S6_PRESENCE_DRIFT	VALIDATION	1104.262	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-047	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-047	3	S6_PRESENCE_DRIFT	VALIDATION	739.047	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-047	3	S6_PRESENCE_DRIFT	VALIDATION	753.203	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-048	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-048	0	S6_PRESENCE_DRIFT	VALIDATION	18.48	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-048	0	S6_PRESENCE_DRIFT	VALIDATION	23.059	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-048	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-048	1	S6_PRESENCE_DRIFT	VALIDATION	37.892	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-048	1	S6_PRESENCE_DRIFT	VALIDATION	69.925	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-048	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-048	2	S6_PRESENCE_DRIFT	VALIDATION	25.358	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-048	2	S6_PRESENCE_DRIFT	VALIDATION	41.764	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-048	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-048	3	S6_PRESENCE_DRIFT	VALIDATION	31.1	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-048	3	S6_PRESENCE_DRIFT	VALIDATION	40.187	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-049	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-049	0	S6_PRESENCE_DRIFT	VALIDATION	98.19	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-049	0	S6_PRESENCE_DRIFT	VALIDATION	121.878	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-049	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-049	1	S6_PRESENCE_DRIFT	VALIDATION	28.552	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-049	1	S6_PRESENCE_DRIFT	VALIDATION	64.241	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-049	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-049	2	S6_PRESENCE_DRIFT	VALIDATION	36.849	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S6-049	2	S6_PRESENCE_DRIFT	VALIDATION	40.785	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-049	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-049	3	S6_PRESENCE_DRIFT	VALIDATION	21.895	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S6-049	3	S6_PRESENCE_DRIFT	VALIDATION	29.82	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-050	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-050	0	S6_PRESENCE_DRIFT	VALIDATION	11.009	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-050	0	S6_PRESENCE_DRIFT	VALIDATION	15.907	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-050	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S6-050	1	S6_PRESENCE_DRIFT	VALIDATION	9.946	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-050	1	S6_PRESENCE_DRIFT	VALIDATION	37.157	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-050	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-050	2	S6_PRESENCE_DRIFT	VALIDATION	21.335	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-050	2	S6_PRESENCE_DRIFT	VALIDATION	53.548	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-050	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S6-050	3	S6_PRESENCE_DRIFT	VALIDATION	18.77	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-050	3	S6_PRESENCE_DRIFT	VALIDATION	23.375	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-051	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-051	0	S6_PRESENCE_DRIFT	VALIDATION	1431.434	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-051	0	S6_PRESENCE_DRIFT	VALIDATION	1478.613	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-051	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-051	1	S6_PRESENCE_DRIFT	VALIDATION	736.321	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-051	1	S6_PRESENCE_DRIFT	VALIDATION	760.052	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-051	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-051	2	S6_PRESENCE_DRIFT	VALIDATION	1498.221	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-051	2	S6_PRESENCE_DRIFT	VALIDATION	1503.447	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-051	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-051	3	S6_PRESENCE_DRIFT	VALIDATION	1347.53	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-051	3	S6_PRESENCE_DRIFT	VALIDATION	1351.488	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-052	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-052	0	S6_PRESENCE_DRIFT	VALIDATION	19.78	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-052	0	S6_PRESENCE_DRIFT	VALIDATION	23.85	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-052	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-052	1	S6_PRESENCE_DRIFT	VALIDATION	39.889	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-052	1	S6_PRESENCE_DRIFT	VALIDATION	76.786	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-052	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-052	2	S6_PRESENCE_DRIFT	VALIDATION	23.702	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-052	2	S6_PRESENCE_DRIFT	VALIDATION	41.767	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-052	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-052	3	S6_PRESENCE_DRIFT	VALIDATION	29.558	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-052	3	S6_PRESENCE_DRIFT	VALIDATION	37.736	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-053	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-053	0	S6_PRESENCE_DRIFT	VALIDATION	3.296	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S6-053	0	S6_PRESENCE_DRIFT	VALIDATION	16.016	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-053	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-053	1	S6_PRESENCE_DRIFT	VALIDATION	27.087	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S6-053	1	S6_PRESENCE_DRIFT	VALIDATION	58.351	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-053	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-053	2	S6_PRESENCE_DRIFT	VALIDATION	34.504	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-053	2	S6_PRESENCE_DRIFT	VALIDATION	38.973	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-053	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-053	3	S6_PRESENCE_DRIFT	VALIDATION	23.09	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-053	3	S6_PRESENCE_DRIFT	VALIDATION	31.943	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-054	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S6-054	0	S6_PRESENCE_DRIFT	VALIDATION	6.46	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-054	0	S6_PRESENCE_DRIFT	VALIDATION	16.4	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-054	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-054	1	S6_PRESENCE_DRIFT	VALIDATION	7.349	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-054	1	S6_PRESENCE_DRIFT	VALIDATION	21.599	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-054	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S6-054	2	S6_PRESENCE_DRIFT	VALIDATION	40.585	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-054	2	S6_PRESENCE_DRIFT	VALIDATION	77.283	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-054	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S6-054	3	S6_PRESENCE_DRIFT	VALIDATION	45.452	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-054	3	S6_PRESENCE_DRIFT	VALIDATION	49.499	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-055	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-055	0	S6_PRESENCE_DRIFT	VALIDATION	772.823	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-055	0	S6_PRESENCE_DRIFT	VALIDATION	814.177	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-055	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-055	1	S6_PRESENCE_DRIFT	VALIDATION	1371.735	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-055	1	S6_PRESENCE_DRIFT	VALIDATION	1384.526	1	PROCEED	NONE	1	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-055	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-055	2	S6_PRESENCE_DRIFT	VALIDATION	1402.623	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-055	2	S6_PRESENCE_DRIFT	VALIDATION	1414.187	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-055	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-055	3	S6_PRESENCE_DRIFT	VALIDATION	951.496	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-055	3	S6_PRESENCE_DRIFT	VALIDATION	955.941	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-056	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-056	0	S6_PRESENCE_DRIFT	VALIDATION	80.299	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-056	0	S6_PRESENCE_DRIFT	VALIDATION	90.881	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-056	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-056	1	S6_PRESENCE_DRIFT	VALIDATION	9.837	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-056	1	S6_PRESENCE_DRIFT	VALIDATION	21.543	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-056	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-056	2	S6_PRESENCE_DRIFT	VALIDATION	92.969	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-056	2	S6_PRESENCE_DRIFT	VALIDATION	130.747	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-056	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-056	3	S6_PRESENCE_DRIFT	VALIDATION	7.544	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-056	3	S6_PRESENCE_DRIFT	VALIDATION	10.852	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-057	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-057	0	S6_PRESENCE_DRIFT	VALIDATION	25.389	0	-	NONE	0	So, ich bin wieder daheim.
+dev-S6-057	0	S6_PRESENCE_DRIFT	VALIDATION	90.252	1	CLARIFY	PRESENCE_DRIFT	0	Mach sie bitte auf.
+dev-S6-057	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-057	1	S6_PRESENCE_DRIFT	VALIDATION	110.152	0	-	NONE	0	Ich bin jetzt unterwegs zur Arbeit.
+dev-S6-057	1	S6_PRESENCE_DRIFT	VALIDATION	123.968	1	CLARIFY	PRESENCE_DRIFT	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-057	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-057	2	S6_PRESENCE_DRIFT	VALIDATION	8.495	0	-	NONE	0	Ich steig gerade in den Zug.
+dev-S6-057	2	S6_PRESENCE_DRIFT	VALIDATION	18.131	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-057	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-057	3	S6_PRESENCE_DRIFT	VALIDATION	90.416	0	-	NONE	0	Ich sitz jetzt im Auto.
+dev-S6-057	3	S6_PRESENCE_DRIFT	VALIDATION	93.472	1	CLARIFY	PRESENCE_DRIFT	0	Schalt ihn bitte ab.
+dev-S6-058	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S6-058	0	S6_PRESENCE_DRIFT	VALIDATION	30.957	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-058	0	S6_PRESENCE_DRIFT	VALIDATION	111.333	1	PROCEED	NONE	0	Mach sie bitte auf.
+dev-S6-058	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-058	1	S6_PRESENCE_DRIFT	VALIDATION	34.483	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-058	1	S6_PRESENCE_DRIFT	VALIDATION	105.082	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-058	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S6-058	2	S6_PRESENCE_DRIFT	VALIDATION	101.564	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-058	2	S6_PRESENCE_DRIFT	VALIDATION	113.29	1	PROCEED	NONE	0	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-058	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S6-058	3	S6_PRESENCE_DRIFT	VALIDATION	114.924	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-058	3	S6_PRESENCE_DRIFT	VALIDATION	125.525	1	PROCEED	NONE	0	Schalt ihn bitte ab.
+dev-S6-059	0	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-059	0	S6_PRESENCE_DRIFT	VALIDATION	1078.49	0	-	NONE	0	Das Garagentor ist offen.
+dev-S6-059	0	S6_PRESENCE_DRIFT	VALIDATION	1098.917	1	PROCEED	NONE	1	Öffne die Garagen-App und mach das Tor zu.
+dev-S6-059	1	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Da klingelt jemand an der Tür.
+dev-S6-059	1	S6_PRESENCE_DRIFT	VALIDATION	1005.725	0	-	NONE	0	Die Haustür ist abgesperrt.
+dev-S6-059	1	S6_PRESENCE_DRIFT	VALIDATION	1070.947	1	PROCEED	NONE	1	Mach sie bitte auf.
+dev-S6-059	2	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Ich glaub, da ist noch wer im Haus.
+dev-S6-059	2	S6_PRESENCE_DRIFT	VALIDATION	1029.93	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-059	2	S6_PRESENCE_DRIFT	VALIDATION	1120.782	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S6-059	3	S6_PRESENCE_DRIFT	VALIDATION	0.0	0	-	NONE	0	Wir haben gerade Besuch.
+dev-S6-059	3	S6_PRESENCE_DRIFT	VALIDATION	793.476	0	-	NONE	0	Der Herd in der Küche ist noch an.
+dev-S6-059	3	S6_PRESENCE_DRIFT	VALIDATION	803.129	1	PROCEED	NONE	1	Schalt ihn bitte ab.
+dev-S7-040	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-040	0	S7_AMBIGUOUS	VALIDATION	90.103	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-040	0	S7_AMBIGUOUS	VALIDATION	170.208	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-040	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-040	1	S7_AMBIGUOUS	VALIDATION	23.976	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-040	1	S7_AMBIGUOUS	VALIDATION	49.521	1	CLARIFY	NO_REFERENT	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S7-040	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-040	2	S7_AMBIGUOUS	VALIDATION	75.711	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-040	2	S7_AMBIGUOUS	VALIDATION	84.634	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-040	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-040	3	S7_AMBIGUOUS	VALIDATION	11.394	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-040	3	S7_AMBIGUOUS	VALIDATION	15.061	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-041	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-041	0	S7_AMBIGUOUS	VALIDATION	20.679	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-041	0	S7_AMBIGUOUS	VALIDATION	108.651	1	CLARIFY	NO_REFERENT	0	Was hat sie gesagt?
+dev-S7-041	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-041	1	S7_AMBIGUOUS	VALIDATION	65.806	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-041	1	S7_AMBIGUOUS	VALIDATION	163.116	1	CLARIFY	NO_REFERENT	0	Hat sie sich schon gemeldet?
+dev-S7-041	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-041	2	S7_AMBIGUOUS	VALIDATION	15.548	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-041	2	S7_AMBIGUOUS	VALIDATION	23.442	1	CLARIFY	NO_REFERENT	0	Hat sie sich schon gemeldet?
+dev-S7-041	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-041	3	S7_AMBIGUOUS	VALIDATION	77.713	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-041	3	S7_AMBIGUOUS	VALIDATION	105.366	1	CLARIFY	NO_REFERENT	0	Hat sie sich schon gemeldet?
+dev-S7-042	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-042	0	S7_AMBIGUOUS	VALIDATION	108.046	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-042	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-042	1	S7_AMBIGUOUS	VALIDATION	28.227	1	PROCEED	NONE	0	Erklär mir kurz, was Photosynthese ist.
+dev-S7-042	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-042	2	S7_AMBIGUOUS	VALIDATION	57.351	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-042	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-042	3	S7_AMBIGUOUS	VALIDATION	38.241	1	PROCEED	NONE	0	Wie lange kocht ein weiches Ei?
+dev-S7-043	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S7-043	0	S7_AMBIGUOUS	VALIDATION	3590.817	1	PROCEED	NONE	1	Wie heißt die Hauptstadt von Kanada?
+dev-S7-043	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S7-043	1	S7_AMBIGUOUS	VALIDATION	3765.389	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-043	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Keller läuft noch der Fernseher.
+dev-S7-043	2	S7_AMBIGUOUS	VALIDATION	4846.867	1	PROCEED	NONE	1	Erklär mir kurz, was Photosynthese ist.
+dev-S7-043	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S7-043	3	S7_AMBIGUOUS	VALIDATION	5079.577	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?
+dev-S7-044	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-044	0	S7_AMBIGUOUS	VALIDATION	10.426	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-044	0	S7_AMBIGUOUS	VALIDATION	26.598	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-044	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-044	1	S7_AMBIGUOUS	VALIDATION	98.894	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-044	1	S7_AMBIGUOUS	VALIDATION	149.15	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-044	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-044	2	S7_AMBIGUOUS	VALIDATION	12.275	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-044	2	S7_AMBIGUOUS	VALIDATION	16.805	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-044	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-044	3	S7_AMBIGUOUS	VALIDATION	58.857	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-044	3	S7_AMBIGUOUS	VALIDATION	67.439	1	CLARIFY	NO_REFERENT	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S7-045	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-045	0	S7_AMBIGUOUS	VALIDATION	113.026	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-045	0	S7_AMBIGUOUS	VALIDATION	130.282	1	CLARIFY	NO_REFERENT	0	Was hat sie gesagt?
+dev-S7-045	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-045	1	S7_AMBIGUOUS	VALIDATION	14.328	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-045	1	S7_AMBIGUOUS	VALIDATION	26.716	1	CLARIFY	NO_REFERENT	0	Hat sie sich schon gemeldet?
+dev-S7-045	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-045	2	S7_AMBIGUOUS	VALIDATION	3.799	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-045	2	S7_AMBIGUOUS	VALIDATION	7.693	1	CLARIFY	NO_REFERENT	0	Hat sie sich schon gemeldet?
+dev-S7-045	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-045	3	S7_AMBIGUOUS	VALIDATION	11.916	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-045	3	S7_AMBIGUOUS	VALIDATION	67.909	1	CLARIFY	NO_REFERENT	0	Was hat sie gesagt?
+dev-S7-046	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-046	0	S7_AMBIGUOUS	VALIDATION	85.241	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-046	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-046	1	S7_AMBIGUOUS	VALIDATION	10.519	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-046	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-046	2	S7_AMBIGUOUS	VALIDATION	3.235	1	PROCEED	NONE	0	Wie lange kocht ein weiches Ei?
+dev-S7-046	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-046	3	S7_AMBIGUOUS	VALIDATION	12.157	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-047	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S7-047	0	S7_AMBIGUOUS	VALIDATION	4303.548	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?
+dev-S7-047	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S7-047	1	S7_AMBIGUOUS	VALIDATION	4522.724	1	PROCEED	NONE	1	Erklär mir kurz, was Photosynthese ist.
+dev-S7-047	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S7-047	2	S7_AMBIGUOUS	VALIDATION	9213.004	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-047	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S7-047	3	S7_AMBIGUOUS	VALIDATION	9620.036	1	PROCEED	NONE	1	Wie heißt die Hauptstadt von Kanada?
+dev-S7-048	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-048	0	S7_AMBIGUOUS	VALIDATION	20.963	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-048	0	S7_AMBIGUOUS	VALIDATION	65.211	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-048	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-048	1	S7_AMBIGUOUS	VALIDATION	79.064	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-048	1	S7_AMBIGUOUS	VALIDATION	100.767	1	CLARIFY	NO_REFERENT	0	Ist das dort noch an?
+dev-S7-048	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-048	2	S7_AMBIGUOUS	VALIDATION	15.34	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-048	2	S7_AMBIGUOUS	VALIDATION	25.165	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-048	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-048	3	S7_AMBIGUOUS	VALIDATION	3.181	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-048	3	S7_AMBIGUOUS	VALIDATION	7.208	1	CLARIFY	NO_REFERENT	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S7-049	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-049	0	S7_AMBIGUOUS	VALIDATION	89.07	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-049	0	S7_AMBIGUOUS	VALIDATION	128.786	1	CLARIFY	NO_REFERENT	0	Hat er sich schon gemeldet?
+dev-S7-049	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-049	1	S7_AMBIGUOUS	VALIDATION	18.166	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-049	1	S7_AMBIGUOUS	VALIDATION	23.844	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-049	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-049	2	S7_AMBIGUOUS	VALIDATION	76.609	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-049	2	S7_AMBIGUOUS	VALIDATION	87.876	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-049	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-049	3	S7_AMBIGUOUS	VALIDATION	23.616	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-049	3	S7_AMBIGUOUS	VALIDATION	43.957	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-050	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-050	0	S7_AMBIGUOUS	VALIDATION	11.065	1	PROCEED	NONE	0	Wie lange kocht ein weiches Ei?
+dev-S7-050	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-050	1	S7_AMBIGUOUS	VALIDATION	41.187	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-050	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-050	2	S7_AMBIGUOUS	VALIDATION	33.087	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-050	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-050	3	S7_AMBIGUOUS	VALIDATION	49.443	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-051	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Küche steht auf Stufe drei.
+dev-S7-051	0	S7_AMBIGUOUS	VALIDATION	8519.743	1	PROCEED	NONE	1	Wie heißt die Hauptstadt von Kanada?
+dev-S7-051	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Schlafzimmer läuft noch der Fernseher.
+dev-S7-051	1	S7_AMBIGUOUS	VALIDATION	8928.792	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-051	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S7-051	2	S7_AMBIGUOUS	VALIDATION	2975.591	1	PROCEED	NONE	1	Erklär mir kurz, was Photosynthese ist.
+dev-S7-051	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S7-051	3	S7_AMBIGUOUS	VALIDATION	3120.256	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?
+dev-S7-052	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-052	0	S7_AMBIGUOUS	VALIDATION	114.364	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-052	0	S7_AMBIGUOUS	VALIDATION	148.994	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-052	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-052	1	S7_AMBIGUOUS	VALIDATION	12.101	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-052	1	S7_AMBIGUOUS	VALIDATION	81.823	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-052	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-052	2	S7_AMBIGUOUS	VALIDATION	3.755	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-052	2	S7_AMBIGUOUS	VALIDATION	6.813	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-052	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-052	3	S7_AMBIGUOUS	VALIDATION	32.215	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-052	3	S7_AMBIGUOUS	VALIDATION	43.798	1	CLARIFY	NO_REFERENT	0	Ist das dort noch an?
+dev-S7-053	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-053	0	S7_AMBIGUOUS	VALIDATION	10.288	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-053	0	S7_AMBIGUOUS	VALIDATION	42.28	1	CLARIFY	NO_REFERENT	0	Hat er sich schon gemeldet?
+dev-S7-053	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-053	1	S7_AMBIGUOUS	VALIDATION	3.311	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-053	1	S7_AMBIGUOUS	VALIDATION	10.358	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-053	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-053	2	S7_AMBIGUOUS	VALIDATION	12.444	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-053	2	S7_AMBIGUOUS	VALIDATION	16.053	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-053	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-053	3	S7_AMBIGUOUS	VALIDATION	97.227	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-053	3	S7_AMBIGUOUS	VALIDATION	160.717	1	CLARIFY	NO_REFERENT	0	Hat er sich schon gemeldet?
+dev-S7-054	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-054	0	S7_AMBIGUOUS	VALIDATION	16.561	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-054	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-054	1	S7_AMBIGUOUS	VALIDATION	3.741	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-054	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-054	2	S7_AMBIGUOUS	VALIDATION	12.137	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-054	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-054	3	S7_AMBIGUOUS	VALIDATION	114.701	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-055	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S7-055	0	S7_AMBIGUOUS	VALIDATION	10447.846	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?
+dev-S7-055	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Keller brennt noch das Licht.
+dev-S7-055	1	S7_AMBIGUOUS	VALIDATION	10000.315	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-055	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche läuft noch der Fernseher.
+dev-S7-055	2	S7_AMBIGUOUS	VALIDATION	5582.177	1	PROCEED	NONE	1	Wie heißt die Hauptstadt von Kanada?
+dev-S7-055	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Schlafzimmer steht auf Stufe drei.
+dev-S7-055	3	S7_AMBIGUOUS	VALIDATION	5323.496	1	PROCEED	NONE	1	Wie heißt die Hauptstadt von Kanada?
+dev-S7-056	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-056	0	S7_AMBIGUOUS	VALIDATION	68.065	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-056	0	S7_AMBIGUOUS	VALIDATION	129.742	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-056	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-056	1	S7_AMBIGUOUS	VALIDATION	16.14	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-056	1	S7_AMBIGUOUS	VALIDATION	47.218	1	CLARIFY	NO_REFERENT	0	Was war damit nochmal?
+dev-S7-056	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-056	2	S7_AMBIGUOUS	VALIDATION	79.71	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-056	2	S7_AMBIGUOUS	VALIDATION	86.556	1	CLARIFY	NO_REFERENT	0	Und wie war das zweite davon?
+dev-S7-056	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-056	3	S7_AMBIGUOUS	VALIDATION	11.029	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-056	3	S7_AMBIGUOUS	VALIDATION	102.726	1	CLARIFY	NO_REFERENT	0	Kannst du mir das von vorhin nochmal sagen?
+dev-S7-057	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Spiel mir bitte etwas Ruhiges vor.
+dev-S7-057	0	S7_AMBIGUOUS	VALIDATION	17.288	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-057	0	S7_AMBIGUOUS	VALIDATION	89.041	1	CLARIFY	NO_REFERENT	0	Hat er sich schon gemeldet?
+dev-S7-057	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-057	1	S7_AMBIGUOUS	VALIDATION	88.468	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-057	1	S7_AMBIGUOUS	VALIDATION	91.615	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-057	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie wird das Wetter morgen?
+dev-S7-057	2	S7_AMBIGUOUS	VALIDATION	23.457	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-057	2	S7_AMBIGUOUS	VALIDATION	29.873	1	CLARIFY	NO_REFERENT	0	Was hat er gesagt?
+dev-S7-057	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-057	3	S7_AMBIGUOUS	VALIDATION	72.908	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-057	3	S7_AMBIGUOUS	VALIDATION	108.547	1	CLARIFY	NO_REFERENT	0	Hat er sich schon gemeldet?
+dev-S7-058	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Erzähl mir einen kurzen Witz.
+dev-S7-058	0	S7_AMBIGUOUS	VALIDATION	3.582	1	PROCEED	NONE	0	Wie lange kocht ein weiches Ei?
+dev-S7-058	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-058	1	S7_AMBIGUOUS	VALIDATION	33.808	1	PROCEED	NONE	0	Wie lange kocht ein weiches Ei?
+dev-S7-058	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Was bedeutet das Wort Muße?
+dev-S7-058	2	S7_AMBIGUOUS	VALIDATION	42.679	1	PROCEED	NONE	0	Wie heißt die Hauptstadt von Kanada?
+dev-S7-058	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Wie viele Tage hat der Februar?
+dev-S7-058	3	S7_AMBIGUOUS	VALIDATION	25.359	1	PROCEED	NONE	0	Wie viel sind 12 mal 14?
+dev-S7-059	0	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Auf dem Zettel in der Küche stehen drei Dinge: Milch, Brot und Kaffee.
+dev-S7-059	0	S7_AMBIGUOUS	VALIDATION	5564.693	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?
+dev-S7-059	1	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S7-059	1	S7_AMBIGUOUS	VALIDATION	5278.49	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-059	2	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Die Heizung im Keller steht auf Stufe drei.
+dev-S7-059	2	S7_AMBIGUOUS	VALIDATION	3358.2	1	PROCEED	NONE	1	Wie viel sind 12 mal 14?
+dev-S7-059	3	S7_AMBIGUOUS	VALIDATION	0.0	0	-	NONE	0	Im Küche brennt noch das Licht.
+dev-S7-059	3	S7_AMBIGUOUS	VALIDATION	3221.444	1	PROCEED	NONE	1	Wie lange kocht ein weiches Ei?

@@ -1,0 +1,33 @@
+EXP-20 P2 SEALED_HOLDOUT summary  holdout=23cd2f25116f07d1d5066edbb17181a89e99fbd941f1017445cf2aeb8b6a12c0 frozen=3302e83183a0108cea2d02a9e1a91321fb27e0ab33ca0bc65c64b2059b616cea  jvm=OpenJDK 64-Bit Server VM 21.0.12.1 os=Linux amd64 cpus=4
+clusters=280 variants=1120 (one cluster = one independent dialog stem)
+
+A solved=153/280 (0.5464) turns=732/1120 noProposal=0 unauthorized=0 inheritedToolOnDrift=17
+   errors FALSE_CONTEXT_SWITCH=0 MISSED_CONTEXT_SWITCH=108 STALE_FACT_LEAKAGE=120 WRONG_ENTITY_BINDING=160 UNNECESSARY_CLARIFICATION=0 UNAUTHORIZED_ACTION_SUGGESTION=0
+   per-scenario solved S1=33/40 S2=30/40 S3=20/40 S4=30/40 S5=0/40 S6=20/40 S7=20/40
+A_DSK solved=124/280 (0.4429) turns=745/1120 noProposal=0 unauthorized=0 inheritedToolOnDrift=17
+   errors FALSE_CONTEXT_SWITCH=47 MISSED_CONTEXT_SWITCH=108 STALE_FACT_LEAKAGE=119 WRONG_ENTITY_BINDING=61 UNNECESSARY_CLARIFICATION=40 UNAUTHORIZED_ACTION_SUGGESTION=0
+   per-scenario solved S1=33/40 S2=20/40 S3=20/40 S4=5/40 S5=0/40 S6=20/40 S7=26/40
+A0 solved=174/280 (0.6214) turns=788/1120 noProposal=0 unauthorized=0 inheritedToolOnDrift=16
+   errors FALSE_CONTEXT_SWITCH=11 MISSED_CONTEXT_SWITCH=107 STALE_FACT_LEAKAGE=52 WRONG_ENTITY_BINDING=160 UNNECESSARY_CLARIFICATION=2 UNAUTHORIZED_ACTION_SUGGESTION=0
+   per-scenario solved S1=33/40 S2=30/40 S3=25/40 S4=30/40 S5=28/40 S6=14/40 S7=14/40
+B solved=146/280 (0.5214) turns=879/1120 noProposal=0 unauthorized=0 inheritedToolOnDrift=2
+   errors FALSE_CONTEXT_SWITCH=89 MISSED_CONTEXT_SWITCH=27 STALE_FACT_LEAKAGE=36 WRONG_ENTITY_BINDING=11 UNNECESSARY_CLARIFICATION=78 UNAUTHORIZED_ACTION_SUGGESTION=0
+   per-scenario solved S1=18/40 S2=22/40 S3=30/40 S4=13/40 S5=19/40 S6=9/40 S7=35/40
+C solved=149/280 (0.5321) turns=883/1120 noProposal=0 unauthorized=0 inheritedToolOnDrift=2
+   errors FALSE_CONTEXT_SWITCH=61 MISSED_CONTEXT_SWITCH=33 STALE_FACT_LEAKAGE=52 WRONG_ENTITY_BINDING=13 UNNECESSARY_CLARIFICATION=78 UNAUTHORIZED_ACTION_SUGGESTION=0
+   per-scenario solved S1=19/40 S2=22/40 S3=32/40 S4=21/40 S5=19/40 S6=7/40 S7=29/40
+
+PRIMARY (Holm over 3)
+  C vs A: solved 149 vs 153, discordant b=65 c=69, McNemar p=0.796 Holm=1.00, diff=-0.0143 95%CI[-0.0929,+0.0679] 90%CI[-0.0821,+0.0536], turn-acc diff=+0.1348 95%CI[+0.0768,+0.1929] -> INCONCLUSIVE
+  C vs B: solved 149 vs 146, discordant b=14 c=11, McNemar p=0.690 Holm=1.00, diff=+0.0107 95%CI[-0.0250,+0.0464] 90%CI[-0.0179,+0.0393], turn-acc diff=+0.0036 95%CI[-0.0179,+0.0259] -> EQUIVALENT
+  B vs A: solved 146 vs 153, discordant b=67 c=74, McNemar p=0.614 Holm=1.00, diff=-0.0250 95%CI[-0.1071,+0.0571] 90%CI[-0.0929,+0.0464], turn-acc diff=+0.1313 95%CI[+0.0705,+0.1929] -> INCONCLUSIVE
+
+SECONDARY (Holm over 5)
+  B vs A0: solved 146 vs 174, discordant b=50 c=78, McNemar p=0.0167 Holm=0.0667, diff=-0.1000 95%CI[-0.1750,-0.0214] 90%CI[-0.1643,-0.0321], turn-acc diff=+0.0813 95%CI[+0.0214,+0.1420] -> INCONCLUSIVE
+  C vs A0: solved 149 vs 174, discordant b=48 c=73, McNemar p=0.0287 Holm=0.0667, diff=-0.0893 95%CI[-0.1643,-0.0107] 90%CI[-0.1536,-0.0250], turn-acc diff=+0.0848 95%CI[+0.0250,+0.1438] -> INCONCLUSIVE
+  A_DSK vs A: solved 124 vs 153, discordant b=15 c=44, McNemar p=0.000204 Holm=0.00102, diff=-0.1036 95%CI[-0.1536,-0.0536] 90%CI[-0.1464,-0.0607], turn-acc diff=+0.0116 95%CI[-0.0268,+0.0518] -> INFERIOR
+  B vs A_DSK: solved 146 vs 124, discordant b=63 c=41, McNemar p=0.0390 Holm=0.0667, diff=+0.0786 95%CI[+0.0107,+0.1500] 90%CI[+0.0179,+0.1393], turn-acc diff=+0.1196 95%CI[+0.0732,+0.1661] -> INCONCLUSIVE
+  C vs A_DSK: solved 149 vs 124, discordant b=67 c=42, McNemar p=0.0211 Holm=0.0667, diff=+0.0893 95%CI[+0.0179,+0.1607] 90%CI[+0.0286,+0.1500], turn-acc diff=+0.1232 95%CI[+0.0777,+0.1688] -> INCONCLUSIVE
+
+REGISTERED QUALITY RULE: disqualified=[] selected=A (cost gate and independence gate are applied separately)
+  independence gate: SEALED_HOLDOUT is same-author -> at most RESEARCH_ONLY; no shadow hook from this result

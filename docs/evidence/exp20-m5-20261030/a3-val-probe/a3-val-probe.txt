@@ -1,0 +1,13 @@
+EXP-20 M5-A3/A4 VAL probe (internal; SEALED not read) data=7d70d20f79f03e10ffb4cef76292cd52201e66299aca42c8a1287ebf2b327dd2 cre1=2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6
+JACCARD            DEV L=64/64 S= 0/64 | VAL L=64/64 S= 0/64 nearMissConfusion_S=64/64 | precondition=FAIL
+HYBRID_LEX         DEV L=64/64 S= 0/64 | VAL L=64/64 S= 0/64 nearMissConfusion_S=64/64 | precondition=FAIL
+CRE1               DEV L=53/64 S=15/64 | VAL L=59/64 S=14/64 nearMissConfusion_S=50/64 | precondition=FAIL
+HYBRID_CRE1        DEV L=64/64 S=17/64 | VAL L=64/64 S=15/64 nearMissConfusion_S=49/64 | precondition=FAIL
+QUERY_BLIND_MEDOID DEV L= 7/64 S=13/64 | VAL L= 7/64 S= 8/64 nearMissConfusion_S=56/64 | precondition=FAIL
+HOPFIELD2_B4       DEV L=53/64 S=15/64 | VAL L=55/64 S=14/64 nearMissConfusion_S=50/64 | precondition=FAIL
+
+VAL comparisons (128 groups, exact McNemar, Holm over 3, MDE +5 pp) - development evidence, not confirmation
+  HYBRID_CRE1 vs HYBRID_LEX: b=15 c=0 Holm=0.000122 diff=+0.1172 95%CI[+0.0625,+0.1797] -> SUPERIOR
+  HYBRID_CRE1 vs JACCARD: b=15 c=0 Holm=0.000122 diff=+0.1172 95%CI[+0.0625,+0.1797] -> SUPERIOR
+  HYBRID_CRE1 vs QUERY_BLIND_MEDOID: b=69 c=5 Holm=5.50e-15 diff=+0.5000 95%CI[+0.3984,+0.6016] -> SUPERIOR
+SEALED=UNOPENED FOLD7=DEVICE_NOT_RUN

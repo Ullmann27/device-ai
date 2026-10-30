@@ -1,0 +1,12 @@
+GIT_PARENT=af7c89a4a23011b2bd1d9bd1471f7c72022124ca P2CostBench.kt sha256=7569be45c75990e4d00b7455059fa4389ab80b58b2968aea205a0e3df66ef3fb JAR=b1b72c9f13a070bed7b7fcd989058e944a54e1e6eb882e65822131cca132925d cpu=Intel(R) Xeon(R) Processor @ 2.80GHz
+CMD run 1: JAVA_OPTS=-Xmx2g scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2CostBench run docs/evidence/exp20-p2-20261030/data 1 docs/evidence/exp20-p2-20261030/cost/run-1.txt  start=09:09:38 loadavg=1.19 0.81 0.67 1/107 5908
+EXIT=0 end=09:10:56
+CMD run 2: JAVA_OPTS=-Xmx2g scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2CostBench run docs/evidence/exp20-p2-20261030/data 2 docs/evidence/exp20-p2-20261030/cost/run-2.txt  start=09:10:56 loadavg=1.11 0.87 0.70 1/104 5949
+EXIT=0 end=09:12:16
+CMD run 3: JAVA_OPTS=-Xmx2g scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2CostBench run docs/evidence/exp20-p2-20261030/data 3 docs/evidence/exp20-p2-20261030/cost/run-3.txt  start=09:12:16 loadavg=1.03 0.90 0.73 1/103 5995
+EXIT=0 end=09:13:35
+CMD run 4: JAVA_OPTS=-Xmx2g scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2CostBench run docs/evidence/exp20-p2-20261030/data 4 docs/evidence/exp20-p2-20261030/cost/run-4.txt  start=09:13:35 loadavg=1.05 0.95 0.77 1/106 6043
+EXIT=0 end=09:14:56
+CMD run 5: JAVA_OPTS=-Xmx2g scripts/exp20-p2-host-run.sh main at.heinz.deviceai.research.exp20.p2.P2CostBench run docs/evidence/exp20-p2-20261030/data 5 docs/evidence/exp20-p2-20261030/cost/run-5.txt  start=09:14:56 loadavg=1.01 0.97 0.79 1/102 6086
+EXIT=0 end=09:16:12
+AGGREGATE_EXIT=0

@@ -1,0 +1,11 @@
+EXP-20 P2 Part K aggregate over 5 JVM processes (ns per turn, block means; median and max across runs)
+FULL A                 p50 med= 31212.6  p95 med= 43461.7  p99 med= 48933.7 max= 55149.3  alloc/turn med=18166.4  runs=5
+FULL A0                p50 med= 28079.2  p95 med= 42263.7  p99 med= 44725.8 max= 55410.4  alloc/turn med=18226.3  runs=5
+FULL B                 p50 med= 33182.7  p95 med= 41460.0  p99 med= 44932.3 max= 56819.9  alloc/turn med=18900.3  runs=5
+FULL C                 p50 med= 28774.9  p95 med= 43679.0  p99 med= 46782.1 max= 52422.5  alloc/turn med=18930.0  runs=5
+FULL C_EXPM1           p50 med= 28576.5  p95 med= 43797.6  p99 med= 46577.2 max= 60462.9  alloc/turn med=19074.8  runs=5
+FULL C_SPARSE_1e-2     p50 med= 32597.7  p95 med= 42258.7  p99 med= 45380.8 max= 51216.6  alloc/turn med=19061.8  runs=5
+STATE B                p50 med=   333.4  p95 med=   426.3  p99 med=   560.1 max=   664.9  alloc/turn med=  168.0  runs=5
+STATE C                p50 med=   893.7  p95 med=  1647.5  p99 med=  1933.4 max=  2920.1  alloc/turn med=  221.0  runs=5
+STATE C_EXPM1          p50 med=  1611.5  p95 med=  1917.9  p99 med=  2021.4 max=  3008.4  alloc/turn med=  341.8  runs=5
+STATE C_SPARSE_1e-2    p50 med=   918.1  p95 med=  1069.8  p99 med=  1131.2 max=  1884.7  alloc/turn med=  344.8  runs=5

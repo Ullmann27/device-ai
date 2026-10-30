@@ -1,0 +1,8 @@
+First run of P4MathTest asserted 'centre ALWAYS wins' and FAILED (41/42): the claim was too strong for random geometry.
+Corrected to a measured tendency (centre wins 344/500 vs chance 62.5/500; gate >= 3x chance).
+GIT_PARENT=9708f3c946233636fb43f72717e3403a7f7decbb P4MathTest.kt sha256=46c06fc620c1ef73c233febc85b486fc4c3b4b6f8d7233c3b5df1130d4f7a269 JAR=884367e86931b6a40964855fcb4f6d2107c73ec7870d2610c70b581d34e5c30c
+Time: 27.605
+
+OK (42 tests)
+
+JUNIT_EXIT=0
