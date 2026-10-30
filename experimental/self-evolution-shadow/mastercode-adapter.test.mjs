@@ -5,7 +5,7 @@ import { runMastercodeSelfPlayOnce, reviewVerifiedCcc1Ledger } from './mastercod
 
 const ready = Object.freeze({
   ownerOptIn: true, idle: true, charging: true, connectedToTrustedHost: true,
-  activeWorker: false, batteryPercent: 75, thermalHeadroom: 0.8, availableTimeMs: 30_000
+  activeWorker: false, batteryPercent: 75, thermalHeadroom: 0.2, availableTimeMs: 30_000
 });
 
 test('MASTER-EXP adapter invokes real bounded composition and independent blind check', () => {
