@@ -59,6 +59,59 @@ class Ewm1OwnerSupersessionTest {
     @Test fun aPostponedAppointmentToNextWeekStillReplacesTheOldDate() = assertEquals(mapOf("neu0" to setOf("f0")),
         replaced("Der Elternabend wurde auf nächsten Mittwoch verschoben.", facts = listOf("f0" to "Der Elternabend ist am Montag.")))
 
+    // ---- review 2026-10-30: event vs state, time orientation, reported speech, coordination, chains, retrieval
+
+    private val none = emptyMap<String, Set<String>>()
+    private fun only(vararg facts: String) = facts.mapIndexed { i, t -> "f$i" to t }
+
+    @Test fun aSharedCityAloneDoesNotLetAStateReplaceAPastVisit() =
+        assertEquals(none, replaced("Max arbeitet nicht mehr in Wien.", facts = only("Max war gestern in Wien.")))
+
+    @Test fun twoTimeAnchorsAloneRelateNothing() =
+        assertEquals(none, replaced("Seit Dienstag arbeitet Anna in Wien.", facts = only("Anna besuchte am Montag Graz.")))
+
+    @Test fun anAdverbInitialVisitIsAPastEventThatAStateDoesNotReplace() = assertEquals(none,
+        replaced("Mittlerweile wohnt Anna in Wien.", "Seit Dienstag arbeitet Anna in Linz.", facts = only("Gestern besuchte Anna Graz.")))
+
+    @Test fun twoVisitsAreTwoEvents() = assertEquals(none, replaced("Anna besuchte Linz.", facts = only("Anna besuchte Graz.")))
+
+    @Test fun anExplicitCorrectionOfTheSamePastEventCorrectsIt() = assertEquals(mapOf("neu0" to setOf("f0")),
+        replaced("Anna war gestern nicht in Graz, sondern in Linz.", facts = only("Anna war gestern in Graz.")))
+
+    @Test fun aLaterStoredHistoricalStatementDoesNotEndThePresentOne() =
+        assertEquals(none, replaced("Früher wohnte ich in Wien.", facts = only("Ich wohne in Graz.")))
+
+    @Test fun aHistoricalStateStaysHistoryWhenANewStateFollows() =
+        assertEquals(none, replaced("Anna wohnt inzwischen in Wien.", facts = only("Anna wohnte in Graz.")))
+
+    @Test fun mySistersResidenceIsNoStatementAboutMe() =
+        assertEquals(none, replaced("Ich wohne in Graz.", facts = only("Meine Schwester Anna wohnt in Linz.")))
+
+    @Test fun aQuotedFirstPersonBelongsToTheQuotedSpeaker() = assertEquals(none, replaced("„Ich wohne jetzt in Graz“, sagt Paul."))
+
+    @Test fun reportedSpeechIsNoOwnerStatement() = assertEquals(none, replaced("Paul sagt, ich wohne jetzt in Graz."))
+
+    @Test fun aCoordinatedSubjectIsNotReplacedByOneOfItsMembers() =
+        assertEquals(none, replaced("Inzwischen wohnt Anna in Graz.", facts = only("Anna und Ben wohnen in Wien.")))
+
+    @Test fun mySpousesMoveKeepsMySonsResidence() = assertEquals(mapOf("neu0" to setOf("f0")),
+        replaced("Inzwischen wohnt mein Mann Paul in Graz.", facts = only("Mein Mann Paul wohnt in Wien.", "Mein Sohn Leo wohnt in Linz.")))
+
+    @Test fun aHolidayIsNoRelocation() = assertEquals(none, replaced("Ich mache gerade Urlaub in Graz."))
+
+    @Test fun aSharedAdverbIsNoSharedActivity() =
+        assertEquals(none, replaced("Inzwischen lese ich gerne Krimis.", facts = only("Ich spiele gerne Tennis.")))
+
+    @Test fun successiveMovesFormAChain() = assertEquals(mapOf("neu0" to setOf("f0"), "neu1" to setOf("f0", "neu0")),
+        replaced("Inzwischen wohne ich in Graz.", "Mittlerweile wohne ich in Linz.", facts = only("Ich wohne in Wien.")))
+
+    @Test fun aKnownNewerStatementIsNeverHiddenByIncompleteRetrieval() {
+        val facts = listOf("wohnort" to "Ich wohne in Wien.", "arbeit" to "Ich arbeite bei der Post.", "neu" to "Inzwischen wohne ich in Graz.")
+        val pack = Ewm1Workspace(facts) { _, subset -> subset.filter { it != "neu" } }.decide("Wo wohne ich?")
+        assertEquals(listOf("neu"), pack.cited)
+        assertEquals(listOf("wohnort"), pack.outdatedFacts)
+    }
+
     @Test fun mySpouseAndIAreNotMeAlone() = assertEquals(emptyMap<String, Set<String>>(),
         replaced("Inzwischen wohne ich in Graz.", facts = listOf("f0" to "Mein Mann und ich wohnen in Wien.")))
 
