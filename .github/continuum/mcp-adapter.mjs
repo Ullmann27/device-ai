@@ -3,14 +3,17 @@
  * owner allowlist, the dual-control decision of ContinuumDualControlPolicy.kt (same table, mirrored here), workspace
  * scope checks, call/time/output budgets and a receipt per call. The server gets no inherited environment (no keys).
  * Nothing here grants Android permissions, signs, merges or bypasses ToolGate/OwnerGate; it only refuses or forwards.
+ * NOT an OS sandbox: the server runs as the same user. Bounds here are program/argument approval, an empty environment,
+ * its own process group (killed as a whole), session/call/output limits and argument scope checks.
  */
 import {spawn} from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 
 const sha256=t=>createHash('sha256').update(t).digest('hex');
 const fail=code=>{const e=Error(code);e.code=code;throw e;};
-export const MCP_LIMITS=Object.freeze({maxCalls:20,callTimeoutMs:30000,startTimeoutMs:15000,maxResultChars:20000,maxLineChars:2_000_000});
+export const MCP_LIMITS=Object.freeze({maxCalls:20,callTimeoutMs:30000,startTimeoutMs:15000,maxResultChars:20000,maxLineChars:2_000_000,maxSessionMs:300000});
 const RISKS=new Set(['READ_ONLY','WRITE','DESTRUCTIVE']);
 
 /** Mirror of ContinuumDualControlPolicy.evaluate: DENY, REQUIRE_OWNER_REVIEW or ALLOW (REVIEW is not authorization). */
@@ -23,15 +26,33 @@ export function decideToolCall({profile,name,spec,grant}){
   return 'REQUIRE_OWNER_REVIEW';
 }
 
-/** Arguments named path/file/dir/cwd must stay inside the granted workspace. */
-export function withinScope(args,workspace){
-  for(const [key,value] of Object.entries(args??{}))
-    if(/^(?:path|file|dir|directory|cwd|filename)$/i.test(key)){
+/** Real path of p, or of its nearest existing parent plus the rest (symlinks resolved where they exist). */
+function realish(p){
+  let head=p,tail=[];
+  while(!fs.existsSync(head)){const up=path.dirname(head);if(up===head)break;tail.unshift(path.basename(head));head=up;}
+  return path.join(fs.realpathSync(head),...tail);
+}
+/** Path-like arguments, also nested in objects/arrays, must stay inside the granted workspace after symlink resolution. */
+export function withinScope(args,workspace,depth=0){
+  if(depth>8)return false;
+  if(Array.isArray(args))return args.every(v=>v===null||typeof v!=='object'||withinScope(v,workspace,depth+1));
+  for(const [key,value] of Object.entries(args??{})){
+    if(value&&typeof value==='object'){if(!withinScope(value,workspace,depth+1))return false;continue;}
+    if(/^(?:path|paths|file|files|dir|directory|cwd|filename|root|target|source|dest|destination)$/i.test(key)){
       if(typeof value!=='string'||!workspace)return false;
-      const full=path.resolve(workspace,value);
-      if(full!==workspace&&!full.startsWith(workspace+path.sep))return false;
+      let root,full;try{root=fs.realpathSync(workspace);full=realish(path.resolve(root,value));}catch{return false;}
+      if(full!==root&&!full.startsWith(root+path.sep))return false;
     }
+  }
   return true;
+}
+
+/** Only an owner-approved server: absolute regular executable file and exactly the approved arguments. */
+export function approvedServer(command,args,approvedServers){
+  if(typeof command!=='string'||!path.isAbsolute(command)||!Array.isArray(args)||!args.every(a=>typeof a==='string'))return false;
+  let real;try{real=fs.realpathSync(command);}catch{return false;}
+  if(!fs.statSync(real).isFile())return false;
+  return (approvedServers??[]).some(s=>s&&s.command===real&&Array.isArray(s.args)&&s.args.length===args.length&&s.args.every((a,i)=>a===args[i]));
 }
 
 /**
@@ -39,13 +60,18 @@ export function withinScope(args,workspace){
  * confirm({name,args}) -> Promise<boolean> is asked for REQUIRE_OWNER_REVIEW; a missing confirm declines.
  */
 export async function createMcpSession({command,args=[],cwd,env={},allowlist,profile='PROTECTED',grant,workspace=null,
-  confirm=null,limits={}}){
+  confirm=null,limits={},approvedServers=[]}){
   const L={...MCP_LIMITS,...limits};
   if(!['PROTECTED','OWNER_AUTONOMOUS'].includes(profile))fail('MCP_PROFILE_INVALID');
   if(!allowlist||typeof allowlist!=='object')fail('MCP_ALLOWLIST_REQUIRED');
-  const child=spawn(command,args,{cwd,env:{PATH:process.env.PATH,...env},stdio:['pipe','pipe','ignore'],shell:false});
+  if(!approvedServer(command,args,approvedServers))fail('MCP_SERVER_NOT_APPROVED');
+  // Empty environment except a fixed PATH; explicit env entries must be owner-provided and never secrets.
+  const child=spawn(fs.realpathSync(command),args,{cwd:workspace??cwd,env:{PATH:'/usr/bin:/bin',...env},stdio:['pipe','pipe','ignore'],
+    shell:false,detached:true});
   let buffer='',nextId=1,calls=0,closed=false;const pending=new Map(),receipts=[];
-  const stop=()=>{if(!closed){closed=true;child.kill('SIGKILL');}for(const p of pending.values())p.reject(Object.assign(Error('MCP_SERVER_CLOSED'),{code:'MCP_SERVER_CLOSED'}));pending.clear();};
+  const stop=()=>{if(!closed){closed=true;clearTimeout(sessionTimer);
+      try{process.kill(-child.pid,'SIGKILL');}catch{try{child.kill('SIGKILL');}catch{}}}for(const p of pending.values())p.reject(Object.assign(Error('MCP_SERVER_CLOSED'),{code:'MCP_SERVER_CLOSED'}));pending.clear();};
+  const sessionTimer=setTimeout(()=>stop(),L.maxSessionMs);sessionTimer.unref?.();
   child.on('exit',stop);child.on('error',stop);
   child.stdout.setEncoding('utf8');
   child.stdout.on('data',chunk=>{

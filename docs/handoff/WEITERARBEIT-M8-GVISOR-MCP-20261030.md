@@ -35,3 +35,27 @@
 2. `--brain chat --executor <runsc-config>` auf den 30 Aufgaben gegen den Einmal-Provider, vorab registriert.
 3. `ContinuumDualControlPolicy.kt` und `mcp-adapter.mjs` gegen eine gemeinsame Fallliste prüfen, sodass die Entscheidungen identisch sind. Danach den Adapter über den Teamleiter (`autonomous-teamleader.mjs`) als Werkzeugquelle anbinden.
 4. Playwright-MCP gepinnt in einer Testumgebung mit `PROTECTED` erproben.
+
+## M8.1 (Commit nach `0dd5afd`): MCP gehärtet, erster echter Werkzeugdurchlauf
+- **Gehärtet:**
+  - Es startet nur ein vom Besitzer freigegebenes Serverprogramm: absoluter Pfad mit aufgelöstem realpath, Argumente exakt wie freigegeben (`approvedServers`), sonst `MCP_SERVER_NOT_APPROVED`.
+  - Leere Umgebung (nur `PATH=/usr/bin:/bin`); `cwd` ist der Arbeitsbereich.
+  - Eigene Prozessgruppe, die bei Fehler, Timeout und Sitzungsende ganz beendet wird (`maxSessionMs`).
+  - Bereichsprüfung auch für verschachtelte Argumente und nach Auflösen von Symlinks.
+  - **Keine OS-Isolation:** Der Server läuft unter demselben Benutzer; es gibt keine Prozess- oder RAM-Limits auf OS-Ebene.
+- **Echt:** `.github/continuum/mcp-git-readonly-server.mjs` (`git_head`, `git_status`, ohne Argumente und ohne Shell). Kette: Auftrag → `decideToolCall` (Tabelle von `ContinuumDualControlPolicy.kt`) → git → tatsächlicher HEAD → Quittung mit `resultSha256`.
+- **Negativ:** nicht freigegebene Argumente, nicht freigegebenes Programm, angebotenes aber nicht erlaubtes Werkzeug, widerrufene Freigabe, verschachtelter Symlink-Ausbruch.
+- **Tests:** `mcp-adapter.test.mjs` 4/4; `coding-*`, `repair-loop`, `benchmark-extra` 96/96; gVisor und Executor (uid 65534) 9/9.
+
+## Nächster Zyklus
+- **A, echte Inferenz:** `scripts/continuum-local-llama-termux.sh` (vorhanden) starten, dann:
+  ```
+  CONTINUUM_LOCAL_BRAIN_API_KEY=… node scripts/continuum-agent-benchmark.mjs --brain chat --only gen-sum-off-by-one
+  ```
+  Auf einem Docker-Host zusätzlich `--executor <cfg>`. `brainKind` und das Server-Log gehören in den Beleg.
+- **B, Worker:** `createMcpSession` über `autonomous-teamleader.mjs` als Werkzeugquelle anbinden. Zyklen, Abbruch (`close()`), Limits und Wiederaufnahme testen.
+- **C, gVisor:** `scripts/continuum-gvisor-selftest.sh` auf einem echten `runsc`-Host ausführen und die Rohausgabe committen.
+- **D, APK:**
+  - Die Updates aus PR #260 auf einen Release-Branch bringen.
+  - Der Besitzer signiert in Termux mit der Original-P12; das Passwort gibt nur er ein.
+  - Danach mit einem zweiten Release den In-App-Updater auf dem Fold7 prüfen.
