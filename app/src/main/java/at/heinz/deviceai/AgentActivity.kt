@@ -220,6 +220,8 @@ class AgentActivity : Activity() {
     private var learningVisualActive = false
     private var voiceSpeaking = false
     private var voiceListening = false
+    // Explicit session-only opt-in. STT transcripts never authenticate the owner or authorize tools.
+    private var jarvisDialogueAutoSend = false
     @Volatile private var voiceUtteranceId: String? = null
     private val voiceSignal = TtsHologramSignal()
     private val voiceFrame = object : Runnable {
@@ -2318,8 +2320,42 @@ class AgentActivity : Activity() {
             marginStart = dp(7)
         })
         val mic = actionButton("🎙", compact = true).apply {
-            contentDescription = "Spracheingabe starten"
-            setOnClickListener { startVoiceInput() }
+            contentDescription = "Spracheingabe starten; lange drücken für Jarvis-Sprachdialog"
+            setOnClickListener {
+                // Explicit new mic tap can interrupt current playback. Never listen in background.
+                if (voiceSpeaking) {
+                    voiceEngine?.stop()
+                    stopVoiceAnimation()
+                }
+                startVoiceInput()
+            }
+            setOnLongClickListener {
+                if (jarvisDialogueAutoSend) {
+                    jarvisDialogueAutoSend = false
+                    text = "🎙"
+                    Toast.makeText(this@AgentActivity,
+                        "Jarvis-Sprachdialog ausgeschaltet.", Toast.LENGTH_SHORT).show()
+                } else {
+                    AlertDialog.Builder(this@AgentActivity)
+                        .setTitle("Jarvis · Sprachdialog")
+                        .setMessage("Nur für diese geöffnete Sitzung: Nach bewusstem Mikrofon-Tipp " +
+                            "werden einfache Gesprächsfragen automatisch an den vorhandenen Continuum-" +
+                            "Gedächtnisdialog übergeben. Werkzeug-, Geräte-, Internet- und " +
+                            "Speicheraufträge bleiben als Entwurf stehen. Die Android-" +
+                            "Spracherkennung kann trotz Offlinepräferenz einen externen Dienst verwenden. " +
+                            "Keine dauerhafte Hintergrundaufnahme; keine Stimmerkennung als Besitzerfreigabe. " +
+                            "Für gesprochene Antworten zusätzlich TON AN einschalten.")
+                        .setNegativeButton("Abbrechen", null)
+                        .setPositiveButton("Für diese Sitzung aktivieren") { _, _ ->
+                            jarvisDialogueAutoSend = true
+                            text = "🎙•"
+                            Toast.makeText(this@AgentActivity,
+                                "Jarvis-Sprachdialog an: Mikrofon tippen und Frage sprechen.",
+                                Toast.LENGTH_LONG).show()
+                        }.show()
+                }
+                true
+            }
         }
         inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
             marginStart = dp(6)
@@ -2837,7 +2873,9 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {
+    private fun runContinuumDialogue(
+        request:String, sourceFallback:Boolean=false, allowLocalModel:Boolean=true
+    ) {
         if(busy || localAgentExecutor.isShutdown)return
         val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()
         val requestSessionId=sessionId
@@ -2935,7 +2973,9 @@ class AgentActivity : Activity() {
                     val (answer,evidence,grounded)=dialogueResult
                     // Direct recall remains exact. Explicit synthesis uses the existing
                     // local agent; its conclusions acquire no confirmed-memory authority.
-                    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
+                    // Auto-dispatched ASR text is not an owner-authorized tool request.
+                    // It must never enter the tool-capable LocalModel/BoundedAgent path.
+                    if(allowLocalModel && LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
                             localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
                         val modelQuestion=LocalFirstPolicy.localModelQuestion(
                             request,localPrompt,
@@ -7975,11 +8015,30 @@ class AgentActivity : Activity() {
                 val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 val spoken = matches?.firstOrNull()
                 if (!spoken.isNullOrBlank()) {
-                    input.setText(spoken)
-                    input.setSelection(spoken.length)
-                    // Only in the explicitly activated learning conversation: a
-                    // recognized phrase goes to the supervised coach, never ToolGate.
-                    if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                    // An ASR hypothesis is untrusted. Auto-dispatch only into the
+                    // existing tool-free cognitive reply, never sendCurrentInput/runLocal.
+                    if (jarvisDialogueAutoSend && !neuralCoach.isActive()) {
+                        val decision = at.heinz.deviceai.jarvis.JarvisVoiceConversationPolicy.evaluate(spoken)
+                        if (decision.routing != at.heinz.deviceai.jarvis.JarvisVoiceRouting.IGNORE) {
+                            input.setText(decision.cleanText)
+                            input.setSelection(decision.cleanText.length)
+                            if (decision.routing == at.heinz.deviceai.jarvis.JarvisVoiceRouting.DIALOGUE_ONLY &&
+                                !busy && !localAgentExecutor.isShutdown && foregroundLearningActive) {
+                                input.text.clear()
+                                addUserMessage(decision.cleanText)
+                                runContinuumDialogue(decision.cleanText, allowLocalModel = false)
+                            } else {
+                                Toast.makeText(this,
+                                    "Jarvis: Nur ein Entwurf. Prüfe den Text und tippe bei Bedarf Senden.",
+                                    Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    } else {
+                        input.setText(spoken)
+                        input.setSelection(spoken.length)
+                        // Explicitly activated learning dialogue is separately supervised.
+                        if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                    }
                 }
             }
             DEV_SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
