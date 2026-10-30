@@ -70,6 +70,7 @@ Gegenprobe pro Stand: #245 grün, #247 grün, #250 rot, #251 rot. Korrigiert ist
 | alle `.github/continuum/*-wiring` | Korrektur | **123/123**, Exit 0 | `all-wiring-on-fix.tap` |
 | Kotlin-Hostprüfung (`android-kotlin-unit-check.sh`, Hauptquellen inkl. `AgentActivity` gegen `android-all-15`, alle JUnit) | `7a011384` | PASS **1313/1313**, Exit 0; Hauptquellen kompilieren (es gibt also keinen Compile-Blocker) | `kotlin-harness-base.txt` |
 | Kotlin-Hostprüfung, dasselbe Skript | Korrektur | PASS **1316/1316** (+3 neue), Exit 0 | `kotlin-harness-fix.txt` |
+| Kotlin-Hostprüfung, dasselbe Skript | Endstand `5a1002f8` (inkl. EXP-20-Labortests) | PASS **1319/1319**, Exit 0 | `kotlin-harness-final-5a1002f8.txt` |
 | #249 Self-Play inkl. Thermal-Grenzwerttest | `d6a66632`, Node v22.22.0 | PASS 24/24 (20 Kern + 4 Adapter), Exit 0 | `thermal249-d6a66632-evolution-node22.tap` |
 
 **Nicht gelaufen:**
