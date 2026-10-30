@@ -8,7 +8,7 @@ const healthy = (id='test-domain') => ({id,policy:{sliceEndAdjustment:0,clampNon
   visible:[{input:{samples:[1,2,3],start:0,span:3,reserved:0,ceiling:9},expected:3}],
   blind:[{input:{samples:[1],start:0,span:1,reserved:0,ceiling:9},expected:1}]});
 const ready={ownerOptIn:true,idle:true,charging:true,connectedToTrustedHost:true,
-  activeWorker:false,batteryPercent:80,thermalHeadroom:.9,availableTimeMs:30000};
+  activeWorker:false,batteryPercent:80,thermalHeadroom:.2,availableTimeMs:30000};
 const candidate={chain:['correct-slice-end','clamp-negative-quota']};
 function proof(task,candidate,{passed=true,exitCode=passed?0:1,executedTests=task.blind.length,
   failedTests=passed?0:1,blindPass=passed,runnerError=false}={}){
