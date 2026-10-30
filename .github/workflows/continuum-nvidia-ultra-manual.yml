@@ -1,0 +1,72 @@
+name: Continuum NVIDIA Ultra 550B Single Master Review
+
+# Deliberately no push/schedule/PR trigger; explicit owner command only.
+# For workflow_dispatch in GitHub UI, first review and add this workflow
+# to the default branch using an owner-approved isolated change.
+on:
+  workflow_dispatch:
+    inputs:
+      owner_consent:
+        description: "Type ONE_REMOTE_TECHNICAL_REVIEW to send public technical source excerpts to NVIDIA once"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-nvidia-ultra-master-once
+  cancel-in-progress: false
+
+jobs:
+  one-research-request:
+    if: ${{ inputs.owner_consent == 'ONE_REMOTE_TECHNICAL_REVIEW' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - name: Checkout pinned reviewed research implementation
+        uses: actions/checkout@v4
+        with:
+          ref: 7863d16c2868d127a74db625e5010a27fda2fbe6
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Offline security and source integrity regression
+        run: |
+          node --test scripts/continuum-nvidia-ultra-review.test.mjs
+          node scripts/continuum-nvidia-ultra-review.mjs --check
+      - name: Validate rotated API key exists
+        shell: bash
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          if [[ -z "$NVIDIA_API_KEY" ]]; then
+            echo "ROTATED_NVIDIA_API_SECRET_REQUIRED"
+            exit 2
+          fi
+          echo "Rotated NVIDIA credential configured; value withheld"
+      - name: One NVIDIA 550B architectural research request
+        shell: bash
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          CONTINUUM_ULTRA_CONSENT: ONE_REMOTE_TECHNICAL_REVIEW
+          CONTINUUM_ULTRA_OUTPUT_DIR: ${{ runner.temp }}/continuum-ultra-report
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -m 700 "$CONTINUUM_ULTRA_OUTPUT_DIR"
+          node scripts/continuum-nvidia-ultra-review.mjs --run
+      - name: Preserve unverified model report privately for owner review
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-nvidia-ultra-owner-review
+          path: ${{ runner.temp }}/continuum-ultra-report/
+          retention-days: 1
+          if-no-files-found: error
+      - name: Explicit non-promotion notice
+        if: always()
+        run: |
+          echo "A teacher proposal is not a verified repair."
+          echo "No model output was executed, merged, added to owner memory or shipped in an APK."
