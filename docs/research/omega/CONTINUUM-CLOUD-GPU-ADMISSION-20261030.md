@@ -97,3 +97,37 @@ https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash
 Testbericht vor echtem NVIDIA-Zugang: Der unmittelbar von GitHub abgerufene Modulquelltext wurde zusätzlich in einer isolierten JavaScript-Prüfumgebung mit simuliertem Response-Stream geprüft; vier fokussierte Assertions bestanden. Dies ist ausdrücklich weder ein nativer Node-Test noch ein bestätigter NVIDIA-GPU-Aufruf. Die Zahl 20 Token/s aus der Simulation stammt aus vorgegebenen Testwerten und darf nicht als reale Benchmark-Leistung ausgegeben werden.
 
 Vor produktiver Continuum-Nutzung: Berechtigungs-/Geheimnisschutz auf dem Fold7, sichere Einzelauftragsfreigabe, Modellrichtlinien, Token-/Rate-Limits und providerseitiger Kosten-/Kontingentschutz, unabhängig verifizierte NVIDIA-Verbindung und Fold7-Gegenprobe. Keine implizite Übertragung von SWB1 oder CCC1-Daten.
+
+
+## NVIDIA Nemotron 3.5: Public Coding Teacher Lab (30.10.2026)
+
+Neu: .github/continuum/nvidia-nim-public-coding-lab.mjs, dazu eigene 9+1 Sicherheits-/Verhaltenstests, 3.600 deterministische RED/GREEN-Eigenschaftstests, und scripts/continuum-nvidia-coding-lab.mjs.
+
+Die NVIDIA 30B-GPU soll mit einem einzigen begrenzten NVIDIA-API-Aufruf drei öffentliche und synthetische Continuum-nahe Fehler analysieren: UTF-8-Bytegrenzen, zeitliche Gültigkeit/Widerruf von Erinnerungen und korrektes GPU-Abrechnungsquantum. Keine privaten Repository-Quellen, Eigentümerfakten oder Secrets werden versendet.
+
+Wiederverwendung bestehender CCC1-Typen: validateCodingTask, taskFingerprint und validateCodingProposal. Das synthetische Null-Commit ist KEIN echtes Git-Commit. Jeder ausgegebene Patch bleibt UNTRUSTED und ist nicht ausführbar, wird nicht installiert, nicht gelernt und nicht als echte CCC1-Reparatur gewertet. Das genaue Übereinstimmen mit den vorregistrierten Golden-Patches ist ein konservativer Benchmark-Proxy; semantisch korrekte alternative Patches könnten dabei fälschlich durchfallen. Echte Reparatur braucht später unveränderte Tests, echte Git-Bindung, RED/GREEN/FRESH-GREEN, OS-Isolation und Besitzerfreigabe.
+
+Der API-Aufruf ist fest auf https://integrate.api.nvidia.com/v1/chat/completions und nvidia/nemotron-3.5-lightning-30b-a3b beschränkt. Modellparameter: temperature=0, chat_template_kwargs.enable_thinking=false, max_tokens=4096, stream=false, keine Tool-Aufrufe. Festes Limit: 16 KB Request, 90.000 Bytes Response, maximal 120 Sekunden, kein Retry. HTTP 401/429, abgeschnittene und unzulässige Antworten werden nicht als Erfolg registriert.
+
+Oracle-Tests: 3.600 synthetische Eingabefälle an autorseitig fixierten ORIGINAL- und GOLDEN-Varianten. Das Modell kann diese Goldenkorrekturen nicht direkt aus dem gesendeten Prompt ablesen. KEIN vom Modell produzierter Programmcode wird in diesem Oracle ausgeführt.
+
+### Einfacher Start nach der NVIDIA-Developer-Anmeldung
+
+Auf https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b/build den Menüpunkt Generate API Key wählen. API-Schlüssel nicht in Chat, GitHub, Issue, Commit oder Screenshot veröffentlichen.
+
+In Termux / einem lokalen Terminal mit Node 22+ und dem Forschungsbranch:
+
+    node scripts/continuum-nvidia-coding-lab.mjs --check
+    read -rs -p 'NVIDIA API key: ' NVIDIA_API_KEY; echo
+    export NVIDIA_API_KEY
+    node scripts/continuum-nvidia-coding-lab.mjs --run
+    unset NVIDIA_API_KEY
+
+Der Start verwendet nur einen einzelnen echten NVIDIA-Request mit öffentlichen synthetischen Quellen. Das Ergebnis zeigt die genau getroffenen Golden-Patches, Zeit und Completion-Tokens; keine rohen Vorschläge oder vertraulichen Daten.
+
+Status am 30.10.2026: Code in GitHub, isolierte Tests positiv; kein in ChatGPT verfügbarer NVIDIA API-Key, kein bestätigter NVIDIA-GPU-Lauf, kein aktualisiertes Fold7-APK. Die Anmeldung im NVIDIA-Browser allein stellt dem ChatGPT-GitHub-Connector keine API-Berechtigung bereit.
+
+Offizielle Referenzen:
+https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-5-lightning-30b-a3b-infer
+https://build.nvidia.com/nvidia/nemotron-3.5-lightning-30b-a3b/build
+https://docs.nvidia.com/nim/large-language-models/2.0.10/get-started/advanced/get-started-nemotron-3.5-lightning.html
