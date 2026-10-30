@@ -31,11 +31,12 @@ trap cleanup EXIT
 git -C "$ROOT" worktree add --detach "$SANDBOX" HEAD >/dev/null
 export OPENAI_API_BASE='https://integrate.api.nvidia.com/v1'
 export OPENAI_API_KEY="$NVIDIA_API_KEY"
-unset NVIDIA_API_KEY
+unset NVIDIA_API_KEY GITHUB_TOKEN GH_TOKEN AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
 cd "$SANDBOX"
 "$VENV/bin/aider" \
   --model openai/nvidia/nemotron-3-ultra-550b-a55b \
   --model-settings-file docs/research/neuro-agent/aider-nvidia-ultra-model-settings.yml \
+  --env-file /dev/null --no-analytics --no-detect-urls \
   --no-auto-commits --no-auto-test --no-auto-lint \
   --no-suggest-shell-commands --no-watch-files \
   app/src/main/java/at/heinz/deviceai/research/neuro/TemporalNeuralShadow.kt
