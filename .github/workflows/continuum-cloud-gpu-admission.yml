@@ -15,6 +15,10 @@ on:
       - scripts/continuum-nvidia-coding-lab.mjs
       - scripts/continuum-nvidia-ultra-review.mjs
       - scripts/continuum-nvidia-ultra-review.test.mjs
+      - scripts/continuum-neuro-agent.mjs
+      - scripts/continuum-neuro-agent.test.mjs
+      - scripts/setup-continuum-neuro-agent.sh
+      - docs/research/neuro-agent/BIO-NEURONALES-JARVIS-GEHIRN-ARCHITEKTUR.md
       - docs/research/omega/NVIDIA-ULTRA-JARVIS-MASTER-RESEARCH-20261030.md
       - .github/workflows/continuum-cloud-gpu-admission.yml
   workflow_dispatch:
@@ -41,6 +45,7 @@ jobs:
             .github/continuum/nvidia-nim-public-coding-lab.test.mjs \
             .github/continuum/nvidia-nim-public-coding-oracle.test.mjs \
             scripts/continuum-nvidia-ultra-review.test.mjs \
+            scripts/continuum-neuro-agent.test.mjs \
             .github/continuum/compute-fabric-model-adapter.test.mjs \
             .github/continuum/continuum-virtual-model-fabric.test.mjs \
             .github/continuum/coding-provider-remote.test.mjs
@@ -57,5 +62,9 @@ jobs:
           node scripts/continuum-nvidia-coding-lab.mjs --check
           node --check scripts/continuum-nvidia-ultra-review.mjs
           node --check scripts/continuum-nvidia-ultra-review.test.mjs
+          node --check scripts/continuum-neuro-agent.mjs
+          node --check scripts/continuum-neuro-agent.test.mjs
+          bash -n scripts/setup-continuum-neuro-agent.sh
+          node scripts/continuum-neuro-agent.mjs --check
           node scripts/continuum-nvidia-ultra-review.mjs --check
           node scripts/continuum-nvidia-nim-benchmark.mjs --check
