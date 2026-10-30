@@ -284,3 +284,20 @@ test('the command line runs the same flow as a process (Termux usage) and refuse
     assert.match(scout,/"tool":"finish"/);fs.rmSync(evidence,{recursive:true,force:true});
   }finally{cleanup(f);}
 });
+
+test('interactive mode: plain requests line by line, confirmation on the next line, "ende" stops (as in Termux)',()=>{
+  const f=fixture();
+  try{
+    const script=path.join(f.dir,'actions.json');
+    fs.writeFileSync(script,JSON.stringify([...scoutScript,rightFix,done]));
+    const r=spawnSync(process.execPath,[path.resolve('scripts/continuum-agent.mjs'),'--repo',f.root,'--script',script],
+      {encoding:'utf8',timeout:120000,input:'Abstand muss immer positiv sein, auch für Größen mit Ümlauten\nj\nende\n'});
+    assert.equal(r.status,0,r.stderr);
+    assert.match(r.stdout,/Auftrag> /);assert.match(r.stdout,/freigeben\? \[j\/N\]/);
+    assert.match(r.stdout,/Ergebnis: VERIFIED \(SIMULATED_SCRIPT\)/);
+    const evidence=r.stdout.match(/Protokoll: (\S+)/)?.[1];if(evidence)fs.rmSync(evidence,{recursive:true,force:true});
+    const no=spawnSync(process.execPath,[path.resolve('scripts/continuum-agent.mjs'),'--repo',f.root,'--script',script],
+      {encoding:'utf8',timeout:120000,input:'Abstand muss positiv sein\nn\n\n'});
+    assert.match(no.stdout,/Ergebnis: NOT_GRANTED/);
+  }finally{cleanup(f);}
+});

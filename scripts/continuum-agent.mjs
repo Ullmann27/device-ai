@@ -9,6 +9,8 @@
  *    committed or pushed.
  * Brain: the owner's local OpenAI-compatible server (CONTINUUM_LOCAL_BRAIN_ENDPOINT/_MODEL/_API_KEY), or
  * --script <actions.json> (a SIMULATED brain for tests and demos). Options: --repo <dir> --yes --executor <config>.
+ * Without a request text the command is interactive: type one plain request per line ("Auftrag> ..."), confirm the
+ * proposed files with j, finish with an empty line or "ende".
  */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -45,21 +47,45 @@ export function runAgentCommand({repo,request,brain,confirm,executor=null,log=()
   }finally{removeWorktree(repo,wt);}
 }
 
+/** Blocking line read from stdin (TTY or pipe); bytes are decoded at the end so umlauts survive. */
+function readLineSync(){
+  const one=Buffer.alloc(1),bytes=[];
+  for(;;){
+    let n;
+    try{n=fs.readSync(0,one,0,1,null);}
+    catch(e){if(e.code==='EAGAIN'){Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,50);continue;}if(e.code==='EOF')n=0;else throw e;}
+    if(n===0)return bytes.length?Buffer.from(bytes).toString('utf8'):null;
+    if(one[0]===10)return Buffer.from(bytes).toString('utf8').replace(/\r$/,'');
+    bytes.push(one[0]);
+  }
+}
+
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const argv=process.argv.slice(2),opt=n=>{const i=argv.indexOf(n);return i>=0?argv.splice(i,2)[1]:null;};
   const repo=path.resolve(opt('--repo')??'.'),script=opt('--script'),config=opt('--executor');
-  const yes=argv.includes('--yes');const request=argv.filter(a=>a!=='--yes').join(' ');
-  const brain=script?createScriptedBrain(JSON.parse(fs.readFileSync(script,'utf8'))):createChatCompletionsBrain({
+  const yes=argv.includes('--yes');const request=argv.filter(a=>a!=='--yes').join(' ').trim();
+  const makeBrain=()=>script?createScriptedBrain(JSON.parse(fs.readFileSync(script,'utf8'))):createChatCompletionsBrain({
     endpoint:process.env.CONTINUUM_LOCAL_BRAIN_ENDPOINT||undefined,model:process.env.CONTINUUM_LOCAL_BRAIN_MODEL||'local',
     apiKey:process.env.CONTINUUM_LOCAL_BRAIN_API_KEY||null});
   const executor=config?createIsolatedExecutor(loadIsolationConfig(config,{sourceRoot:repo})):null;
-  const answer=()=>{if(yes)return true;const b=Buffer.alloc(16);let n=0;
-    try{process.stdout.write('Diese Dateien zur Änderung freigeben? [j/N] ');n=fs.readSync(0,b,0,16,null);}catch{return false;}
-    return /^[jy]/i.test(b.toString('utf8',0,n).trim());};
-  const result=runAgentCommand({repo,request,brain,confirm:answer,executor,log:m=>console.log(m)});
-  console.log(`\nErgebnis: ${result.status} (${result.brainKind})${result.attempts?' Versuche: '+result.attempts.join(', '):''}`);
-  for(const p of result.patches??[])console.log(`\n--- ${p.file} (alt)\n${p.oldText}\n+++ ${p.file} (neu)\n${p.newText}`);
-  if(result.status==='VERIFIED')console.log('\nGeprüft durch die feste Testkette. Nichts wurde angewendet: Patch zur Freigabe.');
-  else if(result.attempts?.includes('REJECTED_BY_EXECUTION_POLICY'))console.log('\nNicht ausgeführt: allgemeine Änderungen laufen nur im isolierten Executor (--executor).');
-  if(result.evidence)console.log('Protokoll: '+result.evidence);
+  const answer=()=>{if(yes)return true;process.stdout.write('Diese Dateien zur Änderung freigeben? [j/N] ');return /^[jy]/i.test((readLineSync()??'').trim());};
+  const show=result=>{
+    console.log(`\nErgebnis: ${result.status} (${result.brainKind??result.scope?.brainKind})${result.attempts?' Versuche: '+result.attempts.join(', '):''}`);
+    for(const p of result.patches??[])console.log(`\n--- ${p.file} (alt)\n${p.oldText}\n+++ ${p.file} (neu)\n${p.newText}`);
+    if(result.status==='VERIFIED')console.log('\nGeprüft durch die feste Testkette. Nichts wurde angewendet: Patch zur Freigabe.');
+    else if(result.attempts?.includes('REJECTED_BY_EXECUTION_POLICY'))console.log('\nNicht ausgeführt: allgemeine Änderungen laufen nur im isolierten Executor (--executor).');
+    if(result.evidence)console.log('Protokoll: '+result.evidence);
+  };
+  const once=text=>{try{show(runAgentCommand({repo,request:text,brain:makeBrain(),confirm:answer,executor,log:m=>console.log(m)}));}
+    catch(e){console.log('Abgebrochen: '+(e.code??e.message));process.exitCode=1;}};
+  if(request)once(request);
+  else{
+    console.log('Continuum Coding-Agent. Ein Auftrag pro Zeile; leere Zeile oder "ende" beendet.');
+    for(;;){
+      process.stdout.write('\nAuftrag> ');
+      const line=readLineSync();
+      if(line===null||!line.trim()||/^(ende|exit|quit)$/i.test(line.trim()))break;
+      once(line.trim());
+    }
+  }
 }
