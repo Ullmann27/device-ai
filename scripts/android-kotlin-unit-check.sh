@@ -50,6 +50,11 @@ echo "classes=${#classes[@]} checks=${#checks[@]} junit: $summary"
 if [ "$status" -ne 0 ]; then
   grep -E '^[0-9]+\) ' "$out/junit.txt" | head -20 || true
   grep 'check failed' "$out/checks.txt" || true
+  # Diagnosis only (exit status unchanged): name failures that carry a concrete host signature.
+  if command -v node >/dev/null; then
+    node "$root/.github/continuum/test-failure-environment.mjs" "$out/junit.txt" >"$out/failure-environment.json" 2>&1 &&
+      node -e 'const r=require(process.argv[1]);console.log("failure diagnosis: host-suspected="+r.hostSuspected+" code-or-test="+r.codeOrTest+(r.hints.length?" hints="+r.hints.length:"")+" (see failure-environment.json; never a pass)")' "$out/failure-environment.json" || true
+  fi
   echo "KOTLIN_UNIT_CHECK_FAILED: see $out/junit.txt and $out/checks.txt"; exit 1
 fi
 echo "KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)"
