@@ -1,0 +1,12 @@
+GIT_HEAD=5e59c731a359f79b06f1a8fc823e53e2ba1cc8f6 (all sources unmodified; same-module host compile with the Risk shim)
+AgentToolLayerTest blob 3ef5a811ea3e62190d9657cfab00b2d0b1a716e1
+ToolExecutionReceiptStoreTest blob 33875a8f32d3355e4f1c700431f9d6798c108252
+ToolReplayGuardTest blob 63ffb278ea826de48375441ce6607a3a3f5d1318
+AgentToolLayer.kt blob 02c5d31a7de71019421c7973c0fde20a3c96d7df ToolRegistry.kt blob e3b0a07387c4585f5011f474752a0c4ad7e137eb
+COMPILE_EXIT=0
+..............
+Time: 0.313
+
+OK (14 tests)
+
+JUNIT_EXIT=0

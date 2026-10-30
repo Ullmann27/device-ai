@@ -1,0 +1,18 @@
+EXP-20 P2 EXPLORATORY holdout autopsy (opened holdout, frozen arms, no re-selection)
+turn-level cue visibility per intended feature (seen/blind):
+  SWITCH              seen=119 blind=33
+  CORRECTION          seen=74 blind=46
+  SHORT_REF           seen=381 blind=139
+  LONG_REF            seen=386 blind=54
+  PERSON_INTRO        seen=279 blind=81
+  PERSON_PRONOUN      seen=320 blind=0
+  DEVICE_OR_PLACE     seen=382 blind=138
+  PRESENCE_UNCERTAIN  seen=45 blind=35
+variants: encoder-blind=428/1120, time out of TRAIN range=169/1120
+
+turn accuracy by condition (correct/total)
+  A      clean=401/604   encoderBlind=257/347   timeOOR=41/88     both=33/81
+  A0     clean=406/604   encoderBlind=255/347   timeOOR=80/88     both=47/81
+  A_DSK  clean=431/604   encoderBlind=251/347   timeOOR=38/88     both=25/81
+  B      clean=572/604   encoderBlind=191/347   timeOOR=81/88     both=35/81
+  C      clean=567/604   encoderBlind=202/347   timeOOR=88/88     both=26/81

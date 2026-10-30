@@ -1,0 +1,9 @@
+GIT_PARENT=5e59c731a359f79b06f1a8fc823e53e2ba1cc8f6 P2SafetyAuditTest.kt sha256=1b8f21ba467ff434e6bd6a34f96902e6427d029a5e4e6eb789613539d109bffe
+JUnit version 4.13.2
+..P2SafetyAudit actions with unresolvedReference=true over 7680 combos: {CLARIFY=7680}
+.
+Time: 0.397
+
+OK (3 tests)
+
+JUNIT_EXIT=0
