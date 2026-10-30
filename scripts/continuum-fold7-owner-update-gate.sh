@@ -91,18 +91,17 @@ case "$mode" in
     expected_fp='6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23'
     [[ "$(cat "$fingerprint")" == "$expected_fp" ]] ||
       blocked 'Continuum Lokal certificate pin differs from installed version'
-    # Re-run full regressions on the exact source without passing signer material.
-    (
-      unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
-      export CONTINUUM_FUSION_REGRESSION_OUTPUT="$(new_evidence_directory)"
-      bash "$root/scripts/continuum-fusion-full-regression.sh" "$approved_sha"
-    ) || blocked 'Full local regression failed; signed release refused'
+    # Single security-critical regression run: the standalone signer itself
+    # runs the entire QA suite BEFORE asking for the P12 password. Running it
+    # again here would double Gradle/CPU/thermal load on the Fold7.
+    # The builder also independently rechecks exact owner-approved HEAD,
+    # official remote, unprotected branch, clean tree, and original certificate.
     [[ "$approved_sha" == "$(git -C "$root" rev-parse --verify HEAD)" &&
        -z "$(git -C "$root" status --porcelain --untracked-files=normal)" ]] ||
-      blocked 'Source changed during QA; owner release refused'
+      blocked 'Source changed before owner build; owner release refused'
     unset CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD
     bash "$root/scripts/continuum-fold7-standalone-apk.sh" build "$version" ||
-      blocked 'Continuum Lokal release build failed'
+      blocked 'Continuum Lokal release build failed; original signer never bypasses QA'
     printf 'CONTINUUM_FOLD7_OWNER_ARTIFACT_NOT_INSTALLED=TRUE\n'
     ;;
 esac
