@@ -7,7 +7,7 @@ Branch: `research/jpi1-presence-shadow-20261030`.
 
 - Reine Kotlin-JPI1-Zustandslogik für die vier bezeichneten Endpunkte HOME_AMBIENT, VEHICLE_HANDSFREE_AUDIO, FOLD7_MOBILE_DIRECT und PC_WORKSTATION.
 - Haushalt: OWNER_AT_HOME, OWNER_AWAY_OTHERS_PRESENT, HOUSE_CONFIRMED_EMPTY, OCCUPANCY_UNKNOWN.
-- Nur frische Telemetrie bei als gefährlich markierten eingeschalteten Geräten; UNKNOWN meldet Unsicherheit statt leeres Haus zu behaupten; anwesende Familie unterdrückt den spezifischen Abwesenheitsalarm.
+- Nur frische, als verifiziert gekennzeichnete Telemetrie bei als gefährlich markierten eingeschalteten Geräten; nicht verifizierte Haushalts-Anwesenheitsbelege erzwingen UNKNOWN; UNKNOWN meldet Unsicherheit statt leeres Haus zu behaupten; anwesende Familie unterdrückt den spezifischen Abwesenheitsalarm.
 - Unterscheidung TELEMETRY_READ_ONLY / SAFE_REMOTE_SHUTOFF_ONLY / FULL_BIDIRECTIONAL_CONTROL.
 - Ablauf mit zufälliger, kurzlebiger, einmalig einlösbarer Proposal-ID, eng begrenzter expliziter Sprachbestätigung, zusätzlicher Besitzer-Authentisierung durch einen **künftigen** vertrauenswürdigen Adapter, unmittelbar erneut geprüfter Haus-/Gerätesituation und nach dem Befehl frischer, zugeordnet überprüfter Telemetrie.
 - Keine globale synchrone Sperre um die Brückenaufrufe, begrenzte Pending-Menge und Cooldown gegen wiederholte Warnungen.
@@ -25,9 +25,9 @@ Ein AUS-Sensorwert von Home Assistant/SmartThings wäre zunächst eine **Telemet
 
 ## Tests und Grenzen
 
-`app/src/test/java/at/heinz/deviceai/jarvis/ContinuumJarvisPresenceEngineTest.kt` enthält 16 JUnit-4-Testfälle: Haus leer, Familie anwesend, Status unbekannt, reiner Lesemodus, SHADOW-Sperre, frischer AUS-Readback, fehlerhafte oder fremde Rückmeldung, fehlende Authentisierung, unklare/negierte Zustimmung, Replay, Ablauf, Rückkehr weiterer Haushaltsmitglieder, veraltete Telemetrie, Cooldown, vier Endpunkte und fehlgeschlagener Befehl.
+`app/src/test/java/at/heinz/deviceai/jarvis/ContinuumJarvisPresenceEngineTest.kt` enthält 18 JUnit-4-Testfälle: Haus leer, Familie anwesend, Status unbekannt, reiner Lesemodus, SHADOW-Sperre, frischer AUS-Readback, fehlerhafte oder fremde Rückmeldung, fehlende Authentisierung, unklare/negierte Zustimmung, Replay, Ablauf, Rückkehr weiterer Haushaltsmitglieder, veraltete Telemetrie, Cooldown, vier Endpunkte, unbestätigtes Haushaltsquorum, unbestätigte Sensortelemetrie und fehlgeschlagener Befehl.
 
-**Lokale Vorprüfung:** Kotlin/JVM mit `kotlinc 1.9.0` kompiliert; die 16 Testmethoden mit einem temporären kompatiblen JUnit-Annotations-/Assert-Testtreiber ausgeführt: 16 PASS / 0 FAIL. Das ist ausdrücklich **kein** vollständiger Gradle-`testDebugUnitTest`-Lauf, keine Android-Geräteabnahme und keine authentische JUnit-Runtime-Validierung. Der zusätzliche produktive ToolGate-Integrationsweg ist nicht aktiviert.
+**Lokale Vorprüfung:** Kotlin/JVM mit `kotlinc 1.9.0` kompiliert; die 16 Testmethoden mit einem temporären kompatiblen JUnit-Annotations-/Assert-Testtreiber ausgeführt: 18 PASS / 0 FAIL. Das ist ausdrücklich **kein** vollständiger Gradle-`testDebugUnitTest`-Lauf, keine Android-Geräteabnahme und keine authentische JUnit-Runtime-Validierung. Der zusätzliche produktive ToolGate-Integrationsweg ist nicht aktiviert.
 
 ## Für spätere echte End-to-End-Integration
 
@@ -41,3 +41,5 @@ Ein AUS-Sensorwert von Home Assistant/SmartThings wäre zunächst eine **Telemet
 8. Erst dann eine gesondert bestätigte Freigabe/PR für die produktive Geräteanbindung vorbereiten.
 
 Kein Merge nach `main`, keine Besitzer-Schlüssel und keine echte Hardwareaktion in diesem Forschungsschritt.
+
+**Integrationskonflikt:** Auf GitHub existiert auch `research/jpi1-presence-initiative-shadow-20261030` mit einem alternativen JPI1-Entwurf samt `JarvisSessionHandoff`. Beide Branches enthalten dieselben Kotlin-Klassennamen und dürfen nicht unkontrolliert gemergt werden. Vor jeder Gesamtintegration ist ein Codevergleich mit gezielter Auswahl und gemeinsamer Regression erforderlich.
