@@ -1,0 +1,39 @@
+EXP-20 P3 encoder precondition + DG-SDR  data=104cd929e2b4f3ced6a96a7a5cac29a78f0c0366dcb4d10a73b4824abf2f2939 cre1=2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6 jvm=21.0.12.1 amd64
+A0_P2_FEATURES  ALL top1=0/120 near_conf=120 unrel_conf=115 ties=120 MRR=0.173 | L top1=0/60 near_conf=60 unrel_conf=57 ties=60 MRR=0.196 | S top1=0/60 near_conf=60 unrel_conf=58 ties=60 MRR=0.149
+JACCARD         ALL top1=60/120 near_conf=60 unrel_conf=2 ties=60 MRR=0.690 | L top1=60/60 near_conf=0 unrel_conf=0 ties=0 MRR=1.000 | S top1=0/60 near_conf=60 unrel_conf=2 ties=60 MRR=0.381
+SUBWORD         ALL top1=61/120 near_conf=50 unrel_conf=42 ties=0 MRR=0.656 | L top1=47/60 near_conf=8 unrel_conf=6 ties=0 MRR=0.875 | S top1=14/60 near_conf=42 unrel_conf=36 ties=0 MRR=0.436
+SUBWORD_SDR     ALL top1=47/120 near_conf=66 unrel_conf=54 ties=33 MRR=0.576 | L top1=35/60 near_conf=22 unrel_conf=14 ties=10 MRR=0.744 | S top1=12/60 near_conf=44 unrel_conf=40 ties=23 MRR=0.408
+CRE1            ALL top1=71/120 near_conf=40 unrel_conf=27 ties=0 MRR=0.750 | L top1=59/60 near_conf=0 unrel_conf=1 ties=0 MRR=0.992 | S top1=12/60 near_conf=40 unrel_conf=26 ties=0 MRR=0.509
+CRE1_SDR        ALL top1=50/120 near_conf=62 unrel_conf=47 ties=50 MRR=0.605 | L top1=44/60 near_conf=11 unrel_conf=5 ties=8 MRR=0.861 | S top1=6/60 near_conf=51 unrel_conf=42 ties=42 MRR=0.349
+CRE1_UNTRAINED  ALL top1=69/120 near_conf=43 unrel_conf=31 ties=0 MRR=0.733 | L top1=56/60 near_conf=1 unrel_conf=3 ties=0 MRR=0.967 | S top1=13/60 near_conf=42 unrel_conf=28 ties=0 MRR=0.500
+
+PRECONDITION (registered): top1>=0.80 on L and on S, near confusion <=0.10 on S
+  A0_P2_FEATURES  FAIL
+  JACCARD         FAIL
+  SUBWORD         FAIL
+  SUBWORD_SDR     FAIL
+  CRE1            FAIL
+  CRE1_SDR        FAIL
+  CRE1_UNTRAINED  FAIL
+
+PLANNED COMPARISONS on all 120 groups (exact McNemar, Holm over 4, MDE +5 pp)
+  SUBWORD_SDR vs SUBWORD: b=2 c=16 p=0.00131 Holm=0.00394 diff=-0.1167 95%CI[-0.1833,-0.0500] -> INFERIOR
+  CRE1_SDR vs CRE1: b=5 c=26 p=0.000192 Holm=0.000769 diff=-0.1750 95%CI[-0.2583,-0.0917] -> INFERIOR
+  CRE1 vs JACCARD: b=12 c=1 p=0.00342 Holm=0.00684 diff=+0.0917 95%CI[+0.0333,+0.1500] -> SUPERIOR
+  SUBWORD vs JACCARD: b=14 c=13 p=1.00 Holm=1.00 diff=+0.0083 95%CI[-0.0750,+0.0917] -> INCONCLUSIVE
+
+COST per query, uncached (host JVM, block means over 200 x 50 queries, after 5000 warm-up queries)
+  A0_P2_FEATURES  p50=403.6 us p95=655.5 us p99=728.8 us alloc/query=36224 B
+  JACCARD         p50=36.2 us p95=91.7 us p99=124.2 us alloc/query=74618 B
+  SUBWORD         p50=260.5 us p95=398.2 us p99=444.2 us alloc/query=348704 B
+  SUBWORD_SDR     p50=7603.8 us p95=9159.4 us p99=9368.9 us alloc/query=1823608 B
+  CRE1            p50=598.4 us p95=838.1 us p99=908.9 us alloc/query=466524 B
+  CRE1_SDR        p50=8470.8 us p95=10096.6 us p99=10347.6 us alloc/query=1895857 B
+  CRE1_UNTRAINED  p50=565.4 us p95=826.6 us p99=978.5 us alloc/query=466524 B
+
+MEMORY (primitive payload; analytical)
+  SUBWORD params=4113 doubles (32904 B); stored vector 16 doubles = 128 B
+  CRE1 params=526336 doubles (4210736 B snapshot); stored vector 32 doubles = 256 B
+  SDR projection 8192 (int index + double sign) = 98304 B per input width; stored code 41 indices = 82 B as 16-bit, or 256 B bitset
+  JACCARD: no parameters; stored token set
+sink=314459.687334774
