@@ -52,7 +52,7 @@ test('exactly one approved NVIDIA high-reasoning streamed request; saves only co
    assert.equal(request.headers.Authorization,'Bearer '+key);
    const body=JSON.parse(request.body);
    assert.equal(body.model,MODEL);assert.equal(body.stream,true);
-   assert.equal(body.reasoning_effort,'high');assert.equal(body.reasoning_budget,8192);
+   assert.equal(body.max_tokens,16384);assert.equal(body.chat_template_kwargs.enable_thinking,true);
    assert.equal(body.messages[1].content,f.packet.prompt);
    return responseReport();
   }});
