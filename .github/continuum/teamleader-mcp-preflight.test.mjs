@@ -40,6 +40,13 @@ test('fail closed: tampered or foreign evidence starts no work; unapproved serve
     const evidence=await mcpPreflight({root:f.root,stateDir:f.state,grant,approvedServers});
     for(const bad of [{...evidence,head:'f'.repeat(40)},{...evidence,clean:false},{...evidence,receipts:evidence.receipts.slice(0,1)}])
       assert.throws(()=>runTeamleaderCycle({root:f.root,stateDir:f.state,driver:driverFor(f.root,calls),toolEvidence:bad}),/MCP_TOOL_EVIDENCE_INVALID/);
+    const swapped={...evidence,receipts:[evidence.receipts[1],evidence.receipts[0]]};
+    assert.throws(()=>runTeamleaderCycle({root:f.root,stateDir:f.state,driver:driverFor(f.root,calls),toolEvidence:swapped}),/MCP_TOOL_EVIDENCE_INVALID/);
+    fs.writeFileSync(path.join(f.root,'dirty.txt'),'x');
+    const dirty=await mcpPreflight({root:f.root,stateDir:f.state,grant,approvedServers});
+    assert.equal(dirty.clean,false);
+    assert.throws(()=>runTeamleaderCycle({root:f.root,stateDir:f.state,driver:driverFor(f.root,calls),toolEvidence:dirty}),/MCP_TOOL_EVIDENCE_INVALID/,'dirty tree is no approved base');
+    fs.rmSync(path.join(f.root,'dirty.txt'));
     assert.equal(calls.repair,0);
     await assert.rejects(mcpPreflight({root:f.root,stateDir:f.state,grant,approvedServers:[]}),/MCP_SERVER_NOT_APPROVED/);
     await assert.rejects(mcpPreflight({root:f.root,stateDir:f.state,grant:{...grant,allowedToolNames:['git_head']},approvedServers}),/MCP_TOOL_DENIED/);

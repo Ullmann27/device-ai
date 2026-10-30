@@ -32,10 +32,15 @@ export async function mcpPreflight({root,stateDir,grant,profile='PROTECTED',appr
   return evidence;
 }
 
-/** The cycle accepts tool evidence only if sealed, both reads succeeded and the MCP HEAD equals its own HEAD. */
+/**
+ * The cycle accepts tool evidence only if: sealed (a consistency check, NOT authenticated provenance - anyone with
+ * write access to the state directory can recompute it), the MCP HEAD equals its own HEAD, the working tree was clean
+ * (a dirty tree is never an approved base), and the receipts are exactly git_head then git_status, both allowed and OK.
+ */
 export function verifyToolEvidence(e,head){
-  if(!e||e.schema!=='continuum-teamleader-tool-evidence'||e.version!==1||e.head!==head)return false;
+  if(!e||e.schema!=='continuum-teamleader-tool-evidence'||e.version!==1||e.head!==head||e.clean!==true)return false;
   const {integrity,...data}=e;
   return integrity===sha256(JSON.stringify(data))&&Array.isArray(e.receipts)&&e.receipts.length===2&&
+    e.receipts.map(r=>r.tool).join(',')==='git_head,git_status'&&
     e.receipts.every(r=>r.outcome==='OK'&&r.decision==='ALLOW'&&/^[a-f0-9]{64}$/.test(r.resultSha256??''));
 }
