@@ -72,3 +72,38 @@ Diese Zahlen belegen **Mechanik und Messinstrument**, nicht Modellfähigkeit. **
 - Er committet, pusht und merged nicht und bekommt keine Shell.
 - Er ändert keine Agent-Kontrolldateien, Tests oder Geheimnisse.
 - OwnerGate, ToolGate und die CognitiveGenome-Invarianten sind nicht berührt.
+
+## Nachtrag: ein Befehl wie bei Claude Code (Commits `bb47be82`, `12c6aa0e`)
+**Benutzung in Termux auf dem Fold7** (im Repository-Ordner, sauberer Arbeitsbaum):
+```
+# 1. lokales Modell starten (vorhanden): scripts/continuum-local-llama-termux.sh
+export CONTINUUM_LOCAL_BRAIN_API_KEY=<schlüssel des llama-servers>   # 32-128 Zeichen
+node scripts/continuum-agent.mjs "Behebe den Fehler in distance: der Abstand muss immer positiv sein"
+```
+Der Ablauf hat drei Phasen:
+1. **Sichtung, nur lesend.** Der Agent sucht und liest selbst und schlägt 1–3 Dateien plus Prüfkriterien vor. Er kann dabei nichts ändern und vergibt sich keine Rechte.
+2. **Freigabe.** Der Besitzer bestätigt mit `j`.
+3. **Reparatur.** Der Werkzeug-Loop läuft in der unveränderten `repairSession`. Der Patch wird angezeigt, aber nie angewendet, committet oder gepusht.
+
+**Hinweise:**
+- Die Ergebniszeile nennt die Art des Brains: `SIMULATED_SCRIPT` oder `MODEL_INFERENCE_UNVERIFIED`.
+- Auf dem Fold7 ohne Executor werden allgemeine Patches **nicht ausgeführt** und als `REJECTED_BY_EXECUTION_POLICY` gemeldet; ausgeführt wird nur die numerische Grammatik. Ein vollständig geprüfter Lauf braucht `--executor <isolation-config>` auf einem Docker-Host oder die CI-Sandbox (nächster Schritt 1).
+
+**ChatGPT-Prüfpunkte, Stand:**
+
+| Punkt | Stand |
+|---|---|
+| 1 synchron, keine Hintergrund-Promises | erfüllt (`spawnSync`-Brain, Loop vor der Übergabe abgeschlossen) |
+| 2 Format `LOCAL_CODING_PATCH_PROPOSAL_V1`, Bindung, `trusted=false`/`autoApply=false` | erfüllt; die Sitzung prüft wie bisher |
+| 3 nur kontrollierte Werkzeuge, keine Shell, keine Selbstfreigabe | erfüllt; Sichtung schlägt nur vor, der Besitzer gibt frei |
+| 4 allgemeine Patches nur im isolierten Executor | erfüllt (Politik-Parität getestet) |
+| 5 Korrekturzyklus, identischer Patch, eingeschleuste Anweisung, Budget/Deadline | getestet: echter Testfehler → nächste Runde mit Datei/Zeile/Werten → Korrektur → `VERIFIED`; Wiederholung läuft nicht doppelt; Anweisungen in Dateien erweitern keine Rechte; Budget, Deadline und ungültige Antworten stoppen |
+| 6 simuliert gegen echte Inferenz | `brainKind` in Vorschlag, Beleg und Ausgabe; **noch keine echte Inferenz gelaufen** |
+| 7 CCC1, Teamleader, OwnerGate, Android-Brücke bleiben | erfüllt; kein zweiter Worker: der Loop ist ein `candidateProvider`, der Befehl ein Frontend auf `repairSession` |
+
+**Offen, dieselbe Reihenfolge wie oben:**
+1. Isolation fürs Telefon.
+2. Echte Modellmessung (`--brain chat`).
+3. Den Befehl an das CCC1-Journal anbinden, also über `prepareCodingTask`/`runCodingTask` statt direkt über `repairSession`.
+4. FEATURE- und TEST-Aufgaben.
+5. Übernahme nach Freigabe.
