@@ -151,3 +151,29 @@ export function executeShadowEvolutionCycle({ snapshot, baselineTasks, solver, i
 }
 
 export const evolutionDigest = hex;
+
+
+/** Ephemeral research-only Bayesian-smoothed priors; NO NTW1 weight/ledger writes. */
+export function deriveShadowOperatorPriors(records, operatorIds = ['correct-slice-end', 'clamp-negative-quota']) {
+  if (!Array.isArray(records) || records.length > 100 || !Array.isArray(operatorIds) ||
+      operatorIds.length < 2 || operatorIds.length > 8 ||
+      new Set(operatorIds).size !== operatorIds.length || operatorIds.some(x => !STRATEGY.test(x)))
+    throw Error('INVALID_PRIOR_EVIDENCE');
+  const counts = new Map(operatorIds.map(id => [id, {success:0, failures:0}]));
+  for (const record of records) {
+    if (!record || !Array.isArray(record.chain) ||
+        record.chain.length !== 1 || !counts.has(record.chain[0])) continue;
+    if (record.classification === 'VERIFIED_EXPERIMENTAL') counts.get(record.chain[0]).success++;
+    if (record.classification === 'VERIFIED_NEGATIVE') counts.get(record.chain[0]).failures++;
+    // A multi-step outcome cannot identify which individual operator caused it.
+    // Neutral/infrastructure failures must NEVER be treated as negative samples.
+  }
+  const weighted = operatorIds.map(id => {
+    const c=counts.get(id);
+    return (c.success + 1) / (c.success + c.failures + 2);
+  });
+  const sum = weighted.reduce((a,b)=>a+b,0);
+  return Object.freeze({priors: Object.freeze(Object.fromEntries(operatorIds.map((id,i)=>[id,weighted[i]/sum]))),
+    sampleCounts: Object.freeze(Object.fromEntries(operatorIds.map(id=>[id,Object.freeze({...counts.get(id)})]))),
+    modelWeightsChanged:false, persisted:false, ownerApprovalRequired:true});
+}
