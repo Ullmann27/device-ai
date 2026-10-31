@@ -14,9 +14,9 @@ Default is `NVIDIA_ENABLED=false`. The new, rotated secret `NVIDIA_API_KEY` must
 
 1. Back up actual deployed Worker source and D1 data; compare and integrate handlers rather than blind replacement.
 2. Create Queue `continuum-nvidia-research` in the Free account.
-3. Existing Worker must have producer binding `RESEARCH_QUEUE`; consumer on the same Worker with `max_batch_size=1`, `max_batch_timeout=1`, `max_concurrency=1`, `max_retries=0`.
+3. The Queue has already been created by the Cloudflare Agent. Existing Worker must have producer binding `RESEARCH_QUEUE`; consumer on the same Worker with `max_batch_size=1`, `max_batch_timeout=1`, `max_concurrency=1`, `max_retries=0`.
 4. Preserve existing D1 `DB` binding to `continuum-jarvis-memory`, Cron and public /health + /db-status (read-only). Keep /db-test disabled.
-5. Execute queue-v2/schema.sql *additively*; verify previous rows survive.
+5. The Worker now runs additive self-initialization through its existing D1 `DB` binding on the first Cron/Queue event (only CREATE TABLE/INDEX IF NOT EXISTS and INSERT OR IGNORE). This can work even if the Cloudflare Agent's separate API token cannot write to D1 via REST. Alternatively execute queue-v2/schema.sql manually in the D1 console. Verify existing rows survive.
 6. Run tests with Node 22+ `node --test tests/queue.test.mjs`. These use real in-memory SQLite via Node's built-in experimental sqlite module.
 7. With NVIDIA flag **false**, confirm Cron, queue delivery, and zero external model requests in live Cloudflare logs.
 8. Verify NVIDIA Developer Program free prototyping credits, rotate previously exposed credentials, store the **new** key as a Cloudflare secret. Only with user-approved free usage enable the flag.
@@ -37,4 +37,7 @@ Cloudflare Workers Free currently has a 10 ms CPU-time limit per invocation and 
 
 ## Verification
 
-12 local SQLite-backed tests passed on 2026-10-31 for the equivalent queue-v2 implementation. PR code and test suite are staged but the GitHub Actions runner problem currently prevents an independent hosted CI proof. **No direct NVIDIA invocation, Cloudflare deployment, or device test has been independently observed.**
+16 local SQLite-backed tests passed on 2026-10-31 for the equivalent queue-v2 implementation. PR code and test suite are staged but the GitHub Actions runner problem currently prevents an independent hosted CI proof. **No direct NVIDIA invocation, Cloudflare deployment, or device test has been independently observed.**
+
+## Private ZIP transfer to Cloudflare Agent
+The Agent cannot access the private GitHub PR. Download `Continuum_Cloudflare_NVIDIA_Agent_Integration.zip` from the ChatGPT conversation and attach it to the Cloudflare-Agent thread. It includes the tested source and instructions. Never send the NVIDIA key in chat: store a rotated new key only in Worker Secrets. The Worker can self-bootstrap DB schema through `env.DB` but does **not** grant D1 Edit rights to the Agent's separate API token.
