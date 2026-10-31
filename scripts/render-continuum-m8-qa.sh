@@ -12,7 +12,12 @@ sha="$(git rev-parse --verify HEAD)"
 git -c core.fileMode=false diff --quiet HEAD -- || die 'Tracked source changed in Render checkout'
 untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts .github/continuum backend/src backend/test)"
 [[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
-[[ "$(git branch --show-current)" == "research/continuum-m8-operational-model-20261031" || -z "$(git branch --show-current)" ]] || die 'Unexpected branch'
+case "$(git branch --show-current)" in \
+  research/continuum-m8-operational-model-20261031|\
+  release/continuum-local-complete-v31-20261031|\
+  release/continuum-local-complete-v31-20261031|"") ;; \
+  *) die "Unexpected branch" ;; \
+esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
     -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] ||
     die 'QA must never receive private signing credentials'
@@ -63,20 +68,32 @@ node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-
     die 'Node contract tests failed'
   }
 cat continuum-m8-render-qa/NODE-TESTS.txt | tail -n 30
+# All newest research checks, not just old M8 contract smoke tests.
+node --test tools/continuum-virtual-fabric/*.test.mjs \
+  > continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt >&2
+  die 'Latest Frontier Node tests failed'
+}
+# Regression for release gates with a stubbed signing environment, not signing.
+node --test scripts/render-continuum-m8-owner-release.test.mjs \
+  > continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt >&2
+  die 'Latest release contract tests failed'
+}
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=29   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
+gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=31   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
     die 'Android QA compilation, unit test or lint failed'
   }
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
 # As a separate task, verify the correct production package can actually be
 # assembled in release mode WITHOUT access to signing credentials.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=29   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
+gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=31   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
     tail -n 140 continuum-m8-render-qa/ASSEMBLY.txt
     die 'Unsigned owner-package assembly failed'
   }
 test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
-printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=29\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=31\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"
