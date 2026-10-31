@@ -21,6 +21,22 @@ object ContinuumSourceNovelty {
         file.readLines().filter(shaPattern::matches).map(String::lowercase).toSet()
     }
 
+    /** Unify attempted, archived and active source hashes across journal compaction. */
+    fun knownHashes(base:File):Set<String> = synchronized(lock) {
+        val attempts=completedHashes(base)
+        val archived=runCatching { ContinuumKnowledgeArchive(base).archivedHashes() }
+            .getOrDefault(emptySet())
+        val ledger=runCatching {
+            FileLearningExperienceStore(File(base,"learning-core-v2")).all()
+                .asSequence()
+                .filter { it.type==LearningExperienceType.SOURCE_TEXT && it.status!=LearningStatus.REVOKED }
+                .mapNotNull { it.sourceRef?.substringAfter("#sha256=","")?.lowercase() }
+                .filter(shaPattern::matches)
+                .toSet()
+        }.getOrDefault(emptySet())
+        attempts+archived+ledger
+    }
+
     /** Mark after a completed, evaluated round (accepted or rejected); never after cancellation. */
     fun markCompleted(base:File,sources:List<MentorSource>) = synchronized(lock) {
         val old=completedHashes(base)
