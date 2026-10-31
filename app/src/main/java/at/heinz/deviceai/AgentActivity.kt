@@ -5377,7 +5377,7 @@ class AgentActivity : Activity() {
         panel.addView(cockpit.section(this, "PRÜFTIEFE · MAXIMALE SUCHDAUER"), matchWidth(top = 10))
         lateinit var dialog: AlertDialog
         val labels = listOf(
-            "QUICK · bis 15 Sek.\nWebsuche mit Wikipedia-Fallback",
+            "QUICK · bis 15 Sek.\nÖffentliche Quellen im gesamten Web",
             "STANDARD · bis 45 Sek.\nMehrere unabhängige Quellen und Belegprüfung",
             "DEEP · bis 90 Sek.\nGegenbelege und dokumentierte Quellenkonflikte"
         )
@@ -5432,7 +5432,7 @@ class AgentActivity : Activity() {
                 (if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
                     "Deine dauerhafte Freigabe ist aktiv; diese Recherche startet ohne weitere Bestätigung. "
                 else "Vor dem Zugriff wird diese eine Recherche zur Freigabe vorgelegt. ") +
-                "Suchfragen gehen an Bing; bei fehlenden Ergebnissen wird Wikipedia versucht. " +
+                "Suchfragen können an öffentliche Suchanbieter gehen; eine Wikipedia-Beschränkung gibt es nicht. " +
                 "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
                 "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
             .setView(topic)
@@ -5475,7 +5475,7 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
-                "Diese Suchfrage wird an Bing übertragen. Falls keine verwendbaren Treffer vorliegen, wird Wikipedia versucht. "
+                "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
                 else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
             .setNegativeButton("Ablehnen") { _,_->webToolGate.cancel();completed(null) }
@@ -5589,9 +5589,9 @@ class AgentActivity : Activity() {
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
                             append(if(session.call is at.heinz.deviceai.cognitive.WebToolRequest.Read)"\n\nDirekte genehmigte HTTPS-Quelle."
-                                else "\n\nAllgemeine Websuche lieferte keine verwendbaren Treffer; Wikipedia-Fallback wurde versucht.")
+                                else "\n\nAllgemeine Suchanbieter lieferten keine überprüfbaren Treffer. Keine Wikipedia-Ersatzquellen erzwungen.")
                         } else {
-                            append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
+                            append("\n\nAllgemeine Websuche über mehrere Anbieter; Suchanbieter können Ergebnisse begrenzen.")
                         }
                         if (dossier.sources.isEmpty()) {
                             append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
