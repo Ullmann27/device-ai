@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning
 
+import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider
+
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -40,7 +42,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         transaction { Unit } // Complete a previously validated import after process death.
     }
 
-    enum class Kind { WIKIPEDIA_EXCERPT, RIS_LEGISLATION, RIS_CASE_LAW }
+    enum class Kind { WIKIPEDIA_EXCERPT, RIS_LEGISLATION, RIS_CASE_LAW, PUBLIC_WEB_EXCERPT }
 
     data class SourceRecord(
         val id:String,
@@ -68,7 +70,10 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         val uri=java.net.URI(url)
         require(uri.scheme=="https" && uri.userInfo==null && uri.fragment==null &&
             uri.port==-1 && uri.rawQuery?.length.orEmptyLength()<=600)
+        if (kind==Kind.PUBLIC_WEB_EXCERPT)
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri)
         require(uri.host in when(kind) {
+            Kind.PUBLIC_WEB_EXCERPT -> setOf(requireNotNull(uri.host))
             Kind.WIKIPEDIA_EXCERPT -> setOf("de.wikipedia.org")
             Kind.RIS_LEGISLATION,Kind.RIS_CASE_LAW -> setOf(
                 "ris.bka.gv.at","www.ris.bka.gv.at","data.bka.gv.at")
@@ -374,7 +379,10 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         require(uri.scheme=="https" && uri.userInfo==null &&
             uri.fragment==null && uri.port==-1 &&
             uri.rawQuery?.length.orEmptyLength()<=600)
+        if (record.kind==Kind.PUBLIC_WEB_EXCERPT)
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri)
         require(uri.host in when(record.kind) {
+            Kind.PUBLIC_WEB_EXCERPT -> setOf(requireNotNull(uri.host))
             Kind.WIKIPEDIA_EXCERPT -> setOf("de.wikipedia.org")
             Kind.RIS_LEGISLATION,Kind.RIS_CASE_LAW ->
                 setOf("ris.bka.gv.at","www.ris.bka.gv.at","data.bka.gv.at")
