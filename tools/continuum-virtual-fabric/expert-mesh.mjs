@@ -1,5 +1,5 @@
 /**
- * 100-role logical expert topology for Continuum.
+ * 50-to-3000-role logical expert topology for Continuum.
  * These are **reservations and task routes**, not neural network weights,
  * separate trained models, new FLOPS, remote workers or deployed services.
  */
@@ -19,7 +19,7 @@ const PROFILE_RESOURCES = Object.freeze({
   research: { cpuSlots:1, gpuSlots:0, ramMb:768, vramMb:0 },
   training: { cpuSlots:1, gpuSlots:1, ramMb:4096, vramMb:8192 }
 });
-const VALID_COUNTS = new Set([50,100]);
+const VALID_COUNTS = new Set([50,100,1000,2000,3000]);
 const safeTaskId = /^[a-zA-Z0-9_.:-]{1,128}$/;
 
 export class ContinuumExpertMesh {
@@ -27,7 +27,7 @@ export class ContinuumExpertMesh {
   #groups=new Map();
   #indexes=new Map();
   constructor({ prototypeCount=100, now=()=>Date.now() }={}) {
-    if (!VALID_COUNTS.has(prototypeCount)) throw new TypeError('Only 50 or 100 prototypes are supported in this experiment');
+    if (!VALID_COUNTS.has(prototypeCount)) throw new TypeError('Supported sizes: 50, 100, 1000, 2000, 3000');
     this.#fabric=new VirtualFabric({now});
     const countPerRole=prototypeCount/5;
     for (const [component, role] of Object.entries(COMPONENT_PROFILES)) {
