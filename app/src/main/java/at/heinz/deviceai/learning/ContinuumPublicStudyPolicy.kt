@@ -13,7 +13,7 @@ object ContinuumPublicStudyPolicy {
     const val PERIOD_MS = 15L * 60L * 1000L
     const val MAX_RESPONSE_BYTES = 96 * 1024
     const val MAX_EXCERPT_CHARS = 390
-    const val MAX_ROUND_WALL_MS = 15_000L
+    const val MAX_ROUND_WALL_MS = 90_000L
     const val MAX_TOPICS = 48
 
     val topics = listOf(
