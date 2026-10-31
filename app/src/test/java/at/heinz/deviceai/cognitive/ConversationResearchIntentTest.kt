@@ -32,6 +32,10 @@ class ConversationResearchIntentTest {
         assertTrue(ConversationResearchIntent.forbidsWeb(question))
         assertNull(PublicKnowledgeTopicRouter.topic(question))
         assertNotNull(PublicKnowledgeTopicRouter.topic("Was ist maschinelles Lernen?"))
+        assertNull(PublicKnowledgeTopicRouter.topic("Welche Farbe hat Bens Schlüssel?"))
+        assertNull(PublicKnowledgeTopicRouter.topic("Welche Farbe hat Mars?"))
+        assertNull(PublicKnowledgeTopicRouter.topic("Was haben wir vorhin über Anna gesagt?"))
+        assertNotNull(PublicKnowledgeTopicRouter.topic("Wer ist Albert Einstein?"))
     }
 
     @Test fun positiveResearchRequestsRemainPossible() {
