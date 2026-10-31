@@ -83,3 +83,33 @@ test('new metadata type safety and published APK hash readback are in the source
   assert.match(catalog,/stringFields\.all/);
   assert.match(source('scripts/continuum-owner-render-readback.mjs'),/APK_HASH_VERIFIED_CERT_NOT_VERIFIED/);
 });
+
+
+test('v34 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
+  const fetch=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt');
+  const scheduler=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
+  const archive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt');
+  const memory=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt');
+  const cognitive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt');
+  assert.match(fetch,/GeneralWebDiscoveryProvider/);
+  assert.match(fetch,/\.take\(12\)/);
+  assert.match(fetch,/completedShas/);
+  assert.match(scheduler,/ContinuumSourceNovelty\.knownHashes\(filesDir\)/);
+  assert.match(scheduler,/ContinuumOpenWebStudyFetch\.acquire\(/);
+  assert.match(scheduler,/archive\.save\(/);
+  assert.match(archive,/fun archivedHashes\(\):Set<String>/);
+  assert.match(archive,/PUBLIC_WEB_EXCERPT/);
+  assert.match(memory,/LearningProvenance\.PUBLIC_WEB_SOURCE/);
+  assert.match(cognitive,/Cre1PromotionGate\.rerank\(/);
+});
+test('v34 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
+  const mission=source('app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt');
+  const research=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
+  const proof=source('app/src/main/java/at/heinz/deviceai/research/neuro/ReviewedEvidenceGraph.kt');
+  assert.match(mission,/ContinuumPublicStudyScheduler\(this\)\.display\(\)/);
+  assert.match(mission,/ContinuumOwnerUpdateActivity::class\.java/);
+  assert.match(research,/automatisch/i);
+  assert.match(proof,/max.*512|expansions <= 512/);
+  assert.match(proof,/answerAuthority: Boolean = false/);
+  assert.match(proof,/mutatesMemory: Boolean = false/);
+});
