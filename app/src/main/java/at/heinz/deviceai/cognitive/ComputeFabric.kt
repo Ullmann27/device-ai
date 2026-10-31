@@ -144,8 +144,14 @@ class ComputeScheduler(
     private val nowMillis: () -> Long = System::currentTimeMillis
 ) {
     fun select(task: ComputeTask): NodeCapabilityManifest? {
-        if (task.deadlineMillis <= nowMillis()) return null
+        val now = nowMillis()
+        if (task.deadlineMillis <= now) return null
         return registry.authorized().asSequence()
+            // Registry and scheduler may use independently supplied clocks. Never
+            // assign work to a node before its grant starts or when its grant
+            // could expire before the task's maximum permitted runtime ends.
+            .filter { it.issuedAtMillis <= now && it.expiresAtMillis > now &&
+                it.expiresAtMillis - now >= task.maxRuntimeMillis }
             .filter { task.assignedNodeId == null || task.assignedNodeId == it.nodeId }
             .filter { task.type in it.taskTypes }
             .filter { task.requiredBackend == null || task.requiredBackend in it.backends }
