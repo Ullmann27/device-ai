@@ -1,0 +1,11 @@
+{
+  "name": "continuum-cloudflare-nvidia-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "deploy": "npx wrangler deploy",
+    "migrate:remote": "npx wrangler d1 execute continuum-jarvis-memory --remote --file=./schema.sql"
+  }
+}
