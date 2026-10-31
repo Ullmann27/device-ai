@@ -67,3 +67,14 @@ Vom bisherigen Geräteverlauf berichteter letzter **installierter** Stand: `Cont
 ## 6. Verpflichtung an alle Assistenten
 
 Vor Codearbeit **diese Datei**, Root-`AGENTS.md`, `docs/CONTINUUM-EXPERIMENTVERTRAG.md`, aktuelles `docs/CONTINUUM-EXPERIMENTE.json`, PR-Abstammung sowie den nachweisbaren Geräte-/Teststand lesen. Auf dem offiziellen Repo arbeiten; isolierter PR, vollständige Ergebniskette, keine Main-Automerges, kein ungefragter kostenpflichtiger Compute, keine Geheimnisse. Forschungsrichtungen dürfen nicht gelöscht oder unbesehen in den Haupt-Chatpfad eingehängt werden.
+
+
+## 7. Verbindliches Update des tatsächlichen Coding- und Speichercodes (31.10.2026)
+
+**Neu im Forschungs-HEAD:** `app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt` und `app/src/test/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearchTest.kt`.
+
+Der neue **forschungsinterne, bisher nicht in AgentActivity gestartete** Adapter ruft den **bestehenden** `AiContextCompiler` wirklich auf, erzeugt nur einen SHA-256-Fingerabdruck des kontextgeprüften Modellinputs und führt begrenzte Kopien bereits unabhängig belegter **rein deterministischer** Zwischenresultate im flüchtigen Speicher. Key enthält Owner-/Kontext-/Modell-/Policy-Revision und Gedächtnis-Epoch. Die Funktionen liefern `hits`, `misses`, `verifiedWrites`, `rejects` und `entries` als erste messbare Zähler. Standardverifikation lehnt alle neuen Einträge ab. Acht neue JUnit-Testmethoden prüfen Isolation, Zählung, TTL, LRU und Fehlerfälle. **Keine JVM-/Gradle-Ausführung dieser neuen Tests bisher belegt**; diese Zähler sind ab sofort instrumentierbar, jedoch keine gemessene Live-App-Leistung.
+
+**Separater Einstieg für Entwickler, die auf dem historischen `main` landen:** [Docs-only Draft #288](https://github.com/Ullmann27/device-ai/pull/288). Dieser PR hat bisher nichts in `main` gemergt.
+
+**Vergleich letzter APK → kommender Kandidat:** [Release-Kompatibilitätsmatrix](release/CONTINUUM-APK-COMPARISON-20261031.md). Vorhandene Render QA ist Quell-/Testabnahme eines älteren Commit; Render Release-Gate ist nicht der für In-App-Updates autorisierte APK-Publisher. Bis Originalsignatur und VersionCode > bestätigter Installation reproduzierbar nachgewiesen sind: **kein neuer installierbarer Download**.
