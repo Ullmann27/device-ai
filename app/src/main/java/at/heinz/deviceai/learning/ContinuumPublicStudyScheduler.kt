@@ -325,7 +325,8 @@ class ContinuumPublicStudyJobService:JobService() {
     @Synchronized override fun onStartJob(params:JobParameters):Boolean {
         if(thread?.isAlive==true)return false
         val scheduler=ContinuumPublicStudyScheduler(this)
-        if(!scheduler.enabled || !scheduler.internetAllowed() || scheduler.isRateLimited())return false
+        if(!scheduler.enabled || scheduler.isRateLimited())return false
+        if(!scheduler.internetAllowed())return false
         // Do not create a false research attempt or run gradients below 20%.
         // JobScheduler itself must not impose the device-dependent low-battery gate.
         val deferral=ContinuumOfflineLearningBudget.deferralReason(continuumLearningResources())
@@ -365,29 +366,24 @@ class ContinuumPublicStudyJobService:JobService() {
                 operation="FETCH_SOURCE"
                 ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                     ContinuumTrainingMonitor.PUBLIC,"FETCH_SOURCE")
-                val source=ContinuumOpenWebStudyFetch.fetch(researchTitle,cancelled)
+                val completedHashes=ContinuumSourceNovelty.knownHashes(filesDir)
+                val acquisition=ContinuumOpenWebStudyFetch.acquire(
+                    researchTitle,cancelled,completedHashes
+                )
+                val source=acquisition.source
                 check(!cancelled())
-                // Keep discovery optional: failures here never discard a valid
-                // article or interrupt the existing learning pipeline.
+                // Reuse already discovered candidate titles: no second network search.
                 if(SystemClock.elapsedRealtime()-start <
                     ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS-6_000L) {
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"DISCOVER_TOPICS")
                     operation="DISCOVER_TOPICS"
-                    val discovered=runCatching {
-                        ContinuumOpenWebStudyFetch.discoverTitles(source.subject,cancelled)
-                    }.onFailure { error ->
-                        if(error is WikimediaRateLimited)
-                            scheduler.postponeDueToProvider(error.waitSeconds)
-                        Log.w("ContinuumPublicStudy",
-                            ContinuumPublicStudyCycleResult.failurePhase("DISCOVER_TOPICS",error,cancelled()))
-                    }.getOrDefault(emptyList())
+                    val discovered=acquisition.discoveredTitles
                     if(!cancelled())scheduler.addDiscovered(discovered)
                 }
                 operation="READ_SOURCE_EVIDENCE"
                 val notebook=MentorSourceNotebook(this)
-                val pending=ContinuumSourceNovelty.pending(listOf(source),
-                    ContinuumSourceNovelty.completedHashes(filesDir))
+                val pending=ContinuumSourceNovelty.pending(listOf(source),completedHashes)
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
@@ -397,8 +393,11 @@ class ContinuumPublicStudyJobService:JobService() {
                     // Store citation and source hash before any training decision.
                     val archive=ContinuumKnowledgeArchive(filesDir)
                     val archiveCountBefore=archive.stats().values.sum()
+                    val archiveKind=if(source.url.startsWith("https://de.wikipedia.org/wiki/"))
+                        ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT
+                    else ContinuumKnowledgeArchive.Kind.PUBLIC_WEB_EXCERPT
                     archive.save(
-                        ContinuumKnowledgeArchive.Kind.PUBLIC_WEB_EXCERPT,
+                        archiveKind,
                         source.subject,source.url,
                         "Öffentliche HTTPS-Quelle · unbestätigter kurzer Auszug",
                         source.excerpt
