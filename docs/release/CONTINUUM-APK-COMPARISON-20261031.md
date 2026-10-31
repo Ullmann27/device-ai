@@ -44,3 +44,12 @@
 ## Nicht verhandelbare Abnahmeschranke
 
 Eine bloß kompilierte, debug-signierte, nur auf Render erzeugte oder mit einem falschen Paket signierte APK ist **kein** aktueller Benutzer-Download. Die neue APK ist erst „fertig“, wenn Revisions-SHA, vollständige Prüfungen, Originalsignatur, Version, Host, Download-Manifest und Fold7-Installation nachgewiesen sind.
+
+
+## 31.10.2026: vorbereiteter QA-Build für nächsten versionCode 30
+
+Neuer Runner `scripts/continuum-frontier-v30-qa.sh` auf PR #287. Er prüft zuerst **alle Original-Node-Forschungsdateien**, schreibt lokale synthetische CPU-Messungen, verifiziert das Vorhandensein des Kotlin-Gehirn-Adapters und verwendet danach den bestehenden M8-Render-QA-Ablauf für `testDebugUnitTest`, `lintDebug` und `assembleRelease`, aber **mit `continuumStandaloneVersionCode=30`** auf dem richtigen Forschungszweig. Alle Signaturvariablen müssen leer sein; eine erzeugte APK ist absichtlich **unsigned und nicht installierbar als Besitzerupdate**.
+
+**Aktueller Status: Datei im GitHub-Branch eingecheckt, vollständiger Gradle-/Render-Runner für diesen neuen HEAD noch nicht ausgeführt.** Es existiert aktuell weder eine signierte v30-APK noch ein bestätigter neuer Download. Der bisherige Render-Publisher/Release-Gate-Dienst benötigt eine rechtmäßig bereitgestellte Original-P12 und den korrekten, gepinnten Updatehost; lediglich ein grüner statischer QA-Build kann das nicht ersetzen.
+
+Originalsignierter Publikationsweg darf erst nach erfolgreichem `versionCode 30` Build, aktuellem PackageManager-Abgleich, Original-Zertifikatsabgleich und expliziter Besitzerfreigabe eingerichtet werden.
