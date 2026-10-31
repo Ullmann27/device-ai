@@ -115,3 +115,12 @@ test('JVM rejects non-canonical base64 receipts that Node would otherwise decode
    /JVM_INVALID_REASON_BASE64/);
  }
 });
+
+test('JVM final receipt trailing whitespace is not silently stripped',()=>{
+ const lines=normal().trimEnd().split('\n');
+ const fields=lines[2].split('\t');
+ fields[5]+=' ';
+ lines[2]=fields.join('\t');
+ assert.throws(()=>observationsToReceipts(lines.join('\n')+'\n',gold),
+  /JVM_INVALID_REASON_BASE64/);
+});
