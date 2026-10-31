@@ -62,6 +62,36 @@ class GeneralWebDiscoveryProviderTest {
         assertTrue(provider.isGeneralSearchAvailable)
     }
 
+    @Test fun secondaryPublicSearchWorksWhenBingIsUnavailable() {
+        val visited = mutableListOf<String>()
+        val wikipedia = Fallback()
+        val provider = GeneralWebDiscoveryProvider(wikipedia, fetchHtml = { url ->
+            visited += url
+            if (url.contains("bing.com")) error("Bing temporarily unavailable")
+            """<a class="result__a" href="https://www.nasa.gov/science/">NASA space research</a>"""
+        })
+        val sources = provider.discover(ResearchQuery("space", "q0"))
+        assertEquals(2, visited.size)
+        assertTrue(visited[0].startsWith("https://www.bing.com/"))
+        assertTrue(visited[1].startsWith("https://html.duckduckgo.com/"))
+        assertEquals(listOf("https://www.nasa.gov/science/"), sources.map { it.url })
+        assertEquals(0, wikipedia.calls)
+        assertTrue(provider.isGeneralSearchAvailable)
+    }
+
+    @Test fun revocationPreventsSecondSearchProvider() {
+        var active = true
+        val visited = mutableListOf<String>()
+        val provider = GeneralWebDiscoveryProvider(
+            checkAccess = { check(active) { "approval revoked" } },
+            fetchHtml = { url -> visited += url; active = false; "<rss><channel/></rss>" }
+        )
+        assertThrows(IllegalStateException::class.java) {
+            provider.discover(ResearchQuery("space", "q0"))
+        }
+        assertEquals(1, visited.size)
+    }
+
     @Test fun fallsBackOnSearchFailure() {
         val fallback = Fallback()
         val provider = GeneralWebDiscoveryProvider(fallback) { error("Search provider unavailable") }
