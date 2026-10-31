@@ -322,4 +322,26 @@ class ContinuumDecoderBridgeTest {
             assertEquals(before,dir.list()?.sorted())
         } finally { dir.deleteRecursively() }
     }
+
+    @Test fun legacyGenerationUsesTheExactTrainingConditioner() {
+        val dir = Files.createTempDirectory("continuum-legacy-condition").toFile()
+        try {
+            val decoder = TinyContextDecoder(seed = 91L)
+            decoder.saveTo(File(dir, "context-decoder.cdx"))
+            val encoder = TrainableSubwordEncoder(seed = 73L)
+            val frozen = encoder.save()
+            val prompt = "Forschungsfrage: Welcher Roboter befindet sich in der Werkstatt?"
+            val trainingCondition = encoder.representation("research context")
+            val oldGenerationCondition = encoder.representation(prompt)
+            assertFalse("The test must distinguish the two conditioners",
+                trainingCondition.contentEquals(oldGenerationCondition))
+            val expected = decoder.generate(prompt, 48, trainingCondition)
+            val observed = ContinuumDecoderBridge(dir).experimentalContinuation(prompt, frozen, 48)
+            assertEquals("Legacy inference must reuse its training conditioner", expected, observed)
+            assertEquals("No test may mutate the original checkpoint",
+                decoder.save().toList(), File(dir, "context-decoder.cdx").readBytes().toList())
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
 }
