@@ -10,15 +10,16 @@ import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorke
 import {readLocalIntegrationStatus} from './local-integration-status.mjs';
 import {buildTeamleaderHandoff} from './teamleader-review-handoff.mjs';
 import {releaseDeadContinuumBuildLease} from './shared-build-lease.mjs';
+import {mcpPreflight,GIT_READONLY_SERVER} from './teamleader-mcp-preflight.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
-  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable','--release-dead-lease']);
+  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable','--release-dead-lease','--mcp-readonly']);
  const opts={once:false,loop:false,status:false,retry:false};
  for(let i=0;i<args.length;i++){
   const key=args[i];
   if(!allowed.has(key))throw Error('Unknown Teamleader option '+key);
-  if(['--once','--loop','--status','--retry','--durable','--release-dead-lease'].includes(key)){
+  if(['--once','--loop','--status','--retry','--durable','--release-dead-lease','--mcp-readonly'].includes(key)){
    const flag=key.slice(2).replace(/-([a-z])/g,(_,ch)=>ch.toUpperCase());
    if(opts[flag])throw Error('Duplicate option '+key);
    opts[flag]=true;
@@ -33,6 +34,7 @@ export function parseTeamleaderArgs(args){
  if([opts.once,opts.loop,opts.status,opts.releaseDeadLease].filter(Boolean).length!==1)
   throw Error('Choose exactly one of --once, --loop or --status (or the owner step --release-dead-lease)');
  if(opts.retry&&!opts.once)throw Error('--retry requires --once');
+ if(opts.mcpReadonly&&!(opts.once||opts.loop))throw Error('--mcp-readonly requires --once or --loop');
  if(opts.durable&&(!opts.loop||opts.maxCycles===undefined))
   throw Error('--durable requires --loop with explicit --max-cycles');
  if(opts.budgetMinutes!==undefined&&
@@ -61,6 +63,18 @@ export function defaultTeamleaderStateDir(root,home=os.homedir()){
  const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
  return path.join(home,'.local','state','device-ai-continuum',suffix);
 }
+/** Explicit local shell opt-in grants ONLY two read-only Git MCP queries.
+ * The shell user is not a substitute for Android biometric authentication;
+ * this grant must never be extended to write, network or protected tools. */
+export async function readOnlyMcpCycleEvidence({root,stateDir}){
+ return mcpPreflight({root,stateDir,profile:'PROTECTED',
+  grant:{ownerAuthenticated:true,sessionActive:true,devicePermissionGranted:true,
+   allowedToolNames:['git_head','git_status']},
+  approvedServers:[{command:fs.realpathSync(process.execPath),args:[GIT_READONLY_SERVER]}],
+  limits:{maxCalls:2,callTimeoutMs:10000,maxSessionMs:30000}
+ });
+}
+
 export async function teamleaderMain(argv=process.argv.slice(2)){
  const opt=parseTeamleaderArgs(argv);
  const root=fs.realpathSync(path.resolve(opt.root??process.cwd()));
@@ -121,12 +135,15 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
   let retryHead=null,retryAttempts=0;
   try{
    const result=await runTeamleaderLoop({
-    work:()=>{
+    work:async()=>{
+     // The optional MCP sidecar runs on EVERY cycle; previous receipts cannot
+     // authorize work after the checkout changed, even across a loop restart.
+     const toolEvidence=opt.mcpReadonly?await readOnlyMcpCycleEvidence({root,stateDir}):null;
      const liveHead=driver.head(root);
      if(retryHead!==liveHead){retryHead=liveHead;retryAttempts=0;}
      const cycle=runTeamleaderCycle({root,stateDir,driver,
       budgetMinutes:Number(opt.budgetMinutes??20),
-      retry:retryAttempts>0,log:console.log});
+      retry:retryAttempts>0,log:console.log,toolEvidence});
      if(cycle.kind==='BASELINE_REPAIR'){
       if(cycle.outcome==='ERROR'&&retryAttempts<2)retryAttempts++;
       else retryAttempts=0;
@@ -155,8 +172,9 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
    process.off('SIGTERM',stop);
   }
  }
+ const toolEvidence=opt.mcpReadonly?await readOnlyMcpCycleEvidence({root,stateDir}):null;
  const result=runTeamleaderCycle({root,stateDir,driver,
-  budgetMinutes:Number(opt.budgetMinutes??20),retry:opt.retry,log:console.log});
+  budgetMinutes:Number(opt.budgetMinutes??20),retry:opt.retry,log:console.log,toolEvidence});
  process.stdout.write(JSON.stringify(result,null,2)+'\n');
  if(teamleaderExitCode(result))process.exitCode=1;
  return result;
