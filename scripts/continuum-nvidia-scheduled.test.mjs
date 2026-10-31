@@ -1,3 +1,4 @@
+import {OWNER_CONSENT} from './continuum-nvidia-ultra-review.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateLedger,decideReservation,reserveGithubBudget,executeReservedResearch,
@@ -40,7 +41,7 @@ test('GitHub API uses only dedicated ledger path, atomic SHA and no secret persi
    json(200,{sha:'a'.repeat(40),encoding:'base64',content:Buffer.from(JSON.stringify(blank())).toString('base64')}):
    json(200,{commit:{sha:'b'.repeat(40)}});
  };
- const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'110',
+ const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'110',
   nowMs:at('00:07:00'),fetchImpl});
  assert.equal(x.allowed,true);assert.equal(calls.length,2);assert.equal(calls[1].opts.method,'PUT');
  const body=JSON.parse(calls[1].opts.body);
@@ -56,7 +57,7 @@ test('GitHub quota ledger write denied -> zero authorized cloud calls',async()=>
    json(200,{sha:'a'.repeat(40),encoding:'base64',content:Buffer.from(JSON.stringify(blank())).toString('base64')}):
    json(403,{message:'forbidden'});
  };
- await assert.rejects(reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'110',
+ await assert.rejects(reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'110',
   nowMs:at('00:07:00'),fetchImpl}),/GITHUB_LEDGER_HTTP_403/);
  assert.equal(count,2);
 });
@@ -65,7 +66,7 @@ test('during cooldown the runner cannot write or contact NVIDIA',async()=>{
  let puts=0;
  const fetchImpl=async(_u,o)=>{if(o.method==='PUT')puts++;return json(200,{sha:'a'.repeat(40),
   encoding:'base64',content:Buffer.from(JSON.stringify(ledger)).toString('base64')});};
- const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'102',
+ const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'102',
   nowMs:at('00:17:00'),fetchImpl});
  assert.equal(x.allowed,false);assert.equal(x.reason,'COOLDOWN');assert.equal(puts,0);
 });
@@ -111,7 +112,7 @@ test('GitHub SHA conflict prevents remote provider invocation',async()=>{
   json(409,{message:'conflict'});
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_HTTP_409/);
  assert.equal(modelCalls,0);
 });
@@ -129,7 +130,7 @@ test('RED: HTTP 200 without durable claim readback cannot invoke NVIDIA',async()
  };
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
  assert.equal(gets,2);
  assert.equal(modelCalls,0);
@@ -147,8 +148,35 @@ test('RED: malformed GitHub write receipt cannot authorize provider use',async()
  };
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
  assert.equal(gets,1);
  assert.equal(modelCalls,0);
+});
+
+test('RED: valid NVIDIA key without explicit owner grant makes no ledger or model calls',async()=>{
+ let githubCalls=0,modelCalls=0;
+ const fetchImpl=async()=>{githubCalls++;throw Error('UNEXPECTED_GITHUB_CALL');};
+ const common={sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
+  outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',
+  token,runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  callReview:async()=>{modelCalls++;}};
+ for(const ownerConsent of [undefined,'',OWNER_CONSENT+' ',null]){
+  await assert.rejects(executeReservedResearch({...common,ownerConsent}),
+   /NVIDIA_OWNER_CONSENT_REQUIRED/);
+ }
+ assert.equal(githubCalls,0);
+ assert.equal(modelCalls,0);
+});
+
+test('RED: reservation requires runtime owner consent before contacting GitHub',async()=>{
+ let githubCalls=0;
+ const fetchImpl=async()=>{githubCalls++;throw Error('UNEXPECTED_GITHUB_CALL');};
+ const args={repoFull:'Ullmann27/device-ai',token,runId:'110',
+  nowMs:at('00:07:00'),fetchImpl};
+ for(const ownerConsent of [undefined,null,'',OWNER_CONSENT+' ']){
+  await assert.rejects(reserveGithubBudget({...args,ownerConsent}),
+   /NVIDIA_OWNER_CONSENT_REQUIRED/);
+ }
+ assert.equal(githubCalls,0);
 });
