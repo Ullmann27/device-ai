@@ -1934,6 +1934,9 @@ class AgentActivity : Activity() {
             CenterAction("UPDATES PRÜFEN UND LADEN", accent = true) {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
             },
+            CenterAction("JARVIS · MISSION CONTROL") {
+                startActivity(Intent(this, ContinuumJarvisMissionControlActivity::class.java))
+            },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
