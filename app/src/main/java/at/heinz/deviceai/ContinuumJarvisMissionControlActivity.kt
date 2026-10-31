@@ -42,7 +42,7 @@ class ContinuumJarvisMissionControlActivity : Activity() {
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(20), dp(22), dp(20), dp(24))
-            setBackgroundColor(background)
+            setBackgroundColor(this@ContinuumJarvisMissionControlActivity.background)
         }
         fun label(text: String, size: Float, color: Int): TextView =
             TextView(this).apply {
