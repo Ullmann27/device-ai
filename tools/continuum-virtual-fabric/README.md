@@ -73,3 +73,21 @@ The CPU smoke runs 100 **actual bounded deterministic 8×8 matrix multiplication
 6. Only ship after fully verified Gradle, Kotlin/Node and Fold7 regression tests. Do not touch original owner-signing keys or model weights in this research branch.
 
 **Project acceptance:** an independent new coding defect must be identified, fixed by a real model, and red-to-green verified on fresh tests before describing M8 as autonomous repair. The current demo does not satisfy that goal.
+
+
+## 31.10.2026 — CONTINUUM JARVIS / Kotlin research-brain connection
+
+**Entry points for every agent:** [latest canonical status](../../docs/CONTINUUM-CURRENT-STATE-20261031.md), [handoff](../../docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md), [APK comparison/test checklist](../../docs/release/CONTINUUM-APK-COMPARISON-20261031.md), Root `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`.
+
+A new Kotlin **research-only** `cognitive/ContinuumComputeReuseResearch.kt` directly calls the current `AiContextCompiler.compile` in `compileObserved(input)`. It measures the SHA-256 of the compiled context and its selected memory/source counts, and allows independently verified, pure intermediate calculation results to be stored **in a bounded in-memory cache** partitioned by owner ID, context digest, model revision, policy revision, memory epoch and stage. Return buffers are copied; TTL and bounded LRU reject stale or over-capacity entries. Verification is **default deny** and `putVerified` requires a trusted callback. Eight focused JUnit test methods were added in `ContinuumComputeReuseResearchTest.kt` covering rejection, isolation, TTL, aliases, revisions and eviction.
+
+**Do not misrepresent this:** It is a callable adapter for the real existing compiler, **not wired into live `AgentActivity`**, not disk persistence, not remote LLM inference, not actual measured app acceleration. The eight new Kotlin/JUnit tests have **not yet been executed on the original Gradle Android project**. Running the full Gradle build, device memory migration and end-to-end app comparison remains a strict release gate.
+
+**Prioritize real benefit:** instrument actual read-only M8 development/brain/tool tasks for file/source reuse, independently validate against baseline, then choose whether a durable encrypted/private cache and a carefully controlled ON switch are worth adding. The existing owners' model/memory store and signed APK must remain unchanged until independently verified.
+
+Standalone source-level Node prototype tests:
+```bash
+node --test tools/continuum-virtual-fabric/*.test.mjs
+node tools/continuum-virtual-fabric/reuse-experiment.mjs
+node tools/continuum-virtual-fabric/shared-stage-experiment.mjs
+```
