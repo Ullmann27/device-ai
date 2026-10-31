@@ -65,3 +65,23 @@ Es wurde **kein neuer Dienst** eingerichtet. Laut offizieller Render-Dokumentati
 - `UNATTENDED_FUTURE_OWNER_SIGNING`: **nicht implementiert**. Ein Update-Button allein erzeugt weder neue signierte APKs noch veröffentlicht er sie. Dafür ist ein gesonderter lokal gesicherter Release-Worker nötig; hier wird **kein Passwort dauerhaft gespeichert**.
 
 Keiner dieser ausstehenden Schritte darf als erfolgreich dargestellt werden, bevor er am konkreten Git-/APK-Stand wirklich ausgeführt und belegt wurde.
+
+
+## Unabhängige HTTPS-Nachkontrolle ab 31.10.2026 (read-only)
+
+Der bisherige Publish-Vorgang endet beim Git-Push; der Render-Dienst hat weiterhin `autoDeploy=no`. Eine erfolgreiche Render-Deploymentmeldung allein beweist weder ein veröffentlichtes Manifest noch die Abrufbarkeit der identischen APK. Deshalb ist der eigenständige Node-22+-Prüfer `scripts/continuum-owner-render-readback.mjs` hinzugekommen:
+
+```bash
+node --test scripts/continuum-owner-render-readback.test.mjs
+node scripts/continuum-owner-render-readback.mjs --manifest-only
+# Erst nach tatsächlicher Besitzer-Releasefreigabe und Render-Deploy:
+node scripts/continuum-owner-render-readback.mjs
+```
+
+- `NO_RELEASE` bedeutet: exakter und gültiger `{"schema":1,"available":false}`-Platzhalter; **kein Update vorhanden**.
+- `MANIFEST_ONLY_APK_NOT_VERIFIED` bedeutet: Release-Deklaration strukturell geprüft, **APK nicht geprüft**.
+- `APK_HASH_VERIFIED_CERT_NOT_VERIFIED` bedeutet: Exakte öffentlich heruntergeladene APK-Bytes gegen manifestierte Länge und SHA-256 geprüft, **aber keine eigenständige P12-/APK-Zertifikatsprüfung**. Diese bleibt Aufgabe des vorhandenen lokalen Owner-Verifiers und des Android-Updaters.
+
+Der Prüfer verwendet nur den hart codierten Render-HTTPS-Host, lässt keine Weiterleitungen zu, begrenzt das Manifest auf 8192 Bytes und den APK-Stream auf 90 MB, verhindert Metadaten-Typumwandlungen und hält die APK nicht als Ganzes im RAM. Er hat weder Schreibzugriff auf GitHub noch Schlüsselzugriff, keine Deploy-Funktion und verändert die App nicht. Er macht aus einem veröffentlichten Manifest **keine** Besitzerfreigabe.
+
+**Nachweisgrenze:** Acht selbständige Offline-Tests gegen simulierte HTTP-Streams bestanden im lokalen Node-22-Lauf. Der öffentliche Render-Abruf sowie ein vollständiger Android-Build auf dieser neuen Git-SHA sind dadurch **nicht** nachgewiesen. Den Live-Dienst erst nach originalsignierter Owner-APK und gesonderter Deploymentfreigabe verändern.
