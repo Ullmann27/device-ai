@@ -353,7 +353,9 @@ class ContinuumPublicStudyJobService:JobService() {
                 { SystemClock.elapsedRealtime() }, { continuumLearningResources() })
             val cancelled:()->Boolean = {
                 stopping.get() || Thread.currentThread().isInterrupted ||
-                    !scheduler.enabled || !scheduler.internetAllowed() || budget.cancelled()
+                    !scheduler.enabled || !scheduler.internetAllowed() ||
+                    !at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayResearch(
+                        at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this@ContinuumPublicStudyJobService)) || budget.cancelled()
             }
             try {
                 val researchTitle=scheduler.nextTopic()
