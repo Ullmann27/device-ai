@@ -92,9 +92,9 @@ internal object ContinuumOpenWebStudyFetch {
             .take(12)
             .toList()
         if (candidates.isEmpty()) {
-            // A provider outage must never permanently retire a research topic.
+            // A partial or full provider outage must not permanently retire a research topic.
             // Genuine empty responses are still classified as no public results.
-            if (discovery is GeneralWebDiscoveryProvider && discovery.allSearchEndpointsFailed) {
+            if (discovery is GeneralWebDiscoveryProvider && discovery.searchIncomplete) {
                 throw IOException("WEB_GENERAL_SEARCH_UNAVAILABLE")
             }
             throw WikimediaSourceUnavailable("NO_PUBLIC_WEB_RESULTS")
