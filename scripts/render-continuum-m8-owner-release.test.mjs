@@ -61,7 +61,7 @@ test('release requires approved v34 and performs real SHA-bound QA before signin
   assert.match(qa, /:app:testDebugUnitTest :app:lintDebug/);
   assert.match(qa, /:app:assembleRelease/);
   assert.match(qa, /BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE/);
-  assert.match(qa, /continuumStandaloneVersionCode=33/);
+  assert.match(qa, /continuumStandaloneVersionCode=34/);
 });
 
 test('manifest is written only for a verified, originally signed APK at the pinned host', () => {
