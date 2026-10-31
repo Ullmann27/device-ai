@@ -7,14 +7,14 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const source=file=>fs.readFileSync(path.join(root,file),'utf8');
 
-test('the same full v32 source tree includes the actual signed owner package',()=>{
+test('the consolidated v34 source tree retains original owner package and signature',()=>{
   const gradle=source('app/build.gradle.kts');
   const release=source('scripts/render-continuum-m8-owner-release.sh');
   const qa=source('scripts/render-continuum-m8-qa.sh');
   assert.match(gradle,/at\.heinz\.deviceai\.continuumlocal/);
-  assert.match(release,/\[\[ "\$version" == "33" \]\]/);
-  assert.match(release,/versionCode: 33/);
-  assert.match(qa,/continuumStandaloneVersionCode=33/);
+  assert.match(release,/\[\[ "\$version" == "34" \]\]/);
+  assert.match(release,/versionCode: 34/);
+  assert.match(qa,/continuumStandaloneVersionCode=34/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
 });
 
@@ -82,4 +82,51 @@ test('new metadata type safety and published APK hash readback are in the source
   assert.match(catalog,/isSchemaOne/);
   assert.match(catalog,/stringFields\.all/);
   assert.match(source('scripts/continuum-owner-render-readback.mjs'),/APK_HASH_VERIFIED_CERT_NOT_VERIFIED/);
+});
+
+
+test('v34 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
+  const fetch=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt');
+  const scheduler=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
+  const archive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt');
+  const memory=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt');
+  const cognitive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt');
+  assert.match(fetch,/GeneralWebDiscoveryProvider/);
+  assert.match(fetch,/\.take\(12\)/);
+  assert.match(fetch,/completedShas/);
+  assert.match(scheduler,/ContinuumSourceNovelty\.knownHashes\(filesDir\)/);
+  assert.match(scheduler,/ContinuumOpenWebStudyFetch\.acquire\(/);
+  assert.match(scheduler,/archive\.save\(/);
+  assert.match(archive,/fun archivedHashes\(\):Set<String>/);
+  assert.match(archive,/PUBLIC_WEB_EXCERPT/);
+  assert.match(memory,/LearningProvenance\.PUBLIC_WEB_SOURCE/);
+  assert.match(cognitive,/Cre1PromotionGate\.rerank\(/);
+});
+test('v34 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
+  const mission=source('app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt');
+  const research=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
+  const proof=source('app/src/main/java/at/heinz/deviceai/research/neuro/ReviewedEvidenceGraph.kt');
+  assert.match(mission,/ContinuumPublicStudyScheduler\(this\)\.display\(\)/);
+  assert.match(mission,/ContinuumOwnerUpdateActivity::class\.java/);
+  assert.match(research,/automatisch/i);
+  assert.match(proof,/max.*512|expansions <= 512/);
+  assert.match(proof,/answerAuthority: Boolean = false/);
+  assert.match(proof,/mutatesMemory: Boolean = false/);
+});
+
+
+test('v34 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
+  const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+  const client=source('app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt');
+  const api=source('backend/src/groq-mentor.js');
+  const server=source('backend/src/server.js');
+  const checks=source('backend/test/openrouter-mentor.test.js');
+  assert.match(app,/showOpenRouterMentorDialog/);
+  assert.match(app,/showOpenRouterBackendMentorDialog/);
+  assert.match(app,/backend\.openRouterMentor\(content\)/);
+  assert.match(client,/fun openRouterMentor/);
+  assert.match(api,/OPENROUTER_URL/);
+  assert.match(server,/OPENROUTER_MENTOR_ENABLED/);
+  assert.match(server,/mentorAuth/);
+  assert.match(checks,/OpenRouter stays off without secret or explicit enablement/);
 });

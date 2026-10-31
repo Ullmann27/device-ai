@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.learning.ContinuumTrainingMonitor
+import at.heinz.deviceai.learning.ContinuumPublicStudyScheduler
 import at.heinz.deviceai.cognitive.ContinuumAutonomyControl
 import at.heinz.deviceai.cognitive.ContinuumAutonomyLevel
 import at.heinz.deviceai.cognitive.DeviceTeamleaderStatusStore
@@ -162,7 +163,10 @@ class ContinuumJarvisMissionControlActivity : Activity() {
                     "${state.channel.uppercase()}: $stateLabel"
                 }
                 "FORSCHUNG / GEDÄCHTNIS\n" + lines.joinToString("\n") +
-                    "\nDiese Anzeige bestätigt weder Modellintelligenz noch die Qualität gespeicherter Fakten."
+                    "\n\n" + ContinuumPublicStudyScheduler(this).display() +
+                    "\nDie angezeigten Quellen- und Versuchszähler sind Forschungsjob-Protokolle, " +
+                    "nicht automatisch der verifizierte Archivbestand. " +
+                    "Diese Anzeige bestätigt weder Modellintelligenz noch die Qualität gespeicherter Fakten."
             }
             1 -> {
                 val job = build.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)

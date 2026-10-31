@@ -36,7 +36,7 @@ sha="$(git rev-parse --verify HEAD)" || fail 'No Git HEAD'
 [[ "${CONTINUUM_RELEASE_VERSION_CODE:-}" =~ ^[0-9]+$ ]] ||
   fail 'Release versionCode required'
 version="$CONTINUUM_RELEASE_VERSION_CODE"
-[[ "$version" == "33" ]] || fail 'This pinned candidate accepts only versionCode 33'
+[[ "$version" == "34" ]] || fail 'This pinned candidate accepts only versionCode 34'
 version_name="0.3.$((version - 1))"
 
 # Refuse to run the existing QA if source is different from the signed build.
@@ -134,7 +134,7 @@ const release = {
   schema: 1,
   channel: 'OWNER_RELEASE',
   packageName: 'at.heinz.deviceai.continuumlocal',
-  versionCode: 33,
+  versionCode: 34,
   versionName: name,
   apkUrl: 'https://' + host + '/continuum-local/Continuum-Lokal-' + digest + '.apk',
   apkSha256: digest,
@@ -146,13 +146,13 @@ const release = {
 };
 if (!Number.isSafeInteger(size) || size < 1_000_000 || size > 2_000_000_000 ||
     !/^[a-f0-9]{40}$/.test(sha) || !/^[a-f0-9]{64}$/.test(digest) ||
-    name !== '0.3.32') process.exit(69);
+    name !== '0.3.33') process.exit(69);
 writeFileSync(target, JSON.stringify(release) + '\n', {flag:'wx', mode:0o600});
 NODE
 test -s "$out/latest.json" || fail 'No valid owner update catalog'
 # Publishing the site is a separate Render deployment operation; do not claim
 # success unless the Render hosting service actually serves these bytes.
-printf 'source_sha=%s\nversion=0.3.32\npackage=%s\nsigner_sha256=%s\napk_sha256=%s\nstatus=SIGNED_STAGED_FOR_PINNED_HOST\n' \
+printf 'source_sha=%s\nversion=0.3.33\npackage=%s\nsigner_sha256=%s\napk_sha256=%s\nstatus=SIGNED_STAGED_FOR_PINNED_HOST\n' \
   "$sha" "$expected_package" "$expected_signer" "$digest" \
   > "$root/continuum-m8-owner-release/BUILD-INFO.txt"
 echo 'CONTINUUM_OWNER_RENDER_SIGNED_STAGED_FOR_PINNED_HOST'

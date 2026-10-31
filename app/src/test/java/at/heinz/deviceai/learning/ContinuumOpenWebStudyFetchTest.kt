@@ -4,6 +4,7 @@ import at.heinz.deviceai.cognitive.ResearchDiscoveryProvider
 import at.heinz.deviceai.cognitive.ResearchDocument
 import at.heinz.deviceai.cognitive.ResearchProvider
 import at.heinz.deviceai.cognitive.ResearchQuery
+import at.heinz.deviceai.cognitive.ResearchRequest
 import at.heinz.deviceai.cognitive.ResearchResult
 import at.heinz.deviceai.cognitive.ResearchSourceCandidate
 import at.heinz.deviceai.cognitive.SourceIdentity
