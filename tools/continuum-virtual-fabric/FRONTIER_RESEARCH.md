@@ -41,7 +41,7 @@ Prefix caching and continuous batching are prior art, documented by vLLM. Specul
 
 **Counterexample B:** 3000 submitted jobs, 3000 unique inputs -> **3000 computations**; 0 avoided; no benefit beyond possible overhead. Generative or nondeterministic jobs are explicitly excluded from answer caching.
 
-**Current test status:** 40/40 pure-JS unit assertions passed in an isolated V8 harness using minimal compatibility shims for Node test/assert/crypto/timing. Original Node `--test`, Android/Gradle and real Fold7 checks are **NOT_RUN**. V8 shim hashes are NOT production SHA-256; the actual source imports `node:crypto` and requires full Node validation. The in-memory receipt verifier in the benchmark merely checks digest integrity, not genuine remote execution; production uses default-deny unless a trusted attestation verifier is injected.
+**Current test status:** 43/43 pure-JS unit assertions passed in an isolated V8 harness using minimal compatibility shims for Node test/assert/crypto/timing. Original Node `--test`, Android/Gradle and real Fold7 checks are **NOT_RUN**. V8 shim hashes are NOT production SHA-256; the actual source imports `node:crypto` and requires full Node validation. The in-memory receipt verifier in the benchmark merely checks digest integrity, not genuine remote execution; production uses default-deny unless a trusted attestation verifier is injected.
 
 ## 4. Reproduce with real Node
 
@@ -116,3 +116,17 @@ node tools/continuum-virtual-fabric/shared-stage-experiment.mjs
 **Engineering thesis:** The M8 coding-agent may repeatedly parse the same Kotlin/Java repository files and evaluate similar diagnostics while seeking different repairs. We should share **verified immutable intermediate results** when revision and privacy context match, then use unique final reasoning per task. This is the next plausible way to reduce real inference/tool cost. Measure distinct hashes and end-to-end latency before claiming gain, and never treat a cached *answer* as a verified code fix.
 
 This is a project-specific integration of established memoization/prefix-cache principles, not proof of unprecedented mathematics or a newly generated computing resource.
+
+
+### Additional independent Node.js arithmetic sanity check
+
+On 2026-10-31, a **standalone local reproduction** of the same 12×12 matrix and per-task SHA-256 formulas ran under **Node.js v22.16.0** on the available test host (NOT on the Fold7, NOT the original repository's `node --test` suite). One-shot measurements:
+
+| Scenario | Baseline heavy kernels | Reused heavy kernels | Base wall-clock | Reuse wall-clock |
+|---|---:|---:|---:|---:|
+| 3,000 final jobs / 30 source versions | 3,000 | 30 | 120.064 ms | 22.025 ms |
+| 3,000 final jobs / 3,000 source versions | 3,000 | 3,000 | 116.838 ms | 124.851 ms |
+
+All 3,000 final SHA-256 outputs compared equal in each scenario. These values are from **one non-controlled run of a standalone reproduction**, not a statistically valid benchmark, not the complete in-repository broker, and not a measurement of neural inference. Node CPU timing can change considerably between devices and runs.
+
+Before claiming real Continuum speedup, benchmark **the unchanged installed model** on both versions with A/B toggles, realistic task distribution, repeated warm/cold runs, energy/thermal limits, and independent correctness tests.
