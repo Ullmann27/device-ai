@@ -29,7 +29,7 @@ export function encodeProbeInput(gold){
  return gold.map(row=>[row.id,encode(row.before),encode(row.after),encode(row.unrelated)].join('\t')).join('\n')+'\n';
 }
 export function observationsToReceipts(stdout,gold,candidateSha=CANDIDATE_SHA){
- const lines=stdout.trimEnd().split('\n');
+ // Remove only the JVM's terminal newline; trimEnd() would silently erase malformed\n // trailing spaces from the final receipt before strict base64 validation.\n const lines=(stdout.endsWith('\n')?stdout.slice(0,-1):stdout).split('\n');
  expect(lines.length===gold.length,'JVM_RESULT_COUNT_MISMATCH');
  const receipts=[];
  for(let i=0;i<lines.length;i++){
