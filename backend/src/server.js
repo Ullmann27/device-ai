@@ -37,6 +37,14 @@ const groqMentor = new GroqMentor({
   model: process.env.GROQ_MENTOR_MODEL ?? "openai/gpt-oss-20b",
   dailyLimit: Number(process.env.GROQ_MENTOR_DAILY_LIMIT ?? 20)
 });
+// Separate provider credentials never leave Render; this is not a silent cloud fallback.
+const openRouterMentor = new GroqMentor({
+  enabled: (process.env.OPENROUTER_MENTOR_ENABLED ?? "false").toLowerCase() === "true",
+  apiKey: process.env.OPENROUTER_API_KEY ?? "",
+  provider: "OPENROUTER",
+  model: process.env.OPENROUTER_MENTOR_MODEL ?? "openai/gpt-4o",
+  dailyLimit: Number(process.env.OPENROUTER_MENTOR_DAILY_LIMIT ?? 10)
+});
 const mentorPairing = new MentorDevicePairing({
   rootToken: DEVICE_AI_TOKEN,
   approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? ""
@@ -350,13 +358,18 @@ app.post("/v1/mentor/pairing/redeem", pairingLimiter, (req, res) => {
 });
 
 /** Private status: never returns API keys or user prompts. */
-app.get("/v1/mentor/status", mentorAuth, (_req, res) => {
-  res.json(groqMentor.status());
+app.get("/v1/mentor/status", mentorAuth, (req, res) => {
+  const provider = req.query.provider ?? "GROQ";
+  if (provider !== "GROQ" && provider !== "OPENROUTER") {
+    return res.status(400).json({ error: "INVALID_PROVIDER" });
+  }
+  res.set("Cache-Control", "no-store");
+  res.json(provider === "OPENROUTER" ? openRouterMentor.status() : groqMentor.status());
 });
 
 /** Explicit text-only mentor. No tools, no context, no persistent learning. */
 app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
-  if (req.body?.provider !== "GROQ" || req.body?.consent !== true) {
+  if (!["GROQ", "OPENROUTER"].includes(req.body?.provider) || req.body?.consent !== true) {
     return res.status(400).json({ error: "OWNER_CONSENT_REQUIRED" });
   }
   if (typeof req.body?.question !== "string" ||
@@ -365,7 +378,8 @@ app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
       Object.keys(req.body).sort().join("|") !== "consent|provider|question") {
     return res.status(400).json({ error: "INVALID_QUESTION" });
   }
-  const result = await groqMentor.answer(req.body.question);
+  const mentor = req.body.provider === "OPENROUTER" ? openRouterMentor : groqMentor;
+  const result = await mentor.answer(req.body.question);
   if (!result.ok) {
     const status = result.code === "DISABLED" ? 503 :
       result.code === "INVALID_QUESTION" ? 400 :
@@ -602,6 +616,7 @@ const httpServer = app.listen(PORT, "0.0.0.0", () => {
   // Presence flags only; never print the API key, Device token or user content.
   console.log("Continuum mentor readiness:", JSON.stringify({
     groqConfigured: groqMentor.status().available,
+    openRouterConfigured: openRouterMentor.status().available,
     deviceAuthenticationConfigured: DEVICE_AI_TOKEN.length >= 16
   }));
   // Explicit operator-only synthetic smoke check; disabled by default.
