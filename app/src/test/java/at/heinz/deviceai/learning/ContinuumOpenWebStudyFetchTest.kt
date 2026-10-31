@@ -305,4 +305,22 @@ class ContinuumOpenWebStudyFetchTest {
         assertEquals("SOURCE_UNAVAILABLE_NO_PUBLIC_WEB_RESULTS", phase)
         assertTrue(ContinuumPublicStudyCycleResult.markTopicCompleted(phase))
     }
+
+    @Test
+    fun oneProviderFailureAndOneEmptyResponseCannotRetireTopic() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { url ->
+            if (url.contains("bing.com")) "<rss><channel/></rss>"
+            else throw IOException("secondary network error")
+        })
+        val exception = assertThrows(IOException::class.java) {
+            ContinuumOpenWebStudyFetch.acquire(
+                topic = "Photovoltaik",
+                cancelled = { false },
+                discoveryFactory = { provider }
+            )
+        }
+        assertEquals("WEB_GENERAL_SEARCH_UNAVAILABLE", exception.message)
+        assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted(
+            ContinuumPublicStudyCycleResult.failurePhase("FETCH_SOURCE", exception, false)))
+    }
 }
