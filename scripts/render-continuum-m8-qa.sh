@@ -12,7 +12,11 @@ sha="$(git rev-parse --verify HEAD)"
 git -c core.fileMode=false diff --quiet HEAD -- || die 'Tracked source changed in Render checkout'
 untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts .github/continuum backend/src backend/test)"
 [[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
-[[ "$(git branch --show-current)" == "research/continuum-m8-operational-model-20261031" || -z "$(git branch --show-current)" ]] || die 'Unexpected branch'
+case "$(git branch --show-current)" in \
+  research/continuum-m8-operational-model-20261031|\
+  research/continuum-m8-render-signed-release-20261031|"") ;; \
+  *) die "Unexpected branch" ;; \
+esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
     -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] ||
     die 'QA must never receive private signing credentials'
