@@ -17,7 +17,8 @@ case "$(git branch --show-current)" in \
   release/continuum-local-complete-v31-20261031|\
   fix/continuum-v32-network-web-recovery-20261031|\
   release/continuum-v32-openrouter-fullweb-20261031|\
-  research/continuum-m8-render-signed-release-20261031|"") ;; \
+  research/continuum-m8-render-signed-release-20261031|\
+  research/continuum-m10-verified-brain-and-web-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
