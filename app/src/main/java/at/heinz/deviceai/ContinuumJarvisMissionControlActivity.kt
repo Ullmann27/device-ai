@@ -16,6 +16,12 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.learning.ContinuumTrainingMonitor
+import at.heinz.deviceai.cognitive.ContinuumAutonomyControl
+import at.heinz.deviceai.cognitive.ContinuumAutonomyLevel
+import at.heinz.deviceai.cognitive.DeviceTeamleaderStatusStore
+import at.heinz.deviceai.cognitive.ContinuumDnaGuardian
+import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
+import at.heinz.deviceai.cognitive.DnaIntegrityState
 
 /**
  * Read-only, evidence-backed JARVIS-inspired operations cockpit.
@@ -116,8 +122,29 @@ class ContinuumJarvisMissionControlActivity : Activity() {
         )
         val states = channels.map { ContinuumTrainingMonitor.read(this, it) }
         val fresh = states.count { it.active && !it.stale }
-        overview.text = "Beobachtete Lernkanäle: $fresh/3 aktiv (45-Sekunden-Lebenszeichen). " +
-            "Fehlende oder veraltete Belege gelten ausdrücklich nicht als LIVE."
+        val ownerLevel = ContinuumAutonomyControl.level(this)
+        val guardian = runCatching {
+            ContinuumDnaGuardian(java.io.File(filesDir, "continuum")) {
+                AndroidKeystoreIdentitySigner()
+            }.inspect()
+        }.getOrNull()
+        val guardianState = when (guardian?.state) {
+            DnaIntegrityState.VERIFIED -> "Identität und Archiv geprüft"
+            DnaIntegrityState.INVALID -> "IDENTITÄT FEHLERHAFT – keine autonome Freigabe"
+            DnaIntegrityState.NOT_INITIALIZED -> "Identitätsbeleg fehlt"
+            null -> "Identitätsprüfung fehlgeschlagen"
+        }
+        val partner = runCatching { DeviceTeamleaderStatusStore(filesDir).read() }.getOrNull()
+        val partnerState = if (partner == null) "kein belegter Prüflauf"
+            else if (System.currentTimeMillis() - partner.checkedAt > 2L * 60L * 60L * 1000L ||
+                partner.checkedAt > System.currentTimeMillis() + 60_000L) "letzter Prüflauf veraltet"
+            else "letzter Prüflauf: " + partner.state
+        overview.text = "CONTINUUM · HAUPTKERN / CODING-WÄCHTER\\n" +
+            "Hauptkern: " + guardianState + "\\n" +
+            "Technischer Partner: " + partnerState + "\\n" +
+            "Autonomie: " + ownerLevel.name + "\\n" +
+            "Beobachtete Lernkanäle: $fresh/3 aktiv (45-Sekunden-Lebenszeichen). " +
+            "Der Partner ist kein zweites frei laufendes LLM; ohne frische Belege gibt es keinen aktiven Schutz-Nachweis."
 
         val build = getSharedPreferences(
             ContinuumMobileBuildResultReceiver.PREFERENCES, Context.MODE_PRIVATE
