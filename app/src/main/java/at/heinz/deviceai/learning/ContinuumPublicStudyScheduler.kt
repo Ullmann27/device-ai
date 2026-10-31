@@ -58,7 +58,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
             "\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+
             " · untersuchte Thementitel: "+seenTopics.size+
             "\nNächstes Forschungsthema: "+nextTopic+
-            "\nJeweils eine Wikipedia-Quelle, auch ohne Ladekabel mit Netzwerk; "+
+            "\nPro Zyklus eine externe öffentliche Webquelle, mit Beleg und Sicherheitsprüfung; "+
             "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."
     }
 
@@ -360,7 +360,7 @@ class ContinuumPublicStudyJobService:JobService() {
                 operation="FETCH_SOURCE"
                 ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                     ContinuumTrainingMonitor.PUBLIC,"FETCH_SOURCE")
-                val source=ContinuumPublicStudyFetch.fetch(researchTitle,cancelled)
+                val source=ContinuumOpenWebStudyFetch.fetch(researchTitle,cancelled)
                 check(!cancelled())
                 // Keep discovery optional: failures here never discard a valid
                 // article or interrupt the existing learning pipeline.
@@ -370,7 +370,7 @@ class ContinuumPublicStudyJobService:JobService() {
                         ContinuumTrainingMonitor.PUBLIC,"DISCOVER_TOPICS")
                     operation="DISCOVER_TOPICS"
                     val discovered=runCatching {
-                        ContinuumPublicStudyFetch.discover(source.subject,cancelled)
+                        ContinuumOpenWebStudyFetch.discoverTitles(source.subject,cancelled)
                     }.onFailure { error ->
                         if(error is WikimediaRateLimited)
                             scheduler.postponeDueToProvider(error.waitSeconds)
@@ -393,9 +393,9 @@ class ContinuumPublicStudyJobService:JobService() {
                     val archive=ContinuumKnowledgeArchive(filesDir)
                     val archiveCountBefore=archive.stats().values.sum()
                     archive.save(
-                        ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                        ContinuumKnowledgeArchive.Kind.PUBLIC_WEB_EXCERPT,
                         source.subject,source.url,
-                        "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                        "Öffentliche HTTPS-Quelle · unbestätigter kurzer Auszug",
                         source.excerpt
                     )
                     added=archive.stats().values.sum()>archiveCountBefore
@@ -438,7 +438,7 @@ class ContinuumPublicStudyJobService:JobService() {
                 Log.w("ContinuumPublicStudy","Research cycle result: "+phase)
             } finally {
                 // This is a separate bounded step, so already-known sources or
-                // temporarily unavailable Wikipedia do not block local rehearsal.
+                // temporarily unavailable search providers do not block local rehearsal.
                 // The same deadline, battery and owner-enabled job governs both.
                 if(!cancelled() && scheduler.enabled) {
                     runCatching {
