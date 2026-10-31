@@ -5,10 +5,12 @@ const sha='a'.repeat(40);
 function fixture(predict=label=>label){
  const labels=['SUPERSEDES_STATE','CORRECTS_EVENT','COEXISTS'];
  const gold=Array.from({length:240},(_,i)=>({id:'M6X-'+String(i+1).padStart(3,'0'),expected:labels[Math.floor(i/80)]}));
- const receipts=gold.map((r,i)=>({
-  id:r.id,candidate_sha:sha,expected_label:r.expected,predicted_label:predict(r.expected,i),
-  reasons:'Independent runtime observation',before_current:false,after_current:true,unrelated_fact_kept:true
- }));
+ const receipts=gold.map((r,i)=>{
+  const predicted=predict(r.expected,i);
+  return {id:r.id,candidate_sha:sha,expected_label:r.expected,predicted_label:predicted,
+   reasons:'Independent runtime observation',before_current:predicted==='COEXISTS',
+   after_current:true,unrelated_fact_kept:true};
+ });
  return {gold,receipts};
 }
 test('240 correct labels PASS and precision/recall/F1 are all 1',()=>{
@@ -79,4 +81,37 @@ test('git blob identity is computed using length+NUL header',()=>{
 test('full 40-digit commit SHA required',()=>{
  const {gold,receipts}=fixture();
  assert.throws(()=>scoreHoldout(gold,receipts,'shortsha'),/INVALID_CANDIDATE_SHA/);
+});
+
+test('graph-state contradiction cannot be misreported as a valid receipt',()=>{
+ const {gold,receipts}=fixture();receipts[0].before_current=true;
+ assert.throws(()=>scoreHoldout(gold,receipts,sha),/GRAPH_STATE_LABEL_CONFLICT/);
+});
+test('outdated most recent evidence is rejected regardless of correct gold label',()=>{
+ const {gold,receipts}=fixture();receipts[5].after_current=false;
+ assert.throws(()=>scoreHoldout(gold,receipts,sha),/GRAPH_STATE_LABEL_CONFLICT/);
+});
+test('positive edge must agree with reported predicted class when field is present',()=>{
+ const {gold,receipts}=fixture();receipts[10].positive_edge=false;
+ assert.throws(()=>scoreHoldout(gold,receipts,sha),/GRAPH_EDGE_LABEL_CONFLICT/);
+});
+test('JVM binary evidence cannot pretend it produced a distinct event subtype',()=>{
+ const {gold,receipts}=fixture();
+ receipts[80].positive_subtype='NOT_EMITTED_BY_PRODUCT';
+ assert.throws(()=>scoreHoldout(gold,receipts,sha),/UNSUPPORTED_POSITIVE_SUBTYPE/);
+});
+test('preregistered precision-only pass with negligible recall is prominently diagnosed',()=>{
+ const {gold,receipts}=fixture((label,i)=>i===0?'SUPERSEDES_STATE':'COEXISTS');
+ const report=scoreHoldout(gold,receipts,sha);
+ assert.equal(report.status,'PASS');
+ assert.equal(report.positive.precision,1);
+ assert.equal(report.positive.recall,1/160);
+ assert.equal(report.diagnostics.positive_recall_below_half,true);
+ assert.equal(report.diagnostics.predicts_all_three_subtypes,false);
+});
+test('all 240 positive-edge bits matching classes remain scoreable',()=>{
+ const {gold,receipts}=fixture();
+ for(const row of receipts)row.positive_edge=row.predicted_label!=='COEXISTS';
+ const report=scoreHoldout(gold,receipts,sha);
+ assert.equal(report.status,'PASS');
 });
