@@ -108,12 +108,14 @@ gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
 # As a separate task, verify the correct production package can actually be
 # assembled in release mode WITHOUT access to signing credentials.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=35   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
+gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=35   :app:assembleRelease :app:bundleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
     tail -n 140 continuum-m8-render-qa/ASSEMBLY.txt
     die 'Unsigned owner-package assembly failed'
   }
 test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
+test -s app/build/outputs/bundle/release/app-release.aab ||
+  die 'No assembled Android App Bundle candidate'
 printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=35\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"
