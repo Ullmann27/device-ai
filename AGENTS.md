@@ -1,5 +1,14 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## AKTUELLER VERBINDLICHER ARBEITSSTAND — 31.10.2026 (Sol / Astra / Opus / alle Agenten)
+
+**VOR jeder neuen Forschung oder Codeänderung ZUERST lesen:** [Kanonischer Stand mit Mythos/Astra/JARVIS, bio-neuronaler Forschung, M8-Coding-Agent, PR-Abstammung, Originalsignatur und APK-Version](docs/CONTINUUM-CURRENT-STATE-20261031.md), [Frontier-Forschungsübergabe](docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md) und [PR #287](https://github.com/Ullmann27/device-ai/pull/287). Ältere Statuspassagen in dieser Datei sind historische Checkpoints, **nicht** der jetzige Produktions- oder Gerätestand.
+
+**Erreichter Forschungsmeilenstein:** Bis 3.000 logische Experten mit begrenztem Compute-Scheduler und rein deterministischer Zwischenberechnungs-Wiederverwendung. Synthetisch 3.000 Aufgaben mit 30 gemeinsam nutzbaren teuren Stufen: 30 statt 3.000 Kernberechnungen; 3.000 verschiedene individuelle Endergebnisse bleiben korrekt. Negativkontrolle: 3.000 verschiedene Inputs brauchen 3.000 Berechnungen. 43/43 isolierte V8-Prüfungen mit Shims; originäre Node-/Android-/Fold7-/Modelltests offen. **Keine 3.000 physischen Rechner, keine 100× LLM-Geschwindigkeit, keine nachgewiesene vollständige JARVIS-App.**
+
+**Primärziel:** Wirklich funktionsfähige eigenständige `Continuum Lokal` Android-KI, Sprache, Gedächtnis, neuronale/Bio-Temporal-Forschung, echter M8-Coding-Agent, berechtigte Tool-/MCP-Verbindung und originalsigniertes One-Tap-Update. Keine Demo oder fiktiven Beweise. Historisch berichtete installierte `0.3.28 / versionCode 29`; nächste APK benötigt aktuellen Gerätecheck, *höheren* Code (mindestens 30 bei installierter 29) und **dieselbe** Continuum-Lokal-Signatur. Nicht den Signaturvertrag von PR #286 (teilweise code29) ungeprüft veröffentlichen.
+
+
 ## PRIORITÄT 27.10.2026: BESTEHENDE FORSCHUNGS-CODEPROJEKTE SYSTEMATISCH INS CONTINUUM-GEHIRN INTEGRIEREN (M4)
 
 **Expliziter Besitzerauftrag:** Internationale Forschungsprojekte und offene Codesammlungen (Google AI Edge Gallery, Jandal, LocalChat, Mem0, A-MEM, sqlite-vec, LongMemEval-V2, mini-SWE-agent, Aider, OpenHands und ARM64-Build-Tools) dürfen bei späteren Entwicklungsrunden **nicht vergessen werden**. Zentrale, mit Quellcode-Links und tatsächlichen Zielpfaden versehene Übergabe: [`docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md`](docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md). Neueste M4-Draft-Integration **PR #198** auf **PR #197**. Nach jeder weiteren Quelle den Katalog pflegen, Quell-Lizenz/Commit prüfen, vorhandene Architektur zuerst abgleichen, dann kleinen isolierten Kotlin/Node-Adapter mit echten Negativ-/Holdout-/Datenschutztests in den bestehenden Gehirn- und CCC1-Aufrufpfad führen. **Nicht** sämtlichen Fremdcode kopieren oder Integrations- und Funktionserfolg behaupten, bevor echte Build-, Geräte- und Qualitätsbelege vorliegen.
