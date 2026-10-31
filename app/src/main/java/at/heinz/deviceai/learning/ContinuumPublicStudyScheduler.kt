@@ -27,6 +27,8 @@ class ContinuumPublicStudyScheduler(context:Context) {
     private val prefs get()=app.getSharedPreferences(PREFS,Context.MODE_PRIVATE)
 
     val enabled get()=prefs.getBoolean("enabled",false)
+    fun internetAllowed():Boolean=app.getSharedPreferences("continuum-internet",Context.MODE_PRIVATE)
+        .getString("mode","ASK")=="ALWAYS_ON"
     fun isRateLimited():Boolean = System.currentTimeMillis()<
         prefs.getLong("retry_after_at",0L)
     fun postponeDueToProvider(seconds:Long) {
@@ -75,7 +77,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
     }
 
     fun restore():Boolean {
-        if(!enabled) { jobs.cancel(JOB_ID); return false }
+        if(!enabled || !internetAllowed()) { jobs.cancel(JOB_ID); return false }
         return try {
             val pending=jobs.getPendingJob(JOB_ID)
             if(pending!=null &&
@@ -323,7 +325,7 @@ class ContinuumPublicStudyJobService:JobService() {
     @Synchronized override fun onStartJob(params:JobParameters):Boolean {
         if(thread?.isAlive==true)return false
         val scheduler=ContinuumPublicStudyScheduler(this)
-        if(!scheduler.enabled || scheduler.isRateLimited())return false
+        if(!scheduler.enabled || !scheduler.internetAllowed() || scheduler.isRateLimited())return false
         // Do not create a false research attempt or run gradients below 20%.
         // JobScheduler itself must not impose the device-dependent low-battery gate.
         val deferral=ContinuumOfflineLearningBudget.deferralReason(continuumLearningResources())
@@ -350,7 +352,8 @@ class ContinuumPublicStudyJobService:JobService() {
             val budget=ContinuumLearningRunBudget(start,ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS,
                 { SystemClock.elapsedRealtime() }, { continuumLearningResources() })
             val cancelled:()->Boolean = {
-                stopping.get() || Thread.currentThread().isInterrupted || !scheduler.enabled || budget.cancelled()
+                stopping.get() || Thread.currentThread().isInterrupted ||
+                    !scheduler.enabled || !scheduler.internetAllowed() || budget.cancelled()
             }
             try {
                 val researchTitle=scheduler.nextTopic()
