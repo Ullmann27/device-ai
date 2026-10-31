@@ -7617,6 +7617,74 @@ class AgentActivity : Activity() {
     }
 
 
+    /**
+     * Optional backend-based OpenRouter path. Uses paired-device authentication and
+     * a server-side secret, unlike the separate user-controlled direct-key option.
+     * Each question requires a new explicit confirmation; responses never update memory.
+     */
+    private fun showOpenRouterBackendMentorDialog(
+        suggested: String = input.text.toString().trim()
+    ) {
+        if (busy) {
+            Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        backend.ensureMentorBackend()
+        if (!backend.hasMentorAccess()) {
+            showMentorPairingDialog()
+            return
+        }
+        val question = EditText(this).apply {
+            hint = "Welche einzelne Frage soll der OpenRouter-Backend-Mentor beantworten?"
+            setText(suggested.take(1800))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            maxLines = 5
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("OpenRouter · sicherer Backend-Mentor")
+            .setMessage(
+                "Einmalige Freigabe: Nur diese Frage geht an dein gekoppeltes HTTPS-Backend. " +
+                    "Der API-Schlüssel bleibt dort. Keine Chat-Historie, Erinnerungen, " +
+                    "Geräteinformationen oder Toolrechte. OpenRouter kann kostenpflichtig sein. " +
+                    "Keine automatische Lernübernahme."
+            )
+            .setView(question)
+            .setNegativeButton("LOKAL BLEIBEN", null)
+            .setPositiveButton("EINMALIG SENDEN") { _, _ ->
+                val content = question.text.toString().trim()
+                if (content.length !in 3..1800) {
+                    addAssistantMessage("Mentorfrage muss 3 bis 1800 Zeichen enthalten.")
+                } else if (!busy) {
+                    addUserMessage(content)
+                    setBusy(true)
+                    addToolActivity("OPENROUTER BACKEND · einzelne Mentorfrage freigegeben")
+                    backend.openRouterMentor(content) { result ->
+                        setBusy(false)
+                        result.fold(
+                            onSuccess = { answer ->
+                                addAssistantMessage(
+                                    "OPENROUTER · BACKEND · UNBESTÄTIGT\n\n" +
+                                        answer + "\n\nKeine automatische Gedächtnisübernahme."
+                                )
+                                addToolActivity("OPENROUTER BACKEND · Antwort empfangen")
+                            },
+                            onFailure = { error ->
+                                addAssistantMessage(
+                                    "OpenRouter-Backend-Mentor nicht verfügbar: " +
+                                        (error.message ?: "Verbindungsfehler").take(160) +
+                                        ". Der lokale Chat bleibt unverändert."
+                                )
+                                addToolActivity("OPENROUTER BACKEND · Anfrage beendet")
+                            }
+                        )
+                    }
+                }
+            }
+            .show()
+    }
+
     private fun showGroqMentorDialog(suggested: String = input.text.toString().trim()) {
         if (busy) {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
@@ -7770,6 +7838,9 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 8))
         box.addView(actionButton("OPENROUTER · EINZELFRAGE STELLEN").apply {
             setOnClickListener { showOpenRouterMentorDialog() }
+        }, matchWidth(top = 8))
+        box.addView(actionButton("OPENROUTER · GESICHERTER BACKEND-MENTOR").apply {
+            setOnClickListener { showOpenRouterBackendMentorDialog() }
         }, matchWidth(top = 8))
         box.addView(actionButton("GROQ-GERÄT OHNE API-SCHLÜSSEL KOPPELN", accent = true).apply {
             setOnClickListener { showMentorPairingDialog() }
