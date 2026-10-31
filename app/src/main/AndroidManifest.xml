@@ -88,6 +88,11 @@
             android:name=".ContinuumTrainingMonitorActivity"
             android:exported="false" />
 
+        <!-- Read-only JARVIS-inspired cockpit reuses existing on-device telemetry. -->
+        <activity
+            android:name=".ContinuumJarvisMissionControlActivity"
+            android:exported="false" />
+
         <!-- Owner update UX is private and only opened from Continuum Lokal. -->
         <activity
             android:name=".ContinuumOwnerUpdateActivity"
