@@ -32,9 +32,11 @@ class GeneralWebDiscoveryProvider(
         // connectivity. Try another bounded HTTPS search endpoint before
         // degrading to Wikipedia-only discovery. Both obey the same grant and
         // SSRF/DNS/TLS/byte limits; no private query expansion is performed.
+        val combined = linkedMapOf<String, ResearchSourceCandidate>()
+        val domains = mutableMapOf<String, Int>()
         for (url in listOf(searchUrl(focused), duckDuckGoUrl(focused))) {
+            checkAccess()
             val matches=runCatching {
-                checkAccess()
                 parseSearchResults(fetchHtml?.invoke(url)?:fetchSearchResponse(url,checkAccess))
                     .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
             }.getOrElse {
@@ -43,11 +45,19 @@ class GeneralWebDiscoveryProvider(
                 emptyList()
             }
             checkAccess()
-            if(matches.isNotEmpty()) {
-                generalWorked=true
-                lastIssue=null
-                return matches
+            for(candidate in matches) {
+                val host = runCatching { URI(candidate.url).host.lowercase(java.util.Locale.ROOT) }.getOrNull()
+                    ?: continue
+                if((domains[host]?:0)>=2 || candidate.url in combined)continue
+                combined[candidate.url]=candidate
+                domains[host]=(domains[host]?:0)+1
             }
+        }
+        checkAccess()
+        if(combined.isNotEmpty()) {
+            generalWorked=true
+            lastIssue=null
+            return combined.values.take(12)
         }
         lastIssue=lastIssue?:"Beide allgemeinen Web-Suchanbieter lieferten keine thematisch passenden Quellen."
         checkAccess()
@@ -75,7 +85,8 @@ class GeneralWebDiscoveryProvider(
             val uri=runCatching { URI(decoded) }.getOrNull()?:return null
             if(runCatching { HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri) }.isFailure)return null
             val host=uri.host.lowercase(java.util.Locale.ROOT).trimEnd('.')
-            if(host=="bing.com"||host.endsWith(".bing.com")||host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||host=="google.com"||host.endsWith(".google.com"))return null
+            if(host=="bing.com"||host.endsWith(".bing.com")||host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||host=="google.com"||host.endsWith(".google.com")||
+                host=="wikipedia.org"||host.endsWith(".wikipedia.org")||host=="wikimedia.org"||host.endsWith(".wikimedia.org"))return null
             return ResearchSourceCandidate(decoded,title?.replace(Regex("\\s+")," ")?.take(256),"general-web-search")
         }
         fun parseSearchResults(raw:String):List<ResearchSourceCandidate> {
