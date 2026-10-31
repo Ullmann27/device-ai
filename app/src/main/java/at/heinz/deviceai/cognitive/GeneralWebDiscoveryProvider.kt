@@ -67,7 +67,7 @@ class GeneralWebDiscoveryProvider(
         }
             .getOrElse {
                 rethrowCancellation(it)
-                lastIssue=lastIssue+" Explizit konfigurierter Zusatzanbieter fehlgeschlagen."
+                lastIssue=lastIssue+" Explizit konfigurierter Fallback fehlgeschlagen."
                 emptyList()
             }
         checkAccess()
