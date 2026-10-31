@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "astra/continuum-integrated-apk-20261019"
+      - "astra/continuum-optional-groq-mentor-20261019"
   workflow_dispatch:
 
 permissions:
@@ -39,6 +40,10 @@ jobs:
           npm --prefix backend test
       - name: Full portable Node regression suite
         run: node --test .github/continuum/*.test.mjs
+      - name: Groq mentor opt-in regression and Android UI contract
+        run: |
+          node --test backend/test/groq-mentor.test.js
+          node --test .github/continuum/groq-mentor-ui-wiring.test.mjs
       - name: Preview-specific learning and research gates
         run: |
           node --test .github/continuum/research-learning-cycle.test.mjs
@@ -57,23 +62,23 @@ jobs:
       - name: Check Android 26+ API safety
         run: gradle :app:lintDebug --stacktrace
       - name: Build installable preview APK
-        run: gradle :app:assembleDebug -PdeviceAiPreview=true --stacktrace
+        run: gradle :app:assembleDebug -PdeviceAiMentorPreview=true --stacktrace
       - name: Verify APK signature, package ID, and build SHA
         run: |
           set -euo pipefail
           apk="app/build/outputs/apk/debug/app-debug.apk"
           test -s "$apk"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.preview'"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.mentorpreview'"
           mkdir -p build-evidence
-          cp "$apk" build-evidence/DeviceAI-Continuum-Preview.apk
+          cp "$apk" build-evidence/DeviceAI-Continuum-Mentor-Preview.apk
           git rev-parse HEAD > build-evidence/COMMIT.txt
-          sha256sum build-evidence/DeviceAI-Continuum-Preview.apk > build-evidence/SHA256SUMS.txt
+          sha256sum build-evidence/DeviceAI-Continuum-Mentor-Preview.apk > build-evidence/SHA256SUMS.txt
           cp -r app/build/test-results/testDebugUnitTest build-evidence/android-unit-results
       - name: Upload exact verified APK and integrity evidence
         uses: actions/upload-artifact@v4
         with:
-          name: DeviceAI-Continuum-Integrated-Preview
+          name: DeviceAI-Continuum-Mentor-Integrated-Preview
           path: build-evidence/
           if-no-files-found: error
           retention-days: 30

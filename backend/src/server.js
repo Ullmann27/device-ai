@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
@@ -10,6 +11,8 @@ import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothes
 import { ContinuumStateStore, mergeResearchQuestions } from "./continuum-state.js";
 import { selectResearchKnowledge } from "./continuum-knowledge.js";
 import { androidWebTools } from "./android-web-tools.js";
+import { GroqMentor } from "./groq-mentor.js";
+import { MentorDevicePairing } from "./mentor-pairing.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -28,6 +31,29 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-6-luna";
 const OPENAI_BASE_URL = (process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1").replace(/\/+$/, "");
 const WEB_SEARCH_ENABLED = (process.env.WEB_SEARCH_ENABLED ?? "true").toLowerCase() !== "false";
 const PORT = Number(process.env.PORT ?? 8080);
+const groqMentor = new GroqMentor({
+  enabled: (process.env.GROQ_MENTOR_ENABLED ?? "false").toLowerCase() === "true",
+  apiKey: process.env.GROQ_API_KEY ?? "",
+  model: process.env.GROQ_MENTOR_MODEL ?? "openai/gpt-oss-20b",
+  dailyLimit: Number(process.env.GROQ_MENTOR_DAILY_LIMIT ?? 20)
+});
+// Optional second provider uses only a server-side secret. Never a silent cloud fallback.
+const openRouterMentor = new GroqMentor({
+  enabled: (process.env.OPENROUTER_MENTOR_ENABLED ?? "false").toLowerCase() === "true",
+  apiKey: process.env.OPENROUTER_API_KEY ?? "",
+  provider: "OPENROUTER",
+  model: process.env.OPENROUTER_MENTOR_MODEL ?? "openai/gpt-4o",
+  dailyLimit: Number(process.env.OPENROUTER_MENTOR_DAILY_LIMIT ?? 10)
+});
+const mentorPairing = new MentorDevicePairing({
+  rootToken: DEVICE_AI_TOKEN,
+  approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? "",
+  additionalApprovedFingerprint: process.env.DEVICE_AI_MENTOR_ADDITIONAL_APPROVED_DEVICE ?? ""
+});
+const pairingLimiter = rateLimit({
+  windowMs: 15 * 60_000, limit: 12,
+  standardHeaders: "draft-8", legacyHeaders: false
+});
 const CONTINUUM_DAEMON_ENABLED = (process.env.CONTINUUM_DAEMON_ENABLED ?? "false").toLowerCase() === "true";
 const CONTINUUM_RESEARCH_PROVIDER = (process.env.CONTINUUM_RESEARCH_PROVIDER ?? "public").toLowerCase();
 const BRAIN_FACTORY_ENABLED = (process.env.CONTINUUM_BRAIN_FACTORY_ENABLED ?? "false").toLowerCase() === "true";
@@ -178,6 +204,12 @@ function auth(req, res, next) {
   next();
 }
 
+function mentorAuth(req, res, next) {
+  const supplied = req.get("authorization") ?? "";
+  if (mentorPairing.isMentorAuthorized(supplied)) return next();
+  return auth(req, res, next);
+}
+
 async function openai(path, options = {}) {
   if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY fehlt.");
   const response = await fetch(OPENAI_BASE_URL + path, {
@@ -280,6 +312,21 @@ function extractCitations(response) {
   return [...found.values()];
 }
 
+// Read-only, same-origin test UI: no secrets or personal questions embedded in HTML.
+// Protected /v1/mentor/* routes still require DEVICE_AI_TOKEN and explicit consent.
+const mentorUiDirectory = fileURLToPath(new URL("../public/", import.meta.url));
+for (const [route, name] of [
+  ["/mentor", "mentor.html"],
+  ["/mentor/ui.css", "mentor.css"],
+  ["/mentor/ui.js", "mentor.js"]
+]) {
+  app.get(route, (_req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.set("Referrer-Policy", "no-referrer");
+    res.sendFile(path.join(mentorUiDirectory, name));
+  });
+}
+
 app.get("/health", (_req, res) => {
   res.json({
     ok: true,
@@ -289,6 +336,58 @@ app.get("/health", (_req, res) => {
     continuum_daemon: Boolean(continuumDaemon),
     brain_factory: Boolean(brainFactory)
   });
+});
+
+/** Stateless pairing; approval is controlled exclusively by Render operator configuration. */
+app.get("/v1/mentor/pairing/challenge", pairingLimiter, (_req, res) => {
+  if (!mentorPairing.ready) return res.status(503).json({ error: "PAIRING_DISABLED" });
+  res.set("Cache-Control", "no-store");
+  return res.json(mentorPairing.challenge());
+});
+app.post("/v1/mentor/pairing/redeem", pairingLimiter, (req, res) => {
+  res.set("Cache-Control", "no-store");
+  if (Object.keys(req.body ?? {}).sort().join("|") !== "challenge|publicKey|signature") {
+    return res.status(400).json({ error: "INVALID_PAIRING_REQUEST" });
+  }
+  try {
+    const outcome = mentorPairing.redeem(req.body);
+    if (!outcome.ok) return res.status(403).json({ error: outcome.code, fingerprint: outcome.fingerprint });
+    return res.json(outcome);
+  } catch {
+    return res.status(400).json({ error: "PAIRING_REJECTED" });
+  }
+});
+
+/** Private status: never returns API keys or user prompts. */
+app.get("/v1/mentor/status", mentorAuth, (req, res) => {
+  const provider = req.query.provider ?? "GROQ";
+  if (provider !== "GROQ" && provider !== "OPENROUTER") {
+    return res.status(400).json({ error: "INVALID_PROVIDER" });
+  }
+  res.set("Cache-Control", "no-store");
+  res.json(provider === "OPENROUTER" ? openRouterMentor.status() : groqMentor.status());
+});
+
+/** Explicit text-only mentor. No tools, no context, no persistent learning. */
+app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
+  if (!["GROQ", "OPENROUTER"].includes(req.body?.provider) || req.body?.consent !== true) {
+    return res.status(400).json({ error: "OWNER_CONSENT_REQUIRED" });
+  }
+  if (typeof req.body?.question !== "string" ||
+      req.body.question.trim().length < 3 ||
+      req.body.question.length > 1800 ||
+      Object.keys(req.body).sort().join("|") !== "consent|provider|question") {
+    return res.status(400).json({ error: "INVALID_QUESTION" });
+  }
+  const mentor = req.body.provider === "OPENROUTER" ? openRouterMentor : groqMentor;
+  const result = await mentor.answer(req.body.question);
+  if (!result.ok) {
+    const status = result.code === "DISABLED" ? 503 :
+      result.code === "INVALID_QUESTION" ? 400 :
+      result.code === "DAILY_LIMIT" || result.code === "BUSY" || result.code === "UPSTREAM_LIMIT" ? 429 : 502;
+    return res.status(status).json({ error: result.code });
+  }
+  return res.json(result);
 });
 
 app.get("/v1/continuum/status", auth, (_req, res) => {
@@ -515,6 +614,39 @@ startContinuumServices();
 
 const httpServer = app.listen(PORT, "0.0.0.0", () => {
   console.log("Device AI backend listening on port " + PORT);
+  // Presence flags only; never print the API key, Device token or user content.
+  console.log("Continuum mentor readiness:", JSON.stringify({
+    groqConfigured: groqMentor.status().available,
+    openRouterConfigured: openRouterMentor.status().available,
+    deviceAuthenticationConfigured: DEVICE_AI_TOKEN.length >= 16
+  }));
+  // Explicit operator-only synthetic smoke check; disabled by default.
+  // No user memories, questions, response text or API secrets are logged.
+  // Consume exactly one model attempt per process start while enabled.
+  if (process.env.GROQ_MENTOR_SELFTEST_ON_START === "true") {
+    const syntheticMentorQuestion = [
+      "Bitte erkläre die folgenden fünf Punkte zu Device AI Continuum.",
+      "1. Was können die lokalen Lernkerne SWB1 und CRE1?",
+      "2. Welche Grenzen hat der Android-Teamleiter aktuell?",
+      "3. Welche Aufgaben kann der optionale Groq-Textmentor ohne Gerätetools übernehmen?",
+      "4. Wie unterscheiden sich Besitzerwissen und unverifizierte Webquellen?",
+      "5. Was fehlt für einen unabhängigen Entwicklungsworker?",
+      "Antworte verständlich auf Deutsch; unterscheide implementierte Funktionen von künftigen Möglichkeiten."
+    ].join(" ");
+    void groqMentor.answer(syntheticMentorQuestion)
+      .then(result => {
+        console.log("Continuum Groq self-test:", JSON.stringify({
+          ok: result.ok,
+          code: result.ok ? "OK" : result.code,
+          answerReceived: result.ok && result.message.length > 0
+        }));
+      })
+      .catch(() => {
+        console.log("Continuum Groq self-test:", JSON.stringify({
+          ok: false, code: "UNEXPECTED_TEST_FAILURE", answerReceived: false
+        }));
+      });
+  }
 });
 
 function shutdown(signal) {

@@ -5,6 +5,10 @@ plugins {
 
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
+val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
+require(!(deviceAiPreview && deviceAiMentorPreview)) {
+    "Use only one preview package ID at a time."
+}
 
 android {
     namespace = "at.heinz.deviceai"
@@ -17,12 +21,21 @@ android {
         versionCode = 4
         versionName = "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
-        manifestPlaceholders["appLabel"] = if (deviceAiPreview) "Device AI Preview" else "Device AI"
+        manifestPlaceholders["appLabel"] = when {
+            deviceAiMentorPreview -> "Device AI Mentor"
+            deviceAiPreview -> "Device AI Preview"
+            else -> "Device AI"
+        }
     }
 
     buildTypes {
         getByName("debug") {
-            if (deviceAiPreview) applicationIdSuffix = ".preview"
+            if (deviceAiMentorPreview) {
+                // Independent signing and app storage: never overwrite the tested Sol preview.
+                applicationIdSuffix = ".mentorpreview"
+            } else if (deviceAiPreview) {
+                applicationIdSuffix = ".preview"
+            }
         }
     }
 

@@ -1037,6 +1037,7 @@ class AgentActivity : Activity() {
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
+            CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
             CenterAction("INTERNET · LERNSTOFF PRÜFEN") { showWebLearningInbox() },
             CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
         ),
@@ -1196,6 +1197,7 @@ class AgentActivity : Activity() {
             CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
+            CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() }
         )
@@ -1429,6 +1431,10 @@ class AgentActivity : Activity() {
         val request = input.text.toString().trim()
         if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (request.startsWith("mentor:", ignoreCase = true)) {
+            showGroqMentorDialog(request.substringAfter(':').trim())
             return
         }
         if (request.equals("Neuron Tutor", true) || request.equals("Neuron Gespräch", true)) {
@@ -4734,6 +4740,82 @@ class AgentActivity : Activity() {
         cloudBadge.background = rounded(PANEL, 14, BORDER)
     }
 
+    /**
+     * No fallback silently uploads local text to any provider.
+     * Owner confirmation is required for every external question.
+     */
+    private fun showGroqMentorDialog(suggested: String = input.text.toString().trim()) {
+        if (busy) {
+            Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!backend.isConfigured()) {
+            AlertDialog.Builder(this)
+                .setTitle("Externer KI-Mentor · Einrichtung fehlt")
+                .setMessage("Verbinde zuerst dein eigenes HTTPS-Backend mit dem Device-Token. " +
+                    "Der Groq-API-Schlüssel bleibt ausschließlich auf dem Backend, " +
+                    "niemals in der Android-App. Dein lokaler Assistent funktioniert weiterhin ohne Cloud.")
+                .setNegativeButton("Später", null)
+                .setPositiveButton("BACKEND EINRICHTEN") { _, _ -> showCloudSettings() }
+                .show()
+            return
+        }
+        val question = EditText(this).apply {
+            hint = "Welche Frage soll der externe Mentor beantworten?"
+            setText(suggested.take(1800))
+            inputType = InputType.TYPE_CLASS_TEXT or
+                InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            minLines = 2
+            maxLines = 5
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("GroqCloud · einmalige externe Anfrage")
+            .setMessage("Nur der folgende Fragetext wird an dein Backend und Groq übermittelt. " +
+                "Keine Erinnerungen, Geräteinformationen, anderen Chats oder Toolfreigaben. " +
+                "Die Antwort bleibt ein ungeprüfter Vorschlag und wird nicht als Wissen gelernt. " +
+                "Es erfolgt kein automatischer Fallback zur Cloud.")
+            .setView(question)
+            .setNegativeButton("LOKAL BLEIBEN", null)
+            .setPositiveButton("EINMALIG SENDEN") { _, _ ->
+                val content = question.text.toString().trim()
+                if (content.length !in 3..1800) {
+                    addAssistantMessage("Mentor-Anfrage abgelehnt: Erforderlich sind 3 bis 1800 Zeichen.")
+                } else if (!busy) {
+                    val originalDraft = input.text.toString().trim()
+                    if (originalDraft == content ||
+                        (originalDraft.startsWith("mentor:", ignoreCase = true) &&
+                            originalDraft.substringAfter(':').trim() == content)) {
+                        input.text.clear()
+                    }
+                    addUserMessage(content)
+                    setBusy(true)
+                    addToolActivity("GROQ · externe Frage mit Einmalfreigabe versendet")
+                    backend.groqMentor(content) { result ->
+                        setBusy(false)
+                        result.fold(
+                            onSuccess = { answer ->
+                                addAssistantMessage(
+                                    "EXTERNER KI-MENTOR · GROQ · UNBESTÄTIGT\n\n" +
+                                        answer + "\n\nNicht automatisch in lokales Wissen übernommen."
+                                )
+                                addToolActivity("GROQ · Antwort empfangen · keine Geräte-Tools ausgeführt")
+                            },
+                            onFailure = { error ->
+                                addAssistantMessage("Externer KI-Mentor nicht verfügbar (" +
+                                    (error.message ?: error.javaClass.simpleName).take(180) +
+                                    "). Dein lokaler Chat und deine Erinnerungen bleiben unverändert. " +
+                                    "Für eine lokale Antwort die Frage erneut über den normalen Chat stellen.")
+                                addToolActivity("GROQ · Anfrage beendet ohne Lernübernahme")
+                            }
+                        )
+                    }
+                }
+            }
+            .show()
+    }
+
     private fun showCloudSettings() {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -4742,7 +4824,9 @@ class AgentActivity : Activity() {
 
         val url = EditText(this).apply {
             hint = "https://dein-device-ai-backend.example"
-            setText(backend.backendUrl())
+            setText(backend.backendUrl().ifBlank {
+                "https://device-ai-continuum-mentor.onrender.com"
+            })
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
             setSingleLine(true)
         }
@@ -4761,7 +4845,7 @@ class AgentActivity : Activity() {
         box.addView(token, matchWidth(top = 4))
         box.addView(
             textView(
-                "Der OpenAI-API-Key gehört niemals hier hinein. Er bleibt ausschließlich als Secret am Backend.",
+                "API-Schlüssel von OpenAI oder Groq gehören niemals hier hinein. Sie bleiben ausschließlich als Secrets am eigenen Backend. Der externe Mentor überträgt nur die ausdrücklich freigegebene Frage.",
                 11f,
                 MUTED
             ).apply { setPadding(0, dp(10), 0, 0) }
@@ -4797,6 +4881,25 @@ class AgentActivity : Activity() {
         backend.health { result ->
             result.onSuccess {
                 addToolActivity("✓ Backend erreichbar")
+                backend.mentorStatus { status ->
+                    status.onSuccess { (configured, remaining) ->
+                        if (configured) {
+                            addToolActivity(
+                                "✓ Groq-Mentor konfiguriert · maximal $remaining Versuche heute übrig. " +
+                                    "Externer Modellaufruf noch nicht getestet."
+                            )
+                        } else {
+                            addToolActivity(
+                                "Groq-Mentor noch nicht aktiviert oder Groq-API-Schlüssel fehlt am Server."
+                            )
+                        }
+                    }.onFailure {
+                        addToolActivity(
+                            "Groq-Mentor-Status nicht abrufbar: " +
+                                (it.message ?: "Verbindung oder Device-Token prüfen").take(120)
+                        )
+                    }
+                }
             }.onFailure {
                 addToolActivity("Backend nicht erreichbar: ${it.message ?: "Fehler"}")
             }
