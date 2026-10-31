@@ -224,6 +224,26 @@ class ContinuumLocalAgentModelTest {
         assertTrue(rt.cancelled)
     }
 
+    @Test fun agentCancelPropagatesToTheNativeRuntimeWithoutToolExecution() {
+        val rt = FakeRuntime { _, cb ->
+            cb.onEvent(LocalInferenceEvent.TextDelta("pending"))
+        }
+        val agent = BoundedAgentOrchestrator(
+            model = model(rt),
+            memories = { emptyList() },
+            toolGate = ToolGate(ToolPolicy(readOnlyEnabled = true),
+                ToolRunner { error("must not execute") }),
+            evaluator = AgentEvaluator { _, _ -> Evaluation(true, 1.0) },
+            experienceStore = InMemoryExperienceStore()
+        )
+        agent.cancel()
+        assertTrue(rt.cancelled)
+        assertThrows(java.util.concurrent.CancellationException::class.java) {
+            agent.run("Inspect device")
+        }
+        assertTrue(rt.prompts.isEmpty())
+    }
+
     @Test fun laterCallbacksCannotOverwriteCompletedModelResponse() {
         lateinit var callback: LocalInferenceCallback
         val rt = FakeRuntime { _, cb ->
