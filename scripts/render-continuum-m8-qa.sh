@@ -18,7 +18,8 @@ case "$(git branch --show-current)" in \
   fix/continuum-v32-network-web-recovery-20261031|\
   release/continuum-v32-openrouter-fullweb-20261031|\
   research/continuum-m8-render-signed-release-20261031|\
-  research/continuum-m10-verified-brain-and-web-20261031|"") ;; \
+  research/continuum-m10-verified-brain-and-web-20261031|\
+  release/continuum-local-0.3.34-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
@@ -100,19 +101,19 @@ node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scrip
   die 'Backend and OpenRouter tests failed'
 }
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=34   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
+gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=35   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
     die 'Android QA compilation, unit test or lint failed'
   }
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
 # As a separate task, verify the correct production package can actually be
 # assembled in release mode WITHOUT access to signing credentials.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=34   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
+gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=35   :app:assembleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
     tail -n 140 continuum-m8-render-qa/ASSEMBLY.txt
     die 'Unsigned owner-package assembly failed'
   }
 test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
-printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=34\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=35\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"
