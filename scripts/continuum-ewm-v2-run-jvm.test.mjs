@@ -11,12 +11,12 @@ const gold=[
  {id:'M6X-003',before:'Anna wohnt in Graz.',after:'Anna besuchte Wien.',
   unrelated:'Eine Lampe ist gelb.',expected:'COEXISTS'}
 ];
-const line=(id,edge,before,after,unrelated,reason='PRODUCTION_GRAPH:edges_from_after=before')=>
+const line=(id,edge,before,after,unrelated,reason='PRODUCTION_GRAPH:edges_from_after=before;replaces_before=true')=>
  [id,edge,before,after,unrelated,Buffer.from(reason,'utf8').toString('base64')].join('\t');
 const normal=()=>[
  line('M6X-001','1','false','true','true'),
  line('M6X-002','1','false','true','true'),
- line('M6X-003','0','true','true','true','PRODUCTION_GRAPH:edges_from_after=')
+ line('M6X-003','0','true','true','true','PRODUCTION_GRAPH:edges_from_after=;replaces_before=false')
 ].join('\n')+'\n';
 
 test('input to JVM contains facts only, never gold decisions or expected classes',()=>{
@@ -69,4 +69,31 @@ test('reason must originate from pinned production-graph reporter',()=>{
 });
 test('candidate commit identity is pinned and full length',()=>{
  assert.match(CANDIDATE_SHA,/^[a-f0-9]{40}$/);
+});
+
+test('JVM rejects fabricated edge explanation not matching binary decision',()=>{
+ const lines=normal().trimEnd().split('\n');
+ lines[0]=line('M6X-001','1','false','true','true','PRODUCTION_GRAPH:edges_from_after=;replaces_before=false');
+ assert.throws(()=>observationsToReceipts(lines.join('\n'),gold),/JVM_EDGE_REASON_MISMATCH/);
+});
+test('JVM rejects current before fact after claimed supersession',()=>{
+ const lines=normal().trimEnd().split('\n');
+ lines[0]=line('M6X-001','1','true','true','true');
+ assert.throws(()=>observationsToReceipts(lines.join('\n'),gold),/JVM_BEFORE_STATE_EDGE_CONFLICT/);
+});
+test('JVM rejects out-of-date newest fact',()=>{
+ const lines=normal().trimEnd().split('\n');
+ lines[0]=line('M6X-001','1','false','false','true');
+ assert.throws(()=>observationsToReceipts(lines.join('\n'),gold),/JVM_AFTER_NOT_CURRENT/);
+});
+test('JVM rejects sentinel superseded by after while claiming sentinel survives',()=>{
+ const lines=normal().trimEnd().split('\n');
+ lines[0]=line('M6X-001','1','false','true','true',
+  'PRODUCTION_GRAPH:edges_from_after=before,unrelated;replaces_before=true');
+ assert.throws(()=>observationsToReceipts(lines.join('\n'),gold),/JVM_UNRELATED_STATE_CONFLICT/);
+});
+test('JVM accepts a valid non-edge from same pinned production graph',()=>{
+ const r=observationsToReceipts(normal(),gold);
+ assert.equal(r[2].predicted_label,'COEXISTS');
+ assert.equal(r[2].before_current,true);
 });
