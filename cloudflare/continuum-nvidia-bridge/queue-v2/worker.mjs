@@ -1,5 +1,26 @@
 const API='https://integrate.api.nvidia.com/v1/chat/completions', MODEL='nvidia/nemotron-3-ultra-550b-a55b';
 const DAY=86_400_000, STALE_MS=16*60_000;
+/**
+ * Operational owner grant, NOT cryptographic identity proof.
+ * The two UTC timestamps must define an explicit grant window <= 24h.
+ * A provider key, an enabled flag, or a stale approval cannot grant permission.
+ * NVIDIA_FREE_TIER_CONFIRMED is an operator attestation, not a billing API check.
+ */
+export function hasCurrentOwnerGrant(env,t){
+ if(env?.NVIDIA_FREE_TIER_CONFIRMED!=='true'||!Number.isFinite(t))return false;
+ const parseUtc=(value)=>{
+  if(typeof value!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{3})?Z$/.test(value))return NaN;
+  const ms=Date.parse(value);
+  if(!Number.isFinite(ms))return NaN;
+  const canonical=value.includes('.')?value:value.slice(0,-1)+'.000Z';
+  return new Date(ms).toISOString()===canonical?ms:NaN;
+ };
+ const issued=parseUtc(env.CONTINUUM_OWNER_GRANT_AT_UTC);
+ const expires=parseUtc(env.CONTINUUM_OWNER_GRANT_UNTIL_UTC);
+ return Number.isFinite(issued)&&Number.isFinite(expires)&&issued<=t&&t<expires&&
+  expires>issued&&expires-issued<=DAY;
+}
+
 const TOPICS=[
  ['ewm-temporal','Develop falsifiable OOD tests for corrected episodic memories, time-valid evidence and revoked facts.'],
  ['m5-semantics','Develop independent sealed benchmarks for negation, unseen German paraphrases, roles and temporal references.'],
@@ -10,8 +31,8 @@ const TOPICS=[
 ];
 const positiveInt=(v,def,max)=>{const n=Number(v);return Number.isSafeInteger(n)&&n>0?Math.min(n,max):def;};
 const reply=(v,s=200)=>new Response(JSON.stringify(v),{status:s,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store'}});
-function cfg(env){return {
- ready:env?.NVIDIA_ENABLED==='true'&&typeof env.NVIDIA_API_KEY==='string'&&!!env.NVIDIA_API_KEY.trim()&&typeof env.RESEARCH_QUEUE?.send==='function',
+function cfg(env,t){return {
+ ready:env?.NVIDIA_ENABLED==='true'&&typeof env.NVIDIA_API_KEY==='string'&&!!env.NVIDIA_API_KEY.trim()&&typeof env.RESEARCH_QUEUE?.send==='function'&&hasCurrentOwnerGrant(env,t),
  maxCalls:positiveInt(env?.NVIDIA_MAX_CALLS_24H,48,500),
  tokenBudget:positiveInt(env?.NVIDIA_MAX_RESERVED_TOKENS_24H,400000,2000000),
  maxTokens:positiveInt(env?.NVIDIA_MAX_TOKENS_PER_CALL,4096,16384)
@@ -49,8 +70,8 @@ export async function ensureResearchSchema(db){
 }
 export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uuid=()=>crypto.randomUUID()}={}){
  async function reserve(env){
-  const c=cfg(env);if(!c.ready||!env?.DB)return false;
-  const db=env.DB,t=now(),control=await db.prepare('SELECT state,blocked_until_ms FROM continuum_nvidia_control WHERE id=1').first();
+  const t=now(),c=cfg(env,t);if(!c.ready||!env?.DB)return false;
+  const db=env.DB,control=await db.prepare('SELECT state,blocked_until_ms FROM continuum_nvidia_control WHERE id=1').first();
   if(control?.state!=='running'||control.blocked_until_ms>t)return false;
   const count=await db.prepare('SELECT COUNT(*) AS n FROM continuum_nvidia_jobs').first();
   const topic=TOPICS[Number(count?.n??0)%TOPICS.length],id=uuid();
@@ -71,13 +92,13 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
   if(!env?.DB)throw Error('Missing DB binding');
   await ensureResearchSchema(env.DB);
   await env.DB.prepare('INSERT INTO jarvis_cron_log(cron_time,action) VALUES(?,?)').bind(new Date(now()).toISOString(),'queue_recovery_tick').run();
-  if(!cfg(env).ready)return;
+  if(!cfg(env,now()).ready)return;
   await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='abandoned_unknown_provider_result',completed_at_ms=? WHERE status IN ('queued','running') AND requested_at_ms<?")
    .bind(now(),now()-STALE_MS).run();
   await reserve(env);
  }
  async function process(message,env){
-  if(!env?.DB||!cfg(env).ready)return;
+  if(!env?.DB||!cfg(env,now()).ready)return;
   const id=message?.body?.id;if(typeof id!=='string'||!/^[\da-f-]{20,64}$/i.test(id))return;
   // Atomic owner/cooldown gate: a queued request must not bypass a later owner stop or 429 cooldown.
   const claim=await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='running' WHERE id=? AND status='queued' AND EXISTS (SELECT 1 FROM continuum_nvidia_control WHERE id=1 AND state='running' AND blocked_until_ms<=?)").bind(id,now()).run();
@@ -85,7 +106,13 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
   const job=await env.DB.prepare('SELECT topic,sequence FROM continuum_nvidia_jobs WHERE id=?').bind(id).first();
   const topic=TOPICS.find(x=>x[0]===job?.topic);if(!topic)throw Error('Unknown topic');
   const prior=await env.DB.prepare("SELECT result_excerpt FROM continuum_nvidia_jobs WHERE status='proposal_unreviewed' ORDER BY requested_at_ms DESC LIMIT 1").first();
-  const c=cfg(env);let status='network_error',excerpt=null,requestId=null,halt=false,blockedUntil=0;
+  const c=cfg(env,now());
+  // Recheck immediately before the external request: a grant can expire after enqueue/claim.
+  if(!c.ready){
+   await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='authorization_expired',completed_at_ms=? WHERE id=? AND status='running'").bind(now(),id).run();
+   return;
+  }
+  let status='network_error',excerpt=null,requestId=null,halt=false,blockedUntil=0;
   try{
    const res=await httpFetch(API,{
     method:'POST',headers:{authorization:'Bearer '+env.NVIDIA_API_KEY,'content-type':'application/json',accept:'application/json'},

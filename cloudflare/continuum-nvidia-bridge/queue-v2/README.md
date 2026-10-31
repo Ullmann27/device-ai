@@ -41,3 +41,22 @@ Cloudflare Workers Free currently has a 10 ms CPU-time limit per invocation and 
 
 ## Private ZIP transfer to Cloudflare Agent
 The Agent cannot access the private GitHub PR. Download `Continuum_Cloudflare_NVIDIA_Agent_Integration.zip` from the ChatGPT conversation and attach it to the Cloudflare-Agent thread. It includes the tested source and instructions. Never send the NVIDIA key in chat: store a rotated new key only in Worker Secrets. The Worker can self-bootstrap DB schema through `env.DB` but does **not** grant D1 Edit rights to the Agent's separate API token.
+
+## Safety fix: time-limited explicit owner authorization (research branch)
+
+The original Queue v2 accepted `NVIDIA_ENABLED=true` plus a provider key as enough to reserve and execute remote calls. Unlike the GitHub research executor in PR #273, this path had **no separate owner authorization**. This branch fails closed until **all** conditions are met:
+
+- `NVIDIA_ENABLED="true"` is explicitly set after review.
+- A rotated `NVIDIA_API_KEY` exists only in Cloudflare Secrets.
+- `NVIDIA_FREE_TIER_CONFIRMED="true"` is set by an operator **only after independently verifying that actual NVIDIA requests are authorized and non-billable**. This flag does not check NVIDIA billing or entitlement.
+- `CONTINUUM_OWNER_GRANT_AT_UTC` and `CONTINUUM_OWNER_GRANT_UNTIL_UTC` are valid UTC ISO-8601 timestamps, with an approval window of at most 24 hours. Example *format* only: `2026-10-31T10:00:00.000Z` / `2026-10-31T11:00:00.000Z`. These are not active grants.
+
+Missing, invalid, expired, future-dated, or >24-hour owner grants prevent **both** reservation and Queue consumption. The worker checks again after claiming a queued job and before the outbound provider request. Changing a flag or expiry does not retroactively cancel an HTTP request already in flight. An approval is an **operational control**, not a cryptographic proof of the human identity behind a dashboard change.
+
+The 10-minute cron is only a recovery mechanism; after a successful result the next approved job is still enqueued immediately, subject to the preexisting daily quota and consent expiry.
+
+### Reproducibility
+
+Run `node --test cloudflare/continuum-nvidia-bridge/queue-v2/tests/queue.test.mjs` from the repository root using Node 22+ with built-in SQLite support. The branch stores 21 test cases; they have **not** been run by GitHub Actions. Ten separate deterministic mock-D1/provider checks were executed in an isolated JavaScript runtime against the exact GitHub worker source blob; all ten passed. They are **not** evidence of live Cloudflare deployment or NVIDIA availability.
+
+**Deployment remains blocked** until the existing Worker v2.0.0 source is backed up and diffed, the operator has Cloudflare D1 write privileges, and a real protected NVIDIA secret plus verified free entitlement exists. Do not merge this PR or replace the existing Worker without those gates.

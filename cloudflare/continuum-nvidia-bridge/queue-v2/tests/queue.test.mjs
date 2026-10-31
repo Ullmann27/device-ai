@@ -17,7 +17,11 @@ function fixture({on='true',client=async()=>good(),vars={},broken=false,fresh=fa
  const queueItems=[],RESEARCH_QUEUE={async send(body){if(broken)throw Error('failed');queueItems.push({body});}};
  let time=Date.UTC(2026,9,31,12,0,0),calls=0;
  const worker=createHandlers({now:()=>time,uuid:()=>crypto.randomUUID(),httpFetch:async(...args)=>{calls++;return client(...args);}});
- const env={DB,RESEARCH_QUEUE,NVIDIA_ENABLED:on,NVIDIA_API_KEY:'fake-test-key',...vars};
+ const env={DB,RESEARCH_QUEUE,NVIDIA_ENABLED:on,NVIDIA_API_KEY:'fake-test-key',
+  NVIDIA_FREE_TIER_CONFIRMED:'true',
+  CONTINUUM_OWNER_GRANT_AT_UTC:new Date(time-60_000).toISOString(),
+  CONTINUUM_OWNER_GRANT_UNTIL_UTC:new Date(time+3_600_000).toISOString(),
+  ...vars};
  return {worker,env,sqlite,queueItems,callCount:()=>calls,advance:n=>{time+=n;},
   tick:()=>worker.scheduled({scheduledTime:time},env),
   consume:async()=>{const msg=queueItems.shift();assert.ok(msg);await worker.queue({messages:[msg]},env);return msg;},
@@ -120,4 +124,50 @@ test('self-initialization preserves old D1 tables and rows',async()=>{
  await f.tick();
  assert.equal(f.rows('SELECT note FROM jarvis_health_log')[0].note,'keep');
  assert.equal(f.rows('SELECT * FROM jarvis_cron_log').length,2);
+});
+
+test('RED: enabled provider key without explicit owner grant cannot reserve or contact NVIDIA',async()=>{
+ for(const vars of [
+  {CONTINUUM_OWNER_GRANT_AT_UTC:undefined},
+  {CONTINUUM_OWNER_GRANT_UNTIL_UTC:undefined},
+  {NVIDIA_FREE_TIER_CONFIRMED:undefined},
+  {NVIDIA_FREE_TIER_CONFIRMED:'false'},
+  {CONTINUUM_OWNER_GRANT_AT_UTC:'not-a-date'},
+  {CONTINUUM_OWNER_GRANT_UNTIL_UTC:'2026-02-31T12:00:00Z'},
+  {CONTINUUM_OWNER_GRANT_UNTIL_UTC:'2026-10-31T11:59:00.000Z'},
+  {CONTINUUM_OWNER_GRANT_AT_UTC:'2026-10-30T10:00:00.000Z'},
+  {CONTINUUM_OWNER_GRANT_UNTIL_UTC:'2026-11-02T12:00:00.000Z'}
+ ]){
+  const f=fixture({vars});await f.tick();
+  assert.equal(f.queueItems.length,0,JSON.stringify(vars));
+  assert.equal(f.callCount(),0);
+ }
+});
+test('RED: owner grant revoked after enqueue blocks already queued provider call',async()=>{
+ const f=fixture();await f.tick();assert.equal(f.queueItems.length,1);
+ f.env.NVIDIA_FREE_TIER_CONFIRMED='false';
+ await f.consume();assert.equal(f.callCount(),0);
+ assert.equal(records(f)[0].status,'queued');
+});
+test('RED: consent expires while queued, even with valid API key',async()=>{
+ const f=fixture();await f.tick();f.advance(3_600_001);
+ await f.consume();assert.equal(f.callCount(),0);
+ assert.equal(records(f)[0].status,'queued');
+});
+test('RED: grant revoked during D1 claim is rechecked before provider request',async()=>{
+ const f=fixture();await f.tick();
+ const original=f.env.DB.prepare.bind(f.env.DB);
+ f.env.DB.prepare=(sql)=>{
+  if(sql.startsWith('SELECT topic,sequence'))f.env.NVIDIA_FREE_TIER_CONFIRMED='false';
+  return original(sql);
+ };
+ await f.consume();assert.equal(f.callCount(),0);
+ assert.equal(records(f)[0].status,'authorization_expired');
+});
+test('GREEN: valid <=24h owner grant still permits immediate chained research',async()=>{
+ const f=fixture({vars:{NVIDIA_MAX_CALLS_24H:'2'}});
+ await f.tick();await f.consume();await f.consume();
+ assert.equal(f.callCount(),2);
+ assert.equal(f.queueItems.length,0);
+ assert.deepEqual(records(f).map(x=>x.status),['proposal_unreviewed','proposal_unreviewed']);
 });
