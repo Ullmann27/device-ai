@@ -1,3 +1,17 @@
+# Update-Nachtrag 31.10.2026: v30 / 0.3.29
+
+Die bereits erfolgreich signierte v29 (0.3.28) ist öffentlich verfügbar, wurde aber vom Fold7-Update-Button mit `Current` quittiert. Der bestehende Client gibt `Current` zurück, wenn `installedVersionCode >= offeredVersionCode`. Das heißt: v29 war auf dem Gerät bereits in identischer oder höherer Android-Versionsnummer installiert, unabhängig von GitHub-Quellunterschieden. Ein erneuter v29-Build ist deshalb keine verlässliche Update-Reparatur.
+
+Dieser isolierte Nachfolgebranch setzt **v30 / 0.3.29** mit derselben originalen Signatur, demselben Android-Paket, derselben angehefteten HTTPS-Domain, einem neu freizugebenden unveränderlichen SHA und vollständiger erneuter Android-QA um. Die App zeigt künftig bei `Current` explizit sowohl den installierten als auch den angebotenen Versionscode, statt einen ungeprüften `aktuell`-Text zu behaupten.
+
+**Noch nicht signiert oder auf Fold7 getestet.** Der vorherige v29-Release bleibt auf dem öffentlichen gepinnten Host, bis v30 mit neuer Besitzerfreigabe die Render-Gates besteht.
+
+## Forschungsquellen: untersuchte Grenzen
+
+Die öffentliche periodische Android-Hintergrundforschung ist bewusst auf Wikipedia beschränkt (ein Wikipedia-Artikel pro endlichem Zyklus, max. 48 Themen im Bootstrap und begrenzte Link-Discovery); sie ist **kein allgemeiner Webcrawler**. `GeneralWebDiscoveryProvider` existiert separat für owner-genehmigte `web_search`/`web_read`-Forschungsaktionen und verwendet Bing-RSS mit Wikipedia-Fallback. Ein stagnierender Quellenzähler (~550 Nutzerbeobachtung) benötigt die App-Statusdaten (`letzte Phase`, `nächstes Thema`, `Retry-After`, `Akku`, `Thermal`, `Storage`) vor einer behaupteten Ursachenbehebung. Eine künftige opt-in Quellen-Inbox mit erlaubten Domains, Textlizenzprüfung, Provenienz, Deduplikation, Budgetgrenzen und unabhängiger Qualitätssicherung muss separat umgesetzt und getestet werden. Niemals Webinhalte zu Geräteanweisungen oder bestätigter Erinnerung erheben.
+
+---
+
 # Continuum Lokal: Render v29 original-signed update candidate
 
 **Build source:** `research/continuum-m8-render-signed-release-20261031`.
