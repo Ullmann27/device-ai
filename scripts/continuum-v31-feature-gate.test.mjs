@@ -7,14 +7,14 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const source=file=>fs.readFileSync(path.join(root,file),'utf8');
 
-test('the consolidated v34 source tree retains original owner package and signature',()=>{
+test('the consolidated v35 source tree retains original owner package and signature',()=>{
   const gradle=source('app/build.gradle.kts');
   const release=source('scripts/render-continuum-m8-owner-release.sh');
   const qa=source('scripts/render-continuum-m8-qa.sh');
   assert.match(gradle,/at\.heinz\.deviceai\.continuumlocal/);
-  assert.match(release,/\[\[ "\$version" == "34" \]\]/);
-  assert.match(release,/versionCode: 34/);
-  assert.match(qa,/continuumStandaloneVersionCode=34/);
+  assert.match(release,/\[\[ "\$version" == "35" \]\]/);
+  assert.match(release,/versionCode: 35/);
+  assert.match(qa,/continuumStandaloneVersionCode=35/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
 });
 
@@ -85,7 +85,7 @@ test('new metadata type safety and published APK hash readback are in the source
 });
 
 
-test('v34 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
+test('v35 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
   const fetch=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt');
   const scheduler=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
   const archive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt');
@@ -102,7 +102,7 @@ test('v34 general-web study is connected to durable novelty, provenance and real
   assert.match(memory,/LearningProvenance\.PUBLIC_WEB_SOURCE/);
   assert.match(cognitive,/Cre1PromotionGate\.rerank\(/);
 });
-test('v34 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
+test('v35 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
   const mission=source('app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt');
   const research=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
   const proof=source('app/src/main/java/at/heinz/deviceai/research/neuro/ReviewedEvidenceGraph.kt');
@@ -115,7 +115,7 @@ test('v34 on-device research counters, owner updater and bounded reviewed neural
 });
 
 
-test('v34 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
+test('v35 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
   const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
   const client=source('app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt');
   const api=source('backend/src/groq-mentor.js');
@@ -131,7 +131,7 @@ test('v34 OpenRouter provides both explicit Android paths and the protected opti
   assert.match(checks,/OpenRouter stays off without secret or explicit enablement/);
 });
 
-test('v34 exposes the real public-study job state and never labels consent as active research',()=>{
+test('v35 exposes the real public-study job state and never labels consent as active research',()=>{
   const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
   const dashboard=source('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
   assert.match(app,/append\("\\n\\n"\)\.append\(at\.heinz\.deviceai\.learning\.ContinuumPublicStudyScheduler\(this@AgentActivity\)\.display\(\)\)/);
