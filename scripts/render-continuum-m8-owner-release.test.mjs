@@ -54,13 +54,14 @@ test('release pins the installed Continuum Lokal app and signer, not Mentor Pair
   assert.doesNotMatch(script, /mentorpaired/);
 });
 
-test('release requires approved v29 and performs real SHA-bound QA before signing', () => {
-  assert.match(script, /This pinned candidate accepts only versionCode 29/);
+test('release requires approved v30 and performs real SHA-bound QA before signing', () => {
+  assert.match(script, /This pinned candidate accepts only versionCode 30/);
   assert.match(script, /bash scripts\/render-continuum-m8-qa\.sh/);
   assert.match(script, /HEAD changed during QA/);
   assert.match(qa, /:app:testDebugUnitTest :app:lintDebug/);
   assert.match(qa, /:app:assembleRelease/);
   assert.match(qa, /BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE/);
+  assert.match(qa, /continuumStandaloneVersionCode=30/);
 });
 
 test('manifest is written only for a verified, originally signed APK at the pinned host', () => {
@@ -72,7 +73,7 @@ test('manifest is written only for a verified, originally signed APK at the pinn
   assert.match(script, /Continuum-Lokal-/);
   assert.match(script, /sourceCommit: sha/);
   assert.match(script, /signerSha256:/);
-  assert.match(script, /versionCode: 29/);
+  assert.match(script, /versionCode: 30/);
   assert.match(script, /writeFileSync\(target/);
 });
 
