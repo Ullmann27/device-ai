@@ -7501,8 +7501,8 @@ class AgentActivity : Activity() {
                         result.fold(
                             onSuccess = { answer ->
                                 addAssistantMessage(
-                                    "EXTERNER KI-MENTOR · $provider · UNBESTÄTIGT\\n\\n" +
-                                        answer + "\\n\\nNicht automatisch in lokales Wissen übernommen."
+                                    "EXTERNER KI-MENTOR · $provider · UNBESTÄTIGT\n\n" +
+                                        answer + "\n\nNicht automatisch in lokales Wissen übernommen."
                                 )
                                 addToolActivity("$provider · Antwort empfangen · keine Geräte-Tools ausgeführt")
                             },
