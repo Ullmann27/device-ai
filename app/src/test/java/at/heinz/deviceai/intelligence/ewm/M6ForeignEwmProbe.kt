@@ -37,6 +37,7 @@ object M6ForeignEwmProbe {
                 val beforeCurrent = "before" !in memory.supersededBy
                 val afterCurrent = "after" !in memory.supersededBy
                 val unrelatedKept = "unrelated" !in memory.supersededBy &&
+                    "unrelated" !in memory.supersedes.keys &&
                     "unrelated" in memory.byId
                 val reason = "PRODUCTION_GRAPH:edges_from_after=" +
                     edgesFromAfter.joinToString(",") + ";replaces_before=" + replacesBefore
