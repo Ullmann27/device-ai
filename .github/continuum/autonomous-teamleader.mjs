@@ -9,6 +9,7 @@
  * No LLM, cloud API, GitHub token, network fetch, paid service, or shell
  * command constructed from prompts is required.
  */
+import {verifyToolEvidence} from './teamleader-mcp-preflight.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -155,7 +156,7 @@ function getLock(file,now){
 }
 
 export function runTeamleaderCycle({
- root, stateDir, driver, now=Date.now, budgetMinutes=20, retry=false,log=()=>{}
+ root, stateDir, driver, now=Date.now, budgetMinutes=20, retry=false,log=()=>{},toolEvidence=null
 }={}){
  if(!root||!stateDir||!driver)throw Error('root, stateDir and driver required');
  if(!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
@@ -175,6 +176,8 @@ export function runTeamleaderCycle({
   let state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
   const head=driver.head(root);
   if(!HEAD.test(head))throw Error('Repository HEAD is not a full SHA');
+  // Optional MCP preflight evidence (teamleader-mcp-preflight.mjs): fail closed when it disagrees with this HEAD.
+  if(toolEvidence!==null&&!verifyToolEvidence(toolEvidence,head))throw Error('MCP_TOOL_EVIDENCE_INVALID');
   // Keep STARTED outcome on disk before work. A crash is not evidence of success.
   const finishedIds=new Set(state.events.filter(e=>e.outcome!=='RUNNING').map(e=>e.id));
   const incomplete=state.events.filter(e=>e.outcome==='RUNNING'&&!finishedIds.has(e.id)).at(-1);
@@ -230,7 +233,8 @@ export function runTeamleaderCycle({
   }
   const id='tl-'+hash(head+'\0'+chosen.kind+'\0'+started).slice(0,20);
   const run={id,at:started,head,kind:chosen.kind,outcome:'RUNNING',
-    elapsedMs:0,detail:(chosen.taskId??'Starting safe bounded cycle').slice(0,160)};
+    elapsedMs:0,detail:(chosen.taskId??'Starting safe bounded cycle').slice(0,160),
+    ...(toolEvidence?{tools:{integrity:toolEvidence.integrity,clean:toolEvidence.clean,receipts:toolEvidence.receipts.map(r=>r.resultSha256)}}:{})};
   if(chosen.kind==='IDLE'){
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
   }
