@@ -20,11 +20,11 @@ class GeneralWebDiscoveryProviderTest {
             """<rss><channel>
                 <item><title>wie – Bedeutung und Grammatik</title><link>https://www.dwds.de/wb/wie</link></item>
                 <item><title>Facebook – Anmeldung</title><link>https://secure.facebook.com/</link></item>
-                <item><title>Solarzelle – photovoltaischer Effekt</title><link>https://de.wikipedia.org/wiki/Solarzelle</link></item>
+                <item><title>Solarzelle – photovoltaischer Effekt</title><link>https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics</link></item>
             </channel></rss>"""
         })
         val result = provider.discover(ResearchQuery("Wie funktionieren Solarzellen?", "q0"))
-        assertEquals(listOf("https://de.wikipedia.org/wiki/Solarzelle"), result.map { it.url })
+        assertEquals(listOf("https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics"), result.map { it.url })
         assertTrue(requested.contains("q=solarzellen"))
         assertTrue(provider.isGeneralSearchAvailable)
     }
@@ -36,7 +36,7 @@ class GeneralWebDiscoveryProviderTest {
             override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
                 topic = query.text
                 return listOf(
-                    ResearchSourceCandidate("https://de.wikipedia.org/wiki/Solarzelle", "Solarzelle")
+                    ResearchSourceCandidate("https://www.energy.gov/eere/solar/solar-photovoltaic-technology-basics", "Solarzelle")
                 )
             }
         }
