@@ -36,7 +36,7 @@ test('the local agent ranks defensive sources and scans only allowed tracked cod
   assert.equal(result.schema,'continuum-coding-agent-scope');
   assert.deepEqual(result.files,['src/network/handler.mjs']);
   assert.equal(result.commit,base);
-  assert.match(seen[0].observation,/src\/network\/handler\.py/);
+  assert.match(seen[0].observation,/src\/network\/handler\.mjs/);
   assert.doesNotMatch(seen[0].observation,/secrets/);
   assert.match(seen[1].observation,/SHELL_PROCESS_EXECUTION/);
   assert.match(seen[2].observation,/Not a readable tracked file/);
