@@ -109,4 +109,38 @@ class ReviewedEvidenceGraphTest {
             assertTrue(expected.message.orEmpty().contains("GRAPH_CAPACITY"))
         }
     }
+
+    @Test fun negativeQuotedStatementCannotBecomePositiveEvidence() {
+        val negative = "Z77 befindet sich nicht in Graz."
+        val evidence = ReviewedEvidenceGraph.Evidence(
+            "negative", negative, ReviewedEvidenceGraph.digest(negative),
+            0, negative.length, true
+        )
+        try {
+            ReviewedEvidenceGraph.Relation("Z77", Level.OBJECT, "Graz", Level.CITY, evidence)
+            fail("Explicit negation must not count as containment")
+        } catch (expected: IllegalArgumentException) {
+            assertTrue(expected.message.orEmpty().contains("NEGATED_RELATION_EVIDENCE"))
+        }
+    }
+
+    @Test fun substringOfDifferentEntityIsNotEvidence() {
+        val unrelated = "Z77 befindet sich in Grazer Bezirk."
+        val evidence = ReviewedEvidenceGraph.Evidence(
+            "unrelated", unrelated, ReviewedEvidenceGraph.digest(unrelated),
+            0, unrelated.length, true
+        )
+        try {
+            ReviewedEvidenceGraph.Relation("Z77", Level.OBJECT, "Graz", Level.CITY, evidence)
+            fail("Partial entity must not be a grounded relation")
+        } catch (expected: IllegalArgumentException) {
+            assertTrue(expected.message.orEmpty().contains("BOTH_ENTITIES"))
+        }
+    }
+
+    @Test fun positiveReviewedContainmentStillPasses() {
+        val relation = edge("positive", "Z77", Level.OBJECT, "Graz", Level.CITY)
+        assertEquals("Graz", ReviewedEvidenceGraph(listOf(relation))
+            .infer("Z77", Level.OBJECT, Level.CITY).resolvedValue)
+    }
 }
