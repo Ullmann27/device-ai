@@ -24,7 +24,10 @@ internal object ConversationResearchIntent {
     )
 
     fun forbidsWeb(text: String): Boolean {
-        if (text.length > 2_048) return false
+        // Large requests must not silently turn an explicit offline opt-out into
+        // web permission. Scan bounded ordinary requests in full; fail closed
+        // for exceptionally large inputs rather than ignoring a negation.
+        if (text.length > 65_536) return true
         val normalized = text.trim().lowercase(Locale.ROOT)
         return noWebPhrase.containsMatchIn(normalized) ||
             noWebImperative.containsMatchIn(normalized) ||
