@@ -2678,7 +2678,9 @@ class AgentActivity : Activity() {
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
-        val publicTopic = if (internetConsent.mode ==
+        val explicitlyOffline = at.heinz.deviceai.cognitive.ConversationResearchIntent.forbidsWeb(request)
+        if (explicitlyOffline) researchArmed = false
+        val publicTopic = if (!explicitlyOffline && internetConsent.mode ==
             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
@@ -2702,7 +2704,8 @@ class AgentActivity : Activity() {
         }
         // A plain question never implies internet permission. Explicit web tools
         // and an armed research button both go through the same owner dialog.
-        val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
+        val webRequest=if (explicitlyOffline) null else
+            at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
             confirmWebRequest(webRequest,researchMode) { session ->

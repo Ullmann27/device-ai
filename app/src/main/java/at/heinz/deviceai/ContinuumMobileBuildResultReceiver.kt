@@ -200,7 +200,10 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         } else if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
             ContinuumMobileResultPolicy.statusExplanation(reportedStatus)
         } else {
-            ContinuumMobileResultPolicy.explanation(outcome)
+            if (outcome == ContinuumMobileResultPolicy.Outcome.EXECUTION_FAILED)
+                ContinuumTermuxFailureDiagnosis.explanation(operation ?: return, bundle?.getString("stderr"))
+                    ?: ContinuumMobileResultPolicy.explanation(outcome)
+            else ContinuumMobileResultPolicy.explanation(outcome)
         }
         val buildProvenance =
             if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE)

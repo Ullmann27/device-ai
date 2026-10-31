@@ -17,9 +17,24 @@ internal object PublicKnowledgeTopicRouter {
     )
     private val topicPattern = Regex("[\\p{L}][\\p{L}\\p{N} .,'()\\-]{2,79}")
 
+    // Conversational references and simple possession/attribute questions are not
+    // reliable public-web topics: they may refer to people and facts only present
+    // in this chat. The owner can still explicitly press the Web button.
+    private val conversationReference = Regex(
+        """\b(?:unser(?:e|er|en|em|es)?|unterhaltung|gespräch|gespraech|vorhin|zuvor|vorher)\b""",
+        RegexOption.IGNORE_CASE
+    )
+    private val contextualAttribute = Regex(
+        """^(?:welche|welcher|welches)\s+(?:farbe|namen|name|schlüssel|schluessel)\b""",
+        RegexOption.IGNORE_CASE
+    )
+
     fun topic(message: String): String? {
         val cleaned = message.trim().replace(Regex("\\s+"), " ")
-        if (cleaned.length !in 8..220 || !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
+        if (cleaned.length !in 8..220 || ConversationResearchIntent.forbidsWeb(cleaned) ||
+            conversationReference.containsMatchIn(cleaned) ||
+            contextualAttribute.containsMatchIn(cleaned) ||
+            !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
             privateMarkers.containsMatchIn(cleaned) ||
             cleaned.any { it.isISOControl() }) return null
         val result = ResearchQuestionFocus.searchText(cleaned)
