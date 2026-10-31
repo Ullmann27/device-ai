@@ -59,6 +59,16 @@ export function scoreHoldout(gold,receipts,candidateSha){
   for(const flag of ['before_current','after_current','unrelated_fact_kept']){
    if(typeof row[flag]!=='boolean')fail('INVALID_FLAG',id+'.'+flag);
   }
+  const hasReplacementEdge=positive.has(row.predicted_label);
+  if(row.before_current===hasReplacementEdge || !row.after_current)
+   fail('GRAPH_STATE_LABEL_CONFLICT',id);
+  if(Object.hasOwn(row,'positive_edge') &&
+      (typeof row.positive_edge!=='boolean'||row.positive_edge!==hasReplacementEdge))
+   fail('GRAPH_EDGE_LABEL_CONFLICT',id);
+  if(Object.hasOwn(row,'positive_subtype') &&
+      row.positive_subtype==='NOT_EMITTED_BY_PRODUCT' &&
+      row.predicted_label==='CORRECTS_EVENT')
+   fail('UNSUPPORTED_POSITIVE_SUBTYPE',id);
   if(!row.unrelated_fact_kept)unrelatedViolations++;
   matrix[goldById.get(id).expected][row.predicted_label]++;
  }
@@ -82,7 +92,16 @@ export function scoreHoldout(gold,receipts,candidateSha){
   candidate_sha:candidateSha,cases:EXPECTED_ROWS,
   matrix,per_label:perLabel,
   positive:{tp,predicted:predictedPositive,actual:actualPositive,precision:positivePrecision,recall:positiveRecall},
-  macro_f1:macroF1,unrelated_fact_violations:unrelatedViolations,gates
+  macro_f1:macroF1,unrelated_fact_violations:unrelatedViolations,
+  // Diagnostics are NOT post-hoc changes to the frozen precision-only preregistration.
+  diagnostics:{
+   positive_recall_below_half:positiveRecall!==null&&positiveRecall<0.5,
+   predicts_all_three_subtypes:LABELS.every(label=>
+    LABELS.reduce((count,actual)=>count+matrix[actual][label],0)>0),
+   model_subtype_unavailable:receipts.some(row=>
+    row.positive_subtype==='NOT_EMITTED_BY_PRODUCT')
+  },
+  gates
  };
 }
 export function scoreFrozenFile({frozenFile,receiptFile,candidateSha}){
