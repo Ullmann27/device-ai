@@ -64,3 +64,18 @@ test('duplicate job IDs cannot be reused by alternate components',()=>{
   mesh.request({component:'coding-agent',taskId:'job'});
   assert.throws(()=>mesh.request({component:'memory-engine',taskId:'job'}),/Duplicate job/);
 });
+
+test('1000, 2000 and 3000 specialists are registered with five balanced roles',()=>{
+  for(const count of [1000,2000,3000]){
+    const mesh=new ContinuumExpertMesh({prototypeCount:count,now});
+    assert.equal(mesh.snapshot().logicalModels,count);
+    assert.deepEqual(Object.values(mesh.snapshot().groups),Array(5).fill(count/5));
+    assert.equal(mesh.snapshot().running,0);
+  }
+});
+test('3000 registrations do not create phantom GPU or CPU throughput',()=>{
+  const mesh=new ContinuumExpertMesh({prototypeCount:3000,now});
+  mesh.request({component:'coding-agent',taskId:'work'});
+  assert.equal(mesh.snapshot().queued,1);
+  assert.equal(mesh.snapshot().nodes.length,0);
+});
