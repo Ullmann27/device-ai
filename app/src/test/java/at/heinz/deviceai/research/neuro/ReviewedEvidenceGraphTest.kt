@@ -5,9 +5,9 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import at.heinz.deviceai.research.neuro.ReviewedEvidenceGraph.Level
 
 class ReviewedEvidenceGraphTest {
-    private val L = ReviewedEvidenceGraph.Level
     private fun edge(id: String, subject: String, from: ReviewedEvidenceGraph.Level,
                      target: String, to: ReviewedEvidenceGraph.Level): ReviewedEvidenceGraph.Relation {
         val text = "$subject befindet sich in $target."
@@ -18,11 +18,11 @@ class ReviewedEvidenceGraphTest {
 
     @Test fun reviewedThreeHopReasoningRemainsResearchOnly() {
         val g = ReviewedEvidenceGraph(listOf(
-            edge("s1", "Z77", L.OBJECT, "Graz", L.CITY),
-            edge("s2", "Graz", L.CITY, "Steiermark", L.REGION),
-            edge("s3", "Steiermark", L.REGION, "Österreich", L.COUNTRY)
+            edge("s1", "Z77", Level.OBJECT, "Graz", Level.CITY),
+            edge("s2", "Graz", Level.CITY, "Steiermark", Level.REGION),
+            edge("s3", "Steiermark", Level.REGION, "Österreich", Level.COUNTRY)
         ))
-        val result = g.infer("Z77", L.OBJECT, L.COUNTRY)
+        val result = g.infer("Z77", Level.OBJECT, Level.COUNTRY)
         assertEquals(ReviewedEvidenceGraph.Status.SUPPORTED_REVIEWED, result.status)
         assertEquals("Österreich", result.resolvedValue)
         assertEquals(3, result.hops)
@@ -33,12 +33,12 @@ class ReviewedEvidenceGraphTest {
 
     @Test fun independentDiamondPathsAreNotMistakenForCycles() {
         val g = ReviewedEvidenceGraph(listOf(
-            edge("s1", "Z77", L.OBJECT, "Graz", L.CITY),
-            edge("s2", "Z77", L.OBJECT, "Innsbruck", L.CITY),
-            edge("s3", "Graz", L.CITY, "Österreich", L.COUNTRY),
-            edge("s4", "Innsbruck", L.CITY, "Österreich", L.COUNTRY)
+            edge("s1", "Z77", Level.OBJECT, "Graz", Level.CITY),
+            edge("s2", "Z77", Level.OBJECT, "Innsbruck", Level.CITY),
+            edge("s3", "Graz", Level.CITY, "Österreich", Level.COUNTRY),
+            edge("s4", "Innsbruck", Level.CITY, "Österreich", Level.COUNTRY)
         ))
-        val result = g.infer("Z77", L.OBJECT, L.COUNTRY)
+        val result = g.infer("Z77", Level.OBJECT, Level.COUNTRY)
         assertEquals(ReviewedEvidenceGraph.Status.SUPPORTED_REVIEWED, result.status)
         assertEquals("Österreich", result.resolvedValue)
         assertEquals(2, result.hops)
@@ -46,10 +46,10 @@ class ReviewedEvidenceGraphTest {
 
     @Test fun conflictingSourcePathsCannotBecomeAnswer() {
         val g = ReviewedEvidenceGraph(listOf(
-            edge("s1", "Z77", L.OBJECT, "Graz", L.CITY),
-            edge("s2", "Z77", L.OBJECT, "Salzburg", L.CITY)
+            edge("s1", "Z77", Level.OBJECT, "Graz", Level.CITY),
+            edge("s2", "Z77", Level.OBJECT, "Salzburg", Level.CITY)
         ))
-        val result = g.infer("Z77", L.OBJECT, L.CITY)
+        val result = g.infer("Z77", Level.OBJECT, Level.CITY)
         assertEquals(ReviewedEvidenceGraph.Status.CONFLICTING_PATHS, result.status)
         assertEquals(null, result.resolvedValue)
         assertEquals(listOf("Graz", "Salzburg"), result.alternativeValues)
@@ -59,7 +59,7 @@ class ReviewedEvidenceGraphTest {
     @Test fun missingKnowledgeAbstains() {
         val g = ReviewedEvidenceGraph(emptyList())
         assertEquals(ReviewedEvidenceGraph.Status.NOT_SUPPORTED,
-            g.infer("Z77", L.OBJECT, L.CITY).status)
+            g.infer("Z77", Level.OBJECT, Level.CITY).status)
     }
 
     @Test fun forgedOrUnreviewedEvidenceIsRejected() {
@@ -81,7 +81,7 @@ class ReviewedEvidenceGraphTest {
 
     @Test fun invalidRelationTypesCannotCreateCycles() {
         try {
-            edge("a", "Graz", L.CITY, "Z77", L.OBJECT)
+            edge("a", "Graz", Level.CITY, "Z77", Level.OBJECT)
             fail("Expected level rejection")
         } catch (expected: IllegalArgumentException) {
             assertTrue(expected.message.orEmpty().contains("INVALID_RELATION_LEVEL"))
@@ -93,7 +93,7 @@ class ReviewedEvidenceGraphTest {
         val evidence = ReviewedEvidenceGraph.Evidence(
             "a", content, ReviewedEvidenceGraph.digest(content), 0, content.length, true)
         try {
-            ReviewedEvidenceGraph.Relation("Z77", L.OBJECT, "Innsbruck", L.CITY, evidence)
+            ReviewedEvidenceGraph.Relation("Z77", Level.OBJECT, "Innsbruck", Level.CITY, evidence)
             fail("Expected unsupported relation rejection")
         } catch (expected: IllegalArgumentException) {
             assertTrue(expected.message.orEmpty().contains("BOTH_ENTITIES"))
@@ -101,7 +101,7 @@ class ReviewedEvidenceGraphTest {
     }
 
     @Test fun sourceCapRejectsUnboundedGraphs() {
-        val edges = (1..129).map { i -> edge("source-$i", "Z$i", L.OBJECT, "Graz", L.CITY) }
+        val edges = (1..129).map { i -> edge("source-$i", "Z$i", Level.OBJECT, "Graz", Level.CITY) }
         try {
             ReviewedEvidenceGraph(edges)
             fail("Expected graph cap rejection")
