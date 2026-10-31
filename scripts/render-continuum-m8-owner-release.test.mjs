@@ -54,8 +54,8 @@ test('release pins the installed Continuum Lokal app and signer, not Mentor Pair
   assert.doesNotMatch(script, /mentorpaired/);
 });
 
-test('release requires approved v32 and performs real SHA-bound QA before signing', () => {
-  assert.match(script, /This pinned candidate accepts only versionCode 33/);
+test('release requires approved v34 and performs real SHA-bound QA before signing', () => {
+  assert.match(script, /This pinned candidate accepts only versionCode 34/);
   assert.match(script, /bash scripts\/render-continuum-m8-qa\.sh/);
   assert.match(script, /HEAD changed during QA/);
   assert.match(qa, /:app:testDebugUnitTest :app:lintDebug/);
@@ -73,7 +73,7 @@ test('manifest is written only for a verified, originally signed APK at the pinn
   assert.match(script, /Continuum-Lokal-/);
   assert.match(script, /sourceCommit: sha/);
   assert.match(script, /signerSha256:/);
-  assert.match(script, /versionCode: 33/);
+  assert.match(script, /versionCode: 34/);
   assert.match(script, /writeFileSync\(target/);
 });
 
@@ -89,7 +89,7 @@ test('no public release proceeds without private original key', () => {
       CONTINUUM_RELEASE_APPROVED_SHA: head.stdout.trim(),
       CONTINUUM_RELEASE_HOST: 'continuum-owner-v23-release-preflight.onrender.com',
       RENDER_SERVICE_NAME: 'continuum-owner-v23-release-preflight',
-      CONTINUUM_RELEASE_VERSION_CODE: '29',
+      CONTINUUM_RELEASE_VERSION_CODE: '34',
       CONTINUUM_LOCAL_SIGNING_P12_BASE64: '',
       CONTINUUM_LOCAL_SIGNING_PASSWORD: '',
       CONTINUUM_MENTOR_SIGNING_FILE: '',
