@@ -102,7 +102,9 @@ class ContinuumAutonomousJobService:JobService() {
             var deferredReason:String?=null
             val cancelled:()->Boolean={
                 val elapsed=SystemClock.elapsedRealtime()
-                if(stopped.get())true
+                if(stopped.get() ||
+                    at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this@ContinuumAutonomousJobService) ==
+                        at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.PAUSED)true
                 else if(ContinuumOfflineLearningBudget.deadlineReached(startedAt,elapsed)) {
                     deferredReason="TIME_BUDGET";true
                 } else {
