@@ -6030,12 +6030,7 @@ class AgentActivity : Activity() {
                         // failed, the fallback may use the owner's task but MUST NOT
                         // bypass privacy, revocation, STALE or CONTRADICTED gates by
                         // rendering the unfiltered memories directly.
-                        append("Trusted memory context unavailable: no memory facts are supplied. ")
-                        append("Do not claim remembered owner facts or infer missing evidence.\n")
-                        reflection?.let {
-                            append("Unverified previous evaluation correction: ")
-                                .append(it.correction.take(512))
-                        }
+                        append(at.heinz.deviceai.cognitive.AgentContextFallback.render(reflection))
                     }
                     if (observations.isNotEmpty()) {
                         append("\n\nTool observations:\n")
