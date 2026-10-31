@@ -2654,6 +2654,23 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
+        // With the owner's persistent ALWAYS_ON grant, automatically route only
+        // de-identified public knowledge questions to a real research cycle.
+        // Personal or ambiguous dialogue remains local; no silent chat upload.
+        val publicTopic = if (internetConsent.mode ==
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+            at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
+        if (publicTopic != null && !researchArmed) {
+            val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
+            confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                if (session != null && !busy) {
+                    input.text.clear()
+                    addUserMessage(request)
+                    runResearch(session)
+                } else session?.cancel()
+            }
+            return
+        }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -7669,6 +7686,17 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        // Store only public, scrubbed topic labels when the owner has enabled
+        // both ALWAYS_ON and recurring public study. Not the chat transcript.
+        if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(value)
+            if (topic != null) {
+                onLearningIo({
+                    val scheduler = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+                    if (scheduler.enabled) scheduler.addDiscovered(listOf(topic)) else 0
+                }) { _ -> }
+            }
+        }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
         conversationActive = true
         refreshConversationLayout()
