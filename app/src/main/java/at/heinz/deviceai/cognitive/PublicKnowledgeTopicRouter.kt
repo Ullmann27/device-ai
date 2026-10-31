@@ -19,7 +19,8 @@ internal object PublicKnowledgeTopicRouter {
 
     fun topic(message: String): String? {
         val cleaned = message.trim().replace(Regex("\\s+"), " ")
-        if (cleaned.length !in 8..220 || !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
+        if (cleaned.length !in 8..220 || ConversationResearchIntent.forbidsWeb(cleaned) ||
+            !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
             privateMarkers.containsMatchIn(cleaned) ||
             cleaned.any { it.isISOControl() }) return null
         val result = ResearchQuestionFocus.searchText(cleaned)
