@@ -386,7 +386,7 @@ class BoundedAgentOrchestrator(
                 sourceIds = toolEvidence.toList(),
                 modelIds = modelIds.distinct(),
                 toolIds = usedTools.distinct(),
-                planSummary = "Bounded model response with registered tools only.",
+                planSummary = AgentExperienceRecall.observedRunSummary(usedTools, retry, historicalHints.size),
                 resultSummary = lastOutput.take(512),
                 failures = (failures + if (lastEvaluation.success) emptyList() else listOf(lastEvaluation.notes))
                     .map { it.take(256) },
