@@ -2678,8 +2678,13 @@ class AgentActivity : Activity() {
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
+        val modelReadyForChat = localRuntime.state == LocalModelState.READY &&
+            localRuntime.loadedModel != null
         val publicTopic = if (internetConsent.mode ==
-            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            (!modelReadyForChat ||
+                at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter
+                    .shouldAutoResearchWithReadyModel(request)))
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
@@ -5602,14 +5607,18 @@ class AgentActivity : Activity() {
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
+        val synthesisFallback = java.util.concurrent.atomic.AtomicReference<String?>(null)
         val localSynthesis = ResearchSynthesizer { input ->
-            if (localRuntime.state != LocalModelState.READY) {
+            if (localRuntime.state != LocalModelState.READY ||
+                localRuntime.loadedModel == null) {
+                synthesisFallback.set("MODEL_NOT_READY_FOR_SYNTHESIS")
                 DeterministicResearchSynthesizer().synthesize(input)
             } else {
                 val generation = generateLocal { callback ->
                     localRuntime.stream(ResearchPromptBoundary.build(input), callback)
                 }
                 if (generation.failure != null || generation.proposal != null || generation.response.isBlank()) {
+                    synthesisFallback.set("MODEL_SYNTHESIS_NOT_COMPLETED")
                     DeterministicResearchSynthesizer().synthesize(input)
                 } else {
                     ResearchSynthesisOutput(generation.response.trim().take(8_000))
@@ -5701,8 +5710,12 @@ class AgentActivity : Activity() {
                         if (dossier.sources.isEmpty()) {
                             append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
                         }
-                        if (localRuntime.state != LocalModelState.READY) {
-                            append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
+                        synthesisFallback.get()?.let { reason ->
+                            append("\n\nHinweis: ")
+                            append(if (reason == "MODEL_NOT_READY_FOR_SYNTHESIS")
+                                "Das lokale Modell war während der Recherche-Zusammenfassung nicht bereit."
+                            else "Die lokale Recherche-Zusammenfassung konnte nicht abgeschlossen werden.")
+                            append(" Deterministische Zusammenfassung verwendet.")
                         }
                         if (dossier.sources.isNotEmpty())
                             dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
