@@ -5203,13 +5203,13 @@ class AgentActivity : Activity() {
             return
         }
         val titles = candidates.map { note ->
-            (if (note.contradictory) "⚠ WIDERSPRUCH · " else "QUELLE · ") + note.text.take(88)
+            (if (note.contradictory) "⚠ WIDERSPRUCH · " else "LERNHINWEIS · ") + note.text.take(88)
         }.toTypedArray()
         // Android AlertController uses the message ScrollView INSTEAD OF the
         // item ListView when setMessage() and setItems() are both supplied.
         // Render the clickable list alone; the detail dialog explains consent.
         AlertDialog.Builder(this)
-            .setTitle("Internet-Lernstoff · ${candidates.size} Quellen · ${learned.getOrNull().orEmpty().size}/24 gespeichert")
+            .setTitle("Internet-Lernstoff · ${candidates.size} Vorschläge · ${candidates.map { it.sourceUrl }.distinct().size} Webseiten · ${learned.getOrNull().orEmpty().size}/24 Notizen")
             .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
             .setNegativeButton("Schließen", null)
             .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
