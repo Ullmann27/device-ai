@@ -20,7 +20,7 @@ class AgentExperiencePairedBenchmarkTest {
 
     private data class Trial(
         val enabled: Boolean,
-        val successCount: Int,
+        val acceptedTextCount: Int,
         val hintSeenCount: Int,
         val modelCalls: Int,
         val addedExperiences: Int,
@@ -46,7 +46,7 @@ class AgentExperiencePairedBenchmarkTest {
         val store = InMemoryExperienceStore()
         tasks.forEachIndexed { index, task -> store.store(historical(task, index)) }
 
-        var success = 0
+        var acceptedText = 0
         var hintsSeen = 0
         var calls = 0
         val started = System.nanoTime()
@@ -74,11 +74,11 @@ class AgentExperiencePairedBenchmarkTest {
                 callIdPrefix = "paired-$index"
             )
             val result = agent.run(task)
-            if (result.experience?.outcome == ExperienceOutcome.SUCCESS &&
-                result.response == "fixture-done") success++
+            if (result.experience?.outcome == ExperienceOutcome.PARTIAL &&
+                result.response == "fixture-done") acceptedText++
         }
         val elapsed = System.nanoTime() - started
-        return Trial(enabled, success, hintsSeen, calls,
+        return Trial(enabled, acceptedText, hintsSeen, calls,
             store.all().size - tasks.size, elapsed)
     }
 
@@ -86,8 +86,8 @@ class AgentExperiencePairedBenchmarkTest {
         val baseline = trial(enabled = false)
         val recall = trial(enabled = true)
 
-        assertEquals(tasks.size, baseline.successCount)
-        assertEquals(tasks.size, recall.successCount)
+        assertEquals(tasks.size, baseline.acceptedTextCount)
+        assertEquals(tasks.size, recall.acceptedTextCount)
         assertEquals(0, baseline.hintSeenCount)
         assertEquals(tasks.size, recall.hintSeenCount)
         assertEquals(tasks.size, baseline.modelCalls)
@@ -97,7 +97,7 @@ class AgentExperiencePairedBenchmarkTest {
 
         println("CONTINUUM MOCK A/B (NOT A REAL MODEL BENCHMARK): " +
             "tasks=${tasks.size}, " +
-            "A_success=${baseline.successCount}, B_success=${recall.successCount}, " +
+            "A_accepted_text=${baseline.acceptedTextCount}, B_accepted_text=${recall.acceptedTextCount}, " +
             "A_hint_seen=${baseline.hintSeenCount}, B_hint_seen=${recall.hintSeenCount}, " +
             "A_model_calls=${baseline.modelCalls}, B_model_calls=${recall.modelCalls}, " +
             "A_added_experiences=${baseline.addedExperiences}, " +
