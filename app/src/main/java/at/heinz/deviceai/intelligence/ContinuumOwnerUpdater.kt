@@ -32,7 +32,7 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
     private val active = AtomicBoolean(false)
 
     sealed interface Check {
-        data object Current : Check
+        data class Current(val installedVersionCode: Int, val offeredVersionCode: Int) : Check
         data object NoRelease : Check
         data class Available(val release: ContinuumOwnerUpdateRelease) : Check
         data class Rejected(val explanation: String) : Check
@@ -54,7 +54,7 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
                 ContinuumUpdatePreflight.ReadyForActualApkVerification -> Check.Available(release)
                 is ContinuumUpdatePreflight.Rejected ->
                     if (policy.reason == ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION)
-                        Check.Current
+                        Check.Current(version, release.descriptor.versionCode)
                     else
                         Check.Rejected("Freigabeprüfung verweigert: $policy")
             }
