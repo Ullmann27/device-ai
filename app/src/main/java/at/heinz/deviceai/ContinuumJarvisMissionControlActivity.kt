@@ -139,10 +139,10 @@ class ContinuumJarvisMissionControlActivity : Activity() {
             else if (System.currentTimeMillis() - partner.checkedAt > 2L * 60L * 60L * 1000L ||
                 partner.checkedAt > System.currentTimeMillis() + 60_000L) "letzter Prüflauf veraltet"
             else "letzter Prüflauf: " + partner.state
-        overview.text = "CONTINUUM · HAUPTKERN / CODING-WÄCHTER\\n" +
-            "Hauptkern: " + guardianState + "\\n" +
-            "Technischer Partner: " + partnerState + "\\n" +
-            "Autonomie: " + ownerLevel.name + "\\n" +
+        overview.text = "CONTINUUM · HAUPTKERN / CODING-WÄCHTER\n" +
+            "Hauptkern: " + guardianState + "\n" +
+            "Technischer Partner: " + partnerState + "\n" +
+            "Autonomie: " + ownerLevel.name + "\n" +
             "Beobachtete Lernkanäle: $fresh/3 aktiv (45-Sekunden-Lebenszeichen). " +
             "Der Partner ist kein zweites frei laufendes LLM; ohne frische Belege gibt es keinen aktiven Schutz-Nachweis."
 
