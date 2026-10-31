@@ -130,3 +130,15 @@ test('v34 OpenRouter provides both explicit Android paths and the protected opti
   assert.match(server,/mentorAuth/);
   assert.match(checks,/OpenRouter stays off without secret or explicit enablement/);
 });
+
+test('v34 exposes the real public-study job state and never labels consent as active research',()=>{
+  const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+  const dashboard=source('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
+  assert.match(app,/append\("\\n\\n"\)\.append\(at\.heinz\.deviceai\.learning\.ContinuumPublicStudyScheduler\(this@AgentActivity\)\.display\(\)\)/);
+  assert.match(dashboard,/getPendingJob\(ContinuumPublicStudyScheduler\.JOB_ID\)/);
+  assert.match(dashboard,/publicStudyScheduled = publicStudy && publicInternetGranted/);
+  assert.match(dashboard,/publicJobRegistered && !publicProviderPaused/);
+  assert.match(dashboard,/Webforschung: Job nicht registriert/);
+  assert.match(dashboard,/Webforschung: Anbieterpause/);
+  assert.doesNotMatch(dashboard,/Öffentliches Lernen aktiv/);
+});
