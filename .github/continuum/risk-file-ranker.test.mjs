@@ -57,3 +57,15 @@ test('a non-call dangerous keyword is not reported',()=>{
  const report=scanDefensiveSinks('src/main.mjs','// strcpy seems scary\nconst note="eval";');
  assert.deepEqual(report.findings,[]);
 });
+
+test('unscanned long lines are reported as incomplete, not clean',()=>{
+ const longLine='a'.repeat(1201)+'strcpy(dst,src);';
+ const report=scanDefensiveSinks('src/network/handler.c',longLine+'\nstrcpy(dst,src);');
+ assert.equal(report.status,'PARTIAL_LINE_LIMIT');
+ assert.equal(report.unscannedLongLines,1);
+ assert.deepEqual(report.findings.map(f=>f.line),[2]);
+ const onlyLong=scanDefensiveSinks('src/network/handler.c',longLine);
+ assert.equal(onlyLong.status,'PARTIAL_LINE_LIMIT');
+ assert.equal(onlyLong.unscannedLongLines,1);
+ assert.deepEqual(onlyLong.findings,[]);
+});
