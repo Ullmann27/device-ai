@@ -21,7 +21,7 @@ internal object PublicKnowledgeTopicRouter {
     // Keep automatic public web research for explicitly time-sensitive knowledge;
     // explicit WEB RECHERCHE remains available for every public subject.
     private val freshEvidenceIndicators = Regex(
-        """(?iu)\b(?:aktuell(?:e|en|er|es)?|heute|gestern|neueste(?:n|r|s)?|letzte(?:n|r|s)?\\s+meldungen|dieses\\s+jahr|derzeit|momentan|gerade\\s+eben|latest|today|yesterday|currently|recent\\s+news)\\b"""
+        """(?iu)\b(?:aktuell(?:e|en|er|es)?|heute|gestern|neueste(?:n|r|s)?|letzte(?:n|r|s)?\s+meldungen|dieses\s+jahr|derzeit|momentan|gerade\s+eben|latest|today|yesterday|currently|recent\s+news)\b"""
     )
 
     fun shouldAutoResearchWithReadyModel(message: String): Boolean =
