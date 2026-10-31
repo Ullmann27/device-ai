@@ -51,4 +51,18 @@ class Ewm1SourceIndexTest {
         val json = pack.render()
         assertTrue(json.contains("SOURCE_OBSERVATION_UNVERIFIED") && json.contains("CC BY-SA 4.0") && json.contains("\"truncated\":true"))
     }
+
+    @Test fun sameTitleWebRevisionsSelectLatest() {
+        fun source(id:Int,date:Long,text:String)=ContinuumKnowledgeArchive.SourceRecord(
+            id="%064x".format(id),kind=ContinuumKnowledgeArchive.Kind.PUBLIC_WEB_EXCERPT,
+            title="Photovoltaik",url="https://solar.example.org/revision-$id",
+            attribution="Öffentliche HTTPS-Quelle · unbestätigter kurzer Auszug",
+            collectedAt=date,sourceDate=null,sha256="%064x".format(id),text=text)
+        val older=source(101,1760000000000L,"Photovoltaik wandelt Sonnenlicht direkt in elektrische Energie um.")
+        val newer=source(102,1760000060000L,"Moderne Tandem-Photovoltaik verwendet gestapelte Solarzellen.")
+        val pack=Ewm1SourceIndex(listOf(older,newer)).retrieve("Was ist Photovoltaik?")
+        assertEquals("QUERY",pack.decision)
+        assertEquals(newer.id,pack.evidence.single().record.id)
+    }
+
 }
