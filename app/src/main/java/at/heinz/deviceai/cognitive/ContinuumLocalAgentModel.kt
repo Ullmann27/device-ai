@@ -29,7 +29,7 @@ class ContinuumLocalAgentModel(
     private val modelIdProvider: () -> String? = {
         runtime.loadedModel?.let { "${it.id}@${it.version}" }
     }
-) : AgentModel {
+) : CancellableAgentModel {
     init {
         require(maxPassMillis in 1L..60_000L)
         require(maxResponseChars in 1..8_000)
@@ -38,10 +38,12 @@ class ContinuumLocalAgentModel(
     private val inFlight = AtomicBoolean(false)
     @Volatile private var cancelled = false
 
-    fun cancel() {
+    override fun cancelGeneration() {
         cancelled = true
         runCatching { runtime.cancel() }
     }
+
+    fun cancel() = cancelGeneration()
 
     override fun generate(
         task: String,
