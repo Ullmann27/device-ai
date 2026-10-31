@@ -28,18 +28,28 @@ class GeneralWebDiscoveryProvider(
         val text=query.text.trim().take(512)
         if(text.isBlank())return emptyList()
         val focused=ResearchQuestionFocus.searchText(text)
-        val primary=runCatching {
+        // A single public search backend can fail independently of device
+        // connectivity. Try another bounded HTTPS search endpoint before
+        // degrading to Wikipedia-only discovery. Both obey the same grant and
+        // SSRF/DNS/TLS/byte limits; no private query expansion is performed.
+        for (url in listOf(searchUrl(focused), duckDuckGoUrl(focused))) {
+            val matches=runCatching {
+                checkAccess()
+                parseSearchResults(fetchHtml?.invoke(url)?:fetchSearchResponse(url,checkAccess))
+                    .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
+            }.getOrElse {
+                rethrowCancellation(it)
+                lastIssue="Web-Suchanbieter nicht verfügbar: "+(it.message?:it.javaClass.simpleName).take(160)
+                emptyList()
+            }
             checkAccess()
-            parseSearchResults(fetchHtml?.invoke(searchUrl(focused))?:fetchSearchResponse(searchUrl(focused),checkAccess))
-                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
-        }.getOrElse {
-            rethrowCancellation(it)
-            lastIssue="Allgemeine Websuche fehlgeschlagen: "+(it.message?:it.javaClass.simpleName).take(160)
-            emptyList()
+            if(matches.isNotEmpty()) {
+                generalWorked=true
+                lastIssue=null
+                return matches
+            }
         }
-        checkAccess()
-        if(primary.isNotEmpty()){generalWorked=true;lastIssue=null;return primary}
-        lastIssue=lastIssue?:"Allgemeine Websuche lieferte keine thematisch passenden Quellen."
+        lastIssue=lastIssue?:"Beide allgemeinen Web-Suchanbieter lieferten keine thematisch passenden Quellen."
         checkAccess()
         val fallback=runCatching {
             (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess))
@@ -60,6 +70,7 @@ class GeneralWebDiscoveryProvider(
     }
     companion object {
         fun searchUrl(query:String)="https://www.bing.com/search?format=rss&q="+URLEncoder.encode(query,"UTF-8")
+        fun duckDuckGoUrl(query:String)="https://html.duckduckgo.com/html/?q="+URLEncoder.encode(query,"UTF-8")
         private fun candidate(url:String,title:String?):ResearchSourceCandidate? {
             val decoded=url.replace("&amp;","&").trim()
             val uri=runCatching { URI(decoded) }.getOrNull()?:return null
