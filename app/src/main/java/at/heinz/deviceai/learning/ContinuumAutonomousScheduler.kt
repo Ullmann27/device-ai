@@ -213,7 +213,7 @@ class ContinuumAutonomousJobService:JobService() {
                         val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)
                             .entries().takeLast(12)
                         val fresh=ContinuumSourceNovelty.pending(
-                            approved, ContinuumSourceNovelty.completedHashes(filesDir)
+                            approved, ContinuumSourceNovelty.knownHashes(filesDir)
                         )
                         if(fresh.isNotEmpty() && !cancelled()) {
                             ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
