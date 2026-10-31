@@ -43,6 +43,8 @@ test('release pins the installed Continuum Lokal app and signer, not Mentor Pair
   assert.match(script, /at\.heinz\.deviceai\.continuumlocal/);
   assert.match(script, /6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
   assert.match(script, /CONTINUUM_MENTOR_SIGNING/);
+  assert.match(script, /Entry type: PrivateKeyEntry/);
+  assert.match(script, /Owner P12 alias does not contain a private signing key/);
   assert.match(script, /Wrong signing certificate/);
   assert.match(script, /Built APK signer differs/);
   assert.match(script, /Verified using v2 scheme/);
