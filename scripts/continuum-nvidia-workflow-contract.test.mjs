@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const reviewedSha = '22d6b27a959831d87ce9707eb6296f34c293af38';
+const expectedSha = '22d6b27a959831d87ce9707eb6296f34c293af38';
 const workflowPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../.github/workflows/continuum-nvidia-ten-minute.yml');
 const workflow = fs.readFileSync(workflowPath, 'utf8');
 
@@ -35,8 +35,8 @@ function requireEnv(source, step, key, value) {
 
 function validateContract(source) {
   const checkout = stepBlock(source, 'Checkout immutable reviewed research sources');
-  if (!checkout.split('\n').includes(`          ref: ${reviewedSha}`)) {
-    throw Error('WORKFLOW_UNREVIEWED_EXECUTOR_REF');
+  if (!checkout.split('\n').includes(`          ref: ${expectedSha}`)) {
+    throw Error('WORKFLOW_EXECUTOR_PIN_MISMATCH');
   }
   const name = 'One NVIDIA Ultra 550B technical research request';
   requireEnv(source, name, 'GITHUB_TOKEN', '${{ github.token }}');
@@ -59,10 +59,10 @@ test('RED: an executor step without GitHub token must be rejected', () => {
   assert.throws(() => validateContract(withoutToken), /WORKFLOW_EXECUTE_GITHUB_TOKEN_MISSING/);
 });
 
-test('RED: an old unreviewed executor pin must be rejected', () => {
-  const old = workflow.replace(`ref: ${reviewedSha}`, 'ref: fd2e5de1acf678ae4d6222bb433762ea8bb3d57f');
+test('RED: an outdated executor pin must be rejected', () => {
+  const old = workflow.replace(`ref: ${expectedSha}`, 'ref: fd2e5de1acf678ae4d6222bb433762ea8bb3d57f');
   assert.notEqual(old, workflow);
-  assert.throws(() => validateContract(old), /WORKFLOW_UNREVIEWED_EXECUTOR_REF/);
+  assert.throws(() => validateContract(old), /WORKFLOW_EXECUTOR_PIN_MISMATCH/);
 });
 
 test('RED: missing independent claim tests must be rejected', () => {
@@ -71,6 +71,6 @@ test('RED: missing independent claim tests must be rejected', () => {
   assert.throws(() => validateContract(withoutTests), /WORKFLOW_CLAIM_TESTS_NOT_GATED/);
 });
 
-test('GREEN: workflow has reviewed immutable source, scoped credentials and offline claim gate', () => {
+test('GREEN: workflow has expected immutable source, scoped credentials and offline claim gate', () => {
   assert.equal(validateContract(workflow), true);
 });
