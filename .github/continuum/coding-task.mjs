@@ -6,9 +6,15 @@ const KINDS=new Set(['BUGFIX','FEATURE','REFACTOR','TEST','COMPILER','DEPENDENCY
 const exact=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const text=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max&&!/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(v);
 const reject=()=>{throw Error('CODING_TASK_INVALID');};
+// Keep the autonomous repair scope bounded: Gradle scripts, manifests, tests,
+// general assets and control-plane files remain forbidden.
+const LEGACY_SOURCE=/^(?:lib\/|src\/|backend\/src\/|app\/src\/main\/java\/|\.github\/continuum\/)[A-Za-z0-9_./-]+\.(?:mjs|js|kt)$/;
+const ANDROID_JAVA=/^app\/src\/main\/java\/[A-Za-z0-9_./-]+\.java$/;
+const ANDROID_LAYOUT=/^app\/src\/main\/res\/layout\/[A-Za-z0-9_./-]+\.xml$/;
+const androidCandidate=file=>file.endsWith('.kt')||ANDROID_JAVA.test(file)||ANDROID_LAYOUT.test(file);
 export function isCodingPath(file){
  return typeof file==='string'&&file.length<=180&&
-  /^(?:lib\/|src\/|backend\/src\/|app\/src\/main\/java\/|\.github\/continuum\/)[A-Za-z0-9_./-]+\.(?:mjs|js|kt)$/.test(file)&&
+  (LEGACY_SOURCE.test(file)||ANDROID_JAVA.test(file)||ANDROID_LAYOUT.test(file))&&
   !file.split('/').some(p=>!p||p==='.'||p==='..')&&
   !/(^|\/)(?:node_modules|build|dist|secrets?|credentials?|private|owner-data)(\/|\.)/i.test(file)&&
   !/^\.github\/continuum\/(?:harness-coding-|storage-fabric|coding-|ccc1-|isolated-|local-brain|local-numeric|step-watchdog|behaviour-probe|contract-|teamleader-|owner-|backlog-|development-|autonomous-)/.test(file)&&
@@ -21,7 +27,7 @@ export function validateCodingTask(input){
   !Array.isArray(input.allowedPaths)||input.allowedPaths.length<1||input.allowedPaths.length>3||
   new Set(input.allowedPaths).size!==input.allowedPaths.length||input.allowedPaths.some(f=>!isCodingPath(f))||
   !Array.isArray(input.acceptance)||input.acceptance.length<1||input.acceptance.length>8||input.acceptance.some(v=>!text(v,300))||
-  !['node','android'].includes(input.chain)||input.allowedPaths.some(f=>f.endsWith('.kt')?input.chain!=='android':input.chain!=='node')||
+  !['node','android'].includes(input.chain)||input.allowedPaths.some(f=>androidCandidate(f)?input.chain!=='android':input.chain!=='node')||
   !exact(input.limits,['maxModelCalls','maxContextChars'])||
   !Number.isSafeInteger(input.limits.maxModelCalls)||input.limits.maxModelCalls<1||input.limits.maxModelCalls>3||
   !Number.isSafeInteger(input.limits.maxContextChars)||input.limits.maxContextChars<2048||input.limits.maxContextChars>24000)reject();
