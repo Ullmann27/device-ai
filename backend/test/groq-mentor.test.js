@@ -42,7 +42,7 @@ test("one authorized message is bounded and contains no tools, memory or device 
   assert.equal(payload.model, "openai/gpt-oss-20b");
   assert.equal(payload.messages.length, 2);
   assert.equal(payload.messages[1].content, "Wie funktionieren Solarzellen?");
-  assert.equal(payload.max_completion_tokens, 450);
+  assert.equal(payload.max_completion_tokens, 2048);
   assert.equal(payload.stream, false);
   assert.equal(payload.tool_choice, "none");
   assert.equal(Object.hasOwn(payload, "device"), false);
