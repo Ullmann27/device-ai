@@ -12,9 +12,9 @@ test('the same full v32 source tree includes the actual signed owner package',()
   const release=source('scripts/render-continuum-m8-owner-release.sh');
   const qa=source('scripts/render-continuum-m8-qa.sh');
   assert.match(gradle,/at\.heinz\.deviceai\.continuumlocal/);
-  assert.match(release,/\[\[ "\$version" == "32" \]\]/);
-  assert.match(release,/versionCode: 32/);
-  assert.match(qa,/continuumStandaloneVersionCode=32/);
+  assert.match(release,/\[\[ "\$version" == "33" \]\]/);
+  assert.match(release,/versionCode: 33/);
+  assert.match(qa,/continuumStandaloneVersionCode=33/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
 });
 
