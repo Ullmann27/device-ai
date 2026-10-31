@@ -1,3 +1,4 @@
+import {OWNER_CONSENT} from './continuum-nvidia-ultra-review.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateLedger,decideReservation,reserveGithubBudget,executeReservedResearch,
@@ -111,7 +112,7 @@ test('GitHub SHA conflict prevents remote provider invocation',async()=>{
   json(409,{message:'conflict'});
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_HTTP_409/);
  assert.equal(modelCalls,0);
 });
@@ -129,7 +130,7 @@ test('RED: HTTP 200 without durable claim readback cannot invoke NVIDIA',async()
  };
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
  assert.equal(gets,2);
  assert.equal(modelCalls,0);
@@ -147,8 +148,23 @@ test('RED: malformed GitHub write receipt cannot authorize provider use',async()
  };
  await assert.rejects(executeReservedResearch({sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
   outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',token,
-  runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  runId:'110',ownerConsent:OWNER_CONSENT,nowMs:at('00:08:00'),fetchImpl,
   callReview:async()=>{modelCalls++;}}),/GITHUB_LEDGER_CLAIM_UNVERIFIED/);
  assert.equal(gets,1);
+ assert.equal(modelCalls,0);
+});
+
+test('RED: valid NVIDIA key without explicit owner grant makes no ledger or model calls',async()=>{
+ let githubCalls=0,modelCalls=0;
+ const fetchImpl=async()=>{githubCalls++;throw Error('UNEXPECTED_GITHUB_CALL');};
+ const common={sequence:0,apiKey:'nvapi-'+'x'.repeat(40),
+  outputDir:'/tmp/continuum-test-output',repoFull:'Ullmann27/device-ai',
+  token,runId:'110',nowMs:at('00:08:00'),fetchImpl,
+  callReview:async()=>{modelCalls++;}};
+ for(const ownerConsent of [undefined,'',OWNER_CONSENT+' ',null]){
+  await assert.rejects(executeReservedResearch({...common,ownerConsent}),
+   /NVIDIA_OWNER_CONSENT_REQUIRED/);
+ }
+ assert.equal(githubCalls,0);
  assert.equal(modelCalls,0);
 });
