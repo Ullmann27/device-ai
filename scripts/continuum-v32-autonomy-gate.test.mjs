@@ -38,8 +38,10 @@ test('public internet defaults to owner-requested mode but explicit off survives
 
 test('partner status is based on DNA and durable run evidence, not simulated agents',()=>{
   const mission=code('app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt');
+  const teamleader=code('app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt');
   assert.match(mission,/ContinuumDnaGuardian/);
   assert.match(mission,/DeviceTeamleaderStatusStore/);
   assert.match(mission,/kein belegter Prüflauf/);
   assert.match(mission,/keinen aktiven Schutz-Nachweis/);
+  assert.match(teamleader,/"OWNER_AUTONOMY_RESTRICTED"/);
 });
