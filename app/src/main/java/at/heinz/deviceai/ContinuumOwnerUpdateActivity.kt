@@ -88,8 +88,12 @@ class ContinuumOwnerUpdateActivity : Activity() {
             result.fold(
                 onSuccess = { check ->
                     when (check) {
-                        ContinuumOwnerUpdater.Check.Current ->
-                            setMessage("Continuum Lokal ist auf dem freigegebenen aktuellen Stand.")
+                        is ContinuumOwnerUpdater.Check.Current ->
+                            setMessage("Kein Update mit höherem Android-Versionscode verfügbar. " +
+                                "Installiert: ${check.installedVersionCode}; " +
+                                "Server: ${check.offeredVersionCode}. " +
+                                "Gleiche Versionscodes können unterschiedliche Code-Stände verdecken; " +
+                                "für eine Aktualisierung ist eine höhere Versionsnummer erforderlich.")
                         ContinuumOwnerUpdater.Check.NoRelease ->
                             setMessage("Der Updatekanal ist erreichbar. Es gibt noch keine originalsignierte und freigegebene neue Continuum-Lokal-Version.")
                         is ContinuumOwnerUpdater.Check.Rejected ->
