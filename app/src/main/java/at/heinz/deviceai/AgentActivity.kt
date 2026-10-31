@@ -5406,7 +5406,7 @@ class AgentActivity : Activity() {
         android.app.AlertDialog.Builder(this)
             .setTitle("CONTINUUM · AUTONOMIEKONTROLLE")
             .setMessage(control.explain(current) +
-                "\\n\\nRechenlast, Fehler und Temperatur begrenzen weiterhin jeden Zyklus. " +
+                "\n\nRechenlast, Fehler und Temperatur begrenzen weiterhin jeden Zyklus. " +
                 "Internetquellen dürfen keine Berechtigungen ausweiten, Code ausführen oder eigenständig Agenten installieren. " +
                 "Für produktive Patches, Installationen und zusätzliche Rechte bleibt deine ausdrückliche Freigabe notwendig.")
             .setSingleChoiceItems(labels, levels.indexOf(current)) { dialog, index ->
