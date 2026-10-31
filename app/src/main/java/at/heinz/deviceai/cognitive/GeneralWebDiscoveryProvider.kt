@@ -22,9 +22,15 @@ class GeneralWebDiscoveryProvider(
     @Volatile private var generalWorked=false
     @Volatile var lastIssue:String?=null
         private set
+    /** Only true when BOTH independent web search transports failed. Empty search results are different. */
+    @Volatile var allSearchEndpointsFailed:Boolean=false
+        private set
     override val isGeneralSearchAvailable:Boolean get()=generalWorked
     override fun discover(query:ResearchQuery):List<ResearchSourceCandidate> {
         checkAccess()
+        lastIssue=null
+        allSearchEndpointsFailed=false
+        generalWorked=false
         val text=query.text.trim().take(512)
         if(text.isBlank())return emptyList()
         val focused=ResearchQuestionFocus.searchText(text)
@@ -34,6 +40,7 @@ class GeneralWebDiscoveryProvider(
         // SSRF/DNS/TLS/byte limits; no private query expansion is performed.
         val combined = linkedMapOf<String, ResearchSourceCandidate>()
         val domains = mutableMapOf<String, Int>()
+        var failedEndpoints=0
         for (url in listOf(searchUrl(focused), duckDuckGoUrl(focused))) {
             checkAccess()
             val matches=runCatching {
@@ -41,6 +48,7 @@ class GeneralWebDiscoveryProvider(
                     .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
             }.getOrElse {
                 rethrowCancellation(it)
+                failedEndpoints++
                 lastIssue="Web-Suchanbieter nicht verfügbar: "+(it.message?:it.javaClass.simpleName).take(160)
                 emptyList()
             }
@@ -54,6 +62,7 @@ class GeneralWebDiscoveryProvider(
             }
         }
         checkAccess()
+        allSearchEndpointsFailed=failedEndpoints==2 && combined.isEmpty()
         if(combined.isNotEmpty()) {
             generalWorked=true
             lastIssue=null
