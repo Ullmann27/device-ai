@@ -273,4 +273,25 @@ class ContinuumCognitiveRuntimeTest {
         } finally { dir.deleteRecursively() }
     }
 
+
+    @Test fun publicWebSourceObservationIsEligibleAsUnverifiedObservationAndNeverBecomesOwnerFact() {
+        val dir=Files.createTempDirectory("continuum-public-web-observation").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val excerpt="Photovoltaikmodule wandeln Sonnenstrahlung mittels Halbleiterzellen direkt in elektrischen Gleichstrom um."
+            val source=MentorSource(subject="Photovoltaik",
+                url="https://solar.example.org/photovoltaik-grundlagen",
+                sha=ContinuumPublicStudyPolicy.digest(excerpt),excerpt=excerpt)
+            core.learnFromSources(listOf(source))
+            assertTrue("Public web source must never become an owner fact",core.activeOwnerFacts().isEmpty())
+            val turn=ContinuumCognitiveRuntime(dir,core,"web-obs-session")
+                .reply("Was machen Photovoltaikmodule mit Sonnenstrahlung?")
+            assertTrue("SWB1 dialogue should retrieve public web observations",turn.grounded)
+            assertEquals(1,turn.evidenceHits.size)
+            assertEquals("Unbestätigte Quellenbeobachtung",turn.evidenceHits.single().kind)
+            assertTrue(turn.answer.contains("Unbestätigte Quellenbeobachtung"))
+            assertTrue(turn.answer.contains("https://solar.example.org/photovoltaik-grundlagen"))
+        } finally { dir.deleteRecursively() }
+    }
+
 }
