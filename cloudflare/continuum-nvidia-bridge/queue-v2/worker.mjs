@@ -26,6 +26,27 @@ function prompt(topic,iteration,prior){
  if(typeof prior==='string'&&prior.length)lines.push('Previous UNTRUSTED hypothesis to critique: '+JSON.stringify(prior.slice(0,1200)));
  return lines.join('\n');
 }
+
+export async function ensureResearchSchema(db){
+ if(!db)throw Error('Missing DB binding');
+ const required=['jarvis_cron_log','continuum_nvidia_control','continuum_nvidia_jobs'];
+ for(const name of required){
+  const entry=await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").bind(name).first();
+  if(!entry){
+   const sql=[
+    'CREATE TABLE IF NOT EXISTS jarvis_cron_log (id INTEGER PRIMARY KEY AUTOINCREMENT, cron_time TEXT NOT NULL, action TEXT NOT NULL)',
+    "CREATE TABLE IF NOT EXISTS continuum_nvidia_control (id INTEGER PRIMARY KEY CHECK(id=1), state TEXT NOT NULL CHECK(state IN ('running','disabled')), blocked_until_ms INTEGER NOT NULL DEFAULT 0, last_error TEXT)",
+    "INSERT OR IGNORE INTO continuum_nvidia_control(id,state,blocked_until_ms) VALUES(1,'running',0)",
+    'CREATE TABLE IF NOT EXISTS continuum_nvidia_jobs (sequence INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL UNIQUE, requested_at_ms INTEGER NOT NULL, requested_at_utc TEXT NOT NULL, topic TEXT NOT NULL, status TEXT NOT NULL, reserved_tokens INTEGER NOT NULL, completed_at_ms INTEGER, result_excerpt TEXT, provider_request_id TEXT)',
+    'CREATE INDEX IF NOT EXISTS idx_nvidia_jobs_time ON continuum_nvidia_jobs(requested_at_ms)',
+    'CREATE INDEX IF NOT EXISTS idx_nvidia_jobs_state ON continuum_nvidia_jobs(status)'
+   ];
+   if(typeof db.batch==='function')await db.batch(sql.map(s=>db.prepare(s)));
+   else for(const s of sql)await db.prepare(s).run();
+   break;
+  }
+ }
+}
 export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uuid=()=>crypto.randomUUID()}={}){
  async function reserve(env){
   const c=cfg(env);if(!c.ready||!env?.DB)return false;
@@ -48,6 +69,7 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
  }
  async function scheduled(event,env){
   if(!env?.DB)throw Error('Missing DB binding');
+  await ensureResearchSchema(env.DB);
   await env.DB.prepare('INSERT INTO jarvis_cron_log(cron_time,action) VALUES(?,?)').bind(new Date(now()).toISOString(),'queue_recovery_tick').run();
   if(!cfg(env).ready)return;
   await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='abandoned_unknown_provider_result',completed_at_ms=? WHERE status IN ('queued','running') AND requested_at_ms<?")
@@ -92,7 +114,7 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
   if(blockedUntil)await env.DB.prepare('UPDATE continuum_nvidia_control SET blocked_until_ms=?,last_error=? WHERE id=1').bind(blockedUntil,status).run();
   if(status==='proposal_unreviewed')await reserve(env);
  }
- async function queue(batch,env){for(const message of batch.messages)await process(message,env);}
+ async function queue(batch,env){if(cfg(env).ready)await ensureResearchSchema(env.DB);for(const message of batch.messages)await process(message,env);}
  async function fetch(request,env){
   const path=new URL(request.url).pathname;
   if(request.method!=='GET')return reply({error:'method_not_allowed'},405);
