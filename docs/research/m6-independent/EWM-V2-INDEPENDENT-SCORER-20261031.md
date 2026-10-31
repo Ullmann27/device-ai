@@ -27,3 +27,40 @@ Der Auswerter prüft den unveränderten Git-Blob 622370c291ead9ab11ec8917c992037
 **Grenze:** Die 240 Fälle stammen aus Varianten von nur 24 Basiskonstruktionen. Ein PASS allein beweist weder breite Generalisierung noch eine funktionierende Fold7-APK. Vor einem echten unabhängigen Lauf ist die Modellerfolgsquote unbekannt.
 
 **Änderungssicherheit:** Ergänzung direkt in bestehender Draft-PR #258, kein neuer PR, kein direkter Main-Push, keine Berührung von Jules-Dateien.
+
+## Echter Kotlin-Graphlauf (neu)
+
+Für diesen Stand wurde zusätzlich **kein neuer PR** eröffnet. Die neue Datei `app/src/test/java/at/heinz/deviceai/intelligence/ewm/Ewm2Foreign240ReceiptTest.kt` ruft auf dem bestehenden EWM2-Produktionscode `Ewm1Memory` auf. Die verbundene Ersetzungskante `after -> before` kommt direkt aus dem originalen Graphen; das Testprogramm enthält **keinen eigenen Ersatz für `replaces()`**.
+
+Der Test erkennt einen expliziten korrigierten Vergangenheitsfall anhand der **Produktionsmerkmale** `tense` und `correction`. Nur bei vorhandener Ersetzungskante kann das Ergebnis `CORRECTS_EVENT` bzw. `SUPERSEDES_STATE` sein. Fehlende Kanten ergeben `COEXISTS`. Die Klassifikation verwendet das Gold-Label nicht; das Gold-Label wird erst nach der Modellentscheidung für den externen Auswerter beigefügt.
+
+Vor der Ausführung werden die folgenden **originalen Git-Blob-Hashes** verifiziert:
+
+| Datei | Eingefrorener Git-Blob |
+|---|---|
+| Ewm1EvidenceWorkspace.kt | `cb19581af34ad177add22a89638988a74a9c7aad` |
+| Ewm1Lexicon.kt | `8c1e6acd4a7ee2cf632b115550eb7c7d5c801df6` |
+| Ewm1Workspace.kt | `b338a755a161a620405bd3581bf45fb74b1c43fc` |
+| EWM-v2 Fremdholdout | `622370c291ead9ab11ec8917c992037a2fcf9e17` |
+
+Der Prüflauf ist damit auf den **eingefrorenen Kandidaten-Commit** `3ba1ba0bba28e441d2b85ae098371901d3db7407` und die nachweislich unveränderten produktiven Klassen festgelegt.
+
+### Einmalige Ausführung
+
+```bash
+bash scripts/continuum-m6-foreign-eval.sh
+```
+
+Voraussetzungen: Git-Checkout dieses bestehenden PR-Branches, Git, Node.js, Android SDK und eine funktionsfähige Android-Gradle-Umgebung. Das Skript prüft die Holdout-Integrität, löscht nur die **alte erzeugte** Receipt-Datei unter `app/build/reports/ewm-m6/`, führt gezielt `Ewm2Foreign240ReceiptTest` aus und bewertet erst anschließend die erzeugten Belege. Es verwendet keine NVIDIA-/Cloudflare-API und ändert keinen Produktionscode. Die Prüfdaten verbleiben unverändert im Repository.
+
+Die **testseitige Klassifikationsabbildung** (Ersetzungskante plus Vergangenheitsmerkmal) ist als Auswertung des internen EWM-Graphen zu verstehen; sie ersetzt weder die Antwortqualität der Gesamt-App noch die unabhängige Validierung von tatsächlichen Nutzerfragen.
+
+### Abnahmezustand
+
+- Quellcode und echte 240-Fälle-Ausführungshilfe: **COMMITTED**.
+- 15 deterministische Node-Auswertertests: **lokal berichtet als bestanden**.
+- Kotlin-Gradle-Lauf: **NOT_RUN** in dieser Ausführungsumgebung, da hier kein zugänglicher vollständiger Android-Gradle-Build vorhanden ist.
+- Echte Precision/Recall/F1 auf 240 Fällen: **UNKNOWN**, nicht 100 %, nicht geschätzt.
+- Fold7/APK-Release: weiterhin **Jules**, getrennte Arbeit.
+
+Die reine Existenz eines JUnit-Tests ist **kein** Nachweis für einen erfolgreichen Android-Gradle-Test oder einen EWM-Messwert.
