@@ -213,4 +213,17 @@ class GeneralWebDiscoveryProviderTest {
         assertTrue(empty.discover(ResearchQuery("space", "q0")).isEmpty())
         assertFalse(empty.allSearchEndpointsFailed)
     }
+
+    @Test fun incompleteSearchIsNotMistakenForConfirmedZeroResults() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { url ->
+            if (url.contains("bing.com")) "<rss><channel/></rss>"
+            else throw java.io.IOException("secondary temporarily unavailable")
+        })
+        assertTrue(provider.discover(ResearchQuery("Photovoltaik", "q0")).isEmpty())
+        assertFalse(provider.allSearchEndpointsFailed)
+        assertTrue(provider.searchIncomplete)
+        val recovered = GeneralWebDiscoveryProvider(fetchHtml = { "<rss><channel/></rss>" })
+        assertTrue(recovered.discover(ResearchQuery("Photovoltaik", "q0")).isEmpty())
+        assertFalse(recovered.searchIncomplete)
+    }
 }
