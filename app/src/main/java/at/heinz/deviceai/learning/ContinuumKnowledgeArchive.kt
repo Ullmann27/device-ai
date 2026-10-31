@@ -159,6 +159,13 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
     /** Cheap change check for a cached index: hashes the sorted record file names only. */
     fun indexState():String = transaction { stateOf(files().take(MAX_RECORDS)) }
 
+    /** All currently archived source hashes; complements the bounded attempt journal. */
+    fun archivedHashes():Set<String> = transaction {
+        files().take(MAX_RECORDS)
+            .mapNotNull { f -> runCatching { readFile(f).sha256.lowercase(Locale.ROOT) }.getOrNull() }
+            .toSet()
+    }
+
     data class IndexSnapshot(val state:String,val records:List<SourceRecord>)
 
     private fun stateOf(chosen:List<File>):String=digest(chosen.joinToString("\n") { it.name })
