@@ -175,7 +175,9 @@ class BoundedAgentOrchestrator(
     // Trusted caller declares the evaluator's scope; model output cannot set this.
     // Form-only checks may allow a reply but never establish a successful skill example.
     private val evaluationConfirmsOutcome: Boolean = true,
-    private val turnTrace: CognitiveTurnTrace? = null
+    private val turnTrace: CognitiveTurnTrace? = null,
+    // OFF by default: original runtime and tool-policy behavior are unchanged.
+    private val recallPriorExperiences: Boolean = false
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -239,6 +241,10 @@ class BoundedAgentOrchestrator(
             limit = 8,
             nowMillis = startedAt
         ).map { it.memory }
+        // Untrusted, ephemeral hints only; never modify the user task or owner retrieval.
+        val historicalHints = if (recallPriorExperiences) {
+            AgentExperienceRecall.hints(experienceStore as? ExperienceLookup, task, startedAt)
+        } else emptyList()
         val currentRun = runIndex++
         retrieved.forEach { turnTrace?.reference(TraceStage.MEMORY_REF, it.id) }
         var currentReflection: AgentReflection? = null
@@ -272,7 +278,9 @@ class BoundedAgentOrchestrator(
             while (!done) {
                 transition(AgentState.MODEL, "Model response requested.")
                 val modelStarted = clock()
-                chosen = model.generate(task, retrieved, currentReflection, toolObservations.toList())
+                chosen = model.generate(task,
+                    if (historicalHints.isEmpty()) retrieved else retrieved + historicalHints,
+                    currentReflection, toolObservations.toList())
                 modelIds += chosen.modelId
                 transition(AgentState.VALIDATE, "Response and optional proposal validated.")
                 val proposal = chosen.proposal
