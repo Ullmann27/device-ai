@@ -461,13 +461,28 @@ class AgentActivity : Activity() {
                 }
             }
         }, "continuum-offline-bootstrap").apply { isDaemon = true; start() }
-        at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
-        if (!at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()) {
-            addToolActivity("CONTINUUM · Teamleiter-Job konnte nicht geplant werden; lokale manuelle Prüfung bleibt verfügbar")
+        val autonomyLevel = at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this)
+        if (autonomyLevel != at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.PAUSED) {
+            at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
+        }
+        if (at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayPropose(autonomyLevel) &&
+            !at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()) {
+            addToolActivity("CONTINUUM · Teamleiter-Job konnte nicht geplant werden; manuelle Prüfung bleibt verfügbar")
         }
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
-        at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).restore()
+        val publicStudy = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+        if (at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayResearch(autonomyLevel) &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            // On v32 entry, recover from the prior Wikipedia-only stopped schedule.
+            // Subsequent user revocations remain effective until explicitly changed.
+            val startup = getSharedPreferences("continuum-autonomy-v32", MODE_PRIVATE)
+            if (!startup.getBoolean("initial_public_study_migration_done", false)) {
+                if (publicStudy.enable())
+                    startup.edit().putBoolean("initial_public_study_migration_done", true).commit()
+            } else publicStudy.restore()
+        } else if (autonomyLevel == at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.PAUSED)
+            publicStudy.disable()
         recoverDevelopmentBacklog()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
@@ -1934,6 +1949,7 @@ class AgentActivity : Activity() {
             CenterAction("UPDATES PRÜFEN UND LADEN", accent = true) {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
             },
+            CenterAction("AUTONOMIE · STUFE / NOT-STOPP", accent = true) { showAutonomyControl() },
             CenterAction("JARVIS · MISSION CONTROL") {
                 startActivity(Intent(this, ContinuumJarvisMissionControlActivity::class.java))
             },
@@ -5331,10 +5347,16 @@ class AgentActivity : Activity() {
     }
 
     private fun restoreInternetMode() {
-        val stored = getSharedPreferences("continuum-internet", MODE_PRIVATE).getString("mode", "ASK")
-        val restored = runCatching {
-            at.heinz.deviceai.cognitive.InternetAccessMode.valueOf(stored ?: "ASK")
-        }.getOrDefault(at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+        val prefs = getSharedPreferences("continuum-internet", MODE_PRIVATE)
+        val stored = prefs.getString("mode", null)
+        // Owner requested continuous public research by default. An explicit OFF
+        // remains OFF, including after upgrades; no private chat is uploaded.
+        val restored = if (stored == "OFF")
+            at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+        else at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+        if (stored != restored.name) {
+            if (!prefs.edit().putString("mode", restored.name).commit()) return
+        }
         if (internetConsent.mode != restored) internetConsent.setMode(restored)
     }
 
@@ -5348,7 +5370,9 @@ class AgentActivity : Activity() {
         // The owner requested ongoing universal public research while internet
         // is enabled. Revocation also cancels the recurrent source worker.
         val publicStudy = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
-        if (value == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+        if (value == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayResearch(
+                at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this))) {
             if (!publicStudy.enable()) addToolActivity("WEB · Hintergrundforschung konnte nicht geplant werden")
         } else {
             publicStudy.disable()
@@ -5356,6 +5380,49 @@ class AgentActivity : Activity() {
         researchArmed = false
         updateCloudBadge()
         addToolActivity("WEB · Internetmodus " + value.name)
+    }
+
+    private fun showAutonomyControl() {
+        val control = at.heinz.deviceai.cognitive.ContinuumAutonomyControl
+        val levels = at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.entries
+        val current = control.level(this)
+        val labels = arrayOf(
+            "NOT-STOPP · alle autonomen Forschungs-/Agentenzyklen anhalten",
+            "FORSCHUNG · öffentliche Webquellen und geprüfte Lernkandidaten",
+            "FORSCHUNG + VORSCHLÄGE · begrenzter autonomer Teamleiter"
+        )
+        android.app.AlertDialog.Builder(this)
+            .setTitle("CONTINUUM · AUTONOMIEKONTROLLE")
+            .setMessage(control.explain(current) +
+                "\\n\\nRechenlast, Fehler und Temperatur begrenzen weiterhin jeden Zyklus. " +
+                "Internetquellen dürfen keine Berechtigungen ausweiten, Code ausführen oder eigenständig Agenten installieren. " +
+                "Für produktive Patches, Installationen und zusätzliche Rechte bleibt deine ausdrückliche Freigabe notwendig.")
+            .setSingleChoiceItems(labels, levels.indexOf(current)) { dialog, index ->
+                dialog.dismiss()
+                val chosen = levels[index]
+                if (!control.setLevel(this, chosen)) {
+                    addAssistantMessage("Autonomiestufe konnte nicht dauerhaft gespeichert werden.")
+                    return@setSingleChoiceItems
+                }
+                val jobs = getSystemService(android.app.job.JobScheduler::class.java)
+                if (chosen == at.heinz.deviceai.cognitive.ContinuumAutonomyLevel.PAUSED) {
+                    at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).disable()
+                    jobs.cancel(at.heinz.deviceai.learning.ContinuumAutonomousScheduler.JOB_ID)
+                    jobs.cancel(at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler.JOB_ID)
+                    webToolGate.cancel()
+                    activeWebResearchSession?.cancel()
+                } else {
+                    at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
+                    if (control.mayPropose(chosen))
+                        at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()
+                    else jobs.cancel(at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler.JOB_ID)
+                    if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+                        at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).enable()
+                }
+                addAssistantMessage("Autonomie: " + chosen.name + ". " + control.explain(chosen))
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
     }
 
     private fun showInternetSettings() {
