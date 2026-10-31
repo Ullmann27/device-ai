@@ -5,6 +5,7 @@ import at.heinz.deviceai.learning.KnowledgeSyntax
 import at.heinz.deviceai.learning.StructuredKnowledge
 import at.heinz.deviceai.learning.OnlineNaiveBayes
 import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.cognitive.ConversationResearchIntent
 
 /** Initial deterministic cognition. Never present these rules as an LLM. */
 enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL, TRAIN, REVISE }
@@ -119,6 +120,10 @@ object BootstrapBrain {
         )
         fun tool(name: String, args: Map<String, Any?> = emptyMap()): BootstrapDecision =
             BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name, arguments = args)
+        // Explicit offline requests must never become web/device commands from
+        // substring matches such as 'internet' or 'speicher' in 'speichern'.
+        if (ConversationResearchIntent.forbidsWeb(text))
+            return BootstrapDecision(BootstrapKind.REPLY, allowNeuralRecall = true)
         BootstrapTraining.resolve(text, learnedCommands)?.let { name ->
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
@@ -131,7 +136,8 @@ object BootstrapBrain {
             mapOf("path" to "/sdcard/Download"))
         if ("akku" in low || "batterie" in low || "ladezustand" in low)
             return tool("get_battery_info")
-        if ("speicher" in low || "große dateien" in low) return tool("get_storage_info")
+        if (Regex("""\bspeicher\b|\bspeicherplatz\b""").containsMatchIn(low) || "große dateien" in low)
+            return tool("get_storage_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
         if ("netzwerk" in low || "internetverbindung" in low) return tool("get_network_summary")
