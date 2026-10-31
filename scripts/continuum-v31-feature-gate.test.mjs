@@ -16,7 +16,7 @@ test('the consolidated v35 source tree retains original owner package and signat
   assert.match(release,/versionCode: 35/);
   assert.match(qa,/continuumStandaloneVersionCode=35/);
   assert.match(qa,/:app:bundleRelease/);
-  assert.match(source('app/build.gradle.kts'),/setOf\\(\"assembleRelease\", \"bundleRelease\"\\)/);
+  assert.match(source('app/build.gradle.kts'),/setOf\(\"assembleRelease\", \"bundleRelease\"\)/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
 });
 
