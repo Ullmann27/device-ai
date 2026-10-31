@@ -119,6 +119,9 @@ internal object ContinuumOpenWebStudyFetch {
                     .take(12)
                 source to mergedTopics
             }
+            // Cancellation can happen while the reader is running. Do not convert
+            // that interruption into a permanent unavailable-source result.
+            checkActive()
             if (attempt.isSuccess) {
                 val (source, mergedTopics) = attempt.getOrThrow()
                 if (source.sha.lowercase() !in completedShas) {
