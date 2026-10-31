@@ -88,3 +88,19 @@ test('additive schema migration is idempotent and preserves old rows',()=>{
  const f=fixture();f.sqlite.exec("INSERT INTO jarvis_cron_log(cron_time,action) VALUES('past','legacy')");
  f.sqlite.exec(schema);assert.equal(f.rows('SELECT * FROM jarvis_cron_log').length,1);
 });
+
+
+test('RED/GREEN: owner disables after enqueue; queued message must not call NVIDIA',async()=>{
+ const f=fixture();await f.tick();assert.equal(f.queueItems.length,1);
+ f.sqlite.exec("UPDATE continuum_nvidia_control SET state='disabled' WHERE id=1");
+ await f.consume();
+ assert.equal(f.callCount(),0);
+ assert.equal(records(f)[0].status,'queued');
+});
+test('RED/GREEN: cooldown introduced after enqueue blocks already queued NVIDIA request',async()=>{
+ const f=fixture();await f.tick();assert.equal(f.queueItems.length,1);
+ f.sqlite.exec('UPDATE continuum_nvidia_control SET blocked_until_ms=9999999999999 WHERE id=1');
+ await f.consume();
+ assert.equal(f.callCount(),0);
+ assert.equal(records(f)[0].status,'queued');
+});
