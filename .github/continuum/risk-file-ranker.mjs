@@ -57,13 +57,17 @@ export function scanDefensiveSinks(file,source,{maxFindings=24,maxBytes=64*1024}
  const bytes=Buffer.byteLength(source,'utf8');
  if(bytes>maxBytes)return {path:file,status:'TOO_LARGE',findings:[]};
  const findings=[];
+ let unscannedLongLines=0;
  for(const [index,line] of source.split('\n').entries()){
-  if(line.length>1200)continue;
+  // Long lines are not scanned. Never present an incomplete scan as clean.
+  if(line.length>1200){unscannedLongLines++;continue;}
   for(const rule of RULES){
    if(!rule.matcher.test(line))continue;
    findings.push({line:index+1,rule:rule.id,severity:rule.severity});
    if(findings.length===maxFindings)return {path:file,status:'TRUNCATED',findings};
   }
  }
- return {path:file,status:'REVIEW_CANDIDATES_ONLY',findings};
+ return unscannedLongLines
+  ? {path:file,status:'PARTIAL_LINE_LIMIT',unscannedLongLines,findings}
+  : {path:file,status:'REVIEW_CANDIDATES_ONLY',findings};
 }
