@@ -41,7 +41,9 @@ version_name="0.3.$((version - 1))"
 
 # Refuse to run the existing QA if source is different from the signed build.
 # Full test/lint and release compile share one precise checked-out source.
-bash scripts/render-continuum-m8-qa.sh ||
+env -u CONTINUUM_LOCAL_SIGNING_P12_BASE64 \
+  -u CONTINUUM_LOCAL_SIGNING_PASSWORD \
+  bash scripts/render-continuum-m8-qa.sh ||
   fail 'Node, Android unit tests, lint or unsigned QA build failed'
 [[ "$(git rev-parse --verify HEAD)" == "$sha" ]] || fail 'HEAD changed during QA'
 workspace="$root/.continuum-render-build"
