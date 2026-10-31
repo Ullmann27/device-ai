@@ -43,9 +43,12 @@ class ReviewedEvidenceGraph(relations: List<Relation>) {
                 container.isNotBlank() && container.length <= 80)
             require(subject.none(Char::isISOControl) && container.none(Char::isISOControl))
             require(subjectLevel.ordinal < containerLevel.ordinal) { "INVALID_RELATION_LEVEL" }
-            val quote = evidence.quotation.lowercase(Locale.ROOT)
-            require(subject.lowercase(Locale.ROOT) in quote &&
-                container.lowercase(Locale.ROOT) in quote) { "EVIDENCE_DOES_NOT_MENTION_BOTH_ENTITIES" }
+            val quote = evidence.quotation
+            require(mentionsCompleteEntity(quote, subject) &&
+                mentionsCompleteEntity(quote, container)) { "EVIDENCE_DOES_NOT_MENTION_BOTH_ENTITIES" }
+            // A reviewed flag does not turn an explicitly negative statement into
+            // positive containment evidence. Abstain rather than infer the opposite.
+            require(!negatedContainment.containsMatchIn(quote)) { "NEGATED_RELATION_EVIDENCE" }
         }
     }
 
@@ -129,6 +132,13 @@ class ReviewedEvidenceGraph(relations: List<Relation>) {
     }
 
     companion object {
+        private val negatedContainment = Regex(
+            """(?iu)\b(?:nicht\s+(?:in|im|innerhalb|bei|zu)|not\s+(?:in|within|part\s+of)|does\s+not\s+belong\s+to|kein(?:e|en|es|er)?\s+teil\s+von)\b"""
+        )
+        private fun mentionsCompleteEntity(quote: String, entity: String): Boolean =
+            Regex("""(?iu)(?<![\p{L}\p{N}])""" + Regex.escape(entity) +
+                """(?![\p{L}\p{N}])""").containsMatchIn(quote)
+
         fun digest(value: String): String =
             MessageDigest.getInstance("SHA-256")
                 .digest(value.toByteArray(Charsets.UTF_8))

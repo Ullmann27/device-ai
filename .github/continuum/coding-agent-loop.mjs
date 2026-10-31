@@ -16,6 +16,7 @@ import {spawnSync} from 'node:child_process';
 import {validateCodingTask,validateCodingProposal,isCodingPath} from './coding-task.mjs';
 import {runProfile,boundedWorktreeFile,CHAINS} from './repair-loop.mjs';
 import {isLocalNumericPatch} from './local-numeric-patch.mjs';
+import {rankFilesByRisk,scanDefensiveSinks} from './risk-file-ranker.mjs';
 
 const sha256=text=>createHash('sha256').update(text).digest('hex');
 const fail=code=>{const error=Error(code);error.code=code;throw error;};
@@ -27,6 +28,8 @@ export const AGENT_LIMITS=Object.freeze({maxSteps:24,maxObservationChars:6000,ma
 export const AGENT_TOOLS=Object.freeze([
   {name:'list_files',args:{dir:'directory prefix, e.g. "lib" or ".github/continuum"'},about:'Tracked files below a directory at the task commit.'},
   {name:'search',args:{pattern:'POSIX extended regular expression',path:'optional directory or file prefix'},about:'git grep over tracked text files at the task commit; prints file:line: text.'},
+  {name:'rank_files',args:{},about:'Prioritize tracked source files by task relevance and defensive risk class, without revealing source.'},
+  {name:'scan_sinks',args:{path:'readable tracked source file'},about:'Defensive review hints: line numbers and rule IDs only; not verified vulnerabilities.'},
   {name:'read_file',args:{path:'tracked file',start_line:'optional 1-based line',end_line:'optional last line'},about:'Numbered lines; an allowed file shows your current edits.'},
   {name:'edit_file',args:{path:'one of the allowed files',old_text:'exact text that occurs once',new_text:'replacement'},about:'Replace exactly one occurrence. Re-read the file when unsure.'},
   {name:'check',args:{},about:'Syntax check of the edited JavaScript files and the size of the current change.'},
@@ -42,7 +45,7 @@ export const ACTION_SCHEMA=Object.freeze({type:'object',additionalProperties:fal
 export const AGENT_SYSTEM_PROMPT=[
   'You are the Continuum coding worker. You change code only through tools and only in the allowed files.',
   'Work like a careful senior developer:',
-  '1. Find the relevant code first: search for the names in the goal and in the failing tests, list directories, read the test and the source.',
+  '1. Prioritize code with rank_files, search and scan_sinks, then read tests and source. Sink matches are review hints, not verified vulnerabilities.',
   '2. Form a hypothesis about the root cause before editing. Never guess file contents: read them.',
   '3. Make the smallest correct edit with edit_file; old_text must be copied exactly from read_file output (without the line-number prefix) and occur once.',
   '4. Run check, and run_tests when it is available; read failures and correct your edit.',
@@ -193,7 +196,7 @@ function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTest
     const tracked=(git(wt,['ls-tree','-r','--name-only','-z',base],{timeoutMs:30000})??fail('CODING_CONTEXT_DEADLINE')).split('\0').filter(Boolean);
     const trackedSet=new Set(tracked);
     const baseText=new Map(),overlay=new Map(),ranges=[],observations=[],steps=[];
-    let readChars=0,testRuns=0,invalid=0,brainCalls=0;
+    let readChars=0,testRuns=0,invalid=0,brainCalls=0,scanCalls=0;
     const original=file=>{
       if(!baseText.has(file)){
         const size=Number(git(wt,['cat-file','-s',`${base}:${file}`]));
@@ -209,6 +212,33 @@ function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTest
         if(prefix&&!isReadablePath(prefix+'/x.md')&&prefix!=='.github/continuum')return 'Directory not readable.';
         const files=tracked.filter(f=>(!prefix||f.startsWith(prefix+'/'))&&isReadablePath(f));
         return files.length?clip(files.slice(0,L.maxListEntries).join('\n')+(files.length>L.maxListEntries?`\n[${files.length-L.maxListEntries} more]`:''),L.maxObservationChars):'No readable tracked files there.';
+      },
+      rank_files:()=>{
+        const ranked=rankFilesByRisk(tracked.filter(isReadablePath),{
+          goal:spec?.goal??intro??'',maxResults:Math.min(25,L.maxListEntries)
+        });
+        return ranked.length?ranked.map(r=>
+          `${r.score}\t${r.path}\t${r.reasons.join(',')||'no-known-signal'}`).join('\n'):
+          'No relevant readable tracked source files.';
+      },
+      scan_sinks:({path:file})=>{
+        if(!isReadablePath(file)||!trackedSet.has(file))return 'Not a readable tracked file.';
+        if(scanCalls++>=4)return 'Defensive scan budget exhausted.';
+        const source=current(file);
+        if(typeof source!=='string')return 'File too large to scan.';
+        const r=scanDefensiveSinks(file,source);
+        const findings=r.findings.map(x=>
+          `${file}:${x.line}\t${x.rule}\tseverity=${x.severity}`).join('\n');
+        const incompleteness=r.status==='PARTIAL_LINE_LIMIT'
+          ? `SCAN INCOMPLETE: ${r.unscannedLongLines} overlong line(s) were not scanned; manual review required.`
+          : r.status==='TOO_LARGE'
+            ? 'SCAN INCOMPLETE: source exceeds the scan budget; manual review required.'
+            : r.status==='TRUNCATED'
+              ? 'SCAN INCOMPLETE: finding limit reached; manual review required.'
+              : '';
+        return (findings||'No matched defensive patterns')+
+          `\n(${r.status}; matches are review candidates, not verified vulnerabilities)`+
+          (incompleteness?'\n'+incompleteness:'');
       },
       search:({pattern,path:prefix=''})=>{
         if(typeof pattern!=='string'||!pattern||pattern.length>L.maxPatternChars||/[\x00-\x1f]/.test(pattern))return 'Invalid pattern (1-200 printable characters).';
@@ -280,7 +310,7 @@ function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTest
       history.length?'Earlier attempts on this task (all failed or were rejected):\n'+history.slice(-3).map(h=>`- ${h.outcome}: ${String(h.diagnostic??'').slice(0,400)}`).join('\n'):''
     ].filter(Boolean).join('\n\n');
     const messages=[{role:'user',content:intro}];
-    const toolNames=scout?new Set(['list_files','search','read_file','propose_scope']):TOOL_NAMES;
+    const toolNames=scout?new Set(['list_files','search','rank_files','scan_sinks','read_file','propose_scope']):TOOL_NAMES;
     for(let step=1;step<=L.maxSteps;step++){
       if(now()>=deadline)fail('CODING_DEADLINE_EXHAUSTED');
       brainCalls++;
@@ -292,7 +322,7 @@ function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTest
       const known=!valid&&action&&typeof action==='object'&&TOOL_NAMES.has(action.tool);
       const named=valid||known?action.tool:'INVALID';
       if(known){
-        observation=`${action.tool} is not available in this phase${scout?' (read-only survey): use list_files, search, read_file and propose_scope':''}.`;
+        observation=`${action.tool} is not available in this phase${scout?' (read-only survey): use list_files, rank_files, scan_sinks, search, read_file and propose_scope':''}.`;
       }else if(!valid){
         if(++invalid>=L.maxInvalidReplies)fail('CODING_RESPONSE_INVALID');
         observation='Invalid reply. Answer with one JSON object {"thought":"...","tool":"<name>","args":{...}}.';
@@ -377,7 +407,7 @@ export function scoutRequest({wt,base,request,brain,limits={},deadline=Date.now(
   if(typeof request!=='string'||!request.trim()||request.length>600)fail('CODING_TASK_INVALID');
   const record=entry=>{if(!evidenceDir)return;fs.mkdirSync(evidenceDir,{recursive:true,mode:0o700});
     fs.appendFileSync(path.join(evidenceDir,'agent-scout.jsonl'),JSON.stringify(entry)+'\n',{mode:0o600});};
-  const intro=`Owner request: ${request.trim()}\n\nSurvey the repository at commit ${base.slice(0,12)} with list_files, search and read_file. `+
+  const intro=`Owner request: ${request.trim()}\n\nSurvey the repository at commit ${base.slice(0,12)} with rank_files, scan_sinks, list_files, search and read_file. `+
     'Find the code that must change and how it is tested, then call propose_scope with the files to change and checkable acceptance criteria. '+
     'You cannot edit anything in this phase.';
   return agentRun({wt,base,deadline,spec:null,brain,L:{...AGENT_LIMITS,...limits},onStep,record,intro,scout:true});

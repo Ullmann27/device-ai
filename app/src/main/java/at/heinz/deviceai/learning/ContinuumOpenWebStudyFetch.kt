@@ -82,8 +82,8 @@ internal object ContinuumOpenWebStudyFetch {
         require(ContinuumPublicStudyPolicy.validArticleTitle(topic))
         fun checkActive() { check(!cancelled()) { "WEB_STUDY_CANCELLED" } }
         checkActive()
-        val rawCandidates = discoveryFactory(::checkActive)
-            .discover(ResearchQuery(topic, "q0"))
+        val discovery = discoveryFactory(::checkActive)
+        val rawCandidates = discovery.discover(ResearchQuery(topic, "q0"))
         val discoveredTitles = extractTopicsFromCandidates(rawCandidates, topic)
         val candidates = rawCandidates
             .asSequence()
@@ -91,7 +91,14 @@ internal object ContinuumOpenWebStudyFetch {
             .distinctBy { ResearchUrlCanonicalizer.canonicalize(it.url) }
             .take(12)
             .toList()
-        if (candidates.isEmpty()) throw WikimediaSourceUnavailable("NO_PUBLIC_WEB_RESULTS")
+        if (candidates.isEmpty()) {
+            // A partial or full provider outage must not permanently retire a research topic.
+            // Genuine empty responses are still classified as no public results.
+            if (discovery is GeneralWebDiscoveryProvider && discovery.searchIncomplete) {
+                throw IOException("WEB_GENERAL_SEARCH_UNAVAILABLE")
+            }
+            throw WikimediaSourceUnavailable("NO_PUBLIC_WEB_RESULTS")
+        }
         val reader = readerFactory(::checkActive)
         var fallbackKnownSource: MentorSource? = null
         var fallbackTopics: List<String> = discoveredTitles

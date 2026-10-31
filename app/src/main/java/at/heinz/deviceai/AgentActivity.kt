@@ -2053,6 +2053,7 @@ class AgentActivity : Activity() {
         append("Werkzeugquittungen: ").append(runCatching { receiptStore.all().size }
             .fold({ "$it gespeichert" }, { "ungültig, Geräteaktionen gesperrt" })).append("\n\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
+        append("\n\n").append(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this@AgentActivity).display())
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("\n\nAUTO-ÜBEN: ").append(if (practice.enabled) "AN · " + practice.lastStatus.take(120) else "AUS")
     }

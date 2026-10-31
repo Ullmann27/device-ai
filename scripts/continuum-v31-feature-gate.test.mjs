@@ -7,14 +7,16 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const source=file=>fs.readFileSync(path.join(root,file),'utf8');
 
-test('the consolidated v34 source tree retains original owner package and signature',()=>{
+test('the consolidated v35 source tree retains original owner package and signature',()=>{
   const gradle=source('app/build.gradle.kts');
   const release=source('scripts/render-continuum-m8-owner-release.sh');
   const qa=source('scripts/render-continuum-m8-qa.sh');
   assert.match(gradle,/at\.heinz\.deviceai\.continuumlocal/);
-  assert.match(release,/\[\[ "\$version" == "34" \]\]/);
-  assert.match(release,/versionCode: 34/);
-  assert.match(qa,/continuumStandaloneVersionCode=34/);
+  assert.match(release,/\[\[ "\$version" == "35" \]\]/);
+  assert.match(release,/versionCode: 35/);
+  assert.match(qa,/continuumStandaloneVersionCode=35/);
+  assert.match(qa,/:app:bundleRelease/);
+  assert.match(source('app/build.gradle.kts'),/setOf\(\"assembleRelease\", \"bundleRelease\"\)/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
 });
 
@@ -25,6 +27,19 @@ test('the actual Android main app keeps a visible update button and original own
   assert.match(activity,/ContinuumOwnerUpdateActivity::class\.java/);
   assert.match(updater,/Updates prüfen und laden/);
   assert.match(updater,/downloadAndInstall/);
+});
+
+test('M8 coding worker actually exposes bounded defensive read-only risk inspection',()=>{
+  const worker=source('.github/continuum/coding-agent-loop.mjs');
+  const ranker=source('.github/continuum/risk-file-ranker.mjs');
+  const qa=source('scripts/render-continuum-m8-qa.sh');
+  assert.match(worker,/rankFilesByRisk,scanDefensiveSinks/);
+  assert.match(worker,/rank_files:\(\)=>/);
+  assert.match(worker,/scan_sinks:\(\{path:file\}\)=>/);
+  assert.match(worker,/scanCalls\+\+>=4/);
+  assert.match(ranker,/readableAuditPath/);
+  assert.match(qa,/coding-agent-risk-tools\.test\.mjs/);
+  assert.match(qa,/risk-file-ranker\.test\.mjs/);
 });
 
 test('M8 agent and execution controls are actually in the same release tree',()=>{
@@ -85,7 +100,7 @@ test('new metadata type safety and published APK hash readback are in the source
 });
 
 
-test('v34 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
+test('v35 general-web study is connected to durable novelty, provenance and real scheduler',()=>{
   const fetch=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetch.kt');
   const scheduler=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
   const archive=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt');
@@ -102,7 +117,7 @@ test('v34 general-web study is connected to durable novelty, provenance and real
   assert.match(memory,/LearningProvenance\.PUBLIC_WEB_SOURCE/);
   assert.match(cognitive,/Cre1PromotionGate\.rerank\(/);
 });
-test('v34 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
+test('v35 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired',()=>{
   const mission=source('app/src/main/java/at/heinz/deviceai/ContinuumJarvisMissionControlActivity.kt');
   const research=source('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
   const proof=source('app/src/main/java/at/heinz/deviceai/research/neuro/ReviewedEvidenceGraph.kt');
@@ -115,7 +130,7 @@ test('v34 on-device research counters, owner updater and bounded reviewed neural
 });
 
 
-test('v34 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
+test('v35 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
   const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
   const client=source('app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt');
   const api=source('backend/src/groq-mentor.js');
@@ -129,4 +144,16 @@ test('v34 OpenRouter provides both explicit Android paths and the protected opti
   assert.match(server,/OPENROUTER_MENTOR_ENABLED/);
   assert.match(server,/mentorAuth/);
   assert.match(checks,/OpenRouter stays off without secret or explicit enablement/);
+});
+
+test('v35 exposes the real public-study job state and never labels consent as active research',()=>{
+  const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+  const dashboard=source('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
+  assert.match(app,/append\("\\n\\n"\)\.append\(at\.heinz\.deviceai\.learning\.ContinuumPublicStudyScheduler\(this@AgentActivity\)\.display\(\)\)/);
+  assert.match(dashboard,/getPendingJob\(ContinuumPublicStudyScheduler\.JOB_ID\)/);
+  assert.match(dashboard,/publicStudyScheduled = publicStudy && publicInternetGranted/);
+  assert.match(dashboard,/publicJobRegistered && !publicProviderPaused/);
+  assert.match(dashboard,/Webforschung: Job nicht registriert/);
+  assert.match(dashboard,/Webforschung: Anbieterpause/);
+  assert.doesNotMatch(dashboard,/Öffentliches Lernen aktiv/);
 });

@@ -192,5 +192,38 @@ class GeneralWebDiscoveryProviderTest {
         }
     }
 
-}
 
+    @Test fun bothSearchTransportsFailingIsDistinctFromGenuinelyEmptySearchResults() {
+        var offline = true
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = {
+            if (offline) throw java.io.IOException("search network offline")
+            """<rss><channel><item><title>NASA space research</title>
+                <link>https://www.nasa.gov/science/</link></item></channel></rss>"""
+        })
+        assertTrue(provider.discover(ResearchQuery("space", "q0")).isEmpty())
+        assertTrue(provider.allSearchEndpointsFailed)
+        assertFalse(provider.isGeneralSearchAvailable)
+
+        offline = false
+        assertEquals(1, provider.discover(ResearchQuery("space", "q0")).size)
+        assertFalse(provider.allSearchEndpointsFailed)
+        assertTrue(provider.isGeneralSearchAvailable)
+
+        val empty = GeneralWebDiscoveryProvider(fetchHtml = { "<rss><channel/></rss>" })
+        assertTrue(empty.discover(ResearchQuery("space", "q0")).isEmpty())
+        assertFalse(empty.allSearchEndpointsFailed)
+    }
+
+    @Test fun incompleteSearchIsNotMistakenForConfirmedZeroResults() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { url ->
+            if (url.contains("bing.com")) "<rss><channel/></rss>"
+            else throw java.io.IOException("secondary temporarily unavailable")
+        })
+        assertTrue(provider.discover(ResearchQuery("Photovoltaik", "q0")).isEmpty())
+        assertFalse(provider.allSearchEndpointsFailed)
+        assertTrue(provider.searchIncomplete)
+        val recovered = GeneralWebDiscoveryProvider(fetchHtml = { "<rss><channel/></rss>" })
+        assertTrue(recovered.discover(ResearchQuery("Photovoltaik", "q0")).isEmpty())
+        assertFalse(recovered.searchIncomplete)
+    }
+}
