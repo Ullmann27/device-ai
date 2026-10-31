@@ -41,7 +41,7 @@ test('GitHub API uses only dedicated ledger path, atomic SHA and no secret persi
    json(200,{sha:'a'.repeat(40),encoding:'base64',content:Buffer.from(JSON.stringify(blank())).toString('base64')}):
    json(200,{commit:{sha:'b'.repeat(40)}});
  };
- const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'110',
+ const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'110',
   nowMs:at('00:07:00'),fetchImpl});
  assert.equal(x.allowed,true);assert.equal(calls.length,2);assert.equal(calls[1].opts.method,'PUT');
  const body=JSON.parse(calls[1].opts.body);
@@ -57,7 +57,7 @@ test('GitHub quota ledger write denied -> zero authorized cloud calls',async()=>
    json(200,{sha:'a'.repeat(40),encoding:'base64',content:Buffer.from(JSON.stringify(blank())).toString('base64')}):
    json(403,{message:'forbidden'});
  };
- await assert.rejects(reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'110',
+ await assert.rejects(reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'110',
   nowMs:at('00:07:00'),fetchImpl}),/GITHUB_LEDGER_HTTP_403/);
  assert.equal(count,2);
 });
@@ -66,7 +66,7 @@ test('during cooldown the runner cannot write or contact NVIDIA',async()=>{
  let puts=0;
  const fetchImpl=async(_u,o)=>{if(o.method==='PUT')puts++;return json(200,{sha:'a'.repeat(40),
   encoding:'base64',content:Buffer.from(JSON.stringify(ledger)).toString('base64')});};
- const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,runId:'102',
+ const x=await reserveGithubBudget({repoFull:'Ullmann27/device-ai',token,ownerConsent:OWNER_CONSENT,runId:'102',
   nowMs:at('00:17:00'),fetchImpl});
  assert.equal(x.allowed,false);assert.equal(x.reason,'COOLDOWN');assert.equal(puts,0);
 });
@@ -167,4 +167,16 @@ test('RED: valid NVIDIA key without explicit owner grant makes no ledger or mode
  }
  assert.equal(githubCalls,0);
  assert.equal(modelCalls,0);
+});
+
+test('RED: reservation requires runtime owner consent before contacting GitHub',async()=>{
+ let githubCalls=0;
+ const fetchImpl=async()=>{githubCalls++;throw Error('UNEXPECTED_GITHUB_CALL');};
+ const args={repoFull:'Ullmann27/device-ai',token,runId:'110',
+  nowMs:at('00:07:00'),fetchImpl};
+ for(const ownerConsent of [undefined,null,'',OWNER_CONSENT+' ']){
+  await assert.rejects(reserveGithubBudget({...args,ownerConsent}),
+   /NVIDIA_OWNER_CONSENT_REQUIRED/);
+ }
+ assert.equal(githubCalls,0);
 });
