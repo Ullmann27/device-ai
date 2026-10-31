@@ -14,7 +14,6 @@ untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts
 [[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
 case "$(git branch --show-current)" in \
   research/continuum-m8-operational-model-20261031|\
-  release/continuum-local-complete-v31-20261031|\
   release/continuum-local-complete-v31-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
@@ -79,6 +78,11 @@ node --test scripts/render-continuum-m8-owner-release.test.mjs \
   > continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt >&2
   die 'Latest release contract tests failed'
+}
+# New independent branches integrated for this exact Android release candidate.
+node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs   > continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt >&2
+  die 'JARVIS cockpit or HTTPS published-APK readback tests failed'
 }
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
 gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=31   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
