@@ -1,0 +1,29 @@
+# EXAMPLE ONLY - DO NOT DEPLOY without backing up the current production worker.
+name = "continuum-jarvis-scheduler"
+main = "./worker.mjs"
+compatibility_date = "2026-10-01"
+
+[vars]
+NVIDIA_ENABLED = "false"
+NVIDIA_MAX_CALLS_24H = "48"
+NVIDIA_MAX_RESERVED_TOKENS_24H = "400000"
+NVIDIA_MAX_TOKENS_PER_CALL = "4096"
+
+[triggers]
+crons = ["*/10 * * * *"]
+
+# Preserve the existing production DB binding:
+# DB -> continuum-jarvis-memory
+# The actual D1 database identifier belongs only in the operator's local config.
+# Required: [[d1_databases]] with binding=DB, database_name and database_id.
+
+[[queues.producers]]
+binding = "RESEARCH_QUEUE"
+queue = "continuum-nvidia-research"
+
+[[queues.consumers]]
+queue = "continuum-nvidia-research"
+max_batch_size = 1
+max_batch_timeout = 1
+max_concurrency = 1
+max_retries = 0
