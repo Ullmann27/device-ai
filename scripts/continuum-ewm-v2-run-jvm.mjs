@@ -39,7 +39,14 @@ export function observationsToReceipts(stdout,gold,candidateSha=CANDIDATE_SHA){
   expect(positive==='0'||positive==='1','JVM_INVALID_EDGE');
   for(const flag of [before,after,unrelated])expect(flag==='true'||flag==='false','JVM_INVALID_STATE_FLAG');
   const reasons=Buffer.from(reasonB64,'base64').toString('utf8');
-  expect(reasons.startsWith('PRODUCTION_GRAPH:')&&reasons.length<=1000,'JVM_INVALID_REASON');
+  const parts=/^PRODUCTION_GRAPH:edges_from_after=((?:before|unrelated)(?:,(?:before|unrelated))*)?;replaces_before=(true|false)$/.exec(reasons);
+  expect(parts!==null,'JVM_INVALID_REASON');
+  const edgeSet=new Set((parts[1]||'').split(',').filter(Boolean));
+  expect((positive==='1')===(parts[2]==='true') && (positive==='1')===edgeSet.has('before'),
+    'JVM_EDGE_REASON_MISMATCH');
+  expect((before==='false')===(positive==='1'),'JVM_BEFORE_STATE_EDGE_CONFLICT');
+  expect(after==='true','JVM_AFTER_NOT_CURRENT');
+  expect(unrelated==='false'||!edgeSet.has('unrelated'),'JVM_UNRELATED_STATE_CONFLICT');
   receipts.push({
    id,candidate_sha:candidateSha,expected_label:row.expected,
    // Production graph decides only whether a fact is superseded, NOT the event/state subtype.
