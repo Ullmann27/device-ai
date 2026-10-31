@@ -208,6 +208,36 @@ class ContinuumOpenWebStudyFetchTest {
     }
 
     @Test
+    fun cancellationDuringFailedReaderDoesNotRetireTheTopic() {
+        var stopped = false
+        val discovery = object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = true
+            override fun discover(query: ResearchQuery) = listOf(
+                ResearchSourceCandidate("https://uni.example.org/physik", "Physik – Forschung")
+            )
+        }
+        val reader = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult {
+                stopped = true
+                throw IOException("request stopped")
+            }
+        }
+        val error = try {
+            ContinuumOpenWebStudyFetch.acquire(
+                topic = "Physik",
+                cancelled = { stopped },
+                discoveryFactory = { discovery },
+                readerFactory = { reader }
+            )
+            fail("Expected cancellation")
+            null
+        } catch (e: IllegalStateException) {
+            e
+        }!!
+        assertTrue(error.message.orEmpty().contains("WEB_STUDY_CANCELLED"))
+    }
+
+    @Test
     fun transportFailureRemainsNetworkFailureAndDoesNotMarkTopicCompleted() {
         val discovery = object : ResearchDiscoveryProvider {
             override val isGeneralSearchAvailable = true
