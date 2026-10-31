@@ -97,3 +97,21 @@ test('JVM accepts a valid non-edge from same pinned production graph',()=>{
  assert.equal(r[2].predicted_label,'COEXISTS');
  assert.equal(r[2].before_current,true);
 });
+
+test('JVM rejects non-canonical base64 receipts that Node would otherwise decode',()=>{
+ const lines=normal().trimEnd().split('\n');
+ const fields=lines[0].split('\t');
+ const canonical=fields[5];
+ for(const corrupted of [
+  canonical.slice(0,10)+'!'+canonical.slice(10),
+  canonical+' ',
+  canonical.slice(0,-1)
+ ]){
+  // These variants decode to the same valid reason under permissive Node Buffer.from.
+  assert.equal(Buffer.from(corrupted,'base64').toString('utf8'),
+   Buffer.from(canonical,'base64').toString('utf8'));
+  const copy=[...lines];copy[0]=[...fields.slice(0,5),corrupted].join('\t');
+  assert.throws(()=>observationsToReceipts(copy.join('\n')+'\n',gold),
+   /JVM_INVALID_REASON_BASE64/);
+ }
+});
