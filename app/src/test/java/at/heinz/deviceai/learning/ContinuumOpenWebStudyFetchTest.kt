@@ -11,6 +11,7 @@ import at.heinz.deviceai.cognitive.ResearchSourceCandidate
 import at.heinz.deviceai.cognitive.SourceIdentity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
