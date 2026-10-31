@@ -38,6 +38,23 @@ class ConversationResearchIntentTest {
         assertNotNull(PublicKnowledgeTopicRouter.topic("Wer ist Albert Einstein?"))
     }
 
+    @Test fun longMessagesCannotBypassExplicitOfflineIntent() {
+        val padding = "A".repeat(3_000)
+        val suffixOptOut = padding + " Antworte ohne Internetrecherche."
+        val prefixOptOut = "Bitte keine Websuche. " + padding
+        val middleOptOut = "A".repeat(1_500) + " Ohne Internet. " + "B".repeat(1_500)
+        listOf(suffixOptOut, prefixOptOut, middleOptOut).forEach { message ->
+            assertTrue(message, ConversationResearchIntent.forbidsWeb(message))
+            assertNull(message, PublicKnowledgeTopicRouter.topic(message))
+            assertEquals(BootstrapKind.REPLY, BootstrapBrain.decide(message, emptyList()).kind)
+        }
+        // Long input alone is not a negation; do not break explicit web intent.
+        assertFalse(ConversationResearchIntent.forbidsWeb(padding + " Suche im Internet"))
+        // Very large inputs are deliberately fail-closed rather than silently
+        // authorizing web access when a negation might be outside the scan.
+        assertTrue(ConversationResearchIntent.forbidsWeb("Suche im Internet " + "A".repeat(65_537)))
+    }
+
     @Test fun positiveResearchRequestsRemainPossible() {
         val examples = listOf(
             "Suche im Internet",
