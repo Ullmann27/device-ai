@@ -113,3 +113,20 @@ test('v34 on-device research counters, owner updater and bounded reviewed neural
   assert.match(proof,/answerAuthority: Boolean = false/);
   assert.match(proof,/mutatesMemory: Boolean = false/);
 });
+
+
+test('v34 OpenRouter provides both explicit Android paths and the protected optional backend',()=>{
+  const app=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+  const client=source('app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt');
+  const api=source('backend/src/groq-mentor.js');
+  const server=source('backend/src/server.js');
+  const checks=source('backend/test/openrouter-mentor.test.js');
+  assert.match(app,/showOpenRouterMentorDialog/);
+  assert.match(app,/showOpenRouterBackendMentorDialog/);
+  assert.match(app,/backend\.openRouterMentor\(content\)/);
+  assert.match(client,/fun openRouterMentor/);
+  assert.match(api,/OPENROUTER_URL/);
+  assert.match(server,/OPENROUTER_MENTOR_ENABLED/);
+  assert.match(server,/mentorAuth/);
+  assert.match(checks,/OpenRouter stays off without secret or explicit enablement/);
+});
