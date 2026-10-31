@@ -18,6 +18,44 @@ object SecureTokenStore {
     private const val KEY_DATA = "backend_token_data"
     private const val KEY_MENTOR_IV = "mentor_token_iv"
     private const val KEY_MENTOR_DATA = "mentor_token_data"
+    private const val KEY_OPENROUTER_IV = "openrouter_token_iv"
+    private const val KEY_OPENROUTER_DATA = "openrouter_token_data"
+
+    /**
+     * BYOK: OpenRouter key is encrypted in private preferences with a non-exportable
+     * Android Keystore AES-GCM key. It is never part of the APK, Git or build config.
+     * Local credential storage is not equivalent to a secure server-side proxy.
+     */
+    fun saveOpenRouterToken(context: Context, token: String) {
+        require(token.matches(Regex("sk-or-v1-[A-Za-z0-9_-]{16,240}"))) {
+            "Ungültiges OpenRouter-Schlüsselformat."
+        }
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        val encrypted = cipher.doFinal(token.toByteArray(Charsets.UTF_8))
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(KEY_OPENROUTER_IV, Base64.encodeToString(cipher.iv, Base64.NO_WRAP))
+            .putString(KEY_OPENROUTER_DATA, Base64.encodeToString(encrypted, Base64.NO_WRAP))
+            .commit()
+    }
+
+    fun loadOpenRouterToken(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val iv = prefs.getString(KEY_OPENROUTER_IV, null) ?: return null
+        val data = prefs.getString(KEY_OPENROUTER_DATA, null) ?: return null
+        return runCatching {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateKey(),
+                GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP)))
+            String(cipher.doFinal(Base64.decode(data, Base64.NO_WRAP)), Charsets.UTF_8)
+                .takeIf { it.matches(Regex("sk-or-v1-[A-Za-z0-9_-]{16,240}")) }
+        }.getOrNull()
+    }
+
+    fun clearOpenRouterToken(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .remove(KEY_OPENROUTER_IV).remove(KEY_OPENROUTER_DATA).commit()
+    }
 
     fun saveMentorToken(context: Context, token: String) {
         require(token.matches(Regex("[A-Za-z0-9_-]{43}"))) {

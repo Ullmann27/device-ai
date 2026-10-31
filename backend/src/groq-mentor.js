@@ -6,6 +6,7 @@
 import { formatMentorAnswer } from "./mentor-answer-format.js";
 
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = "openai/gpt-oss-20b";
 const MAX_INPUT_CHARS = 1800;
 const MAX_RESPONSE_BYTES = 64 * 1024;
@@ -15,6 +16,7 @@ export class GroqMentor {
   constructor({
     enabled = false,
     apiKey = "",
+    provider = "GROQ",
     model = DEFAULT_MODEL,
     dailyLimit = DEFAULT_MAX_DAILY,
     fetcher = globalThis.fetch,
@@ -26,6 +28,11 @@ export class GroqMentor {
     if (typeof model !== "string" || !/^[a-z0-9][a-z0-9/_.-]{2,100}$/i.test(model)) {
       throw Error("Ungültige Modellkennung.");
     }
+    if (provider !== "GROQ" && provider !== "OPENROUTER") {
+      throw Error("Ungültiger Mentor-Anbieter.");
+    }
+    this.provider = provider;
+    this.apiUrl = provider === "OPENROUTER" ? OPENROUTER_URL : API_URL;
     this.enabled = enabled === true && apiKey.trim().length >= 12;
     this.key = apiKey.trim();
     this.model = model;
@@ -42,6 +49,7 @@ export class GroqMentor {
     const used = this.day === day ? this.attempts : 0;
     return Object.freeze({
       available: this.enabled,
+      provider: this.provider,
       model: this.enabled ? this.model : null,
       remainingToday: this.enabled ? Math.max(0, this.limit - used) : 0
     });
@@ -76,7 +84,7 @@ export class GroqMentor {
       // fields are deliberately never shown or written to memory.
       const gptOss = /^openai\/gpt-oss-(?:20b|120b)$/.test(this.model);
       for (let attempt = 0; attempt < 2; attempt++) {
-        const response = await this.fetcher(API_URL, {
+        const response = await this.fetcher(this.apiUrl, {
           method: "POST",
           redirect: "error",
           signal: abort.signal,
@@ -107,7 +115,7 @@ export class GroqMentor {
                 "Keiner dieser Kerne ist ein vollwertiges generatives Sprachmodell. " +
                 "ein optionales LiteRT-LM-Sprachmodell muss separat installiert werden. " +
                 "Der Teamleiter prüft den Backlog, entwickelt aber noch keine Apps eigenständig. " +
-                "Der Groq-Mentor wird nur nach ausdrücklicher Einmalfreigabe für einzelne Fragen aufgerufen; " +
+                "Der externe Mentor wird nur nach ausdrücklicher Einmalfreigabe für einzelne Fragen aufgerufen; " +
                 "er darf keine Geräteaktionen, Git-Patches oder Lernübernahmen ausführen. " +
                 "Für APK-Builds existiert eine getrennte Entwicklungsumgebung, kein Android-eigener Compiler. " +
                 "Wenn nach 'dieser App' oder 'unserer App' gefragt wird, erkläre diese Funktionen verständlich. " +
@@ -127,11 +135,14 @@ export class GroqMentor {
         });
         if (response.status === 429) return { ok: false, code: "UPSTREAM_LIMIT" };
         if (response.status === 401 || response.status === 403) {
-          return { ok: false, code: "GROQ_KEY_REJECTED" };
+          return { ok: false, code: this.provider === "OPENROUTER"
+            ? "OPENROUTER_KEY_REJECTED" : "GROQ_KEY_REJECTED" };
         }
-        if (response.status === 404) return { ok: false, code: "GROQ_MODEL_UNAVAILABLE" };
+        if (response.status === 404) return { ok: false, code: this.provider === "OPENROUTER"
+          ? "OPENROUTER_MODEL_UNAVAILABLE" : "GROQ_MODEL_UNAVAILABLE" };
         if (response.status === 400 || response.status === 422) {
-          return { ok: false, code: "GROQ_REQUEST_REJECTED" };
+          return { ok: false, code: this.provider === "OPENROUTER"
+            ? "OPENROUTER_REQUEST_REJECTED" : "GROQ_REQUEST_REJECTED" };
         }
         if (!response.ok) return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
         const declared = Number(response.headers?.get?.("content-length") ?? 0);
@@ -173,7 +184,7 @@ export class GroqMentor {
             ok: true,
             message: answer,
             model: this.model,
-            provider: "GROQ",
+            provider: this.provider,
             trust: "UNVERIFIED_EXTERNAL",
             tool_calls: [],
             memory_written: false

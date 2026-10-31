@@ -1541,6 +1541,8 @@ class AgentActivity : Activity() {
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
+            CenterAction("KI-MENTOR · OPENROUTER (EXTERN, OPTIONAL)") { showOpenRouterMentorDialog() },
+            CenterAction("OPENROUTER · API-KEY VERWALTEN") { showOpenRouterApiKeyDialog() },
             CenterAction("INTERNET · LERNSTOFF PRÜFEN") { showWebLearningInbox() },
             CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
         ),
@@ -1930,7 +1932,9 @@ class AgentActivity : Activity() {
             CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
+            CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
             CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
+            CenterAction("KI-MENTOR · OPENROUTER (EINMALIG)") { showOpenRouterMentorDialog() },
             CenterAction("UPDATES PRÜFEN UND LADEN", accent = true) {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
             },
@@ -4168,6 +4172,10 @@ class AgentActivity : Activity() {
         box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
             modelCenterDialog?.dismiss()
             showGroqMentorDialog()
+        }, matchWidth(top = 5))
+        box.addView(cockpit.action(this, "OPENROUTER · EXTERNE EINZELFRAGE") {
+            modelCenterDialog?.dismiss()
+            showOpenRouterMentorDialog()
         }, matchWidth(top = 5))
 
         val advanced = LinearLayout(this).apply {
@@ -7436,10 +7444,113 @@ class AgentActivity : Activity() {
     }
 
     /**
-     * No fallback silently uploads local text to any provider.
-     * Owner confirmation is required for every external question.
+     * Neither Groq nor OpenRouter is a silent fallback from the local chat.
+     * Each remote question needs one explicit user confirmation.
      */
     private fun showGroqMentorDialog(suggested: String = input.text.toString().trim()) {
+        showRemoteMentorDialog("GROQ", suggested)
+    }
+
+    private fun showOpenRouterMentorDialog(suggested: String = input.text.toString().trim()) {
+        if (busy) {
+            Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (SecureTokenStore.loadOpenRouterToken(this) == null) {
+            showOpenRouterApiKeyDialog()
+            return
+        }
+        val question = EditText(this).apply {
+            hint = "Welche Frage soll OpenRouter beantworten?"
+            setText(suggested.take(1800))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            maxLines = 5
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("OpenRouter · einzelne Cloud-Frage")
+            .setMessage("Einmalige Freigabe: Nur dieser Fragetext geht über HTTPS direkt " +
+                "an OpenRouter. Keine Chat-Historie, Erinnerungen, Geräteinformationen " +
+                "oder Toolrechte. Maximal fünf Versuche täglich auf diesem Gerät. " +
+                "OpenRouter kann kostenpflichtig sein. Keine automatische Lernübernahme.")
+            .setView(question)
+            .setNegativeButton("LOKAL BLEIBEN", null)
+            .setPositiveButton("EINMALIG SENDEN") { _, _ ->
+                val content = question.text.toString().trim()
+                if (content.length !in 3..1800) {
+                    addAssistantMessage("OpenRouter-Frage muss 3–1800 Zeichen enthalten.")
+                } else if (!busy) {
+                    addUserMessage(content)
+                    setBusy(true)
+                    addToolActivity("OPENROUTER · einmalige Anfrage freigegeben")
+                    OpenRouterDirectClient(this).answer(content) { result ->
+                        setBusy(false)
+                        result.fold(
+                            onSuccess = { answer ->
+                                addAssistantMessage("OPENROUTER · EXTERN · UNBESTÄTIGT\n\n" +
+                                    answer + "\n\nKeine automatische Gedächtnisübernahme.")
+                                addToolActivity("OPENROUTER · Antwort empfangen")
+                            },
+                            onFailure = { error ->
+                                addAssistantMessage("OpenRouter nicht verfügbar: " +
+                                    (error.message ?: "Unbekannter Fehler").take(150) +
+                                    ". Der lokale Chat bleibt unverändert.")
+                                addToolActivity("OPENROUTER · Anfrage beendet")
+                            }
+                        )
+                    }
+                }
+            }
+            .show()
+    }
+
+    private fun showOpenRouterApiKeyDialog() {
+        val field = EditText(this).apply {
+            hint = if (SecureTokenStore.loadOpenRouterToken(this@AgentActivity) != null)
+                "Schlüssel gespeichert · neuer Schlüssel zum Ersetzen" else "sk-or-v1-..."
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            setSingleLine(true)
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("OpenRouter · API-Key sicher speichern")
+            .setMessage("Neuen Schlüssel unter openrouter.ai/settings/keys erzeugen. " +
+                "Hier einfügen und speichern. Der Schlüssel wird mit Android Keystore " +
+                "verschlüsselt auf diesem Gerät aufbewahrt, nicht in die APK eingebaut. " +
+                "Die API wird nur nach Einzelfreigabe verwendet. " +
+                "Ein zuvor im Chat geteilter Schlüssel muss widerrufen werden.")
+            .setView(field)
+            .setNegativeButton("ABBRECHEN", null)
+            .setNeutralButton("SCHLÜSSEL LÖSCHEN") { _, _ ->
+                SecureTokenStore.clearOpenRouterToken(this)
+                addToolActivity("OPENROUTER · lokaler API-Schlüssel gelöscht")
+                Toast.makeText(this, "OpenRouter-Schlüssel am Gerät gelöscht.", Toast.LENGTH_SHORT).show()
+            }
+            .setPositiveButton("SPEICHERN") { _, _ ->
+                val key = field.text.toString().trim()
+                if (!key.matches(Regex("sk-or-v1-[A-Za-z0-9_-]{16,240}"))) {
+                    Toast.makeText(this, "Ungültiger OpenRouter-Key. Bitte vollständig einfügen.",
+                        Toast.LENGTH_LONG).show()
+                } else {
+                    runCatching { SecureTokenStore.saveOpenRouterToken(this, key) }.fold(
+                        onSuccess = {
+                            Toast.makeText(this, "OpenRouter-Key verschlüsselt gespeichert.",
+                                Toast.LENGTH_LONG).show()
+                            addToolActivity("OPENROUTER · lokaler Schlüssel gespeichert, kein API-Test ausgelöst")
+                        },
+                        onFailure = {
+                            Toast.makeText(this, "Schlüssel konnte nicht gespeichert werden.",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    )
+                }
+            }
+            .show()
+    }
+
+    private fun showRemoteMentorDialog(provider: String, suggested: String) {
+        require(provider == "GROQ" || provider == "OPENROUTER")
         if (busy) {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
             return
@@ -7450,7 +7561,7 @@ class AgentActivity : Activity() {
             return
         }
         val question = EditText(this).apply {
-            hint = "Welche Frage soll der externe Mentor beantworten?"
+            hint = "Welche Frage soll $provider beantworten?"
             setText(suggested.take(1800))
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
@@ -7460,8 +7571,8 @@ class AgentActivity : Activity() {
             setPadding(dp(16), dp(10), dp(16), dp(10))
         }
         AlertDialog.Builder(this)
-            .setTitle("GroqCloud · einmalige externe Anfrage")
-            .setMessage("Nur der folgende Fragetext wird an dein Backend und Groq übermittelt. " +
+            .setTitle("$provider · einmalige externe Anfrage")
+            .setMessage("Nur der folgende Fragetext wird an dein Backend und $provider übermittelt. " +
                 "Keine Erinnerungen, Geräteinformationen, anderen Chats oder Toolfreigaben. " +
                 "Die Antwort bleibt ein ungeprüfter Vorschlag und wird nicht als Wissen gelernt. " +
                 "Es erfolgt kein automatischer Fallback zur Cloud.")
@@ -7480,33 +7591,35 @@ class AgentActivity : Activity() {
                     }
                     addUserMessage(content)
                     setBusy(true)
-                    addToolActivity("GROQ · externe Frage mit Einmalfreigabe versendet")
-                    backend.groqMentor(content) { result ->
+                    addToolActivity("$provider · externe Frage mit Einmalfreigabe versendet")
+                    val onAnswer: (Result<String>) -> Unit = { result ->
                         setBusy(false)
                         result.fold(
                             onSuccess = { answer ->
                                 addAssistantMessage(
-                                    "EXTERNER KI-MENTOR · GROQ · UNBESTÄTIGT\n\n" +
+                                    "EXTERNER KI-MENTOR · $provider · UNBESTÄTIGT\n\n" +
                                         answer + "\n\nNicht automatisch in lokales Wissen übernommen."
                                 )
-                                addToolActivity("GROQ · Antwort empfangen · keine Geräte-Tools ausgeführt")
+                                addToolActivity("$provider · Antwort empfangen · keine Geräte-Tools ausgeführt")
                             },
                             onFailure = { error ->
                                 addAssistantMessage("Externer KI-Mentor nicht verfügbar (" +
                                     (error.message ?: error.javaClass.simpleName).take(180) +
                                     "). Dein lokaler Chat und deine Erinnerungen bleiben unverändert. " +
                                     "Für eine lokale Antwort die Frage erneut über den normalen Chat stellen.")
-                                addToolActivity("GROQ · Anfrage beendet ohne Lernübernahme")
+                                addToolActivity("$provider · Anfrage beendet ohne Lernübernahme")
                             }
                         )
                     }
+                    if (provider == "OPENROUTER") backend.openRouterMentor(content, onAnswer)
+                    else backend.groqMentor(content, onAnswer)
                 }
             }
             .show()
     }
 
     /**
-     * No Groq API key and no global Device token must ever be entered on Android.
+     * No external model-provider key and no global Device token must ever be entered on Android.
      * The fingerprint is public; only Render-owner approval permits mentor access.
      */
     private fun showMentorPairingDialog() {
@@ -7587,12 +7700,18 @@ class AgentActivity : Activity() {
             setPadding(0, dp(12), 0, 0)
         })
         box.addView(token, matchWidth(top = 4))
-        box.addView(actionButton("GROQ-GERÄT OHNE API-SCHLÜSSEL KOPPELN", accent = true).apply {
+        box.addView(actionButton("GROQ / OPENROUTER · GERÄT KOPPELN", accent = true).apply {
             setOnClickListener { showMentorPairingDialog() }
         }, matchWidth(top = 12))
+        box.addView(actionButton("OPENROUTER · API-KEY EINGEBEN / ÄNDERN").apply {
+            setOnClickListener { showOpenRouterApiKeyDialog() }
+        }, matchWidth(top = 8))
+        box.addView(actionButton("OPENROUTER · EINZELFRAGE STELLEN").apply {
+            setOnClickListener { showOpenRouterMentorDialog() }
+        }, matchWidth(top = 8))
         box.addView(
             textView(
-                "Dein Groq-Schlüssel liegt bereits ausschließlich auf dem Backend: " +
+                "API-Schlüssel von Groq oder OpenRouter gehören ausschließlich auf das Backend: " +
                     "hier niemals einen Groq- oder OpenAI-Schlüssel eintragen. " +
                     "Diese separate Preview-App übernimmt aus Sicherheitsgründen keinen " +
                     "Geräte-Zugangstoken aus einer anderen Installation. " +

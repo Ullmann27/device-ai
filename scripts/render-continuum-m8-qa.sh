@@ -16,6 +16,7 @@ case "$(git branch --show-current)" in \
   research/continuum-m8-operational-model-20261031|\
   release/continuum-local-complete-v31-20261031|\
   fix/continuum-v32-network-web-recovery-20261031|\
+  feature/continuum-v32-openrouter-mentor-20261031|\
   research/continuum-m8-render-signed-release-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
@@ -87,6 +88,17 @@ node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scrip
   cat continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt >&2
   die 'JARVIS cockpit or HTTPS published-APK readback tests failed'
 }
+# Backend tests include the new OpenRouter provider mock and authorization checks.
+(
+  cd backend
+  npm ci --ignore-scripts --no-audit --no-fund
+  npm run check
+  npm test
+) > continuum-m8-render-qa/BACKEND-TESTS.txt 2>&1 || {
+  tail -n 160 continuum-m8-render-qa/BACKEND-TESTS.txt
+  die 'Backend and OpenRouter tests failed'
+}
+tail -n 30 continuum-m8-render-qa/BACKEND-TESTS.txt
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
 gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=32   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
