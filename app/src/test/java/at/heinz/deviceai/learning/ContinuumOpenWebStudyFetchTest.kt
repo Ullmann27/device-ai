@@ -1,5 +1,6 @@
 package at.heinz.deviceai.learning
 
+import at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider
 import at.heinz.deviceai.cognitive.ResearchDiscoveryProvider
 import at.heinz.deviceai.cognitive.ResearchDocument
 import at.heinz.deviceai.cognitive.ResearchProvider
@@ -268,5 +269,39 @@ class ContinuumOpenWebStudyFetchTest {
         assertEquals("FAILED_FETCH_NETWORK", phase)
         assertEquals("FAILED", ContinuumPublicStudyCycleResult.outcome(phase))
         assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted(phase))
+    }
+
+    @Test
+    fun allProviderTransportFailuresPreserveTopicForFutureResearch() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = {
+            throw IOException("temporary search provider outage")
+        })
+        val exception = assertThrows(IOException::class.java) {
+            ContinuumOpenWebStudyFetch.acquire(
+                topic = "Maschinelles Lernen",
+                cancelled = { false },
+                discoveryFactory = { provider }
+            )
+        }
+        assertEquals("WEB_GENERAL_SEARCH_UNAVAILABLE", exception.message)
+        val phase = ContinuumPublicStudyCycleResult.failurePhase("FETCH_SOURCE", exception, false)
+        assertEquals("FAILED_FETCH_NETWORK", phase)
+        assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted(phase))
+    }
+
+    @Test
+    fun genuineEmptySearchDoesNotPretendToBeProviderOutage() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { "<rss><channel/></rss>" })
+        val exception = assertThrows(WikimediaSourceUnavailable::class.java) {
+            ContinuumOpenWebStudyFetch.acquire(
+                topic = "Maschinelles Lernen",
+                cancelled = { false },
+                discoveryFactory = { provider }
+            )
+        }
+        assertEquals("NO_PUBLIC_WEB_RESULTS", exception.reason)
+        val phase = ContinuumPublicStudyCycleResult.failurePhase("FETCH_SOURCE", exception, false)
+        assertEquals("SOURCE_UNAVAILABLE_NO_PUBLIC_WEB_RESULTS", phase)
+        assertTrue(ContinuumPublicStudyCycleResult.markTopicCompleted(phase))
     }
 }
