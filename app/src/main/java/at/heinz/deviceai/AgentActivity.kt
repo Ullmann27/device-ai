@@ -5756,7 +5756,7 @@ class AgentActivity : Activity() {
     }
 
     private fun createToolGate() = ToolGate(
-        ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
+        ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             if(request.name in setOf("web_search","web_read")) {
                 val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
@@ -5788,10 +5788,16 @@ class AgentActivity : Activity() {
                     .show()
                 return
             }
+        // A terminal read-only tool failure is known, not an ambiguous device mutation.
+        // Keep side-effecting interrupted operations subject to explicit review.
         val uncertain = receipts.filter {
-            it.state == ToolReceiptState.STARTED ||
-                it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
-                it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
+            val canChangeDevice = it.risk != Risk.READ_ONLY &&
+                it.toolName !in setOf("web_search", "web_read")
+            canChangeDevice && (
+                it.state == ToolReceiptState.STARTED ||
+                    it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
+                    it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
+            )
         }
         if (uncertain.isEmpty()) return
         addToolActivity("${uncertain.size} tool call(s) require operator review")
