@@ -141,7 +141,7 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
   if(blockedUntil)await env.DB.prepare('UPDATE continuum_nvidia_control SET blocked_until_ms=?,last_error=? WHERE id=1').bind(blockedUntil,status).run();
   if(status==='proposal_unreviewed')await reserve(env);
  }
- async function queue(batch,env){if(cfg(env).ready)await ensureResearchSchema(env.DB);for(const message of batch.messages)await process(message,env);}
+ async function queue(batch,env){if(cfg(env,now()).ready)await ensureResearchSchema(env.DB);for(const message of batch.messages)await process(message,env);}
  async function fetch(request,env){
   const path=new URL(request.url).pathname;
   if(request.method!=='GET')return reply({error:'method_not_allowed'},405);
