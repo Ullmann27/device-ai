@@ -59,8 +59,10 @@ function api({owner,repo,token,fetchImpl=globalThis.fetch}){
   return await r.json();
  };
 }
-export async function reserveGithubBudget({repoFull,token,runId,
+export async function reserveGithubBudget({repoFull,token,runId,ownerConsent,
  nowMs=Date.now(),fetchImpl=globalThis.fetch}={}){
+ // Reject missing authorization before any remote ledger read or write.
+ requireExplicitOwnerConsent(ownerConsent,OWNER_CONSENT);
  const [owner,repo]=String(repoFull).split('/');
  const request=api({owner,repo,token,fetchImpl});
  const original=await request('GET');
@@ -129,7 +131,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   if(process.argv[2]==='--reserve'){
    const result=await reserveGithubBudget({repoFull:process.env.GITHUB_REPOSITORY,
-    token:process.env.GITHUB_TOKEN,runId:process.env.GITHUB_RUN_ID});
+    token:process.env.GITHUB_TOKEN,runId:process.env.GITHUB_RUN_ID,
+    ownerConsent:process.env.CONTINUUM_ULTRA_CONSENT});
    if(!process.env.GITHUB_OUTPUT)stop('GITHUB_OUTPUT_REQUIRED');
    fs.appendFileSync(process.env.GITHUB_OUTPUT,
     'allowed='+String(result.allowed)+'\n'+
