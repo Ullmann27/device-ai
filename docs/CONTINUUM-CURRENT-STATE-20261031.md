@@ -1,3 +1,5 @@
+> **P0 RELEASE-FREEZE 31.10.2026:** Die **neueste gemeinsame Source-of-Truth für eine nächste Besitzer-APK** ist **`release/continuum-local-complete-v31-20261031`**, siehe [Release-V31-Matrix](release/CONTINUUM-COMBINED-OWNER-RELEASE-V31.md). Der ältere Render-Release `0.3.29/versionCode30` ist **veröffentlicht**, aber enthält nicht sämtliche späteren Forschungs-/JARVIS-/CDX1-Änderungen. Ziel: `0.3.30/versionCode31`, `at.heinz.deviceai.continuumlocal`, **Originalsignatur**, kompletter QA/Gradle-/Fold7-Test. **Nicht fertig, nicht signiert, nicht online!** **KEINE WEITERE FUNKTIONSFORSCHUNG VOR DEM KOMBINIEREN, TESTEN UND PUBLIKATIONSGATE.** Auch Node-Forschungsskripte erzeugen keine Android-Rechenkapazität. Frühere Statusangaben in dieser Datei sind historisch und nicht der Release-Cutoff.
+
 # DEVICE AI CONTINUUM — verbindlicher Projektstand und nächster Funktionsnachweis
 
 **Stand:** 31. Oktober 2026 · **Repository:** `Ullmann27/device-ai`.
