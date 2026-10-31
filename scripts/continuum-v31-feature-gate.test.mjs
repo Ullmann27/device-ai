@@ -29,6 +29,19 @@ test('the actual Android main app keeps a visible update button and original own
   assert.match(updater,/downloadAndInstall/);
 });
 
+test('M8 coding worker actually exposes bounded defensive read-only risk inspection',()=>{
+  const worker=source('.github/continuum/coding-agent-loop.mjs');
+  const ranker=source('.github/continuum/risk-file-ranker.mjs');
+  const qa=source('scripts/render-continuum-m8-qa.sh');
+  assert.match(worker,/rankFilesByRisk,scanDefensiveSinks/);
+  assert.match(worker,/rank_files:\(\)=>/);
+  assert.match(worker,/scan_sinks:\(\{path:file\}\)=>/);
+  assert.match(worker,/scanCalls\+\+>=4/);
+  assert.match(ranker,/readableAuditPath/);
+  assert.match(qa,/coding-agent-risk-tools\.test\.mjs/);
+  assert.match(qa,/risk-file-ranker\.test\.mjs/);
+});
+
 test('M8 agent and execution controls are actually in the same release tree',()=>{
   const agent=source('.github/continuum/coding-agent-loop.mjs');
   const toolgate=source('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');

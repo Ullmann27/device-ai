@@ -67,7 +67,7 @@ gradle --version
 node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
-node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
+node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
     cat continuum-m8-render-qa/NODE-TESTS.txt
     die 'Node contract tests failed'
   }
