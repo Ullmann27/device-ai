@@ -258,9 +258,10 @@ class BoundedAgentOrchestrator(
         val toolObservations = mutableListOf<AgentToolObservation>()
         val toolEvidence = mutableListOf<String>()
         val modelIds = mutableListOf<String>()
-        fun hasFreshToolOutcomes(): Boolean = toolObservations.all {
-            it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
-        }
+        fun hasFreshToolOutcomes(): Boolean = toolEvidence.isNotEmpty() &&
+            toolObservations.isNotEmpty() && toolObservations.all {
+                it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
+            }
 
         fun transition(state: AgentState, detail: String) {
             cancellation.throwIfCancelled()
