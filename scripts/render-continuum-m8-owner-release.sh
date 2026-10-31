@@ -64,12 +64,16 @@ printf '%s' "$CONTINUUM_LOCAL_SIGNING_P12_BASE64" | base64 --decode > "$CONTINUU
   fail 'Owner P12 could not be decoded'
 chmod 600 "$CONTINUUM_LOCAL_SIGNING_FILE"
 unset CONTINUUM_LOCAL_SIGNING_P12_BASE64
-key_fingerprint="$("$JAVA_HOME/bin/keytool" -list -v -storetype PKCS12 \
+key_metadata="$("$JAVA_HOME/bin/keytool" -list -v -storetype PKCS12 \
   -J-Duser.language=en -J-Duser.country=US \
   -alias continuum-local -keystore "$CONTINUUM_LOCAL_SIGNING_FILE" \
-  -storepass:env CONTINUUM_LOCAL_SIGNING_PASSWORD 2>/dev/null |
-  sed -n 's/^[[:space:]]*SHA256: //p' | head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')" ||
+  -storepass:env CONTINUUM_LOCAL_SIGNING_PASSWORD 2>/dev/null)" ||
   fail 'Original owner signing key unavailable or invalid'
+grep -Fq 'Entry type: PrivateKeyEntry' <<<"$key_metadata" ||
+  fail 'Owner P12 alias does not contain a private signing key'
+key_fingerprint="$(sed -n 's/^[[:space:]]*SHA256: //p' <<<"$key_metadata" |
+  head -n1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
+unset key_metadata
 [[ "$key_fingerprint" == "$expected_signer" ]] ||
   fail 'Wrong signing certificate, refusing in-place update'
 
