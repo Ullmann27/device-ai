@@ -59,8 +59,8 @@ class ContinuumOpenWebStudyFetchTest {
                 )
             }
         }
-        val reader = ResearchProvider { req ->
-            when (req.url) {
+        val reader = object : ResearchProvider {
+            override fun retrieve(req: ResearchRequest): ResearchResult = when (req.url) {
                 "https://solar.example.org/grundlagen" -> doc(req.url, firstText)
                 "https://forschung.example.org/tandemzellen" -> doc(req.url, secondText)
                 else -> error("unexpected URL "+req.url)
@@ -100,9 +100,11 @@ class ContinuumOpenWebStudyFetchTest {
             )
         }
         val requestedUrls = mutableListOf<String>()
-        val reader = ResearchProvider { req ->
-            requestedUrls += req.url
-            doc(req.url, validText)
+        val reader = object : ResearchProvider {
+            override fun retrieve(req: ResearchRequest): ResearchResult {
+                requestedUrls += req.url
+                return doc(req.url, validText)
+            }
         }
 
         val acquisition = ContinuumOpenWebStudyFetch.acquire(
@@ -139,12 +141,13 @@ class ContinuumOpenWebStudyFetchTest {
                 ResearchSourceCandidate("https://uni.example.org/zwei", "Zweiter Artikel")
             )
         }
-        val reader = ResearchProvider { req ->
-            if (req.url.endsWith("/eins")) {
-                throw IllegalArgumentException("Research request failed with HTTP 503.")
-            } else {
-                doc(req.url, "Zu kurz")
-            }
+        val reader = object : ResearchProvider {
+            override fun retrieve(req: ResearchRequest): ResearchResult =
+                if (req.url.endsWith("/eins")) {
+                    throw IllegalArgumentException("Research request failed with HTTP 503.")
+                } else {
+                    doc(req.url, "Zu kurz")
+                }
         }
 
         val error = try {
@@ -171,7 +174,10 @@ class ContinuumOpenWebStudyFetchTest {
             override val isGeneralSearchAvailable = true
             override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> = emptyList()
         }
-        val reader = ResearchProvider { error("reader must not be called") }
+        val reader = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult =
+                error("reader must not be called")
+        }
 
         val error = try {
             ContinuumOpenWebStudyFetch.acquire(
@@ -209,7 +215,10 @@ class ContinuumOpenWebStudyFetchTest {
                 ResearchSourceCandidate("https://uni.example.org/physik", "Quantenoptik - Institut")
             )
         }
-        val reader = ResearchProvider { throw IOException("DNS offline") }
+        val reader = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult =
+                throw IOException("DNS offline")
+        }
 
         val error = try {
             ContinuumOpenWebStudyFetch.acquire(
