@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import android.app.ActivityManager
+import android.app.job.JobScheduler
 import android.os.BatteryManager
 import android.content.Context
 import android.net.ConnectivityManager
@@ -117,7 +118,24 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 }
             }
         }
-        val publicStudy = runCatching { ContinuumPublicStudyScheduler(context).enabled }.getOrDefault(false)
+        // Consent does not prove Android has registered an executable research job.
+        val study = runCatching { ContinuumPublicStudyScheduler(context) }.getOrNull()
+        val publicStudy = study?.enabled == true
+        val publicJobRegistered = runCatching {
+            (context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as? JobScheduler)
+                ?.getPendingJob(ContinuumPublicStudyScheduler.JOB_ID) != null
+        }.getOrDefault(false)
+        val publicInternetGranted = runCatching { study?.internetAllowed() == true }.getOrDefault(false)
+        val publicProviderPaused = runCatching { study?.isRateLimited() == true }.getOrDefault(false)
+        val publicStudyScheduled = publicStudy && publicInternetGranted &&
+            publicJobRegistered && !publicProviderPaused
+        val publicStudyLabel = when {
+            !publicStudy -> "Öffentliche Forschung aus"
+            !publicInternetGranted -> "Webforschung: Internet gesperrt"
+            !publicJobRegistered -> "Webforschung: Job nicht registriert"
+            publicProviderPaused -> "Webforschung: Anbieterpause"
+            else -> "Webforschung eingeplant"
+        }
 
         val (cpu, memory, online) = systemSamples()
         val openIssues = runCatching { diagnostics.open().size }.getOrNull()
@@ -156,7 +174,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 segments = storage?.segments.orEmpty(),
                 activeSources = sources,
                 totalSources = sources,
-                syncLabel = if (publicStudy) "Öffentliches Lernen aktiv" else "Keine Synchronisation"
+                syncLabel = publicStudyLabel
             ),
             development = ContinuumDashboardState.DevelopmentStatus(
                 activeProjects = backlog?.let { active }, runningTasks = backlog?.let { running }, errors = backlog?.let { failed },
@@ -180,7 +198,8 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 developing = if (live.builderJobRunning || running > 0) "Aktiv" else "Bereit",
                 evolving = when {
                     live.autoStudyEnabled -> "CDX1-Autostudium an"
-                    publicStudy -> "Öffentliches Lernen an"
+                    publicStudyScheduled -> "Webforschung eingeplant"
+                    publicStudy -> "Webforschung wartet"
                     live.practiceEnabled -> "Auto-Üben an"
                     else -> "Aus"
                 }
