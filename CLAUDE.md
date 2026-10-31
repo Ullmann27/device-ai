@@ -1,0 +1,11 @@
+# Continuum — Claude Opus / coding agents: current binding handoff (2026-10-31)
+
+**Mandatory first reads:** [canonical current state](docs/CONTINUUM-CURRENT-STATE-20261031.md), [all-agent policy](AGENTS.md), [frontier research handoff](docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md), [experiment contract](docs/CONTINUUM-EXPERIMENTVERTRAG.md), and **actual current branch HEAD**.
+
+Owner's product specification: NOT a JARVIS mockup. Build real **Continuum Lokal** (`at.heinz.deviceai.continuumlocal`) with real local model, voice/tools, temporal memory, CRE1/EWM/SWB neuro-biological experiments, independently verified M8 autonomous code repair, and an original-certificate-compatible **„Updates prüfen und laden“** feature. DAN/Mythos/Astra are vision/reference roles, never proven weights or evidence of superintelligence. Owner videos are in PR #263, separate branch; reuse documented legitimate capabilities only.
+
+**Current research:** PR #287 implements 50–3000 **logical** roles, bounded compute reservations, pure deterministic cached intermediate stages, 3000→30 heavy stage calculations on a synthetic repeat-work benchmark, negative control 3000→3000 for unique stages, and **43/43 V8-shim logic checks**. There is **no** 100x LLM speedup, real GPU cluster, APK release, or deployed always-on agent. The bridge must reuse Kotlin `ComputeFabric`, `AiContextCompiler`, `LocalModelRuntime`, `BoundedAgentOrchestrator`, `ToolGate` and existing M8 Node coding worker. Do not duplicate a product scheduler.
+
+**Priority:** full real Node/Kotlin/Android regression → read-only evidence- and memory-epoch-bound compute artifact storage → realistic real-Coding-Agent cache-hit/latency comparisons → true model RED→GREEN repair → higher owner-signed APK (previously reported installed 0.3.28/code29, next code>=30 only if current device confirms) → Fold7 updater/voice/memory/thermal tests. PR #286 code29 is not an in-place upgrade over code29. Existing Render release-gate static service proves contracts only; no signed APK.
+
+Never overwrite working user data/weights, claim an experiment was executed when not, put signing P12/password on GitHub, or auto-merge research into main. Commit real proof and report open blockers with exact links.
