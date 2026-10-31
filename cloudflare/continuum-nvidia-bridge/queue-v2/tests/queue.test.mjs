@@ -171,3 +171,28 @@ test('GREEN: valid <=24h owner grant still permits immediate chained research',a
  assert.equal(f.queueItems.length,0);
  assert.deepEqual(records(f).map(x=>x.status),['proposal_unreviewed','proposal_unreviewed']);
 });
+
+test('queue-only cold start bootstraps D1 without a preceding scheduled tick',async()=>{
+ const f=fixture({fresh:true});
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_jobs'").length,0);
+ await f.worker.queue({messages:[]},f.env);
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_jobs'").length,1);
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_control'").length,1);
+ assert.equal(f.rows("SELECT state FROM continuum_nvidia_control WHERE id=1")[0].state,'running');
+ assert.equal(f.callCount(),0);
+});
+test('queue-only cold start must not bootstrap D1 without an active owner grant',async()=>{
+ const f=fixture({fresh:true,vars:{CONTINUUM_OWNER_GRANT_UNTIL_UTC:'2026-10-31T11:59:59.000Z'}});
+ await f.worker.queue({messages:[]},f.env);
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_jobs'").length,0);
+ assert.equal(f.callCount(),0);
+});
+test('queue-only bootstrap preserves unrelated existing D1 records',async()=>{
+ const f=fixture({fresh:true});
+ f.sqlite.exec("CREATE TABLE jarvis_health_log (id INTEGER PRIMARY KEY, note TEXT)");
+ f.sqlite.exec("INSERT INTO jarvis_health_log(id,note) VALUES(1,'keep')");
+ await f.worker.queue({messages:[]},f.env);
+ assert.equal(f.rows("SELECT note FROM jarvis_health_log WHERE id=1")[0].note,'keep');
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_jobs'").length,1);
+ assert.equal(f.callCount(),0);
+});
