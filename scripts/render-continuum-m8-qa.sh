@@ -7,7 +7,11 @@ cd "$(git rev-parse --show-toplevel)"
 die() { printf 'CONTINUUM_M8_RENDER_QA_FAILED: %s\n' "$*" >&2; exit 69; }
 sha="$(git rev-parse --verify HEAD)"
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid commit SHA'
-[[ -z "$(git status --porcelain --untracked-files=normal)" ]] || die 'Dirty source checkout'
+# Render may create untracked framework/cache files in the checkout. Changes to
+# tracked source or untracked executable project code are still forbidden.
+git -c core.fileMode=false diff --quiet HEAD -- || die 'Tracked source changed in Render checkout'
+untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts .github/continuum backend/src backend/test)"
+[[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
 [[ "$(git branch --show-current)" == "research/continuum-m8-operational-model-20261031" || -z "$(git branch --show-current)" ]] || die 'Unexpected branch'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
     -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] ||
