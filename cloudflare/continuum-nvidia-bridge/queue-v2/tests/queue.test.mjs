@@ -4,14 +4,15 @@ import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 import {createHandlers} from '../worker.mjs';
 const schema=readFileSync(new URL('../schema.sql',import.meta.url),'utf8');
-function fixture({on='true',client=async()=>good(),vars={},broken=false}={}){
- const sqlite=new DatabaseSync(':memory:');sqlite.exec(schema);
+function fixture({on='true',client=async()=>good(),vars={},broken=false,fresh=false}={}){
+ const sqlite=new DatabaseSync(':memory:');if(!fresh)sqlite.exec(schema);
  const DB={prepare(sql){return {
   bind(...args){return {
    async run(){return {meta:{changes:sqlite.prepare(sql).run(...args).changes}};},
    async first(){return sqlite.prepare(sql).get(...args)??null;}
   };},
-  async first(){return sqlite.prepare(sql).get()??null;}
+  async first(){return sqlite.prepare(sql).get()??null;},
+  async run(){return {meta:{changes:sqlite.prepare(sql).run().changes}};}
  };}};
  const queueItems=[],RESEARCH_QUEUE={async send(body){if(broken)throw Error('failed');queueItems.push({body});}};
  let time=Date.UTC(2026,9,31,12,0,0),calls=0;
@@ -103,4 +104,20 @@ test('RED/GREEN: cooldown introduced after enqueue blocks already queued NVIDIA 
  await f.consume();
  assert.equal(f.callCount(),0);
  assert.equal(records(f)[0].status,'queued');
+});
+
+test('empty database self-initializes from cron through existing DB binding',async()=>{
+ const f=fixture({on:'false',fresh:true});await f.tick();
+ assert.equal(f.rows("SELECT name FROM sqlite_master WHERE type='table' AND name='continuum_nvidia_jobs'").length,1);
+ assert.equal(f.rows('SELECT * FROM jarvis_cron_log').length,1);
+ assert.equal(f.callCount(),0);
+});
+test('self-initialization preserves old D1 tables and rows',async()=>{
+ const f=fixture({on:'false'});
+ f.sqlite.exec('CREATE TABLE IF NOT EXISTS jarvis_health_log (id INTEGER PRIMARY KEY, note TEXT)');
+ f.sqlite.exec("INSERT INTO jarvis_health_log(id,note) VALUES(1,'keep')");
+ f.sqlite.exec("INSERT INTO jarvis_cron_log(cron_time,action) VALUES('yesterday','legacy')");
+ await f.tick();
+ assert.equal(f.rows('SELECT note FROM jarvis_health_log')[0].note,'keep');
+ assert.equal(f.rows('SELECT * FROM jarvis_cron_log').length,2);
 });
