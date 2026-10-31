@@ -53,6 +53,62 @@ class AiContextCompilerTest {
     }
 
     @Test
+    fun currentContextExcludesContradictedStaleAndSensitiveMemories() {
+        val now = 100_000L
+        val setup = setup(now)
+        val content = "Android local model version is current"
+        val confirmed = memory(
+            id = "current-verified",
+            content = content,
+            privacy = PrivacyClass.PRIVATE,
+            now = now
+        ).copy(
+            validationState = ValidationState.VERIFIED,
+            validationEvidenceReferences = listOf("owner-confirmation-1")
+        )
+        val contradicted = memory(
+            id = "old-contradicted",
+            content = "Android local model version is contradicted",
+            privacy = PrivacyClass.PRIVATE,
+            now = now
+        ).copy(validationState = ValidationState.CONTRADICTED)
+        val stale = memory(
+            id = "old-stale",
+            content = "Android local model version is stale",
+            privacy = PrivacyClass.PRIVATE,
+            now = now
+        ).copy(validationState = ValidationState.STALE)
+        val sensitive = memory(
+            id = "sensitive-record",
+            content = "Android local model sensitive private evidence",
+            privacy = PrivacyClass.SENSITIVE,
+            now = now
+        )
+        val compiled = AiContextCompiler(
+            AiContextPolicy(maxBytes = 6_000),
+            nowMillis = { now }
+        ).compile(
+            AiContextInput(
+                seed = setup.seed,
+                genome = setup.genome,
+                identityState = setup.identity,
+                userRequest = "Android local model version",
+                memories = listOf(contradicted, stale, sensitive, confirmed)
+            )
+        )
+
+        assertTrue(compiled.includedMemoryIds.contains("current-verified"))
+        assertFalse(compiled.includedMemoryIds.contains("old-contradicted"))
+        assertFalse(compiled.includedMemoryIds.contains("old-stale"))
+        assertFalse(compiled.includedMemoryIds.contains("sensitive-record"))
+        assertFalse(compiled.text.contains("version is contradicted"))
+        assertFalse(compiled.text.contains("version is stale"))
+        assertFalse(compiled.text.contains("sensitive private evidence"))
+        assertTrue(compiled.text.contains("version is current"))
+        assertTrue(compiled.text.toByteArray(Charsets.UTF_8).size <= 6_000)
+    }
+
+    @Test
     fun researchSourceTextIsBoundedAsUntrustedEvidence() {
         val now = 100_000L
         val setup = setup(now)

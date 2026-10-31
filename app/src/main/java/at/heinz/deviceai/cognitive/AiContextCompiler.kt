@@ -111,7 +111,12 @@ class AiContextCompiler(
 
         val scored = HybridMemoryRetriever.retrieve(
             query = input.userRequest,
-            records = input.memories,
+            // Current-answer context must not promote superseded or contradicted
+            // memories. Historical evidence remains stored for explicit audit.
+            records = input.memories.filterNot {
+                it.validationState == ValidationState.CONTRADICTED ||
+                    it.validationState == ValidationState.STALE
+            },
             limit = policy.memoryLimit,
             nowMillis = nowMillis(),
             allowedPrivacy = policy.allowedPrivacy

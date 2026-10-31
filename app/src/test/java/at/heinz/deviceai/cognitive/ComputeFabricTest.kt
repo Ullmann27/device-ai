@@ -77,6 +77,34 @@ class ComputeFabricTest {
     }
 
     @Test
+    fun schedulerRejectsGrantExpiringBeforeMaximumTaskRuntimeEnds() {
+        val registry = registry()
+        val short = manifest("expires-during-task").copy(expiresAtMillis = 10_000)
+        val valid = manifest("valid-full-window")
+        registry.register(SignedNodeCapabilityManifest(short, byteArrayOf(1)))
+        val scheduler = ComputeScheduler(registry) { 1_500 }
+
+        // The task can run for 10,000ms, but this node has only 8,500ms
+        // of authorized time left. It must not be used.
+        assertNull(scheduler.select(task()))
+
+        registry.register(SignedNodeCapabilityManifest(valid, byteArrayOf(1)))
+        assertEquals(valid.nodeId, scheduler.select(task())!!.nodeId)
+        assertNull(scheduler.select(task().copy(assignedNodeId = short.nodeId)))
+    }
+
+    @Test
+    fun schedulerRechecksManifestIssueTimeAgainstItsOwnClock() {
+        // The registry and scheduler clocks may differ, for example when
+        // using test clocks or after a system clock adjustment.
+        val registry = registry()
+        registry.register(SignedNodeCapabilityManifest(manifest("clock-skew"),
+            byteArrayOf(1)))
+        val scheduler = ComputeScheduler(registry) { 900 }
+        assertNull(scheduler.select(task()))
+    }
+
+    @Test
     fun credentialLikeInlineContextIsRejected() {
         assertThrows(IllegalArgumentException::class.java) {
             task(inlineContext = "token=abcdefgh12345678")
@@ -145,7 +173,7 @@ class ComputeFabricTest {
         maxRuntimeMillis = 60_000,
         maxOutputBytes = 16_000,
         issuedAtMillis = 1_000,
-        expiresAtMillis = 10_000
+        expiresAtMillis = 15_000
     )
 
     private fun task(
