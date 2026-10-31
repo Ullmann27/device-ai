@@ -104,4 +104,65 @@ class ContinuumComputeReuseResearchTest {
         assertFalse(cache.putVerified(key(), byteArrayOf(8), "forged"))
         assertArrayEquals(byteArrayOf(7), cache.read(key()))
     }
+
+    @Test fun bridgeRunsActualExistingContextCompilerWithoutCachingAnswers() {
+        val now = 100_000L
+        val genome = CognitiveGenome("continuum-context")
+        val identity = IdentityState.initial(genome)
+        val seed = ContinuumSeed(
+            instanceId = ContinuumInstanceId(identity.identityId),
+            governanceVersion = GovernanceVersion(1),
+            stateFormatVersion = StateFormatVersion(1),
+            memorySchemaVersion = 1,
+            skillSchemaVersion = 1,
+            modelAdapterAbiVersion = ModelAdapterAbiVersion(1),
+            ownerIdentityReference = "owner:test",
+            authorizedNodeIds = listOf(ComputeNodeId("fold")),
+            currentStateRoot = ContinuumObjectId.of(
+                ContinuumObjectType.STATE_MANIFEST, "root".toByteArray()
+            ),
+            createdAtMillis = now
+        )
+        val memory = MemoryRecord(
+            id = "confirmed-context",
+            type = MemoryType.SEMANTIC,
+            content = "Continuum source analysis result",
+            provenance = ProvenanceType.USER_PROVIDED,
+            confidence = 1.0,
+            createdAt = now,
+            updatedAt = now,
+            validationState = ValidationState.VERIFIED,
+            validationEvidenceReferences = listOf("owner-confirmation"),
+            privacyClass = PrivacyClass.PRIVATE
+        )
+        val sensitive = memory.copy(
+            id = "sensitive-context",
+            content = "secret training evidence",
+            privacyClass = PrivacyClass.SENSITIVE
+        )
+        val input = AiContextInput(
+            seed = seed,
+            genome = genome,
+            identityState = identity,
+            userRequest = "Continuum source analysis",
+            memories = listOf(memory, sensitive)
+        )
+        val cache = ContinuumComputeReuseResearch(
+            compiler = AiContextCompiler(
+                AiContextPolicy(
+                    maxBytes = 6000, allowedPrivacy = setOf(PrivacyClass.PUBLIC, PrivacyClass.PRIVATE)
+                ),
+                nowMillis = { now }
+            )
+        )
+        val observed = cache.compileObserved(input)
+        assertTrue(observed.compiled.text.contains("CONTINUUM IDENTITY / GOVERNANCE"))
+        assertTrue(observed.compiled.includedMemoryIds.contains("confirmed-context"))
+        assertFalse(observed.compiled.includedMemoryIds.contains("sensitive-context"))
+        assertFalse(observed.compiled.text.contains("secret training evidence"))
+        assertEquals(digest(observed.compiled.text), observed.contextSha256)
+        assertEquals(1, observed.includedMemoryCount)
+        assertEquals(0, cache.metrics().entries)
+        assertEquals(0L, cache.metrics().verifiedWrites)
+    }
 }
