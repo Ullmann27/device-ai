@@ -3745,7 +3745,7 @@ class AgentActivity : Activity() {
     }
 
     /**
-     * Narrow, reversible authorization for one publicly curated research source
+     * Narrow, reversible authorization for one public web research source
      * per Android-scheduled cycle. Does not grant ALWAYS_ON access to user chat
      * research or to any generated code/tool execution.
      */
@@ -3754,8 +3754,8 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum · autonome öffentliche Forschung")
             .setMessage(scheduler.display()+"\n\n"+
-                "Forschung nur aus 48 festen Artikeln der deutschsprachigen Wikipedia. "+
-                "Pro Android-Lauf höchstens ein Auszug (96 KiB), maximal 15 Sekunden. "+
+                "Startthemen aus verschiedenen Wissenschaftsgebieten und neue Themen aus öffentlichen Gesprächsthemen und Quellenbezügen. "+
+                "Pro Android-Lauf höchstens ein begrenzter öffentlicher HTTPS-Auszug, maximal 90 Sekunden. "+
                 "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
                 "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
                 "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
@@ -5165,7 +5165,7 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
                 .setMessage("Noch keine gespeicherten Recherche-Aussagen vorhanden. " +
                     "Tippe auf WEB RECHERCHE, wähle einen Suchmodus und gib ein Thema ein. " +
-                    "Device AI kann dazu deutschsprachige Wikipedia-Artikel suchen, ohne dass du eine URL kennen musst. " +
+                    "Device AI recherchiert über allgemeine Web-Suchdienste und prüft öffentliche HTTPS-Quellen, ohne dass du eine URL kennen musst. " +
                     "Bereits gespeicherte Quellenhinweise: ${learned.getOrNull().orEmpty().size}. " +
                     "Internetquellen werden erst nach deiner ausdrücklichen Freigabe als Notizen übernommen.")
                 .setPositiveButton("Schließen", null)
