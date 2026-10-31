@@ -110,7 +110,8 @@ class JarvisIntentIntake(
                 @Suppress("UNCHECKED_CAST")
                 val saved = tasks.firstOrNull { it["id"] == taskId }
                     ?.get("subject") as? Map<String, Any?>
-                if (saved?.get("eventDigest") != evidenceHash ||
+                if (saved == null ||
+                    saved["eventDigest"] != evidenceHash ||
                     saved["intentOrigin"] != event.origin.name ||
                     saved["intentKind"] != event.kind.name ||
                     saved["reviewOnly"] != true) {
