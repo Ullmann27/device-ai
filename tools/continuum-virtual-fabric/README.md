@@ -50,3 +50,26 @@ Sources:
 - Colab restrictions: https://research.google.com/colaboratory/faq.html
 - Kaggle notebooks: https://www.kaggle.com/docs/notebooks
 - ZeroGPU: https://huggingface.co/docs/hub/spaces-zerogpu
+
+
+## 50/100 specialist mesh and real CPU smoke
+
+The new `expert-mesh.mjs` declares 50 or 100 **logical** specialists, evenly divided among coding, memory, reasoning, research and NeMo training. They share **the same** bounded `VirtualFabric` reservations; each known component has a quota, and NeMo jobs wait until a real GPU with sufficient VRAM is registered. The component identity in this prototype is a test fixture, **not authenticated**: never put it on a public endpoint or treat it as a production tool grant.
+
+```sh
+node --test tools/continuum-virtual-fabric/*.test.mjs
+node tools/continuum-virtual-fabric/cpu-smoke.mjs
+```
+
+The CPU smoke runs 100 **actual bounded deterministic 8×8 matrix multiplications**, calculates SHA-256 checksums, and completes their reservations sequentially using one local CPU slot. This demonstrates dispatch/accounting and real CPU work, **not** 100 independently running models, LLM generation, a neural network, novel compute capacity, or multiplicative acceleration. Current `complete()` is unauthenticated and in-process only. Never use it for customer billing.
+
+### Coding-agent integration: next required actions
+
+1. Use existing M8 `coding-agent-loop.mjs`, `coding-orchestrator.mjs`, `DeviceTeamleaderScheduler`, local model path and Kotlin `ComputeFabric.kt` as the canonical worker pathway. The JS mesh is a research simulation, not a second permanent scheduler.
+2. Add authenticated `ComputeTask`->worker RPC only after owner approval, provenance, signed result receipts and network privacy policy are implemented. No hidden model download or off-device exfiltration.
+3. Let Coding Agent submit low-risk read-only analysis, test and benchmark tasks; allow write/commit only through existing approvals and isolated executor. Reserve capacity by REAL host CPU/GPU metrics.
+4. Permit Android WorkManager to periodically discover pending jobs (15-minute minimum, not exact). Foreground work requires appropriate explicit notification and lifecycle. A 24/7 autonomous service is impossible to guarantee on a sleeping/terminated phone without an actual permitted always-on host.
+5. Add secure multi-device enrollments and persistent queue before adding actual concurrent nodes; validate measured throughput (jobs/s, tokens/s), p95 latency, RAM/VRAM, thermal and power use.
+6. Only ship after fully verified Gradle, Kotlin/Node and Fold7 regression tests. Do not touch original owner-signing keys or model weights in this research branch.
+
+**Project acceptance:** an independent new coding defect must be identified, fixed by a real model, and red-to-green verified on fresh tests before describing M8 as autonomous repair. The current demo does not satisfy that goal.
