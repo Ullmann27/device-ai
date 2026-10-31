@@ -80,7 +80,8 @@ node --test scripts/render-continuum-m8-owner-release.test.mjs \
   die 'Latest release contract tests failed'
 }
 # New independent branches integrated for this exact Android release candidate.
-node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs   > continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt 2>&1 || {
+node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs \
+  scripts/continuum-v31-feature-gate.test.mjs   > continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt >&2
   die 'JARVIS cockpit or HTTPS published-APK readback tests failed'
 }
