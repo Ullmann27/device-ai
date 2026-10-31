@@ -62,6 +62,26 @@ class GeneralWebDiscoveryProviderTest {
         assertTrue(provider.isGeneralSearchAvailable)
     }
 
+    @Test fun publicGeneralSearchDoesNotDefaultToWikipedia() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = {
+            """<rss><channel><item><title>Hacking Grundlagen</title>
+                 <link>https://de.wikipedia.org/wiki/Hacking</link></item></channel></rss>"""
+        })
+        assertTrue(provider.discover(ResearchQuery("hacking", "q0")).isEmpty())
+        assertFalse(provider.isGeneralSearchAvailable)
+    }
+
+    @Test fun combinesIndependentSearchEnginesForBroaderCoverage() {
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { url ->
+            if(url.contains("bing.com"))
+                """<rss><channel><item><title>Hacking Einführung</title><link>https://owasp.org/</link></item></channel></rss>"""
+            else """<a class="result__a" href="https://portswigger.net/web-security">Hacking und Websicherheit</a>"""
+        })
+        val results = provider.discover(ResearchQuery("hacking", "q0"))
+        assertEquals(setOf("owasp.org", "portswigger.net"),
+            results.map { java.net.URI(it.url).host }.toSet())
+    }
+
     @Test fun secondaryPublicSearchWorksWhenBingIsUnavailable() {
         val visited = mutableListOf<String>()
         val wikipedia = Fallback()
