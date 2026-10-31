@@ -9,6 +9,7 @@ import path from 'node:path';
 import {buildUltraResearchPacket,runUltraMasterReview,OWNER_CONSENT} from './continuum-nvidia-ultra-review.mjs';
 import {createFollowupPacket,checkCycleBudget} from './continuum-neuro-agent.mjs';
 import {claimReservedExecution,verifyPersistedClaim} from './continuum-nvidia-execution-claim.mjs';
+import {requireExplicitOwnerConsent} from './continuum-nvidia-owner-consent.mjs';
 export const LEDGER_BRANCH='research/continuum-nvidia-automation-ledger-20261030';
 export const LEDGER_PATH='docs/research/neuro-agent/nvidia-scheduled-ledger.json';
 export const MAX_PER_UTC_DAY=3, MIN_INTERVAL_MS=4*3600*1000, MAX_LIFETIME=100;
@@ -113,14 +114,16 @@ export async function claimGithubExecution({repoFull,token,runId,sequence,
 }
 
 export async function executeReservedResearch({sequence,apiKey,outputDir,repoRoot,
- repoFull,token,runId,nowMs=Date.now(),fetchImpl=globalThis.fetch,
+ repoFull,token,runId,ownerConsent,nowMs=Date.now(),fetchImpl=globalThis.fetch,
  callReview=runUltraMasterReview}={}){
  if(!Number.isSafeInteger(sequence)||sequence<0||sequence>=MAX_LIFETIME)stop('SEQUENCE_INVALID');
  if(!outputDir||typeof outputDir!=='string'||!path.isAbsolute(outputDir))stop('OUTPUT_DIR_INVALID');
  if(!/^nvapi-[A-Za-z0-9_-]{12,256}$/.test(apiKey??''))stop('NVIDIA_AUTH_REQUIRED');
+ // A configured API key is not an owner grant. Reject before consuming the ledger claim.
+ const consent=requireExplicitOwnerConsent(ownerConsent,OWNER_CONSENT);
  await claimGithubExecution({repoFull,token,runId,sequence,nowMs,fetchImpl});
  const packet=createFollowupPacket(buildUltraResearchPacket(repoRoot),sequence);
- return callReview({packet,apiKey,consent:OWNER_CONSENT,outputDirectory:outputDir,root:repoRoot});
+ return callReview({packet,apiKey,consent,outputDirectory:outputDir,root:repoRoot});
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  try{
@@ -134,7 +137,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    process.stdout.write(JSON.stringify({allowed:result.allowed,reason:result.reason??null})+'\n');
   }else if(process.argv[2]==='--execute'){
    const out=await executeReservedResearch({sequence:Number(process.env.CONTINUUM_RESERVED_SEQUENCE),
-    apiKey:process.env.NVIDIA_API_KEY,outputDir:process.env.CONTINUUM_RESEARCH_OUTPUT_DIR,
+    apiKey:process.env.NVIDIA_API_KEY,ownerConsent:process.env.CONTINUUM_ULTRA_CONSENT,
+    outputDir:process.env.CONTINUUM_RESEARCH_OUTPUT_DIR,
     repoFull:process.env.GITHUB_REPOSITORY,token:process.env.GITHUB_TOKEN,
     runId:process.env.GITHUB_RUN_ID,
     repoRoot:path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..')});
@@ -145,7 +149,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   }else stop('USAGE_RESERVE_OR_EXECUTE');
  }catch(e){
   const msg=String(e?.message??'');
-  const safe=/^(GITHUB_LEDGER_HTTP_\d{3}|GITHUB_LEDGER_INVALID|NVIDIA_AUTH_REQUIRED|SEQUENCE_INVALID|OUTPUT_DIR_INVALID|USAGE_RESERVE_OR_EXECUTE|GITHUB_OUTPUT_REQUIRED|LEDGER_INVALID|LEDGER_DUPLICATES|LEDGER_TIME_ORDER_INVALID|RESERVATION_INVALID|EXECUTION_CLAIM_INVALID|RESERVATION_NOT_FOUND|RESERVATION_ALREADY_CLAIMED|RESERVATION_EXPIRED|GITHUB_LEDGER_CLAIM_UNVERIFIED)$/.test(msg)?msg:'SAFE_FAILURE';
+  const safe=/^(GITHUB_LEDGER_HTTP_\d{3}|GITHUB_LEDGER_INVALID|NVIDIA_AUTH_REQUIRED|SEQUENCE_INVALID|OUTPUT_DIR_INVALID|USAGE_RESERVE_OR_EXECUTE|GITHUB_OUTPUT_REQUIRED|LEDGER_INVALID|LEDGER_DUPLICATES|LEDGER_TIME_ORDER_INVALID|RESERVATION_INVALID|EXECUTION_CLAIM_INVALID|RESERVATION_NOT_FOUND|RESERVATION_ALREADY_CLAIMED|RESERVATION_EXPIRED|GITHUB_LEDGER_CLAIM_UNVERIFIED|NVIDIA_OWNER_CONSENT_REQUIRED)$/.test(msg)?msg:'SAFE_FAILURE';
   process.stderr.write('SCHEDULED_NVIDIA_RUN_STOPPED: '+safe+'\n');
   process.exitCode=2;
  }
