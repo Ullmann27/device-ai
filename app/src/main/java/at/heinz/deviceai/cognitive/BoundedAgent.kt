@@ -59,6 +59,11 @@ fun interface AgentModel {
     ): AgentModelOutput
 }
 
+/** Optional explicit cancellation bridge. Existing AgentModel implementers are unaffected. */
+interface CancellableAgentModel : AgentModel {
+    fun cancelGeneration()
+}
+
 fun interface AgentEvaluator {
     fun evaluate(response: String, toolRecord: ToolExecutionRecord?): Evaluation
 }
@@ -193,6 +198,7 @@ class BoundedAgentOrchestrator(
 
     fun cancel() {
         cancellation.cancel()
+        (model as? CancellableAgentModel)?.cancelGeneration()
         toolGate.cancel()
     }
 
@@ -258,9 +264,10 @@ class BoundedAgentOrchestrator(
         val toolObservations = mutableListOf<AgentToolObservation>()
         val toolEvidence = mutableListOf<String>()
         val modelIds = mutableListOf<String>()
-        fun hasFreshToolOutcomes(): Boolean = toolObservations.all {
-            it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
-        }
+        fun hasFreshToolOutcomes(): Boolean = toolEvidence.isNotEmpty() &&
+            toolObservations.isNotEmpty() && toolObservations.all {
+                it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
+            }
 
         fun transition(state: AgentState, detail: String) {
             cancellation.throwIfCancelled()

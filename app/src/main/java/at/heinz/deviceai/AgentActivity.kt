@@ -6026,9 +6026,11 @@ class AgentActivity : Activity() {
                     if (compiledContext != null) {
                         append(compiledContext.text)
                     } else {
-                        append("User task:\n").append(task.take(7_900))
-                        append(at.heinz.deviceai.cognitive.LocalConversationContext.renderMemories(memories))
-                        reflection?.let { append("\n\nCorrection: ").append(it.correction.take(512)) }
+                        // Fail closed: if trusted context compilation is unavailable or
+                        // failed, the fallback may use the owner's task but MUST NOT
+                        // bypass privacy, revocation, STALE or CONTRADICTED gates by
+                        // rendering the unfiltered memories directly.
+                        append(at.heinz.deviceai.cognitive.AgentContextFallback.render(reflection))
                     }
                     if (observations.isNotEmpty()) {
                         append("\n\nTool observations:\n")

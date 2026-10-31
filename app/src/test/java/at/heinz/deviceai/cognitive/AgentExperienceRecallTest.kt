@@ -67,7 +67,7 @@ class AgentExperienceRecallTest {
         assertEquals("repair battery service", receivedTask)
         assertTrue(receivedMemories.isEmpty())
         assertEquals(2, store.all().size)
-        assertEquals(ExperienceOutcome.SUCCESS, result.experience?.outcome)
+        assertEquals(ExperienceOutcome.PARTIAL, result.experience?.outcome)
     }
 
     @Test fun optedInRecallIsEphemeralUnverifiedAndDoesNotChangeTaskOrStoredMemoryIds() {

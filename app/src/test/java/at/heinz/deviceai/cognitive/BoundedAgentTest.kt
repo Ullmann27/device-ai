@@ -36,9 +36,9 @@ class BoundedAgentTest {
             result.auditTrail.map { it.state }
         )
         assertEquals(1, experiences.all().size)
-        assertEquals(ExperienceOutcome.SUCCESS, result.experience?.outcome)
+        assertEquals(ExperienceOutcome.PARTIAL, result.experience?.outcome)
         assertEquals(
-            1,
+            0,
             reputation.get("test-model", ModelCapability.TOOL_USE, "agent").taskCount
         )
     }
