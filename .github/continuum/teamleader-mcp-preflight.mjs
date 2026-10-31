@@ -18,6 +18,9 @@ export async function mcpPreflight({root,stateDir,grant,profile='PROTECTED',appr
   const source=fs.realpathSync(root),store=path.resolve(stateDir);
   if(store===source||store.startsWith(source+path.sep))throw Error('Store tool evidence outside the repository');
   const session=await createMcpSession({command:process.execPath,args:[GIT_READONLY_SERVER],workspace:source,
+    // Termux installs git next to node, not in /usr/bin. Pass a narrow executable
+    // search path instead of inheriting the caller's environment or credentials.
+    env:{PATH:path.dirname(fs.realpathSync(process.execPath))+':/usr/bin:/bin'},
     allowlist:ALLOWLIST,grant,profile,approvedServers,limits:{maxCalls:2,callTimeoutMs:10000,...limits}});
   let head,status;
   try{
