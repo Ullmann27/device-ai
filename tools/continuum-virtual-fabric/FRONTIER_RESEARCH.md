@@ -90,3 +90,29 @@ Sources:
 - llama.cpp speculative decoding: https://github.com/ggml-org/llama.cpp/blob/master/docs/speculative.md
 - Oracle Always Free: https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm
 - Colab Free restrictions: https://research.google.com/colaboratory/faq.html
+
+
+## 7. More promising practical experiment: distinct jobs sharing heavy intermediate stages
+
+`shared-stage-experiment.mjs` addresses a harder question than repeated *identical* tasks:
+- 3,000 **different final jobs**, each with a unique final result;
+- each job depends on one of 30 source versions;
+- expensive shared preprocessing is a deterministic 12×12 matrix kernel standing in for a real expensive repo parse, embedding or dependency scan;
+- every job still performs its own unique final transformation;
+- optimized and independent baseline final outputs are checked equal.
+
+**Observed in the executed V8 logic tests:**
+- 3,000 distinct outputs; only **30** costly shared-stage kernels, 2,970 duplicate heavy preprocesses avoided.
+- Counterexample: 3,000 distinct source versions -> 3,000 heavy kernels, **zero** reuse benefit.
+- This does **not** imply 100× end-to-end wall-clock speedup: each final transformation, hashing, admission and memory traffic still cost time.
+- Pure-JS research suite now **43/43 PASS in isolated V8 with test/crypto shims**. Original `node --test` and all original device/LLM tests still **NOT_RUN**.
+
+Run in a genuine Node.js 20+ environment:
+```sh
+node --test tools/continuum-virtual-fabric/*.test.mjs
+node tools/continuum-virtual-fabric/shared-stage-experiment.mjs
+```
+
+**Engineering thesis:** The M8 coding-agent may repeatedly parse the same Kotlin/Java repository files and evaluate similar diagnostics while seeking different repairs. We should share **verified immutable intermediate results** when revision and privacy context match, then use unique final reasoning per task. This is the next plausible way to reduce real inference/tool cost. Measure distinct hashes and end-to-end latency before claiming gain, and never treat a cached *answer* as a verified code fix.
+
+This is a project-specific integration of established memoization/prefix-cache principles, not proof of unprecedented mathematics or a newly generated computing resource.
