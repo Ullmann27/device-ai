@@ -71,10 +71,11 @@ require(!continuumLocalRenderUnsigned ||
         mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank() &&
         continuumLocalSigningPath.isNullOrBlank() && continuumLocalSigningPassword.isNullOrBlank() &&
         continuumStandaloneVersion != null && gradle.startParameter.taskNames.isNotEmpty() &&
+        gradle.startParameter.taskNames.any { it.substringAfterLast(':') == "assembleRelease" } &&
         gradle.startParameter.taskNames.all {
-            it.substringAfterLast(':') == "assembleRelease"
+            it.substringAfterLast(':') in setOf("assembleRelease", "bundleRelease")
         })) {
-    "Render unsigned transport permits only assembleRelease without any owner credentials."
+    "Render unsigned transport permits only assembleRelease and optional bundleRelease without owner credentials."
 }
 // Fail closed before task execution: the QA package may only compile/test/lint.
 // It must never be used to assemble any debug/release APK or bundle.
