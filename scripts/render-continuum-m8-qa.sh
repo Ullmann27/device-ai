@@ -14,7 +14,8 @@ untracked_sources="$(git ls-files --others --exclude-standard -- app/src scripts
 [[ -z "$untracked_sources" ]] || die 'Untracked source files present in Render checkout'
 case "$(git branch --show-current)" in \
   research/continuum-m8-operational-model-20261031|\
-  release/continuum-local-complete-v31-20261031|"") ;; \
+  release/continuum-local-complete-v31-20261031|\
+  research/continuum-m8-render-signed-release-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
