@@ -17,6 +17,16 @@ internal object PublicKnowledgeTopicRouter {
     )
     private val topicPattern = Regex("[\\p{L}][\\p{L}\\p{N} .,'()\\-]{2,79}")
 
+    // A ready on-device language model should answer timeless explanations first.
+    // Keep automatic public web research for explicitly time-sensitive knowledge;
+    // explicit WEB RECHERCHE remains available for every public subject.
+    private val freshEvidenceIndicators = Regex(
+        """(?iu)\b(?:aktuell(?:e|en|er|es)?|heute|gestern|neueste(?:n|r|s)?|letzte(?:n|r|s)?\\s+meldungen|dieses\\s+jahr|derzeit|momentan|gerade\\s+eben|latest|today|yesterday|currently|recent\\s+news)\\b"""
+    )
+
+    fun shouldAutoResearchWithReadyModel(message: String): Boolean =
+        freshEvidenceIndicators.containsMatchIn(message)
+
     fun topic(message: String): String? {
         val cleaned = message.trim().replace(Regex("\\s+"), " ")
         if (cleaned.length !in 8..220 || !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
