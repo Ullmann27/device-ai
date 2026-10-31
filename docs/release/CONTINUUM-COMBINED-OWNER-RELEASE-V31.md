@@ -1,3 +1,5 @@
+> **P0 BUILD-UMGEBUNG: GITHUB ACTIONS FUNKTIONIERT HIER DERZEIT NICHT ZUVERLÄSSIG (Besitzerbestätigung, 31.10.2026).** Keine GitHub-Actions-Workflows für APK-/CI-Abnahme anlegen, auslösen oder als Erfolg/Fehlschlag der App werten. GitHub nur für Quellcode, Branches und PRs verwenden. Echte Node-/Gradle-/Android-Abnahme ausschließlich über den vorhandenen **Render-Android-QA-Host** oder einen nachweislich funktionierenden lokalen Build durchführen; immer exakten Branch und SHA prüfen. Der vorhandene Render-QA-Dienst `continuum-m8-android-qa-20261031` steht momentan noch auf dem **älteren M8-Branch** und muss für v31 kontrolliert auf `release/continuum-local-complete-v31-20261031` umgestellt werden, bevor sein Ergebnis die kombinierte v31 bestätigt. Release/Signierung separat über originalen P12-Host; ohne tatsächliches v31-QA-Ergebnis **kein** Veröffentlichungsversprechen. Der zuvor neu angelegte Actions-Workflow wurde wieder gelöscht.
+
 # Continuum Lokal — gemeinsame nächste APK, nicht wieder nur eine Teilversion
 Stand: 31.10.2026 · Branch: `release/continuum-local-complete-v31-20261031`
 
