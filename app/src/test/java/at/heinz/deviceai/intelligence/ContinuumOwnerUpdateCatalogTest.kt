@@ -108,6 +108,42 @@ class ContinuumOwnerUpdateCatalogTest {
         }
     }
 
+    @Test fun schemaVersionRejectsFractionsAndCoercedStrings() {
+        listOf(
+            """{"schema":1.25,"available":false}""",
+            """{"schema":"1","available":false}""",
+            """{"schema":true,"available":false}"""
+        ).forEach { malformed ->
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumOwnerUpdateCatalog.parseAvailable(malformed)
+            }
+        }
+        listOf(1.25, "1", true).forEach { malformed ->
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumOwnerUpdateCatalog.parse(
+                    JSONObject(json()).put("schema", malformed).toString()
+                )
+            }
+        }
+    }
+
+    @Test fun metadataStringsMustNotBeCoercedFromJsonNumbersOrBooleans() {
+        listOf("channel", "packageName", "versionName", "apkUrl",
+            "apkSha256", "sourceCommit", "signerSha256", "notes"
+        ).forEach { key ->
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumOwnerUpdateCatalog.parse(
+                    JSONObject(json()).put(key, 123).toString()
+                )
+            }
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumOwnerUpdateCatalog.parse(
+                    JSONObject(json()).put(key, true).toString()
+                )
+            }
+        }
+    }
+
     @Test fun releaseNameMustMatchActualVersionCode() {
         assertThrows(IllegalArgumentException::class.java) {
             ContinuumOwnerUpdateCatalog.parse(
