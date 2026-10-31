@@ -46,7 +46,7 @@ flowchart LR
 5. **M8 Coding-Agent:** Nachgewiesene end-to-end Fehlerreproduktion, isolierter Patch, deterministischer Test, unabhängiger erneuter Test und explizite Übernahme. Keine Behauptung, dass der Android-Builder ohne Termux autonom aus GitHub arbeitet.
 6. **M10/M11:** Verifizierter Graph als Shadow, erst nach Holdout-, Konflikt-, Falschbeleg- und Widerrufstests selektiv anschließen. Keine ungeprüfte automatische Promotion in Antworten.
 7. **Geräteabnahme:** Installieren/Update, ursprünglicher privater Speicher, Lernjob-Registrierung, reale Web-Domainvielfalt, Modellantwort, Fold7-UI, Akku/RAM/Thermik und Android-Hintergrundpausen auf dem Gerät protokollieren.
-8. **Play-Auslieferung:** Für die Store-Veröffentlichung zusätzlich AAB/Play App Signing, Data Safety, Datenschutz, Berechtigungsprüfung und Pre-Launch-/Gerätetests separat abnehmen. `targetSdk 36` ist im aktuellen Gradle-Quellstand gesetzt, aber allein keine Store-Freigabe.
+8. **Play-Auslieferung:** Für die Store-Veröffentlichung zusätzlich AAB/Play App Signing, Data Safety, Datenschutz, Berechtigungsprüfung und Pre-Launch-/Gerätetests separat abnehmen. `targetSdk 36` ist im aktuellen Gradle-Quellstand gesetzt, aber allein keine Store-Freigabe. **Kritisch:** Das aktuelle Owner-Manifest fordert `QUERY_ALL_PACKAGES` und `REQUEST_INSTALL_PACKAGES` an. Beide sind auf Google Play stark eingeschränkt und erfordern zulässige Hauptfunktionen und eine entsprechende Erklärung; ein selbst installierender Updatekanal ist kein pauschal zulässiger Play-Use-Case. Vor einer Play-Veröffentlichung getrennte Play-spezifische Manifest-/Update-Architektur prüfen, ohne den funktionierenden privaten Originalsignaturkanal zu zerstören.
 
 ## 4. Messbare Erfolgskriterien statt Behauptungen
 
@@ -66,6 +66,8 @@ Die drei unabhängigen Zähler dürfen nicht vermischt werden: `A_t` = insgesamt
 - Android WorkManager – persistente Arbeit mit Nebenbedingungen: https://developer.android.com/develop/background-work/background-tasks/persistent
 - Google Play Ziel-API-Anforderungen (ab 31.08.2026 API 36): https://support.google.com/googleplay/android-developer/answer/11926878
 - Android App Bundle / APK / Play App Signing: https://developer.android.com/guide/app-bundle/faq
+- Play-Richtlinie zur Paket-Sichtbarkeit: https://support.google.com/googleplay/android-developer/answer/10158779
+- Play-Richtlinie zu REQUEST_INSTALL_PACKAGES: https://support.google.com/googleplay/android-developer/answer/12085295
 
 ## 6. Offene Nachweise
 
