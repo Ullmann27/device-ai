@@ -182,7 +182,7 @@ class AgentExperienceRecallTest {
         assertTrue(summary.contains("observed-tools=get_device_info->get_storage_info->get_device_info"))
         assertTrue(summary.contains("retries=1"))
         assertTrue(summary.contains("unverified-recall-hints=2"))
-        assertFalse(summary.contains("verified"))
+        assertFalse(summary.contains("verified-plan="))
         assertTrue(summary.length <= 256)
     }
 
