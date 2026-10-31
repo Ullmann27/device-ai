@@ -57,7 +57,8 @@ export function createHandlers({httpFetch=globalThis.fetch,now=()=>Date.now(),uu
  async function process(message,env){
   if(!env?.DB||!cfg(env).ready)return;
   const id=message?.body?.id;if(typeof id!=='string'||!/^[\da-f-]{20,64}$/i.test(id))return;
-  const claim=await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='running' WHERE id=? AND status='queued'").bind(id).run();
+  // Atomic owner/cooldown gate: a queued request must not bypass a later owner stop or 429 cooldown.
+  const claim=await env.DB.prepare("UPDATE continuum_nvidia_jobs SET status='running' WHERE id=? AND status='queued' AND EXISTS (SELECT 1 FROM continuum_nvidia_control WHERE id=1 AND state='running' AND blocked_until_ms<=?)").bind(id,now()).run();
   if(claim?.meta?.changes!==1)return;
   const job=await env.DB.prepare('SELECT topic,sequence FROM continuum_nvidia_jobs WHERE id=?').bind(id).first();
   const topic=TOPICS.find(x=>x[0]===job?.topic);if(!topic)throw Error('Unknown topic');
