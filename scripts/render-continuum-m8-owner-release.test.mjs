@@ -61,7 +61,7 @@ test('release requires approved v35 and performs real SHA-bound QA before signin
   assert.match(qa, /:app:testDebugUnitTest :app:lintDebug/);
   assert.match(qa, /:app:assembleRelease/);
   assert.match(qa, /:app:bundleRelease/);
-  assert.match(qa, /app-release\\.aab/);
+  assert.match(qa, /app-release\.aab/);
   assert.match(qa, /BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE/);
   assert.match(qa, /continuumStandaloneVersionCode=35/);
 });
