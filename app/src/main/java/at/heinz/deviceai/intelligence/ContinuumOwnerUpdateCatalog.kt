@@ -22,6 +22,19 @@ internal object ContinuumOwnerUpdateCatalog {
     const val MAX_JSON_BYTES = 8192
 
     private val namePattern = Regex("[0-9A-Za-z._-]{1,40}")
+
+    // JSONObject#getInt coerces fractional numbers and numeric strings. The
+    // release schema must be an actual integer token, including placeholders.
+    private fun isSchemaOne(value: Any): Boolean = when (value) {
+        is Int -> value == 1
+        is Long -> value == 1L
+        else -> false
+    }
+
+    private val stringFields = listOf(
+        "channel", "packageName", "versionName", "apkUrl", "apkSha256",
+        "sourceCommit", "signerSha256", "notes"
+    )
     private val allowedKeys = setOf(
         "schema", "channel", "packageName", "versionCode", "versionName",
         "apkUrl", "apkSha256", "byteLength", "sourceCommit",
@@ -40,8 +53,7 @@ internal object ContinuumOwnerUpdateCatalog {
         val iterator = objectValue.keys()
         while (iterator.hasNext()) props += iterator.next()
         if (props == setOf("schema", "available") &&
-            objectValue.get("schema") is Number &&
-            objectValue.getInt("schema") == 1 &&
+            isSchemaOne(objectValue.get("schema")) &&
             objectValue.get("available") is Boolean &&
             !objectValue.getBoolean("available")) return null
         return parse(json)
@@ -57,8 +69,11 @@ internal object ContinuumOwnerUpdateCatalog {
         val names = obj.keys()
         while (names.hasNext()) keys += names.next()
         require(keys == allowedKeys) { "Manifeststruktur unbekannt oder unvollständig" }
-        require(obj.get("schema") is Number && obj.getInt("schema") == 1) {
+        require(isSchemaOne(obj.get("schema"))) {
             "Manifestformat nicht unterstützt"
+        }
+        require(stringFields.all { obj.get(it) is String }) {
+            "Release-Feldtypen ungültig"
         }
         // JSONObject#getInt/getLong silently truncate floating-point JSON numbers.
         // Require actual JSON integer tokens before converting version or APK length.
