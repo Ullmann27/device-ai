@@ -5,6 +5,11 @@ compatibility_date = "2026-10-01"
 
 [vars]
 NVIDIA_ENABLED = "false"
+# Operator attestation only; NOT proof of provider entitlement.
+NVIDIA_FREE_TIER_CONFIRMED = "false"
+# Set both UTC values only after an explicit owner decision; maximum 24h window.
+CONTINUUM_OWNER_GRANT_AT_UTC = ""
+CONTINUUM_OWNER_GRANT_UNTIL_UTC = ""
 NVIDIA_MAX_CALLS_24H = "48"
 NVIDIA_MAX_RESERVED_TOKENS_24H = "400000"
 NVIDIA_MAX_TOKENS_PER_CALL = "4096"
