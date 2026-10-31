@@ -133,11 +133,11 @@ class ReviewedEvidenceGraph(relations: List<Relation>) {
 
     companion object {
         private val negatedContainment = Regex(
-            """(?iu)\\b(?:nicht\\s+(?:in|im|innerhalb|bei|zu)|not\\s+(?:in|within|part\\s+of)|does\\s+not\\s+belong\\s+to|kein(?:e|en|es|er)?\\s+teil\\s+von)\\b"""
+            """(?iu)\b(?:nicht\s+(?:in|im|innerhalb|bei|zu)|not\s+(?:in|within|part\s+of)|does\s+not\s+belong\s+to|kein(?:e|en|es|er)?\s+teil\s+von)\b"""
         )
         private fun mentionsCompleteEntity(quote: String, entity: String): Boolean =
-            Regex("""(?iu)(?<![\\p{L}\\p{N}])""" + Regex.escape(entity) +
-                """(?![\\p{L}\\p{N}])""").containsMatchIn(quote)
+            Regex("""(?iu)(?<![\p{L}\p{N}])""" + Regex.escape(entity) +
+                """(?![\p{L}\p{N}])""").containsMatchIn(quote)
 
         fun digest(value: String): String =
             MessageDigest.getInstance("SHA-256")
