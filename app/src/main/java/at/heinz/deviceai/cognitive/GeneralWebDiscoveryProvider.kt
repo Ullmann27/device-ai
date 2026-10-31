@@ -25,11 +25,15 @@ class GeneralWebDiscoveryProvider(
     /** Only true when BOTH independent web search transports failed. Empty search results are different. */
     @Volatile var allSearchEndpointsFailed:Boolean=false
         private set
+    /** No complete negative answer when even one provider transport failed and no candidate survived. */
+    @Volatile var searchIncomplete:Boolean=false
+        private set
     override val isGeneralSearchAvailable:Boolean get()=generalWorked
     override fun discover(query:ResearchQuery):List<ResearchSourceCandidate> {
         checkAccess()
         lastIssue=null
         allSearchEndpointsFailed=false
+        searchIncomplete=false
         generalWorked=false
         val text=query.text.trim().take(512)
         if(text.isBlank())return emptyList()
@@ -63,6 +67,7 @@ class GeneralWebDiscoveryProvider(
         }
         checkAccess()
         allSearchEndpointsFailed=failedEndpoints==2 && combined.isEmpty()
+        searchIncomplete=failedEndpoints>0 && combined.isEmpty()
         if(combined.isNotEmpty()) {
             generalWorked=true
             lastIssue=null
