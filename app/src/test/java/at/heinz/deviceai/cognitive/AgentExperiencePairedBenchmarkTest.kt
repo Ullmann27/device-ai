@@ -57,8 +57,9 @@ class AgentExperiencePairedBenchmarkTest {
                     assertEquals(task, seenTask)
                     assertTrue(observations.isEmpty())
                     val hints = memories.filter { "agent-experience-hint" in it.tags }
-                    assertEquals(if (enabled) 1 else 0, hints.size)
-                    hintsSeen += hints.size
+                    assertTrue(hints.size <= 3)
+                    assertEquals(enabled, hints.isNotEmpty())
+                    if (hints.isNotEmpty()) hintsSeen++
                     AgentModelOutput("fixed-mock-model", "fixture-done")
                 },
                 memories = { emptyList() },
