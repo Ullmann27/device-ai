@@ -399,7 +399,7 @@ export function scoutRequest({wt,base,request,brain,limits={},deadline=Date.now(
   if(typeof request!=='string'||!request.trim()||request.length>600)fail('CODING_TASK_INVALID');
   const record=entry=>{if(!evidenceDir)return;fs.mkdirSync(evidenceDir,{recursive:true,mode:0o700});
     fs.appendFileSync(path.join(evidenceDir,'agent-scout.jsonl'),JSON.stringify(entry)+'\n',{mode:0o600});};
-  const intro=`Owner request: ${request.trim()}\n\nSurvey the repository at commit ${base.slice(0,12)} with list_files, search and read_file. `+
+  const intro=`Owner request: ${request.trim()}\n\nSurvey the repository at commit ${base.slice(0,12)} with rank_files, scan_sinks, list_files, search and read_file. `+
     'Find the code that must change and how it is tested, then call propose_scope with the files to change and checkable acceptance criteria. '+
     'You cannot edit anything in this phase.';
   return agentRun({wt,base,deadline,spec:null,brain,L:{...AGENT_LIMITS,...limits},onStep,record,intro,scout:true});
