@@ -21,11 +21,11 @@ internal object PublicKnowledgeTopicRouter {
     // reliable public-web topics: they may refer to people and facts only present
     // in this chat. The owner can still explicitly press the Web button.
     private val conversationReference = Regex(
-        """\\b(?:unser(?:e|er|en|em|es)?|unterhaltung|gespräch|gespraech|vorhin|zuvor|vorher)\\b""",
+        """\b(?:unser(?:e|er|en|em|es)?|unterhaltung|gespräch|gespraech|vorhin|zuvor|vorher)\b""",
         RegexOption.IGNORE_CASE
     )
     private val contextualAttribute = Regex(
-        """^(?:welche|welcher|welches)\\s+(?:farbe|namen|name|schlüssel|schluessel)\\b""",
+        """^(?:welche|welcher|welches)\s+(?:farbe|namen|name|schlüssel|schluessel)\b""",
         RegexOption.IGNORE_CASE
     )
 
