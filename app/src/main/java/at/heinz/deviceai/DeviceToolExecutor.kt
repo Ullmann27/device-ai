@@ -27,6 +27,12 @@ class DeviceToolExecutor(
             callback(runCatching { DeviceStorageProbe.read(context.filesDir) })
             return
         }
+        // Android owns connectivity state; it does not require a shell, Binder
+        // bridge or private device data. Do not treat a failed shell as offline.
+        if (call.name == "get_network_summary") {
+            callback(runCatching { DeviceNetworkProbe.read(context) })
+            return
+        }
         if (!bridge.isReady()) {
             callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
@@ -182,11 +188,6 @@ class DeviceToolExecutor(
                 }
                 "am start -a $action >/dev/null 2>&1 && echo 'Einstellungen geöffnet.'"
             }
-
-            "get_network_summary" ->
-                "echo '=== Interfaces ==='; ip -brief addr 2>/dev/null | head -30; " +
-                    "echo; echo '=== Connectivity ==='; dumpsys connectivity 2>/dev/null | " +
-                    "grep -E 'NetworkAgentInfo|VALIDATED|WIFI|MOBILE' | head -80"
 
             else -> error("Tool nicht implementiert: ${call.name}")
         }

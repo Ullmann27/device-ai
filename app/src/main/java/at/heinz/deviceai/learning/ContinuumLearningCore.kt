@@ -480,7 +480,8 @@ class ContinuumLearningCore(
         sources.forEach { source ->
             val experience=LearningExperienceFactory.create(
                 type=LearningExperienceType.SOURCE_TEXT,
-                provenance=LearningProvenance.MENTOR_WIKIPEDIA,
+                provenance=if (source.url.startsWith("https://de.wikipedia.org/wiki/"))
+                    LearningProvenance.MENTOR_WIKIPEDIA else LearningProvenance.PUBLIC_WEB_SOURCE,
                 trust=LearningTrustClass.SOURCE_OBSERVATION,
                 status=LearningStatus.OBSERVED,
                 content=source.excerpt,

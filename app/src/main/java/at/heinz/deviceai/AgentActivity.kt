@@ -2654,6 +2654,23 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
+        // With the owner's persistent ALWAYS_ON grant, automatically route only
+        // de-identified public knowledge questions to a real research cycle.
+        // Personal or ambiguous dialogue remains local; no silent chat upload.
+        val publicTopic = if (internetConsent.mode ==
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+            at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
+        if (publicTopic != null && !researchArmed) {
+            val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
+            confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                if (session != null && !busy) {
+                    input.text.clear()
+                    addUserMessage(request)
+                    runResearch(session)
+                } else session?.cancel()
+            }
+            return
+        }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -3728,7 +3745,7 @@ class AgentActivity : Activity() {
     }
 
     /**
-     * Narrow, reversible authorization for one publicly curated research source
+     * Narrow, reversible authorization for one public web research source
      * per Android-scheduled cycle. Does not grant ALWAYS_ON access to user chat
      * research or to any generated code/tool execution.
      */
@@ -3737,8 +3754,8 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum · autonome öffentliche Forschung")
             .setMessage(scheduler.display()+"\n\n"+
-                "Forschung nur aus 48 festen Artikeln der deutschsprachigen Wikipedia. "+
-                "Pro Android-Lauf höchstens ein Auszug (96 KiB), maximal 15 Sekunden. "+
+                "Startthemen aus verschiedenen Wissenschaftsgebieten und neue Themen aus öffentlichen Gesprächsthemen und Quellenbezügen. "+
+                "Pro Android-Lauf höchstens ein begrenzter öffentlicher HTTPS-Auszug, maximal 90 Sekunden. "+
                 "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
                 "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
                 "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
@@ -5148,7 +5165,7 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
                 .setMessage("Noch keine gespeicherten Recherche-Aussagen vorhanden. " +
                     "Tippe auf WEB RECHERCHE, wähle einen Suchmodus und gib ein Thema ein. " +
-                    "Device AI kann dazu deutschsprachige Wikipedia-Artikel suchen, ohne dass du eine URL kennen musst. " +
+                    "Device AI recherchiert über allgemeine Web-Suchdienste und prüft öffentliche HTTPS-Quellen, ohne dass du eine URL kennen musst. " +
                     "Bereits gespeicherte Quellenhinweise: ${learned.getOrNull().orEmpty().size}. " +
                     "Internetquellen werden erst nach deiner ausdrücklichen Freigabe als Notizen übernommen.")
                 .setPositiveButton("Schließen", null)
@@ -5327,7 +5344,15 @@ class AgentActivity : Activity() {
         activeWebResearchSession?.cancel()
         activeResearchCancellation?.cancel()
         internetConsent.setMode(value)
-        getSharedPreferences("continuum-internet", MODE_PRIVATE).edit().putString("mode", value.name).apply()
+        getSharedPreferences("continuum-internet", MODE_PRIVATE).edit().putString("mode", value.name).commit()
+        // The owner requested ongoing universal public research while internet
+        // is enabled. Revocation also cancels the recurrent source worker.
+        val publicStudy = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+        if (value == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            if (!publicStudy.enable()) addToolActivity("WEB · Hintergrundforschung konnte nicht geplant werden")
+        } else {
+            publicStudy.disable()
+        }
         researchArmed = false
         updateCloudBadge()
         addToolActivity("WEB · Internetmodus " + value.name)
@@ -5377,7 +5402,7 @@ class AgentActivity : Activity() {
         panel.addView(cockpit.section(this, "PRÜFTIEFE · MAXIMALE SUCHDAUER"), matchWidth(top = 10))
         lateinit var dialog: AlertDialog
         val labels = listOf(
-            "QUICK · bis 15 Sek.\nWebsuche mit Wikipedia-Fallback",
+            "QUICK · bis 15 Sek.\nÖffentliche Quellen im gesamten Web",
             "STANDARD · bis 45 Sek.\nMehrere unabhängige Quellen und Belegprüfung",
             "DEEP · bis 90 Sek.\nGegenbelege und dokumentierte Quellenkonflikte"
         )
@@ -5432,7 +5457,7 @@ class AgentActivity : Activity() {
                 (if(internetConsent.mode==at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
                     "Deine dauerhafte Freigabe ist aktiv; diese Recherche startet ohne weitere Bestätigung. "
                 else "Vor dem Zugriff wird diese eine Recherche zur Freigabe vorgelegt. ") +
-                "Suchfragen gehen an Bing; bei fehlenden Ergebnissen wird Wikipedia versucht. " +
+                "Suchfragen können an öffentliche Suchanbieter gehen; eine Wikipedia-Beschränkung gibt es nicht. " +
                 "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
                 "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
             .setView(topic)
@@ -5475,7 +5500,7 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
             .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
-                "Diese Suchfrage wird an Bing übertragen. Falls keine verwendbaren Treffer vorliegen, wird Wikipedia versucht. "
+                "Diese Suchfrage wird an öffentliche Suchanbieter übertragen. Externe Webquellen werden unabhängig geprüft. "
                 else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
                 "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
             .setNegativeButton("Ablehnen") { _,_->webToolGate.cancel();completed(null) }
@@ -5589,9 +5614,9 @@ class AgentActivity : Activity() {
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
                             append(if(session.call is at.heinz.deviceai.cognitive.WebToolRequest.Read)"\n\nDirekte genehmigte HTTPS-Quelle."
-                                else "\n\nAllgemeine Websuche lieferte keine verwendbaren Treffer; Wikipedia-Fallback wurde versucht.")
+                                else "\n\nAllgemeine Suchanbieter lieferten keine überprüfbaren Treffer. Keine Wikipedia-Ersatzquellen erzwungen.")
                         } else {
-                            append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
+                            append("\n\nAllgemeine Websuche über mehrere Anbieter; Suchanbieter können Ergebnisse begrenzen.")
                         }
                         if (dossier.sources.isEmpty()) {
                             append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
@@ -5756,7 +5781,7 @@ class AgentActivity : Activity() {
     }
 
     private fun createToolGate() = ToolGate(
-        ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
+        ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             if(request.name in setOf("web_search","web_read")) {
                 val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
@@ -5788,10 +5813,16 @@ class AgentActivity : Activity() {
                     .show()
                 return
             }
+        // A terminal read-only tool failure is known, not an ambiguous device mutation.
+        // Keep side-effecting interrupted operations subject to explicit review.
         val uncertain = receipts.filter {
-            it.state == ToolReceiptState.STARTED ||
-                it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
-                it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
+            val canChangeDevice = it.risk != Risk.READ_ONLY &&
+                it.toolName !in setOf("web_search", "web_read")
+            canChangeDevice && (
+                it.state == ToolReceiptState.STARTED ||
+                    it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
+                    it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
+            )
         }
         if (uncertain.isEmpty()) return
         addToolActivity("${uncertain.size} tool call(s) require operator review")
@@ -7663,6 +7694,17 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        // Store only public, scrubbed topic labels when the owner has enabled
+        // both ALWAYS_ON and recurring public study. Not the chat transcript.
+        if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(value)
+            if (topic != null) {
+                onLearningIo({
+                    val scheduler = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+                    if (scheduler.enabled) scheduler.addDiscovered(listOf(topic)) else 0
+                }) { _ -> }
+            }
+        }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
         conversationActive = true
         refreshConversationLayout()
