@@ -107,12 +107,16 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
                         }.inspect()
                     }
                 )
-                val reason = ContinuumOfflineLearningBudget.deferralReason(currentResources())
+                val reason = if (!at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayPropose(
+                    at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this@ContinuumDeviceTeamleaderJobService)))
+                    "OWNER_AUTONOMY_RESTRICTED" else ContinuumOfflineLearningBudget.deferralReason(currentResources())
                 if (reason != null) {
                     if (!cancellation.get()) teamleader.defer(reason)
                 } else if (!cancellation.get()) {
                     teamleader.runOnce {
-                        cancellation.get() || Thread.currentThread().isInterrupted
+                        cancellation.get() || Thread.currentThread().isInterrupted ||
+                            !at.heinz.deviceai.cognitive.ContinuumAutonomyControl.mayPropose(
+                                at.heinz.deviceai.cognitive.ContinuumAutonomyControl.level(this@ContinuumDeviceTeamleaderJobService))
                     }
                     // A corrupted model or backlog is a persistent failure,
                     // not a reason to spin an immediate JobScheduler retry.
