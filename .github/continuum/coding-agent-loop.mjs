@@ -227,10 +227,18 @@ function agentRun({wt,base,deadline,diagnostics=[],history=[],spec,brain,runTest
         const source=current(file);
         if(typeof source!=='string')return 'File too large to scan.';
         const r=scanDefensiveSinks(file,source);
-        return r.findings.length?r.findings.map(x=>
-          `${file}:${x.line}\t${x.rule}\tseverity=${x.severity}`).join('\n')+
-          `\n(${r.status}; findings require human confirmation)`:
-          `No matched defensive patterns (${r.status}).`;
+        const findings=r.findings.map(x=>
+          `${file}:${x.line}\t${x.rule}\tseverity=${x.severity}`).join('\n');
+        const incompleteness=r.status==='PARTIAL_LINE_LIMIT'
+          ? `SCAN INCOMPLETE: ${r.unscannedLongLines} overlong line(s) were not scanned; manual review required.`
+          : r.status==='TOO_LARGE'
+            ? 'SCAN INCOMPLETE: source exceeds the scan budget; manual review required.'
+            : r.status==='TRUNCATED'
+              ? 'SCAN INCOMPLETE: finding limit reached; manual review required.'
+              : '';
+        return (findings||'No matched defensive patterns')+
+          `\n(${r.status}; matches are review candidates, not verified vulnerabilities)`+
+          (incompleteness?'\n'+incompleteness:'');
       },
       search:({pattern,path:prefix=''})=>{
         if(typeof pattern!=='string'||!pattern||pattern.length>L.maxPatternChars||/[\x00-\x1f]/.test(pattern))return 'Invalid pattern (1-200 printable characters).';
