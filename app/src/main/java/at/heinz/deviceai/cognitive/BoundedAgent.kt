@@ -59,6 +59,11 @@ fun interface AgentModel {
     ): AgentModelOutput
 }
 
+/** Optional explicit cancellation bridge. Existing AgentModel implementers are unaffected. */
+interface CancellableAgentModel : AgentModel {
+    fun cancelGeneration()
+}
+
 fun interface AgentEvaluator {
     fun evaluate(response: String, toolRecord: ToolExecutionRecord?): Evaluation
 }
@@ -193,6 +198,7 @@ class BoundedAgentOrchestrator(
 
     fun cancel() {
         cancellation.cancel()
+        (model as? CancellableAgentModel)?.cancelGeneration()
         toolGate.cancel()
     }
 
