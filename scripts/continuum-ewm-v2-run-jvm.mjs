@@ -38,7 +38,12 @@ export function observationsToReceipts(stdout,gold,candidateSha=CANDIDATE_SHA){
   const row=gold[i];expect(id===row.id,'JVM_RESULT_ORDER_MISMATCH');
   expect(positive==='0'||positive==='1','JVM_INVALID_EDGE');
   for(const flag of [before,after,unrelated])expect(flag==='true'||flag==='false','JVM_INVALID_STATE_FLAG');
-  const reasons=Buffer.from(reasonB64,'base64').toString('utf8');
+  // Node's base64 decoder silently ignores invalid characters and missing padding.
+  // A receipt must preserve the exact canonical bytes emitted by the JVM probe.
+  const reasonBytes=Buffer.from(reasonB64,'base64');
+  expect(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(reasonB64) &&
+    reasonBytes.toString('base64')===reasonB64,'JVM_INVALID_REASON_BASE64');
+  const reasons=reasonBytes.toString('utf8');
   const parts=/^PRODUCTION_GRAPH:edges_from_after=((?:before|unrelated)(?:,(?:before|unrelated))*)?;replaces_before=(true|false)$/.exec(reasons);
   expect(parts!==null,'JVM_INVALID_REASON');
   const edgeSet=new Set((parts[1]||'').split(',').filter(Boolean));
