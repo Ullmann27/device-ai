@@ -5344,7 +5344,15 @@ class AgentActivity : Activity() {
         activeWebResearchSession?.cancel()
         activeResearchCancellation?.cancel()
         internetConsent.setMode(value)
-        getSharedPreferences("continuum-internet", MODE_PRIVATE).edit().putString("mode", value.name).apply()
+        getSharedPreferences("continuum-internet", MODE_PRIVATE).edit().putString("mode", value.name).commit()
+        // The owner requested ongoing universal public research while internet
+        // is enabled. Revocation also cancels the recurrent source worker.
+        val publicStudy = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+        if (value == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            if (!publicStudy.enable()) addToolActivity("WEB · Hintergrundforschung konnte nicht geplant werden")
+        } else {
+            publicStudy.disable()
+        }
         researchArmed = false
         updateCloudBadge()
         addToolActivity("WEB · Internetmodus " + value.name)
