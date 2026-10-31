@@ -10,9 +10,9 @@ import java.io.StringReader
 import java.util.concurrent.CancellationException
 import javax.xml.parsers.SAXParserFactory
 
-/** Public Bing RSS search, with Wikipedia only when search produces no safe result.
+/** Multi-provider general HTTPS web search; Wikipedia is never an implicit fallback.
  * Every transport shares the research provider's DNS/TLS/redirect/byte bounds.
- * Endpoint availability is not guaranteed; fallback and failures stay visible.
+ * Endpoint availability is not guaranteed; failures stay visible.
  */
 class GeneralWebDiscoveryProvider(
     private val wikipedia:ResearchDiscoveryProvider?=null,
@@ -52,13 +52,12 @@ class GeneralWebDiscoveryProvider(
         lastIssue=lastIssue?:"Beide allgemeinen Web-Suchanbieter lieferten keine thematisch passenden Quellen."
         checkAccess()
         val fallback=runCatching {
-            (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess))
-                .discover(query.copy(text=focused))
-                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
+            wikipedia?.discover(query.copy(text=focused))
+                ?.filter { ResearchQuestionFocus.titleMatches(text,it.title) }.orEmpty()
         }
             .getOrElse {
                 rethrowCancellation(it)
-                lastIssue=lastIssue+" Wikipedia-Fallback ebenfalls fehlgeschlagen."
+                lastIssue=lastIssue+" Explizit konfigurierter Zusatzanbieter fehlgeschlagen."
                 emptyList()
             }
         checkAccess()
