@@ -5618,16 +5618,26 @@ class AgentActivity : Activity() {
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
+        val researchSynthesisRoute = java.util.concurrent.atomic.AtomicReference("NOT_ATTEMPTED")
         val localSynthesis = ResearchSynthesizer { input ->
-            if (localRuntime.state != LocalModelState.READY) {
+            if (input.evidence.none { it.text.isNotBlank() &&
+                    it.sourceUrl.startsWith("https://", ignoreCase = true) }) {
+                researchSynthesisRoute.set("NO_USABLE_EVIDENCE")
+                DeterministicResearchSynthesizer().synthesize(input)
+            } else if (localRuntime.state != LocalModelState.READY) {
+                researchSynthesisRoute.set("MODEL_NOT_READY")
                 DeterministicResearchSynthesizer().synthesize(input)
             } else {
                 val generation = generateLocal { callback ->
                     localRuntime.stream(ResearchPromptBoundary.build(input), callback)
                 }
-                if (generation.failure != null || generation.proposal != null || generation.response.isBlank()) {
+                val quality = at.heinz.deviceai.cognitive.LocalDialogueQualityGate.evaluate(
+                    input.question, generation.response)
+                if (generation.failure != null || generation.proposal != null || !quality.success) {
+                    researchSynthesisRoute.set("MODEL_OUTPUT_REJECTED")
                     DeterministicResearchSynthesizer().synthesize(input)
                 } else {
+                    researchSynthesisRoute.set("MODEL_USED")
                     ResearchSynthesisOutput(generation.response.trim().take(8_000))
                 }
             }
@@ -5717,8 +5727,10 @@ class AgentActivity : Activity() {
                         if (dossier.sources.isEmpty()) {
                             append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
                         }
-                        if (localRuntime.state != LocalModelState.READY) {
-                            append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
+                        val actualRoute = researchSynthesisRoute.get()
+                        if (actualRoute != "MODEL_USED" && actualRoute != "NOT_ATTEMPTED") {
+                            append("\n\nHinweis: Deterministische Rechercheausgabe (")
+                                .append(actualRoute).append("); keine bestätigte Gemma-Antwort.")
                         }
                         if (dossier.sources.isNotEmpty())
                             dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
@@ -6077,7 +6089,8 @@ class AgentActivity : Activity() {
         val localSessionId = sessionId
         val internetModeAtTurnStart = internetConsent.mode
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
-        val conversationContext = localConversationContext.render(localSessionId)
+        val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall
+            .safeHistory(localConversationContext.render(localSessionId))
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
