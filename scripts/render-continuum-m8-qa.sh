@@ -19,6 +19,7 @@ case "$(git branch --show-current)" in \
   release/continuum-v32-openrouter-fullweb-20261031|\
   research/continuum-m8-render-signed-release-20261031|\
   research/continuum-cdx1-negation-hardlock-20261101|\
+  research/jarvis-autonomous-core|\
   research/continuum-m10-verified-brain-and-web-20261031|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
@@ -68,6 +69,10 @@ gradle --version
 node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
+node --test scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
+  die 'Termux pinned checkout recovery contract failed'
+}
 node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
     cat continuum-m8-render-qa/NODE-TESTS.txt
     die 'Node contract tests failed'

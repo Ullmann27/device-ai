@@ -79,6 +79,26 @@ ccc1_full_chain() {
 }
 
 case "${1:-once}" in
+    checkout-check|checkout-repair-missing)
+        # A strictly pinned read-only / opt-in local recovery path for scripts
+        # that the typed Android -> Termux coding bridge depends upon.
+        # No network fetch, branch mutation, APK signing or implicit repair.
+        [[ $# -eq 2 && "$2" =~ ^[0-9a-f]{40}$ ]] || {
+            printf '%s\n' 'Usage: continuum-teamleader-termux.sh checkout-check|checkout-repair-missing <exact 40-char HEAD SHA>' >&2
+            exit 2
+        }
+        guard="$ROOT/scripts/ensure-termux-checkout.sh"
+        [[ -f "$guard" && ! -L "$guard" ]] || {
+            printf '%s\n' 'Pinned checkout guard is missing; cannot repair without a trusted checker.' >&2
+            exit 1
+        }
+        if [[ "$1" == "checkout-check" ]]; then
+            exec bash "$guard" "$ROOT" "$2" --check
+        fi
+        # Explicit mode: restore only missing files that already exist in the
+        # pinned local Git object database; preserve edited owner files.
+        exec bash "$guard" "$ROOT" "$2" --repair-missing
+        ;;
     once)
         exec node "$CLI" --once --root "$ROOT" --budget-minutes 10
         ;;
@@ -180,7 +200,7 @@ case "${1:-once}" in
             });'
         ;;
     *)
-        printf '%s\n' 'Usage: bash scripts/continuum-teamleader-termux.sh [once|status|loop|ccc1-check [--full]|ccc1-prepare|ccc1-once|ccc1-status|ccc1-review|mainapp-qa [--offline]]' >&2
+        printf '%s\n' 'Usage: bash scripts/continuum-teamleader-termux.sh [once|status|loop|checkout-check <sha>|checkout-repair-missing <sha>|ccc1-check [--full]|ccc1-prepare|ccc1-once|ccc1-status|ccc1-review|mainapp-qa [--offline]]' >&2
         exit 2
         ;;
 esac
