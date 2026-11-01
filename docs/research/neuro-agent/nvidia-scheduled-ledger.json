@@ -1,5 +1,12 @@
 {
   "schema": "continuum-nvidia-schedule-ledger",
   "version": 1,
-  "reservations": []
+  "reservations": [
+    {
+      "runId": "41257851608",
+      "atMillis": 1793493700171,
+      "utcDate": "2026-11-01",
+      "sequence": 0
+    }
+  ]
 }
