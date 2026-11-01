@@ -1967,6 +1967,9 @@ class AgentActivity : Activity() {
                 startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
             },
             CenterAction("AUTONOMIE · STUFE / NOT-STOPP", accent = true) { showAutonomyControl() },
+            CenterAction("AVATAR-LAB · OFFLINE-SPRECHTEST", accent = true) {
+                startActivity(Intent(this, ContinuumAvatarLabActivity::class.java))
+            },
             CenterAction("JARVIS · MISSION CONTROL") {
                 startActivity(Intent(this, ContinuumJarvisMissionControlActivity::class.java))
             },

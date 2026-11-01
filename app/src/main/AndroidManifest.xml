@@ -88,6 +88,11 @@
             android:name=".ContinuumTrainingMonitorActivity"
             android:exported="false" />
 
+        <!-- Private offline image-based avatar experiment; no separate launcher or network service. -->
+        <activity
+            android:name=".ContinuumAvatarLabActivity"
+            android:exported="false" />
+
         <!-- Read-only JARVIS-inspired cockpit reuses existing on-device telemetry. -->
         <activity
             android:name=".ContinuumJarvisMissionControlActivity"
