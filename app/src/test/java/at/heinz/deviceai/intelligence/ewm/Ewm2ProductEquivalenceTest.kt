@@ -115,7 +115,7 @@ class Ewm2ProductEquivalenceTest {
                 }
                 val verdict = outcome(t.getString("expected"), strings(t.getJSONArray("gold")).toSet(), cited,
                     r.status==ContinuumBrainStatus.ON_CLARIFY)
-                if (d == 2 && i == 3) {
+                if (d == 2 && i == 3 && records.any { it.title == "Thunfisch" }) {
                     val thunfisch = records.single { it.title == "Thunfisch" }
                     val archive = ContinuumKnowledgeArchive(dir)
                     val directQuote = ContinuumBrainBridge.archiveAnswerForQuestion(thunfisch, t.getString("text")) != null
