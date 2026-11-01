@@ -20,3 +20,21 @@ test('Malformed empty replies never become safe abstentions',()=>{const changed=
 test('Mutating frozen original invalidates whole run',()=>{const changed=structuredClone(cases);changed[0].sources[0].text+='!';assert.throws(()=>score({cases:changed},{cases:rows}),/integrity mismatch/)});
 test('Source range cannot exceed original string',()=>{const changed=structuredClone(rows);changed[0].RAW.endExclusive=999;let x=score({cases},{cases:changed}).splits.PRIMARY.RAW;assert.equal(x.falseSourceAssignments,1)});
 test('Confidence intervals are finite and no primary promotion for toy sample',()=>{const s=run().splits.PRIMARY.RAW;assert.ok(s.supportedWilson95.every(Number.isFinite));assert.equal(s.primaryGate,false)});
+
+test('One hundred deterministic tuple mutations never pass as source-bound evidence', () => {
+  for(let i=0;i<100;i++) {
+    const changed=structuredClone(rows);
+    const p=changed[0].RAW;
+    switch(i%5) {
+      case 0: p.text='fake'+i; break;
+      case 1: p.sourceId='other'+i; break;
+      case 2: p.revision=100+i; break;
+      case 3: p.sha256='0'.repeat(64); break;
+      case 4: p.endExclusive+=1+i%3; break;
+    }
+    const report=score({cases},{cases:changed}).splits.PRIMARY.RAW;
+    assert.equal(report.exactSupported,0,'mutation '+i);
+    assert.equal(report.falseSourceAssignments,1,'provenance mutation '+i);
+    assert.equal(report.unsupportedPositive,1,'false positive '+i);
+  }
+});
