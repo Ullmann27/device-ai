@@ -124,15 +124,43 @@ object DevelopmentSourceChunkIndex {
             if (next != source.bytes || input.read() != -1) throw IOException("Incomplete index")
             entries
         }
+        // A whole-file hash alone does not authenticate the line numbers or
+        // chunk boundaries stored in a sidecar. Reconstruct them from the same
+        // bounded stream while checking each chunk digest and UTF-8 boundary.
         val digest = MessageDigest.getInstance("SHA-256")
+        var line = 1L
+        var lastNewline = false
         FileInputStream(source.file).buffered(CHUNK_BYTES).use { input ->
             val buffer = ByteArray(CHUNK_BYTES)
-            while (true) {
+            chunks.forEachIndexed { index, chunk ->
                 checkCancelled(cancelled)
-                val n = input.read(buffer)
-                if (n < 0) break
-                digest.update(buffer, 0, n)
+                val part = MessageDigest.getInstance("SHA-256")
+                val firstLine = line
+                var remaining = (chunk.end - chunk.start).toInt()
+                var firstRead = true
+                while (remaining > 0) {
+                    checkCancelled(cancelled)
+                    val n = input.read(buffer, 0, minOf(remaining, buffer.size))
+                    if (n <= 0) throw IOException("Source truncated while verifying index")
+                    if (firstRead && index > 0 && (buffer[0].toInt() and 0xC0) == 0x80)
+                        throw IOException("Index splits a UTF-8 code point")
+                    firstRead = false
+                    digest.update(buffer, 0, n)
+                    part.update(buffer, 0, n)
+                    for (i in 0 until n) {
+                        if (buffer[i] == 10.toByte()) {
+                            line++
+                            lastNewline = true
+                        } else lastNewline = false
+                    }
+                    remaining -= n
+                }
+                val lastLine = if (lastNewline) line - 1 else line
+                if (chunk.firstLine != firstLine || chunk.lastLine != lastLine ||
+                    hex(part) != chunk.sha256)
+                    throw IOException("Index chunk provenance mismatch")
             }
+            if (input.read() != -1) throw IOException("Unexpected source bytes after index")
         }
         if (hex(digest) != source.sha256) throw IOException("Source content changed")
         return Index(source, target, chunks)
