@@ -21,6 +21,14 @@ internal object OwnerAttributeEvidenceScope {
     private val claim = Regex("(?u)^(?:(?:Jetzt|Derzeit|Aktuell|Früher|Heute|Damals|Inzwischen)\\s+)?" +
         "(\\p{Lu}[\\p{L}\\p{M}-]{1,39}(?:\\s+\\p{Lu}[\\p{L}\\p{M}-]{1,39}){0,2})\\s+" +
         "(wohnt|wohnte|lebt|lebte|hat|besitzt|trägt|ist|arbeitet)\\b")
+    // A direct age statement may identify its holder by an explicit kinship role:
+    // "Meine Tochter Klara ist 29." The named person, not the speaker or role,
+    // owns the age. This deliberately does not parse reported speech or clauses.
+    private val kinshipAge = Regex(
+        "(?u)^(?:Meine|Mein|Unsere|Unser)\\s+(?:Tochter|Sohn|Schwester|Bruder)\\s+" +
+            "([\\p{Lu}][\\p{L}\\p{M}'’-]{1,39}(?:\\s+[\\p{Lu}][\\p{L}\\p{M}'’-]{1,39}){0,2})" +
+            "\\s+ist\\s+[0-9]{1,3}(?:\\s+Jahre\\s+alt)?\\s*\\.$"
+    )
     private val correction = Regex("(?iu)^(?:korrektur|berichtigung)\\s*:\\s*")
     private fun key(s: String) = Normalizer.normalize(s.trim(), Normalizer.Form.NFC).lowercase(Locale.ROOT)
     private fun request(q: String): Request? {
@@ -52,7 +60,7 @@ internal object OwnerAttributeEvidenceScope {
             it.status in setOf(LearningStatus.CONFIRMED, LearningStatus.LEARNED, LearningStatus.REPLAY_PENDING, LearningStatus.REVOKED) }
         val heads = owner.mapNotNull { e ->
             val cleaned = e.content.replaceFirst(correction, "")
-            claim.find(cleaned.take(160))?.let {
+            val direct = claim.find(cleaned.take(160))?.let {
                 val verb = it.groupValues[2]
                 val compatible = when(ask.kind) {
                     "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
@@ -62,6 +70,9 @@ internal object OwnerAttributeEvidenceScope {
                 }
                 if(compatible)Triple(e, cleaned, key(it.groupValues[1])) else null
             }
+            direct ?: if(ask.kind == "AGE")kinshipAge.matchEntire(cleaned)?.let {
+                Triple(e, cleaned, key(it.groupValues[1]))
+            } else null
         }
         // A bare first name is no proof that two differently named people are one.
         if(heads.any { it.third != ask.holder && it.third.startsWith(ask.holder + " ") })return emptySet()

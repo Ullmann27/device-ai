@@ -117,6 +117,32 @@ class ContinuumOwnerRoleDialogueTest {
         assertEquals("Mira wohnte früher in Wien.",memories.first().content)
     }
 
+    @Test fun explicitKinshipAgeKeepsTheNamedChildWithoutBorrowingOtherOwners() {
+        val bytes = TrainableSubwordEncoder().save()
+        val klara = fact("Meine Tochter Klara ist 29.", 1)
+        val ben = fact("Ben ist 31 Jahre alt.", 2)
+        assertEquals(listOf(klara.id), ContinuumMemoryDialogue.rank(bytes,
+            "Wie alt ist Klara?", listOf(klara, ben)).map { it.id })
+        assertTrue(ContinuumMemoryDialogue.rank(bytes,
+            "Wie alt ist Clara?", listOf(klara, ben)).isEmpty())
+        assertEquals(listOf(ben.id), ContinuumMemoryDialogue.rank(bytes,
+            "Wie alt ist Ben?", listOf(klara, ben)).map { it.id })
+    }
+
+    @Test fun kinshipAgeDoesNotAcceptSecondClauseOrReportedAgeAsOwnersFact() {
+        val bytes = TrainableSubwordEncoder().save()
+        val misleading = listOf(
+            "Meine Tochter Klara ist 29. Ben ist 31.",
+            "Meine Tochter Klara ist 29 und Ben ist 31.",
+            "Meine Tochter Klara ist 29, laut Ben.",
+            "Meine Tochter Klara ist angeblich 29."
+        )
+        misleading.forEach { text ->
+            assertTrue(text, ContinuumMemoryDialogue.rank(bytes,
+                "Wie alt ist Klara?", listOf(fact(text))).isEmpty())
+        }
+    }
+
     @Test fun ownerCodeIsDisplayedAsDeinWhileLiteralEvidenceIsUnchanged() {
         val dir=Files.createTempDirectory("continuum-owner-perspective").toFile()
         try {
