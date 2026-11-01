@@ -1,0 +1,36 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "seed": 17,
+  "rate": 0.15,
+  "devSha256": "9332c99804abffc6604a0fc4ebd1351462b3221c7d4ddb93da247739e56ddee1",
+  "featureNames": [
+    "spanBias",
+    "entityPrefix",
+    "relationPrefix",
+    "entityRelationPrefix",
+    "wholeStaticLocation",
+    "spanRisk",
+    "spanAmbiguity",
+    "noAnswerBias",
+    "noBinding",
+    "noAnswerRisk",
+    "unsupportedQuestion"
+  ],
+  "trainSha256": "316f2b2a8bc324dc216161b3a21a781f6956c00e620b2205a1274e468bc56377",
+  "weights": [
+    -3.6643145520051825,
+    2.2633980024698492,
+    1.2401294791920325,
+    5.027963779833745,
+    5.128857936409631,
+    -4.359352700274796,
+    -3.852893545574312,
+    3.6643145520052025,
+    5.108760815185135,
+    8.21224624584913,
+    0.5564111130858928
+  ],
+  "epochs": 60,
+  "objective": "span/noanswer classifier NLL; not generative byte NLL",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}
