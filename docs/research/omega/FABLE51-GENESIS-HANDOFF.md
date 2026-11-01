@@ -53,7 +53,8 @@ Ergebnis in `docs/evidence/fable51-genesis-20261101/CDX1-ORACLE-BOUND.md` (+ JSO
 | 59e26bcc | B1+B3: `ResearchDialogueHandoff`, Recherche-Digest im Dialogkontext, Abrufdatum/TODAY im Prompt, Canary-Frames im Qualitätsgate | `android-kotlin-unit-check.sh` OK |
 | 24445118 | B2: `FreshKnowledgeNeed` (CURRENT_FACT/EXPLANATION/STATIC), ASK fragt bei Gegenwartsfragen, ALWAYS_ON lässt Erklärungen lokal | `android-kotlin-unit-check.sh` OK (1492 Tests) |
 | f617a6d3 | CDX1 Oracle-Bound-Experiment + Regelkern-Koordination (Komma/„und“) | `android-kotlin-unit-check.sh` OK (1493 Tests, 275 Klassen) |
-| (dieser Commit) | B5: Negativtest – reale Myra-Bot-Wall-Seite (HTTP 503, `app/src/test/resources/research/ris-myra-botwall-503.html`) liefert keine RIS-Evidenz; Provider gibt leere Dokument-/Zitatliste zurück | `LegalRisEvidenceProviderTest` 3/3 grün |
+| dd68d5c7 | B5: Negativtest – reale Myra-Bot-Wall-Seite (HTTP 503, `app/src/test/resources/research/ris-myra-botwall-503.html`) liefert keine RIS-Evidenz; Provider gibt leere Dokument-/Zitatliste zurück | `LegalRisEvidenceProviderTest` 3/3 grün |
+| (dieser Commit) | Argon E7 (Platz 1): Sitzungs-Spezialist `CertifiedLocationReflex.answerFromSession` – „Wo ist X?“ wird vor Gedächtnis/Gemma/Web aus den eigenen früheren Nachrichten der Sitzung per Regelkern+Verifier beantwortet (nur eindeutiger Treffer, 0 Tokens); `LocalConversationContext.priorUserTurns`; Shadow-Adapter-Satzteilgrenzen angeglichen | `android-kotlin-unit-check.sh` OK (1495 Tests) |
 
 ## Offene Aufgaben
 - siehe Abschnitte oben; wird fortgeschrieben.

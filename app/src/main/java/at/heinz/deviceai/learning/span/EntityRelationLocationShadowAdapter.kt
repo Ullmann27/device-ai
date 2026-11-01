@@ -15,7 +15,8 @@ object EntityRelationLocationShadowAdapter {
             .matchEntire(question) ?: return null
         val source = snapshot.sources.single { it.sourceId == found.sourceId }
         val prefix = source.text.substring(0,found.start)
-        val binding = Regex("""(?iu)(?:^|(?<=[.!;]))\s*(""" + Regex.escape(query.groupValues[2]) +
+        // Clause boundaries mirror the probe: sentence punctuation, comma, or a coordinating "und".
+        val binding = Regex("""(?iu)(?:^|(?<=[.!;,])|(?<=\bund\s))\s*(""" + Regex.escape(query.groupValues[2]) +
             """)\s+(""" + Regex.escape(query.groupValues[1]) + """)\s+in\s+$""").find(prefix) ?: return null
         val entity = binding.groups[1]!!
         val relation = binding.groups[2]!!

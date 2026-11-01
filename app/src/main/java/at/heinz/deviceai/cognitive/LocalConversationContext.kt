@@ -61,6 +61,10 @@ class LocalConversationContext {
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
 
+    /** The owner's own earlier requests of this session (oldest first), never model replies or research text. */
+    @Synchronized fun priorUserTurns(sessionId: String): List<String> =
+        if (session != sessionId) emptyList() else turns.map { it.request }
+
     @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null;research=null }
 
     @Synchronized fun render(sessionId: String, nowMillis: Long = System.currentTimeMillis()): String {
