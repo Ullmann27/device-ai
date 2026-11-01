@@ -2702,6 +2702,10 @@ class AgentActivity : Activity() {
         }
         // A plain question never implies internet permission. Explicit web tools
         // and an armed research button both go through the same owner dialog.
+        if (at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(request)) {
+            // An owner prohibition consumes any previously armed one-shot Web UI.
+            researchArmed = false
+        }
         val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
         if(webRequest!=null) {
             researchArmed=false
