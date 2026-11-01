@@ -2682,24 +2682,21 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
-        // Optional zero-token reflex; only an explicitly submitted bounded source can qualify.
-        at.heinz.deviceai.cognitive.CertifiedLocationReflex.answer(request)?.let { proof ->
+        // Optional zero-token reflex; a recognized but unproven source request is terminal.
+        // Keep rule/verifier abstention separate from "no supported evidence route" so that
+        // negation, conflict or unclear time never falls through to model or web guesses.
+        val evidenceRoute = at.heinz.deviceai.cognitive.CertifiedLocationReflex.routeExplicit(request)
+            ?: at.heinz.deviceai.cognitive.CertifiedLocationReflex.routeFromSession(request,
+                localConversationContext.sessionEvidence(sessionId))
+        if (evidenceRoute != null) {
             input.text.clear()
             addUserMessage(request)
-            addAssistantMessage(proof.text)
-            return
-        }
-        // E7 session specialist: a bare "Wo ist X?" is first checked against the owner's own
-        // earlier messages of this session (rule core + verifier, <50 ms, zero tokens). Only an
-        // unambiguous hit short-circuits; otherwise the normal memory → model → web chain runs.
-        // This also keeps a private question out of the ALWAYS_ON web route.
-        at.heinz.deviceai.cognitive.CertifiedLocationReflex.answerFromSession(request,
-            localConversationContext.priorUserTurns(sessionId))?.let { proof ->
-            input.text.clear()
-            addUserMessage(request)
-            addAssistantMessage(proof.text)
-            addToolActivity("Sitzungsbeleg · Regelkern+Verifier · keine Modell- oder Webanfrage")
-            localConversationContext.record(sessionId, request, proof.text)
+            val reply = when (evidenceRoute) {
+                is at.heinz.deviceai.cognitive.CertifiedLocationReflex.Routing.Proven -> evidenceRoute.proof.text
+                is at.heinz.deviceai.cognitive.CertifiedLocationReflex.Routing.Withheld -> evidenceRoute.text
+            }
+            addAssistantMessage(reply, preserveLocalContext = true)
+            addToolActivity("BELEGROUTE · lokal geprüft · keine Modell- oder Webanfrage")
             return
         }
         // With the owner's persistent ALWAYS_ON grant, automatically route only

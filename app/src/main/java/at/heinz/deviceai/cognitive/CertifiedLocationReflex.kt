@@ -12,7 +12,32 @@ import at.heinz.deviceai.learning.span.EntityRelationLocationShadowAdapter
 internal object CertifiedLocationReflex {
     private val format = Regex("""(?is)^\s*Beleg:\s*([^\r\n]{1,2000})\s*\r?\n\s*Frage:\s*([^\r\n]{1,160})\s*$""")
     data class Answer(val text: String, val sourceHash: String, val spanStart: Int,
-                      val spanEnd: Int)
+                      val spanEnd: Int, val support: EvidenceBoundNaturalLocationProbe.Decision.Found)
+
+    sealed class Routing {
+        data class Proven(val proof: Answer) : Routing()
+        data class Withheld(val reason: String) : Routing() {
+            val text: String get() = "Aus dem vorliegenden Text lässt sich kein eindeutiger Ort belegen. " +
+                "Bitte kläre die Person, den Zeitpunkt oder die widersprüchliche Angabe."
+        }
+    }
+
+    /** A recognized evidence request is terminal even when verification declines it. */
+    fun routeExplicit(userTurn: String): Routing? {
+        val groups = format.matchEntire(userTurn) ?: return null
+        if (!questionShape.matches(groups.groupValues[2].trim())) return null
+        return answer(userTurn)?.let { Routing.Proven(it) }
+            ?: Routing.Withheld("EXPLICIT_EVIDENCE_NOT_PROVEN")
+    }
+
+    fun routeFromSession(question: String, priorUserTurns: List<String>?): Routing? {
+        val subject = questionShape.matchEntire(question.trim())?.groupValues?.get(1) ?: return null
+        if (priorUserTurns == null) return Routing.Withheld("INCOMPLETE_SESSION_EVIDENCE")
+        val mentions = mention(subject)
+        if (priorUserTurns.takeLast(4).none { mentions.containsMatchIn(it) }) return null
+        return answerFromSession(question, priorUserTurns)?.let { Routing.Proven(it) }
+            ?: Routing.Withheld("SESSION_EVIDENCE_NOT_PROVEN")
+    }
 
     fun answer(userTurn: String): Answer? {
         if (userTurn.length > 2250) return null
@@ -27,7 +52,7 @@ internal object CertifiedLocationReflex {
             "\nQuelle: aktueller Eingabetext, nicht unabhängig bestätigter Weltfakt." +
             "\nBelegposition: [" + found.start + "," + found.endExclusive + ")" +
             "\nBelegsnapshot SHA-256: " + snapshot.sha256,
-            snapshot.sha256, found.start, found.endExclusive)
+            snapshot.sha256, found.start, found.endExclusive, found)
     }
 
     /**
@@ -41,12 +66,17 @@ internal object CertifiedLocationReflex {
         val q = question.trim()
         if (q.length !in 5..160 || priorUserTurns.isEmpty()) return null
         val subject = questionShape.matchEntire(q)?.groupValues?.get(1) ?: return null
-        val mentions = Regex("""(?iu)(?<![\p{L}\p{M}\p{N}-])""" + Regex.escape(subject) + """(?![\p{L}\p{M}\p{N}-])""")
+        val mentions = mention(subject)
+        val window = priorUserTurns.takeLast(4)
+        // Never silently drop a long correction, nor guess a referent for an unnamed
+        // retraction. These are invalidators, not positive evidence or new facts.
+        if (window.any { it.length > 1000 || it.any(Char::isISOControl) ||
+                !mentions.containsMatchIn(it) && unscopedCorrection.containsMatchIn(it) }) return null
         // Only turns that mention the asked person are evidence; unrelated small talk must
         // neither support nor (via the verifier's pronoun rule) veto the proof.
-        val items = priorUserTurns.takeLast(4).mapIndexedNotNull { index, turn ->
+        val items = window.mapIndexedNotNull { index, turn ->
             val raw = turn // Hash and offsets bind the original user literal, not a display copy.
-            if (raw.isBlank() || raw.length > 1000 || format.matches(raw) || !mentions.containsMatchIn(raw)) null
+            if (raw.isBlank() || format.matches(raw) || questionShape.matches(raw.trim()) || !mentions.containsMatchIn(raw)) null
             else EvidenceBoundNaturalLocationProbe.Evidence(
                 "session-turn-" + (index + 1), 1, EvidenceBoundNaturalLocationProbe.digest(raw), raw)
         }
@@ -55,7 +85,7 @@ internal object CertifiedLocationReflex {
         return Answer("Du hast in dieser Sitzung gesagt: " + found.text +
             "\nQuelle: deine eigene frühere Nachricht (" + found.sourceId + "), keine bestätigte Erinnerung und kein geprüfter Weltfakt." +
             "\nBelegsnapshot SHA-256: " + snapshot.sha256,
-            snapshot.sha256, found.start, found.endExclusive)
+            snapshot.sha256, found.start, found.endExclusive, found)
     }
 
     /**
@@ -70,7 +100,8 @@ internal object CertifiedLocationReflex {
         val q = question.trim()
         if (q.length !in 5..160 || confirmedFacts.isEmpty()) return null
         val subject = questionShape.matchEntire(q)?.groupValues?.get(1) ?: return null
-        val mentions = Regex("""(?iu)(?<![\p{L}\p{M}\p{N}-])""" + Regex.escape(subject) + """(?![\p{L}\p{M}\p{N}-])""")
+        val mentions = mention(subject)
+        if (confirmedFacts.any { (_, text) -> text.length > 1000 && mentions.containsMatchIn(text) }) return null
         // Facts about the person that cannot be about a place ("Mama mag Kaffee.") are not
         // evidence; anything mentioning the person together with "in" (incl. negations, time
         // words, other relations) stays in so the verifier can veto it.
@@ -87,10 +118,13 @@ internal object CertifiedLocationReflex {
         return Answer("Aus deiner bestätigten Erinnerung: " + found.text +
             "\nBeleg: Erinnerung " + found.sourceId + " (Regelkern und Verifier geprüft, Snapshot " +
             snapshot.sha256.take(16) + "…)",
-            snapshot.sha256, found.start, found.endExclusive)
+            snapshot.sha256, found.start, found.endExclusive, found)
     }
 
     private val questionShape = Regex("""(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$""")
+    private val unscopedCorrection = Regex("""(?iu)\b(?:nein|korrektur|widerruf|widerrufen|falsch|ungültig|nicht\s+mehr|nicht\s+dort)\b|\b(?:sie|er|es)\s+(?:ist|wohnt|lebt|steht|war|wohnte|lebte|stand)\b""")
+    private fun mention(subject: String) = Regex("""(?iu)(?<![\p{L}\p{M}\p{N}-])""" +
+        Regex.escape(subject) + """(?![\p{L}\p{M}\p{N}-])""")
 
     private fun prove(question: String, items: List<EvidenceBoundNaturalLocationProbe.Evidence>):
             Pair<EvidenceBoundNaturalLocationProbe.Decision.Found, LocationEvidenceSnapshot>? {

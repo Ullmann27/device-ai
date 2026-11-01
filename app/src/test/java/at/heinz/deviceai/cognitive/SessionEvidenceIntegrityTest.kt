@@ -63,4 +63,21 @@ class SessionEvidenceIntegrityTest {
         assertTrue(context.priorUserTurns("first").isEmpty())
         assertNull(CertifiedLocationReflex.answerFromSession("Wo ist Emma?", context.priorUserTurns("second")))
     }
+
+    @Test fun unnamedRetractionMustNotBeFilteredOutBeforeVerification() {
+        for (correction in listOf("Nein, sie ist nicht dort.", "Sie ist nicht mehr dort.", "Nicht mehr dort."))
+            assertNull(correction, CertifiedLocationReflex.answerFromSession("Wo ist Emma?",
+                listOf("Emma ist in Berg.", correction)))
+    }
+
+    @Test fun directHelperCannotIgnoreOversizedCorrection() {
+        assertNull(CertifiedLocationReflex.answerFromSession("Wo ist Emma?", listOf(
+            "Emma ist in Berg.", "Beilage. ".repeat(130) + "Emma ist nicht in Berg.")))
+    }
+
+    @Test fun confirmedLiteralKeepsOriginalWhitespaceAndOffsets() {
+        val raw = "  Emma ist in Berg.  "
+        val answer = CertifiedLocationReflex.answerFromConfirmedFacts("Wo ist Emma?", listOf("fact-1" to raw))!!
+        assertEquals("Berg", raw.substring(answer.spanStart, answer.spanEnd))
+    }
 }

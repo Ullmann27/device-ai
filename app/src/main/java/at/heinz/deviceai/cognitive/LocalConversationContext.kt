@@ -71,10 +71,13 @@ class LocalConversationContext {
         if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
 
     /** The owner's own earlier requests of this session (oldest first), never model replies or research text. */
-    @Synchronized fun priorUserTurns(sessionId: String): List<String> {
+    @Synchronized fun priorUserTurns(sessionId: String): List<String> = sessionEvidence(sessionId).orEmpty()
+
+    /** One atomic, bounded owner-evidence view. null means incomplete, not an empty safe history. */
+    @Synchronized fun sessionEvidence(sessionId: String): List<String>? {
         if (session != sessionId) return emptyList()
         // An omitted long correction must not resurrect a shorter, earlier assertion.
-        if (turns.any { it.isOwnerTurn && it.originalUserRequest == null }) return emptyList()
+        if (turns.any { it.isOwnerTurn && it.originalUserRequest == null }) return null
         return turns.mapNotNull { it.originalUserRequest }
     }
 
