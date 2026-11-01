@@ -10,7 +10,7 @@ class LocalGenerationDeadlinePolicyTest {
     @Test fun nativeModelHasTimeToProduceItsFirstText() {
         assertNull(policy.stalled(119_999, null, 0))
         assertNull(policy.stalled(179_999, null, 0))
-        assertEquals(policy.StallReason.NO_FIRST_TEXT, policy.stalled(180_000, null, 0))
+        assertEquals(LocalGenerationDeadlinePolicy.StallReason.NO_FIRST_TEXT, policy.stalled(180_000, null, 0))
     }
 
     @Test fun continuouslyStreamingModelHasNoFixedWallClockDeadline() {
@@ -21,11 +21,11 @@ class LocalGenerationDeadlinePolicyTest {
 
     @Test fun stalledModelIsCancelledOnlyAfterRealInactivity() {
         assertNull(policy.stalled(260_999, 141_000, 2_611))
-        assertEquals(policy.StallReason.NO_RECENT_TEXT, policy.stalled(261_000, 141_000, 2_611))
+        assertEquals(LocalGenerationDeadlinePolicy.StallReason.NO_RECENT_TEXT, policy.stalled(261_000, 141_000, 2_611))
     }
 
     @Test fun outputBufferIsExplicitlyBounded() {
         assertNull(policy.stalled(120_000, 120_000, 19_999))
-        assertEquals(policy.StallReason.OUTPUT_LIMIT, policy.stalled(120_000, 120_000, 20_000))
+        assertEquals(LocalGenerationDeadlinePolicy.StallReason.OUTPUT_LIMIT, policy.stalled(120_000, 120_000, 20_000))
     }
 }
