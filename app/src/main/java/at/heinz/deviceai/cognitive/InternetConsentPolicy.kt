@@ -15,6 +15,8 @@ class InternetConsentPolicy(initialMode:InternetAccessMode=InternetAccessMode.AS
     @Volatile var mode=initialMode
         private set
     private var epoch=0L
+    /** Internal read-only revocation generation; never an authority token. */
+    @Synchronized internal fun revision():Long = epoch
     private var pending:InternetApprovalTicket?=null
     @Synchronized fun setMode(value:InternetAccessMode) { mode=value;cancel() }
     @Synchronized fun requestTicket(question:String):InternetApprovalTicket? {
