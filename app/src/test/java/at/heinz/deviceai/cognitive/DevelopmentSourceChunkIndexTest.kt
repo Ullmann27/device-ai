@@ -78,7 +78,7 @@ class DevelopmentSourceChunkIndexTest {
 
     @Test fun alteredLineMetadataCannotBorrowValidWholeSourceHash() = withPrivateDir { dir ->
         val source = DevelopmentSourceStreamImport.importUtf8(
-            ByteArrayInputStream("first\\nsecond\\nthird".replace("\\\\n", "\\n").toByteArray()),
+            ByteArrayInputStream("first\nsecond\nthird".toByteArray()),
             "src/Provenance.txt", dir)
         val index = DevelopmentSourceChunkIndex.build(source)
         // The file and its genuine SHA-256 are unchanged. Only a persisted
@@ -100,7 +100,7 @@ class DevelopmentSourceChunkIndexTest {
 
     @Test fun alteredChunkDigestCannotBorrowValidWholeSourceHash() = withPrivateDir { dir ->
         val source = DevelopmentSourceStreamImport.importUtf8(
-            ByteArrayInputStream("alpha\\nbeta\\ngamma".replace("\\\\n", "\\n").toByteArray()),
+            ByteArrayInputStream("alpha\nbeta\ngamma".toByteArray()),
             "src/Digest.txt", dir)
         val index = DevelopmentSourceChunkIndex.build(source)
         java.io.RandomAccessFile(index.indexFile, "rw").use { file ->
@@ -113,7 +113,9 @@ class DevelopmentSourceChunkIndexTest {
             assertEquals(64, digestLength)
             val digestStart = file.filePointer
             file.seek(digestStart)
-            file.writeByte('0'.code)
+            val old = file.readUnsignedByte()
+            file.seek(digestStart)
+            file.writeByte(if (old == '0'.code) '1'.code else '0'.code)
         }
         try { DevelopmentSourceChunkIndex.load(source); fail("Forged chunk digest accepted") }
         catch (_: IOException) { }
