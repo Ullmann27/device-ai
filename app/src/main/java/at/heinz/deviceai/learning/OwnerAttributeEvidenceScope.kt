@@ -105,6 +105,17 @@ internal object OwnerAttributeEvidenceScope {
             ranked.filter { it.id in ids }.map { it.id }
         }
         val selected = workspace.decide(query)
-        return if(selected.decision == "QUERY")selected.answerFacts.toSet() else emptySet()
+        if(selected.decision == "QUERY")return selected.answerFacts.toSet()
+        // EWM's general-purpose grammar can abstain on "Meine Tochter Klara
+        // ist 29." even after the owner scope has proven an exact single-clause
+        // age assertion. Do not let that suppress this precisely scoped fact.
+        // Never introduce a new candidate: it MUST already be a genuine
+        // ranked OWNER_CONFIRMED record, named explicitly by the strict
+        // kinship-age grammar and selected by the existing latest/revocation
+        // and conflict checks above. No web observations, third-party claims,
+        // or unsupported grammar may take this branch.
+        if(ask.kind == "AGE" && familyAge.matches(f.text) &&
+            ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+        return emptySet()
     }
 }
