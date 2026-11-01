@@ -24,6 +24,7 @@ object EvidenceBoundNaturalLocationProbe {
     private val questionPattern = Regex(
         """(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$"""
     )
+    private val contradictoryWords = Regex("""(?iu)\b(?:nicht|kein|keine|sondern|stattdessen)\b""")
     private val timeWords = Regex(
         """(?iu)\b(?:gestern|heute|morgen|früher|damals|aktuell|seit|vorher|später)\b"""
     )
@@ -65,7 +66,10 @@ object EvidenceBoundNaturalLocationProbe {
                 val sentenceEnd = source.text.indexOfAny(
                     charArrayOf('.', '!', '?', ';'), m.range.first
                 ).let { if (it == -1) source.text.length else it }
-                if (timeWords.containsMatchIn(source.text.substring(sentenceStart, sentenceEnd)))
+                val sentence = source.text.substring(sentenceStart, sentenceEnd)
+                if (contradictoryWords.containsMatchIn(sentence))
+                    return Decision.Abstained("NEGATED_OR_CONTRASTIVE_EVIDENCE")
+                if (timeWords.containsMatchIn(sentence))
                     return Decision.Abstained("AMBIGUOUS_TIME_SCOPE")
             }
             for (m in pattern.findAll(source.text)) {

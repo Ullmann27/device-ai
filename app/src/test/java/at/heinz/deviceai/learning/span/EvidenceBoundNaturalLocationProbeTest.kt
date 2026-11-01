@@ -38,6 +38,8 @@ class EvidenceBoundNaturalLocationProbeTest {
         abstains("Mama ist nicht in Salzburg.", "Wo ist Mama?")
         abstains("Mama ist nicht in Salzburg, sondern in Wien.", "Wo ist Mama?")
         abstains("Mama ist in Salzburg. Mama ist in Wien.", "Wo ist Mama?")
+        abstains("Mama ist in Salzburg. Mama ist nicht in Salzburg.", "Wo ist Mama?")
+        abstains("Mama ist in Salzburg, sondern in Wien.", "Wo ist Mama?")
         abstains("Mama ist seit Dienstag in Graz.", "Wo ist Mama?")
         abstains("Mama war gestern in Graz. Mama ist in Wien.", "Wo ist Mama?")
         abstains("Mama ist in Graz.", "Wo ist Papa?")
