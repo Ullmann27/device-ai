@@ -48,6 +48,23 @@ class ContinuumEvidenceWindowTest {
         assertEquals(quote.text, text.substring(quote.start, quote.endExclusive))
     }
 
+    @Test fun singularNounMayAnchorOnlyTheExactPluralEWithVerifiedBytes() {
+        val source = "Thunfische sind große Raubfische der Hochsee."
+        val quote = ContinuumEvidenceWindow.select("Was ist Thunfisch?", source, hash(source))!!
+        assertTrue(quote.text.contains("Thunfische"))
+        assertEquals(source.substring(quote.start, quote.endExclusive), quote.text)
+        assertEquals(hash(quote.text), quote.quotationSha256)
+        assertEquals(quote.text, source.toByteArray(Charsets.UTF_8)
+            .copyOfRange(quote.utf8Start, quote.utf8EndExclusive).toString(Charsets.UTF_8))
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?",
+            "Thunfischernetze sind für die industrielle Fischerei entwickelt.", 
+            hash("Thunfischernetze sind für die industrielle Fischerei entwickelt.")))
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?",
+            "Diese Quelle handelt ausschließlich von Zimmerpflanzen und Pflege.",
+            hash("Diese Quelle handelt ausschließlich von Zimmerpflanzen und Pflege.")))
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?", source, "0".repeat(64)))
+    }
+
     @Test fun aTermLongerThanTheQuotationBudgetCannotJustifyATruncatedCitation() {
         val term="Quarz".repeat(27)
         val text="$term bezeichnet ein synthetisches Verfahren mit einer sehr langen Kennung."
