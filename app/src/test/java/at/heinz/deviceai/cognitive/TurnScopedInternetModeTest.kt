@@ -67,4 +67,20 @@ class TurnScopedInternetModeTest {
             }
         }
     }
+
+    @Test fun newlyMintedSessionDuringCaptureCannotReachTheOldTurnDispatcher() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val epoch = consent.revision()
+        val query = WebToolRequest.Search("Wetter Wien")
+        var executed = 0
+        org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+            val session = TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                consent.setMode(InternetAccessMode.OFF)
+                consent.setMode(InternetAccessMode.ALWAYS_ON)
+                ApprovedWebToolGate(consent).authorizeAlwaysOn(query, ResearchMode.QUICK)!!
+            }
+            session.execute(query) { executed++; "must not run" }
+        }
+        assertEquals(0, executed)
+    }
 }

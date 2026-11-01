@@ -5947,20 +5947,29 @@ class AgentActivity : Activity() {
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
 
-    private fun createToolGate() = ToolGate(
+    private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null) = ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
-            if(request.name in setOf("web_search","web_read")) {
-                val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
-                val budget=ResearchBudgetPolicy.forMode(session.mode)
-                val runner=ApprovedWebResearchToolRunner(session,
-                    at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
-                    HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
-                        totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
-                runOnUiThread { modelWebActive = true; refreshHologramState() }
-                try { runner.execute(request).also { session.checkAuthorized() } }
-                finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
-            } else DeviceToolExecutorRunner(executor).execute(request)
+            at.heinz.deviceai.cognitive.NetworkTurnConstraint.withOriginalTurn(ownerTurn.orEmpty(), request.name) {
+                if(request.name in setOf("web_search","web_read")) {
+                    // A fresh session minted after revocation cannot rescue an old turn.
+                    // Check the epoch on BOTH sides of capturing the immutable session.
+                    val session = if (consentRevisionAtTurnStart == null)
+                        approvedModelWebSession.getAndSet(null) ?: error("Keine einmalige Internetfreigabe")
+                    else at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        consentRevisionAtTurnStart, internetConsent::revision) {
+                        approvedModelWebSession.getAndSet(null) ?: error("Keine einmalige Internetfreigabe")
+                    }
+                    val budget=ResearchBudgetPolicy.forMode(session.mode)
+                    val runner=ApprovedWebResearchToolRunner(session,
+                        at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
+                        HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
+                            totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
+                    runOnUiThread { modelWebActive = true; refreshHologramState() }
+                    try { runner.execute(request).also { session.checkAuthorized() } }
+                    finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
+                } else DeviceToolExecutorRunner(executor).execute(request)
+            }
         },receiptStore=receiptStore
     )
 
@@ -6315,7 +6324,7 @@ class AgentActivity : Activity() {
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { memoryStore.all() + ownerFactMemories() },
-            toolGate = createToolGate(),
+            toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart),
             evaluator = AgentEvaluator { response, _ ->
                 LocalDialogueQualityGate.evaluate(
                     request = text,
@@ -6331,6 +6340,10 @@ class AgentActivity : Activity() {
                 cancellation.throwIfCancelled()
                 if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
                 val isWeb = proposal.toolName in setOf("web_search", "web_read")
+                if (isWeb && (ownerForbidsExternalNetwork ||
+                    internetConsent.revision() != internetRevisionAtTurnStart ||
+                    internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF))
+                    return@AgentToolApprovalProvider AgentToolApproval(false)
                 if (isWeb && modelWebCalls >= 2) return@AgentToolApprovalProvider AgentToolApproval(false)
                 if (isWeb) modelWebCalls++
                 val latch = CountDownLatch(1)
