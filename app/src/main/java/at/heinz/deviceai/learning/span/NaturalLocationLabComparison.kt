@@ -11,7 +11,8 @@ object NaturalLocationLabComparison {
     }
     data class Comparison(val rule: EvidenceBoundNaturalLocationProbe.Decision,
         val learned: EvidenceBoundNaturalLocationProbe.Decision, val snapshotSha256: String,
-        val modelSha256: String)
+        val modelSha256: String, val hybrid: LocationSpecialistShadow.Choice,
+        val ordered: EntityRelationLocationShadowAdapter.Encoding?)
 
     fun compare(evidence: String, question: String, checkpoint: ByteArray): Comparison {
         val source = EvidenceBoundNaturalLocationProbe.Evidence("lab-input", 1,
@@ -19,7 +20,9 @@ object NaturalLocationLabComparison {
         val snapshot = LocationEvidenceSnapshot.freeze(listOf(source))
         val rule = EvidenceBoundNaturalLocationProbe.answer(question, snapshot.sources)
         val learned = VerifiedLocationSpanResearch(checkpoint).answer(question, snapshot)
-        return Comparison(rule, learned.decision, snapshot.sha256, learned.modelSha256)
+        return Comparison(rule, learned.decision, snapshot.sha256, learned.modelSha256,
+            LocationSpecialistShadow.choose(question,snapshot,learned.decision),
+            EntityRelationLocationShadowAdapter.encode(question,snapshot,enabled=true))
     }
 
     fun render(result: Comparison): String {
@@ -29,6 +32,8 @@ object NaturalLocationLabComparison {
         }
         return "EVIDENZSPAN · NAMEN UND ORTE (FORSCHUNG)\nRegelvergleich: " + decision(result.rule) +
             "\nGelernter Ranker + unabhängige Belegprüfung: " + decision(result.learned) +
+            "\nHybrid-SHADOW (" + result.hybrid.route + "): " + decision(result.hybrid.decision) +
+            "\nRollen-SHADOW: " + (result.ordered?.let { it.entity + " — " + it.relation + " → " + it.location.text } ?: "kein eindeutiger Rollenbeleg") +
             "\nBelegsnapshot-SHA-256: " + result.snapshotSha256 + "\nForschungsmodell-SHA-256: " + result.modelSha256 +
             "\nNur Entnahme aus diesem Beleg. Keine CDX1-Reparatur, Faktenübernahme oder Chatfreigabe."
     }

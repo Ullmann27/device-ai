@@ -42,6 +42,8 @@ export const REQUIRED_JUNIT = Object.freeze([
   'at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest',
   'at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest',
   'at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest',
+  'at.heinz.deviceai.learning.span.RoleAwareShadowTest',
+  'at.heinz.deviceai.learning.span.DualEvidenceReadContractTest',
 ]);
 
 function regular(path, maxBytes) {
