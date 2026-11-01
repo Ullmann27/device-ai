@@ -21,6 +21,7 @@ case "$(git branch --show-current)" in \
   research/continuum-m10-verified-brain-and-web-20261031|\
   research/continuum-sol-cdx1-evidence-20261101|\
   fix/continuum-ewm2-role-age-production-20261101|\
+  fix/continuum-ewm2-archive-plural-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
