@@ -173,6 +173,12 @@ class ContinuumDecoderBridge(private val directory: File) {
             encoder.representation(it.conditionerText())
         }
         val candidate=TinyContextDecoder.restore(baseline.save())
+        fun freeQuality(model:TinyContextDecoder,corpus:DecoderEvidenceCorpus)=
+            DecoderGenerativeGate.measure(corpus) { pair ->
+                model.generate(pair.prefix(),128,conditionFor(pair))
+            }
+        val generationBefore=freeQuality(baseline,audit)
+        val protectedGenerationBefore=protectedAudits.map { freeQuality(baseline,it) }
         val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
         val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
         val result=candidate.trainEvidencePairs(train,steps=steps,
@@ -180,12 +186,19 @@ class ContinuumDecoderBridge(private val directory: File) {
             cancelled=cancelled,maxMillis=5000)
         val auditAfter=candidate.evaluateEvidencePairs(audit,conditionFor)
         val protectedAfter=protectedAudits.map { candidate.evaluateEvidencePairs(it,conditionFor) }
+        val generationAfter=freeQuality(candidate,audit)
+        val protectedGenerationAfter=protectedAudits.map { freeQuality(candidate,it) }
         val protectedSafe=protectedAfter.zip(protectedBefore).all { (now,old) ->
             now.isFinite() && now<=old
         }
+        val protectedFreeSafe=protectedGenerationAfter.zip(protectedGenerationBefore).all { (now,old) ->
+            old.correct.indices.all { !old.correct[it] || now.correct[it] } &&
+                now.unsupported<=old.unsupported && now.unterminated<=old.unterminated
+        }
         val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
             result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
-            protectedSafe
+            protectedSafe && protectedFreeSafe &&
+            DecoderGenerativeGate.improves(generationBefore,generationAfter)
         if(accepted) {
             // A single verified bundle replaces the previous two-file commit.
             // Legacy decoder and SWB1 binding remain untouched.
@@ -195,7 +208,7 @@ class ContinuumDecoderBridge(private val directory: File) {
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
             result.lossAfter,auditBefore,auditAfter,hash(active.save()),
-            protectedBefore,protectedAfter)
+            protectedBefore,protectedAfter,generationBefore,generationAfter)
     }
 
     /** Research-only evidence-conditional output; never auto-published as a
@@ -284,5 +297,7 @@ data class DecoderExperimentResult(
     val auditAfter: Double,
     val activeSha256: String,
     val protectedBefore: List<Double> = emptyList(),
-    val protectedAfter: List<Double> = emptyList()
+    val protectedAfter: List<Double> = emptyList(),
+    val generationBefore: DecoderGenerativeGate.Quality? = null,
+    val generationAfter: DecoderGenerativeGate.Quality? = null
 )
