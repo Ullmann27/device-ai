@@ -128,7 +128,8 @@ class Ewm2ProductEquivalenceTest {
 
     @Test fun theProductionAdapterReachesTheSameDecisions() {
         assertEquals(mapOf("CORRECT" to 12,"ABSTAINED" to 7),adapterCounts(dev5))
+        val actualDev5b = adapterCounts(dev5b)
         assertEquals("Synthetic DEV5b mismatches: ${adapterMismatchDiagnostics.joinToString("; ")}",
-            mapOf("CORRECT" to 20,"ABSTAINED" to 6),adapterCounts(dev5b))
+            mapOf("CORRECT" to 20,"ABSTAINED" to 6),actualDev5b)
     }
 }
