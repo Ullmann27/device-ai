@@ -53,4 +53,25 @@ class ContinuumEvidenceWindowTest {
         val text="$term bezeichnet ein synthetisches Verfahren mit einer sehr langen Kennung."
         assertNull(ContinuumEvidenceWindow.select("Was ist $term?", text, hash(text), 80))
     }
+    @Test fun directGermanPluralKeepsDev5bArchiveSourceReachable() {
+        // DEV5b asks "Was ist Thunfisch?", but the immutable source excerpt
+        // says "Thunfische sind ...". Exact-only matching used to discard it.
+        val text = "Thunfische sind große Raubfische der Hochsee."
+        val quote = ContinuumEvidenceWindow.select("Was ist Thunfisch?", text, hash(text))
+        assertNotNull(quote)
+        assertTrue(quote!!.text.contains("Thunfische"))
+        assertEquals(text.substring(quote.start, quote.endExclusive), quote.text)
+        assertEquals(hash(quote.text), quote.quotationSha256)
+        assertEquals(hash(text), quote.sourceSha256)
+    }
+
+    @Test fun unrelatedOrOnlyPartiallySimilarWordsMustStillAbstain() {
+        val source = "Eine Thunfischerei betreibt Fischfang in bestimmten Küstenregionen."
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?", source, hash(source)))
+        val different = "Die Fische leben in tiefen Gewässern der Nordsee."
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?", different, hash(different)))
+        val swapped = "Thunfische sind große Raubfische der Hochsee."
+        assertNull(ContinuumEvidenceWindow.select("Was ist Thunfisch?", swapped, "0".repeat(64)))
+    }
+
 }
