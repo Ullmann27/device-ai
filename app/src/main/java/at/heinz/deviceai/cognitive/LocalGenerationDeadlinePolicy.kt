@@ -1,29 +1,30 @@
 package at.heinz.deviceai.cognitive
 
 /**
- * Keep a useful, actively streaming on-device answer from being discarded
- * solely because its first token took a long time on Android hardware.
+ * A native on-device language model may stream for substantially longer than
+ * two minutes on a phone. Active progress is never stopped by a wall clock.
  *
- * The original 120-second bound still applies to silent/stalled inference.
- * A *recent* text callback permits a bounded extension, never an infinite
- * wait and never an extension for a full 8,000-character output buffer.
- * Neither model/tool authorization nor cancellation is modified here.
+ * A watchdog protects against a model that never starts or stops emitting
+ * text altogether. The owner can always cancel through the existing STOP
+ * button; this policy neither grants tools nor alters privacy boundaries.
  */
 internal object LocalGenerationDeadlinePolicy {
-    const val BASE_MILLIS = 120_000L
-    const val ACTIVE_STREAM_MAX_MILLIS = 180_000L
-    const val PROGRESS_STALE_MILLIS = 12_000L
-    const val MAX_CAPTURED_CHARACTERS = 8_000
+    const val STARTUP_STALL_MILLIS = 180_000L
+    const val STREAM_STALL_MILLIS = 120_000L
+    const val MAX_CAPTURED_CHARACTERS = 20_000
 
-    fun expired(
+    enum class StallReason { NO_FIRST_TEXT, NO_RECENT_TEXT, OUTPUT_LIMIT }
+
+    fun stalled(
         elapsedMillis: Long,
         lastTextMillis: Long?,
         capturedCharacters: Int
-    ): Boolean {
-        if (elapsedMillis < BASE_MILLIS) return false
-        if (elapsedMillis >= ACTIVE_STREAM_MAX_MILLIS) return true
-        if (lastTextMillis == null || capturedCharacters <= 0 ||
-            capturedCharacters >= MAX_CAPTURED_CHARACTERS) return true
-        return elapsedMillis - lastTextMillis > PROGRESS_STALE_MILLIS
+    ): StallReason? {
+        if (capturedCharacters >= MAX_CAPTURED_CHARACTERS) return StallReason.OUTPUT_LIMIT
+        if (lastTextMillis == null) {
+            return if (elapsedMillis >= STARTUP_STALL_MILLIS) StallReason.NO_FIRST_TEXT else null
+        }
+        return if (elapsedMillis - lastTextMillis >= STREAM_STALL_MILLIS)
+            StallReason.NO_RECENT_TEXT else null
     }
 }
