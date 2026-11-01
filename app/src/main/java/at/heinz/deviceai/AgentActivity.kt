@@ -5424,11 +5424,8 @@ class AgentActivity : Activity() {
     private fun restoreInternetMode() {
         val prefs = getSharedPreferences("continuum-internet", MODE_PRIVATE)
         val stored = prefs.getString("mode", null)
-        // Owner requested continuous public research by default. An explicit OFF
-        // remains OFF, including after upgrades; no private chat is uploaded.
-        val restored = if (stored == "OFF")
-            at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-        else at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+        // Keep the established fresh-install default, but never upgrade a stored ASK/OFF.
+        val restored = at.heinz.deviceai.cognitive.InternetConsentPolicy.restoredMode(stored)
         if (stored != restored.name) {
             if (!prefs.edit().putString("mode", restored.name).commit()) return
         }
@@ -6290,9 +6287,12 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
-                var generation = generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                    if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
-                    else localRuntime.respondToTools(toolResponses, callback)
+                var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                    internetRevisionAtTurnStart, internetConsent::revision) {
+                    generateLocal(cancellation,turnTrace,prompt.length) { callback ->
+                        if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
+                        else localRuntime.respondToTools(toolResponses, callback)
+                    }
                 }
                 generation.failure?.let { error(it) }
                 var rejectionRecoveries = 0
@@ -6301,7 +6301,10 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = generateLocal(cancellation,turnTrace) { callback -> localRuntime.respondToTools(rejected, callback) }
+                    generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        internetRevisionAtTurnStart, internetConsent::revision) {
+                        generateLocal(cancellation,turnTrace) { callback -> localRuntime.respondToTools(rejected, callback) }
+                    }
                     generation.failure?.let { error(it) }
                 }
                 AgentModelOutput(
@@ -6358,8 +6361,11 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching {
-                orchestrator.run(agentTask).also {
-                    modelWebSessions.forEach { session -> session.checkAuthorized() }
+                at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                    internetRevisionAtTurnStart, internetConsent::revision) {
+                    orchestrator.run(agentTask).also {
+                        modelWebSessions.forEach { session -> session.checkAuthorized() }
+                    }
                 }
             }
             runOnUiThread {
@@ -6370,6 +6376,10 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
+                    if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                        addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
+                        return@onSuccess
+                    }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess

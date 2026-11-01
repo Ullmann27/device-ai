@@ -4,6 +4,16 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class InternetConsentPolicyTest {
+    @Test fun explicitAskSurvivesPreferenceRestoreAndReopeningSettings() {
+        for (mode in InternetAccessMode.entries) {
+            assertEquals(mode, InternetConsentPolicy.restoredMode(mode.name))
+            val reopened = InternetConsentPolicy(InternetConsentPolicy.restoredMode(mode.name))
+            assertEquals(mode, reopened.mode)
+            assertEquals(mode, InternetConsentPolicy.restoredMode(reopened.mode.name))
+        }
+        assertEquals(InternetAccessMode.ALWAYS_ON, InternetConsentPolicy.restoredMode(null))
+        assertEquals(InternetAccessMode.OFF, InternetConsentPolicy.restoredMode("corrupt-mode"))
+    }
     @Test fun supportsExplicitAlwaysOnMode() {
         assertTrue("Owner can enable persistent Internet consent",
             InternetAccessMode.entries.any { it.name == "ALWAYS_ON" })

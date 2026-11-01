@@ -14,6 +14,15 @@ class InternetConsentPolicy(initialMode:InternetAccessMode=InternetAccessMode.AS
     private val nowMillis:()->Long={System.nanoTime()/1_000_000}) {
     @Volatile var mode=initialMode
         private set
+    companion object {
+        /** Preserve explicit owner settings; only a fresh install uses the established default. */
+        fun restoredMode(stored: String?): InternetAccessMode = when (stored) {
+            "OFF" -> InternetAccessMode.OFF
+            "ASK" -> InternetAccessMode.ASK
+            "ALWAYS_ON", null -> InternetAccessMode.ALWAYS_ON
+            else -> InternetAccessMode.OFF
+        }
+    }
     private var epoch=0L
     /** Internal read-only revocation generation; never an authority token. */
     @Synchronized internal fun revision():Long = epoch

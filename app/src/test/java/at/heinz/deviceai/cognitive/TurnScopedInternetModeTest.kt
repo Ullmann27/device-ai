@@ -28,4 +28,43 @@ class TurnScopedInternetModeTest {
         assertEquals(InternetAccessMode.ALWAYS_ON,
             TurnScopedInternetMode.effective(InternetAccessMode.ALWAYS_ON, InternetAccessMode.ALWAYS_ON))
     }
+
+    @Test fun staleNativeContinuationIsRejectedBeforeDispatch() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val epoch = consent.revision()
+        var calls = 0
+        assertEquals("fresh", TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+            calls++; "fresh"
+        })
+        consent.cancel()
+        org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+            TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) { calls++; "stale" }
+        }
+        assertEquals(1, calls)
+    }
+
+    @Test fun revocationDuringNativeGenerationDiscardsTheResult() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val epoch = consent.revision()
+        var published = false
+        org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+            val answer = TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                consent.cancel(); "answer from an earlier native prompt"
+            }
+            published = answer.isNotBlank()
+        }
+        org.junit.Assert.assertFalse(published)
+    }
+
+    @Test fun modeReconnectionDoesNotAllowAnOldNativeConversationToResume() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val epoch = consent.revision()
+        consent.setMode(InternetAccessMode.OFF)
+        consent.setMode(InternetAccessMode.ALWAYS_ON)
+        org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+            TurnScopedInternetMode.withCurrentConsentRevision(epoch, consent::revision) {
+                throw AssertionError("native continuation must not run")
+            }
+        }
+    }
 }
