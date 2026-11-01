@@ -58,6 +58,38 @@ internal object CertifiedLocationReflex {
             snapshot.sha256, found.start, found.endExclusive)
     }
 
+    /**
+     * EWM2 specialist (Argon E7 on long-term memory): the same rule core proves a location
+     * question against the owner's CONFIRMED facts that the existing SWB1 ranking already
+     * selected. Nothing is read from any other store, nothing is written, revoked facts never
+     * arrive here. Exactly one supporting fact is required; conflicting or duplicate facts
+     * (e.g. an unrevoked older residence) make the specialist abstain so the plain retrieval
+     * list remains the answer. Returns the proven text and the id of the supporting fact.
+     */
+    fun answerFromConfirmedFacts(question: String, confirmedFacts: List<Pair<String, String>>): Answer? {
+        val q = question.trim()
+        if (q.length !in 5..160 || confirmedFacts.isEmpty()) return null
+        val subject = questionShape.matchEntire(q)?.groupValues?.get(1) ?: return null
+        val mentions = Regex("""(?iu)(?<![\p{L}\p{M}\p{N}-])""" + Regex.escape(subject) + """(?![\p{L}\p{M}\p{N}-])""")
+        // Facts about the person that cannot be about a place ("Mama mag Kaffee.") are not
+        // evidence; anything mentioning the person together with "in" (incl. negations, time
+        // words, other relations) stays in so the verifier can veto it.
+        val maybePlace = Regex("""(?iu)(?<![\p{L}\p{M}])in(?![\p{L}\p{M}])""")
+        val items = confirmedFacts
+            .filter { (id, text) -> id.isNotBlank() && text.isNotBlank() && text.length <= 1000 &&
+                mentions.containsMatchIn(text) && maybePlace.containsMatchIn(text) }
+            .map { (id, text) -> EvidenceBoundNaturalLocationProbe.Evidence(
+                id, 1, EvidenceBoundNaturalLocationProbe.digest(text), text.trim()) }
+        // More than four facts about the person cannot be checked for conflicts by the rule core
+        // (its evidence bound) – abstain instead of silently dropping candidates.
+        if (items.isEmpty() || items.size > 4 || items.map { it.sourceId }.distinct().size != items.size) return null
+        val (found, snapshot) = prove(q, items) ?: return null
+        return Answer("Aus deiner bestätigten Erinnerung: " + found.text +
+            "\nBeleg: Erinnerung " + found.sourceId + " (Regelkern und Verifier geprüft, Snapshot " +
+            snapshot.sha256.take(16) + "…)",
+            snapshot.sha256, found.start, found.endExclusive)
+    }
+
     private val questionShape = Regex("""(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$""")
 
     private fun prove(question: String, items: List<EvidenceBoundNaturalLocationProbe.Evidence>):
