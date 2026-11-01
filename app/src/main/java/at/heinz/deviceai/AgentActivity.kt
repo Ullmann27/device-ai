@@ -2682,6 +2682,13 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
+        // Optional zero-token reflex; only an explicitly submitted bounded source can qualify.
+        at.heinz.deviceai.cognitive.CertifiedLocationReflex.answer(request)?.let { proof ->
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(proof.text)
+            return
+        }
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
@@ -6068,6 +6075,7 @@ class AgentActivity : Activity() {
                          groundedRecall: at.heinz.deviceai.cognitive.LocalGroundedRecall? = null,
                          turnTrace: CognitiveTurnTrace = CognitiveTurnTrace(sessionId)) {
         val localSessionId = sessionId
+        val internetModeAtTurnStart = internetConsent.mode
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
         val conversationContext = localConversationContext.render(localSessionId)
         val imported = localRuntime.loadedModel
@@ -6125,8 +6133,11 @@ class AgentActivity : Activity() {
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()
+                val boundedInternetMode =
+                    at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
+                        internetModeAtTurnStart, internetConsent.mode)
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
-                    "Internetmodus: ${internetConsent.mode.name}. " + when(internetConsent.mode) {
+                    "Internetmodus: ${boundedInternetMode.name}. " + when(boundedInternetMode) {
                         at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Kein Webzugriff; antworte offline und benenne fehlende aktuelle Belege."
                         at.heinz.deviceai.cognitive.InternetAccessMode.ASK -> "Webtools benötigen pro Anfrage eine ausdrückliche Nutzerfreigabe."
                         at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON -> "Entscheide selbst, ob aktuelle oder vergleichbare öffentliche Quellen nötig sind; nutze web_search und web_read. Maximal zwei Webaufrufe pro Auftrag."
