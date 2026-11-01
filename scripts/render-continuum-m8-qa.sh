@@ -18,6 +18,7 @@ case "$(git branch --show-current)" in \
   fix/continuum-v32-network-web-recovery-20261031|\
   release/continuum-v32-openrouter-fullweb-20261031|\
   research/continuum-m8-render-signed-release-20261031|\
+  fix/continuum-cdx1-collapse-diagnostics-20261101|\
   research/continuum-m10-verified-brain-and-web-20261031|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
