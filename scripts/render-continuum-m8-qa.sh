@@ -20,7 +20,8 @@ case "$(git branch --show-current)" in \
   research/continuum-m8-render-signed-release-20261031|\
   research/continuum-m10-verified-brain-and-web-20261031|\
   release/continuum-v35-integrated-20261031|\
-  research/continuum-m5-source-stream-20261101|"") ;; \
+  research/continuum-m5-source-stream-20261101|\
+  research/continuum-m5-persistent-chunk-index-20261101|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
