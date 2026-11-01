@@ -19,6 +19,7 @@ case "$(git branch --show-current)" in \
   release/continuum-v32-openrouter-fullweb-20261031|\
   research/continuum-m8-render-signed-release-20261031|\
   research/continuum-m10-verified-brain-and-web-20261031|\
+  fix/continuum-sol314-kinship-age-qa-20261101|\
   research/continuum-sol-cdx1-evidence-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
