@@ -2423,7 +2423,14 @@ class AgentActivity : Activity() {
         // auto-web under ALWAYS_ON, mentor/cloud commands and the armed Web UI.
         val ownerForbidsExternalNetwork =
             at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(request)
-        if (ownerForbidsExternalNetwork) researchArmed = false
+        if (ownerForbidsExternalNetwork) {
+            researchArmed = false
+            // A previous ASK dialog or running ALWAYS_ON session must not
+            // survive an explicit offline instruction for the new owner turn.
+            // cancel() revokes ephemeral capabilities, not the saved consent
+            // preference (ASK/ALWAYS_ON remains unchanged).
+            webToolGate.cancel()
+        }
         // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
         if (request.equals("Continuum Modelltest", true) ||
             request.equals("Continuum Modelltest Direkt", true)) {
