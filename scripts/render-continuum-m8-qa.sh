@@ -79,7 +79,7 @@ node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
 # Integrated proof: local missing-file recovery is checked without overwriting owners' work.
-node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
   die 'Architecture-proof regression tests failed'
 }
