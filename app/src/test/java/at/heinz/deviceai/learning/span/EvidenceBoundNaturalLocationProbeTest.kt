@@ -33,6 +33,26 @@ class EvidenceBoundNaturalLocationProbeTest {
         accepted("Mira lebt in Bad Ischl.", "Wo lebt Mira?", "Bad Ischl")
     }
 
+    @Test fun coordinatedClausesKeepRoleBinding() {
+        // CDX1 collision shape (Anna/Perg vs Emma/Berg) inside ONE sentence: each person
+        // is bound to her own comma- or "und"-coordinated clause, never to the neighbour's.
+        accepted("Anna ist in Perg, Emma ist in Berg.", "Wo ist Anna?", "Perg")
+        accepted("Anna ist in Perg, Emma ist in Berg.", "Wo ist Emma?", "Berg")
+        accepted("Emma ist in Berg, Anna ist in Perg.", "Wo ist Anna?", "Perg")
+        accepted("Anna ist in Perg und Emma ist in Berg.", "Wo ist Emma?", "Berg")
+        accepted("Anna ist in Bad Ischl und Emma ist in Berg.", "Wo ist Anna?", "Bad Ischl")
+        accepted("Anna wohnt in Perg, Emma wohnt in Berg.", "Wo wohnt Emma?", "Berg")
+        // Coordinated clauses with negation, retraction, time or mixed relations still fail closed.
+        abstains("Anna ist in Perg, Emma ist nicht in Berg.", "Wo ist Anna?")
+        abstains("Anna ist in Perg, nicht in Berg.", "Wo ist Anna?")
+        accepted("Anna ist in Perg, aber Emma ist in Berg.", "Wo ist Anna?", "Perg")
+        abstains("Anna ist in Perg und Anna ist in Berg.", "Wo ist Anna?")
+        abstains("Anna ist in Perg, Emma ist seit gestern in Berg.", "Wo ist Emma?")
+        abstains("Anna ist in Perg und Emma ist in Berg.", "Wo wohnt Emma?")
+        abstains("Anna und Emma sind in Perg.", "Wo ist Anna?")
+        abstains("Anna ist in Perg und Berg.", "Wo ist Anna?")
+    }
+
     @Test fun missingNegatedContradictoryOrAmbiguousEvidenceAbstains() {
         abstains("Papa ist in Wien.", "Wo ist Mama?")
         abstains("Mama ist nicht in Salzburg.", "Wo ist Mama?")

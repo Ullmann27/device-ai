@@ -1,0 +1,591 @@
+{
+  "schema": "CDX1_ORACLE_BOUND_V1",
+  "updatesPerCondition": 60000,
+  "trainItems": 64,
+  "checkpointsTouched": false,
+  "conditions": [
+    {
+      "condition": "SWB1_BAG",
+      "trainMillis": 1316,
+      "lossAfter": 0.36868821895558673,
+      "lossBefore": 5.550144658120797,
+      "testSeen": {
+        "abstention": "0/11",
+        "swapPairsDistinguished": "0/6",
+        "distinctGenerations": 1,
+        "samples": [
+          {
+            "question": "Wo ist Nora?",
+            "generated": "Wels",
+            "kind": "TWO",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist Hanna?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Wein"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Villach"
+          },
+          {
+            "question": "Wo ist Jonas?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Villach"
+          }
+        ],
+        "exactAnswerable": "2/29"
+      },
+      "testUnseenLocations": {
+        "abstention": "0/11",
+        "swapPairsDistinguished": "0/6",
+        "distinctGenerations": 1,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Hallein"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "TWO",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Amstetten"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Tulln"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Wels",
+            "kind": "TWO",
+            "expected": "Tulln"
+          }
+        ],
+        "exactAnswerable": "0/29"
+      },
+      "updates": 60000,
+      "train": {
+        "abstention": "0/17",
+        "swapPairsDistinguished": "0/12",
+        "distinctGenerations": 1,
+        "samples": [
+          {
+            "question": "Wo ist David?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist David?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Wels"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Laura?",
+            "generated": "Wels",
+            "kind": "TWO",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Paul?",
+            "generated": "Wels",
+            "kind": "TWO",
+            "expected": "Wien"
+          }
+        ],
+        "exactAnswerable": "8/47"
+      },
+      "testUnseenNames": {
+        "abstention": "0/6",
+        "swapPairsDistinguished": "0/11",
+        "distinctGenerations": 1,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Berg"
+          },
+          {
+            "question": "Wo ist Bastian?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Wels"
+          }
+        ],
+        "exactAnswerable": "3/34"
+      }
+    },
+    {
+      "condition": "ORACLE_ANSWER",
+      "trainMillis": 1174,
+      "lossAfter": 0.004818987357010516,
+      "lossBefore": 5.548011867956423,
+      "testSeen": {
+        "abstention": "11/11",
+        "swapPairsDistinguished": "5/6",
+        "distinctGenerations": 11,
+        "samples": [
+          {
+            "question": "Wo ist Nora?",
+            "generated": "Steyr",
+            "kind": "TWO",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist Hanna?",
+            "generated": "Wein",
+            "kind": "ONE",
+            "expected": "Wein"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Linz",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Villach",
+            "kind": "ONE",
+            "expected": "Villach"
+          },
+          {
+            "question": "Wo ist Jonas?",
+            "generated": "Villach",
+            "kind": "ONE",
+            "expected": "Villach"
+          }
+        ],
+        "exactAnswerable": "29/29"
+      },
+      "testUnseenLocations": {
+        "abstention": "11/11",
+        "swapPairsDistinguished": "4/6",
+        "distinctGenerations": 5,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Grag",
+            "kind": "ONE",
+            "expected": "Hallein"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "WieWs",
+            "kind": "TWO",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Ween",
+            "kind": "SWAP",
+            "expected": "Amstetten"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "WieWs",
+            "kind": "SWAP",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Graz",
+            "kind": "ONE",
+            "expected": "Tulln"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Graz",
+            "kind": "TWO",
+            "expected": "Tulln"
+          }
+        ],
+        "exactAnswerable": "0/29"
+      },
+      "updates": 60000,
+      "train": {
+        "abstention": "17/17",
+        "swapPairsDistinguished": "12/12",
+        "distinctGenerations": 12,
+        "samples": [
+          {
+            "question": "Wo ist David?",
+            "generated": "Steyr",
+            "kind": "SWAP",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist David?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Wels"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Graz",
+            "kind": "SWAP",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Laura?",
+            "generated": "Gras",
+            "kind": "TWO",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Paul?",
+            "generated": "Wien",
+            "kind": "TWO",
+            "expected": "Wien"
+          }
+        ],
+        "exactAnswerable": "47/47"
+      },
+      "testUnseenNames": {
+        "abstention": "6/6",
+        "swapPairsDistinguished": "11/11",
+        "distinctGenerations": 12,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Linz",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Berg",
+            "kind": "SWAP",
+            "expected": "Berg"
+          },
+          {
+            "question": "Wo ist Bastian?",
+            "generated": "Graz",
+            "kind": "ONE",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Gras",
+            "kind": "SWAP",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Wels"
+          }
+        ],
+        "exactAnswerable": "34/34"
+      }
+    },
+    {
+      "condition": "ORACLE_SPELL",
+      "trainMillis": 1128,
+      "lossAfter": 0.00357481076969852,
+      "lossBefore": 5.550310935901912,
+      "testSeen": {
+        "abstention": "11/11",
+        "swapPairsDistinguished": "5/6",
+        "distinctGenerations": 11,
+        "samples": [
+          {
+            "question": "Wo ist Nora?",
+            "generated": "Steyr",
+            "kind": "TWO",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist Hanna?",
+            "generated": "Wein",
+            "kind": "ONE",
+            "expected": "Wein"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Moritz?",
+            "generated": "Linz",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Villach",
+            "kind": "ONE",
+            "expected": "Villach"
+          },
+          {
+            "question": "Wo ist Jonas?",
+            "generated": "Villach",
+            "kind": "ONE",
+            "expected": "Villach"
+          }
+        ],
+        "exactAnswerable": "29/29"
+      },
+      "testUnseenLocations": {
+        "abstention": "11/11",
+        "swapPairsDistinguished": "5/6",
+        "distinctGenerations": 6,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "LerL",
+            "kind": "ONE",
+            "expected": "Hallein"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Steyr",
+            "kind": "TWO",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Wien",
+            "kind": "SWAP",
+            "expected": "Amstetten"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Steyr",
+            "kind": "SWAP",
+            "expected": "Bad Ischl"
+          },
+          {
+            "question": "Wo ist Ylva?",
+            "generated": "Wern",
+            "kind": "ONE",
+            "expected": "Tulln"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Wern",
+            "kind": "TWO",
+            "expected": "Tulln"
+          }
+        ],
+        "exactAnswerable": "0/29"
+      },
+      "updates": 60000,
+      "train": {
+        "abstention": "17/17",
+        "swapPairsDistinguished": "12/12",
+        "distinctGenerations": 12,
+        "samples": [
+          {
+            "question": "Wo ist David?",
+            "generated": "Steyr",
+            "kind": "SWAP",
+            "expected": "Steyr"
+          },
+          {
+            "question": "Wo ist David?",
+            "generated": "Wels",
+            "kind": "SWAP",
+            "expected": "Wels"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Anna?",
+            "generated": "Graz",
+            "kind": "SWAP",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Laura?",
+            "generated": "Gras",
+            "kind": "TWO",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Paul?",
+            "generated": "Wien",
+            "kind": "TWO",
+            "expected": "Wien"
+          }
+        ],
+        "exactAnswerable": "47/47"
+      },
+      "testUnseenNames": {
+        "abstention": "6/6",
+        "swapPairsDistinguished": "11/11",
+        "distinctGenerations": 12,
+        "samples": [
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Linz",
+            "kind": "SWAP",
+            "expected": "Linz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Berg",
+            "kind": "SWAP",
+            "expected": "Berg"
+          },
+          {
+            "question": "Wo ist Bastian?",
+            "generated": "Graz",
+            "kind": "ONE",
+            "expected": "Graz"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Gras",
+            "kind": "SWAP",
+            "expected": "Gras"
+          },
+          {
+            "question": "Wo ist Greta?",
+            "generated": "Leoben",
+            "kind": "SWAP",
+            "expected": "Leoben"
+          },
+          {
+            "question": "Wo ist Ivana?",
+            "generated": "Wels",
+            "kind": "ONE",
+            "expected": "Wels"
+          }
+        ],
+        "exactAnswerable": "34/34"
+      }
+    },
+    {
+      "abstention": "17/17",
+      "condition": "RULE_CORE",
+      "falseAnswersOnUnanswerable": 0,
+      "set": "train",
+      "trainingUpdates": 0,
+      "exactAnswerable": "47/47"
+    },
+    {
+      "abstention": "11/11",
+      "condition": "RULE_CORE",
+      "falseAnswersOnUnanswerable": 0,
+      "set": "testSeen",
+      "trainingUpdates": 0,
+      "exactAnswerable": "29/29"
+    },
+    {
+      "abstention": "6/6",
+      "condition": "RULE_CORE",
+      "falseAnswersOnUnanswerable": 0,
+      "set": "testUnseenNames",
+      "trainingUpdates": 0,
+      "exactAnswerable": "34/34"
+    },
+    {
+      "abstention": "11/11",
+      "condition": "RULE_CORE",
+      "falseAnswersOnUnanswerable": 0,
+      "set": "testUnseenLocations",
+      "trainingUpdates": 0,
+      "exactAnswerable": "29/29"
+    }
+  ],
+  "trainAnswers": 13,
+  "decoderParameters": 7746
+}

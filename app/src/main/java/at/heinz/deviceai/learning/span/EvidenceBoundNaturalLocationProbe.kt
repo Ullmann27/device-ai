@@ -50,10 +50,13 @@ object EvidenceBoundNaturalLocationProbe {
         if (ids.distinct().size != ids.size) return Decision.Abstained("DUPLICATE_SOURCE")
         val quotedName = Regex.escape(name)
         val mention = Regex("""(?iu)(?<![\p{L}\p{M}])""" + quotedName + """(?![\p{L}\p{M}])""")
+        // Clause boundaries: sentence punctuation, comma and the coordinating "und", so that
+        // "Anna ist in Perg, Emma ist in Berg." binds each person to her own clause. Negation and
+        // time words are still checked on the whole sentence below (fail closed).
         val pattern = Regex(
-            """(?ium)(?:^|(?<=[.!?;]))\s*""" + quotedName +
+            """(?ium)(?:^|(?<=[.!?;,])|(?<=\bund\s))\s*""" + quotedName +
             """\s+""" + evidenceRelations + """\s+in\s+(""" + cityPattern +
-            """)(?=\s*(?:[.!?;]|$))"""
+            """)(?=\s*(?:[.!?;,]|\s+und\s+[\p{L}][\p{L}\p{M}-]{1,31}\s+(?:ist|wohnt|lebt|steht)\s+in\s|$))"""
         )
         val matches = mutableListOf<Decision.Found>()
         for (source in sources) {
@@ -130,13 +133,27 @@ object EvidenceBoundNaturalLocationVerifier {
             if (source.text.any { it in "\"„“”«»" } || Regex(
                     """(?iu)\b(?:sie|er|es|das|dies|diese|dieser|dieses|jene|jener|korrektur|widerruf|widerrufen|falsch|nein|ungültig)\b"""
                 ).containsMatchIn(source.text)) return false
+            // Independently expressed clause split: sentence punctuation, comma, or a
+            // coordinating " und " – each clause must be a complete static assertion.
+            // " und " only separates clauses when a complete new assertion follows;
+            // "in Graz und Wien" stays one (rejected) location coordination.
+            val coordination = Regex("""(?iu)\s+und\s+(?=[\p{L}][\p{L}\p{M}-]{1,31}\s+(?:ist|wohnt|lebt|steht)\s+in\s)""")
             var start = 0
             for (end in 0..source.text.length) {
-                if (end < source.text.length && source.text[end] !in ".!?;") continue
+                if (end < source.text.length && source.text[end] !in ".!?;,") continue
                 val clause = source.text.substring(start, end)
-                if (mention.containsMatchIn(clause)) {
+                var clauseStart = start
+                val parts = ArrayList<Pair<Int, String>>()
+                var cursor = 0
+                for (c in coordination.findAll(clause)) {
+                    parts += clauseStart + cursor to clause.substring(cursor, c.range.first)
+                    cursor = c.range.last + 1
+                }
+                parts += clauseStart + cursor to clause.substring(cursor)
+                for ((partStart, part) in parts) {
+                if (mention.containsMatchIn(part)) {
                     if (end < source.text.length && source.text[end] == '?') return false
-                    val match = assertion.matchEntire(clause) ?: return false
+                    val match = assertion.matchEntire(part) ?: return false
                     if (!match.groupValues[1].equals(relation, ignoreCase = true)) return false
                     val span = match.groups[2] ?: return false
                     val locationWords = span.value.split(Regex("\\s+"))
@@ -145,7 +162,8 @@ object EvidenceBoundNaturalLocationVerifier {
                     supported++
                     exact = exact || (source.sourceId == found.sourceId && source.revision == found.revision &&
                         source.sha256 == found.sha256 && span.value == found.text &&
-                        start + span.range.first == found.start && start + span.range.last + 1 == found.endExclusive)
+                        partStart + span.range.first == found.start && partStart + span.range.last + 1 == found.endExclusive)
+                }
                 }
                 start = end + 1
             }

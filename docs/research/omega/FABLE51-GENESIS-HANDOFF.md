@@ -36,10 +36,23 @@ Dokumentiert in `experimental/brain/CDXA1-RESUME.md`, `docs/evidence/sol314-2026
 (`TrainableSubwordEncoder`, tanh-Mittelwert über Char-n-Gramm-Hash-Buckets).
 Eigene Analyse folgt im Abschnitt "CDX1-Experimente".
 
+## CDX1-Experimente
+Ergebnis in `docs/evidence/fable51-genesis-20261101/CDX1-ORACLE-BOUND.md` (+ JSON):
+- SWB1-Bag-Konditionierung kollabiert auf **eine** Ausgabe für alle Eingaben (0/35 Tausch-Paare),
+  Oracle-Konditionierung desselben Decoders erreicht 47/47 → Architekturproblem der Kopplung, nicht Budget.
+- Selbst Oracle-Konditionierung generiert **0/29** ungesehene Orte → ohne Kopierpfad unerreichbares 16/20-Ziel.
+- Negativbefund: Regelkern enthielt sich bei koordinierten Satzteilen („Anna ist in Perg, Emma ist in Berg.“);
+  behoben durch Satzteil-Grenzen an Komma/„und“ (nur vor vollständiger neuer Aussage), Verifier unabhängig angepasst.
+- Keine Checkpoints verändert; kein Fold7-Lauf.
+
 ## Commit-Log
 | Commit | Änderung | Tests |
 |--------|----------|-------|
 | (Basis) cc878fb9 | PR #333 HEAD | Baseline-Lauf siehe unten |
+| 723adcdd | Handoff-Dokument (Bestandsaufnahme, Brüche B1–B5) | – (nur Doku) |
+| 59e26bcc | B1+B3: `ResearchDialogueHandoff`, Recherche-Digest im Dialogkontext, Abrufdatum/TODAY im Prompt, Canary-Frames im Qualitätsgate | `android-kotlin-unit-check.sh` OK |
+| 24445118 | B2: `FreshKnowledgeNeed` (CURRENT_FACT/EXPLANATION/STATIC), ASK fragt bei Gegenwartsfragen, ALWAYS_ON lässt Erklärungen lokal | `android-kotlin-unit-check.sh` OK (1492 Tests) |
+| (dieser Commit) | CDX1 Oracle-Bound-Experiment + Regelkern-Koordination (Komma/„und“) | `android-kotlin-unit-check.sh` OK (1493 Tests, 275 Klassen) |
 
 ## Offene Aufgaben
 - siehe Abschnitte oben; wird fortgeschrieben.
