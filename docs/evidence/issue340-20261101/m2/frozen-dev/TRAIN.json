@@ -1,0 +1,3908 @@
+{
+  "schema": "CDX2_AUTHOR_SYNTHETIC_V1",
+  "blind": false,
+  "split": "TRAIN",
+  "cases": [
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-0-0",
+        "sha256": "1befec7fd66760eafd416ec32c2cde26dda02e5180ebcd2b9e823162bdbd3467",
+        "text": "Na-Liva lebt in Te-Dorf Te-Nord.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-0-0",
+        "decision": "SPAN",
+        "sha256": "1befec7fd66760eafd416ec32c2cde26dda02e5180ebcd2b9e823162bdbd3467",
+        "endExclusive": 31,
+        "start": 16,
+        "text": "Te-Dorf Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-0"
+    },
+    {
+      "question": "Wo ist Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-1-0",
+        "sha256": "a9fcbeb57bd839ae5ace241bc3d44cfceb7715c91a163cc0b61c3773bf3a5c29",
+        "text": "Na-Rina ist in Te-Dorf, Na-Keva ist in Te-Feld.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-1-0",
+        "decision": "SPAN",
+        "sha256": "a9fcbeb57bd839ae5ace241bc3d44cfceb7715c91a163cc0b61c3773bf3a5c29",
+        "endExclusive": 46,
+        "start": 39,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-1"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-2-0",
+        "sha256": "c77a56fa94d2abfceeb4314ad15197f9494ef1f68f532c1b32af16fe89ff8740",
+        "text": "Na-Toma wohnt in Te-Dorf und Na-Rina wohnt in Te-Park.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-2-0",
+        "decision": "SPAN",
+        "sha256": "c77a56fa94d2abfceeb4314ad15197f9494ef1f68f532c1b32af16fe89ff8740",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-2"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-3-0",
+          "sha256": "6951aeac92a3212cd5d253e7d37b92b8b244c58132af7cd93885d71d7e577ae0",
+          "text": "Na-Keva ist in Te-Dorf.",
+          "revision": 5
+        },
+        {
+          "sourceId": "TRAIN-3-1",
+          "sha256": "94f8d9d787cbef323278dbcb56bd1a380210ace994d74e1ecd6acde3bdc6a945",
+          "text": "Na-Liva ist in Te-Feld.",
+          "revision": 4
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-3-1",
+        "decision": "SPAN",
+        "sha256": "94f8d9d787cbef323278dbcb56bd1a380210ace994d74e1ecd6acde3bdc6a945",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-3"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-4-0",
+        "sha256": "e2c6de314e96d9040f456d337e56c30640f4468eae5902e37e3f9b07fc8d0f79",
+        "text": "Na-Keva steht in Te-See; Na-Rina steht in Te-Feld.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-4-0",
+        "decision": "SPAN",
+        "sha256": "e2c6de314e96d9040f456d337e56c30640f4468eae5902e37e3f9b07fc8d0f79",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-4"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-5-0",
+        "sha256": "4dc1785b468ae37ba46f2e643bf1f3fa3ea26ff258de3f05109ca537e01c901e",
+        "text": "  Na-Liva ist in Te-Burg.  ",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-5-0",
+        "decision": "SPAN",
+        "sha256": "4dc1785b468ae37ba46f2e643bf1f3fa3ea26ff258de3f05109ca537e01c901e",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-5"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-6-0",
+          "sha256": "6a0dc8c31ce5d9abb107506282191db98e86fe2ba6a7efb947e53f0e0e09d8c2",
+          "text": "Na-Toma lebt in Te-Park.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-6-1",
+          "sha256": "c50a82417d186cff1d84156699a1089472553e77b06a6933943f4e03c13881b0",
+          "text": "Na-Keva lebt in Te-Burg.",
+          "revision": 8
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-6-0",
+        "decision": "SPAN",
+        "sha256": "6a0dc8c31ce5d9abb107506282191db98e86fe2ba6a7efb947e53f0e0e09d8c2",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-6"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-7-0",
+        "sha256": "e712f97fbd1d59966319d7d1f9d9863f07c670869f13835cb44f240300e1c99a",
+        "text": "Na-Jaro wohnt in Te-Park Te-Nord, Na-Toma wohnt in Te-Burg.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-7-0",
+        "decision": "SPAN",
+        "sha256": "e712f97fbd1d59966319d7d1f9d9863f07c670869f13835cb44f240300e1c99a",
+        "endExclusive": 32,
+        "start": 17,
+        "text": "Te-Park Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-7"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-8-0",
+        "sha256": "2b5bbea9ab7892da3ae2042f765e734d83bbc68ef94499e86c79490cc46b1d99",
+        "text": "Na-Sina steht in Te-See.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-8"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-9-0",
+        "sha256": "9c25890dbc0f663e7e4938903b6c9cf0a7e583d1374372969a45b34a848a7102",
+        "text": "Na-Liva wohnt nicht in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-9"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-10-0",
+        "sha256": "7d78184bc87c8b5786af5c502739fba99dab9d9d9054d075d1bdaf5c16efa01a",
+        "text": "Na-Rina lebt heute in Te-Tal.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-10"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-11-0",
+          "sha256": "7f7ab9cd3bd47ec5ef552210260ba262dd2c973a9728d7cda26e6f3807cd05cc",
+          "text": "Na-Rina wohnt in Te-Dorf.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-11-1",
+          "sha256": "241cecfca409f76075c8d9e46d79ca4d20b0ebec084267e1506bc3292fa866de",
+          "text": "Na-Rina wohnt in Te-Park.",
+          "revision": 7
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-11"
+    },
+    {
+      "question": "Was macht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-12-0",
+        "sha256": "c7f721820dd17fb054828f2ff7bf63386849b710216d920d172304f58bb3dbd6",
+        "text": "Na-Sina steht in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-12"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-13-0",
+        "sha256": "d434c4c6ffadeea8d414d03f59afb9f9dc9000caefcc7794e4fd27ed46e3da9b",
+        "text": "\"Na-Toma steht in Te-Burg\".",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-13"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-14-0",
+        "sha256": "b79d244a5335c9cd600399a59a8bfac37500d7349d11a4cdccfefdd53ed3725c",
+        "text": "Na-Liva lebt in Te-Dorf Te-Nord. Widerruf.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-14"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-15-0",
+        "sha256": "1dfab6bc34db03a5a5943272b437775c09a97c91045cf784a7728321c69a33f0",
+        "text": "Na-Jaro lebt in Te-See?",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-15"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-16-0",
+        "sha256": "738b5a14a7e0d289ea73f2f7b7605cb79fa9d522ee17c9d820d6d928a60a46d2",
+        "text": "Na-Rina wohnt in Te-Tal und Te-See.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-16"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-17-0",
+        "sha256": "2b5bbea9ab7892da3ae2042f765e734d83bbc68ef94499e86c79490cc46b1d99",
+        "text": "Na-Sina steht in Te-See.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-17"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-18-0",
+        "sha256": "ad1e8a96703a564c1dbbc4d07fddadf541d9f0c88a3f0ff3a59f743be8f0a09a",
+        "text": "Na-Rina lebt in Te-Park. Er lebt in Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-18"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-19-0",
+        "sha256": "10312bbffe88646c14980ed9fce216b5135ff28078fce2b1907213f056c5d169",
+        "text": "🧪; Na-Jaro wohnt in Te-Park.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-19-0",
+        "decision": "SPAN",
+        "sha256": "10312bbffe88646c14980ed9fce216b5135ff28078fce2b1907213f056c5d169",
+        "endExclusive": 28,
+        "start": 21,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-19"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-20-0",
+        "sha256": "dc254c3c4960c825d755cbb4e08deaed83b5a3d1f41778e10b2f4db932fd1716",
+        "text": "Na-Liva lebt in Te-See.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-20-0",
+        "decision": "SPAN",
+        "sha256": "dc254c3c4960c825d755cbb4e08deaed83b5a3d1f41778e10b2f4db932fd1716",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-20"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-21-0",
+        "sha256": "85f6c56c9b036912b9e723dd8e792e33053663bcfd04dc82c36b9f79acf81028",
+        "text": "Na-Toma steht in Te-Burg, Na-Keva steht in Te-Park Te-Nord.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-21-0",
+        "decision": "SPAN",
+        "sha256": "85f6c56c9b036912b9e723dd8e792e33053663bcfd04dc82c36b9f79acf81028",
+        "endExclusive": 58,
+        "start": 43,
+        "text": "Te-Park Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-21"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-22-0",
+        "sha256": "85aebfd4700ad6019052e2141322b03e2c738e9d7fd70e515d48b7feab32ed19",
+        "text": "Na-Rina lebt in Te-Dorf und Na-Sina lebt in Te-Park.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-22-0",
+        "decision": "SPAN",
+        "sha256": "85aebfd4700ad6019052e2141322b03e2c738e9d7fd70e515d48b7feab32ed19",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-22"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-23-0",
+          "sha256": "53f7a181f68d48437b3381d4cb6d7c83f1f38b9a9f2dc75ddc9b73f2d9caacd2",
+          "text": "Na-Keva steht in Te-Park.",
+          "revision": 8
+        },
+        {
+          "sourceId": "TRAIN-23-1",
+          "sha256": "18b9289c252ced721c23367c3abe17d199608bbddea42e70b58e52c96c723d1b",
+          "text": "Na-Sina steht in Te-Dorf.",
+          "revision": 3
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-23-1",
+        "decision": "SPAN",
+        "sha256": "18b9289c252ced721c23367c3abe17d199608bbddea42e70b58e52c96c723d1b",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-23"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-24-0",
+        "sha256": "70025f76cb3a68b3bd33d41e20ebfc182c2eb42bdeae5bfaa1d0913a144ebbcd",
+        "text": "Na-Toma wohnt in Te-Feld; Na-Jaro wohnt in Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-24-0",
+        "decision": "SPAN",
+        "sha256": "70025f76cb3a68b3bd33d41e20ebfc182c2eb42bdeae5bfaa1d0913a144ebbcd",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-24"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-25-0",
+        "sha256": "05ffd802e07b9d03ad5ea16c15e5a849c86d63ef308c424644634a830acf6b1b",
+        "text": "  Na-Rina wohnt in Te-Feld.  ",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-25-0",
+        "decision": "SPAN",
+        "sha256": "05ffd802e07b9d03ad5ea16c15e5a849c86d63ef308c424644634a830acf6b1b",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-25"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-26-0",
+          "sha256": "c7217de1fe1cd191e6f0a338a8827926fd307ab0b9bf081f5c3a060fe5281682",
+          "text": "Na-Toma wohnt in Te-Burg.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-26-1",
+          "sha256": "63facac9c42fd574be09f6385c174c4f9c9c0b44e170683080c2431d27c61872",
+          "text": "Na-Keva wohnt in Te-Tal.",
+          "revision": 2
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-26-0",
+        "decision": "SPAN",
+        "sha256": "c7217de1fe1cd191e6f0a338a8827926fd307ab0b9bf081f5c3a060fe5281682",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-26"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-27-0",
+        "sha256": "43bfbc29efe60ea68006b18f988a5f48aac7da545853cab7584933c59f13a53a",
+        "text": "Na-Jaro steht in Te-Dorf, Na-Toma steht in Te-Park.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-27-0",
+        "decision": "SPAN",
+        "sha256": "43bfbc29efe60ea68006b18f988a5f48aac7da545853cab7584933c59f13a53a",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-27"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-28-0",
+        "sha256": "d07750ff19eedaaa899c478518ccc0fb877ef9d7c4280870f40eba490c3c9923",
+        "text": "Na-Toma wohnt in Te-Park Te-Nord.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-28"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-29-0",
+        "sha256": "03e44bf130a8ad5f8e3b9234373a63c948aa01286ae74844a4c4da44ece8961a",
+        "text": "Na-Keva lebt nicht in Te-See.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-29"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-30-0",
+        "sha256": "a5e6658926b620e005540263249db275540f93513f2c37df171734eb6dbf9202",
+        "text": "Na-Rina lebt heute in Te-Dorf.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-30"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-31-0",
+          "sha256": "606b2dde94ac934bdbe4a8550a4e9c9ae5bc6b04f4c67b64b721002e845d764b",
+          "text": "Na-Sina ist in Te-Tal.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-31-1",
+          "sha256": "6885a69996158364e07329f73779e7e30912764c8b417e776481d9528ef17b77",
+          "text": "Na-Sina ist in Te-See.",
+          "revision": 3
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-31"
+    },
+    {
+      "question": "Was macht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-32-0",
+        "sha256": "396c6b59c2d5560e20576fe9faf427d8dc2b397fa530d2bab33735fdb36a9fe9",
+        "text": "Na-Liva steht in Te-Tal.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-32"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-33-0",
+        "sha256": "ac04dad991336122297ba17e6c106960497a57723d77caeeb8cddc8a0eee0864",
+        "text": "\"Na-Liva wohnt in Te-See\".",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-33"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-34-0",
+        "sha256": "42c8fb90b91b10d9f2690688977052f5c358885b9b01c896dd63915a536b4ddb",
+        "text": "Na-Sina lebt in Te-Feld. Widerruf.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-34"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-35-0",
+        "sha256": "ed89f1685249a705da0f072eedfaeaa0f31c47969e350dfaf08f7791601b8a92",
+        "text": "Na-Sina lebt in Te-Dorf Te-Nord?",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-35"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-36-0",
+        "sha256": "7da081e665eddc6dc9892f72bed9e5b1cf39e0c548548dba5c8731c633029f54",
+        "text": "Na-Rina wohnt in Te-See und Te-Feld.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-36"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-37-0",
+        "sha256": "54213b7c3c590ccbe4570946a619dd31d8ab5e0330afd0435f1c8dfdfae82ab7",
+        "text": "Na-Liva ist in Te-Tal.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-37"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-38-0",
+        "sha256": "4d4e7e8e86ef646c7262ffbb2bd1f0fd44da7b50b75f1a1956a89ed49c821664",
+        "text": "Na-Toma steht in Te-Dorf. Er steht in Te-Park.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-38"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-39-0",
+        "sha256": "53d772534c56c0ccfa2283c471c8fa226c509e04733829007ad180ec4e0e53c7",
+        "text": "🧪; Na-Liva ist in Te-Park.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-39-0",
+        "decision": "SPAN",
+        "sha256": "53d772534c56c0ccfa2283c471c8fa226c509e04733829007ad180ec4e0e53c7",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-39"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-40-0",
+        "sha256": "85e0014cf80c0e0133a1651cbf08bdf0836662179c6601b1c178420437f45d82",
+        "text": "Na-Liva steht in Te-Feld.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-40-0",
+        "decision": "SPAN",
+        "sha256": "85e0014cf80c0e0133a1651cbf08bdf0836662179c6601b1c178420437f45d82",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-40"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-41-0",
+        "sha256": "0f781b05dd7526eae26b60eb89e3cccef9ae48bd38df9d0a4f7d0884eb588df0",
+        "text": "Na-Rina lebt in Te-Burg, Na-Liva lebt in Te-Park.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-41-0",
+        "decision": "SPAN",
+        "sha256": "0f781b05dd7526eae26b60eb89e3cccef9ae48bd38df9d0a4f7d0884eb588df0",
+        "endExclusive": 48,
+        "start": 41,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-41"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-42-0",
+        "sha256": "deaf819c439f2cf66bdbeaa48e29cd8f45ab82d69bf6f127ede088ee64006175",
+        "text": "Na-Toma steht in Te-Feld Te-Nord und Na-Rina steht in Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-42-0",
+        "decision": "SPAN",
+        "sha256": "deaf819c439f2cf66bdbeaa48e29cd8f45ab82d69bf6f127ede088ee64006175",
+        "endExclusive": 32,
+        "start": 17,
+        "text": "Te-Feld Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-42"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-43-0",
+          "sha256": "606b2dde94ac934bdbe4a8550a4e9c9ae5bc6b04f4c67b64b721002e845d764b",
+          "text": "Na-Sina ist in Te-Tal.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-43-1",
+          "sha256": "863079ad8d51dbcf909237e5f3aeba8348b7bd2524bf9d4c9208e27b1b48de5e",
+          "text": "Na-Toma ist in Te-Burg.",
+          "revision": 8
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-43-1",
+        "decision": "SPAN",
+        "sha256": "863079ad8d51dbcf909237e5f3aeba8348b7bd2524bf9d4c9208e27b1b48de5e",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-43"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-44-0",
+        "sha256": "38d75f488afb6ff3710f0640177b99840774ee75e428d1c08c0ddc531b85cd8d",
+        "text": "Na-Sina steht in Te-Dorf; Na-Jaro steht in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-44-0",
+        "decision": "SPAN",
+        "sha256": "38d75f488afb6ff3710f0640177b99840774ee75e428d1c08c0ddc531b85cd8d",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-44"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-45-0",
+        "sha256": "a657e958614f14a3ad0bf2c844ae03fa73ca09540215e8efd1d3cfd5d58c6253",
+        "text": "  Na-Jaro steht in Te-Park.  ",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-45-0",
+        "decision": "SPAN",
+        "sha256": "a657e958614f14a3ad0bf2c844ae03fa73ca09540215e8efd1d3cfd5d58c6253",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-45"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-46-0",
+          "sha256": "98c2efd83e93f4cba303bff8af93351b46fc955ced96c186a976c30d39b58a84",
+          "text": "Na-Toma wohnt in Te-See.",
+          "revision": 5
+        },
+        {
+          "sourceId": "TRAIN-46-1",
+          "sha256": "28a0e54974f099dc9f95b07dea6c8ce8d0a2cfd0f2f9c932b8ffec51cae1b3c4",
+          "text": "Na-Keva wohnt in Te-Feld.",
+          "revision": 7
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-46-0",
+        "decision": "SPAN",
+        "sha256": "98c2efd83e93f4cba303bff8af93351b46fc955ced96c186a976c30d39b58a84",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-46"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-47-0",
+        "sha256": "f549ae57eeb98a82bb1d74aba0a7050118df96f529a8b21a1936962e32f43da5",
+        "text": "Na-Rina wohnt in Te-Dorf, Na-Liva wohnt in Te-Park.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-47-0",
+        "decision": "SPAN",
+        "sha256": "f549ae57eeb98a82bb1d74aba0a7050118df96f529a8b21a1936962e32f43da5",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-47"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-48-0",
+        "sha256": "34a556a8d29d8814e95f957b4ce05b5603899f9802c2a79d5ab903c3e7f67559",
+        "text": "Na-Jaro wohnt in Te-Burg.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-48"
+    },
+    {
+      "question": "Wo ist Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-49-0",
+        "sha256": "28f19b633bc548f21ff0c5e05b13f95ceb0d23e2e2868939bded45d74ec7e9f6",
+        "text": "Na-Keva ist nicht in Te-Feld Te-Nord.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-49"
+    },
+    {
+      "question": "Wo ist Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-50-0",
+        "sha256": "5842260e4c19ada83c1c6fc5e4d1212fb33bbbda0ee717cbe9cd3dc06898589f",
+        "text": "Na-Keva ist heute in Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-50"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-51-0",
+          "sha256": "241cecfca409f76075c8d9e46d79ca4d20b0ebec084267e1506bc3292fa866de",
+          "text": "Na-Rina wohnt in Te-Park.",
+          "revision": 5
+        },
+        {
+          "sourceId": "TRAIN-51-1",
+          "sha256": "f037da67ddbac27498c98ce264b0997c0bfb4565275678bf1b5b81ad274806de",
+          "text": "Na-Rina wohnt in Te-Burg.",
+          "revision": 3
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-51"
+    },
+    {
+      "question": "Was macht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-52-0",
+        "sha256": "efde60eadb7799c9ded381f21a0a3c4068fbbb9e28104f6291cd7516205e868f",
+        "text": "Na-Toma ist in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-52"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-53-0",
+        "sha256": "cb86242dc541000f99c4e33a24b13e5582e2a9f2ae9e975874bfd63a9cfc2bf6",
+        "text": "\"Na-Sina wohnt in Te-See\".",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-53"
+    },
+    {
+      "question": "Wo ist Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-54-0",
+        "sha256": "c7cf1acb662f37be8951ddf8019108d668d5519200538d57e603d9fa8be20094",
+        "text": "Na-Jaro ist in Te-Park. Widerruf.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-54"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-55-0",
+        "sha256": "fe80f3aea733f49b1c0cadb97e84c3ff1334d8e846593ddf9d3f58bb582a055e",
+        "text": "Na-Toma wohnt in Te-See?",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-55"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-56-0",
+        "sha256": "7dc184203cf2424d6c6c1710b8cab97cb8f1e51306b227e3b0a2b6416a79d175",
+        "text": "Na-Jaro wohnt in Te-Feld Te-Nord und Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-56"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-57-0",
+        "sha256": "cf5d6b39394ff18e3a9d76011b79fcd431369937f07306f624b58613043f825c",
+        "text": "Na-Toma steht in Te-Burg.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-57"
+    },
+    {
+      "question": "Wo ist Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-58-0",
+        "sha256": "b9f6892924c0773c4608d1df5fd06e15a5719fe2c105b02dfde1a1964a34dd34",
+        "text": "Na-Jaro ist in Te-Park. Er ist in Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-58"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-59-0",
+        "sha256": "81c6470f62f9c7de0ba3f1f7887c8095eb628ca4860be016cb9be717b505940b",
+        "text": "🧪; Na-Sina lebt in Te-Tal.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-59-0",
+        "decision": "SPAN",
+        "sha256": "81c6470f62f9c7de0ba3f1f7887c8095eb628ca4860be016cb9be717b505940b",
+        "endExclusive": 26,
+        "start": 20,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-59"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-60-0",
+        "sha256": "e01441beb047b3fb589590b52b5b1af7ce6d1a499a07b7d5f76ce7d6f686add9",
+        "text": "Na-Sina wohnt in Te-Burg.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-60-0",
+        "decision": "SPAN",
+        "sha256": "e01441beb047b3fb589590b52b5b1af7ce6d1a499a07b7d5f76ce7d6f686add9",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-60"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-61-0",
+        "sha256": "bf245d19a093f85727d1f11a32d235c3058397bc8becfcecaa38c573b5740dec",
+        "text": "Na-Keva ist in Te-Feld, Na-Rina ist in Te-See.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-61-0",
+        "decision": "SPAN",
+        "sha256": "bf245d19a093f85727d1f11a32d235c3058397bc8becfcecaa38c573b5740dec",
+        "endExclusive": 45,
+        "start": 39,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-61"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-62-0",
+        "sha256": "b45ae460dcc17367e5fc85c0f4f7287e2600021a75ec2e649a360b5c1acea971",
+        "text": "Na-Jaro wohnt in Te-Park und Na-Rina wohnt in Te-Burg.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-62-0",
+        "decision": "SPAN",
+        "sha256": "b45ae460dcc17367e5fc85c0f4f7287e2600021a75ec2e649a360b5c1acea971",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-62"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-63-0",
+          "sha256": "9cc1a83b1a528e8af357364102a0990929e9897075c9c2da084609a37f79c804",
+          "text": "Na-Liva steht in Te-Dorf.",
+          "revision": 3
+        },
+        {
+          "sourceId": "TRAIN-63-1",
+          "sha256": "1316592efedf147362ad5de62b68193edbb528573c385a0089efe3489faf6a2e",
+          "text": "Na-Rina steht in Te-Feld Te-Nord.",
+          "revision": 4
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-63-1",
+        "decision": "SPAN",
+        "sha256": "1316592efedf147362ad5de62b68193edbb528573c385a0089efe3489faf6a2e",
+        "endExclusive": 32,
+        "start": 17,
+        "text": "Te-Feld Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-63"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-64-0",
+        "sha256": "48287b25f9e199838477f78ee75312b133361da633f21cb18e3df258ee23215c",
+        "text": "Na-Jaro lebt in Te-See; Na-Sina lebt in Te-Feld.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-64-0",
+        "decision": "SPAN",
+        "sha256": "48287b25f9e199838477f78ee75312b133361da633f21cb18e3df258ee23215c",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-64"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-65-0",
+        "sha256": "81f20847b7d7d758f029da1c07a1f8a9bffa4c3c7a29797025281832f6e88152",
+        "text": "  Na-Rina lebt in Te-Park.  ",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-65-0",
+        "decision": "SPAN",
+        "sha256": "81f20847b7d7d758f029da1c07a1f8a9bffa4c3c7a29797025281832f6e88152",
+        "endExclusive": 25,
+        "start": 18,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-65"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-66-0",
+          "sha256": "dc254c3c4960c825d755cbb4e08deaed83b5a3d1f41778e10b2f4db932fd1716",
+          "text": "Na-Liva lebt in Te-See.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-66-1",
+          "sha256": "d4a7ef4773c755700e576d008af940415bb3c2fe40010c16b294c154ddd78acf",
+          "text": "Na-Jaro lebt in Te-Feld.",
+          "revision": 7
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-66-0",
+        "decision": "SPAN",
+        "sha256": "dc254c3c4960c825d755cbb4e08deaed83b5a3d1f41778e10b2f4db932fd1716",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-66"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-67-0",
+        "sha256": "d4a847004ba9d185b91c2a799a57e50a554c394af6533bce9d9b800f84f5a0c5",
+        "text": "Na-Liva wohnt in Te-See, Na-Toma wohnt in Te-Feld.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-67-0",
+        "decision": "SPAN",
+        "sha256": "d4a847004ba9d185b91c2a799a57e50a554c394af6533bce9d9b800f84f5a0c5",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-67"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-68-0",
+        "sha256": "4737c82e99e7987d78c00c959ecde2588d2cfbef07f41bccf2075a8b06aa48d1",
+        "text": "Na-Liva lebt in Te-Feld.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-68"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-69-0",
+        "sha256": "46719bdb4a9fc3a4e1816121f1a36c19c73adcd02cc367ed45f3f72d0bc57830",
+        "text": "Na-Rina wohnt nicht in Te-Dorf.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-69"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-70-0",
+        "sha256": "0f8b3dbd0584da2245aa9db692a614ec0d238643c0c8002e24340d2129bc97ae",
+        "text": "Na-Keva lebt heute in Te-Feld Te-Nord.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-70"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-71-0",
+          "sha256": "e7e46c17d0cfda3dadc483f4915af78749a3f5a657fd62af893e2c3b3859c157",
+          "text": "Na-Jaro wohnt in Te-Feld.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-71-1",
+          "sha256": "9d6f7aa97fa99e647deb8a55ab545be99a2d7f8bcdae963b117417764d82d652",
+          "text": "Na-Jaro wohnt in Te-Dorf.",
+          "revision": 2
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-71"
+    },
+    {
+      "question": "Was macht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-72-0",
+        "sha256": "9e00ea491b85649889c229ada036f56c9cb3f1ac56a75ab11de0db893eab97e0",
+        "text": "Na-Sina wohnt in Te-See.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-72"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-73-0",
+        "sha256": "b0374e19f26e6098375b1059ed65d6dbcbc254281f209e8785b845fe63550c5c",
+        "text": "\"Na-Liva steht in Te-Feld\".",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-73"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-74-0",
+        "sha256": "c32be4e71027808b5b42e5b7f27ac8afae348f2731334988f54454e5f0a17c84",
+        "text": "Na-Rina ist in Te-See. Widerruf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-74"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-75-0",
+        "sha256": "8cce3ff241ccb630738bfc3be07c11c793f669f4e1d76854f147c3758c4ad193",
+        "text": "Na-Liva lebt in Te-Burg?",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-75"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-76-0",
+        "sha256": "9dfe5da92fc1bec59bdb3319df79ae6e077c4e2c4248b54e997b9f8dc022a3ab",
+        "text": "Na-Sina steht in Te-Burg und Te-Tal.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-76"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-77-0",
+        "sha256": "575ccc39c9225c81f7bd27c6d857718409d827cc76f1367e45fb7cc78f1917ed",
+        "text": "Na-Jaro wohnt in Te-Dorf Te-Nord.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-77"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-78-0",
+        "sha256": "ed5ec27251e35325d278230f6ecf41a8cc4db5bebf414668a5aad81b137b70d1",
+        "text": "Na-Keva wohnt in Te-Feld. Er wohnt in Te-Dorf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-78"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-79-0",
+        "sha256": "7d223ad3dc08d8ab44ff319b722925b815cf895323bcf9987cf2415a376f711a",
+        "text": "🧪; Na-Rina wohnt in Te-See.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-79-0",
+        "decision": "SPAN",
+        "sha256": "7d223ad3dc08d8ab44ff319b722925b815cf895323bcf9987cf2415a376f711a",
+        "endExclusive": 27,
+        "start": 21,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-79"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-80-0",
+        "sha256": "c50a82417d186cff1d84156699a1089472553e77b06a6933943f4e03c13881b0",
+        "text": "Na-Keva lebt in Te-Burg.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-80-0",
+        "decision": "SPAN",
+        "sha256": "c50a82417d186cff1d84156699a1089472553e77b06a6933943f4e03c13881b0",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-80"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-81-0",
+        "sha256": "4f46bf4462b922dec07bf8048d8ff86c2c24cba1039c4edb0bb67a7c29ad8aee",
+        "text": "Na-Liva ist in Te-Burg, Na-Rina ist in Te-Park.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-81-0",
+        "decision": "SPAN",
+        "sha256": "4f46bf4462b922dec07bf8048d8ff86c2c24cba1039c4edb0bb67a7c29ad8aee",
+        "endExclusive": 46,
+        "start": 39,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-81"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-82-0",
+        "sha256": "94c64af6ba0b98f8354d0b47a15d08b1de36f2cc7de8c1653cb34b9a6f16b31b",
+        "text": "Na-Liva ist in Te-Park und Na-Rina ist in Te-Burg.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-82-0",
+        "decision": "SPAN",
+        "sha256": "94c64af6ba0b98f8354d0b47a15d08b1de36f2cc7de8c1653cb34b9a6f16b31b",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-82"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-83-0",
+          "sha256": "21233eefab6ecbc25329e8c86f4ab28892c589459046914fe79b3c57bac245c6",
+          "text": "Na-Rina lebt in Te-See.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-83-1",
+          "sha256": "e6e05430a86416df0b66862ad2a10589cb5ae5d0688ef71c3b822e9e97c56a2a",
+          "text": "Na-Liva lebt in Te-Tal.",
+          "revision": 5
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-83-1",
+        "decision": "SPAN",
+        "sha256": "e6e05430a86416df0b66862ad2a10589cb5ae5d0688ef71c3b822e9e97c56a2a",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-83"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-84-0",
+        "sha256": "2c5c96f896d559c5d5293e6d206873e1ad986621e046bc65cf3b3003bb4ac8b7",
+        "text": "Na-Rina ist in Te-Burg Te-Nord; Na-Sina ist in Te-Tal.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-84-0",
+        "decision": "SPAN",
+        "sha256": "2c5c96f896d559c5d5293e6d206873e1ad986621e046bc65cf3b3003bb4ac8b7",
+        "endExclusive": 30,
+        "start": 15,
+        "text": "Te-Burg Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-84"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-85-0",
+        "sha256": "82761d6440187efcba4d020ffedb1b5ad0eb93c47d7117065db41e72aa3bce4d",
+        "text": "  Na-Liva ist in Te-Park.  ",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-85-0",
+        "decision": "SPAN",
+        "sha256": "82761d6440187efcba4d020ffedb1b5ad0eb93c47d7117065db41e72aa3bce4d",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-85"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-86-0",
+          "sha256": "0023d79bec678252383d7d4a0ea253e6e6a24b7e8abc2e84f68b4b1c19422d4b",
+          "text": "Na-Jaro lebt in Te-Dorf.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-86-1",
+          "sha256": "fef86416f932565a432db3536c027c0befb68b9db8e2eab0f8847a7414fd57a9",
+          "text": "Na-Rina lebt in Te-Park.",
+          "revision": 7
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-86-0",
+        "decision": "SPAN",
+        "sha256": "0023d79bec678252383d7d4a0ea253e6e6a24b7e8abc2e84f68b4b1c19422d4b",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-86"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-87-0",
+        "sha256": "5852456a8d5668526ea241b8629abd40605c2b483470ae002dae37ef9748212e",
+        "text": "Na-Keva steht in Te-Dorf, Na-Rina steht in Te-Park.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-87-0",
+        "decision": "SPAN",
+        "sha256": "5852456a8d5668526ea241b8629abd40605c2b483470ae002dae37ef9748212e",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-87"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-88-0",
+        "sha256": "9d6f7aa97fa99e647deb8a55ab545be99a2d7f8bcdae963b117417764d82d652",
+        "text": "Na-Jaro wohnt in Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-88"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-89-0",
+        "sha256": "a8fb5142f8b55dba19f3c13ddd42aa1ed898e18a8e2f5b52f8a0584692d60284",
+        "text": "Na-Liva wohnt nicht in Te-Tal.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-89"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-90-0",
+        "sha256": "1489f9a2143756ee6606e688c366febc279f9f32b282a9c243d40888e126d46e",
+        "text": "Na-Toma lebt heute in Te-Dorf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-90"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-91-0",
+          "sha256": "91a5fa572a793418e0e9ad0d155fecf1db52503d3d898e3caab59bcbb8ee97b6",
+          "text": "Na-Rina ist in Te-Tal Te-Nord.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-91-1",
+          "sha256": "3c08c82c88d7654c9d986cf60488675e18c2d054af3355f2905ac4f12e0b0da2",
+          "text": "Na-Rina ist in Te-See.",
+          "revision": 6
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-91"
+    },
+    {
+      "question": "Was macht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-92-0",
+        "sha256": "1922259db5b13f657bf587f5293f688dcbccb6a6d472681b8464f901c5b79e34",
+        "text": "Na-Keva wohnt in Te-Dorf.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-92"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-93-0",
+        "sha256": "98eb72ea416a962165defc16ed99a38641671fe9b4eabcdd937334f1cdbc4f44",
+        "text": "\"Na-Rina wohnt in Te-See\".",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-93"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-94-0",
+        "sha256": "c030105c3fa7693a92c2f69715b7b6764202312603f786a5ff9b8f05a255a19c",
+        "text": "Na-Rina steht in Te-Feld. Widerruf.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-94"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-95-0",
+        "sha256": "d1f9fcffe299d1e5c6c6ff3684fa693e706fd828f4a4673290f3717ffb9bebf8",
+        "text": "Na-Sina lebt in Te-Burg?",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-95"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-96-0",
+        "sha256": "989bd5b43cd8edd5fc13fc4e3ef5ee5761857f8cbc58946f13ed3b4160782382",
+        "text": "Na-Keva lebt in Te-Dorf und Te-Park.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-96"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-97-0",
+        "sha256": "34a556a8d29d8814e95f957b4ce05b5603899f9802c2a79d5ab903c3e7f67559",
+        "text": "Na-Jaro wohnt in Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-97"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-98-0",
+        "sha256": "f7b8da485c1c929b986410555ddfceb6c242f9fbbab65ba605428ce52811cb89",
+        "text": "Na-Liva steht in Te-Dorf Te-Nord. Er steht in Te-Park.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-98"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-99-0",
+        "sha256": "ccc42d919e492750ad74ca6f2379edb6f64346bcf4c409c4b389d1a63ec84ed0",
+        "text": "🧪; Na-Sina wohnt in Te-Burg.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-99-0",
+        "decision": "SPAN",
+        "sha256": "ccc42d919e492750ad74ca6f2379edb6f64346bcf4c409c4b389d1a63ec84ed0",
+        "endExclusive": 28,
+        "start": 21,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-99"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-100-0",
+        "sha256": "6885a69996158364e07329f73779e7e30912764c8b417e776481d9528ef17b77",
+        "text": "Na-Sina ist in Te-See.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-100-0",
+        "decision": "SPAN",
+        "sha256": "6885a69996158364e07329f73779e7e30912764c8b417e776481d9528ef17b77",
+        "endExclusive": 21,
+        "start": 15,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-100"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-101-0",
+        "sha256": "945275d3c8d46a8f5856cef8444f2a4da66f65e3b24741390fa853fcce5ef101",
+        "text": "Na-Toma steht in Te-Tal, Na-Keva steht in Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-101-0",
+        "decision": "SPAN",
+        "sha256": "945275d3c8d46a8f5856cef8444f2a4da66f65e3b24741390fa853fcce5ef101",
+        "endExclusive": 49,
+        "start": 42,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-101"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-102-0",
+        "sha256": "c52765f33fb75ead2d1555890ba1bb7b272f199c5f399f3d3a558ef5578d59b6",
+        "text": "Na-Sina ist in Te-Burg und Na-Jaro ist in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-102-0",
+        "decision": "SPAN",
+        "sha256": "c52765f33fb75ead2d1555890ba1bb7b272f199c5f399f3d3a558ef5578d59b6",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-102"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-103-0",
+          "sha256": "40cc58d9fc63837c895ba3a179c4e03d439d99469fdace6efcad39132c2ad4d0",
+          "text": "Na-Toma steht in Te-Park.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-103-1",
+          "sha256": "28892bb188d71c5a4f1d478375e0f775e18a6a5c0f4fd5889fba430ed7302b29",
+          "text": "Na-Keva steht in Te-Dorf.",
+          "revision": 8
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-103-1",
+        "decision": "SPAN",
+        "sha256": "28892bb188d71c5a4f1d478375e0f775e18a6a5c0f4fd5889fba430ed7302b29",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-103"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-104-0",
+        "sha256": "d53bed8085cb338a9e57b3f35d3092e9fa5a967bc0cd745a74faa9097f7d4c3f",
+        "text": "Na-Rina steht in Te-Feld; Na-Sina steht in Te-Dorf.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-104-0",
+        "decision": "SPAN",
+        "sha256": "d53bed8085cb338a9e57b3f35d3092e9fa5a967bc0cd745a74faa9097f7d4c3f",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-104"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-105-0",
+        "sha256": "5ecc45266ddb9ba53dbae9e102845cecca856763ee83c099fa35c080ec2bd991",
+        "text": "  Na-Liva steht in Te-Burg Te-Nord.  ",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-105-0",
+        "decision": "SPAN",
+        "sha256": "5ecc45266ddb9ba53dbae9e102845cecca856763ee83c099fa35c080ec2bd991",
+        "endExclusive": 34,
+        "start": 19,
+        "text": "Te-Burg Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-105"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-106-0",
+          "sha256": "dfc039195be74da1f17db6525e34b26f780ad33e32a340b08bfe935fdeb27830",
+          "text": "Na-Sina lebt in Te-Tal.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-106-1",
+          "sha256": "21233eefab6ecbc25329e8c86f4ab28892c589459046914fe79b3c57bac245c6",
+          "text": "Na-Rina lebt in Te-See.",
+          "revision": 2
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-106-0",
+        "decision": "SPAN",
+        "sha256": "dfc039195be74da1f17db6525e34b26f780ad33e32a340b08bfe935fdeb27830",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-106"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-107-0",
+        "sha256": "d851338c5984679593df50ae2ae0114779ff29b6c020d8fd8f5c5b1a33599229",
+        "text": "Na-Sina wohnt in Te-See, Na-Rina wohnt in Te-Feld.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-107-0",
+        "decision": "SPAN",
+        "sha256": "d851338c5984679593df50ae2ae0114779ff29b6c020d8fd8f5c5b1a33599229",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-107"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-108-0",
+        "sha256": "53f7a181f68d48437b3381d4cb6d7c83f1f38b9a9f2dc75ddc9b73f2d9caacd2",
+        "text": "Na-Keva steht in Te-Park.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-108"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-109-0",
+        "sha256": "163fed493dabfc310aef30e16e72a101889aac69ac5d5df066d0eb144936dd70",
+        "text": "Na-Rina lebt nicht in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-109"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-110-0",
+        "sha256": "8dbf43ddeb82ffba1ef174354d32d4f99832aa455369a1736b876720729aca5c",
+        "text": "Na-Rina wohnt heute in Te-Tal.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-110"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-111-0",
+          "sha256": "9754da1ec72a8bf3b12fa2dd8a1202e99a2bf90e016cc71f87e8ce78519fe93e",
+          "text": "Na-Keva wohnt in Te-Burg.",
+          "revision": 4
+        },
+        {
+          "sourceId": "TRAIN-111-1",
+          "sha256": "63facac9c42fd574be09f6385c174c4f9c9c0b44e170683080c2431d27c61872",
+          "text": "Na-Keva wohnt in Te-Tal.",
+          "revision": 2
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-111"
+    },
+    {
+      "question": "Was macht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-112-0",
+        "sha256": "7faeb113b85bcba1bf6ae8d92508e1f776dbf814504407620f5b4b135d0c37a2",
+        "text": "Na-Rina ist in Te-Dorf Te-Nord.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-112"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-113-0",
+        "sha256": "20c0d237b6f5f824c0b4beadaddec88cc3ee8203ac1b14b6dc8592b79e04b222",
+        "text": "\"Na-Sina steht in Te-Park\".",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-113"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-114-0",
+        "sha256": "b6895cfbc191c126b65ede14b7ec34deb4dba662180d808db1fbb931b3e20638",
+        "text": "Na-Jaro lebt in Te-Dorf. Widerruf.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-114"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-115-0",
+        "sha256": "ef7ecd4cb401434fd9321664a127825e6a0b536c5d4d3568ed3b9ccd1ce9be08",
+        "text": "Na-Toma ist in Te-Tal?",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-115"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-116-0",
+        "sha256": "5a347f4dc2cc2e028937e8bb8ece1b32aff5e9c523c3480f670512f3598ccbf0",
+        "text": "Na-Liva ist in Te-Park und Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-116"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-117-0",
+        "sha256": "f0154192a25bd5d1396b78635323ee147eda00ed96b3d8eed54fcb641568f552",
+        "text": "Na-Rina ist in Te-Dorf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-117"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-118-0",
+        "sha256": "8321ce864c35e8039c7e47e58504e4dacb9714166faa7f755f52d05df937525a",
+        "text": "Na-Liva steht in Te-See. Er steht in Te-Feld.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-118"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-119-0",
+        "sha256": "1b9a568c6182c2cd996575d5c4c480ee1f47cf9c46a678d73a80684f58db8bc7",
+        "text": "🧪; Na-Rina steht in Te-See Te-Nord.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-119-0",
+        "decision": "SPAN",
+        "sha256": "1b9a568c6182c2cd996575d5c4c480ee1f47cf9c46a678d73a80684f58db8bc7",
+        "endExclusive": 35,
+        "start": 21,
+        "text": "Te-See Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-119"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-120-0",
+        "sha256": "05abef4d99b6f1acf9faf9d91973312417cbab57af7d0603b2d14c92c4de0cd1",
+        "text": "Na-Keva steht in Te-Burg.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-120-0",
+        "decision": "SPAN",
+        "sha256": "05abef4d99b6f1acf9faf9d91973312417cbab57af7d0603b2d14c92c4de0cd1",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-120"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-121-0",
+        "sha256": "4e76b4d5cb122d5a159529018b7ef874b59e1f51e12b36eb9b8399c943b71704",
+        "text": "Na-Sina lebt in Te-Feld, Na-Keva lebt in Te-See.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-121-0",
+        "decision": "SPAN",
+        "sha256": "4e76b4d5cb122d5a159529018b7ef874b59e1f51e12b36eb9b8399c943b71704",
+        "endExclusive": 47,
+        "start": 41,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-121"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-122-0",
+        "sha256": "a9300e836764613c69f7148038c50163355101c7bd736a08fb36221483deb55a",
+        "text": "Na-Rina lebt in Te-Tal und Na-Jaro lebt in Te-See.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-122-0",
+        "decision": "SPAN",
+        "sha256": "a9300e836764613c69f7148038c50163355101c7bd736a08fb36221483deb55a",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-122"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-123-0",
+          "sha256": "53a568a74c35da85c8c7fa84593e63790f164aae328bf843a03c81a6f2611090",
+          "text": "Na-Liva steht in Te-Burg.",
+          "revision": 4
+        },
+        {
+          "sourceId": "TRAIN-123-1",
+          "sha256": "53f7a181f68d48437b3381d4cb6d7c83f1f38b9a9f2dc75ddc9b73f2d9caacd2",
+          "text": "Na-Keva steht in Te-Park.",
+          "revision": 5
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-123-1",
+        "decision": "SPAN",
+        "sha256": "53f7a181f68d48437b3381d4cb6d7c83f1f38b9a9f2dc75ddc9b73f2d9caacd2",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-123"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-124-0",
+        "sha256": "27488345c0ed578ccd8fc6018d8cfa6687c7755efa3550eb9de42846cbe0864c",
+        "text": "Na-Toma lebt in Te-Park; Na-Rina lebt in Te-Burg.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-124-0",
+        "decision": "SPAN",
+        "sha256": "27488345c0ed578ccd8fc6018d8cfa6687c7755efa3550eb9de42846cbe0864c",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-124"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-125-0",
+        "sha256": "bc341be66018c3afe71a6118c86ce245da5c68c309a7d74f7f0275348f301fee",
+        "text": "  Na-Liva wohnt in Te-Park.  ",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-125-0",
+        "decision": "SPAN",
+        "sha256": "bc341be66018c3afe71a6118c86ce245da5c68c309a7d74f7f0275348f301fee",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-125"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-126-0",
+          "sha256": "dd25fa8accc0a667b0fa76aa38d0e670a7f3f55efc4fc81cd0ec02288fd4d153",
+          "text": "Na-Rina lebt in Te-Dorf Te-Nord.",
+          "revision": 3
+        },
+        {
+          "sourceId": "TRAIN-126-1",
+          "sha256": "6a0dc8c31ce5d9abb107506282191db98e86fe2ba6a7efb947e53f0e0e09d8c2",
+          "text": "Na-Toma lebt in Te-Park.",
+          "revision": 3
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-126-0",
+        "decision": "SPAN",
+        "sha256": "dd25fa8accc0a667b0fa76aa38d0e670a7f3f55efc4fc81cd0ec02288fd4d153",
+        "endExclusive": 31,
+        "start": 16,
+        "text": "Te-Dorf Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-126"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-127-0",
+        "sha256": "4d8876a4b19fce275b82179365f894c331c4c9c58048574531c459e0098d80fa",
+        "text": "Na-Sina lebt in Te-See, Na-Liva lebt in Te-Feld.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-127-0",
+        "decision": "SPAN",
+        "sha256": "4d8876a4b19fce275b82179365f894c331c4c9c58048574531c459e0098d80fa",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-127"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-128-0",
+        "sha256": "6951aeac92a3212cd5d253e7d37b92b8b244c58132af7cd93885d71d7e577ae0",
+        "text": "Na-Keva ist in Te-Dorf.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-128"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-129-0",
+        "sha256": "bab9d54e598bf55ff18873864b4b713c83e57b6c7be4d9a360e000c0d4690298",
+        "text": "Na-Sina steht nicht in Te-Feld.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-129"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-130-0",
+        "sha256": "7a6a76fe8b121def4610c44d969e45caf20b12b0bc621b3682c179b3e00b18c0",
+        "text": "Na-Keva wohnt heute in Te-Tal.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-130"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-131-0",
+          "sha256": "65f12a50407e142029d8670cc40df094eeee4d4d25f38e90e0684dfe51709777",
+          "text": "Na-Jaro wohnt in Te-See.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-131-1",
+          "sha256": "e7e46c17d0cfda3dadc483f4915af78749a3f5a657fd62af893e2c3b3859c157",
+          "text": "Na-Jaro wohnt in Te-Feld.",
+          "revision": 1
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-131"
+    },
+    {
+      "question": "Was macht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-132-0",
+        "sha256": "f0154192a25bd5d1396b78635323ee147eda00ed96b3d8eed54fcb641568f552",
+        "text": "Na-Rina ist in Te-Dorf.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-132"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-133-0",
+        "sha256": "67facd583e8dcba740788f89756ee96d97a208ee2fd22d8cbf8e710867a51340",
+        "text": "\"Na-Keva steht in Te-Dorf Te-Nord\".",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-133"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-134-0",
+        "sha256": "d50677949b3e7b3c7b04617cb14300408eea50fdaf7612781774145c45b57daa",
+        "text": "Na-Rina steht in Te-Tal. Widerruf.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-134"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-135-0",
+        "sha256": "e37038f8cdcbb017c35939de93cdb53d893b5b522ef624ba423dfea9e9471374",
+        "text": "Na-Rina steht in Te-Park?",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-135"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-136-0",
+        "sha256": "5cee1169c2e7c5763e191437fe2afc54783b4b53e52023cad873ba7e2c5327af",
+        "text": "Na-Sina wohnt in Te-Tal und Te-See.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-136"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-137-0",
+        "sha256": "6951aeac92a3212cd5d253e7d37b92b8b244c58132af7cd93885d71d7e577ae0",
+        "text": "Na-Keva ist in Te-Dorf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-137"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-138-0",
+        "sha256": "8b03dc27952c111b5b4bd1347de12d9e3c5fa138ec04419856c705f04906a11d",
+        "text": "Na-Keva wohnt in Te-Park. Er wohnt in Te-Burg.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-138"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-139-0",
+        "sha256": "e18a89c71dfec3d96f7ef0963e6bd5c721134a9d0443afcbc2265a706bbb47b1",
+        "text": "🧪; Na-Keva steht in Te-Park.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-139-0",
+        "decision": "SPAN",
+        "sha256": "e18a89c71dfec3d96f7ef0963e6bd5c721134a9d0443afcbc2265a706bbb47b1",
+        "endExclusive": 28,
+        "start": 21,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-139"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-140-0",
+        "sha256": "7cd95fee276a1d5b31566019e7e5e7e1f6d8e431f2f17a450935b57b80beb52b",
+        "text": "Na-Rina ist in Te-Feld Te-Nord.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-140-0",
+        "decision": "SPAN",
+        "sha256": "7cd95fee276a1d5b31566019e7e5e7e1f6d8e431f2f17a450935b57b80beb52b",
+        "endExclusive": 30,
+        "start": 15,
+        "text": "Te-Feld Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-140"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-141-0",
+        "sha256": "a54f33abbf704f0f13309cc09939aab70137ea4a841449342d6b22eec573921a",
+        "text": "Na-Rina steht in Te-Feld, Na-Keva steht in Te-See.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-141-0",
+        "decision": "SPAN",
+        "sha256": "a54f33abbf704f0f13309cc09939aab70137ea4a841449342d6b22eec573921a",
+        "endExclusive": 49,
+        "start": 43,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-141"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-142-0",
+        "sha256": "a2d81152f33bfb7e11ccb34da278a19b60da9a18e908f6e66d857d54974c201c",
+        "text": "Na-Keva steht in Te-Dorf und Na-Liva steht in Te-Park.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-142-0",
+        "decision": "SPAN",
+        "sha256": "a2d81152f33bfb7e11ccb34da278a19b60da9a18e908f6e66d857d54974c201c",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-142"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-143-0",
+          "sha256": "d8221c7c1a57161c3f5c2180ec477d2dad087c078330649645f2f323a8718097",
+          "text": "Na-Jaro lebt in Te-See.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-143-1",
+          "sha256": "33384e688ab697ac3519461b3b36fc5d407a357576a25611b36105b670af566f",
+          "text": "Na-Toma lebt in Te-Tal.",
+          "revision": 7
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-143-1",
+        "decision": "SPAN",
+        "sha256": "33384e688ab697ac3519461b3b36fc5d407a357576a25611b36105b670af566f",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-143"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-144-0",
+        "sha256": "c9b26d6fec013bc39e003925b0f808d0d771e1a0731a9a2c684163645718408c",
+        "text": "Na-Jaro wohnt in Te-See; Na-Sina wohnt in Te-Feld.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-144-0",
+        "decision": "SPAN",
+        "sha256": "c9b26d6fec013bc39e003925b0f808d0d771e1a0731a9a2c684163645718408c",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-144"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-145-0",
+        "sha256": "4dc1785b468ae37ba46f2e643bf1f3fa3ea26ff258de3f05109ca537e01c901e",
+        "text": "  Na-Liva ist in Te-Burg.  ",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-145-0",
+        "decision": "SPAN",
+        "sha256": "4dc1785b468ae37ba46f2e643bf1f3fa3ea26ff258de3f05109ca537e01c901e",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-145"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-146-0",
+          "sha256": "ac464d323e3ca91aba0b1f5001857e14a847587f27c586f92dc955f2898e187b",
+          "text": "Na-Rina lebt in Te-Tal.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-146-1",
+          "sha256": "e2ad360f5a7857f7c7cf87c8bbe7a153d8f509cc31149bc7b55300557d5a814a",
+          "text": "Na-Sina lebt in Te-See.",
+          "revision": 3
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-146-0",
+        "decision": "SPAN",
+        "sha256": "ac464d323e3ca91aba0b1f5001857e14a847587f27c586f92dc955f2898e187b",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-146"
+    },
+    {
+      "question": "Wo ist Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-147-0",
+        "sha256": "c354edd31b51043184e223a9ee99155cb79d90fc55463da80ec8037a7abafa77",
+        "text": "Na-Jaro ist in Te-Tal Te-Nord, Na-Keva ist in Te-See.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-147-0",
+        "decision": "SPAN",
+        "sha256": "c354edd31b51043184e223a9ee99155cb79d90fc55463da80ec8037a7abafa77",
+        "endExclusive": 29,
+        "start": 15,
+        "text": "Te-Tal Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-147"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-148-0",
+        "sha256": "8828ad72ae18197d37a960e195b3b5635f449f93ee7d09c9c07b45a132a6c1e7",
+        "text": "Na-Keva lebt in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-148"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-149-0",
+        "sha256": "8e931cc9614ef1f406bb9ecb93989dafc7a87a289b32266c68c3de04c851476d",
+        "text": "Na-Liva ist nicht in Te-Burg.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-149"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-150-0",
+        "sha256": "de78e4422c8e4e4b4d98b1a3bcfbe980c42f1a37210f255ec3f30abad1b7a32e",
+        "text": "Na-Rina steht heute in Te-Park.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-150"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-151-0",
+          "sha256": "b30e192c4a12ea4fdc66e4fe5b4f8c5c623b4d020ceecd99908526a4f6fe3484",
+          "text": "Na-Toma wohnt in Te-Feld.",
+          "revision": 4
+        },
+        {
+          "sourceId": "TRAIN-151-1",
+          "sha256": "658d8f44451c281275595f92428ce06f8039cefe3fc934b6ca3acca475e08ab9",
+          "text": "Na-Toma wohnt in Te-Dorf.",
+          "revision": 6
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-151"
+    },
+    {
+      "question": "Was macht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-152-0",
+        "sha256": "df1aa2572183b679cb28b70ec5b031976e49d4669e0cf900c55e0a420bd60406",
+        "text": "Na-Jaro steht in Te-Park.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-152"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-153-0",
+        "sha256": "4d720e0992b63c558dd521890236ba21c57957e884c524805b1055f138ed4301",
+        "text": "\"Na-Toma wohnt in Te-See\".",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-153"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-154-0",
+        "sha256": "1df7cb3c2c8fedbd63861fc8d5d356c57269b071a05fe4f58f8983e255b8abda",
+        "text": "Na-Rina steht in Te-See Te-Nord. Widerruf.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-154"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-155-0",
+        "sha256": "c232b79b377d21ca4881b3a7d7664ec8ac5f9f776bdf539186822555e6701f59",
+        "text": "Na-Toma ist in Te-Park?",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-155"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-156-0",
+        "sha256": "8c1d52c0e19998773210ff1bc8dd7fe56d746ded76b2251f5468387f1dd42625",
+        "text": "Na-Rina ist in Te-Park und Te-Burg.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-156"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-157-0",
+        "sha256": "7038b71c3b36ca7f50a265187adda08f3fb8657bd1c3cf4f516c716c375b689a",
+        "text": "Na-Liva lebt in Te-Burg.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-157"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-158-0",
+        "sha256": "6d6d0e2f867c321ed0d0a10549c26290562eb821bacb79e726579a41f6e31498",
+        "text": "Na-Sina lebt in Te-Feld. Er lebt in Te-Dorf.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-158"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-159-0",
+        "sha256": "da6f5f1fe406b66d02aef1441148aeda8abfc8aafdb04396af8bb1b7ba7bad25",
+        "text": "🧪; Na-Liva ist in Te-See.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-159-0",
+        "decision": "SPAN",
+        "sha256": "da6f5f1fe406b66d02aef1441148aeda8abfc8aafdb04396af8bb1b7ba7bad25",
+        "endExclusive": 25,
+        "start": 19,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-159"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-160-0",
+        "sha256": "0023d79bec678252383d7d4a0ea253e6e6a24b7e8abc2e84f68b4b1c19422d4b",
+        "text": "Na-Jaro lebt in Te-Dorf.",
+        "revision": 7
+      }],
+      "expected": {
+        "sourceId": "TRAIN-160-0",
+        "decision": "SPAN",
+        "sha256": "0023d79bec678252383d7d4a0ea253e6e6a24b7e8abc2e84f68b4b1c19422d4b",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 7
+      },
+      "id": "TRAIN-160"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-161-0",
+        "sha256": "575a5cb4db897175f8b1303b59319d416acb1e3ad55898f8853376d260a9ead7",
+        "text": "Na-Jaro lebt in Te-See, Na-Sina lebt in Te-Tal Te-Nord.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-161-0",
+        "decision": "SPAN",
+        "sha256": "575a5cb4db897175f8b1303b59319d416acb1e3ad55898f8853376d260a9ead7",
+        "endExclusive": 54,
+        "start": 40,
+        "text": "Te-Tal Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-161"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-162-0",
+        "sha256": "0a598c3342038df6797eabdb13638733f77da2ddda67490b418c724dc729c9dd",
+        "text": "Na-Rina steht in Te-Park und Na-Keva steht in Te-Burg.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-162-0",
+        "decision": "SPAN",
+        "sha256": "0a598c3342038df6797eabdb13638733f77da2ddda67490b418c724dc729c9dd",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-162"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-163-0",
+          "sha256": "1eb3bff3fea2d462e9319007e304d80a3d89296d4520b6177ab9a6037e66b583",
+          "text": "Na-Keva ist in Te-Park.",
+          "revision": 1
+        },
+        {
+          "sourceId": "TRAIN-163-1",
+          "sha256": "f0154192a25bd5d1396b78635323ee147eda00ed96b3d8eed54fcb641568f552",
+          "text": "Na-Rina ist in Te-Dorf.",
+          "revision": 4
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-163-1",
+        "decision": "SPAN",
+        "sha256": "f0154192a25bd5d1396b78635323ee147eda00ed96b3d8eed54fcb641568f552",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-163"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-164-0",
+        "sha256": "6ec95d0a36aaaebe9f654203f2dfc1a836c525cac166df26ffec15d133cddcce",
+        "text": "Na-Keva lebt in Te-Feld; Na-Liva lebt in Te-Dorf.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-164-0",
+        "decision": "SPAN",
+        "sha256": "6ec95d0a36aaaebe9f654203f2dfc1a836c525cac166df26ffec15d133cddcce",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-164"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-165-0",
+        "sha256": "38fbe9bdb9477b0b993bcce0ebaeb7eaa4c071a82f6ee96e5aba44bdcff290c9",
+        "text": "  Na-Jaro lebt in Te-Burg.  ",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-165-0",
+        "decision": "SPAN",
+        "sha256": "38fbe9bdb9477b0b993bcce0ebaeb7eaa4c071a82f6ee96e5aba44bdcff290c9",
+        "endExclusive": 25,
+        "start": 18,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-165"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-166-0",
+          "sha256": "67f3506374070e6001084e350f758ecb22e0ccf0207ad97f6ecbb9246497550c",
+          "text": "Na-Liva ist in Te-Dorf.",
+          "revision": 3
+        },
+        {
+          "sourceId": "TRAIN-166-1",
+          "sha256": "2bcd7a149759e5aa5143a6afea9b5181ec498b010f48bf7f05664f0fcf0c9b9b",
+          "text": "Na-Sina ist in Te-Park.",
+          "revision": 4
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-166-0",
+        "decision": "SPAN",
+        "sha256": "67f3506374070e6001084e350f758ecb22e0ccf0207ad97f6ecbb9246497550c",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-166"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-167-0",
+        "sha256": "1210fd72f1f849a2d9eb9ebe3c089e237b53b58cbced075189c2cc1246df9b39",
+        "text": "Na-Toma ist in Te-Burg, Na-Keva ist in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-167-0",
+        "decision": "SPAN",
+        "sha256": "1210fd72f1f849a2d9eb9ebe3c089e237b53b58cbced075189c2cc1246df9b39",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-167"
+    },
+    {
+      "question": "Wo steht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-168-0",
+        "sha256": "fcc8ebab791a7537c3645eedd1bc1066346ebec54d839225236c1a3678ef9dcb",
+        "text": "Na-Keva steht in Te-Dorf Te-Nord.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-168"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-169-0",
+        "sha256": "21f2d3fe74634830a9a87f48e08d00316de0103045b12bc85deb5c3abb5473ac",
+        "text": "Na-Toma steht nicht in Te-Park.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-169"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-170-0",
+        "sha256": "4a219182d4d8a89b907c93844b49c037c5cc656dc5f4510ce35b0a41e206f5d7",
+        "text": "Na-Toma steht heute in Te-See.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-170"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-171-0",
+          "sha256": "23f779d99a55cdbe43df91fd991eeb9c2deaaeade67352132dcff1b3a48330de",
+          "text": "Na-Sina ist in Te-Burg.",
+          "revision": 3
+        },
+        {
+          "sourceId": "TRAIN-171-1",
+          "sha256": "606b2dde94ac934bdbe4a8550a4e9c9ae5bc6b04f4c67b64b721002e845d764b",
+          "text": "Na-Sina ist in Te-Tal.",
+          "revision": 1
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-171"
+    },
+    {
+      "question": "Was macht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-172-0",
+        "sha256": "c7f721820dd17fb054828f2ff7bf63386849b710216d920d172304f58bb3dbd6",
+        "text": "Na-Sina steht in Te-Park.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-172"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-173-0",
+        "sha256": "0a90ca3f3b2717fd3da2eae7da5c235d3d880a02e279114916308095a6e253d3",
+        "text": "\"Na-Rina ist in Te-Tal\".",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-173"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-174-0",
+        "sha256": "e8ee57a3aae73e320496ee9ea9665c82601fefd26192680997d4e91367a0fe91",
+        "text": "Na-Liva ist in Te-Burg. Widerruf.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-174"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-175-0",
+        "sha256": "4618ec116f3fc9bced1be3571deee02713c775e59d4cb993247075a4cb005908",
+        "text": "Na-Keva lebt in Te-See Te-Nord?",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-175"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-176-0",
+        "sha256": "0458cc5975c801c8f34005a56c2773a790e69c8b48195a473c3cdb3eb2981735",
+        "text": "Na-Rina steht in Te-See und Te-Feld.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-176"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-177-0",
+        "sha256": "ddac317ef2748e47b6214b0a211cec2c181b0d34b7e26c856f015c6c5e0e5550",
+        "text": "Na-Sina steht in Te-Feld.",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-177"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-178-0",
+        "sha256": "6eaf090d5fc319959db6cf962ef69272a1f94895be6d5b9cd37cc6b59014730c",
+        "text": "Na-Jaro lebt in Te-See. Er lebt in Te-Feld.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-178"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-179-0",
+        "sha256": "2912037ec91d54b78b7e868267e0edc4cc382c44372cea4ee3c83ecf20f608cf",
+        "text": "🧪; Na-Toma ist in Te-Tal.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-179-0",
+        "decision": "SPAN",
+        "sha256": "2912037ec91d54b78b7e868267e0edc4cc382c44372cea4ee3c83ecf20f608cf",
+        "endExclusive": 25,
+        "start": 19,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-179"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-180-0",
+        "sha256": "23f779d99a55cdbe43df91fd991eeb9c2deaaeade67352132dcff1b3a48330de",
+        "text": "Na-Sina ist in Te-Burg.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-180-0",
+        "decision": "SPAN",
+        "sha256": "23f779d99a55cdbe43df91fd991eeb9c2deaaeade67352132dcff1b3a48330de",
+        "endExclusive": 22,
+        "start": 15,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-180"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-181-0",
+        "sha256": "7650644912d23657c18c7e0929a14671765a7ecae7e91cfec028de2bfca0ec4d",
+        "text": "Na-Rina lebt in Te-Feld, Na-Toma lebt in Te-See.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-181-0",
+        "decision": "SPAN",
+        "sha256": "7650644912d23657c18c7e0929a14671765a7ecae7e91cfec028de2bfca0ec4d",
+        "endExclusive": 47,
+        "start": 41,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-181"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-182-0",
+        "sha256": "25aca95497ad23acc034695db478bccfd3c0d5747aeca40c6be730f8fbf8d56f",
+        "text": "Na-Toma wohnt in Te-Burg Te-Nord und Na-Rina wohnt in Te-Tal.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-182-0",
+        "decision": "SPAN",
+        "sha256": "25aca95497ad23acc034695db478bccfd3c0d5747aeca40c6be730f8fbf8d56f",
+        "endExclusive": 32,
+        "start": 17,
+        "text": "Te-Burg Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-182"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-183-0",
+          "sha256": "d6f7e80bf519625b293b369ad18e7fb902d5d9112e3d8257fb6400ed2ef21585",
+          "text": "Na-Rina lebt in Te-Dorf.",
+          "revision": 8
+        },
+        {
+          "sourceId": "TRAIN-183-1",
+          "sha256": "c6486be2809d2f39124928f1af8dc12ebeb689072160746d0a68b8f0333010d3",
+          "text": "Na-Sina lebt in Te-Feld.",
+          "revision": 5
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-183-1",
+        "decision": "SPAN",
+        "sha256": "c6486be2809d2f39124928f1af8dc12ebeb689072160746d0a68b8f0333010d3",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-183"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-184-0",
+        "sha256": "c5e8c56a2195228e95103d9bfcd3e8c66c6490b8f21c8725b0387394790e47fe",
+        "text": "Na-Rina lebt in Te-Tal; Na-Sina lebt in Te-See.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-184-0",
+        "decision": "SPAN",
+        "sha256": "c5e8c56a2195228e95103d9bfcd3e8c66c6490b8f21c8725b0387394790e47fe",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-184"
+    },
+    {
+      "question": "Wo lebt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-185-0",
+        "sha256": "b92a60fcd5e96e7e7fbdae0fbe4477717136f77af076df11776ea079e125e353",
+        "text": "  Na-Toma lebt in Te-Dorf.  ",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-185-0",
+        "decision": "SPAN",
+        "sha256": "b92a60fcd5e96e7e7fbdae0fbe4477717136f77af076df11776ea079e125e353",
+        "endExclusive": 25,
+        "start": 18,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-185"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-186-0",
+          "sha256": "df1aa2572183b679cb28b70ec5b031976e49d4669e0cf900c55e0a420bd60406",
+          "text": "Na-Jaro steht in Te-Park.",
+          "revision": 5
+        },
+        {
+          "sourceId": "TRAIN-186-1",
+          "sha256": "cf5d6b39394ff18e3a9d76011b79fcd431369937f07306f624b58613043f825c",
+          "text": "Na-Toma steht in Te-Burg.",
+          "revision": 4
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-186-0",
+        "decision": "SPAN",
+        "sha256": "df1aa2572183b679cb28b70ec5b031976e49d4669e0cf900c55e0a420bd60406",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-186"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-187-0",
+        "sha256": "c32cd3b627820b720386b166644b790af6b5c7d3f8ab956cd718797f8edc2be5",
+        "text": "Na-Jaro steht in Te-Tal, Na-Toma steht in Te-See.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-187-0",
+        "decision": "SPAN",
+        "sha256": "c32cd3b627820b720386b166644b790af6b5c7d3f8ab956cd718797f8edc2be5",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-187"
+    },
+    {
+      "question": "Wo steht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-188-0",
+        "sha256": "b8becda79021e5e324d9b36594dc27ae7a785b5887fd23a9289efe83c094369a",
+        "text": "Na-Jaro steht in Te-Tal.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-188"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-189-0",
+        "sha256": "2a734ef34670e69db3b81a615cadba731b810ede8dd36825d331b1e711bb52d1",
+        "text": "Na-Jaro steht nicht in Te-Tal Te-Nord.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-189"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-190-0",
+        "sha256": "9e34b3e3dc2c59359737d20dea9a27c3ba093b0dcf77124ea4da65ea708d3c1f",
+        "text": "Na-Keva lebt heute in Te-Burg.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-190"
+    },
+    {
+      "question": "Wo wohnt Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-191-0",
+          "sha256": "6cfefc4f2bac4aa88ee15b58b6591f7505859585a0049bc863b6c20dc2f89ea4",
+          "text": "Na-Keva wohnt in Te-See.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-191-1",
+          "sha256": "28a0e54974f099dc9f95b07dea6c8ce8d0a2cfd0f2f9c932b8ffec51cae1b3c4",
+          "text": "Na-Keva wohnt in Te-Feld.",
+          "revision": 1
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-191"
+    },
+    {
+      "question": "Was macht Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-192-0",
+        "sha256": "bebd3c7a1a04326becfc98063b0778bff5c64a45faa6f3bbece5f086615bc3fc",
+        "text": "Na-Rina steht in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-192"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-193-0",
+        "sha256": "afc1ef5b2de44d522ff540f11aa5f66b5b5af33e7b329944c83513cf1c45caf6",
+        "text": "\"Na-Rina lebt in Te-Tal\".",
+        "revision": 7
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-193"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-194-0",
+        "sha256": "dc63425aa958b15b96227da783c1c1236dcae57c46f9761b49f042b450c07717",
+        "text": "Na-Liva lebt in Te-Burg. Widerruf.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-194"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-195-0",
+        "sha256": "9e5cd526942870e96db3b679313506ae45a617a0e4cfeda6da58d86dbcdbcbec",
+        "text": "Na-Liva wohnt in Te-See?",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-195"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-196-0",
+        "sha256": "501df2fe91f372ab75d0b3d9de4bfed5bd1e09eb79a0f7623d3fac854779d77e",
+        "text": "Na-Liva ist in Te-Tal Te-Nord und Te-See.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-196"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-197-0",
+        "sha256": "89e627a670a7b75916c9ee8683a2f8acdd8750cb248edbf7a10df7f35f81722d",
+        "text": "Na-Toma steht in Te-Dorf.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-197"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-198-0",
+        "sha256": "e74e548162eab91bc86229fa2347aea8d750cb76d763cc4f02a9da9547449b85",
+        "text": "Na-Rina wohnt in Te-Dorf. Er wohnt in Te-Park.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-198"
+    },
+    {
+      "question": "Wo ist Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-199-0",
+        "sha256": "f4d3480c718b1a9137c32a0c538a04069cbd2c67f3bc5047810f3a03c7bb11f3",
+        "text": "🧪; Na-Jaro ist in Te-Park.",
+        "revision": 3
+      }],
+      "expected": {
+        "sourceId": "TRAIN-199-0",
+        "decision": "SPAN",
+        "sha256": "f4d3480c718b1a9137c32a0c538a04069cbd2c67f3bc5047810f3a03c7bb11f3",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Park",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-199"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-200-0",
+        "sha256": "4473252f2e56b422546f00c02d2a4331a3c2e22b18c36ec286a7c8c35248d2f0",
+        "text": "Na-Liva wohnt in Te-See.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-200-0",
+        "decision": "SPAN",
+        "sha256": "4473252f2e56b422546f00c02d2a4331a3c2e22b18c36ec286a7c8c35248d2f0",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-200"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-201-0",
+        "sha256": "d839919c2d0759d4a6db8e47674f05200e8ee6da8a49879907eeb4a21c35913a",
+        "text": "Na-Rina steht in Te-See, Na-Sina steht in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {
+        "sourceId": "TRAIN-201-0",
+        "decision": "SPAN",
+        "sha256": "d839919c2d0759d4a6db8e47674f05200e8ee6da8a49879907eeb4a21c35913a",
+        "endExclusive": 48,
+        "start": 42,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 1
+      },
+      "id": "TRAIN-201"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-202-0",
+        "sha256": "6c1b21af207ea3cec40b2f83a36ec1dff848976697402695af77185f6ecea303",
+        "text": "Na-Toma wohnt in Te-Dorf und Na-Sina wohnt in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-202-0",
+        "decision": "SPAN",
+        "sha256": "6c1b21af207ea3cec40b2f83a36ec1dff848976697402695af77185f6ecea303",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-202"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-203-0",
+          "sha256": "3ca4463378a8758feae3ac328f52969682aee1a93dd5c6a83b38b642c9c1d11a",
+          "text": "Na-Rina steht in Te-Burg.",
+          "revision": 7
+        },
+        {
+          "sourceId": "TRAIN-203-1",
+          "sha256": "486a1d95426b51ae68cf39e1ab0ee6662729b1481098712d44a742c90f62778f",
+          "text": "Na-Keva steht in Te-Park Te-Nord.",
+          "revision": 3
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-203-1",
+        "decision": "SPAN",
+        "sha256": "486a1d95426b51ae68cf39e1ab0ee6662729b1481098712d44a742c90f62778f",
+        "endExclusive": 32,
+        "start": 17,
+        "text": "Te-Park Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 3
+      },
+      "id": "TRAIN-203"
+    },
+    {
+      "question": "Wo lebt Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-204-0",
+        "sha256": "57aaa3ddfe16c5cee01967e700b59d5b827071c85d50818045100351fbfddc5d",
+        "text": "Na-Keva lebt in Te-See; Na-Toma lebt in Te-Feld.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-204-0",
+        "decision": "SPAN",
+        "sha256": "57aaa3ddfe16c5cee01967e700b59d5b827071c85d50818045100351fbfddc5d",
+        "endExclusive": 22,
+        "start": 16,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-204"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-205-0",
+        "sha256": "291bb4e7438b0996bdb5bdcaa63c829b7ad6bbef3775b80130f269c725dc698f",
+        "text": "  Na-Keva steht in Te-Dorf.  ",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-205-0",
+        "decision": "SPAN",
+        "sha256": "291bb4e7438b0996bdb5bdcaa63c829b7ad6bbef3775b80130f269c725dc698f",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-205"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-206-0",
+          "sha256": "e01441beb047b3fb589590b52b5b1af7ce6d1a499a07b7d5f76ce7d6f686add9",
+          "text": "Na-Sina wohnt in Te-Burg.",
+          "revision": 5
+        },
+        {
+          "sourceId": "TRAIN-206-1",
+          "sha256": "aaefe6cbc74041206b8a101a632c5565c9d1adb551ae283282fe57816a9bb4db",
+          "text": "Na-Liva wohnt in Te-Tal.",
+          "revision": 2
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-206-0",
+        "decision": "SPAN",
+        "sha256": "e01441beb047b3fb589590b52b5b1af7ce6d1a499a07b7d5f76ce7d6f686add9",
+        "endExclusive": 24,
+        "start": 17,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-206"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-207-0",
+        "sha256": "625d103d113ee3c8e177e93feafdb1937645a0b0ef9e6c16ede4b4b22ab32d0a",
+        "text": "Na-Toma wohnt in Te-See, Na-Liva wohnt in Te-Feld.",
+        "revision": 8
+      }],
+      "expected": {
+        "sourceId": "TRAIN-207-0",
+        "decision": "SPAN",
+        "sha256": "625d103d113ee3c8e177e93feafdb1937645a0b0ef9e6c16ede4b4b22ab32d0a",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-See",
+        "offsetEncoding": "UTF-16",
+        "revision": 8
+      },
+      "id": "TRAIN-207"
+    },
+    {
+      "question": "Wo wohnt Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-208-0",
+        "sha256": "80887bbb34e482bd016708250d5d99423ba2b1600c255108300f90c55e7fed11",
+        "text": "Na-Rina wohnt in Te-Tal.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-208"
+    },
+    {
+      "question": "Wo wohnt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-209-0",
+        "sha256": "a8fb5142f8b55dba19f3c13ddd42aa1ed898e18a8e2f5b52f8a0584692d60284",
+        "text": "Na-Liva wohnt nicht in Te-Tal.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-209"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-210-0",
+        "sha256": "993cdfc1bf7d1c3815d6cd3a0ee2f4d05a4952290ed11f4bd1044711060bd5d4",
+        "text": "Na-Jaro lebt heute in Te-Dorf Te-Nord.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-210"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-211-0",
+          "sha256": "e23f44902807be7f6d609cc19d5a1d2b7d6e8c68af9bbd7a870e9aaba47ec4ca",
+          "text": "Na-Sina lebt in Te-Burg.",
+          "revision": 7
+        },
+        {
+          "sourceId": "TRAIN-211-1",
+          "sha256": "dfc039195be74da1f17db6525e34b26f780ad33e32a340b08bfe935fdeb27830",
+          "text": "Na-Sina lebt in Te-Tal.",
+          "revision": 4
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-211"
+    },
+    {
+      "question": "Was macht Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-212-0",
+        "sha256": "68dcd72b6257ff790d0824a1e76c99e33449d073092446e8eabf4bb99647ac24",
+        "text": "Na-Liva ist in Te-Burg.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-212"
+    },
+    {
+      "question": "Wo ist Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-213-0",
+        "sha256": "99db705146cd1e372f428fcdca492e3cb3b3d39791bcc9aa98d95467f840d756",
+        "text": "\"Na-Liva ist in Te-Park\".",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-213"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-214-0",
+        "sha256": "2346cf6520c40a32b7d8045e9db2e5b739f55c797ff709642d749d8461fb4c66",
+        "text": "Na-Toma ist in Te-Feld. Widerruf.",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-214"
+    },
+    {
+      "question": "Wo steht Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-215-0",
+        "sha256": "7aa4b946dd51e51ce6d5a4595c99e54f15f73d3b1dc91d2c4767e8e5c0c2b2ae",
+        "text": "Na-Jaro steht in Te-See?",
+        "revision": 4
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-215"
+    },
+    {
+      "question": "Wo wohnt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-216-0",
+        "sha256": "6e96a661dc51f7d56f7d94ce9aaf501206fba99521407c6ee2d9a093e4467b97",
+        "text": "Na-Rina wohnt in Te-Feld und Te-Dorf.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-216"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-217-0",
+        "sha256": "3bfb669a4b0b5c42386476fcef97acaff31f9f2d9044149ec751ae6bca794500",
+        "text": "Na-Sina steht in Te-Feld Te-Nord.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-217"
+    },
+    {
+      "question": "Wo lebt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-218-0",
+        "sha256": "441ed584975ffc302aab675f5775f3f7aa91a1d3880de5e062eb531bdaa2f35c",
+        "text": "Na-Jaro lebt in Te-Park. Er lebt in Te-Burg.",
+        "revision": 2
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-218"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-219-0",
+        "sha256": "98bbe45a1eb5f0f558e552db3afdb415b7a4f6fdabd96697f9232fbe57a6621a",
+        "text": "🧪; Na-Toma ist in Te-Dorf.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-219-0",
+        "decision": "SPAN",
+        "sha256": "98bbe45a1eb5f0f558e552db3afdb415b7a4f6fdabd96697f9232fbe57a6621a",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-219"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-220-0",
+        "sha256": "55a7cc0d46956bd8cf0aaac13476a061225187ef6c3904d47897922278a6b3b6",
+        "text": "Na-Sina wohnt in Te-Tal.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-220-0",
+        "decision": "SPAN",
+        "sha256": "55a7cc0d46956bd8cf0aaac13476a061225187ef6c3904d47897922278a6b3b6",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-220"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-221-0",
+        "sha256": "5a6580546b29a3ec323669b58517351ca333a4b76503ea977f56fc10040a2de9",
+        "text": "Na-Sina ist in Te-See, Na-Rina ist in Te-Tal.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-221-0",
+        "decision": "SPAN",
+        "sha256": "5a6580546b29a3ec323669b58517351ca333a4b76503ea977f56fc10040a2de9",
+        "endExclusive": 44,
+        "start": 38,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-221"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-222-0",
+        "sha256": "7ebe1d0b711aedbb7748d6404dabb6bf082bafee6f071c016313fb6fa72a3ff7",
+        "text": "Na-Sina lebt in Te-Burg und Na-Toma lebt in Te-Tal.",
+        "revision": 5
+      }],
+      "expected": {
+        "sourceId": "TRAIN-222-0",
+        "decision": "SPAN",
+        "sha256": "7ebe1d0b711aedbb7748d6404dabb6bf082bafee6f071c016313fb6fa72a3ff7",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 5
+      },
+      "id": "TRAIN-222"
+    },
+    {
+      "question": "Wo steht Na-Sina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-223-0",
+          "sha256": "f7d28cc3d7aeeefb6e651daa1e933f36e7985e91bb5a75369ad0f8c5d6595e10",
+          "text": "Na-Keva steht in Te-See.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-223-1",
+          "sha256": "feaa540e256433a6d73858da4f64d1e0c5d1c666cd70e5ad5390677878f5ad6e",
+          "text": "Na-Sina steht in Te-Tal.",
+          "revision": 2
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-223-1",
+        "decision": "SPAN",
+        "sha256": "feaa540e256433a6d73858da4f64d1e0c5d1c666cd70e5ad5390677878f5ad6e",
+        "endExclusive": 23,
+        "start": 17,
+        "text": "Te-Tal",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-223"
+    },
+    {
+      "question": "Wo ist Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-224-0",
+        "sha256": "8cc523e40b326d4e99e0685c1415fb81985495820fb9550751e0632f82eb7a95",
+        "text": "Na-Rina ist in Te-Dorf Te-Nord; Na-Jaro ist in Te-Park.",
+        "revision": 4
+      }],
+      "expected": {
+        "sourceId": "TRAIN-224-0",
+        "decision": "SPAN",
+        "sha256": "8cc523e40b326d4e99e0685c1415fb81985495820fb9550751e0632f82eb7a95",
+        "endExclusive": 30,
+        "start": 15,
+        "text": "Te-Dorf Te-Nord",
+        "offsetEncoding": "UTF-16",
+        "revision": 4
+      },
+      "id": "TRAIN-224"
+    },
+    {
+      "question": "Wo lebt Na-Liva?",
+      "sources": [{
+        "sourceId": "TRAIN-225-0",
+        "sha256": "ba68a0600f11bd1e7c6d34485cbe24c994621bc44e7aee6a302fc7c32df9a352",
+        "text": "  Na-Liva lebt in Te-Dorf.  ",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-225-0",
+        "decision": "SPAN",
+        "sha256": "ba68a0600f11bd1e7c6d34485cbe24c994621bc44e7aee6a302fc7c32df9a352",
+        "endExclusive": 25,
+        "start": 18,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-225"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-226-0",
+          "sha256": "6f1be3571698e73c146eb4baad01afae0337fad3460bf134f30e23e7cf15e303",
+          "text": "Na-Rina lebt in Te-Feld.",
+          "revision": 2
+        },
+        {
+          "sourceId": "TRAIN-226-1",
+          "sha256": "6385a9fda7b180525f46e44157bae6e649b105499f74a766363625e46d4349aa",
+          "text": "Na-Sina lebt in Te-Dorf.",
+          "revision": 1
+        }
+      ],
+      "expected": {
+        "sourceId": "TRAIN-226-0",
+        "decision": "SPAN",
+        "sha256": "6f1be3571698e73c146eb4baad01afae0337fad3460bf134f30e23e7cf15e303",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Feld",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-226"
+    },
+    {
+      "question": "Wo lebt Na-Rina?",
+      "sources": [{
+        "sourceId": "TRAIN-227-0",
+        "sha256": "c42fae7170a528f2f0c54311757d980ed6a685933ecf7888730efc3c5f82c2fa",
+        "text": "Na-Rina lebt in Te-Dorf, Na-Keva lebt in Te-Park.",
+        "revision": 6
+      }],
+      "expected": {
+        "sourceId": "TRAIN-227-0",
+        "decision": "SPAN",
+        "sha256": "c42fae7170a528f2f0c54311757d980ed6a685933ecf7888730efc3c5f82c2fa",
+        "endExclusive": 23,
+        "start": 16,
+        "text": "Te-Dorf",
+        "offsetEncoding": "UTF-16",
+        "revision": 6
+      },
+      "id": "TRAIN-227"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-228-0",
+        "sha256": "8828ad72ae18197d37a960e195b3b5635f449f93ee7d09c9c07b45a132a6c1e7",
+        "text": "Na-Keva lebt in Te-Tal.",
+        "revision": 8
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-228"
+    },
+    {
+      "question": "Wo wohnt Na-Jaro?",
+      "sources": [{
+        "sourceId": "TRAIN-229-0",
+        "sha256": "e30b065c4846c8d6c460447da62f48c21f39c1f2a36942d5d31edecf59d3260c",
+        "text": "Na-Jaro wohnt nicht in Te-Tal.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-229"
+    },
+    {
+      "question": "Wo wohnt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-230-0",
+        "sha256": "070ac24d0dbe65c24c8825c6ec0d5f56c72398aaf1a3395ba80b2567b55e5bc8",
+        "text": "Na-Sina wohnt heute in Te-Feld.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-230"
+    },
+    {
+      "question": "Wo ist Na-Keva?",
+      "sources": [
+        {
+          "sourceId": "TRAIN-231-0",
+          "sha256": "062a77bbfb389fac4e29f656580cc34b8b9c21326d3bbe4d9ee581ff7bf8d3c8",
+          "text": "Na-Keva ist in Te-Dorf Te-Nord.",
+          "revision": 6
+        },
+        {
+          "sourceId": "TRAIN-231-1",
+          "sha256": "1eb3bff3fea2d462e9319007e304d80a3d89296d4520b6177ab9a6037e66b583",
+          "text": "Na-Keva ist in Te-Park.",
+          "revision": 4
+        }
+      ],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-231"
+    },
+    {
+      "question": "Was macht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-232-0",
+        "sha256": "863079ad8d51dbcf909237e5f3aeba8348b7bd2524bf9d4c9208e27b1b48de5e",
+        "text": "Na-Toma ist in Te-Burg.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-232"
+    },
+    {
+      "question": "Wo lebt Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-233-0",
+        "sha256": "f868cc7747807aa822683965729c2875508211a2494877a745b24c9da501de00",
+        "text": "\"Na-Sina lebt in Te-Burg\".",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-233"
+    },
+    {
+      "question": "Wo steht Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-234-0",
+        "sha256": "00e7aa9469ed3b364a3222945a926a93e93faa5813f5ce158c424a3cba61df64",
+        "text": "Na-Toma steht in Te-Tal. Widerruf.",
+        "revision": 5
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-234"
+    },
+    {
+      "question": "Wo steht Na-Keva?",
+      "sources": [{
+        "sourceId": "TRAIN-235-0",
+        "sha256": "1133d1097fbb3ace802ba0002b529fc3b724db3ff18d5eb5643c1ed3add794ef",
+        "text": "Na-Keva steht in Te-Park?",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-235"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-236-0",
+        "sha256": "c82d8caa7d733811a3db8ea17d67f2a3daa73df590badb9e151cfb30b8700145",
+        "text": "Na-Sina ist in Te-Feld und Te-Dorf.",
+        "revision": 3
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-236"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-237-0",
+        "sha256": "ddac317ef2748e47b6214b0a211cec2c181b0d34b7e26c856f015c6c5e0e5550",
+        "text": "Na-Sina steht in Te-Feld.",
+        "revision": 1
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-237"
+    },
+    {
+      "question": "Wo ist Na-Sina?",
+      "sources": [{
+        "sourceId": "TRAIN-238-0",
+        "sha256": "000146e6432cfb19965de1d2c9cb2198bd66fe6bc977249f0812a47652837088",
+        "text": "Na-Sina ist in Te-Burg Te-Nord. Er ist in Te-Tal.",
+        "revision": 6
+      }],
+      "expected": {"decision": "NOANSWER"},
+      "id": "TRAIN-238"
+    },
+    {
+      "question": "Wo ist Na-Toma?",
+      "sources": [{
+        "sourceId": "TRAIN-239-0",
+        "sha256": "1f6c79eee6b11ce4f298562e4744acf19b8fa67db55cfb89fc25a93bcb6514b1",
+        "text": "🧪; Na-Toma ist in Te-Burg.",
+        "revision": 2
+      }],
+      "expected": {
+        "sourceId": "TRAIN-239-0",
+        "decision": "SPAN",
+        "sha256": "1f6c79eee6b11ce4f298562e4744acf19b8fa67db55cfb89fc25a93bcb6514b1",
+        "endExclusive": 26,
+        "start": 19,
+        "text": "Te-Burg",
+        "offsetEncoding": "UTF-16",
+        "revision": 2
+      },
+      "id": "TRAIN-239"
+    }
+  ],
+  "seed": 17
+}

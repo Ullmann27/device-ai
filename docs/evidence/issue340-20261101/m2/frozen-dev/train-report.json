@@ -1,0 +1,35 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "trainNllAfter": 0.0028133692902478657,
+  "trials": [
+    {
+      "rate": 0.05,
+      "devClassifierNll": 0.02457877031276444,
+      "epochs": 20
+    },
+    {
+      "rate": 0.15,
+      "devClassifierNll": 0.008303430206356386,
+      "epochs": 20
+    },
+    {
+      "rate": 0.05,
+      "devClassifierNll": 0.008356281707238346,
+      "epochs": 60
+    },
+    {
+      "rate": 0.15,
+      "devClassifierNll": 0.0027843158600500124,
+      "epochs": 60
+    }
+  ],
+  "selection": "DEV NLL only",
+  "trainMillis": 781.007446,
+  "parameterCount": 11,
+  "devClassifierNll": 0.0027843158600500124,
+  "trainCurrentThreadCpuMillis": 739.448081,
+  "trainItems": 240,
+  "trainNllBefore": 1.3935530535947087,
+  "devItems": 100
+}

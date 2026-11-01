@@ -1,0 +1,9 @@
+9c7d33b64d7fb1b13e3ceb22f2b538f3e4e62608d477f7e9868ce1f3b79c5f2e  /workspace/continuum-post-fable/tools/continuum-span-research/Cdx2PointerCandidate.kt
+fc66c1ca58c35b9b7b1ff39a68baac11cae294d0bf98a52c8b7ee91aee1815a9  /workspace/continuum-post-fable/tools/continuum-span-research/Cdx2PointerSynthetic.kt
+6aa2daa52c2cd9401449a972386fb4c30ad103ecb02e7dfe28f33c27808a2540  /workspace/continuum-post-fable/tools/continuum-span-research/Cdx2PointerDevHarness.kt
+a6bfd2e2b79a8704f3955bc2ebcc3012354609dada91ba4dea948e19fe7b4e92  /workspace/continuum-post-fable/tools/continuum-span-research/cdx2-pointer-dev.sh
+316f2b2a8bc324dc216161b3a21a781f6956c00e620b2205a1274e468bc56377  /workspace/continuum-checks/issue340-pointer-dev/frozen/TRAIN.json
+9332c99804abffc6604a0fc4ebd1351462b3221c7d4ddb93da247739e56ddee1  /workspace/continuum-checks/issue340-pointer-dev/frozen/DEV.json
+629c8319ede2aba3cd60f0448b6469034c8550530e0326739b79c26bfc40939d  /workspace/continuum-checks/issue340-pointer-dev/frozen/checkpoint.json
+ffd910f54293104372b0a28eaa471d6f3eca190dfe6c87c220e22d4bdf97b428  /workspace/continuum-checks/issue340-pointer-dev/frozen/dev-report.json
+122ca4d9da965208a942fe672bb8c3ae23a84feebf4c0adb5181ced9348345a0  /workspace/continuum-checks/issue340-pointer-dev/frozen/train-report.json
