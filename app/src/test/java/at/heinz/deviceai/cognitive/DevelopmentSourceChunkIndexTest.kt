@@ -75,4 +75,26 @@ class DevelopmentSourceChunkIndexTest {
         try { DevelopmentSourceChunkIndex.load(source); fail("Tampered index accepted") }
         catch (_: IOException) { }
     }
+
+    @Test fun hundredMiBIndexReadsNinetyFiveMiBMarkerWithBoundedBuffers() = withPrivateDir { dir ->
+        val file = File(dir, "large.utf8")
+        val marker = "MARKER_AT_95_MIB".toByteArray()
+        val block = ByteArray(DevelopmentSourceChunkIndex.CHUNK_BYTES) { 65 }
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        file.outputStream().buffered(DevelopmentSourceChunkIndex.CHUNK_BYTES).use { output ->
+            repeat(1600) { part ->
+                if (part == 95 * 16) marker.copyInto(block, 0)
+                output.write(block)
+                digest.update(block)
+                if (part == 95 * 16) java.util.Arrays.fill(block, 0, marker.size, 65.toByte())
+            }
+        }
+        val hash = digest.digest().joinToString("") { "%02x".format(it.toInt() and 255) }
+        val source = DevelopmentSourceStreamImport.ImportedSource("src/Large.txt", file, file.length(), hash)
+        assertEquals(DevelopmentSourceStreamImport.MAX_SOURCE_BYTES, source.bytes)
+        val index = DevelopmentSourceChunkIndex.build(source)
+        assertEquals(1600, index.chunks.size)
+        assertTrue(DevelopmentSourceChunkIndex.read(index, 95 * 16).text.startsWith("MARKER_AT_95_MIB"))
+        assertEquals(index.chunks, DevelopmentSourceChunkIndex.load(source).chunks)
+    }
 }
