@@ -32,6 +32,9 @@ internal object NetworkTurnConstraint {
         """(?iu)\b(?:antworte|beantworte|arbeite|bleib|bleibe|denke|denk|nutze)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|lokal|gerätelokal)\b"""
     )
     private val onlyLocal = Regex("""(?iu)\b(?:nur|ausschließlich)\s+(?:lokal|gerätelokal|offline)\b""")
+    private val explicitOfflineAnswer = Regex(
+        """(?iu)\b(?:antworte|beantworte|arbeite|erkläre|loese|löse)\b[^.!?;]{0,48}\boffline\b"""
+    )
 
     fun forbidsExternalResearch(userTurn: String): Boolean {
         // Oversized text cannot become an implicit web authorization.
@@ -43,6 +46,7 @@ internal object NetworkTurnConstraint {
             negativeAction.containsMatchIn(text) ||
             negativeMedium.containsMatchIn(text) ||
             localOnly.containsMatchIn(text) ||
-            onlyLocal.containsMatchIn(text)
+            onlyLocal.containsMatchIn(text) ||
+            explicitOfflineAnswer.containsMatchIn(text)
     }
 }
