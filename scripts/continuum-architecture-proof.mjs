@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { closeSync, existsSync, lstatSync, openSync, readFileSync, readSync, readdirSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { basename, join, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Architecture proof is a local QA receipt, NOT a signature or proof of AGI.
@@ -9,6 +10,7 @@ import { basename, join, resolve } from 'node:path';
  * capabilities unverified. No owner data, model weights or network access.
  */
 export const REQUIRED_LOGS = Object.freeze([
+  'ARCHITECTURE-PROOF-TESTS.txt',
   'TERMUX-RECOVERY-TESTS.txt',
   'NODE-TESTS.txt',
   'FRONTIER-NODE-TESTS.txt',
@@ -17,6 +19,16 @@ export const REQUIRED_LOGS = Object.freeze([
   'BACKEND-TESTS.txt',
   'GRADLE-QA.txt',
   'ASSEMBLY.txt'
+]);
+
+export const REQUIRED_NODE_LOGS = Object.freeze([
+  'ARCHITECTURE-PROOF-TESTS.txt',
+  'TERMUX-RECOVERY-TESTS.txt',
+  'NODE-TESTS.txt',
+  'FRONTIER-NODE-TESTS.txt',
+  'RELEASE-CONTRACT-TESTS.txt',
+  'JARVIS-READBACK-TESTS.txt',
+  'BACKEND-TESTS.txt'
 ]);
 
 export const REQUIRED_JUNIT = Object.freeze([
@@ -57,24 +69,56 @@ function digestFile(path, maxBytes) {
   }
 }
 
-function junitProof(junitDir, klass) {
-  const file = join(junitDir, 'TEST-' + klass + '.xml');
-  regular(file, 1024 * 1024);
-  const xml = readFileSync(file, 'utf8');
-  const suite = xml.match(/<testsuite\b([^>]*)>/)?.[1];
-  if (!suite) throw Error('Missing JUnit suite: ' + klass);
-  const attr = name => suite.match(new RegExp('\\b' + name + '="([0-9]+)"'))?.[1];
-  const count = Number(attr('tests'));
-  if (!Number.isSafeInteger(count) || count <= 0 ||
-      attr('failures') !== '0' || attr('errors') !== '0' ||
-      !suite.includes('name="' + klass + '"'))
-    throw Error('JUnit suite not fully passing: ' + klass);
-  return { tests: count, ...digestFile(file, 1024 * 1024) };
+/**
+ * TAP summaries come from executed Node tests and are also guarded by shell exit
+ * codes. Hashes alone are not evidence that a test process passed.
+ */
+export function parseNodeTestSummary(report) {
+  const lines = report.trimEnd().split(/\r?\n/);
+  const values = new Map();
+  for (const line of lines) {
+    const m = /^# (tests|pass|fail|cancelled|skipped|todo) (\d+)$/.exec(line);
+    if (!m) continue;
+    if (values.has(m[1])) throw Error('Duplicate TAP summary: ' + m[1]);
+    values.set(m[1], Number(m[2]));
+  }
+  const keys = ['tests','pass','fail','cancelled','skipped','todo'];
+  if (keys.some(k => !Number.isSafeInteger(values.get(k))))
+    throw Error('Missing machine-readable TAP summary');
+  if (values.get('tests') <= 0 || values.get('pass') !== values.get('tests') ||
+      values.get('fail') !== 0 || values.get('cancelled') !== 0 ||
+      values.get('skipped') !== 0 || values.get('todo') !== 0)
+    throw Error('Node TAP failed, skipped or incomplete');
+  if (lines.filter(x => /^\s*ok \d+\b/.test(x)).length !== values.get('tests'))
+    throw Error('Node TAP testcase count mismatches summary');
+  return Object.fromEntries(keys.map(k => [k,values.get(k)]));
 }
 
-export function collectArchitectureProof({ root, sha, versionCode }) {
+/** ElementTree parses exact attribute names and all actual testcase elements. */
+function junitProof(junitDir, klass) {
+  const file = join(junitDir,'TEST-' + klass + '.xml');
+  regular(file, 1024 * 1024);
+  const validator = join(dirname(fileURLToPath(import.meta.url)),
+    'continuum-junit-validator.py');
+  let parsed;
+  try {
+    parsed = JSON.parse(execFileSync('python3',[validator,file,klass],{
+      encoding:'utf8',maxBuffer:32768,timeout:10000,stdio:['ignore','pipe','pipe']
+    }));
+  } catch (e) {
+    throw Error('Structured JUnit rejected ' + klass + ': ' +
+      String(e.stderr || e.message).slice(0,300));
+  }
+  if (!Number.isSafeInteger(parsed.executed) || parsed.executed <= 0 ||
+      parsed.skipped !== 0 || parsed.failures !== 0 || parsed.errors !== 0)
+    throw Error('JUnit parser returned invalid counts: ' + klass);
+  return { tests:parsed.executed, ...digestFile(file,1024 * 1024) };
+}
+
+export function collectArchitectureProof({ root, sha, versionCode, runId }) {
   if (!/^[a-f0-9]{40}$/.test(sha) ||
-      !Number.isInteger(versionCode) || versionCode < 36 || versionCode > 9999)
+      !Number.isInteger(versionCode) || versionCode < 36 || versionCode > 9999 ||
+      !/^[0-9a-f]{8}-[0-9a-f-]{27,36}$/.test(runId))
     throw Error('Invalid pinned source or version');
   const qaDir = join(root, 'continuum-m8-render-qa');
   const statusPath = join(qaDir, 'STATUS.txt');
@@ -83,6 +127,7 @@ export function collectArchitectureProof({ root, sha, versionCode }) {
   const expectedLines = [
     'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE',
     'source_commit=' + sha,
+    'run_id=' + runId,
     'package=at.heinz.deviceai.continuumlocal',
     'version_code=' + versionCode,
     'apk_signed=FALSE',
@@ -96,6 +141,9 @@ export function collectArchitectureProof({ root, sha, versionCode }) {
   const logs = {};
   for (const name of REQUIRED_LOGS)
     logs[name] = digestFile(join(qaDir, name), 16 * 1024 * 1024);
+  const nodeTestSummaries = {};
+  for (const name of REQUIRED_NODE_LOGS)
+    nodeTestSummaries[name] = parseNodeTestSummary(readFileSync(join(qaDir,name),'utf8'));
   for (const name of ['GRADLE-QA.txt', 'ASSEMBLY.txt']) {
     const contents = readFileSync(join(qaDir, name), 'utf8');
     if (!/BUILD SUCCESSFUL in \d/.test(contents))
@@ -113,13 +161,14 @@ export function collectArchitectureProof({ root, sha, versionCode }) {
   // This is test provenance only. Recorded source texts and model outputs
   // have not been independently established as true.
   return {
-    schema: 1,
+    schema: 2,
     kind: 'CONTINUUM_ARCHITECTURE_QA_RECEIPT',
     sourceCommit: sha,
+    runId,
     packageName: 'at.heinz.deviceai.continuumlocal',
     versionCode,
     scope: 'HOST_QA_UNSIGNED_ONLY',
-    proofMethod: 'LOCAL_TEST_TRANSCRIPTS_AND_HASHES_NOT_SIGNED_ATTESTATION',
+    proofMethod: 'LOCAL_PROCESS_EXIT_CODES_AND_REPORT_HASHES_NOT_INDEPENDENT_ATTESTATION',
     qa: {
       termuxRecovery: 'AUTOMATED_TEST_RUN_PASS',
       toolRouting: 'AUTOMATED_TEST_RUN_PASS',
@@ -129,7 +178,7 @@ export function collectArchitectureProof({ root, sha, versionCode }) {
       codingAgentContracts: 'AUTOMATED_TEST_RUN_PASS',
       backendMockTests: 'AUTOMATED_TEST_RUN_PASS',
       unsignedOwnerApkAndAab: 'ASSEMBLED_NOT_INSTALLABLE',
-      logs, junitSuites: suites, unsignedApk: apk, unsignedAab: aab
+      logs, nodeTestSummaries, junitSuites: suites, unsignedApk: apk, unsignedAab: aab
     },
     notYetProven: [
       'CDX1_20_OF_20_BLIND_SUPPORTED_ANSWERS',
@@ -150,7 +199,8 @@ function main() {
   const versionCode = Number(process.env.CONTINUUM_PROOF_VERSION);
   const pinned = process.env.CONTINUUM_PROOF_SHA;
   if (sha !== pinned) throw Error('Checkout SHA differs from owner-proof pin');
-  const result = collectArchitectureProof({ root, sha, versionCode });
+  const result = collectArchitectureProof({ root, sha, versionCode,
+    runId: process.env.CONTINUUM_PROOF_RUN_ID });
   const out = join(root, 'continuum-m8-render-qa/ARCHITECTURE-PROOF.json');
   if (existsSync(out)) throw Error('Proof already exists: refusing overwrite');
   writeFileSync(out, JSON.stringify(result, null, 2) + '\n', {flag:'wx', mode:0o600});

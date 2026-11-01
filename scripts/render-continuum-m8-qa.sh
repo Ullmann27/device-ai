@@ -31,8 +31,10 @@ esac
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
     -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] ||
     die 'QA must never receive private signing credentials'
+[[ ! -e continuum-m8-render-qa ]] || die 'Stale QA output directory; refusing reused reports'
+run_id="$(node -e 'process.stdout.write(require("node:crypto").randomUUID())')"
 mkdir -p continuum-m8-render-qa
-printf 'status=RUNNING_NOT_A_RELEASE\nsource_commit=%s\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+printf 'status=RUNNING_NOT_A_RELEASE\nsource_commit=%s\nrun_id=%s\n' "$sha" "$run_id" > continuum-m8-render-qa/STATUS.txt
 workspace="$PWD/.continuum-render-build"
 mkdir -p "$workspace"
 export JAVA_HOME="$workspace/jdk17"
@@ -74,33 +76,33 @@ node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
 # Integrated proof: local missing-file recovery is checked without overwriting owners' work.
-node --test scripts/continuum-architecture-proof.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
   die 'Architecture-proof regression tests failed'
 }
-node --test scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
   die 'Pinned Termux checkout recovery contract failed'
 }
-node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
     cat continuum-m8-render-qa/NODE-TESTS.txt
     die 'Node contract tests failed'
   }
 cat continuum-m8-render-qa/NODE-TESTS.txt | tail -n 30
 # All newest research checks, not just old M8 contract smoke tests.
-node --test tools/continuum-virtual-fabric/*.test.mjs \
+node --test --test-reporter=tap tools/continuum-virtual-fabric/*.test.mjs \
   > continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/FRONTIER-NODE-TESTS.txt >&2
   die 'Latest Frontier Node tests failed'
 }
 # Regression for release gates with a stubbed signing environment, not signing.
-node --test scripts/render-continuum-m8-owner-release.test.mjs \
+node --test --test-reporter=tap scripts/render-continuum-m8-owner-release.test.mjs \
   > continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/RELEASE-CONTRACT-TESTS.txt >&2
   die 'Latest release contract tests failed'
 }
 # New independent branches integrated for this exact Android release candidate.
-node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs \
+node --test --test-reporter=tap   scripts/continuum-jarvis-mission-control-contract.test.mjs   scripts/continuum-owner-render-readback.test.mjs \
   scripts/continuum-v31-feature-gate.test.mjs scripts/continuum-v32-autonomy-gate.test.mjs   > continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/JARVIS-READBACK-TESTS.txt >&2
   die 'JARVIS cockpit or HTTPS published-APK readback tests failed'
@@ -110,13 +112,13 @@ node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scrip
   cd backend
   npm ci --ignore-scripts --no-audit --no-fund
   npm run check
-  npm test
+  npm test -- --test-reporter=tap
 ) > continuum-m8-render-qa/BACKEND-TESTS.txt 2>&1 || {
   tail -n 140 continuum-m8-render-qa/BACKEND-TESTS.txt
   die 'Backend and OpenRouter tests failed'
 }
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=36   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
+gradle --rerun-tasks --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=36   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
     # Failed Render builds do not publish their local JUnit XML artifacts.
     # Emit ONLY failure type/message/test-id from the independently generated
@@ -131,7 +133,7 @@ gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
 # As a separate task, verify the correct production package can actually be
 # assembled in release mode WITHOUT access to signing credentials.
-gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=36   :app:assembleRelease :app:bundleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
+gradle --rerun-tasks --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalRenderUnsigned=true   -PcontinuumStandaloneVersionCode=36   :app:assembleRelease :app:bundleRelease > continuum-m8-render-qa/ASSEMBLY.txt 2>&1 || {
     tail -n 140 continuum-m8-render-qa/ASSEMBLY.txt
     die 'Unsigned owner-package assembly failed'
   }
@@ -139,7 +141,7 @@ test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
 test -s app/build/outputs/bundle/release/app-release.aab ||
   die 'No assembled Android App Bundle candidate'
-printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
-CONTINUUM_PROOF_SHA="$sha" CONTINUUM_PROOF_VERSION=36 node scripts/continuum-architecture-proof.mjs || die 'Architecture-proof receipt invalid'
+printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\nrun_id=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n' "$sha" "$run_id" > continuum-m8-render-qa/STATUS.txt
+CONTINUUM_PROOF_SHA="$sha" CONTINUUM_PROOF_RUN_ID="$run_id" CONTINUUM_PROOF_VERSION=36 node scripts/continuum-architecture-proof.mjs || die 'Architecture-proof receipt invalid'
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"
