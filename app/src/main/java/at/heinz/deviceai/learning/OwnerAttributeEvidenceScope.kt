@@ -57,11 +57,14 @@ internal object OwnerAttributeEvidenceScope {
             it.status in setOf(LearningStatus.CONFIRMED, LearningStatus.LEARNED, LearningStatus.REPLAY_PENDING, LearningStatus.REVOKED) }
         val heads = owner.mapNotNull { e ->
             val cleaned = e.content.replaceFirst(correction, "")
-            val direct = claim.find(cleaned.take(160))
-            val roleAgeHolder = if(ask.kind=="AGE" && direct==null)
+            // The broad NAME grammar can read "Meine Tochter Klara" as an
+            // apparent full subject and shadow the actual named person Klara.
+            // Prefer the anchored kinship-age grammar BEFORE generic parsing.
+            val roleAgeHolder = if(ask.kind=="AGE")
                 familyAge.matchEntire(cleaned.trim())?.groupValues?.get(1) else null
-            val verb = direct?.groupValues?.get(2) ?: if(roleAgeHolder!=null)"ist" else null
-            val holder = direct?.groupValues?.get(1) ?: roleAgeHolder
+            val direct = if(roleAgeHolder == null)claim.find(cleaned.take(160)) else null
+            val verb = if(roleAgeHolder!=null)"ist" else direct?.groupValues?.get(2)
+            val holder = roleAgeHolder ?: direct?.groupValues?.get(1)
             val compatible = when(ask.kind) {
                 "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
                 "COLOR" -> verb in setOf("hat", "besitzt", "trägt")
