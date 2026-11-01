@@ -32,6 +32,8 @@ function fixture(t) {
     put('continuum-m8-render-qa/' + log,
       log.startsWith('GRADLE-') || log === 'ASSEMBLY.txt'
         ? 'BUILD SUCCESSFUL in 4m 42s\n' : TAP);
+  put('continuum-m8-render-qa/APK-BADGING.txt',
+    "package: name='at.heinz.deviceai.continuumlocal' versionCode='36' versionName='0.3.35'\n");
   for (const klass of REQUIRED_JUNIT) {
     put('app/build/test-results/testDebugUnitTest/TEST-' + klass + '.xml',
       '<testsuite name="' + klass + '" tests="3" skipped="0" failures="0" errors="0">' +
@@ -45,6 +47,7 @@ test('signed-release claims remain explicitly unverified after successful unsign
   const f = fixture(t);
   const proof = collectArchitectureProof({root:f.root,sha:SHA,versionCode:VERSION,runId:RUN_ID});
   assert.equal(proof.sourceCommit,SHA);
+  assert.deepEqual(proof.qa.unsignedApkIdentity, {packageName:'at.heinz.deviceai.continuumlocal',versionCode:36,versionName:'0.3.35'});
   assert.equal(proof.qa.unsignedOwnerApkAndAab,'ASSEMBLED_NOT_INSTALLABLE');
   assert.equal(proof.qa.evidenceBinding,'AUTOMATED_JUNIT_PASS_NOT_FACTUAL_TRUTH');
   assert.ok(proof.notYetProven.includes('ORIGINAL_OWNER_SIGNED_AND_PUBLISHED_APK'));
@@ -119,4 +122,20 @@ test('actual backend QA command emits machine-readable TAP on modern Node', t =>
   const run = spawnSync('bash', ['-c',command], {cwd:root,env,encoding:'utf8',timeout:10000});
   assert.equal(run.status,0,run.stderr);
   assert.deepEqual(parseNodeTestSummary(run.stdout),{tests:1,pass:1,fail:0,cancelled:0,skipped:0,todo:0});
+});
+
+
+test('actual APK identity must match source receipt instead of trusting STATUS metadata', t => {
+  const f = fixture(t);
+  for (const badging of [
+    "package: name='at.heinz.deviceai.other' versionCode='36' versionName='0.3.35'\n",
+    "package: name='at.heinz.deviceai.continuumlocal' versionCode='35' versionName='0.3.35'\n",
+    "package: name='at.heinz.deviceai.continuumlocal' versionCode='36' versionName='0.3.34'\n",
+    "not a package report\n",
+    "package: forged-name='at.heinz.deviceai.continuumlocal' forged-versionCode='36' forged-versionName='0.3.35'\n",
+    "package: name='at.heinz.deviceai.continuumlocal' name='other' versionCode='36' versionName='0.3.35'\n"
+  ]) {
+    f.put('continuum-m8-render-qa/APK-BADGING.txt',badging);
+    assert.throws(() => collectArchitectureProof({root:f.root,sha:SHA,versionCode:VERSION,runId:RUN_ID}), /APK identity/);
+  }
 });

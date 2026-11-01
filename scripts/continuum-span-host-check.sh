@@ -21,7 +21,7 @@ for name in "${tests[@]}"; do
   files+=("$root/app/src/test/java/at/heinz/deviceai/learning/span/$name.kt")
   classes+=("at.heinz.deviceai.learning.span.$name")
 done
-files+=("$root/tools/continuum-span-research/NaturalSpanExperiment.kt" "$root/tools/continuum-span-research/ConditioningCounterfactualExperiment.kt")
+files+=("$root/tools/continuum-span-research/NaturalSpanExperiment.kt" "$root/tools/continuum-span-research/ConditioningCounterfactualExperiment.kt" "$root/tools/continuum-span-research/SpanResourceExperiment.kt")
 java -cp "$CONTINUUM_KOTLIN_COMPILER_CP" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
   -no-stdlib -no-reflect -jvm-target 17 -classpath "$CONTINUUM_KOTLIN_STDLIB:$CONTINUUM_JUNIT_CP" \
   -d "$out/classes" "${files[@]}"
@@ -29,5 +29,10 @@ cp="$out/classes:$CONTINUUM_KOTLIN_STDLIB:$CONTINUUM_JUNIT_CP:$root/app/src/test
 java -Xmx512m -cp "$cp" org.junit.runner.JUnitCore "${classes[@]}"
 if [[ "${CONTINUUM_SPAN_RUN_EXPERIMENTS:-0}" == 1 ]]; then
   java -Xmx512m -cp "$cp" at.heinz.deviceai.learning.span.NaturalSpanExperiment "$out/authored-ranker"
-  java -Xmx512m -cp "$cp" at.heinz.deviceai.learning.ConditioningCounterfactualExperiment "$out/counterfactual.json"
+  java -Xmx512m -cp "$cp" at.heinz.deviceai.learning.ConditioningCounterfactualExperiment "$out/counterfactual.json" "$root/app/src/main/assets/continuum-research/natural-location-v3.csx"
+fi
+
+if [[ "${CONTINUUM_SPAN_RUN_RESOURCES:-0}" == 1 ]]; then
+  java -Xmx128m -cp "$cp" at.heinz.deviceai.learning.span.SpanResourceExperiment \
+    "$root/app/src/main/assets/continuum-research/natural-location-v3.csx" "$out/host-resources.json"
 fi

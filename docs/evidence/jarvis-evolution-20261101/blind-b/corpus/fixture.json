@@ -1,0 +1,593 @@
+{
+  "name": "pr330-independent-natural-location-blind-b",
+  "status": "FROZEN_NOT_RUN",
+  "track": "SPAN_EXTRACTION_NOT_CDX_GENERATION",
+  "partition": "main25=20known+5missing; guard12=12missing",
+  "declaredRuleScope": [
+    "Exact named German explicit question; question and source assertion must use the same predicate.",
+    "Only direct affirmative unambiguous declarative assertions may establish a location; no quoted/reported/hypothetical/temporal/negated/interrogative evidence, no coordinated alternative places.",
+    "No temporal or anaphoric resolver is claimed; pronoun/correction/revocation/quote contexts abstain for this experiment.",
+    "Exact natural name/entity, complete original place span, same source ID/revision/hash and UTF16 offsets.",
+    "All labels fixed before candidate execution; no training/tuning or relabeling after outcomes."
+  ],
+  "cases": [
+    {
+      "id": "b-main-01",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Imke?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Imke ist in Bautzen."
+        }
+      ],
+      "expected": {
+        "text": "Bautzen",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-02",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Fabrice?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Fabrice wohnt in Stralsund."
+        }
+      ],
+      "expected": {
+        "text": "Stralsund",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-03",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Henrike?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Henrike lebt in Ravensburg."
+        }
+      ],
+      "expected": {
+        "text": "Ravensburg",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-04",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Yasemin?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Yasemin steht in Ansbach."
+        }
+      ],
+      "expected": {
+        "text": "Ansbach",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-05",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Kilian?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Kilian ist in Celle."
+        }
+      ],
+      "expected": {
+        "text": "Celle",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-06",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Ramona?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Ramona wohnt in Ingolstadt."
+        }
+      ],
+      "expected": {
+        "text": "Ingolstadt",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-07",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Silvan?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Silvan lebt in Heilbronn."
+        }
+      ],
+      "expected": {
+        "text": "Heilbronn",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-08",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Danilo?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Danilo steht in Neustadt."
+        }
+      ],
+      "expected": {
+        "text": "Neustadt",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-09",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Alessia?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Alessia ist in Buxtehude."
+        }
+      ],
+      "expected": {
+        "text": "Buxtehude",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-10",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Carola?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Carola wohnt in Wolfsburg."
+        }
+      ],
+      "expected": {
+        "text": "Wolfsburg",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-11",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Hendrik?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Hendrik lebt in Elmshorn."
+        }
+      ],
+      "expected": {
+        "text": "Elmshorn",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-12",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Viviana?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Viviana steht in Freiberg."
+        }
+      ],
+      "expected": {
+        "text": "Freiberg",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-13",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Tamara?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Tamara ist in Bad Kissingen."
+        }
+      ],
+      "expected": {
+        "text": "Bad Kissingen",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-14",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Renato?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Renato wohnt in Neu-Ulm."
+        }
+      ],
+      "expected": {
+        "text": "Neu-Ulm",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-15",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Floriane?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Floriane lebt in Schwäbisch Hall."
+        }
+      ],
+      "expected": {
+        "text": "Schwäbisch Hall",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-16",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Joelle?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Joelle steht in Sankt Augustin."
+        }
+      ],
+      "expected": {
+        "text": "Sankt Augustin",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-17",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo ist Samira?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Samira ist in Sonthofen."
+        }
+      ],
+      "expected": {
+        "text": "Sonthofen",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-18",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo wohnt Torben?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Torben wohnt in Radolfzell."
+        }
+      ],
+      "expected": {
+        "text": "Radolfzell",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-19",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo lebt Annika?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Annika lebt in Herford."
+        }
+      ],
+      "expected": {
+        "text": "Herford",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-20",
+      "part": "main25",
+      "kind": "known-explicit",
+      "question": "Wo steht Laurent?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Laurent steht in Villingen."
+        }
+      ],
+      "expected": {
+        "text": "Villingen",
+        "sourceId": "blind-b-source"
+      }
+    },
+    {
+      "id": "b-main-21",
+      "part": "main25",
+      "kind": "missing-entity",
+      "question": "Wo wohnt Emilian?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Rosalie wohnt in Flensburg."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-main-22",
+      "part": "main25",
+      "kind": "missing-location",
+      "question": "Wo ist Odette?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Odette besitzt eine grüne Reisetasche."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-main-23",
+      "part": "main25",
+      "kind": "missing-relation",
+      "question": "Wo lebt Severin?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Severin arbeitet als Musiker."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-main-24",
+      "part": "main25",
+      "kind": "missing-entity",
+      "question": "Wo steht Lenore?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Maik steht in Hameln."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-main-25",
+      "part": "main25",
+      "kind": "missing-location",
+      "question": "Wo wohnt Inga?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Inga zeichnet ein Porträt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-01",
+      "part": "guard12",
+      "kind": "anaphoric-revocation",
+      "question": "Wo wohnt Junia?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Junia wohnt in Oschersleben. Sie wohnt nicht mehr dort."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-02",
+      "part": "guard12",
+      "kind": "anaphoric-denial",
+      "question": "Wo lebt Anselm?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Anselm lebt in Gummersbach. Das ist falsch."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-03",
+      "part": "guard12",
+      "kind": "quoted-evidence",
+      "question": "Wo wohnt Pia?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "„Pia wohnt in Rendsburg.“ ist ein literarisches Zitat."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-04",
+      "part": "guard12",
+      "kind": "time-scope",
+      "question": "Wo lebt Dieter?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Dieter lebt seit April in Aachen."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-05",
+      "part": "guard12",
+      "kind": "interrogative-evidence",
+      "question": "Wo ist Nico?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Nico ist in Hamm?"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-06",
+      "part": "guard12",
+      "kind": "multiple-locations",
+      "question": "Wo wohnt Janina?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Janina wohnt in Hagen und Velbert."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-07",
+      "part": "guard12",
+      "kind": "standing-not-residence",
+      "question": "Wo wohnt Orlando?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Orlando steht in Minden."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-08",
+      "part": "guard12",
+      "kind": "residence-not-presence",
+      "question": "Wo ist Armin?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Armin lebt in Baden-Baden."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-09",
+      "part": "guard12",
+      "kind": "correction-without-time-resolver",
+      "question": "Wo wohnt Fenna?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Fenna wohnt in Coburg. Korrektur: Fenna wohnt in Krefeld."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-10",
+      "part": "guard12",
+      "kind": "reported-speech",
+      "question": "Wo lebt Juri?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Tobias meldet: Juri lebt in Marburg."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-11",
+      "part": "guard12",
+      "kind": "hypothetical",
+      "question": "Wo steht Antonia?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Angenommen, Antonia steht in Soltau."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "b-guard-12",
+      "part": "guard12",
+      "kind": "hyphen-subentity",
+      "question": "Wo ist Bela?",
+      "sources": [
+        {
+          "id": "blind-b-source",
+          "revision": 1,
+          "text": "Bela-Janos ist in Vechta."
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

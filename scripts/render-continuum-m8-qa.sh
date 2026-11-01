@@ -143,6 +143,9 @@ test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
   die 'No assembled unsigned candidate APK'
 test -s app/build/outputs/bundle/release/app-release.aab ||
   die 'No assembled Android App Bundle candidate'
+# Read package and version from the built binary, independently of Gradle/STATUS labels.
+aapt2 dump badging app/build/outputs/apk/release/app-release-unsigned.apk \
+  > continuum-m8-render-qa/APK-BADGING.txt 2>&1 || die 'Unsigned APK binary readback failed'
 printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\nrun_id=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n' "$sha" "$run_id" > continuum-m8-render-qa/STATUS.txt
 CONTINUUM_PROOF_SHA="$sha" CONTINUUM_PROOF_RUN_ID="$run_id" CONTINUUM_PROOF_VERSION=36 node scripts/continuum-architecture-proof.mjs || die 'Architecture-proof receipt invalid'
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html

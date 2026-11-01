@@ -1,0 +1,468 @@
+[
+  {
+    "track": "baseline",
+    "id": "b-guard-01",
+    "part": "guard12",
+    "kind": "anaphoric-revocation",
+    "question": "Wo wohnt Junia?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Junia wohnt in Oschersleben. Sie wohnt nicht mehr dort."
+      }
+    ],
+    "expected": null,
+    "actual": "Oschersleben",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-02",
+    "part": "guard12",
+    "kind": "anaphoric-denial",
+    "question": "Wo lebt Anselm?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Anselm lebt in Gummersbach. Das ist falsch."
+      }
+    ],
+    "expected": null,
+    "actual": "Gummersbach",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-05",
+    "part": "guard12",
+    "kind": "interrogative-evidence",
+    "question": "Wo ist Nico?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Nico ist in Hamm?"
+      }
+    ],
+    "expected": null,
+    "actual": "Hamm",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-06",
+    "part": "guard12",
+    "kind": "multiple-locations",
+    "question": "Wo wohnt Janina?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Janina wohnt in Hagen und Velbert."
+      }
+    ],
+    "expected": null,
+    "actual": "Hagen und Velbert",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-07",
+    "part": "guard12",
+    "kind": "standing-not-residence",
+    "question": "Wo wohnt Orlando?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Orlando steht in Minden."
+      }
+    ],
+    "expected": null,
+    "actual": "Minden",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-08",
+    "part": "guard12",
+    "kind": "residence-not-presence",
+    "question": "Wo ist Armin?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Armin lebt in Baden-Baden."
+      }
+    ],
+    "expected": null,
+    "actual": "Baden-Baden",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-10",
+    "part": "guard12",
+    "kind": "reported-speech",
+    "question": "Wo lebt Juri?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Tobias meldet: Juri lebt in Marburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Marburg",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "baseline",
+    "id": "b-guard-11",
+    "part": "guard12",
+    "kind": "hypothetical",
+    "question": "Wo steht Antonia?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Angenommen, Antonia steht in Soltau."
+      }
+    ],
+    "expected": null,
+    "actual": "Soltau",
+    "reason": "",
+    "found": "true",
+    "verifier": "true",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-main-15",
+    "part": "main25",
+    "kind": "known-explicit",
+    "question": "Wo lebt Floriane?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Floriane lebt in Schwäbisch Hall."
+      }
+    ],
+    "expected": {
+      "text": "Schwäbisch Hall",
+      "sourceId": "blind-b-source"
+    },
+    "actual": "Schwäbisch",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-main-22",
+    "part": "main25",
+    "kind": "missing-location",
+    "question": "Wo ist Odette?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Odette besitzt eine grüne Reisetasche."
+      }
+    ],
+    "expected": null,
+    "actual": "besitzt",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-main-23",
+    "part": "main25",
+    "kind": "missing-relation",
+    "question": "Wo lebt Severin?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Severin arbeitet als Musiker."
+      }
+    ],
+    "expected": null,
+    "actual": "arbeitet",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-main-25",
+    "part": "main25",
+    "kind": "missing-location",
+    "question": "Wo wohnt Inga?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Inga zeichnet ein Porträt."
+      }
+    ],
+    "expected": null,
+    "actual": "zeichnet",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-01",
+    "part": "guard12",
+    "kind": "anaphoric-revocation",
+    "question": "Wo wohnt Junia?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Junia wohnt in Oschersleben. Sie wohnt nicht mehr dort."
+      }
+    ],
+    "expected": null,
+    "actual": "Oschersleben",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-02",
+    "part": "guard12",
+    "kind": "anaphoric-denial",
+    "question": "Wo lebt Anselm?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Anselm lebt in Gummersbach. Das ist falsch."
+      }
+    ],
+    "expected": null,
+    "actual": "Gummersbach",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-03",
+    "part": "guard12",
+    "kind": "quoted-evidence",
+    "question": "Wo wohnt Pia?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "„Pia wohnt in Rendsburg.“ ist ein literarisches Zitat."
+      }
+    ],
+    "expected": null,
+    "actual": "Rendsburg",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-04",
+    "part": "guard12",
+    "kind": "time-scope",
+    "question": "Wo lebt Dieter?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Dieter lebt seit April in Aachen."
+      }
+    ],
+    "expected": null,
+    "actual": "seit April",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-05",
+    "part": "guard12",
+    "kind": "interrogative-evidence",
+    "question": "Wo ist Nico?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Nico ist in Hamm?"
+      }
+    ],
+    "expected": null,
+    "actual": "Hamm",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-06",
+    "part": "guard12",
+    "kind": "multiple-locations",
+    "question": "Wo wohnt Janina?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Janina wohnt in Hagen und Velbert."
+      }
+    ],
+    "expected": null,
+    "actual": "Hagen",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-07",
+    "part": "guard12",
+    "kind": "standing-not-residence",
+    "question": "Wo wohnt Orlando?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Orlando steht in Minden."
+      }
+    ],
+    "expected": null,
+    "actual": "steht",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-09",
+    "part": "guard12",
+    "kind": "correction-without-time-resolver",
+    "question": "Wo wohnt Fenna?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Fenna wohnt in Coburg. Korrektur: Fenna wohnt in Krefeld."
+      }
+    ],
+    "expected": null,
+    "actual": "Coburg",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-10",
+    "part": "guard12",
+    "kind": "reported-speech",
+    "question": "Wo lebt Juri?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Tobias meldet: Juri lebt in Marburg."
+      }
+    ],
+    "expected": null,
+    "actual": "Marburg",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_RAW",
+    "id": "b-guard-11",
+    "part": "guard12",
+    "kind": "hypothetical",
+    "question": "Wo steht Antonia?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Angenommen, Antonia steht in Soltau."
+      }
+    ],
+    "expected": null,
+    "actual": "Soltau",
+    "reason": "",
+    "found": "true",
+    "verifier": "false",
+    "correct": false
+  },
+  {
+    "track": "TRAINED_VERIFIED",
+    "id": "b-main-15",
+    "part": "main25",
+    "kind": "known-explicit",
+    "question": "Wo lebt Floriane?",
+    "sources": [
+      {
+        "id": "blind-b-source",
+        "revision": 1,
+        "text": "Floriane lebt in Schwäbisch Hall."
+      }
+    ],
+    "expected": {
+      "text": "Schwäbisch Hall",
+      "sourceId": "blind-b-source"
+    },
+    "actual": "",
+    "reason": "INDEPENDENT_VERIFICATION_REJECTED",
+    "found": "false",
+    "verifier": "false",
+    "correct": false
+  }
+]

@@ -18,7 +18,8 @@ export const REQUIRED_LOGS = Object.freeze([
   'JARVIS-READBACK-TESTS.txt',
   'BACKEND-TESTS.txt',
   'GRADLE-QA.txt',
-  'ASSEMBLY.txt'
+  'ASSEMBLY.txt',
+  'APK-BADGING.txt'
 ]);
 
 export const REQUIRED_NODE_LOGS = Object.freeze([
@@ -159,6 +160,16 @@ export function collectArchitectureProof({ root, sha, versionCode, runId }) {
     if (!/BUILD SUCCESSFUL in \d/.test(contents))
       throw Error('Missing successful Gradle transcript: ' + name);
   }
+  const badging = readFileSync(join(qaDir, 'APK-BADGING.txt'),'utf8');
+  const packageLines = badging.split(/\r?\n/).filter(line => line.startsWith('package: '));
+  if (packageLines.length !== 1) throw Error('APK identity: missing or ambiguous binary package line');
+  const attributes = [...packageLines[0].matchAll(/(?:^|\s)([A-Za-z][A-Za-z0-9]*)='([^']*)'(?=\s|$)/g)];
+  const fields = Object.fromEntries(attributes.map(match => [match[1],match[2]]));
+  if (new Set(attributes.map(match => match[1])).size !== attributes.length ||
+      fields.name !== 'at.heinz.deviceai.continuumlocal' || fields.versionCode !== String(versionCode) ||
+      fields.versionName !== '0.3.' + (versionCode - 1))
+    throw Error('APK identity mismatch: binary package/version differs from pinned receipt');
+  const apkIdentity = {packageName:fields.name,versionCode:Number(fields.versionCode),versionName:fields.versionName};
   const suites = {};
   const junitDir = join(root, 'app/build/test-results/testDebugUnitTest');
   for (const klass of REQUIRED_JUNIT)
@@ -171,7 +182,7 @@ export function collectArchitectureProof({ root, sha, versionCode, runId }) {
   // This is test provenance only. Recorded source texts and model outputs
   // have not been independently established as true.
   return {
-    schema: 2,
+    schema: 3,
     kind: 'CONTINUUM_ARCHITECTURE_QA_RECEIPT',
     sourceCommit: sha,
     runId,
@@ -188,7 +199,7 @@ export function collectArchitectureProof({ root, sha, versionCode, runId }) {
       codingAgentContracts: 'AUTOMATED_TEST_RUN_PASS',
       backendMockTests: 'AUTOMATED_TEST_RUN_PASS',
       unsignedOwnerApkAndAab: 'ASSEMBLED_NOT_INSTALLABLE',
-      logs, nodeTestSummaries, junitSuites: suites, unsignedApk: apk, unsignedAab: aab
+      logs, nodeTestSummaries, junitSuites: suites, unsignedApkIdentity: apkIdentity, unsignedApk: apk, unsignedAab: aab
     },
     notYetProven: [
       'CDX1_20_OF_20_BLIND_SUPPORTED_ANSWERS',

@@ -1,0 +1,18 @@
+{
+  "fixtureSha256": "4a8314061ca589d19b5043a4ef48869534b2ff8387e7ae787c143117dbb1ae4f",
+  "candidateCommit": "d81be49e851a3c7f2196bcce288bc2fb40c7e22b",
+  "sourceHashes": {
+    "ContinuumResidualSpanCore.kt": "daf65ff935390f02684aec4264985435c00db8c16a976e4cc71d0db843762bab",
+    "EvidenceBoundNaturalLocationProbe.kt": "4d94ca8f217c22c0300e7cfa17b2699a4c280a42a356b4ac1b1921845b6190d9",
+    "VerifiedLocationSpanResearch.kt": "d362af0ec109e7e746879dc44ff70767e57816a7f410c1a84fa4944f586cf205"
+  },
+  "track": "SPAN_EXTRACTION_NOT_CDX_GENERATION",
+  "baselineCommit": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+  "baselineSourceSha256": "7095b9273d794cb4f7375ab8879c7c0ea43f2dde1494a11c70ffdc694568ff83",
+  "checkpointSha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+  "checkpointAfterSha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+  "checkpointUnchanged": true,
+  "baselineBinaryTreeSha256": "ff436ac28f4427264d50f3023c8fe757966e8e9d53edbf669397d926b70b7874",
+  "final-probeBinaryTreeSha256": "6a3dea02c47d243091bc90e9ddb35bef3a1a6c986b9f0dcffa786b0a0963a23f",
+  "learnedBinaryTreeSha256": "9646bbbc853694ccbc92d9f9c41d7448f54118ac26c98626f90cfeecf864aa1c"
+}
