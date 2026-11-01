@@ -92,7 +92,7 @@ class DevelopmentSourceChunkIndexTest {
             file.readLong() // first chunk end
             val firstLineOffset = file.filePointer
             file.seek(firstLineOffset)
-            file.writeLong(999L)
+            file.writeLong(2L) // plausible but false: lastLine remains >= firstLine
         }
         try { DevelopmentSourceChunkIndex.load(source); fail("Forged line provenance accepted") }
         catch (_: IOException) { }
