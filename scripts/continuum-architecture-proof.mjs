@@ -142,8 +142,13 @@ export function collectArchitectureProof({ root, sha, versionCode, runId }) {
   for (const name of REQUIRED_LOGS)
     logs[name] = digestFile(join(qaDir, name), 16 * 1024 * 1024);
   const nodeTestSummaries = {};
-  for (const name of REQUIRED_NODE_LOGS)
-    nodeTestSummaries[name] = parseNodeTestSummary(readFileSync(join(qaDir,name),'utf8'));
+  for (const name of REQUIRED_NODE_LOGS) {
+    try {
+      nodeTestSummaries[name] = parseNodeTestSummary(readFileSync(join(qaDir,name),'utf8'));
+    } catch (error) {
+      throw Error('Node/TAP receipt rejected: ' + name + ': ' + error.message);
+    }
+  }
   for (const name of ['GRADLE-QA.txt', 'ASSEMBLY.txt']) {
     const contents = readFileSync(join(qaDir, name), 'utf8');
     if (!/BUILD SUCCESSFUL in \d/.test(contents))
