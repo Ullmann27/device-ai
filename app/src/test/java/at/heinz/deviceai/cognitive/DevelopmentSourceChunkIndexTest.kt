@@ -76,6 +76,49 @@ class DevelopmentSourceChunkIndexTest {
         catch (_: IOException) { }
     }
 
+    @Test fun alteredLineMetadataCannotBorrowValidWholeSourceHash() = withPrivateDir { dir ->
+        val source = DevelopmentSourceStreamImport.importUtf8(
+            ByteArrayInputStream("first\\nsecond\\nthird".replace("\\\\n", "\\n").toByteArray()),
+            "src/Provenance.txt", dir)
+        val index = DevelopmentSourceChunkIndex.build(source)
+        // The file and its genuine SHA-256 are unchanged. Only a persisted
+        // line number is corrupted, which a whole-source hash cannot detect.
+        java.io.RandomAccessFile(index.indexFile, "rw").use { file ->
+            file.readUTF() // magic
+            file.readLong() // source length
+            file.readUTF() // source SHA-256
+            file.readInt() // chunk count
+            file.readLong() // first chunk start
+            file.readLong() // first chunk end
+            val firstLineOffset = file.filePointer
+            file.seek(firstLineOffset)
+            file.writeLong(999L)
+        }
+        try { DevelopmentSourceChunkIndex.load(source); fail("Forged line provenance accepted") }
+        catch (_: IOException) { }
+    }
+
+    @Test fun alteredChunkDigestCannotBorrowValidWholeSourceHash() = withPrivateDir { dir ->
+        val source = DevelopmentSourceStreamImport.importUtf8(
+            ByteArrayInputStream("alpha\\nbeta\\ngamma".replace("\\\\n", "\\n").toByteArray()),
+            "src/Digest.txt", dir)
+        val index = DevelopmentSourceChunkIndex.build(source)
+        java.io.RandomAccessFile(index.indexFile, "rw").use { file ->
+            file.readUTF()
+            file.readLong()
+            file.readUTF()
+            file.readInt()
+            repeat(4) { file.readLong() } // start, end, firstLine, lastLine
+            val digestLength = file.readUnsignedShort()
+            assertEquals(64, digestLength)
+            val digestStart = file.filePointer
+            file.seek(digestStart)
+            file.writeByte('0'.code)
+        }
+        try { DevelopmentSourceChunkIndex.load(source); fail("Forged chunk digest accepted") }
+        catch (_: IOException) { }
+    }
+
     @Test fun hundredMiBIndexReadsNinetyFiveMiBMarkerWithBoundedBuffers() = withPrivateDir { dir ->
         val file = File(dir, "large.utf8")
         val marker = "MARKER_AT_95_MIB".toByteArray()
