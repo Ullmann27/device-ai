@@ -27,6 +27,10 @@ function fixture() {
     mkdirSync(dirname(join(root, p)), { recursive: true });
     writeFileSync(join(root, p), 'pinned code: ' + p + '\n');
   }
+  // Exercise the real Termux wrapper against this *synthetic* tracked fixture.
+  const wrapper = join(import.meta.dirname, 'continuum-teamleader-termux.sh');
+  writeFileSync(join(root, 'scripts/continuum-teamleader-termux.sh'), readFileSync(wrapper, 'utf8'));
+  writeFileSync(join(root, '.github/continuum/teamleader-cli.mjs'), '// synthetic CLI placeholder, never invoked\n');
   assert.equal(g('add', '-A').status, 0);
   assert.equal(g('commit', '-qm', 'pinned fixture').status, 0);
   const sha = g('rev-parse', 'HEAD').stdout.trim();
@@ -78,4 +82,23 @@ test('untrusted path and unsupported modes fail closed', (t) => {
   assert.equal(bad.status, 20);
   const nested = call('bash', [script, join(f.root, 'scripts'), f.sha], f.root);
   assert.equal(nested.status, 20);
+});
+
+test('existing Termux teamleader exposes pinned check and explicit no-clobber recovery', (t) => {
+  const f = fixture(); t.after(() => rmSync(f.root, { recursive: true, force: true }));
+  const wrapper = join(f.root, 'scripts/continuum-teamleader-termux.sh');
+  const exec = (...args) => call('bash', [wrapper, ...args], f.root);
+  const clean = exec('checkout-check', f.sha);
+  assert.equal(clean.status, 0, clean.stderr);
+  const missing = join(f.root, tracked[1]);
+  rmSync(missing);
+  const failed = exec('checkout-check', f.sha);
+  assert.equal(failed.status, 20);
+  assert.equal(existsSync(missing), false);
+  const restored = exec('checkout-repair-missing', f.sha);
+  assert.equal(restored.status, 0, restored.stderr);
+  assert.equal(readFileSync(missing, 'utf8'), 'pinned code: ' + tracked[1] + '\n');
+  assert.equal(f.g('status', '--porcelain').stdout, '');
+  const wrongSha = exec('checkout-repair-missing', 'f'.repeat(40));
+  assert.equal(wrongSha.status, 20);
 });
