@@ -72,3 +72,40 @@ outputs on frozen synthetic checkpoints; independently evaluated answer-path
 improvement, dialogue regression, evidence provenance and exact-SHA Render QA.
 Model/device tests remain unavailable until actually run. Rollback is to drop
 this isolated branch; no owner data migration or model checkpoint replacement.
+
+## Named-owner role / temporal retrieval candidate
+
+Actual runtime path: AgentActivity.runContinuumDialogue → CognitiveDecisionBridge
+→ ContinuumCognitiveRuntime → ContinuumLearningCore.replyWithEvidenceScoped →
+ContinuumMemoryDialogue.replyInConversation/rank. The change runs in this existing
+path; it does not enable the optional EWM2 brain switch or create a new ledger.
+
+RED: three new actual-runtime-class regressions exposed wrong-person property
+citations, superseded residence ordering and unknown-person borrowing.
+The first EWM filter passed these three, but independent first-run TEST-v1
+showed **8/50→33/50 exact evidence sets** with dangerous remaining errors and a
+material resource regression. That candidate was rejected before commit. V1 is
+now consumed for debugging; it cannot be relabelled as an untouched final TEST.
+
+Replacement: `OwnerAttributeEvidenceScope` uses explicit named-attribute grammar,
+an exact grammatical holder and predicate, single-assertion safeguards, latest
+owner assertion / explicit reactivation time, negative/revoked invalidation and
+tie/first-name ambiguity abstention. Only eligible confirmed owner citations may
+survive; public source text cannot answer these personal attributes. At most16
+matching assertions ≤512 chars reach the existing EWM reader, after cheap bounded
+header filtering. No all-ledger quadratic EWM graph per query. The existing lexical
+ranker remains unchanged outside this grammar; this is no general semantic parser.
+
+`Und Annas?` rewrites an explicit genitive in the prior supported question within
+the same existing persisted conversation. Missing context and unsupported shapes
+abstain. No temporary example is promoted into personal memory, no checkpoint or
+history format changes. This does NOT yet implement temporary scenario assertions,
+key swapping, arbitrary long-context understanding or a general temporal database.
+
+Host gate: **43 actual Kotlin/JUnit tests passed**, including nine role/dialogue
+regressions and retained decoder/encoder tests. Reproduce with
+`scripts/continuum-sol314-host-check.sh` and documented classpath environment vars.
+Fresh independent40-case TEST-v2 is frozen, hash
+`2bf6acb02afc33a92422994d590b1289c187ee85ffc55a3148e057b5571ad8c0`, not yet run.
+This candidate remains UNVERIFIED for promotion pending that countercheck,
+resource rerun, full exact-SHA Render Android QA and Fold7 tests.
