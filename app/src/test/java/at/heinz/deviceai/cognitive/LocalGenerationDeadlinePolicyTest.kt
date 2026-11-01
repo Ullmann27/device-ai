@@ -1,30 +1,31 @@
 package at.heinz.deviceai.cognitive
 
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LocalGenerationDeadlinePolicyTest {
-    @Test fun normalWindowRemainsBounded() {
-        assertFalse(LocalGenerationDeadlinePolicy.expired(119_999, null, 0))
-        assertTrue(LocalGenerationDeadlinePolicy.expired(120_000, null, 0))
+    private val policy = LocalGenerationDeadlinePolicy
+
+    @Test fun nativeModelHasTimeToProduceItsFirstText() {
+        assertNull(policy.stalled(119_999, null, 0))
+        assertNull(policy.stalled(179_999, null, 0))
+        assertEquals(policy.StallReason.NO_FIRST_TEXT, policy.stalled(180_000, null, 0))
     }
 
-    @Test fun recentStreamingTextCanFinishWithinExtendedWindow() {
-        assertFalse(LocalGenerationDeadlinePolicy.expired(120_000, 119_000, 2_611))
-        assertFalse(LocalGenerationDeadlinePolicy.expired(154_000, 151_000, 3_400))
-        assertTrue(LocalGenerationDeadlinePolicy.expired(180_000, 179_999, 5_000))
+    @Test fun continuouslyStreamingModelHasNoFixedWallClockDeadline() {
+        assertNull(policy.stalled(120_000, 119_000, 2_611))
+        assertNull(policy.stalled(300_000, 299_000, 3_800))
+        assertNull(policy.stalled(1_800_000, 1_799_990, 12_000))
     }
 
-    @Test fun stoppedProgressCannotHoldRuntimeOpen() {
-        assertTrue(LocalGenerationDeadlinePolicy.expired(133_001, 121_000, 2_611))
-        assertFalse(LocalGenerationDeadlinePolicy.expired(133_000, 121_000, 2_611))
-        assertTrue(LocalGenerationDeadlinePolicy.expired(120_100, 120_100, 8_000))
-        assertTrue(LocalGenerationDeadlinePolicy.expired(120_000, null, 0))
+    @Test fun stalledModelIsCancelledOnlyAfterRealInactivity() {
+        assertNull(policy.stalled(260_999, 141_000, 2_611))
+        assertEquals(policy.StallReason.NO_RECENT_TEXT, policy.stalled(261_000, 141_000, 2_611))
     }
 
-    @Test fun capturesRemainBoundedForInvalidOrEmptyText() {
-        assertTrue(LocalGenerationDeadlinePolicy.expired(121_000, 120_999, 0))
-        assertTrue(LocalGenerationDeadlinePolicy.expired(121_000, 120_999, 8_001))
+    @Test fun outputBufferIsExplicitlyBounded() {
+        assertNull(policy.stalled(120_000, 120_000, 19_999))
+        assertEquals(policy.StallReason.OUTPUT_LIMIT, policy.stalled(120_000, 120_000, 20_000))
     }
 }
