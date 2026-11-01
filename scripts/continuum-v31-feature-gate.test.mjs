@@ -7,14 +7,14 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const source=file=>fs.readFileSync(path.join(root,file),'utf8');
 
-test('the consolidated v35 source tree retains original owner package and signature',()=>{
+test('the consolidated v36 source tree retains original owner package and signature',()=>{
   const gradle=source('app/build.gradle.kts');
   const release=source('scripts/render-continuum-m8-owner-release.sh');
   const qa=source('scripts/render-continuum-m8-qa.sh');
   assert.match(gradle,/at\.heinz\.deviceai\.continuumlocal/);
-  assert.match(release,/\[\[ "\$version" == "35" \]\]/);
-  assert.match(release,/versionCode: 35/);
-  assert.match(qa,/continuumStandaloneVersionCode=35/);
+  assert.match(release,/\[\[ "\$version" == "36" \]\]/);
+  assert.match(release,/versionCode: 36/);
+  assert.match(qa,/continuumStandaloneVersionCode=36/);
   assert.match(qa,/:app:bundleRelease/);
   assert.match(source('app/build.gradle.kts'),/setOf\(\"assembleRelease\", \"bundleRelease\"\)/);
   assert.match(release,/6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23/);
