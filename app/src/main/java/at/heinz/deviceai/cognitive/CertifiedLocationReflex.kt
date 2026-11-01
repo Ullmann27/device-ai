@@ -42,7 +42,7 @@ internal object CertifiedLocationReflex {
     fun answer(userTurn: String): Answer? {
         if (userTurn.length > 2250) return null
         val groups = format.matchEntire(userTurn) ?: return null
-        val raw = groups.groupValues[1].trim()
+        val raw = groups.groupValues[1] // Preserve literal whitespace for SHA and UTF-16 offsets.
         val question = groups.groupValues[2].trim()
         if (raw.isBlank()) return null
         val item = EvidenceBoundNaturalLocationProbe.Evidence(
@@ -102,6 +102,12 @@ internal object CertifiedLocationReflex {
         val subject = questionShape.matchEntire(q)?.groupValues?.get(1) ?: return null
         val mentions = mention(subject)
         if (confirmedFacts.any { (_, text) -> text.length > 1000 && mentions.containsMatchIn(text) }) return null
+        // A later owner-confirmed revocation without the word "in" must never disappear
+        // while an older positive place fact survives the filter below.
+        // No temporal precedence is inferred from this bounded source list.
+        val namedRetraction = Regex("""(?iu)\b(?:weggezogen|umgezogen|widerruf(?:en)?|zurueckgezogen|zurückgezogen|ort\s+unbekannt)\b""")
+        if (confirmedFacts.any { (_, text) -> mentions.containsMatchIn(text) &&
+                namedRetraction.containsMatchIn(text) }) return null
         // Facts about the person that cannot be about a place ("Mama mag Kaffee.") are not
         // evidence; anything mentioning the person together with "in" (incl. negations, time
         // words, other relations) stays in so the verifier can veto it.
