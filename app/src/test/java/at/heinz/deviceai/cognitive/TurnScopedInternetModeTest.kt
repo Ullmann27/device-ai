@@ -11,6 +11,15 @@ class TurnScopedInternetModeTest {
         }
     }
 
+    @Test fun temporaryModeRevocationCannotBeUndoneByAnotherToggle() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val epoch = consent.revision()
+        consent.setMode(InternetAccessMode.OFF)
+        consent.setMode(InternetAccessMode.ALWAYS_ON)
+        assertEquals(InternetAccessMode.OFF, TurnScopedInternetMode.effective(
+            InternetAccessMode.ALWAYS_ON, consent.mode, consent.revision() == epoch))
+    }
+
     @Test fun askIsNotUpgradedWhileTurnIsActive() {
         assertEquals(InternetAccessMode.ASK,
             TurnScopedInternetMode.effective(InternetAccessMode.ASK, InternetAccessMode.ALWAYS_ON))

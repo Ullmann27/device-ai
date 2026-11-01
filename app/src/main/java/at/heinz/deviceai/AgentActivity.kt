@@ -6089,6 +6089,7 @@ class AgentActivity : Activity() {
                          turnTrace: CognitiveTurnTrace = CognitiveTurnTrace(sessionId)) {
         val localSessionId = sessionId
         val internetModeAtTurnStart = internetConsent.mode
+        val internetRevisionAtTurnStart = internetConsent.revision()
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
         val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall
             .safeHistory(localConversationContext.render(localSessionId))
@@ -6149,7 +6150,8 @@ class AgentActivity : Activity() {
                 cancellation.throwIfCancelled()
                 val boundedInternetMode =
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
-                        internetModeAtTurnStart, internetConsent.mode)
+                        internetModeAtTurnStart, internetConsent.mode,
+                        internetConsent.revision() == internetRevisionAtTurnStart)
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
                     "Internetmodus: ${boundedInternetMode.name}. " + when(boundedInternetMode) {
                         at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Kein Webzugriff; antworte offline und benenne fehlende aktuelle Belege."
