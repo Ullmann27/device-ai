@@ -54,8 +54,8 @@ test('release pins the installed Continuum Lokal app and signer, not Mentor Pair
   assert.doesNotMatch(script, /mentorpaired/);
 });
 
-test('release requires approved v35 and performs real SHA-bound QA before signing', () => {
-  assert.match(script, /This pinned candidate accepts only versionCode 35/);
+test('release requires approved v36 and performs real SHA-bound QA before signing', () => {
+  assert.match(script, /This pinned candidate accepts only versionCode 36/);
   assert.match(script, /bash scripts\/render-continuum-m8-qa\.sh/);
   assert.match(script, /HEAD changed during QA/);
   assert.match(qa, /:app:testDebugUnitTest :app:lintDebug/);
@@ -63,7 +63,7 @@ test('release requires approved v35 and performs real SHA-bound QA before signin
   assert.match(qa, /:app:bundleRelease/);
   assert.match(qa, /app-release\.aab/);
   assert.match(qa, /BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE/);
-  assert.match(qa, /continuumStandaloneVersionCode=35/);
+  assert.match(qa, /continuumStandaloneVersionCode=36/);
 });
 
 test('manifest is written only for a verified, originally signed APK at the pinned host', () => {
@@ -75,7 +75,7 @@ test('manifest is written only for a verified, originally signed APK at the pinn
   assert.match(script, /Continuum-Lokal-/);
   assert.match(script, /sourceCommit: sha/);
   assert.match(script, /signerSha256:/);
-  assert.match(script, /versionCode: 35/);
+  assert.match(script, /versionCode: 36/);
   assert.match(script, /writeFileSync\(target/);
 });
 
@@ -91,7 +91,7 @@ test('no public release proceeds without private original key', () => {
       CONTINUUM_RELEASE_APPROVED_SHA: head.stdout.trim(),
       CONTINUUM_RELEASE_HOST: 'continuum-owner-v23-release-preflight.onrender.com',
       RENDER_SERVICE_NAME: 'continuum-owner-v23-release-preflight',
-      CONTINUUM_RELEASE_VERSION_CODE: '35',
+      CONTINUUM_RELEASE_VERSION_CODE: '36',
       CONTINUUM_LOCAL_SIGNING_P12_BASE64: '',
       CONTINUUM_LOCAL_SIGNING_PASSWORD: '',
       CONTINUUM_MENTOR_SIGNING_FILE: '',

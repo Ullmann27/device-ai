@@ -17,7 +17,7 @@ class ContinuumOwnerUpdateCatalogTest {
         obj.put("channel", "OWNER_RELEASE")
         obj.put("packageName", ContinuumSignedUpdatePolicy.OWNER_PACKAGE)
         obj.put("versionCode", version)
-        obj.put("versionName", "0.3.29")
+        obj.put("versionName", "0.3.${version - 1}")
         obj.put("apkUrl", apkUrl)
         obj.put("apkSha256", "b".repeat(64))
         obj.put("byteLength", 100_000_000)
@@ -155,6 +155,31 @@ class ContinuumOwnerUpdateCatalogTest {
                 JSONObject(json()).put("versionCode", 28).toString()
             )
         }
+    }
+
+    @Test fun build36IsAcceptedForGenuineOwnerUpgradeButNotForEqualOrNewerInstall() {
+        val release = ContinuumOwnerUpdateCatalog.parse(json(version = 36))
+        assertEquals(36, release.descriptor.versionCode)
+        assertEquals("0.3.35", release.versionName)
+        val ready = ContinuumSignedUpdatePolicy.check(
+            ContinuumSignedUpdatePolicy.OWNER_PACKAGE,
+            35,
+            ContinuumSignedUpdatePolicy.ORIGINAL_SIGNER_SHA256,
+            ContinuumOwnerUpdateCatalog.HOST,
+            release.descriptor
+        )
+        assertTrue(ready is ContinuumUpdatePreflight.ReadyForActualApkVerification)
+        val outdated = ContinuumSignedUpdatePolicy.check(
+            ContinuumSignedUpdatePolicy.OWNER_PACKAGE,
+            36,
+            ContinuumSignedUpdatePolicy.ORIGINAL_SIGNER_SHA256,
+            ContinuumOwnerUpdateCatalog.HOST,
+            release.descriptor
+        )
+        assertEquals(
+            ContinuumUpdatePreflight.Rejected(ContinuumUpdateRejection.OLD_OR_EQUAL_VERSION),
+            outdated
+        )
     }
 
 }
