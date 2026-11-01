@@ -29,6 +29,7 @@ case "$(git branch --show-current)" in \
   research/continuum-jarvis-evolution-20261101|\
   research/continuum-sol61-post-fable-20261101|\
   research/continuum-340-evidence-routing-20261101|\
+  research/continuum-341-brain-wiring-qa-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
@@ -80,10 +81,16 @@ node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
 # Integrated proof: local missing-file recovery is checked without overwriting owners' work.
-node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs scripts/continuum-session-evidence-routing.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs scripts/continuum-session-evidence-routing.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs scripts/cdx2-blind-score.test.mjs scripts/continuum-brain-connection-audit.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
   die 'Architecture-proof regression tests failed'
 }
+# Fail closed on missing main-chat edges and mutated frozen Blind-C source.
+node scripts/continuum-brain-connection-audit.mjs > continuum-m8-render-qa/BRAIN-CONNECTIONS.json ||
+  die 'Brain source connections are missing; no owner release claim'
+echo '3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c  docs/evidence/issue340-20261101/m2/blind-c/corpus.json' |
+  sha256sum --check --status || die 'Frozen CDX2 blind corpus changed'
+# No blind result is asserted without independent raw predictions.
 node --test --test-reporter=tap scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
   die 'Pinned Termux checkout recovery contract failed'
