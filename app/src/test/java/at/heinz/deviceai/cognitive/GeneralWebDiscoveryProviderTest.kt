@@ -226,4 +226,24 @@ class GeneralWebDiscoveryProviderTest {
         assertTrue(recovered.discover(ResearchQuery("Photovoltaik", "q0")).isEmpty())
         assertFalse(recovered.searchIncomplete)
     }
+    @Test fun regionalSearchPortalHomepagesNeverCountAsDomainEvidence() {
+        val rss = """<rss><channel>
+            <item><title>RIS § 1295 ABGB – Google Suche</title><link>https://www.google.de/index.html</link></item>
+            <item><title>RIS § 1295 ABGB – Yahoo Suche</title><link>https://de.search.yahoo.com/</link></item>
+            <item><title>RIS § 1295 ABGB – Google Bilder</title><link>https://images.google.de/?hl=de</link></item>
+            <item><title>RIS § 1295 ABGB – Gesetzestext</title><link>https://www.ris.bka.gv.at/eli/jgs/1811/946/P1295/NOR12019037</link></item>
+        </channel></rss>"""
+        val candidates = GeneralWebDiscoveryProvider.parseSearchResults(rss)
+        assertEquals(listOf("www.ris.bka.gv.at"), candidates.map { java.net.URI(it.url).host })
+    }
+
+    @Test fun searchDomainLookalikesAreNotRejectedBySubstringMatches() {
+        val rss = """<rss><channel>
+            <item><title>Technikbericht</title><link>https://google.com.evidence.example.org/article</link></item>
+            <item><title>Yahoo News</title><link>https://news.yahoo.co.jp/search</link></item>
+        </channel></rss>"""
+        val candidates = GeneralWebDiscoveryProvider.parseSearchResults(rss)
+        assertEquals(listOf("google.com.evidence.example.org"), candidates.map { java.net.URI(it.url).host })
+    }
+
 }

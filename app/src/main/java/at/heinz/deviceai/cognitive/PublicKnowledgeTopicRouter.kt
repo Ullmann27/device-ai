@@ -9,7 +9,7 @@ import java.util.Locale
  */
 internal object PublicKnowledgeTopicRouter {
     private val startsAsKnowledgeQuestion = Regex(
-        "^(was|wie|warum|wieso|weshalb|welche|welcher|welches|wer|wann|wo|what|how|why|explain|erkläre|erklaere|beschreibe)\\b",
+        "^(was|wie|welche|welcher|welches|wer|wann|wo|what|how|which|who|when|where)\\b",
         RegexOption.IGNORE_CASE
     )
     private val privateMarkers = Regex(

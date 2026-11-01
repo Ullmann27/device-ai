@@ -27,4 +27,16 @@ class PublicKnowledgeTopicRouterTest {
         assertNull(PublicKnowledgeTopicRouter.topic("Hallo, wie geht es dir?"))
         assertNull(PublicKnowledgeTopicRouter.topic("Installiere eine Anwendung."))
     }
+    @Test fun explanatoryAndCausalQuestionsDoNotTriggerUnrequestedWebResearch() {
+        assertNull(PublicKnowledgeTopicRouter.topic(
+            "Erkläre mir den Unterschied zwischen Wissen speichern und logisch schlussfolgern."))
+        assertNull(PublicKnowledgeTopicRouter.topic("Beschreibe den Unterschied zwischen Wissen und Daten."))
+        assertNull(PublicKnowledgeTopicRouter.topic("Warum kann eine KI falsche Antworten geben?"))
+        assertNull(PublicKnowledgeTopicRouter.topic("Explain how reasoning differs from memorization."))
+    }
+
+    @Test fun publicFactLookupsStillWorkWithExplicitConsent() {
+        assertEquals("stern", PublicKnowledgeTopicRouter.topic("Was ist ein Stern?"))
+    }
+
 }

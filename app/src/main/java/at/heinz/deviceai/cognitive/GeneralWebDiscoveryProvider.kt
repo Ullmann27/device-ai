@@ -99,8 +99,15 @@ class GeneralWebDiscoveryProvider(
             val uri=runCatching { URI(decoded) }.getOrNull()?:return null
             if(runCatching { HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(uri) }.isFailure)return null
             val host=uri.host.lowercase(java.util.Locale.ROOT).trimEnd('.')
-            if(host=="bing.com"||host.endsWith(".bing.com")||host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||host=="google.com"||host.endsWith(".google.com")||
-                host=="wikipedia.org"||host.endsWith(".wikipedia.org")||host=="wikimedia.org"||host.endsWith(".wikimedia.org"))return null
+            // Search-engine homepages, regional domains and login/navigation pages
+            // are discovery transports, not independent evidence for a fact.
+            // Keep the real publisher host after URI parsing; never match arbitrary URL text.
+            if(host=="bing.com"||host.endsWith(".bing.com")||
+                host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||
+                Regex("""(^|\\.)google\\.[a-z]{2,}(\\.[a-z]{2,})?$""").containsMatchIn(host)||
+                Regex("""(^|\\.)yahoo\\.[a-z]{2,}(\\.[a-z]{2,})?$""").containsMatchIn(host)||
+                host=="wikipedia.org"||host.endsWith(".wikipedia.org")||
+                host=="wikimedia.org"||host.endsWith(".wikimedia.org"))return null
             return ResearchSourceCandidate(decoded,title?.replace(Regex("\\s+")," ")?.take(256),"general-web-search")
         }
         fun parseSearchResults(raw:String):List<ResearchSourceCandidate> {

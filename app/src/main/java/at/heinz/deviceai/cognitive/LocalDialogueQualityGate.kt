@@ -28,6 +28,14 @@ object LocalDialogueQualityGate {
         if (candidate.length > 20_000) {
             return Evaluation(false, 0.1, "Antwort übermäßig lang. Kürze sie und beantworte die Frage direkt.")
         }
+        // A leaked internal research placeholder is not a useful chat answer.
+        // Only flag it when the owner did not explicitly ask about that literal.
+        if (!request.contains("UNTRUSTED EVIDENCE DATA", ignoreCase = true) &&
+            candidate.contains("UNTRUSTED EVIDENCE DATA", ignoreCase = true)) {
+            return Evaluation(false, 0.1,
+                "Interner Recherche-Platzhalter statt Antwort ausgegeben. " +
+                    "Beantworte die aktuelle Frage direkt oder benenne fehlende Informationen.")
+        }
         val current = normalized(candidate)
         val question = normalized(request)
         if (question.length >= 24 && current == question) {
