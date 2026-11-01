@@ -30,6 +30,8 @@ function fixture() {
   // Exercise the real Termux wrapper against this *synthetic* tracked fixture.
   const wrapper = join(import.meta.dirname, 'continuum-teamleader-termux.sh');
   writeFileSync(join(root, 'scripts/continuum-teamleader-termux.sh'), readFileSync(wrapper, 'utf8'));
+  // The wrapper must find its own trusted guard inside the synthetic checkout.
+  writeFileSync(join(root, 'scripts/ensure-termux-checkout.sh'), readFileSync(script, 'utf8'));
   writeFileSync(join(root, '.github/continuum/teamleader-cli.mjs'), '// synthetic CLI placeholder, never invoked\n');
   assert.equal(g('add', '-A').status, 0);
   assert.equal(g('commit', '-qm', 'pinned fixture').status, 0);
