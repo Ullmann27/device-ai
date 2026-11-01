@@ -45,7 +45,7 @@ object EvidenceBoundNaturalLocationProbe {
             ?: return Decision.Abstained("UNSUPPORTED_QUESTION")
         val name = questionMatch.groupValues[2]
         val relation = questionMatch.groupValues[1].lowercase(java.util.Locale.ROOT)
-        val evidenceRelations = if (relation == "ist") "(?:ist|wohnt|lebt|steht)" else Regex.escape(relation)
+        val evidenceRelations = Regex.escape(relation)
         val ids = sources.map { it.sourceId }
         if (ids.distinct().size != ids.size) return Decision.Abstained("DUPLICATE_SOURCE")
         val quotedName = Regex.escape(name)
@@ -124,15 +124,24 @@ object EvidenceBoundNaturalLocationVerifier {
                 !source.sha256.matches(Regex("[0-9a-f]{64}")) || source.text.isBlank() ||
                 source.text.any(Char::isISOControl) || !Charsets.UTF_8.newEncoder().canEncode(source.text) ||
                 EvidenceBoundNaturalLocationProbe.digest(source.text) != source.sha256) return false
+            // This narrow static-assertion verifier cannot resolve cross-clause
+            // pronouns, retractions or quotations. Refuse the whole source rather
+            // than silently treating a preceding positive clause as still valid.
+            if (source.text.any { it in "\"„“”«»" } || Regex(
+                    """(?iu)\b(?:sie|er|es|das|dies|diese|dieser|dieses|jene|jener|korrektur|widerruf|widerrufen|falsch|nein|ungültig)\b"""
+                ).containsMatchIn(source.text)) return false
             var start = 0
             for (end in 0..source.text.length) {
                 if (end < source.text.length && source.text[end] !in ".!?;") continue
                 val clause = source.text.substring(start, end)
                 if (mention.containsMatchIn(clause)) {
+                    if (end < source.text.length && source.text[end] == '?') return false
                     val match = assertion.matchEntire(clause) ?: return false
-                    if (relation != "ist" && !match.groupValues[1].equals(relation, ignoreCase = true)) return false
+                    if (!match.groupValues[1].equals(relation, ignoreCase = true)) return false
                     val span = match.groups[2] ?: return false
-                    if (span.value.firstOrNull()?.isUpperCase() != true) return false
+                    val locationWords = span.value.split(Regex("\\s+"))
+                    if (locationWords.any { it.firstOrNull()?.isUpperCase() != true ||
+                            it.lowercase(java.util.Locale.ROOT) in setOf("und", "oder", "aber") }) return false
                     supported++
                     exact = exact || (source.sourceId == found.sourceId && source.revision == found.revision &&
                         source.sha256 == found.sha256 && span.value == found.text &&

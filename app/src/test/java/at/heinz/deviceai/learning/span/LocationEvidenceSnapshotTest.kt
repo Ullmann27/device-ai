@@ -28,6 +28,20 @@ class LocationEvidenceSnapshotTest {
         }
     }
 
+    @Test fun validateExactlyTheCopiedEvidenceRatherThanAnEarlierCallerView() {
+        val good = evidence("Anna ist in Graz.")
+        val tampered = good.copy(text="Anna ist in Wien.")
+        // Deterministic stand-in for a caller changing its list between validation and copy.
+        val changing = object : AbstractList<EvidenceBoundNaturalLocationProbe.Evidence>() {
+            var reads = 0
+            override val size = 1
+            override fun get(index: Int) = if (++reads >= 4) tampered else good
+        }
+        val snapshot = LocationEvidenceSnapshot.freeze(changing)
+        assertEquals(snapshot.sources.single().sha256,
+            EvidenceBoundNaturalLocationProbe.digest(snapshot.sources.single().text))
+    }
+
     @Test fun modelCheckpointIsFrozenAndVerifierGuardsAllResearchPredictions() {
         val features = ContinuumResidualSpanCore.Features(positionFeatures=false, entityProximity=true,
             naturalEntityBindings=true, multiTokenSpans=true)

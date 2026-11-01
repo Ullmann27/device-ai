@@ -49,7 +49,7 @@ test('signed-release claims remain explicitly unverified after successful unsign
   assert.equal(proof.qa.evidenceBinding,'AUTOMATED_JUNIT_PASS_NOT_FACTUAL_TRUTH');
   assert.ok(proof.notYetProven.includes('ORIGINAL_OWNER_SIGNED_AND_PUBLISHED_APK'));
   assert.ok(proof.notYetProven.includes('SUPERINTELLIGENCE_OR_MODEL_PARITY'));
-  assert.equal(Object.keys(proof.qa.junitSuites).length,4);
+  assert.equal(Object.keys(proof.qa.junitSuites).length,REQUIRED_JUNIT.length);
   assert.match(proof.qa.unsignedApk.sha256,/^[a-f0-9]{64}$/);
 });
 test('wrong commit, version or release-claim metadata cannot pass', t => {

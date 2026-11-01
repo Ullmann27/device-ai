@@ -44,4 +44,25 @@ class NaturalLocationVerificationTest {
         val e = source("Mama steht in Graz.")
         assertFalse(EvidenceBoundNaturalLocationVerifier.verify("Wo wohnt Mama?", listOf(e), forged(e, "Graz")))
     }
+
+    @Test fun interrogativesCoordinationAndResidenceDoNotProveCurrentPresence() {
+        for (text in listOf("Mama ist in Graz?", "Mama ist in Graz und Wien.", "Mama ist in Graz Und Wien.",
+            "Mama wohnt in Graz.", "Mama lebt in Graz.")) {
+            val e = source(text)
+            assertFalse(text, EvidenceBoundNaturalLocationVerifier.verify("Wo ist Mama?", listOf(e), forged(e, "Graz")))
+            assertTrue(text, EvidenceBoundNaturalLocationProbe.answer("Wo ist Mama?", listOf(e))
+                is EvidenceBoundNaturalLocationProbe.Decision.Abstained)
+        }
+    }
+
+    @Test fun unsupportedAnaphoricCorrectionsAndQuotationContextFailClosed() {
+        for (text in listOf("Mama ist in Graz. Sie ist nicht in Graz.", "Mama ist in Graz. Sie ist in Wien.",
+            "Mama ist in Graz. Das stimmt nicht.", "Mama ist in Graz. Korrektur: Wien.",
+            "Er behauptet: „Heute frei. Mama ist in Graz.“")) {
+            val e = source(text)
+            assertFalse(text, EvidenceBoundNaturalLocationVerifier.verify("Wo ist Mama?", listOf(e), forged(e, "Graz")))
+            assertTrue(text, EvidenceBoundNaturalLocationProbe.answer("Wo ist Mama?", listOf(e))
+                is EvidenceBoundNaturalLocationProbe.Decision.Abstained)
+        }
+    }
 }

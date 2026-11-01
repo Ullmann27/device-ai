@@ -34,3 +34,24 @@ Fresh authored TRAIN:64 examples, seed77,3200 updates, rate.025, no owner/blind 
 Actual host checks:21 span/gradient/legacy/snapshot/provenance JUnit tests PASS;55 unchanged SWB1/decoder/memory tests PASS;8 proof tests PASS (new test executes the actual backend QA command with a minimal independent Node fixture; old invocation fails). Script `continuum-span-host-check.sh` reproduces pure JVM checks and optional authored experiments with the existing external toolchain jars; Render still required.
 
 Independent blind corpus was frozen before candidate: SHA1762e7cb3d969802f2c507e90a5aee7ee725cfd021497ec7a01ce482def079e7,45 cases(20known+5missing primary,20 additional); developer has not opened it. Natural checkpoint frozen SHA c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92. Results pending, no performance/promote claim.
+
+## Checkpoint 4 — BLIND-A, adversarial repairs, actual Android lab connection
+
+Independent45-case BLIND-A frozen SHA1762e7cb... was run once on original frozen candidates. Complete portable corpus/scope/source snapshots/row-level errors retained in `docs/evidence/jarvis-evolution-20261101/blind-a` (manifestcc2141760cbde9cbd550121fdd9ea11627011393425f892e8f2e8e7936653708).
+
+|Frozen candidate|Primary20known|Primary5missing|Additional20correct|Total45correct|
+|---|---:|---:|---:|---:|
+|330 rule|20|5|11|36|
+|ae2 rule|20|5|17|42|
+|Trained RAW|19|2|6|27|
+|Trained VERIFIED|19|5|19|43|
+
+These ORIGINAL scores will not be overwritten by post-blind fixes. No primary benchmark CDX1 generation upgrade; this is extraction. Extended set still exposed unsafe answers, so primary threshold alone is insufficient for promotion.
+
+Follow-up regression fixes (first RED, then GREEN): interrogative evidence is not an assertion; location conjunctions are not one place; residence does not prove current presence. A second independent reviewer found cross-sentence pronoun corrections/retractions and quotation scope holes. This static grammar now refuses entire sources containing unsupported anaphoric/retraction/quoted context; it does NOT claim to resolve those temporal/discourse problems. Snapshot now validates exactly its copied list (deterministic changing-caller regression); checkpoint size is bounded before copying and the same frozen bytes supply restore+hash.
+
+Runtime: existing `AgentActivity.showCdxPromptTest`→`NaturalLocationLabComparison`→immutable snapshot→v3 learned ranker→independent verifier. Frozen32932-byte research model is packaged under assets/continuum-research, separate from ALL owner/live checkpoints. Bounded read consumes exactly32932 bytes plus EOF check. Reference answer is NOT an inference argument. Original CDX1/CSX1 outputs remain visible, side-by-side; no normal-chat routing, tool authorization, training or owner persistence added. This is SOURCE_INTEGRATED_LAB, not VERIFIED_DEVICE and not CDX1 repair.
+
+Focused cumulative Kotlin/JVM:27 tests PASS, including legacy compatibility, exact gradients, all new negative regressions, asset identity/length checks, swapped names and original positions. Strict8 Node proof tests PASS. Architecture receipt now requires five additional actual span/snapshot/lab JUnit suites; no existing gate removed. Full independent Render at the next pushed SHA remains required.
+
+Historical full Render b86f0a99 PASS independently read from HTTPS: saved STATUS and ARCHITECTURE-PROOF; Android/lint/backend/unsigned artifacts accepted for that SHA only.3303fdf itself subsequently reached Render live(dep-dbjfdendnq4s73dvpadg). No signed0.3.35 or Fold7 acceptance implied.

@@ -4465,9 +4465,17 @@ class AgentActivity : Activity() {
                             "CSX1 · KEINE ANTWORT (SICHERES ENTHALTEN)\n"+
                                 extraction.reason
                     }
+                    val naturalReport=runCatching {
+                        val comparison=at.heinz.deviceai.learning.span.NaturalLocationLabComparison
+                        val checkpoint=assets.open(comparison.MODEL_ASSET).use { input ->
+                            comparison.readCheckpoint(input)
+                        }
+                        comparison.render(comparison.compare(source,query,checkpoint))
+                    }.getOrElse { "Evidenzspan-Forschung nicht verfügbar: "+failureName(it) }
                     cdxText+"\n\n"+spanReport+
                         "\nCSX1 ist nur ein regelbasierter Forschungs-Benchmark; "+
-                        "keine trainierte semantische Generalisierung und keine Chatfreigabe."
+                        "keine trainierte semantische Generalisierung und keine Chatfreigabe."+
+                        "\n\n"+naturalReport
                 }) { result ->
                     addAssistantMessage(result.getOrElse {
                         "CDX1-Test fehlgeschlagen: "+failureName(it)+

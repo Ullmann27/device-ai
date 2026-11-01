@@ -1,0 +1,23 @@
+id	category	expectedVerify	actualVerify	correct	producerFound	producerText	reason
+f01	positive-control	true	true	true	true	Zürich	
+f02	negation	false	true	false	false		NEGATED_OR_CONTRASTIVE_EVIDENCE
+f03	negated-later-assertion	false	true	false	false		NEGATED_OR_CONTRASTIVE_EVIDENCE
+f04	conflict-same-source	false	true	false	false		AMBIGUOUS_OR_CONTRADICTORY
+f05	conflict-other-source	false	true	false	false		AMBIGUOUS_OR_CONTRADICTORY
+f06	reported-speech	false	true	false	true	Zürich	
+f07	hypothesis	false	true	false	true	Zürich	
+f08	wrong-grammatical-holder	false	true	false	true	Zürich	
+f09	hyphen-subentity	false	false	true	false		VERIFICATION_REJECTED
+f10	question-not-assertion	false	true	false	true	Zürich	
+f11	coordinated-places	false	true	false	true	Zürich und Bremen	
+f12	partial-span	false	true	false	true	Zürich	
+f13	relation-drift-standing	false	true	false	true	Zürich	
+f14	presence-vs-residence-scope	false	true	false	true	Zürich	
+f15	invalid-source-id	false	true	false	false		UNTRUSTED_EVIDENCE
+f16	invalid-revision	false	true	false	false		UNTRUSTED_EVIDENCE
+f17	invalid-unselected-hash	false	true	false	false		UNTRUSTED_EVIDENCE
+f18	duplicate-unselected-ids	false	true	false	false		DUPLICATE_SOURCE
+f19	too-many-sources	false	true	false	false		INVALID_REQUEST
+f20	oversize-question	false	true	false	false		INVALID_REQUEST
+f21	wrong-offset-control	false	false	true	true	Zürich	
+f22	outside-scope-anaphoric-denial	false	true	false	true	Zürich	
