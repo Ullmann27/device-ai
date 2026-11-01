@@ -4,6 +4,8 @@
 
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+> **Continuum-Genesis-Einstieg (01.11.2026, Branch `research/continuum-fable51-genesis-20261101`, PR #334):** Vor Weiterarbeit an Recherche-Dialog, Aktualitätsprüfung, RIS, E7/EWM2 oder CDX2 zuerst [`docs/research/omega/CONTINUUM-NEXT-AGENT-ENTRYPOINT.md`](docs/research/omega/CONTINUUM-NEXT-AGENT-ENTRYPOINT.md) lesen. Dieser Hinweis ändert keine Sicherheits- oder Freigaberegeln dieser Datei.
+
 ## AKTUELLER VERBINDLICHER ARBEITSSTAND — 31.10.2026 (Sol / Astra / Opus / alle Agenten)
 
 **VOR jeder neuen Forschung oder Codeänderung ZUERST lesen:** [Kanonischer Stand mit Mythos/Astra/JARVIS, bio-neuronaler Forschung, M8-Coding-Agent, PR-Abstammung, Originalsignatur und APK-Version](docs/CONTINUUM-CURRENT-STATE-20261031.md), [Frontier-Forschungsübergabe](docs/handoff/CONTINUUM_FRONTIER_COMPUTE_20261031.md) und [PR #287](https://github.com/Ullmann27/device-ai/pull/287). Ältere Statuspassagen in dieser Datei sind historische Checkpoints, **nicht** der jetzige Produktions- oder Gerätestand.
