@@ -1,5 +1,7 @@
 # CONTINUUM – Einstiegspunkt für den nächsten Agenten
 
+**Aktuelle Fortsetzung nach Fable: [Sol-Handoff](SOL61-POST-FABLE-HANDOFF.md) und [ausführbarer GPT-6/Fable-Fortsetzungsauftrag](SOL61-GPT6-NEXT-AGENT-INSTRUCTIONS.md), Draft-PR[#335](https://github.com/Ullmann27/device-ai/pull/335).** Zuerst tatsächlichen Remote-HEAD dieses PR prüfen. Fable702b57ae ist vollständig enthalten; S1-Offline-/Consent-Lücke inzwischen repariert, bestätigte Altersangaben eng begrenzt erweitert. Die nachfolgenden Fable-Punkte beschreiben den historischen Einstieg, keine neue Aufforderung zum Wiederholen abgeschlossener Reparaturen.
+
 **Pflichtreihenfolge vor jeder größeren Architekturänderung:**
 1. Aktuellen GitHub-HEAD prüfen: `git fetch && git rev-parse origin/research/continuum-fable51-genesis-20261101` (Stand dieses Dokuments: Code-HEAD `5a528e29`, Doku-Commit danach; PR [#334](https://github.com/Ullmann27/device-ai/pull/334), Basis PR #333).
 2. [`AGENTS.md`](../../../AGENTS.md) vollständig lesen (Sicherheits-, Freigabe- und Release-Regeln gelten unverändert).
