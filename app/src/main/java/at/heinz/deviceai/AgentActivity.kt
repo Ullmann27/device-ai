@@ -2692,8 +2692,11 @@ class AgentActivity : Activity() {
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
+        // B2: need-based, not mode-based. A conceptual why/how question is explained locally
+        // even under ALWAYS_ON; the grant is spent only on questions that need world knowledge.
         val publicTopic = if (!ownerForbidsExternalNetwork && internetConsent.mode ==
-            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request))
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
@@ -2705,6 +2708,28 @@ class AgentActivity : Activity() {
                 } else session?.cancel()
             }
             return
+        }
+        // B2: in ASK mode a question that depends on the present state of the world is not
+        // answered silently from stale model knowledge; the existing one-time consent dialog is
+        // offered first. Declining keeps the local answer path, marked as without current sources.
+        if (!ownerForbidsExternalNetwork && !researchArmed &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
+            at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request)) {
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request)
+            if (topic != null) {
+                val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
+                confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                    if (busy) { session?.cancel(); return@confirmWebRequest }
+                    input.text.clear()
+                    addUserMessage(request)
+                    if (session != null) runResearch(session)
+                    else {
+                        addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
+                        runContinuumDialogue(request)
+                    }
+                }
+                return
+            }
         }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
