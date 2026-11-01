@@ -273,6 +273,9 @@ class HttpReadOnlyResearchProvider private constructor(
             if(keepMarkup || mime !in setOf("text/html"))return raw.trim().take(limit)
             return raw.replace(Regex("<script\\b[^>]*>[\\s\\S]*?</script\\s*>",RegexOption.IGNORE_CASE)," ")
                 .replace(Regex("<style\\b[^>]*>[\\s\\S]*?</style\\s*>",RegexOption.IGNORE_CASE)," ")
+                // Screen-reader-only duplicates (e.g. RIS "Paragraph 1151," next to "§ 1151.")
+                // would otherwise appear twice in the extracted text.
+                .replace(Regex("<(span|div)\\b[^>]*\\bclass=\"[^\"]*\\bsr-only\\b[^\"]*\"[^>]*>[\\s\\S]*?</\\1\\s*>",RegexOption.IGNORE_CASE)," ")
                 .replace(Regex("<[^>]+>")," ").replace(Regex("\\s+")," ").trim().take(limit)
         }
         private val SAFE_MIME_TYPES = setOf(

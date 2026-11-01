@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning
 
+import at.heinz.deviceai.cognitive.CertifiedLocationReflex
+
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -92,10 +94,19 @@ class ContinuumMemoryDialogue(private val directory:File) {
             followUp -> previousTopic
             else -> text.take(320)
         }
+        // E7 on EWM2: a location question gets a precise first line when the certified rule core
+        // proves exactly one supporting fact among ALL active confirmed owner facts (not only the
+        // ranked ones, so an unrevoked conflicting fact the ranker dropped still forces abstention),
+        // and only when memory retrieval itself is grounded. Read-only, zero model tokens, no new store.
+        val exactLocation=if(greeting || followUp || selected.isEmpty())null else
+            CertifiedLocationReflex.answerFromConfirmedFacts(text,
+                experiences.filter { eligible(it) && it.type==LearningExperienceType.USER_FACT &&
+                    it.trust==LearningTrustClass.OWNER_CONFIRMED }.map { it.id to it.content })
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
             selected.isEmpty() -> NO_EVIDENCE_ANSWER
-            else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
+            else -> (exactLocation?.let { it.text+"\n\n" } ?: "")+
+                (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
                 "\n\n"+(if(it.kind=="Bestätigte Nutzererinnerung")OwnerMemoryPerspective.display(it.text) else it.text.take(250))+
                     "\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }

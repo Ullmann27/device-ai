@@ -2689,11 +2689,27 @@ class AgentActivity : Activity() {
             addAssistantMessage(proof.text)
             return
         }
+        // E7 session specialist: a bare "Wo ist X?" is first checked against the owner's own
+        // earlier messages of this session (rule core + verifier, <50 ms, zero tokens). Only an
+        // unambiguous hit short-circuits; otherwise the normal memory → model → web chain runs.
+        // This also keeps a private question out of the ALWAYS_ON web route.
+        at.heinz.deviceai.cognitive.CertifiedLocationReflex.answerFromSession(request,
+            localConversationContext.priorUserTurns(sessionId))?.let { proof ->
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(proof.text)
+            addToolActivity("Sitzungsbeleg · Regelkern+Verifier · keine Modell- oder Webanfrage")
+            localConversationContext.record(sessionId, request, proof.text)
+            return
+        }
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
+        // B2: need-based, not mode-based. A conceptual why/how question is explained locally
+        // even under ALWAYS_ON; the grant is spent only on questions that need world knowledge.
         val publicTopic = if (!ownerForbidsExternalNetwork && internetConsent.mode ==
-            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
+            !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request))
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {
             val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(publicTopic)
@@ -2706,6 +2722,36 @@ class AgentActivity : Activity() {
             }
             return
         }
+        // B2: in ASK mode a question that depends on the present state of the world is not
+        // answered silently from stale model knowledge; the existing one-time consent dialog is
+        // offered first. Declining keeps the local answer path, marked as without current sources.
+        // M2 (Genesis): a follow-up against research this session already holds is checked for
+        // freshness (question type × retrieval age × documented validity). Stale evidence is
+        // re-researched only within the same ASK consent; otherwise it stays visibly flagged.
+        val staleResearch = localConversationContext.researchFreshness(sessionId, request)
+            ?.takeIf { it.mustFlag && !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request) }
+        if (!ownerForbidsExternalNetwork && !researchArmed &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
+            (at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request) || staleResearch != null)) {
+            val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request)
+            if (topic != null) {
+                if (staleResearch != null) addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason}")
+                val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
+                confirmWebRequest(call, ResearchMode.STANDARD) { session ->
+                    if (busy) { session?.cancel(); return@confirmWebRequest }
+                    input.text.clear()
+                    addUserMessage(request)
+                    if (session != null) runResearch(session)
+                    else {
+                        addToolActivity("WEB · nicht freigegeben · lokale Antwort ohne aktuelle Quellen")
+                        runContinuumDialogue(request)
+                    }
+                }
+                return
+            }
+        }
+        if (staleResearch != null)
+            addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason} · Antwort wird als unsicher gekennzeichnet")
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -5643,9 +5689,13 @@ class AgentActivity : Activity() {
             }
         }
         val researchStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+        val researchSessionId = sessionId
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
-        val discovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
+        val generalDiscovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
+        // M3: a norm reference ("§ 364a ABGB") is resolved via the official RIS open-data API first;
+        // everything else (and any API failure) goes through the general web discovery unchanged.
+        val discovery=at.heinz.deviceai.cognitive.LegalRisDiscoveryProvider(generalDiscovery,checkAccess=session::checkActive)
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
         ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
@@ -5714,7 +5764,7 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
-                        .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
+                        .joinToString("\n") { at.heinz.deviceai.cognitive.ResearchDialogueHandoff.citationLine(it) }
                     val body = buildString {
                         append(if (dossier.sources.isEmpty()) ContinuumUiCopy.emptyResearch(dossier.partialReason)
                             else (dossier.synthesis?.text ?: "Es wurde keine Zusammenfassung erstellt.").take(4600))
@@ -5736,8 +5786,19 @@ class AgentActivity : Activity() {
                         if (dossier.sources.isNotEmpty())
                             dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
                     }
-                    discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
+                    discovery.lastIssue?.let { addToolActivity("RIS · "+it) }
+                    generalDiscovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
+                    // B1: the research result becomes follow-up context for the local model (same brain,
+                    // same session) – typed as external, unverified data, never an owner fact.
+                    at.heinz.deviceai.cognitive.ResearchDialogueHandoff
+                        .digest(session.call.question, dossier, researchSynthesisRoute.get(), System.currentTimeMillis())
+                        ?.let { digest ->
+                            if (sessionId == researchSessionId) {
+                                localConversationContext.recordResearch(sessionId, digest)
+                                addToolActivity("RESEARCH · Ergebnis als Gesprächskontext übernommen (ungeprüft)")
+                            }
+                        }
                     val queue = WebLearningInbox.candidates(dossier)
                     if (queue.isNotEmpty()) {
                         addAssistantMessage("Ich habe ${queue.size} Quellen-Aussagen als Lernkandidaten erkannt. " +
