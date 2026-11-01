@@ -102,10 +102,14 @@ class ContinuumMemoryDialogue(private val directory:File) {
             CertifiedLocationReflex.answerFromConfirmedFacts(text,
                 experiences.filter { eligible(it) && it.type==LearningExperienceType.USER_FACT &&
                     it.trust==LearningTrustClass.OWNER_CONFIRMED }.map { it.id to it.content })
+        // Reuse the existing full-ledger attribute/revision scope. Only literal, precisely
+        // named age statements get a short value; original memory quotation stays below.
+        val exactAge=if(greeting || followUp || selected.isEmpty())null else
+            OwnerAttributeEvidenceScope.exactAgeReply(text,experiences,selected)
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
             selected.isEmpty() -> NO_EVIDENCE_ANSWER
-            else -> (exactLocation?.let { it.text+"\n\n" } ?: "")+
+            else -> ((exactLocation?.text ?: exactAge)?.let { it+"\n\n" } ?: "")+
                 (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
                 "\n\n"+(if(it.kind=="Bestätigte Nutzererinnerung")OwnerMemoryPerspective.display(it.text) else it.text.take(250))+
                     "\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"

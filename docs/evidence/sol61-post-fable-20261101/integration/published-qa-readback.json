@@ -1,0 +1,161 @@
+[
+  {
+    "label": "pr332",
+    "url": "https://continuum-dialog-routing-qa-20261101.onrender.com",
+    "STATUS.txt": {
+      "bytes": 246,
+      "sha256": "484a1f796604e1cc2c23a9df07790c89ea9b4bf5e3dd1866b8aa5413dcbb1245",
+      "content": "status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=27bdfccda95d870b70529f93716a861c054eebb5\nrun_id=8526861c-8320-4bd1-88e1-77d5e4bdbdde\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n"
+    },
+    "ARCHITECTURE-PROOF.json": {
+      "bytes": 6625,
+      "sha256": "f8c526a689376ca9ab904bd5e211d7748f484a9ea569edb1f123779e76e31acc",
+      "schema": 3,
+      "sourceCommit": "27bdfccda95d870b70529f93716a861c054eebb5",
+      "packageName": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 36,
+      "apkIdentity": {
+        "packageName": "at.heinz.deviceai.continuumlocal",
+        "versionCode": 36,
+        "versionName": "0.3.35"
+      },
+      "apk": {
+        "bytes": 54553583,
+        "sha256": "f7eeecb9d6f434d777b71be1c6e0bf9faea51b9135f530a5374986d2ec9de17c"
+      },
+      "junitSuites": [
+        "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+        "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+        "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+        "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+        "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+        "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+        "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+        "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+        "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest"
+      ]
+    },
+    "GRADLE-QA.txt": {
+      "bytes": 16485,
+      "sha256": "5a9db4d6c5c6bb875666da5cfc54156362962c28c7a841e4228e11869b5fc49e",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 4m 39s"
+      ]
+    },
+    "ASSEMBLY.txt": {
+      "bytes": 13055,
+      "sha256": "0cf12305fb6bd10e98c6bb3ced176ca0e8d8641e1e30fadd7dd72299e6b9c8ae",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 2m 9s"
+      ]
+    }
+  },
+  {
+    "label": "pr333",
+    "url": "https://continuum-jarvis04-integration-qa.onrender.com",
+    "STATUS.txt": {
+      "bytes": 246,
+      "sha256": "e626289c43fb6eda57c4e4100539f38ff4fadb8f4f7460fefbd135164d2a45c7",
+      "content": "status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=cc878fb9e2e8374805648a12455f6b08fbce00e0\nrun_id=82a4ed5a-c76f-45b2-935a-331a332b410f\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n"
+    },
+    "ARCHITECTURE-PROOF.json": {
+      "bytes": 6625,
+      "sha256": "d3289f597a8a84e7fba265ffb442d4958ab6050aa97d89f09bff06699baf2e02",
+      "schema": 3,
+      "sourceCommit": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+      "packageName": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 36,
+      "apkIdentity": {
+        "packageName": "at.heinz.deviceai.continuumlocal",
+        "versionCode": 36,
+        "versionName": "0.3.35"
+      },
+      "apk": {
+        "bytes": 54569967,
+        "sha256": "8f924e6750a8f87e1e1da9940e42e26d1c66cdfe74686c795dbed8299f27bf41"
+      },
+      "junitSuites": [
+        "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+        "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+        "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+        "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+        "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+        "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+        "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+        "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+        "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest"
+      ]
+    },
+    "GRADLE-QA.txt": {
+      "bytes": 16485,
+      "sha256": "fba0618e8994547e1de89c27aa2411b1a7c6452cdd308fb71a4a97a7577e041d",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 4m 39s"
+      ]
+    },
+    "ASSEMBLY.txt": {
+      "bytes": 13055,
+      "sha256": "4dadd0cc05e1be0eb679762de020f8f39f2866bf26ce648f1b00c046c2d3d117",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 2m 8s"
+      ]
+    }
+  },
+  {
+    "label": "pr331",
+    "url": "https://continuum-jarvis-evolution-qa-20261101.onrender.com",
+    "STATUS.txt": {
+      "bytes": 246,
+      "sha256": "c9a36464dd7a3573b730fbaa9a0fcd26709bb0ee9bb854e666a076cc8137572b",
+      "content": "status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=8417f08b8c926c7b643c6ded979d0c501e3a306f\nrun_id=5421f05f-58e0-4e04-a3db-a51cd22dd584\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n"
+    },
+    "ARCHITECTURE-PROOF.json": {
+      "bytes": 6625,
+      "sha256": "71c71932c04d26d49caecbd274b9f67685f36dcb9269eb33ecb13cc297809979",
+      "schema": 3,
+      "sourceCommit": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+      "packageName": "at.heinz.deviceai.continuumlocal",
+      "versionCode": 36,
+      "apkIdentity": {
+        "packageName": "at.heinz.deviceai.continuumlocal",
+        "versionCode": 36,
+        "versionName": "0.3.35"
+      },
+      "apk": {
+        "bytes": 54553583,
+        "sha256": "1ce90adfb5927e1ed478e8e575f29e93647e41dc601b40316afde90af3949e3f"
+      },
+      "junitSuites": [
+        "at.heinz.deviceai.cognitive.NetworkTurnConstraintTest",
+        "at.heinz.deviceai.cognitive.Cdx1EvidenceSlotBinderTest",
+        "at.heinz.deviceai.intelligence.ewm.Ewm2ProductEquivalenceTest",
+        "at.heinz.deviceai.learning.ContinuumEvidenceWindowTest",
+        "at.heinz.deviceai.learning.span.EvidenceBoundNaturalLocationProbeTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationVerificationTest",
+        "at.heinz.deviceai.learning.span.NaturalEntitySpanCoreTest",
+        "at.heinz.deviceai.learning.span.LocationEvidenceSnapshotTest",
+        "at.heinz.deviceai.learning.span.NaturalLocationLabComparisonTest",
+        "at.heinz.deviceai.learning.span.RoleAwareShadowTest",
+        "at.heinz.deviceai.learning.span.DualEvidenceReadContractTest"
+      ]
+    },
+    "GRADLE-QA.txt": {
+      "bytes": 16485,
+      "sha256": "726406e9540e3947bad326a42c734f219b69c4cee41a1aa20e3e3499607bc929",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 4m 42s"
+      ]
+    },
+    "ASSEMBLY.txt": {
+      "bytes": 13055,
+      "sha256": "6ac2763fbc0fccef01bad1794c9d94695e40cc5072dcea13c7ca4e77142199b3",
+      "successful_build_lines": [
+        "BUILD SUCCESSFUL in 2m 8s"
+      ]
+    }
+  }
+]

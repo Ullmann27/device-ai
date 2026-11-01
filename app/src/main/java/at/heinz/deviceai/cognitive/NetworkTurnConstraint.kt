@@ -41,6 +41,15 @@ internal object NetworkTurnConstraint {
         """(?iu)\b(?:antworte|beantworte|arbeite|erkläre|loese|löse)\b[^.!?;]{0,48}\boffline\b"""
     )
 
+    /** Remove-only execution boundary, bound to OWNER text rather than a rewritten model query.
+     * Generic to keep this pure policy usable in the existing JVM research checks. */
+    fun <T> withOriginalTurn(originalUserTurn: String, toolName: String, execute: () -> T): T {
+        check(!(toolName in setOf("web_search", "web_read") && forbidsExternalResearch(originalUserTurn))) {
+            "Externe Recherche ist für diese ursprüngliche Nutzeranfrage verboten"
+        }
+        return execute()
+    }
+
     fun forbidsExternalResearch(userTurn: String): Boolean {
         // Oversized text cannot become an implicit web authorization.
         if (userTurn.length > 8192) return true

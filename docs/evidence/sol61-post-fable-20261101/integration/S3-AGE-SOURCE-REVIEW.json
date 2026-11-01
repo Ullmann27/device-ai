@@ -1,0 +1,56 @@
+{
+  "schema": "continuum.post_fable_s3_age_source_review.v1",
+  "review_time_utc": "2026-11-01T15:23:38.342731+00:00",
+  "head_sha": "fc9560bd032a268379cb3e8960afdd2c3632959b",
+  "scope": "Read-only current S3 age presentation and its caller/tests; JVM consent disk roundtrip and static preference wiring only.",
+  "source_files_sha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt": "4214b60f7121fef7cdff3f6a0d7afdf13b4cb2d947155dab45b37160ff5b8db7",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt": "3c05f03e1e62fac41f240636ff7de0fabebeff1de23e0ad4cb799d2d453b0953",
+    "app/src/test/java/at/heinz/deviceai/learning/OwnerMemoryAgeSpecialistTest.kt": "b9c4fd830f47f7501034109b2717865fba13e46151440edf6621f4a28b8f3c39",
+    "app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt": "99e835003f3cfc99fb977023c0bdc6894da5d39574c9ca06bbe11597abc40e7a",
+    "scripts/continuum-v32-autonomy-gate.test.mjs": "5fb168c742550177e235d2f9d022dbf441c8ff96f604c20607a36947a6bf2a1e"
+  },
+  "findings": [
+    {
+      "id": "S3_FAMILY_HOLDER_INVALIDATOR",
+      "priority": "P2",
+      "status": "OPEN_STATIC_SOURCE_FINDING_NOT_EXECUTED_BY_REVIEWER",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt",
+      "problem": "The existing select familyAge grammar accepts only a bare numeric family age. Later confirmed family statements with negation or a Jahre-alt suffix fall back to generic claim with holder Meine Tochter Klara instead of Klara, so they do not participate in the named persons ledger conflict/revocation decision. The new exactAgeReply can therefore display the older29 as an exact age.",
+      "regression_pairs": [
+        [
+          "Meine Tochter Klara ist 29.",
+          "Meine Tochter Klara ist nicht 29."
+        ],
+        [
+          "Meine Tochter Klara ist 29.",
+          "Meine Tochter Klara ist 30 Jahre alt."
+        ]
+      ],
+      "query": "Wie alt ist Klara?",
+      "expected": "Negation must suppress the old exact value; newer supported family age must yield30 or abstain, and revocation of that newer family statement must not resurrect29.",
+      "smallest_repair_direction": "Retain same-holder unsupported/negated family statements as invalidators, or use a bounded shared family-holder grammar and fail closed when the remainder cannot supply a supported exact age. Do not broaden unsupported statements into answers."
+    }
+  ],
+  "other_checks": {
+    "provenance": "select requires genuine confirmed owner records; exactAgeReply requires unique ledger ID and byte-identical ranked content/kind. LearningExperience validates content hash and ID.",
+    "mutation": "New helper only reads records; no owner-fact or model write introduced. Existing dialogue-history save remains.",
+    "age_semantics": "Owner-statement age explicitly distinguished from automatically advanced current age.",
+    "disk_test": "Explicit JVM file roundtrip of mode string into fresh policy/gate; no Android SharedPreferences or device E2E claim.",
+    "static_wiring": "Actual restoredMode caller and preferences read/commit/setMode checks present.",
+    "git_diff_check": "PASS"
+  },
+  "verification_scope": {
+    "tests_started_by_reviewer": false,
+    "builds_started_by_reviewer": false,
+    "root_reported_age_location_family_tests": 14,
+    "root_reported_consent_tests": 31,
+    "root_results_independently_rerun": false
+  },
+  "reviewer_boundaries": {
+    "shared_edits": false,
+    "owner_data_read": false,
+    "publisher_mutations": false,
+    "blind_fixtures_read": false
+  }
+}

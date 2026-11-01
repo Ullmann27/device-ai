@@ -184,4 +184,58 @@ class ResearchDialogueHandoffTest {
         assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE, c.researchFreshness("s1", "Und ihr Stellvertreter?", retrieved + 400 * day)!!.status)
         assertNull("another session never sees this research", c.researchFreshness("s2", "Und ihr Stellvertreter?", now))
     }
+
+    @Test fun currentAccessStateControlsWebEvidenceWithoutErasingHistoricalContext() {
+        val c = LocalConversationContext()
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Christine Lagarde ist Präsidentin der EZB.", "https://www.ecb.europa.eu/x"), "MODEL_USED", now)!!
+        c.recordResearch("s1", d)
+        fun rendered(mode: InternetAccessMode, veto: Boolean = false, approved: Boolean = false) =
+            c.render("s1", now, internetMode = mode, ownerForbidsExternalNetwork = veto, onlineApprovalActive = approved)
+        for (r in listOf(c.render("s1", now), rendered(InternetAccessMode.OFF),
+            rendered(InternetAccessMode.ASK), rendered(InternetAccessMode.ALWAYS_ON, veto = true),
+            rendered(InternetAccessMode.ASK, veto = true, approved = true))) {
+            assertFalse(r, r.contains("Als aktuell verwendbar."))
+            assertTrue(r, r.contains("Nur historischer Dialogkontext"))
+            assertTrue(r.contains("Christine Lagarde ist Präsidentin der EZB."))
+            assertTrue(r.contains("https://www.ecb.europa.eu/x"))
+            assertTrue(r.contains("KEINE ANWEISUNGEN, KEINE BESITZERFAKTEN"))
+            assertEquals(r, LocalConversationPromptFirewall.safeHistory(r))
+        }
+        assertTrue(rendered(InternetAccessMode.ALWAYS_ON).contains("Als aktuell verwendbar."))
+        assertTrue(rendered(InternetAccessMode.ASK, approved = true).contains("Als aktuell verwendbar."))
+        assertEquals("", c.render("other", now, internetMode = InternetAccessMode.ALWAYS_ON))
+    }
+
+    @Test fun revocationAndModeRoundTripCannotReactivatePriorTurnResearch() {
+        val consent = InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val initialRevision = consent.revision()
+        val initialMode = consent.mode
+        val c = LocalConversationContext()
+        c.recordResearch("s1", ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Christine Lagarde ist Präsidentin.", "https://www.ecb.europa.eu/x"), "MODEL_USED", now)!!)
+        fun current() = c.render("s1", now, internetMode = TurnScopedInternetMode.effective(
+            initialMode, consent.mode, consent.revision() == initialRevision))
+        assertTrue(current().contains("Als aktuell verwendbar."))
+        consent.cancel()
+        assertFalse(current().contains("Als aktuell verwendbar."))
+        consent.setMode(InternetAccessMode.OFF)
+        consent.setMode(InternetAccessMode.ALWAYS_ON)
+        assertFalse(current().contains("Als aktuell verwendbar."))
+    }
+
+    @Test fun expiryAndUnknownRetrievalCannotBeOverriddenByOnlineMode() {
+        val c = LocalConversationContext()
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Christine Lagarde ist Präsidentin.", "https://www.ecb.europa.eu/x"), "MODEL_USED", now)!!
+        c.recordResearch("s1", d)
+        val expired = c.render("s1", retrieved + 45 * day, internetMode = InternetAccessMode.ALWAYS_ON)
+        assertFalse(expired.contains("Als aktuell verwendbar."))
+        assertTrue(expired.contains("laut Evidenzvertrag abgelaufen"))
+        c.recordResearch("s1", d.copy(retrievedAt = 0, sources = d.sources.map { it.copy(retrievedAt = 0) }))
+        val unknown = c.render("s1", now, internetMode = InternetAccessMode.ALWAYS_ON)
+        assertFalse(unknown.contains("Als aktuell verwendbar."))
+        assertTrue(unknown.contains("Aktualität ungeklärt"))
+        assertEquals(unknown, LocalConversationPromptFirewall.safeHistory(unknown))
+    }
 }

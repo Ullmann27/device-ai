@@ -1,0 +1,26 @@
+JUnit version 4.13.2
+...E.E..
+Time: 0.453
+There were 2 failures:
+1) correctionUsesExistingLedgerChronologyAndRevocationNeverResurrectsOldAge(at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.correctionUsesExistingLedgerChronologyAndRevocationNeverResurrectsOldAge$lambda$3(OwnerMemoryAgeSpecialistTest.kt:34)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.withCore(OwnerMemoryAgeSpecialistTest.kt:12)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.correctionUsesExistingLedgerChronologyAndRevocationNeverResurrectsOldAge(OwnerMemoryAgeSpecialistTest.kt:31)
+2) confirmedNamedAgeGetsExactValueAndOriginalMemoryIdReadOnly(at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest)
+java.lang.AssertionError: Dazu finde ich in meinem Gedächtnis:
+
+Deine Tochter Klara ist 29. (gespeichert: „Meine Tochter Klara ist 29.“)
+(Bestätigte Nutzererinnerung)
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.confirmedNamedAgeGetsExactValueAndOriginalMemoryIdReadOnly$lambda$2(OwnerMemoryAgeSpecialistTest.kt:21)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.withCore(OwnerMemoryAgeSpecialistTest.kt:12)
+	at at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest.confirmedNamedAgeGetsExactValueAndOriginalMemoryIdReadOnly(OwnerMemoryAgeSpecialistTest.kt:15)
+
+FAILURES!!!
+Tests run: 6,  Failures: 2
+

@@ -1,0 +1,103 @@
+[
+  {
+    "pr": 327,
+    "head": "integration/continuum-ouroboros-ewm2-proof-20261101",
+    "head_sha": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+    "base": "fix/continuum-ewm2-archive-plural-20261101",
+    "base_sha": "2ffe3de940c932a5408b5b6235b4554726cf04ea",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/327",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 328,
+    "head": "release/continuum-local-0.3.35-20261101",
+    "head_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+    "base": "integration/continuum-ouroboros-ewm2-proof-20261101",
+    "base_sha": "0c104e5d83e94096ab634685bf6184f753fc4e72",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/328",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 329,
+    "head": "research/continuum-superki-architecture-proof-20261101",
+    "head_sha": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+    "base": "release/continuum-local-0.3.35-20261101",
+    "base_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/329",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 330,
+    "head": "research/continuum-evidence-span-natural-entities-20261101",
+    "head_sha": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+    "base": "release/continuum-local-0.3.35-20261101",
+    "base_sha": "081065b7d3628bf6a51239360f1e377f20df3fff",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/330",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 331,
+    "head": "research/continuum-jarvis-evolution-20261101",
+    "head_sha": "cc9a56b152afb1a8359b768417cf395583db2027",
+    "base": "research/continuum-evidence-span-natural-entities-20261101",
+    "base_sha": "3fdf244ea6f5f3e1386e0653538d06daddc616ad",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/331",
+    "ancestor_of_code_6e1825b0": false,
+    "only_missing_commit_doc_restored_byte_identical": true,
+    "source_ancestor_8417": true
+  },
+  {
+    "pr": 332,
+    "head": "research/continuum-live-dialog-routing-20261101",
+    "head_sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+    "base": "research/continuum-m8-render-signed-release-20261031",
+    "base_sha": "8417f08b8c926c7b643c6ded979d0c501e3a306f",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/332",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 333,
+    "head": "research/continuum-jarvis-04-architecture-implementation-20261101",
+    "head_sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+    "base": "research/continuum-live-dialog-routing-20261101",
+    "base_sha": "27bdfccda95d870b70529f93716a861c054eebb5",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/333",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 334,
+    "head": "research/continuum-fable51-genesis-20261101",
+    "head_sha": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+    "base": "research/continuum-jarvis-04-architecture-implementation-20261101",
+    "base_sha": "cc878fb9e2e8374805648a12455f6b08fbce00e0",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/334",
+    "ancestor_of_code_6e1825b0": true
+  },
+  {
+    "pr": 335,
+    "head": "research/continuum-sol61-post-fable-20261101",
+    "head_sha": "6e1825b09ffca1c811414f9eeb7790607ef4c448",
+    "base": "research/continuum-fable51-genesis-20261101",
+    "base_sha": "702b57ae5c2724a819048bcc3b7775272b48f2b3",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/335",
+    "ancestor_of_code_6e1825b0": true
+  }
+]

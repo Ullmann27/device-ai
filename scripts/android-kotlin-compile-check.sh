@@ -101,7 +101,7 @@ external=""; own=""
 while IFS= read -r line; do
   [ -z "$line" ] && continue
   file=${line%%:*}; file=${file#"$root/"}
-  if printf '%s\n' "$unavailable" | grep -qxF "$file"; then external+="$line"$'\n'; else own+="$line"$'\n'; fi
+  if grep -qxF "$file" <<< "$unavailable"; then external+="$line"$'\n'; else own+="$line"$'\n'; fi
 done <<< "$errors"
 echo "sources=${#sources[@]} kotlinc_exit=$status"
 echo "errors in files that need LiteRT-LM (Google Maven, unavailable here): $(printf '%s' "$external" | grep -c . || true)"

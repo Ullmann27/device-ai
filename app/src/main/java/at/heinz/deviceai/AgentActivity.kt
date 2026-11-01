@@ -5424,11 +5424,8 @@ class AgentActivity : Activity() {
     private fun restoreInternetMode() {
         val prefs = getSharedPreferences("continuum-internet", MODE_PRIVATE)
         val stored = prefs.getString("mode", null)
-        // Owner requested continuous public research by default. An explicit OFF
-        // remains OFF, including after upgrades; no private chat is uploaded.
-        val restored = if (stored == "OFF")
-            at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-        else at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+        // Keep the established fresh-install default, but never upgrade a stored ASK/OFF.
+        val restored = at.heinz.deviceai.cognitive.InternetConsentPolicy.restoredMode(stored)
         if (stored != restored.name) {
             if (!prefs.edit().putString("mode", restored.name).commit()) return
         }
@@ -5950,20 +5947,29 @@ class AgentActivity : Activity() {
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
 
-    private fun createToolGate() = ToolGate(
+    private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null) = ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
-            if(request.name in setOf("web_search","web_read")) {
-                val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
-                val budget=ResearchBudgetPolicy.forMode(session.mode)
-                val runner=ApprovedWebResearchToolRunner(session,
-                    at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
-                    HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
-                        totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
-                runOnUiThread { modelWebActive = true; refreshHologramState() }
-                try { runner.execute(request).also { session.checkAuthorized() } }
-                finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
-            } else DeviceToolExecutorRunner(executor).execute(request)
+            at.heinz.deviceai.cognitive.NetworkTurnConstraint.withOriginalTurn(ownerTurn.orEmpty(), request.name) {
+                if(request.name in setOf("web_search","web_read")) {
+                    // A fresh session minted after revocation cannot rescue an old turn.
+                    // Check the epoch on BOTH sides of capturing the immutable session.
+                    val session = if (consentRevisionAtTurnStart == null)
+                        approvedModelWebSession.getAndSet(null) ?: error("Keine einmalige Internetfreigabe")
+                    else at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        consentRevisionAtTurnStart, internetConsent::revision) {
+                        approvedModelWebSession.getAndSet(null) ?: error("Keine einmalige Internetfreigabe")
+                    }
+                    val budget=ResearchBudgetPolicy.forMode(session.mode)
+                    val runner=ApprovedWebResearchToolRunner(session,
+                        at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
+                        HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
+                            totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
+                    runOnUiThread { modelWebActive = true; refreshHologramState() }
+                    try { runner.execute(request).also { session.checkAuthorized() } }
+                    finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
+                } else DeviceToolExecutorRunner(executor).execute(request)
+            }
         },receiptStore=receiptStore
     )
 
@@ -6152,8 +6158,8 @@ class AgentActivity : Activity() {
         val internetModeAtTurnStart = internetConsent.mode
         val internetRevisionAtTurnStart = internetConsent.revision()
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
-        val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall
-            .safeHistory(localConversationContext.render(localSessionId))
+        val ownerForbidsExternalNetwork =
+            at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(text)
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
@@ -6209,10 +6215,17 @@ class AgentActivity : Activity() {
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()
-                val boundedInternetMode =
+                val boundedInternetMode = if (ownerForbidsExternalNetwork)
+                    at.heinz.deviceai.cognitive.InternetAccessMode.OFF else
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
                         internetModeAtTurnStart, internetConsent.mode,
                         internetConsent.revision() == internetRevisionAtTurnStart)
+                // Rebuild per model call/retry: a consent revocation must not reuse a
+                // research frame rendered before the current bounded access state.
+                val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
+                    localConversationContext.render(localSessionId, internetMode = boundedInternetMode,
+                        ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
+                        onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
                     "Internetmodus: ${boundedInternetMode.name}. " + when(boundedInternetMode) {
                         at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Kein Webzugriff; antworte offline und benenne fehlende aktuelle Belege."
@@ -6283,9 +6296,12 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
-                var generation = generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                    if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
-                    else localRuntime.respondToTools(toolResponses, callback)
+                var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                    internetRevisionAtTurnStart, internetConsent::revision) {
+                    generateLocal(cancellation,turnTrace,prompt.length) { callback ->
+                        if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
+                        else localRuntime.respondToTools(toolResponses, callback)
+                    }
                 }
                 generation.failure?.let { error(it) }
                 var rejectionRecoveries = 0
@@ -6294,7 +6310,10 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = generateLocal(cancellation,turnTrace) { callback -> localRuntime.respondToTools(rejected, callback) }
+                    generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                        internetRevisionAtTurnStart, internetConsent::revision) {
+                        generateLocal(cancellation,turnTrace) { callback -> localRuntime.respondToTools(rejected, callback) }
+                    }
                     generation.failure?.let { error(it) }
                 }
                 AgentModelOutput(
@@ -6305,7 +6324,7 @@ class AgentActivity : Activity() {
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { memoryStore.all() + ownerFactMemories() },
-            toolGate = createToolGate(),
+            toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart),
             evaluator = AgentEvaluator { response, _ ->
                 LocalDialogueQualityGate.evaluate(
                     request = text,
@@ -6321,6 +6340,10 @@ class AgentActivity : Activity() {
                 cancellation.throwIfCancelled()
                 if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
                 val isWeb = proposal.toolName in setOf("web_search", "web_read")
+                if (isWeb && (ownerForbidsExternalNetwork ||
+                    internetConsent.revision() != internetRevisionAtTurnStart ||
+                    internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF))
+                    return@AgentToolApprovalProvider AgentToolApproval(false)
                 if (isWeb && modelWebCalls >= 2) return@AgentToolApprovalProvider AgentToolApproval(false)
                 if (isWeb) modelWebCalls++
                 val latch = CountDownLatch(1)
@@ -6351,8 +6374,11 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching {
-                orchestrator.run(agentTask).also {
-                    modelWebSessions.forEach { session -> session.checkAuthorized() }
+                at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
+                    internetRevisionAtTurnStart, internetConsent::revision) {
+                    orchestrator.run(agentTask).also {
+                        modelWebSessions.forEach { session -> session.checkAuthorized() }
+                    }
                 }
             }
             runOnUiThread {
@@ -6363,6 +6389,10 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
+                    if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                        addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
+                        return@onSuccess
+                    }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess

@@ -1,0 +1,32 @@
+{
+  "testedCodeAndHarnessCommit": "6906220ec86cd635a9a67181c9363361034d29ea",
+  "appCodeCommit": "6e1825b09ffca1c811414f9eeb7790607ef4c448",
+  "status": "PASS_HOST_ONLY",
+  "junitTests": 1529,
+  "junitClasses": 278,
+  "checksPrograms": 4,
+  "android": "REQUIRES_SEPARATE_EXACT_SHA_RENDER",
+  "device": "DEVICE_NOT_RUN",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "68b9af70237483fed3bdc67f4af65829d8112c5a87f7d01102c19789c76bfd12",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt": "3c05f03e1e62fac41f240636ff7de0fabebeff1de23e0ad4cb799d2d453b0953",
+    "app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt": "15366b8c4223e6809c3d65bd12313303f1908bfe8429adc52a23ce4cf1a870de",
+    "app/src/test/java/at/heinz/deviceai/learning/OwnerMemoryAgeSpecialistTest.kt": "f440df508c61252e82f8801bb3be655068b4279fa94663525127bc4ad800833b",
+    "app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt": "99e835003f3cfc99fb977023c0bdc6894da5d39574c9ca06bbe11597abc40e7a",
+    "scripts/android-kotlin-compile-check.sh": "c677acf783e85fac229de30dc57ad49459ba0c81d93695c49ae05e9e0e090bef",
+    "scripts/android-kotlin-unit-check.sh": "69c79884287d1149eef538c9309f6d542ac300968f94d23fd061b470c3095b0f"
+  },
+  "artifactSha256": {
+    "harness-node.tap": "3f8a583b3246514f3342b587ffd4f8341a450ee444358799d53b1c9681d29543",
+    "kotlinc-test.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-check.txt": "da090e493d7fae436c9b4accd253fdb5334bd2e169452c197f9d334511fcc411",
+    "final-all-node.tap": "37cc3bbb423bfe8c030aa8bcfcaaa42cc685d7b6e3b0332b43fea38d65d4521e",
+    "kotlinc-main.log": "892bc120a920f5a7b875b89960c6eacb4a66c1f058c4e708ef25f027bbe803f6",
+    "checks.txt": "9e0eff0ace7d1ab242e50d19f425c2cebd06896e10a1c37d50afb2b713e06fae",
+    "junit.txt.gz": "60b05d4b95653f73bc416b9b858ee61c54c3f5186a9b32f73e7e5a77ec24100d",
+    "SUMMARY.txt": "7a7d5204498c7ae9bff71df460ef9434d872d563ae64142039eb28363b9ee5d6",
+    "junit.txt": "47e4737a0acaccba1aad934089389b32091fabea6fa4d8600081c0d145fc8b30"
+  },
+  "rawJunit": "junit.txt.gz is a lossless archive of original stdout; readable junit.txt only normalizes final blank lines for git whitespace gate.",
+  "originalJunitSha256": "927c974b251e70e193f9fbc5445e581f8b6cf46830cd5f23445dfe3b6e77dc49"
+}

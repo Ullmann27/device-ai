@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "849c19f3d1eec24e7e9ebe5b3a880d190ee7927b",
+  "serviceId": "srv-dbjktl5g1s2s7381v030",
+  "deployId": "dep-dbjlbjmc6qcc73bsas5g",
+  "status": "build_failed",
+  "createdAt": "2026-11-01T15:07:58Z",
+  "finishedAt": "2026-11-01T15:08:31Z",
+  "failure": "Node static v32 contract still required inline if (stored == \"OFF\") after consent restoration moved to existing InternetConsentPolicy helper. Before Gradle, not an Android compile failure. Reproduced local 3/4; replaced inline-shape assertion with actual caller + explicit OFF/ASK/ALWAYS/default-unknown mapping checks. No Kotlin change, no skipped tests. Full contract rerun40/40."
+}

@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: actual host classifier preserves membership under pipefail and an early grep match
+ok 1 - actual host classifier preserves membership under pipefail and an early grep match
+  ---
+  duration_ms: 105.980758
+  type: 'test'
+  ...
+# Subtest: signed-release claims remain explicitly unverified after successful unsigned QA
+ok 2 - signed-release claims remain explicitly unverified after successful unsigned QA
+  ---
+  duration_ms: 1076.925765
+  type: 'test'
+  ...
+# Subtest: wrong commit, version or release-claim metadata cannot pass
+ok 3 - wrong commit, version or release-claim metadata cannot pass
+  ---
+  duration_ms: 10.19756
+  type: 'test'
+  ...
+# Subtest: missing test transcript and failed JUnit block the architectural receipt
+ok 4 - missing test transcript and failed JUnit block the architectural receipt
+  ---
+  duration_ms: 83.452972
+  type: 'test'
+  ...
+# Subtest: a failed Gradle transcript never becomes a proof
+ok 5 - a failed Gradle transcript never becomes a proof
+  ---
+  duration_ms: 3.749316
+  type: 'test'
+  ...
+# Subtest: rejects skipped required JUnit suite and spoofed test metadata
+ok 6 - rejects skipped required JUnit suite and spoofed test metadata
+  ---
+  duration_ms: 77.769136
+  type: 'test'
+  ...
+# Subtest: rejects fullname and forged error attributes
+ok 7 - rejects fullname and forged error attributes
+  ---
+  duration_ms: 203.341791
+  type: 'test'
+  ...
+# Subtest: rejects red or skipped Node TAP even with present reports
+ok 8 - rejects red or skipped Node TAP even with present reports
+  ---
+  duration_ms: 4.466147
+  type: 'test'
+  ...
+# Subtest: actual backend QA command emits machine-readable TAP on modern Node
+ok 9 - actual backend QA command emits machine-readable TAP on modern Node
+  ---
+  duration_ms: 311.78609
+  type: 'test'
+  ...
+# Subtest: actual APK identity must match source receipt instead of trusting STATUS metadata
+ok 10 - actual APK identity must match source receipt instead of trusting STATUS metadata
+  ---
+  duration_ms: 19.188802
+  type: 'test'
+  ...
+# Subtest: owner autonomy defaults to bounded research and proposals with durable stop
+ok 11 - owner autonomy defaults to bounded research and proposals with durable stop
+  ---
+  duration_ms: 1.867842
+  type: 'test'
+  ...
+# Subtest: emergency stop reaches all three jobs and is exposed in the real app
+ok 12 - emergency stop reaches all three jobs and is exposed in the real app
+  ---
+  duration_ms: 6.648882
+  type: 'test'
+  ...
+# Subtest: public internet restores explicit owner OFF and ASK through the actual consent policy
+ok 13 - public internet restores explicit owner OFF and ASK through the actual consent policy
+  ---
+  duration_ms: 3.853623
+  type: 'test'
+  ...
+# Subtest: partner status is based on DNA and durable run evidence, not simulated agents
+ok 14 - partner status is based on DNA and durable run evidence, not simulated agents
+  ---
+  duration_ms: 0.770608
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2689.669877

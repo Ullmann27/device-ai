@@ -7,6 +7,29 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NetworkTurnConstraintTest {
+    @Test fun originalOfflineTurnCannotBeBypassedByARewrittenModelQuery() {
+        var executions = 0
+        val delegate = at.heinz.deviceai.ToolRunner { executions++; "executed" }
+        for (original in listOf("Antworte ohne Internetrecherche", "Nur lokal antworten")) {
+            for (tool in listOf("web_search", "web_read")) {
+                val rewritten = at.heinz.deviceai.ToolCallRequest("rewritten-$tool", tool,
+                    if (tool == "web_search") mapOf("query" to "Wetter Wien") else mapOf("url" to "https://example.com/weather"))
+                org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+                    NetworkTurnConstraint.withOriginalTurn(original, rewritten.name) { delegate.execute(rewritten) }
+                }
+            }
+        }
+        org.junit.Assert.assertEquals(0, executions)
+        val local = at.heinz.deviceai.ToolCallRequest("local", "get_battery_info", emptyMap())
+        org.junit.Assert.assertEquals("executed", NetworkTurnConstraint.withOriginalTurn("Nur lokal antworten", local.name) {
+            delegate.execute(local)
+        })
+        val web = at.heinz.deviceai.ToolCallRequest("web", "web_search", mapOf("query" to "Wetter Wien"))
+        org.junit.Assert.assertEquals("executed", NetworkTurnConstraint.withOriginalTurn("Bitte recherchiere das Wetter", web.name) {
+            delegate.execute(web)
+        })
+        org.junit.Assert.assertEquals(2, executions)
+    }
     private val negative = listOf(
         "Mara hat drei Würfel. Antworte ohne Internetrecherche.",
         "Erkläre mir maschinelles Lernen ohne Internet.",
