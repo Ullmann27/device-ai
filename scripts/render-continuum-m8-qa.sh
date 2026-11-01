@@ -105,6 +105,14 @@ node --test   scripts/continuum-jarvis-mission-control-contract.test.mjs   scrip
 # The isolated QA mode forbids APK assembly and enforces a distinct .qa package.
 gradle --no-daemon --max-workers=2 --console=plain   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'   -Pkotlin.compiler.execution.strategy=in-process   -PdeviceAiMentorPreview=true   -PcontinuumLocalStandaloneQa=true   -PcontinuumStandaloneVersionCode=35   :app:testDebugUnitTest :app:lintDebug   > continuum-m8-render-qa/GRADLE-QA.txt 2>&1 || {
     tail -n 180 continuum-m8-render-qa/GRADLE-QA.txt
+    # Failed Render builds do not publish their local JUnit XML artifacts.
+    # Emit ONLY failure type/message/test-id from the independently generated
+    # test report; never change, skip or weaken the frozen acceptance tests.
+    if [[ -d app/build/test-results/testDebugUnitTest ]]; then
+      echo 'CONTINUUM_ANDROID_JUNIT_FAILURE_DETAILS_START'
+      find app/build/test-results/testDebugUnitTest -maxdepth 1 -name 'TEST-*.xml' -type f -exec grep -H -B 2 -A 3 '<failure' {} + | head -n 85 || true
+      echo 'CONTINUUM_ANDROID_JUNIT_FAILURE_DETAILS_END'
+    fi
     die 'Android QA compilation, unit test or lint failed'
   }
 tail -n 60 continuum-m8-render-qa/GRADLE-QA.txt
