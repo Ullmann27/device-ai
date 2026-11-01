@@ -14,6 +14,11 @@ object LocalDialogueQualityGate {
     private val sentenceBoundary = Regex("(?<=[.!?])\\s+")
     private val separators = Regex("[^\\p{L}\\p{N}]+")
     private val whitespace = Regex("\\s+")
+    /** Canary strings of internal prompt frames; the model reproducing one means template completion, not an answer. */
+    internal val INTERNAL_FRAMES = listOf(
+        "UNTRUSTED EVIDENCE DATA", "<<<UNTRUSTED>>>", "CLAIM GRAPH:",
+        "EXTERNE RECHERCHEDATEN (", "ENDE EXTERNE RECHERCHEDATEN", "GESPRÄCHSDATEN —", "ENDE GESPRÄCHSDATEN"
+    )
 
     fun evaluate(
         request: String,
@@ -28,10 +33,12 @@ object LocalDialogueQualityGate {
         if (candidate.length > 20_000) {
             return Evaluation(false, 0.1, "Antwort übermäßig lang. Kürze sie und beantworte die Frage direkt.")
         }
-        // A leaked internal research placeholder is not a useful chat answer.
-        // Only flag it when the owner did not explicitly ask about that literal.
-        if (!request.contains("UNTRUSTED EVIDENCE DATA", ignoreCase = true) &&
-            candidate.contains("UNTRUSTED EVIDENCE DATA", ignoreCase = true)) {
+        // A leaked internal prompt frame (research template, evidence block, dialogue frame) is not
+        // a chat answer. Only flag a frame the owner did not explicitly ask about.
+        val leaked = INTERNAL_FRAMES.firstOrNull { frame ->
+            !request.contains(frame, ignoreCase = true) && candidate.contains(frame, ignoreCase = true)
+        }
+        if (leaked != null) {
             return Evaluation(false, 0.1,
                 "Interner Recherche-Platzhalter statt Antwort ausgegeben. " +
                     "Beantworte die aktuelle Frage direkt oder benenne fehlende Informationen.")

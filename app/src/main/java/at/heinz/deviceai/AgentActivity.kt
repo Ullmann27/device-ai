@@ -5643,6 +5643,7 @@ class AgentActivity : Activity() {
             }
         }
         val researchStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+        val researchSessionId = sessionId
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
         val discovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
@@ -5714,7 +5715,7 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
-                        .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
+                        .joinToString("\n") { at.heinz.deviceai.cognitive.ResearchDialogueHandoff.citationLine(it) }
                     val body = buildString {
                         append(if (dossier.sources.isEmpty()) ContinuumUiCopy.emptyResearch(dossier.partialReason)
                             else (dossier.synthesis?.text ?: "Es wurde keine Zusammenfassung erstellt.").take(4600))
@@ -5738,6 +5739,16 @@ class AgentActivity : Activity() {
                     }
                     discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
+                    // B1: the research result becomes follow-up context for the local model (same brain,
+                    // same session) – typed as external, unverified data, never an owner fact.
+                    at.heinz.deviceai.cognitive.ResearchDialogueHandoff
+                        .digest(session.call.question, dossier, researchSynthesisRoute.get(), System.currentTimeMillis())
+                        ?.let { digest ->
+                            if (sessionId == researchSessionId) {
+                                localConversationContext.recordResearch(sessionId, digest)
+                                addToolActivity("RESEARCH · Ergebnis als Gesprächskontext übernommen (ungeprüft)")
+                            }
+                        }
                     val queue = WebLearningInbox.candidates(dossier)
                     if (queue.isNotEmpty()) {
                         addAssistantMessage("Ich habe ${queue.size} Quellen-Aussagen als Lernkandidaten erkannt. " +
