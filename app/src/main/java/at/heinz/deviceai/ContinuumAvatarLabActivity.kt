@@ -130,13 +130,14 @@ class ContinuumAvatarLabActivity : Activity() {
             loadPortrait(Uri.parse(it))
         }
         voice = TextToSpeech(this) { status ->
-            ready = status == TextToSpeech.SUCCESS
-            if (ready) {
-                voice?.language = Locale.GERMAN
-                installListener()
+            handler.post {
+                if (isDestroyed) return@post
+                ready = status == TextToSpeech.SUCCESS &&
+                    (voice?.setLanguage(Locale.GERMAN) ?: TextToSpeech.LANG_NOT_SUPPORTED) >= TextToSpeech.LANG_AVAILABLE
+                if (ready) installListener()
+                stateText.text = if (ready) "Lokale Sprachausgabe bereit. Keine Cloud-Verbindung."
+                    else "Keine lokale deutsche TTS-Stimme verfügbar. Sprachengine prüfen."
             }
-            stateText.text = if (ready) "Lokale Sprachausgabe bereit. Keine Cloud-Verbindung."
-                else "Keine lokale TTS-Stimme verfügbar. Sprachengine prüfen."
         }
     }
 
@@ -213,7 +214,10 @@ class ContinuumAvatarLabActivity : Activity() {
                 if (id != null && id == utteranceId && audio != null) signal.append(id, audio)
             }
             override fun onRangeStart(id: String?, start: Int, end: Int, frame: Int) {
-                if (id != null && id == utteranceId) signal.anchor(id, frame, SystemClock.elapsedRealtime())
+                if (id != null && id == utteranceId) {
+                    signal.anchor(id, frame, SystemClock.elapsedRealtime())
+                    runOnUiThread { if (id == utteranceId) face.onSpeechRange() }
+                }
             }
             override fun onDone(id: String?) = finish(id)
             @Deprecated("Required for older synthesis implementations")
@@ -281,6 +285,7 @@ class ContinuumAvatarLabActivity : Activity() {
         private var active = false
         private var talking = false
         private var energy = 0f
+        private var lastSpeechRangeMs = 0L
 
         fun setPortrait(value: Bitmap) {
             if (portrait !== value) portrait?.recycle()
@@ -289,10 +294,20 @@ class ContinuumAvatarLabActivity : Activity() {
         }
         fun toggleStyle() { hologram = !hologram; invalidate() }
         fun setActive(value: Boolean) { active = value; if (value) invalidate() }
-        fun setSpeaking(value: Boolean) { talking = value; invalidate() }
+        fun setSpeaking(value: Boolean) {
+            talking = value
+            if (!value) { energy = 0f; lastSpeechRangeMs = 0L }
+            invalidate()
+        }
+        fun onSpeechRange() { lastSpeechRangeMs = SystemClock.uptimeMillis() }
         fun setAudio(value: Float) {
-            val level = if (value.isFinite()) value.coerceIn(0f, 1f) else 0f
-            energy += (level - energy) * .4f
+            val measured = if (value.isFinite()) value.coerceIn(0f, 1f) else 0f
+            // Fallback for TTS engines that provide word ranges but no PCM chunks.
+            // This is coarse word-level motion, NOT precise phoneme synchronization.
+            val elapsed = (SystemClock.uptimeMillis() - lastSpeechRangeMs).coerceAtLeast(0L)
+            val wordMotion = if (talking && measured == 0f && elapsed < 500L)
+                (.10f + .18f * abs(sin(elapsed / 75f))) else 0f
+            energy += (max(measured, wordMotion) - energy) * .4f
             invalidate()
         }
         override fun onDraw(canvas: Canvas) {
