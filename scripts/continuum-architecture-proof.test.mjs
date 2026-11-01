@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, unlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, unlinkSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import {spawnSync} from 'node:child_process';
 import { dirname, join } from 'node:path';
-import { collectArchitectureProof, REQUIRED_JUNIT, REQUIRED_LOGS } from './continuum-architecture-proof.mjs';
+import { collectArchitectureProof, REQUIRED_JUNIT, REQUIRED_LOGS, parseNodeTestSummary } from './continuum-architecture-proof.mjs';
 
 const SHA = 'b'.repeat(40);
 const VERSION = 36;
@@ -101,4 +102,21 @@ test('rejects red or skipped Node TAP even with present reports',t=>{
   assert.throws(()=>collectArchitectureProof({root:f.root,sha:SHA,versionCode:VERSION,runId:RUN_ID}),/Node TAP failed/);
   f.put('continuum-m8-render-qa/NODE-TESTS.txt',TAP.replace('# skipped 0','# skipped 1'));
   assert.throws(()=>collectArchitectureProof({root:f.root,sha:SHA,versionCode:VERSION,runId:RUN_ID}),/Node TAP failed/);
+});
+
+
+test('actual backend QA command emits machine-readable TAP on modern Node', t => {
+  const root = mkdtempSync(join(tmpdir(), 'continuum-backend-reporter-'));
+  t.after(() => rmSync(root, {recursive:true, force:true}));
+  mkdirSync(join(root, 'test'));
+  writeFileSync(join(root, 'package.json'), JSON.stringify({scripts:{test:'node --test test/*.test.js'}}));
+  writeFileSync(join(root, 'test', 'minimal.test.js'), "require('node:test')('fixture',()=>{});\n");
+  const script = readFileSync(new URL('./render-continuum-m8-qa.sh', import.meta.url), 'utf8');
+  const command = /npm run check\r?\n\s+([^\r\n]+)/.exec(script)?.[1];
+  assert.ok(command, 'backend test invocation exists');
+  const env = {...process.env};
+  delete env.NODE_TEST_CONTEXT;
+  const run = spawnSync('bash', ['-c',command], {cwd:root,env,encoding:'utf8',timeout:10000});
+  assert.equal(run.status,0,run.stderr);
+  assert.deepEqual(parseNodeTestSummary(run.stdout),{tests:1,pass:1,fail:0,cancelled:0,skipped:0,todo:0});
 });

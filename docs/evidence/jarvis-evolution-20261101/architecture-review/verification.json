@@ -1,0 +1,51 @@
+{
+  "source_sha": "3064ceb85a84b24dd1d2a4d36c9059fccbf68d24",
+  "node_local": "v24.19.0",
+  "node_render": "v26.13.0",
+  "source_files_verified_byte_identical": [
+    {
+      "path": "scripts/continuum-architecture-proof.mjs",
+      "sha256": "3d22b35749ee7084e2ea5098c3673bc9403f21a144b330b32d85a6a3972bf48e",
+      "git_blob": "1966a540643837958fc8ee534fb4c3a2425bba0c"
+    },
+    {
+      "path": "scripts/continuum-architecture-proof.test.mjs",
+      "sha256": "817be87fa296d27a831e96cd46b30be24761bbcdac168f66af24a3dde8a71415",
+      "git_blob": "eb69adc75f6e813bb187045f459dbe3f2f777e5e"
+    },
+    {
+      "path": "scripts/continuum-junit-validator.py",
+      "sha256": "6578022ce3e3cf25472b75861b67a9f182ea458ef978305399c539d78205db2e",
+      "git_blob": "82d972dd5c7cadd649f39637dcacb7cecb9d4164"
+    },
+    {
+      "path": "scripts/render-continuum-m8-qa.sh",
+      "sha256": "e3473579ecc46f15023602a49d86a03b8e70525fc2117b74f4cf7980ec050ea6",
+      "git_blob": "d73fe89a0637cd477709b011e878a0c545b0c066"
+    },
+    {
+      "path": "backend/package.json",
+      "sha256": "d3bdfbe3340e509c7b62769c43291117efeba62ecafeb269dd0d0d55332139ca",
+      "git_blob": "c3c48ff9233f7d5668e8e545d5f985bb230f0ee4"
+    }
+  ],
+  "results": {
+    "npm_check_exit": 0,
+    "backend_original_exit": 0,
+    "backend_original_parser": "REJECTED_MISSING_TAP_SUMMARY",
+    "backend_fixed_exit": 0,
+    "backend_fixed_summary": {
+      "tests": 64,
+      "pass": 64,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "unchanged_proof_regression": "7/7_PASS",
+    "producer_regression_old": "1_FAIL_EXPECTED_RED",
+    "producer_regression_fixed": "1_PASS_GREEN"
+  },
+  "junit_xml_actual_failed_build": "NOT_AVAILABLE_NOT_REACHED_BY_PROOF",
+  "shared_repository_edits": false
+}
