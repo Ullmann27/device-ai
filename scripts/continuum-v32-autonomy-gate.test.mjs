@@ -28,9 +28,14 @@ test('emergency stop reaches all three jobs and is exposed in the real app',()=>
   assert.match(partner,/ContinuumAutonomyControl\.mayPropose/);
 });
 
-test('public internet defaults to owner-requested mode but explicit off survives upgrades',()=>{
+test('public internet restores explicit owner OFF and ASK through the actual consent policy',()=>{
   const activity=code('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
-  assert.match(activity,/if \(stored == "OFF"\)/);
+  const policy=code('app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt');
+  assert.match(activity,/InternetConsentPolicy\.restoredMode\(stored\)/);
+  assert.match(policy,/"OFF" -> InternetAccessMode\.OFF/);
+  assert.match(policy,/"ASK" -> InternetAccessMode\.ASK/);
+  assert.match(policy,/"ALWAYS_ON", null -> InternetAccessMode\.ALWAYS_ON/);
+  assert.match(policy,/else -> InternetAccessMode\.OFF/);
   assert.match(activity,/InternetAccessMode\.ALWAYS_ON/);
   assert.match(activity,/initial_public_study_migration_done/);
   assert.match(activity,/PublicKnowledgeTopicRouter\.topic/);
