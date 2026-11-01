@@ -96,7 +96,8 @@ class ContinuumMemoryDialogue(private val directory:File) {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
             selected.isEmpty() -> NO_EVIDENCE_ANSWER
             else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
-                "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
+                "\n\n"+(if(it.kind=="Bestätigte Nutzererinnerung")OwnerMemoryPerspective.display(it.text) else it.text.take(250))+
+                    "\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
         }.take(1000)
         val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty(),contextReset)

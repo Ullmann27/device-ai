@@ -10,9 +10,9 @@ out=${1:?isolated output directory}
 mkdir -p "$out"
 main=(LearningSnapshot TinyContextDecoder TrainableSubwordEncoder ContinuumPairedEncoderBinding
   ContinuumAtomicPairedBundleStore ContinuumDecoderBridge DecoderGenerativeGate
-  ContinuumLearningExperience ContinuumOrthographyProbe ContinuumMemoryDialogue OwnerAttributeEvidenceScope)
+  ContinuumLearningExperience ContinuumOrthographyProbe ContinuumMemoryDialogue OwnerAttributeEvidenceScope ContinuumEvidenceWindow OwnerMemoryPerspective)
 tests=(DecoderGenerativePromotionTest DecoderGenerativeGateTest ContinuumDecoderBridgeTest
-  TinyContextDecoderTest ContinuumOwnerRoleDialogueTest TrainableSubwordEncoderTest)
+  TinyContextDecoderTest ContinuumOwnerRoleDialogueTest TrainableSubwordEncoderTest ContinuumEvidenceWindowTest OwnerMemoryPerspectiveTest)
 files=()
 classes=()
 for name in "${main[@]}"; do files+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt"); done

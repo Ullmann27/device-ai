@@ -58,6 +58,15 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
 
     data class Hit(val source:SourceRecord,val score:Int)
 
+    /** Resolve one indexed source to its complete verified stored excerpt.
+     * IDs never become paths supplied by web text. No new store or revision.
+     */
+    fun readSource(id:String):SourceRecord? = transaction {
+        require(id.matches(Regex("[a-f0-9]{64}")))
+        val file=File(root,"$id.rec")
+        if(!file.exists())null else runCatching { readFile(file) }.getOrNull()
+    }
+
     /** Caller must confirm the licence/usage policy before import. */
     fun save(kind:Kind,title:String,url:String,attribution:String,
              text:String,collectedAt:Long=System.currentTimeMillis(),

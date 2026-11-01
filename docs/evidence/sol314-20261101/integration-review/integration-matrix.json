@@ -1,0 +1,887 @@
+{
+  "schema": "continuum.integration_review.v1",
+  "review_time_utc": "2026-11-01T03:57:11.708556+00:00",
+  "repository": "Ullmann27/device-ai",
+  "release_sha": "97b5b9006f8c60f1a6fc4fb10981894330c55fe4",
+  "reviewed_committed_candidate_sha": "8c40d111c557e9ebb0d19f807a098c1f5d196966",
+  "current_worktree_snapshot": [
+    "M app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    " M app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+    " M app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt",
+    " M app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+    " M app/src/test/java/at/heinz/deviceai/learning/ContinuumBrainBridgeTest.kt",
+    " M app/src/test/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchiveTest.kt",
+    " M scripts/continuum-sol314-host-check.sh",
+    "?? app/src/main/java/at/heinz/deviceai/learning/ContinuumEvidenceWindow.kt",
+    "?? app/src/test/java/at/heinz/deviceai/learning/ContinuumEvidenceWindowTest.kt",
+    "?? docs/evidence/sol314-20261101/independent-review/"
+  ],
+  "method": [
+    "Fresh GitHub get_pr_info/list_pr_changed_filenames for all 15 requested PRs",
+    "57 GitHub fetch_pr_file_patch results covering every app/src/main changed file and selected research tests",
+    "Local git merge-base/ancestry and exact blob comparison against pinned release and candidate",
+    "Every local app/src/main changed-file list checked equal to actual GitHub PR file list",
+    "Read-only production callers and relevant runtime hunk review; no software source edits"
+  ],
+  "verification_scope": "SOURCE_AND_ANCESTRY_REVIEW_ONLY; no model, Android, JVM, Node application tests, APK, signing or device claims from this reviewer",
+  "open_pr_is_not_missing_source": true,
+  "matrix": [
+    {
+      "pr": 285,
+      "url": "https://github.com/Ullmann27/device-ai/pull/285",
+      "title": "[DRAFT] M8: echte Agent-Evidenzgrenze, sicherer Chat-Kontext und lokaler Modelladapter",
+      "state": "open",
+      "base": "research/continuum-jarvis-neuro-integration-20261031",
+      "base_sha": "caaf69326aa0cecbb40a051064dd492ec4e40f1a",
+      "head": "research/continuum-m8-operational-model-20261031",
+      "head_sha": "861d2faed694fc1869050cf5ed81a593701801f5",
+      "actual_diff_merge_base": "caaf69326aa0cecbb40a051064dd492ec4e40f1a",
+      "head_is_release_ancestor": true,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_ANCESTRY_PARTLY_UNCONNECTED",
+      "represented": [
+        "861d2faed694fc1869050cf5ed81a593701801f5 is a release ancestor",
+        "AgentContextFallback.kt, BoundedAgent.kt and ContinuumLocalAgentModel.kt are byte-identical to the PR head"
+      ],
+      "runtime": "AgentActivity.runLocal uses AgentContextFallback.render and BoundedAgentOrchestrator with an inline AgentModel. The standalone ContinuumLocalAgentModel has no production caller.",
+      "gate": "Existing ToolGate, fresh tool-evidence requirement, explicit owner approval. Adapter is source-present only.",
+      "action": "Do not reintegrate the branch or substitute the less featureful standalone adapter for the current Activity callback.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "999aac89d82d93d6d0b037078b072f8616c96a4c",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentContextFallback.kt",
+          "head_blob": "c92171ce74bff28adf585a4d0be8bb400a6cef6b",
+          "release_blob": "c92171ce74bff28adf585a4d0be8bb400a6cef6b",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+          "head_blob": "f2d0cca757ac0ce241ecba5fc31424a7820efec8",
+          "release_blob": "f2d0cca757ac0ce241ecba5fc31424a7820efec8",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+          "head_blob": "f0d65194eccb8f8739f4b0f22028898034682029",
+          "release_blob": "f0d65194eccb8f8739f4b0f22028898034682029",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [
+        "scripts/render-continuum-m8-qa.sh"
+      ],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "scripts/render-continuum-m8-qa.sh"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    },
+    {
+      "pr": 281,
+      "url": "https://github.com/Ullmann27/device-ai/pull/281",
+      "title": "[DRAFT] Cognitive context: prevent stale and contradicted memories in live prompts",
+      "state": "open",
+      "base": "claude/m7-m8-integration-kxrxy2",
+      "base_sha": "c863bcbef55911fd1e71b14487193870cb049f7d",
+      "head": "research/continuum-context-validity-gate-20261031",
+      "head_sha": "0ba16082792e755bc0518905ba6b2f985ca43785",
+      "actual_diff_merge_base": "c863bcbef55911fd1e71b14487193870cb049f7d",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_SELECTED_PATCH",
+      "represented": [
+        "AiContextCompiler.kt and AiContextCompilerTest.kt byte-identical to PR head",
+        "2d42fd32ef4c8fda2d50eb7102b0f7d91be9a849 integrates the hard STALE/CONTRADICTED filter"
+      ],
+      "runtime": "AgentActivity.runLocal -> contextCompiler.compile -> HybridMemoryRetriever with pre-filtered memories.",
+      "gate": "allowedPrivacy retained; stale and contradicted memories removed before retrieval.",
+      "action": "No source integration needed.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+          "head_blob": "12a1c5c20d324bdacdf57f211a5568fbdc9dbafe",
+          "release_blob": "12a1c5c20d324bdacdf57f211a5568fbdc9dbafe",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 1
+    },
+    {
+      "pr": 267,
+      "url": "https://github.com/Ullmann27/device-ai/pull/267",
+      "title": "[DRAFT] Continuum Lokal v30: CDX1-Legacy-Konditionierung korrigieren und Update-Schnellzugriff",
+      "state": "open",
+      "base": "chatgpt/continuum-fold7-single-pass-release-20261030",
+      "base_sha": "01263334e7eae198691287345514e5b81647520f",
+      "head": "chatgpt/continuum-cdx1-legacy-v30-20261030",
+      "head_sha": "f50c990f7dc12bb92beafbc36352cae36309aab1",
+      "actual_diff_merge_base": "01263334e7eae198691287345514e5b81647520f",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "REPRESENTED_SELECTED_PATCHES",
+      "represented": [
+        "23de2c52c95799723dec272f194112e4043fe8ab selects the legacy fixed conditioner; decoder file byte-identical",
+        "b21ce8af396c4f0d2f92485733b5f75ea3d7b7c4 selects the Updates quick action"
+      ],
+      "runtime": "Legacy experimentalContinuation uses representation(\"research context\"); Updates opens existing ContinuumOwnerUpdateActivity. Paired CDX1 remains a separate laboratory path.",
+      "gate": "No CDX1 free-chat promotion; existing update signature/owner gates.",
+      "action": "Retain current files; never replace Activity or decoder with older branch versions.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "479b2f888996c4c141a8ea7191fd4616e77ad738",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+          "head_blob": "777d7090af917d82d1a8b8a8a21c008400503b62",
+          "release_blob": "777d7090af917d82d1a8b8a8a21c008400503b62",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt"
+      ],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 2
+    },
+    {
+      "pr": 258,
+      "url": "https://github.com/Ullmann27/device-ai/pull/258",
+      "title": "[DRAFT] M6 EWM-v2: unabhängiger 240-Paar-Ersetzungs-Holdout, vorregistriert und eingefroren",
+      "state": "open",
+      "base": "claude/ewm-owner-subject-fix-kxrxy2",
+      "base_sha": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+      "head": "chatgpt/continuum-m6-independent-holdout-20261030",
+      "head_sha": "0e10beac455ca4418d513aa1a7ad57ee3db23452",
+      "actual_diff_merge_base": "3ba1ba0bba28e441d2b85ae098371901d3db7407",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "TEST_ONLY_NOT_PRESENT_TARGET_SOURCE_REPRESENTED",
+      "represented": [
+        "No app/src/main changes in the actual GitHub PR patch",
+        "Frozen EWM product source was separately integrated by 64f178b8f52bf6ae75cd7c4c0efc06bcd1f47c77"
+      ],
+      "runtime": "Foreign-240 corpus and Ewm2Foreign240ReceiptTest are absent from release; no Android runtime caller. The receipt test exercises the real Ewm1Memory supersession graph, not a mock.",
+      "gate": "Preregistered independent test; source/corpus blob pins and no gold labels in predictor.",
+      "action": "Possible independent acceptance work: select tests/corpus/scorers only. All three production blob pins already match release; keep gold frozen. No result measured by this review.",
+      "production_files": [],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 38
+    },
+    {
+      "pr": 256,
+      "url": "https://github.com/Ullmann27/device-ai/pull/256",
+      "title": "[DRAFT] EXP-20: M5/M5b/M5c-Semantik (M5 nicht erreicht) + EWM-Ersetzungsfix als separater Patchkandidat",
+      "state": "open",
+      "base": "research/jarvis-voice1-stale-recognizer-session-20261030",
+      "base_sha": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+      "head": "claude/continuum-jarvis-exp20-p2-kxrxy2",
+      "head_sha": "80012a103f98603b9a346aa2c7cabc0bae05cb50",
+      "actual_diff_merge_base": "ed408a7d921e47b5730b06f1f514268e249bd5f7",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "TEST_ONLY_NOT_CONNECTED",
+      "represented": [
+        "Actual GitHub patch contains no app/src/main changes"
+      ],
+      "runtime": "EXP-20 M5/M5b/M5c, P2-P4 probes live in app/src/test and research/scripts. They do not supply normal-chat reasoning or Android compute.",
+      "gate": "Research acceptance gates; M5 not achieved per branch record. No model promotion implied.",
+      "action": "Preserve research history. Do not bulk merge this stacked branch to recover diagnostics; its ancestry carries unrelated source work.",
+      "production_files": [],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 35
+    },
+    {
+      "pr": 245,
+      "url": "https://github.com/Ullmann27/device-ai/pull/245",
+      "title": "[DRAFT] Continuum M9–M16: Erfahrung verdoppelt Reparaturen, F1/EWM2+ Gedächtnis, Aussagenprüfer v2 (alles SHADOW)",
+      "state": "open",
+      "base": "opus/continuum-m1-m8-20261030",
+      "base_sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+      "head": "opus/continuum-m9-m16-20261030",
+      "head_sha": "29c1e1e1bef289cddf1e0c7854f2511923b93c0f",
+      "actual_diff_merge_base": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "PENDING_SHADOW_NOT_REPRESENTED",
+      "represented": [
+        "Existing ContinuumBrain bridge is already release source, but this PR shadow additions are absent"
+      ],
+      "runtime": "Pending patch adds MemoryTimeline.check and MemoryQuestionResolver.resolve only inside ContinuumBrainMode.SHADOW; LocalModelClaimAudit v2 and ARGON fixes depend on older pending branches. New helpers and research/argon4 files are absent in release.",
+      "gate": "SHADOW observations only; the patch returns the same baseline in SHADOW and does not authorize answers or tools.",
+      "action": "Optional later research integration with dependencies and tests; coordinate ContinuumBrain.kt with Sol314 before selected hunks. No whole-file transplant.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveTurnTrace.kt",
+          "head_blob": "76e43960fdc280b24ef8395279c077bd18598464",
+          "release_blob": "38c324dce337fb7341ae5513eba04c029b0e01c7",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelClaimAudit.kt",
+          "head_blob": "ef43e9d429ea76ed09293d1388f36d7d7ed8560f",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryQuestionResolver.kt",
+          "head_blob": "972f3ffcab835e01f36a83f30888fb7d742b4382",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryTimeline.kt",
+          "head_blob": "03ff0e4fa9f276bfd0fde1a32807b53195cb783c",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+          "head_blob": "90becae5673661b85babfc3938b2bec71f152d45",
+          "release_blob": "941bfbb5586493b9dec4baf9f3c6b6ac2bfa2e50",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/research/argon4/DialogStateKernel.kt",
+          "head_blob": "85c816a7579af910f66d1c00cd5f0a51ecd55060",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt",
+          "head_blob": "fd5799baaa3c91c91fba02a069ca9b6568581489",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumBrainBridgeTest.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 24
+    },
+    {
+      "pr": 244,
+      "url": "https://github.com/Ullmann27/device-ai/pull/244",
+      "title": "[DRAFT] Continuum M1–M8: #243 gehärtet, Fähigkeitstransfer gemessen, Gemma-Aussagenprüfung (Shadow), Regression grün",
+      "state": "open",
+      "base": "research/continuum-counterexample-acceptance-20261029",
+      "base_sha": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+      "head": "opus/continuum-m1-m8-20261030",
+      "head_sha": "0e672333a80bf42af0ad641c9bc6ba239e562d83",
+      "actual_diff_merge_base": "ebba7e163b035d6d9b1c8a6955599104a2b3a309",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "PENDING_SHADOW_NOT_REPRESENTED",
+      "represented": [
+        "LocalModelClaimAudit.kt and added TraceStage values are absent in release"
+      ],
+      "runtime": "Pending Activity hunk calls LocalModelClaimAudit.stage only after successful generation with groundedRecall, and records a trace stage. It does not filter or replace the model answer.",
+      "gate": "Shadow audit is diagnostic, not semantic entailment proof.",
+      "action": "Optional later audit integration must include helper, TraceStage and tests together; older Activity context includes web-review changes absent in release.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "3a34b02dea4ab040eea57dc30a590d9b5f3294a2",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveTurnTrace.kt",
+          "head_blob": "fadb82e30c17d4ce520f66c9a2af00002452f793",
+          "release_blob": "38c324dce337fb7341ae5513eba04c029b0e01c7",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelClaimAudit.kt",
+          "head_blob": "f3745350ad97f297ec15b135a72bb3ad4b048a77",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 18
+    },
+    {
+      "pr": 242,
+      "url": "https://github.com/Ullmann27/device-ai/pull/242",
+      "title": "[DRAFT] Continuum: tested ARGON shadow integration, Gemma date context and CCC1 safeguards",
+      "state": "open",
+      "base": "research/sol61-ccc1-skill-transfer",
+      "base_sha": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+      "head": "integration/continuum-brain-system-20261029",
+      "head_sha": "7924ba0793963dd84eef61517359a743071829bf",
+      "actual_diff_merge_base": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "PENDING_SHADOW_AND_DATE_CONTEXT_NOT_REPRESENTED",
+      "represented": [
+        "Argon4SystemShadow.kt and research/argon4/{ComputeAllocationPolicy,DialogStateKernel,JustifiedRelationStore}.kt are absent",
+        "AiContextCompiler.deviceDateAnchor and CURRENT DEVICE DATE are absent"
+      ],
+      "runtime": "Pending patch observes LocalConversationContext and same-turn evidence and records a proposed compute choice. It does not replace actual chat routing, calls, budgets or answers.",
+      "gate": "Argon4ShadowMode.OFF/SHADOW only. Date anchor describes device clock, not proof of current external facts.",
+      "action": "If date support is selected, combine with already-present PR281 validity filter and PR285 typed fallback. The old Activity fallback renders raw memories and must not overwrite the current safe fallback.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "773332370ffee5a75ebcaaec67720f8d9d5be827",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+          "head_blob": "dbc7ec3770c3e0137ae652e1c79b97db253afe86",
+          "release_blob": "12a1c5c20d324bdacdf57f211a5568fbdc9dbafe",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/Argon4SystemShadow.kt",
+          "head_blob": "99b96fe2663bec3d0831bfe5c4c207d1bd4a0ead",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+          "head_blob": "f21a114c9ed810cc0ac52cf10fe00b5d56ff2a5e",
+          "release_blob": "5783c6a2ca17c5a2e641f9b22c5682db8c457127",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+          "head_blob": "14eeec836dc360680ecd370c0b7028a7dc4a7620",
+          "release_blob": "a0a24a695ca94c90799801970df9a288fe8b1d99",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+          "head_blob": "f790e4320ee433efd9f8721a3b9cd17c10d42233",
+          "release_blob": "0ea621baf457d1055ec9e51f2d440f535aea7c32",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/research/argon4/ComputeAllocationPolicy.kt",
+          "head_blob": "4628ba00cb98e4c6abdc3e637837dc4ca1fc8aa0",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/research/argon4/DialogStateKernel.kt",
+          "head_blob": "6d3ae8a680500fccafe41295bf6b7fd2742d045f",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt",
+          "head_blob": "7aadc83f163a1bdb64e049616554a702e721ad29",
+          "release_blob": null,
+          "release_status": "ABSENT"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 17
+    },
+    {
+      "pr": 230,
+      "url": "https://github.com/Ullmann27/device-ai/pull/230",
+      "title": "[DRAFT] Continuum: tested memory attribute, release-source and worker stop fixes",
+      "state": "open",
+      "base": "review/continuum-memory-attribute-guard-20261029",
+      "base_sha": "a16e45c8bb43a38143ed729b5e0501337adc8eb5",
+      "head": "sol/continuum-gpt6-closeout-20261029",
+      "head_sha": "9fbd377f2511a72ef669fad9928b07593eeb81a2",
+      "actual_diff_merge_base": "a16e45c8bb43a38143ed729b5e0501337adc8eb5",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": false,
+      "status": "NOT_REPRESENTED_IN_RELEASE_SUPERSEDED_BY_SOL314_CANDIDATE",
+      "represented": [
+        "Release lacks ownerMemoryAnswersAskedAttribute/BIRTH_DATE_EVIDENCE; these PR hunks are not integrated",
+        "8c40d111c557e9ebb0d19f807a098c1f5d196966 adds broader current-owner/attribute scope via existing EWM reader"
+      ],
+      "runtime": "Sol314 candidate ContinuumMemoryDialogue.rank -> OwnerAttributeEvidenceScope.select removes unsupported personal-attribute candidates. Pending PR230 only narrows a birth-word citation gate.",
+      "gate": "Current Sol314 read-only evidence scope; no new fact authority.",
+      "action": "Keep selected Sol314 implementation and regression evidence. Do not reintroduce the old whole MemoryDialogue file or duplicate its narrow gate.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+          "head_blob": "316afc58368e1839e3025338b8d799dee338258c",
+          "release_blob": "185cfed8f4883484c2cb2ba351a79476a7784317",
+          "release_status": "DIVERGED"
+        }
+      ],
+      "sol314_committed_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt"
+      ],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 2
+    },
+    {
+      "pr": 224,
+      "url": "https://github.com/Ullmann27/device-ai/pull/224",
+      "title": "[DRAFT] EWM1+EWM2: Continuum-Gehirn – Gedächtnis-Diskurs, Quellen-Router, Aussagenprüfer (Forschung; H1/H3–H7 bestanden, H2 nicht)",
+      "state": "open",
+      "base": "research/continuum-worker-untracked-gate-20261028",
+      "base_sha": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "head": "opus/continuum-brain-research-20261029",
+      "head_sha": "d49fbfea587ac18bead8f5ad30f244ca4250d796",
+      "actual_diff_merge_base": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": true,
+      "status": "TEST_PR_PRODUCTIZED_LATER",
+      "represented": [
+        "Original PR has no app/src/main changes and its ewm1 test paths are absent",
+        "dff7bf6a61b64d7e4acabd2abe42df053d3d5609 copies frozen e1669271 research classes into app/src/main/.../intelligence/ewm; source header explicitly identifies PR224",
+        "64f178b8f52bf6ae75cd7c4c0efc06bcd1f47c77 later integrates supersession v2"
+      ],
+      "runtime": "AgentActivity.runContinuumDialogue -> ContinuumBrainBridge.decide -> Ewm1Brain.ask when owner mode is SHADOW/ON. Mode OFF returns baseline without computing the brain.",
+      "gate": "ContinuumBrainMode default OFF; SHADOW keeps baseline; ON requires owner confirmation and revocation checks.",
+      "action": "No whole-branch merge. Preserve product copy/evolved sources and use independent acceptance tests.",
+      "production_files": [],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    },
+    {
+      "pr": 221,
+      "url": "https://github.com/Ullmann27/device-ai/pull/221",
+      "title": "[DO NOT INTEGRATE] Gemma callback gate — native lock ordering unresolved",
+      "state": "open",
+      "base": "research/continuum-worker-untracked-gate-20261028",
+      "base_sha": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "head": "research/gemma-stream-callback-lifecycle-20261029",
+      "head_sha": "3a5c91446ca3cc13e5f311ef13d9983978705ed1",
+      "actual_diff_merge_base": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+      "head_is_release_ancestor": false,
+      "base_is_release_ancestor": true,
+      "status": "DO_NOT_INTEGRATE_UNRESOLVED_NATIVE_LOCK_ORDER",
+      "represented": [
+        "Full ec419d51eeaa061c7863ee5c4f943b236c10cc94 callback rewrite is absent",
+        "Only safe whitespace delta correction is represented by 9ecc038d57a1e98144245cb9910d18aada022272",
+        "1be9b151098913a031b9d5f706e5911b029122f9 separately adds runtime boundary profiling"
+      ],
+      "runtime": "Release retains original callbackLock lifecycle, with native cancelProcess calls under its message monitor. Full candidate gate also holds a Kotlin monitor around JNI send/cancel and may invert native locks on cross-thread callbacks.",
+      "gate": "Explicit DO NOT INTEGRATE. Same-thread reentrant tests do not exclude cross-thread native deadlock. No native lifecycle correctness or 120-second root cause proven.",
+      "action": "Keep isolated. Future repair needs JNI/user callbacks outside state monitors, deterministic cross-thread send/cancel cases and real native/device acceptance.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+          "head_blob": "f14d43d3d3a535bd4b0fb73aeb7d6b93ae22e369",
+          "release_blob": "5d993b960a78cfba4765811a57217e119ed4c3fa",
+          "release_status": "DIVERGED"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 1
+    },
+    {
+      "pr": 214,
+      "url": "https://github.com/Ullmann27/device-ai/pull/214",
+      "title": "[DRAFT] Continuum Lokal: eine Haupt-App, Gemma-Importspur, sichere Lernübernahme und Release-Gates",
+      "state": "open",
+      "base": "research/continuum-sol-max-handoff-readiness-20261028",
+      "base_sha": "82514fac1ad104bbaff976989c7cd2d679d85e4c",
+      "head": "research/continuum-sol-preflight-and-native-evidence-20261028",
+      "head_sha": "c4b8713872232de38671d2fdc52d2124086f6855",
+      "actual_diff_merge_base": "82514fac1ad104bbaff976989c7cd2d679d85e4c",
+      "head_is_release_ancestor": true,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_ANCESTRY",
+      "represented": [
+        "c4b8713872232de38671d2fdc52d2124086f6855 is a release ancestor",
+        "LocalModelImportProgress.kt byte-identical; Activity/archive/catalog evolved later"
+      ],
+      "runtime": "Existing main-app learning/migration navigation, SAF model import progress and bounded archive import are reachable from Activity. They do not prove complete backup/restore.",
+      "gate": "Manual SAF import, source validation and existing model/hash checks.",
+      "action": "Do not remerge old files. Sol314 archive read/quotation changes extend current source; Astra M8 complete restore remains separate.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "81ee30f726357fec60341973aecf4a6b83f8b117",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt",
+          "head_blob": "9d41a44cb1b3ff53038c39080aaf8f0f0968642f",
+          "release_blob": "b0c4cdeed7207d5ae0d77e701ddf858b3f6fdbba",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+          "head_blob": "216066c6201d69b0344a03a18c12d87d376670d7",
+          "release_blob": "91a4eea632ab14bdc92e5f46f30e9617e0145fb4",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportProgress.kt",
+          "head_blob": "1e190846a546fb64b200bda6593a48a6e3c957c7",
+          "release_blob": "1e190846a546fb64b200bda6593a48a6e3c957c7",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt",
+        "app/src/test/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchiveTest.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    },
+    {
+      "pr": 205,
+      "url": "https://github.com/Ullmann27/device-ai/pull/205",
+      "title": "[DRAFT] Continuum main-app research: detect German source contradictions before corroboration",
+      "state": "open",
+      "base": "chatgpt/continuum-fusion-regression-gate-20261028",
+      "base_sha": "f2a42ed28e59b3eb8acc1b1ee034c430c8310acc",
+      "head": "chatgpt/continuum-german-research-contradiction-20261028",
+      "head_sha": "aa19655b1f14fe95990f318cf1b2d70312efc685",
+      "actual_diff_merge_base": "f2a42ed28e59b3eb8acc1b1ee034c430c8310acc",
+      "head_is_release_ancestor": true,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_ANCESTRY",
+      "represented": [
+        "aa19655b1f14fe95990f318cf1b2d70312efc685 is a release ancestor",
+        "ResearchNegationSignals.kt and ResearchEngine.kt byte-identical; paired decoder curriculum/lab source already represented"
+      ],
+      "runtime": "ResearchPipeline and DeepResearchEngine use ResearchNegationSignals.hasOppositePolarity before corroboration. Existing paired CDX1/decoder lab remains experimental and is touched by current Sol314 gate fixes.",
+      "gate": "Public source observations remain unconfirmed; no decoder chat promotion.",
+      "action": "No duplicate integration. Retain current release plus Sol314 selected changes.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "5ffd15b7a79ca918c5f1857e62d588296e1a4c19",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderRoute.kt",
+          "head_blob": "f9dd72c1c302046befd94646c17200ddc8771827",
+          "release_blob": "f9dd72c1c302046befd94646c17200ddc8771827",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+          "head_blob": "a19c839fff6c525336c64af4d0450e451cc4b66f",
+          "release_blob": "5bbcbd714e120a4d2eed8e43a3d7fd76905d5330",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+          "head_blob": "88b6e0dbe6d6d81678922407af5162c9352e4bed",
+          "release_blob": "88b6e0dbe6d6d81678922407af5162c9352e4bed",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchNegationSignals.kt",
+          "head_blob": "0fe6e121782be6a630c3a9edf0e5f63901dfa715",
+          "release_blob": "0fe6e121782be6a630c3a9edf0e5f63901dfa715",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeCurriculum.kt",
+          "head_blob": "c9915da770f8ea91aaa205066c1d8c5ec208aaa8",
+          "release_blob": "c9915da770f8ea91aaa205066c1d8c5ec208aaa8",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+          "head_blob": "f94a85133b38d2313c7bb261e953806fded174f6",
+          "release_blob": "f94a85133b38d2313c7bb261e953806fded174f6",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+          "head_blob": "8612de47d75681311df851e553d6e3d97a8920b3",
+          "release_blob": "777d7090af917d82d1a8b8a8a21c008400503b62",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+          "head_blob": "dc3cc9eb0bd463dc917d431562cb6f18a4d0010f",
+          "release_blob": "287caf66f20e50d3b849ea3f83fd1e37f92119fe",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+          "head_blob": "94995cfccedb73ef20d39748567e16f402a79c10",
+          "release_blob": "91a4eea632ab14bdc92e5f46f30e9617e0145fb4",
+          "release_status": "DIVERGED"
+        }
+      ],
+      "sol314_committed_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt"
+      ],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+        "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    },
+    {
+      "pr": 203,
+      "url": "https://github.com/Ullmann27/device-ai/pull/203",
+      "title": "[DRAFT] Continuum Fusion: authorized conversation memory and hybrid research retrieval",
+      "state": "open",
+      "base": "chatgpt/continuum-research-integration-memory-m4-20261027",
+      "base_sha": "34acc378ac77e915b8d322bf02e46af77288bcf0",
+      "head": "chatgpt/continuum-fusion-memory-vertical-20261028",
+      "head_sha": "b12dfab392022d050c072419f8ed2fdf2c71bfae",
+      "actual_diff_merge_base": "34acc378ac77e915b8d322bf02e46af77288bcf0",
+      "head_is_release_ancestor": true,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_ANCESTRY_ACTIVE_SHADOW",
+      "represented": [
+        "b12dfab392022d050c072419f8ed2fdf2c71bfae is a release ancestor",
+        "AuthorizedConversationMemoryShadow, ChatReasoningRouter, MemoryResearchShadowComparator and ContinuumCognitiveRuntime byte-identical"
+      ],
+      "runtime": "ContinuumCognitiveRuntime.reply calls AuthorizedConversationMemoryShadow.observe with exact same-turn authorized hits. Activity shows aggregate Hybrid-Shadow trace. Synthetic comparator is only a diagnostic menu path.",
+      "gate": "Observer cannot change retrieval, prompt, memory or tools; exact evidence identity and privacy scope checked.",
+      "action": "Reuse existing observer, do not build a second memory store or treat counters as quality proof.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+          "head_blob": "aa0001fc21c656339112bb96d8d17200b2736a3f",
+          "release_blob": "f3a48e69ca2767f7e0aa3b3e4902cba19ba6c991",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+          "head_blob": "2eb3f27136da392f79c340fb4a854f0b93f5fc63",
+          "release_blob": "2eb3f27136da392f79c340fb4a854f0b93f5fc63",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+          "head_blob": "5783c6a2ca17c5a2e641f9b22c5682db8c457127",
+          "release_blob": "5783c6a2ca17c5a2e641f9b22c5682db8c457127",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
+          "head_blob": "29fa981a57a47138e7d0842d6c336fd1f316096d",
+          "release_blob": "29fa981a57a47138e7d0842d6c336fd1f316096d",
+          "release_status": "BYTE_IDENTICAL"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+          "head_blob": "0ea621baf457d1055ec9e51f2d440f535aea7c32",
+          "release_blob": "0ea621baf457d1055ec9e51f2d440f535aea7c32",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [
+        "app/src/main/java/at/heinz/deviceai/AgentActivity.kt"
+      ],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    },
+    {
+      "pr": 198,
+      "url": "https://github.com/Ullmann27/device-ai/pull/198",
+      "title": "research(m4): all vetted external AI/Android code mapped to Continuum brain; memory benchmark shadow gate",
+      "state": "open",
+      "base": "chatgpt/continuum-mainapp-m3-after-sol-20261027",
+      "base_sha": "77e429f6d2f0eebfe697244a467f2b0565e7eb68",
+      "head": "chatgpt/continuum-research-integration-memory-m4-20261027",
+      "head_sha": "34acc378ac77e915b8d322bf02e46af77288bcf0",
+      "actual_diff_merge_base": "77e429f6d2f0eebfe697244a467f2b0565e7eb68",
+      "head_is_release_ancestor": true,
+      "base_is_release_ancestor": true,
+      "status": "REPRESENTED_ANCESTRY_RESEARCH_DIAGNOSTIC",
+      "represented": [
+        "34acc378ac77e915b8d322bf02e46af77288bcf0 is a release ancestor",
+        "MemoryRetrievalResearchGate.kt byte-identical; comparator expanded by PR203"
+      ],
+      "runtime": "Activity memory synthetic-self-check -> MemoryResearchShadowComparator -> MemoryRetrievalResearchGate.evaluate -> existing HybridMemoryRetriever. It is not a new production retriever or third-party memory implementation.",
+      "gate": "Explicit research module, independent holdout/expected-source/privacy checks; no automatic promotion.",
+      "action": "No integration needed; retain external-source license/audit catalog and existing retrieval authority.",
+      "production_files": [
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
+          "head_blob": "960bc7fe349af4743e212703bcf4284ffd565902",
+          "release_blob": "29fa981a57a47138e7d0842d6c336fd1f316096d",
+          "release_status": "DIVERGED"
+        },
+        {
+          "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+          "head_blob": "bc4aa5dbb38417cd7bb885a930ef4f644dde2f8e",
+          "release_blob": "bc4aa5dbb38417cd7bb885a930ef4f644dde2f8e",
+          "release_status": "BYTE_IDENTICAL"
+        }
+      ],
+      "sol314_committed_file_overlaps": [],
+      "sol314_current_worktree_file_overlaps": [],
+      "nonancestor_source_commits_count_including_inherited_work": 0
+    }
+  ],
+  "runtime": [
+    {
+      "component": "normal chat dispatch",
+      "caller": "AgentActivity.sendCurrentInput",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "line": 2415,
+      "active": "Explicit commands and public-research consent routes precede knowledge topic lookup and BootstrapBrain; allowNeuralRecall routes remaining replies to runContinuumDialogue."
+    },
+    {
+      "component": "deterministic baseline",
+      "caller": "AgentActivity.runContinuumDialogue",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "line": 2857,
+      "active": "CognitiveDecisionBridge(ContinuumCognitiveRuntime, null) keeps exact retrieval; archive and reviewed-web fallbacks may produce a grounded answer."
+    },
+    {
+      "component": "optional EWM brain",
+      "caller": "ContinuumBrainBridge.decide",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+      "line": 182,
+      "active": "OFF by default, SHADOW keeps baseline, ON uses EWM evidence with owner/revocation gates. Sol314 working source also checks current attribute scope before showing ON memory evidence."
+    },
+    {
+      "component": "local model dispatch",
+      "caller": "LocalFirstPolicy.afterMemory",
+      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+      "line": 22,
+      "active": "Requires loaded READY model and either ungrounded baseline or explicitlyRequestsSynthesis(request). Other grounded answers remain exact."
+    },
+    {
+      "component": "actual agent model path",
+      "caller": "AgentActivity.runLocal",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "line": 6083,
+      "active": "BoundedAgentOrchestrator(inline AgentModel) -> AiContextCompiler -> optional ChatReasoningRouter advisory -> localRuntime.stream/respondToTools -> generateLocal -> evaluator/tool/owner gates."
+    },
+    {
+      "component": "standalone adapter",
+      "caller": null,
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+      "line": 23,
+      "active": "No production instantiation found; class/source and tests exist. Does not replace Activity inline callback."
+    },
+    {
+      "component": "existing hybrid observer",
+      "caller": "ContinuumCognitiveRuntime.reply",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "line": 130,
+      "active": "AuthorizedConversationMemoryShadow observes already authorized same-turn hits; diagnostic only."
+    },
+    {
+      "component": "direct smoke test",
+      "caller": "AgentActivity.runLocalSmokeTest",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "line": 6006,
+      "active": "Calls localRuntime.stream with a fixed short question directly; bypasses normal dispatch, memory/archive, assembled prompt and orchestrator."
+    },
+    {
+      "component": "native runtime",
+      "caller": "LiteRtLmLocalModelRuntime.streamMessage",
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "line": 312,
+      "active": "Existing LiteRT-LM engine, fresh native chat prompt boundary, explicit tool continuation. Whitespace correction and profiler present; lifecycle/locking issue still open."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "GEMMA_CHAT_ROUTING",
+      "severity": "IMPORTANT",
+      "finding": "Loaded/READY Gemma is not a universal normal-message path. BootstrapBrain replies to exact greetings/self-capability phrases and handles device keywords before unhandled dialogue reaches the model. Grounded archive/memory replies suppress inference unless the narrow synthesis regex matches.",
+      "evidence": [
+        "AgentActivity.kt:2697,2721,2763,2929",
+        "BootstrapBrain.kt:89-117,126-140",
+        "LocalFirstPolicy.kt:22,47-57"
+      ],
+      "example": "If a source is grounded, an Erkläre ... request does not match SYNTHESIS; warum/vergleiche/analysiere do. Direct recall must retain exact evidence semantics.",
+      "next": "Astra315 acceptance should prove normal dispatch with ready model, grounded direct recall, grounded explanation/synthesis, ungrounded chat, web consent and model-not-ready cases separately."
+    },
+    {
+      "id": "DIRECT_TEST_IS_NOT_CHAT_PROOF",
+      "severity": "IMPORTANT",
+      "finding": "A successful fixed direct-model test cannot prove normal chat dispatch, prompt budget/context, memory integration or orchestrated tool outcomes.",
+      "evidence": [
+        "AgentActivity.kt:5981-6007 versus6052-6185"
+      ],
+      "next": "Require same-model/SHA trace showing MODEL_PRIMARY_INVOKED and MODEL_COMPLETED from an ordinary sendCurrentInput turn."
+    },
+    {
+      "id": "NATIVE_CALLBACK_LIFECYCLE",
+      "severity": "IMPORTANT",
+      "finding": "The known native cancel/callback lifecycle and timeout mechanism remain unresolved. Release still calls cancelProcess under callbackLock; PR221 full rewrite is explicitly unsafe for integration.",
+      "evidence": [
+        "LiteRtLmLocalModelRuntime.kt:319-357",
+        "PR221/GEMMA-CALLBACK-HANDOFF-20261029.md"
+      ],
+      "next": "Fix separately with cross-thread native callback tests and device profiling, preserving exactly-once terminal delivery and tool continuation ownership."
+    },
+    {
+      "id": "MISSING_DATE_CONTEXT",
+      "severity": "MODERATE",
+      "finding": "PR242 device-date anchor is absent from current source. Context/compiler hardening from PR281/285 is present.",
+      "evidence": [
+        "AiContextCompiler.kt:111-123",
+        "PR242 actual AiContextCompiler.kt patch"
+      ],
+      "next": "If selected later, port only date-context additions and retain current validity filter and typed no-memory fallback."
+    },
+    {
+      "id": "OLD_STACKED_BRANCHES",
+      "severity": "IMPORTANT",
+      "finding": "Several test-only PR heads inherit unintegrated production work from older bases. Source-only PR labels or zero app/src/main diff do not make their complete branch ancestry safe for release merge.",
+      "evidence": [
+        "ancestry-file-comparison.json",
+        "PR258 inherited source commits:38",
+        "PR256 inherited source commits:35"
+      ],
+      "next": "Compare actual patch/merge-base and select bounded hunks; never replace current Activity/Brain/MemoryDialogue from historical branch snapshots."
+    },
+    {
+      "id": "ASTRA_SOL_FILE_OWNERSHIP",
+      "severity": "IMPORTANT",
+      "finding": "Sol314 current source touches Activity archive rendering, ContinuumBrain answer admission, archive read lookup, MemoryDialogue and decoder gates. Older PR242/244/245 overlap Activity/Brain; #316 has no production-file overlap but shares scripts/render-continuum-m8-qa.sh.",
+      "evidence": [
+        "integration-matrix.json per-PR overlap arrays",
+        "PR316 changed file list: DevelopmentSourceStreamImport.kt, its test, scripts/render-continuum-m8-qa.sh"
+      ],
+      "next": "Astra315 integrate Sol317 and316 by source SHA in coordinated order; combine QA allowlists without reverting another research branch, then rerun actual Node/Kotlin/Gradle and device gates."
+    }
+  ],
+  "pr258_release_source_pins": {
+    "Ewm1EvidenceWorkspace.kt": "cb19581af34ad177add22a89638988a74a9c7aad",
+    "Ewm1Lexicon.kt": "8c1e6acd4a7ee2cf632b115550eb7c7d5c801df6",
+    "Ewm1Workspace.kt": "b338a755a161a620405bd3581bf45fb74b1c43fc",
+    "all_exactly_match_release": true
+  },
+  "astra315": "https://github.com/Ullmann27/device-ai/issues/315",
+  "pr316": {
+    "head_sha": "08a7f13ce9dbb2180e244789917d64e7b28ce49f",
+    "base_sha": "97b5b9006f8c60f1a6fc4fb10981894330c55fe4",
+    "source_overlap_with_sol314": [],
+    "shared_test_gate": "scripts/render-continuum-m8-qa.sh"
+  }
+}

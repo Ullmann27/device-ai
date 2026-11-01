@@ -630,6 +630,27 @@ class ContinuumLearningCore(
         loadModel().save() to activeOwnerFacts()
     }
 
+    /** One read-only view for the optional EWM answer gate. Keep tombstones in
+     * the scope calculation so an older active fact cannot reappear through a
+     * different answer path after a newer assertion is revoked.
+     */
+    internal fun brainAnswerView(question:String,proposedIds:List<String>,conversationId:String):Pair<List<LearningExperience>,Set<String>?> =
+        synchronized(CORE_LOCK) {
+            val all=store.all()
+            val active=all.filter { it.type==LearningExperienceType.USER_FACT &&
+                it.provenance==LearningProvenance.USER_CONFIRMED && it.trust==LearningTrustClass.OWNER_CONFIRMED &&
+                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) }
+            val proposed=active.filter { it.id in proposedIds }.map {
+                ContinuumMemoryHit(it.id,it.content,"Bestätigte Nutzererinnerung",it.sourceRef,0.0,0.0)
+            }
+            val resolved=runCatching { dialogue.history(conversationId).lastOrNull() }
+                .getOrNull()?.takeIf { it.input==question.trim().take(320) }?.resolvedQuery ?: question
+            val scope=OwnerAttributeEvidenceScope.select(resolved,all,proposed)
+                ?: if(Regex("(?u)^[Uu]nd\\s+\\p{Lu}[\\p{L}'’-]*(?:s|['’])(?:\\s.*?)?\\?$").matches(question.trim()))
+                    emptySet() else null
+            active to scope
+        }
+
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
         dialogue.clear()
         store.updateMatching(

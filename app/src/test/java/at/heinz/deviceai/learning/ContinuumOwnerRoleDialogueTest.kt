@@ -106,4 +106,27 @@ class ContinuumOwnerRoleDialogueTest {
         assertEquals(listOf(old.id), ContinuumMemoryDialogue.rank(TrainableSubwordEncoder().save(),
             "Wo wohnt Mira?", listOf(old, interim)).map { it.id })
     }
+
+    @Test fun earlierResidenceStaysHistoricalAndCurrentQuestionCitesGraz() {
+        val before = fact("Mira wohnte früher in Wien.", 1)
+        val current = fact("Mira wohnt jetzt in Graz.", 2)
+        val memories = listOf(before,current)
+        val hits = ContinuumMemoryDialogue.rank(TrainableSubwordEncoder().save(), "Wo wohnt Mira jetzt?",memories)
+        assertEquals(listOf(current.id),hits.map { it.id })
+        assertTrue(hits.single().text.contains("Graz"))
+        assertEquals("Mira wohnte früher in Wien.",memories.first().content)
+    }
+
+    @Test fun ownerCodeIsDisplayedAsDeinWhileLiteralEvidenceIsUnchanged() {
+        val dir=Files.createTempDirectory("continuum-owner-perspective").toFile()
+        try {
+            val original=fact("Mein Testkürzel lautet NEBEL-731.")
+            val turn=ContinuumMemoryDialogue(dir).reply(TrainableSubwordEncoder().save(),listOf(original),
+                "Wie lautet mein Testkürzel?",2)
+            assertEquals(listOf(original.id),turn.memoryIds)
+            assertTrue(turn.answer.contains("Dein Testkürzel lautet NEBEL-731."))
+            assertTrue(turn.answer.contains("gespeichert: „Mein Testkürzel lautet NEBEL-731.“"))
+            assertEquals("Mein Testkürzel lautet NEBEL-731.",original.content)
+        } finally { dir.deleteRecursively() }
+    }
 }

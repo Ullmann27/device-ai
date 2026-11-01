@@ -1,0 +1,6 @@
+records=8 longText=false contentBytes=176 ledgerBytes=1592 p50Ms=11.71183 p95Ms=36.794201
+records=8 longText=true contentBytes=13352 ledgerBytes=14768 p50Ms=88.073949 p95Ms=139.798494
+records=64 longText=false contentBytes=1463 ledgerBytes=12511 p50Ms=28.623968 p95Ms=61.847176
+records=64 longText=true contentBytes=106871 ledgerBytes=117919 p50Ms=500.122035 p95Ms=533.290541
+records=256 longText=false contentBytes=6036 ledgerBytes=50108 p50Ms=59.231804 p95Ms=72.232342
+records=256 longText=true contentBytes=427668 ledgerBytes=471740 p50Ms=3481.552606 p95Ms=5455.560465

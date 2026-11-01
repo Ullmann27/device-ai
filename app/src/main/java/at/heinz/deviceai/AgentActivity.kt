@@ -2881,13 +2881,7 @@ class AgentActivity : Activity() {
                     }.getOrNull()
                 } else null
                 val archiveAnswer=archiveHit?.source?.let { document ->
-                    "LOKALES WISSENSARCHIV · öffentlicher, nicht unabhängig verifizierter "+
-                        "Quellenauszug: "+
-                        document.text.take(350)+"\nQuelle: "+document.url+
-                        "\nHerkunft: "+document.attribution+
-                        "\nSHA-256: "+document.sha256.take(16)+"…"+
-                        "\nFür zeitabhängige oder rechtliche Aussagen Originalquelle "+
-                        "und relevanten Stichtag kontrollieren."
+                    at.heinz.deviceai.learning.ContinuumBrainBridge.archiveAnswerForQuestion(document,request)
                 }
                 val fallback=if(legacyFallback)
                     GroundedWebRecall.answer(request,reviewedNotes)
@@ -2912,7 +2906,7 @@ class AgentActivity : Activity() {
                         legacyFallback && fallback!=null -> at.heinz.deviceai.learning.ContinuumBaselineSource.WEB_NOTES
                         turn.grounded -> at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY
                         else -> at.heinz.deviceai.learning.ContinuumBaselineSource.NONE
-                    },turn.memoryIds,archiveHit?.source?.id)
+                    },turn.memoryIds,archiveHit?.source?.id?.takeIf { archiveAnswer!=null })
                 val shown=runCatching {
                     at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,
                         request.take(512),baseline).outcome

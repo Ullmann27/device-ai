@@ -1,0 +1,369 @@
+{
+  "v1": {
+    "status": "consumed validation/regression rerun",
+    "baseline-classes": {
+      "all": {
+        "cases": 50,
+        "answerable": 26,
+        "missing": 24,
+        "exactEvidenceSet": 8,
+        "answerableExactEvidenceSet": 4,
+        "correctAbstentions": 4,
+        "recallAt3": 1.0,
+        "precisionAt3": 0.3333333333333333,
+        "mrr": 0.9230769230769231,
+        "returnedCitationPrecisionOnAnswerable": 0.5306122448979592,
+        "hostReplyP50Ms": 2.455,
+        "hostReplyP95Ms": 16.273
+      },
+      "declaredQueryGrammar": {
+        "cases": 44,
+        "answerable": 23,
+        "missing": 21,
+        "exactEvidenceSet": 8,
+        "answerableExactEvidenceSet": 4,
+        "correctAbstentions": 4,
+        "recallAt3": 1.0,
+        "precisionAt3": 0.3333333333333333,
+        "mrr": 0.9130434782608695,
+        "returnedCitationPrecisionOnAnswerable": 0.5348837209302325,
+        "hostReplyP50Ms": 2.475,
+        "hostReplyP95Ms": 16.273
+      },
+      "outsideDeclaredQueryGrammar": {
+        "cases": 6,
+        "answerable": 3,
+        "missing": 3,
+        "exactEvidenceSet": 0,
+        "answerableExactEvidenceSet": 0,
+        "correctAbstentions": 0,
+        "recallAt3": 1.0,
+        "precisionAt3": 0.3333333333333333,
+        "mrr": 1.0,
+        "returnedCitationPrecisionOnAnswerable": 0.5,
+        "hostReplyP50Ms": 2.067,
+        "hostReplyP95Ms": 3.541
+      }
+    },
+    "candidate-8c40d111-classes": {
+      "all": {
+        "cases": 50,
+        "answerable": 26,
+        "missing": 24,
+        "exactEvidenceSet": 45,
+        "answerableExactEvidenceSet": 22,
+        "correctAbstentions": 23,
+        "recallAt3": 0.9230769230769231,
+        "precisionAt3": 0.30769230769230765,
+        "mrr": 0.9230769230769231,
+        "returnedCitationPrecisionOnAnswerable": 0.9230769230769231,
+        "hostReplyP50Ms": 3.1864999999999997,
+        "hostReplyP95Ms": 39.319
+      },
+      "declaredQueryGrammar": {
+        "cases": 44,
+        "answerable": 23,
+        "missing": 21,
+        "exactEvidenceSet": 43,
+        "answerableExactEvidenceSet": 22,
+        "correctAbstentions": 21,
+        "recallAt3": 0.9565217391304348,
+        "precisionAt3": 0.3188405797101449,
+        "mrr": 0.9565217391304348,
+        "returnedCitationPrecisionOnAnswerable": 1.0,
+        "hostReplyP50Ms": 3.9025,
+        "hostReplyP95Ms": 39.319
+      },
+      "outsideDeclaredQueryGrammar": {
+        "cases": 6,
+        "answerable": 3,
+        "missing": 3,
+        "exactEvidenceSet": 2,
+        "answerableExactEvidenceSet": 0,
+        "correctAbstentions": 2,
+        "recallAt3": 0.6666666666666666,
+        "precisionAt3": 0.2222222222222222,
+        "mrr": 0.6666666666666666,
+        "returnedCitationPrecisionOnAnswerable": 0.5,
+        "hostReplyP50Ms": 1.307,
+        "hostReplyP95Ms": 2.27
+      }
+    },
+    "paired": {
+      "exactSetWins": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "27",
+        "28",
+        "29",
+        "34",
+        "35",
+        "36",
+        "38",
+        "42",
+        "43",
+        "47",
+        "48",
+        "49",
+        "50"
+      ],
+      "exactSetLosses": [],
+      "lostRelevantEvidence": [
+        "26",
+        "45"
+      ],
+      "apiReplyRankDifferences": [
+        "42",
+        "43",
+        "45"
+      ]
+    },
+    "failures": [
+      {
+        "id": "26",
+        "category": "explicit-owner-role",
+        "query": "Welche Farbe hat Annas Schlüssel?",
+        "expected": [
+          "key"
+        ],
+        "actual": [],
+        "answer": "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+      },
+      {
+        "id": "37",
+        "category": "historical-explicit-year",
+        "query": "Wo wohnte Nora im Jahr 2020?",
+        "expected": [
+          "history"
+        ],
+        "actual": [
+          "history",
+          "current"
+        ],
+        "answer": "Dazu finde ich in meinem Gedächtnis:\n\nIm Jahr 2020 wohnte Nora in Wien.\n(Bestätigte Nutzererinnerung)\n\nNora wohnt jetzt in Graz.\n(Bestätigte Nutzererinnerung)"
+      },
+      {
+        "id": "39",
+        "category": "historical-earlier",
+        "query": "Wo wohnte Nora früher?",
+        "expected": [
+          "history"
+        ],
+        "actual": [
+          "history",
+          "current"
+        ],
+        "answer": "Dazu finde ich in meinem Gedächtnis:\n\nNora wohnte früher in Wien.\n(Bestätigte Nutzererinnerung)\n\nNora wohnt jetzt in Graz.\n(Bestätigte Nutzererinnerung)"
+      },
+      {
+        "id": "40",
+        "category": "future-unavailable",
+        "query": "Wo wird Nora nächstes Jahr wohnen?",
+        "expected": [],
+        "actual": [
+          "current"
+        ],
+        "answer": "Dazu finde ich in meinem Gedächtnis:\n\nNora wohnt jetzt in Graz.\n(Bestätigte Nutzererinnerung)"
+      },
+      {
+        "id": "45",
+        "category": "explicit-new-object",
+        "query": "Und Annas Fahrrad?",
+        "expected": [
+          "bike"
+        ],
+        "actual": [],
+        "answer": "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+      }
+    ]
+  },
+  "v2": {
+    "status": "fresh first-run TEST, executed exactly once",
+    "baseline-classes": {
+      "all": {
+        "cases": 40,
+        "answerable": 20,
+        "missing": 20,
+        "exactEvidenceSet": 6,
+        "answerableExactEvidenceSet": 3,
+        "correctAbstentions": 3,
+        "recallAt3": 0.95,
+        "precisionAt3": 0.31666666666666665,
+        "mrr": 0.875,
+        "returnedCitationPrecisionOnAnswerable": 0.5428571428571428,
+        "hostReplyP50Ms": 2.3579999999999997,
+        "hostReplyP95Ms": 27.563
+      },
+      "declaredQueryGrammar": {
+        "cases": 36,
+        "answerable": 19,
+        "missing": 17,
+        "exactEvidenceSet": 6,
+        "answerableExactEvidenceSet": 3,
+        "correctAbstentions": 3,
+        "recallAt3": 1.0,
+        "precisionAt3": 0.3333333333333333,
+        "mrr": 0.9210526315789473,
+        "returnedCitationPrecisionOnAnswerable": 0.5428571428571428,
+        "hostReplyP50Ms": 2.3979999999999997,
+        "hostReplyP95Ms": 28.858
+      },
+      "outsideDeclaredQueryGrammar": {
+        "cases": 4,
+        "answerable": 1,
+        "missing": 3,
+        "exactEvidenceSet": 0,
+        "answerableExactEvidenceSet": 0,
+        "correctAbstentions": 0,
+        "recallAt3": 0.0,
+        "precisionAt3": 0.0,
+        "mrr": 0,
+        "returnedCitationPrecisionOnAnswerable": 0,
+        "hostReplyP50Ms": 1.5545,
+        "hostReplyP95Ms": 6.46
+      }
+    },
+    "candidate-8c40d111-classes": {
+      "all": {
+        "cases": 40,
+        "answerable": 20,
+        "missing": 20,
+        "exactEvidenceSet": 37,
+        "answerableExactEvidenceSet": 18,
+        "correctAbstentions": 19,
+        "recallAt3": 0.9,
+        "precisionAt3": 0.3,
+        "mrr": 0.9,
+        "returnedCitationPrecisionOnAnswerable": 1.0,
+        "hostReplyP50Ms": 4.836,
+        "hostReplyP95Ms": 21.581
+      },
+      "declaredQueryGrammar": {
+        "cases": 36,
+        "answerable": 19,
+        "missing": 17,
+        "exactEvidenceSet": 35,
+        "answerableExactEvidenceSet": 18,
+        "correctAbstentions": 17,
+        "recallAt3": 0.9473684210526315,
+        "precisionAt3": 0.3157894736842105,
+        "mrr": 0.9473684210526315,
+        "returnedCitationPrecisionOnAnswerable": 1.0,
+        "hostReplyP50Ms": 5.079,
+        "hostReplyP95Ms": 31.472
+      },
+      "outsideDeclaredQueryGrammar": {
+        "cases": 4,
+        "answerable": 1,
+        "missing": 3,
+        "exactEvidenceSet": 2,
+        "answerableExactEvidenceSet": 0,
+        "correctAbstentions": 2,
+        "recallAt3": 0.0,
+        "precisionAt3": 0.0,
+        "mrr": 0,
+        "returnedCitationPrecisionOnAnswerable": 0,
+        "hostReplyP50Ms": 2.1435,
+        "hostReplyP95Ms": 21.581
+      }
+    },
+    "paired": {
+      "exactSetWins": [
+        "v2-01",
+        "v2-02",
+        "v2-03",
+        "v2-04",
+        "v2-05",
+        "v2-06",
+        "v2-07",
+        "v2-08",
+        "v2-09",
+        "v2-10",
+        "v2-12",
+        "v2-13",
+        "v2-14",
+        "v2-15",
+        "v2-16",
+        "v2-17",
+        "v2-18",
+        "v2-19",
+        "v2-20",
+        "v2-21",
+        "v2-22",
+        "v2-24",
+        "v2-25",
+        "v2-26",
+        "v2-30",
+        "v2-31",
+        "v2-32",
+        "v2-34",
+        "v2-37",
+        "v2-38",
+        "v2-40"
+      ],
+      "exactSetLosses": [],
+      "lostRelevantEvidence": [
+        "v2-23"
+      ],
+      "apiReplyRankDifferences": [
+        "v2-37",
+        "v2-38"
+      ]
+    },
+    "failures": [
+      {
+        "id": "v2-23",
+        "category": "reverse-owner-role",
+        "query": "Welche Farbe besitzt Ivos Rucksack?",
+        "expected": [
+          "ownership"
+        ],
+        "actual": [],
+        "answer": "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+      },
+      {
+        "id": "v2-33",
+        "category": "historical-outside-grammar",
+        "query": "Wo lebte Cihan 2018?",
+        "expected": [
+          "old"
+        ],
+        "actual": [],
+        "answer": "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+      },
+      {
+        "id": "v2-35",
+        "category": "future-outside-grammar",
+        "query": "In welcher Stadt wird Cihan übernächstes Jahr leben?",
+        "expected": [],
+        "actual": [
+          "current"
+        ],
+        "answer": "Dazu finde ich in meinem Gedächtnis:\n\nCihan lebt nun in Koblenz.\n(Bestätigte Nutzererinnerung)"
+      }
+    ]
+  },
+  "definitions": "Recall@3, Precision@3 (fixed denominator3), MRR and returnedCitationPrecisionOnAnswerable are macro metrics over answerable cases; each frozen case has one expected evidence ID. Missing cases use separate abstention accuracy. Latencies are host final reply calls incl synthetic history I/O, one pass per corpus/snapshot, not Android/device timings."
+}

@@ -189,7 +189,7 @@ object ContinuumBrainBridge {
             return ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.SHADOW)
         }
         val (answer,facts)=asked ?: return ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.FALLBACK_ERROR)
-        val evaluated=runCatching { decideOn(core,answer,facts,baseline) }
+        val evaluated=runCatching { decideOn(core,answer,facts,baseline,appDirectory,request,conversationId) }
             .getOrElse { ContinuumBrainResult(baseline,mode,ContinuumBrainStatus.FALLBACK_ERROR) }
         // The owner may switch the brain OFF while this turn is being evaluated.
         // Never publish an ON result after that revocation of the owner's opt-in.
@@ -237,14 +237,16 @@ object ContinuumBrainBridge {
     }
 
     private fun decideOn(
-        core:ContinuumLearningCore,answer:Ewm1Brain.Answer,ownerFacts:Set<String>,baseline:ContinuumChatOutcome
+        core:ContinuumLearningCore,answer:Ewm1Brain.Answer,ownerFacts:Set<String>,baseline:ContinuumChatOutcome,
+        appDirectory:File,question:String,conversationId:String
     ):ContinuumBrainResult {
         val on=ContinuumBrainMode.ON
         if(answer.decision=="QUERY" && answer.route=="MEMORY") {
             val ids=answer.cited
             // Revocation protection: read the active facts again; a fact revoked meanwhile is never shown.
             beforeRevocationCheck?.invoke()
-            val active=core.activeOwnerFacts().associate { it.id to it.content }
+            val (currentFacts,attributeScope)=core.brainAnswerView(question,ids,conversationId)
+            val active=currentFacts.associate { it.id to it.content }
             if(ids.isEmpty() || ids.any { it !in active }) {
                 // The baseline was rendered before the revocation check and may itself cite a
                 // now-revoked owner fact. Never fall back to that already-rendered text.
@@ -261,16 +263,31 @@ object ContinuumBrainBridge {
                     ContinuumBrainStatus.FALLBACK_REVOKED
                 )
             }
+            if(attributeScope!=null && ids.any { it !in attributeScope }) {
+                if(baseline.source==ContinuumBaselineSource.MEMORY && baseline.memoryIds.isNotEmpty() &&
+                    baseline.memoryIds.all { it in attributeScope && it in active })
+                    return ContinuumBrainResult(baseline,on,ContinuumBrainStatus.ON_KEPT_BASELINE)
+                return ContinuumBrainResult(ContinuumChatOutcome(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,
+                    "CONTINUUM · EWM2-Gehirn · kein passender aktueller Besitzerbeleg",baseline.trace,false,
+                    ContinuumBaselineSource.NONE),on,ContinuumBrainStatus.ON_ABSTAIN)
+            }
             val text=("Dazu finde ich in meinem Gedächtnis:"+ids.joinToString("") {
-                "\n\n"+active.getValue(it).take(250)+"\n(Bestätigte Nutzererinnerung)"
+                "\n\n"+OwnerMemoryPerspective.display(active.getValue(it))+"\n(Bestätigte Nutzererinnerung)"
             }).take(1000)
             return ContinuumBrainResult(ContinuumChatOutcome(text,
                 "CONTINUUM · EWM2-Gehirn · "+ids.size+" aktuelle Erinnerungen",baseline.trace,true,
                 ContinuumBaselineSource.MEMORY,ids),on,ContinuumBrainStatus.ON_MEMORY)
         }
         if(answer.decision=="QUERY" && answer.route=="SOURCE") {
-            val record=answer.source!!.evidence.first().record
-            return ContinuumBrainResult(ContinuumChatOutcome(archiveAnswer(record),
+            val indexed=answer.source!!.evidence.first().record
+            // The H5 index can hold a truncated text with the original full
+            // source hash. Reopen exactly that record before quoting offsets.
+            val record=ContinuumKnowledgeArchive(appDirectory).readSource(indexed.id)
+                ?.takeIf { it.sha256==indexed.sha256 }
+                ?: return ContinuumBrainResult(baseline,on,ContinuumBrainStatus.FALLBACK_ERROR)
+            val quotation=archiveAnswerForQuestion(record,question)
+                ?: return ContinuumBrainResult(baseline,on,ContinuumBrainStatus.ON_KEPT_BASELINE)
+            return ContinuumBrainResult(ContinuumChatOutcome(quotation,
                 "QUELLENABRUF · EWM2-Gehirn · lokal archivierter, nicht bestätigter Beleg",baseline.trace,true,
                 ContinuumBaselineSource.ARCHIVE,emptyList(),record.id),on,ContinuumBrainStatus.ON_SOURCE)
         }
@@ -295,6 +312,19 @@ object ContinuumBrainBridge {
     }
 
     /** Same wording as the existing archive answer in AgentActivity. */
+    internal fun archiveAnswerForQuestion(document:ContinuumKnowledgeArchive.SourceRecord,question:String):String? {
+        val quote=ContinuumEvidenceWindow.select(question,document.text,document.sha256) ?: return null
+        return "LOKALES WISSENSARCHIV · öffentlicher, nicht unabhängig verifizierter Quellenauszug: "+
+            quote.text+"\nQuelle: "+document.url+"\nHerkunft: "+document.attribution+
+            "\nQuellen-SHA-256: "+quote.sourceSha256+
+            "\nBelegabschnitt: UTF-8-Bytes im archivierten Auszug "+quote.utf8Start+"–"+quote.utf8EndExclusive+" (Ende exklusiv)"+
+            "\nAbschnitt-SHA-256: "+quote.quotationSha256+
+            "\nQuelldatum: "+(document.sourceDate ?: "nicht angegeben")+
+            "\nLexikalisch ausgewähltes Zitat, kein unabhängig geprüfter Antwortbeweis. "+
+            "Für zeitabhängige oder rechtliche Aussagen Originalquelle und Stichtag kontrollieren."
+    }
+
+    /** Compatibility formatter; active question paths use archiveAnswerForQuestion. */
     internal fun archiveAnswer(document:ContinuumKnowledgeArchive.SourceRecord):String=
         "LOKALES WISSENSARCHIV · öffentlicher, nicht unabhängig verifizierter "+
             "Quellenauszug: "+
