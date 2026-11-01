@@ -1,7 +1,7 @@
 # CONTINUUM – Einstiegspunkt für den nächsten Agenten
 
 **Pflichtreihenfolge vor jeder größeren Architekturänderung:**
-1. Aktuellen GitHub-HEAD prüfen: `git fetch && git rev-parse origin/research/continuum-fable51-genesis-20261101` (Stand dieses Dokuments: `5a528e29`; PR [#334](https://github.com/Ullmann27/device-ai/pull/334), Basis PR #333).
+1. Aktuellen GitHub-HEAD prüfen: `git fetch && git rev-parse origin/research/continuum-fable51-genesis-20261101` (Stand dieses Dokuments: Code-HEAD `5a528e29`, Doku-Commit danach; PR [#334](https://github.com/Ullmann27/device-ai/pull/334), Basis PR #333).
 2. [`AGENTS.md`](../../../AGENTS.md) vollständig lesen (Sicherheits-, Freigabe- und Release-Regeln gelten unverändert).
 3. [`FABLE51-GENESIS-HANDOFF.md`](FABLE51-GENESIS-HANDOFF.md) (Bestandsaufnahme, Commit-Log, Alt/Neu, Nicht-Erreichtes).
 4. [`FABLE51-GENESIS-CONTINUATION.md`](FABLE51-GENESIS-CONTINUATION.md) (Gehirnaufbau, alle Experimente, Tests, Weiterentwicklung je Meilenstein, Fortsetzungsplan).
