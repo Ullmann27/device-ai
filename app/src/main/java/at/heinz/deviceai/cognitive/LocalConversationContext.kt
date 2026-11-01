@@ -72,10 +72,17 @@ class LocalConversationContext {
 
     @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null;research=null }
 
-    @Synchronized fun render(sessionId: String, nowMillis: Long = System.currentTimeMillis()): String {
+    /** Access is supplied by the current turn, never inferred from a saved research digest.
+     * onlineApprovalActive must come from an existing authorized session of this turn. */
+    @Synchronized fun render(sessionId: String, nowMillis: Long = System.currentTimeMillis(),
+                            internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                            ownerForbidsExternalNetwork: Boolean = false,
+                            onlineApprovalActive: Boolean = false): String {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null && research==null) return ""
+        val offline = ownerForbidsExternalNetwork || internetMode == InternetAccessMode.OFF ||
+            internetMode == InternetAccessMode.ASK && !onlineApprovalActive
         return buildString {
-            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis)) }
+            research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
             explicitFocus?.let { append("\nKorrigierter Gesprächsfokus – vorläufiger Kontext, keine bestätigte Erinnerung: ")
                 .append(data(it,120)).append("\nNicht als Besitzerfakt oder Freigabe behandeln.\n") }
             if (turns.isEmpty()) return@buildString

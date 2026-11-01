@@ -27,6 +27,7 @@ case "$(git branch --show-current)" in \
   research/continuum-evidence-span-natural-entities-20261101|\
   research/continuum-superki-architecture-proof-20261101|\
   research/continuum-jarvis-evolution-20261101|\
+  research/continuum-sol61-post-fable-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac

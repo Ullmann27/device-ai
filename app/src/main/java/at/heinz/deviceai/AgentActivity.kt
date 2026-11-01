@@ -6152,8 +6152,8 @@ class AgentActivity : Activity() {
         val internetModeAtTurnStart = internetConsent.mode
         val internetRevisionAtTurnStart = internetConsent.revision()
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
-        val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall
-            .safeHistory(localConversationContext.render(localSessionId))
+        val ownerForbidsExternalNetwork =
+            at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(text)
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
@@ -6209,10 +6209,17 @@ class AgentActivity : Activity() {
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()
-                val boundedInternetMode =
+                val boundedInternetMode = if (ownerForbidsExternalNetwork)
+                    at.heinz.deviceai.cognitive.InternetAccessMode.OFF else
                     at.heinz.deviceai.cognitive.TurnScopedInternetMode.effective(
                         internetModeAtTurnStart, internetConsent.mode,
                         internetConsent.revision() == internetRevisionAtTurnStart)
+                // Rebuild per model call/retry: a consent revocation must not reuse a
+                // research frame rendered before the current bounded access state.
+                val conversationContext = at.heinz.deviceai.cognitive.LocalConversationPromptFirewall.safeHistory(
+                    localConversationContext.render(localSessionId, internetMode = boundedInternetMode,
+                        ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
+                        onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
                     "Internetmodus: ${boundedInternetMode.name}. " + when(boundedInternetMode) {
                         at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Kein Webzugriff; antworte offline und benenne fehlende aktuelle Belege."
