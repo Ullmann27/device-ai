@@ -5692,7 +5692,10 @@ class AgentActivity : Activity() {
         val researchSessionId = sessionId
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
-        val discovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
+        val generalDiscovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
+        // M3: a norm reference ("§ 364a ABGB") is resolved via the official RIS open-data API first;
+        // everything else (and any API failure) goes through the general web discovery unchanged.
+        val discovery=at.heinz.deviceai.cognitive.LegalRisDiscoveryProvider(generalDiscovery,checkAccess=session::checkActive)
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
         ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
@@ -5783,7 +5786,8 @@ class AgentActivity : Activity() {
                         if (dossier.sources.isNotEmpty())
                             dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
                     }
-                    discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
+                    discovery.lastIssue?.let { addToolActivity("RIS · "+it) }
+                    generalDiscovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
                     // B1: the research result becomes follow-up context for the local model (same brain,
                     // same session) – typed as external, unverified data, never an owner fact.

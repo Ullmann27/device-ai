@@ -47,8 +47,8 @@ internal object LegalRisParagraphExtractor {
         val text = if (path.startsWith("/eli/", true)) path
             else if (path.equals("/NormDokument.wxe", true)) uri.rawQuery.orEmpty()
             else return null
-        return Regex("""(?iu)(?:/P|(?:^|&)Paragraf=)([0-9]{1,5})(?:/|&|$)""")
-            .find(text)?.groupValues?.get(1)
+        return Regex("""(?iu)(?:/P|(?:^|&)Paragraf=)([0-9]{1,5}[a-z]?)(?:/|&|$)""")
+            .find(text)?.groupValues?.get(1)?.lowercase(Locale.ROOT)
     }
 
     /** Official RIS open-data document host (same authority, no portal chrome); paragraph comes from metadata. */
@@ -61,8 +61,8 @@ internal object LegalRisParagraphExtractor {
 
     /** Paragraph declared in the RIS metadata block ("§/Artikel/Anlage … § 1151"), null if absent. */
     fun declaredParagraph(raw: String): String? =
-        Regex("""(?iu)§/Artikel/Anlage\s+(?:Paragraph/Artikel/Anlage\s+)?§\s*([0-9]{1,5})(?![0-9])""")
-            .find(normalize(raw))?.groupValues?.get(1)
+        Regex("""(?iu)§/Artikel/Anlage\s+(?:Paragraph/Artikel/Anlage\s+)?§\s*([0-9]{1,5}[a-z]?)(?![0-9a-z])""")
+            .find(normalize(raw))?.groupValues?.get(1)?.lowercase(Locale.ROOT)
 
     /** "Inkrafttretensdatum"/"Außerkrafttretensdatum" from the RIS metadata; an expired version is marked. */
     fun validityNote(raw: String): String? {
@@ -83,13 +83,14 @@ internal object LegalRisParagraphExtractor {
 
     /** This is a partial-evidence extractor, not legal interpretation or current-law oracle. */
     fun extract(paragraph: String, rawInput: String): String? {
-        if (!paragraph.matches(Regex("[0-9]{1,5}")) || rawInput.length !in 100..100_000)
+        // Paragraph identifiers may carry a letter suffix (§ 364a ABGB); letters are compared case-insensitively.
+        if (!paragraph.matches(Regex("[0-9]{1,5}[a-zA-Z]?")) || rawInput.length !in 100..100_000)
             return null
         val raw = normalize(rawInput)
         // A document whose metadata declares another paragraph can never serve as evidence for this one.
         val declared = declaredParagraph(raw)
-        if (declared != null && declared != paragraph) return null
-        val heading = Regex("""(?iu)§\s*""" + Regex.escape(paragraph) + """(?:[.\s]|$)""")
+        if (declared != null && declared != paragraph.lowercase(Locale.ROOT)) return null
+        val heading = Regex("""(?iu)§\s*""" + Regex.escape(paragraph) + """(?![0-9a-z])(?:[.\s]|$)""")
         // Metadata can mention "Dokumentnummer" before the actual Text section.
         // Only treat section trailers *following* "Text" as delimiters.
         val textField = Regex("""(?iu)\bText\s*:?""").find(raw)

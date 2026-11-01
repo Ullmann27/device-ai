@@ -62,11 +62,16 @@ object ResearchDialogueHandoff {
         append("Recherchierte Frage: ").append(digest.question).append('\n')
         append(if (digest.modelSynthesized) "Lokale Zusammenfassung der Quellen: " else "Quellenauszüge: ")
         append(digest.synthesis).append('\n')
+        val verdict = FreshKnowledgeNeed.freshness(digest.question, digest.retrievedAt, nowMillis, digest.synthesis)
+        // B4 (first runtime use): every source is typed PUBLIC_WEB evidence whose expiry is the
+        // freshness horizon; the contract decides which citations still count as usable.
+        val usable = JarvisUnifiedEvidenceContract.useForAnswer(unifiedEvidence(digest, verdict), nowMillis, offline = false,
+            maxEvidence = MAX_SOURCES).map { it.sourceId }.toSet()
         digest.sources.forEachIndexed { i, s ->
             append("Quelle ").append(i + 1).append(": ").append(s.label).append(" — ").append(s.url)
-                .append(" (abgerufen ").append(formatDate(s.retrievedAt)).append(")\n")
+                .append(" (abgerufen ").append(formatDate(s.retrievedAt))
+                .append(if (s.url in usable) ")\n" else "; laut Evidenzvertrag abgelaufen)\n")
         }
-        val verdict = FreshKnowledgeNeed.freshness(digest.question, digest.retrievedAt, nowMillis, digest.synthesis)
         append("Aktualität: ").append(verdict.reason)
         when (verdict.status) {
             FreshKnowledgeNeed.Freshness.FRESH -> append(" Als aktuell verwendbar.\n")
@@ -76,6 +81,20 @@ object ResearchDialogueHandoff {
         }
         append("Aussagen daraus nur mit Quellenbezug und Abrufdatum wiedergeben; Unsicherheit benennen.\n")
         append("ENDE EXTERNE RECHERCHEDATEN.\n")
+    }
+
+    /** The digest's sources as [JarvisUnifiedEvidenceContract] evidence (origin PUBLIC_WEB, never owner authority);
+     *  expiry = retrieval time + freshness horizon of the question type. Sources the contract rejects are skipped. */
+    internal fun unifiedEvidence(digest: Digest, verdict: FreshKnowledgeNeed.FreshnessVerdict): List<JarvisUnifiedEvidenceContract.Evidence> {
+        val content = digest.synthesis.filterNot(Char::isISOControl).take(4096).ifBlank { "-" }
+        val sha = JarvisUnifiedEvidenceContract.hash(content)
+        return digest.sources.mapNotNull { s ->
+            runCatching {
+                JarvisUnifiedEvidenceContract.Evidence(JarvisUnifiedEvidenceContract.Origin.PUBLIC_WEB,
+                    JarvisUnifiedEvidenceContract.Privacy.PUBLIC, s.url, 1, s.retrievedAt,
+                    s.retrievedAt + verdict.horizonDays * 86_400_000L, content, sha)
+            }.getOrNull()
+        }
     }
 
     /** Verdict for a follow-up question against the recorded research of this session. */

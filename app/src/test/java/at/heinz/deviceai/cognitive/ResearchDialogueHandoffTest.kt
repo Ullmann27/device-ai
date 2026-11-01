@@ -141,6 +141,15 @@ class ResearchDialogueHandoffTest {
         // The same evidence 45 days later must be flagged, not silently presented as current.
         val later = ResearchDialogueHandoff.render(d, retrieved + 45 * day)
         assertTrue(later, later.contains("Abruf vor 45 Tagen, für diese Fragenart gilt höchstens 30 Tag(e). MÖGLICHERWEISE VERALTET"))
+        // B4: the typed evidence contract marks the expired citation; the fresh one is untouched.
+        assertTrue(later, later.contains("https://www.ecb.europa.eu/x (abgerufen 2025-11-01; laut Evidenzvertrag abgelaufen)"))
+        assertFalse(fresh.contains("abgelaufen"))
+        val ev = ResearchDialogueHandoff.unifiedEvidence(d, FreshKnowledgeNeed.freshness(d.question, d.retrievedAt, now, d.synthesis)).single()
+        assertEquals(JarvisUnifiedEvidenceContract.Origin.PUBLIC_WEB, ev.origin)
+        assertFalse(ev.grantsOwnerAuthority)
+        assertEquals(d.retrievedAt + 30 * day, ev.expiresAtMillis)
+        assertTrue("offline mode never uses PUBLIC_WEB evidence",
+            JarvisUnifiedEvidenceContract.useForAnswer(listOf(ev), now, offline = true).isEmpty())
         assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE,
             ResearchDialogueHandoff.freshnessFor(d, "Wer ist aktuell Präsidentin der EZB?", retrieved + 45 * day).status)
         // A price question against the same retrieval is stale after two days.
