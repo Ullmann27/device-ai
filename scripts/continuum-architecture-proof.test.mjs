@@ -62,7 +62,7 @@ test('missing test transcript and failed JUnit block the architectural receipt',
   const f=fixture(t);
   unlinkSync(join(f.root,'continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt'));
   assert.throws(()=>collectArchitectureProof({root:f.root,sha:SHA,versionCode:36,runId:RUN_ID}));
-  f.put('continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt','pass\n');
+  f.put('continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt',TAP);
   const klass = REQUIRED_JUNIT[0];
   f.put('app/build/test-results/testDebugUnitTest/TEST-'+klass+'.xml',
     '<testsuite name="'+klass+'" tests="3" failures="1" errors="0"/>');
