@@ -34,7 +34,7 @@ test('code37 keeps the original package, certificate and pinned Render publisher
   assert.match(owner, /Wrong signing certificate/);
   assert.match(owner, /Built APK signer differs/);
   assert.match(owner, /Verified using v2 scheme/);
-  assert.match(owner, /HEAD changed during release build/);
+  assert.match(owner, /Source SHA changed during release build/);
 });
 
 test('v37 requires exactly code37, matching Gradle, AAPT, proof and manifest', () => {
