@@ -9,6 +9,13 @@ fail() { printf 'CONTINUUM_OWNER_RENDER_RELEASE_BLOCKED: %s\n' "$*" >&2; exit 69
 root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$root"
 
+# The original Render service keeps its established build command and pinned URL.
+# Dispatch the new, explicitly approved code37 candidate to a separate strict
+# release contract. Code36 continues through the unmodified legacy checks.
+if [[ "${CONTINUUM_RELEASE_VERSION_CODE:-}" == "37" ]]; then
+  exec bash "$root/scripts/render-continuum-v37-owner-release.sh"
+fi
+
 expected_host='continuum-owner-v23-release-preflight.onrender.com'
 expected_package='at.heinz.deviceai.continuumlocal'
 expected_signer='6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23'
