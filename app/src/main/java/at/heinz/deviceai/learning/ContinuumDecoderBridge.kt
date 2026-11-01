@@ -173,9 +173,12 @@ class ContinuumDecoderBridge(private val directory: File) {
             encoder.representation(it.conditionerText())
         }
         val candidate=TinyContextDecoder.restore(baseline.save())
+        val started=System.nanoTime()
+        fun stopped()=cancelled() || Thread.currentThread().isInterrupted ||
+            System.nanoTime()-started>=5_000_000_000L
         fun freeQuality(model:TinyContextDecoder,corpus:DecoderEvidenceCorpus)=
-            DecoderGenerativeGate.measure(corpus) { pair ->
-                model.generate(pair.prefix(),128,conditionFor(pair))
+            DecoderGenerativeGate.measureCancellable(corpus,::stopped) { pair ->
+                model.generate(pair.prefix(),DecoderGenerativeGate.MAX_BYTES,conditionFor(pair),::stopped)
             }
         val generationBefore=freeQuality(baseline,audit)
         val protectedGenerationBefore=protectedAudits.map { freeQuality(baseline,it) }
@@ -183,21 +186,22 @@ class ContinuumDecoderBridge(private val directory: File) {
         val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
         val result=candidate.trainEvidencePairs(train,steps=steps,
             learningRate=learningRate,conditionerFor=conditionFor,
-            cancelled=cancelled,maxMillis=5000)
+            cancelled=::stopped,maxMillis=5000)
         val auditAfter=candidate.evaluateEvidencePairs(audit,conditionFor)
         val protectedAfter=protectedAudits.map { candidate.evaluateEvidencePairs(it,conditionFor) }
-        val generationAfter=freeQuality(candidate,audit)
-        val protectedGenerationAfter=protectedAudits.map { freeQuality(candidate,it) }
+        val generationAfter=if(result.interrupted)null else freeQuality(candidate,audit)
+        val protectedGenerationAfter=protectedAudits.map { if(result.interrupted)null else freeQuality(candidate,it) }
         val protectedSafe=protectedAfter.zip(protectedBefore).all { (now,old) ->
             now.isFinite() && now<=old
         }
         val protectedFreeSafe=protectedGenerationAfter.zip(protectedGenerationBefore).all { (now,old) ->
-            old.correct.indices.all { !old.correct[it] || now.correct[it] } &&
+            now!=null && old!=null && old.correct.indices.all { !old.correct[it] || now.correct[it] } &&
                 now.unsupported<=old.unsupported && now.unterminated<=old.unterminated
         }
-        val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
+        val accepted=result.steps>0 && !result.interrupted && !stopped() &&
             result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
             protectedSafe && protectedFreeSafe &&
+            generationBefore!=null && generationAfter!=null &&
             DecoderGenerativeGate.improves(generationBefore,generationAfter)
         if(accepted) {
             // A single verified bundle replaces the previous two-file commit.
@@ -208,7 +212,14 @@ class ContinuumDecoderBridge(private val directory: File) {
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
             result.lossAfter,auditBefore,auditAfter,hash(active.save()),
-            protectedBefore,protectedAfter,generationBefore,generationAfter)
+            protectedBefore,protectedAfter,generationBefore,generationAfter,
+            when {
+                generationBefore==null || generationAfter==null -> "INTERRUPTED"
+                generationAfter.supported<20 || generationAfter.missing<5 -> "INSUFFICIENT_VALIDATION"
+                !DecoderGenerativeGate.improves(generationBefore,generationAfter) -> "FREE_GENERATION_REJECTED"
+                accepted -> "PASSED"
+                else -> "LOSS_OR_PROTECTED_REJECTED"
+            })
     }
 
     /** Research-only evidence-conditional output; never auto-published as a
@@ -299,5 +310,6 @@ data class DecoderExperimentResult(
     val protectedBefore: List<Double> = emptyList(),
     val protectedAfter: List<Double> = emptyList(),
     val generationBefore: DecoderGenerativeGate.Quality? = null,
-    val generationAfter: DecoderGenerativeGate.Quality? = null
+    val generationAfter: DecoderGenerativeGate.Quality? = null,
+    val generationGate: String = "NOT_APPLICABLE"
 )

@@ -49,4 +49,20 @@ class DecoderGenerativeGateTest {
         assertEquals(1, score.correctSupported)
         assertEquals(0, score.correctAbstentions)
     }
+
+    @Test fun cancellationStopsBeforeInferenceAndBetweenCases() {
+        var generated = 0
+        assertNull(DecoderGenerativeGate.measureCancellable(validation, { true }) {
+            generated++; DecoderGeneration(it.answer, 1, true)
+        })
+        assertEquals(0, generated)
+        assertNull(DecoderGenerativeGate.measureCancellable(validation, { generated == 1 }) {
+            generated++; DecoderGeneration(it.answer, 1, true)
+        })
+        assertEquals(1, generated)
+        var checks = 0
+        val output = TinyContextDecoder().generate("Antwort: ", 48, cancelled = { ++checks > 3 })
+        assertTrue(output.bytesGenerated <= 3)
+        assertFalse(output.ended)
+    }
 }

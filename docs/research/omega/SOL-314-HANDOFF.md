@@ -54,6 +54,19 @@ Compile `LearningSnapshot`, `TinyContextDecoder`, `TrainableSubwordEncoder`,
 Run JUnitCore with `app/src/test/resources` on the classpath; Render runs these
 through the original Android Gradle QA script on the exact pushed commit.
 
+Independent review found and prompted corrections: free scoring now checks
+cancellation/deadline before/between items and inside byte generation; the
+shared budget is the Android runtime's 48 bytes. Structurally ineligible large
+curricula return `INSUFFICIENT_VALIDATION` without training, retry or cursor
+consumption. The added qualifying 20+5 bridge regression verifies that improved
+NLL still cannot publish an incorrect generator and preserves an existing
+checkpoint. Focused host suite: **30/30 passed**. No original tests removed.
+
+Render first-commit QA: service `srv-dbjatfetlv9c73cmufs0`, deploy
+`dep-dbjatfmtlv9c73cmugig`, source `b7ca85ba9a05f8ff626dfea9e71fa1c2bd2adfc9`;
+started 2026-11-01 03:15:10 UTC, outcome pending. Subsequent source needs its own
+exact-SHA QA. The static site serves audit text only; it is not an active worker.
+
 Next: causal ablative measurements of conditioning / free vs teacher-forced
 outputs on frozen synthetic checkpoints; independently evaluated answer-path
 improvement, dialogue regression, evidence provenance and exact-SHA Render QA.

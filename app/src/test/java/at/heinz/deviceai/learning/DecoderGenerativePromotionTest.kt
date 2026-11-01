@@ -34,4 +34,32 @@ class DecoderGenerativePromotionTest {
         assertArrayEquals(decoder.nextTokenProbabilities(first),
             decoder.nextTokenProbabilities(second), 0.0)
     }
+
+    @Test fun qualifyingValidationStillRejectsLossImprovementAndKeepsExistingCheckpoint() {
+        val directory = Files.createTempDirectory("cdx1-qualified-free-gate").toFile()
+        try {
+            val encoder = TrainableSubwordEncoder().save()
+            val previous = TinyContextDecoder().save()
+            val file = directory.resolve("context-decoder-paired.cdx")
+            file.writeBytes(previous)
+            ContinuumPairedEncoderBinding.write(directory.resolve("context-decoder-paired.swb1-binding"), previous, encoder)
+            val train = DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Anna wohnt in Graz.", "Wo wohnt Anna?", "Graz")
+            ), DecoderSplit.TRAIN)
+            val audit = DecoderEvidenceCorpus((1..20).map {
+                DecoderEvidencePair("Person B$it wohnt in Graz.", "Wo wohnt B$it?", "Graz")
+            } + (1..5).map {
+                DecoderEvidencePair("Person C$it wohnt in Graz.", "Welche Farbe mag C$it?", "unbekannt")
+            }, DecoderSplit.AUDIT)
+            assertTrue(DecoderGenerativeGate.hasControls(audit))
+            val result = ContinuumDecoderBridge(directory).trainPairedExperiment(train, audit, encoder, steps = 120)
+            assertTrue(result.trainingAfter < result.trainingBefore)
+            assertTrue(result.auditAfter < result.auditBefore)
+            assertEquals("FREE_GENERATION_REJECTED", result.generationGate)
+            assertEquals(0, result.generationAfter!!.correctSupported)
+            assertFalse(result.accepted)
+            assertArrayEquals(previous, file.readBytes())
+            assertFalse(directory.resolve("context-decoder-paired.bundle").exists())
+        } finally { directory.deleteRecursively() }
+    }
 }

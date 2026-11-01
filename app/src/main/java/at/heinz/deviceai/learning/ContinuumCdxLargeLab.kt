@@ -32,7 +32,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
                      val after:Double,val auditBefore:Double,
                      val auditAfter:Double,val oldAuditBefore:Double,
                      val oldAuditAfter:Double,val hash:String,
-                     val finalized:Boolean,val attempts:Int=1) {
+                     val finalized:Boolean,val attempts:Int=1,val generationGate:String="NOT_APPLICABLE") {
         fun description():String = buildString {
             append("CDX1 · GROSSES BELEG-ANTWORT-ARCHIV\n")
             append("Stufe ").append(stage).append("/").append(total)
@@ -40,7 +40,10 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
                 .append(" durchgeführte Gewichtsupdates\n")
             append(if(!finalized) "UNVOLLSTÄNDIG · Stufe wiederholbar" else
                 if(accepted) "KANDIDAT ÜBERNOMMEN" else "KANDIDAT VERWORFEN")
-            fun loss(value:Double)="%.5f".format(Locale.ROOT,value)
+            append("\nFreie Generierungsprüfung: ").append(generationGate)
+            if(generationGate=="INSUFFICIENT_VALIDATION")
+                append("\nValidierung benötigt mindestens 20 Belegfragen und 5 Missing-Evidence-Kontrollen. Stufe nicht verbraucht.")
+            fun loss(value:Double)=if(value.isFinite())"%.5f".format(Locale.ROOT,value) else "nicht gemessen"
             append("\nTraining: ").append(loss(before)).append(" → ").append(loss(after))
             append("\nUnbekannte Forschungsfälle: ")
                 .append(loss(auditBefore)).append(" → ").append(loss(auditAfter))
@@ -63,6 +66,14 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         val core=ContinuumLearningCore(filesDir).apply {
             observeTraining(phaseObserver)
         }
+        if(!DecoderGenerativeGate.hasControls(curriculum.audit)) {
+            // A structurally ineligible validation cannot be fixed by retrying
+            // gradients. Preserve the stage cursor and all model checkpoints.
+            return@synchronized Round(index+1,curriculum.STAGES,false,0,
+                curriculum.TRAIN_STEPS,Double.NaN,Double.NaN,Double.NaN,Double.NaN,
+                Double.NaN,Double.NaN,core.pairedDecoderStatus().sha256 ?: "0".repeat(64),
+                false,0,"INSUFFICIENT_VALIDATION")
+        }
         val protected=DecoderEvidenceCorpus(curriculum.historicAudit,DecoderSplit.AUDIT)
         val training=curriculum.trainingStageWithReplay(index)
         val swbBefore=core.modelHash()
@@ -73,6 +84,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
             steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
             protectedAudits=listOf(protected))
         val retry=index>0 && !first.accepted &&
+            first.generationGate!="INSUFFICIENT_VALIDATION" &&
             first.completedSteps==curriculum.TRAIN_STEPS && !cancelled()
         val second=if(retry)core.trainExperimentalPairedDecoder(
             training,curriculum.audit,
@@ -81,7 +93,8 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         ) else null
         val report=second ?: first
         check(core.modelHash()==swbBefore) { "SWB1 was changed during CDX1 laboratory" }
-        val finished=report.completedSteps==curriculum.TRAIN_STEPS && !cancelled()
+        val finished=report.completedSteps==curriculum.TRAIN_STEPS && !cancelled() &&
+            report.generationGate!="INSUFFICIENT_VALIDATION" && report.generationGate!="INTERRUPTED"
         if(finished)writeStage(index+1)
         Round(index+1,curriculum.STAGES,report.accepted,
             first.completedSteps+(second?.completedSteps ?: 0),
@@ -89,7 +102,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
             report.trainingBefore,report.trainingAfter,
             report.auditBefore,report.auditAfter,
             report.protectedBefore.single(),report.protectedAfter.single(),
-            report.activeSha256,finished,if(second==null)1 else 2)
+            report.activeSha256,finished,if(second==null)1 else 2,report.generationGate)
     }
 
     private fun readStage():Int {

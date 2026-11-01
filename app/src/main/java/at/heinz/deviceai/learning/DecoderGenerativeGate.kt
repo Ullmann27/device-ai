@@ -8,6 +8,8 @@ import java.util.Locale
  * An audit answer of "unbekannt" explicitly labels a missing-evidence control.
  */
 object DecoderGenerativeGate {
+    // Same budget as the existing Android intelligence audit and paired lab.
+    const val MAX_BYTES = 48
     data class Quality(val correct: List<Boolean>, val supported: Int,
         val missing: Int, val correctSupported: Int, val correctAbstentions: Int,
         val unsupported: Int, val unterminated: Int) {
@@ -23,12 +25,23 @@ object DecoderGenerativeGate {
     private val abstentions = setOf("unbekannt", "nicht bekannt", "weiß ich nicht",
         "keine angabe", "keine information", "nicht angegeben")
 
-    fun measure(corpus: DecoderEvidenceCorpus, generate: (DecoderEvidencePair) -> DecoderGeneration): Quality {
+    fun hasControls(corpus: DecoderEvidenceCorpus): Boolean =
+        corpus.split == DecoderSplit.AUDIT &&
+            corpus.pairs.count { normalize(it.answer) in abstentions } >= 5 &&
+            corpus.pairs.count { normalize(it.answer) !in abstentions } >= 20
+
+    fun measure(corpus: DecoderEvidenceCorpus, generate: (DecoderEvidencePair) -> DecoderGeneration): Quality =
+        checkNotNull(measureCancellable(corpus, { false }, generate))
+
+    fun measureCancellable(corpus: DecoderEvidenceCorpus, cancelled: () -> Boolean,
+        generate: (DecoderEvidencePair) -> DecoderGeneration): Quality? {
         require(corpus.split == DecoderSplit.AUDIT)
         var supported = 0; var missing = 0; var correctSupported = 0
         var correctAbstentions = 0; var unsupported = 0; var unterminated = 0
         val correct = corpus.pairs.map { pair ->
+            if (cancelled() || Thread.currentThread().isInterrupted) return null
             val output = generate(pair)
+            if (cancelled() || Thread.currentThread().isInterrupted) return null
             val answer = normalize(output.text)
             val isMissing = normalize(pair.answer) in abstentions
             if (!output.ended) unterminated++
