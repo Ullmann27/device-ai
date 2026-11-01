@@ -18,3 +18,7 @@ Nine JUnit tests pass (five existing, four new), actual Kotlin2.0.21/JVM21; `git
 ## Next work / rollback
 
 Independent reviewer holds a previously unused frozen natural-location corpus; do not use it for training or tune after seeing results. Next: immutable bounded evidence snapshot, controlled residual-span research adapter, counterfactual conditioner measurements, fix329 reporter invocation without weakening strict receipt validation, cumulative independent Render QA. Default Android answer path is unchanged at this checkpoint. Revert this isolated commit to restore330 behavior; never merge automatically to main.
+
+## Checkpoint 2 — architecture-proof integration
+
+Reviewed329's four-file delta and merged exact3064ceb8 on isolated331, preserving330 whitelist and adding only331. Root cause of329 failure: `npm test -- --test-reporter=tap` places reporter after backend test globs on Node24, emits Spec with exit0. Fix invokes `node --test --test-reporter=tap test/*.test.js` in the same backend block. Strict TAP/JUnit verifier remains unchanged. All7 proof negative/positive tests PASS on Node24.19.0; independent reviewer replaying complete backend. New Render cumulative QA required, no use of329 old PASS.
