@@ -105,7 +105,7 @@ internal object CertifiedLocationReflex {
         // A later owner-confirmed revocation without the word "in" must never disappear
         // while an older positive place fact survives the filter below.
         // No temporal precedence is inferred from this bounded source list.
-        val namedRetraction = Regex("""(?iu)\\b(?:weggezogen|umgezogen|widerruf(?:en)?|zurueckgezogen|zurückgezogen|ort\\s+unbekannt)\\b""")
+        val namedRetraction = Regex("""(?iu)\b(?:weggezogen|umgezogen|widerruf(?:en)?|zurueckgezogen|zurückgezogen|ort\s+unbekannt)\b""")
         if (confirmedFacts.any { (_, text) -> mentions.containsMatchIn(text) &&
                 namedRetraction.containsMatchIn(text) }) return null
         // Facts about the person that cannot be about a place ("Mama mag Kaffee.") are not
