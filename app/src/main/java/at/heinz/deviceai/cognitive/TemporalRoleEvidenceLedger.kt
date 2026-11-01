@@ -12,7 +12,8 @@ internal object TemporalRoleEvidenceLedger {
     data class Fact(val subject: String, val relation: String, val value: String,
         val validFromMillis: Long, val observedAtMillis: Long,
         val sourceId: String, val sourceRevision: Int, val sourceText: String,
-        val sourceSha256: String, val validUntilMillis: Long? = null) {
+        val sourceSha256: String, val validUntilMillis: Long? = null,
+        val supersedesSourceIds: Set<String> = emptySet()) {
         init {
             require(subject.length in 1..80 && relation.length in 1..80 && value.length in 1..160)
             require(subject.none(Char::isISOControl) && value.none(Char::isISOControl))
@@ -22,6 +23,9 @@ internal object TemporalRoleEvidenceLedger {
             require(sourceText.length in 1..4096)
             require(sourceSha256.matches(Regex("[a-f0-9]{64}")))
             require(sourceSha256 == sha256(sourceText))
+            require(supersedesSourceIds.size <= 16 &&
+                supersedesSourceIds.none { it == sourceId ||
+                    !it.matches(Regex("[a-zA-Z0-9._:-]{1,96}")) })
         }
     }
 
@@ -41,12 +45,19 @@ internal object TemporalRoleEvidenceLedger {
                 (it.validUntilMillis == null || validAtMillis < it.validUntilMillis) }
             .toList()
         if (relevant.isEmpty()) return Lookup.NoEvidence
-        // Explicit time supersession is allowed only within a consistent evidence timeline.
-        // Same-time conflicting values are refused, not resolved by model confidence.
+        // A later timestamp is NOT authority to erase a conflicting source.
+        // New location values supersede older active values only when the new
+        // evidence explicitly identifies the older source being replaced.
         val latest = relevant.maxOf { it.validFromMillis }
         val candidates = relevant.filter { it.validFromMillis == latest }
-        if (candidates.map { it.value.lowercase(Locale.ROOT) }.distinct().size != 1)
-            return Lookup.Conflict(candidates.map { it.sourceId }.distinct().sorted())
+        val allValues = candidates.map { it.value.lowercase(Locale.ROOT) }.distinct()
+        val oldConflicts = relevant.filter { fact ->
+            fact.validFromMillis < latest &&
+                fact.value.lowercase(Locale.ROOT) !in allValues &&
+                candidates.none { fact.sourceId in it.supersedesSourceIds }
+        }
+        if (allValues.size != 1 || oldConflicts.isNotEmpty())
+            return Lookup.Conflict((candidates + oldConflicts).map { it.sourceId }.distinct().sorted())
         return Lookup.Found(candidates.first().value, candidates.map { it.sourceId }.distinct().sorted(), latest)
     }
 

@@ -5,20 +5,27 @@ import org.junit.Test
 
 class TemporalRoleEvidenceLedgerTest {
     private fun fact(value: String, valid: Long, observed: Long, id: String,
-                     validUntil: Long? = null): TemporalRoleEvidenceLedger.Fact {
+                     validUntil: Long? = null, supersedes: Set<String> = emptySet()):
+                     TemporalRoleEvidenceLedger.Fact {
         val text = "Anna ist in " + value + "."
         return TemporalRoleEvidenceLedger.Fact("Anna", "ist in", value, valid, observed,
-            id, 1, text, TemporalRoleEvidenceLedger.sha256(text), validUntil)
+            id, 1, text, TemporalRoleEvidenceLedger.sha256(text), validUntil, supersedes)
     }
 
     @Test fun supportsWhatWasKnownAndWhatWasActuallyValidAtDistinctTimes() {
-        val all = listOf(fact("Graz", 10, 15, "a"), fact("Linz", 20, 30, "b"))
+        val all = listOf(fact("Graz", 10, 15, "a"), fact("Linz", 20, 30, "b", supersedes = setOf("a")))
         val historical = TemporalRoleEvidenceLedger.lookup(all,"Anna","ist in",11,40)
         assertEquals("Graz", (historical as TemporalRoleEvidenceLedger.Lookup.Found).value)
         val priorKnowledge = TemporalRoleEvidenceLedger.lookup(all,"Anna","ist in",31,20)
         assertEquals("Graz", (priorKnowledge as TemporalRoleEvidenceLedger.Lookup.Found).value)
         val current = TemporalRoleEvidenceLedger.lookup(all,"Anna","ist in",31,40)
         assertEquals("Linz", (current as TemporalRoleEvidenceLedger.Lookup.Found).value)
+    }
+
+    @Test fun laterTimestampWithoutExplicitCorrectionCannotSilentlyEraseOldSource() {
+        val all = listOf(fact("Graz", 10, 15, "a"), fact("Linz", 20, 30, "b"))
+        assertTrue(TemporalRoleEvidenceLedger.lookup(all,"Anna","ist in",31,40)
+            is TemporalRoleEvidenceLedger.Lookup.Conflict)
     }
 
     @Test fun simultaneousConflictingSourcesForceAbstention() {
