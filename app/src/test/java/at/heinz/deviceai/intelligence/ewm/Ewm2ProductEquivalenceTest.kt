@@ -92,6 +92,8 @@ class Ewm2ProductEquivalenceTest {
         assertEquals(mapOf("CORRECT" to 20,"ABSTAINED" to 6),k1Counts(dev5b))
     }
 
+    private val syntheticSourceDiagnostics = mutableListOf<String>()
+
     /** The same dialogs through the real learning core, archive and bridge (ON, baseline without evidence). */
     private fun adapterCounts(corpus:JSONArray):Map<String,Int> {
         val counts=HashMap<String,Int>()
@@ -111,8 +113,17 @@ class Ewm2ProductEquivalenceTest {
                     ContinuumBrainStatus.ON_SOURCE -> listOf("SOURCE:"+records.single { it.id==r.outcome.archiveId }.title)
                     else -> emptyList()
                 }
-                counts.merge(outcome(t.getString("expected"),strings(t.getJSONArray("gold")).toSet(),cited,
-                    r.status==ContinuumBrainStatus.ON_CLARIFY),1,Int::plus)
+                val verdict = outcome(t.getString("expected"), strings(t.getJSONArray("gold")).toSet(), cited,
+                    r.status==ContinuumBrainStatus.ON_CLARIFY)
+                if (d == 2 && i == 3) {
+                    val thunfisch = records.single { it.title == "Thunfisch" }
+                    val archive = ContinuumKnowledgeArchive(dir)
+                    val directQuote = ContinuumBrainBridge.archiveAnswerForQuestion(thunfisch, t.getString("text")) != null
+                    val indexed = archive.indexSnapshot().records.any { it.id == thunfisch.id }
+                    val readback = archive.readSource(thunfisch.id) != null
+                    syntheticSourceDiagnostics.add("DEV5b d2t3 verdict=$verdict status=${r.status} directQuote=$directQuote indexed=$indexed readback=$readback")
+                }
+                counts.merge(verdict, 1, Int::plus)
             }
         }
         return counts
@@ -120,6 +131,8 @@ class Ewm2ProductEquivalenceTest {
 
     @Test fun theProductionAdapterReachesTheSameDecisions() {
         assertEquals(mapOf("CORRECT" to 12,"ABSTAINED" to 7),adapterCounts(dev5))
-        assertEquals(mapOf("CORRECT" to 20,"ABSTAINED" to 6),adapterCounts(dev5b))
+        val actualDev5b = adapterCounts(dev5b)
+        assertEquals("Synthetic source diagnostics: ${syntheticSourceDiagnostics.joinToString("; ")}",
+            mapOf("CORRECT" to 20,"ABSTAINED" to 6),actualDev5b)
     }
 }
