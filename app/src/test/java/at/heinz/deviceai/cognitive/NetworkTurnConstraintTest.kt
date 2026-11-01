@@ -29,7 +29,12 @@ class NetworkTurnConstraintTest {
         "Ohne Netzwerkzugriff arbeiten.",
         "Beantworte mit den Fakten ohne Cloudzugriff.",
         "Suche im Internet nach einer Quelle, aber antworte ohne Internetrecherche.",
-        "Suche nicht im Internet, sondern in meinem Archiv."
+        "Suche nicht im Internet, sondern in meinem Archiv.",
+        "Suche nur lokal nach Quellen.",
+        "Recherchiere offline mit gespeicherten Quellen.",
+        "Internetrecherche ist verboten.",
+        "Webzugriff bleibt deaktiviert.",
+        "Verbinde dich nicht mit dem Internet."
     )
 
     private val positive = listOf(
@@ -39,10 +44,12 @@ class NetworkTurnConstraintTest {
         "Lies die Seite https://www.wikipedia.org.",
         "Suche online nach aktuellen Quellen.",
         "Nutze Internetrecherche.",
-        "Recherchiere nicht nur online, sondern auch in Büchern."
+        "Recherchiere nicht nur online, sondern auch in Büchern.",
+        "Suche nicht nur lokal, sondern auch im Internet.",
+        "Verwende nicht ausschließlich lokale Quellen; recherchiere online."
     )
 
-    @Test fun prohibitsTwentyTwoContrastingTurnsEvenIfWebUiWasArmed() {
+    @Test fun prohibitsExplicitOfflineTurnsEvenIfWebUiWasArmed() {
         for (text in negative) {
             assertTrue(text, NetworkTurnConstraint.forbidsExternalResearch(text))
             assertNull(text, WebToolRequest.fromChat(text, true))
@@ -55,6 +62,8 @@ class NetworkTurnConstraintTest {
         }
         assertNotNull(WebToolRequest.fromChat("Recherchiere Klimawandel", false))
         assertNotNull(WebToolRequest.fromChat("Suche im Internet nach Wasser", false))
+        assertNotNull(WebToolRequest.fromChat(
+            "Suche nicht nur lokal, sondern auch im Internet.", true))
     }
 
     @Test fun askAndAlwaysOnNeverMintNetworkTicketForNegatedTurn() {

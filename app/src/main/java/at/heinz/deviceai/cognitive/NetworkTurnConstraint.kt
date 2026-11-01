@@ -29,9 +29,14 @@ internal object NetworkTurnConstraint {
         """(?iu)\b(?:nicht|niemals|keinesfalls)\s+(?:(?:ins|im|auf|das)\s+)?(?:internet|web|online|cloud)\b"""
     )
     private val localOnly = Regex(
-        """(?iu)\b(?:antworte|beantworte|arbeite|bleib|bleibe|denke|denk|nutze)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|lokal|gerätelokal)\b"""
+        """(?iu)\b(?:antworte|beantworte|arbeite|bleib|bleibe|denke|denk|nutze|suche|such|recherchiere|recherchier)\s+(?:bitte\s+)?(?:(?:nur|ausschließlich)\s+)?(?:offline|lokal|gerätelokal)\b"""
     )
-    private val onlyLocal = Regex("""(?iu)\b(?:nur|ausschließlich)\s+(?:lokal|gerätelokal|offline)\b""")
+    // "nicht nur lokal" is explicitly NOT an offline-only constraint.
+    private val onlyLocal = Regex("""(?iu)(?<!nicht\s)\b(?:nur|ausschließlich)\s+(?:lokal|gerätelokal|offline)\b""")
+    private val explicitBlockedCapability = Regex(
+        """(?iu)\b(?:internet(?:recherche|suche|zugriff)?|web(?:recherche|suche|zugriff)?|online(?:recherche|suche)?|cloud(?:zugriff)?|netz(?:werk)?(?:zugriff)?)\s+(?:(?:ist|bleibt)\s+)?(?:verboten|untersagt|gesperrt|deaktiviert)\b"""
+    )
+    private val noConnection = Regex("""(?iu)\bverbinde\s+(?:dich\s+)?nicht\s+mit\s+dem\s+internet\b""")
     private val explicitOfflineAnswer = Regex(
         """(?iu)\b(?:antworte|beantworte|arbeite|erkläre|loese|löse)\b[^.!?;]{0,48}\boffline\b"""
     )
@@ -47,6 +52,8 @@ internal object NetworkTurnConstraint {
             negativeMedium.containsMatchIn(text) ||
             localOnly.containsMatchIn(text) ||
             onlyLocal.containsMatchIn(text) ||
+            explicitBlockedCapability.containsMatchIn(text) ||
+            noConnection.containsMatchIn(text) ||
             explicitOfflineAnswer.containsMatchIn(text)
     }
 }
