@@ -24,6 +24,7 @@ case "$(git branch --show-current)" in \
   fix/continuum-ewm2-archive-plural-20261101|\
   integration/continuum-ouroboros-ewm2-proof-20261101|\
   release/continuum-local-0.3.35-20261101|\
+  research/continuum-superki-architecture-proof-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
@@ -73,6 +74,10 @@ node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
 # Integrated proof: local missing-file recovery is checked without overwriting owners' work.
+node --test scripts/continuum-architecture-proof.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
+  die 'Architecture-proof regression tests failed'
+}
 node --test scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
   die 'Pinned Termux checkout recovery contract failed'
@@ -135,5 +140,6 @@ test -s app/build/outputs/apk/release/app-release-unsigned.apk ||
 test -s app/build/outputs/bundle/release/app-release.aab ||
   die 'No assembled Android App Bundle candidate'
 printf 'status=BUILD_AND_TEST_GREEN_UNSIGNED_NOT_INSTALLABLE\nsource_commit=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=36\napk_signed=FALSE\napk_published=FALSE\n' "$sha" > continuum-m8-render-qa/STATUS.txt
+CONTINUUM_PROOF_SHA="$sha" CONTINUUM_PROOF_VERSION=36 node scripts/continuum-architecture-proof.mjs || die 'Architecture-proof receipt invalid'
 printf '<!doctype html><html lang="de"><meta charset="UTF-8"><title>Continuum M8 QA</title><body><h1>CONTINUUM M8 QA PASS</h1><p>Nur Build-Abnahme, keine signierte APK veröffentlicht.</p><pre>%s</pre></body></html>' "$sha" > continuum-m8-render-qa/index.html
 echo "CONTINUUM_M8_RENDER_QA=PASS SHA=$sha NO_OWNER_APK_PUBLISHED"
