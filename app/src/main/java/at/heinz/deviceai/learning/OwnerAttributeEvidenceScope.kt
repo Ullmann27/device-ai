@@ -21,6 +21,11 @@ internal object OwnerAttributeEvidenceScope {
     private val claim = Regex("(?u)^(?:(?:Jetzt|Derzeit|Aktuell|Früher|Heute|Damals|Inzwischen)\\s+)?" +
         "(\\p{Lu}[\\p{L}\\p{M}-]{1,39}(?:\\s+\\p{Lu}[\\p{L}\\p{M}-]{1,39}){0,2})\\s+" +
         "(wohnt|wohnte|lebt|lebte|hat|besitzt|trägt|ist|arbeitet)\\b")
+    // A confirmed age statement can introduce the holder through a directly
+    // bound family role, e.g. "Meine Tochter Klara ist 29.".
+    // This is deliberately not a general role or reported-speech parser.
+    private val familyAge = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
+        "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\s+[0-9]{1,3}\\s*\\.?$")
     private val correction = Regex("(?iu)^(?:korrektur|berichtigung)\\s*:\\s*")
     private fun key(s: String) = Normalizer.normalize(s.trim(), Normalizer.Form.NFC).lowercase(Locale.ROOT)
     private fun request(q: String): Request? {
@@ -52,16 +57,18 @@ internal object OwnerAttributeEvidenceScope {
             it.status in setOf(LearningStatus.CONFIRMED, LearningStatus.LEARNED, LearningStatus.REPLAY_PENDING, LearningStatus.REVOKED) }
         val heads = owner.mapNotNull { e ->
             val cleaned = e.content.replaceFirst(correction, "")
-            claim.find(cleaned.take(160))?.let {
-                val verb = it.groupValues[2]
-                val compatible = when(ask.kind) {
-                    "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
-                    "COLOR" -> verb in setOf("hat", "besitzt", "trägt")
-                    "WORK" -> verb in setOf("arbeitet", "ist")
-                    else -> verb == "ist"
-                }
-                if(compatible)Triple(e, cleaned, key(it.groupValues[1])) else null
+            val direct = claim.find(cleaned.take(160))
+            val roleAgeHolder = if(ask.kind=="AGE" && direct==null)
+                familyAge.matchEntire(cleaned.trim())?.groupValues?.get(1) else null
+            val verb = direct?.groupValues?.get(2) ?: if(roleAgeHolder!=null)"ist" else null
+            val holder = direct?.groupValues?.get(1) ?: roleAgeHolder
+            val compatible = when(ask.kind) {
+                "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
+                "COLOR" -> verb in setOf("hat", "besitzt", "trägt")
+                "WORK" -> verb in setOf("arbeitet", "ist")
+                else -> verb == "ist"
             }
+            if(compatible && holder!=null)Triple(e, cleaned, key(holder)) else null
         }
         // A bare first name is no proof that two differently named people are one.
         if(heads.any { it.third != ask.holder && it.third.startsWith(ask.holder + " ") })return emptySet()
