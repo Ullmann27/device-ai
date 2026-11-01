@@ -65,8 +65,8 @@ test('missing test transcript and failed JUnit block the architectural receipt',
   f.put('continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt',TAP);
   const klass = REQUIRED_JUNIT[0];
   f.put('app/build/test-results/testDebugUnitTest/TEST-'+klass+'.xml',
-    '<testsuite name="'+klass+'" tests="3" failures="1" errors="0"/>');
-  assert.throws(()=>collectArchitectureProof({root:f.root,sha:SHA,versionCode:36,runId:RUN_ID}),/not fully passing/);
+    '<testsuite name="'+klass+'" tests="3" skipped="0" failures="1" errors="0"/>');
+  assert.throws(()=>collectArchitectureProof({root:f.root,sha:SHA,versionCode:36,runId:RUN_ID}),/Structured JUnit rejected/);
 });
 test('a failed Gradle transcript never becomes a proof',t=>{
   const f=fixture(t);
