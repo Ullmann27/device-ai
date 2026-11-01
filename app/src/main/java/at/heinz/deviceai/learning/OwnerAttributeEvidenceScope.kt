@@ -83,14 +83,24 @@ internal object OwnerAttributeEvidenceScope {
                 (',' in text && !Regex("(?iu)\\bsondern\\b").containsMatchIn(text))
         })return emptySet()
         val parsed = candidates.mapIndexed { i, (e, text, _) -> e to Ewm1Fact(e.id, text, i) }
-            .filter { (_, f) -> f.subjectKnown && f.tense == 'n' &&
-                f.tokens.none { it.lower in setOf("wenn", "falls", "würde", "würden", "hätte", "hätten") } && when(ask.kind) {
-                "LOCATION" -> "wohnen" in f.relationGroups
-                "COLOR" -> f.tokens.any { Ewm1Lexicon.stem(it.lower) == ask.item } &&
-                    (f.tokens.any { Ewm1Lexicon.isColor(it.lower) } || f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS })
-                "WORK" -> "arbeiten" in f.relationGroups
-                else -> "alter" in f.relationGroups || f.tokens.any { it.lower.any(Char::isDigit) }
-            } }
+            .filter { (_, f) ->
+                // The generic EWM grammar parses "Klara ist 29" as a subject,
+                // but not "Meine Tochter Klara ist 29". For a single directly
+                // attributed and bounded kinship-age sentence, strict matching
+                // above already establishes the named holder. Let that exact
+                // grammar through without inventing general NLP authority.
+                val directlyBoundFamilyAge = ask.kind == "AGE" && familyAge.matches(f.text)
+                (directlyBoundFamilyAge || (f.subjectKnown && f.tense == 'n')) &&
+                    f.tokens.none { it.lower in setOf("wenn", "falls", "würde", "würden", "hätte", "hätten") } &&
+                    when(ask.kind) {
+                        "LOCATION" -> "wohnen" in f.relationGroups
+                        "COLOR" -> f.tokens.any { Ewm1Lexicon.stem(it.lower) == ask.item } &&
+                            (f.tokens.any { Ewm1Lexicon.isColor(it.lower) } || f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS })
+                        "WORK" -> "arbeiten" in f.relationGroups
+                        else -> directlyBoundFamilyAge || "alter" in f.relationGroups ||
+                            f.tokens.any { it.lower.any(Char::isDigit) }
+                    }
+            }
         if(parsed.isEmpty())return emptySet()
         // CONFIRMED updatedAt can be an explicit reactivation by confirmOwnerFact.
         // A later revocation of an older assertion does not make that assertion new.
