@@ -215,6 +215,9 @@ class AgentActivity : Activity() {
     private var activeLocalStreamToken: Any? = null
     private var localStreamPreviewRow: LinearLayout? = null
     private var localStreamPreviewText: TextView? = null
+    // Scrolling through a streamed answer is a deliberate owner action:
+    // never pull the reader back to the newest text.
+    private var streamUserPausedScrolling = false
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -903,6 +906,16 @@ class AgentActivity : Activity() {
             isFillViewport = true
             clipToPadding = false
             setPadding(0, 0, 0, dp(10))
+            setOnTouchListener { _, event ->
+                if (activeLocalStreamToken != null) {
+                    when (event.actionMasked) {
+                        android.view.MotionEvent.ACTION_MOVE -> streamUserPausedScrolling = true
+                        android.view.MotionEvent.ACTION_UP ->
+                            if (isChatNearBottom()) streamUserPausedScrolling = false
+                    }
+                }
+                false // Preserve normal Android scrolling and accessibility.
+            }
         }
         chatContainer = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -7007,6 +7020,7 @@ class AgentActivity : Activity() {
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
         var firstTextNanos: Long? = null
+        var lastTextNanos: Long? = null
         var lastPreviewNanos = generationStartedNanos
         val previewToken = Any()
         runOnUiThread {
@@ -7020,6 +7034,7 @@ class AgentActivity : Activity() {
                     localStreamPreviewRow = null
                     localStreamPreviewText = null
                     activeLocalStreamToken = previewToken
+                    streamUserPausedScrolling = !isChatNearBottom()
                 }
             }
         }
@@ -7029,13 +7044,20 @@ class AgentActivity : Activity() {
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
                     when (event) {
-                        is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
-                            if (firstTextNanos == null) firstTextNanos = System.nanoTime()
-                            streamedChunks++
-                            response.append(event.text.take(8_000 - response.length))
+                        is LocalInferenceEvent.TextDelta -> if (
+                            event.text.isNotEmpty() &&
+                            response.length < at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS
+                        ) {
                             val now = System.nanoTime()
+                            if (firstTextNanos == null) firstTextNanos = now
+                            lastTextNanos = now
+                            streamedChunks++
+                            response.append(event.text.take(
+                                at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS - response.length))
+                            // One UI refresh per second is enough for natural reading
+                            // without repeatedly remeasuring an expanding TextView.
                             if (streamedChunks == 1 ||
-                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(250)) {
+                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(1_000)) {
                                 lastPreviewNanos = now
                                 val draft = response.toString()
                                 val chunks = streamedChunks
@@ -7085,31 +7107,40 @@ class AgentActivity : Activity() {
                 }
             }
         }
-        val generationDeadline = generationStartedNanos + TimeUnit.SECONDS.toNanos(120)
         val started = runCatching { cancellation?.throwIfCancelled(); turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED); localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF,it.sha256) }; start(callback) }
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
         while (true) {
             cancellation?.throwIfCancelled()
-            if (System.nanoTime() < generationDeadline) {
-                if (completed.await(10, TimeUnit.MILLISECONDS)) break
-                continue
-            }
+            if (completed.await(250, TimeUnit.MILLISECONDS)) break
             val diagnostic = synchronized(eventLock) {
-                terminalEventReceived = true
-                val firstTextMillis = firstTextNanos?.let {
+                val elapsedMillis = (System.nanoTime() - generationStartedNanos)
+                    .coerceAtLeast(0L) / 1_000_000L
+                val lastTextMillis = lastTextNanos?.let {
                     (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
                 }
-                "Local generation exceeded its 120-second limit. " +
-                    "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
-                    ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
-                    "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms." +
-                    "\nLetztes numerisches Laufzeitprofil:\n" +
-                    (localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Nicht verfügbar.")
+                val reason = if (terminalEventReceived) null else
+                    at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.stalled(
+                        elapsedMillis, lastTextMillis, response.length)
+                if (reason == null) null else {
+                    terminalEventReceived = true
+                    val firstTextMillis = firstTextNanos?.let {
+                        (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                    }
+                    "Local generation stopped after stalled native progress (${reason.name}). " +
+                        "Keine feste Gesamtdauer, solange weiter Text entsteht. " +
+                        "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
+                        ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
+                        "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms." +
+                        "\nLetztes numerisches Laufzeitprofil:\n" +
+                        (localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Nicht verfügbar.")
+                }
             }
-            localRuntime.cancel()
-            localRuntimeError = diagnostic
-            runOnUiThread { refreshLocalModelUi() }
-            return LocalGeneration("", null, emptyList(), diagnostic)
+            if (diagnostic != null) {
+                localRuntime.cancel()
+                localRuntimeError = diagnostic
+                runOnUiThread { refreshLocalModelUi() }
+                return LocalGeneration("", null, emptyList(), diagnostic)
+            }
         }
         cancellation?.throwIfCancelled()
         val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
@@ -7146,7 +7177,8 @@ class AgentActivity : Activity() {
         catch (_: java.util.concurrent.CancellationException) { return }
         val text = localStreamPreviewText ?: textView("", 14.5f, TEXT).also { preview ->
             preview.setPadding(dp(13), dp(10), dp(13), dp(10))
-            preview.setTextIsSelectable(true)
+            // The draft is replaced with a selectable, verified answer later.
+            // Selectable/focusable streaming text fights touch scrolling.
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 background = rounded(ASSISTANT_BUBBLE, 18, BORDER)
@@ -7160,8 +7192,9 @@ class AgentActivity : Activity() {
             " · ANTWORTENTWURF · NOCH UNGEPRÜFT" +
             "\nErster Text: " + (firstTextMillis?.toString() ?: "—") + " ms" +
             " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
-            "\n\n" + draft.take(8_000)
-        scrollToBottom()
+            "\n\n" + draft.take(
+                at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicy.MAX_CAPTURED_CHARACTERS)
+        if (!streamUserPausedScrolling) scrollToBottom()
     }
 
     private fun clearLocalStreamPreview(token: Any) {
@@ -8223,9 +8256,26 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
     }
 
+    private fun isChatNearBottom(): Boolean {
+        if (!::chatScroll.isInitialized) return true
+        val contents = chatScroll.getChildAt(0) ?: return true
+        val bottom = (contents.bottom + chatScroll.paddingBottom - chatScroll.height).coerceAtLeast(0)
+        return bottom - chatScroll.scrollY <= dp(64)
+    }
+
     private fun scrollToBottom() {
-        if (::chatScroll.isInitialized) {
-            chatScroll.post { chatScroll.fullScroll(View.FOCUS_DOWN) }
+        if (!::chatScroll.isInitialized) return
+        val currentScroll = chatScroll
+        currentScroll.post {
+            if (isFinishing || isDestroyed || !currentScroll.isAttachedToWindow ||
+                (::chatScroll.isInitialized && chatScroll !== currentScroll) ||
+                (activeLocalStreamToken != null && streamUserPausedScrolling)) return@post
+            val contents = currentScroll.getChildAt(0) ?: return@post
+            // Scroll to the measured bottom without focus-search; fullScroll()
+            // stole focus and made the live chat oscillate on the Fold.
+            val bottom = (contents.bottom + currentScroll.paddingBottom - currentScroll.height)
+                .coerceAtLeast(0)
+            currentScroll.scrollTo(0, bottom)
         }
     }
 
