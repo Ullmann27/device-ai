@@ -104,8 +104,8 @@ class GeneralWebDiscoveryProvider(
             // Keep the real publisher host after URI parsing; never match arbitrary URL text.
             if(host=="bing.com"||host.endsWith(".bing.com")||
                 host=="duckduckgo.com"||host.endsWith(".duckduckgo.com")||
-                Regex("""(^|\\.)google\\.[a-z]{2,}(\\.[a-z]{2,})?$""").containsMatchIn(host)||
-                Regex("""(^|\\.)yahoo\\.[a-z]{2,}(\\.[a-z]{2,})?$""").containsMatchIn(host)||
+                Regex("""(^|\.)google\.[a-z]{2,}(\.[a-z]{2,})?$""").containsMatchIn(host)||
+                Regex("""(^|\.)yahoo\.[a-z]{2,}(\.[a-z]{2,})?$""").containsMatchIn(host)||
                 host=="wikipedia.org"||host.endsWith(".wikipedia.org")||
                 host=="wikimedia.org"||host.endsWith(".wikimedia.org"))return null
             return ResearchSourceCandidate(decoded,title?.replace(Regex("\\s+")," ")?.take(256),"general-web-search")
