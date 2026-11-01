@@ -3,10 +3,10 @@
   "version": 1,
   "modelHash": "458ef19fc1e2e0d45b408ab095c0c548bd75774b1996884a8a5f6becc4ce35fd",
   "updates": 14000,
-  "rounds": 13,
+  "rounds": 14,
   "accepted": 3,
   "paused": false,
-  "replay": 48,
+  "replay": 49,
   "audit": {
     "intent": {
       "loss": 0.08170274660790525,
@@ -20,7 +20,7 @@
     }
   },
   "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
-  "lastDecision": "MULTITASK_GATE_PASSED",
+  "lastDecision": "VALIDATION_REGRESSION",
   "privacy": "PUBLIC_AND_CURATED_TRAINING_ONLY",
   "codeSha": "a3bca34f4f2843875bd907954991ee9a5d9638ed"
 }
