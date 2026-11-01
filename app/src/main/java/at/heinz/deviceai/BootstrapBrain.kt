@@ -5,6 +5,7 @@ import at.heinz.deviceai.learning.KnowledgeSyntax
 import at.heinz.deviceai.learning.StructuredKnowledge
 import at.heinz.deviceai.learning.OnlineNaiveBayes
 import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.cognitive.NetworkTurnConstraint
 
 /** Initial deterministic cognition. Never present these rules as an LLM. */
 enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL, TRAIN, REVISE }
@@ -134,6 +135,14 @@ object BootstrapBrain {
         if ("speicher" in low || "große dateien" in low) return tool("get_storage_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
+        // An explicit offline instruction is neither a web-search request nor
+        // a reason to withhold a local model attempt. The ToolGate applies the
+        // independent hard veto to any network execution.
+        if (NetworkTurnConstraint.forbidsExternalResearch(text))
+            return BootstrapDecision(BootstrapKind.REPLY,
+                "Ich beantworte diese Anfrage nur aus lokal verfügbaren Informationen. " +
+                    "Falls dafür keine ausreichenden Belege vorliegen, sage ich das ausdrücklich.",
+                allowNeuralRecall = true)
         if ("netzwerk" in low || "internetverbindung" in low) return tool("get_network_summary")
         if ("internet" in low || "recherch" in low) return BootstrapDecision(
             BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +
