@@ -54,7 +54,29 @@ Ergebnis in `docs/evidence/fable51-genesis-20261101/CDX1-ORACLE-BOUND.md` (+ JSO
 | 24445118 | B2: `FreshKnowledgeNeed` (CURRENT_FACT/EXPLANATION/STATIC), ASK fragt bei Gegenwartsfragen, ALWAYS_ON lässt Erklärungen lokal | `android-kotlin-unit-check.sh` OK (1492 Tests) |
 | f617a6d3 | CDX1 Oracle-Bound-Experiment + Regelkern-Koordination (Komma/„und“) | `android-kotlin-unit-check.sh` OK (1493 Tests, 275 Klassen) |
 | dd68d5c7 | B5: Negativtest – reale Myra-Bot-Wall-Seite (HTTP 503, `app/src/test/resources/research/ris-myra-botwall-503.html`) liefert keine RIS-Evidenz; Provider gibt leere Dokument-/Zitatliste zurück | `LegalRisEvidenceProviderTest` 3/3 grün |
-| (dieser Commit) | Argon E7 (Platz 1): Sitzungs-Spezialist `CertifiedLocationReflex.answerFromSession` – „Wo ist X?“ wird vor Gedächtnis/Gemma/Web aus den eigenen früheren Nachrichten der Sitzung per Regelkern+Verifier beantwortet (nur eindeutiger Treffer, 0 Tokens); `LocalConversationContext.priorUserTurns`; Shadow-Adapter-Satzteilgrenzen angeglichen | `android-kotlin-unit-check.sh` OK (1495 Tests) |
+| 1269b9c5 | Argon E7 (Platz 1): Sitzungs-Spezialist `CertifiedLocationReflex.answerFromSession` – „Wo ist X?“ wird vor Gedächtnis/Gemma/Web aus den eigenen früheren Nachrichten der Sitzung per Regelkern+Verifier beantwortet (nur eindeutiger Treffer, 0 Tokens); `LocalConversationContext.priorUserTurns`; Shadow-Adapter-Satzteilgrenzen angeglichen | `android-kotlin-unit-check.sh` OK (1495 Tests) |
 
-## Offene Aufgaben
-- siehe Abschnitte oben; wird fortgeschrieben.
+## Alt vs. Neu (nur host-verifiziert, kein Fold7-Lauf)
+| Fähigkeit | Vorher (cc878fb9) | Nachher (dieser Branch) |
+|-----------|-------------------|-------------------------|
+| Folgefrage nach Webrecherche | Gemma kennt die gerade gelesenen Quellen nicht | Recherche-Digest (Frage, Kernaussagen, Quellen mit Abrufdatum) liegt als getrennt gerahmter, als ungeprüft markierter Block im Dialogkontext; Canary-Frames im Qualitätsgate |
+| Zeitliche Einordnung | weder TODAY noch Abrufdatum im Prompt; Zitate ohne Datum | TODAY + `retrieved=` je Quelle im Prompt; Zitatzeilen mit Abrufdatum |
+| Routing ASK/ALWAYS_ON | modusgesteuert: ASK fragt nie, ALWAYS_ON schickt jede W-Frage ins Netz | bedarfsgesteuert: Gegenwartsfragen in ASK lösen eine Freigabe-Rückfrage aus (Ablehnung → lokale Antwort ohne aktuelle Quellen); Erklärungsfragen bleiben auch in ALWAYS_ON lokal; Offline-Verbote unverändert |
+| Belegte Ortsfrage mit koordinierten Satzteilen („Anna ist in Perg, Emma ist in Berg.“) | Regelkern enthält sich (sicher, aber stumm) | Regelkern, Verifier und Shadow-Adapter binden jede Person an ihren Satzteil; Negation/Zeit/„in Graz und Wien“ enthalten sich weiterhin |
+| „Wo ist Mama?“ nach „Mama ist in Graz.“ in derselben Sitzung | Gedächtnis → Gemma (≈28 s auf Fold7 laut Argon-Messung) oder in ALWAYS_ON sogar Webroute | Sitzungs-Spezialist antwortet deterministisch aus der eigenen Nachricht (<50 ms Host), eindeutig als Sitzungsbeleg gekennzeichnet, keine Modell-/Webanfrage |
+| RIS-Bot-Wall | nur HTTP-Statusprüfung im Fetcher | zusätzlich Negativtest: Challenge-Seite liefert nie Paragraphentext |
+| CDX1 | „Nullleistung“ ohne Ursachennachweis | Ursache experimentell belegt (Kopplungskollaps + fehlender Kopierpfad), Checkpoints unverändert |
+
+## Nicht erreicht / bewusst nicht behauptet
+- Kein Fold7-Release, kein APK-Build, kein Lint, kein Gerätelauf; alle Testaussagen sind Host-JUnit (`KOTLIN_UNIT_TESTS_CHECKED`).
+- CDX1 erreicht das 16/20-Ziel in freier Generierung weiterhin nicht; der Erfolg des Regelkerns gilt ausdrücklich nicht als Reparatur von CDX1.
+- B4-Module (`TemporalRoleEvidenceLedger`, `JarvisUnifiedEvidenceContract`, `ConstrainedResourceFabric`, `MemoryEcology`, `ComputeFabric`, `VirtualModelFabric`) haben weiterhin keinen Laufzeitaufrufer; nicht angebunden, weil kein geprüfter Integrationspunkt ohne Parallelsystem existierte.
+- Live-RIS-Abnahme (B5) weiterhin offen (Bot-Wall aus dieser Umgebung).
+- Argon U5 (RIS-DOM-Parser), U1 (spekulatives Drafting), U2 (SWB1-Surprise), U3 (Negationsachse), U6 (bitemporale Fakten) nicht begonnen.
+
+## Nächste priorisierte Meilensteine
+1. Fold7-Abnahme dieses Branches: Dialog nach Recherche, ASK-Rückfrage bei Gegenwartsfrage, Sitzungs-Spezialist, Offline-Verbot; Paket `at.heinz.deviceai.continuumlocal` 0.3.35/36 unverändert.
+2. E7-Ausbau auf bestätigte EWM2-Erinnerungen über den bestehenden `grounded`-Recall-Pfad (kein neuer Speicher), mit Herkunftskennzeichnung und Revisionsprüfung.
+3. CDX2-Kandidat isoliert: Kopier-/Pointer-Pfad über Belegbytes + rollenbindender Konditionierer; Blind-C-Korpus neu erzeugen (Blind-A/B sind konsumiert).
+4. U5 RIS-Absatzparser auf echtem RIS-HTML (Fixture vom Fold7 aufnehmen, da Host-Zugriff blockiert).
+5. B4-Module entweder an einen echten Aufrufer binden oder als Forschungsartefakte markieren.
