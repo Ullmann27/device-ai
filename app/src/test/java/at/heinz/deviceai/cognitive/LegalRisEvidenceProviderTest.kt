@@ -29,4 +29,25 @@ class LegalRisEvidenceProviderTest {
         assertNull(LegalRisParagraphExtractor.extract("1296",raw))
         assertNull(LegalRisParagraphExtractor.extract("1295","Login Google Seite ohne Paragraf".repeat(10)))
     }
+
+    /** Real Myra bot-wall body captured from ris.bka.gv.at (HTTP 503, 2026-11-01). The fetcher
+     *  already rejects non-2xx; this guards the extractor if a challenge page ever arrives as 200. */
+    @Test fun myraBotWallPageYieldsNoLegalEvidence() {
+        val botWall = javaClass.getResourceAsStream("/research/ris-myra-botwall-503.html")!!
+            .bufferedReader(Charsets.UTF_8).readText()
+        assertTrue(botWall.contains("Security Check"))
+        assertNull(LegalRisParagraphExtractor.extract("1151", botWall))
+        assertNull(LegalRisParagraphExtractor.extract("30", botWall))
+        val risUrl = "https://www.ris.bka.gv.at/eli/jgs/1811/946/P1151/NOR12018403"
+        val upstream = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult {
+                val doc = ResearchDocument(risUrl, "Security Check", 1L, "0".repeat(64), "text/html",
+                    SourceIdentity("www.ris.bka.gv.at", "www.ris.bka.gv.at"), botWall)
+                return ResearchResult(listOf(doc), listOf(doc.citation()))
+            }
+        }
+        val result = LegalRisEvidenceProvider(upstream).retrieve(ResearchRequest("§ 1151 ABGB", risUrl))
+        assertTrue(result.documents.isEmpty())
+        assertTrue(result.citations.isEmpty())
+    }
 }
