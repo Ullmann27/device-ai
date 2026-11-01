@@ -3528,7 +3528,7 @@ class AgentActivity : Activity() {
                     "\nGeschützte bestehende Widerrufe: " + plan.blockedReactivations.size +
                     "\nIdentitätskonflikte: " + plan.identityConflicts.size +
                     "\nKapazitätsgrenze überschritten: " + plan.capacityExceeded +
-                    "\nWeitere protokollierte Datensätze: " + plan.reviewOnlyCount +
+                    at.heinz.deviceai.learning.PersonalLearningPreviewCopy.explainReviewOnly(plan.reviewOnlyCount) +
                     "\n\nEine Prüfsumme bestätigt keine Herkunft. Jeder persönliche Fakt benötigt deine eigene Bestätigung."
             }
         }) { result ->
