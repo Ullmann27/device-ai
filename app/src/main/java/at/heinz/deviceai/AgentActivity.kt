@@ -5649,7 +5649,8 @@ class AgentActivity : Activity() {
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
         ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
-        val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)
+        val researchProvider=at.heinz.deviceai.cognitive.LegalRisEvidenceProvider(
+            at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider))
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
                 if (!isFinishing && !isDestroyed) {
