@@ -27,7 +27,15 @@ object ContinuumEvidenceWindow {
         if(terms.isEmpty())return null
         val tokens = words.findAll(source).toList()
         val normalizedTokens = tokens.map { normalized(it.value) }
-        val anchors = tokens.indices.filter { normalizedTokens[it] in terms }
+        // Exact or one unambiguous German plural "-e" for sufficiently long
+        // nouns only (e.g. "Thunfisch" -> "Thunfische"). The source remains
+        // an unverified observation: matching text does not prove its truth.
+        // Never use substring/fuzzy matching to fabricate citations.
+        fun anchorTerm(token: String): String? = terms.firstOrNull { term ->
+            token == term || (term.length >= 7 && token == term + "e")
+        }
+        val tokenTerm = normalizedTokens.map(::anchorTerm)
+        val anchors = tokens.indices.filter { tokenTerm[it] != null }
         if(anchors.isEmpty())return null
         // Bounded stored excerpts only (6000 chars); no index, file copy or new
         // source store. Score exact source windows by distinct question terms.
@@ -44,10 +52,9 @@ object ContinuumEvidenceWindow {
         var left = 0; var right = 0; var bestScore = -1
         var best = ranges.first()
         fun adjust(index: Int, delta: Int) {
-            val word = normalizedTokens[index]
-            if(word !in terms)return
-            val next = (counts[word] ?: 0) + delta
-            if(next <= 0)counts.remove(word) else counts[word] = next
+            val term = tokenTerm[index] ?: return
+            val next = (counts[term] ?: 0) + delta
+            if(next <= 0)counts.remove(term) else counts[term] = next
         }
         for(range in ranges) {
             val (start, end) = range
