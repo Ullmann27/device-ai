@@ -18,6 +18,14 @@ object ContinuumEvidenceWindow {
         "kurz", "etwas", "kannst", "könntest", "wissen", "weißt", "kennst", "bedeutet", "genau")
     private fun normalized(text: String) = Normalizer.normalize(text, Normalizer.Form.NFC).lowercase(Locale.ROOT)
 
+    // Only the directly inflected German noun plural -e is considered a
+    // lexical quotation anchor (e.g. Thunfisch -> Thunfische). This does NOT
+    // assert semantic equivalence or allow arbitrary prefix matching.
+    private fun matchedQuestionTerm(token: String, terms: Set<String>): String? =
+        if (token in terms) token else terms.firstOrNull { term ->
+            term.length >= 8 && token == term + "e"
+        }
+
     fun select(question: String, source: String, sourceSha256: String, maxChars: Int = 350): Quotation? {
         require(maxChars in 80..1000)
         if(question.isBlank() || question.length > 512 || source.length !in 20..6000 ||
@@ -27,7 +35,7 @@ object ContinuumEvidenceWindow {
         if(terms.isEmpty())return null
         val tokens = words.findAll(source).toList()
         val normalizedTokens = tokens.map { normalized(it.value) }
-        val anchors = tokens.indices.filter { normalizedTokens[it] in terms }
+        val anchors = tokens.indices.filter { matchedQuestionTerm(normalizedTokens[it], terms) != null }
         if(anchors.isEmpty())return null
         // Bounded stored excerpts only (6000 chars); no index, file copy or new
         // source store. Score exact source windows by distinct question terms.
@@ -44,8 +52,7 @@ object ContinuumEvidenceWindow {
         var left = 0; var right = 0; var bestScore = -1
         var best = ranges.first()
         fun adjust(index: Int, delta: Int) {
-            val word = normalizedTokens[index]
-            if(word !in terms)return
+            val word = matchedQuestionTerm(normalizedTokens[index], terms) ?: return
             val next = (counts[word] ?: 0) + delta
             if(next <= 0)counts.remove(word) else counts[word] = next
         }
