@@ -21,6 +21,11 @@ internal object OwnerAttributeEvidenceScope {
     private val claim = Regex("(?u)^(?:(?:Jetzt|Derzeit|Aktuell|Früher|Heute|Damals|Inzwischen)\\s+)?" +
         "(\\p{Lu}[\\p{L}\\p{M}-]{1,39}(?:\\s+\\p{Lu}[\\p{L}\\p{M}-]{1,39}){0,2})\\s+" +
         "(wohnt|wohnte|lebt|lebte|hat|besitzt|trägt|ist|arbeitet)\\b")
+    // A confirmed age statement can introduce the holder through a directly
+    // bound family role, e.g. "Meine Tochter Klara ist 29.".
+    // This is deliberately not a general role or reported-speech parser.
+    private val familyAge = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
+        "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\s+[0-9]{1,3}\\s*\\.?$")
     private val correction = Regex("(?iu)^(?:korrektur|berichtigung)\\s*:\\s*")
     private fun key(s: String) = Normalizer.normalize(s.trim(), Normalizer.Form.NFC).lowercase(Locale.ROOT)
     private fun request(q: String): Request? {
@@ -52,16 +57,21 @@ internal object OwnerAttributeEvidenceScope {
             it.status in setOf(LearningStatus.CONFIRMED, LearningStatus.LEARNED, LearningStatus.REPLAY_PENDING, LearningStatus.REVOKED) }
         val heads = owner.mapNotNull { e ->
             val cleaned = e.content.replaceFirst(correction, "")
-            claim.find(cleaned.take(160))?.let {
-                val verb = it.groupValues[2]
-                val compatible = when(ask.kind) {
-                    "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
-                    "COLOR" -> verb in setOf("hat", "besitzt", "trägt")
-                    "WORK" -> verb in setOf("arbeitet", "ist")
-                    else -> verb == "ist"
-                }
-                if(compatible)Triple(e, cleaned, key(it.groupValues[1])) else null
+            // The broad NAME grammar can read "Meine Tochter Klara" as an
+            // apparent full subject and shadow the actual named person Klara.
+            // Prefer the anchored kinship-age grammar BEFORE generic parsing.
+            val roleAgeHolder = if(ask.kind=="AGE")
+                familyAge.matchEntire(cleaned.trim())?.groupValues?.get(1) else null
+            val direct = if(roleAgeHolder == null)claim.find(cleaned.take(160)) else null
+            val verb = if(roleAgeHolder!=null)"ist" else direct?.groupValues?.get(2)
+            val holder = roleAgeHolder ?: direct?.groupValues?.get(1)
+            val compatible = when(ask.kind) {
+                "LOCATION" -> verb in setOf("wohnt", "wohnte", "lebt", "lebte")
+                "COLOR" -> verb in setOf("hat", "besitzt", "trägt")
+                "WORK" -> verb in setOf("arbeitet", "ist")
+                else -> verb == "ist"
             }
+            if(compatible && holder!=null)Triple(e, cleaned, key(holder)) else null
         }
         // A bare first name is no proof that two differently named people are one.
         if(heads.any { it.third != ask.holder && it.third.startsWith(ask.holder + " ") })return emptySet()
@@ -76,14 +86,24 @@ internal object OwnerAttributeEvidenceScope {
                 (',' in text && !Regex("(?iu)\\bsondern\\b").containsMatchIn(text))
         })return emptySet()
         val parsed = candidates.mapIndexed { i, (e, text, _) -> e to Ewm1Fact(e.id, text, i) }
-            .filter { (_, f) -> f.subjectKnown && f.tense == 'n' &&
-                f.tokens.none { it.lower in setOf("wenn", "falls", "würde", "würden", "hätte", "hätten") } && when(ask.kind) {
-                "LOCATION" -> "wohnen" in f.relationGroups
-                "COLOR" -> f.tokens.any { Ewm1Lexicon.stem(it.lower) == ask.item } &&
-                    (f.tokens.any { Ewm1Lexicon.isColor(it.lower) } || f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS })
-                "WORK" -> "arbeiten" in f.relationGroups
-                else -> "alter" in f.relationGroups || f.tokens.any { it.lower.any(Char::isDigit) }
-            } }
+            .filter { (_, f) ->
+                // The generic EWM grammar parses "Klara ist 29" as a subject,
+                // but not "Meine Tochter Klara ist 29". For a single directly
+                // attributed and bounded kinship-age sentence, strict matching
+                // above already establishes the named holder. Let that exact
+                // grammar through without inventing general NLP authority.
+                val directlyBoundFamilyAge = ask.kind == "AGE" && familyAge.matches(f.text)
+                (directlyBoundFamilyAge || (f.subjectKnown && f.tense == 'n')) &&
+                    f.tokens.none { it.lower in setOf("wenn", "falls", "würde", "würden", "hätte", "hätten") } &&
+                    when(ask.kind) {
+                        "LOCATION" -> "wohnen" in f.relationGroups
+                        "COLOR" -> f.tokens.any { Ewm1Lexicon.stem(it.lower) == ask.item } &&
+                            (f.tokens.any { Ewm1Lexicon.isColor(it.lower) } || f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS })
+                        "WORK" -> "arbeiten" in f.relationGroups
+                        else -> directlyBoundFamilyAge || "alter" in f.relationGroups ||
+                            f.tokens.any { it.lower.any(Char::isDigit) }
+                    }
+            }
         if(parsed.isEmpty())return emptySet()
         // CONFIRMED updatedAt can be an explicit reactivation by confirmOwnerFact.
         // A later revocation of an older assertion does not make that assertion new.
@@ -98,6 +118,17 @@ internal object OwnerAttributeEvidenceScope {
             ranked.filter { it.id in ids }.map { it.id }
         }
         val selected = workspace.decide(query)
-        return if(selected.decision == "QUERY")selected.answerFacts.toSet() else emptySet()
+        if(selected.decision == "QUERY")return selected.answerFacts.toSet()
+        // EWM's general-purpose grammar can abstain on "Meine Tochter Klara
+        // ist 29." even after the owner scope has proven an exact single-clause
+        // age assertion. Do not let that suppress this precisely scoped fact.
+        // Never introduce a new candidate: it MUST already be a genuine
+        // ranked OWNER_CONFIRMED record, named explicitly by the strict
+        // kinship-age grammar and selected by the existing latest/revocation
+        // and conflict checks above. No web observations, third-party claims,
+        // or unsupported grammar may take this branch.
+        if(ask.kind == "AGE" && familyAge.matches(f.text) &&
+            ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+        return emptySet()
     }
 }
