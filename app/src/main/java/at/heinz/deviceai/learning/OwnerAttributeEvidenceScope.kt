@@ -24,9 +24,14 @@ internal object OwnerAttributeEvidenceScope {
     // A confirmed age statement can introduce the holder through a directly
     // bound family role, e.g. "Meine Tochter Klara ist 29.".
     // This is deliberately not a general role or reported-speech parser.
-    private val familyAge = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
-        "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\s+[0-9]{1,3}\\s*\\.?$")
+    // Keep the named holder even when a later age claim is negated or uses a unit.
+    // Head recognition only supplies an invalidator/candidate, never a literal answer.
+    private val familyAgeHead = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
+        "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\b")
     private val correction = Regex("(?iu)^(?:korrektur|berichtigung)\\s*:\\s*")
+    private val directAgeValue = Regex("(?iu)^$NAME\\s+ist\\s+([0-9]{1,3})(?:\\s+Jahre(?:\\s+alt)?)?\\s*\\.?$")
+    private val familyAgeValue = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
+        "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\s+([0-9]{1,3})(?:\\s+Jahre(?:\\s+alt)?)?\\s*\\.?$")
     private fun key(s: String) = Normalizer.normalize(s.trim(), Normalizer.Form.NFC).lowercase(Locale.ROOT)
     private fun request(q: String): Request? {
         location.matchEntire(q)?.let { m ->
@@ -61,7 +66,7 @@ internal object OwnerAttributeEvidenceScope {
             // apparent full subject and shadow the actual named person Klara.
             // Prefer the anchored kinship-age grammar BEFORE generic parsing.
             val roleAgeHolder = if(ask.kind=="AGE")
-                familyAge.matchEntire(cleaned.trim())?.groupValues?.get(1) else null
+                familyAgeHead.find(cleaned.trim())?.groupValues?.get(1) else null
             val direct = if(roleAgeHolder == null)claim.find(cleaned.take(160)) else null
             val verb = if(roleAgeHolder!=null)"ist" else direct?.groupValues?.get(2)
             val holder = roleAgeHolder ?: direct?.groupValues?.get(1)
@@ -92,7 +97,7 @@ internal object OwnerAttributeEvidenceScope {
                 // attributed and bounded kinship-age sentence, strict matching
                 // above already establishes the named holder. Let that exact
                 // grammar through without inventing general NLP authority.
-                val directlyBoundFamilyAge = ask.kind == "AGE" && familyAge.matches(f.text)
+                val directlyBoundFamilyAge = ask.kind == "AGE" && familyAgeHead.containsMatchIn(f.text)
                 (directlyBoundFamilyAge || (f.subjectKnown && f.tense == 'n')) &&
                     f.tokens.none { it.lower in setOf("wenn", "falls", "würde", "würden", "hätte", "hätten") } &&
                     when(ask.kind) {
@@ -127,8 +132,29 @@ internal object OwnerAttributeEvidenceScope {
         // kinship-age grammar and selected by the existing latest/revocation
         // and conflict checks above. No web observations, third-party claims,
         // or unsupported grammar may take this branch.
-        if(ask.kind == "AGE" && familyAge.matches(f.text) &&
+        if(ask.kind == "AGE" && familyAgeValue.matches(f.text) &&
             ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
         return emptySet()
+    }
+
+    /** Exact AGE presentation after the existing ledger/scope has selected ONE genuine hit.
+     * This is the age at the owner's statement, not a calculated current age or a new fact.
+     * Strict whole-sentence matching rejects measurements, reported speech and temporal claims.
+     * No new database, model state, revision rule or authority is introduced.
+     */
+    fun exactAgeReply(query: String, records: List<LearningExperience>, ranked: List<ContinuumMemoryHit>): String? {
+        val ask = request(query) ?: return null
+        if (ask.kind != "AGE") return null
+        val id = select(query, records, ranked)?.singleOrNull() ?: return null
+        val source = records.singleOrNull { it.id == id } ?: return null
+        if (ranked.none { it.id == id && it.text == source.content && it.kind == "Bestätigte Nutzererinnerung" }) return null
+        val literal = source.content.replaceFirst(correction, "").trim()
+        val match = familyAgeValue.matchEntire(literal) ?: directAgeValue.matchEntire(literal) ?: return null
+        if (key(match.groupValues[1]) != ask.holder) return null
+        val value = match.groupValues[2]
+        if (value.toIntOrNull() !in 0..130) return null
+        return "Aus deiner bestätigten Altersangabe: $value Jahre\n" +
+            "Beleg: Erinnerung $id (Stand der bestätigten Angabe, kein automatisch fortgeschriebenes Alter; " +
+            "SHA-256 ${source.contentHash.take(16)}…)"
     }
 }

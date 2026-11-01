@@ -59,3 +59,15 @@ S1 source/host fixes complete, awaiting final immutable full-host and Android ac
 ## S2 real QA failure and repair — 849 source frozen
 
 Final immutable host on **849c19f3d1eec24e7e9ebe5b3a880d190ee7927b:1520JUnit/277classes+4Checks PASS**. Independent Render dep-dbjlbjmc6qcc73bsas5g failed before Gradle: inherited Node static v32 contract expected inline `if (stored == "OFF")`, now correctly centralized in InternetConsentPolicy.restoredMode. Reproduced locally3/4; the contract now checks the real Android caller AND explicit OFF, ASK, ALWAYS_ON/fresh-install, corrupt-mode→OFF mappings. All40 relevant Node proof/source/readback tests PASS. No safety test removed, no Kotlin/Gradle/source exclusion change. Previous12152 Android PASS cannot accept849; a fresh exact source run is required. Raw failure summary and successful rerun are retained in s2/.
+
+## Final code checkpoint — confirmed AGE and durable-mode countercheck
+
+S1/S2 accepted **fc9560bd032a268379cb3e8960afdd2c3632959b** on Render dep-dbjlevflk1mc739jqvo0/live15:23:15Z: real LiteRT0.18.0/all-main Gradle, AndroidJUnit/lint,115Node+64backend, unsignedAPK/AAB/schema3 identity. Exact receipts/logs retained in s2/fc9560bd-render. Not a signed/device release.
+
+S3 now adds only a bounded confirmed-age first line through EXISTING OwnerAttributeEvidenceScope.select, existing ledger chronology/revocation and actual ranked evidence. Strict literal direct/family age grammar, named-holder equality and byte-identical genuine hit required. Original quotation+memory ID preserved; explicitly age AT THE OWNER STATEMENT, no automatically calculated current age. No new database/weight/codec/tool authority.
+
+RED before change:2of6new age tests failed, quote-list only. Independent reviewer found actual family-holder invalidation loss (newer negation or30Jahre-alt could disappear); two extra actual regressions reproduced RED2/2. Fixed by keeping family head binding for invalidators while accepting answers only via strict full literal grammar. Final focused16age/family/locationPASS including invalidators, equal-time conflict, revocation/no resurrection, full-name ambiguity, unknown persons, sessions, web/unconfirmed contamination and read-only facts/weights. Final peer source review found no remaining concrete blocker in scoped change. Full immutable host/Android acceptance of NEW code still required.
+
+Additional actual consent disk-roundtrip test uses a JVM file, new policy+gate recreation and real sessions:OFF/ASK/ALWAYS preserved; oldASK pending grant not inherited, newASK needs exact approval, OFF revokes completed evidence.31consent testsPASS. Actual Android SharedPreferences read/commit/setMode wiring checked structurally; no UI/device restart claim. All115QA Node+64backend testsPASS. Raw negative/positive results kept in s3/.
+
+Owner requested closure, no more experiments/new milestones. Freeze this safe code, finish full tests/exact Render, append final next-agent instructions and commit/push all finished material. No full S4–S8 completion claim.
