@@ -11,3 +11,13 @@ M1 confirmed source hypothesis: LocalConversationContext.record sanitizes/trunca
 Acceptance: real context→reflex RED/GREEN with swapped entities, source hash/exact offsets, negation/time restriction beyond300, over-bound evidence, research/model contamination and session reset; existing OFF/ASK/revoke tests preserved. Complete Kotlin host and existing QA pipeline after the final source freeze. New code is currently NOT_STARTED, not host/device verified. Baseline previous335 host1529 and exact Render receipts are historical until rerun. M2 pointer hypothesis will be pre-registered before a fresh independent Blind-C and candidate freeze; no claimed blind scores or CDX1 promotion.
 
 Next: implement failing M1 tests first, then smallest safe context repair, full host, commit/push. Independent matrix and final milestones/test evidence will update this file. All code remains editable in the official private repository.
+
+## M0 + first M1 code checkpoint
+
+M0 independently audited by Astra/high, root independently confirmed mergebase/DAG and no app-tree delta335→installed80062368. Full matrix/readback and compressed raw audit preserved under docs/evidence/issue340-20261101. Historical335Render receipt still matches10/10readback logs; not a new build. Actual Android memory caller is replyWithEvidenceInConversation→ContinuumMemoryDialogue, NOT the unused replyFromMemory entry named in older handoff.
+
+First actual M1repair: separate immutable original owner literal (max1000characters, same existing4turn window) from300character sanitized prompt preview. Research question/model output never becomes owner evidence; any oversized owner turn invalidates the whole proof window, so an omitted correction cannot revive a previous assertion. Session and confirmed-fact reflex no longer trim source before hashing/offsetting. Existing Probe/Verifier/Snapshot remain unchanged.
+
+Regression evidence: same6new real context→reflex tests **RED5/6 before**, **GREEN6/6 after**;50focused existing/new JVM testsPASS including OFF/ASK/revoke controls, session reset, altered roles, exact source offsets, late negation/time and research contamination. This is focused HOST verification, not final Android/device acceptance. Independent review found no new blocker in this scoped diff. Full host follows final source freeze.
+
+Remaining M1follow-up: terminal clarification for explicit rejected evidence instead of falling through to Gemma; preserve pronoun/retraction invalidators across the selected bounded snapshot; direct helper resource limits must fail closed too. Existing ordinary non-model/failure-turn context capture remains a separate known F08 gap, not claimed repaired by this integrity checkpoint. M2hypothesis/corpus/model not yet executed.

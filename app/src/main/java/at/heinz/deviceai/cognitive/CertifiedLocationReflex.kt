@@ -45,7 +45,7 @@ internal object CertifiedLocationReflex {
         // Only turns that mention the asked person are evidence; unrelated small talk must
         // neither support nor (via the verifier's pronoun rule) veto the proof.
         val items = priorUserTurns.takeLast(4).mapIndexedNotNull { index, turn ->
-            val raw = turn.trim()
+            val raw = turn // Hash and offsets bind the original user literal, not a display copy.
             if (raw.isBlank() || raw.length > 1000 || format.matches(raw) || !mentions.containsMatchIn(raw)) null
             else EvidenceBoundNaturalLocationProbe.Evidence(
                 "session-turn-" + (index + 1), 1, EvidenceBoundNaturalLocationProbe.digest(raw), raw)
@@ -79,7 +79,7 @@ internal object CertifiedLocationReflex {
             .filter { (id, text) -> id.isNotBlank() && text.isNotBlank() && text.length <= 1000 &&
                 mentions.containsMatchIn(text) && maybePlace.containsMatchIn(text) }
             .map { (id, text) -> EvidenceBoundNaturalLocationProbe.Evidence(
-                id, 1, EvidenceBoundNaturalLocationProbe.digest(text), text.trim()) }
+                id, 1, EvidenceBoundNaturalLocationProbe.digest(text), text) }
         // More than four facts about the person cannot be checked for conflicts by the rule core
         // (its evidence bound) – abstain instead of silently dropping candidates.
         if (items.isEmpty() || items.size > 4 || items.map { it.sourceId }.distinct().size != items.size) return null
