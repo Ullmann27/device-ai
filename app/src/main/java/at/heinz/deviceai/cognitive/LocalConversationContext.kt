@@ -61,6 +61,11 @@ class LocalConversationContext {
 
     @Synchronized fun hasResearch(sessionId: String): Boolean = session == sessionId && research != null
 
+    /** M2: freshness verdict of this session's research for a follow-up question; null without research. */
+    @Synchronized internal fun researchFreshness(sessionId: String, question: String, nowMillis: Long = System.currentTimeMillis()):
+        FreshKnowledgeNeed.FreshnessVerdict? =
+        if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+
     /** The owner's own earlier requests of this session (oldest first), never model replies or research text. */
     @Synchronized fun priorUserTurns(sessionId: String): List<String> =
         if (session != sessionId) emptyList() else turns.map { it.request }

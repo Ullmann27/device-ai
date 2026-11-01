@@ -66,9 +66,21 @@ object ResearchDialogueHandoff {
             append("Quelle ").append(i + 1).append(": ").append(s.label).append(" — ").append(s.url)
                 .append(" (abgerufen ").append(formatDate(s.retrievedAt)).append(")\n")
         }
+        val verdict = FreshKnowledgeNeed.freshness(digest.question, digest.retrievedAt, nowMillis, digest.synthesis)
+        append("Aktualität: ").append(verdict.reason)
+        when (verdict.status) {
+            FreshKnowledgeNeed.Freshness.FRESH -> append(" Als aktuell verwendbar.\n")
+            FreshKnowledgeNeed.Freshness.POSSIBLY_STALE -> append(" MÖGLICHERWEISE VERALTET: Gegenwartsaussagen nur mit ausdrücklichem Vorbehalt, neue Recherche empfehlen.\n")
+            FreshKnowledgeNeed.Freshness.SUPERSEDED -> append(" NICHT ALS GELTEND DARSTELLEN: historische Fassung, geltenden Stand ausdrücklich als ungeprüft benennen.\n")
+            FreshKnowledgeNeed.Freshness.UNKNOWN_AGE -> append(" Aktualität ungeklärt, als unbestätigt kennzeichnen.\n")
+        }
         append("Aussagen daraus nur mit Quellenbezug und Abrufdatum wiedergeben; Unsicherheit benennen.\n")
         append("ENDE EXTERNE RECHERCHEDATEN.\n")
     }
+
+    /** Verdict for a follow-up question against the recorded research of this session. */
+    internal fun freshnessFor(digest: Digest, question: String, nowMillis: Long): FreshKnowledgeNeed.FreshnessVerdict =
+        FreshKnowledgeNeed.freshness(if (question.isBlank()) digest.question else question, digest.retrievedAt, nowMillis, digest.synthesis)
 
     /** User-facing citation line with retrieval time, so temporal validity is visible. */
     fun citationLine(source: ResearchSource): String =

@@ -64,4 +64,17 @@ class FreshKnowledgeNeedTest {
     @Test fun explanationWithFreshnessMarkerStillNeedsCurrentWeb() {
         assertEquals(FreshKnowledgeNeed.Need.CURRENT_FACT, need("Warum ist der Leitzins derzeit so hoch?"))
     }
+
+    @Test fun trustHorizonFollowsQuestionTypeNotJustADate() {
+        assertEquals(1, FreshKnowledgeNeed.horizonDays("Wie ist das Wetter in Wien?"))
+        assertEquals(1, FreshKnowledgeNeed.horizonDays("Was ist der aktuelle Goldpreis?"))
+        assertEquals(7, FreshKnowledgeNeed.horizonDays("Welche Android-Version ist erschienen?"))
+        assertEquals(30, FreshKnowledgeNeed.horizonDays("Wer ist Bundeskanzler von Österreich?"))
+        assertEquals(30, FreshKnowledgeNeed.horizonDays("Was regelt § 1151 ABGB?"))
+        assertEquals(7, FreshKnowledgeNeed.horizonDays("Was ist zurzeit los in Linz?"))
+        assertEquals(365, FreshKnowledgeNeed.horizonDays("Warum ist der Himmel blau?"))
+        val now = 1_761_955_200_000L
+        assertEquals(FreshKnowledgeNeed.Freshness.FRESH, FreshKnowledgeNeed.freshness("Warum ist der Himmel blau?", now - 200L * 86_400_000, now).status)
+        assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE, FreshKnowledgeNeed.freshness("Wie ist das Wetter?", now - 2L * 86_400_000, now).status)
+    }
 }

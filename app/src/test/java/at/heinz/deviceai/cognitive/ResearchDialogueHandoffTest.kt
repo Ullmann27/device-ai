@@ -129,4 +129,50 @@ class ResearchDialogueHandoffTest {
         assertEquals("• MRG § 30 (abgerufen 2025-11-01, gültig: Fassung vom 2025-11-01)\n  https://www.ris.bka.gv.at/eli/bgbl/1981/520/P30",
             ResearchDialogueHandoff.citationLine(s))
     }
+
+    /** M2 (Genesis): freshness is decided from question type + retrieval age + documented validity. */
+    @Test fun renderedResearchCarriesAnExplainableFreshnessVerdict() {
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Christine Lagarde ist Präsidentin der EZB.", "https://www.ecb.europa.eu/x"), "MODEL_USED", now)!!
+        // Office holder: 30-day horizon; 3 days old is fresh.
+        val fresh = ResearchDialogueHandoff.render(d, now)
+        assertTrue(fresh, fresh.contains("Aktualität: Abruf vor 3 Tagen innerhalb von 30 Tag(en). Als aktuell verwendbar."))
+        assertFalse(fresh.contains("MÖGLICHERWEISE VERALTET"))
+        // The same evidence 45 days later must be flagged, not silently presented as current.
+        val later = ResearchDialogueHandoff.render(d, retrieved + 45 * day)
+        assertTrue(later, later.contains("Abruf vor 45 Tagen, für diese Fragenart gilt höchstens 30 Tag(e). MÖGLICHERWEISE VERALTET"))
+        assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE,
+            ResearchDialogueHandoff.freshnessFor(d, "Wer ist aktuell Präsidentin der EZB?", retrieved + 45 * day).status)
+        // A price question against the same retrieval is stale after two days.
+        assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE,
+            ResearchDialogueHandoff.freshnessFor(d, "Was kostet der Bitcoin-Kurs?", retrieved + 2 * day).status)
+        // Firewall and the "no owner facts" frame are unchanged by the verdict line.
+        val c = LocalConversationContext(); c.recordResearch("s9", d)
+        val rendered = c.render("s9", retrieved + 45 * day)
+        assertEquals(rendered, LocalConversationPromptFirewall.safeHistory(rendered))
+        assertTrue(rendered.contains("KEINE BESITZERFAKTEN"))
+    }
+
+    @Test fun repealedStatuteEvidenceIsNeverPresentedAsCurrentLaw() {
+        val d = ResearchDialogueHandoff.digest("Was sagt § 678 ABGB?",
+            dossier("[RIS-Fassung AUSSER KRAFT seit 31.12.2016 (historische Fassung, kein geltendes Recht)] § 678. Unter Juwelen …",
+                "https://ogd.ris.bka.gv.at/Dokumente/Bundesnormen/NOR12018403/NOR12018403.html"), "SOURCES_ONLY", now)!!
+        val r = ResearchDialogueHandoff.render(d, now)
+        assertTrue(r, r.contains("NICHT ALS GELTEND DARSTELLEN"))
+        assertEquals(FreshKnowledgeNeed.Freshness.SUPERSEDED, ResearchDialogueHandoff.freshnessFor(d, "", now).status)
+        // Unknown retrieval time is flagged as unconfirmed, never as fresh.
+        assertEquals(FreshKnowledgeNeed.Freshness.UNKNOWN_AGE, FreshKnowledgeNeed.freshness("Wer ist Bundeskanzler?", 0L, now).status)
+        assertEquals(FreshKnowledgeNeed.Freshness.UNKNOWN_AGE, FreshKnowledgeNeed.freshness("Wer ist Bundeskanzler?", now + day, now).status)
+    }
+
+    @Test fun sessionContextReportsFreshnessOnlyForItsOwnSession() {
+        val c = LocalConversationContext()
+        assertNull(c.researchFreshness("s1", "Wer leitet die EZB?", now))
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Christine Lagarde ist Präsidentin der EZB.", "https://www.ecb.europa.eu/x"), "MODEL_USED", now)!!
+        c.recordResearch("s1", d)
+        assertEquals(FreshKnowledgeNeed.Freshness.FRESH, c.researchFreshness("s1", "Und ihr Stellvertreter?", now)!!.status)
+        assertEquals(FreshKnowledgeNeed.Freshness.POSSIBLY_STALE, c.researchFreshness("s1", "Und ihr Stellvertreter?", retrieved + 400 * day)!!.status)
+        assertNull("another session never sees this research", c.researchFreshness("s2", "Und ihr Stellvertreter?", now))
+    }
 }

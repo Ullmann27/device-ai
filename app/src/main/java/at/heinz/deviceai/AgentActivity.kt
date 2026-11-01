@@ -2725,11 +2725,17 @@ class AgentActivity : Activity() {
         // B2: in ASK mode a question that depends on the present state of the world is not
         // answered silently from stale model knowledge; the existing one-time consent dialog is
         // offered first. Declining keeps the local answer path, marked as without current sources.
+        // M2 (Genesis): a follow-up against research this session already holds is checked for
+        // freshness (question type × retrieval age × documented validity). Stale evidence is
+        // re-researched only within the same ASK consent; otherwise it stays visibly flagged.
+        val staleResearch = localConversationContext.researchFreshness(sessionId, request)
+            ?.takeIf { it.mustFlag && !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request) }
         if (!ownerForbidsExternalNetwork && !researchArmed &&
             internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
-            at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request)) {
+            (at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request) || staleResearch != null)) {
             val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request)
             if (topic != null) {
+                if (staleResearch != null) addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason}")
                 val call = at.heinz.deviceai.cognitive.WebToolRequest.Search(topic)
                 confirmWebRequest(call, ResearchMode.STANDARD) { session ->
                     if (busy) { session?.cancel(); return@confirmWebRequest }
@@ -2744,6 +2750,8 @@ class AgentActivity : Activity() {
                 return
             }
         }
+        if (staleResearch != null)
+            addToolActivity("AKTUALITÄT · Recherchestand ${staleResearch.status.name.lowercase()} · ${staleResearch.reason} · Antwort wird als unsicher gekennzeichnet")
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
