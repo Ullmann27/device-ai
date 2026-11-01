@@ -1,0 +1,66 @@
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:13:20: error: unresolved reference 'EntityRelationLocationShadowAdapter'.
+        assertNull(EntityRelationLocationShadowAdapter.encode("Wo ist Ylva?", a))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:14:20: error: unresolved reference 'EntityRelationLocationShadowAdapter'.
+        val left = EntityRelationLocationShadowAdapter.encode("Wo ist Ylva?", a, enabled=true)!!
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:15:21: error: unresolved reference 'EntityRelationLocationShadowAdapter'.
+        val right = EntityRelationLocationShadowAdapter.encode("Wo ist Ylva?", b, enabled=true)!!
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:16:35: error: unresolved reference 'entity'.
+        assertEquals("Ylva", left.entity)
+                                  ^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:17:34: error: unresolved reference 'relation'.
+        assertEquals("ist", left.relation)
+                                 ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:18:35: error: unresolved reference 'location'.
+        assertEquals("Perg", left.location.text)
+                                  ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:19:36: error: unresolved reference 'location'.
+        assertEquals("Berg", right.location.text)
+                                   ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:20:30: error: unresolved reference 'orderedSha256'.
+        assertNotEquals(left.orderedSha256, right.orderedSha256)
+                             ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:20:51: error: unresolved reference 'orderedSha256'.
+        assertNotEquals(left.orderedSha256, right.orderedSha256)
+                                                  ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:21:25: error: unresolved reference 'entityStart'.
+        assertTrue(left.entityStart < left.relationStart && left.relationStart < left.location.start)
+                        ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:21:44: error: unresolved reference 'relationStart'.
+        assertTrue(left.entityStart < left.relationStart && left.relationStart < left.location.start)
+                                           ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:21:66: error: unresolved reference 'relationStart'.
+        assertTrue(left.entityStart < left.relationStart && left.relationStart < left.location.start)
+                                                                 ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:21:87: error: unresolved reference 'location'.
+        assertTrue(left.entityStart < left.relationStart && left.relationStart < left.location.start)
+                                                                                      ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:22:69: error: unresolved reference 'entityStart'.
+        assertEquals("Ylva", a.sources.single().text.substring(left.entityStart, left.entityEndExclusive))
+                                                                    ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:22:87: error: unresolved reference 'entityEndExclusive'.
+        assertEquals("Ylva", a.sources.single().text.substring(left.entityStart, left.entityEndExclusive))
+                                                                                      ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:23:20: error: unresolved reference 'EntityRelationLocationShadowAdapter'.
+        assertNull(EntityRelationLocationShadowAdapter.encode("Wo ist Ylva?", snapshot("Ylva wohnt in Perg."), enabled=true))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:30:22: error: unresolved reference 'LocationSpecialistShadow'.
+        val choice = LocationSpecialistShadow.choose("Wo ist Ylva?", s,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:32:22: error: unresolved reference 'LocationSpecialistShadow'.
+        assertEquals(LocationSpecialistShadow.Route.RULE_VERIFIED, choice.route)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:34:22: error: unresolved reference 'LocationSpecialistShadow'.
+        assertEquals(LocationSpecialistShadow.Route.CONSENSUS,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:35:13: error: unresolved reference 'LocationSpecialistShadow'.
+            LocationSpecialistShadow.choose("Wo ist Ylva?", s, found).route)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:44:26: error: unresolved reference 'LocationSpecialistShadow'.
+            val choice = LocationSpecialistShadow.choose("Wo ist Ylva?",changed,old)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/learning/span/RoleAwareShadowTest.kt:47:30: error: unresolved reference 'LocationSpecialistShadow'.
+                assertEquals(LocationSpecialistShadow.Route.RULE_VERIFIED,choice.route)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^

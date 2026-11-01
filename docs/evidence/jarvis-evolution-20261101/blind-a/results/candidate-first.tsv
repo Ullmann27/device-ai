@@ -1,0 +1,46 @@
+id	part	kind	expectedKnown	correct	found	verifier	integrity	latencyUs	question64	expected64	actual64	sourceId	reason64
+main-01	main25	known-explicit	true	true	true	true	true	341029	V28gd29obnQgRnJpZGE/	TMO8YmVjaw==	TMO8YmVjaw==	natural-source	
+main-02	main25	known-explicit	true	true	true	true	true	7921	V28gbGVidCBEb3JpYW4/	V8O8cnpidXJn	V8O8cnpidXJn	natural-source	
+main-03	main25	known-explicit	true	true	true	true	true	5332	V28gaXN0IE5hZGlyYT8=	S29uc3Rhbno=	S29uc3Rhbno=	natural-source	
+main-04	main25	known-explicit	true	true	true	true	true	38756	V28gc3RlaHQgS2FzcGFyPw==	RXJmdXJ0	RXJmdXJ0	natural-source	
+main-05	main25	known-explicit	true	true	true	true	true	8356	V28gd29obnQgQXVyZWxpYT8=	T2xkZW5idXJn	T2xkZW5idXJn	natural-source	
+main-06	main25	known-explicit	true	true	true	true	true	11421	V28gbGVidCBMZXZpbj8=	QmFkIE5hdWhlaW0=	QmFkIE5hdWhlaW0=	natural-source	
+main-07	main25	known-explicit	true	true	true	true	true	5236	V28gaXN0IE1hcmlzb2w/	S2VtcHRlbg==	S2VtcHRlbg==	natural-source	
+main-08	main25	known-explicit	true	true	true	true	true	7762	V28gc3RlaHQgVGFyaWs/	U2Fua3QgR2FsbGVu	U2Fua3QgR2FsbGVu	natural-source	
+main-09	main25	known-explicit	true	true	true	true	true	5097	V28gd29obnQgU2VsbWE/	V2ludGVydGh1cg==	V2ludGVydGh1cg==	natural-source	
+main-10	main25	known-explicit	true	true	true	true	true	9788	V28gbGVidCBBbWFsaWE/	QmllbA==	QmllbA==	natural-source	
+main-11	main25	known-explicit	true	true	true	true	true	43948	V28gaXN0IENlZHJpYz8=	QmVsbGluem9uYQ==	QmVsbGluem9uYQ==	natural-source	
+main-12	main25	known-explicit	true	true	true	true	true	6731	V28gc3RlaHQgRWx3aXJhPw==	Q2h1cg==	Q2h1cg==	natural-source	
+main-13	main25	known-explicit	true	true	true	true	true	8625	V28gd29obnQgUnVuYT8=	TmV1YnJhbmRlbmJ1cmc=	TmV1YnJhbmRlbmJ1cmc=	natural-source	
+main-14	main25	known-explicit	true	true	true	true	true	13866	V28gbGVidCBCYXN0aWFuPw==	RnJldWRlbnN0YWR0	RnJldWRlbnN0YWR0	natural-source	
+main-15	main25	known-explicit	true	true	true	true	true	3149	V28gaXN0IEZsb3JlbnQ/	SGlsZGVzaGVpbQ==	SGlsZGVzaGVpbQ==	natural-source	
+main-16	main25	known-explicit	true	true	true	true	true	76771	V28gc3RlaHQgS2FtaWxhPw==	UGFzc2F1	UGFzc2F1	natural-source	
+main-17	main25	known-explicit	true	true	true	true	true	21191	V28gd29obnQgTGVhbmRybz8=	UmVnZW5zYnVyZw==	UmVnZW5zYnVyZw==	natural-source	
+main-18	main25	known-explicit	true	true	true	true	true	84824	V28gbGVidCBOZWxlPw==	QXNjaGFmZmVuYnVyZw==	QXNjaGFmZmVuYnVyZw==	natural-source	
+main-19	main25	known-explicit	true	true	true	true	true	33671	V28gaXN0IFNvcmF5YT8=	V2VpbWFy	V2VpbWFy	natural-source	
+main-20	main25	known-explicit	true	true	true	true	true	3010	V28gc3RlaHQgVmFsZW50aW4/	VMO8YmluZ2Vu	VMO8YmluZ2Vu	natural-source	
+main-21	main25	missing-entity	false	true	false	false	true	9867	V28gd29obnQgQWRpbmE/				Tk9fU1VQUE9SVEVEX1NQQU4=
+main-22	main25	missing-location	false	true	false	false	true	756	V28gbGVidCBGZWxpbmE/				Tk9fU1VQUE9SVEVEX1NQQU4=
+main-23	main25	missing-relation	false	true	false	false	true	543	V28gd29obnQgSmFyb24/				Tk9fU1VQUE9SVEVEX1NQQU4=
+main-24	main25	missing-entity	false	true	false	false	true	413	V28gaXN0IEl2b25hPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+main-25	main25	missing-location	false	true	false	false	true	422	V28gd29obnQgTWVybGU/				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-01	guard20	known-unicode-name	true	true	true	true	true	34244	V28gd29obnQgw5xtaXQ/	U2luZ2Vu	U2luZ2Vu	natural-source	
+guard-02	guard20	known-hyphen-name	true	true	true	true	true	2197	V28gbGVidCBBbmEtTHV6Pw==	QmFkIEFpYmxpbmc=	QmFkIEFpYmxpbmc=	natural-source	
+guard-03	guard20	known-multiword-place	true	true	true	true	true	6390	V28gaXN0IE1hbG8/	U2Fua3QgUMO2bHRlbg==	U2Fua3QgUMO2bHRlbg==	natural-source	
+guard-04	guard20	known-unicode-name	true	true	true	true	true	2047	V28gc3RlaHQgw4VzYT8=	RnVsZGE=	RnVsZGE=	natural-source	
+guard-05	guard20	substring-entity	false	true	false	false	true	876	V28gd29obnQgTGVuZT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-06	guard20	hyphen-subentity	false	true	false	false	true	562	V28gd29obnQgTGluYT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-07	guard20	indirect-speech	false	true	false	false	true	670	V28gd29obnQgQ2V5ZGE/				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-08	guard20	hypothetical	false	true	false	false	true	5447	V28gbGVidCBUaG9yZT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-09	guard20	quotation	false	true	false	false	true	7529	V28gaXN0IEphc25hPw==				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-10	guard20	positive-then-negation	false	true	false	false	true	1074	V28gd29obnQgSWxrYT8=				TkVHQVRFRF9PUl9DT05UUkFTVElWRV9FVklERU5DRQ==
+guard-11	guard20	conflicting-sources	false	true	false	false	true	1324	V28gbGVidCBNaWxvcz8=				QU1CSUdVT1VTX09SX0NPTlRSQURJQ1RPUlk=
+guard-12	guard20	interrogative-evidence	false	false	true	true	true	6287	V28gd29obnQgRmFyaWQ/		UGlybmE=	natural-source	
+guard-13	guard20	non-direct-knowledge-claim	false	true	false	false	true	1892	V28gbGVidCBPdHRpbGllPw==				TkVHQVRFRF9PUl9DT05UUkFTVElWRV9FVklERU5DRQ==
+guard-14	guard20	relation-drift-standing	false	true	false	false	true	5232	V28gd29obnQgSW1yYW4/				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-15	guard20	relation-drift-presence	false	false	true	true	true	1891	V28gaXN0IExvcmV0dGE/		TMO8bmVidXJn	natural-source	
+guard-16	guard20	coordinated-places	false	false	true	true	true	6118	V28gbGVidCBFbm5vPw==		UGxhdWVuIHVuZCBad2lja2F1	natural-source	
+guard-17	guard20	hearsay	false	true	false	false	true	836	V28gd29obnQgQXlsaW4/				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-18	guard20	denied-report	false	true	false	false	true	611	V28gbGVidCBNZWx2aW4/				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-19	guard20	future	false	true	false	false	true	42165	V28gd29obnQgS2lyYT8=				Tk9fU1VQUE9SVEVEX1NQQU4=
+guard-20	guard20	simulated-report	false	true	false	false	true	861	V28gd29obnQgTGVvbmE/				Tk9fU1VQUE9SVEVEX1NQQU4=

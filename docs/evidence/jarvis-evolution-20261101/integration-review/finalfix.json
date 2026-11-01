@@ -1,0 +1,33 @@
+{
+  "source_commit": "d81be49e851a3c7f2196bcce288bc2fb40c7e22b",
+  "source_path": "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+  "source_sha256": "4d94ca8f217c22c0300e7cfa17b2699a4c280a42a356b4ac1b1921845b6190d9",
+  "source_copy_matches_commit": true,
+  "compile_exit_code": 0,
+  "run_exit_code": 0,
+  "same_four_review_cases": [
+    {
+      "case": "anaphoric_negation",
+      "verifier_accepts": false,
+      "rule": "ABSTAINED_VERIFICATION_REJECTED"
+    },
+    {
+      "case": "anaphoric_conflict",
+      "verifier_accepts": false,
+      "rule": "ABSTAINED_VERIFICATION_REJECTED"
+    },
+    {
+      "case": "retracted_assertion",
+      "verifier_accepts": false,
+      "rule": "ABSTAINED_VERIFICATION_REJECTED"
+    },
+    {
+      "case": "quoted_across_sentence",
+      "verifier_accepts": false,
+      "rule": "ABSTAINED_VERIFICATION_REJECTED"
+    }
+  ],
+  "previous_findings_preserved": true,
+  "blind_fixtures_read": false,
+  "repository_changes_by_reviewer": false
+}

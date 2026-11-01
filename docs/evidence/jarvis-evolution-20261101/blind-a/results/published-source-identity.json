@@ -1,0 +1,10 @@
+{
+  "candidateCommit": "a329d5c4ba8455c33e8ab248e3c3a3e553e32683",
+  "sourcesMatchPublishedCommit": {
+    "ContinuumResidualSpanCore.kt": true,
+    "EvidenceBoundNaturalLocationProbe.kt": true,
+    "VerifiedLocationSpanResearch.kt": true
+  },
+  "checkpointSha256": "c28c44c21e6b79aea5d13254760a0a782714e662294b366826d9d8c940697e92",
+  "checkpointIncluded": false
+}

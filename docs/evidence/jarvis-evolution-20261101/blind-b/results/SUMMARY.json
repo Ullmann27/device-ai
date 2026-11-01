@@ -1,0 +1,200 @@
+{
+  "status": "EXECUTED_ONCE_FROZEN_BLIND_B",
+  "fixtureSha256": "4a8314061ca589d19b5043a4ef48869534b2ff8387e7ae787c143117dbb1ae4f",
+  "track": "SPAN_EXTRACTION_NOT_CDX_GENERATION",
+  "results": {
+    "baseline": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 20,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 25,
+        "p50Ms": 2.274,
+        "p95Ms": 6.506,
+        "failures": []
+      },
+      "guard12": {
+        "known": 0,
+        "missing": 12,
+        "correctKnown": 0,
+        "correctAbstentions": 4,
+        "wrongAccepted": 8,
+        "allCorrect": 4,
+        "p50Ms": 1.1355,
+        "p95Ms": 4.048,
+        "failures": [
+          "b-guard-01",
+          "b-guard-02",
+          "b-guard-05",
+          "b-guard-06",
+          "b-guard-07",
+          "b-guard-08",
+          "b-guard-10",
+          "b-guard-11"
+        ]
+      },
+      "all37": {
+        "known": 20,
+        "missing": 17,
+        "correctKnown": 20,
+        "correctAbstentions": 9,
+        "wrongAccepted": 8,
+        "allCorrect": 29,
+        "p50Ms": 1.739,
+        "p95Ms": 6.506,
+        "failures": [
+          "b-guard-01",
+          "b-guard-02",
+          "b-guard-05",
+          "b-guard-06",
+          "b-guard-07",
+          "b-guard-08",
+          "b-guard-10",
+          "b-guard-11"
+        ]
+      }
+    },
+    "final-probe": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 20,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 25,
+        "p50Ms": 2.546,
+        "p95Ms": 21.139,
+        "failures": []
+      },
+      "guard12": {
+        "known": 0,
+        "missing": 12,
+        "correctKnown": 0,
+        "correctAbstentions": 12,
+        "wrongAccepted": 0,
+        "allCorrect": 12,
+        "p50Ms": 1.241,
+        "p95Ms": 2.703,
+        "failures": []
+      },
+      "all37": {
+        "known": 20,
+        "missing": 17,
+        "correctKnown": 20,
+        "correctAbstentions": 17,
+        "wrongAccepted": 0,
+        "allCorrect": 37,
+        "p50Ms": 1.976,
+        "p95Ms": 21.139,
+        "failures": []
+      }
+    },
+    "TRAINED_RAW": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 19,
+        "correctAbstentions": 2,
+        "wrongAccepted": 4,
+        "allCorrect": 21,
+        "p50Ms": 1.163,
+        "p95Ms": 24.393,
+        "failures": [
+          "b-main-15",
+          "b-main-22",
+          "b-main-23",
+          "b-main-25"
+        ]
+      },
+      "guard12": {
+        "known": 0,
+        "missing": 12,
+        "correctKnown": 0,
+        "correctAbstentions": 2,
+        "wrongAccepted": 10,
+        "allCorrect": 2,
+        "p50Ms": 0.733,
+        "p95Ms": 4.642,
+        "failures": [
+          "b-guard-01",
+          "b-guard-02",
+          "b-guard-03",
+          "b-guard-04",
+          "b-guard-05",
+          "b-guard-06",
+          "b-guard-07",
+          "b-guard-09",
+          "b-guard-10",
+          "b-guard-11"
+        ]
+      },
+      "all37": {
+        "known": 20,
+        "missing": 17,
+        "correctKnown": 19,
+        "correctAbstentions": 4,
+        "wrongAccepted": 14,
+        "allCorrect": 23,
+        "p50Ms": 1.079,
+        "p95Ms": 24.393,
+        "failures": [
+          "b-main-15",
+          "b-main-22",
+          "b-main-23",
+          "b-main-25",
+          "b-guard-01",
+          "b-guard-02",
+          "b-guard-03",
+          "b-guard-04",
+          "b-guard-05",
+          "b-guard-06",
+          "b-guard-07",
+          "b-guard-09",
+          "b-guard-10",
+          "b-guard-11"
+        ]
+      }
+    },
+    "TRAINED_VERIFIED": {
+      "main25": {
+        "known": 20,
+        "missing": 5,
+        "correctKnown": 19,
+        "correctAbstentions": 5,
+        "wrongAccepted": 0,
+        "allCorrect": 24,
+        "p50Ms": 1.774,
+        "p95Ms": 5.025,
+        "failures": [
+          "b-main-15"
+        ]
+      },
+      "guard12": {
+        "known": 0,
+        "missing": 12,
+        "correctKnown": 0,
+        "correctAbstentions": 12,
+        "wrongAccepted": 0,
+        "allCorrect": 12,
+        "p50Ms": 0.969,
+        "p95Ms": 1.623,
+        "failures": []
+      },
+      "all37": {
+        "known": 20,
+        "missing": 17,
+        "correctKnown": 19,
+        "correctAbstentions": 17,
+        "wrongAccepted": 0,
+        "allCorrect": 36,
+        "p50Ms": 1.521,
+        "p95Ms": 5.025,
+        "failures": [
+          "b-main-15"
+        ]
+      }
+    }
+  }
+}
