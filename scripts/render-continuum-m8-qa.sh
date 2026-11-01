@@ -22,6 +22,7 @@ case "$(git branch --show-current)" in \
   research/continuum-sol-cdx1-evidence-20261101|\
   fix/continuum-ewm2-role-age-production-20261101|\
   fix/continuum-ewm2-archive-plural-20261101|\
+  integration/continuum-ouroboros-ewm2-proof-20261101|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
@@ -70,6 +71,11 @@ gradle --version
 node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
+# Integrated proof: local missing-file recovery is checked without overwriting owners' work.
+node --test scripts/ensure-termux-checkout.test.mjs > continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt 2>&1 || {
+  cat continuum-m8-render-qa/TERMUX-RECOVERY-TESTS.txt >&2
+  die 'Pinned Termux checkout recovery contract failed'
+}
 node --test   .github/continuum/coding-task.test.mjs   .github/continuum/coding-task-android-extensions.test.mjs   .github/continuum/risk-file-ranker.test.mjs   .github/continuum/coding-agent-risk-tools.test.mjs     > continuum-m8-render-qa/NODE-TESTS.txt 2>&1 || {
     cat continuum-m8-render-qa/NODE-TESTS.txt
     die 'Node contract tests failed'
