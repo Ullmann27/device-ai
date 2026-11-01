@@ -48,14 +48,16 @@ internal object LegalRisParagraphExtractor {
         if (!paragraph.matches(Regex("[0-9]{1,5}")) || raw.length !in 100..100_000)
             return null
         val heading = Regex("""(?iu)§\s*""" + Regex.escape(paragraph) + """(?:[.\s]|$)""")
+        // Metadata can mention "Dokumentnummer" before the actual Text section.
+        // Only treat section trailers *following* "Text" as delimiters.
+        val textField = Regex("""(?iu)\bText\s*:?""").find(raw)
+            ?.range?.last?.plus(1) ?: return null
         val firstTrailer = listOf("Schlagworte", "Zuletzt aktualisiert", "Dokumentnummer", "European Legislation Identifier")
-            .map { raw.indexOf(it, ignoreCase = true) }.filter { it >= 0 }.minOrNull() ?: raw.length
-        val candidates = heading.findAll(raw).filter { it.range.first < firstTrailer }.toList()
-        if (candidates.isEmpty()) return null
-        // Prefer a statute heading after the RIS "Text" field, not page navigation.
-        val textField = Regex("""(?iu)\bText\s*:?""").findAll(raw)
-            .firstOrNull { it.range.first < firstTrailer }?.range?.last?.plus(1) ?: 0
-        val match = candidates.lastOrNull { it.range.first >= textField } ?: return null
+            .map { raw.indexOf(it, startIndex = textField, ignoreCase = true) }
+            .filter { it >= 0 }.minOrNull() ?: raw.length
+        val candidates = heading.findAll(raw)
+            .filter { it.range.first in textField until firstTrailer }.toList()
+        val match = candidates.lastOrNull() ?: return null
         val segment = raw.substring(match.range.first, firstTrailer)
             .replace(Regex("""\s+"""), " ").trim().take(10_000)
         if (segment.length < 80 || !Regex("""(?iu)(?:\(\s*1\s*\)|\bAbsatz\s+(?:eins|1)\b|\b1\))""")
