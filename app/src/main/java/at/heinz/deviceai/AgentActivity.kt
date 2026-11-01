@@ -2419,6 +2419,18 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        // Enforce an explicit no-network constraint before ANY early dispatch:
+        // auto-web under ALWAYS_ON, mentor/cloud commands and the armed Web UI.
+        val ownerForbidsExternalNetwork =
+            at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(request)
+        if (ownerForbidsExternalNetwork) {
+            researchArmed = false
+            // A previous ASK dialog or running ALWAYS_ON session must not
+            // survive an explicit offline instruction for the new owner turn.
+            // cancel() revokes ephemeral capabilities, not the saved consent
+            // preference (ASK/ALWAYS_ON remains unchanged).
+            webToolGate.cancel()
+        }
         // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
         if (request.equals("Continuum Modelltest", true) ||
             request.equals("Continuum Modelltest Direkt", true)) {
@@ -2438,7 +2450,7 @@ class AgentActivity : Activity() {
         // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
         // showGroqMentorDialog always requires a second owner confirmation.
         val groqQuestion = GroqInvocationRouter.extractQuestion(request)
-        if (groqQuestion != null) {
+        if (groqQuestion != null && !ownerForbidsExternalNetwork) {
             showGroqMentorDialog(groqQuestion)
             return
         }
@@ -2678,7 +2690,7 @@ class AgentActivity : Activity() {
         // With the owner's persistent ALWAYS_ON grant, automatically route only
         // de-identified public knowledge questions to a real research cycle.
         // Personal or ambiguous dialogue remains local; no silent chat upload.
-        val publicTopic = if (internetConsent.mode ==
+        val publicTopic = if (!ownerForbidsExternalNetwork && internetConsent.mode ==
             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
         if (publicTopic != null && !researchArmed) {

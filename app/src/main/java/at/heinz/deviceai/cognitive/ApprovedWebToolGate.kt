@@ -18,6 +18,8 @@ sealed class WebToolRequest {
         }
         fun fromChat(text:String,armed:Boolean):WebToolRequest? {
             val value=text.trim()
+            // Same-turn prohibition overrides even a previously armed Web button.
+            if (NetworkTurnConstraint.forbidsExternalResearch(value)) return null
             val search=Regex("(?is)^(?:/?web_search|/search|suche im internet|recherchiere)(?:\\s*:\\s*|\\s+)(.+)$").matchEntire(value)
             if(search!=null)return Search(search.groupValues[1].trim())
             val read=Regex("(?is)^(?:/?web_read|/read|lies die seite)(?:\\s*:\\s*|\\s+)(.+)$").matchEntire(value)
@@ -37,12 +39,14 @@ class ApprovedWebToolGate(private val consent:InternetConsentPolicy) {
     @Synchronized fun prepare(call:WebToolRequest):WebToolApproval? {
         pending=null;consent.clearPending()
         if(consent.mode!=InternetAccessMode.ASK)return null
+        if(NetworkTurnConstraint.forbidsExternalResearch(call.question))return null
         if(!validCall(call))return null
         val ticket=consent.requestTicket(call.question)?:return null
         return WebToolApproval(call,ticket).also { pending=it }
     }
     @Synchronized fun authorizeAlwaysOn(call:WebToolRequest,mode:ResearchMode):ApprovedWebResearchSession? {
         pending=null;consent.clearPending()
+        if(NetworkTurnConstraint.forbidsExternalResearch(call.question))return null
         if(!validCall(call))return null
         val ticket=consent.grantAlwaysOn(call.question)?:return null
         return ApprovedWebResearchSession(call,mode,consent,ticket)
