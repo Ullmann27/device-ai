@@ -6602,7 +6602,12 @@ class AgentActivity : Activity() {
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
-                    publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)
+                    val requiredContextOverflow = error.message in setOf(
+                        "MANDATORY_CONTEXT_EXCEEDS_BUDGET",
+                        "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET"
+                    )
+                    publishCognitiveTrace(turnTrace,
+                        if (requiredContextOverflow) TraceOutcome.CLARIFY else TraceOutcome.FAILED)
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
                             .recordLocalOutcome(false)
@@ -6611,10 +6616,14 @@ class AgentActivity : Activity() {
                     }
                     localRuntimeError = error.message ?: "Local inference failed."
                     val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
-                    addAssistantMessage(groundedRecall?.failureAnswer() ?:
+                    addAssistantMessage(if (requiredContextOverflow)
+                        "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
+                    else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
-                    addToolActivity("ERROR · lokale Inferenz")
+                    addToolActivity(if (requiredContextOverflow)
+                        "KONTEXT · vollständig erforderliche Belege passen nicht; keine Modellaktion"
+                    else "ERROR · lokale Inferenz")
                 }
                 setBusy(false)
                 refreshLocalModelUi()
