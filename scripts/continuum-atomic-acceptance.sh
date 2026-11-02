@@ -82,8 +82,10 @@ run() {
   fi
 }
 
-# Native Kotlin/Android toolgate tests + all app JUnit + lint. No APK task.
-run android-gradle bash "$root/gradlew" --offline --no-daemon \
+# Native Kotlin/Android ToolGate tests + all app JUnit + lint. No APK task.
+# --rerun-tasks prevents a prior commit's stale/up-to-date JUnit XML from
+# masquerading as a new exact-source successful run.
+run android-gradle bash "$root/gradlew" --offline --no-daemon --rerun-tasks \
   :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
 
 # Reuse the existing diagnoser: exit 0 and an empty/fully skipped JUnit tree
@@ -111,12 +113,15 @@ else
   exit 1
 fi
 
+export RECEIPT_EXPECTED_HEAD="$expected"
+
 # Existing canonical Node QA enforces exit codes, confirmed process termination,
 # complete JUnit evidence, source identity and no skipped-only success.
 run node-critical node "$root/scripts/continuum-reliability-qa.mjs" critical --out "$out/critical"
 if node --input-type=commonjs - "$out/critical/report.json" <<'NODE'
 const r=require(process.argv[2]);
-if(r.status!=='PASS'||r.sourceUnchanged!==true)process.exit(1);
+if(r.status!=='PASS'||r.sourceUnchanged!==true||
+  r.source?.commit!==process.env.RECEIPT_EXPECTED_HEAD)process.exit(1);
 NODE
 then printf 'node-critical-proof\tPASS\t0\n' >> "$out/checks.tsv"
 else printf 'node-critical-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
@@ -124,7 +129,8 @@ fi
 run node-full node "$root/scripts/continuum-reliability-qa.mjs" full-node --out "$out/full-node"
 if node --input-type=commonjs - "$out/full-node/report.json" <<'NODE'
 const r=require(process.argv[2]);
-if(r.status!=='PASS'||r.sourceUnchanged!==true)process.exit(1);
+if(r.status!=='PASS'||r.sourceUnchanged!==true||
+  r.source?.commit!==process.env.RECEIPT_EXPECTED_HEAD)process.exit(1);
 NODE
 then printf 'node-full-proof\tPASS\t0\n' >> "$out/checks.tsv"
 else printf 'node-full-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
