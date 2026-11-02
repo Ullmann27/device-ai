@@ -30,6 +30,10 @@ class DeviceToolExecutor internal constructor(
             else startNativeAction(call,adapter,callback)
             return
         }
+        if (call.name == "find_app") {
+            callback(runCatching { AndroidInstalledAppLookup.search(context, call.arguments["query"] as String) })
+            return
+        }
         // App-volume statistics need neither Shizuku nor access to personal files.
         // Exceptions propagate to the existing ToolGate as FAILED, never as a
         // successful string containing an error. The runner consumes Result explicitly.
