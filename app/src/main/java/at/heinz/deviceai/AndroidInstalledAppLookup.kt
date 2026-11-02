@@ -28,6 +28,7 @@ internal object AndroidInstalledAppLookup {
         return JSONObject()
             .put("schema", "CONTINUUM_APP_DISCOVERY_V1")
             .put("readOnly", true)
+            .put("visibility", "VISIBLE_LAUNCHER_ACTIVITIES_ONLY")
             .put("exactLabelMatch", result.exactLabel)
             .put("uniqueExactMatch", result.exactLabel && result.total == 1)
             .put("totalMatches", result.total)
