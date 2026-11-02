@@ -21,8 +21,10 @@ def main():
     for split, count, seed, prefix in [('train',80,711,'Ta'),('validation',20,912,'Va'),('holdout-d',55,1319,'Da')]:
         rng=random.Random(seed); cases=[]
         def word():
-            w=prefix+''.join(rng.choice('bcdfghjklmnprstv')+rng.choice('aeiou') for _ in range(3))
-            assert w not in identities; identities.add(w); return w
+            while True:
+                w=prefix+''.join(rng.choice('bcdfghjklmnprstv')+rng.choice('aeiou') for _ in range(3))
+                if w not in identities:
+                    identities.add(w); return w
         for i in range(count):
             who, other, a, b=word(),word(),word(),word(); ident=f'{split}-{i+1:03}'
             if split=='holdout-d':
