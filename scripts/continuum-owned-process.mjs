@@ -47,8 +47,13 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
     const remember=()=>{
       if(!procPlatform||!child.pid){trackingComplete=false;return;}
       trackingComplete=true;
-      const root=currentIdentity(child.pid);if(root&&!owned.has(root.pid))owned.set(root.pid,root);
-      if(root)startFloor=Math.max(startFloor,Number(root.start));
+      const root=currentIdentity(child.pid);
+      // Bind the floor once to the original child. A recycled root PID must not
+      // exclude surviving descendants born before its replacement. Signal checks
+      // below still require the original (pid,start) identity.
+      if(root&&!owned.has(root.pid)){
+        owned.set(root.pid,root);startFloor=Math.max(startFloor,Number(root.start));
+      }
       let pids;
       try {pids=fs.readdirSync('/proc').filter(p=>/^[0-9]+$/.test(p));}
       catch {trackingComplete=false;return;}

@@ -116,3 +116,32 @@ test('denied proc access still stops its direct child and returns a bounded unco
   assert.ok(Date.now()-start<3000);
   assert.equal(r.ok,false);assert.equal(r.timedOut,true);assert.equal(r.terminationConfirmed,false);
 });
+
+test('a reused root PID cannot hide an earlier detached descendant from cleanup',async t=>{
+  if(process.platform!=='linux'){t.skip('Linux /proc identity check');return;}
+  const read=fs.readFileSync;
+  let rootFile=null,rootStat=null;
+  fs.readFileSync=(file,...args)=>{
+    let value;
+    try {value=read(file,...args);} catch(error) {
+      if(String(file)!==rootFile||error.code!=='ENOENT')throw error;
+      // Model PID reuse after the direct child exits: the replacement has a later start time.
+      const end=rootStat.lastIndexOf(')')+2,parts=rootStat.slice(end).split(' ');
+      parts[0]='S';parts[19]=String(Number(parts[19])+1000000);
+      return rootStat.slice(0,end)+parts.join(' ');
+    }
+    if(!rootFile&&/^\/proc\/[0-9]+\/stat$/.test(String(file))){
+      const parts=String(value).slice(String(value).lastIndexOf(')')+2).split(' ');
+      if(Number(parts[1])===process.pid){rootFile=String(file);rootStat=String(value);}
+    }
+    return value;
+  };
+  t.after(()=>{fs.readFileSync=read;});
+  const code='const{spawn}=require("node:child_process");const p=spawn(process.execPath,["-e","setInterval(()=>{},1000)"],{detached:true,stdio:"ignore"});console.log(p.pid);p.unref();';
+  const result=await runOwnedCommand(process.execPath,['-e',code],{timeout:5000});
+  const pid=Number(result.output.trim());
+  t.after(()=>{try{process.kill(pid,'SIGKILL');}catch{}});
+  assert.ok(rootFile,'root identity was observed before synthetic reuse');
+  let state=null;try{state=read('/proc/'+pid+'/stat','utf8').split(') ')[1].split(' ')[0];}catch{}
+  assert.ok(state===null||state==='Z','detached descendant must be stopped after root PID reuse');
+});
