@@ -1,3 +1,7 @@
+## Sovereign cognition continuation — PR357 (2026-11-02)
+
+Read [Sovereign handoff](SOVEREIGN-COGNITION-HANDOFF-20261102.md) and its exact-source final-verification file first. S1 complete evidence context, S2 prospective context-loss result and S3 task-bound events extend the existing brain. Fresh GitHub heads remain mandatory. No owner APK/main/weight change; device/native model acceptance remains NOT_RUN. PR354 Android-click and PR356 GGUF/Termux files were excluded. Do not present the synthetic compiler/verifier gain as a repaired CDX1 generator.
+
 # CONTINUUM – Einstiegspunkt für den nächsten Agenten
 
 **Neueste Fortsetzung: [Synapse-III-Handoff](SYNAPSE-III-HANDOFF-20261102.md), [Laufzeitmatrix](SYNAPSE-III-ARCHITECTURE-20261102.md), [Draft-PR344](https://github.com/Ullmann27/device-ai/pull/344). Zuerst dessen echten Remote-HEAD und source-exakten Render-Kommentar lesen. Vollständiger Synapse-II-Elternstand2eb20959 ist enthalten; keine alten Blindtests neu als ungesehen zählen.**

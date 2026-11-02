@@ -1,0 +1,678 @@
+{
+  "schema": 1,
+  "status": "RESEARCH_SHADOW",
+  "corpusSha256": "c29f57dca626901ca65cbba36027b22897794cc73d4e6a35e252da5dd442e3cf",
+  "parentSource": "6fc252ecc05d49508023efe2835a983c14299074",
+  "candidateSource": "c1af43392af6efa208b36724771fb7c0892c5deb",
+  "parent": {
+    "answerableAbstentions": 0,
+    "total": 72,
+    "wrongAnswers": 24,
+    "correct": 48,
+    "emptyControlCorrect": 24,
+    "oracleCorrect": 72,
+    "correctNegativeAbstentions": 0
+  },
+  "candidate": {
+    "answerableAbstentions": 0,
+    "total": 72,
+    "wrongAnswers": 0,
+    "correct": 72,
+    "emptyControlCorrect": 24,
+    "oracleCorrect": 72,
+    "correctNegativeAbstentions": 24
+  },
+  "improved": 24,
+  "regressed": 0,
+  "unchanged": 48,
+  "rows": [
+    {
+      "id": "113-0-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "113-0-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-0-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "113-1-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    },
+    {
+      "id": "113-1-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-1-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    },
+    {
+      "id": "113-2-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "113-2-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-2-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "113-3-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "113-3-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-3-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "113-4-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "113-4-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-4-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "113-5-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "113-5-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-5-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "113-6-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "113-6-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-6-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "113-7-short",
+      "seed": 113,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "113-7-late-negation",
+      "seed": 113,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": null
+    },
+    {
+      "id": "113-7-budget-edge",
+      "seed": 113,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "227-0-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    },
+    {
+      "id": "227-0-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-0-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    },
+    {
+      "id": "227-1-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "227-1-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-1-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "227-2-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "227-2-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-2-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "227-3-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "227-3-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-3-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "227-4-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "227-4-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-4-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "227-5-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "227-5-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-5-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "227-6-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "227-6-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-6-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "227-7-short",
+      "seed": 227,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "227-7-late-negation",
+      "seed": 227,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": null
+    },
+    {
+      "id": "227-7-budget-edge",
+      "seed": 227,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "409-0-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "409-0-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-0-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Žilina",
+      "afterAnswer": "Žilina"
+    },
+    {
+      "id": "409-1-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "409-1-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-1-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Brüggen",
+      "afterAnswer": "Brüggen"
+    },
+    {
+      "id": "409-2-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "409-2-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-2-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Bad Ischl",
+      "afterAnswer": "Bad Ischl"
+    },
+    {
+      "id": "409-3-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "409-3-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-3-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ústí",
+      "afterAnswer": "Ústí"
+    },
+    {
+      "id": "409-4-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "409-4-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-4-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Stendal",
+      "afterAnswer": "Stendal"
+    },
+    {
+      "id": "409-5-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "409-5-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-5-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Quedlinburg",
+      "afterAnswer": "Quedlinburg"
+    },
+    {
+      "id": "409-6-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "409-6-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-6-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Tórshavn",
+      "afterAnswer": "Tórshavn"
+    },
+    {
+      "id": "409-7-short",
+      "seed": 409,
+      "kind": "short",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    },
+    {
+      "id": "409-7-late-negation",
+      "seed": 409,
+      "kind": "late-negation",
+      "beforeCorrect": false,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": null
+    },
+    {
+      "id": "409-7-budget-edge",
+      "seed": 409,
+      "kind": "budget-edge",
+      "beforeCorrect": true,
+      "afterCorrect": true,
+      "beforeAnswer": "Ålesund",
+      "afterAnswer": "Ålesund"
+    }
+  ]
+}

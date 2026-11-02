@@ -152,7 +152,8 @@ class ToolGate(
     fun execute(
         invocation: ToolInvocation,
         userConfirmed: Boolean = false,
-        destructiveConfirmed: Boolean = false
+        destructiveConfirmed: Boolean = false,
+        onExecutionStarted: (() -> Unit)? = null
     ): ToolExecutionResult {
         val request = invocation.request
         val spec = ToolRegistry.get(request.name)
@@ -270,16 +271,31 @@ class ToolGate(
                 ) != null
             }.getOrDefault(false)
         }
+        val executionStartAllowed = AtomicBoolean(true)
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
         return try {
-            val future = executor.submit(Callable { runner.execute(request) })
+            val future = executor.submit(Callable {
+                fun checkStartEligibility() {
+                    if (!executionStartAllowed.get() || cancelled.get() || Thread.currentThread().isInterrupted)
+                        throw CancellationException("Backend start cancelled.")
+                    if (clock() - start >= policy.timeoutMillis * 1_000_000L)
+                        throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT, "Backend start deadline expired.")
+                }
+                checkStartEligibility()
+                // The observer may consume interruption. Recheck the independent
+                // per-execution lease before any backend operation can begin.
+                runCatching { onExecutionStarted?.invoke() }
+                checkStartEligibility()
+                runner.execute(request)
+            })
             activeFutures += future
             if (cancelled.get()) future.cancel(true)
             val output = try {
                 future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
+                executionStartAllowed.set(false)
                 future.cancel(true)
                 val saved = persistTerminal(ToolReceiptState.TIMED_OUT, null)
                 return result(
@@ -335,6 +351,7 @@ class ToolGate(
             persistTerminal(ToolReceiptState.FAILED, null)
             result(ToolExecutionStatus.FAILED, "Tool execution failed.")
         } finally {
+            executionStartAllowed.set(false)
             activeFutures.removeIf { it.isDone }
             executor.shutdownNow()
         }

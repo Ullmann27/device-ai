@@ -9,7 +9,9 @@ enum class TraceStage {
     CTX3_SHADOW, CTX3_OFF, CRE1_SHADOW, CRE1_ACTIVE, ROUTER_ADVISORY,
     MODEL_PRIMARY_INVOKED, MODEL_ADVISORY_INVOKED, MODEL_COMPLETED, MODEL_FAILED,
     MODEL_NOT_READY, GATED_FALLBACK, LOCAL_MODEL_SYNTHESIS, TOOL_PROPOSED, TOOL_EXECUTED,
-    CORRECTION_SCOPE, CLARIFICATION, TEST_DOUBLE_CALL
+    CORRECTION_SCOPE, CLARIFICATION, TEST_DOUBLE_CALL,
+    TASK_REF, TASK_RECEIVED, PLAN_CREATED, APPROVAL_REQUESTED, TOOL_EXECUTION_STARTED,
+    OUTCOME_CHECK_STARTED, OUTCOME_CONFIRMED, OUTCOME_UNCONFIRMED
 }
 enum class TraceOutcome { MEMORY_EXACT, MODEL_INTERPRETATION, ACTION_VERIFIED, BLOCKED, FAILED, CANCELLED, CLARIFY, WORKING_CONTEXT }
 enum class TraceFeedback { NONE, CONFIRMED, CORRECTED, REVOKED }
@@ -24,6 +26,21 @@ data class CognitiveTraceSnapshot(val id: String, val sessionHash: String, val e
         require(id.matches(Regex("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}")))
         require(sessionHash.matches(Regex("[a-f0-9]{64}")))
         require(elapsedMillis >= 0 && events.size <= 64)
+    }
+    /** Observed orchestration only; voice states belong to actual voice callbacks. */
+    val workState: CognitiveWorkState? get() = if(outcome in setOf(
+        TraceOutcome.CANCELLED, TraceOutcome.FAILED, TraceOutcome.BLOCKED, TraceOutcome.CLARIFY))
+        CognitiveWorkState.BLOCKED else events.asReversed().firstNotNullOfOrNull {
+        when(it.stage) {
+            TraceStage.TASK_RECEIVED -> CognitiveWorkState.UNDERSTANDING
+            TraceStage.PLAN_CREATED -> CognitiveWorkState.PLANNING
+            TraceStage.APPROVAL_REQUESTED -> CognitiveWorkState.WAITING_FOR_APPROVAL
+            TraceStage.TOOL_EXECUTION_STARTED -> CognitiveWorkState.EXECUTING
+            TraceStage.OUTCOME_CHECK_STARTED -> CognitiveWorkState.VERIFYING
+            TraceStage.OUTCOME_CONFIRMED -> CognitiveWorkState.COMPLETED
+            TraceStage.OUTCOME_UNCONFIRMED -> CognitiveWorkState.BLOCKED
+            else -> null
+        }
     }
     val modelInvocations: Int get() = events.count { it.stage in setOf(TraceStage.MODEL_PRIMARY_INVOKED, TraceStage.MODEL_ADVISORY_INVOKED) }
     val completedModelCalls: Int get() = events.count { it.stage == TraceStage.MODEL_COMPLETED }

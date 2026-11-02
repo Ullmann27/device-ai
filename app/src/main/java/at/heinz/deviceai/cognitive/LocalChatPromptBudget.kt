@@ -9,6 +9,9 @@ package at.heinz.deviceai.cognitive
  * the original request or the native model identity checks.
  */
 internal object LocalChatPromptBudget {
+    const val MAX_TASK_CHARACTERS = 7_900
+    fun acceptsCompleteTask(task: String): Boolean = task.isNotBlank() && task.length <= MAX_TASK_CHARACTERS
+
     const val FULL_CHARACTERS = 15_500
     const val BRIEF_FIRST_TURN_CHARACTERS = 6_000
 

@@ -81,7 +81,12 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   activity.includes('val agentTask = resolvedQuestion.take(7_900)') &&
+   activity.includes('val agentTask = resolvedQuestion') &&
+   !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
+   bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
+   bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <
+     bodyOf(activity,'private fun runLocal(text:').indexOf('activeLocalRequest = true') &&
+   bodyOf(activity,'private fun runLocal(text:').includes('publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)') &&
    !activity.includes('persistRequestedMemory(') && !bodyOf(activity,'private fun runLocal(text:').includes('memoryStore.put('));
  ensure('only explicit confirmed fact can retry unanswered turn',
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&

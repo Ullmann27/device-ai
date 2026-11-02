@@ -1,0 +1,4 @@
+frozen-context-holdout.json: OK
+parent: {"answerableAbstentions":0,"total":72,"wrongAnswers":24,"correct":48,"emptyControlCorrect":24,"oracleCorrect":72,"correctNegativeAbstentions":0}
+candidate: {"answerableAbstentions":0,"total":72,"wrongAnswers":0,"correct":72,"emptyControlCorrect":24,"oracleCorrect":72,"correctNegativeAbstentions":24}
+pairs=12; identicalBucketSets=0; structuredCorrect=12
