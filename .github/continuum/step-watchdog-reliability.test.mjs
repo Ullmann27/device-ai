@@ -7,6 +7,7 @@ import {spawn,spawnSync} from 'node:child_process';
 import {once} from 'node:events';
 import {fileURLToPath} from 'node:url';
 import {runProfile} from './repair-loop.mjs';
+import {BacklogStore} from './development-backlog.mjs';
 
 const WATCHDOG=fileURLToPath(new URL('./step-watchdog.mjs',import.meta.url));
 const linux=process.platform==='linux';
@@ -23,6 +24,31 @@ function watch(f,code) {
   return spawnSync(process.execPath,[WATCHDOG,f.backlog,'repair-watched',f.receipt,'5000',String(process.pid),'--',process.execPath,'-e',code],
     {env:f.env,encoding:'utf8',timeout:10000});
 }
+test('a completion I/O failure preserves the owner abort receipt',{skip:!linux},t=>{
+  const f=fixture(t,`const fs=require('node:fs');const write=fs.writeFileSync;fs.writeFileSync=(p,...a)=>{
+    if(String(p).endsWith('.completion.json'))throw Object.assign(Error('synthetic full disk'),{code:'ENOSPC'});
+    return write(p,...a);};`);
+  const store=new BacklogStore(f.backlog,{actor:'owner'});
+  store.apply([{op:'propose',actor:'owner',at:1,task:{id:'repair-watched',title:'Abort test',kind:'REPAIR',
+    source:'owner',priority:900,subject:{base:'0'.repeat(40),chain:'node'}}},
+    {op:'accept',actor:'owner',at:2,id:'repair-watched',reason:'test'},
+    {op:'abort',actor:'owner',at:3,id:'repair-watched',reason:'test owner stop'}]);
+  const marker=path.join(f.dir,'ran');
+  const r=watch(f,`require('node:fs').writeFileSync(${JSON.stringify(marker)},'ran')`);
+  assert.equal(r.status,1);assert.equal(fs.existsSync(marker),false);
+  assert.equal(JSON.parse(fs.readFileSync(f.receipt,'utf8')).taskId,'repair-watched');
+  assert.equal(fs.existsSync(f.receipt+'.completion.json'),false);
+});
+test('an existing completion cannot be overwritten or turn a failed delivery into success',{skip:!linux},t=>{
+  const f=fixture(t),stale=JSON.stringify({schemaVersion:1,taskId:'repair-watched',code:0,
+    exitSignal:null,error:null,terminationConfirmed:true});
+  fs.writeFileSync(f.receipt+'.completion.json',stale);
+  const r=watch(f,'process.exitCode=3');
+  assert.equal(r.status,1);
+  assert.equal(fs.readFileSync(f.receipt+'.completion.json','utf8'),stale);
+  const fallback=JSON.parse(r.stderr.split('COMPLETION_WRITE_FAILED ')[1]);
+  assert.equal(fallback.code,3);assert.equal(fallback.ioError,'EEXIST');
+});
 test('unreadable proc cannot turn a live detached child into watchdog success',{skip:!linux},t=>{
   const f=fixture(t,denyProc),marker=path.join(f.dir,'pid');
   const code=`const {spawn}=require('node:child_process');const p=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{detached:true,stdio:'ignore'});require('node:fs').writeFileSync(${JSON.stringify(marker)},String(p.pid));p.unref();`;
