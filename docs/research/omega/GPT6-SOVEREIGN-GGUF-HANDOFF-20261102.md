@@ -23,8 +23,20 @@ bash -n scripts/continuum-local-llama-termux.sh
 - **Wichtige Evidenzgrenze:** Die 7 Tests verwenden für positive bzw. negative `preflightPinnedGguf`-Quittungen einen kontrollierten Test-`admit`-Adapter. Der ursprüngliche `admitGgufFile` hat im Repository eigene GGUF-Tests; seine erneute gemeinsame Prüfung mit diesem neuen CLI ist **NOT_RUN** in diesem Host-Lauf. `bash -n` ist Syntaxprüfung, keine reale ARM64-Ausführung.
 - Vollständige Android-Gradle-, Node-Gesamtsuite, lokale GGUF-Inferenz auf Fold7 und realer Termux-Serverstart: **NOT_RUN**. Kein `DEVICE_VERIFIED`, kein APK-Update.
 
+## Fortsetzung: tatsächlicher GGUF-CLI-Integrationspfad (gleicher Forschungstag)
+
+Neu [`scripts/continuum-gguf-preflight.integration.test.mjs`](../../../../scripts/continuum-gguf-preflight.integration.test.mjs): fünf gesonderte tatsächliche CLI- und Shell-Integrationsprüfungen. Eine strukturell gültige winzige GGUF-`llama`-Testdatei wird auf Platte erzeugt, als echte Datei gehasht und durch `continuum-gguf-preflight.mjs --verify` mit dem vorhandenen `admitGgufFile` geprüft. Die Tests verlangen die Quittung `GGUF_PIN_VERIFIED` und `serverModelIdentityVerified=false`.
+
+Negativkontrollen: Byte-Manipulation mit `GGUF_HASH_MISMATCH`, gefälschter GGUF-Magic mit dazu passender neu berechneter SHA (`GGUF_MAGIC`), falsche deklarierte Größe (`GGUF_SIZE_MISMATCH`), fehlende Pin-Datei (`GGUF_PIN_UNAVAILABLE`). Ein simulierter ARM64-Termux-Einstieg verwendet ein **künstliches** Shell-Serverprogramm und prüft, dass nach manipulierten Modellbytes nicht einmal `--help` am Server aufgerufen wird.
+
+**Zusammen ausgeführte lokale Tests:** `node --test scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs` → **12 PASS / 0 FAIL / 0 SKIP, Exit 0**. `bash -n scripts/continuum-local-llama-termux.sh` → Exit 0. Originaler berichteter Linux-Lauf mit Node v22.16.0, kein Android-Gerät.
+
+**Wichtige Einschränkung zur Quellbindung:** Die lokale Testumgebung wurde aus GitHub-Quellen/Spiegeln manuell zusammengestellt; `scripts/continuum-gguf-preflight.mjs` stimmt bytegenau mit dem GitHub-Blob `447f4a515f07152f661391896e0febf99146ddac` überein. Die übrigen lokal eingesetzten Spiegel wurden nicht alle als byteidentische GitHub-Objekte nachgewiesen. Deshalb ist dies ein ehrlicher **Host-Integrationsbeleg**, noch kein lückenloser, am PR-HEAD reproduzierter Release-QA-Beleg. Der Einzelnachweis liegt in [`host-preflight-results.json`](../../../../docs/evidence/continuum-sovereign-gguf-20261102/host-preflight-results.json); vollständige aktuelle Node-/Gradle-Prüfung und autorisierter ARM64-GGUF-Modellstart fehlen weiterhin.
+
+Die Test-GGUF enthält nur einen synthetischen Tensorheader. Ein echter trainierter Decoder oder `llama-server` wurde dabei nicht betrieben; `DEVICE_VERIFIED=false`, `MODEL_SWITCH=false`.
+
 ## Nicht aufgelöste Grenzen und nächste Schritte
-1. Erst vorhandene echte GGUF-Tests zusammen mit neuer Testsuite in einem **exakten, vollständigen Projekt-Checkout** ausführen, danach echten lokalen, von Besitzer bereitgestellten `GGUF` mit exaktem Quellen-/Lizenz-Pin offline verifizieren.
+1. Vorhandene GGUF-Tests und die 12 Host-Fälle in einem **exakten, vollständigen GitHub-Checkout** ausführen, danach einen echten lokal vom Besitzer bereitgestellten GGUF-Gewichtsstand mit exaktem Quellen-/Lizenz-Pin offline verifizieren.
 2. Auf Fold7/Termux manuell `CONTINUUM_GGUF_PATH` und `CONTINUUM_GGUF_MANIFEST` setzen; echten Start + echte `llama.cpp`-Generierung und Energie-/RAM-/Latenzwerte erheben. Kein automatischer Download.
 3. Modellidentität im laufenden llama-server ist **noch nicht** an den SHA des vor dem Start geprüften Modells gebunden. Ein Austausch der Modelldatei zwischen Verifikation und Öffnen durch den Server wäre ein TOCTOU-Risiko. Lösen mit vertrauenswürdiger unveränderlicher Stage-/Inode-Bindung oder unabhängiger Server-Ladequittung, bevor ein Produkt-Erfolg behauptet wird.
 4. `repository/revision/license` stammen aus dem vom Besitzer erstellten Manifest und beweisen **nicht** die Echtheit des Modellherausgebers oder die rechtliche Verwendung. Die tatsächliche Quelle/Lizenz separat verifizieren.
