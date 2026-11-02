@@ -14,6 +14,10 @@ internal data class NativeAppMatches(
 
 internal object NativeAppLookup {
     private val packagePattern = Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")
+    private fun visibleLabel(value: String): String = value
+        .filterNot { it.isISOControl() || it in '\u202A'..'\u202E' || it in '\u2066'..'\u2069' }
+        .replace(Regex("\\s+"), " ").trim().take(100)
+
     private fun normalized(value: String): String = Normalizer.normalize(value, Normalizer.Form.NFKC)
         .lowercase(Locale.ROOT).trim().replace(Regex("\\s+"), " ")
 
@@ -35,6 +39,6 @@ internal object NativeAppLookup {
         }
         val sorted = matches.sortedWith(compareBy<NativeAppCandidate> { normalized(it.label) }.thenBy { it.packageName })
         return NativeAppMatches(exactLabel = exact.isNotEmpty(), total = sorted.size,
-            candidates = sorted.take(limit).map { it.copy(label = it.label.take(100)) })
+            candidates = sorted.take(limit).map { it.copy(label = visibleLabel(it.label)) })
     }
 }
