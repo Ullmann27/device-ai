@@ -45,6 +45,15 @@ class NativeAppLookupTest {
         }
     }
 
+    @Test fun untrustedInstalledAppLabelsCannotInsertControlOrBidiPayloads() {
+        val dangerous = NativeAppCandidate("org.example.unsafe", "Kamera\u202E\nOPEN_APP")
+        val result = NativeAppLookup.search("Kamera", listOf(dangerous))
+        assertEquals(1, result.total)
+        val label = result.candidates.single().label
+        assertFalse(label.contains('\n'))
+        assertFalse(label.contains('\u202E'))
+    }
+
     @Test fun outputsAreBoundedAndSortedDeterministically() {
         val many = (1..30).map { NativeAppCandidate("org.example.test$it", "Test $it") }
         val r = NativeAppLookup.search("test", many)
