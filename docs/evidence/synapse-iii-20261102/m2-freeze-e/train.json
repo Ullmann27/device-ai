@@ -1,0 +1,1605 @@
+{
+  "schema": "SHADOW_REPLAY_CORPUS_V1",
+  "cases": [
+    {
+      "id": "train-001",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETarumusu?",
+      "sources": [
+        {
+          "sourceId": "train-001:s1",
+          "revision": 1,
+          "sha256": "8adfb103b1faa9e617486b7d6c45beaa47ca26545ca321da468df6f0b410eeee",
+          "text": "ETagojavi lebt in ETalidoca. ETarumusu lebt in ETaluheba."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-001:s1",
+        "revision": 1,
+        "sha256": "8adfb103b1faa9e617486b7d6c45beaa47ca26545ca321da468df6f0b410eeee",
+        "text": "ETaluheba",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-002",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETajomiku?",
+      "sources": [
+        {
+          "sourceId": "train-002:s1",
+          "revision": 1,
+          "sha256": "da4d2de4eddee7955cdd42d174d1dd380453f4d6516913001e55b0401b960b8d",
+          "text": "ETajofuru wohnt in ETamosuko. ETajomiku wohnt in ETagupino."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-002:s1",
+        "revision": 1,
+        "sha256": "da4d2de4eddee7955cdd42d174d1dd380453f4d6516913001e55b0401b960b8d",
+        "text": "ETagupino",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-003",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETagigumi?",
+      "sources": [
+        {
+          "sourceId": "train-003:s1",
+          "revision": 1,
+          "sha256": "e2822d6401e9cf55dc061067decda505fc065766c8e1f39bc1efaa316aa71339",
+          "text": "ETamufene lebt in ETanebelu. ETagigumi lebt in ETalomupa."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-003:s1",
+        "revision": 1,
+        "sha256": "e2822d6401e9cf55dc061067decda505fc065766c8e1f39bc1efaa316aa71339",
+        "text": "ETalomupa",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-004",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETarutopu?",
+      "sources": [
+        {
+          "sourceId": "train-004:s1",
+          "revision": 1,
+          "sha256": "9da00ad894e42fd491b9fe8ed4f98c79b1b739b864dc3d3aa7397d54d09d7903",
+          "text": "ETasobifa ist in ETahehodu. ETarutopu ist in ETalaridi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-004:s1",
+        "revision": 1,
+        "sha256": "9da00ad894e42fd491b9fe8ed4f98c79b1b739b864dc3d3aa7397d54d09d7903",
+        "text": "ETalaridi",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-005",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETaruberu?",
+      "sources": [
+        {
+          "sourceId": "train-005:s1",
+          "revision": 1,
+          "sha256": "f930f497b99b16b43f06d073c8c7b4e635f160710d6ce179793126a9c6afb3e7",
+          "text": "ETacikabu steht in ETagulesu. ETaruberu steht in ETalisasu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-005:s1",
+        "revision": 1,
+        "sha256": "f930f497b99b16b43f06d073c8c7b4e635f160710d6ce179793126a9c6afb3e7",
+        "text": "ETalisasu",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-006",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETaredajo?",
+      "sources": [
+        {
+          "sourceId": "train-006:s1",
+          "revision": 1,
+          "sha256": "869064c2dc157de8dd2e9406f93fc74bcb056410adb651ccd784b68e8f2c8616",
+          "text": "ETanujeko lebt in ETapiheku. ETaredajo lebt in ETamosenu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-006:s1",
+        "revision": 1,
+        "sha256": "869064c2dc157de8dd2e9406f93fc74bcb056410adb651ccd784b68e8f2c8616",
+        "text": "ETamosenu",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-007",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETavijume?",
+      "sources": [
+        {
+          "sourceId": "train-007:s1",
+          "revision": 1,
+          "sha256": "c642660bfe064c2923728fdecd947c0fc78124fdec76421b789a890cc22594e4",
+          "text": "ETajodahe wohnt in ETavivira. ETavijume wohnt in ETahivafo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-007:s1",
+        "revision": 1,
+        "sha256": "c642660bfe064c2923728fdecd947c0fc78124fdec76421b789a890cc22594e4",
+        "text": "ETahivafo",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-008",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETasesogu?",
+      "sources": [
+        {
+          "sourceId": "train-008:s1",
+          "revision": 1,
+          "sha256": "49ce98b671c35d97792cce8788c60796a0584ecc0313e41cc7b4e78d48c0b2e9",
+          "text": "ETahidimi wohnt in ETasirako. ETasesogu wohnt in ETamirobe."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-008:s1",
+        "revision": 1,
+        "sha256": "49ce98b671c35d97792cce8788c60796a0584ecc0313e41cc7b4e78d48c0b2e9",
+        "text": "ETamirobe",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-009",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETajidoma?",
+      "sources": [
+        {
+          "sourceId": "train-009:s1",
+          "revision": 1,
+          "sha256": "8627ae08ac8c4a03f5a666b38291a3ed2fb2824ecbb648afcf344698d22648ac",
+          "text": "ETapedoca ist in ETamekafu. ETajidoma ist in ETahedebi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-009:s1",
+        "revision": 1,
+        "sha256": "8627ae08ac8c4a03f5a666b38291a3ed2fb2824ecbb648afcf344698d22648ac",
+        "text": "ETahedebi",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-010",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETadokuma?",
+      "sources": [
+        {
+          "sourceId": "train-010:s1",
+          "revision": 1,
+          "sha256": "e90fb766d5fb44490eab74fd24d25488731876bbd02b4d5e31684c4e68eb40d3",
+          "text": "ETasodiga wohnt in ETajudahi. ETadokuma wohnt in ETasavuku."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-010:s1",
+        "revision": 1,
+        "sha256": "e90fb766d5fb44490eab74fd24d25488731876bbd02b4d5e31684c4e68eb40d3",
+        "text": "ETasavuku",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-011",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETahecanu?",
+      "sources": [
+        {
+          "sourceId": "train-011:s1",
+          "revision": 1,
+          "sha256": "adab8aeb774eecd0977c9df2faeadd25b9d4d5634c9ac60f07bfd19d1e49b68c",
+          "text": "ETaduhaci wohnt in ETakekija. ETahecanu wohnt in ETagakepa."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-011:s1",
+        "revision": 1,
+        "sha256": "adab8aeb774eecd0977c9df2faeadd25b9d4d5634c9ac60f07bfd19d1e49b68c",
+        "text": "ETagakepa",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-012",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETahisiko?",
+      "sources": [
+        {
+          "sourceId": "train-012:s1",
+          "revision": 1,
+          "sha256": "17076166ff12ba4fbf5f3f7412244db5d4783dd7aa1599ca116def4a58e798f4",
+          "text": "ETavusofu wohnt in ETalilapa. ETahisiko wohnt in ETamasebu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-012:s1",
+        "revision": 1,
+        "sha256": "17076166ff12ba4fbf5f3f7412244db5d4783dd7aa1599ca116def4a58e798f4",
+        "text": "ETamasebu",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-013",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETacidina?",
+      "sources": [
+        {
+          "sourceId": "train-013:s1",
+          "revision": 1,
+          "sha256": "6b151b2fc0cc5f0fc8c0bb3bec811cbc4b2c2ceda83b66cdbc7e66c4a06d3c14",
+          "text": "ETahefimi steht in ETajecajo. ETacidina steht in ETajolomi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-013:s1",
+        "revision": 1,
+        "sha256": "6b151b2fc0cc5f0fc8c0bb3bec811cbc4b2c2ceda83b66cdbc7e66c4a06d3c14",
+        "text": "ETajolomi",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-014",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETacegaro?",
+      "sources": [
+        {
+          "sourceId": "train-014:s1",
+          "revision": 1,
+          "sha256": "0a078b46b7acf675e3dadf209ee0b32cb26795d05ecb0c60455daca5aa232e79",
+          "text": "ETapibifo ist in ETanapobu. ETacegaro ist in ETalonidu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-014:s1",
+        "revision": 1,
+        "sha256": "0a078b46b7acf675e3dadf209ee0b32cb26795d05ecb0c60455daca5aa232e79",
+        "text": "ETalonidu",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-015",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETanujoko?",
+      "sources": [
+        {
+          "sourceId": "train-015:s1",
+          "revision": 1,
+          "sha256": "d2de91b5174a152b1cb6d51d4861c8208585178f8c617487e24263ea055e0ac6",
+          "text": "ETanevaga steht in ETatovibe. ETanujoko steht in ETajirigo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-015:s1",
+        "revision": 1,
+        "sha256": "d2de91b5174a152b1cb6d51d4861c8208585178f8c617487e24263ea055e0ac6",
+        "text": "ETajirigo",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-016",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETahonuju?",
+      "sources": [
+        {
+          "sourceId": "train-016:s1",
+          "revision": 1,
+          "sha256": "5b066a9008d65fcd9db071254053fbdc8b7dbdf21b29e31e6b9a63cbb88cd4c7",
+          "text": "ETabakopi wohnt in ETabibara. ETahonuju wohnt in ETasahujo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-016:s1",
+        "revision": 1,
+        "sha256": "5b066a9008d65fcd9db071254053fbdc8b7dbdf21b29e31e6b9a63cbb88cd4c7",
+        "text": "ETasahujo",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-017",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETamohala?",
+      "sources": [
+        {
+          "sourceId": "train-017:s1",
+          "revision": 1,
+          "sha256": "e79e96ab79a218507b9fc5c006cf14472d70076020429d2a45e1adbfea329bb7",
+          "text": "ETamakedi steht in ETamovofi. ETamohala steht in ETafoneke."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-017:s1",
+        "revision": 1,
+        "sha256": "e79e96ab79a218507b9fc5c006cf14472d70076020429d2a45e1adbfea329bb7",
+        "text": "ETafoneke",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-018",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETamimule?",
+      "sources": [
+        {
+          "sourceId": "train-018:s1",
+          "revision": 1,
+          "sha256": "035ac8d3419da8237b5df5b1d1bca622681562f97b04cdd42bb0c02fc7d2b593",
+          "text": "ETatareso ist in ETacejebo. ETamimule ist in ETavemimi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-018:s1",
+        "revision": 1,
+        "sha256": "035ac8d3419da8237b5df5b1d1bca622681562f97b04cdd42bb0c02fc7d2b593",
+        "text": "ETavemimi",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-019",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETapusana?",
+      "sources": [
+        {
+          "sourceId": "train-019:s1",
+          "revision": 1,
+          "sha256": "dcc3596e11261d7398308f98a2fad78ad264eba993816f9c3fdabec124a4c340",
+          "text": "ETabagegu wohnt in ETafuruho. ETapusana wohnt in ETacumudo."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-019:s1",
+        "revision": 1,
+        "sha256": "dcc3596e11261d7398308f98a2fad78ad264eba993816f9c3fdabec124a4c340",
+        "text": "ETacumudo",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-020",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETakanita?",
+      "sources": [
+        {
+          "sourceId": "train-020:s1",
+          "revision": 1,
+          "sha256": "5692377ff71fa81ccd0dea3cdadbe802edc9b8f071d2d7e16eaf9d3202478a03",
+          "text": "ETabasota lebt in ETamubago. ETakanita lebt in ETasesaji."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-020:s1",
+        "revision": 1,
+        "sha256": "5692377ff71fa81ccd0dea3cdadbe802edc9b8f071d2d7e16eaf9d3202478a03",
+        "text": "ETasesaji",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-021",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETahutaba?",
+      "sources": [
+        {
+          "sourceId": "train-021:s1",
+          "revision": 1,
+          "sha256": "5be12243b79ad00057ee49f8904a7c28a1b0e55a6f238ebcc5f3897a1a550864",
+          "text": "ETacofava lebt in ETarejelo. ETahutaba lebt in ETasoduga."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-021:s1",
+        "revision": 1,
+        "sha256": "5be12243b79ad00057ee49f8904a7c28a1b0e55a6f238ebcc5f3897a1a550864",
+        "text": "ETasoduga",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-022",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETadabifu?",
+      "sources": [
+        {
+          "sourceId": "train-022:s1",
+          "revision": 1,
+          "sha256": "ed2ab30036477268d1ebe2aba42fb610d849e04cd5e1dfd137266d3e57a281ca",
+          "text": "ETafavaru ist in ETahakufu. ETadabifu ist in ETacurusu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-022:s1",
+        "revision": 1,
+        "sha256": "ed2ab30036477268d1ebe2aba42fb610d849e04cd5e1dfd137266d3e57a281ca",
+        "text": "ETacurusu",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-023",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETabeduvi?",
+      "sources": [
+        {
+          "sourceId": "train-023:s1",
+          "revision": 1,
+          "sha256": "398816cbb3162c80659cc4a59cb9a24d19d3745bcce3faa53eaf91859ae83f23",
+          "text": "ETarajadu steht in ETanurage. ETabeduvi steht in ETatomeva."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-023:s1",
+        "revision": 1,
+        "sha256": "398816cbb3162c80659cc4a59cb9a24d19d3745bcce3faa53eaf91859ae83f23",
+        "text": "ETatomeva",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-024",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETahumunu?",
+      "sources": [
+        {
+          "sourceId": "train-024:s1",
+          "revision": 1,
+          "sha256": "118bd6c4f726b92b228ff8558423b9f009fae82e6c9bb4272740397b08d52e54",
+          "text": "ETaninujo steht in ETatepado. ETahumunu steht in ETadamide."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-024:s1",
+        "revision": 1,
+        "sha256": "118bd6c4f726b92b228ff8558423b9f009fae82e6c9bb4272740397b08d52e54",
+        "text": "ETadamide",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-025",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETajojuno?",
+      "sources": [
+        {
+          "sourceId": "train-025:s1",
+          "revision": 1,
+          "sha256": "e116e754515f99c84f836d341f4fe3e43e39aa933d5a225dcb07d4c83e25b955",
+          "text": "ETakaguhe wohnt in ETafijive. ETajojuno wohnt in ETatacomi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-025:s1",
+        "revision": 1,
+        "sha256": "e116e754515f99c84f836d341f4fe3e43e39aa933d5a225dcb07d4c83e25b955",
+        "text": "ETatacomi",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-026",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETapahuru?",
+      "sources": [
+        {
+          "sourceId": "train-026:s1",
+          "revision": 1,
+          "sha256": "32898ccd20f78956ca27696906212d20b229253240904f182f3ba93c0700029a",
+          "text": "ETarekoja lebt in ETanonama. ETapahuru lebt in ETasikola."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-026:s1",
+        "revision": 1,
+        "sha256": "32898ccd20f78956ca27696906212d20b229253240904f182f3ba93c0700029a",
+        "text": "ETasikola",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-027",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETabetopi?",
+      "sources": [
+        {
+          "sourceId": "train-027:s1",
+          "revision": 1,
+          "sha256": "81303a9bad23ac2170dabb40b220a87833179d7126461d6a9e51573d2f152565",
+          "text": "ETasikebi lebt in ETanenaja. ETabetopi lebt in ETapenuvu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-027:s1",
+        "revision": 1,
+        "sha256": "81303a9bad23ac2170dabb40b220a87833179d7126461d6a9e51573d2f152565",
+        "text": "ETapenuvu",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-028",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETakuhoni?",
+      "sources": [
+        {
+          "sourceId": "train-028:s1",
+          "revision": 1,
+          "sha256": "0686a6b0f7307c192d72ab537b53fbfe7f0d2a28597a2f60c70836df818db0bc",
+          "text": "ETaferadu ist in ETarofare. ETakuhoni ist in ETatamobu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-028:s1",
+        "revision": 1,
+        "sha256": "0686a6b0f7307c192d72ab537b53fbfe7f0d2a28597a2f60c70836df818db0bc",
+        "text": "ETatamobu",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-029",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETavasifo?",
+      "sources": [
+        {
+          "sourceId": "train-029:s1",
+          "revision": 1,
+          "sha256": "cd787f26db9184c1b9c77a434addcc42261fafd3eac5ba56ab745a3aff7caece",
+          "text": "ETabolega lebt in ETasumabe. ETavasifo lebt in ETakikode."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-029:s1",
+        "revision": 1,
+        "sha256": "cd787f26db9184c1b9c77a434addcc42261fafd3eac5ba56ab745a3aff7caece",
+        "text": "ETakikode",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-030",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETaremosa?",
+      "sources": [
+        {
+          "sourceId": "train-030:s1",
+          "revision": 1,
+          "sha256": "51f9aec8cc7cb7df08a63285d06043c2d097da35b4213f58a712c60d1edef0e2",
+          "text": "ETanavebe lebt in ETapepevi. ETaremosa lebt in ETatigugu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-030:s1",
+        "revision": 1,
+        "sha256": "51f9aec8cc7cb7df08a63285d06043c2d097da35b4213f58a712c60d1edef0e2",
+        "text": "ETatigugu",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-031",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETahepalu?",
+      "sources": [
+        {
+          "sourceId": "train-031:s1",
+          "revision": 1,
+          "sha256": "62f8e28b0a15dac5bef488ce7afd94ec0fd95be19c10e3f6d284132cf411b4c0",
+          "text": "ETapocuko steht in ETamupede. ETahepalu steht in ETapuneco."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-031:s1",
+        "revision": 1,
+        "sha256": "62f8e28b0a15dac5bef488ce7afd94ec0fd95be19c10e3f6d284132cf411b4c0",
+        "text": "ETapuneco",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-032",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETakuseki?",
+      "sources": [
+        {
+          "sourceId": "train-032:s1",
+          "revision": 1,
+          "sha256": "82668849164c544909ad3f811c100adec4eb695effd0c55c6e99a897370355cb",
+          "text": "ETapicise steht in ETarevema. ETakuseki steht in ETagaledu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-032:s1",
+        "revision": 1,
+        "sha256": "82668849164c544909ad3f811c100adec4eb695effd0c55c6e99a897370355cb",
+        "text": "ETagaledu",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-033",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETakaceci?",
+      "sources": [
+        {
+          "sourceId": "train-033:s1",
+          "revision": 1,
+          "sha256": "7d5d094333ccd37d69b02512651cb8d2ccd603f166a3b199c21a78c3d9f3c852",
+          "text": "ETagicune lebt in ETatutoma. ETakaceci lebt in ETahepahu."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-033:s1",
+        "revision": 1,
+        "sha256": "7d5d094333ccd37d69b02512651cb8d2ccd603f166a3b199c21a78c3d9f3c852",
+        "text": "ETahepahu",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-034",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETakedede?",
+      "sources": [
+        {
+          "sourceId": "train-034:s1",
+          "revision": 1,
+          "sha256": "ac461bafa225a25fb77af1f4a7911890327b396ad13201a9b1f13d8befe9b25b",
+          "text": "ETanihoce wohnt in ETajenino. ETakedede wohnt in ETabenore."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-034:s1",
+        "revision": 1,
+        "sha256": "ac461bafa225a25fb77af1f4a7911890327b396ad13201a9b1f13d8befe9b25b",
+        "text": "ETabenore",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-035",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETamopudo?",
+      "sources": [
+        {
+          "sourceId": "train-035:s1",
+          "revision": 1,
+          "sha256": "3a3f0537323bb445aa34ff09ccdcb9925da90ea8cce3b1affe663bf7e6a330ef",
+          "text": "ETalabelu ist in ETalikeno. ETamopudo ist in ETavipodi."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-035:s1",
+        "revision": 1,
+        "sha256": "3a3f0537323bb445aa34ff09ccdcb9925da90ea8cce3b1affe663bf7e6a330ef",
+        "text": "ETavipodi",
+        "start": 45,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "train-036",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETasirete?",
+      "sources": [
+        {
+          "sourceId": "train-036:s1",
+          "revision": 1,
+          "sha256": "e7a2cbe822a87c87ef9dec7113f8f8b201bb02462aae7ab2acad657579ee3f70",
+          "text": "ETamoboti wohnt in ETasekapa. ETasirete wohnt in ETahegale."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-036:s1",
+        "revision": 1,
+        "sha256": "e7a2cbe822a87c87ef9dec7113f8f8b201bb02462aae7ab2acad657579ee3f70",
+        "text": "ETahegale",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-037",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETalacufu?",
+      "sources": [
+        {
+          "sourceId": "train-037:s1",
+          "revision": 1,
+          "sha256": "2656f819786c889e75c1613d1a7778bda3c9530a65670589b63caec1d1c5ab23",
+          "text": "ETabatube steht in ETamasico. ETalacufu steht in ETakapaha."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-037:s1",
+        "revision": 1,
+        "sha256": "2656f819786c889e75c1613d1a7778bda3c9530a65670589b63caec1d1c5ab23",
+        "text": "ETakapaha",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-038",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETalefubi?",
+      "sources": [
+        {
+          "sourceId": "train-038:s1",
+          "revision": 1,
+          "sha256": "2afb502ef9ffb1311779f208407529b4872bc4bd99cac66f44e43af3e1eeca9a",
+          "text": "ETapejohe steht in ETavaneve. ETalefubi steht in ETakonati."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-038:s1",
+        "revision": 1,
+        "sha256": "2afb502ef9ffb1311779f208407529b4872bc4bd99cac66f44e43af3e1eeca9a",
+        "text": "ETakonati",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-039",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETahuteki?",
+      "sources": [
+        {
+          "sourceId": "train-039:s1",
+          "revision": 1,
+          "sha256": "e4065a6502f86500bc7d3879b70c0794734739da5e7660123dda78df44809b58",
+          "text": "ETarahemo lebt in ETatikibo. ETahuteki lebt in ETanoheve."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-039:s1",
+        "revision": 1,
+        "sha256": "e4065a6502f86500bc7d3879b70c0794734739da5e7660123dda78df44809b58",
+        "text": "ETanoheve",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "train-040",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETabomehi?",
+      "sources": [
+        {
+          "sourceId": "train-040:s1",
+          "revision": 1,
+          "sha256": "7753e60688b7671b232df621411649cd207fa6bd21c5569feb4064c5587e0a5f",
+          "text": "ETajotufe steht in ETajehiko. ETabomehi steht in ETanicima."
+        }
+      ],
+      "expected": {
+        "sourceId": "train-040:s1",
+        "revision": 1,
+        "sha256": "7753e60688b7671b232df621411649cd207fa6bd21c5569feb4064c5587e0a5f",
+        "text": "ETanicima",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "train-041",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETalirere?",
+      "sources": [
+        {
+          "sourceId": "train-041:s1",
+          "revision": 1,
+          "sha256": "3bba1a35e445838167fbdc49fb1622b725f5beb19c82ed129e43060321309c48",
+          "text": "ETalirere steht in ETajicujo, ETalirere ist in ETamehonu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-042",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETataheme?",
+      "sources": [
+        {
+          "sourceId": "train-042:s1",
+          "revision": 1,
+          "sha256": "427518157cf3ea4d75688dc80bceaf6ad2f1eac3d12b2028d58ed85b6fc358f1",
+          "text": "ETataheme wohnt in ETavavoma."
+        },
+        {
+          "sourceId": "train-042:s2",
+          "revision": 2,
+          "sha256": "9d8767e49fba151c2988f956b0fa164c1fdc15806c96b53937354dc90538484a",
+          "text": "ETataheme ist in ETabomuka."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-043",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETakokafa?",
+      "sources": [
+        {
+          "sourceId": "train-043:s1",
+          "revision": 1,
+          "sha256": "9fa172f756a7048176b59b8906be6e53af819ef0ddc22f5493275763965e27c4",
+          "text": "ETakokafa wohnt in ETabojido, ETakokafa ist in ETajunipu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-044",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETatecovi?",
+      "sources": [
+        {
+          "sourceId": "train-044:s1",
+          "revision": 1,
+          "sha256": "4ab284409382e3b030d086897ae6ee616ea97e3373c839f5179f187a07c9a335",
+          "text": "ETatecovi wohnt in ETagesapi."
+        },
+        {
+          "sourceId": "train-044:s2",
+          "revision": 2,
+          "sha256": "3adc42a51e558027c7f8baac351d7fc212ebcd10f7e615359e2601d90cdff730",
+          "text": "ETatecovi ist in ETadomota."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-045",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETaravesi?",
+      "sources": [
+        {
+          "sourceId": "train-045:s1",
+          "revision": 1,
+          "sha256": "d4f902a6b117697f497453767004870fe0adc4602b25d2d353277595347117c9",
+          "text": "ETaravesi ist in ETaseveme, ETaravesi wohnt in ETajolifi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-046",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETavevade?",
+      "sources": [
+        {
+          "sourceId": "train-046:s1",
+          "revision": 1,
+          "sha256": "807b4aef564ef6c5fad285b1f2120b4fdbdb5300e0d387ad0ee7adff4be20095",
+          "text": "ETavevade ist in ETavurite."
+        },
+        {
+          "sourceId": "train-046:s2",
+          "revision": 2,
+          "sha256": "47509dee608ff5363e4dd0029e8439ff43869d579fb27797dcf661e04bad815e",
+          "text": "ETavevade steht in ETafopodo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-047",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETahofegi?",
+      "sources": [
+        {
+          "sourceId": "train-047:s1",
+          "revision": 1,
+          "sha256": "881fc5570640f74806011c222a00b79db09157ff222b87d058d5d4c7d11ac77a",
+          "text": "ETahofegi wohnt in ETakivego, ETahofegi ist in ETapekoho."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-048",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETagadome?",
+      "sources": [
+        {
+          "sourceId": "train-048:s1",
+          "revision": 1,
+          "sha256": "164ea8dd3008ad2da727311bf4ba9e3534c836f21bba37ad7ebdc0a73b86b0ed",
+          "text": "ETagadome ist in ETadiviju."
+        },
+        {
+          "sourceId": "train-048:s2",
+          "revision": 2,
+          "sha256": "80e9bd4c222dd3d7763a0abc7069354872af881620e7da11b61e2d309c3bb054",
+          "text": "ETagadome lebt in ETaforoke."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-049",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETacumere?",
+      "sources": [
+        {
+          "sourceId": "train-049:s1",
+          "revision": 1,
+          "sha256": "7bbba8a727f765922e75d12f3e8e63759ba0b8db03fdd7b63a3f1b908412589e",
+          "text": "ETacumere wohnt in ETavacumi, ETacumere ist in ETagifebu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-050",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETagonopu?",
+      "sources": [
+        {
+          "sourceId": "train-050:s1",
+          "revision": 1,
+          "sha256": "ff50cbcc4942160af94e780fdfed038b10e3aea5a4801874b01c3cde88e4cde0",
+          "text": "ETagonopu ist in ETapekoru."
+        },
+        {
+          "sourceId": "train-050:s2",
+          "revision": 2,
+          "sha256": "7508f184b934ad7f129030ccc952147da77363e80be40e08fa5d9afdb8af4a32",
+          "text": "ETagonopu lebt in ETavekoha."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-051",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETanapuci?",
+      "sources": [
+        {
+          "sourceId": "train-051:s1",
+          "revision": 1,
+          "sha256": "b1399913f2d87283998628eb7cb786ce803824ab1094d0b363e1d0b5b1ee0fab",
+          "text": "ETanapuci steht in ETahuraci, ETanapuci ist in ETavogada."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-052",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETagigibe?",
+      "sources": [
+        {
+          "sourceId": "train-052:s1",
+          "revision": 1,
+          "sha256": "fccada483523fdf14634fe3761a16f452a59e1047739791992b4d4ccb5fbf3b4",
+          "text": "ETagigibe ist in ETatebaga."
+        },
+        {
+          "sourceId": "train-052:s2",
+          "revision": 2,
+          "sha256": "67f4704be65a9b72d747eb13c6d4bd3389ac99ba7f9c1398ed8a7cdb2eecc248",
+          "text": "ETagigibe lebt in ETacinodi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-053",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETabesili?",
+      "sources": [
+        {
+          "sourceId": "train-053:s1",
+          "revision": 1,
+          "sha256": "b76bfd2f453acd472ac3f3be0119bafb28d25776c14b7ec6ff1e3c7a9744269d",
+          "text": "ETabesili ist in ETajajala, ETabesili wohnt in ETapidiju."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-054",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETavibupe?",
+      "sources": [
+        {
+          "sourceId": "train-054:s1",
+          "revision": 1,
+          "sha256": "d51653e824a08af3eebedc56d4dde928e27ac1e67e70429393ebb373d61776a8",
+          "text": "ETavibupe ist in ETakeparo."
+        },
+        {
+          "sourceId": "train-054:s2",
+          "revision": 2,
+          "sha256": "074060e949ad338da70fc0fbc79879a21a867ac652309b9780a5b6327ea14a56",
+          "text": "ETavibupe wohnt in ETasedale."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-055",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETafekijo?",
+      "sources": [
+        {
+          "sourceId": "train-055:s1",
+          "revision": 1,
+          "sha256": "fad1ef312cb6eaea6cf32b55fbcff4aa4989d5fd9af7bc8066553246f9d2203e",
+          "text": "ETafekijo lebt in ETasigofa, ETafekijo ist in ETaluconu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-056",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETajulani?",
+      "sources": [
+        {
+          "sourceId": "train-056:s1",
+          "revision": 1,
+          "sha256": "5a7bce17a7c50f484c574c1f891c20d6f4281b556df507b02702da7536632d29",
+          "text": "ETajulani ist in ETarejobe."
+        },
+        {
+          "sourceId": "train-056:s2",
+          "revision": 2,
+          "sha256": "dfcf7ff8b8a0ff2e8d8c3ff17368659bfd8629f12e6899d323f780543587b460",
+          "text": "ETajulani wohnt in ETapipina."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-057",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETakumege?",
+      "sources": [
+        {
+          "sourceId": "train-057:s1",
+          "revision": 1,
+          "sha256": "8ca343de54a23dd8c10e54b6826e14517aa5565c9c42427b37f3b96e8c78c947",
+          "text": "ETakumege ist in ETalunibu, ETakumege wohnt in ETakenico."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-058",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETapijadi?",
+      "sources": [
+        {
+          "sourceId": "train-058:s1",
+          "revision": 1,
+          "sha256": "03c44292f1d1b349f43ea34c57b1e21af671f9cbe0b17e05db57aa553a0f7eaf",
+          "text": "ETapijadi ist in ETabivisu."
+        },
+        {
+          "sourceId": "train-058:s2",
+          "revision": 2,
+          "sha256": "af6f727cda9b7181dcc5ecdfa536ad246a26809b6bb50ef4247dc97724f834c4",
+          "text": "ETapijadi wohnt in ETamagito."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-059",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETafegivo?",
+      "sources": [
+        {
+          "sourceId": "train-059:s1",
+          "revision": 1,
+          "sha256": "1d467faf657051e8534372275e6eb631531d5f46013cdfae20428f544190fb3c",
+          "text": "ETafegivo steht in ETatocuku, ETafegivo ist in ETapemara."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-060",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETabefaka?",
+      "sources": [
+        {
+          "sourceId": "train-060:s1",
+          "revision": 1,
+          "sha256": "a4db17e2186651180ad18d7062336122df3640099e46cd4ec6a4ac10245f9246",
+          "text": "ETabefaka ist in ETafugudi."
+        },
+        {
+          "sourceId": "train-060:s2",
+          "revision": 2,
+          "sha256": "efcc55f11b4bce9d78a7e74c4ecad004405559e2b2e7b2812c768d1269835443",
+          "text": "ETabefaka lebt in ETalehiri."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-061",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETabipume?",
+      "sources": [
+        {
+          "sourceId": "train-061:s1",
+          "revision": 1,
+          "sha256": "04990ed1a9bc916f769f278b018c98c6b89fa20d1bc2cfeffca2136e99cf6009",
+          "text": "ETabipume ist in ETacorimi, ETabipume wohnt in ETarutodi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-062",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETamunenu?",
+      "sources": [
+        {
+          "sourceId": "train-062:s1",
+          "revision": 1,
+          "sha256": "5dac6d42676761473f93b41ad5ca8d54dbfc3f21c8d9c28a9ea4a3cb4d8fea5b",
+          "text": "ETamunenu ist in ETafubare."
+        },
+        {
+          "sourceId": "train-062:s2",
+          "revision": 2,
+          "sha256": "5bf8900d6ff5c2e90307fb92d862eca3eb87d9cda826269b842e4284c9b51025",
+          "text": "ETamunenu lebt in ETaremada."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-063",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETapojuca?",
+      "sources": [
+        {
+          "sourceId": "train-063:s1",
+          "revision": 1,
+          "sha256": "9378195be68a1e554f62edf082d1f2e5e3cf764aabaddde062e1751234c27a56",
+          "text": "ETapojuca wohnt in ETakifoto, ETapojuca ist in ETamabaso."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-064",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETapajite?",
+      "sources": [
+        {
+          "sourceId": "train-064:s1",
+          "revision": 1,
+          "sha256": "71439f1aded57cc877cda06ce3f09b9d478fb4298943c507a460cb264efc4f85",
+          "text": "ETapajite wohnt in ETatibeje."
+        },
+        {
+          "sourceId": "train-064:s2",
+          "revision": 2,
+          "sha256": "a5407c3b203543e9d6646607a7048f20966b50a897a19d052f10d3b9881e286a",
+          "text": "ETapajite ist in ETakakugu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-065",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETagodevo?",
+      "sources": [
+        {
+          "sourceId": "train-065:s1",
+          "revision": 1,
+          "sha256": "4f7ec131d4dec51f662ef0247dbff074fed7cdc2f0a7c2bd7bf5f8dcea89c1b4",
+          "text": "ETagodevo steht in ETavulofi, ETagodevo ist in ETacacasi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-066",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETarusogo?",
+      "sources": [
+        {
+          "sourceId": "train-066:s1",
+          "revision": 1,
+          "sha256": "dcebbd4049f263633973c3c1a4fc9e979fa2b6199b546de3b787027d36bb6b05",
+          "text": "ETarusogo ist in ETabevugi."
+        },
+        {
+          "sourceId": "train-066:s2",
+          "revision": 2,
+          "sha256": "2d59ed10d26c3f1c0d09c1b47f3bbaadfbcac25ca7555b4d924cd1cda181c818",
+          "text": "ETarusogo wohnt in ETakeruvo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-067",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETababema?",
+      "sources": [
+        {
+          "sourceId": "train-067:s1",
+          "revision": 1,
+          "sha256": "9194890b82a4d189f7b37345606e82c98081ef8814b94fa8a10371a2b95b73ca",
+          "text": "ETababema lebt in ETakafade, ETababema ist in ETabadabe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-068",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETagakoma?",
+      "sources": [
+        {
+          "sourceId": "train-068:s1",
+          "revision": 1,
+          "sha256": "9a70555133739480cd8a6ef1c33d3a421266565f654d125c7522b06132cc0ca3",
+          "text": "ETagakoma wohnt in ETanubiva."
+        },
+        {
+          "sourceId": "train-068:s2",
+          "revision": 2,
+          "sha256": "50f4d3dad588ea2dd5772e088fb2872b9419f85b41fc7d7247cb60fd6074a8a6",
+          "text": "ETagakoma ist in ETafuduso."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-069",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETakeloko?",
+      "sources": [
+        {
+          "sourceId": "train-069:s1",
+          "revision": 1,
+          "sha256": "59d699e07462fa8cab14685d7bd218a6c4219553d5b22d14b72df857b7c59c1f",
+          "text": "ETakeloko lebt in ETanulasa, ETakeloko ist in ETatamico."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-070",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETajupake?",
+      "sources": [
+        {
+          "sourceId": "train-070:s1",
+          "revision": 1,
+          "sha256": "bd2e70328edec0202cdc0e128500008fc1e32744dcb1707b55d89a2abecc0363",
+          "text": "ETajupake wohnt in ETadometo."
+        },
+        {
+          "sourceId": "train-070:s2",
+          "revision": 2,
+          "sha256": "c7ca186c212970c7781d80052fe09e9defb8a6f17ac6f9ce43628c054c74fcb8",
+          "text": "ETajupake ist in ETadolene."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-071",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETavulohu?",
+      "sources": [
+        {
+          "sourceId": "train-071:s1",
+          "revision": 1,
+          "sha256": "680beba88a9bea665a9e7bdf7674f14d42c716300bfdeff0672316cfa85a3f79",
+          "text": "ETavulohu steht in ETaretela, ETavulohu ist in ETatabiba."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-072",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETasidike?",
+      "sources": [
+        {
+          "sourceId": "train-072:s1",
+          "revision": 1,
+          "sha256": "d906b906d32d339afc7a630601446740e0ba1341ee5cd57173d7defbac1374ad",
+          "text": "ETasidike ist in ETakapome."
+        },
+        {
+          "sourceId": "train-072:s2",
+          "revision": 2,
+          "sha256": "97a082d72a76daa5d929137fa50eb4975aa31821f3853c81cfbcc89b8e9bbef7",
+          "text": "ETasidike steht in ETaseruro."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-073",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETaberudi?",
+      "sources": [
+        {
+          "sourceId": "train-073:s1",
+          "revision": 1,
+          "sha256": "8e3551e479681ac0b04702c2f15444b47da509ca284e2812146f313201471df4",
+          "text": "ETaberudi wohnt in ETagihodi, ETaberudi ist in ETabuvaru."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-074",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETahebole?",
+      "sources": [
+        {
+          "sourceId": "train-074:s1",
+          "revision": 1,
+          "sha256": "0b42b9d462e99ba2b821850608de37fb1c8eb83402226969a3fbe2a7932b724f",
+          "text": "ETahebole ist in ETasaluva."
+        },
+        {
+          "sourceId": "train-074:s2",
+          "revision": 2,
+          "sha256": "154b3c958f5946dc8c08ceb20809a9c90dd8c52e9bd8ec11c4d53b29fbef2b60",
+          "text": "ETahebole lebt in ETasogolu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-075",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETabohucu?",
+      "sources": [
+        {
+          "sourceId": "train-075:s1",
+          "revision": 1,
+          "sha256": "bce21588cb244468a7b7d1abf1fa08ca5dab6d5e94885baeb6e48794733206f1",
+          "text": "ETabohucu ist in ETamabomu, ETabohucu wohnt in ETalufuji."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-076",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo ist ETabumido?",
+      "sources": [
+        {
+          "sourceId": "train-076:s1",
+          "revision": 1,
+          "sha256": "9fd0308147d71e07cfd595aeb157281446e4e2f7ec56f0eff085d25d2f70d7ea",
+          "text": "ETabumido wohnt in ETaserele."
+        },
+        {
+          "sourceId": "train-076:s2",
+          "revision": 2,
+          "sha256": "cce5c35e9f0083238e62d920548de67e9f451b90478ee5b856509d638e2245ea",
+          "text": "ETabumido ist in ETalocame."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-077",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt ETagemepa?",
+      "sources": [
+        {
+          "sourceId": "train-077:s1",
+          "revision": 1,
+          "sha256": "fda6604e826187e4328f35c9bcd1c1af23127ab1b1c82b63fc2abe3b7c136177",
+          "text": "ETagemepa lebt in ETabocaho, ETagemepa ist in ETabalade."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-078",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETabefato?",
+      "sources": [
+        {
+          "sourceId": "train-078:s1",
+          "revision": 1,
+          "sha256": "01c8b3e83d967c49e3ea61d273f12807da1c09aaf815b741791004d094808a6b",
+          "text": "ETabefato ist in ETajovonu."
+        },
+        {
+          "sourceId": "train-078:s2",
+          "revision": 2,
+          "sha256": "7faa00ba7700ddf51803c3b8cafe8529b4a0097294a21d8e8a974097484a9ca9",
+          "text": "ETabefato steht in ETapanori."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-079",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht ETaforace?",
+      "sources": [
+        {
+          "sourceId": "train-079:s1",
+          "revision": 1,
+          "sha256": "c06c9bb40e1d5434dd911fb7a9a9e6ca5ab24598a63b88193d4f3e0b86a8341e",
+          "text": "ETaforace steht in ETasokamu, ETaforace ist in ETalubocu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "train-080",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt ETagibago?",
+      "sources": [
+        {
+          "sourceId": "train-080:s1",
+          "revision": 1,
+          "sha256": "9c72fc2e8e54a4aee7750039ab5e6614ce7d5df39814fc06a94baca973628225",
+          "text": "ETagibago ist in ETafipepi."
+        },
+        {
+          "sourceId": "train-080:s2",
+          "revision": 2,
+          "sha256": "1428578dfcd4a94c597639999be469d19cb980261005cf595a9d311d4658f556",
+          "text": "ETagibago wohnt in ETacokoli."
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

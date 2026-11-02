@@ -14,11 +14,13 @@ def write(p, x):
 
 def main():
     out=Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=False)
-    manifest={'schema':'SHADOW_REPLAY_FREEZE_V1','seed':2026110203,
+    offset=int(sys.argv[2]) if len(sys.argv)>2 else 0
+    manifest={'schema':'SHADOW_REPLAY_FREEZE_V1','seed':2026110203+offset,
       'selection':'fixed before implementation; synthetic same grammar, fresh identity/value vocabulary',
       'promotion':'FORBIDDEN_RESEARCH_ONLY','splits':{}}
     identities=set()
     for split, count, seed, prefix in [('train',80,711,'Ta'),('validation',20,912,'Va'),('holdout-d',55,1319,'Da')]:
+        seed+=offset; prefix=('E'+prefix if offset else prefix)
         rng=random.Random(seed); cases=[]
         def word():
             while True:
@@ -30,6 +32,7 @@ def main():
             if split=='holdout-d':
                 kind='STATIC' if i<20 else 'MISSING' if i<25 else 'SWAP' if i<35 else 'MIXED'
                 bucket='PRIMARY' if i<25 else 'ADVERSARIAL'
+                if offset and i>=35 and i%2: kind='NEGATED'
             else:
                 kind='SWAP' if i<count//2 else 'MIXED'; bucket='ADVERSARIAL'
             relation=rng.choice(['ist','wohnt','lebt','steht'])
@@ -45,6 +48,8 @@ def main():
                 source_texts=([f'{who} {mismatch} in {a}.',f'{who} {relation} in {b}.'] if i%2 else
                     [f'{who} {relation} in {a}, {who} {mismatch} in {b}.'])
                 expected_place=None
+            if kind=='NEGATED':
+                source_texts=[f'{who} {relation} nicht in {a}.'];expected_place=None
             sources=[{'sourceId':ident+f':s{j+1}','revision':1+j,
                       'sha256':hashlib.sha256(t.encode()).hexdigest(),'text':t} for j,t in enumerate(source_texts)]
             expected=None
