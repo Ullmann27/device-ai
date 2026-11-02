@@ -24,7 +24,14 @@ internal object NativeAppLookup {
     fun search(query: String, available: List<NativeAppCandidate>, limit: Int = 12): NativeAppMatches {
         require(query.length in 2..80 && query.none { it.isISOControl() }) { "INVALID_APP_QUERY" }
         require(limit in 1..20) { "INVALID_RESULT_LIMIT" }
-        val needle = normalized(query)
+        val normalizedQuery = normalized(query)
+        // This is a read-only lookup, never an instruction interpreter.
+        // A negative command must not be rewritten into a positive app launch.
+        if (Regex("(?iu)\\b(nicht|kein|keine|niemals)\\b").containsMatchIn(normalizedQuery))
+            return NativeAppMatches(false, 0, emptyList())
+        val needle = normalizedQuery
+            .replace(Regex("(?iu)^(?:öffne|starte|zeige(?: mir)?|öffnen|starten)\\s+(?:mir\\s+)?(?:die\\s+|das\\s+|den\\s+|app\\s+)?"), "")
+            .replace(Regex("(?iu)\\s+bitte$"), "").trim()
         require(needle.length >= 2) { "INVALID_APP_QUERY" }
         val apps = available.asSequence()
             .filter { packagePattern.matches(it.packageName) && it.label.isNotBlank() }
