@@ -14,6 +14,9 @@ expected_package='at.heinz.deviceai.continuumlocal'
 expected_signer='6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23'
 sha="$(git rev-parse --verify HEAD)" || fail 'No Git HEAD'
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || fail 'Invalid commit'
+# P0 freeze remains in force until exact SHA release authorization.
+[[ "${CONTINUUM_RELEASE_FREEZE_LIFTED_BY_OWNER:-}" == "$sha" ]] ||
+  fail 'P0 release freeze active: owner signing and publishing are blocked'
 [[ "${CONTINUUM_RELEASE_APPROVED_SHA:-}" == "$sha" ]] ||
   fail 'Exact source SHA not approved by owner'
 [[ "${CONTINUUM_RELEASE_HOST:-}" == "$expected_host" ]] ||
@@ -132,7 +135,8 @@ const name = process.env.CONTINUUM_RELEASE_VERSION_NAME;
 const host = 'continuum-owner-v23-release-preflight.onrender.com';
 const release = {
   schema: 1,
-  channel: 'OWNER_RELEASE',
+  channel: 'OWNER_RELEASE_CANDIDATE',
+  status: 'SIGNED_STAGED_DEVICE_NOT_RUN',
   packageName: 'at.heinz.deviceai.continuumlocal',
   versionCode: 38,
   versionName: name,
@@ -141,8 +145,8 @@ const release = {
   byteLength: size,
   sourceCommit: sha,
   signerSha256: '6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23',
-  approved: true,
-  notes: 'Originalsigniertes Continuum Lokal Code38 Update nach vollständigen Node-/Android-Gates.'
+  approved: false,
+  notes: 'Originalsigniertes, nicht freigegebenes Update: Fold7-Abnahme und separate Besitzerfreigabe erforderlich.'
 };
 if (!Number.isSafeInteger(size) || size < 1_000_000 || size > 2_000_000_000 ||
     !/^[a-f0-9]{40}$/.test(sha) || !/^[a-f0-9]{64}$/.test(digest) ||
