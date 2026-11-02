@@ -41,7 +41,7 @@ async function fixture(t){
     'const out=process.argv.at(-1); fs.mkdirSync(out,{recursive:true});',
     'fs.writeFileSync(path.join(out,"report.json"),JSON.stringify({',
     'status:process.env.CONTINUUM_TEST_NODE_BAD==="yes"?"FAIL":"PASS",',
-    'sourceUnchanged:true,source:{commit:process.env.RECEIPT_EXPECTED_HEAD}}));'
+    'sourceUnchanged:true,source:{commit:process.env.CONTINUUM_TEST_NODE_WRONG_SHA==="yes"?"0".repeat(40):process.env.RECEIPT_EXPECTED_HEAD}}));'
   ].join('\n')+'\n');
   ensureSuccess(execute('git',['init','-q','-b','feature/qa-fixture'],repo),'init fixture');
   ensureSuccess(execute('git',['add','.'],repo),'add fixture');
@@ -97,6 +97,11 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[2].status,'PASS');
+  assert.equal(r.receipt?.checks[3].status,'FAIL');
+
+  r=await invoke(f,'node-mismatched-source',f.sha,{CONTINUUM_TEST_NODE_WRONG_SHA:'yes'});
+  assert.equal(r.result.status,1);
+  assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[3].status,'FAIL');
 
   r=await invoke(f,'valid-synthetic');
