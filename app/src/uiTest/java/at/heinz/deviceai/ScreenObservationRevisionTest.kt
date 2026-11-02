@@ -30,8 +30,9 @@ class ScreenObservationRevisionTest {
             packageName = "com.android.settings"; text = "Akku 80 Prozent"; isVisibleToUser = true
         }
     }
-    private fun contentChanged(target: ContinuumScreenObservationService = service) {
+    private fun contentChanged(target: ContinuumScreenObservationService = service, pkg: String? = null) {
         val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+        event.packageName = pkg
         try { target.onAccessibilityEvent(event) } finally { event.recycle() }
     }
     @Test fun contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence() {
@@ -77,6 +78,84 @@ class ScreenObservationRevisionTest {
         val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
         try { service.onAccessibilityEvent(event) } finally { event.recycle() }
         assertNull(ScreenObservationBus.awaitAfter(before, 1))
+    }
+    @Test fun unrelatedPackageUpdatesDoNotAbortStableTargetRead() {
+        prepare(); var delivered = false
+        val result = ScreenObservationBus.read("com.android.settings") {
+            if (!delivered) {
+                delivered = true
+                contentChanged(pkg = "com.android.systemui")
+                contentChanged(pkg = "com.example.otherpane")
+            }
+        }
+        assertEquals(listOf("Akku 80 Prozent"), result.snapshot.texts)
+    }
+    @Test fun unrelatedThenTargetUpdateStillInvalidates() {
+        prepare(); var delivered = false
+        val failure = assertThrows(IllegalStateException::class.java) {
+            ScreenObservationBus.read("com.android.settings") {
+                if (!delivered) {
+                    delivered = true
+                    contentChanged(pkg = "com.example.otherpane")
+                    contentChanged(pkg = "com.android.settings")
+                }
+            }
+        }
+        assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
+    }
+    @Test fun unknownOrMalformedPackageCannotBeIgnored() {
+        for (pkg in listOf(null, "", " ", "not a package")) {
+            prepare(); var delivered = false
+            val failure = assertThrows(IllegalStateException::class.java) {
+                ScreenObservationBus.read("com.android.settings") {
+                    if (!delivered) { delivered = true; contentChanged(pkg = pkg) }
+                }
+            }
+            assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
+        }
+    }
+    @Test fun concurrentReaderIsRejectedWithoutCorruptingOriginalRead() {
+        prepare(); var attempted = false
+        val result = ScreenObservationBus.read("com.android.settings") {
+            if (!attempted) {
+                attempted = true
+                val outcome = java.util.concurrent.atomic.AtomicReference<Throwable?>()
+                val reader = Thread {
+                    try { ScreenObservationBus.read("com.example.otherpane") {} }
+                    catch (failure: Throwable) { outcome.set(failure) }
+                }
+                reader.start(); reader.join(1000)
+                assertFalse("second reader must not block", reader.isAlive)
+                assertEquals("ANOTHER_SCREEN_READ_ACTIVE", outcome.get()?.message)
+            }
+        }
+        assertTrue(result.snapshot.complete)
+    }
+    @Test fun abortedReadClearsTargetInFinally() {
+        for (reason in listOf("DEVICE_ACTION_CANCELLED", "SCREEN_READ_DEADLINE")) {
+            prepare()
+            val failure = assertThrows(IllegalStateException::class.java) {
+                ScreenObservationBus.read("com.android.settings") { error(reason) }
+            }
+            assertEquals(reason, failure.message)
+            prepare() // Each real traversal owns/recycles its framework root.
+            assertTrue(ScreenObservationBus.read("com.android.settings") {}.snapshot.complete)
+        }
+    }
+    @Test fun disconnectAndInterruptInvalidateEvenWithUnrelatedEvents() {
+        for (disconnect in listOf(false, true)) {
+            prepare(); var delivered = false
+            val failure = assertThrows(IllegalStateException::class.java) {
+                ScreenObservationBus.read("com.android.settings") {
+                    if (!delivered) {
+                        delivered = true
+                        contentChanged(pkg = "com.example.otherpane")
+                        if (disconnect) ScreenObservationBus.disconnect(service) else ScreenObservationBus.interrupt(service)
+                    }
+                }
+            }
+            assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
+        }
     }
     @Test fun stableReadRetainsBoundedObservedText() {
         prepare()

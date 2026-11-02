@@ -14,7 +14,7 @@ class ContinuumScreenObservationService:AccessibilityService(){
     override fun onAccessibilityEvent(event:AccessibilityEvent?){
         if(event==null)return
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
-            ScreenObservationBus.contentChanged(this)
+            ScreenObservationBus.contentChanged(this,event.packageName?.toString())
             return // Invalidate an in-flight read; do not capture text or invent a launch observation.
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
@@ -51,13 +51,20 @@ internal data class ObservedAppScreen(val snapshot:ScreenTextSnapshot,val epoch:
 internal object ScreenObservationBus:ForegroundEvents{
     private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
     private var epoch=0L;private var sequence=0L;private var wakeSequence=0L;private var latest:ForegroundWindow?=null
+    private var readingPackage:String?=null
+    private val packageNamePattern=Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")
     fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
     fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
     fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
     fun observed(s:ContinuumScreenObservationService,pkg:String)=synchronized(lock){if(service===s){
         sequence++;latest=if(pkg.isNotBlank())ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
-    fun contentChanged(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){
-        sequence++;lock.notifyAll()}}
+    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?)=synchronized(lock){if(service===s){
+        // Only a well-formed OS event sender known to differ from the active read
+        // can be ignored. Missing/malformed senders remain uncertainty, never success.
+        val target=readingPackage
+        val knownPackage=pkg?.takeIf{packageNamePattern.matches(it)}
+        if(target!=null&&knownPackage!=null&&knownPackage!=target)return@synchronized
+        sequence++;if(knownPackage==null)latest=null;lock.notifyAll()}}
     override fun grantEpoch():Long?=synchronized(lock){if(service!=null)epoch else null}
     override fun revision():Long=synchronized(lock){sequence}
     override fun wake()=synchronized(lock){wakeSequence++;lock.notifyAll()}
@@ -73,12 +80,19 @@ internal object ScreenObservationBus:ForegroundEvents{
     fun read(expectedPackage:String,checkActive:()->Unit):ObservedAppScreen{
         val state=synchronized(lock){
             val current=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
+            check(readingPackage==null){"ANOTHER_SCREEN_READ_ACTIVE"}
+            readingPackage=expectedPackage
             Triple(current,epoch,++sequence)
         }
-        val observedAt=System.currentTimeMillis()
-        val result=state.first.readScreen(expectedPackage,checkActive)
-        synchronized(lock){check(service===state.first&&epoch==state.second&&sequence==state.third){"SCREEN_CHANGED_DURING_READ"}}
-        return ObservedAppScreen(result,state.second,state.third,observedAt)
+        try {
+            val observedAt=System.currentTimeMillis()
+            val result=state.first.readScreen(expectedPackage,checkActive)
+            checkActive() // Preserve cancellation/deadline checks before publishing text.
+            synchronized(lock){check(service===state.first&&epoch==state.second&&sequence==state.third){"SCREEN_CHANGED_DURING_READ"}}
+            return ObservedAppScreen(result,state.second,state.third,observedAt)
+        } finally {
+            synchronized(lock){readingPackage=null}
+        }
 
     }
 }
