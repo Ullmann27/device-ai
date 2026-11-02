@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import android.accessibilityservice.AccessibilityService
+import android.graphics.Rect
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
@@ -23,21 +24,24 @@ import org.robolectric.shadows.ShadowAccessibilityWindowInfo
 class NativeClickCandidateTest {
     @Implements(AccessibilityService::class)
     class ServiceShadow:ShadowAccessibilityService(){
-        companion object { var template:AccessibilityNodeInfo?=null; var count=1 }
+        companion object { var template:AccessibilityNodeInfo?=null; var count=1; var targetId=42; var overlap=false; var otherType=AccessibilityWindowInfo.TYPE_APPLICATION }
         @Implementation protected fun getRootInActiveWindow()=template?.let { AccessibilityNodeInfo.obtain(it) }
-        @Implementation public override fun getWindows()=List(count){AccessibilityWindowInfo.obtain()}
+        @Implementation public override fun getWindows()=List(count){index->
+            AccessibilityWindowInfo.obtain().also { window ->
+                val w=shadowOf(window);w.setId(if(index==0)targetId else 43)
+                w.setType(if(index==0)AccessibilityWindowInfo.TYPE_APPLICATION else otherType)
+                w.setActive(index==0);w.setFocused(index==0)
+                if(index!=0)w.setRoot(AccessibilityNodeInfo.obtain().apply{packageName="com.other.app"})
+                w.setBoundsInScreen(if(index==0||overlap) Rect(0,0,500,1000) else Rect(600,0,1000,1000))
+            }
+        }
     }
     @Implements(AccessibilityWindowInfo::class)
-    class WindowShadow:ShadowAccessibilityWindowInfo(){
-        @Implementation protected fun getId()=42
-        @Implementation protected fun getType()=AccessibilityWindowInfo.TYPE_APPLICATION
-        @Implementation protected fun isActive()=true
-        @Implementation protected fun isFocused()=true
-    }
+    class WindowShadow:ShadowAccessibilityWindowInfo()
     @Implements(AccessibilityNodeInfo::class)
     class NodeShadow:ShadowAccessibilityNodeInfo(){
-        companion object { var action:(()->Boolean)?=null; var onRefresh:(()->Unit)?=null }
-        @Implementation public override fun getWindowId()=42
+        companion object { var action:(()->Boolean)?=null; var onRefresh:(()->Unit)?=null; var currentWindowId=42 }
+        @Implementation public override fun getWindowId():Int=Companion.currentWindowId
         @Implementation public override fun refresh():Boolean { onRefresh?.invoke();return true }
         @Implementation public override fun performAction(action:Int):Boolean =
             if(action==AccessibilityNodeInfo.ACTION_CLICK) Companion.action?.invoke()?:false else false
@@ -45,12 +49,121 @@ class NativeClickCandidateTest {
     private val service=ContinuumScreenObservationService()
     private fun node(text:String,pkg:String="com.android.settings",sensitive:Boolean=false)=AccessibilityNodeInfo.obtain().apply{
         packageName=pkg;this.text=text;isVisibleToUser=true;isEnabled=true;isClickable=true;isPassword=sensitive
+        setBoundsInScreen(Rect(0,0,500,1000))
     }
     private fun setup():ClickRequest {
         ScreenObservationBus.connect(service);ServiceShadow.count=1;ServiceShadow.template=node("Akku")
         return ClickRequest("com.android.settings",ScreenObservationBus.grantEpoch()!!,ScreenObservationBus.revision(),"Akku","Akkuverbrauch")
     }
-    @After fun cleanup(){ScreenObservationBus.disconnect(service);ServiceShadow.template=null;NodeShadow.action=null;NodeShadow.onRefresh=null;ServiceShadow.count=1}
+    @After fun cleanup(){ScreenObservationBus.disconnect(service);ServiceShadow.template=null;NodeShadow.action=null;NodeShadow.onRefresh=null;ServiceShadow.count=1;ServiceShadow.targetId=42;NodeShadow.currentWindowId=42;ServiceShadow.overlap=false;ServiceShadow.otherType=AccessibilityWindowInfo.TYPE_APPLICATION}
+    private fun windowEvent(pkg:String?,id:Int,changes:Int=AccessibilityEvent.WINDOWS_CHANGE_BOUNDS){
+        val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOWS_CHANGED)
+        event.packageName=pkg;org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",id)
+        org.robolectric.util.ReflectionHelpers.setField(event,"mWindowChangeTypes",changes)
+        try{service.onAccessibilityEvent(event)}finally{event.recycle()}
+    }
+    @Test fun unrelatedNonOverlappingWindowDoesNotInvalidateActiveRead(){
+        setup();var checks=0;var delivered=false
+        val result=ScreenObservationBus.read("com.android.settings"){
+            if(++checks==3){
+                delivered=true;ServiceShadow.count=2;windowEvent("com.other.app",43);ServiceShadow.count=1
+            }
+        }
+        assertTrue(delivered);assertEquals(listOf("Akku"),result.snapshot.texts)
+    }
+    @Test fun overlappingWindowChangeStillInvalidatesRead(){
+        setup();var checks=0;ServiceShadow.overlap=true
+        val failure=assertThrows(IllegalStateException::class.java){
+            ScreenObservationBus.read("com.android.settings"){
+                if(++checks==3){ServiceShadow.count=2;windowEvent("com.other.app",43);ServiceShadow.count=1}
+            }
+        }
+        assertEquals("SCREEN_CHANGED_DURING_READ",failure.message)
+    }
+    @Test fun foreignFocusOrUnknownSenderOrKeyboardInvalidatesRead(){
+        for(case in 0..2){
+            setup();var checks=0
+            val failure=assertThrows(IllegalStateException::class.java){
+                ScreenObservationBus.read("com.android.settings"){
+                    if(++checks==3){
+                        ServiceShadow.count=2
+                        if(case==2)ServiceShadow.otherType=AccessibilityWindowInfo.TYPE_INPUT_METHOD
+                        windowEvent(if(case==1)null else "com.other.app",43,
+                            if(case==0)AccessibilityEvent.WINDOWS_CHANGE_FOCUSED else AccessibilityEvent.WINDOWS_CHANGE_BOUNDS)
+                        ServiceShadow.count=1;ServiceShadow.otherType=AccessibilityWindowInfo.TYPE_APPLICATION
+                    }
+                }
+            }
+            assertEquals("SCREEN_CHANGED_DURING_READ",failure.message)
+        }
+    }
+    @Test fun actualForegroundSwitchMissingRootAndUnknownWindowIdInvalidateRead(){
+        for(case in 0..2){
+            setup();var checks=0
+            val failure=assertThrows(IllegalStateException::class.java){
+                ScreenObservationBus.read("com.android.settings"){
+                    if(++checks==3){
+                        ServiceShadow.count=2
+                        if(case==0)ServiceShadow.template=node("Andere App","com.other.app")
+                        if(case==1)ServiceShadow.template=null
+                        windowEvent("com.other.app",if(case==2)-1 else 43)
+                        ServiceShadow.count=1
+                    }
+                }
+            }
+            assertEquals("SCREEN_CHANGED_DURING_READ",failure.message)
+        }
+    }
+    @Test fun unknownContentDuringClickInvalidatesBeforeDispatch(){
+        val request=setup();var calls=0;NodeShadow.action={calls++;true}
+        NodeShadow.onRefresh={val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
+        assertEquals("SCREEN_CHANGED_DURING_READ",assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}.message)
+        assertEquals(0,calls)
+    }
+    @Test fun unrelatedNonOverlappingWindowDoesNotInvalidateClick(){
+        val request=setup();var calls=0
+        NodeShadow.onRefresh={ServiceShadow.count=2;windowEvent("com.other.app",43);ServiceShadow.count=1}
+        NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
+            val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);e.packageName="com.android.settings"
+            try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
+        val result=ScreenObservationBus.clickCandidate(request,true){}
+        assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
+    }
+    @Test fun foreignFocusChangeDuringClickStillInvalidates(){
+        val request=setup();var calls=0;NodeShadow.action={calls++;true}
+        NodeShadow.onRefresh={ServiceShadow.count=2;windowEvent("com.other.app",43,AccessibilityEvent.WINDOWS_CHANGE_FOCUSED);ServiceShadow.count=1}
+        assertEquals("SCREEN_CHANGED_DURING_READ",assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}.message)
+        assertEquals(0,calls)
+    }
+    @Test fun foreignContentBeforeClickWindowIsBoundFailsClosed(){
+        val request=setup();var calls=0;var delivered=false;NodeShadow.action={calls++;true}
+        assertThrows(IllegalStateException::class.java){
+            ScreenObservationBus.clickCandidate(request,true){
+                if(!delivered){delivered=true;val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+                    e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
+                if(calls>0)error("UNEXPECTED_ACTION")
+            }
+        }
+        assertTrue(delivered);assertEquals(0,calls)
+    }
+    @Test fun foreignContentDuringClickDoesNotInvalidateOrProveSuccess(){
+        val request=setup();var calls=0
+        NodeShadow.onRefresh={val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
+        NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
+            val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);e.packageName="com.android.settings"
+            try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
+        val result=ScreenObservationBus.clickCandidate(request,true){}
+        assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
+    }
+    @Test fun foreignContentAloneCannotProveClickSuccess(){
+        val request=setup();var calls=0;var checks=0
+        NodeShadow.action={calls++;val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
+        val failure=assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){if(++checks>30)error("TIMEOUT")}}
+        assertEquals("TIMEOUT",failure.message);assertEquals(1,calls)
+    }
     @Test fun verifiedActionRequiresNewObservedScreen(){
         val request=setup();var calls=0
         NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch");
@@ -58,6 +171,26 @@ class NativeClickCandidateTest {
             try{service.onAccessibilityEvent(event)}finally{event.recycle()};true}
         val result=ScreenObservationBus.clickCandidate(request,true){}
         assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
+    }
+    @Test fun targetNavigationToNewWindowCanBeVerifiedAfterRelevantEvent(){
+        val request=setup();var calls=0
+        NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
+            ServiceShadow.targetId=44;NodeShadow.currentWindowId=44
+            val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);event.packageName="com.android.settings"
+            try{service.onAccessibilityEvent(event)}finally{event.recycle()};true}
+        val result=ScreenObservationBus.clickCandidate(request,true){}
+        assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
+    }
+    @Test fun unknownEventAfterDispatchCannotBecomeSuccessWithLaterTargetEvent(){
+        val request=setup();var calls=0
+        NodeShadow.action={calls++
+            val unknown=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            try{service.onAccessibilityEvent(unknown)}finally{unknown.recycle()}
+            ServiceShadow.template=node("Akkuverbrauch")
+            val target=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);target.packageName="com.android.settings"
+            try{service.onAccessibilityEvent(target)}finally{target.recycle()};true}
+        assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}
+        assertEquals(1,calls)
     }
     @Test fun noApprovalOrOverlayNeverClicks(){
         val request=setup();var calls=0;NodeShadow.action={calls++;true}

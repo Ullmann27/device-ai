@@ -11,11 +11,11 @@ import java.security.MessageDigest
 
 /** Strict candidate: a single visible application window and a bounded complete tree.
  * A production caller still requires an explicit, exact, ToolGate-bound owner grant. */
-internal fun AccessibilityService.snapshotForClick(request:ClickRequest,revision:Long,checkActive:()->Unit):ClickFrame =
-    inspectClickTree(request,revision,checkActive,false) { _,_->false }.first
+internal fun AccessibilityService.snapshotForClick(request:ClickRequest,revision:Long,checkActive:()->Unit,bindWindow:(Int)->Unit):ClickFrame =
+    inspectClickTree(request,revision,checkActive,false,bindWindow) { _,_->false }.first
 
-internal fun AccessibilityService.dispatchClick(request:ClickRequest,revision:Long,checkActive:()->Unit,
-    verify:(ClickFrame)->Unit):Boolean = inspectClickTree(request,revision,checkActive,true) { frame,node ->
+internal fun AccessibilityService.dispatchClick(request:ClickRequest,revision:Long,checkActive:()->Unit,bindWindow:(Int)->Unit,
+    verify:(ClickFrame)->Unit):Boolean = inspectClickTree(request,revision,checkActive,true,bindWindow) { frame,node ->
         verify(frame);checkActive()
         check(node.refresh()){ "STALE_CLICK_NODE" }
         check(node.isVisibleToUser&&node.isEnabled&&node.isClickable&&!node.isPassword&&!node.isEditable &&
@@ -38,7 +38,7 @@ internal fun AccessibilityService.dispatchClick(request:ClickRequest,revision:Lo
     }.second
 
 private inline fun AccessibilityService.inspectClickTree(request:ClickRequest,revision:Long,checkActive:()->Unit,
-    dispatch:Boolean,block:(ClickFrame,AccessibilityNodeInfo)->Boolean):Pair<ClickFrame,Boolean> {
+    dispatch:Boolean,bindWindow:(Int)->Unit,block:(ClickFrame,AccessibilityNodeInfo)->Boolean):Pair<ClickFrame,Boolean> {
     checkActive()
     val windows=windows ?: error("WINDOWS_UNAVAILABLE")
     try {
@@ -54,6 +54,7 @@ private inline fun AccessibilityService.inspectClickTree(request:ClickRequest,re
         var matches=0
         try {
             check(root.windowId==window.id && root.packageName?.toString()==request.packageName){"UNEXPECTED_SCREEN_PACKAGE"}
+            bindWindow(window.id)
             while(queue.isNotEmpty()) {
                 val (node,depth)=queue.removeFirst()
                 var retained=false
