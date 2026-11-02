@@ -59,6 +59,11 @@ class LocalConversationContext {
     @Synchronized fun recordUnanswered(sessionId: String, request: String) {
         require(sessionId.isNotBlank() && request.isNotBlank())
         if (session != sessionId) { clear(); session = sessionId }
+        // Several revoked callbacks for the same request must not displace
+        // four independent owner turns with identical failed-turn placeholders.
+        val last = turns.lastOrNull()
+        if (request.length <= 1000 && last?.isOwnerTurn == true &&
+            last.originalUserRequest == request && last.response == "(Keine bestätigte Modellantwort)") return
         turns.addLast(Turn(data(request, 300), "(Keine bestätigte Modellantwort)",
             request.takeIf { it.length <= 1000 }))
         while (turns.size > 4) turns.removeFirst()

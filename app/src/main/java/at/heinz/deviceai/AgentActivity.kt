@@ -233,6 +233,8 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
+    private var appLookupGeneration: Long = 0L
+    private var appLookupActive: Boolean = false
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
     private var pendingLocalSpeechGeneration: Long = -1L
@@ -548,7 +550,15 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
-        onDeviceSpeech?.cancel()
+        // A delayed read-only lookup must not render into a background/other app state.
+        appLookupGeneration++
+        if (appLookupActive) {
+            appLookupActive = false
+            activeLocalRequest = false
+            setBusy(false)
+        }
+        // Ending the full recognition scope also invalidates pending Android permission callbacks.
+        cancelSpeechInputScope()
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
@@ -2441,11 +2451,56 @@ class AgentActivity : Activity() {
         return shell
     }
 
+    private fun runExplicitAppLookup(query: String) {
+        val ownerSession = sessionId
+        val generation = ++appLookupGeneration
+        appLookupActive = true
+        activeLocalRequest = true
+        setBusy(true)
+        val invocation = ToolCallRequest("explicit-lookup-" + UUID.randomUUID(), "find_app", mapOf("query" to query))
+        executeTool(invocation, false, false) { raw ->
+            if (isFinishing || isDestroyed || sessionId != ownerSession || appLookupGeneration != generation) return@executeTool
+            appLookupActive = false
+            activeLocalRequest = false
+            setBusy(false)
+            val response = runCatching {
+                val obj = org.json.JSONObject(raw)
+                check(obj.optString("schema") == "CONTINUUM_APP_DISCOVERY_V1") { "UNVERIFIED_APP_LOOKUP" }
+                val count = obj.optInt("totalMatches", -1)
+                check(count >= 0) { "INVALID_APP_COUNT" }
+                val items = obj.getJSONArray("candidates")
+                check(items.length() <= 12) { "UNBOUNDED_APP_RESULT" }
+                if (count == 0) "Ich habe keine passende startbare App gefunden. Das beweist nicht, dass sie nicht installiert ist."
+                else {
+                    val suggestions = (0 until items.length()).map { i ->
+                        val candidate = items.getJSONObject(i)
+                        candidate.getString("label").take(100) + " (" + candidate.getString("packageName").take(200) + ")"
+                    }.joinToString("; ")
+                    "Gefundene Apps: $suggestions. Zum tatsächlichen Öffnen brauche ich deinen separaten bestätigten Auftrag."
+                }
+            }.getOrElse { "Appsuche konnte nicht bestätigt werden. Es wurde keine App gestartet." }
+            addAssistantMessage(response)
+        }
+    }
+
     private fun sendCurrentInput() {
         if (busy) return
+        // Barge-in: the user takes precedence over any previous spoken answer.
+        voiceEngine?.stop()
+        stopVoiceAnimation()
         val request = input.text.toString().trim()
         if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
+        // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
+        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            input.text.clear()
+            addUserMessage(request)
+            runExplicitAppLookup(lookup)
             return
         }
         // Revoke previously granted ephemeral network capabilities for this offline turn.
@@ -6449,14 +6504,21 @@ class AgentActivity : Activity() {
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
                     if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                        lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
+                        if (sessionId == localSessionId && !ephemeralScreenRun.get())
+                            localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
                         return@onSuccess
                     }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
+                        lastLocalReply = null
+                        if (sessionId == localSessionId && !ephemeralScreenRun.get())
+                            localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess
                     }
                     if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                        lastLocalReply = null
                         addToolActivity("Bildschirmfreigabe geändert: Antwort verworfen.")
                         setBusy(false);return@onSuccess
                     }
@@ -7021,6 +7083,14 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        appLookupGeneration++
+        if (appLookupActive) {
+            appLookupActive = false
+            activeLocalRequest = false
+            setBusy(false)
+            addToolActivity("Appsuche abgebrochen; spätes Ergebnis wird ignoriert")
+            return
+        }
         cancelSpeechInputScope()
         if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the

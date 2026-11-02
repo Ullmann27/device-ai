@@ -27,6 +27,14 @@ class JarvisVoiceProfileTest {
         assertTrue(spoken.contains("Weitere Schritte"))
     }
 
+    @Test fun incompleteAndInlineCodeAreNotSpokenAsSecrets() {
+        val incomplete = JarvisVoiceProfile.speakable("Hinweis:\n```kotlin\nval secret = PRIVATE")!!
+        assertFalse(incomplete.contains("PRIVATE"))
+        val inline = JarvisVoiceProfile.speakable("Hallo `secret_token` und weiter.")!!
+        assertFalse(inline.contains("secret_token"))
+        assertTrue(inline.contains("weiter"))
+    }
+
     @Test fun answerLengthIsBoundedAndNeverEmptyAfterTruncation() {
         val value = "Das ist ein Satz. ".repeat(70)
         val spoken = JarvisVoiceProfile.speakable(value, 120)!!
