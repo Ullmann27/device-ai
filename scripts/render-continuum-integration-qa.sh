@@ -96,7 +96,7 @@ const report=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
 for(const check of report.checks||[])
   console.log('NODE_GATE '+JSON.stringify({id:check.id,status:check.status,
     code:check.code,reason:check.reason,diagnostics:(check.tests?.diagnostics||[]).map(d=>({
-      id:d.id,fingerprint:d.fingerprint})).slice(0,8)}));
+      kind:d.kind,file:d.file,message:String(d.message||'').slice(0,240),fingerprint:d.fingerprint})).slice(0,8)}));
 NODE
   fi
   tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt
