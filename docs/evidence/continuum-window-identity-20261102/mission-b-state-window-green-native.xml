@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.NativeClickCandidateTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:55:38" hostname="64c62d88-b43" time="2.55">
+  <properties/>
+  <testcase name="samePackageOtherStateWindowCannotConfirmClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="2.55"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,267 @@
+✔ Android source routes bootstrap actions through the existing cognitive agent (source wiring only) (4.18016ms)
+✖ actual Android shell adapters compile against official APIs and the unchanged Binder contract (23100.262747ms)
+✖ native natural request → actual tool → receipt → persisted episode, with negative regressions (13089.959105ms)
+✖ actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces (17722.217623ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 53980.323067
+
+✖ failing tests:
+
+test at .github/continuum/cognitive-action-integration.test.mjs:30:1
+✖ actual Android shell adapters compile against official APIs and the unchanged Binder contract (23100.262747ms)
+  AssertionError [ERR_ASSERTION]: 
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:10:29: error: unresolved reference 'DeviceAppActionPort'.
+      private val appActions: DeviceAppActionPort?
+                              ^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:13:64: error: unresolved reference 'AndroidDeviceAppActions'.
+          this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))
+                                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:34:36: error: unresolved reference 'AndroidInstalledAppLookup'.
+              callback(runCatching { AndroidInstalledAppLookup.search(context, call.arguments["query"] as String) })
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:47:36: error: unresolved reference 'DeviceNetworkProbe'.
+              callback(runCatching { DeviceNetworkProbe.read(context) })
+                                     ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:69:64: error: unresolved reference 'DeviceAppActionPort'.
+      private fun startNativeAction(call:ToolCallRequest,adapter:DeviceAppActionPort,callback:(Result<String>)->Unit){
+                                                                 ^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:77:53: error: unresolved reference 'execute'.
+                  if(!pending.cancelled.get())adapter.execute(call,{pending.cancelled.get()}){result->if(outcome==null)outcome=result}
+                                                      ^^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:77:93: error: cannot infer type for value parameter 'result'. Specify it explicitly.
+                  if(!pending.cancelled.get())adapter.execute(call,{pending.cancelled.get()}){result->if(outcome==null)outcome=result}
+                                                                                              ^^^^^^
+  app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt:88:48: error: unresolved reference 'cancelPending'.
+              it.cancelled.set(true);appActions?.cancelPending();it.thread?.interrupt()
+                                                 ^^^^^^^^^^^^^
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/cognitive-action-integration.test.mjs:42:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/cognitive-action-integration.test.mjs:48:1
+✖ native natural request → actual tool → receipt → persisted episode, with negative regressions (13089.959105ms)
+  AssertionError [ERR_ASSERTION]: app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt:8:36: error: unresolved reference 'NetworkTurnConstraint'.
+  import at.heinz.deviceai.cognitive.NetworkTurnConstraint
+                                     ^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt:141:13: error: unresolved reference 'NetworkTurnConstraint'.
+          if (NetworkTurnConstraint.forbidsExternalResearch(text))
+              ^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:252:13: error: unresolved reference 'AgentExperienceRecall'.
+              AgentExperienceRecall.hints(experienceStore as? ExperienceLookup, task, startedAt)
+              ^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:253:16: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+          } else emptyList()
+                 ^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:401:31: error: unresolved reference 'AgentExperienceRecall'.
+                  planSummary = AgentExperienceRecall.observedRunSummary(usedTools, retry, historicalHints.size),
+                                ^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt:401:106: error: unresolved reference 'size'.
+                  planSummary = AgentExperienceRecall.observedRunSummary(usedTools, retry, historicalHints.size),
+                                                                                                           ^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:17:27: error: unresolved reference 'ResearchDialogueHandoff'.
+      private var research: ResearchDialogueHandoff.Digest? = null
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:76:65: error: unresolved reference 'ResearchDialogueHandoff'.
+      @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:80:40: error: unresolved reference 'question'.
+          turns.addLast(Turn(data(digest.question, 300), "(Antwort aus Webrecherche; siehe EXTERNE RECHERCHEDATEN)",
+                                         ^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:89:9: error: unresolved reference 'FreshKnowledgeNeed'.
+          FreshKnowledgeNeed.FreshnessVerdict? =
+          ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:35: error: null cannot be a value of a non-null type 'uninferred K (of fun <K> WHEN_CALL)'.
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                    ^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:55: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:55: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+  fun <T, R> T.let(block: (T) -> R): R
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:90:61: error: unresolved reference 'ResearchDialogueHandoff'.
+          if (session != sessionId) null else research?.let { ResearchDialogueHandoff.freshnessFor(it, question, nowMillis) }
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:108:43: error: unresolved reference 'InternetAccessMode'.
+                              internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                            ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:108:64: error: unresolved reference 'InternetAccessMode'.
+                              internetMode: InternetAccessMode = InternetAccessMode.OFF,
+                                                                 ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:112:70: error: unresolved reference 'InternetAccessMode'.
+          val offline = ownerForbidsExternalNetwork || internetMode == InternetAccessMode.OFF ||
+                                                                       ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:113:29: error: unresolved reference 'InternetAccessMode'.
+              internetMode == InternetAccessMode.ASK && !onlineApprovalActive
+                              ^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:115:23: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+              research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:115:23: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+              research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:115:23: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+  fun <T, R> T.let(block: (T) -> R): R
+              research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                        ^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:115:27: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+              research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt:115:36: error: unresolved reference 'ResearchDialogueHandoff'.
+              research?.let { append(ResearchDialogueHandoff.render(it, nowMillis, offline = offline)) }
+                                     ^^^^^^^^^^^^^^^^^^^^^^^
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/cognitive-action-integration.test.mjs:59:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/cognitive-action-integration.test.mjs:72:1
+✖ actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces (17722.217623ms)
+  AssertionError [ERR_ASSERTION]:              ^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:133:30: error: unresolved reference 'lower'.
+          if(f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS } && !f.correction)return emptySet()
+                               ^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:133:39: error: unresolved reference 'Ewm1Lexicon'.
+          if(f.tokens.any { it.lower in Ewm1Lexicon.NEGATIONS } && !f.correction)return emptySet()
+                                        ^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:25: error: unresolved reference 'Ewm1Workspace'.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                          ^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                        ^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:39: error: inapplicable candidate(s): fun <T> listOf(element: T): List<T>
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                        ^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:53: error: function invocation 'first()' expected.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                      ^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:59: error: unresolved reference 'id'.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                            ^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:62: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                               ^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:62: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                               ^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:76: error: cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                                             ^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:134:79: error: cannot infer type for value parameter 'ids'. Specify it explicitly.
+          val workspace = Ewm1Workspace(listOf(newest.first.id to f.text)) { _, ids ->
+                                                                                ^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:148:42: error: function invocation 'first()' expected.
+              ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+                                           ^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:148:48: error: unresolved reference 'id'.
+              ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+                                                 ^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:148:73: error: function invocation 'first()' expected.
+              ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+                                                                          ^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/OwnerAttributeEvidenceScope.kt:148:79: error: unresolved reference 'id'.
+              ranked.any { it.id == newest.first.id })return setOf(newest.first.id)
+                                                                                ^^
+  app/src/main/java/at/heinz/deviceai/learning/span/DualEvidenceReadContract.kt:3:36: error: unresolved reference 'NetworkTurnConstraint'.
+  import at.heinz.deviceai.cognitive.NetworkTurnConstraint
+                                     ^^^^^^^^^^^^^^^^^^^^^
+  app/src/main/java/at/heinz/deviceai/learning/span/DualEvidenceReadContract.kt:13:9: error: unresolved reference 'NetworkTurnConstraint'.
+          NetworkTurnConstraint.forbidsExternalResearch(userTurn) -> FetchPlan.OFFLINE_VETO
+          ^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:75:54: error: unresolved reference 'AuthorizedHybridShadowStatus'.
+              assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:76:37: error: unresolved reference 'status'.
+                  result.hybridShadow.status)
+                                      ^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:132:54: error: unresolved reference 'AuthorizedHybridShadowStatus'.
+              assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:133:35: error: unresolved reference 'status'.
+                  turn.hybridShadow.status)
+                                    ^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:253:47: error: unresolved reference 'authorizedCount'.
+              assertEquals(1,first.hybridShadow.authorizedCount)
+                                                ^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:254:43: error: unresolved reference 'status'.
+              assertTrue(first.hybridShadow.status in setOf(
+                                            ^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:254:53: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+              assertTrue(first.hybridShadow.status in setOf(
+                                                      ^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:255:45: error: unresolved reference 'AuthorizedHybridShadowStatus'.
+                  at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:256:45: error: unresolved reference 'AuthorizedHybridShadowStatus'.
+                  at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.COMPARED_WITH_CRE1
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:267:45: error: unresolved reference 'AuthorizedHybridShadowStatus'.
+                  at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:268:36: error: unresolved reference 'status'.
+                  after.hybridShadow.status
+                                     ^^^^^^
+  app/src/test/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntimeTest.kt:271:47: error: unresolved reference 'authorizedCount'.
+              assertEquals(0,after.hybridShadow.authorizedCount)
+                                                ^^^^^^^^^^^^^^^
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/cognitive-action-integration.test.mjs:81:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

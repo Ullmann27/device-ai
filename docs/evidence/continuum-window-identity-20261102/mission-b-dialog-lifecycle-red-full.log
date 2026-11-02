@@ -1,0 +1,119 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:411:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:412:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:414:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:714:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1880:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3350:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3365:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3394:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5833:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6340:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6340:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7247:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt:28:47 The corresponding parameter in the supertype 'DeviceAppActionPort' is named 'cancelled'. This may cause problems when calling this function with named arguments.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt:102:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AccessibilityNodeInfo'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt:59:32 This class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:32:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:38:61 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:54:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:64:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:67:63 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:123:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:124:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:132:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:133:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:147:72 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:148:97 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:156:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:157:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:159:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:160:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:166:61 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:167:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:174:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:175:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:183:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:184:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:191:44 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:192:71 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:194:43 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:195:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:205:24 'fun addPackage(p0: String!): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:213:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:214:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+NativeClickCandidateTest > toolGateToRealNativeClickProducesObservedReceipt FAILED
+    java.lang.AssertionError at NativeClickCandidateTest.kt:229
+
+1701 tests completed, 1 failed, 3 skipped
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 12s
+30 actionable tasks: 6 executed, 24 up-to-date

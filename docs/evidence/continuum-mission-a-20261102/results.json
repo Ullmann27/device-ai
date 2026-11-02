@@ -1,0 +1,85 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "schemaVersion": 1,
+  "baselineCommit": "91271b4d694b65d7609e94501536b248546593e6",
+  "ownerOrder": "https://github.com/Ullmann27/device-ai/pull/354#issuecomment-6575155127",
+  "missionArchitecture": "https://github.com/Ullmann27/device-ai/issues/355",
+  "workingTreeInputsSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "b1607d35d97f072308880f690fd6517208980367fdd04874ac099adae16dba74",
+    "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": "39bb17fe485e36bcb8fc9e54b5f010da29356adbcc1df6ad3c63971aea4b097e",
+    "app/src/main/res/xml/continuum_screen_observation.xml": "4f8cbc33a3d61e8991ffb3a5a24245e2fcae256d9fdc6f88ca01e95e8ccef358",
+    "app/build.gradle.kts": "90eb3ea13034246b674d3266342631dfd969faab3e5f9d51a291877e3af17cdd",
+    "build.gradle.kts": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+    "settings.gradle.kts": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be",
+    "gradle.properties": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+  },
+  "gradleCommand": "../continuum-integration-20261102/commands.json#gradle",
+  "cwd": "/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai",
+  "runs": [
+    {
+      "id": "native-red",
+      "exitCode": 1,
+      "screenTests": 12,
+      "failures": 3,
+      "detail": "Foreign sender and concurrent-reader checks reproduce defects; third failure is reused recycled node in test fixture, corrected for final run. Final thread test replaces nested reader with actual second thread."
+    },
+    {
+      "id": "native-green",
+      "exitCode": 0,
+      "tests": 1669,
+      "passed": 1666,
+      "failed": 0,
+      "skipped": 3,
+      "screenTestsPassed": 12,
+      "lintIssues": 0,
+      "compile": "PASS"
+    },
+    {
+      "id": "critical",
+      "exitCode": 0,
+      "passed": 135,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "id": "full-node",
+      "exitCode": 1,
+      "tests": 1948,
+      "passed": 1932,
+      "failed": 3,
+      "skipped": 13,
+      "classification": "Same historical live-release source/branch assertions. Original diagnostic messages and child exit codes retained."
+    }
+  ],
+  "limits": [
+    "DEVICE_VERIFIED false; Fold7/APK/Gemma NOT_RUN.",
+    "Dynamic content-event subscription NOT_IMPLEMENTED; battery/wakeup measurements needed. Global window/permission events retained.",
+    "Framework sender metadata with valid package syntax is used; no screen/model text grants sender authority. Unknown/malformed packages invalidate.",
+    "No retries or action redispatch. New click/scroll, messaging/files, Mission state machine NOT_IMPLEMENTED in this sprint. Issue355 retains B/C.",
+    "Earlier optional JVM harness result1PASS/3FAIL unchanged, NOT_RUN this turn.",
+    "Original three Gradle parity skips retained; no inference or device claim."
+  ],
+  "evidenceSha256": {
+    "mission-critical/android-source-contracts.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-critical/android-source-contracts.xml": "f1659f85bc7b6da8a6fa80737855bc21adf3f920507265082fa057a903651656",
+    "mission-critical/host-checker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-critical/host-checker.xml": "da0f4cdda3058f63e4744dfb926c7b5839b6e0700977325f0ea20b2764b3f1c5",
+    "mission-critical/process.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-critical/process.xml": "b9752a35fe0437946eed922b5d1df4e17556e539a1728b5dff6dfcab75232316",
+    "mission-critical/report.json": "fa8d4f9c7bcb98bd87e7844ff87f0b35250022a43af02bb44de7535564bb759f",
+    "mission-critical/report.md": "633599beec986b56e7f23808994c3d053d4f288797876ace6d5f0c4f01a5c0eb",
+    "mission-critical/storage-agent.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-critical/storage-agent.xml": "e2c9e8e13dfda5681f5f5254f8ebd247bcbe52cf0405154da25466a25fec8681",
+    "mission-full/full-node.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-full/full-node.xml": "6da1a6532380f62588c248577eff12c5a1b2cce5fc062421f34c3e9c47ba1258",
+    "mission-full/report.json": "7e179404d4995ab7960e913232e5b8af539e020112f440783465243122cfe5f9",
+    "mission-full/report.md": "db153c1733afe88ba011ae22b5fd502fd6e15b5cb8b775b4d172a22072051626",
+    "mission-green/counts.json": "adbe99433297f8549a8ff9b451784c43520ddc8e80c3a3e04dac039b7a765297",
+    "mission-green/junit.zip": "df4e0608094b3ae2de0b6e1c7030bb05eeeb91cce6dc87c1cf7cec4b97b8a2a8",
+    "mission-green/lint.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "mission-green/screen.xml": "2c210a355a28978d8d93522cb37b9ba4c073ce04ffa27f87fb7f50fb97dfb0a7",
+    "mission-green.log": "afcaf5f79ed71015e0ff5afaba70e2e1129407722ebb823bcba9b1a697716807",
+    "mission-red/screen.xml": "1d5eb0258c9fcf55eeba856bc1b433b493a31240f35c9dce2d5c13e02f6b32f0",
+    "mission-red.log": "eec7c4c19ea978567a9bccc43c62f4591779636dc2d4f0084f63da852a1bd1f6"
+  }
+}

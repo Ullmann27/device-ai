@@ -90,6 +90,38 @@ class ResearchDialogueHandoffTest {
         assertEquals("", c.render("s1", now))
     }
 
+    @Test fun explicitScopeCorrectionDropsResearchAndItsFreshnessEvidence() {
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Alte Recherche zur EZB.", "https://a.example/old"), "MODEL_USED", now)!!
+        for ((request, kind) in listOf(
+            "Nein, ich meinte den Akku" to ContextDirectiveKind.SCOPE_UPDATED,
+            "Ich meinte das andere" to ContextDirectiveKind.CLARIFY_SCOPE)) {
+            val c = LocalConversationContext()
+            c.recordResearch("s1", d)
+            c.record("s1", "Warum?", "Alte Modellantwort.")
+            assertEquals(kind, c.inspectRequest("s1", request)?.kind)
+            assertFalse(request, c.hasResearch("s1"))
+            assertNull(c.researchFreshness("s1", "Warum?", now))
+            val rendered = c.render("s1", now)
+            for (stale in listOf("EXTERNE RECHERCHEDATEN", "Alte Recherche", "a.example/old", "Alte Modellantwort"))
+                assertFalse("$request retains $stale", rendered.contains(stale))
+            assertTrue(c.sessionEvidence("s1")!!.isEmpty())
+            if (kind == ContextDirectiveKind.SCOPE_UPDATED) assertTrue(rendered.contains("Akku"))
+        }
+    }
+
+    @Test fun ordinaryFollowUpAndContextReportRetainResearchWithoutCreatingOwnerEvidence() {
+        val c = LocalConversationContext()
+        val d = ResearchDialogueHandoff.digest("Wer leitet die EZB?",
+            dossier("Recherche bleibt im selben Thema.", "https://a.example/keep"), "MODEL_USED", now)!!
+        c.recordResearch("s1", d)
+        assertNull(c.inspectRequest("s1", "Welche Quelle sagt das?"))
+        assertEquals(ContextDirectiveKind.CONTEXT_REPORT, c.inspectRequest("s1", "Was hast du verstanden?")?.kind)
+        assertTrue(c.hasResearch("s1"))
+        assertTrue(c.render("s1", now).contains("a.example/keep"))
+        assertTrue(c.sessionEvidence("s1")!!.isEmpty())
+    }
+
     @Test fun onlyTheLatestResearchIsKept() {
         val c = LocalConversationContext()
         c.recordResearch("s1", ResearchDialogueHandoff.digest("Erste Frage?", dossier("Erste Antwort.", "https://a.example/1"), "MODEL_USED", now)!!)
