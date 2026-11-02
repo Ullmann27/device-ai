@@ -6,9 +6,10 @@ internal object JarvisVoiceProfile {
     const val pitch = 0.86f
     const val speechRate = 0.93f
 
-    private val codeFence = Regex("(?s)```[^\n]*\n.*?```")
-    private val unfinishedFence = Regex("(?s)```.*$")
-    private val inlineCode = Regex("`[^`\\n]{1,500}`")
+    private val codeFence = Regex("(?s)(?:```|~~~)[^\n]*\n.*?(?:```|~~~)")
+    private val unfinishedFence = Regex("(?s)(?:```|~~~).*$")
+    private val inlineCode = Regex("(?s)`[^`]*`")
+    private val unfinishedInlineCode = Regex("(?s)`.*$")
     private val url = Regex("(?i)https?://\\S+")
     private val markdownLinks = Regex("\\[([^\\]]{1,100})\\]\\(https?://[^)]*\\)")
     private val punctuation = Regex("[*_#`>]")
@@ -20,6 +21,7 @@ internal object JarvisVoiceProfile {
             .replace(codeFence, " Codebeispiel ausgelassen. ")
             .replace(unfinishedFence, " Nicht abgeschlossenen Codeblock ausgelassen. ")
             .replace(inlineCode, " Codebeispiel ausgelassen. ")
+            .replace(unfinishedInlineCode, " Unvollständigen Code ausgelassen. ")
             .replace(markdownLinks, "$1")
             .replace(url, " Link ausgelassen. ")
             .replace(punctuation, " ")
