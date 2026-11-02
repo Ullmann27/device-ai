@@ -114,7 +114,7 @@ node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node"
 const fs=require('node:fs'),r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
 for(const c of r.checks||[])console.log('NODE_FULL_GATE '+JSON.stringify({
   id:c.id,status:c.status,code:c.code,reason:c.reason,
-  diagnostics:(c.tests?.diagnostics||[]).map(x=>x.fingerprint).slice(0,8)}));
+  diagnostics:(c.tests?.diagnostics||[]).slice(0,16).map(x=>({kind:x.kind,file:x.file,message:String(x.message||'').slice(0,260),fingerprint:x.fingerprint}))}));
 NODE
   fi
   tail -n 100 continuum-all-systems-logs/NODE-FULL.txt
