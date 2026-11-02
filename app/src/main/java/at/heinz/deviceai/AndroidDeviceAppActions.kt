@@ -7,7 +7,7 @@ package at.heinz.deviceai
 import android.content.Context
 import android.content.Intent
 import at.heinz.deviceai.cognitive.VerifiedForegroundLaunch
-import java.util.Locale
+import at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContract
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import org.json.JSONArray
@@ -22,13 +22,14 @@ internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{
         app.startActivity(intent);true
     })
     override fun cancelPending(){cancelled.incrementAndGet();launch.cancel()}
-    override fun execute(call:ToolCallRequest,callback:(Result<String>)->Unit){
+    override fun execute(call:ToolCallRequest,callback:(Result<String>)->Unit)=execute(call,{false},callback)
+    override fun execute(call:ToolCallRequest,cancelledByCaller:()->Boolean,callback:(Result<String>)->Unit){
         val token=Any()
         if(!active.compareAndSet(null,token)){
             callback(Result.failure(ToolBackendFailure(ToolExecutionStatus.FAILED,"ANOTHER_DEVICE_ACTION_ACTIVE")));return
         }
         val generation=cancelled.get()
-        fun checkActive(){if(generation!=cancelled.get()||Thread.currentThread().isInterrupted)
+        fun checkActive(){if(cancelledByCaller()||generation!=cancelled.get()||Thread.currentThread().isInterrupted)
             throw ToolBackendFailure(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED")}
         try {
             val result=runCatching {
@@ -37,7 +38,7 @@ internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{
                 val pkg=resolveExactLauncher(requested)
                 val output=when(call.name){
                     "launch_app"->{
-                        val observed=launch.launch(pkg)
+                        val observed=launch.launch(pkg,::checkActive)
                         JSONObject().put("schema","CONTINUUM_DEVICE_ACTION_V1").put("action","LAUNCH_APP")
                             .put("package",pkg).put("execution","NATIVE_ANDROID_INTENT")
                             .put("status","VERIFIED_FOREGROUND").put("windowRevision",observed.revision)
@@ -45,10 +46,27 @@ internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{
                     }
                     "read_app_screen"->{
                         val epoch=ScreenObservationBus.grantEpoch()?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
-                        val screen=ScreenObservationBus.read(pkg)
+                        val readStart=System.nanoTime()
+                        val observed=ScreenObservationBus.read(pkg){
+                            checkActive()
+                            if(System.nanoTime()-readStart>2_000_000_000L)throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT,"SCREEN_READ_DEADLINE")
+                        }
+                        val screen=observed.snapshot
                         checkActive();check(epoch==ScreenObservationBus.grantEpoch()){"OBSERVATION_PERMISSION_CHANGED"}
                         check(screen.complete){"SCREEN_SNAPSHOT_INCOMPLETE_NO_TEXT_RELEASED"}
-                        JSONObject().put("schema","CONTINUUM_SCREEN_DATA_V1").put("package",pkg)
+                        val content=screen.texts.joinToString(" ")
+                        require(observed.revision in 1..Int.MAX_VALUE.toLong())
+                        val evidence=JarvisUnifiedEvidenceContract.Evidence(
+                            JarvisUnifiedEvidenceContract.Origin.EXTERNAL_APP_SCREEN,
+                            JarvisUnifiedEvidenceContract.Privacy.DEVICE_LOCAL_ONLY,
+                            "app-screen:$pkg:${observed.epoch}",observed.revision.toInt(),
+                            observed.observedAtMillis,observed.observedAtMillis+30_000,content,
+                            JarvisUnifiedEvidenceContract.hash(content))
+                        check(JarvisUnifiedEvidenceContract.useForAnswer(listOf(evidence),System.currentTimeMillis(),offline=true)==listOf(evidence))
+                        JSONObject().put("sourceId",evidence.sourceId).put("revision",evidence.revision)
+                            .put("sha256",evidence.sha256).put("observedAtMillis",evidence.observedAtMillis)
+                            .put("expiresAtMillis",evidence.expiresAtMillis).put("privacy",evidence.privacy.name)
+                            .put("schema","CONTINUUM_SCREEN_DATA_V1").put("package",pkg)
                             .put("provenance","EXTERNAL_APP_UNTRUSTED_EPHEMERAL")
                             .put("authority","DATA_ONLY_NO_COMMANDS_NO_OWNER_FACTS_NO_NETWORK_GRANT")
                             .put("texts",JSONArray(screen.texts)).put("redactedFields",screen.redacted)
@@ -62,17 +80,9 @@ internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{
         }finally{active.compareAndSet(token,null)}
     }
     private fun resolveExactLauncher(request:String):String{
-        val q=request.trim();require(q.length in 1..120&&!q.any(Char::isISOControl))
-        val pm=app.packageManager
-        if(q.matches(Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+"))){
-            require(pm.getLaunchIntentForPackage(q)!=null){"NO_INSTALLED_LAUNCHER_FOR_PACKAGE"};return q
-        }
-        val aliases=mapOf("whatsapp" to "com.whatsapp","chrome" to "com.android.chrome","youtube" to "com.google.android.youtube")
-        aliases[q.lowercase(Locale.ROOT)]?.let{if(pm.getLaunchIntentForPackage(it)!=null)return it}
-        val launchers=pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),0)
-            .filter{it.loadLabel(pm).toString().equals(q,ignoreCase=true)}.map{it.activityInfo.packageName}.distinct()
-        require(launchers.size==1){"APP_NAME_UNKNOWN_OR_AMBIGUOUS_USE_PACKAGE"}
-        return launchers.single()
+        require(ToolRegistry.isExplicitAppTarget(request)){"EXPLICIT_PACKAGE_REQUIRED"}
+        require(app.packageManager.getLaunchIntentForPackage(request)!=null){"NO_INSTALLED_LAUNCHER_FOR_PACKAGE"}
+        return request // literal matches exactly what the owner confirmed; never late-resolve an app label
     }
     private companion object{val active=AtomicReference<Any?>(null)}
 }

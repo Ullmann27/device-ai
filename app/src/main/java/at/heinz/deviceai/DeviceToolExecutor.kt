@@ -27,7 +27,7 @@ class DeviceToolExecutor internal constructor(
         if (call.name in setOf("launch_app", "read_app_screen")) {
             val adapter=appActions
             if(adapter==null)callback(Result.failure(IllegalStateException("NO_VERIFIED_DEVICE_ACTION_ADAPTER")))
-            else adapter.execute(call,callback)
+            else startNativeAction(call,adapter,callback)
             return
         }
         // App-volume statistics need neither Shizuku nor access to personal files.
@@ -57,7 +57,34 @@ class DeviceToolExecutor internal constructor(
         runBridge(command, callback)
     }
 
-    fun cancelPendingActions() { appActions?.cancelPending() }
+    private class PendingAction(val callId:String) {
+        val cancelled=java.util.concurrent.atomic.AtomicBoolean()
+        @Volatile var thread:Thread?=null
+    }
+    private val pendingAction=java.util.concurrent.atomic.AtomicReference<PendingAction?>(null)
+    private fun startNativeAction(call:ToolCallRequest,adapter:DeviceAppActionPort,callback:(Result<String>)->Unit){
+        val pending=PendingAction(call.callId)
+        if(!pendingAction.compareAndSet(null,pending)){
+            callback(Result.failure(ToolBackendFailure(ToolExecutionStatus.FAILED,"ANOTHER_DEVICE_ACTION_ACTIVE")));return
+        }
+        val thread=Thread({
+            var outcome:Result<String>?=null
+            try {
+                if(!pending.cancelled.get())adapter.execute(call,{pending.cancelled.get()}){result->if(outcome==null)outcome=result}
+            }catch(error:Exception){outcome=Result.failure(error)}
+            finally{pendingAction.compareAndSet(pending,null)}
+            callback(if(pending.cancelled.get())Result.failure(ToolBackendFailure(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED"))
+                else outcome?:Result.failure(IllegalStateException("DEVICE_ACTION_NO_COMPLETION")))
+        },"continuum-native-action").apply{isDaemon=true}
+        pending.thread=thread
+        try{thread.start()}catch(error:RuntimeException){pendingAction.compareAndSet(pending,null);callback(Result.failure(error))}
+    }
+    fun cancelNativeRequest(callId:String){
+        pendingAction.get()?.takeIf{it.callId==callId}?.let{
+            it.cancelled.set(true);appActions?.cancelPending();it.thread?.interrupt()
+        }
+    }
+    fun cancelPendingActions(){pendingAction.get()?.let{cancelNativeRequest(it.callId)}}
 
     private fun buildCommand(call: ToolCallRequest): String =
         when (call.name) {

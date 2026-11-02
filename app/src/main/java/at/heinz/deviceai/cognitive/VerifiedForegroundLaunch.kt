@@ -24,7 +24,7 @@ internal class VerifiedForegroundLaunch(
     private val cancellation=AtomicLong()
     init {require(timeoutMillis in 1..5_000)}
     fun cancel(){cancellation.incrementAndGet();events.wake()}
-    fun launch(packageName:String):ForegroundWindow {
+    fun launch(packageName:String,checkRequest:()->Unit = {}):ForegroundWindow {
         require(packageName.matches(Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")))
         if(!active.compareAndSet(false,true))fail(ToolExecutionStatus.FAILED,"ANOTHER_DEVICE_ACTION_ACTIVE")
         try {
@@ -32,6 +32,7 @@ internal class VerifiedForegroundLaunch(
             val epoch=events.grantEpoch()?:fail(ToolExecutionStatus.FAILED,"ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
             val before=events.revision();val started=clockNanos()
             fun checkActive(){
+                checkRequest()
                 if(Thread.currentThread().isInterrupted||ticket!=cancellation.get())
                     fail(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED")
                 if(events.grantEpoch()!=epoch)fail(ToolExecutionStatus.CANCELLED,"OBSERVATION_PERMISSION_CHANGED")

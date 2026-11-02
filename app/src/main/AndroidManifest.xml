@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Microphone is requested only after an explicit on-device speech gesture. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Required on Android 14+ to schedule JobScheduler network-constrained tasks. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

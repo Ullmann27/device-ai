@@ -22,10 +22,12 @@ class ContinuumScreenObservationService:AccessibilityService(){
     }
     override fun onInterrupt(){ScreenObservationBus.interrupt(this)}
     override fun onDestroy(){ScreenObservationBus.disconnect(this);super.onDestroy()}
-    internal fun readScreen(expectedPackage:String):ScreenTextSnapshot{
+    internal fun readScreen(expectedPackage:String,checkActive:()->Unit):ScreenTextSnapshot{
+        checkActive()
         val root=rootInActiveWindow?:error("NO_ACTIVE_WINDOW")
+        try{checkActive()}catch(error:RuntimeException){@Suppress("DEPRECATION") root.recycle();throw error}
         if(root.packageName?.toString()!=expectedPackage){@Suppress("DEPRECATION") root.recycle();error("UNEXPECTED_SCREEN_PACKAGE")}
-        return BoundedScreenReader.read(AndroidScreenNode(root))
+        return BoundedScreenReader.read(AndroidScreenNode(root),checkActive=checkActive)
     }
     private class AndroidScreenNode(private val node:AccessibilityNodeInfo):ScreenTreeNode{
         override val text get()=node.text?.take(4_001)?.toString()
@@ -37,6 +39,8 @@ class ContinuumScreenObservationService:AccessibilityService(){
         @Suppress("DEPRECATION") override fun release(){node.recycle()}
     }
 }
+
+internal data class ObservedAppScreen(val snapshot:ScreenTextSnapshot,val epoch:Long,val revision:Long,val observedAtMillis:Long)
 
 /** In-process, event-driven metadata only. No screen text cached on events. */
 internal object ScreenObservationBus:ForegroundEvents{
@@ -59,10 +63,15 @@ internal object ScreenObservationBus:ForegroundEvents{
         }
         latest?.takeIf{it.revision>revision}
     }
-    fun read(expectedPackage:String):ScreenTextSnapshot{
-        val pair=synchronized(lock){(service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")) to epoch}
-        val result=pair.first.readScreen(expectedPackage)
-        synchronized(lock){check(service===pair.first&&epoch==pair.second){"OBSERVATION_PERMISSION_CHANGED"}}
-        return result
+    fun read(expectedPackage:String,checkActive:()->Unit):ObservedAppScreen{
+        val state=synchronized(lock){
+            val current=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
+            Triple(current,epoch,++sequence)
+        }
+        val observedAt=System.currentTimeMillis()
+        val result=state.first.readScreen(expectedPackage,checkActive)
+        synchronized(lock){check(service===state.first&&epoch==state.second&&sequence==state.third){"SCREEN_CHANGED_DURING_READ"}}
+        return ObservedAppScreen(result,state.second,state.third,observedAt)
+
     }
 }

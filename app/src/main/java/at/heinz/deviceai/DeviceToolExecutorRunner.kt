@@ -13,9 +13,13 @@ import java.util.concurrent.atomic.AtomicReference
  */
 class DeviceToolExecutorRunner internal constructor(
     private val start: (ToolCallRequest, (Result<String>) -> Unit) -> Unit,
-    private val callbackTimeoutMillis: Long
+    private val callbackTimeoutMillis: Long,
+    private val cancelRequest:(ToolCallRequest)->Unit
 ) : ToolRunner {
-    constructor(executor: DeviceToolExecutor) : this(executor::execute, 18_000)
+    internal constructor(start:(ToolCallRequest,(Result<String>)->Unit)->Unit, callbackTimeoutMillis:Long) :
+        this(start,callbackTimeoutMillis,{})
+
+    constructor(executor: DeviceToolExecutor) : this(executor::execute, 18_000, { executor.cancelNativeRequest(it.callId) })
 
     init {
         require(callbackTimeoutMillis in 1..18_000)
@@ -29,12 +33,14 @@ class DeviceToolExecutorRunner internal constructor(
         }
         try {
             if (!completed.await(callbackTimeoutMillis, TimeUnit.MILLISECONDS)) {
+                runCatching { cancelRequest(request) }
                 throw ToolBackendFailure(
                     ToolExecutionStatus.TIMED_OUT,
                     "Device tool callback did not complete within its deadline."
                 )
             }
         } catch (_: InterruptedException) {
+            runCatching { cancelRequest(request) }
             Thread.currentThread().interrupt()
             throw ToolBackendFailure(
                 ToolExecutionStatus.CANCELLED,

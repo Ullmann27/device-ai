@@ -39,4 +39,24 @@ class BoundedScreenReaderTest {
         }
         val s=BoundedScreenReader.read(broken);assertFalse(s.complete);assertEquals(1,releases)
     }
+    @Test fun separatorCharactersCountTowardsTheSameAtomicEvidenceBudget(){
+        val children=List(100){Node("x".repeat(40))};val root=Node(nodes=children)
+        val snapshot=BoundedScreenReader.read(root)
+        assertFalse(snapshot.complete)
+        assertTrue(snapshot.texts.joinToString(" ").length<=4_000)
+        assertTrue(children.all{it.released==1})
+    }
+    @Test fun stopAfterChildAcquisitionReleasesItAndAcquiresNoMore(){
+        val child=Node("private");var stop=false;var acquired=0;var rootReleased=0
+        val root=object:ScreenTreeNode{
+            override val text="root";override val description:String?=null
+            override val visible=true;override val sensitive=false;override val children=100
+            override fun child(index:Int):ScreenTreeNode{acquired++;stop=true;return child}
+            override fun release(){rootReleased++}
+        }
+        val failure=assertThrows(at.heinz.deviceai.ToolBackendFailure::class.java){
+            BoundedScreenReader.read(root,checkActive={if(stop)throw at.heinz.deviceai.ToolBackendFailure(at.heinz.deviceai.ToolExecutionStatus.CANCELLED,"owner stop")})}
+        assertEquals(at.heinz.deviceai.ToolExecutionStatus.CANCELLED,failure.status)
+        assertEquals(1,acquired);assertEquals(1,child.released);assertEquals(1,rootReleased)
+    }
 }
