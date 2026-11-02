@@ -93,7 +93,7 @@ test('Termux launcher rejects missing pinned manifest before running even server
   await mkdir(bin);
   await writeFile(join(bin,'uname'),'#!/bin/sh\necho aarch64\n',{mode:0o700});
   await writeFile(server,'#!/bin/sh\necho SERVER_WAS_EXECUTED\n',{mode:0o700});
-  const env={...process.env,PATH:bin+':'+process.env.PATH,HOME:f.dir,
+  const env={...process.env,BASH_ENV:'',ENV:'',PATH:bin+':'+process.env.PATH,HOME:f.dir,
     PREFIX:'/data/data/com.termux/files/usr',CONTINUUM_LLAMA_SERVER_BIN:server,
     CONTINUUM_GGUF_PATH:f.modelPath,CONTINUUM_GGUF_MANIFEST:''};
   await writeFile(f.modelPath,'GGUF-not-a-real-model',{mode:0o600});
