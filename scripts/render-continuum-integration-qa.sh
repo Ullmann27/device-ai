@@ -7,7 +7,13 @@ fail() { printf 'CONTINUUM_QA_BLOCKED: %s\n' "$*" >&2; exit 69; }
 cd "$(git rev-parse --show-toplevel)"
 sha="$(git rev-parse --verify HEAD)" || fail 'No source SHA'
 [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || fail 'Invalid source SHA'
-[[ "$(git branch --show-current)" == "integration/continuum-all-systems-apk-qa-20261102" ]] || fail 'Wrong source branch'
+branch_name="$(git symbolic-ref --quiet --short HEAD || true)"
+if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; then
+  # Render intentionally checks out a detached commit even when configured to
+  # follow a named branch. Only this dedicated Render QA service is allowed.
+  [[ -z "$branch_name" && "${RENDER_SERVICE_NAME:-}" == "continuum-unified-research-apk-20261102" ]] ||
+    fail 'Wrong source branch or untrusted detached checkout'
+fi
 git -c core.fileMode=false diff --quiet HEAD -- || fail 'Changed tracked source'
 [[ -z "$(git ls-files --others --exclude-standard -- app/src scripts backend/src backend/test)" ]] || fail 'Untracked executable source'
 for key in CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_P12_BASE64 CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD; do
