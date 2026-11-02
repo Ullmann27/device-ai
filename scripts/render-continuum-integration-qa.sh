@@ -98,6 +98,20 @@ mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 node --version
 
+# The historical v25 owner-release protocol test deliberately replays a
+# frozen real 1,095-file source manifest. Render uses a shallow checkout;
+# fetch ONLY the immutable historical commit into the local object database.
+# Never substitute current sources or waive the release protocol tests.
+historical_sha='5270202e0699764b0eac5d4dd3e6a587b982ae05'
+if ! git cat-file -e "${historical_sha}^{commit}" 2>/dev/null; then
+  git -c protocol.version=2 fetch --no-tags --depth=1 origin "$historical_sha" >/dev/null ||
+    fail 'Immutable historical v25 release commit cannot be fetched'
+fi
+git cat-file -e "${historical_sha}^{commit}" ||
+  fail 'Historical source object still unavailable after fetch'
+[[ "$(git rev-parse --verify HEAD)" == "$sha" ]] ||
+  fail 'Historical fetch changed integration HEAD'
+
 # The historical architecture-proof suite executes a Python stdlib XML
 # validator. Confirm the Render runtime can actually run it before Node QA.
 command -v python3 || fail 'Python3 missing for mandatory JUnit verification'
