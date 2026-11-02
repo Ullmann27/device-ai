@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Research-only APK: separate .qa package, no original owner signing.
+# Strict QA for the original code38 owner package; never signs or publishes it.
 set -Eeuo pipefail
 set +x
 umask 077
@@ -7,11 +7,24 @@ fail() { printf 'CONTINUUM_QA_BLOCKED: %s\n' "$*" >&2; exit 69; }
 cd "$(git rev-parse --show-toplevel)"
 sha="$(git rev-parse --verify HEAD)" || fail 'No source SHA'
 [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || fail 'Invalid source SHA'
+owner_qa="${CONTINUUM_OWNER_RELEASE_QA:-0}"
+if [[ "$owner_qa" == "1" ]]; then
+  [[ "${RENDER_SERVICE_NAME:-}" == "continuum-owner-v23-release-preflight" &&
+     "${CONTINUUM_RELEASE_APPROVED_SHA:-}" == "$sha" &&
+     "${CONTINUUM_RELEASE_HOST:-}" == "continuum-owner-v23-release-preflight.onrender.com" &&
+     "${CONTINUUM_RELEASE_VERSION_CODE:-}" == "38" ]] ||
+    fail 'Owner QA requires approved SHA, code38 and pinned publisher'
+elif [[ "$owner_qa" == "0" ]]; then
+  [[ "${RENDER_SERVICE_NAME:-}" == "continuum-unified-research-apk-20261102" ]] ||
+    fail 'Only isolated QA service may run ordinary QA'
+else
+  fail 'Invalid owner QA mode'
+fi
 branch_name="$(git symbolic-ref --quiet --short HEAD || true)"
 if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; then
   # Render intentionally checks out a detached commit even when configured to
   # follow a named branch. Only this dedicated Render QA service is allowed.
-  [[ -z "$branch_name" && "${RENDER_SERVICE_NAME:-}" == "continuum-unified-research-apk-20261102" ]] ||
+  [[ -z "$branch_name" ]] ||
     fail 'Wrong source branch or untrusted detached checkout'
   # Render detaches HEAD. The canonical Node-QA contract requires an attached
   # local branch; reattach THIS exact checked-out SHA without touching remote.
@@ -123,28 +136,34 @@ NODE
 cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 150 continuum-all-systems-logs/ANDROID-TESTS.txt; fail 'Android test/lint failure'; }
-gradle --no-daemon --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumInstallableResearchQa=true -PcontinuumStandaloneVersionCode=38 :app:assembleDebug > continuum-all-systems-logs/APK-ASSEMBLY.txt 2>&1 ||
-  { tail -n 150 continuum-all-systems-logs/APK-ASSEMBLY.txt; fail 'QA APK build failure'; }
-apk='app/build/outputs/apk/debug/app-debug.apk'
-[[ -s "$apk" && ! -L "$apk" ]] || fail 'APK missing'
-apksigner verify --verbose "$apk" > continuum-all-systems-logs/APK-SIGNATURE.txt || fail 'APK signing invalid'
-aapt2 dump badging "$apk" > continuum-all-systems-logs/APK-BADGING.txt || fail 'APK identity unreadable'
-grep -Fq "package: name='at.heinz.deviceai.continuumlocal.qa' versionCode='38'" continuum-all-systems-logs/APK-BADGING.txt ||
-  fail 'Wrong package or version'
-[[ "$(git rev-parse HEAD)" == "$sha" ]] || fail 'Source changed'
-git -c core.fileMode=false diff --quiet HEAD -- || fail 'Tracked source changed during build'
+# Release compiler identity must match the ORIGINAL owner package.
+# The debug .qa package above was used only for hermetic unit tests.
+gradle --no-daemon --max-workers=2 --console=plain \
+  -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
+  -PcontinuumStandaloneVersionCode=38 :app:assembleRelease :app:bundleRelease \
+  > continuum-all-systems-logs/ORIGINAL-PACKAGE-ASSEMBLY.txt 2>&1 ||
+  { tail -n 170 continuum-all-systems-logs/ORIGINAL-PACKAGE-ASSEMBLY.txt; fail 'Original-package unsigned release build failed'; }
+apk='app/build/outputs/apk/release/app-release-unsigned.apk'
+[[ -s "$apk" && ! -L "$apk" ]] || fail 'Original unsigned APK missing'
+aapt2 dump badging "$apk" > continuum-all-systems-logs/ORIGINAL-APK-BADGING.txt ||
+  fail 'Binary package identity unavailable'
+grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='38' versionName='0.3.37'" continuum-all-systems-logs/ORIGINAL-APK-BADGING.txt ||
+  fail 'Wrong original update package, version or name'
+if apksigner verify "$apk" >/dev/null 2>&1; then
+  fail 'QA artifact is unexpectedly signed'
+fi
+[[ "$(git rev-parse --verify HEAD)" == "$sha" ]] || fail 'Source SHA changed during build'
+git -c core.fileMode=false diff --quiet HEAD -- || fail 'Source changed during build'
 hash="$(sha256sum "$apk" | cut -d' ' -f1)"
-[[ "$hash" =~ ^[0-9a-f]{64}$ ]] || fail 'Invalid APK hash'
 bytes="$(stat -c '%s' "$apk")"
-[[ "$bytes" =~ ^[0-9]+$ && "$bytes" -gt 1000000 ]] || fail 'Invalid APK size'
+[[ "$hash" =~ ^[0-9a-f]{64}$ && "$bytes" =~ ^[0-9]+$ && "$bytes" -gt 1000000 ]] || fail 'Bad original APK size or hash'
 mkdir continuum-all-systems-site
-name="Continuum-Research-QA-$hash.apk"
-install -m 644 "$apk" "continuum-all-systems-site/$name"
-[[ "$(sha256sum "continuum-all-systems-site/$name" | cut -d' ' -f1)" == "$hash" ]] || fail 'Staging hash changed'
-CONTINUUM_SOURCE_SHA="$sha" CONTINUUM_APK_HASH="$hash" CONTINUUM_APK_FILE="$name" CONTINUUM_APK_SIZE="$bytes" CONTINUUM_JDK_VERSION="$jdk_version" CONTINUUM_JDK_ARCHIVE_SHA256="$jdk_sha256" node --input-type=module <<'NODE'
+CONTINUUM_SOURCE_SHA="$sha" CONTINUUM_APK_HASH="$hash" CONTINUUM_APK_SIZE="$bytes" CONTINUUM_JDK_VERSION="$jdk_version" CONTINUUM_JDK_ARCHIVE_SHA256="$jdk_sha256" node --input-type=module <<'NODE'
 import fs from 'node:fs';
-const d={schemaVersion:1,channel:'ISOLATED_RESEARCH_QA',status:'HOST_TESTS_PASS_DEVICE_NOT_RUN',packageName:'at.heinz.deviceai.continuumlocal.qa',versionCode:38,sourceCommit:process.env.CONTINUUM_SOURCE_SHA,jdkVersion:process.env.CONTINUUM_JDK_VERSION,jdkArchiveSha256:process.env.CONTINUUM_JDK_ARCHIVE_SHA256,sha256:process.env.CONTINUUM_APK_HASH,apkFile:process.env.CONTINUUM_APK_FILE,byteLength:Number(process.env.CONTINUUM_APK_SIZE),ownerSigned:false,canUpdateInstalledOwnerApp:false,deviceVerified:false};
+const d={schemaVersion:1,channel:'OWNER_UPDATE_PRE_SIGN_QA',status:'UNSIGNED_BUILD_VERIFIED_DEVICE_NOT_RUN',packageName:'at.heinz.deviceai.continuumlocal',versionCode:38,versionName:'0.3.37',sourceCommit:process.env.CONTINUUM_SOURCE_SHA,unsignedArtifactSha256:process.env.CONTINUUM_APK_HASH,unsignedArtifactBytes:Number(process.env.CONTINUUM_APK_SIZE),jdkVersion:process.env.CONTINUUM_JDK_VERSION,jdkArchiveSha256:process.env.CONTINUUM_JDK_ARCHIVE_SHA256,ownerSigned:false,apkPublished:false,deviceVerified:false};
 fs.writeFileSync('continuum-all-systems-site/build.json',JSON.stringify(d,null,2)+'\n');
-fs.writeFileSync('continuum-all-systems-site/index.html','<!doctype html><html lang="de"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Continuum QA</title><style>body{font:17px sans-serif;background:#101827;color:white;max-width:720px;margin:10vh auto;padding:24px}a{display:inline-block;padding:16px;border-radius:12px;background:#2479d5;color:#fff;text-decoration:none}</style><h1>Continuum – getrennte Forschungs-Test-APK</h1><p>Diese APK ersetzt die installierte Original-App nicht.</p><p>SHA: '+d.sourceCommit+'</p><p>APK SHA-256: '+d.sha256+'</p><p>Fold7 noch nicht abgenommen.</p><a href="/'+encodeURIComponent(d.apkFile)+'">APK herunterladen</a></html>');
+fs.writeFileSync('continuum-all-systems-site/index.html','<!doctype html><html lang="de"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Continuum Original-Update QA</title><style>body{font:17px sans-serif;background:#101827;color:white;max-width:720px;margin:10vh auto;padding:24px}</style><h1>Continuum Lokal – Original-Update QA</h1><p>App-Paket: at.heinz.deviceai.continuumlocal · Version 0.3.37 (38).</p><p>Quellstand: '+d.sourceCommit+'</p><p>Build geprüft, <strong>noch nicht signiert oder veröffentlicht.</strong></p><p>APK-Download erst nach Originalsignatur, Quell-SHA-Freigabe und HTTPS-Readback über den bisherigen Updatehost.</p></html>');
 NODE
-echo "CONTINUUM_QA_APK_BUILT source=$sha sha256=$hash package=at.heinz.deviceai.continuumlocal.qa"
+echo "CONTINUUM_OWNER_PRESIGN_QA_PASS SHA=$sha PACKAGE=at.heinz.deviceai.continuumlocal CODE=38 UNSIGNED_NOT_PUBLISHED"
