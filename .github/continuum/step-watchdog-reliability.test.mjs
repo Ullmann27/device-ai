@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {spawnSync} from 'node:child_process';
+import {spawn,spawnSync} from 'node:child_process';
+import {once} from 'node:events';
 import {fileURLToPath} from 'node:url';
 import {runProfile} from './repair-loop.mjs';
 
@@ -50,4 +51,23 @@ for(const [name,hook,confirmed] of [
   assert.equal(result.passed,confirmed);
   assert.equal(result.terminationConfirmed,confirmed);
   if(!confirmed)assert.equal(result.error,'TERMINATION_UNCONFIRMED');
+});
+
+
+test('a supervisor signal cannot become success when the command exits zero on SIGTERM',{skip:!linux},async t=>{
+  const f=fixture(t),marker=path.join(f.dir,'ready');
+  const code=`process.on('SIGTERM',()=>process.exit(0));require('node:fs').writeFileSync(${JSON.stringify(marker)},String(process.pid));setInterval(()=>{},1000);`;
+  const child=spawn(process.execPath,[WATCHDOG,f.backlog,'repair-watched',f.receipt,'5000',String(process.pid),'--',process.execPath,'-e',code],{env:f.env,stdio:'ignore'});
+  let commandPid;
+  t.after(()=>{try{child.kill('SIGKILL');}catch{};if(commandPid)try{process.kill(commandPid,'SIGKILL');}catch{}});
+  const exit=once(child,'exit'),deadline=Date.now()+5000;
+  while(!fs.existsSync(marker)&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,25));
+  assert.ok(fs.existsSync(marker),'command installed its signal handler');
+  commandPid=Number(fs.readFileSync(marker,'utf8'));
+  child.kill('SIGTERM');
+  const timer=setTimeout(()=>child.kill('SIGKILL'),5000);
+  let status;try{[status]=await exit;}finally{clearTimeout(timer);}
+  assert.equal(status,1);
+  const completion=JSON.parse(fs.readFileSync(f.receipt+'.completion.json','utf8'));
+  assert.equal(completion.code,0);assert.equal(completion.error,'ABORTED');
 });

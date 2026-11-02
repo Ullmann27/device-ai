@@ -120,11 +120,15 @@ test('denied proc access still stops its direct child and returns a bounded unco
 test('a reused root PID cannot hide an earlier detached descendant from cleanup',async t=>{
   if(process.platform!=='linux'){t.skip('Linux /proc identity check');return;}
   const read=fs.readFileSync;
-  let rootFile=null,rootStat=null;
+  let rootFile=null,rootStat=null,replacementSeen=false;
+  const kill=process.kill,signals=[];
+  process.kill=(pid,...args)=>{if(replacementSeen)signals.push(pid);return kill(pid,...args);};
+  t.after(()=>{process.kill=kill;});
   fs.readFileSync=(file,...args)=>{
     let value;
     try {value=read(file,...args);} catch(error) {
       if(String(file)!==rootFile||error.code!=='ENOENT')throw error;
+      replacementSeen=true;
       // Model PID reuse after the direct child exits: the replacement has a later start time.
       const end=rootStat.lastIndexOf(')')+2,parts=rootStat.slice(end).split(' ');
       parts[0]='S';parts[19]=String(Number(parts[19])+1000000);
@@ -142,6 +146,25 @@ test('a reused root PID cannot hide an earlier detached descendant from cleanup'
   const pid=Number(result.output.trim());
   t.after(()=>{try{process.kill(pid,'SIGKILL');}catch{}});
   assert.ok(rootFile,'root identity was observed before synthetic reuse');
+  assert.ok(replacementSeen,'replacement identity was actually injected');
+  const rootPid=Number(rootFile.split('/')[2]);
+  assert.ok(!signals.includes(rootPid)&&!signals.includes(-rootPid),'never signal the replacement PID or group');
   let state=null;try{state=read('/proc/'+pid+'/stat','utf8').split(') ')[1].split(' ')[0];}catch{}
   assert.ok(state===null||state==='Z','detached descendant must be stopped after root PID reuse');
+});
+
+for(const permanent of [false,true])test('incomplete proc scans are retried within the cleanup bound: '+(permanent?'persistent':'transient'),async t=>{
+  if(process.platform!=='linux'){t.skip('Linux /proc identity check');return;}
+  const list=fs.readdirSync;let scans=0;
+  fs.readdirSync=(file,...args)=>{
+    if(file==='/proc'&&(++scans<=2||permanent))throw Object.assign(Error('synthetic scan denial'),{code:'EACCES'});
+    return list(file,...args);
+  };
+  t.after(()=>{fs.readdirSync=list;});
+  const started=Date.now();
+  const result=await runOwnedCommand(process.execPath,['-e','process.exit(0)'],{timeout:5000});
+  assert.ok(scans>2,'retry the incomplete snapshot instead of immediately releasing the caller');
+  assert.equal(result.terminationConfirmed,!permanent);assert.equal(result.ok,!permanent);
+  assert.equal(result.code,0);assert.ok(Date.now()-started<3000,'bounded cleanup even without proc access');
+  if(permanent)assert.equal(result.error,'TERMINATION_UNCONFIRMED');
 });

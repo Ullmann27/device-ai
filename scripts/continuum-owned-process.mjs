@@ -113,12 +113,13 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
       let quiet=0;
       do {
         remember();kill('SIGKILL');
-        quiet=live()?0:quiet+1;
+        const alive=live();
+        quiet=trackingComplete&&!alive?quiet+1:0;
         if(quiet>=2)break;
         await new Promise(wake=>setTimeout(wake,25));
       } while(Date.now()<deadline);
       const alive=live();
-      terminationConfirmed=trackingComplete&&!alive;
+      terminationConfirmed=quiet>=2&&trackingComplete&&!alive;
       if(!closed) {
         // An inaccessible descendant can hold a pipe open. Return a bounded
         // unconfirmed result, instead of waiting forever for the close event.
@@ -153,7 +154,7 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
           return p.pid!==child.pid&&current?.start===p.start&&current.state!=='Z';
         });
         terminationConfirmed=trackingComplete;
-        if(remaining) {
+        if(remaining||!trackingComplete) {
           kill('SIGTERM');
           forceTimer=setTimeout(forceAndConfirm,250);
         }
