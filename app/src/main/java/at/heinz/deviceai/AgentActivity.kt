@@ -551,7 +551,8 @@ class AgentActivity : Activity() {
     override fun onPause() {
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
-        onDeviceSpeech?.cancel()
+        // Ending the full recognition scope also invalidates pending Android permission callbacks.
+        cancelSpeechInputScope()
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
@@ -2476,6 +2477,9 @@ class AgentActivity : Activity() {
 
     private fun sendCurrentInput() {
         if (busy) return
+        // Barge-in: the user takes precedence over any previous spoken answer.
+        voiceEngine?.stop()
+        stopVoiceAnimation()
         val request = input.text.toString().trim()
         if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
@@ -6491,10 +6495,14 @@ class AgentActivity : Activity() {
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
                     if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                        if (sessionId == localSessionId && !ephemeralScreenRun.get())
+                            localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
                         return@onSuccess
                     }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
+                        if (sessionId == localSessionId && !ephemeralScreenRun.get())
+                            localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess
                     }
