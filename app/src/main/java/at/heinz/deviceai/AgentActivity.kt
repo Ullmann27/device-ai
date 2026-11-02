@@ -8400,7 +8400,7 @@ class AgentActivity : Activity() {
             pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null
             // A delayed system permission response must not start the microphone
             // in a different chat or a dismissed development dialog.
-            if(pending!=null && !isFinishing && !isDestroyed &&
+            if(pending!=null && !isFinishing && !isDestroyed && foregroundLearningActive &&
                 sessionId==originalSession && speechScopeGeneration==originalGeneration &&
                 (pending!=DEV_SPEECH_REQUEST || devDialog===originalDialog && originalDialog?.isShowing==true) &&
                 grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
