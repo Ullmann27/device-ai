@@ -53,6 +53,27 @@ class ToolExecutionStartLatchTest {
         }
     }
 
+    /** GitHub Gitar review: FutureTask wraps worker CancellationException in ExecutionException. */
+    @Test fun workerThrownCancellationCannotBecomeFailedReceipt() {
+        val backendCalls = AtomicInteger(0)
+        val clockReads = AtomicInteger(0)
+        val gate = ToolGate(
+            ToolPolicy(readOnlyEnabled = true, timeoutMillis = 2_000),
+            ToolRunner { backendCalls.incrementAndGet(); "unexpected" },
+            clock = {
+                if (Thread.currentThread().name == "device-ai-tool" &&
+                    clockReads.incrementAndGet() == 2
+                ) throw java.util.concurrent.CancellationException("Worker revoked before dispatch")
+                System.nanoTime()
+            }
+        )
+        val result = gate.execute(ToolProposal("get_storage_info", emptyMap())
+            .invocation("worker-cancel-exception"))
+        assertEquals(ToolExecutionStatus.CANCELLED, result.record.status)
+        assertTrue(result.record.decisionReason.contains("before backend dispatch"))
+        assertEquals(0, backendCalls.get())
+    }
+
     /** Reproduces the independent PR358 clock-stall counterexample, now fail-closed. */
     @Test fun timeoutCannotStartBackendAfterTheCallerAlreadyReturned() {
         delayedEligibilityRace(cancel=false)
