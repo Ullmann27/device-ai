@@ -180,6 +180,34 @@ Current published predecessor: `25f2d31c8de962fe5f77a65705e0f70613ce630e`.
 Signing, publication, installation and Fold7 remain NOT_RUN. Original signer,
 package, owner data, main and research/production weights remain unchanged.
 
+## Verified Android/APK closure source62b3
+
+Code SHA `62b3aa90f0b418db4522249d967bfa1bca5b4f3a`:
+
+- Real SDK36/JDK17/Kotlin2.4/Gradle8.11.1 full compilation, JUnit and lint:
+  **PASS, 1,690 total / 1,687 executed and passed / 0 failed / 3 skipped**.
+  The three skipped tests require explicit CRE1/SWB Node training-parity fixtures;
+  they are NOT_RUN, not counted as passes. All 11 mandatory suites executed.
+- Independent scoped review **APPROVE** for busy journal, completed replay and
+  queued unload; the reviewer used real journal I/O and declared native API
+  stand-ins, not a Fold7 or real-model certification.
+- Original APK and bundle assembly PASS. APK: package
+  `at.heinz.deviceai.continuumlocal`, version0.3.37/code38, 54,669,275 bytes,
+  SHA256 `abf0664e2bb79190e932c4f8e46adf8545fc50c006c9e37bdc34f5d4a9669845`.
+  `apksigner` confirms missing signature manifest; no original signer or download
+  publication. Raw binary remains a private local build artifact, not Git source.
+- Exact62b3 Node22 full run: 1,982 total / 1,969 executed / 1,968 passed /
+  1 failed / 13 skipped. Failure is the old unreadable-process cleanup fixture:
+  its 2s deadline races the 250ms+1.5s cleanup budget under build load, producing
+  TIMEOUT instead of the intended TERMINATION_UNCONFIRMED branch. The fixture now
+  allows 5s, keeps its child alive for 10s, and **adds** timedOut=false while
+  retaining false-success/false-confirmation assertions. Production process
+  deadlines are unchanged. Focused complete process suite: 15/15 PASS.
+
+Final full Node rerun after this fixture-only repair is pending at this checkpoint.
+No further product changes are planned. Final report must distinguish the tested
+source cutoff from later evidence-only commits and retain this original RED log.
+
 ## Release boundary
 
 Owner wants an original-signed in-place update without data loss. This instruction

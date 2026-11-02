@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "startedAtMillis": 1793649861431,
+  "finishedAtMillis": 1793650316561,
+  "xmlFiles": 312,
+  "mandatory": [
+    {
+      "name": "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest",
+      "tests": 3,
+      "executed": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolDurableOutcomeTest",
+      "tests": 8,
+      "executed": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolExecutionStartLatchTest",
+      "tests": 7,
+      "executed": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.JournalAvailabilityTest",
+      "tests": 2,
+      "executed": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalPromptFrameTest",
+      "tests": 8,
+      "executed": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest",
+      "tests": 1,
+      "executed": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest",
+      "tests": 3,
+      "executed": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest",
+      "tests": 3,
+      "executed": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest",
+      "tests": 2,
+      "executed": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest",
+      "tests": 2,
+      "executed": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "tests": 8,
+      "executed": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "counts": {
+    "total": 1690,
+    "executed": 1687,
+    "passed": 1687,
+    "failed": 0,
+    "skipped": 3
+  },
+  "failures": []
+}
