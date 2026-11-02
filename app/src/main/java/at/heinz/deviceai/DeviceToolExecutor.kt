@@ -3,10 +3,14 @@ package at.heinz.deviceai
 import android.content.Context
 import java.util.Locale
 
-class DeviceToolExecutor(
+class DeviceToolExecutor internal constructor(
     private val context: Context,
-    private val bridge: ShizukuBridge
+    private val bridgeReady: () -> Boolean,
+    private val runBridge: (String, (Result<String>) -> Unit) -> Unit,
+    private val appActions: DeviceAppActionPort?
 ) {
+    constructor(context: Context, bridge: ShizukuBridge) :
+        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))
     private val sharedRoots = listOf(
         "/sdcard/Download",
         "/sdcard/Documents",
@@ -18,6 +22,12 @@ class DeviceToolExecutor(
     fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
         ToolRegistry.validate(call)?.let {
             callback(Result.failure(IllegalArgumentException(it)))
+            return
+        }
+        if (call.name in setOf("launch_app", "read_app_screen")) {
+            val adapter=appActions
+            if(adapter==null)callback(Result.failure(IllegalStateException("NO_VERIFIED_DEVICE_ACTION_ADAPTER")))
+            else startNativeAction(call,adapter,callback)
             return
         }
         // App-volume statistics need neither Shizuku nor access to personal files.
@@ -33,7 +43,7 @@ class DeviceToolExecutor(
             callback(runCatching { DeviceNetworkProbe.read(context) })
             return
         }
-        if (!bridge.isReady()) {
+        if (!bridgeReady()) {
             callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
         }
@@ -44,8 +54,37 @@ class DeviceToolExecutor(
                 return
             }
 
-        bridge.executeChecked(command, callback)
+        runBridge(command, callback)
     }
+
+    private class PendingAction(val callId:String) {
+        val cancelled=java.util.concurrent.atomic.AtomicBoolean()
+        @Volatile var thread:Thread?=null
+    }
+    private val pendingAction=java.util.concurrent.atomic.AtomicReference<PendingAction?>(null)
+    private fun startNativeAction(call:ToolCallRequest,adapter:DeviceAppActionPort,callback:(Result<String>)->Unit){
+        val pending=PendingAction(call.callId)
+        if(!pendingAction.compareAndSet(null,pending)){
+            callback(Result.failure(ToolBackendFailure(ToolExecutionStatus.FAILED,"ANOTHER_DEVICE_ACTION_ACTIVE")));return
+        }
+        val thread=Thread({
+            var outcome:Result<String>?=null
+            try {
+                if(!pending.cancelled.get())adapter.execute(call,{pending.cancelled.get()}){result->if(outcome==null)outcome=result}
+            }catch(error:Exception){outcome=Result.failure(error)}
+            finally{pendingAction.compareAndSet(pending,null)}
+            callback(if(pending.cancelled.get())Result.failure(ToolBackendFailure(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED"))
+                else outcome?:Result.failure(IllegalStateException("DEVICE_ACTION_NO_COMPLETION")))
+        },"continuum-native-action").apply{isDaemon=true}
+        pending.thread=thread
+        try{thread.start()}catch(error:RuntimeException){pendingAction.compareAndSet(pending,null);callback(Result.failure(error))}
+    }
+    fun cancelNativeRequest(callId:String){
+        pendingAction.get()?.takeIf{it.callId==callId}?.let{
+            it.cancelled.set(true);appActions?.cancelPending();it.thread?.interrupt()
+        }
+    }
+    fun cancelPendingActions(){pendingAction.get()?.let{cancelNativeRequest(it.callId)}}
 
     private fun buildCommand(call: ToolCallRequest): String =
         when (call.name) {
@@ -87,13 +126,6 @@ class DeviceToolExecutor(
                     val pkg = resolvePackage(target) ?: safePackage(target)
                     "logcat -d -t 1600 2>/dev/null | grep -i -E 'AndroidRuntime|FATAL EXCEPTION|${escapeGrep(pkg)}' | tail -$lines"
                 }
-            }
-
-            "launch_app" -> {
-                val name = requiredString(call, "packageOrName")
-                val pkg = resolvePackage(name) ?: error("App nicht gefunden: $name")
-                val safe = safePackage(pkg)
-                "monkey -p $safe -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 && echo 'Gestartet: $safe'"
             }
 
             "stop_app" -> {

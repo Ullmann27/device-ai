@@ -9,7 +9,7 @@ import java.net.URI
  * Expiration and exact source revision are checked before model inclusion.
  */
 internal object JarvisUnifiedEvidenceContract {
-    enum class Origin { OWNER_LOCAL_VIEW, REVIEWED_ARCHIVE, PUBLIC_WEB }
+    enum class Origin { OWNER_LOCAL_VIEW, REVIEWED_ARCHIVE, PUBLIC_WEB, EXTERNAL_APP_SCREEN }
     enum class Privacy { PUBLIC, DEVICE_LOCAL_ONLY }
     data class Evidence(val origin: Origin, val privacy: Privacy,
         val sourceId: String, val revision: Int, val observedAtMillis: Long,
@@ -25,6 +25,11 @@ internal object JarvisUnifiedEvidenceContract {
                     uri.scheme == "https" && uri.host != null && uri.userInfo == null &&
                         uri.port in setOf(-1,443)
                 }.getOrDefault(false))
+            }
+            if (origin == Origin.EXTERNAL_APP_SCREEN) {
+                require(privacy == Privacy.DEVICE_LOCAL_ONLY &&
+                    sourceId.matches(Regex("app-screen:[A-Za-z0-9_.]+:[0-9]+")) &&
+                    expiresAtMillis-observedAtMillis in 1..30_000)
             }
             if (privacy == Privacy.DEVICE_LOCAL_ONLY)
                 require(origin != Origin.PUBLIC_WEB)

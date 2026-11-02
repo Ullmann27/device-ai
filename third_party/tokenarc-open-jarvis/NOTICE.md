@@ -1,0 +1,5 @@
+# TokenArc Open Jarvis adaptation
+
+Upstream https://github.com/tokenarc/open-jarvis at04873998933830ce582018fe4664ebce5ec64d2f, MIT Copyright(c)2024TokenArc, original license preserved verbatim.
+
+Adapted algorithm/source shapes from app/src/main/java/com/openjarvis/accessibility/ScreenReader.kt and JarvisAccessibilityService.kt: breadth-first reading, Android root/window observation and native launchIntent. Local changed implementations: cognitive/BoundedScreenReader.kt, ContinuumScreenObservationService.kt, AndroidDeviceAppActions.kt. Added node/depth/character limits, exactly-once node release, no live node returned, password/editable-subtree exclusion, per-request package/permission checks, observed postconditions, cancellation and singleflight. No upstream whole app, SocketServer, overlay, AIapp delegation, model/API/network, Room database or extra dependency imported. Original unbounded traversal/recycle/dispatch-success behavior deliberately not preserved. Tests are Continuum-owned, with explicit host doubles.

@@ -34,7 +34,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import java.util.Locale
 import android.text.InputType
@@ -124,6 +123,7 @@ class AgentActivity : Activity() {
     companion object {
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
+        private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
@@ -232,6 +232,10 @@ class AgentActivity : Activity() {
         }
     }
     private var voiceEngine: TextToSpeech? = null
+    private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
+    private var pendingLocalSpeechRequest: Int? = null
+    private var activeLocalSpeechRequest: Int? = null
+    private var speechScopeGeneration = 0L
     private var voiceReady = false
     private var voiceEnabled = false
     private var voiceButton: Button? = null
@@ -411,7 +415,11 @@ class AgentActivity : Activity() {
             if (status == TextToSpeech.SUCCESS) {
                 installVoiceProgressListener()
                 val language = voiceEngine?.setLanguage(Locale.GERMAN)
-                voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE
+                val offlineVoice=voiceEngine?.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language=="de" }
+                    ?.maxByOrNull { it.quality }
+                if(offlineVoice!=null)voiceEngine?.setVoice(offlineVoice)
+                voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE &&
+                    at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
             }
         }
@@ -535,6 +543,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        onDeviceSpeech?.cancel()
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
@@ -565,6 +574,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        cancelSpeechInputScope();onDeviceSpeech=null
+        if (::executor.isInitialized) executor.cancelPendingActions()
         modelImportObservation?.close()
         modelImportObservation = null
         sessionResetLifetime.set(false)
@@ -5234,7 +5245,8 @@ class AgentActivity : Activity() {
     }
 
     private fun speakBootstrap(message: String) {
-        if (!voiceEnabled || !voiceReady || !foregroundLearningActive) return
+        if (!voiceEnabled || !voiceReady || !foregroundLearningActive ||
+            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)) return
         stopVoiceAnimation()
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
@@ -5957,9 +5969,13 @@ class AgentActivity : Activity() {
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
 
-    private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null) = ToolGate(
+    private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,
+                               ephemeralScreenContext:()->Boolean = {false}) = ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
+            check(!ephemeralScreenContext() || at.heinz.deviceai.cognitive.ScreenObservationPrompt.allowsTool(request.name)) {
+                "SCREEN_DATA_CANNOT_AUTHORIZE_NETWORK_OR_SENSITIVE_ACTIONS"
+            }
             at.heinz.deviceai.cognitive.NetworkTurnConstraint.withOriginalTurn(ownerTurn.orEmpty(), request.name) {
                 if(request.name in setOf("web_search","web_read")) {
                     // A fresh session minted after revocation cannot rescue an old turn.
@@ -6076,6 +6092,7 @@ class AgentActivity : Activity() {
             val summary = when {
                 key.contains(Regex("password|token|secret|credential|authorization", RegexOption.IGNORE_CASE)) ->
                     "[REDACTED]"
+                key=="packageOrName"&&ToolRegistry.isExplicitAppTarget(value) -> value.toString()
                 value is String -> "[Text, ${value.length.coerceAtMost(4_096)} Zeichen]"
                 value is List<*> -> "[Liste, ${value.size.coerceAtMost(100)} Elemente]"
                 value is Number || value is Boolean -> value.toString().take(32)
@@ -6192,12 +6209,27 @@ class AgentActivity : Activity() {
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
         val agentTask = resolvedQuestion.take(7_900)
+        val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
+        val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
         val orchestrator = BoundedAgentOrchestrator(
-            model = AgentModel { task, memories, reflection, observations ->
+            model = AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
+                check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
+                val hasScreen=rawObservations.any { it.toolName=="read_app_screen" }
+                if(hasScreen)ephemeralScreenRun.set(true)
+                val screenFrames=mutableListOf<String>()
+                val observations=rawObservations.map { observation ->
+                    if(observation.toolName!="read_app_screen")observation else {
+                        val grant=ScreenObservationBus.grantEpoch()
+                        val frame=at.heinz.deviceai.cognitive.ScreenObservationPrompt.frame(observation.output,
+                            System.currentTimeMillis(),grant)
+                        frame?.let {screenFrames.add(it);screenGrant.compareAndSet(null,grant)}
+                        observation.copy(output=frame?:"App-Beobachtung nicht mehr gültig oder freigegeben; keine Bildschirmdaten übergeben.")
+                    }
+                }
                 val state = continuumState
                 val compiledContext = state?.let { runtimeState ->
                     runCatching {
@@ -6273,7 +6305,7 @@ class AgentActivity : Activity() {
                         append("\n\nTool observations:\n")
                         observations.take(4).forEach {
                             append("- ").append(it.toolName).append(" [").append(it.status.name).append("]: ")
-                                .append(it.output.orEmpty().take(2_000)).append('\n')
+                                .append(if(it.toolName=="read_app_screen")it.output.orEmpty() else it.output.orEmpty().take(2_000)).append('\n')
                         }
                     }
                     // Current task/evidence precede optional history under the prompt cap.
@@ -6295,6 +6327,8 @@ class AgentActivity : Activity() {
                 val prompt = ChatReasoningRouter.composePrompt(
                     promptBody, advisory, promptTail + briefInstruction, promptCap
                 )
+                // A screen frame is atomic. Never send a clipped negation/source block.
+                screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 val toolResponses = newObservations.take(4).map {
@@ -6306,16 +6340,19 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
+                check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                        if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
+                        if (hasScreen || toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
                         else localRuntime.respondToTools(toolResponses, callback)
                     }
                 }
                 generation.failure?.let { error(it) }
+                check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var rejectionRecoveries = 0
                 while (generation.rejectedToolResponses.isNotEmpty()) {
+                    check(!hasScreen) {"SCREEN_TOOL_REJECTION_REQUIRES_NEW_TURN"}
                     if (++rejectionRecoveries > 1) {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
@@ -6334,7 +6371,8 @@ class AgentActivity : Activity() {
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { memoryStore.all() + ownerFactMemories() },
-            toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart),
+            toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,
+                ephemeralScreenContext = ephemeralScreenRun::get),
             evaluator = AgentEvaluator { response, _ ->
                 LocalDialogueQualityGate.evaluate(
                     request = text,
@@ -6407,6 +6445,10 @@ class AgentActivity : Activity() {
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess
                     }
+                    if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                        addToolActivity("Bildschirmfreigabe geändert: Antwort verworfen.")
+                        setBusy(false);return@onSuccess
+                    }
                     val successful=run.blocker==null && run.response.isNotBlank()
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     onLearningIo({
@@ -6418,11 +6460,12 @@ class AgentActivity : Activity() {
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
                         else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = successful)
+                    addAssistantMessage(visibleAnswer, preserveLocalContext = successful && !ephemeralScreenRun.get())
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
-                    if (successful && sessionId == localSessionId) {
+                    if (ephemeralScreenRun.get()) lastLocalReply=null
+                    if (successful && !ephemeralScreenRun.get() && sessionId == localSessionId) {
                         lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
                         localConversationContext.record(localSessionId, text, run.response)
                     }
@@ -6679,6 +6722,8 @@ class AgentActivity : Activity() {
         devDialog = AlertDialog.Builder(this)
             .setView(scroll)
             .setOnDismissListener {
+                if(activeLocalSpeechRequest==DEV_SPEECH_REQUEST||pendingLocalSpeechRequest==DEV_SPEECH_REQUEST)
+                    cancelSpeechInputScope()
                 devController.setGoal(devGoalInput?.text?.toString().orEmpty())
                 devDialog = null
             }
@@ -6960,6 +7005,8 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        cancelSpeechInputScope()
+        if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
         // cancellation state before they may create or update a draft.
         activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
@@ -8081,6 +8128,7 @@ class AgentActivity : Activity() {
     }
 
     private fun newSession() {
+        cancelSpeechInputScope()
         if (busy) {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
@@ -8276,58 +8324,64 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun cancelSpeechInputScope(){
+        speechScopeGeneration++;pendingLocalSpeechRequest=null;activeLocalSpeechRequest=null
+        voiceListening=false
+        onDeviceSpeech?.cancel()
+    }
+
     private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
-            putExtra(RecognizerIntent.EXTRA_PROMPT,
-                if (requestCode == DEV_SPEECH_REQUEST) "Welche App oder welchen Code soll Continuum entwickeln?"
-                else "Was soll Device AI tun?")
-            putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+        if (busy) {
+            if(activeLocalRequest)cancelLocalRequest()
+            else { Toast.makeText(this,"Bitte die laufende Aufgabe zuerst über Stopp beenden.",Toast.LENGTH_LONG).show();return }
         }
-        try {
-            voiceListening = true
-            refreshHologramState()
-            startActivityForResult(intent, requestCode)
-        } catch (_: Exception) {
-            voiceListening = false
-            refreshHologramState()
-            Toast.makeText(this, "Keine Spracheingabe verfügbar.", Toast.LENGTH_LONG).show()
+        voiceEngine?.stop()
+        val scopeGeneration=++speechScopeGeneration
+        val scopeSession=sessionId
+        val scopeDialog=devDialog
+        activeLocalSpeechRequest=requestCode
+        val speech=onDeviceSpeech?:AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech=it }
+        val route=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.route(internetConsent.mode,
+            offlineVeto=true,onDeviceAvailable=speech.available(),microphoneGranted=speech.microphoneGranted())
+        when(route){
+            at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.REQUEST_MICROPHONE -> {
+                pendingLocalSpeechRequest=requestCode
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO),LOCAL_SPEECH_PERMISSION_REQUEST)
+            }
+            at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.ON_DEVICE -> runCatching { speech.start(
+                onState={if(speechScopeGeneration==scopeGeneration){voiceListening=it;refreshHologramState()}},
+                onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
+                    (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog))applyLocalSpeechText(requestCode,spoken)},
+                onError={message->Toast.makeText(this,message,Toast.LENGTH_LONG).show()}) }.onFailure {
+                    speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+                }
+            else -> Toast.makeText(this,"Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun applyLocalSpeechText(requestCode:Int,spoken:String){
+        if(isFinishing||isDestroyed)return
+        if(requestCode==DEV_SPEECH_REQUEST){
+            if(devDialog?.isShowing==true){
+                val safe=spoken.take(400);devGoalInput?.setText(safe);devController.setGoal(safe);refreshDevelopmentUi()
+            }
+        }else {input.setText(spoken);input.setSelection(spoken.length)}
+        // Recognition only fills the composer. Sending/actions remain an explicit owner gesture.
+    }
+
+    override fun onRequestPermissionsResult(requestCode:Int,permissions:Array<out String>,grantResults:IntArray){
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        if(requestCode==LOCAL_SPEECH_PERMISSION_REQUEST){
+            val pending=pendingLocalSpeechRequest;pendingLocalSpeechRequest=null
+            if(pending!=null&&!isFinishing&&!isDestroyed&&grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
+                startVoiceInput(pending)
         }
     }
 
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==SPEECH_REQUEST || requestCode==DEV_SPEECH_REQUEST) {
-            voiceListening=false
-            refreshHologramState()
-        }
         when (requestCode) {
-            SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
-                val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                val spoken = matches?.firstOrNull()
-                if (!spoken.isNullOrBlank()) {
-                    input.setText(spoken)
-                    input.setSelection(spoken.length)
-                    // Only in the explicitly activated learning conversation: a
-                    // recognized phrase goes to the supervised coach, never ToolGate.
-                    if (neuralCoach.isActive() && !busy) sendCurrentInput()
-                }
-            }
-            DEV_SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
-                val spoken = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                    ?.firstOrNull()?.trim()
-                if (!spoken.isNullOrBlank() && devDialog?.isShowing == true) {
-                    // Recognition output is untrusted text, never an executable command.
-                    val safe = spoken.map { if (Character.isISOControl(it)) ' ' else it }
-                        .joinToString("").replace(Regex("\\s+"), " ").trim().take(400)
-                    devGoalInput?.setText(safe)
-                    devGoalInput?.setSelection(safe.length)
-                    devController.setGoal(safe)
-                    refreshDevelopmentUi()
-                }
-            }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
                 pendingContinuumPackageModel=null
                 val modelUri=data?.data

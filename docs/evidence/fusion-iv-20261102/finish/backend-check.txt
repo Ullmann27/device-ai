@@ -1,0 +1,4 @@
+
+> device-ai-backend@0.3.0 check
+> node --check src/server.js && node --check src/continuum-state.js && node --check src/continuum-daemon.js && node --check src/continuum-worker.js && node --check src/public-research.js && node --check src/prompt-library.js && node --check src/brain-factory.js && node --check src/hypothesis-tournament.js && node --check src/continuum-research-once.js && node --check src/continuum-knowledge.js && node --check src/groq-mentor.js
+
