@@ -11,6 +11,10 @@ build=out/'classes';build.mkdir();logs=out/'logs';logs.mkdir()
 manifest=json.loads((freeze/'FREEZE.json').read_text())
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 for n,s in manifest['splits'].items(): assert sha(freeze/(n+'.json'))==s['sha256']
+train_manifest=json.loads((training/'FREEZE.json').read_text())
+for n in ['train','validation']:assert sha(training/(n+'.json'))==train_manifest['splits'][n]['sha256']
+assert sha(root/'docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json')=='629c8319ede2aba3cd60f0448b6469034c8550530e0326739b79c26bfc40939d'
+assert sha(root/'app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt')=='7b29fbef554c3771c1d8ed735aa683429952f4dddabc2662fbca13d0e5d87a4a'
 pins=json.loads((root/'docs/evidence/synapse-ii-20261102/m2/source-pins.json').read_text()) if (root/'docs/evidence/synapse-ii-20261102/m2/source-pins.json').exists() else {}
 assert sha(root/'tools/continuum-span-research/Cdx2PointerCandidate.kt')=='9c7d33b64d7fb1b13e3ceb22f2b538f3e4e62608d477f7e9868ce1f3b79c5f2e'
 java=os.environ.get('SHADOW_JAVA','/workspace/post-fable-toolchain/jdk21/bin/java')
@@ -51,16 +55,17 @@ for name in ['seed17','seed29','ablation17','ablation29']:
  improved=sum(not a['RAW']['exact'] and b['RAW']['exact'] for a,b in zip(base['records'],s['records']))
  regressed=sum(a['RAW']['exact'] and not b['RAW']['exact'] for a,b in zip(base['records'],s['records']))
  gates[name]={'status':'SHADOW_PASS_NOT_PROMOTED' if passed else 'REJECTED','pairedRawImprovements':improved,'pairedRawRegressions':regressed}
-if adapter:
- # Consumed oldC regression is a hard safety gate, distinct from fresh E scoring.
- old=root/'docs/evidence/issue340-20261101/m2/blind-c'
- run([java,'-cp',cp,'at.heinz.deviceai.learning.span.Cdx2FrozenBackboneAdapter','run',training/'train.json',training/'validation.json',old/'inputs.json',root/'docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json',out/'regression-c'],'old-c-replay')
- for seed in [17,29]:
-  run(['node',root/'scripts/cdx2-blind-score.mjs',old/'corpus.json',out/f'regression-c/predictions-{seed}.json',out/f'regression-c-score-{seed}.json','3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c'],f'old-c-score-{seed}')
-  s=json.loads((out/f'regression-c-score-{seed}.json').read_text())
-  passed=all(v['exactSupported']==v['supported'] and v['correctAbstentions']==v['missing'] and v['falseSourceAssignments']==0 and v['malformed']==0 for b in s['splits'].values() for v in b.values())
-  gates[f'seed{seed}']['oldCRegressionGate']='PASS' if passed else 'FAIL'
-  if not passed:gates[f'seed{seed}']['status']='REJECTED'
+# Consumed oldC regression is a mandatory safety gate for BOTH candidate variants.
+old=root/'docs/evidence/issue340-20261101/m2/blind-c'
+regression=[java,'-cp',cp,'at.heinz.deviceai.learning.span.'+('Cdx2FrozenBackboneAdapter' if adapter else 'Cdx2CounterfactualShadow'),'run',training/'train.json',training/'validation.json',old/'inputs.json']
+if adapter:regression.append(root/'docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json')
+run([*regression,out/'regression-c'],'old-c-replay')
+for seed in [17,29]:
+ run(['node',root/'scripts/cdx2-blind-score.mjs',old/'corpus.json',out/f'regression-c/predictions-{seed}.json',out/f'regression-c-score-{seed}.json','3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c'],f'old-c-score-{seed}')
+ s=json.loads((out/f'regression-c-score-{seed}.json').read_text())
+ passed=all(v['exactSupported']==v['supported'] and v['correctAbstentions']==v['missing'] and v['falseSourceAssignments']==0 and v['malformed']==0 for b in s['splits'].values() for v in b.values())
+ gates[f'seed{seed}']['oldCRegressionGate']='PASS' if passed else 'FAIL'
+ if not passed:gates[f'seed{seed}']['status']='REJECTED'
 report=dict(schema='SYNAPSE_III_SHADOW_REPLAY_V1',sourceCommit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),sourceHashes={str(p.relative_to(root)):sha(p) for p in src},holdoutSha256=manifest['splits']['holdout-d']['sha256'],promotion='FORBIDDEN_RESEARCH_ONLY',selection='fixed60epochs/0.05/seeds17,29; adapter freezes11baseweights' if adapter else 'fixed60epochs/0.05/seeds17,29; no test-based tuning',gates=gates,device='NOT_RUN',latencyComparison='NOT_COMPARABLE: cold per-case baseline vs warm batch candidate; no speedup claim')
 (out/'replay-report.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({n:json.loads((out/(n+'-score.json')).read_text())['splits'] for n in ['baseline','seed17','seed29']},indent=2))

@@ -1,0 +1,111 @@
+{
+  "schema": "CONTINUUM_BRAIN_WIRING_AUDIT_V1",
+  "scope": "STATIC_SOURCE_ONLY_NOT_DEVICE_PROOF",
+  "edges": [
+    {
+      "key": "owner-session-source",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "session-verified-reflex",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "explicit-verified-reflex",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "terminal-fail-closed",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "raw-session-evidence",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "3f507926eca8312c4969a88a3545fe00fd534b9db7b8df3c0769770df278f375"
+    },
+    {
+      "key": "research-is-not-owner",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "3f507926eca8312c4969a88a3545fe00fd534b9db7b8df3c0769770df278f375"
+    },
+    {
+      "key": "source-sha-binding",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "046cc7f0999b1b0bb952496c69c9725930e921bb6c08b7feb757ee31044d8da2"
+    },
+    {
+      "key": "independent-span-verifier",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "046cc7f0999b1b0bb952496c69c9725930e921bb6c08b7feb757ee31044d8da2"
+    },
+    {
+      "key": "verified-role-adapter",
+      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "046cc7f0999b1b0bb952496c69c9725930e921bb6c08b7feb757ee31044d8da2"
+    },
+    {
+      "key": "memory-evidence-entry",
+      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "3c05f03e1e62fac41f240636ff7de0fabebeff1de23e0ad4cb799d2d453b0953"
+    },
+    {
+      "key": "cognitive-conversation-gateway",
+      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "9d91aba05bb774d6bb076abe7a66e482228e9e378510c4bdd1bc9027157672f4"
+    },
+    {
+      "key": "memory-conversation-runtime",
+      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "1903291dc361e87d57dc81349065d8cdfac07050c9df1e53da4ea7b21cea67cc"
+    },
+    {
+      "key": "web-consent-ask",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "web-consent-always-on",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    },
+    {
+      "key": "runtime-model-route",
+      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "status": "STATIC_CALL_FOUND",
+      "sourceSha256": "33d55a374a3dfaa07543ba15bcebb6c9336841a61f62e1e642cc74c7cc806e6a"
+    }
+  ],
+  "research": [
+    {
+      "name": "CDX2 pointer research only",
+      "file": "tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "status": "RESEARCH_SOURCE_PRESENT_NOT_PROMOTED"
+    },
+    {
+      "name": "learned evidence ranker research",
+      "file": "app/src/main/java/at/heinz/deviceai/learning/span/VerifiedLocationSpanResearch.kt",
+      "status": "RESEARCH_SOURCE_PRESENT_NOT_PROMOTED"
+    }
+  ],
+  "allRequiredSourceEdgesFound": true,
+  "ownerApkPublished": false,
+  "shadowPromoted": false
+}
