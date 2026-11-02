@@ -42,6 +42,17 @@ class NativeAppLookupTest {
         assertEquals(0, NativeAppLookup.search("Niemals WhatsApp starten", apps).total)
     }
 
+    @Test fun politeNaturalGermanVariationsStayReadOnlySuggestions() {
+        for (phrase in listOf("Bitte öffne die App WhatsApp", "Starte WhatsApp App")) {
+            val matches = NativeAppLookup.search(phrase, apps)
+            assertTrue(matches.exactLabel)
+            assertEquals("com.whatsapp", matches.candidates.single().packageName)
+        }
+        val camera = NativeAppLookup.search("Suche mir die App Kamera", apps)
+        assertTrue(camera.exactLabel)
+        assertEquals("org.example.camera", camera.candidates.single().packageName)
+    }
+
     @Test fun duplicatePackagesAndInvalidMetadataAreExcluded() {
         val r = NativeAppLookup.search("kamera", apps)
         assertEquals(1, r.total)
