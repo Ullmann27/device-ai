@@ -98,17 +98,21 @@ mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 node --version
 
+gateFailures=0
 # The historical v25 owner-release protocol test deliberately replays a
 # frozen real 1,095-file source manifest. Render uses a shallow checkout;
 # fetch ONLY the immutable historical commit into the local object database.
 # Never substitute current sources or waive the release protocol tests.
 historical_sha='5270202e0699764b0eac5d4dd3e6a587b982ae05'
 if ! git cat-file -e "${historical_sha}^{commit}" 2>/dev/null; then
-  git -c protocol.version=2 fetch --no-tags --depth=1 origin "$historical_sha" >/dev/null ||
-    fail 'Immutable historical v25 release commit cannot be fetched'
+  if git remote get-url origin >/dev/null 2>&1; then
+    git -c protocol.version=2 fetch --no-tags --depth=1 origin "$historical_sha" >/dev/null 2>&1 || true
+  fi
 fi
-git cat-file -e "${historical_sha}^{commit}" ||
-  fail 'Historical source object still unavailable after fetch'
+if ! git cat-file -e "${historical_sha}^{commit}" 2>/dev/null; then
+  echo 'QA_HISTORICAL_COMMIT_UNAVAILABLE: original release protocol cannot be replayed on this Render checkout'
+  gateFailures=$((gateFailures+1))
+fi
 [[ "$(git rev-parse --verify HEAD)" == "$sha" ]] ||
   fail 'Historical fetch changed integration HEAD'
 
@@ -118,7 +122,7 @@ command -v python3 || fail 'Python3 missing for mandatory JUnit verification'
 python3 -c 'import sys, xml.etree.ElementTree as ET; print("PYTHON_QA_READY",sys.version.split()[0])' ||
   fail 'Python XML validator unavailable'
 node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
-  { tail -n 100 continuum-all-systems-logs/NODE-SPECIAL.txt; fail 'Node special contract failed'; }
+  { tail -n 50 continuum-all-systems-logs/NODE-SPECIAL.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED node-special'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
 node scripts/continuum-reliability-qa.mjs critical --out "$qa_proofs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
   { if [[ -f "$qa_proofs/critical/report.json" ]]; then
@@ -132,7 +136,7 @@ for(const check of report.checks||[])
 NODE
   fi
   tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt
-  fail 'Node critical failed'
+  gateFailures=$((gateFailures+1)); echo 'QA_RED node-critical'
 }
 cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
 node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
@@ -145,11 +149,11 @@ for(const c of r.checks||[])console.log('NODE_FULL_GATE '+JSON.stringify({
 NODE
   fi
   tail -n 100 continuum-all-systems-logs/NODE-FULL.txt
-  fail 'Full Node failed'
+  gateFailures=$((gateFailures+1)); echo 'QA_RED full-node'
 }
 cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
-  { tail -n 150 continuum-all-systems-logs/ANDROID-TESTS.txt; fail 'Android test/lint failure'; }
+  { tail -n 100 continuum-all-systems-logs/ANDROID-TESTS.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED android-gradle'; }
 # Release compiler identity must match the ORIGINAL owner package.
 # The debug .qa package above was used only for hermetic unit tests.
 gradle --no-daemon --max-workers=2 --console=plain \
@@ -158,7 +162,11 @@ gradle --no-daemon --max-workers=2 --console=plain \
   -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true \
   -PcontinuumStandaloneVersionCode=38 :app:assembleRelease :app:bundleRelease \
   > continuum-all-systems-logs/ORIGINAL-PACKAGE-ASSEMBLY.txt 2>&1 ||
-  { tail -n 170 continuum-all-systems-logs/ORIGINAL-PACKAGE-ASSEMBLY.txt; fail 'Original-package unsigned release build failed'; }
+  { tail -n 100 continuum-all-systems-logs/ORIGINAL-PACKAGE-ASSEMBLY.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED original-package-assembly'; }
+if (( gateFailures > 0 )); then
+  echo "QA_SUMMARY failed_gates=$gateFailures SHA=$sha Original signing and download remain BLOCKED"
+  fail 'At least one genuine QA gate is red; no owner APK is published'
+fi
 apk='app/build/outputs/apk/release/app-release-unsigned.apk'
 [[ -s "$apk" && ! -L "$apk" ]] || fail 'Original unsigned APK missing'
 aapt2 dump badging "$apk" > continuum-all-systems-logs/ORIGINAL-APK-BADGING.txt ||
