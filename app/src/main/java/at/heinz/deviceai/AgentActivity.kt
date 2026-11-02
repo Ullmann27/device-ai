@@ -549,6 +549,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        // A delayed read-only lookup must not render into a background/other app state.
+        appLookupGeneration++
         onDeviceSpeech?.cancel()
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
@@ -2482,6 +2484,7 @@ class AgentActivity : Activity() {
         // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
         // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
         at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
+            webToolGate.cancel()
             input.text.clear()
             addUserMessage(request)
             runExplicitAppLookup(lookup)
