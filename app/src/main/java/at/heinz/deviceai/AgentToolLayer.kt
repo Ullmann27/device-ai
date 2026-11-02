@@ -271,14 +271,23 @@ class ToolGate(
                 ) != null
             }.getOrDefault(false)
         }
+        val executionStartAllowed = AtomicBoolean(true)
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
         return try {
             val future = executor.submit(Callable {
-                // Observation hook runs only inside an actually started authorized worker.
-                // A broken HUD/observer cannot grant, deny or change the tool result.
+                fun checkStartEligibility() {
+                    if (!executionStartAllowed.get() || cancelled.get() || Thread.currentThread().isInterrupted)
+                        throw CancellationException("Backend start cancelled.")
+                    if (clock() - start >= policy.timeoutMillis * 1_000_000L)
+                        throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT, "Backend start deadline expired.")
+                }
+                checkStartEligibility()
+                // The observer may consume interruption. Recheck the independent
+                // per-execution lease before any backend operation can begin.
                 runCatching { onExecutionStarted?.invoke() }
+                checkStartEligibility()
                 runner.execute(request)
             })
             activeFutures += future
@@ -286,6 +295,7 @@ class ToolGate(
             val output = try {
                 future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
+                executionStartAllowed.set(false)
                 future.cancel(true)
                 val saved = persistTerminal(ToolReceiptState.TIMED_OUT, null)
                 return result(
@@ -341,6 +351,7 @@ class ToolGate(
             persistTerminal(ToolReceiptState.FAILED, null)
             result(ToolExecutionStatus.FAILED, "Tool execution failed.")
         } finally {
+            executionStartAllowed.set(false)
             activeFutures.removeIf { it.isDone }
             executor.shutdownNow()
         }

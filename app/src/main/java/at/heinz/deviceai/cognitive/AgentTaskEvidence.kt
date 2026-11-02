@@ -8,6 +8,7 @@ enum class CognitiveWorkState {
     VERIFYING, SPEAKING, BLOCKED, COMPLETED
 }
 
+/** Cross-thread notifications: consumers order by (taskId, attempt, sequence), not arrival. */
 data class AgentCognitiveEvent(
     val sequence: Int,
     val taskId: String,

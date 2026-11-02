@@ -271,10 +271,6 @@ class BoundedAgentOrchestrator(
         val cognitiveEvents = mutableListOf<AgentCognitiveEvent>()
         val plannedToolNames = (model as? ReadOnlyToolPlan)?.plannedToolNames.orEmpty()
         fun emit(state: CognitiveWorkState, callId: String? = null) {
-            val event = synchronized(cognitiveEvents) {
-                AgentCognitiveEvent(cognitiveEvents.size, callIdPrefix, currentRun, state,
-                    (clock() - startedAt).coerceAtLeast(0), callId).also { cognitiveEvents += it }
-            }
             val stage = when(state) {
                 CognitiveWorkState.UNDERSTANDING -> TraceStage.TASK_RECEIVED
                 CognitiveWorkState.PLANNING -> TraceStage.PLAN_CREATED
@@ -285,8 +281,18 @@ class BoundedAgentOrchestrator(
                 CognitiveWorkState.BLOCKED -> TraceStage.OUTCOME_UNCONFIRMED
                 else -> null
             }
-            stage?.let { turnTrace?.event(it) }
-            // Presentation failure must not affect authorization or learning evidence.
+            val terminal = setOf(CognitiveWorkState.COMPLETED, CognitiveWorkState.BLOCKED)
+            val event = synchronized(cognitiveEvents) {
+                // A delayed worker notification cannot supersede a terminal phase.
+                if (cognitiveEvents.lastOrNull()?.state in terminal && state !in terminal) return
+                AgentCognitiveEvent(cognitiveEvents.size, callIdPrefix, currentRun, state,
+                    (clock() - startedAt).coerceAtLeast(0), callId).also {
+                    cognitiveEvents += it
+                    stage?.let { value -> turnTrace?.event(value) }
+                }
+            }
+            // Callbacks may cross threads. Consumers use task/attempt/sequence,
+            // never callback arrival time, to discard stale presentation events.
             runCatching { eventObserver(event) }
         }
         fun proof(verified: Boolean = false, candidateId: String? = null) = AgentTaskEvidence(

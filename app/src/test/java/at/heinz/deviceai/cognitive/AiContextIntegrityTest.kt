@@ -84,4 +84,14 @@ class AiContextIntegrityTest {
         assertTrue(result.text.toByteArray(Charsets.UTF_8).size <= 1800)
         assertTrue(Charsets.UTF_8.newEncoder().canEncode(result.text))
     }
+    @Test fun secretRedactionCannotConsumeTheResearchClosingBoundary() {
+        val dossier=ContextIntegrityFixture.dossier("Maren: token=synthetic_secret")
+            .copy(synthesis=ResearchSynthesisOutput("credential=another_synthetic_secret"))
+        val result=compile(ContextIntegrityFixture.input("Wo ist Maren?",dossier=dossier))
+        assertEquals(1,result.includedResearchSourceUrls.size)
+        assertFalse(result.text.contains("synthetic_secret"))
+        assertEquals(2,Regex("<<<UNTRUSTED_EVIDENCE>>>").findAll(result.text).count())
+        assertEquals(2,Regex("<<<END_UNTRUSTED_EVIDENCE>>>").findAll(result.text).count())
+    }
+
 }

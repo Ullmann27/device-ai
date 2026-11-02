@@ -106,7 +106,7 @@ class UntrustedResearchEvidenceTest {
         // below and additionally require the entire sanitized hostile literal.
         assertFalse(compiled.text.contains("[TRUNCATED]"))
         assertTrue(compiled.text.contains("<<<UNTRUSTED_EVIDENCE>>>" +
-            sanitizeUntrustedResearchText(hostile, hostile.length * 20) + "<<<END_UNTRUSTED_EVIDENCE>>>"))
+            sanitizeUntrustedResearchText(hostile, hostile.length * 20) + "\n<<<END_UNTRUSTED_EVIDENCE>>>"))
         assertTrue(compiled.text.contains("[U+202E]"))
         assertTrue(compiled.text.contains("[U+200B]"))
         assertTrue(compiled.text.contains("[U+0000]"))

@@ -6292,6 +6292,14 @@ class AgentActivity : Activity() {
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
         val ownerForbidsExternalNetwork =
             at.heinz.deviceai.cognitive.NetworkTurnConstraint.forbidsExternalResearch(text)
+        if (!at.heinz.deviceai.cognitive.LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)) {
+            turnTrace.event(TraceStage.CLARIFICATION)
+            publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)
+            setBusy(false)
+            addAssistantMessage("Der Auftrag passt nicht vollständig in das lokale Aufgabenbudget. " +
+                "Bitte teile ihn in kürzere Schritte auf; ich führe keinen abgeschnittenen Auftrag aus.")
+            return
+        }
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
@@ -6318,7 +6326,7 @@ class AgentActivity : Activity() {
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
-        val agentTask = resolvedQuestion.take(7_900)
+        val agentTask = resolvedQuestion
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
         var submittedToolObservationCount = 0
