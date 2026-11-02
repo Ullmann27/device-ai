@@ -1,0 +1,10 @@
+✔ actual host classifier preserves membership under pipefail and an early grep match (32.608091ms)
+✔ host compile check never reports compiler crashes as a successful partial check (790.122414ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 880.57344

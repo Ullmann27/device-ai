@@ -73,8 +73,11 @@ test('owner facts win, and retrieval is clearly labelled a non-verified excerpt'
   const block=ui.slice(start,end);
   assert.match(block,/if\(!turn\.grounded && request\.length in 6\.\.240/);
   assert.match(block,/archiveAnswer=archiveHit/);
-  assert.match(block,/nicht unabhängig verifizierter/);
-  assert.match(block,/document\.url/);
+  assert.match(block,/ContinuumBrainBridge\.archiveAnswerForQuestion\(document,request\)/);
+  const brain=readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt',import.meta.url),'utf8');
+  assert.match(brain,/nicht unabhängig verifizierter Quellenauszug/);
+  assert.match(brain,/document\.url/);
+  assert.match(brain,/ContinuumEvidenceWindow\.select\(question,document\.text,document\.sha256\)/);
   assert.match(block,/turn\.grounded \|\| archiveAnswer!=null/);
   assert.doesNotMatch(block,/requestPermissions\(|ProcessBuilder\(/);
 });

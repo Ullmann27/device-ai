@@ -46,8 +46,11 @@ test('advanced routes remain available from the start screen, its rail and the M
 
 test('Nexus keeps real hologram and voice entry tied to Android speech and system state', () => {
   assert.match(home, /ContinuumHologramView\(this\)/);
-  assert.match(activity, /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
-  assert.match(activity, /voiceListening = true/);
+  assert.match(activity, /AndroidOnDeviceSpeechInput\(this\)/);
+  const recognizer=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt',import.meta.url),'utf8');
+  assert.match(recognizer, /SpeechRecognizer\.createOnDeviceSpeechRecognizer\(context\)/);
+  assert.match(recognizer, /RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
+  assert.match(activity, /onState=\{if\(speechScopeGeneration==scopeGeneration\)\{voiceListening=it;refreshHologramState\(\)/);
   assert.match(activity, /refreshHologramState\(\)/);
   assert.match(hologram, /setAudioLevel/);
 });

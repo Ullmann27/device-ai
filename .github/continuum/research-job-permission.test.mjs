@@ -19,7 +19,7 @@ test('persisted source research job is registered but never exported',()=>{
 });
 
 test('owner consent, cellular network and measured 20pct resource gates remain required',()=>{
-  assert.match(study,/if\(!enabled\)/);
+  assert.match(study,/if\(!enabled \|\| !internetAllowed\(\)\) \{ jobs\.cancel\(JOB_ID\); return false \}/);
   assert.match(study,/setRequiresCharging\(false\)/);
   assert.match(study,/setRequiresBatteryNotLow\(false\)/);
   assert.match(study,/setRequiresStorageNotLow\(true\)/);

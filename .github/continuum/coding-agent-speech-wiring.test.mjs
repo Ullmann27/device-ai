@@ -8,6 +8,7 @@ const read=path=>readFileSync(resolve(root,path),'utf8');
 const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const router=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt');
 const tests=read('app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt');
+const recognizer=read('app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt');
 const builder=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
 
 test('coding agent has one integrated entry from Android home, no second app',()=>{
@@ -21,18 +22,24 @@ test('coding agent has one integrated entry from Android home, no second app',()
 test('developer speech uses actual German Android recognizer and a unique callback',()=>{
   assert.match(activity,/private const val DEV_SPEECH_REQUEST = 2221/);
   assert.match(activity,/startVoiceInput\(DEV_SPEECH_REQUEST\)/);
-  assert.match(activity,/RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
-  assert.match(activity,/RecognizerIntent\.EXTRA_LANGUAGE, "de-AT"/);
-  assert.match(activity,/startActivityForResult\(intent, requestCode\)/);
-  assert.match(activity,/DEV_SPEECH_REQUEST -> if \(resultCode == RESULT_OK\)/);
-  assert.match(activity,/devDialog\?\.isShowing == true/);
+  assert.match(activity,/AndroidOnDeviceSpeechInput\(this\)/);
+  assert.match(recognizer,/SpeechRecognizer\.createOnDeviceSpeechRecognizer\(context\)/);
+  assert.match(recognizer,/RecognizerIntent\.ACTION_RECOGNIZE_SPEECH/);
+  assert.match(recognizer,/RecognizerIntent\.EXTRA_LANGUAGE,"de-AT"/);
+  assert.match(activity,/applyLocalSpeechText\(requestCode,spoken\)/);
+  assert.match(activity,/requestCode==DEV_SPEECH_REQUEST/);
+  assert.match(activity,/devDialog\?\.isShowing==true/);
   assert.match(activity,/devController\.setGoal\(safe\)/);
-  assert.match(activity,/safe\.length/);
+  assert.match(activity,/val safe=spoken\.take\(400\)/);
 });
 
 test('voice text is always previewed; neither recognition nor chat command executes code',()=>{
-  const speech = activity.slice(activity.indexOf('DEV_SPEECH_REQUEST -> if (resultCode'),activity.indexOf('CONTINUUM_PACKAGE_MODEL_REQUEST -> {',activity.indexOf('DEV_SPEECH_REQUEST -> if (resultCode')));
-  assert.ok(speech.length>0);
+  const start=activity.indexOf('private fun applyLocalSpeechText(');
+  const end=activity.indexOf('override fun onRequestPermissionsResult(',start);
+  assert.ok(start>=0 && end>start);
+  const speech=activity.slice(start,end);
+  assert.match(speech,/input\.setText\(spoken\)/);
+  assert.match(speech,/devController\.setGoal\(safe\)/);
   assert.doesNotMatch(speech,/startDevelopmentJob\(|dispatch\(|startService\(|openMobileBuilder\(|sendCurrentInput\(/);
   assert.match(activity,/if \(task == null\)/);
   assert.match(activity,/val coordinator = DevelopmentCoordinator\(LocalModelReasoningAdapter\(localRuntime\)/);

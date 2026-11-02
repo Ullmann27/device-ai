@@ -4,7 +4,9 @@
  * command through runOwnedCommand (own process group, tracked descendants), polls the watched backlog task and
  * stops the step as soon as that task is ABORTED, or when the waiting parent is gone.
  *
- * For the parent nothing else changes: stdout/stderr are inherited byte for byte, the exit code or the ending
+ * stdout/stderr are inherited byte for byte. A structured completion preserves the actual command outcome.
+ * Unconfirmed termination or interrupted supervision overrides a successful exit with failure (owner reliability contract, 2 Nov 2026).
+ * Otherwise the exit code or the ending
  * signal of the command is passed through, and the SIGTERM of a spawnSync timeout stops the whole step before the
  * command's own outcome is passed on, so it still reads as a timeout. A stop by abort is reported only through the
  * receipt file (created exclusively), never through output or an exit code a check could also produce.
@@ -58,12 +60,27 @@ const endBy=name=>{
   // A signal Node keeps ignored (SIGPIPE) cannot end the process; report it like a shell does.
   setTimeout(()=>process.exit(128+(os.constants.signals[name]??0)),2000);
 };
+// Record the owner stop independently: a completion write must not suppress this receipt.
 if(stopReason==='TASK_ABORTED'){
   try{
     fs.writeFileSync(receipt,JSON.stringify({schemaVersion:1,taskId,stoppedAt:new Date().toISOString(),
       terminationConfirmed:result.terminationConfirmed===true})+'\n',{flag:'wx',mode:0o600});
-  }finally{process.exit(1);}
-}else if(stopReason==='PARENT_GONE')process.exit(1);
+  }catch{ /* The completion still records the failed command; no success follows an abort. */ }
+}
+// A private per-step path from the trusted parent; never infer cleanup from exit 0 alone.
+const completion={schemaVersion:1,taskId,code:result.code??null,exitSignal:result.exitSignal??null,
+  error:result.error??null,terminationConfirmed:result.terminationConfirmed===true};
+try{
+  fs.writeFileSync(receipt+'.completion.json',JSON.stringify(completion)+'\n',{flag:'wx',mode:0o600});
+}catch(error){
+  // Diagnostic only, never an authoritative receipt. Preserve the actual outcome when
+  // storage is unavailable, but fail even if a stale successful file exists at this path.
+  const ioError=typeof error.code==='string'&&/^[A-Z0-9_]{1,40}$/.test(error.code)?error.code:'IO_ERROR';
+  fs.writeSync(2,'continuum-step-watchdog: COMPLETION_WRITE_FAILED '+JSON.stringify({...completion,ioError})+'\n');
+  process.exit(1);
+}
+if(stopReason==='TASK_ABORTED'||stopReason==='PARENT_GONE')process.exit(1);
+else if(result.code===0&&!result.ok)process.exit(1);
 else if(Number.isInteger(result.code))process.exit(result.code);
 else if(result.exitSignal)endBy(result.exitSignal);
 else if(stopReason)endBy(stopReason);

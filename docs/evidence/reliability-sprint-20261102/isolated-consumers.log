@@ -1,0 +1,15 @@
+✔ opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop (809.15584ms)
+✔ independent research veto blocks completion even after primary tests passed (636.55579ms)
+✔ a throwing optional verifier exhausts the fixed proposal budget without publishing a patch (627.228027ms)
+✔ actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch (440.825257ms)
+✔ scheduled owner task completes full real Git repair and independent verification (564.109683ms)
+✔ actual passing Git fixture generates no fake repair, patch, or changed source (158.716313ms)
+✔ actual offline Teamleader completes a priority investigation with real Git checks and evidence (286.593553ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2167.153432

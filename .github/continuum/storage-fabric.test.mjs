@@ -163,3 +163,31 @@ test('bounded encrypted cache evicts within quota and does not replace object/to
  await f.stop(0); await f.stop(1); await assert.rejects(f.fabric.get('first'), /NO_VALID_REPLICA/); assert.deepEqual((await f.fabric.get('second')).bytes, synthetic(80, 61));
  await assert.rejects(f.fabric.get('unknown'), /NOT_FOUND/);
 });
+
+test('a measured HTTP timeout withholds metadata and a queued healthy write still commits',async t=>{
+ const f=await fixture(t),node=f.adapters[1],originalUrl=node.baseUrl,originalTimeout=node.timeoutMs;
+ // Synthetic stalled replica endpoint: no successful acknowledgement is returned before the deadline.
+ const sockets=new Set();
+ const stalled=http.createServer((req,res)=>{req.resume();});
+ stalled.on('connection',socket=>{sockets.add(socket);socket.on('close',()=>sockets.delete(socket));});
+ await new Promise(resolve=>stalled.listen(0,'127.0.0.1',resolve));
+ t.after(async()=>{for(const socket of sockets)socket.destroy();await new Promise(resolve=>stalled.close(resolve));});
+ node.baseUrl=`http://127.0.0.1:${stalled.address().port}`;node.timeoutMs=50;
+ const put=node.put.bind(node);let actualFailure;
+ node.put=async(...args)=>{try{return await put(...args);}catch(error){actualFailure=error;throw error;}};
+ const revision=f.fabric.state.revision,started=Date.now();
+ const rejected=f.fabric.put('timed-out',synthetic(64));
+ // Queue behind the failed transaction; restore the real replica only once its outcome is known.
+ const observed=rejected.catch(error=>{node.baseUrl=originalUrl;node.timeoutMs=originalTimeout;throw error;});
+ const queued=f.fabric.put('queued',synthetic(64,91));
+ await assert.rejects(observed,/FULL_REPLICATION_REQUIRED_METADATA_NOT_COMMITTED/);
+ assert.equal(actualFailure?.name,'TimeoutError','preserve actual transport cause independently');
+ assert.ok(Date.now()-started>=40,'the configured deadline was actually exercised');
+ assert.equal(f.fabric.state.revision,revision,'failed replication has no catalog commit');
+ await assert.rejects(f.fabric.get('timed-out'),/NOT_FOUND/);
+ const entry=await queued;
+ assert.equal(entry.version,1);assert.equal(f.fabric.state.revision,revision+1);
+ await f.fabric.close();await f.open();
+ assert.deepEqual((await f.fabric.get('queued')).bytes,synthetic(64,91));
+ await assert.rejects(f.fabric.get('timed-out'),/NOT_FOUND/);
+});

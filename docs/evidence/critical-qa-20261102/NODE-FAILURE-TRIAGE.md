@@ -41,4 +41,17 @@ Existing Render deploy `dep-dbk4b1lh3lcs738rgga0` on **exact** `df3b6930` report
 `node --test .github/continuum/step-watchdog.test.mjs .github/continuum/storage-fabric.test.mjs`.
 `node --test scripts/continuum-architecture-proof.test.mjs .github/continuum/*test.mjs` (historical extended suite).
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:d45ca8062337e2bdb746a588e8a9c9f97fcbfdbc5e3b2d9149ed7978438d02ad -->
+
 Report each exit code, exact ref, fully executed counts and stderr. Only after investigating the two P0 failures should new Android actions be added; owner-approved Fold7 functional test remains separate.
+
+## Independent reliability sprint replay, PR353
+
+The historical sixteen remain intact above. On clean PR351, the prior independent replay was1277PASS/11FAIL/13SKIP. In this sprint the actual coding-loop suite passed15 cases; original #5 was a stale assertion repaired by PR351. Parent fixes #8/#9 passed. Historical #15/#16 passed isolated and in the final expanded run; their original environmental cause is not proven.
+
+Separately reproduced and repaired: swallowed unconfirmed cleanup, simulated root PID reuse hiding an orphan, signalled supervision forwarding child exit0, and premature abandonment of incomplete proc scans. The process/consumer gate passed35 cases; storage/coding/architecture passed32. Final expanded affected command (includes owned-process and owned-app consumers) ran1367 cases:1343PASS/11FAIL/13SKIP, exit1. All eleven failures are the remaining source assertions; none were weakened. Earlier extra load failures and diagnostic runs remain in docs/evidence/reliability-sprint-20261102. See docs/research/omega/CODERABBIT-RELIABILITY-SPRINT.md for exact commands, compatibility exception, review blocker and next Codex task.
+
+
+<!-- /coderabbit-ai-generated:v1 -->

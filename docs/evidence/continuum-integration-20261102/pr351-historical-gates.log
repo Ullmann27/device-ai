@@ -1,0 +1,39 @@
+✔ live inventory is explicitly NOT owner release approval (1.658078ms)
+✔ without owner consent the signed-release inventory gate fails closed (31.556664ms)
+✔ partial, wrong or stale source and manifest approval fails closed (162.21618ms)
+✖ synthetic exact approval exercises inventory verifier but authorizes NO release (85.307393ms)
+✔ live signing recipe is syntactically valid but does not self-authorize an APK (3.44183ms)
+✔ live signer refuses even a matching branch and dummy keystore without owner approvals (10.87273ms)
+✔ even with synthetic exact builder approval, missing owner source/manifest blocks signing (41.253243ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 397.612916
+
+✖ failing tests:
+
+test at scripts/continuum-0324-live-source-gate.test.mjs:61:1
+✖ synthetic exact approval exercises inventory verifier but authorizes NO release (85.307393ms)
+  AssertionError [ERR_ASSERTION]: OWNER_0324_LIVE_BLOCKED: Altered approved source .github/continuum/app-navigation-wiring.test.mjs
+  
+  
+  69 !== 0
+  
+      at TestContext.<anonymous> (file:///tmp/continuum-pr351-historical-gates/scripts/continuum-0324-live-source-gate.test.mjs:65:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 69,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
