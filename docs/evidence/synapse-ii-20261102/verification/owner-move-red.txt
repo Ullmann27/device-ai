@@ -1,0 +1,8 @@
+rank=[Anna wohnt in Graz.]
+grounded=true; ids=[lx-8f3d899fdf364956bed4ec93]; answer=Dazu finde ich in meinem Gedächtnis:
+
+Anna wohnt in Graz.
+(Bestätigte Nutzererinnerung)
+Exception in thread "main" java.lang.IllegalStateException: RED: older residence remains selected after a later confirmed move
+	at at.heinz.deviceai.learning.OwnerMoveRedKt.main(OwnerMoveRed.kt:13)
+	at at.heinz.deviceai.learning.OwnerMoveRedKt.main(OwnerMoveRed.kt)

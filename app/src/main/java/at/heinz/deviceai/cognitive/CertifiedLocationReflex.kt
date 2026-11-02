@@ -71,6 +71,7 @@ internal object CertifiedLocationReflex {
         // Never silently drop a long correction, nor guess a referent for an unnamed
         // retraction. These are invalidators, not positive evidence or new facts.
         if (window.any { it.length > 1000 || it.any(Char::isISOControl) ||
+                unknownPlace.containsMatchIn(it) ||
                 !mentions.containsMatchIn(it) && unscopedCorrection.containsMatchIn(it) }) return null
         // Only turns that mention the asked person are evidence; unrelated small talk must
         // neither support nor (via the verifier's pronoun rule) veto the proof.
@@ -129,11 +130,15 @@ internal object CertifiedLocationReflex {
 
     private val questionShape = Regex("""(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$""")
     private val unscopedCorrection = Regex("""(?iu)\b(?:nein|korrektur|widerruf|widerrufen|falsch|ungültig|nicht\s+mehr|nicht\s+dort)\b|\b(?:sie|er|es)\s+(?:ist|wohnt|lebt|steht|war|wohnte|lebte|stand)\b""")
+    // An unresolved place correction can invalidate an earlier location without
+    // repeating its person. Refuse the bounded proof; do not infer a referent.
+    private val unknownPlace = Regex("""(?iu)\b(?:der\s+)?(?:aktuelle\s+)?(?:ort|wohnort|aufenthaltsort)\s+(?:ist\s+)?(?:(?:jetzt|aktuell|derzeit|nun|heute)\s+)?(?:unbekannt|unklar)\b""")
     private fun mention(subject: String) = Regex("""(?iu)(?<![\p{L}\p{M}\p{N}-])""" +
         Regex.escape(subject) + """(?![\p{L}\p{M}\p{N}-])""")
 
     private fun prove(question: String, items: List<EvidenceBoundNaturalLocationProbe.Evidence>):
             Pair<EvidenceBoundNaturalLocationProbe.Decision.Found, LocationEvidenceSnapshot>? {
+        if (items.any { unknownPlace.containsMatchIn(it.text) }) return null
         val snapshot = runCatching { LocationEvidenceSnapshot.freeze(items) }.getOrNull() ?: return null
         val found = EvidenceBoundNaturalLocationProbe.answer(question, items)
             as? EvidenceBoundNaturalLocationProbe.Decision.Found ?: return null
