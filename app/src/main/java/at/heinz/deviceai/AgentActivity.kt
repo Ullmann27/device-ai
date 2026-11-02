@@ -6406,7 +6406,7 @@ class AgentActivity : Activity() {
                         "Erkläre bei Warum-Fragen tatsächliche Ursachen; falls unbekannt, Unsicherheit nennen.\n")
                     // Current task and retrieval precede optional compiled/history data.
                     // A long request must never disappear behind the512-char memory lookup.
-                    append("Aktueller Auftrag:\n").append(task).append('\n')
+                    if (compiledContext == null) append("Aktueller Auftrag:\n").append(task).append('\n')
                     groundedRecall?.let { append(it.render()) }
                     if (compiledContext != null) {
                         append(compiledContext.text)
@@ -6425,7 +6425,6 @@ class AgentActivity : Activity() {
                         }
                     }
                     // Current task/evidence precede optional history under the prompt cap.
-                    append(conversationContext)
                 }
                 val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
                     task = task,
@@ -6440,9 +6439,13 @@ class AgentActivity : Activity() {
                     "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
                         "Keine zusätzlichen internen Denkschritte behaupten."
                 else ""
-                val prompt = ChatReasoningRouter.composePrompt(
-                    promptBody, advisory, promptTail + briefInstruction, promptCap
-                )
+                // Required owner request and selected evidence are atomic. Do not
+                // cut a negation to fit optional history or advisory text.
+                val prompt = at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
+                    requiredBody=promptBody, optionalHistory=conversationContext,
+                    advisory=advisory, requiredTail=promptTail + briefInstruction,
+                    maxCharacters=promptCap
+                ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
                 // A screen frame is atomic. Never send a clipped negation/source block.
                 screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
