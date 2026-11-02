@@ -1,5 +1,7 @@
 # CONTINUUM – Einstiegspunkt für den nächsten Agenten
 
+**Neueste Fortsetzung: [Synapse-III-Handoff](SYNAPSE-III-HANDOFF-20261102.md), [Laufzeitmatrix](SYNAPSE-III-ARCHITECTURE-20261102.md), [Draft-PR344](https://github.com/Ullmann27/device-ai/pull/344). Zuerst dessen echten Remote-HEAD und source-exakten Render-Kommentar lesen. Vollständiger Synapse-II-Elternstand2eb20959 ist enthalten; keine alten Blindtests neu als ungesehen zählen.**
+
 **Aktuelle Fortsetzung nach Fable: [Sol-Handoff](SOL61-POST-FABLE-HANDOFF.md) und [ausführbarer GPT-6/Fable-Fortsetzungsauftrag](SOL61-GPT6-NEXT-AGENT-INSTRUCTIONS.md), Draft-PR[#335](https://github.com/Ullmann27/device-ai/pull/335).** Zuerst tatsächlichen Remote-HEAD dieses PR prüfen. Fable702b57ae ist vollständig enthalten; S1-Offline-/Consent-Lücke inzwischen repariert, bestätigte Altersangaben eng begrenzt erweitert. Die nachfolgenden Fable-Punkte beschreiben den historischen Einstieg, keine neue Aufforderung zum Wiederholen abgeschlossener Reparaturen.
 
 **Pflichtreihenfolge vor jeder größeren Architekturänderung:**

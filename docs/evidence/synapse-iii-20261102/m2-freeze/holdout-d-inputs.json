@@ -1,0 +1,724 @@
+{
+  "cases": [
+    {
+      "id": "holdout-d-001",
+      "question": "Wo steht Darivata?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-001:s1",
+          "revision": 1,
+          "sha256": "4b549d470dc6bc14fc68ee9122ab121490dbd5ffcab6a028e6b9a8487c37e8fc",
+          "text": "Darivata steht in Davadepo. Dalimoga steht in Dahujuje."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-002",
+      "question": "Wo wohnt Damehosu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-002:s1",
+          "revision": 1,
+          "sha256": "9a5b792548e2fb362afa414f3c12ae3d635e322a854e828482f0bf1051c08c2b",
+          "text": "Damehosu wohnt in Dasujilu. Damucabe wohnt in Dapujucu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-003",
+      "question": "Wo steht Davijive?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-003:s1",
+          "revision": 1,
+          "sha256": "19db266928bd5a11f8e179487d24a61dc1ba5b5db14eb2a15dfcfc46f18c3a4c",
+          "text": "Davijive steht in Danepeca. Dajefele steht in Dacebavo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-004",
+      "question": "Wo ist Daletimu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-004:s1",
+          "revision": 1,
+          "sha256": "3a16bb6402f28b8df1def7ce9347babbca11da50c34e695fd38739149e6cef23",
+          "text": "Daletimu ist in Dafusuno. Datimutu ist in Dasolicu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-005",
+      "question": "Wo ist Dajipedo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-005:s1",
+          "revision": 1,
+          "sha256": "19bf14f1d34d5b1e3d447d8b03ad6fa5cb70541db3ebc93e07449424705c4b51",
+          "text": "Dajipedo ist in Dacepini. Daguditi ist in Dadetike."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-006",
+      "question": "Wo steht Dapogake?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-006:s1",
+          "revision": 1,
+          "sha256": "f08eb32224c72958e25d21882d5f14805334d0286dd72b4d9c769b4940ed3339",
+          "text": "Dapogake steht in Dahosere. Dahedeca steht in Damecehe."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-007",
+      "question": "Wo ist Daruluru?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-007:s1",
+          "revision": 1,
+          "sha256": "a54af35e40f108b6300770e86511bc39379293a58acdee268b79a29f1d3dffed",
+          "text": "Daruluru ist in Dagipiga. Dagisapi ist in Dakipifa."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-008",
+      "question": "Wo steht Dajovedo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-008:s1",
+          "revision": 1,
+          "sha256": "2f327481db58c3f4141bf0e9846a6e16d9fb8b2073806511718080d2c735f6e7",
+          "text": "Dajovedo steht in Dafojiji. Dalujubi steht in Datuvara."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-009",
+      "question": "Wo steht Dafijoba?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-009:s1",
+          "revision": 1,
+          "sha256": "0ac6b04b1a48895609e1b2ab8ef262ebd5f0be5f52022867c94546988abdc3b3",
+          "text": "Dafijoba steht in Darocari. Dajimeki steht in Dasosaci."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-010",
+      "question": "Wo ist Datifiga?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-010:s1",
+          "revision": 1,
+          "sha256": "5f4f8438397a367517af005c570482e17dd968bc80a9085dcf130c0c356abfa7",
+          "text": "Datifiga ist in Dadajehe. Davavove ist in Dalobuco."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-011",
+      "question": "Wo steht Dadukoke?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-011:s1",
+          "revision": 1,
+          "sha256": "d91951c970a4e2770a01d342120d828e6e00f9c4ebb4449ca700d0241efa4beb",
+          "text": "Dadukoke steht in Daverunu. Dafojagi steht in Dajapebo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-012",
+      "question": "Wo wohnt Damobeha?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-012:s1",
+          "revision": 1,
+          "sha256": "4331a5c79c499f4ec6292eddb12570f4d8eda68939cfb427b6442feb60f3d3df",
+          "text": "Damobeha wohnt in Darudoki. Dadudafi wohnt in Dacibifi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-013",
+      "question": "Wo lebt Darohoga?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-013:s1",
+          "revision": 1,
+          "sha256": "efd214f4f16b772b8f61c689e09d4f7b33f07a180ad30a67f6050c62bf5fac49",
+          "text": "Darohoga lebt in Dalefeda. Damobose lebt in Dakesali."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-014",
+      "question": "Wo wohnt Dabedipa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-014:s1",
+          "revision": 1,
+          "sha256": "d963cae733f26171bb454b9c2ac4f635af53586697e673dd581db91b611c8c2a",
+          "text": "Dabedipa wohnt in Dacunuda. Dahonoku wohnt in Dapacile."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-015",
+      "question": "Wo lebt Dajebiso?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-015:s1",
+          "revision": 1,
+          "sha256": "b651b5e990865a21e45d973f0fc2034e7209dbbac109d03a38d6a2665a13c156",
+          "text": "Dajebiso lebt in Dafohenu. Daropibu lebt in Dakiteki."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-016",
+      "question": "Wo lebt Dagivohe?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-016:s1",
+          "revision": 1,
+          "sha256": "2f358e0eb401bc5cf1e2dba8dc81f375e3247f525906e7cc5b061b1ddfb27351",
+          "text": "Dagivohe lebt in Datinefi. Danujoso lebt in Dapejito."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-017",
+      "question": "Wo steht Dagatosa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-017:s1",
+          "revision": 1,
+          "sha256": "70bc4d9d9915dc8590eda8f9b2029f337dbbef8c6a8db34c3764f2ce20fe5a59",
+          "text": "Dagatosa steht in Darevile. Dajogali steht in Dabarosi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-018",
+      "question": "Wo steht Davorale?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-018:s1",
+          "revision": 1,
+          "sha256": "5325090f289ff5d2e4a8debccdd0f879753b830a2a1c6b1d9aef82a2a1221db9",
+          "text": "Davorale steht in Dabigese. Darepiga steht in Dacopomi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-019",
+      "question": "Wo ist Dajuveme?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-019:s1",
+          "revision": 1,
+          "sha256": "ceeb2dd8d001959a968184ca48a7ee506ef64716722d1b01a75aea37b529a918",
+          "text": "Dajuveme ist in Dagahoca. Dagikuha ist in Danemeda."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-020",
+      "question": "Wo steht Dasadaku?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-020:s1",
+          "revision": 1,
+          "sha256": "78ef5f8d8e2cd332c9e46a6b01977f9e88a3996d45b09029106901e48c337fb6",
+          "text": "Dasadaku steht in Dagosuha. Dahivote steht in Damunica."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-021",
+      "question": "Wo wohnt Dalegoga?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-021:s1",
+          "revision": 1,
+          "sha256": "e5ffbf693bf1ae1bc23cc65029b9c5cc387678d29f4b382df615472f3f517f5c",
+          "text": "Dahopopu wohnt in Dacurujo. Dacusavu wohnt in Dahavilo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-022",
+      "question": "Wo lebt Danagipu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-022:s1",
+          "revision": 1,
+          "sha256": "6eb111db3f9cdaad184d70f18138e7df48563d69874104d26b92d630a3efa194",
+          "text": "Dahinone lebt in Dagasudo. Dadifile lebt in Damoceho."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-023",
+      "question": "Wo lebt Dariguma?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-023:s1",
+          "revision": 1,
+          "sha256": "c7b7a1d1d219677f704f6f7923b3ad354a0d1b5c2f32555346c41e00600e308a",
+          "text": "Dapotili lebt in Datapicu. Dakanebo lebt in Darolubu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-024",
+      "question": "Wo steht Dafelase?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-024:s1",
+          "revision": 1,
+          "sha256": "51ecfb66ba4f528dd5c916eb2ba4f41f0b95a01d598b2c93bba35801a98f43e0",
+          "text": "Danecire steht in Damofego. Dacitoki steht in Damavara."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-025",
+      "question": "Wo lebt Davubigi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-025:s1",
+          "revision": 1,
+          "sha256": "bfe9af08627c31b1bb21c1d5a78acd879b1559d8e6b44daa96ba10177e7b4ac9",
+          "text": "Dadekibo lebt in Dakimanu. Dahohutu lebt in Dagicave."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-026",
+      "question": "Wo steht Dademufu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-026:s1",
+          "revision": 1,
+          "sha256": "7f95125d76674d3259df0fd838665d00741be8178fc124eb5762c3d273e6f030",
+          "text": "Dapujagi steht in Dagomafe. Dademufu steht in Datijopa."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-027",
+      "question": "Wo wohnt Dahihigo?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-027:s1",
+          "revision": 1,
+          "sha256": "2ef65d9a930460dc87073543eb3a56673db03e966c80173906d3b00657b032f5",
+          "text": "Dapimuda wohnt in Damivake. Dahihigo wohnt in Dalorede."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-028",
+      "question": "Wo steht Dasogage?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-028:s1",
+          "revision": 1,
+          "sha256": "b6a412cd4866f434ef498a0979df47f4f8240297bb625aca69b034b96bb319cc",
+          "text": "Dakekifa steht in Dakarato. Dasogage steht in Dapecise."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-029",
+      "question": "Wo steht Dapohera?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-029:s1",
+          "revision": 1,
+          "sha256": "d3f10c62bcf875e4ceae9b334f4aabd195e564c61a04128879274ea379accd27",
+          "text": "Dabimali steht in Dacomice. Dapohera steht in Davobafu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-030",
+      "question": "Wo wohnt Datutuci?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-030:s1",
+          "revision": 1,
+          "sha256": "6568d69cddd84b590ccf04a70ad3b0dc4881787cad7bca3b3921ae530cf1e524",
+          "text": "Dakibonu wohnt in Danitope. Datutuci wohnt in Datucita."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-031",
+      "question": "Wo steht Daneraso?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-031:s1",
+          "revision": 1,
+          "sha256": "173cec55c378c9b00f2da7f34c2540fce2e8adbe18123b1dde9ca0f36fd9426a",
+          "text": "Dakukeme steht in Dakivoce. Daneraso steht in Dafudiru."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-032",
+      "question": "Wo lebt Dalebune?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-032:s1",
+          "revision": 1,
+          "sha256": "c5c0bb9290f37d90bb4f8014d4269e53ecd228dadf4e8b0f7f2553ed6db054b0",
+          "text": "Dapupode lebt in Dalujunu. Dalebune lebt in Daferedi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-033",
+      "question": "Wo steht Dasobugu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-033:s1",
+          "revision": 1,
+          "sha256": "825ba5cc054b9d6e31871db38e2d964cfd8d4bd12c290d564f13e9f4c1d0a7c2",
+          "text": "Damirise steht in Dahebopa. Dasobugu steht in Dasicuge."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-034",
+      "question": "Wo steht Dafujeni?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-034:s1",
+          "revision": 1,
+          "sha256": "e91ea42dec4bdb7c42dbe83f182c360ba0e25e7975b869998c7fbc2e423feff4",
+          "text": "Daberape steht in Dahijedo. Dafujeni steht in Danosiva."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-035",
+      "question": "Wo wohnt Datesica?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-035:s1",
+          "revision": 1,
+          "sha256": "b017b478ad539c2966d96c7669cd56a3cd17f6b803726a9472ccce7b01f60305",
+          "text": "Dafadesu wohnt in Datonitu. Datesica wohnt in Damoceti."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-036",
+      "question": "Wo lebt Dafomako?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-036:s1",
+          "revision": 1,
+          "sha256": "69cabf6fb39aca0df18f9f5efcb581b570828b82f51037fd6f826815c8c84792",
+          "text": "Dafomako ist in Dasonalu."
+        },
+        {
+          "sourceId": "holdout-d-036:s2",
+          "revision": 2,
+          "sha256": "018c3893c132c49e5e4b6566934e8f98c7f835bc452f32eaf9e6dd7b0530725a",
+          "text": "Dafomako lebt in Dajecema."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-037",
+      "question": "Wo ist Dahafaga?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-037:s1",
+          "revision": 1,
+          "sha256": "b583514e8eba6f390220d21f30b0010b9a8f869e2c03f846bf7eedaf0b2e6a18",
+          "text": "Dahafaga ist in Dakirona, Dahafaga wohnt in Dakimuhu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-038",
+      "question": "Wo steht Davabemu?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-038:s1",
+          "revision": 1,
+          "sha256": "9d17ea8619e5162b252ac0db0cd8d3fe89ac52e3bee3a91dc87e75a72ee446e5",
+          "text": "Davabemu ist in Damerufu."
+        },
+        {
+          "sourceId": "holdout-d-038:s2",
+          "revision": 2,
+          "sha256": "425c4a7d1f8935865b6de06c1ada00d124eb5a53e3d812eec5e2b7fdb76b937a",
+          "text": "Davabemu steht in Dahahofa."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-039",
+      "question": "Wo steht Dakupoco?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-039:s1",
+          "revision": 1,
+          "sha256": "6cf47cc47238077527aeb8272cc2e551a196f55de36e645a3dce5ae3c3dac1ef",
+          "text": "Dakupoco steht in Dalediti, Dakupoco ist in Dadokudi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-040",
+      "question": "Wo steht Datirapi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-040:s1",
+          "revision": 1,
+          "sha256": "c43b7c009a786251d7e2f4ba77fffb2dc469352c356e194ba99afa3c92c10058",
+          "text": "Datirapi ist in Datepofa."
+        },
+        {
+          "sourceId": "holdout-d-040:s2",
+          "revision": 2,
+          "sha256": "c6fc896bb6ccb1878ab2e5ffab95752a2c8e794596986349bd529f5dd7c3c251",
+          "text": "Datirapi steht in Darecore."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-041",
+      "question": "Wo ist Davifoci?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-041:s1",
+          "revision": 1,
+          "sha256": "b9109e057a7aca6f84dde92b1a6f4f533d4924ecdacc598fe34b6e2f55b711d9",
+          "text": "Davifoci ist in Danikovi, Davifoci wohnt in Danedosu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-042",
+      "question": "Wo lebt Dalimoha?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-042:s1",
+          "revision": 1,
+          "sha256": "853fe139da60da6ee3c66bd82cd95c49cbf126bfe771150984fbfadb8273301f",
+          "text": "Dalimoha ist in Dapedute."
+        },
+        {
+          "sourceId": "holdout-d-042:s2",
+          "revision": 2,
+          "sha256": "077a3e00a9b655a9614a5bcf5421cf60bda101217d9c0e7959a4f28d49d6c736",
+          "text": "Dalimoha lebt in Dareciro."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-043",
+      "question": "Wo ist Darebime?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-043:s1",
+          "revision": 1,
+          "sha256": "615f0f97b1b8ebe01cc89935c6093d9afd0e949d4a2bd6096a5831c4b11e4d10",
+          "text": "Darebime ist in Dasefotu, Darebime wohnt in Datojena."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-044",
+      "question": "Wo lebt Danogite?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-044:s1",
+          "revision": 1,
+          "sha256": "4f2b2a18c20eebad3b0d688e2d35e88e64b8f779edbc1d31c86b63cfe899f488",
+          "text": "Danogite ist in Dakesone."
+        },
+        {
+          "sourceId": "holdout-d-044:s2",
+          "revision": 2,
+          "sha256": "b10908cf99243bf80270f68ffbfc6ac3419d8d18679953c94e6ed5854323e77e",
+          "text": "Danogite lebt in Dabafoju."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-045",
+      "question": "Wo lebt Dasohora?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-045:s1",
+          "revision": 1,
+          "sha256": "465532925082458dabee69312fea445c9d1b0c9dedf9440819c6d41308661a5b",
+          "text": "Dasohora lebt in Dakepile, Dasohora ist in Datuloda."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-046",
+      "question": "Wo wohnt Dagukole?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-046:s1",
+          "revision": 1,
+          "sha256": "b0264eb94e3018bf56688bc136ee8aa33029af46a9db78a69c80111fd46610ea",
+          "text": "Dagukole ist in Datoritu."
+        },
+        {
+          "sourceId": "holdout-d-046:s2",
+          "revision": 2,
+          "sha256": "0d244ccd819a898c1deab23357f8507a4f17eeecf3362b34505bddace7184d56",
+          "text": "Dagukole wohnt in Dahacujo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-047",
+      "question": "Wo steht Danojado?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-047:s1",
+          "revision": 1,
+          "sha256": "1aea7e7b5e428de0f0e3c8e3ecafbba54be0c67304c7deca0d547a88a9f03fca",
+          "text": "Danojado steht in Dagavicu, Danojado ist in Dapiruji."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-048",
+      "question": "Wo wohnt Dahonada?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-048:s1",
+          "revision": 1,
+          "sha256": "58e17ac6aec601113739a3e5c41fd4fd00b885883ebe5cd74357688d14f8e429",
+          "text": "Dahonada ist in Dafaroho."
+        },
+        {
+          "sourceId": "holdout-d-048:s2",
+          "revision": 2,
+          "sha256": "d9cd5eef64a3c274205bb38aedfe580c9bb1a3501d5df38f232de62513d15363",
+          "text": "Dahonada wohnt in Dajepegi."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-049",
+      "question": "Wo lebt Dasaduha?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-049:s1",
+          "revision": 1,
+          "sha256": "43b4b60e52a3dda56f859789a3dc5db3bd1916042decb5113d62b420fd4cca7e",
+          "text": "Dasaduha lebt in Dasevamo, Dasaduha ist in Dadubobe."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-050",
+      "question": "Wo wohnt Dakaduji?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-050:s1",
+          "revision": 1,
+          "sha256": "f166eaad8912f0adfeb237054539ae676e0d38c8f7b5db2e55544d4fac600345",
+          "text": "Dakaduji ist in Dakucimi."
+        },
+        {
+          "sourceId": "holdout-d-050:s2",
+          "revision": 2,
+          "sha256": "e1b065e9042abebc5ed452579a66630130a057eea9b9f997a7af53cc9434e006",
+          "text": "Dakaduji wohnt in Dagenuhu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-051",
+      "question": "Wo lebt Danubibi?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-051:s1",
+          "revision": 1,
+          "sha256": "e8463be01cf19da660399b029a6eda1748020969c01c6e30ac72d001f3134114",
+          "text": "Danubibi lebt in Danidane, Danubibi ist in Datifesa."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-052",
+      "question": "Wo steht Dalegisa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-052:s1",
+          "revision": 1,
+          "sha256": "f3ed16b10bd7d0b3e1cf3ac7c27d2dc3bc454157c20341ebcc927b0b7367f693",
+          "text": "Dalegisa ist in Dajiceco."
+        },
+        {
+          "sourceId": "holdout-d-052:s2",
+          "revision": 2,
+          "sha256": "d1c72dd7c55668ba4610358f3a04bb417029336d22297e36426e2dac7536168a",
+          "text": "Dalegisa steht in Dafalugu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-053",
+      "question": "Wo lebt Dahatama?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-053:s1",
+          "revision": 1,
+          "sha256": "5101cca0e60882d0359ab10c42dfb9694dc4cef859dde06736315581e419da7a",
+          "text": "Dahatama lebt in Davukuni, Dahatama ist in Darahomo."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-054",
+      "question": "Wo wohnt Danufuha?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-054:s1",
+          "revision": 1,
+          "sha256": "1ca749b04df70a756a75846fe89f49549f2d319f5730d33d0899f1a2e014fb94",
+          "text": "Danufuha ist in Davelela."
+        },
+        {
+          "sourceId": "holdout-d-054:s2",
+          "revision": 2,
+          "sha256": "946bffd9c110a30cbbac6f6b950444990808cab643e13fd507d4ce8bb3ea60d6",
+          "text": "Danufuha wohnt in Dabumalu."
+        }
+      ]
+    },
+    {
+      "id": "holdout-d-055",
+      "question": "Wo ist Davofupa?",
+      "sources": [
+        {
+          "sourceId": "holdout-d-055:s1",
+          "revision": 1,
+          "sha256": "7404b0c9b7d45e600b5954da99abdab48543f86924233c0d97f45369610eeea1",
+          "text": "Davofupa ist in Dakurevo, Davofupa wohnt in Dacuvame."
+        }
+      ]
+    }
+  ]
+}

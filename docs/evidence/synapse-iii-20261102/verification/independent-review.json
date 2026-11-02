@@ -1,0 +1,13 @@
+{
+  "reviewedHead": "0278a7e92fabe167d4bb9553dad1d9aca4ab37c0",
+  "reviewer": "synapse_iii_final_review",
+  "importantFinding": "TOCTOU: submitOnce validated oldHEAD but startTask reread and could bind newHEAD",
+  "reproducer": "deterministic concurrent fixture commit before orders mkdir",
+  "sourceFix": "optional expectedSourceCommit through both submission helpers; startTask validates and binds SAME captured SHA before state writes",
+  "red": "7/8 binding tests; new race assertion fails",
+  "green": "31/31 worker/bridge/repair,9/9 binding independently repeated",
+  "postCaptureChange": "task retains old binding; runTask aborts STALE_BASE before reasoner",
+  "shadowIndependentRerun": "55/55 E and C allmodes bothseeds, frozen11 exact,10RAWgains/0regressions",
+  "remainingImportantIssuesInScope": [],
+  "scope": "host/source only; DEVICE_NOT_RUN"
+}

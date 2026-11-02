@@ -129,7 +129,7 @@ internal object CertifiedLocationReflex {
     }
 
     private val questionShape = Regex("""(?iu)^\s*wo\s+(?:ist|wohnt|lebt|steht)\s+([\p{L}][\p{L}\p{M}-]{1,31})\s*\?\s*$""")
-    private val unscopedCorrection = Regex("""(?iu)\b(?:nein|korrektur|widerruf|widerrufen|falsch|ungültig|nicht\s+mehr|nicht\s+dort)\b|\b(?:sie|er|es)\s+(?:ist|wohnt|lebt|steht|war|wohnte|lebte|stand)\b""")
+    private val unscopedCorrection = Regex("""(?iu)\b(?:nein|korrektur|widerruf|widerrufen|falsch|ungültig|nicht\s+mehr|nicht\s+dort)\b|\b(?:sie|er|es)\s+(?:ist|wohnt|lebt|steht|war|wohnte|lebte|stand|zieht|zog)\b|\b(?:das|dies|diese\s+angabe)\s+stimmt\s+nicht\b""")
     // An unresolved place correction can invalidate an earlier location without
     // repeating its person. Refuse the bounded proof; do not infer a referent.
     private val unknownPlace = Regex("""(?iu)\b(?:der\s+)?(?:aktuelle\s+)?(?:ort|wohnort|aufenthaltsort)\s+(?:ist\s+)?(?:(?:jetzt|aktuell|derzeit|nun|heute)\s+)?(?:unbekannt|unklar)\b""")

@@ -22,6 +22,7 @@ import {REPAIR_CAPABILITY} from './ccc1-envelope.mjs';
 import {REPAIR_CHAINS,cancelMobileCodingJob,readReceipt} from '../../scripts/continuum-mobile-coding.mjs';
 import {jobIdFor,teamleaderStateOf,builderStateOf} from './ccc1-recovery.mjs';
 import {createHash} from 'node:crypto';
+import {ensureCcc1StateOutsideSource} from './ccc1-path-policy.mjs';
 
 export const OUTCOME_FOR={COMPLETED:'VERIFIED_PATCH_PENDING_REVIEW',ABSTAINED:'DONE_INVESTIGATION',ABORTED:'DONE_INVESTIGATION',
  FAILED:'ERROR',STOPPED_CORRUPT_JOURNAL:'ERROR',WAITING_FOR_WORKER:'INTERRUPTED',BLOCKED_WRITER_ACTIVE:'INTERRUPTED',
@@ -44,10 +45,10 @@ export function repositoryOf(project){
 }
 
 /** Owner goal -> durable CCC1 task bound to the project's repository and current commit. */
-export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60}){
+export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60,expectedSourceCommit=null}){
  const repo=repoFullName??repositoryOf(project);
  if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
- return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes});
+ return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes,expectedSourceCommit});
 }
 
 /**
@@ -55,12 +56,12 @@ export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,
  * running the fixed chain in an isolated worktree, never guessed. CPU budget covers baseline, candidates and the
  * independent second run of a real suite.
  */
-export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60}){
+export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60,expectedSourceCommit=null}){
  if(!REPAIR_CHAINS.includes(chain))throw Error('chain must be one of '+REPAIR_CHAINS.join(', '));
  const repo=repoFullName??repositoryOf(project);
  if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
  return startTask({project,stateDir,goal:{text:`Repariere die fehlschlagenden Tests der Testkette ${chain}.`,repair:{chain}},
-  repoFullName:repo,permissions:[REPAIR_CAPABILITY+':'+chain],maxRounds,deadlineMinutes,maxCpuMillis:3_600_000});
+  repoFullName:repo,permissions:[REPAIR_CAPABILITY+':'+chain],maxRounds,deadlineMinutes,maxCpuMillis:3_600_000,expectedSourceCommit});
 }
 
 /**
@@ -133,6 +134,28 @@ function writeAtomic(file,text){
  fs.writeFileSync(tmp,text,{mode:0o600});fs.renameSync(tmp,file);
 }
 
+/** Bind Android order/retry state to the explicitly authorized checkout, not just its commit bytes.
+ * A copied checkout may contain identical objects but has not received this owner's order.
+ * Existing unbound order directories require owner review; never silently adopt them. */
+function checkOrderCheckout(project,stateDir,{create=false}={}){
+ const root=fs.realpathSync(project),state=ensureCcc1StateOutsideSource(root,stateDir);
+ const file=path.join(state,'checkout-binding.json');
+ const want={schema:'CCC1_ORDER_CHECKOUT_V1',project:root,repository:repositoryOf(root)};
+ const check=()=>{
+  const known=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(known.schema!==want.schema||known.project!==want.project||known.repository!==want.repository)
+   throw Error('CCC1_CHECKOUT_MISMATCH: order state belongs to another authorized checkout');
+ };
+ if(fs.existsSync(file)){check();return;}
+ const orders=path.join(state,'orders');
+ if(fs.existsSync(orders)&&fs.readdirSync(orders).length)
+  throw Error('CCC1_CHECKOUT_UNBOUND: legacy order state requires owner review; nothing was adopted');
+ if(!create)return; // explicit legacy task API has no Android order identity to adopt
+ fs.mkdirSync(state,{recursive:true,mode:0o700});
+ try{fs.writeFileSync(file,JSON.stringify(want)+'\n',{flag:'wx',mode:0o600});}
+ catch(e){if(e.code!=='EEXIST')throw e;check();}
+}
+
 /**
  * Idempotent owner submit. `order` is the Android request id: the first submit creates the task and every later one
  * with the same id answers with that task - also after it has ended - and never creates or runs a second one (a lost
@@ -143,22 +166,26 @@ function writeAtomic(file,text){
 export function submitOnce({project,stateDir,order=null,chain=null,text=null,repoFullName=null,sourceCommit}){
  if(order!==null&&!ORDER.test(order))throw Error('CCC1_ORDER_INVALID: order must be a lowercase UUIDv4');
  if((chain===null)===(text===null))throw Error('exactly one of chain, text');
+ const head=spawnSync('git',['rev-parse','--verify','HEAD'],{cwd:project,encoding:'utf8',timeout:15000,shell:false});
+ if(head.status!==0||head.stdout.trim()!==sourceCommit)throw Error('CCC1_SOURCE_MISMATCH: request source is not checkout HEAD');
+ checkOrderCheckout(project,stateDir,{create:true});
  const want=chain!==null?{repair:chain}:{text};
  const file=order&&path.join(stateDir,'orders',order+'.json');
  if(file&&fs.existsSync(file)){
   const known=JSON.parse(fs.readFileSync(file,'utf8'));
   if(JSON.stringify(known.goal)!==JSON.stringify(want))throw Error('CCC1_ORDER_REUSED: the order id belongs to another goal');
   if(!known.taskId)throw Error('CCC1_ORDER_UNRESOLVED: an earlier submit of this order was interrupted; check the task list');
+  if(known.sourceCommit!==sourceCommit)throw Error('CCC1_ORDER_SOURCE_MISMATCH: retry belongs to a different source; inspect original task');
   return {taskId:known.taskId,duplicate:true};
  }
  const same=t=>!t.terminal&&t.state!=='CORRUPT'&&t.baseCommitSha===sourceCommit&&(chain!==null?t.repair===chain:t.repair===null&&t.goal===text);
  const open=listTasks(stateDir).find(same);
  if(file){
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
-  fs.writeFileSync(file,JSON.stringify({goal:want,taskId:null})+'\n',{flag:'wx',mode:0o600});   // reservation: one winner
+  fs.writeFileSync(file,JSON.stringify({goal:want,taskId:null,sourceCommit})+'\n',{flag:'wx',mode:0o600});   // reservation: one winner
  }
- const taskId=open?.taskId??(chain!==null?submitRepair({project,stateDir,chain,repoFullName}):submitGoal({project,stateDir,text,repoFullName}));
- if(file)writeAtomic(file,JSON.stringify({goal:want,taskId})+'\n');
+ const taskId=open?.taskId??(chain!==null?submitRepair({project,stateDir,chain,repoFullName,expectedSourceCommit:sourceCommit}):submitGoal({project,stateDir,text,repoFullName,expectedSourceCommit:sourceCommit}));
+ if(file)writeAtomic(file,JSON.stringify({goal:want,taskId,sourceCommit})+'\n');
  return {taskId,duplicate:Boolean(open)};
 }
 
@@ -209,6 +236,7 @@ export function listTasks(stateDir){
 /** One bounded cycle: drive one task, record finished ones, answer in the loop's vocabulary. */
 export async function runCcc1Cycle({project,stateDir,core='disambiguate',maxTurns=24,signal=null,indexOnIdle=false}){
  if(!CORES[core])throw Error('unknown language core '+core);
+ checkOrderCheckout(project,stateDir);
  const log=new ExperienceLog(path.join(stateDir,'experience.jsonl'));
  const record=(taskId,coreId,unchecked=[])=>{
   const entries=new DurableTaskJournal(path.join(stateDir,'tasks',taskId+'.jsonl'),runtimeKey(stateDir)).entries();

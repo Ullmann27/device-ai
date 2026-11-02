@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-026:s1",
+    "decision": "SPAN",
+    "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavasofa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-026:s1",
+    "decision": "SPAN",
+    "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavasofa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-026:s1",
+    "decision": "SPAN",
+    "sha256": "e9b5bbb1993f0371a0658734a0aee82a0e88899480e3703b6fa9c4c3b2ae2211",
+    "endExclusive": 56,
+    "start": 47,
+    "text": "EDavasofa",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 68.258634
+}

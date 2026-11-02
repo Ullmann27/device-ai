@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {submitRepair, runCcc1Cycle} from '../../.github/continuum/ccc1-worker.mjs';
+import {submitRepair, submitOnce, runCcc1Cycle} from '../../.github/continuum/ccc1-worker.mjs';
 import {DurableTaskJournal, runtimeKey} from '../../.github/continuum/ccc1-journal.mjs';
 import {builderStateOf, jobIdFor} from '../../.github/continuum/ccc1-recovery.mjs';
 import {readReceipt} from '../../scripts/continuum-mobile-coding.mjs';
@@ -41,7 +41,7 @@ function command(label, cmd, args, cwd=root, expected=0) {
 const g=(label,args)=>command(label,'git',args);
 const sourceCommit=command('source-head','git',['rev-parse','HEAD'],sourceRoot);
 const sourceBranch=command('source-branch','git',['branch','--show-current'],sourceRoot);
-assert.equal(sourceBranch,'research/continuum-synapse-ii-20261102');
+assert(['research/continuum-synapse-ii-20261102','research/continuum-synapse-iii-20261102'].includes(sourceBranch));
 const good='export function square(x){return x*x;}\nexport function quad(x){return square(square(x));}\n';
 const bad=good.replace('return square(square(x))','return sqare(square(x))');
 const tests="import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport {square,quad} from './math.mjs';\n"+
@@ -67,6 +67,10 @@ write('fixture-source.json',{good,bad,tests,seedCommit,fixtureSourceCommit});
 // Owner authorization here is limited to the user-requested disposable fixture experiment.
 // Existing Ccc1Reasoner requests a fixed 25-minute repair budget; the goal must cover it.
 const taskId=submitRepair({project:root,stateDir,chain:'node',repoFullName:'local/synapse-m3-fixture',maxRounds:1,deadlineMinutes:30});
+const order=crypto.randomUUID();
+const boundOrder=submitOnce({project:root,stateDir,order,chain:'node',sourceCommit:fixtureSourceCommit});
+assert.deepEqual(boundOrder,{taskId,duplicate:true});
+write('bound-order.json',{order,...boundOrder,sourceCommit:fixtureSourceCommit});
 const cycle=await runCcc1Cycle({project:root,stateDir});
 write('ccc1-cycle.json',cycle);
 assert.equal(cycle.ccc1,'COMPLETED',JSON.stringify(cycle));
@@ -120,6 +124,8 @@ const reviewRoot=path.join(sandbox,'committed-control');
 g('committed-control-worktree',['worktree','add','--detach',reviewRoot,published.commit]);
 command('committed-control-raw',process.execPath,['--test','.github/continuum/math.test.mjs'],reviewRoot);
 g('fixture-bundle',['bundle','create',path.join(out,'fixture.bundle'),'HEAD',published.commit]);
+// A restarted owner retry stays bound to the same task; no second execution.
+assert.deepEqual(submitOnce({project:root,stateDir,order,chain:'node',sourceCommit:fixtureSourceCommit}),{taskId,duplicate:true});
 // A second scheduler cycle must not repeat the completed task.
 const replay=await runCcc1Cycle({project:root,stateDir});
 write('replay.json',replay); assert.equal(replay.outcome,'IDLE');
