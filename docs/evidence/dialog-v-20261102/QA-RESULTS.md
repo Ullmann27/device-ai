@@ -35,3 +35,13 @@ Keine Änderungen an main, originalem Signierkanal, Besitzerinstallationsdaten o
 - Host `kotlinc-jvm 1.9.0`, OpenJDK 21: diese zwei **byte-identischen GitHub-Quellen** zusammen mit einem eigenständigen 20-Fall-Testharness kompiliert (`-include-runtime`) und via `java -jar` ausgeführt.
 - Ergebnis: **20/20 PASS**. Geprüft: exakte/teilweise/mehrdeutige Appnamen, Duplikate, deutsche Sprachbefehle, verneinte Befehle, unbekannte App, ungültige/lange Queries, Unicode-Bidi/Newline-Härtung, Sortier-/Ergebnislimit, Paketname, Offline-TTS-Konfiguration, Markdown-/URL-/Codebereinigung, sichere Textkürzung und Budgetgrenzen.
 - Dies ist ein **realer source-exakter Host-Lauf für genau zwei reine Kotlin-Produktionsdateien**, **nicht** die Android-JUnit-/Gradle-Laufzeit, nicht die übrigen Testdateien, nicht der DeviceToolExecutor oder das Fold7. Die früheren manuellen Mirrors sind getrennte 11/11-Vorprüfungen.
+
+
+## Folgeprüfung – 23/23 source-exakt geprüfte Pure-Kotlin-Verträge
+
+- Nach Erweiterung der deutschen Appanfragen auf höfliche Befehle, `suche/ finde` und optionale `App`-Präfixe/-Suffixe wurden die zwei tatsächlich abgefragten GitHub-Produktionsquellen mit den lokal kompilierten Bytes via `git hash-object` verglichen:
+  - `NativeAppLookup.kt` **cf10ecfa022f18394ba7a509d7a6bb9dedf347a6**
+  - `JarvisVoiceProfile.kt` **aeaa2ecd4876da9aa29ea15d70ade0b73b96cc1b**
+- Mit `kotlinc-jvm 1.9.0` und OpenJDK21 gemeinsam kompiliert, lokales ausführbares JAR gebaut; **23/23** separate manuelle Pure-Kotlin-Assertions bestanden. Neue Prüfungen: `Bitte öffne die App WhatsApp`, `Suche mir die App Kamera`, `Starte WhatsApp App`. Die früheren 20/20 bleiben als historischer Prüfstand erhalten.
+- **Geltungsbereich:** Diese zwei Pure-Kotlin-Dateien sind byte-identisch zu ihren zitierten Blob-SHAs. Das externe 23-Fall-Harness ist jedoch nicht als JUnit-/Android-Test ausgeführt worden. Kotlin-Klassen mit Android-Abhängigkeiten, `AgentActivity`, `AndroidInstalledAppLookup`, Mikrofon-Lifecycle und `LocalConversationContext` wurden **nicht** source-exakt auf Android oder mit vollständiger Gradle-Suite kompiliert.
+- Erneut gilt: `GRADLE_NOT_RUN`, `LITERT_NOT_RUN`, `LINT_NOT_RUN`, `RENDER_SOURCE_QA_NOT_RUN`, `DEVICE_NOT_RUN`. Kein Owner-Release.
