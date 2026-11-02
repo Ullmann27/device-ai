@@ -40,3 +40,12 @@ bash scripts/continuum-dialog-vi-host-check.sh
 Then run the complete existing Android Gradle/JUnit/LiteRT/Lint suite on the **exact final branch HEAD** in the established Render Android-QA environment. Prior Synapse III Render success does not cover Dialog VI.
 
 Review \`AgentActivity\` lifecycle and every new JUnit test before approving. After full Android compile, complete explicit Fold7 opt-in device tests for voice availability, starting/stopping recognition, interrupted AppLookup, consented app launch, screen postcondition, and F08 memory corrections. No main merge, owner release, original signing or private model mutation without owner approval.
+
+## Final code-review correction
+The gated local-model callback was additionally hardened: when Internet consent, an approved web session, or a screen observation grant is revoked, `lastLocalReply` is invalidated before returning. A rejected response cannot leave a previous model-answer anchor. Source fix is committed; Android JUnit and physical device verification remain **NOT_RUN**.
+
+## Trust boundaries for next agent
+- `find_app` is explicitly owner-invoked and READ_ONLY; the result appears only after the registered ToolGate returns JSON with the expected schema. A separate `launch_app` call always requires a new user confirmation.
+- Offline speech quality cannot be measured without the actual German Android TTS engine; lower pitch is not a synthesized actor voice.
+- F08 retains failed owner turns as provisional context only, not independent fact proof or tool authority.
+- 43/43 PASS proves three exact pure Kotlin sources on the JVM. Android-bound changes and the new JUnit classes are not yet source-exact Android-QA verified.
