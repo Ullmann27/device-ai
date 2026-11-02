@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-043:s1",
+    "decision": "SPAN",
+    "sha256": "615f0f97b1b8ebe01cc89935c6093d9afd0e949d4a2bd6096a5831c4b11e4d10",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Dasefotu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 65.233505
+}
