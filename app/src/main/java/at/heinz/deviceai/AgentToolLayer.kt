@@ -122,10 +122,15 @@ class ToolGate(
     private val calls = AtomicInteger()
     private val cancelled = AtomicBoolean()
     private val activeFutures = ConcurrentHashMap.newKeySet<Future<String>>()
+    private val pendingStarts = ConcurrentHashMap.newKeySet<ToolExecutionStartLatch>()
+    private val startCommitLock = Any()
     private val consumedCallIds = ConcurrentHashMap.newKeySet<String>()
 
     fun cancel() {
-        cancelled.set(true)
+        synchronized(startCommitLock) {
+            cancelled.set(true)
+            pendingStarts.forEach { it.revokeIfPending() }
+        }
         activeFutures.forEach { it.cancel(true) }
     }
 
@@ -271,14 +276,18 @@ class ToolGate(
                 ) != null
             }.getOrDefault(false)
         }
-        val executionStartAllowed = AtomicBoolean(true)
+        val dispatch = ToolExecutionStartLatch()
+        synchronized(startCommitLock) {
+            if (cancelled.get()) dispatch.revokeIfPending()
+            else pendingStarts += dispatch
+        }
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
         return try {
             val future = executor.submit(Callable {
                 fun checkStartEligibility() {
-                    if (!executionStartAllowed.get() || cancelled.get() || Thread.currentThread().isInterrupted)
+                    if (dispatch.wasRevokedBeforeCommit || cancelled.get() || Thread.currentThread().isInterrupted)
                         throw CancellationException("Backend start cancelled.")
                     if (clock() - start >= policy.timeoutMillis * 1_000_000L)
                         throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT, "Backend start deadline expired.")
@@ -288,6 +297,13 @@ class ToolGate(
                 // per-execution lease before any backend operation can begin.
                 runCatching { onExecutionStarted?.invoke() }
                 checkStartEligibility()
+                // This CAS is the only start-commit point. A timeout/cancel that
+                // wins the race revokes the pending dispatch before backend work.
+                // A committed dispatch cannot later be reported as definitely unrun.
+                synchronized(startCommitLock) {
+                    if (cancelled.get() || Thread.currentThread().isInterrupted || !dispatch.commitIfPending())
+                        throw CancellationException("Dispatch was revoked before start.")
+                }
                 runner.execute(request)
             })
             activeFutures += future
@@ -295,20 +311,21 @@ class ToolGate(
             val output = try {
                 future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
-                executionStartAllowed.set(false)
+                dispatch.revokeIfPending()
                 future.cancel(true)
                 val saved = persistTerminal(ToolReceiptState.TIMED_OUT, null)
                 return result(
                     ToolExecutionStatus.TIMED_OUT,
-                    if (saved) "Tool execution timed out."
-                    else "Tool timed out and its outcome is ambiguous; operator review is required."
+                    if (saved && !dispatch.wasCommitted) "Tool deadline expired before backend dispatch."
+                    else "Tool timed out after possible dispatch; outcome UNKNOWN and operator review is required."
                 )
             }
             if (cancelled.get()) {
                 val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
                 result(
                     ToolExecutionStatus.CANCELLED,
-                    if (saved) "Task cancelled." else "Cancellation outcome is ambiguous; operator review is required.",
+                    if (saved && !dispatch.wasCommitted) "Task cancelled before backend dispatch."
+                    else "Task cancelled after possible dispatch; outcome UNKNOWN and operator review is required.",
                     output.take(policy.maxOutputCharacters)
                 )
             } else if (output.length > policy.maxOutputCharacters) {
@@ -329,15 +346,31 @@ class ToolGate(
             }
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.CANCELLED, null)
-            result(ToolExecutionStatus.CANCELLED, "Tool execution interrupted.")
+            result(ToolExecutionStatus.CANCELLED, if (dispatch.wasCommitted)
+                "Tool interrupted after possible dispatch; outcome UNKNOWN." else "Tool interrupted before dispatch.")
         } catch (_: CancellationException) {
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.CANCELLED, null)
-            result(ToolExecutionStatus.CANCELLED, "Tool execution cancelled.")
+            result(ToolExecutionStatus.CANCELLED, if (dispatch.wasCommitted)
+                "Tool cancelled after possible dispatch; outcome UNKNOWN." else "Tool cancelled before dispatch.")
         } catch (_: TimeoutException) {
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.TIMED_OUT, null)
-            result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
+            result(ToolExecutionStatus.TIMED_OUT, if (dispatch.wasCommitted)
+                "Tool timed out after possible dispatch; outcome UNKNOWN." else "Tool timed out before dispatch.")
         } catch (e: java.util.concurrent.ExecutionException) {
+            // FutureTask wraps a worker-side pre-dispatch cancellation in
+            // ExecutionException. It must not be misreported as FAILED.
+            if (e.cause is CancellationException) {
+                dispatch.revokeIfPending()
+                val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
+                return result(ToolExecutionStatus.CANCELLED,
+                    if (dispatch.wasCommitted || !saved)
+                        "Worker cancelled after possible dispatch or with ambiguous receipt; outcome UNKNOWN."
+                    else "Worker cancelled before backend dispatch.")
+            }
             val status = (e.cause as? ToolBackendFailure)?.status ?: ToolExecutionStatus.FAILED
             val state = when (status) {
                 ToolExecutionStatus.TIMED_OUT -> ToolReceiptState.TIMED_OUT
@@ -351,7 +384,8 @@ class ToolGate(
             persistTerminal(ToolReceiptState.FAILED, null)
             result(ToolExecutionStatus.FAILED, "Tool execution failed.")
         } finally {
-            executionStartAllowed.set(false)
+            dispatch.revokeIfPending()
+            pendingStarts.remove(dispatch)
             activeFutures.removeIf { it.isDone }
             executor.shutdownNow()
         }
