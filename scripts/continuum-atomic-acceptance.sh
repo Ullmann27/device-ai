@@ -36,9 +36,11 @@ grade=FAIL
 finish() {
   local code="$?"
   trap - EXIT INT TERM
+  # A PASS without a persistently written receipt is not a verified PASS.
+  set +e
   RECEIPT_OUTPUT="$out" RECEIPT_SHA="$expected" RECEIPT_BRANCH="$branch" \
     RECEIPT_GRADE="$grade" RECEIPT_EXIT="$code" \
-    node --input-type=commonjs - <<'NODE' || true
+    node --input-type=commonjs - <<'NODE'
 const fs=require('node:fs'), path=require('node:path'), e=process.env;
 const names=['android-gradle','android-junit','node-critical','node-critical-proof','node-full','node-full-proof'];
 const completed=fs.readFileSync(path.join(e.RECEIPT_OUTPUT,'checks.tsv'),'utf8')
@@ -58,6 +60,11 @@ const receipt={schemaVersion:1,sourceHead:e.RECEIPT_SHA,sourceBranch:e.RECEIPT_B
 fs.writeFileSync(path.join(e.RECEIPT_OUTPUT,'acceptance.json'),
   JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
 NODE
+  local receipt_status=$?
+  if [[ "$receipt_status" -ne 0 ]]; then
+    echo 'ACCEPTANCE_RECEIPT_WRITE_FAILED' >&2
+    code=1
+  fi
   exit "$code"
 }
 trap finish EXIT
