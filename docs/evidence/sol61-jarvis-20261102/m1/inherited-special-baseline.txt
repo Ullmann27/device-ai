@@ -1,0 +1,24 @@
+✔ exact-SHA local QA wrapper refuses false evidence and protects source (1439.93255ms)
+✔ real full GGUF admission: exact bytes -> identity receipt, no runtime authority (54.180489ms)
+✔ real full admission rejects modified tensor bytes under unchanged pin (55.894488ms)
+✔ malformed GGUF with self-consistent SHA is rejected structurally (44.852506ms)
+✔ altered manifest size and missing manifest do not admit (84.645359ms)
+✔ simulated Termux actually executes preflight before touching even server --help (118.6859ms)
+✔ valid canonical owner pin is read without persistence or mutation (11.785236ms)
+✔ manifest missing, symlinked, hardlinked or group-writable fails closed (5.100856ms)
+✔ oversize, malformed JSON and all invalid manifest fields refuse (9.190616ms)
+✔ no pin or file-name mismatch never calls admission (2.958307ms)
+✔ admission must independently confirm bytes, identity and disabled execution (5.994782ms)
+✔ rejected model admission propagates and prints no false success receipt (2.222439ms)
+✔ Termux launcher rejects missing pinned manifest before running even server --help (7.594643ms)
+✔ v38 owner release recipe has valid shell syntax and original package identity (4.474912ms)
+✔ P0 freeze denies even an exact SHA without owner-specific freeze lift (9.13976ms)
+✔ staged owner candidate is explicitly unapproved and device-unverified (0.33878ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2073.852745

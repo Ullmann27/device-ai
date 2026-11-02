@@ -11,7 +11,7 @@ fi
 expected="$2"
 destination="$4"
 [[ "$expected" =~ ^[a-f0-9]{40}$ && "$destination" == /* ]] || exit 2
-for executable in git node java timeout readlink; do
+for executable in git node java python3 timeout readlink; do
   command -v "$executable" >/dev/null || { echo "UNAVAILABLE $executable" >&2; exit 3; }
 done
 root="$(cd -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -101,40 +101,8 @@ run android-gradle bash "$root/gradlew" --offline --no-daemon --rerun-tasks \
 
 # Reuse the existing diagnoser: exit 0 and an empty/fully skipped JUnit tree
 # are NOT successful app tests. Keep the evidence in the external receipt dir.
-if node --input-type=module - "$root" "$out" <<'NODE'
-import fs from 'node:fs';
-import path from 'node:path';
-import {pathToFileURL} from 'node:url';
-const [root,out]=process.argv.slice(2);
-const diagnostics=await import(pathToFileURL(path.join(root,'.github/continuum/repair-diagnostics.mjs')).href);
-const junitDir=path.join(root,'app/build/test-results/testDebugUnitTest');
-const startedAt=Number(fs.readFileSync(path.join(out,'gradle-start-millis.txt'),'utf8'));
-const cases=fs.existsSync(junitDir)?fs.readdirSync(junitDir)
-  .filter(name=>/^TEST-.*\.xml$/.test(name)):[];
-const requiredClasses=[
-  'at.heinz.deviceai.ToolExecutionStartLatchTest',
-  'at.heinz.deviceai.ReadOnlyToolSizeRegressionTest',
-  'at.heinz.deviceai.cognitive.LocalPromptFrameTest'
-];
-const allCriticalSuitesPresent=requiredClasses.every(name=>
-  cases.includes('TEST-'+name+'.xml'));
-const fresh=Number.isSafeInteger(startedAt) && cases.length>0 &&
-  allCriticalSuitesPresent && cases.every(name=>{
-    const stat=fs.lstatSync(path.join(junitDir,name));
-    return stat.isFile() && !stat.isSymbolicLink() && stat.mtimeMs>=startedAt-1000;
-  });
-const report=diagnostics.readJUnitDirectory(junitDir,root);
-fs.writeFileSync(path.join(out,'android-junit.json'),JSON.stringify({
-  freshXml: fresh,xmlFiles:cases.length,
-  mandatorySuites:requiredClasses,
-  mandatorySuitesPresent:allCriticalSuitesPresent,
-  total:report.total,executed:report.executed,passed:report.passed,
-  failed:report.failed,skipped:report.skipped,placeholders:report.placeholders,
-  evidenceComplete:report.evidenceComplete
-},null,2)+'\n',{flag:'wx',mode:0o600});
-if(!fresh || !report.evidenceComplete || report.executed===0 || report.failed!==0 ||
-  report.placeholders!==0)process.exit(1);
-NODE
+if node "$root/scripts/continuum-qa-evidence.mjs" android "$root" \
+  "$(cat "$out/gradle-start-millis.txt")" > "$out/android-junit.json"
 then
   printf 'android-junit\tPASS\t0\n' >> "$out/checks.tsv"
 else
@@ -147,21 +115,17 @@ export RECEIPT_EXPECTED_HEAD="$expected"
 
 # Existing canonical Node QA enforces exit codes, confirmed process termination,
 # complete JUnit evidence, source identity and no skipped-only success.
+node -p 'Date.now()' > "$out/critical-start-millis.txt"
 run node-critical node "$root/scripts/continuum-reliability-qa.mjs" critical --out "$out/critical"
-if node --input-type=commonjs - "$out/critical/report.json" <<'NODE'
-const r=require(process.argv[2]);
-if(r.status!=='PASS'||r.sourceUnchanged!==true||
-  r.source?.commit!==process.env.RECEIPT_EXPECTED_HEAD)process.exit(1);
-NODE
+if node "$root/scripts/continuum-qa-evidence.mjs" node "$out/critical/report.json" \
+  "$expected" critical "$(cat "$out/critical-start-millis.txt")" > "$out/critical-proof.json"
 then printf 'node-critical-proof\tPASS\t0\n' >> "$out/checks.tsv"
 else printf 'node-critical-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
 fi
+node -p 'Date.now()' > "$out/full-node-start-millis.txt"
 run node-full node "$root/scripts/continuum-reliability-qa.mjs" full-node --out "$out/full-node"
-if node --input-type=commonjs - "$out/full-node/report.json" <<'NODE'
-const r=require(process.argv[2]);
-if(r.status!=='PASS'||r.sourceUnchanged!==true||
-  r.source?.commit!==process.env.RECEIPT_EXPECTED_HEAD)process.exit(1);
-NODE
+if node "$root/scripts/continuum-qa-evidence.mjs" node "$out/full-node/report.json" \
+  "$expected" full-node "$(cat "$out/full-node-start-millis.txt")" > "$out/full-node-proof.json"
 then printf 'node-full-proof\tPASS\t0\n' >> "$out/checks.tsv"
 else printf 'node-full-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
 fi

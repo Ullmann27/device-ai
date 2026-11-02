@@ -23,6 +23,8 @@ async function fixture(t){
     await fs.mkdir(path.join(repo,sub),{recursive:true});
   }
   await fs.copyFile(source,path.join(repo,'scripts/continuum-atomic-acceptance.sh'));
+  for(const name of ['continuum-qa-evidence.mjs','continuum-junit-validator.py'])
+    await fs.copyFile(fileURLToPath(new URL('./'+name,import.meta.url)),path.join(repo,'scripts',name));
   await fs.writeFile(path.join(repo,'.gitignore'),'app/build/\n');
   // All following executables are intentionally synthetic; no Android SDK,
   // network, GitHub Actions, real owner keystore or Gradle are involved.
@@ -32,21 +34,21 @@ async function fixture(t){
     'mkdir -p app/build/test-results/testDebugUnitTest\n'+
     'for suite in at.heinz.deviceai.ToolExecutionStartLatchTest at.heinz.deviceai.ReadOnlyToolSizeRegressionTest at.heinz.deviceai.cognitive.LocalPromptFrameTest; do\n'+
     'if [ "$CONTINUUM_TEST_FIXTURE_OMIT_SUITE" = "yes" ] && [ "$suite" = "at.heinz.deviceai.cognitive.LocalPromptFrameTest" ]; then continue; fi\n'+
-    'printf \'%s\\n\' \'<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>\' > "app/build/test-results/testDebugUnitTest/TEST-$suite.xml"\n'+
+    'body="<testcase name=\\"synthetic\\" classname=\\"$suite\\"/>"\n'+
+    'if [ "$suite" = "at.heinz.deviceai.cognitive.LocalPromptFrameTest" ]; then\n'+
+    'case "$CONTINUUM_TEST_CRITICAL_MODE" in empty) body="";; skipped) body="<testcase name=\\"synthetic\\" classname=\\"$suite\\"><skipped/></testcase>";; esac\n'+
+    'fi\n'+
+    'printf \'<testsuite name="%s" tests="1" skipped="0" failures="0" errors="0">%s</testsuite>\\n\' "$suite" "$body" > "app/build/test-results/testDebugUnitTest/TEST-$suite.xml"\n'+
     'done\n'+
     'fi\nexit 0\n');
-  await fs.writeFile(path.join(repo,'.github/continuum/repair-diagnostics.mjs'),[
-    'import fs from "node:fs"; import path from "node:path";',
-    'export function readJUnitDirectory(dir){',
-    'const total=fs.existsSync(dir)?fs.readdirSync(dir).filter(x=>x.startsWith("TEST-")&&x.endsWith(".xml")).length:0;',
-    'return {total,executed:total,passed:total,failed:0,',
-    'skipped:0,placeholders:0,evidenceComplete:true};',
-    '}'
-  ].join('\n')+'\n');
+  await fs.copyFile(fileURLToPath(new URL('../.github/continuum/repair-diagnostics.mjs',import.meta.url)),
+    path.join(repo,'.github/continuum/repair-diagnostics.mjs'));
   await fs.writeFile(path.join(repo,'scripts/continuum-reliability-qa.mjs'),[
     'import fs from "node:fs"; import path from "node:path";',
     'const out=process.argv.at(-1); fs.mkdirSync(out,{recursive:true});',
     'fs.writeFileSync(path.join(out,"report.json"),JSON.stringify({',
+    'profile:process.argv[2],startedAt:new Date().toISOString(),finishedAt:new Date().toISOString(),',
+    'checks:(process.argv[2]==="critical"?["process","storage-agent","android-source-contracts","host-checker"]:["full-node"]).map(id=>({id,status:"PASS",code:0,terminationConfirmed:true,tests:{executed:1,evidenceComplete:true,failed:0}})),',
     'status:process.env.CONTINUUM_TEST_NODE_BAD==="yes"?"FAIL":"PASS",',
     'sourceUnchanged:true,source:{commit:process.env.CONTINUUM_TEST_NODE_WRONG_SHA==="yes"?"0".repeat(40):process.env.RECEIPT_EXPECTED_HEAD}}));'
   ].join('\n')+'\n');
@@ -114,6 +116,14 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[1].status,'FAIL');
+
+  for (const mode of ['empty','skipped']) {
+    r=await invoke(f,'critical-'+mode,f.sha,{
+      ...newJunit,CONTINUUM_TEST_CRITICAL_MODE:mode
+    });
+    assert.equal(r.result.status,1,'Mandatory '+mode+' suite must block acceptance');
+    assert.equal(r.receipt?.checks[1].status,'FAIL');
+  }
 
   r=await invoke(f,'node-report-bad',f.sha,{...newJunit,CONTINUUM_TEST_NODE_BAD:'yes'});
   assert.equal(r.result.status,1);
