@@ -1,0 +1,26 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "codeCheckpoint": "3eb7701cc033a620c9b038d2072fb872e3f6e547",
+  "reports": {
+    "qa-critical-final": {
+      "recordedHead": "40915a079463aabf26db4ba48b7ffcf191835409",
+      "sourceUnchangedDuringRun": true,
+      "currentCodeDifferences": [
+        "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt",
+        "app/src/main/res/xml/continuum_screen_observation.xml"
+      ],
+      "reuseRationale": "Only screen service/XML changed after this critical run. None of the four selected gates reads those files; narrow rg checked all nine Android source-contract files. The later full-node run includes every selected critical test and has no code-input differences. Service/event behavior independently covered by final SDK Gradle/Robolectric."
+    },
+    "qa-full-final": {
+      "recordedHead": "40915a079463aabf26db4ba48b7ffcf191835409",
+      "sourceUnchangedDuringRun": true,
+      "currentCodeDifferences": []
+    }
+  },
+  "protectedConfigUnchangedFromPR351": {
+    "app/build.gradle.kts": true,
+    "build.gradle.kts": true,
+    "settings.gradle.kts": true,
+    "gradle.properties": true
+  }
+}

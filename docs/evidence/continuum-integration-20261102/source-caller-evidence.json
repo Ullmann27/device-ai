@@ -1,930 +1,934 @@
 {
-  "ContinuumBrainBridge": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 2758,
-      "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.forget(correctionSession)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3032,
-      "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.archiveAnswerForQuestion(document,request)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3059,
-      "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 159,
-      "text": "object ContinuumBrainBridge {"
-    }
-  ],
-  "ContinuumCognitiveRuntime": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3006,
-      "text": "at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5185,
-      "text": "at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
-      "line": 3,
-      "text": "import at.heinz.deviceai.learning.ContinuumCognitiveRuntime"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
-      "line": 24,
-      "text": "private val cognitiveRuntime: ContinuumCognitiveRuntime,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
-      "line": 45,
-      "text": "class ContinuumCognitiveRuntime("
-    }
-  ],
-  "CognitiveDecisionBridge": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3005,
-      "text": "val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
-      "line": 23,
-      "text": "class CognitiveDecisionBridge("
-    }
-  ],
-  "AiContextCompiler": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 58,
-      "text": "import at.heinz.deviceai.cognitive.AiContextCompiler"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 180,
-      "text": "private val contextCompiler = AiContextCompiler("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
-      "line": 56,
-      "text": "class AiContextCompiler("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt",
-      "line": 7,
-      "text": "* Read-only experimental interface to the EXISTING AiContextCompiler."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt",
-      "line": 17,
-      "text": "private val compiler: AiContextCompiler = AiContextCompiler(),"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
-      "line": 25,
-      "text": "private val compiler: AiContextCompiler,"
-    }
-  ],
-  "LocalModelRuntime": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 106,
-      "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 174,
-      "text": "private lateinit var localRuntime: LocalModelRuntime"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 7514,
-      "text": "* thread; LocalModelRuntime performs its expensive file/hash/engine work"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
-      "line": 6,
-      "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
-      "line": 24,
-      "text": "private val runtime: LocalModelRuntime,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
-      "line": 5,
-      "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
-      "line": 12,
-      "text": "private val runtime: LocalModelRuntime,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
-      "line": 61,
-      "text": "interface LocalModelRuntime {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
-      "line": 79,
-      "text": "class LiteRtLmLocalModelRuntime("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
-      "line": 83,
-      "text": ") : LocalModelRuntime {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
-      "line": 14,
-      "text": "class Host(val catalog: LocalModelCatalog, val runtime: LiteRtLmLocalModelRuntime) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
-      "line": 25,
-      "text": "Host(catalog, LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, \"litertlm\")))"
-    }
-  ],
-  "LocalModelReasoningAdapter": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 67,
-      "text": "import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 6363,
-      "text": "ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 7079,
-      "text": "val coordinator = DevelopmentCoordinator(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
-      "line": 11,
-      "text": "class LocalModelReasoningAdapter("
-    }
-  ],
-  "ContinuumLearningCore": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 20,
-      "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 461,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 1667,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 1731,
-      "text": "val learning = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 1975,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 2759,
-      "text": "ContinuumLearningCore(filesDir).resetDialogueConversation(correctionSession) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 2939,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 2997,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3373,
-      "text": "ContinuumLearningCore(filesDir).teachIntent("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3539,
-      "text": "val core = runCatching { ContinuumLearningCore(filesDir).recordCommandMapping(phrase, name) }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3585,
-      "text": "runCatching { ContinuumLearningCore(filesDir).status() }.getOrNull()?.let { core ->"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3611,
-      "text": "val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllCommandMappings() }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3693,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 3789,
-      "text": "val learning=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4165,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4203,
-      "text": "ContinuumLearningCore(filesDir).trainPublicCurriculum {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4235,
-      "text": "val bytes=ContinuumLearningCore(filesDir).modelSnapshot()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4401,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4428,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4471,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4570,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4783,
-      "text": "val previous=ContinuumLearningCore(filesDir).modelHash()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4802,
-      "text": "check(ContinuumLearningCore(filesDir).modelHash()==previous) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4834,
-      "text": "onLearningIo({ ContinuumLearningCore(filesDir).cre1ResearchStatus() }) { result ->"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4868,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4922,
-      "text": "val snapshot=ContinuumLearningCore(filesDir).modelSnapshot()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4926,
-      "text": "val unchanged=ContinuumLearningCore(filesDir).modelHash()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 4960,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5003,
-      "text": "val result=runCatching { ContinuumLearningCore(filesDir).rollbackToPrevious() }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5171,
-      "text": "val core=ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5205,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5227,
-      "text": "val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 5850,
-      "text": "at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).learnFromSources(found) { cancellation.isCancelled() || !session.isAuthorized() }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 6638,
-      "text": "ContinuumLearningCore(filesDir).activeOwnerFacts().map { fact ->"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 8275,
-      "text": "onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) { sessionResetLifetime.get() } }) { result ->"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 8323,
-      "text": "val score=ContinuumLearningCore(filesDir).intentScore(value)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 8591,
-      "text": "ContinuumLearningCore(filesDir).importPublicPackage(model,manifest)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 8636,
-      "text": "ContinuumLearningCore(filesDir).importSnapshot(bytes)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
-      "line": 15,
-      "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
-      "line": 65,
-      "text": "\"Lernzentrum \u00f6ffnen; bleibt der Fehler, Diagnose exportieren.\") { ContinuumLearningCore(files) }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
-      "line": 38,
-      "text": "val core=at.heinz.deviceai.learning.ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
-      "line": 19,
-      "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
-      "line": 196,
-      "text": "ContinuumLearningCore(appContext.filesDir).intelligenceAudit {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
-      "line": 3,
-      "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
-      "line": 168,
-      "text": "val core = ContinuumLearningCore(filesDir, now)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
-      "line": 73,
-      "text": "val core = ContinuumLearningCore(filesDir)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
-      "line": 122,
-      "text": "val core=ContinuumLearningCore(filesDir).apply {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 14,
-      "text": "* [ContinuumLearningCore.activeOwnerFacts] (revoked facts are never part of it), ranking from the unchanged"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 175,
-      "text": "core:ContinuumLearningCore,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 210,
-      "text": "appDirectory:File,core:ContinuumLearningCore,conversationId:String,request:String"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 240,
-      "text": "core:ContinuumLearningCore,answer:Ewm1Brain.Answer,ownerFacts:Set<String>,baseline:ContinuumChatOutcome,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
-      "line": 25,
-      "text": "val decoder=ContinuumLearningCore(filesDir).pairedDecoderStatus()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
-      "line": 66,
-      "text": "val core=ContinuumLearningCore(filesDir).apply {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
-      "line": 47,
-      "text": "private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
-      "line": 6,
-      "text": "* The caller holds ContinuumLearningCore's common process lock."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
-      "line": 10,
-      "text": "core: ContinuumLearningCore,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 121,
-      "text": "class ContinuumLearningCore("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicCurriculum.kt",
-      "line": 9,
-      "text": "* holdouts in ContinuumLearningCore remain an additional independent gate."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
-      "line": 412,
-      "text": "val core=ContinuumLearningCore(filesDir).apply {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
-      "line": 452,
-      "text": "ContinuumLearningCore(filesDir).apply {"
-    }
-  ],
-  "ContinuumMemoryDialogue": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
-      "line": 160,
-      "text": "// (ContinuumMemoryDialogue: history.lastOrNull()?.topic); a loaded model's window is not reported."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 15,
-      "text": "* SWB1 dialogue ([ContinuumMemoryDialogue.rank]), public sources from [ContinuumKnowledgeArchive]."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 212,
-      "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 217,
-      "text": "val state=digest(ContinuumMemoryDialogue.hash(model)+\"\\n\"+facts.joinToString(\"\\n\") { it.id }+\"\\n\"+sourceState)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 221,
-      "text": "ContinuumMemoryDialogue.rank(model,query.take(1000),facts.filter { it.id in subset }).map { it.id }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 256,
-      "text": "ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 270,
-      "text": "return ContinuumBrainResult(ContinuumChatOutcome(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
-      "line": 308,
-      "text": "return ContinuumBrainResult(ContinuumChatOutcome(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 129,
-      "text": "private val dialogue=ContinuumMemoryDialogue(directory)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 802,
-      "text": "fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 820,
-      "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 847,
-      "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 854,
-      "text": "val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 940,
-      "text": "val active=ContinuumMemoryDialogue.hash(loadModel().save())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
-      "line": 62,
-      "text": "ContinuumMemoryDialogue.hash(original),"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
-      "line": 63,
-      "text": "ContinuumMemoryDialogue.hash(report.candidate.save()),"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
-      "line": 24,
-      "text": "class ContinuumMemoryDialogue(private val directory:File) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
-      "line": 75,
-      "text": "val ranked=ContinuumMemoryDialogue.rank(swb1Snapshot,item.query,item.memoryPool)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
-      "line": 33,
-      "text": "val hash=ContinuumMemoryDialogue.hash(bytes)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
-      "line": 58,
-      "text": "require(ContinuumMemoryDialogue.hash(bytes)==sha256) { \"Checkpoint besch\u00e4digt\" }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
-      "line": 64,
-      "text": "file.length()<=65536 && ContinuumMemoryDialogue.hash(file.readBytes())==hash"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 49,
-      "text": "val version=ContinuumMemoryDialogue.hash(pool.entries.sortedBy { it.key }.joinToString(\"\\u0000\"){it.key+\"\\u0000\"+it.value}.toByteArray())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 55,
-      "text": "val hits=ContinuumMemoryDialogue.rank(bytes,decision.query,allowed).take(3).map { it.id }"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 57,
-      "text": "Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"QUERY\",if(decision.sourceIds.isEmpty())\"UNRESOLVED_RETRIEVAL_SCOPE\" else \"CURRENT_CONFIRMED_SOURCE_SCOPE\",baseline.take(3),hits)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 59,
-      "text": "is Ctx3Decision.Clarify->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"CLARIFY\",decision.reason,baseline.take(3),emptyList())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 60,
-      "text": "is Ctx3Decision.Abstain->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"ABSTAIN\",decision.reason,baseline.take(3),emptyList())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 62,
-      "text": "result.copy(conversationSha256=ContinuumMemoryDialogue.hash(conversationId.toByteArray()),modelSha256=ContinuumMemoryDialogue.hash(bytes),sourceVersion=version)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "line": 63,
-      "text": "}.getOrElse {s.context.reset();Event(ContinuumMemoryDialogue.hash(input.take(512).toByteArray()),\"ERROR\",\"SAFE_SHADOW_FAILURE\",baseline.take(3),emptyList())}"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Workspace.kt",
-      "line": 34,
-      "text": "* [b0Rank] ranks a subset of fact ids for a query exactly like ContinuumMemoryDialogue.rank (top-3, may be empty)."
-    }
-  ],
-  "HybridMemoryRetriever": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
-      "line": 112,
-      "text": "val scored = HybridMemoryRetriever.retrieve("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
-      "line": 92,
-      "text": "val lexical = HybridMemoryRetriever.retrieve("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
-      "line": 100,
-      "text": "val candidate = if (useCre1) HybridMemoryRetriever.retrieve("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
-      "line": 244,
-      "text": "val retrieved = HybridMemoryRetriever.retrieve("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
-      "line": 53,
-      "text": "object HybridMemoryRetriever {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
-      "line": 6,
-      "text": "* Research-only before/after comparison for the existing HybridMemoryRetriever."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
-      "line": 65,
-      "text": "* Shadow quality gate over HybridMemoryRetriever: the production retrieval"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
-      "line": 95,
-      "text": "val hits = HybridMemoryRetriever.retrieve("
-    }
-  ],
-  "MemoryGraph": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
-      "line": 101,
-      "text": "class MemoryGraph {"
-    }
-  ],
-  "SelfModel": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
-      "line": 16,
-      "text": "val selfModel: SelfModel,"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
-      "line": 59,
-      "text": "modelReputation = emptyMap(), sourceReputation = emptyMap(), selfModel = SelfModel.uncertain(),"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 36,
-      "text": "class SelfModel private constructor("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 47,
-      "text": "fun withLimitation(c: Capability, limitation: String): SelfModel ="
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 48,
-      "text": "SelfModel(estimates + (c to this[c].copy(knownLimitations = this[c].knownLimitations + limitation)), log)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 51,
-      "text": "fun withEvidence(e: CapabilityEvidence, rate: Double): SelfModel {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 63,
-      "text": "return SelfModel(estimates + (e.capability to updated), log + e)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 71,
-      "text": "override fun equals(other: Any?) = other is SelfModel && other.estimates == estimates && other.log == log"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 75,
-      "text": "fun uncertain() = SelfModel(Capability.values().associateWith { CapabilityEstimate() }, emptyList())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 80,
-      "text": "): SelfModel {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
-      "line": 89,
-      "text": "return SelfModel(estimates.toMap(), evidence.toList())"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
-      "line": 57,
-      "text": "fun updateSelfModel(e: Evaluation)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitivePersistence.kt",
-      "line": 335,
-      "text": "val selfModel = SelfModel.restored(estimates, evidence)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
-      "line": 369,
-      "text": "selfModel: SelfModel,"
-    }
-  ],
-  "ExperienceCompiler": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
-      "line": 1673,
-      "text": "at.heinz.deviceai.cognitive.ExperienceCompiler().compile(experiences)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
-      "line": 33,
-      "text": "data class ExperienceCompilerPolicy("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
-      "line": 45,
-      "text": "class ExperienceCompiler("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
-      "line": 46,
-      "text": "private val policy: ExperienceCompilerPolicy = ExperienceCompilerPolicy()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
-      "line": 15,
-      "text": "* Strictly opt-in, evidence-gated adapter to the existing ExperienceCompiler."
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
-      "line": 22,
-      "text": "private val compiler: ExperienceCompiler = ExperienceCompiler(),"
-    }
-  ],
-  "ProofCarryingMemoryMutation": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 51,
-      "text": "data class ProofCarryingMemoryMutation("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 72,
-      "text": "): ProofCarryingMemoryMutation {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 100,
-      "text": "return ProofCarryingMemoryMutation(payload, signer.sign(payload.canonicalBytes()))"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 106,
-      "text": "private val entries = mutableListOf<ProofCarryingMemoryMutation>()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 109,
-      "text": "fun append(mutation: ProofCarryingMemoryMutation) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 119,
-      "text": "fun all(): List<ProofCarryingMemoryMutation> = entries.toList()"
-    }
-  ],
-  "MemoryMutationLedger": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
-      "line": 105,
-      "text": "class MemoryMutationLedger(private val signer: IdentitySigner) {"
-    }
-  ],
-  "ContinuumDecoderBridge": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
-      "line": 11,
-      "text": "class ContinuumDecoderBridge(private val directory: File) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 726,
-      "text": "fun decoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 727,
-      "text": "ContinuumDecoderBridge(directory).status()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 736,
-      "text": "ContinuumDecoderBridge(directory).trainExperiment("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 743,
-      "text": "ContinuumDecoderBridge(directory).experimentalContinuation("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 751,
-      "text": "fun pairedDecoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 753,
-      "text": "return@synchronized ContinuumDecoderBridge.Status("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 756,
-      "text": "ContinuumDecoderBridge(directory).pairedStatus(snapshot)"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 768,
-      "text": "ContinuumDecoderBridge(directory).storageEvidence()"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 781,
-      "text": "ContinuumDecoderBridge(directory).trainPairedExperiment("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
-      "line": 794,
-      "text": "ContinuumDecoderBridge(directory).experimentalPairedContinuation("
-    }
-  ],
-  "MemoryRetrievalResearchGate": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
-      "line": 113,
-      "text": "MemoryResearchSummary = MemoryRetrievalResearchGate.evaluate("
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
-      "line": 70,
-      "text": "object MemoryRetrievalResearchGate {"
-    }
-  ],
-  "VerifiedSkillReview": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
-      "line": 21,
-      "text": "class VerifiedSkillReview("
-    }
-  ],
-  "AndroidDeviceAppActions": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
-      "line": 16,
-      "text": "internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
-      "line": 13,
-      "text": "this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))"
-    }
-  ],
-  "VerifiedForegroundLaunch": [
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
-      "line": 9,
-      "text": "import at.heinz.deviceai.cognitive.VerifiedForegroundLaunch"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
-      "line": 19,
-      "text": "private val launch=VerifiedForegroundLaunch(ScreenObservationBus,dispatch={pkg->"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
-      "line": 20,
-      "text": "val intent=app.packageManager.getLaunchIntentForPackage(pkg)?:return@VerifiedForegroundLaunch false"
-    },
-    {
-      "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedForegroundLaunch.kt",
-      "line": 17,
-      "text": "internal class VerifiedForegroundLaunch("
-    }
-  ]
+  "generatedBy": "CodeRabbit Agent",
+  "sourceCommit": "3eb7701cc033a620c9b038d2072fb872e3f6e547",
+  "references": {
+    "ContinuumBrainBridge": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 2758,
+        "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.forget(correctionSession)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3032,
+        "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.archiveAnswerForQuestion(document,request)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3059,
+        "text": "at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 159,
+        "text": "object ContinuumBrainBridge {"
+      }
+    ],
+    "ContinuumCognitiveRuntime": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3006,
+        "text": "at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5185,
+        "text": "at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+        "line": 3,
+        "text": "import at.heinz.deviceai.learning.ContinuumCognitiveRuntime"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+        "line": 24,
+        "text": "private val cognitiveRuntime: ContinuumCognitiveRuntime,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "line": 45,
+        "text": "class ContinuumCognitiveRuntime("
+      }
+    ],
+    "CognitiveDecisionBridge": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3005,
+        "text": "val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveDecisionBridge.kt",
+        "line": 23,
+        "text": "class CognitiveDecisionBridge("
+      }
+    ],
+    "AiContextCompiler": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 58,
+        "text": "import at.heinz.deviceai.cognitive.AiContextCompiler"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 180,
+        "text": "private val contextCompiler = AiContextCompiler("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+        "line": 56,
+        "text": "class AiContextCompiler("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt",
+        "line": 7,
+        "text": "* Read-only experimental interface to the EXISTING AiContextCompiler."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumComputeReuseResearch.kt",
+        "line": 17,
+        "text": "private val compiler: AiContextCompiler = AiContextCompiler(),"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+        "line": 25,
+        "text": "private val compiler: AiContextCompiler,"
+      }
+    ],
+    "LocalModelRuntime": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 106,
+        "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 174,
+        "text": "private lateinit var localRuntime: LocalModelRuntime"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 7514,
+        "text": "* thread; LocalModelRuntime performs its expensive file/hash/engine work"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+        "line": 6,
+        "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+        "line": 24,
+        "text": "private val runtime: LocalModelRuntime,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+        "line": 5,
+        "text": "import at.heinz.deviceai.localmodel.LocalModelRuntime"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+        "line": 12,
+        "text": "private val runtime: LocalModelRuntime,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+        "line": 61,
+        "text": "interface LocalModelRuntime {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+        "line": 79,
+        "text": "class LiteRtLmLocalModelRuntime("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+        "line": 83,
+        "text": ") : LocalModelRuntime {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+        "line": 14,
+        "text": "class Host(val catalog: LocalModelCatalog, val runtime: LiteRtLmLocalModelRuntime) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+        "line": 25,
+        "text": "Host(catalog, LiteRtLmLocalModelRuntime(catalog, File(app.cacheDir, \"litertlm\")))"
+      }
+    ],
+    "LocalModelReasoningAdapter": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 67,
+        "text": "import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 6363,
+        "text": "ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 7079,
+        "text": "val coordinator = DevelopmentCoordinator(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+        "line": 11,
+        "text": "class LocalModelReasoningAdapter("
+      }
+    ],
+    "ContinuumLearningCore": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 20,
+        "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 461,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 1667,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 1731,
+        "text": "val learning = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 1975,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 2759,
+        "text": "ContinuumLearningCore(filesDir).resetDialogueConversation(correctionSession) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 2939,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 2997,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3373,
+        "text": "ContinuumLearningCore(filesDir).teachIntent("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3539,
+        "text": "val core = runCatching { ContinuumLearningCore(filesDir).recordCommandMapping(phrase, name) }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3585,
+        "text": "runCatching { ContinuumLearningCore(filesDir).status() }.getOrNull()?.let { core ->"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3611,
+        "text": "val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllCommandMappings() }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3693,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 3789,
+        "text": "val learning=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4165,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4203,
+        "text": "ContinuumLearningCore(filesDir).trainPublicCurriculum {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4235,
+        "text": "val bytes=ContinuumLearningCore(filesDir).modelSnapshot()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4401,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4428,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4471,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4570,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4783,
+        "text": "val previous=ContinuumLearningCore(filesDir).modelHash()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4802,
+        "text": "check(ContinuumLearningCore(filesDir).modelHash()==previous) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4834,
+        "text": "onLearningIo({ ContinuumLearningCore(filesDir).cre1ResearchStatus() }) { result ->"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4868,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4922,
+        "text": "val snapshot=ContinuumLearningCore(filesDir).modelSnapshot()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4926,
+        "text": "val unchanged=ContinuumLearningCore(filesDir).modelHash()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 4960,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5003,
+        "text": "val result=runCatching { ContinuumLearningCore(filesDir).rollbackToPrevious() }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5171,
+        "text": "val core=ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5205,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5227,
+        "text": "val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 5850,
+        "text": "at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).learnFromSources(found) { cancellation.isCancelled() || !session.isAuthorized() }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 6638,
+        "text": "ContinuumLearningCore(filesDir).activeOwnerFacts().map { fact ->"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 8275,
+        "text": "onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) { sessionResetLifetime.get() } }) { result ->"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 8323,
+        "text": "val score=ContinuumLearningCore(filesDir).intentScore(value)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 8591,
+        "text": "ContinuumLearningCore(filesDir).importPublicPackage(model,manifest)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 8636,
+        "text": "ContinuumLearningCore(filesDir).importSnapshot(bytes)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+        "line": 15,
+        "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+        "line": 65,
+        "text": "\"Lernzentrum \u00f6ffnen; bleibt der Fehler, Diagnose exportieren.\") { ContinuumLearningCore(files) }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+        "line": 38,
+        "text": "val core=at.heinz.deviceai.learning.ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+        "line": 19,
+        "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+        "line": 196,
+        "text": "ContinuumLearningCore(appContext.filesDir).intelligenceAudit {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+        "line": 3,
+        "text": "import at.heinz.deviceai.learning.ContinuumLearningCore"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceTeamleader.kt",
+        "line": 168,
+        "text": "val core = ContinuumLearningCore(filesDir, now)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+        "line": 73,
+        "text": "val core = ContinuumLearningCore(filesDir)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+        "line": 122,
+        "text": "val core=ContinuumLearningCore(filesDir).apply {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 14,
+        "text": "* [ContinuumLearningCore.activeOwnerFacts] (revoked facts are never part of it), ranking from the unchanged"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 175,
+        "text": "core:ContinuumLearningCore,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 210,
+        "text": "appDirectory:File,core:ContinuumLearningCore,conversationId:String,request:String"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 240,
+        "text": "core:ContinuumLearningCore,answer:Ewm1Brain.Answer,ownerFacts:Set<String>,baseline:ContinuumChatOutcome,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "line": 25,
+        "text": "val decoder=ContinuumLearningCore(filesDir).pairedDecoderStatus()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+        "line": 66,
+        "text": "val core=ContinuumLearningCore(filesDir).apply {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+        "line": 47,
+        "text": "private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
+        "line": 6,
+        "text": "* The caller holds ContinuumLearningCore's common process lock."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumIntelligenceOnDevice.kt",
+        "line": 10,
+        "text": "core: ContinuumLearningCore,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 121,
+        "text": "class ContinuumLearningCore("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicCurriculum.kt",
+        "line": 9,
+        "text": "* holdouts in ContinuumLearningCore remain an additional independent gate."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+        "line": 412,
+        "text": "val core=ContinuumLearningCore(filesDir).apply {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+        "line": 452,
+        "text": "ContinuumLearningCore(filesDir).apply {"
+      }
+    ],
+    "ContinuumMemoryDialogue": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+        "line": 160,
+        "text": "// (ContinuumMemoryDialogue: history.lastOrNull()?.topic); a loaded model's window is not reported."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 15,
+        "text": "* SWB1 dialogue ([ContinuumMemoryDialogue.rank]), public sources from [ContinuumKnowledgeArchive]."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 212,
+        "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 217,
+        "text": "val state=digest(ContinuumMemoryDialogue.hash(model)+\"\\n\"+facts.joinToString(\"\\n\") { it.id }+\"\\n\"+sourceState)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 221,
+        "text": "ContinuumMemoryDialogue.rank(model,query.take(1000),facts.filter { it.id in subset }).map { it.id }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 256,
+        "text": "ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 270,
+        "text": "return ContinuumBrainResult(ContinuumChatOutcome(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumBrain.kt",
+        "line": 308,
+        "text": "return ContinuumBrainResult(ContinuumChatOutcome(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 129,
+        "text": "private val dialogue=ContinuumMemoryDialogue(directory)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 802,
+        "text": "fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 820,
+        "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 847,
+        "text": "ContinuumMemoryDialogue.requireConversationId(conversationId)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 854,
+        "text": "val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 940,
+        "text": "val active=ContinuumMemoryDialogue.hash(loadModel().save())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+        "line": 62,
+        "text": "ContinuumMemoryDialogue.hash(original),"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+        "line": 63,
+        "text": "ContinuumMemoryDialogue.hash(report.candidate.save()),"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+        "line": 24,
+        "text": "class ContinuumMemoryDialogue(private val directory:File) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt",
+        "line": 75,
+        "text": "val ranked=ContinuumMemoryDialogue.rank(swb1Snapshot,item.query,item.memoryPool)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+        "line": 33,
+        "text": "val hash=ContinuumMemoryDialogue.hash(bytes)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+        "line": 58,
+        "text": "require(ContinuumMemoryDialogue.hash(bytes)==sha256) { \"Checkpoint besch\u00e4digt\" }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+        "line": 64,
+        "text": "file.length()<=65536 && ContinuumMemoryDialogue.hash(file.readBytes())==hash"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 49,
+        "text": "val version=ContinuumMemoryDialogue.hash(pool.entries.sortedBy { it.key }.joinToString(\"\\u0000\"){it.key+\"\\u0000\"+it.value}.toByteArray())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 55,
+        "text": "val hits=ContinuumMemoryDialogue.rank(bytes,decision.query,allowed).take(3).map { it.id }"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 57,
+        "text": "Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"QUERY\",if(decision.sourceIds.isEmpty())\"UNRESOLVED_RETRIEVAL_SCOPE\" else \"CURRENT_CONFIRMED_SOURCE_SCOPE\",baseline.take(3),hits)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 59,
+        "text": "is Ctx3Decision.Clarify->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"CLARIFY\",decision.reason,baseline.take(3),emptyList())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 60,
+        "text": "is Ctx3Decision.Abstain->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),\"ABSTAIN\",decision.reason,baseline.take(3),emptyList())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 62,
+        "text": "result.copy(conversationSha256=ContinuumMemoryDialogue.hash(conversationId.toByteArray()),modelSha256=ContinuumMemoryDialogue.hash(bytes),sourceVersion=version)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+        "line": 63,
+        "text": "}.getOrElse {s.context.reset();Event(ContinuumMemoryDialogue.hash(input.take(512).toByteArray()),\"ERROR\",\"SAFE_SHADOW_FAILURE\",baseline.take(3),emptyList())}"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/intelligence/ewm/Ewm1Workspace.kt",
+        "line": 34,
+        "text": "* [b0Rank] ranks a subset of fact ids for a query exactly like ContinuumMemoryDialogue.rank (top-3, may be empty)."
+      }
+    ],
+    "HybridMemoryRetriever": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+        "line": 112,
+        "text": "val scored = HybridMemoryRetriever.retrieve("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+        "line": 92,
+        "text": "val lexical = HybridMemoryRetriever.retrieve("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/AuthorizedConversationMemoryShadow.kt",
+        "line": 100,
+        "text": "val candidate = if (useCre1) HybridMemoryRetriever.retrieve("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+        "line": 244,
+        "text": "val retrieved = HybridMemoryRetriever.retrieve("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+        "line": 53,
+        "text": "object HybridMemoryRetriever {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
+        "line": 6,
+        "text": "* Research-only before/after comparison for the existing HybridMemoryRetriever."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+        "line": 65,
+        "text": "* Shadow quality gate over HybridMemoryRetriever: the production retrieval"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+        "line": 95,
+        "text": "val hits = HybridMemoryRetriever.retrieve("
+      }
+    ],
+    "MemoryGraph": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+        "line": 101,
+        "text": "class MemoryGraph {"
+      }
+    ],
+    "SelfModel": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+        "line": 16,
+        "text": "val selfModel: SelfModel,"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+        "line": 59,
+        "text": "modelReputation = emptyMap(), sourceReputation = emptyMap(), selfModel = SelfModel.uncertain(),"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 36,
+        "text": "class SelfModel private constructor("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 47,
+        "text": "fun withLimitation(c: Capability, limitation: String): SelfModel ="
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 48,
+        "text": "SelfModel(estimates + (c to this[c].copy(knownLimitations = this[c].knownLimitations + limitation)), log)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 51,
+        "text": "fun withEvidence(e: CapabilityEvidence, rate: Double): SelfModel {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 63,
+        "text": "return SelfModel(estimates + (e.capability to updated), log + e)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 71,
+        "text": "override fun equals(other: Any?) = other is SelfModel && other.estimates == estimates && other.log == log"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 75,
+        "text": "fun uncertain() = SelfModel(Capability.values().associateWith { CapabilityEstimate() }, emptyList())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 80,
+        "text": "): SelfModel {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+        "line": 89,
+        "text": "return SelfModel(estimates.toMap(), evidence.toList())"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+        "line": 57,
+        "text": "fun updateSelfModel(e: Evaluation)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/CognitivePersistence.kt",
+        "line": 335,
+        "text": "val selfModel = SelfModel.restored(estimates, evidence)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+        "line": 369,
+        "text": "selfModel: SelfModel,"
+      }
+    ],
+    "ExperienceCompiler": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+        "line": 1673,
+        "text": "at.heinz.deviceai.cognitive.ExperienceCompiler().compile(experiences)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+        "line": 33,
+        "text": "data class ExperienceCompilerPolicy("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+        "line": 45,
+        "text": "class ExperienceCompiler("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+        "line": 46,
+        "text": "private val policy: ExperienceCompilerPolicy = ExperienceCompilerPolicy()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
+        "line": 15,
+        "text": "* Strictly opt-in, evidence-gated adapter to the existing ExperienceCompiler."
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
+        "line": 22,
+        "text": "private val compiler: ExperienceCompiler = ExperienceCompiler(),"
+      }
+    ],
+    "ProofCarryingMemoryMutation": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 51,
+        "text": "data class ProofCarryingMemoryMutation("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 72,
+        "text": "): ProofCarryingMemoryMutation {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 100,
+        "text": "return ProofCarryingMemoryMutation(payload, signer.sign(payload.canonicalBytes()))"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 106,
+        "text": "private val entries = mutableListOf<ProofCarryingMemoryMutation>()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 109,
+        "text": "fun append(mutation: ProofCarryingMemoryMutation) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 119,
+        "text": "fun all(): List<ProofCarryingMemoryMutation> = entries.toList()"
+      }
+    ],
+    "MemoryMutationLedger": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+        "line": 105,
+        "text": "class MemoryMutationLedger(private val signer: IdentitySigner) {"
+      }
+    ],
+    "ContinuumDecoderBridge": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+        "line": 11,
+        "text": "class ContinuumDecoderBridge(private val directory: File) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 726,
+        "text": "fun decoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 727,
+        "text": "ContinuumDecoderBridge(directory).status()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 736,
+        "text": "ContinuumDecoderBridge(directory).trainExperiment("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 743,
+        "text": "ContinuumDecoderBridge(directory).experimentalContinuation("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 751,
+        "text": "fun pairedDecoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 753,
+        "text": "return@synchronized ContinuumDecoderBridge.Status("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 756,
+        "text": "ContinuumDecoderBridge(directory).pairedStatus(snapshot)"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 768,
+        "text": "ContinuumDecoderBridge(directory).storageEvidence()"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 781,
+        "text": "ContinuumDecoderBridge(directory).trainPairedExperiment("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+        "line": 794,
+        "text": "ContinuumDecoderBridge(directory).experimentalPairedContinuation("
+      }
+    ],
+    "MemoryRetrievalResearchGate": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryResearchShadowComparator.kt",
+        "line": 113,
+        "text": "MemoryResearchSummary = MemoryRetrievalResearchGate.evaluate("
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+        "line": 70,
+        "text": "object MemoryRetrievalResearchGate {"
+      }
+    ],
+    "VerifiedSkillReview": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt",
+        "line": 21,
+        "text": "class VerifiedSkillReview("
+      }
+    ],
+    "AndroidDeviceAppActions": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
+        "line": 16,
+        "text": "internal class AndroidDeviceAppActions(context:Context):DeviceAppActionPort{"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
+        "line": 13,
+        "text": "this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))"
+      }
+    ],
+    "VerifiedForegroundLaunch": [
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
+        "line": 9,
+        "text": "import at.heinz.deviceai.cognitive.VerifiedForegroundLaunch"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
+        "line": 19,
+        "text": "private val launch=VerifiedForegroundLaunch(ScreenObservationBus,dispatch={pkg->"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/AndroidDeviceAppActions.kt",
+        "line": 20,
+        "text": "val intent=app.packageManager.getLaunchIntentForPackage(pkg)?:return@VerifiedForegroundLaunch false"
+      },
+      {
+        "file": "app/src/main/java/at/heinz/deviceai/cognitive/VerifiedForegroundLaunch.kt",
+        "line": 17,
+        "text": "internal class VerifiedForegroundLaunch("
+      }
+    ]
+  }
 }

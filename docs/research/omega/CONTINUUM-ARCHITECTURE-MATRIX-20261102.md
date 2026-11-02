@@ -43,4 +43,10 @@ PR334/335 and342–349 are ancestors of this integration; PR350 and352 are separ
 
 No new third-party code or assets were imported in this sprint. Existing TokenArc Open Jarvis adaptation records commit04873998933830ce582018fe4664ebce5ec64d2f and MIT in AndroidDeviceAppActions and ContinuumScreenObservationService; no new copying or license conclusion is claimed. PR350 lists eight exact upstream commits/licenses; its provenance snapshot remains evidence, not proof of model/asset sublicensing or runtime integration. Mem0, A-mem, sqlite-vec, LongMemEval, River, UI-TARS, OpenHands, Aider, sherpa-onnx, llama.cpp and whisper.cpp were not independently re-audited or integrated in this bounded pass (NOT_RUN). Existing repository adapters take precedence.
 
-Primary references fetched read-only: [Android AccessibilityEvent](https://developer.android.com/reference/android/view/accessibility/AccessibilityEvent) distinguishes content changes from window changes; the current service subscribes only to window changes. A subsequent Robolectric regression reproduced stale text release during a delivered content event; the small invalidation fix is now framework-tested. This remains no Fold7 proof. [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) was checked as the existing upstream; no performance recommendation or new model capability was inferred. Current pinned Gradle dependency remains0.18.0.
+Primary references fetched read-only: [Android AccessibilityEvent](https://developer.android.com/reference/android/view/accessibility/AccessibilityEvent) distinguishes content changes from window changes; <!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:d84b9821608061de3562f10ae3303dd57d716c95f4fd3f0fa2eaeabac2920192 -->
+
+the pre-change service subscribed only to window changes.
+
+<!-- /coderabbit-ai-generated:v1 --> A subsequent Robolectric regression reproduced stale text release during a delivered content event; the small invalidation fix is now framework-tested. This remains no Fold7 proof. [LiteRT-LM](https://github.com/google-ai-edge/LiteRT-LM) was checked as the existing upstream; no performance recommendation or new model capability was inferred. Current pinned Gradle dependency remains0.18.0.
