@@ -1,0 +1,98 @@
+[
+  {
+    "scope": "JVM",
+    "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+    "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores",
+    "reason": "Requires explicit Node training-parity fixture; see source"
+  },
+  {
+    "scope": "JVM",
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeTrainingParity",
+    "reason": "Requires explicit Node training-parity fixture; see source"
+  },
+  {
+    "scope": "JVM",
+    "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+    "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds",
+    "reason": "Requires explicit Node training-parity fixture; see source"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "actual Android shell adapters compile against official APIs and the unchanged Binder contract",
+    "reason": "NOT_RUN: configure official Kotlin and Shizuku/annotation jars"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "native natural request → actual tool → receipt → persisted episode, with negative regressions",
+    "reason": "NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces",
+    "reason": "NOT_RUN: configure official Kotlin/JUnit jars"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "native JVM export feeds Node byte-for-byte when cross-language runner is configured",
+    "reason": "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM→Node test"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "real Harness service preserves the existing strict wire schema without mounting tools",
+    "reason": "NOT_RUN: configure actual reviewed Harness SDK"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "authority smuggling, no-op and HTTP failure remain rejected without hidden retries",
+    "reason": "NOT_RUN: actual SDK required"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "fixed isolated Android runner rejects 401 reports instead of returning a green subset",
+    "reason": "Requires explicitly configured Docker; synthetic Gradle reports, not an Android build"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs",
+    "reason": "true"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "wrong independent expected output rejects a compiling patch",
+    "reason": "true"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "an arbitrary red baseline is never accepted as proof of the requested missing method",
+    "reason": "true"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "new method compiles and computes a nontrivial result with real kotlinc",
+    "reason": "true"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles",
+    "reason": "true"
+  },
+  {
+    "scope": "Node",
+    "class": "test",
+    "name": "false owner output cannot create a verified Kotlin preview",
+    "reason": "true"
+  }
+]
