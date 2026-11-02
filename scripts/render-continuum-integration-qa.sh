@@ -85,6 +85,11 @@ mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 node --version
 
+# The historical architecture-proof suite executes a Python stdlib XML
+# validator. Confirm the Render runtime can actually run it before Node QA.
+command -v python3 || fail 'Python3 missing for mandatory JUnit verification'
+python3 -c 'import sys, xml.etree.ElementTree as ET; print("PYTHON_QA_READY",sys.version.split()[0])' ||
+  fail 'Python XML validator unavailable'
 node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/NODE-SPECIAL.txt; fail 'Node special contract failed'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
