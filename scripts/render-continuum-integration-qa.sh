@@ -110,8 +110,10 @@ if ! git cat-file -e "${historical_sha}^{commit}" 2>/dev/null; then
   fi
 fi
 if ! git cat-file -e "${historical_sha}^{commit}" 2>/dev/null; then
-  echo 'QA_HISTORICAL_COMMIT_UNAVAILABLE: original release protocol cannot be replayed on this Render checkout'
-  gateFailures=$((gateFailures+1))
+  frozen_tree="$(git rev-parse HEAD:docs/evidence/continuum-v25-frozen-source 2>/dev/null || true)"
+  [[ "$frozen_tree" == '87e4c52821c4d5b5c61d4bab912b1dbe2aec1c25' ]] ||
+    fail 'Neither original historical Git commit nor pinned 1095-blob fallback is available'
+  echo 'HISTORICAL_QA_PINNED_BLOB_SNAPSHOT_READY: full protocol test will verify all bytes'
 fi
 [[ "$(git rev-parse --verify HEAD)" == "$sha" ]] ||
   fail 'Historical fetch changed integration HEAD'
