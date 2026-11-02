@@ -1,0 +1,49 @@
+{
+  "status": "AUDIT_CHECKPOINT_ONLY",
+  "reviewVerdict": "CHANGES_REQUESTED",
+  "productCodeChanged": false,
+  "checks": [
+    {
+      "command": "python3 tools/continuum-span-research/report-context-duplicates.py docs/evidence/sovereign-brain-iv-20261102/holdout-72-and-54.json",
+      "scope": "frozen prediction reanalysis",
+      "status": "HOST_VERIFIED",
+      "allRows": {
+        "count": 72,
+        "parentCorrect": 48,
+        "candidateCorrect": 72,
+        "improved": 24,
+        "regressed": 0,
+        "unchanged": 48,
+        "parentWrongAnswers": 24,
+        "candidateWrongAnswers": 0,
+        "candidateCorrectNegativeAbstentions": 24
+      },
+      "uniqueCases": {
+        "count": 54,
+        "parentCorrect": 36,
+        "candidateCorrect": 54,
+        "improved": 18,
+        "regressed": 0,
+        "unchanged": 36,
+        "parentWrongAnswers": 18,
+        "candidateWrongAnswers": 0,
+        "candidateCorrectNegativeAbstentions": 18
+      }
+    },
+    {
+      "command": "bash docs/evidence/sovereign-brain-iv-20261102/independent-baseline-review/run.sh /workspace/brain4-final-probe",
+      "scope": "fresh exact-source bounded negative probes",
+      "status": "HOST_VERIFIED",
+      "knownFailuresReproduced": 3,
+      "passedAcceptance": false
+    }
+  ],
+  "A": "NOT_IMPLEMENTED",
+  "B_S4": "NOT_IMPLEMENTED",
+  "C_S6": "NOT_IMPLEMENTED",
+  "S5NewDecoderExperiments": "NOT_RUN",
+  "fullKotlinNodeThisRound": "NOT_RUN",
+  "Fold7": "NOT_RUN",
+  "releaseApproval": false,
+  "authorization": "Explicit owner Brain IV request in this chat, followed by explicit immediate-close instruction. No fabricated GitHub owner-comment link."
+}
