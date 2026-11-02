@@ -152,7 +152,8 @@ class ToolGate(
     fun execute(
         invocation: ToolInvocation,
         userConfirmed: Boolean = false,
-        destructiveConfirmed: Boolean = false
+        destructiveConfirmed: Boolean = false,
+        onExecutionStarted: (() -> Unit)? = null
     ): ToolExecutionResult {
         val request = invocation.request
         val spec = ToolRegistry.get(request.name)
@@ -274,7 +275,12 @@ class ToolGate(
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
         return try {
-            val future = executor.submit(Callable { runner.execute(request) })
+            val future = executor.submit(Callable {
+                // Observation hook runs only inside an actually started authorized worker.
+                // A broken HUD/observer cannot grant, deny or change the tool result.
+                runCatching { onExecutionStarted?.invoke() }
+                runner.execute(request)
+            })
             activeFutures += future
             if (cancelled.get()) future.cancel(true)
             val output = try {

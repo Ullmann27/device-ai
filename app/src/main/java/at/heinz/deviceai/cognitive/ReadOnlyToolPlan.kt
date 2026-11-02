@@ -14,6 +14,7 @@ class ReadOnlyToolPlan(proposals: List<ToolProposal>) : AgentModel, AgentEvaluat
     private val steps=proposals.map { it.copy(arguments=it.arguments.toMap()) }
     constructor(proposal:ToolProposal):this(listOf(proposal))
     val stepCount:Int get()=steps.size
+    val plannedToolNames:List<String> get()=steps.map { it.toolName }
     private var observed:List<AgentToolObservation> = emptyList()
 
     init {

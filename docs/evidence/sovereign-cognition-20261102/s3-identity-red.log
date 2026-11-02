@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+.E
+Time: 0.351
+There was 1 failure:
+1) distinctAuthorizedTaskNamespacesCannotCollideAtTheSameTime(at.heinz.deviceai.cognitive.AgentTaskIdentityTest)
+java.lang.AssertionError: Different existing task/call namespaces need different experience IDs. Actual: agent-076a11ae3b8ad36f-50-0
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at at.heinz.deviceai.cognitive.AgentTaskIdentityTest.distinctAuthorizedTaskNamespacesCannotCollideAtTheSameTime(AgentTaskIdentityTest.kt:16)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
