@@ -25,4 +25,16 @@ Raw byte-preserved logs are in this directory. Full expanded Node run and native
 
 GitHub API inspection of PR352/353 found no completed CodeRabbit review. Gitar's completion finding is addressed here; its PR352 documentation finding belongs to a different unmerged documentation branch and is not silently edited. No independent CodeRabbit approval is claimed.
 
-Next: finish the full Node gate, fix and validate the reproduced ephemeral research-context reset, then publish a separate integration follow-up with an architecture matrix and executable handoff. This draft is not a merge instruction.
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:201128d7816feafd16c7d71f890dee281f92a47f87eb99585e0200dace6b1212 -->
+
+## Broader Node follow-up
+
+The expanded command `node --test --test-concurrency=2 .github/continuum/*test.mjs scripts/*.test.mjs` ran1944 cases:1926PASS/5FAIL/13SKIP, exit1. This adds all script tests beyond the previous narrower1367-case scope. Two failures were proven fixture leakage: BASH_ENV restored the sandbox gh wrapper ahead of fake gh/git, causing real authentication/network calls instead of synthetic cases. Only these test subprocesses now clear BASH_ENV; all access denial, origin preservation and secret-redaction assertions remain. `node --test scripts/continuum-local-access.test.mjs`:3PASS, exit0. Production GitHub access code and signing code unchanged.
+
+Three historical live-release source-gate assertions remain failed in the broader run: one expects today's research tree to equal frozen20261027 source blobs; two expect later rejection messages even though this research branch is already rejected. On a detached PR351 worktree, that seven-case file itself gives6PASS/1FAIL (old inventory already mismatches app-navigation-wiring); the two other cases pass because detached HEAD bypasses only the branch-name check and still rejects missing approvals. These are source/branch-dependent historical fixtures, not evidence of a signing bypass. No release manifest, approval pin or signer was relaxed. Final integration follow-up will retain these failures explicitly.
+
+Next: publish the independently tested ephemeral research-context reset and focused QA entry point in a separate dependent draft. This draft is not a merge instruction.
+
+<!-- /coderabbit-ai-generated:v1 -->
