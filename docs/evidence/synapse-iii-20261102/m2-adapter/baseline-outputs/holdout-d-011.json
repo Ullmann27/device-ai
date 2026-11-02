@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-011:s1",
+    "decision": "SPAN",
+    "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDajagimu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-011:s1",
+    "decision": "SPAN",
+    "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDajagimu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-011:s1",
+    "decision": "SPAN",
+    "sha256": "ef273a5fc8b12a917f383b638c90be2b7a11a6cfe7204cc36e32d8b5a58dc7da",
+    "endExclusive": 28,
+    "start": 19,
+    "text": "EDajagimu",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 66.911443
+}

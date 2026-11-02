@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-013:s1",
+    "decision": "SPAN",
+    "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+    "endExclusive": 27,
+    "start": 18,
+    "text": "EDadagadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-013:s1",
+    "decision": "SPAN",
+    "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+    "endExclusive": 27,
+    "start": 18,
+    "text": "EDadagadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-013:s1",
+    "decision": "SPAN",
+    "sha256": "2661560c46698d8f68cad3a6455fdb088bdec1d8621573a6448e23f06ffc7cf6",
+    "endExclusive": 27,
+    "start": 18,
+    "text": "EDadagadi",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 79.710539
+}

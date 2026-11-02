@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-051:s1",
+    "decision": "SPAN",
+    "sha256": "73275c8cc9d4ccae8f7f535f1b811c756f6486747a78debd4e4451b030f003b1",
+    "endExclusive": 26,
+    "start": 17,
+    "text": "EDagasavo",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 84.274954
+}

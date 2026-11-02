@@ -1,0 +1,23 @@
+{
+  "trials": [
+    {
+      "trainNllAfter": 0.0034131659844932687,
+      "seed": 17,
+      "trainMillis": 254.754692,
+      "trainNllBefore": 3.168925087703395,
+      "validationNll": 0.0034131659844932696
+    },
+    {
+      "trainNllAfter": 0.0034131659844932687,
+      "seed": 29,
+      "trainMillis": 39.701718,
+      "trainNllBefore": 3.168925087703395,
+      "validationNll": 0.0034131659844932696
+    }
+  ],
+  "rate": 0.05,
+  "trainableParameters": 2,
+  "frozenParameters": 11,
+  "epochs": 60,
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}
