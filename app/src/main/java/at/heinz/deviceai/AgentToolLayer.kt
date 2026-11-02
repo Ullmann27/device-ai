@@ -123,11 +123,14 @@ class ToolGate(
     private val cancelled = AtomicBoolean()
     private val activeFutures = ConcurrentHashMap.newKeySet<Future<String>>()
     private val pendingStarts = ConcurrentHashMap.newKeySet<ToolExecutionStartLatch>()
+    private val startCommitLock = Any()
     private val consumedCallIds = ConcurrentHashMap.newKeySet<String>()
 
     fun cancel() {
-        cancelled.set(true)
-        pendingStarts.forEach { it.revokeIfPending() }
+        synchronized(startCommitLock) {
+            cancelled.set(true)
+            pendingStarts.forEach { it.revokeIfPending() }
+        }
         activeFutures.forEach { it.cancel(true) }
     }
 
@@ -274,7 +277,10 @@ class ToolGate(
             }.getOrDefault(false)
         }
         val dispatch = ToolExecutionStartLatch()
-        pendingStarts += dispatch
+        synchronized(startCommitLock) {
+            if (cancelled.get()) dispatch.revokeIfPending()
+            else pendingStarts += dispatch
+        }
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
@@ -294,7 +300,10 @@ class ToolGate(
                 // This CAS is the only start-commit point. A timeout/cancel that
                 // wins the race revokes the pending dispatch before backend work.
                 // A committed dispatch cannot later be reported as definitely unrun.
-                if (!dispatch.commitIfPending()) throw CancellationException("Dispatch was revoked before start.")
+                synchronized(startCommitLock) {
+                    if (cancelled.get() || Thread.currentThread().isInterrupted || !dispatch.commitIfPending())
+                        throw CancellationException("Dispatch was revoked before start.")
+                }
                 runner.execute(request)
             })
             activeFutures += future
