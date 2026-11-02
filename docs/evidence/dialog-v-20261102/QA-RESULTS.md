@@ -27,3 +27,11 @@
 5. Nur nach neuer kompletter QA und Besitzerfreigabe höheren Versionscode/Originalsignatur über bestehenden Releasekanal verwenden; nichts automatisch veröffentlichen.
 
 Keine Änderungen an main, originalem Signierkanal, Besitzerinstallationsdaten oder Modellgewichten.
+
+## Zusatzprüfung – source-exakt verifizierte Pure-Kotlin-Dateien
+
+- `cognitive/NativeAppLookup.kt`: lokaler `git hash-object` **a0290ab81df5cbcc941196365a209fb335e213d1**, identisch mit dem GitHub-Blob-SHA zum Zeitpunkt dieser Prüfung.
+- `cognitive/JarvisVoiceProfile.kt`: lokaler `git hash-object` **aeaa2ecd4876da9aa29ea15d70ade0b73b96cc1b**, identisch mit dem GitHub-Blob-SHA.
+- Host `kotlinc-jvm 1.9.0`, OpenJDK 21: diese zwei **byte-identischen GitHub-Quellen** zusammen mit einem eigenständigen 20-Fall-Testharness kompiliert (`-include-runtime`) und via `java -jar` ausgeführt.
+- Ergebnis: **20/20 PASS**. Geprüft: exakte/teilweise/mehrdeutige Appnamen, Duplikate, deutsche Sprachbefehle, verneinte Befehle, unbekannte App, ungültige/lange Queries, Unicode-Bidi/Newline-Härtung, Sortier-/Ergebnislimit, Paketname, Offline-TTS-Konfiguration, Markdown-/URL-/Codebereinigung, sichere Textkürzung und Budgetgrenzen.
+- Dies ist ein **realer source-exakter Host-Lauf für genau zwei reine Kotlin-Produktionsdateien**, **nicht** die Android-JUnit-/Gradle-Laufzeit, nicht die übrigen Testdateien, nicht der DeviceToolExecutor oder das Fold7. Die früheren manuellen Mirrors sind getrennte 11/11-Vorprüfungen.
