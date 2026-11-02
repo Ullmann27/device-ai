@@ -13,6 +13,11 @@ if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; 
   # follow a named branch. Only this dedicated Render QA service is allowed.
   [[ -z "$branch_name" && "${RENDER_SERVICE_NAME:-}" == "continuum-unified-research-apk-20261102" ]] ||
     fail 'Wrong source branch or untrusted detached checkout'
+  # Render detaches HEAD. The canonical Node-QA contract requires an attached
+  # local branch; reattach THIS exact checked-out SHA without touching remote.
+  git switch -c integration/continuum-all-systems-apk-qa-20261102 "$sha" >/dev/null ||
+    fail 'Could not establish local QA source identity'
+  [[ "$(git rev-parse HEAD)" == "$sha" ]] || fail 'Reattachment changed source'
 fi
 git -c core.fileMode=false diff --quiet HEAD -- || fail 'Changed tracked source'
 [[ -z "$(git ls-files --others --exclude-standard -- app/src scripts backend/src backend/test)" ]] || fail 'Untracked executable source'
