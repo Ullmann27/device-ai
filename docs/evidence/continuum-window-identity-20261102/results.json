@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "CodeRabbit Agent",
+  "baselineCommit": "6fc252ecc05d49508023efe2835a983c14299074",
+  "workingDirectory": "/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai",
+  "environment": "Ubuntu 26.04.1 x86_64, Node 24.21.0, Temurin JDK17, Gradle 8.11.1, AGP 8.10.0, Kotlin 2.4.0, Android SDK36; Robolectric synthetic windows; no physical device",
+  "workingTreeInputsSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "c22829c841b9292eb5d0cbfd21ef60f878174d5d06202d51957afa2380a5547c",
+    "app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt": "e5e9a191872a3c782902b54557496608cf15fad9e32dbd90f3e781abff71a78a",
+    "app/src/main/java/at/heinz/deviceai/AndroidNativeClick.kt": "554a6adcd1dd6395b6e42b3a6e5110dfbb7cb30fe4534a861ffb93c0bdaf5ad6",
+    "app/src/main/res/xml/continuum_screen_observation.xml": "84dc3cd4c1c9c09455ecc225e287e356bac0428231c5c22dd79a127e997a9b52",
+    "app/build.gradle.kts": "90eb3ea13034246b674d3266342631dfd969faab3e5f9d51a291877e3af17cdd",
+    "build.gradle.kts": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499",
+    "settings.gradle.kts": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be",
+    "gradle.properties": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+  },
+  "gradleCommand": "../continuum-integration-20261102/commands.json#gradle",
+  "targetedSelection": "Same Gradle environment and flags as gradleCommand with -I /tmp/continuum-state-event-red.init.gradle or /tmp/continuum-foreground-red.init.gradle and only :app:testDebugUnitTest; exact init scripts included.",
+  "runs": [
+    {
+      "id": "prototype-dialog-red",
+      "exitCode": 1,
+      "tests": 1701,
+      "failed": 1,
+      "skipped": 3,
+      "reason": "Changing foreground for owner dialog invalidates old revision on uncommitted prototype."
+    },
+    {
+      "id": "prototype-window-id-red",
+      "exitCode": 1,
+      "tests": 1705,
+      "failed": 2,
+      "skipped": 3,
+      "reason": "Different same-package content window and unknown windows-changed event incorrectly confirmed click. Ran with prototype additions and unchanged pre-fix event handler."
+    },
+    {
+      "id": "prototype-green2",
+      "exitCode": 0,
+      "tests": 1705,
+      "passed": 1702,
+      "failed": 0,
+      "skipped": 3,
+      "reason": "Experimental integration prototype; native/gate XML and full Gradle log retained, aggregate counts observed locally but all suite XML not retained. It is not shipped as executable code."
+    },
+    {
+      "id": "state-window-red",
+      "exitCode": 1,
+      "tests": 1,
+      "failed": 1,
+      "reason": "Different same-package state-change window incorrectly confirmed click."
+    },
+    {
+      "id": "state-window-green",
+      "exitCode": 0,
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "id": "foreground-red",
+      "exitCode": 1,
+      "tests": 1,
+      "failed": 1,
+      "reason": "Mismatched window incorrectly produced new foreground observation."
+    },
+    {
+      "id": "foreground-final",
+      "exitCode": 0,
+      "tests": 1701,
+      "passed": 1698,
+      "failed": 0,
+      "skipped": 3,
+      "nativeCases": 26,
+      "lintIssues": 0,
+      "kotlinCompile": "PASS"
+    },
+    {
+      "id": "foreground-critical",
+      "exitCode": 0,
+      "tests": 135,
+      "passed": 135,
+      "failed": 0,
+      "skipped": 0,
+      "sourceUnchanged": true
+    },
+    {
+      "id": "foreground-full",
+      "exitCode": 0,
+      "tests": 1951,
+      "passed": 1938,
+      "failed": 0,
+      "skipped": 13,
+      "sourceUnchanged": true,
+      "terminationConfirmed": true
+    },
+    {
+      "id": "fold7",
+      "status": "NOT_RUN",
+      "reason": "Configured SDK adb devices -l exit 0 reported no devices; no owner device session, no APK assembly or signing."
+    }
+  ],
+  "prototype": {
+    "path": "prototype-not-for-application.patch",
+    "base": "6fc252ecc05d49508023efe2835a983c14299074",
+    "status": "NOT_APPLIED_NOT_REACHABLE",
+    "warning": "Experimental, predates final event fixes; durable dispatch/unknown receipt and real Activity lifecycle remain unresolved. Do not deploy or apply without reconciling and completing safety work."
+  },
+  "evidenceSha256": {
+    "continuum-foreground-red.init.gradle": "a91c1d6a89baae78c4872db8f1ab444688dbf236e898b2ab48e4b3d7ca6896b9",
+    "continuum-state-event-red.init.gradle": "3af828c05036105d2c617161e4517cc4ba47a7c5fb6e3ee2a109a6076e64f2e1",
+    "mission-b-dialog-lifecycle-red-full.log": "ffb7c5d861875a16c861c3232bc6eca8668cdc7e0e860b255b06cf891337c190",
+    "mission-b-dialog-lifecycle-red-native.xml": "ad348dd64206a8ec8296be9fb5d77634136a9e3e7ab45e9df6c3a3340f5a29f3",
+    "mission-b-event-and-integration-green2/gate.xml": "38131a8da460f06f8233ece8bf32cbfda7c3fc9702b6f5bfb5338a692d1a39a7",
+    "mission-b-event-and-integration-green2/lint.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "mission-b-event-and-integration-green2/native.xml": "dbc9ae8712b08d1959d4ecdc205be2df869de79a78860bfce2103b5778e40348",
+    "mission-b-event-and-integration-green2.log": "87b8166bef259254a98cc82ff38d7a47a6add46c04905ca40823803c365f4274",
+    "mission-b-foreground-critical/android-source-contracts.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-b-foreground-critical/android-source-contracts.xml": "691a8a31eed0a7ba675988be8da13fb008b00167e2c08061e6fa536afca53f00",
+    "mission-b-foreground-critical/host-checker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-b-foreground-critical/host-checker.xml": "7992ca39dba12591c9f93383d3112a970a5703da095a51ef5aba6ef7476bff6f",
+    "mission-b-foreground-critical/process.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-b-foreground-critical/process.xml": "acfe6afa6aff3dcbae54b395622efdfea7a3391485fb1afae7a227200a12dda0",
+    "mission-b-foreground-critical/report.json": "5861381fe42869f75858dd1059fe0312b4fd50b9df48c92e6aca539ae21cd44b",
+    "mission-b-foreground-critical/report.md": "f08df00f38b5ba725481196296e477148ef01dcf85d680978ac8e6ee78f5ebcf",
+    "mission-b-foreground-critical/storage-agent.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-b-foreground-critical/storage-agent.xml": "cfb3f0d062698a858bbc9812046e92aa2d3a6a00ad75bcdbf2f3165018d1bdcb",
+    "mission-b-foreground-final/junit.zip": "b335561b3177854e352de956c0a2365e73188032165eac7d37c5aa654fcd9170",
+    "mission-b-foreground-final/lint.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "mission-b-foreground-final/native.xml": "8108be227390b7cda7371eab4a33dcf1ed0e9ed762a6585b5baf58a6f11c9cab",
+    "mission-b-foreground-final.log": "1a311be732e4399fc95b5d35f0b91fab519ab1beddbe8fd36597212c4cf99d69",
+    "mission-b-foreground-full/full-node.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mission-b-foreground-full/full-node.xml": "c2621bd660e141ce80f3e13a67a4e8c464c56c17d237261876a0c9f7b795cf88",
+    "mission-b-foreground-full/report.json": "a1d9eacb6a1d5d776ae699fcf9eb8be87dd0fce30044861312a2671686c9f3f0",
+    "mission-b-foreground-full/report.md": "47e9b133fef3d5a897b87e03e0cfa1d5cc78343b4af2793f3125acbe313aa7ee",
+    "mission-b-foreground-red-native.xml": "3479d38e53e9f6af229ffd716e806db08bd73cd379c6d0e091d61cc9483a842c",
+    "mission-b-foreground-red.log": "4523551e9adb674d877f02797b750a8c0cf5ca47216774335e37433584d5408b",
+    "mission-b-state-window-green-native.xml": "85034fceef44d4f836c3a81d5f7a8fe63f88836636bd0587ef23606387c1313a",
+    "mission-b-state-window-green.log": "3f945a5814fc00fe81545406fd2091188353cdf540ba3b3902843ce5c5d48b5c",
+    "mission-b-state-window-red-native.xml": "1422121c0265d9291afb68141a115fe3fa64f8c3fb0003ee6287d13749b9c70b",
+    "mission-b-state-window-red.log": "34010f0115481e0ac7d3e866e6921561ac7481e183c2c1ff7c727890a8e2b751",
+    "mission-b-window-id-red-native.xml": "e4928431d22087535e84c1bfc825a965124024f15224034d1a859ffe57bd3859",
+    "mission-b-window-id-red.log": "cdf8232429eace52256fe45f2ca6ef1f91525104703f11c4dff9c8bb9ecd4088",
+    "prototype-not-for-application.patch": "c8cfb24553e36f4162a0ba788ffbe71a8c883a4a30dc39474eda26df196fa76a"
+  }
+}

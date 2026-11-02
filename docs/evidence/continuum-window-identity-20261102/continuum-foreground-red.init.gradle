@@ -1,0 +1,7 @@
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            filter { includeTestsMatching 'at.heinz.deviceai.NativeClickCandidateTest.unrelatedWindowCannotConfirmForeground' }
+        }
+    }
+}

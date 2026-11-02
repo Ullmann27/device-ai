@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.NativeClickCandidateTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:59:21" hostname="64c62d88-b43" time="6.947">
+  <properties/>
+  <testcase name="unknownContentDuringClickInvalidatesBeforeDispatch" classname="at.heinz.deviceai.NativeClickCandidateTest" time="4.448"/>
+  <testcase name="targetNavigationToNewWindowCanBeVerifiedAfterRelevantEvent" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.075"/>
+  <testcase name="unknownEventAfterDispatchCannotBecomeSuccessWithLaterTargetEvent" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.051"/>
+  <testcase name="matchingWindowCanConfirmForeground" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.052"/>
+  <testcase name="revokedPermissionAfterClickIsNeverSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.046"/>
+  <testcase name="verifiedActionRequiresNewObservedScreen" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.057"/>
+  <testcase name="foreignContentAloneCannotProveClickSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="1.021"/>
+  <testcase name="unknownSenderCannotConfirmForeground" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.072"/>
+  <testcase name="foreignFocusChangeDuringClickStillInvalidates" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.068"/>
+  <testcase name="overlappingWindowChangeStillInvalidatesRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.088"/>
+  <testcase name="samePackageOtherStateWindowCannotConfirmClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.051"/>
+  <testcase name="foreignFocusOrUnknownSenderOrKeyboardInvalidatesRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.05"/>
+  <testcase name="foreignContentBeforeClickWindowIsBoundFailsClosed" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.053"/>
+  <testcase name="duplicateVisibleTargetsNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.062"/>
+  <testcase name="noApprovalOrOverlayNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.045"/>
+  <testcase name="acceptedClickWithoutNewEvidenceIsNotSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.12"/>
+  <testcase name="overlayAppearingImmediatelyBeforeDispatchDoesNotClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.052"/>
+  <testcase name="unrelatedNonOverlappingWindowDoesNotInvalidateActiveRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.065"/>
+  <testcase name="unknownWindowChangeCannotConfirmClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.072"/>
+  <testcase name="foreignContentDuringClickDoesNotInvalidateOrProveSuccess" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.064"/>
+  <testcase name="unrelatedWindowCannotConfirmForeground" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.091"/>
+  <testcase name="actualForegroundSwitchMissingRootAndUnknownWindowIdInvalidateRead" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.059"/>
+  <testcase name="wrongPackageSensitiveAndStaleNeverClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.06"/>
+  <testcase name="unrelatedNonOverlappingWindowDoesNotInvalidateClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.036"/>
+  <testcase name="samePackageDifferentWindowCannotConfirmClick" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.029"/>
+  <testcase name="revokedPermissionBeforeDispatchNeverClicks" classname="at.heinz.deviceai.NativeClickCandidateTest" time="0.043"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -16,7 +16,7 @@ class ContinuumScreenObservationService:AccessibilityService(){
     override fun onAccessibilityEvent(event:AccessibilityEvent?){
         if(event==null)return
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
-            ScreenObservationBus.contentChanged(this,event.packageName?.toString())
+            ScreenObservationBus.contentChanged(this,event.packageName?.toString(),event.windowId)
             return // Invalidate an in-flight read; do not capture text or invent a launch observation.
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
@@ -25,7 +25,17 @@ class ContinuumScreenObservationService:AccessibilityService(){
                 ScreenObservationBus.ignoreVerifiedUnrelatedWindow(this,event))return
             val root=rootInActiveWindow
             if(root==null){ScreenObservationBus.observed(this, "",event.packageName?.toString());return}
-            try{ScreenObservationBus.observed(this,root.packageName?.toString().orEmpty(),event.packageName?.toString())}
+            try{
+                val knownWindowChanges=AccessibilityEvent.WINDOWS_CHANGE_ADDED or AccessibilityEvent.WINDOWS_CHANGE_BOUNDS or
+                    AccessibilityEvent.WINDOWS_CHANGE_LAYER or AccessibilityEvent.WINDOWS_CHANGE_TITLE or
+                    AccessibilityEvent.WINDOWS_CHANGE_ACTIVE or AccessibilityEvent.WINDOWS_CHANGE_FOCUSED
+                val validWindowEvent=event.packageName?.toString()==root.packageName?.toString() &&
+                    event.windowId>=0 && event.windowId==root.windowId &&
+                    (event.eventType!=AccessibilityEvent.TYPE_WINDOWS_CHANGED ||
+                        android.os.Build.VERSION.SDK_INT>=28 && event.windowChanges!=0 &&
+                        event.windowChanges and knownWindowChanges.inv()==0)
+                ScreenObservationBus.observed(this,root.packageName?.toString().orEmpty(),event.packageName?.toString(),validWindowEvent)
+            }
             finally{@Suppress("DEPRECATION") root.recycle()}
         }
     }
@@ -67,13 +77,13 @@ internal object ScreenObservationBus:ForegroundEvents{
     fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
     fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
     fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
-    fun observed(s:ContinuumScreenObservationService,pkg:String,eventSender:String?=null)=synchronized(lock){if(service===s){
+    fun observed(s:ContinuumScreenObservationService,pkg:String,eventSender:String?=null,validTargetEvent:Boolean=true)=synchronized(lock){if(service===s){
         if(clickInProgress){
-            if(pkg==readingPackage && eventSender==readingPackage && operationWindowId!=null)clickTargetEvent=true
+            if(pkg==readingPackage && eventSender==readingPackage && operationWindowId!=null && validTargetEvent)clickTargetEvent=true
             else clickUncertain=true
         }
-        sequence++;latest=if(pkg.isNotBlank())ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
-    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?)=synchronized(lock){if(service===s){
+        sequence++;latest=if(pkg.isNotBlank()&&validTargetEvent)ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
+    fun contentChanged(s:ContinuumScreenObservationService,pkg:String?,windowId:Int=-1)=synchronized(lock){if(service===s){
         // Only a well-formed OS event sender known to differ from the active read
         // can be ignored. Missing/malformed senders remain uncertainty, never success.
         val target=readingPackage
@@ -81,9 +91,9 @@ internal object ScreenObservationBus:ForegroundEvents{
         // During a click, an unrelated sender is harmless only after the
         // operation has bound a concrete target window. Unknown stays closed.
         if(target!=null&&knownPackage!=null&&knownPackage!=target&&
-            (!clickInProgress||operationWindowId!=null))return@synchronized
+            (!clickInProgress||operationWindowId!=null&&windowId>=0&&windowId!=operationWindowId))return@synchronized
         if(clickInProgress){
-            if(knownPackage==target&&operationWindowId!=null)clickTargetEvent=true else clickUncertain=true
+            if(knownPackage==target&&operationWindowId!=null&&windowId==operationWindowId)clickTargetEvent=true else clickUncertain=true
         }
         sequence++;if(knownPackage==null)latest=null;lock.notifyAll()}}
     private fun bindWindow(s:ContinuumScreenObservationService,pkg:String,grant:Long,revision:Long,id:Int,

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="actual host classifier preserves membership under pipefail and an early grep match" time="0.032793" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/android-kotlin-compile-check.test.mjs"/>
+	<testcase name="host compile check never reports compiler crashes as a successful partial check" time="0.658946" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/android-kotlin-compile-check.test.mjs"/>
+	<!-- tests 2 -->
+	<!-- suites 0 -->
+	<!-- pass 2 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 744.534714 -->
+</testsuites>

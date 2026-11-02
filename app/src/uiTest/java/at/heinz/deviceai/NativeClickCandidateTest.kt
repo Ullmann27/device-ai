@@ -126,6 +126,7 @@ class NativeClickCandidateTest {
         NodeShadow.onRefresh={ServiceShadow.count=2;windowEvent("com.other.app",43);ServiceShadow.count=1}
         NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
             val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);e.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(e,"mSourceWindowId",NodeShadow.currentWindowId)
             try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
         val result=ScreenObservationBus.clickCandidate(request,true){}
         assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
@@ -141,7 +142,7 @@ class NativeClickCandidateTest {
         assertThrows(IllegalStateException::class.java){
             ScreenObservationBus.clickCandidate(request,true){
                 if(!delivered){delivered=true;val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
-                    e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
+                    e.packageName="com.other.app";org.robolectric.util.ReflectionHelpers.setField(e,"mSourceWindowId",43);try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
                 if(calls>0)error("UNEXPECTED_ACTION")
             }
         }
@@ -150,9 +151,10 @@ class NativeClickCandidateTest {
     @Test fun foreignContentDuringClickDoesNotInvalidateOrProveSuccess(){
         val request=setup();var calls=0
         NodeShadow.onRefresh={val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
-            e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
+            e.packageName="com.other.app";org.robolectric.util.ReflectionHelpers.setField(e,"mSourceWindowId",43);try{service.onAccessibilityEvent(e)}finally{e.recycle()}}
         NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
             val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);e.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(e,"mSourceWindowId",NodeShadow.currentWindowId)
             try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
         val result=ScreenObservationBus.clickCandidate(request,true){}
         assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
@@ -160,7 +162,7 @@ class NativeClickCandidateTest {
     @Test fun foreignContentAloneCannotProveClickSuccess(){
         val request=setup();var calls=0;var checks=0
         NodeShadow.action={calls++;val e=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
-            e.packageName="com.other.app";try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
+            e.packageName="com.other.app";org.robolectric.util.ReflectionHelpers.setField(e,"mSourceWindowId",43);try{service.onAccessibilityEvent(e)}finally{e.recycle()};true}
         val failure=assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){if(++checks>30)error("TIMEOUT")}}
         assertEquals("TIMEOUT",failure.message);assertEquals(1,calls)
     }
@@ -168,6 +170,7 @@ class NativeClickCandidateTest {
         val request=setup();var calls=0
         NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch");
             val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);event.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",NodeShadow.currentWindowId)
             try{service.onAccessibilityEvent(event)}finally{event.recycle()};true}
         val result=ScreenObservationBus.clickCandidate(request,true){}
         assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
@@ -177,6 +180,7 @@ class NativeClickCandidateTest {
         NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
             ServiceShadow.targetId=44;NodeShadow.currentWindowId=44
             val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);event.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",NodeShadow.currentWindowId)
             try{service.onAccessibilityEvent(event)}finally{event.recycle()};true}
         val result=ScreenObservationBus.clickCandidate(request,true){}
         assertEquals(1,calls);assertTrue(result.nodes.any{it.label=="Akkuverbrauch"})
@@ -188,9 +192,58 @@ class NativeClickCandidateTest {
             try{service.onAccessibilityEvent(unknown)}finally{unknown.recycle()}
             ServiceShadow.template=node("Akkuverbrauch")
             val target=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED);target.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(target,"mSourceWindowId",NodeShadow.currentWindowId)
             try{service.onAccessibilityEvent(target)}finally{target.recycle()};true}
         assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}
         assertEquals(1,calls)
+    }
+    private fun assertUnidentifiedTargetWindowRejected(unknown:Boolean){
+        val request=setup();var calls=0
+        NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
+            val event=AccessibilityEvent.obtain(if(unknown)AccessibilityEvent.TYPE_WINDOWS_CHANGED
+                else AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED)
+            event.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",if(unknown)-1 else 43)
+            try{service.onAccessibilityEvent(event)}finally{event.recycle()};true
+        }
+        assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}
+        assertEquals(1,calls)
+    }
+    @Test fun samePackageDifferentWindowCannotConfirmClick()=assertUnidentifiedTargetWindowRejected(false)
+    @Test fun unknownWindowChangeCannotConfirmClick()=assertUnidentifiedTargetWindowRejected(true)
+    @Test fun samePackageOtherStateWindowCannotConfirmClick(){
+        val request=setup();var calls=0
+        NodeShadow.action={calls++;ServiceShadow.template=node("Akkuverbrauch")
+            val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+            event.packageName="com.android.settings"
+            org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",43)
+            try{service.onAccessibilityEvent(event)}finally{event.recycle()};true
+        }
+        assertThrows(IllegalStateException::class.java){ScreenObservationBus.clickCandidate(request,true){}}
+        assertEquals(1,calls)
+    }
+    @Test fun unrelatedWindowCannotConfirmForeground(){
+        setup();val before=ScreenObservationBus.revision()
+        val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+        event.packageName="com.android.settings"
+        org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",43)
+        try{service.onAccessibilityEvent(event)}finally{event.recycle()}
+        assertNull(ScreenObservationBus.awaitAfter(before,1))
+    }
+    @Test fun matchingWindowCanConfirmForeground(){
+        setup();val before=ScreenObservationBus.revision()
+        val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+        event.packageName="com.android.settings"
+        org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",NodeShadow.currentWindowId)
+        try{service.onAccessibilityEvent(event)}finally{event.recycle()}
+        assertEquals("com.android.settings",ScreenObservationBus.awaitAfter(before,1)?.packageName)
+    }
+    @Test fun unknownSenderCannotConfirmForeground(){
+        setup();val before=ScreenObservationBus.revision()
+        val event=AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+        org.robolectric.util.ReflectionHelpers.setField(event,"mSourceWindowId",NodeShadow.currentWindowId)
+        try{service.onAccessibilityEvent(event)}finally{event.recycle()}
+        assertNull(ScreenObservationBus.awaitAfter(before,1))
     }
     @Test fun noApprovalOrOverlayNeverClicks(){
         val request=setup();var calls=0;NodeShadow.action={calls++;true}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ClickToolGateIntegrationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:49:35" hostname="64c62d88-b43" time="0.155">
+  <properties/>
+  <testcase name="ownerSeesExactActionAndUntrustedScreenCannotGrantOtherTools" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.036"/>
+  <testcase name="directExecutorAndUnconfirmedGateCannotReachNativePort" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.036"/>
+  <testcase name="confirmedGatePassesOneExactInvocationAndReplayIsRejected" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.023"/>
+  <testcase name="gateConsentCannotAuthorizeADifferentInvocation" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.022"/>
+  <testcase name="onlyAConcreteOriginalOwnerTaskPermitsTheNarrowAction" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.016"/>
+  <testcase name="authorizationRejectsChangedArgumentsAndSnapshotsProposal" classname="at.heinz.deviceai.ClickToolGateIntegrationTest" time="0.021"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
