@@ -35,3 +35,14 @@ Vor Release: neue Quellen in exakten Render-Android-Build und Unit-/Lint-/LiteRT
 5. Auf dem Fold7 nur durch ausdrückliche Benutzerfreigabe originalsignierten Gesamt-Release erproben.
 
 Alle Änderungen sind auf eigenem öffentlichen GitHub-PR innerhalb des privaten offiziellen Repositories reviewbar und einzeln rücksetzbar. Keine Änderung von `main`, produktiver Geräteinstallation, Credentials, App-Paketidentität, owner-gated Wertdaten oder Gewichten.
+
+
+## Nachfolgende kleine Korrekturen auf demselben Branch
+
+- F08 ergänzt: auch der frühe Pfad `Gemma not READY` bewahrt die Originalbenutzeräußerung als unbestätigten flüchtigen Sitzungskontext, statt mit `addAssistantMessage` den Gesprächskontext zu löschen.
+- Die Kotlin-Appnamen-Suche versteht zusätzlich sichere, häufige deutsche Formulierungen mit `Bitte`, `Suche mir die App ...` und dem App-Suffix. Die Ausgabe ist weiterhin reine read-only Vorschlagsliste und kein automatischer Appstart.
+- Android-Mikrofon-Berechtigung: verzögerte Permission-Callbacks sind an Chat-Sitzung, Generation, aktiven Foreground-Zustand und gegebenenfalls das ursprüngliche Entwicklerdialogfenster gebunden; nach Sitzung-/Dialogwechsel kann kein nachträgliches Starten der Aufnahme erfolgen. Neuer Lifecycle-Guard **noch nicht mit Android ausgeführt**.
+- `find_app` kennzeichnet Ergebnisse ausdrücklich als `VISIBLE_LAUNCHER_ACTIVITIES_ONLY`; Nichttreffer sind wegen PackageManager-Sichtbarkeit kein Nachweis, dass eine App nicht installiert ist.
+- Quellbyteidentischer Host-Test der reinen Kotlin-Appsuche und TTS-Aufbereitung nach der Erweiterung: **23/23 PASS**, GitHub-Blob-SHAs und exakte Grenzen im [QA-Report](../../evidence/dialog-v-20261102/QA-RESULTS.md). Android-Gradle, JUnit, LiteRT, Render und Fold7 **NOT_RUN**.
+
+**Nicht als fertig deklarieren:** Die reguläre App kann noch keine frei formulierten, kontinuierlichen Sprachdialoge automatisch absenden oder Apps frei tippen/wischen. Lokaler ASR wird durch eine Benutzeraktion gestartet; Aufnahme resultiert vorerst im Eingabefeld, und `launch_app` bleibt separat zustimmungspflichtig. Die JARVIS-artige Klangfarbe ist eine lokale TTS-Parameterwahl, deren Klangqualität vom Fold7 offline nachzuweisen ist.
