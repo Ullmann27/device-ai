@@ -84,7 +84,9 @@ class LocalPromptFrameTest {
     @Test fun modelAdvisoryCannotFitIfItWouldStealOwnerBudget() {
         val body="Eindeutiger, vollständiger Auftrag. "+"x".repeat(8_600)
         val tail="\nDie letzte Kontrolle darf nie fehlen."
-        val max=body.length+tail.length
+        // The German owner text contains a multibyte umlaut: the genuine
+        // boundary is UTF-8 bytes, not Kotlin UTF-16 characters.
+        val max=(body+tail).toByteArray(Charsets.UTF_8).size
         val prompt=LocalPromptFrame.assemble(body,"","UNVERIFIED".repeat(300),tail,max)
         assertEquals(body+tail,prompt)
     }
