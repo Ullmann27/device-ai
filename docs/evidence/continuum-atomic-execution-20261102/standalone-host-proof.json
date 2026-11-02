@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "workstream": "CONTINUUM_SOVEREIGN_EXECUTION_GUARDS",
+  "date": "2026-11-02",
+  "repository": "Ullmann27/device-ai",
+  "branch": "research/continuum-execution-atomicity-20261102",
+  "baseCommit": "699c85e24ace808203993b7fafbef6cb1c9f5e02",
+  "sourceProofs": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionStartLatch.kt",
+      "githubBlobSha1": "810e8c6c76d43dfd21fc101f86beb35b006a4ce6",
+      "localCompiledCopyGitBlobSha1": "810e8c6c76d43dfd21fc101f86beb35b006a4ce6",
+      "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalPromptFrame.kt",
+      "githubBlobSha1": "323252e6c51c4014aa601117b0c80b232392e4bc",
+      "localCompiledCopyGitBlobSha1": "323252e6c51c4014aa601117b0c80b232392e4bc",
+      "match": true
+    }
+  ],
+  "commands": [
+    {
+      "cmd": "kotlinc ToolExecutionStartLatch.kt ToolStartHarness.kt -include-runtime -d latch-test.jar && java -jar latch-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; local standalone harness with exact identical GitHub file",
+      "status": "PASS",
+      "cases": 1000,
+      "meaning": "1,000 commit/revoke races, revoke-before-dispatch and post-commit ambiguity; standalone class only, not ToolGate/JUnit/Gradle"
+    },
+    {
+      "cmd": "kotlinc LocalPromptFrame.kt PromptHarness.kt -include-runtime -d prompt-test.jar && java -jar prompt-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact identical GitHub file plus manually reconstructed equivalent ChatReasoningRouter.composePrompt and LocalChatPromptBudget stubs",
+      "status": "PASS",
+      "meaning": "Mandatory owner text, negation, optional history omission, advisory exclusion, Unicode/CJK/emoji; does NOT prove full Android Activity"
+    }
+  ],
+  "githubSourceChanges": [
+    "Atomic start-commit latch integrated into existing ToolGate; cancel+commit serialized and pending timeout uses atomic revocation; already committed outcome explicitly ambiguous when terminalized",
+    "ReadOnlyToolPlan rejects complete formatted output >8000 with unverified response instead of throwing or falsely promoting success",
+    "LocalPromptFrame protects mandatory body and tail; Activity no longer duplicates task when compiled; optional history omitted whole if no room; explicit clarification on mandatory budget overflow",
+    "JUnit regression files committed but full project JUnit NOT_RUN"
+  ],
+  "unverified": [
+    "Full Android Gradle and Kotlin2.4 compile",
+    "Existing ToolGate integration JUnit",
+    "New JUnit regressions against exact project deps",
+    "Full Node suite and Android lint",
+    "Late side-effecting backend after logical commit under OS preemption",
+    "Fold7 native device/APK/owner model",
+    "Gitar/CodeRabbit new review approval"
+  ],
+  "status": "SOURCE_INTEGRATED / STANDALONE_HOST_VERIFIED; PRODUCT_HOST_QA_NOT_RUN; DEVICE_NOT_RUN",
+  "safety": "No main merge; no owner data or signing changes; no PR354 Android-click or PR356 GGUF/Termux file changes; backend commit does not imply observed side-effect or safe rollback. Fail-closed and no automatic replay."
+}
