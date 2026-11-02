@@ -6195,8 +6195,13 @@ class AgentActivity : Activity() {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
             publishCognitiveTrace(turnTrace,TraceOutcome.BLOCKED)
             setBusy(false)
+            // F08: an unavailable model must not silently discard the owner's
+            // pending correction. Session context is provisional, never a fact.
+            val retainUnanswered = sessionId == localSessionId
             addAssistantMessage(groundedRecall?.failureAnswer() ?:
-                "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.")
+                "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.",
+                preserveLocalContext = retainUnanswered)
+            if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)
             refreshLocalModelUi()
             return
         }
