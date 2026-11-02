@@ -1,0 +1,33 @@
+✔ actual host classifier preserves membership under pipefail and an early grep match (42.581033ms)
+✖ host compile check never reports compiler crashes as a successful partial check (374.472362ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 475.559691
+
+✖ failing tests:
+
+test at scripts/android-kotlin-compile-check.test.mjs:24:1
+✖ host compile check never reports compiler crashes as a successful partial check (374.472362ms)
+  AssertionError [ERR_ASSERTION]: {"status":137,"diagnostic":"/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt:6:19: error: unresolved reference 'ai'.\n","stdout":"sources=306 kotlinc_exit=137\nerrors in files that need LiteRT-LM (Google Maven, unavailable here): 1\nKOTLIN_COMPILE_CHECKED: no compile error outside the LiteRT-LM files (not an APK build)\n","stderr":""}
+  
+  0 !== 137
+  
+      at TestContext.<anonymous> (file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/android-kotlin-compile-check.test.mjs:47:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 137,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
