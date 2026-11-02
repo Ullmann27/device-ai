@@ -79,10 +79,14 @@ function head(project){
  * the permissions the owner grants. Returns the task id.
  */
 export function startTask({project,stateDir,goal,repoFullName,worktreeId='main',permissions=[CAPABILITY],maxRounds=3,
- deadlineMinutes=30,maxCpuMillis=600_000,maxMemoryBytes=2_000_000_000,now=Date.now()}){
+ deadlineMinutes=30,maxCpuMillis=600_000,maxMemoryBytes=2_000_000_000,now=Date.now(),expectedSourceCommit=null}){
+ // Capture once: validation and journal binding must refer to the same source.
+ const sourceCommit=head(project);
+ if(expectedSourceCommit!==null&&sourceCommit!==expectedSourceCommit)
+  throw Error('CCC1_SOURCE_MISMATCH: checkout moved before task source was bound');
  const key=runtimeKey(stateDir);
  const taskId=newTaskId();
- const binding={sessionId:randomUUID(),taskId,repoFullName,baseCommitSha:head(project),worktreeId,deadline:now+deadlineMinutes*60_000,
+ const binding={sessionId:randomUUID(),taskId,repoFullName,baseCommitSha:sourceCommit,worktreeId,deadline:now+deadlineMinutes*60_000,
   maxRounds,maxCpuMillis,maxMemoryBytes,permissions,checkpointHash:null};
  const env=envelope({binding,sender:'OWNER',kind:'GOAL',payload:goal,sequence:0});
  const problems=envelopeProblems(env);

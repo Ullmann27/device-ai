@@ -6,6 +6,7 @@ import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {submitOnce,runCcc1Cycle,listTasks} from './ccc1-worker.mjs';
+import {startTask,runTask} from './ccc1-orchestrator.mjs';
 
 function fixture(){
  const home=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-binding-'));
@@ -60,4 +61,39 @@ test('missing legacy binding requires owner review, never automatic state adopti
  fs.unlinkSync(path.join(f.stateDir,'checkout-binding.json'));
  assert.throws(()=>submitOnce(a),/CCC1_CHECKOUT_UNBOUND/);
  assert.equal(fs.existsSync(path.join(f.stateDir,'checkout-binding.json')),false);
+});
+
+test('HEAD changing between initial validation and task creation cannot rebind authorization',()=>{
+ const f=fixture(),a=args(f);const mkdir=fs.mkdirSync;let changed=false;
+ fs.mkdirSync=function(dir,...options){
+  if(String(dir)===path.join(f.stateDir,'orders')&&!changed){
+   changed=true;fs.appendFileSync(path.join(f.project,'readme.txt'),'concurrent revision\n');
+   f.git(f.project,'-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qam','concurrent HEAD');
+  }
+  return mkdir.call(this,dir,...options);
+ };
+ try{
+  assert.throws(()=>submitOnce(a),/CCC1_SOURCE_MISMATCH/);
+  assert.equal(changed,true,'race injection actually advanced HEAD');
+  assert.equal(listTasks(f.stateDir).length,0,'no task authorized for a different commit');
+ }finally{fs.mkdirSync=mkdir;}
+});
+
+test('a later change after source capture keeps the old binding and aborts before reasoning',async()=>{
+ const f=fixture(),mkdir=fs.mkdirSync;let changed=false,taskId;
+ fs.mkdirSync=function(dir,...options){
+  if(String(dir)===f.stateDir&&!changed){
+   changed=true;fs.appendFileSync(path.join(f.project,'readme.txt'),'postcapture revision\n');
+   f.git(f.project,'-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qam','postcapture HEAD');
+  }
+  return mkdir.call(this,dir,...options);
+ };
+ try{taskId=startTask({project:f.project,stateDir:f.stateDir,goal:{text:'Authorized old source'},
+  repoFullName:'local/a',expectedSourceCommit:f.sourceCommit});}
+ finally{fs.mkdirSync=mkdir;}
+ assert.equal(changed,true);assert.equal(listTasks(f.stateDir)[0].baseCommitSha,f.sourceCommit);
+ const result=await runTask({project:f.project,stateDir:f.stateDir,taskId,
+  reasoner:{turn(){assert.fail('stale source must never reach reasoning');}}});
+ assert.equal(result.outcome,'ABORTED');
+ assert.equal(result.entries.find(e=>e.kind==='ABORT').payload.code,'STALE_BASE');
 });

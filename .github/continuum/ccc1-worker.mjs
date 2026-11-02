@@ -45,10 +45,10 @@ export function repositoryOf(project){
 }
 
 /** Owner goal -> durable CCC1 task bound to the project's repository and current commit. */
-export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60}){
+export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60,expectedSourceCommit=null}){
  const repo=repoFullName??repositoryOf(project);
  if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
- return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes});
+ return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes,expectedSourceCommit});
 }
 
 /**
@@ -56,12 +56,12 @@ export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,
  * running the fixed chain in an isolated worktree, never guessed. CPU budget covers baseline, candidates and the
  * independent second run of a real suite.
  */
-export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60}){
+export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60,expectedSourceCommit=null}){
  if(!REPAIR_CHAINS.includes(chain))throw Error('chain must be one of '+REPAIR_CHAINS.join(', '));
  const repo=repoFullName??repositoryOf(project);
  if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
  return startTask({project,stateDir,goal:{text:`Repariere die fehlschlagenden Tests der Testkette ${chain}.`,repair:{chain}},
-  repoFullName:repo,permissions:[REPAIR_CAPABILITY+':'+chain],maxRounds,deadlineMinutes,maxCpuMillis:3_600_000});
+  repoFullName:repo,permissions:[REPAIR_CAPABILITY+':'+chain],maxRounds,deadlineMinutes,maxCpuMillis:3_600_000,expectedSourceCommit});
 }
 
 /**
@@ -184,7 +184,7 @@ export function submitOnce({project,stateDir,order=null,chain=null,text=null,rep
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
   fs.writeFileSync(file,JSON.stringify({goal:want,taskId:null,sourceCommit})+'\n',{flag:'wx',mode:0o600});   // reservation: one winner
  }
- const taskId=open?.taskId??(chain!==null?submitRepair({project,stateDir,chain,repoFullName}):submitGoal({project,stateDir,text,repoFullName}));
+ const taskId=open?.taskId??(chain!==null?submitRepair({project,stateDir,chain,repoFullName,expectedSourceCommit:sourceCommit}):submitGoal({project,stateDir,text,repoFullName,expectedSourceCommit:sourceCommit}));
  if(file)writeAtomic(file,JSON.stringify({goal:want,taskId,sourceCommit})+'\n');
  return {taskId,duplicate:Boolean(open)};
 }
