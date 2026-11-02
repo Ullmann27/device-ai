@@ -1,0 +1,29 @@
+# Dialog V – Validierung, Stand 02.11.2026
+
+## Tatsächlich ausgeführt (lokaler Host, nicht Fold7)
+- `kotlinc-jvm 1.9.0` / JRE 21: Zwei reine Kotlin-Helfer (manuell in ein isoliertes lokales Testverzeichnis übertragene `NativeAppLookup`- und `JarvisVoiceProfile`-Logik) kompiliert; ausführbares JAR mit `-include-runtime` erstellt.
+- `java -jar .../tests.jar`: **11/11** manuelle Contract-Harness-Checks bestanden: eindeutige Appsuche, Mehrdeutigkeit, Paket-Deduplizierung, ungültige Queries, natürliche deutsche Anfrage, Negationsschutz, Zeichen-/Bidi-Redaktion, fehlender Treffer, Markdown/URL-Sprache, Markdown-Codeauslassung, Ausgabe-Längenbudget.
+- Die Kotlin-Harness-Dateien sind **manuelle Mirrors**, nicht byte-identisch zur produktiven Android-Datei nachgewiesen; damit beweist dieser Lauf weder den vollständigen GitHub-JUnit-Satz noch ein Android-Build.
+- Im selben Forschungs-PR committed: native `NativeAppLookupTest`, `JarvisVoiceProfileTest`, `UnansweredOwnerTurnTest`; diese **JUnit-Tests sind auf dem neuen HEAD noch NOT_RUN**.
+
+## Ausdrücklich nicht ausgeführt
+- Vollständige Gradle/LiteRT/Android-JUnit/Lint/unsigned APK & AAB: **NOT_RUN**, Android SDK/Gradle nicht in der aktuellen lokalen Testumgebung installiert.
+- Render-Android-QA für diesen Branch: **NOT_RUN** (Synapse-III-Render-PASS ist nur Eltern-QA und zählt hier nicht).
+- Fold7 Accessibility/App-Start/Sprachqualität, Berechtigungstest und vollständige Gemma-Dialogfolge: **DEVICE_NOT_RUN**.
+- KI-Modell für automatische Werkzeugwahl, generalisierte App-Interaktion, unabhängige Memory-Gates, TTS-Audio-Output: **NOT_RUN**.
+- Fremdbibliothek Sherpa-ONNX, UI-TARS, OpenHands: **NOT_IMPORTED**. Vorhandenes TokenArc MIT-Adapterwerk gehört zu Fusion-IV-Elternstand.
+
+## Sicherheits- und Funktionsgrenzen
+- `find_app` ist READ_ONLY, liefert Kandidaten und startet keine App; das bestehende `launch_app` bleibt CONFIRM + expliziter Paketname + Accessibility-Fenster-Postcondition.
+- Keine Tipp-/Wischaktion, kein automatisches Voice-Command-Submit, keine Rechteausweitung, kein Hintergrundmikrofon, kein Cloud-TTS.
+- JARVIS-artige Stimme ist ausschließlich eine langsamer/tiefer eingestellte vorhandene Offline-Android-TTS-Stimme; keine Stimmkopie, kein Modellpaket.
+- Unbeantwortete Besitzeräußerungen bleiben als **unbestätigter Sitzungskontext**, nicht in SWB1/EWM2, ohne Modellantwortbeleg. Lange Originale machen die Kontextbeweisansicht unvollständig statt falsche kurze Fakten zu bestätigen.
+
+## Bevor eine Besitzer-Version möglich wäre
+1. Exakten Branch HEAD abfragen, Gradle-Kotlin-Compile, vollständige JUnit, LiteRT, Lint und Android-Assembly auf diesem HEAD ausführen.
+2. Prüfen, ob `find_app` vom lokalen Gemma-Tool-Selection-Format tatsächlich ausgelöst werden kann; reales ToolGate/Owner-Confirm/Launcher-Postcondition auf Fold7 testen.
+3. Prüfen, ob installierte deutschsprachige Offline-TTS/ASR-Stimmen verfügbar sind und die Sprachqualität akzeptabel ist.
+4. F08 neu mit fehlgeschlagenem Modellaufruf und späterer Negation/Fokuskorrektur auf der realen App reproduzieren. Unbestätigte Nutzertexte niemals automatisch in bestätigtes Gedächtnis verschieben.
+5. Nur nach neuer kompletter QA und Besitzerfreigabe höheren Versionscode/Originalsignatur über bestehenden Releasekanal verwenden; nichts automatisch veröffentlichen.
+
+Keine Änderungen an main, originalem Signierkanal, Besitzerinstallationsdaten oder Modellgewichten.
