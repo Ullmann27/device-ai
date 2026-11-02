@@ -2497,6 +2497,7 @@ class AgentActivity : Activity() {
         // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
         at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
             webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
             input.text.clear()
             addUserMessage(request)
             runExplicitAppLookup(lookup)
