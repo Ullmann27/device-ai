@@ -361,6 +361,16 @@ class ToolGate(
             result(ToolExecutionStatus.TIMED_OUT, if (dispatch.wasCommitted)
                 "Tool timed out after possible dispatch; outcome UNKNOWN." else "Tool timed out before dispatch.")
         } catch (e: java.util.concurrent.ExecutionException) {
+            // FutureTask wraps a worker-side pre-dispatch cancellation in
+            // ExecutionException. It must not be misreported as FAILED.
+            if (e.cause is CancellationException) {
+                dispatch.revokeIfPending()
+                val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
+                return result(ToolExecutionStatus.CANCELLED,
+                    if (dispatch.wasCommitted || !saved)
+                        "Worker cancelled after possible dispatch or with ambiguous receipt; outcome UNKNOWN."
+                    else "Worker cancelled before backend dispatch.")
+            }
             val status = (e.cause as? ToolBackendFailure)?.status ?: ToolExecutionStatus.FAILED
             val state = when (status) {
                 ToolExecutionStatus.TIMED_OUT -> ToolReceiptState.TIMED_OUT
