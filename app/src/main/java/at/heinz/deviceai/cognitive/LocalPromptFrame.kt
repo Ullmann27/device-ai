@@ -15,15 +15,30 @@ internal object LocalPromptFrame {
         maxCharacters: Int
     ): String? {
         if (maxCharacters !in 1..LocalChatPromptBudget.FULL_CHARACTERS ||
-            requiredBody.isBlank() || requiredBody.length.toLong() +
-            requiredTail.length > maxCharacters.toLong()) return null
-        val canIncludeHistory = requiredBody.length.toLong() + optionalHistory.length +
-            requiredTail.length <= maxCharacters.toLong()
-        val body = if (canIncludeHistory) requiredBody + optionalHistory else requiredBody
-        val prompt = ChatReasoningRouter.composePrompt(body, advisory, requiredTail, maxCharacters)
-        // An internal reasoning advisory is never allowed to steal owner/evidence space.
-        if (!prompt.startsWith(body) || !prompt.endsWith(requiredTail) ||
-            prompt.length > maxCharacters) return null
-        return prompt
+            requiredBody.isBlank()) return null
+
+        // Character limits and UTF-8 sizes are not interchangeable: a
+        // multilingual prompt may fit the former while exceeding the latter.
+        // An intentionally conservative shared limit protects both.
+        fun fits(value: String): Boolean =
+            value.length <= maxCharacters &&
+                value.toByteArray(Charsets.UTF_8).size <= maxCharacters
+
+        val mandatory = requiredBody + requiredTail
+        if (!fits(mandatory)) return null
+
+        // Old history is lower priority than the current request and evidence.
+        // Never send an arbitrary prefix of a contradictory older conversation.
+        val withHistory = requiredBody + optionalHistory
+        val body = if (fits(withHistory + requiredTail)) withHistory else requiredBody
+        val candidate = ChatReasoningRouter.composePrompt(body, advisory, requiredTail, maxCharacters)
+        if (candidate.startsWith(body) && candidate.endsWith(requiredTail) && fits(candidate))
+            return candidate
+
+        // Optional internal advice may be cut or too large in UTF-8. Remove it
+        // before refusing an otherwise complete owner/evidence request.
+        val withoutAdvisory = ChatReasoningRouter.composePrompt(body, null, requiredTail, maxCharacters)
+        return withoutAdvisory.takeIf { it.startsWith(body) &&
+            it.endsWith(requiredTail) && fits(it) }
     }
 }
