@@ -6342,22 +6342,20 @@ class AgentActivity : Activity() {
                 }
                 val state = continuumState
                 val compiledContext = state?.let { runtimeState ->
-                    runCatching {
-                        contextCompiler.compile(
-                            AiContextInput(
-                                seed = runtimeState.seed,
-                                genome = runtimeState.archive.genome,
-                                identityState = runtimeState.archive.identityState,
-                                userRequest = task,
-                                memories = memories,
-                                activeTaskSummary = reflection?.correction?.take(1_024),
-                                unresolvedContradictions = memories
-                                    .filter { memory -> memory.validationState.name == "CONTRADICTED" }
-                                    .map { memory -> memory.content.take(512) },
-                                model = imported
-                            )
+                    contextCompiler.compile(
+                        AiContextInput(
+                            seed = runtimeState.seed,
+                            genome = runtimeState.archive.genome,
+                            identityState = runtimeState.archive.identityState,
+                            userRequest = task,
+                            memories = memories,
+                            activeTaskSummary = reflection?.correction?.take(1_024),
+                            unresolvedContradictions = memories
+                                .filter { memory -> memory.validationState.name == "CONTRADICTED" }
+                                .map { memory -> memory.content },
+                            model = imported
                         )
-                    }.getOrNull()
+                    )
                 }
                 val advisory = if (observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
                     ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
@@ -6437,6 +6435,7 @@ class AgentActivity : Activity() {
                 val prompt = ChatReasoningRouter.composePrompt(
                     promptBody, advisory, promptTail + briefInstruction, promptCap
                 )
+                compiledContext?.requireCompleteIn(prompt)
                 // A screen frame is atomic. Never send a clipped negation/source block.
                 screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
                 val newObservations = observations.drop(submittedToolObservationCount)

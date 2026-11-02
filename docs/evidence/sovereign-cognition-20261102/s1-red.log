@@ -1,0 +1,35 @@
+JUnit version 4.13.2
+.E.E..E.E.E
+Time: 0.157
+There were 5 failures:
+1) overflowOmitsTheWholeSelectedMemoryGroupIncludingItsIds(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError: Do not retain the positive while dropping the correction
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.overflowOmitsTheWholeSelectedMemoryGroupIncludingItsIds(AiContextIntegrityTest.kt:22)
+2) researchEvidenceKeepsItsNegativeSuffixAndBalancedUntrustedFrame(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.researchEvidenceKeepsItsNegativeSuffixAndBalancedUntrustedFrame(AiContextIntegrityTest.kt:49)
+3) lateNegationSurvivesAsPartOfTheWholeMemory(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError: A declared memory must include its late negation
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.lateNegationSurvivesAsPartOfTheWholeMemory(AiContextIntegrityTest.kt:15)
+4) requiredRequestCannotBeSilentlyCutBeforeItsNegation(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError: expected java.lang.IllegalStateException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.requiredRequestCannotBeSilentlyCutBeforeItsNegation(AiContextIntegrityTest.kt:30)
+5) allContradictionsPrecedeOptionalMemoryAndCannotBePartiallyLost(at.heinz.deviceai.cognitive.AiContextIntegrityTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.AiContextIntegrityTest.allContradictionsPrecedeOptionalMemoryAndCannotBePartiallyLost(AiContextIntegrityTest.kt:38)
+
+FAILURES!!!
+Tests run: 6,  Failures: 5
+

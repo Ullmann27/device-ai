@@ -21,3 +21,7 @@ Alternatives: increasing prompt budgets only moves the failure; introducing anot
 - [ ] Whole-source host verification and final review.
 
 All new functionality: NOT_RUN at this checkpoint. Fold7/device/model: NOT_RUN. No general intelligence or independently trained base model claim. Rollback: revert only this branch's scoped commits.
+
+## S1 checkpoint
+
+SOURCE_INTEGRATED; focused HOST_VERIFIED: 8/8 JUnit. Initial 6-case RED: 5 failures, 1 control passed; full original logs preserved. Compiler now keeps selected memories/research atomic, includes IDs only on successful append, prioritizes full request/task/contradictions and fails closed if mandatory context cannot fit. Activity propagates compilation failure and checks the complete context survives final prompt assembly. Secrets still redacted. Model/permission/weight interfaces unchanged. Whole-source compile/test rerun is pending at this commit, not inferred from focused tests. The first host setup found missing javac launcher; the installed jdk.compiler module is used through a local wrapper. A fixture constructor typo was corrected before the genuine five assertion failures were recorded.
