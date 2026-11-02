@@ -89,6 +89,10 @@ run() {
   fi
 }
 
+# Establish a fresh evidence boundary before Gradle: stale XML from an older
+# checkout must never be counted as a current-source test.
+node -p 'Date.now()' > "$out/gradle-start-millis.txt"
+
 # Native Kotlin/Android ToolGate tests + all app JUnit + lint. No APK task.
 # --rerun-tasks prevents a prior commit's stale/up-to-date JUnit XML from
 # masquerading as a new exact-source successful run.
@@ -103,13 +107,23 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 const [root,out]=process.argv.slice(2);
 const diagnostics=await import(pathToFileURL(path.join(root,'.github/continuum/repair-diagnostics.mjs')).href);
-const report=diagnostics.readJUnitDirectory(path.join(root,'app/build/test-results/testDebugUnitTest'),root);
+const junitDir=path.join(root,'app/build/test-results/testDebugUnitTest');
+const startedAt=Number(fs.readFileSync(path.join(out,'gradle-start-millis.txt'),'utf8'));
+const cases=fs.existsSync(junitDir)?fs.readdirSync(junitDir)
+  .filter(name=>/^TEST-.*\\.xml$/.test(name)):[];
+const fresh=Number.isSafeInteger(startedAt) && cases.length>0 &&
+  cases.every(name=>{
+    const stat=fs.lstatSync(path.join(junitDir,name));
+    return stat.isFile() && !stat.isSymbolicLink() && stat.mtimeMs>=startedAt-1000;
+  });
+const report=diagnostics.readJUnitDirectory(junitDir,root);
 fs.writeFileSync(path.join(out,'android-junit.json'),JSON.stringify({
+  freshXml: fresh,xmlFiles:cases.length,
   total:report.total,executed:report.executed,passed:report.passed,
   failed:report.failed,skipped:report.skipped,placeholders:report.placeholders,
   evidenceComplete:report.evidenceComplete
 },null,2)+'\n',{flag:'wx',mode:0o600});
-if(!report.evidenceComplete || report.executed===0 || report.failed!==0 ||
+if(!fresh || !report.evidenceComplete || report.executed===0 || report.failed!==0 ||
   report.placeholders!==0)process.exit(1);
 NODE
 then
