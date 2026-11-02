@@ -1,0 +1,87 @@
+{
+ "ops": [
+  {
+   "op": "complete",
+   "actor": "android-roundtrip",
+   "at": 1800000100000,
+   "id": "rt-repair",
+   "evidence": {
+    "type": "TEST_RUN",
+    "taskId": "rt-repair",
+    "submissionToken": "00000000000000000000000000000abc",
+    "artifactSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "chain": "android",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "profiles": [
+     {
+      "profile": "android-unit",
+      "passed": true,
+      "executed": 412,
+      "failed": 0,
+      "skipped": 0
+     }
+    ],
+    "repair": null,
+    "at": 1800000100000,
+    "by": "ci-runner"
+   }
+  },
+  {
+   "op": "claim",
+   "actor": "android-roundtrip",
+   "at": 1800000100001,
+   "id": "rt-follow",
+   "owner": "android-roundtrip",
+   "token": "00000000000000000000000000000def",
+   "leaseMs": 3600000
+  },
+  {
+   "op": "reject",
+   "actor": "android-roundtrip",
+   "at": 1800000100002,
+   "id": "rt-investigate",
+   "reason": "auf dem Gerät geprüft: kein Fehler"
+  },
+  {
+   "op": "propose",
+   "actor": "android-roundtrip",
+   "at": 1800000100003,
+   "task": {
+    "id": "rt-android",
+    "title": "Vom Gerät: Größenprüfung 📱",
+    "kind": "IMPLEMENT",
+    "source": "android"
+   }
+  }
+ ],
+ "opLog": [
+  {
+   "op": "accept",
+   "actor": "heinz",
+   "at": 1800000100010,
+   "id": "rt-android"
+  },
+  {
+   "op": "accept",
+   "actor": "heinz",
+   "at": 1800000100011,
+   "id": "rt-repair"
+  },
+  {
+   "op": "setPriority",
+   "actor": "heinz",
+   "at": 1800000100012,
+   "id": "rt-android",
+   "priority": 600
+  }
+ ],
+ "expected": {
+  "revisionDelta": 4,
+  "states": {
+   "rt-repair": "DONE",
+   "rt-follow": "IN_PROGRESS",
+   "rt-investigate": "REJECTED",
+   "rt-android": "PROPOSED"
+  }
+ }
+}
