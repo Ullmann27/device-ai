@@ -113,4 +113,19 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.receipt.deviceVerified,false);
   assert.equal(r.receipt.apkProduced,false);
   assert.equal(r.receipt.signingPerformed,false);
+
+  // Simulate a disk/receipt-writer failure after all test commands succeeded.
+  // No durable acceptance receipt means the wrapper must return non-zero.
+  const bin=path.join(f.dir,'fixture-bin');
+  await fs.mkdir(bin);
+  const nodeWrapper=path.join(bin,'node');
+  await fs.writeFile(nodeWrapper,
+    '#!/bin/sh\\nif [ -n "$RECEIPT_OUTPUT" ]; then exit 9; fi\\nexec "'+
+      process.execPath+'" "$@"\\n',{mode:0o700});
+  r=await invoke(f,'receipt-write-failure',f.sha,{
+    PATH:bin+path.delimiter+process.env.PATH
+  });
+  assert.equal(r.result.status,1);
+  assert.match(r.result.stderr,/ACCEPTANCE_RECEIPT_WRITE_FAILED/);
+  assert.equal(r.receipt,null);
 });
