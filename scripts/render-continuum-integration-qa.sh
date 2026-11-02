@@ -15,8 +15,15 @@ if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; 
     fail 'Wrong source branch or untrusted detached checkout'
   # Render detaches HEAD. The canonical Node-QA contract requires an attached
   # local branch; reattach THIS exact checked-out SHA without touching remote.
-  git switch -c integration/continuum-all-systems-apk-qa-20261102 "$sha" >/dev/null ||
-    fail 'Could not establish local QA source identity'
+  if git show-ref --verify --quiet refs/heads/integration/continuum-all-systems-apk-qa-20261102; then
+    [[ "$(git rev-parse refs/heads/integration/continuum-all-systems-apk-qa-20261102)" == "$sha" ]] ||
+      fail 'Local QA branch points to a different commit'
+    git switch integration/continuum-all-systems-apk-qa-20261102 >/dev/null ||
+      fail 'Could not select existing local QA branch'
+  else
+    git switch -c integration/continuum-all-systems-apk-qa-20261102 "$sha" >/dev/null ||
+      fail 'Could not create local QA source branch'
+  fi
   [[ "$(git rev-parse HEAD)" == "$sha" ]] || fail 'Reattachment changed source'
 fi
 git -c core.fileMode=false diff --quiet HEAD -- || fail 'Changed tracked source'
