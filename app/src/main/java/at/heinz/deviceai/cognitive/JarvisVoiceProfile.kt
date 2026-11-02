@@ -6,10 +6,10 @@ internal object JarvisVoiceProfile {
     const val pitch = 0.86f
     const val speechRate = 0.93f
 
-    private val codeFence = Regex("(?s)\x60\x60\x60[^\n]*\n.*?\x60\x60\x60")
+    private val codeFence = Regex("(?s)```[^\n]*\n.*?```")
     private val url = Regex("(?i)https?://\\S+")
     private val markdownLinks = Regex("\\[([^\\]]{1,100})\\]\\(https?://[^)]*\\)")
-    private val punctuation = Regex("[*_#\x60>]")
+    private val punctuation = Regex("[*_#`>]")
     private val whitespace = Regex("\\s+")
 
     fun speakable(text: String, maxCharacters: Int = 480): String? {
