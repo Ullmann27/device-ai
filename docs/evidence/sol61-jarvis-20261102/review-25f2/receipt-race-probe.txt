@@ -1,0 +1,2 @@
+STALE_SNAPSHOT_RESULT status=REJECTED uncertain=true disk=DISPATCH_COMMITTED reason=Durable receipt conflict: concurrent outcome UNKNOWN; execution blocked for operator review.
+CANCELLED_GATE_RESULT status=CANCELLED uncertain=true disk=DISPATCH_COMMITTED reason=Task cancelled; prior or concurrent dispatch outcome UNKNOWN, operator review required.

@@ -1,0 +1,14 @@
+docs/evidence/sol61-jarvis-20261102/closure-62b3/android-gradle-green.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/android-junit-proof.json
+docs/evidence/sol61-jarvis-20261102/closure-62b3/apk-badging.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/apk-unsigned-proof.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/apk.bytes
+docs/evidence/sol61-jarvis-20261102/closure-62b3/apk.sha256
+docs/evidence/sol61-jarvis-20261102/closure-62b3/busy-journal-probe.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/completed-replay-probe.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/final-review.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/process-fixture-green.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/queued-unload-probe.txt
+docs/evidence/sol61-jarvis-20261102/closure-62b3/raw-reports.zip
+docs/research/omega/SOL61-JARVIS-INTEGRATION-HANDOFF-20261102.md
+scripts/continuum-owned-process.test.mjs

@@ -14,7 +14,7 @@ Forschungsbranch: `research/continuum-quantumflow-upstreams-20261102` · Draft-P
 ## Tatsächlich getestet
 
 - Alle 16 Originaldateien haben im verbundenen GitHub-Repository die im Manifest gespeicherten Blob-Hashes (einzelne `fetch_file`-Abfragen).
-- Der reine SHA-1-Verifier wurde mit Node.js 22 auf Syntax geprüft. In einem **separaten synthetischen temporären Testrepository**: 1/1 Originaldatei wurde akzeptiert; eine nachträgliche Inhaltsveränderung wurde korrekt verworfen. **Der Commit-verifizierte vollständige 16-Dateien-Checkout-Lauf ist noch NOT_RUN.**
+- Vollständiger Checkout-Lauf auf Integrationsquelle `5060ec4470f49e3f9aa217189cd69adbb0f42f1a`: `node scripts/continuum-quantumflow-verify-upstreams.mjs` mit Node24.19.0 meldete **QUANTUMFLOW_UPSTREAM_SOURCE_VERIFIED 16 files across 8 repositories**. Das beweist die lokalen Original-Blob-Hashes und keinen laufenden 3D-Avatar. Frühere Syntax-/Ein-Datei-Tests bleiben historische Teilprüfungen.
 - Neues Android UI/Filament/GLB/Lip-Sync/FaceLandmarker/Render/Fold7: **NOT_RUN / NOT_IMPLEMENTED**. PR #350 ist deshalb bewusst Draft.
 - Alle Originalsnapshots liegen unter docs/evidence; kein externes JavaScript wird automatisch ausgeführt.
 

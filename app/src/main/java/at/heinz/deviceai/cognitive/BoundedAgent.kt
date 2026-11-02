@@ -301,6 +301,7 @@ class BoundedAgentOrchestrator(
             lastEvaluation.success, evaluationConfirmsOutcome, verified, candidateId)
 
         fun hasFreshToolOutcomes(): Boolean = !ephemeralScreenContext && toolEvidence.isNotEmpty() &&
+            callProofs.none { it.outcomeUncertain } &&
             toolObservations.isNotEmpty() && toolObservations.all {
                 it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
             }
@@ -388,14 +389,27 @@ class BoundedAgentOrchestrator(
                                     .joinToString("") { "%02x".format(it) }
                                 toolEvidence += "tool-call:${lastRecord.callId}:sha256:$digest"
                             }
-                            val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED && !execution.output.isNullOrBlank()
+                            val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED &&
+                                !lastRecord.outcomeUncertain && !execution.replayed && !execution.output.isNullOrBlank()
                             callProofs += AgentToolEvidence(invocation.id, proposal.toolName,
                                 at.heinz.deviceai.toolArgumentFingerprint(invocation.request.arguments),
                                 approvalRequested, approval.userConfirmed.takeIf { approvalRequested },
                                 lastRecord.status, execution.output?.takeIf { fresh }?.let {
                                     sha256Bytes(it.toByteArray(Charsets.UTF_8)).toHex()
-                                }, fresh)
+                                }, fresh, lastRecord.outcomeUncertain, execution.replayed)
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
+                            if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
+                                // Do not let a model reissue an unresolved effect under
+                                // a new call id or turn a replay into fresh experience.
+                                val blocked = if(lastRecord.outcomeUncertain)
+                                    "Werkzeugausgang UNKNOWN: Eine bereits ausgelöste Wirkung kann fortbestehen. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else "Gespeicherte Quittung: keine neue Ausführung oder frische Beobachtung. " +
+                                    "Weitere Aktionen benötigen Besitzerprüfung."
+                                emit(CognitiveWorkState.BLOCKED, invocation.id)
+                                return AgentRunResult(blocked,AgentState.OBSERVE_RESULT,audit.toList(),
+                                    null,blocked,proof())
+                            }
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output
                             )

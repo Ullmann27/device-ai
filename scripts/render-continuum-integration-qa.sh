@@ -126,6 +126,7 @@ python3 -c 'import sys, xml.etree.ElementTree as ET; print("PYTHON_QA_READY",sys
 node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
   { tail -n 50 continuum-all-systems-logs/NODE-SPECIAL.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED node-special'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
+node -p 'Date.now()' > continuum-all-systems-logs/CRITICAL-START.txt
 node scripts/continuum-reliability-qa.mjs critical --out "$qa_proofs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
   { if [[ -f "$qa_proofs/critical/report.json" ]]; then
     node - "$qa_proofs/critical/report.json" <<'NODE'
@@ -142,10 +143,14 @@ NODE
 }
 if [[ -f "$qa_proofs/critical/report.json" ]]; then
   cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
+  node scripts/continuum-qa-evidence.mjs node "$qa_proofs/critical/report.json" "$sha" critical \
+    "$(cat continuum-all-systems-logs/CRITICAL-START.txt)" > continuum-all-systems-logs/CRITICAL-PROOF.json || \
+    { gateFailures=$((gateFailures+1)); echo 'QA_RED invalid-critical-receipt'; }
 else
   gateFailures=$((gateFailures+1))
   echo 'QA_RED missing-critical-receipt; still checking remaining Android gates'
 fi
+node -p 'Date.now()' > continuum-all-systems-logs/FULL-NODE-START.txt
 node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
   { if [[ -f "$qa_proofs/full-node/report.json" ]]; then
     node - "$qa_proofs/full-node/report.json" <<'NODE'
@@ -160,12 +165,19 @@ NODE
 }
 if [[ -f "$qa_proofs/full-node/report.json" ]]; then
   cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
+  node scripts/continuum-qa-evidence.mjs node "$qa_proofs/full-node/report.json" "$sha" full-node \
+    "$(cat continuum-all-systems-logs/FULL-NODE-START.txt)" > continuum-all-systems-logs/FULL-NODE-PROOF.json || \
+    { gateFailures=$((gateFailures+1)); echo 'QA_RED invalid-full-node-receipt'; }
 else
   gateFailures=$((gateFailures+1))
   echo 'QA_RED missing-full-node-receipt; still checking remaining Android gates'
 fi
+node -p 'Date.now()' > continuum-all-systems-logs/GRADLE-START.txt
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/ANDROID-TESTS.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED android-gradle'; }
+node scripts/continuum-qa-evidence.mjs android "$PWD" \
+  "$(cat continuum-all-systems-logs/GRADLE-START.txt)" > continuum-all-systems-logs/ANDROID-JUNIT-PROOF.json || \
+  { gateFailures=$((gateFailures+1)); echo 'QA_RED incomplete-or-stale-android-junit'; }
 # Release compiler identity must match the ORIGINAL owner package.
 # The debug .qa package above was used only for hermetic unit tests.
 gradle --no-daemon --max-workers=2 --console=plain \

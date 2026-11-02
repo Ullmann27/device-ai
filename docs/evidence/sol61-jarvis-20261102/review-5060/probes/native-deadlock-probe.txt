@@ -1,0 +1,29 @@
+CALLBACK_SUBMISSION_DEADLOCK=true dispatchAlive=true
+"review-native-dispatch" daemon prio=5 Id=18 BLOCKED on java.lang.Object@5f205aa owned by "review-native-callback" Id=19
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime$streamMessage$2$1.onMessage(LiteRtLmLocalModelRuntime.kt:349)
+	-  blocked on java.lang.Object@5f205aa
+	at app//NativeDeadlockProbeKt.main$lambda$0(NativeDeadlockProbe.kt:21)
+	at app//NativeDeadlockProbeKt$$Lambda/0x00007f864400f618.invoke(Unknown Source)
+	at app//com.google.ai.edge.litertlm.Conversation.sendMessageAsync(NativeProbeStub.kt:21)
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.streamMessage(LiteRtLmLocalModelRuntime.kt:342)
+	-  locked java.lang.Object@43556938
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.streamMessage$default(LiteRtLmLocalModelRuntime.kt:201)
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.respondToTools(LiteRtLmLocalModelRuntime.kt:197)
+	at app//NativeDeadlockProbeKt.main$lambda$1(NativeDeadlockProbe.kt:24)
+	...
+
+
+"review-native-callback" daemon prio=5 Id=19 BLOCKED on java.lang.Object@43556938 owned by "review-native-dispatch" Id=18
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.cancel(LiteRtLmLocalModelRuntime.kt:460)
+	-  blocked on java.lang.Object@43556938
+	at app//NativeDeadlockProbeKt.main$lambda$1$0(NativeDeadlockProbe.kt:28)
+	at app//NativeDeadlockProbeKt$$Lambda/0x00007f8644014200.onEvent(Unknown Source)
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.deliver(LiteRtLmLocalModelRuntime.kt:545)
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime.access$deliver(LiteRtLmLocalModelRuntime.kt:82)
+	at app//at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime$streamMessage$2$1.onMessage(LiteRtLmLocalModelRuntime.kt:395)
+	-  locked java.lang.Object@5f205aa
+	at app//NativeDeadlockProbeKt.main$lambda$0$0(NativeDeadlockProbe.kt:13)
+	at app//NativeDeadlockProbeKt$$Lambda/0x00007f864401d6f0.run(Unknown Source)
+	...
+
+

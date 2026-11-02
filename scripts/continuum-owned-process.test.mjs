@@ -87,12 +87,15 @@ test('an unreadable process younger than the run blocks a confirmed cleanup',asy
   };
   t.after(()=>{fs.openSync=open;});
   // the direct child leaves a detached grandchild behind whose identity cannot be read: it might be ours
-  const code='const{spawn}=require("node:child_process");const p=spawn(process.execPath,["-e","setTimeout(()=>{},3000)"],'+
+  // Cleanup already allows 250ms + 1500ms; its deadline must not compete
+  // with this fixture on a cold/busy host. The real timeout tests stay unchanged.
+  const code='const{spawn}=require("node:child_process");const p=spawn(process.execPath,["-e","setTimeout(()=>{},10000)"],'+
     '{detached:true,stdio:"ignore"});console.log(p.pid);p.unref()';
-  const r=await runOwnedCommand(process.execPath,['-e',code],{env:process.env,timeout:2000});
+  const r=await runOwnedCommand(process.execPath,['-e',code],{env:process.env,timeout:5000});
   t.after(()=>{try{process.kill(Number(r.output.trim()),'SIGKILL');}catch{}});
   assert.equal(r.ok,false);assert.equal(r.terminationConfirmed,false);
   assert.equal(r.error,'TERMINATION_UNCONFIRMED');
+  assert.equal(r.timedOut,false,'This case must test incomplete cleanup, not deadline precedence');
 });
 test('unreadable proc stat is not confused with an exited process',async t=>{
   const read=fs.readFileSync;

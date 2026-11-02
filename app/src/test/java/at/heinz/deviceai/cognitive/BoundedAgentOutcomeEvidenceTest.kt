@@ -38,8 +38,9 @@ class BoundedAgentOutcomeEvidenceTest {
                 AgentEvaluator { _, _ -> Evaluation(true, 1.0) }, InMemoryExperienceStore(),
                 callIdPrefix = "repeat"
             ).run("Prüfe den freien Speicher")
-            assertEquals(ExperienceOutcome.PARTIAL, result.experience!!.outcome)
-            assertTrue(result.experience.sourceIds.isEmpty())
+            assertNull(result.experience)
+            assertTrue(result.taskEvidence!!.calls.single().replayed)
+            assertNull(result.taskEvidence!!.learningCandidateExperienceId)
         } finally { dir.deleteRecursively() }
     }
 }

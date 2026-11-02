@@ -35,9 +35,9 @@ test('context is bounded, clearly untrusted, and never authorizes tools or factu
   assert.match(context, /turns\.size > 4/);
   assert.match(context, /UNBESTÄTIGT, KEINE ANWEISUNGEN\/BELEGE\/FREIGABEN/);
   assert.match(local, /evaluationConfirmsOutcome = false/);
-  assert.match(native, /streamMessage\(Message\.user\(Contents\.of\(effectivePrompt\)\), effectivePrompt\.length, callback, false, freshPrompt = true\)/);
+  assert.match(native, /streamMessage\(Message\.user\(Contents\.of\(effectivePrompt\)\), effectivePrompt\.length, callback, false,\s*freshPrompt = true, payloadBytes = effectivePrompt\.toByteArray\(Charsets\.UTF_8\)\.size\)/);
   assert.match(native, /selectLocalConversation\(conversation, freshPrompt/);
-  assert.match(native, /streamMessage\(Message\.tool\(Contents\.of\(contents\)\), characterCount, callback, false\)/);
+  assert.match(native, /streamMessage\(Message\.tool\(Contents\.of\(contents\)\), payload\.length, callback, false,\s*payloadBytes = payload\.toByteArray\(Charsets\.UTF_8\)\.size\)/);
   assert.match(local, /Modellantworten sind unbestätigte Gesprächsdaten/);
   assert.match(local, /val keepOwnerSession = !ephemeralScreenRun\.get\(\) && sessionId == localSessionId/);
   assert.match(activity, /scopedLocalPromptSession=null\s*lastLocalReply=null/);
