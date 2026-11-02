@@ -27,7 +27,11 @@ async function fixture(t){
   // All following executables are intentionally synthetic; no Android SDK,
   // network, GitHub Actions, real owner keystore or Gradle are involved.
   await fs.writeFile(path.join(repo,'gradlew'),
-    '#!/bin/sh\nif [ "$CONTINUUM_TEST_FAIL_GRADLE" = "yes" ]; then exit 1; fi\nexit 0\n');
+    '#!/bin/sh\nif [ "$CONTINUUM_TEST_FAIL_GRADLE" = "yes" ]; then exit 1; fi\n'+
+    'if [ "$CONTINUUM_TEST_FIXTURE_EMIT_JUNIT" = "yes" ]; then\n'+
+    'mkdir -p app/build/test-results/testDebugUnitTest\n'+
+    'printf \'%s\\n\' \'<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>\' > app/build/test-results/testDebugUnitTest/TEST-synthetic.xml\n'+
+    'fi\nexit 0\n');
   await fs.writeFile(path.join(repo,'.github/continuum/repair-diagnostics.mjs'),[
     'import fs from "node:fs"; import path from "node:path";',
     'export function readJUnitDirectory(dir){',
@@ -91,20 +95,27 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.receipt?.checks[1].status,'FAIL');
   assert.equal(r.receipt?.checks[2].status,'NOT_RUN');
 
-  await fs.writeFile(path.join(f.repo,'app/build/test-results/testDebugUnitTest/TEST-synthetic.xml'),
-    '<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>');
-  r=await invoke(f,'node-report-bad',f.sha,{CONTINUUM_TEST_NODE_BAD:'yes'});
+  const xml=path.join(f.repo,'app/build/test-results/testDebugUnitTest/TEST-synthetic.xml');
+  await fs.writeFile(xml,'<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>');
+  await fs.utimes(xml,new Date(0),new Date(0));
+  r=await invoke(f,'stale-junit');
+  assert.equal(r.result.status,1);
+  assert.equal(r.receipt?.status,'FAIL');
+  assert.equal(r.receipt?.checks[1].status,'FAIL');
+
+  const newJunit={CONTINUUM_TEST_FIXTURE_EMIT_JUNIT:'yes'};
+  r=await invoke(f,'node-report-bad',f.sha,{...newJunit,CONTINUUM_TEST_NODE_BAD:'yes'});
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[2].status,'PASS');
   assert.equal(r.receipt?.checks[3].status,'FAIL');
 
-  r=await invoke(f,'node-mismatched-source',f.sha,{CONTINUUM_TEST_NODE_WRONG_SHA:'yes'});
+  r=await invoke(f,'node-mismatched-source',f.sha,{...newJunit,CONTINUUM_TEST_NODE_WRONG_SHA:'yes'});
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[3].status,'FAIL');
 
-  r=await invoke(f,'valid-synthetic');
+  r=await invoke(f,'valid-synthetic',f.sha,newJunit);
   assert.equal(r.result.status,0,r.result.stderr);
   assert.equal(r.receipt?.status,'PASS');
   assert.equal(r.receipt?.sourceHead,f.sha);
@@ -123,7 +134,7 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
     '#!/bin/sh\nif [ -n "$RECEIPT_OUTPUT" ]; then exit 9; fi\nexec "'+
       process.execPath+'" "$@"\n',{mode:0o700});
   r=await invoke(f,'receipt-write-failure',f.sha,{
-    PATH:bin+path.delimiter+process.env.PATH
+    ...newJunit,PATH:bin+path.delimiter+process.env.PATH
   });
   assert.equal(r.result.status,1);
   assert.match(r.result.stderr,/ACCEPTANCE_RECEIPT_WRITE_FAILED/);
