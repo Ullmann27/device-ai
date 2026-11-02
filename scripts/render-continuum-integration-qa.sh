@@ -36,15 +36,27 @@ mkdir continuum-all-systems-logs
 printf 'source=%s\n' "$sha" > continuum-all-systems-logs/SOURCE.txt
 workspace="$PWD/.continuum-render-build"
 mkdir -p "$workspace"
+# Exact Adoptium Temurin Linux x64 JDK 17.0.20.1+1 (official GitHub
+# expanded release asset SHA256). No mutable latest URL or unverified tarball.
+jdk_release='17.0.20.1+1'
+jdk_sha256='3808d1d15e3ec6bd5b84057fb5d84c33d8a1536a258146bcea2e603fc726e08e'
+jdk_url='https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz'
 export JAVA_HOME="$workspace/jdk17"
 if [[ ! -x "$JAVA_HOME/bin/javac" ]]; then
   mkdir -p "$JAVA_HOME"
-  curl --fail --location --retry 2 --max-time 360     'https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse'     -o "$workspace/jdk17.tar.gz"
-  tar -xzf "$workspace/jdk17.tar.gz" -C "$JAVA_HOME" --strip-components=1
+  curl --fail --location --retry 2 --max-time 360 "$jdk_url" -o "$workspace/jdk17.tar.gz" ||
+    fail 'Pinned JDK download failed'
+  echo "$jdk_sha256  $workspace/jdk17.tar.gz" | sha256sum --check --status ||
+    fail 'Pinned JDK SHA-256 mismatch'
+  tar -xzf "$workspace/jdk17.tar.gz" -C "$JAVA_HOME" --strip-components=1 ||
+    fail 'Pinned JDK extract failed'
   rm -f "$workspace/jdk17.tar.gz"
 fi
 export PATH="$JAVA_HOME/bin:$PATH"
 java -version
+jdk_version="$("$JAVA_HOME/bin/java" -version 2>&1 | head -n 1)"
+[[ "$jdk_version" == *'17.0.20.1'* ]] || fail 'JDK toolchain version does not match pin'
+printf 'jdk_version=%s\njdk_release=%s\njdk_archive_sha256=%s\n' "$jdk_version" "$jdk_release" "$jdk_sha256" >> continuum-all-systems-logs/SOURCE.txt
 export ANDROID_HOME="$workspace/android-sdk"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 if [[ ! -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]]; then
@@ -124,9 +136,9 @@ mkdir continuum-all-systems-site
 name="Continuum-Research-QA-$hash.apk"
 install -m 644 "$apk" "continuum-all-systems-site/$name"
 [[ "$(sha256sum "continuum-all-systems-site/$name" | cut -d' ' -f1)" == "$hash" ]] || fail 'Staging hash changed'
-CONTINUUM_SOURCE_SHA="$sha" CONTINUUM_APK_HASH="$hash" CONTINUUM_APK_FILE="$name" CONTINUUM_APK_SIZE="$bytes" node --input-type=module <<'NODE'
+CONTINUUM_SOURCE_SHA="$sha" CONTINUUM_APK_HASH="$hash" CONTINUUM_APK_FILE="$name" CONTINUUM_APK_SIZE="$bytes" CONTINUUM_JDK_VERSION="$jdk_version" CONTINUUM_JDK_ARCHIVE_SHA256="$jdk_sha256" node --input-type=module <<'NODE'
 import fs from 'node:fs';
-const d={schemaVersion:1,channel:'ISOLATED_RESEARCH_QA',status:'HOST_TESTS_PASS_DEVICE_NOT_RUN',packageName:'at.heinz.deviceai.continuumlocal.qa',versionCode:38,sourceCommit:process.env.CONTINUUM_SOURCE_SHA,sha256:process.env.CONTINUUM_APK_HASH,apkFile:process.env.CONTINUUM_APK_FILE,byteLength:Number(process.env.CONTINUUM_APK_SIZE),ownerSigned:false,canUpdateInstalledOwnerApp:false,deviceVerified:false};
+const d={schemaVersion:1,channel:'ISOLATED_RESEARCH_QA',status:'HOST_TESTS_PASS_DEVICE_NOT_RUN',packageName:'at.heinz.deviceai.continuumlocal.qa',versionCode:38,sourceCommit:process.env.CONTINUUM_SOURCE_SHA,jdkVersion:process.env.CONTINUUM_JDK_VERSION,jdkArchiveSha256:process.env.CONTINUUM_JDK_ARCHIVE_SHA256,sha256:process.env.CONTINUUM_APK_HASH,apkFile:process.env.CONTINUUM_APK_FILE,byteLength:Number(process.env.CONTINUUM_APK_SIZE),ownerSigned:false,canUpdateInstalledOwnerApp:false,deviceVerified:false};
 fs.writeFileSync('continuum-all-systems-site/build.json',JSON.stringify(d,null,2)+'\n');
 fs.writeFileSync('continuum-all-systems-site/index.html','<!doctype html><html lang="de"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Continuum QA</title><style>body{font:17px sans-serif;background:#101827;color:white;max-width:720px;margin:10vh auto;padding:24px}a{display:inline-block;padding:16px;border-radius:12px;background:#2479d5;color:#fff;text-decoration:none}</style><h1>Continuum – getrennte Forschungs-Test-APK</h1><p>Diese APK ersetzt die installierte Original-App nicht.</p><p>SHA: '+d.sourceCommit+'</p><p>APK SHA-256: '+d.sha256+'</p><p>Fold7 noch nicht abgenommen.</p><a href="/'+encodeURIComponent(d.apkFile)+'">APK herunterladen</a></html>');
 NODE
