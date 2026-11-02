@@ -16,6 +16,10 @@ class ReadOnlyMultiStepTest {
             val downloads=File(root,"Download").also { it.mkdir() }
             File(downloads,"synthetic-alpha.txt").writeText("public synthetic fixture")
             File(downloads,"synthetic-beta.txt").writeText("second fixture")
+            val experiences=InMemoryExperienceStore()
+            val rawEvidence=mutableListOf<String>()
+            repeat(3) { attempt ->
+            val namespace="two-step-$attempt"
             val request="Continuum, prüfe bitte Speicher und Downloads."
             val decision=BootstrapBrain.decide(request,emptyList())
             assertEquals("list_files",decision.tool) // unchanged old dispatcher sees only one goal
@@ -36,8 +40,8 @@ class ReadOnlyMultiStepTest {
                         }
                         else -> error("not permitted")
                     }.also { outputs+=it }
-                },receiptStore=receipts),plan,InMemoryExperienceStore(),
-                limits=AgentLimits(maxSteps=24,maxToolCalls=2,maxRetries=0),callIdPrefix="two-step",turnTrace=trace).run(request)
+                },receiptStore=receipts),plan,experiences,
+                limits=AgentLimits(maxSteps=24,maxToolCalls=2,maxRetries=0),callIdPrefix=namespace,turnTrace=trace).run(request)
             assertNull(result.blocker)
             assertEquals(listOf("get_storage_info","list_files"),executed)
             assertEquals(ExperienceOutcome.SUCCESS,result.experience!!.outcome)
@@ -45,10 +49,22 @@ class ReadOnlyMultiStepTest {
             assertEquals("synthetic-alpha.txt\nsynthetic-beta.txt",outputs[1])
             val bytes=Regex("Gesamt: (\\d+) Byte").find(outputs[0])!!.groupValues[1].toLong()
             assertEquals(Files.getFileStore(root.toPath()).totalSpace,bytes)
-            for(i in 1..2)assertEquals(ToolReceiptState.SUCCEEDED,receipts.get("two-step-$i")!!.state)
+            for(i in 1..2)assertEquals(ToolReceiptState.SUCCEEDED,receipts.get("$namespace-$i")!!.state)
             assertEquals(2,trace.finish(TraceOutcome.ACTION_VERIFIED).events.count { it.stage==TraceStage.TOOL_EXECUTED })
+            val proof=result.taskEvidence!!
+            assertTrue(proof.outcomeVerified)
+            assertTrue(proof.calls.all {it.freshOutput && !it.outcomeUncertain})
+            rawEvidence += "task=$namespace\nplan=${proof.plannedToolNames}\ncalls=${proof.calls}\nevents=${proof.events}\n"+
+                "independentFileStoreOracle=true\nindependentKnownFilesOracle=true\nsourceIds=${result.experience.sourceIds}"
+            }
+            val candidate=ExperienceCompiler().compile(experiences.all()).single()
+            assertEquals(3,candidate.occurrenceCount)
+            assertTrue(candidate.requiresOwnerApproval)
+            assertTrue(candidate.eligibleForOwnerReview)
             System.getProperty("continuum.action.evidenceDir")?.let {
-                File(it,"actual-two-step.txt").writeText("adapter=REAL_HOST_JDK_FILESYSTEM_NOT_ANDROID_BINDER\nsteps=${executed.joinToString()}\nreceipts=two-step-1,two-step-2\nindependentFileStoreOracle=true\nindependentKnownFilesOracle=true\nsourceIds=${result.experience.sourceIds.joinToString()}\nllmInvocations=0\nweightsUpdated=false\n")
+                File(it).mkdirs()
+                File(it,"actual-two-step.txt").writeText("adapter=REAL_HOST_JDK_FILESYSTEM_NOT_ANDROID_BINDER\n"+
+                    rawEvidence.joinToString("\n\n")+"\nreviewCandidate=$candidate\nllmInvocations=0\nweightsUpdated=false\n")
             }
         } finally { root.deleteRecursively() }
     }

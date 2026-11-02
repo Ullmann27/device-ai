@@ -301,6 +301,7 @@ class BoundedAgentOrchestrator(
             lastEvaluation.success, evaluationConfirmsOutcome, verified, candidateId)
 
         fun hasFreshToolOutcomes(): Boolean = !ephemeralScreenContext && toolEvidence.isNotEmpty() &&
+            callProofs.none { it.outcomeUncertain } &&
             toolObservations.isNotEmpty() && toolObservations.all {
                 it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
             }
@@ -388,13 +389,14 @@ class BoundedAgentOrchestrator(
                                     .joinToString("") { "%02x".format(it) }
                                 toolEvidence += "tool-call:${lastRecord.callId}:sha256:$digest"
                             }
-                            val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED && !execution.output.isNullOrBlank()
+                            val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED &&
+                                !lastRecord.outcomeUncertain && !execution.output.isNullOrBlank()
                             callProofs += AgentToolEvidence(invocation.id, proposal.toolName,
                                 at.heinz.deviceai.toolArgumentFingerprint(invocation.request.arguments),
                                 approvalRequested, approval.userConfirmed.takeIf { approvalRequested },
                                 lastRecord.status, execution.output?.takeIf { fresh }?.let {
                                     sha256Bytes(it.toByteArray(Charsets.UTF_8)).toHex()
-                                }, fresh)
+                                }, fresh, lastRecord.outcomeUncertain)
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output

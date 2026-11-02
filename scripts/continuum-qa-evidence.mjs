@@ -7,7 +7,12 @@ import {readJUnitDirectory} from '../.github/continuum/repair-diagnostics.mjs';
 export const REQUIRED_ANDROID_SUITES=Object.freeze([
   'at.heinz.deviceai.ToolExecutionStartLatchTest',
   'at.heinz.deviceai.ReadOnlyToolSizeRegressionTest',
-  'at.heinz.deviceai.cognitive.LocalPromptFrameTest'
+  'at.heinz.deviceai.cognitive.LocalPromptFrameTest',
+  'at.heinz.deviceai.ToolDurableOutcomeTest',
+  'at.heinz.deviceai.localmodel.LocalToolContinuationTest',
+  'at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest',
+  'at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest',
+  'at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest'
 ]);
 const validator=fileURLToPath(new URL('./continuum-junit-validator.py',import.meta.url));
 

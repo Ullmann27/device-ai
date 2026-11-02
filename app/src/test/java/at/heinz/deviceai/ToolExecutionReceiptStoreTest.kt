@@ -34,7 +34,7 @@ class ToolExecutionReceiptStoreTest {
             assertEquals(
                 listOf(
                     ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED,
-                    ToolReceiptState.STARTED, ToolReceiptState.SUCCEEDED
+                    ToolReceiptState.START_PENDING, ToolReceiptState.DISPATCH_COMMITTED, ToolReceiptState.SUCCEEDED
                 ),
                 receipt?.transitions?.map { it.state }
             )

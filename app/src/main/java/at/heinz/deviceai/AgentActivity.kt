@@ -6125,11 +6125,7 @@ class AgentActivity : Activity() {
         val uncertain = receipts.filter {
             val canChangeDevice = it.risk != Risk.READ_ONLY &&
                 it.toolName !in setOf("web_search", "web_read")
-            canChangeDevice && (
-                it.state == ToolReceiptState.STARTED ||
-                    it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
-                    it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
-            )
+            canChangeDevice && it.outcomeUncertain
         }
         if (uncertain.isEmpty()) return
         addToolActivity("${uncertain.size} tool call(s) require operator review")

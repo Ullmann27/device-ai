@@ -79,6 +79,32 @@ Runtime unchanged in M1; full final-source acceptance and independent review pen
 
 SOURCE_INTEGRATED / focused HOST_VERIFIED; alternative native engine and Fold7 NOT_RUN.
 
+## M3 checkpoint — durable execution outcomes
+
+- RED against real parent compiled classes: 4/5 regressions failed. Parallel
+  store instances retained only 13 of 32 receipts; post-dispatch timeout became
+  plain TIMED_OUT after restart; no explicit dispatch journal existed.
+- Existing receipt store now serializes complete transactions across instances
+  and processes, rejects redirected/non-regular paths and syncs the journal and
+  directory before backend entry. No unlocked storage fallback.
+- New calls distinguish START_PENDING, DISPATCH_COMMITTED and
+  UNKNOWN_AFTER_DISPATCH; legacy STARTED remains conservatively ambiguous.
+  Unknown/committed/legacy-ambiguous receipts block replay. Typed uncertainty
+  reaches the existing task evidence and excludes outcome/learning confirmation.
+- Focused current-source Kotlin host checks: **20 PASS**, including 32 parallel
+  calls, same-ID parallel gates, failed dispatch persistence, timeout, pre/post
+  dispatch cancellation and late runner results. Full SDK acceptance pending.
+- Existing real two-step host filesystem test now executes three fresh task IDs
+  with independent file-store/known-file oracles and compiles a review-only skill
+  candidate. Added two simulated adapters through the existing Host/runtime/core
+  contracts. These new integration tests are SOURCE_INTEGRATED / NOT_RUN here
+  until the forthcoming full Gradle run.
+- Dispatch commitment is a logical boundary: effects of already committed,
+  non-cooperative backends may continue. UNKNOWN never means safe rollback.
+
+Next: freeze a source checkpoint, execute complete SDK/Node suites and independent
+review. No signing, release freeze lift or Fold7 execution has occurred.
+
 ## Release boundary
 
 Owner wants an original-signed in-place update without data loss. This instruction

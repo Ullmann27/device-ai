@@ -18,8 +18,8 @@ function fixture(t) {
 test('fresh required suites prove actual execution and exact counts',t=>{
   const f=fixture(t),r=androidEvidence(f);
   assert.equal(r.status,'PASS',JSON.stringify(r));
-  assert.equal(r.counts.executed,3);
-  assert.equal(r.mandatory.length,3);
+  assert.equal(r.counts.executed,REQUIRED_ANDROID_SUITES.length);
+  assert.equal(r.mandatory.length,REQUIRED_ANDROID_SUITES.length);
 });
 for(const kind of ['missing','empty','skipped','wrong-class','wrong-count','malformed','stale','future','symlink']) {
   test('required Android proof rejects '+kind,t=>{

@@ -5,6 +5,7 @@ import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {REQUIRED_ANDROID_SUITES} from './continuum-qa-evidence.mjs';
 
 const source=fileURLToPath(new URL('./continuum-atomic-acceptance.sh',import.meta.url));
 function execute(command,args,cwd,environment={}){
@@ -32,7 +33,7 @@ async function fixture(t){
     '#!/bin/sh\nif [ "$CONTINUUM_TEST_FAIL_GRADLE" = "yes" ]; then exit 1; fi\n'+
     'if [ "$CONTINUUM_TEST_FIXTURE_EMIT_JUNIT" = "yes" ]; then\n'+
     'mkdir -p app/build/test-results/testDebugUnitTest\n'+
-    'for suite in at.heinz.deviceai.ToolExecutionStartLatchTest at.heinz.deviceai.ReadOnlyToolSizeRegressionTest at.heinz.deviceai.cognitive.LocalPromptFrameTest; do\n'+
+    'for suite in '+REQUIRED_ANDROID_SUITES.join(' ')+'; do\n'+
     'if [ "$CONTINUUM_TEST_FIXTURE_OMIT_SUITE" = "yes" ] && [ "$suite" = "at.heinz.deviceai.cognitive.LocalPromptFrameTest" ]; then continue; fi\n'+
     'body="<testcase name=\\"synthetic\\" classname=\\"$suite\\"/>"\n'+
     'if [ "$suite" = "at.heinz.deviceai.cognitive.LocalPromptFrameTest" ]; then\n'+

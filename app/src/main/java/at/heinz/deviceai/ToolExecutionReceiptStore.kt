@@ -10,9 +10,15 @@ import java.io.IOException
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.LinkOption
+import java.nio.file.StandardOpenOption
+import java.nio.channels.FileChannel
 import java.security.MessageDigest
 
-enum class ToolReceiptState { PROPOSED, APPROVED, STARTED, SUCCEEDED, FAILED, TIMED_OUT, CANCELLED, REJECTED }
+enum class ToolReceiptState {
+    PROPOSED, APPROVED, STARTED, SUCCEEDED, FAILED, TIMED_OUT, CANCELLED, REJECTED,
+    START_PENDING, DISPATCH_COMMITTED, UNKNOWN_AFTER_DISPATCH
+}
 
 data class ToolReceiptTransition(val state: ToolReceiptState, val atMillis: Long) {
     init { require(atMillis >= 0) }
@@ -30,6 +36,10 @@ data class ToolExecutionReceipt(
     val outputSha256: String? = null
 ) {
     val state: ToolReceiptState get() = transitions.last().state
+    /** STARTED is a legacy ambiguous boundary; new calls journal commitment explicitly. */
+    val outcomeUncertain: Boolean get() = state != ToolReceiptState.SUCCEEDED &&
+        transitions.any { it.state in setOf(ToolReceiptState.STARTED,
+            ToolReceiptState.DISPATCH_COMMITTED, ToolReceiptState.UNKNOWN_AFTER_DISPATCH) }
 
     init {
         require(callId.matches(Regex("[A-Za-z0-9._:-]{1,128}")))
@@ -74,17 +84,14 @@ interface ToolExecutionReceiptStore {
 class FileToolExecutionReceiptStore(private val directory: File) : ToolExecutionReceiptStore {
     private val file = File(directory, FILE_NAME)
 
-    @Synchronized
-    fun all(): List<ToolExecutionReceipt> = readAll().values.toList()
+    fun all(): List<ToolExecutionReceipt> = guarded { readAll().values.toList() }
 
-    @Synchronized
-    override fun get(callId: String): ToolExecutionReceipt? {
+    override fun get(callId: String): ToolExecutionReceipt? = guarded {
         require(validCallId(callId))
-        return readAll()[callId]
+        readAll()[callId]
     }
 
-    @Synchronized
-    override fun propose(receipt: ToolExecutionReceipt): ToolExecutionReceipt {
+    override fun propose(receipt: ToolExecutionReceipt): ToolExecutionReceipt = guarded {
         require(receipt.state == ToolReceiptState.PROPOSED)
         val records = readAll()
         val existing = records[receipt.callId]
@@ -93,15 +100,14 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
                 existing.argumentFingerprint == receipt.argumentFingerprint) {
                 "Tool call id was reused with different arguments."
             }
-            return existing
+            return@guarded existing
         }
         require(records.size < MAX_RECEIPTS) { "Tool receipt store is full; operator cleanup is required." }
         records[receipt.callId] = receipt
         writeAll(records)
-        return receipt
+        receipt
     }
 
-    @Synchronized
     override fun transition(
         callId: String,
         expected: ToolReceiptState,
@@ -109,11 +115,11 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
         atMillis: Long,
         outputLength: Int,
         outputSha256: String?
-    ): ToolExecutionReceipt? {
+    ): ToolExecutionReceipt? = guarded {
         require(allowedTransition(expected, next) && atMillis >= 0)
         val records = readAll()
-        val current = records[callId] ?: return null
-        if (current.state != expected) return null
+        val current = records[callId] ?: return@guarded null
+        if (current.state != expected) return@guarded null
         val updated = current.copy(
             transitions = current.transitions + ToolReceiptTransition(next, atMillis),
             outputLength = outputLength,
@@ -121,7 +127,27 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
         )
         records[callId] = updated
         writeAll(records)
-        return updated
+        updated
+    }
+
+    /** One transaction across instances/processes; never fall back to unlocked I/O. */
+    private fun <T> guarded(operation: () -> T): T = synchronized(PROCESS_MONITOR) {
+        val root=directory.toPath()
+        if (Files.isSymbolicLink(root) || Files.isSymbolicLink(file.toPath()))
+            throw IOException("Unsafe tool receipt path.")
+        if (!directory.exists() && !directory.mkdirs() && !directory.isDirectory)
+            throw IOException("Cannot create tool receipt directory.")
+        val lockPath=File(directory,".tool-receipts.lock").toPath()
+        for (path in listOf(file.toPath(),lockPath)) {
+            if (Files.exists(path,LinkOption.NOFOLLOW_LINKS) &&
+                !Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS))
+                throw IOException("Tool receipt and lock must be regular files.")
+        }
+        FileChannel.open(lockPath,
+            StandardOpenOption.CREATE,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS).use { channel ->
+            val lock=channel.tryLock() ?: throw IOException("Tool receipt store is busy; execution blocked.")
+            lock.use { operation() }
+        }
     }
 
     private fun readAll(): LinkedHashMap<String, ToolExecutionReceipt> {
@@ -158,6 +184,7 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
             } catch (_: AtomicMoveNotSupportedException) {
                 Files.move(temporary.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING)
             }
+            FileChannel.open(directory.toPath(),StandardOpenOption.READ).use { it.force(true) }
         } finally {
             temporary.delete()
         }
@@ -256,6 +283,7 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
     }
 
     companion object {
+        private val PROCESS_MONITOR = Any()
         private const val FILE_NAME = "tool-execution-receipts.bin"
         private const val MAGIC = "DEVICE_AI_TOOL_RECEIPTS"
         private const val SCHEMA_VERSION = 1
@@ -268,7 +296,12 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
 
 internal fun allowedTransition(from: ToolReceiptState, to: ToolReceiptState): Boolean = when (from) {
     ToolReceiptState.PROPOSED -> to in setOf(ToolReceiptState.APPROVED, ToolReceiptState.REJECTED, ToolReceiptState.CANCELLED)
-    ToolReceiptState.APPROVED -> to in setOf(ToolReceiptState.STARTED, ToolReceiptState.REJECTED, ToolReceiptState.CANCELLED)
+    ToolReceiptState.APPROVED -> to in setOf(ToolReceiptState.STARTED, ToolReceiptState.START_PENDING,
+        ToolReceiptState.REJECTED, ToolReceiptState.CANCELLED)
+    ToolReceiptState.START_PENDING -> to in setOf(ToolReceiptState.DISPATCH_COMMITTED,
+        ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED,
+        ToolReceiptState.UNKNOWN_AFTER_DISPATCH)
+    ToolReceiptState.DISPATCH_COMMITTED -> to in setOf(ToolReceiptState.SUCCEEDED, ToolReceiptState.UNKNOWN_AFTER_DISPATCH)
     ToolReceiptState.STARTED -> to in setOf(
         ToolReceiptState.SUCCEEDED, ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED
     )

@@ -107,6 +107,7 @@ class LiteRtLmLocalModelRuntime(
     private var activeInferenceProfile: LocalInferenceProfileRecorder? = null
     private var pendingUnload: ((Result<Unit>) -> Unit)? = null
     private var activeCancellation: AtomicBoolean? = null
+    private var activeDeliveryLock: Any? = null
 
     init { require(systemPrompt.isNotBlank() && systemPrompt.length <= 4_096) }
 
@@ -214,6 +215,7 @@ class LiteRtLmLocalModelRuntime(
         val startNanos = System.nanoTime()
         val inputTokens: Int?
         val generationCancelled = AtomicBoolean(false)
+        val callbackLock = Any()
         synchronized(lock) {
             check(state == LocalModelState.READY) { "A local model is not ready." }
             profile.mark(LocalInferenceStage.CONVERSATION_SELECTION_ENTER)
@@ -261,6 +263,7 @@ class LiteRtLmLocalModelRuntime(
             activeInferenceProfile = profile
             inferenceActive = true
             activeCancellation = generationCancelled
+            activeDeliveryLock = callbackLock
             state = LocalModelState.GENERATING
             inputTokens = profile.measure(LocalInferenceStage.INPUT_TOKEN_COUNT_ENTER,
                 LocalInferenceStage.INPUT_TOKEN_COUNT_EXIT) {
@@ -268,7 +271,6 @@ class LiteRtLmLocalModelRuntime(
             }
         }
         // Serializes streamed chunks, terminal events and visible callback delivery.
-        val callbackLock = Any()
         val terminalOverrideRequested = AtomicBoolean(false)
         val responseCharacters = intArrayOf(0)
         val chunks = intArrayOf(0)
@@ -458,8 +460,11 @@ class LiteRtLmLocalModelRuntime(
         val active = synchronized(lock) {
             activeCancellation?.set(true)
             if (state != LocalModelState.GENERATING && state != LocalModelState.UNLOADING) null
-            else (inferenceConversation ?: conversation) to activeInferenceProfile
+            else Triple(inferenceConversation ?: conversation, activeInferenceProfile, activeDeliveryLock)
         } ?: return
+        // Join any delivery already in progress; later callbacks see the revoked
+        // generation. Never hold the delivery lock while calling native cancel.
+        active.third?.let { synchronized(it) {} }
         val cancelNative = { runCatching { active.first?.cancelProcess() } }
         val profile = active.second
         if (profile == null) cancelNative()
@@ -477,6 +482,7 @@ class LiteRtLmLocalModelRuntime(
             activeConversation = inferenceConversation ?: conversation
             cancelProfile = activeInferenceProfile
             deferredToInferenceCompletion = inferenceActive
+            if (deferredToInferenceCompletion) activeCancellation?.set(true)
             state = LocalModelState.UNLOADING
             if (deferredToInferenceCompletion) pendingUnload = callback
         }
@@ -493,6 +499,7 @@ class LiteRtLmLocalModelRuntime(
         val shouldUnload = synchronized(lock) {
             inferenceActive = false
             activeInferenceProfile = null
+            activeDeliveryLock = null
             if (pendingUnload != null) true
             else {
                 if (state == LocalModelState.GENERATING) state = LocalModelState.READY

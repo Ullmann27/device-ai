@@ -29,7 +29,8 @@ data class AgentToolEvidence(
     val ownerApproved: Boolean?,
     val status: ToolExecutionStatus,
     val outputSha256: String?,
-    val freshOutput: Boolean
+    val freshOutput: Boolean,
+    val outcomeUncertain: Boolean = false
 )
 
 /** Reuses the trusted existing call namespace as task identity. Not a second task store.
