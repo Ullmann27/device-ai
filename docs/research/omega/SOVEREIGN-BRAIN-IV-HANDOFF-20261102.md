@@ -39,3 +39,20 @@ These are actual current environment paths, not portable-toolchain availability 
 - [ ] Fresh full relevant suites and independent final-source review; no own-tests-only closure.
 
 All NEW functionality NOT_RUN at this initial checkpoint. Rollback: review/revert only new branch commits; no reset/shared-branch mutation. Keep one brain/memory/worker/model host and existing CCC1 contracts.
+
+## Sofortabschluss nach Besitzeranweisung
+
+Die spätere explizite Besitzeranweisung verlangt jetzt Abschluss/Commit/Push statt weiterer Entwicklung. Daher sind die geplanten A/B/C/S4–S6-Schritte **nicht begonnen / NOT_RUN**, nicht erfüllt. Der neue Abschlussbericht `SOVEREIGN-BRAIN-IV-ABSCHLUSS-20261102.md` ist maßgeblich; die obige Planung bleibt der nächste Einstiegspunkt, kein Implementierungsnachweis.
+
+Neu geprüft:72 eingefrorene Zeilen enthalten54 eindeutige Fälle; vollständige Auswertung72:48→72, eindeutig54:36→54 (18 verbessert/0 regrediert/36 unverändert). Original JSON/SHA und Originalvorhersagen unverändert. Neues Tool `tools/continuum-span-research/report-context-duplicates.py`; exakter Lauf:
+
+```bash
+python3 tools/continuum-span-research/report-context-duplicates.py
+bash docs/evidence/sovereign-brain-iv-20261102/independent-baseline-review/run.sh /workspace/brain4-next-fresh-probe
+```
+
+Der erste Befehl berechnet nur vorhandene synthetische Vorhersagen neu. Der zweite kompiliert die exakten357-Originalquellen d4903184 mit Kotlin2.4 gegen die dokumentierten vorhandenen Hostklassen neu und reproduziert die offen gebliebenen Scheduling-/Ausgabegrenzen. Er ist ein Negativ-Reproducer, keine Erfolgsabnahme. Der Ausgabeordner muss neu sein. Vollständige ausgeführte Compile-/Run-Logs, Quell-SHAs und Ergebnisse liegen in `docs/evidence/sovereign-brain-iv-20261102/independent-baseline-review/`.
+
+Unabhängige Prüfung bestätigte: Reparaturen aabd/babba sind im Code; dennoch verbleiben Budgetdefekt, nachgelagerter Backendstart nach Timeout/Cancel und übergroß gerenderte ReadOnlyToolPlan-Antworten. **Weitere Änderungen erforderlich.** Keine Review-Threads aufgelöst; keine Bestätigung allein aufgrund eigener grüner Tests. Die Review-Reproducer werden synthetisch auf dem Host ausgeführt, nicht auf Android. Keine neue unabhängige Review-Zustimmung behauptet.
+
+S5 concrete next research input (only inspected, not executed here): `docs/evidence/sol-brain-20261025/cdx-baseline-v1/stage-6000.cdx.base64`, encoded-file SHA256 `df6ef50839efdad02003cc860f773171a495f3fc3930f451a1d49d265a163a8e`, original source manifest in the same directory. This is the archived synthetic research decoder, not the absent Fold7 audited checkpoint. Do not claim equivalence; no decoder or conditioning experiment was run in this continuation.

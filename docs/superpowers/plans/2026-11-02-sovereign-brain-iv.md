@@ -39,3 +39,7 @@ These are actual current environment paths, not portable-toolchain availability 
 - [ ] Fresh full relevant suites and independent final-source review; no own-tests-only closure.
 
 All NEW functionality NOT_RUN at this initial checkpoint. Rollback: review/revert only new branch commits; no reset/shared-branch mutation. Keep one brain/memory/worker/model host and existing CCC1 contracts.
+
+## Owner stop / handoff ledger
+
+Owner explicitly requested immediate clean finish/commit/push on the reported15% quota. Task scope reduced to the actual audit checkpoint; no product implementation started. Completed: isolated branch/Draft358, fresh GitHub/open-review audit, independent host bug repro and72/54 reanalysis. A/B/C/S4–S6 remain NOT_IMPLEMENTED/NOT_RUN. Continue from the current handoff, never restart oldS1–S3 or infer approval from parent PASS.
