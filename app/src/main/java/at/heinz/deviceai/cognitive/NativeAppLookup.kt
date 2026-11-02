@@ -30,8 +30,9 @@ internal object NativeAppLookup {
         if (Regex("(?iu)\\b(nicht|kein|keine|niemals)\\b").containsMatchIn(normalizedQuery))
             return NativeAppMatches(false, 0, emptyList())
         val needle = normalizedQuery
-            .replace(Regex("(?iu)^(?:öffne|starte|zeige(?: mir)?|öffnen|starten)\\s+(?:mir\\s+)?(?:die\\s+|das\\s+|den\\s+|app\\s+)?"), "")
-            .replace(Regex("(?iu)\\s+bitte$"), "").trim()
+            .replace(Regex("(?iu)^(?:bitte\\s+)?(?:öffne|starte|zeige(?: mir)?|suche|finde|öffnen|starten)\\s+(?:mir\\s+)?(?:(?:die|das|den)\\s+)?(?:app\\s+)?"), "")
+            .replace(Regex("(?iu)\\s+bitte$"), "")
+            .replace(Regex("(?iu)\\s+app$"), "").trim()
         require(needle.length >= 2) { "INVALID_APP_QUERY" }
         val apps = available.asSequence()
             .filter { packagePattern.matches(it.packageName) && it.label.isNotBlank() }
