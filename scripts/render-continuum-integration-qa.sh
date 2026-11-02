@@ -63,10 +63,13 @@ node --version
 
 node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/NODE-SPECIAL.txt; fail 'Node special contract failed'; }
-node scripts/continuum-reliability-qa.mjs critical --out "$PWD/continuum-all-systems-logs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
+qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
+node scripts/continuum-reliability-qa.mjs critical --out "$qa_proofs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt; fail 'Node critical failed'; }
-node scripts/continuum-reliability-qa.mjs full-node --out "$PWD/continuum-all-systems-logs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
+cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
+node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/NODE-FULL.txt; fail 'Full Node failed'; }
+cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 150 continuum-all-systems-logs/ANDROID-TESTS.txt; fail 'Android test/lint failure'; }
 gradle --no-daemon --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumInstallableResearchQa=true -PcontinuumStandaloneVersionCode=38 :app:assembleDebug > continuum-all-systems-logs/APK-ASSEMBLY.txt 2>&1 ||
