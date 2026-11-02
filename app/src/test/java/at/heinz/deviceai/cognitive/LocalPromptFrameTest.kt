@@ -48,6 +48,26 @@ class LocalPromptFrameTest {
         assertTrue(prompt.endsWith(tail))
     }
 
+    @Test fun utf8ByteBudgetRejectsCompleteEmojiRequestInsteadOfCuttingIt() {
+        val mandatory = "## USER REQUEST\\n" + "🧠".repeat(4_200)
+        assertTrue(mandatory.length < 15_500)
+        assertTrue(mandatory.toByteArray(Charsets.UTF_8).size > 15_500)
+        assertNull(LocalPromptFrame.assemble(mandatory, "", null,
+            "\\nBerechtigungen bleiben unverändert.", 15_500))
+    }
+
+    @Test fun unicodeHistoryAndAdvisoryMayBeOmittedWithoutLosingOwnerCorrection() {
+        val owner = "## USER REQUEST\\n" + "東京".repeat(1_500) + "Nicht mehr Graz."
+        val tail = "\\nToolGate und Besitzerfreigabe bleiben verbindlich."
+        val history = "frühere Aussage: Graz. ".repeat(400)
+        val advisory = "🧠".repeat(1_700)
+        val response = LocalPromptFrame.assemble(owner, history, advisory, tail, 15_500)
+        assertNotNull(response)
+        assertTrue(response!!.contains("Nicht mehr Graz."))
+        assertTrue(response.endsWith(tail))
+        assertTrue(response.toByteArray(Charsets.UTF_8).size <= 15_500)
+    }
+
     @Test fun modelAdvisoryCannotFitIfItWouldStealOwnerBudget() {
         val body="Eindeutiger, vollständiger Auftrag. "+"x".repeat(8_600)
         val tail="\nDie letzte Kontrolle darf nie fehlen."
