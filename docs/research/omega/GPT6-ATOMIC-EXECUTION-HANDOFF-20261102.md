@@ -62,3 +62,34 @@ Above commands are **required future actions, NOT executed in this continuation*
 5. **M5** realistic voice/3D globe/JARVIS runtime and verified generalization research; no imaginary neural or device claims.
 
 Rollback: do not integrate PR359; no production state was written. If integration fails, revert only this branch's 3 runtime changes and the two new helper files, not Sol/CodeRabbit or owner assets.
+
+## Nächster Integrationsmeilenstein: quellgebundener Android-Gesamttest (neue lokale QA)
+
+**Code auf diesem Forschungsbranch:** `scripts/continuum-atomic-acceptance.sh` und `scripts/continuum-atomic-acceptance.test.mjs`. Kein GitHub-Actions-Workflow, kein weiteres ToolGate, kein Cloud-LLM und keine Änderung an Besitzer-APK/-Signierung.
+
+Das Skript ist ein manueller, offline-fähiger **Abnahmevertrag** für einen echten lokalen Android-SDK-Host oder den von Besitzern bereits betriebenen QA-Rechner. `--expected-head` muss die volle 40-stellige Checkout-SHA sein; `--out` muss ein neuer absoluter Pfad außerhalb des Git-Quellbaums sein. Es verweigert einen Dirty-Worktree, einen anderen Commit, `main`/Release-Branches oder einen überschriebenen Ergebnisordner.
+
+Es ruft **mit echten Quellen** `gradlew --offline --no-daemon --rerun-tasks :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug` auf und verwertet die echte bestehende `readJUnitDirectory`-Logik. Ein altes JUnit-XML zählt ausdrücklich nicht: Startzeit, Aktualität der XML-Daten und drei notwendige Klassentests werden kontrolliert:
+
+- `at.heinz.deviceai.ToolExecutionStartLatchTest`
+- `at.heinz.deviceai.ReadOnlyToolSizeRegressionTest`
+- `at.heinz.deviceai.cognitive.LocalPromptFrameTest`
+
+Danach laufen die **bestehenden** `continuum-reliability-qa.mjs` Profile `critical` und `full-node`. Ihre Reports müssen `PASS`, `sourceUnchanged=true` und genau die erwartete Git-SHA enthalten. Jeder fehlende Beleg, unerwartete Abbruch und jede negative Prüfung führen zu `FAIL`. Die maschinenlesbare `acceptance.json` enthält die sechs Prüfgrenzen; **fehlt die Quittung wegen eines Schreibfehlers, darf der Shell-Prozess nicht mit Exit 0 enden**. Alle Befehle laufen ohne produktive Signierung; kein APK-Build oder -Install.
+
+**Abnahmebefehle (noch NICHT ausgeführt im vollständigen PR-Checkout):**
+```bash
+node --test scripts/continuum-atomic-acceptance.test.mjs
+bash -n scripts/continuum-atomic-acceptance.sh
+git status --short
+bash scripts/continuum-atomic-acceptance.sh \
+  --expected-head "$(git rev-parse HEAD)" \
+  --out "/tmp/continuum-atomic-acceptance-$(git rev-parse --short=12 HEAD)"
+```
+
+Die Skript-Negativtests bauen ein **synthetisches eigenes Wegwerf-Git-Repository** mit künstlicher `gradlew`, JUnit-Ausgabe und künstlichen Node-Prüfreports. Sie erzwingen Abweisung bei falschem Commit, geschütztem Branch, verändertem Checkout, fehlgeschlagenem Gradle, leerem, altem oder unvollständigem JUnit, anderem Commit in Node-Evidenz sowie bei fehlgeschlagenem Receipt-Write. Ein erfolgreicher synthetischer Positivfall darf **nicht** als echter Android-Test ausgegeben werden.
+
+**Belegstand:** Die ursprüngliche kleine synthetische QA-Harness-Version wurde zuvor mit Node22 / 1 Hosttest PASS geprüft (siehe `docs/evidence/continuum-atomic-execution-20261102/acceptance-harness-results.json`). Seitdem wurde der Abnahmevertrag um Build-Neulauf, frisch generierte JUnit-Belege, notwendige Testklassen, verifizierte Node-SHAs und Schreibfehler-Behandlung erweitert. **Die letzte erweiterte Version ist auf GitHub gepusht, aber bislang nicht erneut in einem vollständigen autorisierten Checkout ausgeführt: `SOURCE_INTEGRATED / QA_NOT_RUN`.** Auch die synthetischen Fixture-Tests für diese letzte Revision benötigen erneute Ausführung. Keine irreführende Übernahme älterer PASS-Quittungen.
+
+**Sicherheits- und Rollbackgrenze:** Dieser zusätzliche Abnahmevertrag ist nur ein Prüfprogramm; er schaltet keine ToolGate-Aktionen frei und ändert die tatsächlich installierte Android-App nicht. Zum Zurücksetzen den Draft-PR #359 nicht integrieren. Bei unvollständiger Android-SDK/Gradle-Umgebung `UNAVAILABLE` und Rohlogs erhalten, nicht als PASS melden.
+
