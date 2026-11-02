@@ -30,6 +30,9 @@ val continuumLocalStandalone = providers.gradleProperty("continuumLocalStandalon
 // Opt-in QA for new Continuum Lokal: debug package gets .qa suffix and never
 // consumes the owner's original signing key. The signed release lane is unchanged.
 val continuumLocalStandaloneQa = providers.gradleProperty("continuumLocalStandaloneQa").orNull == "true"
+// Explicit owner research APK: only the isolated .qa package with a disposable
+// debug signer may be assembled. Ordinary QA's no-APK policy stays intact.
+val continuumInstallableResearchQa = providers.gradleProperty("continuumInstallableResearchQa").orNull == "true"
 val continuumLocalRenderUnsigned = providers.gradleProperty("continuumLocalRenderUnsigned").orNull == "true"
 require(listOf(continuumLocalStandalone, continuumLocalStandaloneQa, continuumLocalRenderUnsigned).count { it } <= 1) {
     "Owner signing, QA, and unsigned transport modes are mutually exclusive."
@@ -79,13 +82,21 @@ require(!continuumLocalRenderUnsigned ||
 }
 // Fail closed before task execution: the QA package may only compile/test/lint.
 // It must never be used to assemble any debug/release APK or bundle.
+require(!continuumInstallableResearchQa ||
+    (continuumLocalStandaloneQa && deviceAiMentorPreview &&
+        continuumStandaloneVersion != null && gradle.startParameter.taskNames.isNotEmpty() &&
+        gradle.startParameter.taskNames.all { it.substringAfterLast(':') == "assembleDebug" })) {
+    "Installable research QA may assemble only the isolated debug APK; no owner package."
+}
 require(!continuumLocalStandaloneQa ||
     (gradle.startParameter.taskNames.isNotEmpty() &&
         gradle.startParameter.taskNames.all { requested ->
             requested.substringAfterLast(':') in
-                setOf("testDebugUnitTest", "lintDebug", "compileDebugKotlin")
+                (if (continuumInstallableResearchQa)
+                    setOf("assembleDebug")
+                else setOf("testDebugUnitTest", "lintDebug", "compileDebugKotlin"))
         })) {
-    "Disposable Continuum Lokal QA allows only debug unit tests, lint and compilation."
+    "Disposable QA only tests/lints/compiles unless expressly opted into isolated debug APK."
 }
 require(!continuumLocalStandalone ||
     (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
