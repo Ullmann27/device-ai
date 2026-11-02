@@ -123,7 +123,7 @@ fi
 command -v python3 || fail 'Python3 missing for mandatory JUnit verification'
 python3 -c 'import sys, xml.etree.ElementTree as ET; print("PYTHON_QA_READY",sys.version.split()[0])' ||
   fail 'Python XML validator unavailable'
-node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
+node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-preflight.test.mjs scripts/continuum-gguf-preflight.integration.test.mjs scripts/continuum-owner-v38-release.test.mjs > continuum-all-systems-logs/NODE-SPECIAL.txt 2>&1 ||
   { tail -n 50 continuum-all-systems-logs/NODE-SPECIAL.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED node-special'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
 node scripts/continuum-reliability-qa.mjs critical --out "$qa_proofs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
