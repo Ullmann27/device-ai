@@ -264,7 +264,8 @@ class BoundedAgentOrchestrator(
         val toolObservations = mutableListOf<AgentToolObservation>()
         val toolEvidence = mutableListOf<String>()
         val modelIds = mutableListOf<String>()
-        fun hasFreshToolOutcomes(): Boolean = toolEvidence.isNotEmpty() &&
+        var ephemeralScreenContext=false
+        fun hasFreshToolOutcomes(): Boolean = !ephemeralScreenContext && toolEvidence.isNotEmpty() &&
             toolObservations.isNotEmpty() && toolObservations.all {
                 it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
             }
@@ -274,7 +275,7 @@ class BoundedAgentOrchestrator(
             if (steps >= limits.maxSteps) throw StepLimitReached()
             steps++
             audit += AgentAuditEvent(audit.size, state, detail.take(256))
-            checkpointStore?.save(checkpoint(task, state, retry))
+            if(!ephemeralScreenContext)checkpointStore?.save(checkpoint(task, state, retry))
         }
 
         try {
@@ -292,6 +293,10 @@ class BoundedAgentOrchestrator(
                 transition(AgentState.VALIDATE, "Response and optional proposal validated.")
                 val proposal = chosen.proposal
                 if (proposal != null) {
+                    if(proposal.toolName=="read_app_screen"){
+                        ephemeralScreenContext=true
+                        checkpointStore?.clear()
+                    }
                     turnTrace?.event(TraceStage.TOOL_PROPOSED)
                     transition(AgentState.TOOL_PROPOSAL, "Registered tool proposal received.")
                     if (calls >= limits.maxToolCalls) {
@@ -383,7 +388,7 @@ class BoundedAgentOrchestrator(
                     lastRecord = null
                 }
             }
-            transition(AgentState.STORE_EXPERIENCE, "Evaluated attempt stored.")
+            transition(AgentState.STORE_EXPERIENCE, if(ephemeralScreenContext)"Ephemeral screen run; learning skipped." else "Evaluated attempt stored.")
             val finishedAt = clock().coerceAtLeast(startedAt)
             val resultExperience = Experience(
                 id = experienceId(task, finishedAt, currentRun),
@@ -409,7 +414,7 @@ class BoundedAgentOrchestrator(
                 completedAt = finishedAt,
                 evaluation = lastEvaluation
             )
-            experienceStore.store(resultExperience)
+            if(!ephemeralScreenContext)experienceStore.store(resultExperience)
             val blocker = if (lastEvaluation.success) null else
                 "Retry budget exhausted: ${lastEvaluation.notes.ifBlank { "evaluation failed" }}"
             transition(AgentState.RESPOND, if (blocker == null) "Response ready." else "Structured blocker returned.")
@@ -417,7 +422,7 @@ class BoundedAgentOrchestrator(
                 if (blocker == null) lastOutput else blocker,
                 AgentState.RESPOND,
                 audit.toList(),
-                resultExperience,
+                resultExperience.takeUnless { ephemeralScreenContext },
                 blocker
             )
             checkpointStore?.clear()

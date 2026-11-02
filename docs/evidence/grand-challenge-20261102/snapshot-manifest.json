@@ -1,0 +1,18 @@
+{
+  "node.tap": {
+    "sha256": "616f0b9f94eef1e6fa409f5f4d51f105c3b78e32e6ab1d7e4de283580f011872",
+    "bytes": 290416
+  },
+  "coding-loop-recheck.txt": {
+    "sha256": "ff0b5650d1bc59206e551ce8a0097bbfeb7f4e9e3b9f9826dd3376e763549e13",
+    "bytes": 4395
+  },
+  "full-host.txt": {
+    "sha256": "18ca62b27323e64df6fc27ede17f5459ccc40079005d6bc6b395a586be4b5360",
+    "bytes": 18
+  },
+  "full-host-retry.txt": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+}
