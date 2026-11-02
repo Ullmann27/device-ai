@@ -234,6 +234,9 @@ class AgentActivity : Activity() {
     private var voiceEngine: TextToSpeech? = null
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var pendingLocalSpeechRequest: Int? = null
+    private var pendingLocalSpeechSession: String? = null
+    private var pendingLocalSpeechGeneration: Long = -1L
+    private var pendingLocalSpeechDialog: AlertDialog? = null
     private var activeLocalSpeechRequest: Int? = null
     private var speechScopeGeneration = 0L
     private var voiceReady = false
@@ -8338,7 +8341,8 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelSpeechInputScope(){
-        speechScopeGeneration++;pendingLocalSpeechRequest=null;activeLocalSpeechRequest=null
+        speechScopeGeneration++;pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
+        pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
         onDeviceSpeech?.cancel()
     }
@@ -8359,6 +8363,9 @@ class AgentActivity : Activity() {
         when(route){
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.REQUEST_MICROPHONE -> {
                 pendingLocalSpeechRequest=requestCode
+                pendingLocalSpeechSession=scopeSession
+                pendingLocalSpeechGeneration=scopeGeneration
+                pendingLocalSpeechDialog=scopeDialog
                 requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO),LOCAL_SPEECH_PERMISSION_REQUEST)
             }
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.ON_DEVICE -> runCatching { speech.start(
@@ -8385,8 +8392,18 @@ class AgentActivity : Activity() {
     override fun onRequestPermissionsResult(requestCode:Int,permissions:Array<out String>,grantResults:IntArray){
         super.onRequestPermissionsResult(requestCode,permissions,grantResults)
         if(requestCode==LOCAL_SPEECH_PERMISSION_REQUEST){
-            val pending=pendingLocalSpeechRequest;pendingLocalSpeechRequest=null
-            if(pending!=null&&!isFinishing&&!isDestroyed&&grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
+            val pending=pendingLocalSpeechRequest
+            val originalSession=pendingLocalSpeechSession
+            val originalGeneration=pendingLocalSpeechGeneration
+            val originalDialog=pendingLocalSpeechDialog
+            pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
+            pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null
+            // A delayed system permission response must not start the microphone
+            // in a different chat or a dismissed development dialog.
+            if(pending!=null && !isFinishing && !isDestroyed &&
+                sessionId==originalSession && speechScopeGeneration==originalGeneration &&
+                (pending!=DEV_SPEECH_REQUEST || devDialog===originalDialog && originalDialog?.isShowing==true) &&
+                grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
                 startVoiceInput(pending)
         }
     }
