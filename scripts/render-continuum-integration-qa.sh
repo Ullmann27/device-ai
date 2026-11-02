@@ -140,7 +140,12 @@ NODE
   tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt
   gateFailures=$((gateFailures+1)); echo 'QA_RED node-critical'
 }
-cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
+if [[ -f "$qa_proofs/critical/report.json" ]]; then
+  cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
+else
+  gateFailures=$((gateFailures+1))
+  echo 'QA_RED missing-critical-receipt; still checking remaining Android gates'
+fi
 node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
   { if [[ -f "$qa_proofs/full-node/report.json" ]]; then
     node - "$qa_proofs/full-node/report.json" <<'NODE'
@@ -153,7 +158,12 @@ NODE
   tail -n 100 continuum-all-systems-logs/NODE-FULL.txt
   gateFailures=$((gateFailures+1)); echo 'QA_RED full-node'
 }
-cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
+if [[ -f "$qa_proofs/full-node/report.json" ]]; then
+  cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
+else
+  gateFailures=$((gateFailures+1))
+  echo 'QA_RED missing-full-node-receipt; still checking remaining Android gates'
+fi
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 100 continuum-all-systems-logs/ANDROID-TESTS.txt; gateFailures=$((gateFailures+1)); echo 'QA_RED android-gradle'; }
 # Release compiler identity must match the ORIGINAL owner package.
