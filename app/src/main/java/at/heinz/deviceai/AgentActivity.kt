@@ -565,6 +565,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        if (::executor.isInitialized) executor.cancelPendingActions()
         modelImportObservation?.close()
         modelImportObservation = null
         sessionResetLifetime.set(false)
@@ -6960,6 +6961,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
         // cancellation state before they may create or update a draft.
         activeLocalStreamToken?.let { clearLocalStreamPreview(it) }

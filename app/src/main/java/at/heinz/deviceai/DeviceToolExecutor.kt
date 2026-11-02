@@ -3,10 +3,14 @@ package at.heinz.deviceai
 import android.content.Context
 import java.util.Locale
 
-class DeviceToolExecutor(
+class DeviceToolExecutor internal constructor(
     private val context: Context,
-    private val bridge: ShizukuBridge
+    private val bridgeReady: () -> Boolean,
+    private val runBridge: (String, (Result<String>) -> Unit) -> Unit,
+    private val appActions: DeviceAppActionPort?
 ) {
+    constructor(context: Context, bridge: ShizukuBridge) :
+        this(context, bridge::isReady, bridge::executeChecked, AndroidDeviceAppActions(context))
     private val sharedRoots = listOf(
         "/sdcard/Download",
         "/sdcard/Documents",
@@ -18,6 +22,12 @@ class DeviceToolExecutor(
     fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
         ToolRegistry.validate(call)?.let {
             callback(Result.failure(IllegalArgumentException(it)))
+            return
+        }
+        if (call.name in setOf("launch_app", "read_app_screen")) {
+            val adapter=appActions
+            if(adapter==null)callback(Result.failure(IllegalStateException("NO_VERIFIED_DEVICE_ACTION_ADAPTER")))
+            else adapter.execute(call,callback)
             return
         }
         // App-volume statistics need neither Shizuku nor access to personal files.
@@ -33,7 +43,7 @@ class DeviceToolExecutor(
             callback(runCatching { DeviceNetworkProbe.read(context) })
             return
         }
-        if (!bridge.isReady()) {
+        if (!bridgeReady()) {
             callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
         }
@@ -44,8 +54,10 @@ class DeviceToolExecutor(
                 return
             }
 
-        bridge.executeChecked(command, callback)
+        runBridge(command, callback)
     }
+
+    fun cancelPendingActions() { appActions?.cancelPending() }
 
     private fun buildCommand(call: ToolCallRequest): String =
         when (call.name) {
@@ -87,13 +99,6 @@ class DeviceToolExecutor(
                     val pkg = resolvePackage(target) ?: safePackage(target)
                     "logcat -d -t 1600 2>/dev/null | grep -i -E 'AndroidRuntime|FATAL EXCEPTION|${escapeGrep(pkg)}' | tail -$lines"
                 }
-            }
-
-            "launch_app" -> {
-                val name = requiredString(call, "packageOrName")
-                val pkg = resolvePackage(name) ?: error("App nicht gefunden: $name")
-                val safe = safePackage(pkg)
-                "monkey -p $safe -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1 && echo 'Gestartet: $safe'"
             }
 
             "stop_app" -> {

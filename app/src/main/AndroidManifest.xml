@@ -19,6 +19,13 @@
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
 
+        <!-- Explicit Android accessibility opt-in; read-only, per-request observations. -->
+        <service android:name=".ContinuumScreenObservationService"
+            android:exported="true" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/continuum_screen_observation" />
+        </service>
+
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"

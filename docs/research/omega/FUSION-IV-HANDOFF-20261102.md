@@ -21,3 +21,9 @@ II: Existing Android recognizer uses EXTRA_PREFER_OFFLINE (a preference, not off
 III: Existing BoundedAgent and CCC1 already own orchestration, job identity, receipts and experience. OpenJarvis loop guard offers bounded repetition/cycle detection; adapt only if measured current-model repeated-call failure improves. No Python/Rustruntime, newworker/backlog or memoryDB. No paidAPI requirement. Verified experiences remain distinct from confirmedownerfacts.
 
 Status at opening: AUDIT/PREFLIGHT; newimplementation NOT_RUN. This handoff is extended per real code/test checkpoint. DEVICE_NOT_RUN unless actual hardware access exists. Final ownHEAD fullQA required.
+
+## First actual action patch
+
+RED2/2 through actual ToolGate→DeviceToolExecutorRunner→DeviceToolExecutor with TEST DOUBLE device ports: shell dispatch success incorrectly became SUCCEEDED despite missing observed target. GREEN12/12 focused JVM: dispatch seam2, controller6 (fresh success, wrong/stale/missing window, missinggrant, revoke/stop, reentry, intermediatewindow), boundedreader4 (recycling, sensitive subtree, limits, broken node). Source compiles with real Android API jar; noFold7 claim.
+
+Existing launch_app route now uses native launcher + fresh Accessibility foreground event, before Shizuku readiness; exact unambiguous launcher choice and explicit missing-observation refusal. New read_app_screen is CONFIRM, target-package scoped, bounded/redacted ephemeral JSON; incomplete snapshots refused, noauto capture. Service only windowevents, no tap/type/overlay/audio/network/storage; owner enables/revokes via standard AndroidAccessibility. MainActivity toolregistry/Gemma route unchanged; AgentActivity STOP/destroy cancels pending action. MITlicense/changed-source notice in third_party/tokenarc-open-jarvis. WholeAndroid QA pending. Generic taps/typing/visual-model actionfallback remain unavailable, not silentlyenabled.
