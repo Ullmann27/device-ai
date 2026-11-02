@@ -41,7 +41,7 @@ async function fixture(t){
     'const out=process.argv.at(-1); fs.mkdirSync(out,{recursive:true});',
     'fs.writeFileSync(path.join(out,"report.json"),JSON.stringify({',
     'status:process.env.CONTINUUM_TEST_NODE_BAD==="yes"?"FAIL":"PASS",',
-    'sourceUnchanged:true}));'
+    'sourceUnchanged:true,source:{commit:process.env.RECEIPT_EXPECTED_HEAD}}));'
   ].join('\n')+'\n');
   ensureSuccess(execute('git',['init','-q','-b','feature/qa-fixture'],repo),'init fixture');
   ensureSuccess(execute('git',['add','.'],repo),'add fixture');
