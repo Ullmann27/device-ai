@@ -32,7 +32,9 @@ class LocalConversationContext {
         if(Regex("(?iu)^was hast du (?:(?:dadurch|jetzt|daraus) )?verstanden[?!.]?$").matches(text))
             return ContextDirective(ContextDirectiveKind.CONTEXT_REPORT,explicitFocus)
         val correction=Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$").matchEntire(text)?:return null
-        turns.clear() // The corrected scope must not retain stale model dialogue.
+        // A scope correction invalidates every old topic channel, including typed
+        // research and its freshness evidence, not only the visible dialogue turns.
+        turns.clear();research=null
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
         val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|lösche|installiere|starte|ignoriere)\\b")

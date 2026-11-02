@@ -1,0 +1,16 @@
+PASS: isolated cognitive decision assertions
+PASS: pipeline, conversation-focus and evidence-graph shadow checks
+PASS: Cortex shadow safety and deterministic behavior assertions
+PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
