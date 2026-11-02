@@ -418,6 +418,8 @@ class AgentActivity : Activity() {
                 val offlineVoice=voiceEngine?.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language=="de" }
                     ?.maxByOrNull { it.quality }
                 if(offlineVoice!=null)voiceEngine?.setVoice(offlineVoice)
+                voiceEngine?.setPitch(at.heinz.deviceai.cognitive.JarvisVoiceProfile.pitch)
+                voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
                 voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE &&
                     at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
@@ -5251,7 +5253,8 @@ class AgentActivity : Activity() {
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
         voiceSignal.activate(id)
-        if(voiceEngine?.speak(message.take(800), TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
+        val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
+        if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
             stopVoiceAnimation()
     }
 
