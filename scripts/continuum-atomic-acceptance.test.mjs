@@ -105,6 +105,7 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
   assert.equal(r.receipt?.checks[1].status,'FAIL');
+  await fs.rm(xml); // Isolate the next case: fresh output but a missing mandatory suite.
 
   const newJunit={CONTINUUM_TEST_FIXTURE_EMIT_JUNIT:'yes'};
   r=await invoke(f,'missing-critical-suite',f.sha,{
