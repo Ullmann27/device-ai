@@ -40,7 +40,7 @@ finish() {
     RECEIPT_GRADE="$grade" RECEIPT_EXIT="$code" \
     node --input-type=commonjs - <<'NODE' || true
 const fs=require('node:fs'), path=require('node:path'), e=process.env;
-const names=['android-gradle','node-critical','node-full'];
+const names=['android-gradle','android-junit','node-critical','node-critical-proof','node-full','node-full-proof'];
 const completed=fs.readFileSync(path.join(e.RECEIPT_OUTPUT,'checks.tsv'),'utf8')
   .split('\n').filter(Boolean).map(x=>x.split('\t'));
 const checks=names.map(name=>{
@@ -86,18 +86,49 @@ run() {
 run android-gradle bash "$root/gradlew" --offline --no-daemon \
   :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug
 
+# Reuse the existing diagnoser: exit 0 and an empty/fully skipped JUnit tree
+# are NOT successful app tests. Keep the evidence in the external receipt dir.
+if node --input-type=module - "$root" "$out" <<'NODE'
+import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+const [root,out]=process.argv.slice(2);
+const diagnostics=await import(pathToFileURL(path.join(root,'.github/continuum/repair-diagnostics.mjs')).href);
+const report=diagnostics.readJUnitDirectory(path.join(root,'app/build/test-results/testDebugUnitTest'),root);
+fs.writeFileSync(path.join(out,'android-junit.json'),JSON.stringify({
+  total:report.total,executed:report.executed,passed:report.passed,
+  failed:report.failed,skipped:report.skipped,placeholders:report.placeholders,
+  evidenceComplete:report.evidenceComplete
+},null,2)+'\n',{flag:'wx',mode:0o600});
+if(!report.evidenceComplete || report.executed===0 || report.failed!==0 ||
+  report.placeholders!==0)process.exit(1);
+NODE
+then
+  printf 'android-junit\tPASS\t0\n' >> "$out/checks.tsv"
+else
+  printf 'android-junit\tFAIL\t1\n' >> "$out/checks.tsv"
+  echo 'ANDROID_JUNIT_EMPTY_OR_FAILED' >&2
+  exit 1
+fi
+
 # Existing canonical Node QA enforces exit codes, confirmed process termination,
 # complete JUnit evidence, source identity and no skipped-only success.
 run node-critical node "$root/scripts/continuum-reliability-qa.mjs" critical --out "$out/critical"
-node --input-type=commonjs - "$out/critical/report.json" <<'NODE'
+if node --input-type=commonjs - "$out/critical/report.json" <<'NODE'
 const r=require(process.argv[2]);
 if(r.status!=='PASS'||r.sourceUnchanged!==true)process.exit(1);
 NODE
+then printf 'node-critical-proof\tPASS\t0\n' >> "$out/checks.tsv"
+else printf 'node-critical-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
+fi
 run node-full node "$root/scripts/continuum-reliability-qa.mjs" full-node --out "$out/full-node"
-node --input-type=commonjs - "$out/full-node/report.json" <<'NODE'
+if node --input-type=commonjs - "$out/full-node/report.json" <<'NODE'
 const r=require(process.argv[2]);
 if(r.status!=='PASS'||r.sourceUnchanged!==true)process.exit(1);
 NODE
+then printf 'node-full-proof\tPASS\t0\n' >> "$out/checks.tsv"
+else printf 'node-full-proof\tFAIL\t1\n' >> "$out/checks.tsv"; exit 1
+fi
 [[ "$(git rev-parse --verify HEAD)" == "$expected" ]] || { echo 'HEAD_CHANGED' >&2; exit 4; }
 [[ -z "$(git status --porcelain --untracked-files=all)" ]] || { echo 'SOURCE_CHANGED' >&2; exit 4; }
 grade=PASS
