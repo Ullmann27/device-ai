@@ -205,6 +205,51 @@
           "git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
         }
       ]
+    },
+    {
+      "repo": "LottieFiles/dotlottie-android",
+      "commit": "7b81497851c2b63308ccfa1c79f3385f333381d7",
+      "license": "MIT",
+      "roles": [
+        "Android View/Compose animated UI state machines",
+        "document cards and ring motion"
+      ],
+      "snapshots": [
+        [
+          "dotlottie-android/LICENSE",
+          "5aab31bc718782907c4548567b2b26c604ed4299"
+        ]
+      ],
+      "notes": "Runtime is JNI/Rust-backed; don't bundle paid/unlicensed animation packs. Imported LICENSE only; no runtime dependency installed.",
+      "source_url": "https://github.com/LottieFiles/dotlottie-android/tree/7b81497851c2b63308ccfa1c79f3385f333381d7",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/dotlottie-android/LICENSE",
+          "git_blob_sha1": "5aab31bc718782907c4548567b2b26c604ed4299"
+        }
+      ]
+    },
+    {
+      "repo": "airbnb/lottie-android",
+      "commit": "05ea92e90381eb8a8ae06855ea2b74f322bebbec",
+      "license": "Apache-2.0",
+      "roles": [
+        "Android native vector HUD progress/transition animations"
+      ],
+      "snapshots": [
+        [
+          "lottie-android/LICENSE",
+          "9c8f3ea0871e0bfe81da0fa6e7c1d7d156dc380e"
+        ]
+      ],
+      "notes": "Use vetted bundled Lottie JSON animations, not arbitrary remote LottieFiles assets. Imported LICENSE only; no runtime dependency installed.",
+      "source_url": "https://github.com/airbnb/lottie-android/tree/05ea92e90381eb8a8ae06855ea2b74f322bebbec",
+      "source_files": [
+        {
+          "snapshot_path": "docs/evidence/quantumflow-20261102/upstream/lottie-android/LICENSE",
+          "git_blob_sha1": "9c8f3ea0871e0bfe81da0fa6e7c1d7d156dc380e"
+        }
+      ]
     }
   ],
   "limitations": [
