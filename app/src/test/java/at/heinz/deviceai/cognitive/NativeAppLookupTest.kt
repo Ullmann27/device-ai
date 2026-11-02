@@ -33,6 +33,15 @@ class NativeAppLookupTest {
         assertEquals(2, ambiguous.total)
     }
 
+    @Test fun GermanVoicePhrasesAreLookupOnlyAndNegationsAbstain() {
+        assertEquals("com.whatsapp", NativeAppLookup.search("Öffne mir WhatsApp bitte", apps)
+            .candidates.single().packageName)
+        assertEquals("com.whatsapp", NativeAppLookup.search("Starte die WhatsApp", apps)
+            .candidates.single().packageName)
+        assertEquals(0, NativeAppLookup.search("Öffne nicht WhatsApp", apps).total)
+        assertEquals(0, NativeAppLookup.search("Niemals WhatsApp starten", apps).total)
+    }
+
     @Test fun duplicatePackagesAndInvalidMetadataAreExcluded() {
         val r = NativeAppLookup.search("kamera", apps)
         assertEquals(1, r.total)
