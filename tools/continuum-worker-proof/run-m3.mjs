@@ -41,7 +41,7 @@ function command(label, cmd, args, cwd=root, expected=0) {
 const g=(label,args)=>command(label,'git',args);
 const sourceCommit=command('source-head','git',['rev-parse','HEAD'],sourceRoot);
 const sourceBranch=command('source-branch','git',['branch','--show-current'],sourceRoot);
-assert(['research/continuum-synapse-ii-20261102','research/continuum-synapse-iii-20261102'].includes(sourceBranch));
+assert(['research/continuum-synapse-ii-20261102','research/continuum-synapse-iii-20261102','research/continuum-fusion-iv-20261102'].includes(sourceBranch));
 const good='export function square(x){return x*x;}\nexport function quad(x){return square(square(x));}\n';
 const bad=good.replace('return square(square(x))','return sqare(square(x))');
 const tests="import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport {square,quad} from './math.mjs';\n"+
