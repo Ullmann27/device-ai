@@ -24,6 +24,15 @@ class UnansweredOwnerTurnTest {
         assertTrue(ctx.render("s").contains("UNVOLLSTÄNDIG"))
     }
 
+    @Test fun repeatedFailedCallbackKeepsPreviousDistinctOwnerEvidence() {
+        val ctx = LocalConversationContext()
+        ctx.record("s", "Ich bin in Wien.", "Verstanden.")
+        ctx.recordUnanswered("s", "Nein, ich bin jetzt in Linz.")
+        repeat(8) { ctx.recordUnanswered("s", "Nein, ich bin jetzt in Linz.") }
+        assertEquals(listOf("Ich bin in Wien.", "Nein, ich bin jetzt in Linz."),
+            ctx.sessionEvidence("s"))
+    }
+
     @Test fun newSessionInvalidatesPreviousFailedTurnAndCorrections() {
         val ctx = LocalConversationContext()
         ctx.recordUnanswered("s1", "Ich bin jetzt in Wien.")
