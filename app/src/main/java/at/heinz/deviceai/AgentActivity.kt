@@ -233,6 +233,7 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
+    private var appLookupGeneration: Long = 0L
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
     private var pendingLocalSpeechGeneration: Long = -1L
@@ -2441,11 +2442,49 @@ class AgentActivity : Activity() {
         return shell
     }
 
+    private fun runExplicitAppLookup(query: String) {
+        val ownerSession = sessionId
+        val generation = ++appLookupGeneration
+        activeLocalRequest = true
+        setBusy(true)
+        val invocation = ToolCallRequest("explicit-lookup-" + UUID.randomUUID(), "find_app", mapOf("query" to query))
+        executeTool(invocation, false, false) { raw ->
+            if (isFinishing || isDestroyed || sessionId != ownerSession || appLookupGeneration != generation) return@executeTool
+            activeLocalRequest = false
+            setBusy(false)
+            val response = runCatching {
+                val obj = org.json.JSONObject(raw)
+                check(obj.optString("schema") == "CONTINUUM_APP_DISCOVERY_V1") { "UNVERIFIED_APP_LOOKUP" }
+                val count = obj.optInt("totalMatches", -1)
+                check(count >= 0) { "INVALID_APP_COUNT" }
+                val items = obj.getJSONArray("candidates")
+                check(items.length() <= 12) { "UNBOUNDED_APP_RESULT" }
+                if (count == 0) "Ich habe keine passende startbare App gefunden. Das beweist nicht, dass sie nicht installiert ist."
+                else {
+                    val suggestions = (0 until items.length()).map { i ->
+                        val candidate = items.getJSONObject(i)
+                        candidate.getString("label").take(100) + " (" + candidate.getString("packageName").take(200) + ")"
+                    }.joinToString("; ")
+                    "Gefundene Apps: $suggestions. Zum tatsächlichen Öffnen brauche ich deinen separaten bestätigten Auftrag."
+                }
+            }.getOrElse { "Appsuche konnte nicht bestätigt werden. Es wurde keine App gestartet." }
+            addAssistantMessage(response)
+        }
+    }
+
     private fun sendCurrentInput() {
         if (busy) return
         val request = input.text.toString().trim()
         if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
+        // It ONLY returns bounded candidates; opening any app requires a separate consented tool call.
+        at.heinz.deviceai.cognitive.OwnerAppLookupIntent.parse(request)?.let { lookup ->
+            input.text.clear()
+            addUserMessage(request)
+            runExplicitAppLookup(lookup)
             return
         }
         // Revoke previously granted ephemeral network capabilities for this offline turn.
@@ -7021,6 +7060,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        appLookupGeneration++
         cancelSpeechInputScope()
         if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
