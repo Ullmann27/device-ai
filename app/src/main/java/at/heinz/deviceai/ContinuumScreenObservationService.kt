@@ -52,6 +52,7 @@ internal object ScreenObservationBus:ForegroundEvents{
     private val lock=java.lang.Object();private var service:ContinuumScreenObservationService?=null
     private var epoch=0L;private var sequence=0L;private var wakeSequence=0L;private var latest:ForegroundWindow?=null
     private var readingPackage:String?=null
+    private var clickInProgress=false
     private val packageNamePattern=Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z0-9_]+)+")
     fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
     fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
@@ -77,10 +78,58 @@ internal object ScreenObservationBus:ForegroundEvents{
         }
         latest?.takeIf{it.revision>revision}
     }
+    /** Experimental native port; no registry or production approval pathway yet. */
+    internal fun clickCandidate(request:ClickRequest,ownerConfirmed:Boolean,checkRequest:()->Unit):ClickFrame {
+        val started=System.nanoTime()
+        fun checkBound(){
+            checkRequest()
+            if(Thread.currentThread().isInterrupted)throw ToolBackendFailure(ToolExecutionStatus.CANCELLED,"DEVICE_ACTION_CANCELLED")
+            if(System.nanoTime()-started>2_000_000_000L)throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT,"SCREEN_CLICK_DEADLINE")
+        }
+        val current=synchronized(lock){
+            val connected=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
+            check(readingPackage==null&&!clickInProgress){"ANOTHER_SCREEN_READ_ACTIVE"}
+            check(epoch==request.epoch&&sequence==request.revision){"STALE_OR_UNSAFE_SCREEN"}
+            clickInProgress=true
+            connected
+        }
+        fun state():Long=synchronized(lock){
+            check(service===current&&epoch==request.epoch){"OBSERVATION_PERMISSION_CHANGED"}
+            sequence
+        }
+        val port=object:ClickObservationPort {
+            private var before:ClickFrame?=null
+            override fun checkActive(){ checkBound();state() }
+            override fun current():ClickFrame {
+                val rev=state()
+                return current.snapshotForClick(request,rev,::checkBound).also {
+                    check(state()==rev){"SCREEN_CHANGED_DURING_READ"};before=it
+                }
+            }
+            override fun clickOnce(request:ClickRequest):Boolean {
+                val rev=state();check(rev==request.revision){"SCREEN_CHANGED_DURING_READ"}
+                return current.dispatchClick(request,rev,::checkBound) { frame ->
+                    check(frame==before&&state()==rev){"SCREEN_CHANGED_DURING_READ"}
+                }
+            }
+            override fun awaitPostcondition():ClickFrame {
+                synchronized(lock){while(service===current&&epoch==request.epoch&&sequence<=request.revision){
+                    checkBound();lock.wait(50)
+                }}
+                checkBound()
+                val rev=state()
+                return current.snapshotForClick(request,rev,::checkBound).also {
+                    check(state()==rev){"SCREEN_CHANGED_DURING_READ"}
+                }
+            }
+        }
+        return try { VerifiedNodeClick.execute(request,ownerConfirmed,port) }
+        finally { synchronized(lock){clickInProgress=false;lock.notifyAll()} }
+    }
     fun read(expectedPackage:String,checkActive:()->Unit):ObservedAppScreen{
         val state=synchronized(lock){
             val current=service?:error("ACCESSIBILITY_OBSERVATION_NOT_GRANTED")
-            check(readingPackage==null){"ANOTHER_SCREEN_READ_ACTIVE"}
+            check(readingPackage==null&&!clickInProgress){"ANOTHER_SCREEN_READ_ACTIVE"}
             readingPackage=expectedPackage
             Triple(current,epoch,++sequence)
         }
