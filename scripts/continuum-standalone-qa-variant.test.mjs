@@ -12,7 +12,7 @@ test('standalone QA is opt-in and explicitly exclusive with signed owner lane',(
   assert.match(gradle,/require\(!\(continuumLocalStandalone && continuumLocalStandaloneQa\)\)/);
 });
 test('source builds new continuumlocal app base ID under QA but uses a separate package suffix',()=>{
-  assert.match(gradle,/applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa\) "at\.heinz\.deviceai\.continuumlocal"/);
+  assert.match(gradle,/applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa \|\| continuumLocalRenderUnsigned\) "at\.heinz\.deviceai\.continuumlocal"/);
   assert.match(gradle,/else if \(continuumLocalStandaloneQa\) \{[\s\S]{0,180}applicationIdSuffix = "\.qa"/);
   assert.match(gradle,/continuumLocalStandaloneQa -> "Continuum Lokal QA NICHT INSTALLIEREN"/);
 });

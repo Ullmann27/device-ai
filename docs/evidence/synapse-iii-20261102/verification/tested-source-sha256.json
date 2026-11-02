@@ -1,0 +1,6 @@
+{
+  ".github/continuum/ccc1-worker.mjs": "b3968e64e82fba94bf3b9a8835957881cd38e8eb378316ea3cf87e0bb1ba95ca",
+  "tools/continuum-worker-proof/run-m3.mjs": "5a438b8b85662aae3e0d0c7521fc09a764d16d9997abd1334824d8b65a28761c",
+  "app/src/main/java/at/heinz/deviceai/cognitive/CertifiedLocationReflex.kt": "046cc7f0999b1b0bb952496c69c9725930e921bb6c08b7feb757ee31044d8da2",
+  "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "3f507926eca8312c4969a88a3545fe00fd534b9db7b8df3c0769770df278f375"
+}

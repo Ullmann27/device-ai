@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/workspace/post-fable-toolchain/jdk21/bin/java",
+    "-cp",
+    "/workspace/continuum-checks/synapse-iii/shadow-proof/classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+    "at.heinz.deviceai.learning.span.Cdx2CounterfactualShadow",
+    "run",
+    "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/train.json",
+    "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/validation.json",
+    "/workspace/continuum-post-fable/docs/evidence/synapse-iii-20261102/m2-freeze/holdout-d-inputs.json",
+    "/workspace/continuum-checks/synapse-iii/shadow-resource"
+  ],
+  "exitCode": 0,
+  "wallMillis": 1053.618968000137,
+  "maxChildRssKiB": 146840,
+  "cpuUserSeconds": 1.883404,
+  "cpuSystemSeconds": 0.135147,
+  "scope": "Linux host single JVM, train+ablation+predict; not Android/PSS/native/energy/thermal",
+  "device": "NOT_RUN",
+  "repeatedOutputsAndWeightsByteIdentical": true
+}

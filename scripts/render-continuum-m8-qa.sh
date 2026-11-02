@@ -83,7 +83,7 @@ node --version
 # Preserve frozen historical owner-release approval tests: they are not valid
 # acceptance criteria for changed source. Do not run them as false positives.
 # Integrated proof: local missing-file recovery is checked without overwriting owners' work.
-node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs scripts/continuum-session-evidence-routing.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs scripts/cdx2-blind-score.test.mjs scripts/continuum-brain-connection-audit.test.mjs .github/continuum/ccc1-checkout-binding.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
+node --test --test-reporter=tap scripts/continuum-architecture-proof.test.mjs scripts/android-kotlin-compile-check.test.mjs scripts/continuum-session-evidence-routing.test.mjs scripts/continuum-fold7-stream-scroll.test.mjs scripts/cdx2-blind-score.test.mjs scripts/continuum-brain-connection-audit.test.mjs .github/continuum/ccc1-checkout-binding.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-model-center.test.mjs scripts/continuum-standalone-qa-variant.test.mjs > continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt 2>&1 || {
   cat continuum-m8-render-qa/ARCHITECTURE-PROOF-TESTS.txt >&2
   die 'Architecture-proof regression tests failed'
 }
