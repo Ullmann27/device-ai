@@ -52,6 +52,32 @@ class ScreenObservationRevisionTest {
         assertTrue(delivered)
         assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
     }
+    @Test fun unknownWindowDuringReadInvalidatesSnapshotAndLaunchEvidence() {
+        prepare(); ScreenObservationBus.observed(service, "com.android.settings")
+        val before = ScreenObservationBus.revision(); var delivered = false; var checks = 0
+        val failure = assertThrows(IllegalStateException::class.java) {
+            ScreenObservationBus.read("com.android.settings") {
+                if (++checks == 2) {
+                    delivered = true
+                    RootedService.root = null
+                    val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOWS_CHANGED)
+                    try { service.onAccessibilityEvent(event) } finally { event.recycle() }
+                }
+            }
+        }
+        assertTrue(delivered)
+        assertEquals("SCREEN_CHANGED_DURING_READ", failure.message)
+        assertNull(ScreenObservationBus.awaitAfter(before, 1))
+    }
+    @Test fun unknownWindowCannotLeaveOldForegroundConfirmation() {
+        prepare()
+        val before = ScreenObservationBus.revision()
+        ScreenObservationBus.observed(service, "com.android.settings")
+        RootedService.root = null
+        val event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+        try { service.onAccessibilityEvent(event) } finally { event.recycle() }
+        assertNull(ScreenObservationBus.awaitAfter(before, 1))
+    }
     @Test fun stableReadRetainsBoundedObservedText() {
         prepare()
         val result = ScreenObservationBus.read("com.android.settings") {}

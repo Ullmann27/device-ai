@@ -19,7 +19,8 @@ class ContinuumScreenObservationService:AccessibilityService(){
         }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
             event.eventType==AccessibilityEvent.TYPE_WINDOWS_CHANGED){
-            val root=rootInActiveWindow?:return
+            val root=rootInActiveWindow
+            if(root==null){ScreenObservationBus.observed(this, "");return}
             try{ScreenObservationBus.observed(this,root.packageName?.toString().orEmpty())}
             finally{@Suppress("DEPRECATION") root.recycle()}
         }
@@ -53,8 +54,8 @@ internal object ScreenObservationBus:ForegroundEvents{
     fun connect(s:ContinuumScreenObservationService)=synchronized(lock){service=s;epoch++;latest=null;lock.notifyAll()}
     fun disconnect(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){service=null;epoch++;latest=null;lock.notifyAll()}}
     fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
-    fun observed(s:ContinuumScreenObservationService,pkg:String)=synchronized(lock){if(service===s&&pkg.isNotBlank()){
-        latest=ForegroundWindow(pkg,++sequence,epoch);lock.notifyAll()}}
+    fun observed(s:ContinuumScreenObservationService,pkg:String)=synchronized(lock){if(service===s){
+        sequence++;latest=if(pkg.isNotBlank())ForegroundWindow(pkg,sequence,epoch) else null;lock.notifyAll()}}
     fun contentChanged(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){
         sequence++;lock.notifyAll()}}
     override fun grantEpoch():Long?=synchronized(lock){if(service!=null)epoch else null}

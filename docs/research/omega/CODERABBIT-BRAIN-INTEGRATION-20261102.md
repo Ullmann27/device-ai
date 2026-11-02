@@ -6,7 +6,21 @@
 
 # Continuum — geprüfter Integrationsstand und Fortsetzung (2. November 2026)
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:6416a93f89e5e81ac05289902b3f86462ae8a3f5f0d7edb933ca399e0f2a0eb0 -->
+
+## Nachprüfung: unbekanntes Fenster (2026-11-02)
+
+**IMPLEMENTED / TESTED:** Ein zugestellter Fensterwechsel mit `rootInActiveWindow == null` wurde zuvor ignoriert. Zwei neue Robolectric-Fälle belegen die Folgen: eine laufende Lesung gab alten Text frei und eine ältere Vordergrundbestätigung blieb abrufbar. Fensterwechsel ohne lesbares Paket invalidieren jetzt die Revision und löschen die alte Bestätigung. Fenster mit bekanntem Paket bleiben beobachtbar; fehlende oder verspätete Ereignisse sind weiterhin keine atomare Zustandsprüfung.
+
+Vorher: 4 von 6 Bildschirmtests bestanden, 2 scheiterten, Gradle Exit 1. Nachher: 6 von 6 Bildschirmtests und insgesamt 1660 von 1663 Unit-Fällen bestanden, 3 übersprungen; Lint ohne Befund und Kotlin-Compile bestanden, Gradle Exit 0. Der erste Testversuch löste das Ereignis zu früh aus und ist als fehlerhafter Versuch mit Rohlog dokumentiert. Exakte Befehle, Prüfsummen und Original-XML: `docs/evidence/continuum-window-followup-20261102/results.json`.
+
+**Weiter offen:** Inhaltsereignisse aus anderen Fenstern invalidieren ebenfalls Lesungen. Das ist aus dem Code ersichtlich; Häufigkeit, Akkukosten und Split-Screen-Auswirkung auf dem Fold7 sind nicht gemessen. Eine Paketfilterung ohne Umgang mit unbekannten Paketen, Overlays und parallelen Fenstern könnte den Sicherheitsvertrag schwächen und ist nicht implementiert. Fold7, APK und echte Appbedienung bleiben NOT_RUN.
+
 ## GitHub und Status
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 - **PR353 / M1:** `coderabbit/continuum-reliability-sprint-20261102`, gepusht bis `86032c31a36547888536446c765a719cd6ee5c5c`, Draft auf PR351.
 - **PR354 / M2, Bildschirmgrenze und QA:** `coderabbit/continuum-brain-integration-20261102`, Code-Checkpoint `3eb7701cc033a620c9b038d2072fb872e3f6e547`, offener abhängiger Draft auf PR353. Nachfolgende Dokumentationscommits ändern diesen geprüften Code nicht. Die endgültige Spitze steht im PR und im Abschluss der Coding-Aufgabe.
