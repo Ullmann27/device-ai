@@ -1,0 +1,160 @@
+import {sha256} from './repair-diagnostics.mjs';
+
+export const ANSK_SCHEMA='continuum-ansk-shadow-recipe';
+export const ANSK_VERSION=1;
+
+const SHA40=/^[0-9a-f]{40}$/;
+const SHA64=/^[0-9a-f]{64}$/;
+const SOURCE=/^app\/src\/main\/(?:java|kotlin)\/(?:[A-Za-z0-9_-]+\/)+[A-Za-z0-9_-]+\.kt$/;
+const IMPORT=/^(?:[A-Za-z_][A-Za-z0-9_]*\.)+[A-Za-z_][A-Za-z0-9_]*$/;
+const PROFILE_ORDER=['android-compile','android-unit'];
+
+export function assertAnskSource(file,importFqn){
+  if(typeof file!=='string'||!SOURCE.test(file)||file.includes('..')||
+     typeof importFqn!=='string'||!IMPORT.test(importFqn))
+    throw Error('ANSK_INVALID_KOTLIN_IMPORT_TARGET');
+  return file;
+}
+
+/** Strictly the existing fixed Android chain; external JSON is not proof. */
+export function measureAnskChain(result,{baseline=null,allowFailure=false}={}){
+  if(!result||!Array.isArray(result.results)||result.results.length===0||
+     result.results.length>PROFILE_ORDER.length||typeof result.passed!=='boolean')
+    return {passed:false,reason:'INVALID_RUN'};
+  const rows=result.results;
+  if(rows.some((p,i)=>p?.profile!==PROFILE_ORDER[i]||
+    typeof p.passed!=='boolean'||typeof p.testProfile!=='boolean'||
+    p.testProfile!==(i===1)||!Number.isSafeInteger(p.tests?.executed)||
+    !Number.isSafeInteger(p.tests?.failed)||!Number.isSafeInteger(p.tests?.skipped)||
+    p.tests.executed<0||p.tests.failed<0||p.tests.skipped<0||
+    (p.tests.skipped>0&&(i!==1||
+      typeof p.tests.skippedCaseDigest!=='string'||
+      !SHA64.test(p.tests.skippedCaseDigest)))||
+    p.timedOut===true||
+    (p.passed&&(p.tests.failed!==0||p.exitCode!==0))||
+    (!p.passed&&p.exitCode===0&&p.tests.failed===0)))
+    return {passed:false,reason:'INVALID_PROFILE'};
+  if(result.passed!==rows.every(p=>p.passed))
+    return {passed:false,reason:'INVALID_CHAIN_VERDICT'};
+  if(allowFailure){
+    if(result.passed||rows.every(p=>p.passed)||
+       rows.length!==1||rows[0].profile!=='android-compile'||
+       rows[0].passed!==false||rows[0].exitCode===0)
+      return {passed:false,reason:'MUTATION_NOT_COMPILER_RED'};
+    return {passed:true,reason:null};
+  }
+  if(!result.passed||rows.length!==PROFILE_ORDER.length||
+     rows.some(p=>!p.passed)||rows[1].tests.executed<=0)
+    return {passed:false,reason:'NOT_ALL_PROFILES_GREEN'};
+  if(baseline){
+    if(!measureAnskChain(baseline).passed)
+      return {passed:false,reason:'INVALID_BASELINE_EVIDENCE'};
+    // A lower test count OR a different set of skipped cases invalidates
+    // the patch, including a count-preserving skip swap across test cases.
+    if(rows.some((p,i)=>p.tests.executed<baseline.results[i].tests.executed||
+      p.tests.skipped!==baseline.results[i].tests.skipped||
+      (p.tests.skipped>0&&
+       p.tests.skippedCaseDigest!==baseline.results[i].tests.skippedCaseDigest)))
+      return {passed:false,reason:'EVIDENCE_REGRESSION'};
+  }
+  return {passed:true,reason:null};
+}
+
+export function verifyAnskExperiment({
+  head,sourceFile,importFqn,baselineSha256,mutatedSha256,
+  primarySha256,independentSha256,patchSha256,
+  baselineRun,mutatedRun,primaryRun,independentRun,
+  diagnostic,strategiesAttempted,successfulStrategy
+}={}){
+  const fail=reason=>({verified:false,reason,authority:'SHADOW_ONLY',recipe:null});
+  try{assertAnskSource(sourceFile,importFqn);}catch{return fail('INVALID_TARGET');}
+  if(!SHA40.test(head??'')||
+     ![baselineSha256,mutatedSha256,primarySha256,independentSha256,patchSha256]
+      .every(s=>SHA64.test(s??''))||
+     baselineSha256===mutatedSha256||primarySha256!==independentSha256)
+    return fail('SOURCE_OR_PATCH_HASH_MISMATCH');
+  if(measureAnskChain(baselineRun).passed!==true)return fail('BASELINE_NOT_GREEN');
+  if(measureAnskChain(mutatedRun,{allowFailure:true}).passed!==true)
+    return fail('MUTATION_NOT_COMPILER_RED');
+  if(!diagnostic||diagnostic.file!==sourceFile||
+     diagnostic.kind!=='UNRESOLVED_REFERENCE'||
+     diagnostic.symbol!==importFqn.split('.').at(-1))
+    return fail('NO_MATCHING_COMPILER_DIAGNOSTIC');
+  if(measureAnskChain(primaryRun,{baseline:baselineRun}).passed!==true)
+    return fail('PRIMARY_NOT_GREEN');
+  if(measureAnskChain(independentRun,{baseline:baselineRun}).passed!==true)
+    return fail('INDEPENDENT_NOT_GREEN');
+  if(typeof successfulStrategy!=='string'||successfulStrategy!=='KOTLIN_MISSING_IMPORT'||
+     !Array.isArray(strategiesAttempted)||strategiesAttempted.length<1||
+     strategiesAttempted.length>3||!strategiesAttempted.includes(successfulStrategy)||
+     new Set(strategiesAttempted).size!==strategiesAttempted.length)
+    return fail('INVALID_REPAIR_STRATEGY');
+  const recipe={
+    schema:ANSK_SCHEMA,version:ANSK_VERSION,authority:'SHADOW_ONLY',
+    stage:'QUARANTINED_REVIEW_REQUIRED',head,
+    sourceFile,sourceSha256:baselineSha256,
+    mutatedSha256,repairedSha256:primarySha256,
+    editSha256:patchSha256,
+    diagnosis:'UNRESOLVED_REFERENCE',
+    strategy:'KOTLIN_MISSING_IMPORT',importFqn,
+    baselineExecuted:baselineRun.results[1].tests.executed,
+    primaryExecuted:primaryRun.results[1].tests.executed,
+    independentExecuted:independentRun.results[1].tests.executed,
+    attemptedStrategies:strategiesAttempted.slice(),
+    modelTrainingAuthorized:false,automaticToolRegistration:false,
+    mainBranchWriteAuthorized:false
+  };
+  return {verified:true,reason:null,authority:'SHADOW_ONLY',
+    recipe:{...recipe,recipeSha256:sha256(JSON.stringify(recipe))}};
+}
+
+/** SHA-256 is a corruption check, not a signature or evidence of authorship. */
+export function verifyAnskRecipeReceipt(recipe){
+ const fail=reason=>({valid:false,reason,authority:'SHADOW_ONLY'});
+ if(!recipe||typeof recipe!=='object'||Array.isArray(recipe))
+  return fail('INVALID_RECIPE');
+ const {recipeSha256,...body}=recipe;
+ if(!SHA64.test(recipeSha256??'')||
+    sha256(JSON.stringify(body))!==recipeSha256)
+  return fail('RECIPE_HASH_MISMATCH');
+ if(body.schema!==ANSK_SCHEMA||body.version!==ANSK_VERSION||
+    body.authority!=='SHADOW_ONLY'||
+    body.stage!=='QUARANTINED_REVIEW_REQUIRED'||
+    body.modelTrainingAuthorized!==false||
+    body.automaticToolRegistration!==false||
+    body.mainBranchWriteAuthorized!==false||
+    !SHA40.test(body.head??'')||
+    body.diagnosis!=='UNRESOLVED_REFERENCE'||
+    body.strategy!=='KOTLIN_MISSING_IMPORT'||
+    ![body.sourceSha256,body.mutatedSha256,body.repairedSha256,body.editSha256]
+      .every(s=>SHA64.test(s??''))||
+    ![body.baselineExecuted,body.primaryExecuted,body.independentExecuted]
+      .every(n=>Number.isSafeInteger(n)&&n>0)||
+    body.primaryExecuted<body.baselineExecuted||
+    body.independentExecuted<body.baselineExecuted||
+    !Array.isArray(body.attemptedStrategies)||
+    body.attemptedStrategies.length<1||body.attemptedStrategies.length>3||
+    !body.attemptedStrategies.includes(body.strategy))
+  return fail('RECIPE_NOT_ELIGIBLE_FOR_SHADOW_REPLAY');
+ try{assertAnskSource(body.sourceFile,body.importFqn);}
+ catch{return fail('INVALID_RECIPE_TARGET');}
+ return {valid:true,reason:null,authority:'SHADOW_ONLY'};
+}
+
+/** Structural gate only. The transfer runner must collect these observations
+ * itself through the fixed check chain, never accept user-supplied run JSON.
+ */
+export function verifyAnskTransferArm({baselineRun,primaryRun,independentRun,
+ baselineSha256,mutatedSha256,primarySha256,independentSha256}={}){
+ const reject=reason=>({verified:false,reason});
+ if(![baselineSha256,mutatedSha256,primarySha256,independentSha256]
+   .every(s=>SHA64.test(s??''))||baselineSha256===mutatedSha256||
+   primarySha256===mutatedSha256||primarySha256!==independentSha256)
+  return reject('TRANSFER_SOURCE_HASH_MISMATCH');
+ if(!measureAnskChain(baselineRun).passed)return reject('BASELINE_NOT_GREEN');
+ if(!measureAnskChain(primaryRun,{baseline:baselineRun}).passed)
+  return reject('PRIMARY_NOT_GREEN');
+ if(!measureAnskChain(independentRun,{baseline:baselineRun}).passed)
+  return reject('INDEPENDENT_NOT_GREEN');
+ return {verified:true,reason:null};
+}

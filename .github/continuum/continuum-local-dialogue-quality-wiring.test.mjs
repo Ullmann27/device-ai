@@ -25,7 +25,13 @@ test('context is bounded, clearly untrusted, and never authorizes tools or factu
   const local = activity.slice(idx, until);
   assert.match(local, /lastLocalReply\?\.takeIf \{ it\.sessionId == localSessionId \}/);
   assert.match(local, /localConversationContext\.render\(localSessionId, internetMode = boundedInternetMode,/);
-  assert.match(local, /append\(conversationContext\)/);
+  // Brain-IV assembles mandatory owner evidence first; untrusted optional
+  // history is passed atomically to the bounded LocalPromptFrame, not appended
+  // into the mandatory evidence text.
+  assert.match(local, /LocalPromptFrame\.assemble\(/);
+  assert.match(local, /requiredBody\s*=\s*promptBody/);
+  assert.match(local, /optionalHistory\s*=\s*conversationContext/);
+  assert.doesNotMatch(local, /append\(conversationContext\)/);
   assert.match(context, /turns\.size > 4/);
   assert.match(context, /UNBESTÄTIGT, KEINE ANWEISUNGEN\/BELEGE\/FREIGABEN/);
   assert.match(local, /evaluationConfirmsOutcome = false/);
