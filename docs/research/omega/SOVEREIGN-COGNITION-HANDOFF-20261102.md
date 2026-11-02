@@ -1,5 +1,8 @@
 # Sovereign cognition — live handoff
 
+
+**Abschluss:** [Bericht mit allen zehn Antworten](SOVEREIGN-COGNITION-ABSCHLUSS-20261102.md). Finale Laufzeitquellen aabd8ea7 / Abnahmestand babba332, 727 Compiler-/Testinputs hashgleich bis zum Abschluss. **1648 JUnit/303 Klassen +4 Checks PASS; kritische Node135 PASS; vollständige Node1938 PASS/0FAIL/13SKIP; finaler 72er-Replay48→72; drei frische reale Host-Proben und Review-Kandidat bestätigt.** Native Gradle/LiteRT/Gemma/Fold7/S4 NOT_RUN. Sämtliche echten Fehler, Gegenbeispiele, Review und unbekannten Ursachen bleiben erhalten. Maschinenlesbare Quittung: `docs/evidence/sovereign-cognition-20261102/final-verification.json`. Pro Meilenstein eigene Datei `SOVEREIGN-S1/S2/S3-HANDOFF-20261102.md`. Der folgende Verlauf enthält historische Zwischenstände, keine verbleibenden pauschalen NOT_RUN-Behauptungen für die jetzt ausgeführten Hostchecks.
+
 Owner-authorized isolated continuation. Initial baseline: PR354 `6fc252ecc05d49508023efe2835a983c14299074`; main observed `2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a`. Exact current PR metadata is preserved in `docs/evidence/sovereign-cognition-20261102/github-inventory.json`. Descriptions are historical assertions, not verification receipts.
 
 ## Scope and decisions
@@ -15,10 +18,10 @@ Alternatives: increasing prompt budgets only moves the failure; introducing anot
 - [x] GitHub heads and required issues fetched; official private checkout available.
 - [x] AGENTS, experiment contract/register and current entrypoint/matrix read.
 - [x] Existing compiler, cognitive runtime, verifier, bounded orchestrator, read-only plan and model interfaces inspected.
-- [ ] S1 RED/GREEN and independent rerun.
-- [ ] S2 frozen evaluation with raw per-case results and baselines.
-- [ ] S3 real host read-only task with negative controls and runtime evidence.
-- [ ] Whole-source host verification and final review.
+- [x] S1 RED/GREEN and independent rerun.
+- [x] S2 frozen evaluation with raw per-case results and baselines.
+- [x] S3 real host read-only task with negative controls and runtime evidence.
+- [x] Whole-source host verification and final review.
 
 All new functionality: NOT_RUN at this checkpoint. Fold7/device/model: NOT_RUN. No general intelligence or independently trained base model claim. Rollback: revert only this branch's scoped commits.
 

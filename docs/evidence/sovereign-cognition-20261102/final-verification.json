@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "project": "Ullmann27/device-ai",
+  "pullRequest": 357,
+  "codeCompiledAt": "aabd8ea7dcd09863fb5fe214ed027cd145ce2fb0",
+  "acceptanceSource": "babba3326475521bfc8d03807ee1ad8873e01b91",
+  "allMainTestResourceAndHostHarnessInputsMatchFinalTree": true,
+  "inputManifest": "final-host-source-inputs.json",
+  "milestones": {
+    "S1": "c1af43392af6efa208b36724771fb7c0892c5deb",
+    "S2": "c6f79e0e0c91ab6ca5a5ca062eaa8568071dac00",
+    "S3": "0e22bdb75124e46dce14f4d46977bedcb235751c"
+  },
+  "checks": [
+    {
+      "scope": "complete Kotlin main/test host compilation and JUnit",
+      "status": "HOST_VERIFIED",
+      "classes": 303,
+      "tests": 1648,
+      "failed": 0,
+      "checksPrograms": 4,
+      "command": "PATH=<kotlinc+javac> CONTINUUM_ANDROID_DEPS=<jars> CONTINUUM_JUNIT_JARS=<junit:hamcrest> CONTINUUM_KOTLIN_STDLIB=<stdlib> bash scripts/android-kotlin-unit-check.sh <fresh-out>",
+      "raw": "final-host/",
+      "limitation": "Compile-only LiteRT stub; no Gradle, lint, native model inference or device"
+    },
+    {
+      "scope": "critical Node QA serial rerun",
+      "status": "HOST_VERIFIED",
+      "passed": 135,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node scripts/continuum-reliability-qa.mjs critical --out <outside-checkout-output>",
+      "raw": "final-critical/",
+      "sourceUnchanged": true
+    },
+    {
+      "scope": "complete Node QA",
+      "status": "HOST_VERIFIED",
+      "passed": 1938,
+      "failed": 0,
+      "skipped": 13,
+      "command": "node scripts/continuum-reliability-qa.mjs full-node --out <outside-checkout-output>",
+      "raw": "final-node/",
+      "sourceUnchanged": true
+    },
+    {
+      "scope": "final real host task/receipt/probe replay",
+      "status": "HOST_VERIFIED",
+      "tests": 7,
+      "failed": 0,
+      "actualStorageProbes": 3,
+      "reviewOnlyCandidates": 1,
+      "raw": "final-probes/"
+    },
+    {
+      "scope": "final frozen 72-case replay",
+      "status": "RESEARCH_SHADOW",
+      "parentCorrect": 48,
+      "candidateCorrect": 72,
+      "pairedImprovements": 24,
+      "regressions": 0,
+      "raw": "final-audit/"
+    },
+    {
+      "scope": "registry metadata contracts after docs update",
+      "status": "HOST_VERIFIED",
+      "tests": 8,
+      "failed": 0,
+      "raw": "register-contracts.log"
+    },
+    {
+      "scope": "Android SDK/Gradle/lint",
+      "status": "NOT_RUN"
+    },
+    {
+      "scope": "real LiteRT/Gemma quality",
+      "status": "NOT_RUN"
+    },
+    {
+      "scope": "Fold7",
+      "status": "NOT_RUN"
+    },
+    {
+      "scope": "alternative model adapter S4",
+      "status": "NOT_RUN"
+    },
+    {
+      "scope": "APK/sign/install/release",
+      "status": "NOT_RUN"
+    },
+    {
+      "scope": "productive neural training/promotion",
+      "status": "NOT_RUN"
+    }
+  ],
+  "retainedFailures": [
+    "Five initial compiler regressions; identity collision; two cancellation-phase regressions; five review regressions retained with later GREEN.",
+    "Old truncation-specific Kotlin and Node assertions replaced with stricter full-literal/whole-request and original privacy/authority assertions; original failures retained.",
+    "One owner-location plain-retrieval failure in an intermediate broad host run: root cause UNKNOWN; unchanged relevant bytecode, eight isolated parent repeats and final complete suite passed; assertion unchanged.",
+    "One concurrent critical process-test result TIMEOUT instead of TERMINATION_UNCONFIRMED: cause UNKNOWN. No process runtime/test change. Complete Node and serial critical later passed; original report retained."
+  ],
+  "rejected": "Universal role-swap exact bucket collision hypothesis:0/12 identical bucket sets; do not infer neural repair from structural12/12.",
+  "deviceVerified": false,
+  "mergePerformed": false,
+  "mainChanged": false,
+  "ownerApkBuilt": false,
+  "weightsChanged": false,
+  "ownerDataChanged": false
+}

@@ -1,0 +1,22 @@
+{
+  "jdk": "openjdk version \"21.0.12.1\" 2026-08-18\nOpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)",
+  "kotlin": "2.4.0",
+  "node": "v24.19.0",
+  "kind": "HOST_ONLY_COMPILE_STUB_NOT_REAL_LITERT_OR_ANDROID_SDK",
+  "dependencies": {
+    "compiler.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+    "stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "android-all-15.jar": "e17105f6c432357e6bb278a527f8e848d01fc56ccee01be77725bea23d871990",
+    "junit.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+    "json.jar": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed",
+    "okhttp.jar": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0",
+    "okio.jar": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412",
+    "shizuku-api.jar": "4315fcd853f487321548be5a997749fe43105fa29aaaa6f6e7a8cdc958a38357",
+    "shizuku-aidl.jar": "584945c98f21b0c4e3ccdb74b51528f89852174c30bb2a4786c43a8ca456e496",
+    "shizuku-shared.jar": "8557b8c715d374f8da18e148ca5b971d1c7435e91447e6d4f7664403c7328760",
+    "shizuku-provider.jar": "35aee86b938cb8d06b315c9d73c30f41ec7cfdc10009a5de83733bc5c4db5051"
+  },
+  "javac": "Installed JDK jdk.compiler module via java com.sun.tools.javac.Main; launcher absent initially.",
+  "nativeGradleSdk": "NOT_RUN: no gradle/sdkmanager/Android SDK installed; shared Render services not changed and no APK requested/built."
+}
