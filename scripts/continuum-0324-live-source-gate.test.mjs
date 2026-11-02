@@ -1,6 +1,7 @@
 import test, {before, after} from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, writeFileSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, unlinkSync, symlinkSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {readFileSync, writeFileSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, unlinkSync, symlinkSync, lstatSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {spawnSync,execFileSync} from 'node:child_process';
 import {resolve,dirname} from 'node:path';
@@ -13,6 +14,8 @@ let fixture;
 const head=()=>git('rev-parse','HEAD');
 const expectedSource='5270202e0699764b0eac5d4dd3e6a587b982ae05';
 const expectedBlob='441e667cb1c8b48106e1227df0c50a37b5b53399';
+const frozenPath='docs/evidence/continuum-v25-frozen-source';
+const expectedFrozenTree='87e4c52821c4d5b5c61d4bab912b1dbe2aec1c25';
 const path='docs/release/continuum-0324-live-source-proposal-20261027.json';
 // Build an actual isolated Git tree from the exact historical commit and the
 // original manifest. Never adapt the release gate or synthesize its blob hashes.
@@ -36,10 +39,31 @@ before(()=>{
  try {
   execFileSync('git',['archive','--format=tar','--output='+archive,expectedSource,'--',...paths],
    {cwd:root,env:base,stdio:'pipe'});
+  execFileSync('tar',['-xf',archive,'-C',fixture],{env:base,stdio:'pipe'});
+  unlinkSync(archive);
  } catch(error) {
-  throw new Error('Historical source commit '+expectedSource+' must be present locally (fetch that commit for shallow checkouts)',{cause:error});
+  // Render's authenticated checkout has no 'origin' and often no historical
+  // objects. Reconstruct the SAME 1,095 files from immutable Git blob IDs
+  // already audited against the original v25 tree. No generated dummy files.
+  // A different frozen tree, missing file or changed blob fails this hook.
+  const tree=execFileSync('git',['rev-parse','HEAD:'+frozenPath],
+    {cwd:root,env:base,encoding:'utf8',stdio:'pipe'}).trim();
+  assert.equal(tree,expectedFrozenTree,'The frozen historical Git tree changed');
+  const tracked=execFileSync('git',['ls-files','-z','--',frozenPath],
+    {cwd:root,env:base,encoding:'utf8',stdio:'pipe'}).split('\u0000').filter(Boolean);
+  assert.equal(tracked.length,manifest.files.length,'Historical fixture has extra/missing files');
+  for(const item of manifest.files) {
+    const input=resolve(root,frozenPath,item.path);
+    const stat=lstatSync(input);
+    assert.ok(stat.isFile()&&!stat.isSymbolicLink(),'Not a regular historical source: '+item.path);
+    const data=readFileSync(input);
+    const digest=createHash('sha1').update('blob '+data.length+'\u0000').update(data).digest('hex');
+    assert.equal(digest,item.blob,'Historical source bytes changed: '+item.path);
+    const destination=resolve(fixture,item.path);
+    mkdirSync(dirname(destination),{recursive:true});
+    copyFileSync(input,destination);
+  }
  }
- execFileSync('tar',['-xf',archive,'-C',fixture],{env:base,stdio:'pipe'});unlinkSync(archive);
  for(const p of [path,'scripts/continuum-0324-live-source-gate.mjs',
   'scripts/continuum-0324-live-source-gate.test.mjs','scripts/render-mentor-owner-update-v25-live.sh']){
   mkdirSync(dirname(resolve(fixture,p)),{recursive:true});copyFileSync(resolve(root,p),resolve(fixture,p));
