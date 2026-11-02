@@ -83,6 +83,37 @@ class ToolExecutionStartLatchTest {
         delayedEligibilityRace(cancel=true)
     }
 
+    /** A dispatched operation cannot be labelled definitely unexecuted on timeout. */
+    @Test fun postCommitTimeoutIsAmbiguousAndDoesNotRetrySideEffects() {
+        val backendEntered=CountDownLatch(1)
+        val releaseBackend=CountDownLatch(1)
+        val backendCalls=AtomicInteger(0)
+        val gate=ToolGate(ToolPolicy(readOnlyEnabled=true,timeoutMillis=250),ToolRunner {
+            backendCalls.incrementAndGet()
+            backendEntered.countDown()
+            while(releaseBackend.count!=0L) {
+                try { releaseBackend.await(2,TimeUnit.SECONDS) }
+                catch (_:InterruptedException) { /* intentional non-cooperative backend */ }
+            }
+            "result after timeout"
+        })
+        val invocation=ToolProposal("get_storage_info",emptyMap()).invocation("post-commit-timeout")
+        try {
+            val outcome=AtomicReference<ToolExecutionResult>()
+            val caller=Thread { outcome.set(gate.execute(invocation)) }
+            caller.start()
+            assertTrue(backendEntered.await(2,TimeUnit.SECONDS))
+            caller.join(2_000)
+            assertFalse(caller.isAlive)
+            assertEquals(ToolExecutionStatus.TIMED_OUT,outcome.get().record.status)
+            assertTrue(outcome.get().record.decisionReason.contains("UNKNOWN"))
+            assertEquals(1,backendCalls.get())
+            val replay=gate.execute(invocation)
+            assertNotEquals(ToolExecutionStatus.SUCCEEDED,replay.record.status)
+            assertEquals(1,backendCalls.get())
+        } finally { releaseBackend.countDown() }
+    }
+
     private fun delayedEligibilityRace(cancel:Boolean) {
         val clockEntered=CountDownLatch(1)
         val releaseClock=CountDownLatch(1)
