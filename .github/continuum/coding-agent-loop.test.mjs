@@ -213,7 +213,10 @@ test('a real failing test after the first candidate reaches the next revision, w
     assert.deepEqual(report.attempts.map(a=>a.outcome).slice(0,1),['FAILED_TESTS']);
     assert.equal(intros.length,2);
     assert.match(intros[1],/Earlier attempts on this task[\s\S]*FAILED_TESTS/);
-    assert.match(intros[1],/Current failing checks:\n- TEST_FAILURE \.github\/continuum\/geometry\.test\.mjs 3 Expected values to be strictly equal:-5 !== 5/);
+    // Node's strict assertion diagnostic contains a line break between the
+    // summary label and expected/actual values. Retain the actual failure
+    // evidence requirement; do not rely on a flattened one-line string.
+    assert.match(intros[1],/Current failing checks:\n- TEST_FAILURE \.github\/continuum\/geometry\.test\.mjs 3 Expected values to be strictly equal:\s+-5 !== 5/);
   }finally{cleanup(f);}
 });
 
