@@ -111,14 +111,23 @@ const junitDir=path.join(root,'app/build/test-results/testDebugUnitTest');
 const startedAt=Number(fs.readFileSync(path.join(out,'gradle-start-millis.txt'),'utf8'));
 const cases=fs.existsSync(junitDir)?fs.readdirSync(junitDir)
   .filter(name=>/^TEST-.*\.xml$/.test(name)):[];
+const requiredClasses=[
+  'at.heinz.deviceai.ToolExecutionStartLatchTest',
+  'at.heinz.deviceai.ReadOnlyToolSizeRegressionTest',
+  'at.heinz.deviceai.cognitive.LocalPromptFrameTest'
+];
+const allCriticalSuitesPresent=requiredClasses.every(name=>
+  cases.includes('TEST-'+name+'.xml'));
 const fresh=Number.isSafeInteger(startedAt) && cases.length>0 &&
-  cases.every(name=>{
+  allCriticalSuitesPresent && cases.every(name=>{
     const stat=fs.lstatSync(path.join(junitDir,name));
     return stat.isFile() && !stat.isSymbolicLink() && stat.mtimeMs>=startedAt-1000;
   });
 const report=diagnostics.readJUnitDirectory(junitDir,root);
 fs.writeFileSync(path.join(out,'android-junit.json'),JSON.stringify({
   freshXml: fresh,xmlFiles:cases.length,
+  mandatorySuites:requiredClasses,
+  mandatorySuitesPresent:allCriticalSuitesPresent,
   total:report.total,executed:report.executed,passed:report.passed,
   failed:report.failed,skipped:report.skipped,placeholders:report.placeholders,
   evidenceComplete:report.evidenceComplete
