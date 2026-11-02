@@ -390,10 +390,8 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
    return nextEligible(store.read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
-   // A Node-only owner repository has no Kotlin capability to discover.
-   if(!fsApi.existsSync(path.join(root,'app/src')))return null;
-   // JS-only and partial repositories have no Android source tree to inspect.
-   // This is an idle discovery, not a failed repair or a reason to retry.
+   // Node-only and partial repositories have no Android source tree to inspect.
+   // Idle discovery is neither a failed repair nor a reason to retry.
    if(!fsApi.existsSync(path.join(root,'app','src')))return null;
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});
