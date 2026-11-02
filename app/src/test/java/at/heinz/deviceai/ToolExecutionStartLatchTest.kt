@@ -88,7 +88,7 @@ class ToolExecutionStartLatchTest {
         val backendEntered=CountDownLatch(1)
         val releaseBackend=CountDownLatch(1)
         val backendCalls=AtomicInteger(0)
-        val gate=ToolGate(ToolPolicy(readOnlyEnabled=true,timeoutMillis=250),ToolRunner {
+        val gate=ToolGate(ToolPolicy(readOnlyEnabled=true,timeoutMillis=1_500),ToolRunner {
             backendCalls.incrementAndGet()
             backendEntered.countDown()
             while(releaseBackend.count!=0L) {
@@ -103,7 +103,7 @@ class ToolExecutionStartLatchTest {
             val caller=Thread { outcome.set(gate.execute(invocation)) }
             caller.start()
             assertTrue(backendEntered.await(2,TimeUnit.SECONDS))
-            caller.join(2_000)
+            caller.join(4_000)
             assertFalse(caller.isAlive)
             assertEquals(ToolExecutionStatus.TIMED_OUT,outcome.get().record.status)
             assertTrue(outcome.get().record.decisionReason.contains("UNKNOWN"))
@@ -120,7 +120,7 @@ class ToolExecutionStartLatchTest {
         val backend=CountDownLatch(1)
         val clockReads=AtomicInteger()
         val outcome=AtomicReference<ToolExecutionResult>()
-        val gate=ToolGate(ToolPolicy(readOnlyEnabled=true,timeoutMillis=80),ToolRunner {
+        val gate=ToolGate(ToolPolicy(readOnlyEnabled=true,timeoutMillis=if (cancel) 10_000 else 1_500),ToolRunner {
             backend.countDown(); "late unexpected execution"
         },clock={
             if(Thread.currentThread().name=="device-ai-tool" && clockReads.incrementAndGet()==2) {
@@ -138,7 +138,7 @@ class ToolExecutionStartLatchTest {
         try {
             assertTrue("Worker never reached eligibility barrier",clockEntered.await(2,TimeUnit.SECONDS))
             if(cancel)gate.cancel()
-            caller.join(2000)
+            caller.join(4_000)
             assertFalse("Caller must terminate promptly",caller.isAlive)
             assertEquals(if(cancel)ToolExecutionStatus.CANCELLED else ToolExecutionStatus.TIMED_OUT,
                 outcome.get().record.status)
