@@ -120,8 +120,8 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   await fs.mkdir(bin);
   const nodeWrapper=path.join(bin,'node');
   await fs.writeFile(nodeWrapper,
-    '#!/bin/sh\\nif [ -n "$RECEIPT_OUTPUT" ]; then exit 9; fi\\nexec "'+
-      process.execPath+'" "$@"\\n',{mode:0o700});
+    '#!/bin/sh\nif [ -n "$RECEIPT_OUTPUT" ]; then exit 9; fi\nexec "'+
+      process.execPath+'" "$@"\n',{mode:0o700});
   r=await invoke(f,'receipt-write-failure',f.sha,{
     PATH:bin+path.delimiter+process.env.PATH
   });
