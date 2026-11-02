@@ -82,7 +82,9 @@ class ReadOnlyMultiStepTest {
             ToolGate(ToolPolicy(readOnlyEnabled=true),ToolRunner { calls++;throw java.io.IOException("injected first-step failure") }),
             ReadOnlyToolPlan(steps),InMemoryExperienceStore(),limits=AgentLimits(maxRetries=0,maxToolCalls=2)).run("synthetic failure")
         assertEquals(1,calls);assertNotNull(result.blocker)
-        assertEquals(ExperienceOutcome.FAILURE,result.experience!!.outcome)
+        assertNull(result.experience)
+        assertTrue(result.taskEvidence!!.calls.single().outcomeUncertain)
+        assertNull(result.taskEvidence!!.learningCandidateExperienceId)
     }
 
     @Test fun multiStepRequestCannotBroadenPermissionsOrAcceptNegationQuotesOrUnboundedPlans() {

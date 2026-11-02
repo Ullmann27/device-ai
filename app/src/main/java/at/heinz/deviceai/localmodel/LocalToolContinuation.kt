@@ -8,6 +8,11 @@ internal object LocalToolContinuation {
     const val MAX_RESPONSES = 4
     private const val MESSAGE_RESERVE = 256
 
+    /** Complete field values only; role headers/newlines cannot escape the JSON. */
+    fun observationData(toolName: String,status: String,output: String?): String =
+        JSONObject().put("tool_name",toolName).put("status",status)
+            .put("output",output ?: JSONObject.NULL).toString()
+
     fun text(responses: List<LocalToolResponse>): String? {
         if (responses.isEmpty() || responses.size > MAX_RESPONSES) return null
         val text = responses.joinToString("\n") { "${it.toolName}: ${it.response}" }
@@ -17,8 +22,7 @@ internal object LocalToolContinuation {
 
     /** Measure the serialized JSON, including escaping, before constructing it. */
     fun encode(toolName: String, status: String, output: String?): LocalToolResponse? {
-        val encoded = JSONObject().put("status", status)
-            .put("output", output ?: JSONObject.NULL).toString()
+        val encoded = observationData(toolName,status,output)
         if (encoded.length > 8_000 || encoded.toByteArray(Charsets.UTF_8).size > MAX_INPUT_BYTES)
             return null
         return LocalToolResponse(toolName, encoded)

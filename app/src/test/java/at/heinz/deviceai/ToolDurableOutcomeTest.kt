@@ -31,7 +31,9 @@ class ToolDurableOutcomeTest {
         val calls=AtomicInteger()
         try {
             val request=invocation("timeout")
-            val result=ToolGate(ToolPolicy(timeoutMillis=100),ToolRunner {
+            // This case tests post-dispatch expiry. Allow cold journal fsync to
+            // reach the runner; the latch still forces a genuine timeout.
+            val result=ToolGate(ToolPolicy(timeoutMillis=1_000),ToolRunner {
                 calls.incrementAndGet();entered.countDown()
                 try {while(release.count>0)try {release.await()} catch(_:InterruptedException) {}}
                 finally {left.countDown()}

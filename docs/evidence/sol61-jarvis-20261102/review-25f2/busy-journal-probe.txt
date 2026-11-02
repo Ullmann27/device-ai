@@ -1,0 +1,3 @@
+OBSERVATIONS_AFTER_BUSY=[AgentToolObservation(toolName=stop_app, status=REJECTED, output=null)]
+BUSY_JOURNAL_RESULT effects=2 generations=3 approvals=2 blocker=null uncertainty=[false, false] diskFirst=DISPATCH_COMMITTED response=App successfully stopped. stored=1 outcome=PARTIAL
+BUSY_UNKNOWN_IN_SKILL=true successRate=0.8

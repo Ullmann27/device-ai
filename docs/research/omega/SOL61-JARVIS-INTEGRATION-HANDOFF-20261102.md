@@ -141,6 +141,45 @@ Post-repair focused host checks: 22 core/shell JUnit and 9 native-policy/deliver
 JUnit PASS (native API stand-ins explicitly scoped). Full final SDK/Node runs and
 fresh independent approval remain pending at this checkpoint.
 
+## Closure checkpoint after owner STOP instruction
+
+No further feature/research work. Finalize the current repairs, execute acceptance,
+build only the unsigned original-package APK and hand off all remaining boundaries.
+Current published predecessor: `25f2d31c8de962fe5f77a65705e0f70613ce630e`.
+
+- Exact25f2 Node22 full suite: 1,982 total, 1,969 executed/PASS, 13 skipped,
+  zero failures, source unchanged. Exact25f2 Gradle: 1,687 total, 4 failures,
+  3 skipped. All four failures expected the old stored negative/partial experience;
+  they now assert no experience and typed replay/uncertainty, preserving the
+  stronger no-learning requirement. These logs are retained, not waived.
+- Further independent REDs: busy journal could hide concurrent dispatch; a
+  competing completion during approval could produce a replay from a stale
+  PROPOSED snapshot; queued text could outlive unload after native completion.
+  Fixes add a typed replay flag from ToolGate to task evidence, fail unavailable
+  journal reads as UNKNOWN, and retain generation ownership until queued terminal
+  delivery. Unload revokes pending generation data regardless of native state.
+- 42 focused host/core tests passed before the final small closure changes.
+  Fresh complete acceptance of this closure commit is required; no final PASS
+  or independent approval is claimed in this checkpoint.
+- Tool observations in fresh/retry Activity prompts now use complete JSON fields
+  labelled untrusted. Added role-header/JSON-breakout injection cases for web,
+  screen, file and device observations. Native LiteRT still uses Message.tool;
+  no tool permission is derived from any field value.
+- START_PENDING mutations are visible in the startup review list. Native fresh
+  conversation boundary already existed: selectLocalConversation closes old
+  native state for complete new prompts; tool replies alone continue it. Host
+  boundary tests exist; actual JNI/Fold7 boundary behavior remains NOT_RUN.
+- Timeout-test allowance is changed only for the deliberately blocked
+  post-dispatch expiry fixture (100→1,000ms), allowing cold receipt fsync before
+  its runner latch. Production limits and other deadline tests are unchanged.
+- Directory sync remains strict on target Android/Linux. The proposal to silently
+  ignore Windows directory-open failures is not applied: gradlew.bat is generated
+  tooling, not a Windows durability certification. Windows receipt-backed runtime
+  remains UNAVAILABLE/NOT_RUN; failures block execution and retain uncertainty.
+
+Signing, publication, installation and Fold7 remain NOT_RUN. Original signer,
+package, owner data, main and research/production weights remain unchanged.
+
 ## Release boundary
 
 Owner wants an original-signed in-place update without data loss. This instruction

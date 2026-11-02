@@ -52,6 +52,7 @@ class ToolExecutionReceiptStoreTest {
             }, receiptStore = restarted).execute(proposal.invocation("call-1"))
             assertEquals(ToolExecutionStatus.SUCCEEDED, replay.record.status)
             assertTrue(replay.record.decisionReason.contains("already completed"))
+            assertTrue(replay.replayed)
             assertEquals(1, calls.get())
         } finally {
             directory.deleteRecursively()

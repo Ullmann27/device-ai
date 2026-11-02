@@ -390,15 +390,15 @@ class BoundedAgentOrchestrator(
                                 toolEvidence += "tool-call:${lastRecord.callId}:sha256:$digest"
                             }
                             val fresh = lastRecord.status == ToolExecutionStatus.SUCCEEDED &&
-                                !lastRecord.outcomeUncertain && !execution.output.isNullOrBlank()
+                                !lastRecord.outcomeUncertain && !execution.replayed && !execution.output.isNullOrBlank()
                             callProofs += AgentToolEvidence(invocation.id, proposal.toolName,
                                 at.heinz.deviceai.toolArgumentFingerprint(invocation.request.arguments),
                                 approvalRequested, approval.userConfirmed.takeIf { approvalRequested },
                                 lastRecord.status, execution.output?.takeIf { fresh }?.let {
                                     sha256Bytes(it.toByteArray(Charsets.UTF_8)).toHex()
-                                }, fresh, lastRecord.outcomeUncertain)
+                                }, fresh, lastRecord.outcomeUncertain, execution.replayed)
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
-                            if (lastRecord.outcomeUncertain || requiresReview) {
+                            if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
                                 // Do not let a model reissue an unresolved effect under
                                 // a new call id or turn a replay into fresh experience.
                                 val blocked = if(lastRecord.outcomeUncertain)

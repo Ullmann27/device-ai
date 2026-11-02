@@ -90,7 +90,8 @@ data class ToolExecutionRecord(
     val outcomeUncertain: Boolean = false
 )
 
-data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord)
+data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord,
+                               val replayed: Boolean = false)
 
 /** A trusted backend can narrow an outcome to failure, never assert success. */
 class ToolBackendFailure(val status: ToolExecutionStatus, message: String) : RuntimeException(message) {
@@ -166,14 +167,14 @@ class ToolGate(
         val start = clock()
         var uncertainOutcome = false
         fun result(status: ToolExecutionStatus, reason: String, output: String? = null,
-                   uncertain: Boolean = uncertainOutcome): ToolExecutionResult {
+                   uncertain: Boolean = uncertainOutcome, replayed: Boolean = false): ToolExecutionResult {
             val elapsed = ((clock() - start).coerceAtLeast(0) / 1_000_000)
             return ToolExecutionResult(
                 output,
                 ToolExecutionRecord(
                     request.callId, request.name, spec?.risk, sanitizeArguments(request.arguments),
                     reason, status, elapsed, output?.length ?: 0, uncertain
-                )
+                ), replayed
             )
         }
 
@@ -195,27 +196,28 @@ class ToolGate(
         var receipt = try {
             recordProposal(invocation)
         } catch (_: Exception) {
-            return result(ToolExecutionStatus.REJECTED, "Durable tool receipt could not be verified or saved.")
+            return result(ToolExecutionStatus.REJECTED,
+                "Durable journal unavailable; prior outcome UNKNOWN, operator review required.",uncertain=true)
         }
         when (receipt?.state) {
             ToolReceiptState.SUCCEEDED -> return result(
                 ToolExecutionStatus.SUCCEEDED,
-                "This call id already completed; its tool was not run again."
+                "This call id already completed; its tool was not run again.", replayed=true
             )
             ToolReceiptState.STARTED, ToolReceiptState.DISPATCH_COMMITTED,
             ToolReceiptState.UNKNOWN_AFTER_DISPATCH -> return result(
                 ToolExecutionStatus.REJECTED,
                 "This call id has outcome UNKNOWN after possible dispatch and requires operator review; it was not retried.",
-                uncertain = true
+                uncertain = true, replayed=true
             )
             ToolReceiptState.START_PENDING -> return result(ToolExecutionStatus.REJECTED,
-                "This call id was prepared before restart but never committed; operator review is required, no retry.")
+                "This call id was prepared before restart but never committed; operator review is required, no retry.",replayed=true)
             ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED,
             ToolReceiptState.REJECTED -> return result(
                 receipt.state.toExecutionStatus(),
                 if (receipt.outcomeUncertain) "Prior dispatch outcome UNKNOWN; operator review is required, no retry."
                 else "This call id already has a terminal receipt; it was not retried.",
-                uncertain = receipt.outcomeUncertain
+                uncertain = receipt.outcomeUncertain, replayed=true
             )
             else -> Unit
         }

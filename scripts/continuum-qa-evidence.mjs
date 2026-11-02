@@ -14,7 +14,8 @@ export const REQUIRED_ANDROID_SUITES=Object.freeze([
   'at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest',
   'at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest',
   'at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest',
-  'at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest'
+  'at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest',
+  'at.heinz.deviceai.cognitive.JournalAvailabilityTest'
 ]);
 const validator=fileURLToPath(new URL('./continuum-junit-validator.py',import.meta.url));
 
@@ -52,7 +53,8 @@ export function androidEvidence({root,startedAtMillis,finishedAtMillis=Date.now(
       if(!Number.isSafeInteger(counts.executed)||(required&&(counts.executed<1||counts.skipped!==0))||
           counts.failures!==0||counts.errors!==0)throw Error('Invalid execution counts');
       if(required)mandatory.push({name:klass,...counts});
-    } catch {reject('INVALID_OR_UNEXECUTED_SUITE:'+klass);}
+    } catch(error) {reject('INVALID_OR_UNEXECUTED_SUITE:'+klass+':'+
+      String(error?.stderr||error?.message||error).slice(0,200));}
   }
   // Never follow symlinked XML into the aggregate parser.
   const aggregate=failures.length?null:

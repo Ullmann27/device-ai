@@ -297,6 +297,9 @@ class LiteRtLmLocalModelRuntime(
                 else -> LocalInferenceTerminal.FAILED
             }
             profile.runtimeTerminal(terminal)
+            // Keep the generation owned until preceding queued text is drained.
+            // A new engine turn must not replace its cancellation lease early.
+            finishInference()
             profile.measure(LocalInferenceStage.RUNTIME_TERMINAL_DELIVERY_ENTER,
                 LocalInferenceStage.RUNTIME_TERMINAL_DELIVERY_EXIT) {
                 deliver(callback, actual)
@@ -305,7 +308,7 @@ class LiteRtLmLocalModelRuntime(
             drainDeliveries()
         }
 
-        fun finish(event: LocalInferenceEvent?) {
+        fun finish(event: LocalInferenceEvent) {
             if (!finished.compareAndSet(false, true)) return
             if (isolatedThinking) {
                 // Keep the isolated conversation owned until its close completes.
@@ -320,19 +323,17 @@ class LiteRtLmLocalModelRuntime(
                         if (closed.isFailure && pendingUnload == null)
                             state = LocalModelState.FAILED
                     }
-                    finishInference()
                     if (closed.isFailure) {
                         deliverTerminal(LocalInferenceEvent.Failed(
                             "Isolated conversation could not be released safely."))
-                    } else if (event != null) deliverTerminal(
+                    } else deliverTerminal(
                         if (generationCancelled.get()) LocalInferenceEvent.Cancelled else event)
                 }
             } else {
                 synchronized(lock) {
                     if (inferenceConversation === activeConversation) inferenceConversation = null
                 }
-                finishInference()
-                if (event != null) deliverTerminal(
+                deliverTerminal(
                     if (generationCancelled.get()) LocalInferenceEvent.Cancelled else event)
             }
         }
@@ -501,8 +502,8 @@ class LiteRtLmLocalModelRuntime(
             activeConversation = inferenceConversation ?: conversation
             cancelProfile = activeInferenceProfile
             deferredToInferenceCompletion = inferenceActive
-            if (deferredToInferenceCompletion) activeCancellation?.set(true)
-            if (deferredToInferenceCompletion) activeStart?.revokeIfPending()
+            activeCancellation?.set(true)
+            activeStart?.revokeIfPending()
             state = LocalModelState.UNLOADING
             if (deferredToInferenceCompletion) pendingUnload = callback
         }
