@@ -859,6 +859,13 @@ class AgentActivity : Activity() {
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
         dashboard.addView(home, matchWidth())
+        workStatusView = textView("Bereit", 13f, ACCENT).apply {
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+            typeface = android.graphics.Typeface.MONOSPACE
+            setBackgroundColor(0xff101b2c.toInt())
+        }
+        dashboard.addView(workStatusView, matchWidth())
+        refreshWorkPresentation()
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
         // existing update paths still write to them; device access, web consent and model state are in the system center.
         buildStatusRow()
@@ -5250,7 +5257,29 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    private var workStatusView: TextView? = null
+    private var workStarted: Long? = null
+    private var workElapsed = 0L
+    private var workOutcome: String? = null
+    private var workTool: String? = null
+    private var workToolCall: String? = null
+
+    private fun refreshWorkPresentation() {
+        val phase = at.heinz.deviceai.ui.CognitiveWorkPresentation.phase(
+            voiceListening, voiceSpeaking,
+            activeResearchCancellation != null || approvedModelWebSession.get() != null || modelWebActive,
+            learningVisualActive || activeNeuralCancellation != null, busy, workTool, workOutcome)
+        val elapsed = if(busy) at.heinz.deviceai.ui.CognitiveWorkPresentation.elapsed(
+            workStarted, android.os.SystemClock.elapsedRealtime()) else workElapsed
+        workStatusView?.apply {
+            text = at.heinz.deviceai.ui.CognitiveWorkPresentation.summary(phase, elapsed)
+            setTextColor(phase.color)
+            contentDescription = text
+        }
+    }
+
     private fun refreshHologramState() {
+        refreshWorkPresentation()
         val state = when {
             voiceListening -> ContinuumHologramView.State.LISTENING
             voiceSpeaking -> ContinuumHologramView.State.SPEAKING
@@ -6034,6 +6063,14 @@ class AgentActivity : Activity() {
                                ephemeralScreenContext:()->Boolean = {false}) = ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
+            val presentationSession = sessionId
+            val presentationStart = workStarted
+            runOnUiThread {
+                if(sessionId == presentationSession && workStarted == presentationStart && busy) {
+                    workTool=request.name; workToolCall=request.callId; refreshWorkPresentation()
+                }
+            }
+            try {
             check(!ephemeralScreenContext() || at.heinz.deviceai.cognitive.ScreenObservationPrompt.allowsTool(request.name)) {
                 "SCREEN_DATA_CANNOT_AUTHORIZE_NETWORK_OR_SENSITIVE_ACTIONS"
             }
@@ -6056,6 +6093,13 @@ class AgentActivity : Activity() {
                     try { runner.execute(request).also { session.checkAuthorized() } }
                     finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
                 } else DeviceToolExecutorRunner(executor).execute(request)
+            }
+            } finally {
+                runOnUiThread {
+                    if(workToolCall == request.callId) {
+                        workTool=null; workToolCall=null; refreshWorkPresentation()
+                    }
+                }
             }
         },receiptStore=receiptStore
     )
@@ -6571,6 +6615,13 @@ class AgentActivity : Activity() {
     /** Owner-local metadata only; telemetry is never memory or execution authority. */
     private fun publishCognitiveTrace(trace:CognitiveTurnTrace,outcome:TraceOutcome) {
         val snapshot=trace.finish(outcome)
+        runOnUiThread {
+            val currentSessionHash = java.security.MessageDigest.getInstance("SHA-256")
+                .digest(sessionId.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
+            if(snapshot.sessionHash == currentSessionHash) {
+                workOutcome = outcome.name; refreshWorkPresentation()
+            }
+        }
         lastVisibleCognitiveTrace=sessionId to snapshot.id
         onLearningIo({
             at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir).recordTrace(snapshot)
@@ -8228,6 +8279,9 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            workOutcome = null; workTool = null; workToolCall = null
+            workStarted = null; workElapsed = 0L
+            refreshWorkPresentation()
             scopedLocalPromptSession=null
             lastLocalReply=null
             localConversationContext.clear()
@@ -8373,6 +8427,14 @@ class AgentActivity : Activity() {
     }
 
     private fun setBusy(value: Boolean) {
+        if(value && !busy) {
+            workStarted = android.os.SystemClock.elapsedRealtime()
+            workElapsed = 0L; workOutcome = null; workTool = null
+        } else if(!value && busy) {
+            workElapsed = at.heinz.deviceai.ui.CognitiveWorkPresentation.elapsed(
+                workStarted, android.os.SystemClock.elapsedRealtime())
+            workTool = null
+        }
         busy = value
         if(!value) learningVisualActive = false
         refreshConversationLayout()
