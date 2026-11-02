@@ -6463,14 +6463,17 @@ class AgentActivity : Activity() {
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
                         else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = successful && !ephemeralScreenRun.get())
+                    val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
+                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession)
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
                     if (ephemeralScreenRun.get()) lastLocalReply=null
-                    if (successful && !ephemeralScreenRun.get() && sessionId == localSessionId) {
-                        lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
-                        localConversationContext.record(localSessionId, text, run.response)
+                    if (keepOwnerSession) {
+                        if (successful) {
+                            lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
+                            localConversationContext.record(localSessionId, text, run.response)
+                        } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
@@ -6483,8 +6486,10 @@ class AgentActivity : Activity() {
                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
                     }
                     localRuntimeError = error.message ?: "Local inference failed."
+                    val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
                     addAssistantMessage(groundedRecall?.failureAnswer() ?:
-                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}")
+                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
+                    if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity("ERROR · lokale Inferenz")
                 }
                 setBusy(false)
