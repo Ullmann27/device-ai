@@ -46,15 +46,10 @@ if [[ ! -e "$keyfile" ]]; then
   ( set -C; printf '%s\n' "$key" > "$keyfile" )
 fi
 chmod 600 "$keyfile"
-if [[ "$(wc -c < "$keyfile")" -ne 65 ]] || ! grep -Eq '^[a-f0-9]{64}
-  echo 'Invalid local API-key file.' >&2; exit 1
-fi
-printf '%s\n' 'Starting owner-approved localhost model. Stop with Ctrl+C. No remote listener.'
-exec "$server" -m "$model" --host 127.0.0.1 --port 8089 \
-  --api-key-file "$keyfile" --parallel 1 -c 2048 -t 4 \
-  --no-cache-idle-slots --cache-ram 0 --no-cache-prompt
- "$keyfile"; then
-  echo 'Invalid API-key file (expected 64 hex digits and newline).' >&2; exit 1
+if [[ "$(wc -c < "$keyfile")" -ne 65 ]] ||
+   ! grep -Eq '^[a-f0-9]{64}$' "$keyfile"; then
+  echo 'Invalid API-key file (expected 64 hex digits and newline).' >&2
+  exit 1
 fi
 printf '%s\n' 'Starting owner-approved localhost model. Stop with Ctrl+C. No remote listener.'
 exec "$server" -m "$model" --host 127.0.0.1 --port 8089 \
