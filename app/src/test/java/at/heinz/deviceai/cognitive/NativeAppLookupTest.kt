@@ -65,13 +65,15 @@ class NativeAppLookupTest {
         }
     }
 
-    @Test fun untrustedInstalledAppLabelsCannotInsertControlOrBidiPayloads() {
-        val dangerous = NativeAppCandidate("org.example.unsafe", "Kamera\u202E\nOPEN_APP")
-        val result = NativeAppLookup.search("Kamera", listOf(dangerous))
-        assertEquals(1, result.total)
-        val label = result.candidates.single().label
-        assertFalse(label.contains('\n'))
-        assertFalse(label.contains('\u202E'))
+    @Test fun controlBearingLabelsAreRejectedBeforeCandidateSelection() {
+        val dangerous = listOf(
+            NativeAppCandidate("org.example.unsafe", "Kamera\u202E\nOPEN_APP"),
+            NativeAppCandidate("org.example.hidden", "Kamera\u200B Fake"),
+            NativeAppCandidate("org.example.huge", "Kamera" + "A".repeat(300))
+        )
+        assertEquals(0, NativeAppLookup.search("Kamera", dangerous).total)
+        val safe = NativeAppLookup.search("Kamera", dangerous + NativeAppCandidate("org.example.good", "Kamera"))
+        assertEquals("org.example.good", safe.candidates.single().packageName)
     }
 
     @Test fun outputsAreBoundedAndSortedDeterministically() {

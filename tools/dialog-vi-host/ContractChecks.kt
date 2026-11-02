@@ -49,10 +49,17 @@ fun main() {
     verify("empty label removed") { check(NativeAppLookup.search("empty", installed).total == 0) }
     verify("control query blocked") { check(runCatching { NativeAppLookup.search("ok\nlaunch", installed) }.isFailure) }
     verify("oversized query blocked") { check(runCatching { NativeAppLookup.search("x".repeat(81), installed) }.isFailure) }
-    verify("bidi label sanitized") {
-        val c = NativeAppLookup.search("Kamera",
-            listOf(NativeAppCandidate("org.example.unsafe", "Kamera\u202e\nOPEN_APP"))).candidates.single()
-        check(!c.label.contains('\n') && !c.label.contains('\u202e'))
+    verify("bidi app label rejected") {
+        check(NativeAppLookup.search("Kamera",
+            listOf(NativeAppCandidate("org.example.unsafe", "Kamera\u202e\nOPEN_APP"))).total == 0)
+    }
+    verify("zero-width app label rejected") {
+        check(NativeAppLookup.search("Kamera",
+            listOf(NativeAppCandidate("org.example.unsafe", "Kamera\u200B Fake"))).total == 0)
+    }
+    verify("oversized app label rejected") {
+        check(NativeAppLookup.search("Kamera",
+            listOf(NativeAppCandidate("org.example.unsafe", "Kamera" + "A".repeat(300)))).total == 0)
     }
     verify("bounded results") {
         val lots = (1..30).map { NativeAppCandidate("org.example.test" + it, "Test " + it) }
@@ -77,6 +84,21 @@ fun main() {
     verify("inline code redacted") {
         val v = JarvisVoiceProfile.speakable("Der Wert ist " + tick + "PRIVATE_TOKEN" + tick + ", verstanden.")!!
         check("PRIVATE_TOKEN" !in v)
+    }
+    verify("multiline inline secret redacted") {
+        val secret = "SECRET_TOKEN"
+        val v = JarvisVoiceProfile.speakable("Konto " + tick + "ABC\n" + secret + tick + " geändert.")!!
+        check(secret !in v)
+    }
+    verify("tilde fence secret redacted") {
+        val secret = "SECRET_TOKEN"
+        val v = JarvisVoiceProfile.speakable("~~~kotlin\nval key = " + secret + "\n~~~\nFertig.")!!
+        check(secret !in v && "Fertig" in v)
+    }
+    verify("long inline secret redacted") {
+        val secret = "SECRET_TOKEN"
+        val v = JarvisVoiceProfile.speakable("Beginn " + tick + secret.repeat(50) + tick + " Ende.", 800)!!
+        check(secret !in v)
     }
     verify("markdown link keeps description") {
         val v = JarvisVoiceProfile.speakable("[Quelle](https://example.com/secret)")!!

@@ -35,6 +35,17 @@ class JarvisVoiceProfileTest {
         assertTrue(inline.contains("weiter"))
     }
 
+    @Test fun multilineLongAndTildeCodeAreNeverSpoken() {
+        val hidden = "SECRET_ACCESS_TOKEN"
+        val multiline = JarvisVoiceProfile.speakable("Konto `ABC\n" + hidden + "` geändert.")!!
+        assertFalse(multiline.contains(hidden))
+        val tilde = JarvisVoiceProfile.speakable("~~~kotlin\nkey = " + hidden + "\n~~~\nFertig.")!!
+        assertFalse(tilde.contains(hidden))
+        assertTrue(tilde.contains("Fertig"))
+        val oversized = JarvisVoiceProfile.speakable("Beginn `" + hidden.repeat(40) + "` Ende.", 800)!!
+        assertFalse(oversized.contains(hidden))
+    }
+
     @Test fun answerLengthIsBoundedAndNeverEmptyAfterTruncation() {
         val value = "Das ist ein Satz. ".repeat(70)
         val spoken = JarvisVoiceProfile.speakable(value, 120)!!
