@@ -16,7 +16,41 @@
     "ownerMemoryPromotionAllowed": false,
     "mergeToMainAuthorized": false,
     "originalSignerNeededForOwnerUpdate": true,
-    "relevantExperiments": ["EXP-00", "EXP-02", "EXP-04", "EXP-05", "EXP-06", "EXP-07", "EXP-09", "EXP-11"]
+    "relevantExperiments": [
+      "EXP-00",
+      "EXP-02",
+      "EXP-04",
+      "EXP-05",
+      "EXP-06",
+      "EXP-07",
+      "EXP-09",
+      "EXP-11"
+    ],
+    "sovereignCognitionAudit": {
+      "pullRequest": 357,
+      "status": "SOURCE_INTEGRATED",
+      "hostVerification": "See exact-source final verification; do not infer device acceptance",
+      "milestones": {
+        "S1": "c1af43392af6efa208b36724771fb7c0892c5deb",
+        "S2": "c6f79e0e0c91ab6ca5a5ca062eaa8568071dac00",
+        "S3": "0e22bdb75124e46dce14f4d46977bedcb235751c"
+      },
+      "reviewFix": "aabd8ea7dcd09863fb5fe214ed027cd145ce2fb0",
+      "handoff": "docs/research/omega/SOVEREIGN-COGNITION-HANDOFF-20261102.md",
+      "researchResult": "docs/evidence/sovereign-cognition-20261102/RESEARCH-RESULT.md",
+      "scope": "Atomic live model context; prospective synthetic verifier audit; existing read-only task/receipt/experience events",
+      "newModelTraining": false,
+      "productivePromotionAllowed": false,
+      "deviceVerified": false,
+      "relevantExperiments": [
+        "EXP-04",
+        "EXP-05",
+        "EXP-06",
+        "EXP-07",
+        "EXP-11",
+        "EXP-12"
+      ]
+    }
   },
   "integrationPolicy": {
     "canonicalBacklog": true,

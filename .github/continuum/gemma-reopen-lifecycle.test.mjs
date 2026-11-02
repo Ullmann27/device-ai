@@ -79,7 +79,9 @@ test('a fresh restoration does not invent a successful local answer',()=>{
  assert.match(load,/resetM2NativeProof\(\)/);
 });
 test('original 3.66 GB model import remains separate and SHA-verified',()=>{
- assert.match(modelImport,/modelCatalog\.import\(/);
+ assert.match(modelImport,/modelImports\.start\(metadata\.first, metadata\.second, metadata\.third\)/);
+ const coordinator=read('app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt');
+ assert.match(coordinator,/openInput\(\)\.use \{ source ->[\s\S]*catalog\.import\(id, version, source, expectedSha256\)/);
  assert.match(catalog,/MessageDigest\.getInstance\("SHA-256"\)/);
 });
 test('regression suite covers correct original, opt-out, foreign SHA, busy engine',()=>{

@@ -96,6 +96,16 @@ kotlinc "${sources[@]}" "${stubs[@]}" -cp "$cp" -jvm-target 17 -nowarn -d "$out/
   -Xnullability-annotations=@android.annotation:warn -XXLanguage:+BreakContinueInInlineLambdas > "$out/kotlinc.log" 2>&1
 status=$?
 set -e
+# Only ordinary diagnostic exit 1 can be the documented missing-LiteRT case.
+# A killed/crashed compiler may also have printed those diagnostics before dying.
+if [ "$status" -ne 0 ] && [ "$status" -ne 1 ]; then
+  echo "KOTLIN_COMPILE_CHECK_FAILED: compiler exited $status; see $out/kotlinc.log"
+  exit "$status"
+fi
+if grep -Eq '(^exception:|^Exception in thread|OutOfMemoryError|Internal compiler error|^error:)' "$out/kotlinc.log"; then
+  echo "KOTLIN_COMPILE_CHECK_FAILED: compiler failure; see $out/kotlinc.log"
+  if [ "$status" -eq 0 ]; then exit 1; else exit "$status"; fi
+fi
 errors=$(grep -E '^[^ ]+\.(kt|java):[0-9]+:[0-9]+: error:' "$out/kotlinc.log" || true)
 external=""; own=""
 while IFS= read -r line; do

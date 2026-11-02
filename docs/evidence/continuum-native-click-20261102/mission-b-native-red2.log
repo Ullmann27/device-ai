@@ -1,0 +1,115 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:generateDebugLintReportModel UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug UP-TO-DATE
+> Task :app:lintDebug
+> Task :app:compileDebugUnitTestKotlin
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt:131:53 Unnecessary non-null assertion (!!) on a non-null receiver of type 'DevelopmentBacklogStore.Recovery'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt:163:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:41:100 Expression is unused.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:82:50 Expression is unused.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:47:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:48:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:49:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:50:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:51:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalogTest.kt:85:47 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Ctx1Experiment.kt:105:115 No cast needed.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:66:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:107:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:148:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:15:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:16:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt:126:66 Redundant call of conversion method.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt:89:33 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/test/java/at/heinz/deviceai/learning/nf/NfStream.kt:91:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NfTrainer'.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:26:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:45:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:56:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:57:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:29:52 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:34:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:36:68 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:64:52 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:65:81 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:78:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:79:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:67:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+NativeClickCandidateTest > overlayAppearingImmediatelyBeforeDispatchDoesNotClick FAILED
+    java.lang.AssertionError at NativeClickCandidateTest.kt:82
+
+1681 tests completed, 1 failed, 3 skipped
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 28s
+40 actionable tasks: 5 executed, 35 up-to-date

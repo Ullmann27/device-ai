@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+.E.E.E
+Time: 0.189
+There were 3 failures:
+1) unknownImmediatelyBlocksFreshIdsInventedSuccessAndLearning(at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest)
+java.lang.AssertionError: expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest.unknownImmediatelyBlocksFreshIdsInventedSuccessAndLearning(UnknownOutcomeSafetyTest.kt:27)
+2) cancelledGatePreservesPreviouslyCommittedUncertainty(at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest.cancelledGatePreservesPreviouslyCommittedUncertainty(UnknownOutcomeSafetyTest.kt:54)
+3) losingAReceiptTransitionCannotClaimADefinitelyUnrunCall(at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest.losingAReceiptTransitionCannotClaimADefinitelyUnrunCall(UnknownOutcomeSafetyTest.kt:79)
+
+FAILURES!!!
+Tests run: 3,  Failures: 3
+

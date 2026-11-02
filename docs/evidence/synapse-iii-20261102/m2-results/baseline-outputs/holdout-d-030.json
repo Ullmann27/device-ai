@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-030:s1",
+    "decision": "SPAN",
+    "sha256": "6568d69cddd84b590ccf04a70ad3b0dc4881787cad7bca3b3921ae530cf1e524",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Datucita",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {
+    "sourceId": "holdout-d-030:s1",
+    "decision": "SPAN",
+    "sha256": "6568d69cddd84b590ccf04a70ad3b0dc4881787cad7bca3b3921ae530cf1e524",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Datucita",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "VERIFIED": {
+    "sourceId": "holdout-d-030:s1",
+    "decision": "SPAN",
+    "sha256": "6568d69cddd84b590ccf04a70ad3b0dc4881787cad7bca3b3921ae530cf1e524",
+    "endExclusive": 54,
+    "start": 46,
+    "text": "Datucita",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "rawMillis": 72.456864
+}

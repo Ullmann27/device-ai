@@ -44,7 +44,7 @@ class ResearchFeedbackMultiprocessTest {
                 processes += ProcessBuilder(
                     javaExecutable, "-cp", classpath, probe,
                     root.absolutePath, id, candidate.experience.id, candidate.reviewDigest
-                ).redirectErrorStream(true).start()
+                ).start()
             }
 
             val limit = System.nanoTime() + TimeUnit.SECONDS.toNanos(15)
@@ -57,7 +57,8 @@ class ResearchFeedbackMultiprocessTest {
             val outcomes = processes.map { process ->
                 assertTrue("Child process timed out", process.waitFor(20, TimeUnit.SECONDS))
                 val output = process.inputStream.bufferedReader().readText().trim()
-                assertEquals("Child failed: $output", 0, process.exitValue())
+                val diagnostic = process.errorStream.bufferedReader().readText().trim()
+                assertEquals("Child failed: $output; stderr: $diagnostic", 0, process.exitValue())
                 output
             }
             assertEquals(1, outcomes.count { it == "CONFIRMED" })

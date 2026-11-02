@@ -81,7 +81,12 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   activity.includes('val agentTask = resolvedQuestion.take(7_900)') &&
+   activity.includes('val agentTask = resolvedQuestion') &&
+   !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
+   bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
+   bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <
+     bodyOf(activity,'private fun runLocal(text:').indexOf('activeLocalRequest = true') &&
+   bodyOf(activity,'private fun runLocal(text:').includes('publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)') &&
    !activity.includes('persistRequestedMemory(') && !bodyOf(activity,'private fun runLocal(text:').includes('memoryStore.put('));
  ensure('only explicit confirmed fact can retry unanswered turn',
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
@@ -142,6 +147,22 @@ test('activity request codes are unique and every one has a result handler',()=>
   const handler=bodyOf(source,'override fun onActivityResult(');
   assert.ok(handler,file+': onActivityResult not found');
   for(const c of codes){
+   // Speech codes now scope in-process callbacks; they must never launch an external recognizer.
+   if(file==='AgentActivity.kt' && ['SPEECH_REQUEST','DEV_SPEECH_REQUEST'].includes(c.name)) {
+    ensure(c.name+' uses the local recognizer', source.includes('AndroidOnDeviceSpeechInput(this)') &&
+      source.includes('private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST)') &&
+      source.includes('startVoiceInput(DEV_SPEECH_REQUEST)') &&
+      source.includes('applyLocalSpeechText(requestCode,spoken)'));
+    ensure(c.name+' never launches an Activity result', !source.includes('startActivityForResult(intent, requestCode)'));
+    continue;
+   }
+   if(file==='AgentActivity.kt' && c.name==='LOCAL_SPEECH_PERMISSION_REQUEST') {
+    const permission=bodyOf(source,'override fun onRequestPermissionsResult(');
+    ensure(c.name+' is permission-only',permission?.includes('requestCode==LOCAL_SPEECH_PERMISSION_REQUEST') &&
+      permission.includes('grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED') &&
+      permission.includes('startVoiceInput(pending)'));
+    continue;
+   }
    ensure(`${file}: ${c.name} handled in onActivityResult`,new RegExp(`\\b${c.name}\\b\\s*(->|,)|==\\s*${c.name}\\b`).test(handler));
    const uses=source.split(new RegExp(`\\b${c.name}\\b`)).length-1;
    ensure(`${file}: ${c.name} is requested somewhere`,uses>=3);
@@ -388,7 +409,8 @@ test('neural training failures expose bounded diagnostics without claiming saved
 test('Wikipedia article research uses bounded authentic extracts and original citations',()=>{
  const provider=fs.readFileSync(dir+'cognitive/WikipediaExtractResearchProvider.kt','utf8');
  ensure('Android research wraps its existing HTTPS provider in a bounded Wikipedia extractor',
-   activity.includes('val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)') &&
+   activity.includes('val researchProvider=at.heinz.deviceai.cognitive.LegalRisEvidenceProvider(') &&
+   activity.includes('at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider))') &&
    activity.includes('ApprovedWebResearchToolRunner(session,discovery,researchProvider,'));
  ensure('only German Wikipedia articles qualify',
    provider.includes('uri.host != "de.wikipedia.org"') &&

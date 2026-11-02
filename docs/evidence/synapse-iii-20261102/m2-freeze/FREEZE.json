@@ -1,0 +1,23 @@
+{
+  "schema": "SHADOW_REPLAY_FREEZE_V1",
+  "seed": 2026110203,
+  "selection": "fixed before implementation; synthetic same grammar, fresh identity/value vocabulary",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY",
+  "splits": {
+    "train": {
+      "items": 80,
+      "seed": 711,
+      "sha256": "cd0ed7b01a930a214f65821753662d07035052dcead6ac3fd75bd4fe7beb44f7"
+    },
+    "validation": {
+      "items": 20,
+      "seed": 912,
+      "sha256": "67355655d073990e5b23e969e1ce4cf8d03c047c9cc660b1b15f3cb576483650"
+    },
+    "holdout-d": {
+      "items": 55,
+      "seed": 1319,
+      "sha256": "ab5b6f363b04f7461f432d9a8150c1b891584f9580c6d1a07461d57fc69fb4c8"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "id": "C001",
+  "question": "Wo ist Zybupeza?",
+  "sources": [
+    {
+      "revision": 0,
+      "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+      "sourceId": "bc:C001:s1",
+      "text": "Zybupeza ist in Uvgegenu."
+    }
+  ]
+}

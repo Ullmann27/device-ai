@@ -1,0 +1,18 @@
+{
+  "id": "C025",
+  "question": "Wo ist Zyjojuni?",
+  "sources": [
+    {
+      "revision": 4,
+      "sha256": "46d60496a0b4501f6097267f27bb266f3d04dda284e478d7b12de1f983f4adce",
+      "sourceId": "bc:C025:s1",
+      "text": "Qemolazo ist in Uvramufo Uvtisuru."
+    },
+    {
+      "revision": 5,
+      "sha256": "3715af8198412b600d0bd564905b671b2f971f3f4959906c71f1a80f13ac4c03",
+      "sourceId": "bc:C025:s2",
+      "text": "Zyjojuni zeichnet eine Karte."
+    }
+  ]
+}

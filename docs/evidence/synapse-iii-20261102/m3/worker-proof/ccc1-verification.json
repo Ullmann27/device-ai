@@ -1,0 +1,6 @@
+{
+  "verdict": "CONFIRMED",
+  "reasons": [
+    "a failing node chain was repaired; the patch passed in the repair worktree and in an independent second worktree"
+  ]
+}

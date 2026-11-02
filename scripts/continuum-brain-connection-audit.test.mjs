@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { audit } from './continuum-brain-connection-audit.mjs';
+const fixture = () => fs.mkdtempSync(path.join(os.tmpdir(),'brain-wiring-'));
+test('Empty repo is never misreported as connected',()=>{const root=fixture();try{const r=audit(root);assert.equal(r.allRequiredSourceEdgesFound,false);assert.ok(r.edges.every(e=>e.status==='MISSING_SOURCE'));assert.equal(r.shadowPromoted,false)}finally{fs.rmSync(root,{recursive:true,force:true})}});
+test('Presence alone does not qualify as a real caller',()=>{const root=fixture();try{const p=path.join(root,'app/src/main/java/at/heinz/deviceai/AgentActivity.kt');fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,'// empty stub');const r=audit(root);assert.equal(r.edges[0].status,'NOT_WIRED');assert.match(r.edges[0].sourceSha256,/^[a-f0-9]{64}$/)}finally{fs.rmSync(root,{recursive:true,force:true})}});
+test('One specific edge is found but all other missing edges still block gate',()=>{const root=fixture();try{const p=path.join(root,'app/src/main/java/at/heinz/deviceai/AgentActivity.kt');fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,'localConversationContext.sessionEvidence(sessionId)');const r=audit(root);assert.equal(r.edges[0].status,'STATIC_CALL_FOUND');assert.equal(r.allRequiredSourceEdgesFound,false)}finally{fs.rmSync(root,{recursive:true,force:true})}});

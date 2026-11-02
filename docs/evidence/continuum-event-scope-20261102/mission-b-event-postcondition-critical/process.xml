@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop" time="0.692357" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="independent research veto blocks completion even after primary tests passed" time="0.572144" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="a throwing optional verifier exhausts the fixed proposal budget without publishing a patch" time="0.574008" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/research-verifier-integration.test.mjs"/>
+	<testcase name="a completion I/O failure preserves the owner abort receipt" time="0.049039" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="an existing completion cannot be overwritten or turn a failed delivery into success" time="0.341386" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="unreadable proc cannot turn a live detached child into watchdog success" time="1.837501" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: confirmed" time="0.139104" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: denied proc" time="1.911527" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: missing completion" time="0.419012" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="repair profile requires a valid completion: wrong task" time="0.126655" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="a supervisor signal cannot become success when the command exits zero on SIGTERM" time="0.358985" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog-reliability.test.mjs"/>
+	<testcase name="a watched step passes streams, exit code and ending signal through unchanged" time="0.521595" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a spawnSync timeout still reads as a timeout and also ends the detached grandchild" time="1.810112" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="an owner abort ends a running step and its detached grandchild within seconds" time="0.834415" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a task aborted before the step starts never runs the command" time="0.044128" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="a watched step stops when the waiting parent is gone" time="0.857817" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="the watchdog refuses incomplete or relative arguments" time="0.222942" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="an abort watch ends a running check profile and the chain never uses its result" time="0.838370" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/step-watchdog.test.mjs"/>
+	<testcase name="actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch" time="0.377654" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="scheduled owner task completes full real Git repair and independent verification" time="0.480525" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="actual passing Git fixture generates no fake repair, patch, or changed source" time="0.116516" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="actual offline Teamleader completes a priority investigation with real Git checks and evidence" time="0.245545" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/.github/continuum/teamleader-end-to-end.test.mjs"/>
+	<testcase name="bounded process executes argv directly and reports its actual exit" time="0.307220" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="timeout kills the process group and never reports success" time="0.430138" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="owner cancellation is asynchronous and cannot become a successful exit" time="0.379789" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="the signal that ended the direct child is reported, an exit code is not" time="0.047677" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="oversized process logs are bounded and fail closed" time="0.301534" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="cancellation also stops a child that detached like the Gradle daemon" time="0.630443" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="inherited run identity catches a rapidly orphaned detached child on linux" time="0.310037" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="inherited run identity catches a rapidly orphaned detached child on android" time="0.312797" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup" time="0.032193" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="an unreadable process younger than the run blocks a confirmed cleanup" time="1.803754" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="unreadable proc stat is not confused with an exited process" time="1.791304" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="denied proc access still stops its direct child and returns a bounded unconfirmed timeout" time="1.869976" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="a reused root PID cannot hide an earlier detached descendant from cleanup" time="0.309050" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="incomplete proc scans are retried within the cleanup bound: transient" time="0.430013" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<testcase name="incomplete proc scans are retried within the cleanup bound: persistent" time="1.794483" classname="test" file="/home/vercel-sandbox/workspace/repos/github.com/ullmann27/device-ai/scripts/continuum-owned-process.test.mjs"/>
+	<!-- tests 37 -->
+	<!-- suites 0 -->
+	<!-- pass 37 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 17347.645969 -->
+</testsuites>

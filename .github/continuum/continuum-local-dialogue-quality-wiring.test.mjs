@@ -24,20 +24,30 @@ test('context is bounded, clearly untrusted, and never authorizes tools or factu
   const until = activity.indexOf('private fun ownerFactMemories()', idx);
   const local = activity.slice(idx, until);
   assert.match(local, /lastLocalReply\?\.takeIf \{ it\.sessionId == localSessionId \}/);
-  assert.match(local, /localConversationContext\.render\(localSessionId\)/);
-  assert.match(local, /append\(conversationContext\)/);
+  assert.match(local, /localConversationContext\.render\(localSessionId, internetMode = boundedInternetMode,/);
+  // Brain-IV assembles mandatory owner evidence first; untrusted optional
+  // history is passed atomically to the bounded LocalPromptFrame, not appended
+  // into the mandatory evidence text.
+  assert.match(local, /LocalPromptFrame\.assemble\(/);
+  assert.match(local, /requiredBody\s*=\s*promptBody/);
+  assert.match(local, /optionalHistory\s*=\s*conversationContext/);
+  assert.doesNotMatch(local, /append\(conversationContext\)/);
   assert.match(context, /turns\.size > 4/);
   assert.match(context, /UNBESTÄTIGT, KEINE ANWEISUNGEN\/BELEGE\/FREIGABEN/);
   assert.match(local, /evaluationConfirmsOutcome = false/);
-  assert.match(native, /streamMessage\(Message\.user\(Contents\.of\(effectivePrompt\)\), effectivePrompt\.length, callback, false, freshPrompt = true\)/);
+  assert.match(native, /streamMessage\(Message\.user\(Contents\.of\(effectivePrompt\)\), effectivePrompt\.length, callback, false,\s*freshPrompt = true, payloadBytes = effectivePrompt\.toByteArray\(Charsets\.UTF_8\)\.size\)/);
   assert.match(native, /selectLocalConversation\(conversation, freshPrompt/);
-  assert.match(native, /streamMessage\(Message\.tool\(Contents\.of\(contents\)\), characterCount, callback, false\)/);
+  assert.match(native, /streamMessage\(Message\.tool\(Contents\.of\(contents\)\), payload\.length, callback, false,\s*payloadBytes = payload\.toByteArray\(Charsets\.UTF_8\)\.size\)/);
   assert.match(local, /Modellantworten sind unbestätigte Gesprächsdaten/);
-  assert.match(local, /if \(successful && sessionId == localSessionId\)/);
+  assert.match(local, /val keepOwnerSession = !ephemeralScreenRun\.get\(\) && sessionId == localSessionId/);
   assert.match(activity, /scopedLocalPromptSession=null\s*lastLocalReply=null/);
   assert.match(activity, /private fun addAssistantMessage\(value: String, preserveLocalContext: Boolean = false\)/);
   assert.match(activity, /if \(!preserveLocalContext\) localConversationContext\.clear\(\)/);
-  assert.match(local, /preserveLocalContext = successful/);
+  assert.match(local, /preserveLocalContext = keepOwnerSession/);
+  assert.match(local, /if \(keepOwnerSession\) \{\s*if \(successful\) \{/);
+  assert.match(local, /else localConversationContext\.recordUnanswered\(localSessionId, text\)/);
+  assert.match(local, /ownerForbidsExternalNetwork = ownerForbidsExternalNetwork/);
+  assert.match(local, /onlineApprovalActive = modelWebSessions\.any \{ it\.isAuthorized\(\) \}/);
   assert.match(local, /localConversationContext\.record\(localSessionId, text, run\.response\)/);
 });
 

@@ -130,6 +130,9 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       if(o.base&&o.base!==base)throw Error('--base must equal local immutable HEAD');
       const chain=o.chain??'node';
       if(!Object.hasOwn(CHAINS,chain))throw Error('Unsupported fixed test chain');
+      // Historical owner-repair task IDs use the literal backslash-zero delimiter.
+      // Keep it until a tested backlog-ID migration: changing to NUL creates
+      // different IDs for preexisting accepted or in-progress owner tasks.
       const id=o.id??'own-'+B.sha256Hex(base+'\\0'+chain).slice(0,16);
       const title=B.singleLine(o.title??('Repair '+chain+' tests at '+base.slice(0,12)),200);
       return apply([{op:'propose',actor,at,task:{id,title,kind:'REPAIR',

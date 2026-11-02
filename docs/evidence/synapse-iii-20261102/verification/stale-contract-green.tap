@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: finished experiment review is reachable in primary learning center
+ok 1 - finished experiment review is reachable in primary learning center
+  ---
+  duration_ms: 1.317912
+  type: 'test'
+  ...
+# Subtest: CTX3 test is discoverable and stays confined to existing nonexported lab
+ok 2 - CTX3 test is discoverable and stays confined to existing nonexported lab
+  ---
+  duration_ms: 0.274798
+  type: 'test'
+  ...
+# Subtest: Orion personal memory is not mistaken for an entity definition
+ok 3 - Orion personal memory is not mistaken for an entity definition
+  ---
+  duration_ms: 0.171457
+  type: 'test'
+  ...
+# Subtest: native delta preview is throttled, bounded and tied to the active request
+ok 4 - native delta preview is throttled, bounded and tied to the active request
+  ---
+  duration_ms: 1.945486
+  type: 'test'
+  ...
+# Subtest: stream completion removes only its own transient row
+ok 5 - stream completion removes only its own transient row
+  ---
+  duration_ms: 0.464879
+  type: 'test'
+  ...
+# Subtest: Stop clears preview synchronously and queued rendering checks cancellation state
+ok 6 - Stop clears preview synchronously and queued rendering checks cancellation state
+  ---
+  duration_ms: 1.442226
+  type: 'test'
+  ...
+# Subtest: native text deltas preserve standalone whitespace while ignoring empty chunks
+ok 7 - native text deltas preserve standalone whitespace while ignoring empty chunks
+  ---
+  duration_ms: 1.585956
+  type: 'test'
+  ...
+# Subtest: invocation time consumes the same generation budget and safe profile reaches existing status
+ok 8 - invocation time consumes the same generation budget and safe profile reaches existing status
+  ---
+  duration_ms: 0.915786
+  type: 'test'
+  ...
+# Subtest: owner-selected Gemma metadata is byte-identical to repository model selection
+ok 9 - owner-selected Gemma metadata is byte-identical to repository model selection
+  ---
+  duration_ms: 1.416025
+  type: 'test'
+  ...
+# Subtest: existing owner model center shows choices without automatically downloading
+ok 10 - existing owner model center shows choices without automatically downloading
+  ---
+  duration_ms: 2.64791
+  type: 'test'
+  ...
+# Subtest: selected model has a live status binding and never grants shell rights
+ok 11 - selected model has a live status binding and never grants shell rights
+  ---
+  duration_ms: 1.285271
+  type: 'test'
+  ...
+# Subtest: standalone QA is opt-in and explicitly exclusive with signed owner lane
+ok 12 - standalone QA is opt-in and explicitly exclusive with signed owner lane
+  ---
+  duration_ms: 1.152431
+  type: 'test'
+  ...
+# Subtest: source builds new continuumlocal app base ID under QA but uses a separate package suffix
+ok 13 - source builds new continuumlocal app base ID under QA but uses a separate package suffix
+  ---
+  duration_ms: 0.227001
+  type: 'test'
+  ...
+# Subtest: owner and historical mentor signing credentials are prohibited for QA
+ok 14 - owner and historical mentor signing credentials are prohibited for QA
+  ---
+  duration_ms: 0.290395
+  type: 'test'
+  ...
+# Subtest: QA rejects assembly/bundle or release tasks before Gradle runs them
+ok 15 - QA rejects assembly/bundle or release tasks before Gradle runs them
+  ---
+  duration_ms: 0.465661
+  type: 'test'
+  ...
+# Subtest: full regression targets QA source with correct package and no owner signer
+ok 16 - full regression targets QA source with correct package and no owner signer
+  ---
+  duration_ms: 0.266433
+  type: 'test'
+  ...
+# Subtest: owner release still uses independently signed standalone build with original package
+ok 17 - owner release still uses independently signed standalone build with original package
+  ---
+  duration_ms: 0.167219
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 433.077408

@@ -14,6 +14,7 @@ class ReadOnlyToolPlan(proposals: List<ToolProposal>) : AgentModel, AgentEvaluat
     private val steps=proposals.map { it.copy(arguments=it.arguments.toMap()) }
     constructor(proposal:ToolProposal):this(listOf(proposal))
     val stepCount:Int get()=steps.size
+    val plannedToolNames:List<String> get()=steps.map { it.toolName }
     private var observed:List<AgentToolObservation> = emptyList()
 
     init {
@@ -33,8 +34,18 @@ class ReadOnlyToolPlan(proposals: List<ToolProposal>) : AgentModel, AgentEvaluat
         }
         if(!valid)return AgentModelOutput(MODEL_ID,"Kein frisches, erfolgreiches Geräteergebnis vorhanden; weitere Schritte abgebrochen.")
         if(toolObservations.size<steps.size)return AgentModelOutput(MODEL_ID,"",steps[toolObservations.size])
+        val complete = render(toolObservations)
+        // ToolGate permits up to 8,000 characters of raw output. The required
+        // tool labels can push a valid observation beyond AgentModelOutput's
+        // 8,000-character limit. Never throw or pretend a truncated answer is
+        // a verified full observation; no learning candidate may be promoted.
+        if (complete.length > MAX_RESPONSE_CHARS) {
+            observed=emptyList()
+            return AgentModelOutput(MODEL_ID,
+                "Das vollständige Werkzeugergebnis überschreitet das Antwortbudget; Ergebnis nicht bestätigt.")
+        }
         observed=toolObservations.toList()
-        return AgentModelOutput(MODEL_ID,render(observed))
+        return AgentModelOutput(MODEL_ID,complete)
     }
 
     override fun evaluate(response:String,toolRecord:ToolExecutionRecord?):Evaluation {
@@ -53,6 +64,7 @@ class ReadOnlyToolPlan(proposals: List<ToolProposal>) : AgentModel, AgentEvaluat
 
     companion object {
         const val MODEL_ID="deterministic-read-only-plan-v1"
+        const val MAX_RESPONSE_CHARS=8_000
         /** Narrow explicit owner request only. Questions, quotes, negations and role
          * headers cannot expand an existing single-tool decision into extra actions. */
         fun forRequest(request:String,fallback:ToolProposal):ReadOnlyToolPlan {

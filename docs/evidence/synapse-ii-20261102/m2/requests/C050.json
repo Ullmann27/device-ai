@@ -1,0 +1,18 @@
+{
+  "id": "C050",
+  "question": "Wo ist Zyrapepi?",
+  "sources": [
+    {
+      "revision": 1,
+      "sha256": "020cb0b71c567ae0982de81d122179a8b4aa5ce4caad554a09b45c9bcae1d3b6",
+      "sourceId": "bc:C050:s1",
+      "text": "Qepevoha ist in Uvzusoca."
+    },
+    {
+      "revision": 2,
+      "sha256": "af1570021ac7e7f5210747f85760a42a86899b0d5f0b9b218c4d91a21e924ac5",
+      "sourceId": "bc:C050:s2",
+      "text": "Zyrapepi wohnt in Uvlebilu Uvpeneke."
+    }
+  ]
+}

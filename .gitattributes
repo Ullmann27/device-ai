@@ -1,0 +1,6 @@
+# Preserve byte-exact upstream/license snapshots and unedited test output.
+docs/evidence/fusion-iv-20261102/upstream/sources/** -whitespace
+docs/evidence/fusion-iv-20261102/finish/** -whitespace
+# Unedited integration test receipts; preserve failure output bytes.
+docs/evidence/grand-challenge-20261102/*.txt -whitespace
+docs/evidence/grand-challenge-20261102/*.tap -whitespace

@@ -1,0 +1,1203 @@
+{
+  "cases": [
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+        "sourceId": "bc:C001:s1",
+        "start": 16,
+        "text": "Uvgegenu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+        "sourceId": "bc:C001:s1",
+        "start": 16,
+        "text": "Uvgegenu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+        "sourceId": "bc:C001:s1",
+        "start": 16,
+        "text": "Uvgegenu"
+      },
+      "id": "C001"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+        "sourceId": "bc:C002:s1",
+        "start": 64,
+        "text": "Uvlafeci Uvvaputi"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+        "sourceId": "bc:C002:s1",
+        "start": 64,
+        "text": "Uvlafeci Uvvaputi"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+        "sourceId": "bc:C002:s1",
+        "start": 64,
+        "text": "Uvlafeci Uvvaputi"
+      },
+      "id": "C002"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 43,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+        "sourceId": "bc:C003:s2",
+        "start": 17,
+        "text": "Uvdakezu Uvjerazo Uvjujuce"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 43,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+        "sourceId": "bc:C003:s2",
+        "start": 17,
+        "text": "Uvdakezu Uvjerazo Uvjujuce"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 43,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+        "sourceId": "bc:C003:s2",
+        "start": 17,
+        "text": "Uvdakezu Uvjerazo Uvjujuce"
+      },
+      "id": "C003"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+        "sourceId": "bc:C004:s3",
+        "start": 55,
+        "text": "Uvvagaja"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+        "sourceId": "bc:C004:s3",
+        "start": 55,
+        "text": "Uvvagaja"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+        "sourceId": "bc:C004:s3",
+        "start": 55,
+        "text": "Uvvagaja"
+      },
+      "id": "C004"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 77,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+        "sourceId": "bc:C005:s1",
+        "start": 60,
+        "text": "Uvvevohi Uvfokeza"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 77,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+        "sourceId": "bc:C005:s1",
+        "start": 60,
+        "text": "Uvvevohi Uvfokeza"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 77,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+        "sourceId": "bc:C005:s1",
+        "start": 60,
+        "text": "Uvvevohi Uvfokeza"
+      },
+      "id": "C005"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+        "sourceId": "bc:C006:s1",
+        "start": 18,
+        "text": "Uvbuguba Uvriledu Uvpafoha"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+        "sourceId": "bc:C006:s1",
+        "start": 18,
+        "text": "Uvbuguba Uvriledu Uvpafoha"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+        "sourceId": "bc:C006:s1",
+        "start": 18,
+        "text": "Uvbuguba Uvriledu Uvpafoha"
+      },
+      "id": "C006"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+        "sourceId": "bc:C007:s2",
+        "start": 53,
+        "text": "Uvtolasa"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+        "sourceId": "bc:C007:s2",
+        "start": 53,
+        "text": "Uvtolasa"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+        "sourceId": "bc:C007:s2",
+        "start": 53,
+        "text": "Uvtolasa"
+      },
+      "id": "C007"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+        "sourceId": "bc:C008:s3",
+        "start": 18,
+        "text": "Uvhiloza Uvjogeka"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+        "sourceId": "bc:C008:s3",
+        "start": 18,
+        "text": "Uvhiloza Uvjogeka"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+        "sourceId": "bc:C008:s3",
+        "start": 18,
+        "text": "Uvhiloza Uvjogeka"
+      },
+      "id": "C008"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 68,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+        "sourceId": "bc:C009:s1",
+        "start": 42,
+        "text": "Uvtobani Uvcomovu Uvzozima"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 68,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+        "sourceId": "bc:C009:s1",
+        "start": 42,
+        "text": "Uvtobani Uvcomovu Uvzozima"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 68,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+        "sourceId": "bc:C009:s1",
+        "start": 42,
+        "text": "Uvtobani Uvcomovu Uvzozima"
+      },
+      "id": "C009"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+        "sourceId": "bc:C010:s1",
+        "start": 55,
+        "text": "Uvgemeta"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+        "sourceId": "bc:C010:s1",
+        "start": 55,
+        "text": "Uvgemeta"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 63,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+        "sourceId": "bc:C010:s1",
+        "start": 55,
+        "text": "Uvgemeta"
+      },
+      "id": "C010"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 34,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+        "sourceId": "bc:C011:s2",
+        "start": 17,
+        "text": "Uvkunoji Uvrataba"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 34,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+        "sourceId": "bc:C011:s2",
+        "start": 17,
+        "text": "Uvkunoji Uvrataba"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 34,
+        "offsetEncoding": "UTF-16",
+        "revision": 5,
+        "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+        "sourceId": "bc:C011:s2",
+        "start": 17,
+        "text": "Uvkunoji Uvrataba"
+      },
+      "id": "C011"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 72,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+        "sourceId": "bc:C012:s3",
+        "start": 46,
+        "text": "Uvnebaka Uvjibile Uvlogase"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 72,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+        "sourceId": "bc:C012:s3",
+        "start": 46,
+        "text": "Uvnebaka Uvjibile Uvlogase"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 72,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+        "sourceId": "bc:C012:s3",
+        "start": 46,
+        "text": "Uvnebaka Uvjibile Uvlogase"
+      },
+      "id": "C012"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+        "sourceId": "bc:C013:s1",
+        "start": 16,
+        "text": "Uvgedozu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+        "sourceId": "bc:C013:s1",
+        "start": 16,
+        "text": "Uvgedozu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 24,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+        "sourceId": "bc:C013:s1",
+        "start": 16,
+        "text": "Uvgedozu"
+      },
+      "id": "C013"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+        "sourceId": "bc:C014:s1",
+        "start": 64,
+        "text": "Uvpubuca Uvcomite"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+        "sourceId": "bc:C014:s1",
+        "start": 64,
+        "text": "Uvpubuca Uvcomite"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+        "sourceId": "bc:C014:s1",
+        "start": 64,
+        "text": "Uvpubuca Uvcomite"
+      },
+      "id": "C014"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 70,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+        "sourceId": "bc:C015:s2",
+        "start": 44,
+        "text": "Uvzisimu Uvnamuju Uvnanazi"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 70,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+        "sourceId": "bc:C015:s2",
+        "start": 44,
+        "text": "Uvzisimu Uvnamuju Uvnanazi"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 70,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+        "sourceId": "bc:C015:s2",
+        "start": 44,
+        "text": "Uvzisimu Uvnamuju Uvnanazi"
+      },
+      "id": "C015"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 26,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+        "sourceId": "bc:C016:s3",
+        "start": 18,
+        "text": "Uvpatema"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 26,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+        "sourceId": "bc:C016:s3",
+        "start": 18,
+        "text": "Uvpatema"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 26,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+        "sourceId": "bc:C016:s3",
+        "start": 18,
+        "text": "Uvpatema"
+      },
+      "id": "C016"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 88,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+        "sourceId": "bc:C017:s1",
+        "start": 71,
+        "text": "Uvpetado Uvradeba"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 88,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+        "sourceId": "bc:C017:s1",
+        "start": 71,
+        "text": "Uvpetado Uvradeba"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 88,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+        "sourceId": "bc:C017:s1",
+        "start": 71,
+        "text": "Uvpetado Uvradeba"
+      },
+      "id": "C017"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+        "sourceId": "bc:C018:s1",
+        "start": 18,
+        "text": "Uvrosabo Uvsogosu Uvpaveza"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+        "sourceId": "bc:C018:s1",
+        "start": 18,
+        "text": "Uvrosabo Uvsogosu Uvpaveza"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 4,
+        "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+        "sourceId": "bc:C018:s1",
+        "start": 18,
+        "text": "Uvrosabo Uvsogosu Uvpaveza"
+      },
+      "id": "C018"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+        "sourceId": "bc:C019:s2",
+        "start": 53,
+        "text": "Uvdaniti"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+        "sourceId": "bc:C019:s2",
+        "start": 53,
+        "text": "Uvdaniti"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 61,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+        "sourceId": "bc:C019:s2",
+        "start": 53,
+        "text": "Uvdaniti"
+      },
+      "id": "C019"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+        "sourceId": "bc:C020:s3",
+        "start": 64,
+        "text": "Uvhileta Uvjesucu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+        "sourceId": "bc:C020:s3",
+        "start": 64,
+        "text": "Uvhileta Uvjesucu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 81,
+        "offsetEncoding": "UTF-16",
+        "revision": 1,
+        "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+        "sourceId": "bc:C020:s3",
+        "start": 64,
+        "text": "Uvhileta Uvjesucu"
+      },
+      "id": "C020"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C021"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C022"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C023"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C024"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C025"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C026"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C027"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C028"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C029"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C030"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C031"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C032"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C033"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C034"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C035"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C036"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C037"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C038"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C039"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C040"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 59,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+        "sourceId": "bc:C041:s1",
+        "start": 42,
+        "text": "Uvpovelu Uvjaluzu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 59,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+        "sourceId": "bc:C041:s1",
+        "start": 42,
+        "text": "Uvpovelu Uvjaluzu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 59,
+        "offsetEncoding": "UTF-16",
+        "revision": 6,
+        "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+        "sourceId": "bc:C041:s1",
+        "start": 42,
+        "text": "Uvpovelu Uvjaluzu"
+      },
+      "id": "C041"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+        "sourceId": "bc:C042:s1",
+        "start": 18,
+        "text": "Uvjogiju Uvmukedo Uvcudumu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+        "sourceId": "bc:C042:s1",
+        "start": 18,
+        "text": "Uvjogiju Uvmukedo Uvcudumu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 44,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+        "sourceId": "bc:C042:s1",
+        "start": 18,
+        "text": "Uvjogiju Uvmukedo Uvcudumu"
+      },
+      "id": "C042"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 25,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+        "sourceId": "bc:C043:s2",
+        "start": 17,
+        "text": "Uvvomeki"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 25,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+        "sourceId": "bc:C043:s2",
+        "start": 17,
+        "text": "Uvvomeki"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 25,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+        "sourceId": "bc:C043:s2",
+        "start": 17,
+        "text": "Uvvomeki"
+      },
+      "id": "C043"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+        "sourceId": "bc:C044:s1",
+        "start": 18,
+        "text": "Uvfafoli Uvzimapu"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+        "sourceId": "bc:C044:s1",
+        "start": 18,
+        "text": "Uvfafoli Uvzimapu"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 35,
+        "offsetEncoding": "UTF-16",
+        "revision": 2,
+        "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+        "sourceId": "bc:C044:s1",
+        "start": 18,
+        "text": "Uvfafoli Uvzimapu"
+      },
+      "id": "C044"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 90,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+        "sourceId": "bc:C045:s1",
+        "start": 64,
+        "text": "Uvjalicu Uvhetilu Uvhugoma"
+      },
+      "RULE": {
+        "decision": "SPAN",
+        "endExclusive": 90,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+        "sourceId": "bc:C045:s1",
+        "start": 64,
+        "text": "Uvjalicu Uvhetilu Uvhugoma"
+      },
+      "VERIFIED": {
+        "decision": "SPAN",
+        "endExclusive": 90,
+        "offsetEncoding": "UTF-16",
+        "revision": 3,
+        "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+        "sourceId": "bc:C045:s1",
+        "start": 64,
+        "text": "Uvjalicu Uvhetilu Uvhugoma"
+      },
+      "id": "C045"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C046"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C047"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 25,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "f2bbd6919db2e0b65625456217330779b375b3a37b07c35283db18395a13087c",
+        "sourceId": "bc:C048:s2",
+        "start": 17,
+        "text": "Uvfafihi"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C048"
+    },
+    {
+      "RAW": {
+        "decision": "SPAN",
+        "endExclusive": 26,
+        "offsetEncoding": "UTF-16",
+        "revision": 7,
+        "sha256": "9b77dbe5da923be169b9788b77f6f702427c445a68809a694988f6be5b9ab3d5",
+        "sourceId": "bc:C049:s1",
+        "start": 18,
+        "text": "Uvzuriza"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C049"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C050"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C051"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C052"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C053"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C054"
+    },
+    {
+      "RAW": {
+        "decision": "NOANSWER"
+      },
+      "RULE": {
+        "decision": "NOANSWER"
+      },
+      "VERIFIED": {
+        "decision": "NOANSWER"
+      },
+      "id": "C055"
+    }
+  ]
+}

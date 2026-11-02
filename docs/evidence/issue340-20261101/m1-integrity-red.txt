@@ -1,0 +1,43 @@
+JUnit version 4.13.2
+..E.E.E.E.E
+Time: 0.212
+There were 5 failures:
+1) originalWhitespaceAndSwappedRolesKeepExactSourceOffsets(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+org.junit.ComparisonFailure: expected:<[Berg]> but was:<[n Be]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.originalWhitespaceAndSwappedRolesKeepExactSourceOffsets(SessionEvidenceIntegrityTest.kt:18)
+2) researchQuestionsAndModelRepliesAreNeverOwnerEvidence(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError: expected:<[Hallo]> but was:<[Hallo, Emma ist in Berg.]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.researchQuestionsAndModelRepliesAreNeverOwnerEvidence(SessionEvidenceIntegrityTest.kt:52)
+3) oversizedOwnerTurnInvalidatesProofInsteadOfKeepingATruncatedOrOldClaim(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.oversizedOwnerTurnInvalidatesProofInsteadOfKeepingATruncatedOrOldClaim(SessionEvidenceIntegrityTest.kt:44)
+4) negationAfterPromptPreviewLimitCannotBecomeAPositiveProof(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError: expected null, but was:<Answer(text=Du hast in dieser Sitzung gesagt: Berg
+Quelle: deine eigene frühere Nachricht (session-turn-1), keine bestätigte Erinnerung und kein geprüfter Weltfakt.
+Belegsnapshot SHA-256: 7383d96b48083b10180b01fbc621d0a9548d59079bc9c2bcdee083d719127067, sourceHash=7383d96b48083b10180b01fbc621d0a9548d59079bc9c2bcdee083d719127067, spanStart=12, spanEnd=16)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.negationAfterPromptPreviewLimitCannotBecomeAPositiveProof(SessionEvidenceIntegrityTest.kt:30)
+5) temporalCorrectionAfterPromptPreviewLimitCannotBecomeACurrentProof(at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest)
+java.lang.AssertionError: expected null, but was:<Answer(text=Du hast in dieser Sitzung gesagt: Perg
+Quelle: deine eigene frühere Nachricht (session-turn-1), keine bestätigte Erinnerung und kein geprüfter Weltfakt.
+Belegsnapshot SHA-256: 9b1ca8561684fb3fac96567f06ae096dc94016cebdbe09d9e12a79adefb68969, sourceHash=9b1ca8561684fb3fac96567f06ae096dc94016cebdbe09d9e12a79adefb68969, spanStart=12, spanEnd=16)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest.temporalCorrectionAfterPromptPreviewLimitCannotBecomeACurrentProof(SessionEvidenceIntegrityTest.kt:37)
+
+FAILURES!!!
+Tests run: 6,  Failures: 5

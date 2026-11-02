@@ -1,0 +1,405 @@
+{
+  "schema": "SHADOW_REPLAY_CORPUS_V1",
+  "cases": [
+    {
+      "id": "validation-001",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVabihimu?",
+      "sources": [
+        {
+          "sourceId": "validation-001:s1",
+          "revision": 1,
+          "sha256": "edbde7d9db2fa4c0019c9985a6cd2509016389ffdd861e48480a81128b019131",
+          "text": "EVacomipa wohnt in EVateravo. EVabihimu wohnt in EVakakilo."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-001:s1",
+        "revision": 1,
+        "sha256": "edbde7d9db2fa4c0019c9985a6cd2509016389ffdd861e48480a81128b019131",
+        "text": "EVakakilo",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-002",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVapokiji?",
+      "sources": [
+        {
+          "sourceId": "validation-002:s1",
+          "revision": 1,
+          "sha256": "3ff9448ef0650fb96131033e039f1070d1ba9bac9c35b5f543282017c288c84c",
+          "text": "EVasevaba steht in EVavovijo. EVapokiji steht in EVaheceda."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-002:s1",
+        "revision": 1,
+        "sha256": "3ff9448ef0650fb96131033e039f1070d1ba9bac9c35b5f543282017c288c84c",
+        "text": "EVaheceda",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-003",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVakasuse?",
+      "sources": [
+        {
+          "sourceId": "validation-003:s1",
+          "revision": 1,
+          "sha256": "b377e806ad45043d3ab3a21ebf37257df5c333414e8f0f866b0d36b3543ecad0",
+          "text": "EVadukiru steht in EValehesi. EVakasuse steht in EVanoguvi."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-003:s1",
+        "revision": 1,
+        "sha256": "b377e806ad45043d3ab3a21ebf37257df5c333414e8f0f866b0d36b3543ecad0",
+        "text": "EVanoguvi",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-004",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVafijuke?",
+      "sources": [
+        {
+          "sourceId": "validation-004:s1",
+          "revision": 1,
+          "sha256": "b204a80a66a80892a39525556e3d20d00db7f07c9c239f19b8fb45b59025acc3",
+          "text": "EVatocofe steht in EVatosasi. EVafijuke steht in EVakepohe."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-004:s1",
+        "revision": 1,
+        "sha256": "b204a80a66a80892a39525556e3d20d00db7f07c9c239f19b8fb45b59025acc3",
+        "text": "EVakepohe",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-005",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVakefari?",
+      "sources": [
+        {
+          "sourceId": "validation-005:s1",
+          "revision": 1,
+          "sha256": "f3e207585f975a9ea464e7d8c1fcea43f54bc340e0ce39e210b196156f99e36e",
+          "text": "EVasileda wohnt in EVakogusa. EVakefari wohnt in EVahepafa."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-005:s1",
+        "revision": 1,
+        "sha256": "f3e207585f975a9ea464e7d8c1fcea43f54bc340e0ce39e210b196156f99e36e",
+        "text": "EVahepafa",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-006",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVapakoce?",
+      "sources": [
+        {
+          "sourceId": "validation-006:s1",
+          "revision": 1,
+          "sha256": "38c392296723a544988f0faa0b1aec75d2b6ae3279653f22d04a54f12e4593bd",
+          "text": "EVavekoro steht in EVamatepo. EVapakoce steht in EVanabehi."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-006:s1",
+        "revision": 1,
+        "sha256": "38c392296723a544988f0faa0b1aec75d2b6ae3279653f22d04a54f12e4593bd",
+        "text": "EVanabehi",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-007",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EValonuca?",
+      "sources": [
+        {
+          "sourceId": "validation-007:s1",
+          "revision": 1,
+          "sha256": "ab7b0f061ed155ab65c9737722792365010e58e1f358500910133ce4dd71c183",
+          "text": "EVatutaje steht in EVagafitu. EValonuca steht in EValakako."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-007:s1",
+        "revision": 1,
+        "sha256": "ab7b0f061ed155ab65c9737722792365010e58e1f358500910133ce4dd71c183",
+        "text": "EValakako",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-008",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt EValacove?",
+      "sources": [
+        {
+          "sourceId": "validation-008:s1",
+          "revision": 1,
+          "sha256": "1683b9734cc5e2c0f8f657f4d9dbf553c02c8eaa68bbc13d6507574d7a5bb1ca",
+          "text": "EVapakudo lebt in EVagonejo. EValacove lebt in EVajidole."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-008:s1",
+        "revision": 1,
+        "sha256": "1683b9734cc5e2c0f8f657f4d9dbf553c02c8eaa68bbc13d6507574d7a5bb1ca",
+        "text": "EVajidole",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "validation-009",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt EVapapedu?",
+      "sources": [
+        {
+          "sourceId": "validation-009:s1",
+          "revision": 1,
+          "sha256": "155a79a3bd5fe49f3dcd3e8c0ba193f13bd807c4a67aa268c42be6fd8e08e7d6",
+          "text": "EVatinafe lebt in EVabigoki. EVapapedu lebt in EVamatuju."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-009:s1",
+        "revision": 1,
+        "sha256": "155a79a3bd5fe49f3dcd3e8c0ba193f13bd807c4a67aa268c42be6fd8e08e7d6",
+        "text": "EVamatuju",
+        "start": 47,
+        "endExclusive": 56
+      }
+    },
+    {
+      "id": "validation-010",
+      "category": "SWAP",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVahenepa?",
+      "sources": [
+        {
+          "sourceId": "validation-010:s1",
+          "revision": 1,
+          "sha256": "3811dcebc3b193e5ed03f4a4bd44ce8208eced87a1cc2f70fb9a6b19c4c3b7cc",
+          "text": "EVamabera steht in EVagenacu. EVahenepa steht in EVanatime."
+        }
+      ],
+      "expected": {
+        "sourceId": "validation-010:s1",
+        "revision": 1,
+        "sha256": "3811dcebc3b193e5ed03f4a4bd44ce8208eced87a1cc2f70fb9a6b19c4c3b7cc",
+        "text": "EVanatime",
+        "start": 49,
+        "endExclusive": 58
+      }
+    },
+    {
+      "id": "validation-011",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVajotutu?",
+      "sources": [
+        {
+          "sourceId": "validation-011:s1",
+          "revision": 1,
+          "sha256": "1f3ae1904862bd94eb78fa8250aa05584f998ff5fd1a1cc8d65f17e27fc30fe9",
+          "text": "EVajotutu wohnt in EVatohome, EVajotutu ist in EVabilujo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-012",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVagehale?",
+      "sources": [
+        {
+          "sourceId": "validation-012:s1",
+          "revision": 1,
+          "sha256": "8a49e63661adc4664161333f68360f4e97be8a03608bda472f76c013c3dcf24f",
+          "text": "EVagehale ist in EVadamaka."
+        },
+        {
+          "sourceId": "validation-012:s2",
+          "revision": 2,
+          "sha256": "ebe94c939356af3a1aea10512404c4584201ae402fcfa9cf309a65428687d57b",
+          "text": "EVagehale wohnt in EVasomucu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-013",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVavubeju?",
+      "sources": [
+        {
+          "sourceId": "validation-013:s1",
+          "revision": 1,
+          "sha256": "16b626d7aab07a6f3acc852a6b4d4da2dfcb7070ad3165dda38094d77f19a620",
+          "text": "EVavubeju steht in EVahucocu, EVavubeju ist in EVavitohi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-014",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVajonile?",
+      "sources": [
+        {
+          "sourceId": "validation-014:s1",
+          "revision": 1,
+          "sha256": "63001c5089751ecb3395b720619a329b2d02cde40328a0c5828b3e5a450afd55",
+          "text": "EVajonile ist in EVabavoli."
+        },
+        {
+          "sourceId": "validation-014:s2",
+          "revision": 2,
+          "sha256": "dbd71001100c1d3fae37f9745e50bba0ba50a12a16be3668dda2142b39e46620",
+          "text": "EVajonile steht in EVajegore."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-015",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVasuvuhi?",
+      "sources": [
+        {
+          "sourceId": "validation-015:s1",
+          "revision": 1,
+          "sha256": "070ac80b555e6ce8f30b4b31abbfd6f114614ced6837094e4e9f41b58ce0ff5e",
+          "text": "EVasuvuhi wohnt in EVajamaco, EVasuvuhi ist in EVaduboci."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-016",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo steht EVaneheje?",
+      "sources": [
+        {
+          "sourceId": "validation-016:s1",
+          "revision": 1,
+          "sha256": "eb89267a4e29c63372c2996e518ae51b942610c1d7ef725dbb3e5ad69d7b3c69",
+          "text": "EVaneheje ist in EVateribu."
+        },
+        {
+          "sourceId": "validation-016:s2",
+          "revision": 2,
+          "sha256": "ee1027b03192748938f6891cccb91637d1e5807d5b069425065d44289349ec44",
+          "text": "EVaneheje steht in EVagutega."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-017",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVavujama?",
+      "sources": [
+        {
+          "sourceId": "validation-017:s1",
+          "revision": 1,
+          "sha256": "f19bc0509a1fb63623aa2bc308a7bba939ca1a9474a95c2b74d6b3310fba9c9e",
+          "text": "EVavujama wohnt in EVamutaji, EVavujama ist in EVarasuba."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-018",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVasipihe?",
+      "sources": [
+        {
+          "sourceId": "validation-018:s1",
+          "revision": 1,
+          "sha256": "bac1ab07abc3f12a471fc7a52e00798fc8d728290870b0fc13db8b6d8c3584ee",
+          "text": "EVasipihe ist in EVasidemi."
+        },
+        {
+          "sourceId": "validation-018:s2",
+          "revision": 2,
+          "sha256": "ede0db96b0bd482bfcd688bc1a06f3cf2024deda4ac7e886b5e6324c51455924",
+          "text": "EVasipihe wohnt in EVamuhimu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-019",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt EVavipilu?",
+      "sources": [
+        {
+          "sourceId": "validation-019:s1",
+          "revision": 1,
+          "sha256": "ea90e71d949b8c313173f65c406f13ac11725ef77d2c0fdb9cd3eb1a5fe24448",
+          "text": "EVavipilu wohnt in EVamegubi, EVavipilu ist in EVacehevu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "validation-020",
+      "category": "MIXED",
+      "split": "ADVERSARIAL",
+      "question": "Wo lebt EVabomuho?",
+      "sources": [
+        {
+          "sourceId": "validation-020:s1",
+          "revision": 1,
+          "sha256": "131af2da800f3ab5667fdee7e5bbbcb750bde2574b25b93a4079b8d330f4e1b2",
+          "text": "EVabomuho ist in EVafekuju."
+        },
+        {
+          "sourceId": "validation-020:s2",
+          "revision": 2,
+          "sha256": "f99b1773e9f986b0fd4c9fb503e44ab4128406b073326a55a9a815ff60895249",
+          "text": "EVabomuho lebt in EVadogeme."
+        }
+      ],
+      "expected": null
+    }
+  ]
+}

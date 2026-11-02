@@ -108,7 +108,8 @@ class ShellExecutionTest {
             val result = gate.execute(ToolProposal("get_device_info", emptyMap()).invocation("oversize"))
             assertEquals(ToolExecutionStatus.FAILED, result.record.status)
             assertEquals("1234", result.output)
-            assertEquals(ToolReceiptState.FAILED, receipts.get("oversize")!!.state)
+            assertEquals(ToolReceiptState.UNKNOWN_AFTER_DISPATCH, receipts.get("oversize")!!.state)
+            assertTrue(result.record.outcomeUncertain)
             assertNull(receipts.get("oversize")!!.outputSha256)
         } finally { dir.deleteRecursively() }
     }

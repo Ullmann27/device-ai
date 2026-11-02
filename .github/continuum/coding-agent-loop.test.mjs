@@ -213,7 +213,17 @@ test('a real failing test after the first candidate reaches the next revision, w
     assert.deepEqual(report.attempts.map(a=>a.outcome).slice(0,1),['FAILED_TESTS']);
     assert.equal(intros.length,2);
     assert.match(intros[1],/Earlier attempts on this task[\s\S]*FAILED_TESTS/);
-    assert.match(intros[1],/Current failing checks:\n- TEST_FAILURE \.github\/continuum\/geometry\.test\.mjs 3 Expected values to be strictly equal:-5 !== 5/);
+    // Node's strict assertion diagnostic contains a line break between the
+    // summary label and expected/actual values. Retain the actual failure
+    // evidence requirement; do not rely on a flattened one-line string.
+    // Node versions render strict-assertion details differently. Verify the
+    // actual failure, file and signed mismatch rather than one display layout.
+    const currentFailure = intros[1].split('Current failing checks:\n')[1]?.split('\n\nEarlier attempts')[0];
+    assert.ok(currentFailure, 'The next revision must see real failing-check evidence.');
+    assert.match(currentFailure, /TEST_FAILURE/);
+    assert.match(currentFailure, /\.github\/continuum\/geometry\.test\.mjs/);
+    assert.match(currentFailure, /Expected values to be strictly equal/);
+    assert.match(currentFailure, /(?:-5\s*!==\s*5|5\s*!==\s*-5)/);
   }finally{cleanup(f);}
 });
 

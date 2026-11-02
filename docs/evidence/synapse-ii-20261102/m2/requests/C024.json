@@ -1,0 +1,30 @@
+{
+  "id": "C024",
+  "question": "Wo steht Zynegoko?",
+  "sources": [
+    {
+      "revision": 3,
+      "sha256": "0818cf360cc4e6c2f7e176ad52562061b37f7dd85ab432eabe1045d1a97f8bba",
+      "sourceId": "bc:C024:s1",
+      "text": "Qekuvufe steht in Uvnonobo."
+    },
+    {
+      "revision": 4,
+      "sha256": "cd3a0931c0200fda2990e5f756609100165e53d4fe708a69b7a22a3a5c46a3a0",
+      "sourceId": "bc:C024:s2",
+      "text": "Qefaviji ist in Uvbapodu."
+    },
+    {
+      "revision": 5,
+      "sha256": "6ac57f71d6b12409a5e652d731271f6d3e5874a1c6ba42fd1f6a359cc340a483",
+      "sourceId": "bc:C024:s3",
+      "text": "Qetetifu lebt in Uvnubefo."
+    },
+    {
+      "revision": 6,
+      "sha256": "283e25c5080f1b3902b6949f76906c005cdc26709208bb81883f643893cef151",
+      "sourceId": "bc:C024:s4",
+      "text": "Zynegoko singt."
+    }
+  ]
+}

@@ -51,6 +51,7 @@ test('a watched step passes streams, exit code and ending signal through unchang
   assert.equal(r.status,3);
   assert.equal(fs.existsSync(b.receipt),false,'no receipt without an abort');
   for(const sig of ['SIGKILL','SIGTERM']){
+    fs.rmSync(b.receipt+'.completion.json',{force:true});
     const killed=watched(b,20000,['-e',`process.kill(process.pid,"${sig}")`]);
     assert.equal(killed.signal,sig);assert.equal(killed.status,null);
   }

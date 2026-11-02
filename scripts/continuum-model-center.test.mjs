@@ -35,7 +35,10 @@ test("existing owner model center shows choices without automatically downloadin
   assert.match(agent,/id\.setText\(ContinuumSelectedModels\.LOCAL_ID\)/);
   assert.match(agent,/version\.setText\(ContinuumSelectedModels\.LOCAL_VERSION\)/);
   assert.match(agent,/digest\.setText\(ContinuumSelectedModels\.LOCAL_SHA256\)/);
-  assert.match(agent,/modelCatalog\.import\(metadata\.first, metadata\.second, it, metadata\.third\)/);
+  assert.match(agent,/modelImports\.start\(metadata\.first, metadata\.second, metadata\.third\)/);
+  const imports = readFileSync(new URL("../app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt", import.meta.url), "utf8");
+  assert.match(imports,/openInput\(\)\.use \{ source ->/);
+  assert.match(imports,/catalog\.import\(id, version, source, expectedSha256\)/);
 });
 test("selected model has a live status binding and never grants shell rights", () => {
   assert.match(agent,/ContinuumSelectedModels\.gemmaStatus\(models, loaded\)/);

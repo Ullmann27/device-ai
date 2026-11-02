@@ -1,0 +1,19 @@
+{
+  "status": "DONE",
+  "head": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+  "taskId": "mob-d0260da8b7efc105",
+  "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+  "patch": "/tmp/continuum-synapse-m3-9KKVjI/ccc1-state/teamleader/reports/owner-repair/mob-d0260da8b7efc105-6e97b5612a1d-1793586139940-3854881d/repair.patch",
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 4,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "independentReceipt": "/tmp/continuum-synapse-m3-9KKVjI/ccc1-state/teamleader/reports/owner-repair/mob-d0260da8b7efc105-6e97b5612a1d-1793586139940-3854881d/independent-check/verification.json",
+  "report": "/tmp/continuum-synapse-m3-9KKVjI/ccc1-state/teamleader/reports/owner-repair/mob-d0260da8b7efc105-6e97b5612a1d-1793586139940-3854881d/report.json",
+  "approvedForMerge": false
+}

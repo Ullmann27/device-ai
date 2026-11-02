@@ -1,0 +1,2 @@
+STATE_BEFORE_UNLOAD=GENERATING
+QUEUED_UNLOAD_EVENTS=[TextDelta(text=first), Cancelled] emitterAlive=false

@@ -26,7 +26,9 @@ test("Android only sends bounded question text to the private backend", () => {
   assert.ok(start >= 0 && end > start);
   const body = client.slice(start, end);
   assert.match(body, /put\("consent", true\)/);
-  assert.match(body, /put\("provider", "GROQ"\)/);
+  assert.match(body, /externalMentor\(question, "GROQ", callback\)/);
+  assert.match(body, /require\(provider == "GROQ" \|\| provider == "OPENROUTER"\)/);
+  assert.match(body, /put\("provider", provider\)/);
   assert.match(body, /put\("question", question\.trim\(\)\)/);
   assert.doesNotMatch(body, /Build\.MODEL|shizuku_ready|manufacturer|sendDevice|put\("memory"|put\("device"/);
   assert.match(body, /"POST", "\$base\/v1\/mentor\/answer"/);

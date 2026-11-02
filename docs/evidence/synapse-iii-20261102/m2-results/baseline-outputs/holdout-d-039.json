@@ -1,0 +1,20 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": false,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "holdout-d-039:s1",
+    "decision": "SPAN",
+    "sha256": "6cf47cc47238077527aeb8272cc2e551a196f55de36e645a3dce5ae3c3dac1ef",
+    "endExclusive": 26,
+    "start": 18,
+    "text": "Dalediti",
+    "offsetEncoding": "UTF-16",
+    "revision": 1
+  },
+  "RULE": {"decision": "NOANSWER"},
+  "VERIFIED": {"decision": "NOANSWER"},
+  "rawMillis": 65.880476
+}

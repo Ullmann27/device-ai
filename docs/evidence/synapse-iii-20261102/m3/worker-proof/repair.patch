@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/math.mjs b/.github/continuum/math.mjs
+index 442ece9..ddb1d3a 100644
+--- a/.github/continuum/math.mjs
++++ b/.github/continuum/math.mjs
+@@ -1,2 +1,2 @@
+ export function square(x){return x*x;}
+-export function quad(x){return sqare(square(x));}
++export function quad(x){return square(square(x));}

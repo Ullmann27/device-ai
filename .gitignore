@@ -41,3 +41,10 @@ agent-kotlin-benchmark/
 
 # Reproducibly installed backend dependencies are not source or dirty QA state.
 /backend/node_modules/
+
+# Verified Render toolchain cache and QA-only generated artifacts.
+# Exclude build outputs, never executable source. The exact integration
+# source still participates in the canonical Git-bound QA fingerprint.
+/.continuum-render-build/
+/continuum-all-systems-logs/
+/continuum-all-systems-site/

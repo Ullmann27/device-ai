@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C015:s2",
+    "decision": "SPAN",
+    "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+    "endExclusive": 70,
+    "start": 44,
+    "text": "Uvzisimu Uvnamuju Uvnanazi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "RULE": {
+    "sourceId": "bc:C015:s2",
+    "decision": "SPAN",
+    "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+    "endExclusive": 70,
+    "start": 44,
+    "text": "Uvzisimu Uvnamuju Uvnanazi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C015:s2",
+    "decision": "SPAN",
+    "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+    "endExclusive": 70,
+    "start": 44,
+    "text": "Uvzisimu Uvnamuju Uvnanazi",
+    "offsetEncoding": "UTF-16",
+    "revision": 2
+  },
+  "rawMillis": 58.253619
+}

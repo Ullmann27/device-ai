@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ScreenObservationRevisionTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-02T10:50:56" hostname="e9081157-c2d" time="4.48">
+  <properties/>
+  <testcase name="unrelatedThenTargetUpdateStillInvalidates" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="3.772"/>
+  <testcase name="contentEventInvalidatesRevisionWithoutInventingFreshLaunchEvidence" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.053"/>
+  <testcase name="disconnectAndInterruptInvalidateEvenWithUnrelatedEvents" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.057"/>
+  <testcase name="unknownOrMalformedPackageCannotBeIgnored" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.058"/>
+  <testcase name="abortedReadClearsTargetInFinally" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.094"/>
+  <testcase name="oldServiceAndNullEventsCannotInvalidateCurrentService" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.086"/>
+  <testcase name="stableReadRetainsBoundedObservedText" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.058"/>
+  <testcase name="unknownWindowDuringReadInvalidatesSnapshotAndLaunchEvidence" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.082"/>
+  <testcase name="unrelatedPackageUpdatesDoNotAbortStableTargetRead" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.057"/>
+  <testcase name="concurrentReaderIsRejectedWithoutCorruptingOriginalRead" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.06"/>
+  <testcase name="contentChangeDuringReadFailsClosedInsteadOfReleasingStaleText" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.05"/>
+  <testcase name="unknownWindowCannotLeaveOldForegroundConfirmation" classname="at.heinz.deviceai.ScreenObservationRevisionTest" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

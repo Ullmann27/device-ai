@@ -74,3 +74,11 @@ enthält Fables vollständigen HEAD702b57ae und die geprüften Vorgängerfähigk
 Die ältere Fable-Übergabe bleibt die Grundlage; dort genanntes offenes S1-Offline-Flag
 ist inzwischen repariert. Keine alten offenen Punkte blind erneut implementieren.
 Geräte-/Signaturabnahme und experimentelle CDX2-Forschung bleiben getrennte Gates.
+
+## Aktueller Synapse-III-Forschungsstand — 02.11.2026
+
+Fortsetzung: [Synapse-III-Handoff](docs/research/omega/SYNAPSE-III-HANDOFF-20261102.md) und [tatsächliche Aufrufermatrix](docs/research/omega/SYNAPSE-III-ARCHITECTURE-20261102.md), Draft-PR344 auf vollständigem Synapse-II-PR343. Zuerst neuesten Remote-HEAD und exakten QA-Receipt prüfen; Eltern-PASS nicht übernehmen. Die neue Zwei-Gewicht-CDX2-Adaption bleibt SHADOW, Volltraining wurde wegen Vergessen verworfen. CCC1-Auftragszustand ist an den autorisierten Checkout gebunden; alte ungebundene Android-Aufträge benötigen Besitzerprüfung, keine automatische Migration. Alle bisherigen Sicherheits-, Release- und Datenregeln bleiben gültig.
+
+## Grand Challenge integration — PR349
+
+Read `docs/research/omega/GRAND-CHALLENGE-HANDOFF-20261102.md` for the combined Dialog VII/Fusion privacy state, actual test boundaries and next-agent instructions. Fetch the real remote HEAD before continuing.

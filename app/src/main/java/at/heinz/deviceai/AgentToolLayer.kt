@@ -86,10 +86,12 @@ data class ToolExecutionRecord(
     val decisionReason: String,
     val status: ToolExecutionStatus,
     val elapsedMillis: Long,
-    val outputLength: Int = 0
+    val outputLength: Int = 0,
+    val outcomeUncertain: Boolean = false
 )
 
-data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord)
+data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord,
+                               val replayed: Boolean = false)
 
 /** A trusted backend can narrow an outcome to failure, never assert success. */
 class ToolBackendFailure(val status: ToolExecutionStatus, message: String) : RuntimeException(message) {
@@ -122,10 +124,15 @@ class ToolGate(
     private val calls = AtomicInteger()
     private val cancelled = AtomicBoolean()
     private val activeFutures = ConcurrentHashMap.newKeySet<Future<String>>()
+    private val pendingStarts = ConcurrentHashMap.newKeySet<ToolExecutionStartLatch>()
+    private val startCommitLock = Any()
     private val consumedCallIds = ConcurrentHashMap.newKeySet<String>()
 
     fun cancel() {
-        cancelled.set(true)
+        synchronized(startCommitLock) {
+            cancelled.set(true)
+            pendingStarts.forEach { it.revokeIfPending() }
+        }
         activeFutures.forEach { it.cancel(true) }
     }
 
@@ -152,53 +159,65 @@ class ToolGate(
     fun execute(
         invocation: ToolInvocation,
         userConfirmed: Boolean = false,
-        destructiveConfirmed: Boolean = false
+        destructiveConfirmed: Boolean = false,
+        onExecutionStarted: (() -> Unit)? = null
     ): ToolExecutionResult {
         val request = invocation.request
         val spec = ToolRegistry.get(request.name)
         val start = clock()
-        fun result(status: ToolExecutionStatus, reason: String, output: String? = null): ToolExecutionResult {
+        var uncertainOutcome = false
+        fun result(status: ToolExecutionStatus, reason: String, output: String? = null,
+                   uncertain: Boolean = uncertainOutcome, replayed: Boolean = false): ToolExecutionResult {
             val elapsed = ((clock() - start).coerceAtLeast(0) / 1_000_000)
             return ToolExecutionResult(
                 output,
                 ToolExecutionRecord(
                     request.callId, request.name, spec?.risk, sanitizeArguments(request.arguments),
-                    reason, status, elapsed, output?.length ?: 0
-                )
+                    reason, status, elapsed, output?.length ?: 0, uncertain
+                ), replayed
             )
         }
 
         if (cancelled.get()) {
             runCatching {
                 val prior = receiptStore?.get(request.callId)
+                uncertainOutcome = prior?.outcomeUncertain == true || prior?.state == ToolReceiptState.START_PENDING
                 if (prior != null && prior.state in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
-                    receiptStore.transition(
-                        request.callId, prior.state, ToolReceiptState.CANCELLED, receiptClock().coerceAtLeast(0)
-                    )
+                    val saved=receiptStore.transition(request.callId, prior.state, ToolReceiptState.CANCELLED,
+                        receiptClock().coerceAtLeast(prior.transitions.last().atMillis))
+                    if(saved==null)uncertainOutcome=true
                 }
-            }
-            return result(ToolExecutionStatus.CANCELLED, "Task cancelled.")
+            }.onFailure {uncertainOutcome=true}
+            return result(ToolExecutionStatus.CANCELLED,if(uncertainOutcome)
+                "Task cancelled; prior or concurrent dispatch outcome UNKNOWN, operator review required." else "Task cancelled before dispatch.")
         }
         val validation = ToolProposal(request.name, request.arguments).validate()
         if (validation != null) return result(ToolExecutionStatus.REJECTED, validation)
         var receipt = try {
             recordProposal(invocation)
         } catch (_: Exception) {
-            return result(ToolExecutionStatus.REJECTED, "Durable tool receipt could not be verified or saved.")
+            return result(ToolExecutionStatus.REJECTED,
+                "Durable journal unavailable; prior outcome UNKNOWN, operator review required.",uncertain=true)
         }
         when (receipt?.state) {
             ToolReceiptState.SUCCEEDED -> return result(
                 ToolExecutionStatus.SUCCEEDED,
-                "This call id already completed; its tool was not run again."
+                "This call id already completed; its tool was not run again.", replayed=true
             )
-            ToolReceiptState.STARTED -> return result(
+            ToolReceiptState.STARTED, ToolReceiptState.DISPATCH_COMMITTED,
+            ToolReceiptState.UNKNOWN_AFTER_DISPATCH -> return result(
                 ToolExecutionStatus.REJECTED,
-                "This call id has an ambiguous prior outcome and requires operator review; it was not retried."
+                "This call id has outcome UNKNOWN after possible dispatch and requires operator review; it was not retried.",
+                uncertain = true, replayed=true
             )
+            ToolReceiptState.START_PENDING -> return result(ToolExecutionStatus.REJECTED,
+                "This call id was prepared before restart but never committed; operator review is required, no retry.",replayed=true)
             ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED,
             ToolReceiptState.REJECTED -> return result(
                 receipt.state.toExecutionStatus(),
-                "This call id already has a terminal receipt; it was not retried."
+                if (receipt.outcomeUncertain) "Prior dispatch outcome UNKNOWN; operator review is required, no retry."
+                else "This call id already has a terminal receipt; it was not retried.",
+                uncertain = receipt.outcomeUncertain, replayed=true
             )
             else -> Unit
         }
@@ -207,7 +226,10 @@ class ToolGate(
             if (current != null) {
                 val terminal = if (status == ToolExecutionStatus.CANCELLED) ToolReceiptState.CANCELLED
                 else ToolReceiptState.REJECTED
-                receiptStore?.transition(request.callId, current.state, terminal, receiptClock().coerceAtLeast(0))
+                val saved=runCatching { receiptStore?.transition(request.callId, current.state, terminal,
+                    receiptClock().coerceAtLeast(current.transitions.last().atMillis)) }.getOrNull()
+                if(saved==null)return result(status,
+                    "Receipt conflict: concurrent dispatch outcome UNKNOWN; operator review required.",uncertain=true)
             }
             return result(status, reason)
         }
@@ -235,64 +257,109 @@ class ToolGate(
         }
         if (!consumedCallIds.add(request.callId)) {
             calls.decrementAndGet()
-            return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Duplicate tool call id rejected by replay guard.")
+            return result(ToolExecutionStatus.REJECTED,
+                "Duplicate active call id; concurrent outcome UNKNOWN, replay blocked.",uncertain=true)
         }
         if (receipt != null) {
             if (receipt.state == ToolReceiptState.PROPOSED) {
-                receipt = receiptStore?.transition(
+                receipt = runCatching { receiptStore?.transition(
                     request.callId, ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED,
                     receiptClock().coerceAtLeast(0)
-                )
+                ) }.getOrNull()
             }
-            receipt = receiptStore?.transition(
-                request.callId, ToolReceiptState.APPROVED, ToolReceiptState.STARTED,
+            receipt = runCatching { receiptStore?.transition(
+                request.callId, ToolReceiptState.APPROVED, ToolReceiptState.START_PENDING,
                 receiptClock().coerceAtLeast(0)
-            )
+            ) }.getOrNull()
             if (receipt == null) {
                 calls.decrementAndGet()
                 return result(
                     ToolExecutionStatus.REJECTED,
-                    "Durable receipt state changed; execution was blocked for operator review."
+                    "Durable receipt conflict: concurrent outcome UNKNOWN; execution blocked for operator review.",
+                    uncertain=true
                 )
             }
         }
-        fun persistTerminal(state: ToolReceiptState, output: String?): Boolean {
-            val store = receiptStore ?: return true
+        val dispatch = ToolExecutionStartLatch()
+        fun persistTerminal(state: ToolReceiptState, output: String?): Boolean = synchronized(startCommitLock) {
+            uncertainOutcome = state != ToolReceiptState.SUCCEEDED && dispatch.wasCommitted
+            val store = receiptStore ?: return@synchronized true
             val digest = output?.takeIf { it.isNotEmpty() }?.let {
                 MessageDigest.getInstance("SHA-256").digest(it.toByteArray()).joinToString("") { byte ->
                     "%02x".format(byte)
                 }
             }
-            return runCatching {
+            val saved=runCatching {
+                val current=store.get(request.callId) ?: return@runCatching false
+                val next=if (state != ToolReceiptState.SUCCEEDED &&
+                    (dispatch.wasCommitted || current.outcomeUncertain)) ToolReceiptState.UNKNOWN_AFTER_DISPATCH else state
+                if (current.state == next) return@runCatching true
                 store.transition(
-                    request.callId, ToolReceiptState.STARTED, state, receiptClock().coerceAtLeast(0),
+                    request.callId, current.state, next,
+                    receiptClock().coerceAtLeast(current.transitions.last().atMillis),
                     output?.length ?: 0, digest
                 ) != null
             }.getOrDefault(false)
+            if (!saved && dispatch.wasCommitted) uncertainOutcome = true
+            saved
+        }
+        synchronized(startCommitLock) {
+            if (cancelled.get()) dispatch.revokeIfPending()
+            else pendingStarts += dispatch
         }
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
         }
         return try {
-            val future = executor.submit(Callable { runner.execute(request) })
+            val future = executor.submit(Callable {
+                fun checkStartEligibility() {
+                    if (dispatch.wasRevokedBeforeCommit || cancelled.get() || Thread.currentThread().isInterrupted)
+                        throw CancellationException("Backend start cancelled.")
+                    if (clock() - start >= policy.timeoutMillis * 1_000_000L)
+                        throw ToolBackendFailure(ToolExecutionStatus.TIMED_OUT, "Backend start deadline expired.")
+                }
+                checkStartEligibility()
+                // The observer may consume interruption. Recheck the independent
+                // per-execution lease before any backend operation can begin.
+                runCatching { onExecutionStarted?.invoke() }
+                checkStartEligibility()
+                // This CAS is the only start-commit point. A timeout/cancel that
+                // wins the race revokes the pending dispatch before backend work.
+                // A committed dispatch cannot later be reported as definitely unrun.
+                synchronized(startCommitLock) {
+                    if (cancelled.get() || Thread.currentThread().isInterrupted || !dispatch.commitIfPending())
+                        throw CancellationException("Dispatch was revoked before start.")
+                    val store=receiptStore
+                    if (store != null) {
+                        val committed=runCatching { store.transition(request.callId,
+                            ToolReceiptState.START_PENDING, ToolReceiptState.DISPATCH_COMMITTED,
+                            receiptClock().coerceAtLeast(receipt?.transitions?.last()?.atMillis ?: 0)) }.getOrNull()
+                        if (committed == null) throw ToolBackendFailure(ToolExecutionStatus.FAILED,
+                            "Durable dispatch commitment failed; backend was not invoked.")
+                    }
+                }
+                runner.execute(request)
+            })
             activeFutures += future
             if (cancelled.get()) future.cancel(true)
             val output = try {
                 future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
+                dispatch.revokeIfPending()
                 future.cancel(true)
                 val saved = persistTerminal(ToolReceiptState.TIMED_OUT, null)
                 return result(
                     ToolExecutionStatus.TIMED_OUT,
-                    if (saved) "Tool execution timed out."
-                    else "Tool timed out and its outcome is ambiguous; operator review is required."
+                    if (saved && !dispatch.wasCommitted) "Tool deadline expired before backend dispatch."
+                    else "Tool timed out after possible dispatch; outcome UNKNOWN and operator review is required."
                 )
             }
             if (cancelled.get()) {
                 val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
                 result(
                     ToolExecutionStatus.CANCELLED,
-                    if (saved) "Task cancelled." else "Cancellation outcome is ambiguous; operator review is required.",
+                    if (saved && !dispatch.wasCommitted) "Task cancelled before backend dispatch."
+                    else "Task cancelled after possible dispatch; outcome UNKNOWN and operator review is required.",
                     output.take(policy.maxOutputCharacters)
                 )
             } else if (output.length > policy.maxOutputCharacters) {
@@ -313,15 +380,31 @@ class ToolGate(
             }
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.CANCELLED, null)
-            result(ToolExecutionStatus.CANCELLED, "Tool execution interrupted.")
+            result(ToolExecutionStatus.CANCELLED, if (dispatch.wasCommitted)
+                "Tool interrupted after possible dispatch; outcome UNKNOWN." else "Tool interrupted before dispatch.")
         } catch (_: CancellationException) {
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.CANCELLED, null)
-            result(ToolExecutionStatus.CANCELLED, "Tool execution cancelled.")
+            result(ToolExecutionStatus.CANCELLED, if (dispatch.wasCommitted)
+                "Tool cancelled after possible dispatch; outcome UNKNOWN." else "Tool cancelled before dispatch.")
         } catch (_: TimeoutException) {
+            dispatch.revokeIfPending()
             persistTerminal(ToolReceiptState.TIMED_OUT, null)
-            result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
+            result(ToolExecutionStatus.TIMED_OUT, if (dispatch.wasCommitted)
+                "Tool timed out after possible dispatch; outcome UNKNOWN." else "Tool timed out before dispatch.")
         } catch (e: java.util.concurrent.ExecutionException) {
+            // FutureTask wraps a worker-side pre-dispatch cancellation in
+            // ExecutionException. It must not be misreported as FAILED.
+            if (e.cause is CancellationException) {
+                dispatch.revokeIfPending()
+                val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
+                return result(ToolExecutionStatus.CANCELLED,
+                    if (dispatch.wasCommitted || !saved)
+                        "Worker cancelled after possible dispatch or with ambiguous receipt; outcome UNKNOWN."
+                    else "Worker cancelled before backend dispatch.")
+            }
             val status = (e.cause as? ToolBackendFailure)?.status ?: ToolExecutionStatus.FAILED
             val state = when (status) {
                 ToolExecutionStatus.TIMED_OUT -> ToolReceiptState.TIMED_OUT
@@ -329,12 +412,16 @@ class ToolGate(
                 else -> ToolReceiptState.FAILED
             }
             val saved = persistTerminal(state, null)
-            result(status, if (saved) "Backend reported $status."
+            result(status, if (dispatch.wasCommitted) "Backend reported $status after possible side effects; outcome UNKNOWN, operator review required."
+                else if (saved) "Backend reported $status before dispatch."
                 else "Backend outcome is ambiguous; operator review is required.")
         } catch (_: Exception) {
             persistTerminal(ToolReceiptState.FAILED, null)
-            result(ToolExecutionStatus.FAILED, "Tool execution failed.")
+            result(ToolExecutionStatus.FAILED, if(dispatch.wasCommitted)
+                "Tool execution failed after possible dispatch; outcome UNKNOWN." else "Tool execution failed before dispatch.")
         } finally {
+            dispatch.revokeIfPending()
+            pendingStarts.remove(dispatch)
             activeFutures.removeIf { it.isDone }
             executor.shutdownNow()
         }

@@ -1,0 +1,82 @@
+{
+  "schema": "continuum-mobile-coding-receipt",
+  "version": 1,
+  "job": "3d2a845b-9610-4a5d-a436-e0d19d0f406e",
+  "operation": "code-repair",
+  "taskId": "mob-beee58e9e1b475f9",
+  "commit": "fd02e2d0a1b46c85484eb868d4c7774715751139",
+  "toolchain": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "git": "git version 2.52.0"
+  },
+  "order": {
+    "chain": "node"
+  },
+  "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+  "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+  "patch": {
+    "sha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+    "path": "/tmp/continuum-synapse-m3-nCIP5Z/ccc1-state/teamleader/reports/owner-repair/mob-beee58e9e1b475f9-fd02e2d0a1b4-1793589052098-49a1dd32/repair.patch",
+    "bytes": 324
+  },
+  "evidence": {
+    "verificationSha256": "46238500314590e0ac108beb1fc9a0890fa509413b022576fb44a5bddabe0b7e",
+    "baselineFailed": 3,
+    "baselineExecuted": 4,
+    "candidateExecuted": 4,
+    "independentExecuted": 4,
+    "evidenceSufficient": true
+  },
+  "commands": [
+    {
+      "phase": "baseline",
+      "exitCode": 1,
+      "passed": false,
+      "executed": 4,
+      "failed": 3,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "candidate",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 4,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    },
+    {
+      "phase": "independent",
+      "exitCode": 0,
+      "passed": true,
+      "executed": 4,
+      "failed": 0,
+      "timedOut": false,
+      "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+    }
+  ],
+  "failure": null,
+  "backlog": {
+    "state": "DONE",
+    "attempts": 1,
+    "maxAttempts": 3,
+    "error": null
+  },
+  "approvedForMerge": false,
+  "apk": null,
+  "installed": false,
+  "deviceVerified": false,
+  "createdAt": "2026-11-02T03:10:51.812Z",
+  "repair": {
+    "outcome": "VERIFIED",
+    "strategy": "JS_TYPO_REFERENCE",
+    "files": [
+      ".github/continuum/math.mjs"
+    ],
+    "diagnostics": 3,
+    "attempts": 1
+  }
+}

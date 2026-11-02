@@ -1,0 +1,12 @@
+✔ source binding includes branch-dependent gates even when HEAD and bytes stay identical (0.792072ms)
+✔ QA requires actual executed evidence and confirmed cleanup (3.564176ms)
+✔ QA reports skips and failed assertions separately and keeps severity and device limits (0.640247ms)
+✔ CLI lists a fixed command scope and refuses nesting without running tests (160.977781ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 258.273231

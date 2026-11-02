@@ -56,6 +56,17 @@ function readStepReceipt(file){
   }
 }
 
+function readCompletion(file,taskId){
+  try{
+    const r=JSON.parse(fs.readFileSync(file,'utf8'));
+    if(r?.schemaVersion!==1||r.taskId!==taskId||typeof r.terminationConfirmed!=='boolean'||
+       !(r.code===null||Number.isInteger(r.code))||
+       !(r.exitSignal===null||typeof r.exitSignal==='string')||
+       !(r.error===null||typeof r.error==='string'))return null;
+    return r;
+  }catch{return null;}
+}
+
 function run(cmd,args,{cwd,timeoutMs=120000,env,abortWatch=null}={}){
   const started=Date.now();
   // Child checks see the depth, so a test suite cannot start a nested repair loop.
@@ -74,7 +85,10 @@ function run(cmd,args,{cwd,timeoutMs=120000,env,abortWatch=null}={}){
         {cwd,timeout:timeoutMs,encoding:'utf8',maxBuffer:64*1024*1024,shell:false,env:childEnv})
       :spawnSync(cmd,args,{cwd,timeout:timeoutMs,encoding:'utf8',maxBuffer:64*1024*1024,shell:false,env:childEnv});
     const stoppedByOwner=receipt?readStepReceipt(receipt):null;
-    return {status:r.status,signal:r.signal,error:r.error?.code??null,stdout:r.stdout??'',stderr:r.stderr??'',ms:Date.now()-started,
+    const completion=receipt?readCompletion(receipt+'.completion.json',abortWatch.taskId):null;
+    const terminationConfirmed=receipt?completion?.terminationConfirmed===true:undefined;
+    return {status:r.status,signal:r.signal,error:r.error?.code??(terminationConfirmed===false?'TERMINATION_UNCONFIRMED':completion?.error??null),stdout:r.stdout??'',stderr:r.stderr??'',ms:Date.now()-started,
+      ...(receipt?{terminationConfirmed,commandExitCode:completion?.code??null,commandExitSignal:completion?.exitSignal??null,commandError:completion?.error??null}:{}),
       ...(stoppedByOwner?{stoppedByOwner}:{})};
   }finally{if(scratch)fs.rmSync(scratch,{recursive:true,force:true});}
 }
@@ -193,6 +207,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   if(executor&&(!Array.isArray(r?.junitFiles)||!validIsolationEvidence(r.isolation,name)))
     throw Error('ISOLATION_INVALID_PROFILE_EVIDENCE');
   let stoppedByOwner=r.stoppedByOwner??null;
+  let terminationConfirmed=r.terminationConfirmed;
   const localize=text=>executor?text.replaceAll('/work/',wt+'/'):text;
   const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
@@ -239,11 +254,12 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
     const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
     const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
-      if(stoppedByOwner||deadline!==null&&Date.now()>=deadline)break;
+      if(terminationConfirmed===false||stoppedByOwner||deadline!==null&&Date.now()>=deadline)break;
       const again=run(p.cmd,['--test','--test-reporter=tap',file],{
         cwd:p.cwd,timeoutMs:Math.min(120000,remaining()),abortWatch
       });
       stoppedByOwner??=again.stoppedByOwner??null;
+      if(again.terminationConfirmed===false)terminationConfirmed=false;
       diagnostics.unshift(...parseJsErrorText(again.stdout+'\n'+again.stderr,wt));
     }
   }
@@ -251,9 +267,10 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   // run (missing report, only file placeholders or skips) is not a pass.
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
   const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&
-    (!testProfile||tests.executed>0&&tests.evidenceComplete)&&!stoppedByOwner;
+    (!testProfile||tests.executed>0&&tests.evidenceComplete)&&!stoppedByOwner&&terminationConfirmed!==false;
   return {profile:name,passed,testProfile,...(executor?{isolation:r.isolation}:{}),exitCode:r.status,
-    signal:r.signal??null,error:r.error??null,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+    signal:r.signal??null,error:r.error??(terminationConfirmed===false?'TERMINATION_UNCONFIRMED':null),timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+    ...(terminationConfirmed!==undefined?{terminationConfirmed,commandExitCode:r.commandExitCode,commandExitSignal:r.commandExitSignal,commandError:r.commandError}:{}),
     outputTail:text.slice(-3000),...(stoppedByOwner?{stoppedByOwner}:{})};
 }
 

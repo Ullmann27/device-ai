@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C013:s1",
+    "decision": "SPAN",
+    "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Uvgedozu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "RULE": {
+    "sourceId": "bc:C013:s1",
+    "decision": "SPAN",
+    "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Uvgedozu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C013:s1",
+    "decision": "SPAN",
+    "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+    "endExclusive": 24,
+    "start": 16,
+    "text": "Uvgedozu",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "rawMillis": 49.474257
+}

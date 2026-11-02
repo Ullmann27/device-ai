@@ -1,0 +1,234 @@
+[
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "442023b8-a599-4a4d-b435-1e8c4641f9ab",
+    "sequence": 0,
+    "parentMessageId": null,
+    "sender": "OWNER",
+    "kind": "GOAL",
+    "payload": {
+      "text": "Repariere die fehlschlagenden Tests der Testkette node.",
+      "repair": {
+        "chain": "node"
+      }
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:19.456Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": null,
+    "prevHash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "2de27802567f7016028886de4fc4548ec9d9fbdc8fa060a4edf19a80220a3049",
+    "mac": "9e71c9f7fb2dd92cc88a6aa68a7fd5497f54ef30b03cb8aae7aece6459d19edf"
+  },
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "3dd3f1b3-6443-48fd-aba7-73c3ccc1d8e3",
+    "sequence": 1,
+    "parentMessageId": null,
+    "sender": "REASONER",
+    "kind": "HYPOTHESIS",
+    "payload": {
+      "claim": "Die bestehende Reparaturpipeline kann einen Fehler der Testkette node am gebundenen Commit beheben.",
+      "repair": {
+        "chain": "node"
+      },
+      "basis": "Ausdrücklicher Reparaturauftrag des Besitzers; über die Ursache wird nichts vermutet.",
+      "confidence": 0.5
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:19.591Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": null,
+    "prevHash": "2de27802567f7016028886de4fc4548ec9d9fbdc8fa060a4edf19a80220a3049",
+    "hash": "4d86fb506e3350118a60e50ff560df66cee07a82567c9389e338de3c0d339491"
+  },
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "c1593416-73f3-431a-b378-f76ea743d4f5",
+    "sequence": 2,
+    "parentMessageId": "3dd3f1b3-6443-48fd-aba7-73c3ccc1d8e3",
+    "sender": "REASONER",
+    "kind": "PLAN",
+    "payload": {
+      "capability": "node-repair",
+      "steps": [
+        "Testkette node im isolierten Worktree ausführen",
+        "echten Fehler und Diagnosen erfassen",
+        "deterministische Reparaturkandidaten prüfen",
+        "Patch unabhängig in zweitem Worktree wiederholen",
+        "Quittung prüfen und Patch zur Prüfung anbieten"
+      ]
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:19.593Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": null,
+    "prevHash": "4d86fb506e3350118a60e50ff560df66cee07a82567c9389e338de3c0d339491",
+    "hash": "ce7106054db6577e19edd5182ad9617514583f0d8fe6f4aeaa865eb36db6db70"
+  },
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "74a79427-28de-4e8d-a3fe-c7cc661f484a",
+    "sequence": 3,
+    "parentMessageId": "3dd3f1b3-6443-48fd-aba7-73c3ccc1d8e3",
+    "sender": "REASONER",
+    "kind": "TEST_REQUEST",
+    "payload": {
+      "hypothesis": "3dd3f1b3-6443-48fd-aba7-73c3ccc1d8e3",
+      "repair": {
+        "chain": "node"
+      },
+      "budgetMinutes": 25
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:19.598Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": null,
+    "prevHash": "ce7106054db6577e19edd5182ad9617514583f0d8fe6f4aeaa865eb36db6db70",
+    "hash": "5744e3e4887c494f84fd4873cedd4ed72affc351c8679f7ce9b344458de24135"
+  },
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "d90f7e4a-4f94-4d37-9661-4393f8900bc9",
+    "sequence": 4,
+    "parentMessageId": "74a79427-28de-4e8d-a3fe-c7cc661f484a",
+    "sender": "VERIFIER",
+    "kind": "RECEIPT",
+    "payload": {
+      "request": "74a79427-28de-4e8d-a3fe-c7cc661f484a",
+      "receiptSha256": "b529daa7cdd500f8f4f1be75e2ff7d485907926dcade85368d50c7c22a322f37",
+      "verdict": "CONFIRMED",
+      "job": "219b42d6-2b36-41d4-b2fd-5d68752b58c7",
+      "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+      "reasons": [
+        "a failing node chain was repaired; the patch passed in the repair worktree and in an independent second worktree"
+      ],
+      "patchSha256": "da5c8bbf0e3a012d3cab4d8877c73f9c21ad6beec04df3411f169c2dd52a5a43",
+      "evidenceSha256": "dc25c3dc52eee3bdab513ddead3a4ce8d88a5b526d1fb9beafa109c4801350a1",
+      "runs": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "executed": 4,
+          "failed": 3
+        },
+        {
+          "phase": "candidate",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        },
+        {
+          "phase": "independent",
+          "exitCode": 0,
+          "executed": 4,
+          "failed": 0
+        }
+      ],
+      "replayed": false,
+      "execution": "EXECUTED",
+      "cost": {
+        "cpuMillis": 1580,
+        "wallMillis": 2261
+      }
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:21.995Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": "f796c190ea4d6f18c75179ebb5f32a176c001494586dd9115fbf2c8f2be25ffc",
+    "prevHash": "5744e3e4887c494f84fd4873cedd4ed72affc351c8679f7ce9b344458de24135",
+    "hash": "443c098d1eabaeb3eff4f9a4c102b7eac5981ce4a23315cd6c2b9885d26f9d3b",
+    "mac": "70077f911eb5d3caa2a93f1f37655fbe46ab9dc6f406d128f9269e71923979d2"
+  },
+  {
+    "schemaVersion": 1,
+    "sessionId": "d363dd21-a761-4986-94bd-dde25489e727",
+    "taskId": "t-35ec97302687a24a",
+    "messageId": "2d49b559-560e-4da9-82c8-f5ccae378a09",
+    "sequence": 5,
+    "parentMessageId": "d90f7e4a-4f94-4d37-9661-4393f8900bc9",
+    "sender": "REASONER",
+    "kind": "CRITIQUE",
+    "payload": {
+      "receipt": "d90f7e4a-4f94-4d37-9661-4393f8900bc9",
+      "verdict": "CONFIRMED",
+      "reason": "Ein echter Testfehler wurde repariert und unabhängig bestätigt; der Patch liegt zur Prüfung durch den Besitzer bereit."
+    },
+    "repoFullName": "local/synapse-m3-fixture",
+    "baseCommitSha": "6e97b5612a1da8480ddbce0d8b55d49e578032a7",
+    "worktreeId": "main",
+    "deadline": 1793587939433,
+    "maxRounds": 1,
+    "maxCpuMillis": 3600000,
+    "maxMemoryBytes": 2000000000,
+    "permissions": [
+      "node-repair:node"
+    ],
+    "checkpointHash": null,
+    "createdAt": "2026-11-02T02:22:22.025Z",
+    "protocolHash": "6fb579f563797fb5b727083be7cb8ae75c57b3e9e275183bbeb1a4cd9ee49834",
+    "verificationReceiptId": null,
+    "prevHash": "443c098d1eabaeb3eff4f9a4c102b7eac5981ce4a23315cd6c2b9885d26f9d3b",
+    "hash": "d13e6c2a07b07aec3d7d6625efb27be1f20a8650f0bf1990689fc578a97621b5"
+  }
+]

@@ -107,8 +107,9 @@ class ReadOnlyToolPlanTest {
             val replay = run(true, "once")
             assertNotNull(replay.blocker)
             assertEquals(1, calls)
-            assertEquals(ExperienceOutcome.FAILURE, replay.experience!!.outcome)
-            assertTrue(replay.experience.sourceIds.isEmpty())
+            assertNull(replay.experience)
+            assertTrue(replay.taskEvidence!!.calls.single().replayed)
+            assertNull(replay.taskEvidence!!.learningCandidateExperienceId)
         } finally { dir.deleteRecursively() }
     }
 
@@ -129,8 +130,9 @@ class ReadOnlyToolPlanTest {
                 plan, { emptyList() }, ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { throw java.io.IOException("probe failed") }),
                 plan, episodes, limits = AgentLimits(maxRetries = 0)).run("Prüfe den Speicher")
             assertNotNull(failed.blocker)
-            assertEquals(ExperienceOutcome.FAILURE, failed.experience!!.outcome)
-            assertTrue(failed.experience.sourceIds.isEmpty())
+            assertNull(failed.experience)
+            assertTrue(failed.taskEvidence!!.calls.single().outcomeUncertain)
+            assertTrue(episodes.all().isEmpty())
         } finally { dir.deleteRecursively() }
     }
 
