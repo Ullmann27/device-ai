@@ -54,6 +54,31 @@ task evidence and experience compiler. No second brain, database or worker.
 
 Runtime unchanged in M1; full final-source acceptance and independent review pending.
 
+## M2 checkpoint — complete local model continuation
+
+- Reproduced 2/3 failing adapter regressions against actual Gradle-compiled parent
+  runtime: oversized UTF-8 and five-response batches reached the default engine.
+- Existing Activity now preserves each selected observation whole, including late
+  negations; JSON encoding is checked after escaping before LocalToolResponse
+  construction. Over-budget evidence requests clarification, never a prefix.
+- Default LocalModelRuntime and LiteRT use the same continuation policy. LiteRT
+  additionally accounts for existing native token count, model capacity, output
+  reserve and a conservative UTF-8 estimate; unknown/full capacity is refused.
+  This is not exact tokenizer equivalence or a Fold7 performance measurement.
+- Native submission is serialized with cancellation; cancelled generations cannot
+  deliver late text/proposals as new output. LocalModelHost accepts the existing
+  LocalModelRuntime interface while still constructing the original LiteRT engine.
+- Focused Kotlin2.4/JDK21 host harness: 6/6 PASS, explicitly using native/catalog
+  API stand-ins. Full real Android Gradle verification remains pending for M2.
+- First actual SDK36/JDK17 Gradle baseline completed: 1,666 total tests,
+  1 failure / 3 skipped (1,663 executed). Failure
+  `ResearchFeedbackMultiprocessTest.concurrentProcessReviewsAcceptOnlyOneDigest`
+  reproduced because inherited JVM diagnostics were merged into protocol stdout.
+  Child stdout/stderr are now distinct; exact one-CONFIRMED/one-DENIED assertions
+  remain unchanged. A fresh real run is required.
+
+SOURCE_INTEGRATED / focused HOST_VERIFIED; alternative native engine and Fold7 NOT_RUN.
+
 ## Release boundary
 
 Owner wants an original-signed in-place update without data loss. This instruction
