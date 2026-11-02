@@ -33,6 +33,7 @@ case "$(git branch --show-current)" in \
   research/continuum-synapse-ii-20261102|\
   research/continuum-synapse-iii-20261102|\
   research/continuum-fusion-iv-20261102|\
+  research/continuum-grand-challenge-20261102|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac
