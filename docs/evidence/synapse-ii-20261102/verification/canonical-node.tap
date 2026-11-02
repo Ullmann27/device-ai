@@ -1,0 +1,820 @@
+TAP version 13
+# Subtest: the local agent ranks defensive sources and scans only allowed tracked code
+ok 1 - the local agent ranks defensive sources and scans only allowed tracked code
+  ---
+  duration_ms: 271.640356
+  type: 'test'
+  ...
+# Subtest: Android source tasks can edit scoped Java and ordinary layout XML
+ok 2 - Android source tasks can edit scoped Java and ordinary layout XML
+  ---
+  duration_ms: 14.537258
+  type: 'test'
+  ...
+# Subtest: new scope never grants build scripts, manifests, security XML, JSON or test edits
+ok 3 - new scope never grants build scripts, manifests, security XML, JSON or test edits
+  ---
+  duration_ms: 1.545739
+  type: 'test'
+  ...
+# Subtest: a scoped XML edit cannot touch a second path or change the chain
+ok 4 - a scoped XML edit cannot touch a second path or change the chain
+  ---
+  duration_ms: 2.898056
+  type: 'test'
+  ...
+# Subtest: typed task pins scope, source, acceptance and resource bounds
+ok 5 - typed task pins scope, source, acceptance and resource bounds
+  ---
+  duration_ms: 82.078791
+  type: 'test'
+  ...
+# Subtest: structured proposal is data only and cannot widen task scope
+ok 6 - structured proposal is data only and cannot widen task scope
+  ---
+  duration_ms: 2.877653
+  type: 'test'
+  ...
+# Subtest: autonomous candidates cannot modify the new Harness or encrypted-storage control boundary
+ok 7 - autonomous candidates cannot modify the new Harness or encrypted-storage control boundary
+  ---
+  duration_ms: 2.111883
+  type: 'test'
+  ...
+# Subtest: network and authentication code outrank unrelated docs for a security task
+ok 8 - network and authentication code outrank unrelated docs for a security task
+  ---
+  duration_ms: 19.727855
+  type: 'test'
+  ...
+# Subtest: deterministic tie order and strict pagination caps
+ok 9 - deterministic tie order and strict pagination caps
+  ---
+  duration_ms: 28.221039
+  type: 'test'
+  ...
+# Subtest: reject secrets traversal, dot paths and unreadable extensions
+ok 10 - reject secrets traversal, dot paths and unreadable extensions
+  ---
+  duration_ms: 3.284741
+  type: 'test'
+  ...
+# Subtest: detect likely risky constructs without claiming a verified vulnerability
+ok 11 - detect likely risky constructs without claiming a verified vulnerability
+  ---
+  duration_ms: 1.734425
+  type: 'test'
+  ...
+# Subtest: bounded scan stops, reports truncation, omits source excerpts
+ok 12 - bounded scan stops, reports truncation, omits source excerpts
+  ---
+  duration_ms: 0.913953
+  type: 'test'
+  ...
+# Subtest: no scan result for excessive content and no arbitrary byte budget
+ok 13 - no scan result for excessive content and no arbitrary byte budget
+  ---
+  duration_ms: 40.948793
+  type: 'test'
+  ...
+# Subtest: a non-call dangerous keyword is not reported
+ok 14 - a non-call dangerous keyword is not reported
+  ---
+  duration_ms: 0.487318
+  type: 'test'
+  ...
+# Subtest: unscanned long lines are reported as incomplete, not clean
+ok 15 - unscanned long lines are reported as incomplete, not clean
+  ---
+  duration_ms: 0.377029
+  type: 'test'
+  ...
+# Subtest: actual host classifier preserves membership under pipefail and an early grep match
+ok 16 - actual host classifier preserves membership under pipefail and an early grep match
+  ---
+  duration_ms: 167.450373
+  type: 'test'
+  ...
+# Subtest: Exact UTF16 offsets and SHA bound source
+ok 17 - Exact UTF16 offsets and SHA bound source
+  ---
+  duration_ms: 6.74154
+  type: 'test'
+  ...
+# Subtest: Wrong source is an unsupported claim and false assignment
+ok 18 - Wrong source is an unsupported claim and false assignment
+  ---
+  duration_ms: 1.109417
+  type: 'test'
+  ...
+# Subtest: Wrong Unicode offset is detected
+ok 19 - Wrong Unicode offset is detected
+  ---
+  duration_ms: 1.475209
+  type: 'test'
+  ...
+# Subtest: False abstention is not counted correct
+ok 20 - False abstention is not counted correct
+  ---
+  duration_ms: 8.787714
+  type: 'test'
+  ...
+# Subtest: Missing predictions are rejected even with plausible aggregate score
+ok 21 - Missing predictions are rejected even with plausible aggregate score
+  ---
+  duration_ms: 6.449859
+  type: 'test'
+  ...
+# Subtest: Duplicate or unexpected ids reject entire result
+ok 22 - Duplicate or unexpected ids reject entire result
+  ---
+  duration_ms: 0.358046
+  type: 'test'
+  ...
+# Subtest: Malformed empty replies never become safe abstentions
+ok 23 - Malformed empty replies never become safe abstentions
+  ---
+  duration_ms: 0.531091
+  type: 'test'
+  ...
+# Subtest: Mutating frozen original invalidates whole run
+ok 24 - Mutating frozen original invalidates whole run
+  ---
+  duration_ms: 0.474244
+  type: 'test'
+  ...
+# Subtest: Source range cannot exceed original string
+ok 25 - Source range cannot exceed original string
+  ---
+  duration_ms: 0.56236
+  type: 'test'
+  ...
+# Subtest: Confidence intervals are finite and no primary promotion for toy sample
+ok 26 - Confidence intervals are finite and no primary promotion for toy sample
+  ---
+  duration_ms: 0.621467
+  type: 'test'
+  ...
+# Subtest: One hundred deterministic tuple mutations never pass as source-bound evidence
+ok 27 - One hundred deterministic tuple mutations never pass as source-bound evidence
+  ---
+  duration_ms: 11.468069
+  type: 'test'
+  ...
+# Subtest: signed-release claims remain explicitly unverified after successful unsigned QA
+ok 28 - signed-release claims remain explicitly unverified after successful unsigned QA
+  ---
+  duration_ms: 3885.058677
+  type: 'test'
+  ...
+# Subtest: wrong commit, version or release-claim metadata cannot pass
+ok 29 - wrong commit, version or release-claim metadata cannot pass
+  ---
+  duration_ms: 20.24048
+  type: 'test'
+  ...
+# Subtest: missing test transcript and failed JUnit block the architectural receipt
+ok 30 - missing test transcript and failed JUnit block the architectural receipt
+  ---
+  duration_ms: 245.131473
+  type: 'test'
+  ...
+# Subtest: a failed Gradle transcript never becomes a proof
+ok 31 - a failed Gradle transcript never becomes a proof
+  ---
+  duration_ms: 11.318983
+  type: 'test'
+  ...
+# Subtest: rejects skipped required JUnit suite and spoofed test metadata
+ok 32 - rejects skipped required JUnit suite and spoofed test metadata
+  ---
+  duration_ms: 233.332948
+  type: 'test'
+  ...
+# Subtest: rejects fullname and forged error attributes
+ok 33 - rejects fullname and forged error attributes
+  ---
+  duration_ms: 587.264866
+  type: 'test'
+  ...
+# Subtest: rejects red or skipped Node TAP even with present reports
+ok 34 - rejects red or skipped Node TAP even with present reports
+  ---
+  duration_ms: 15.495793
+  type: 'test'
+  ...
+# Subtest: actual backend QA command emits machine-readable TAP on modern Node
+ok 35 - actual backend QA command emits machine-readable TAP on modern Node
+  ---
+  duration_ms: 207.63007
+  type: 'test'
+  ...
+# Subtest: actual APK identity must match source receipt instead of trusting STATUS metadata
+ok 36 - actual APK identity must match source receipt instead of trusting STATUS metadata
+  ---
+  duration_ms: 8.911513
+  type: 'test'
+  ...
+# Subtest: Empty repo is never misreported as connected
+ok 37 - Empty repo is never misreported as connected
+  ---
+  duration_ms: 4.595732
+  type: 'test'
+  ...
+# Subtest: Presence alone does not qualify as a real caller
+ok 38 - Presence alone does not qualify as a real caller
+  ---
+  duration_ms: 2.340822
+  type: 'test'
+  ...
+# Subtest: One specific edge is found but all other missing edges still block gate
+ok 39 - One specific edge is found but all other missing edges still block gate
+  ---
+  duration_ms: 1.119246
+  type: 'test'
+  ...
+# Subtest: stream preview does not force focus to bottom or make live draft selectable
+ok 40 - stream preview does not force focus to bottom or make live draft selectable
+  ---
+  duration_ms: 2.06655
+  type: 'test'
+  ...
+# Subtest: owner scrolling pauses auto-follow while a native response streams
+ok 41 - owner scrolling pauses auto-follow while a native response streams
+  ---
+  duration_ms: 0.90052
+  type: 'test'
+  ...
+# Subtest: time deadline is based on progress, not fixed wall clock
+ok 42 - time deadline is based on progress, not fixed wall clock
+  ---
+  duration_ms: 0.7511
+  type: 'test'
+  ...
+# Subtest: existing cancellation and unverified-draft protections remain in place
+ok 43 - existing cancellation and unverified-draft protections remain in place
+  ---
+  duration_ms: 11.275287
+  type: 'test'
+  ...
+# Subtest: existing Continuum app opens a private read-only mission cockpit
+ok 44 - existing Continuum app opens a private read-only mission cockpit
+  ---
+  duration_ms: 5.980686
+  type: 'test'
+  ...
+# Subtest: three views show existing real device evidence, never fictitious companies or employees
+ok 45 - three views show existing real device evidence, never fictitious companies or employees
+  ---
+  duration_ms: 42.07319
+  type: 'test'
+  ...
+# Subtest: coding and update status depend on actual receipts
+ok 46 - coding and update status depend on actual receipts
+  ---
+  duration_ms: 0.304898
+  type: 'test'
+  ...
+# Subtest: no arbitrary device control, hidden API calls, or unapproved external models
+ok 47 - no arbitrary device control, hidden API calls, or unapproved external models
+  ---
+  duration_ms: 0.481767
+  type: 'test'
+  ...
+# Subtest: two supplied original Jarvis transcripts retained with timestamps
+ok 48 - two supplied original Jarvis transcripts retained with timestamps
+  ---
+  duration_ms: 1.05288
+  type: 'test'
+  ...
+# Subtest: placeholder is accurately NO_RELEASE and never requests an APK
+ok 49 - placeholder is accurately NO_RELEASE and never requests an APK
+  ---
+  duration_ms: 24.864613
+  type: 'test'
+  ...
+# Subtest: real approved bytes yield hash-only receipt, never certificate claim
+ok 50 - real approved bytes yield hash-only receipt, never certificate claim
+  ---
+  duration_ms: 12.395249
+  type: 'test'
+  ...
+# Subtest: manifest-only explicitly does not fetch or verify an APK
+ok 51 - manifest-only explicitly does not fetch or verify an APK
+  ---
+  duration_ms: 10.259751
+  type: 'test'
+  ...
+# Subtest: reject wrong signer, approval, schema, version and size before APK requests
+ok 52 - reject wrong signer, approval, schema, version and size before APK requests
+  ---
+  duration_ms: 57.105582
+  type: 'test'
+  ...
+# Subtest: reject a fake no-update manifest and malformed JSON
+ok 53 - reject a fake no-update manifest and malformed JSON
+  ---
+  duration_ms: 5.252519
+  type: 'test'
+  ...
+# Subtest: reject substituted APK URLs before network download
+ok 54 - reject substituted APK URLs before network download
+  ---
+  duration_ms: 7.173994
+  type: 'test'
+  ...
+# Subtest: reject wrong APK bytes, response status, gzip and truncated HTTP length
+ok 55 - reject wrong APK bytes, response status, gzip and truncated HTTP length
+  ---
+  duration_ms: 9.750827
+  type: 'test'
+  ...
+# Subtest: reject redirect and oversize manifest response
+ok 56 - reject redirect and oversize manifest response
+  ---
+  duration_ms: 7.014663
+  type: 'test'
+  ...
+# Subtest: actual Android input routes unsafe evidence to a terminal reply before model/web fallback
+ok 57 - actual Android input routes unsafe evidence to a terminal reply before model/web fallback
+  ---
+  duration_ms: 13.324221
+  type: 'test'
+  ...
+# Subtest: the consolidated v36 source tree retains original owner package and signature
+ok 58 - the consolidated v36 source tree retains original owner package and signature
+  ---
+  duration_ms: 41.666266
+  type: 'test'
+  ...
+# Subtest: the actual Android main app keeps a visible update button and original owner updater
+ok 59 - the actual Android main app keeps a visible update button and original owner updater
+  ---
+  duration_ms: 8.049687
+  type: 'test'
+  ...
+# Subtest: M8 coding worker actually exposes bounded defensive read-only risk inspection
+ok 60 - M8 coding worker actually exposes bounded defensive read-only risk inspection
+  ---
+  duration_ms: 0.756356
+  type: 'test'
+  ...
+# Subtest: M8 agent and execution controls are actually in the same release tree
+ok 61 - M8 agent and execution controls are actually in the same release tree
+  ---
+  duration_ms: 9.6053
+  type: 'test'
+  ...
+# Subtest: legacy CDX1 training representation fix and regression are included
+ok 62 - legacy CDX1 training representation fix and regression are included
+  ---
+  duration_ms: 4.772777
+  type: 'test'
+  ...
+# Subtest: neural and temporal research are included without live authority
+ok 63 - neural and temporal research are included without live authority
+  ---
+  duration_ms: 0.315963
+  type: 'test'
+  ...
+# Subtest: bounded pure memory bridge and brain tests are included
+ok 64 - bounded pure memory bridge and brain tests are included
+  ---
+  duration_ms: 0.253511
+  type: 'test'
+  ...
+# Subtest: the 3000 logical-expert research remains capacity-bound
+ok 65 - the 3000 logical-expert research remains capacity-bound
+  ---
+  duration_ms: 0.38104
+  type: 'test'
+  ...
+# Subtest: mission control shows real evidence and is actually registered
+ok 66 - mission control shows real evidence and is actually registered
+  ---
+  duration_ms: 8.132577
+  type: 'test'
+  ...
+# Subtest: new metadata type safety and published APK hash readback are in the source tree
+ok 67 - new metadata type safety and published APK hash readback are in the source tree
+  ---
+  duration_ms: 0.714184
+  type: 'test'
+  ...
+# Subtest: v35 general-web study is connected to durable novelty, provenance and real scheduler
+ok 68 - v35 general-web study is connected to durable novelty, provenance and real scheduler
+  ---
+  duration_ms: 5.192763
+  type: 'test'
+  ...
+# Subtest: v35 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired
+ok 69 - v35 on-device research counters, owner updater and bounded reviewed neural reasoning remain wired
+  ---
+  duration_ms: 1.07274
+  type: 'test'
+  ...
+# Subtest: v35 OpenRouter provides both explicit Android paths and the protected optional backend
+ok 70 - v35 OpenRouter provides both explicit Android paths and the protected optional backend
+  ---
+  duration_ms: 14.602031
+  type: 'test'
+  ...
+# Subtest: v35 exposes the real public-study job state and never labels consent as active research
+ok 71 - v35 exposes the real public-study job state and never labels consent as active research
+  ---
+  duration_ms: 3.281593
+  type: 'test'
+  ...
+# Subtest: owner autonomy defaults to bounded research and proposals with durable stop
+ok 72 - owner autonomy defaults to bounded research and proposals with durable stop
+  ---
+  duration_ms: 6.390637
+  type: 'test'
+  ...
+# Subtest: emergency stop reaches all three jobs and is exposed in the real app
+ok 73 - emergency stop reaches all three jobs and is exposed in the real app
+  ---
+  duration_ms: 14.268424
+  type: 'test'
+  ...
+# Subtest: public internet restores explicit owner OFF and ASK through the actual consent policy
+ok 74 - public internet restores explicit owner OFF and ASK through the actual consent policy
+  ---
+  duration_ms: 9.541946
+  type: 'test'
+  ...
+# Subtest: partner status is based on DNA and durable run evidence, not simulated agents
+ok 75 - partner status is based on DNA and durable run evidence, not simulated agents
+  ---
+  duration_ms: 0.901048
+  type: 'test'
+  ...
+# Subtest: clean pinned script tree validates without mutation
+ok 76 - clean pinned script tree validates without mutation
+  ---
+  duration_ms: 524.075581
+  type: 'test'
+  ...
+# Subtest: sparse-like missing script requires explicit repair then restores exact Git blob
+ok 77 - sparse-like missing script requires explicit repair then restores exact Git blob
+  ---
+  duration_ms: 783.041246
+  type: 'test'
+  ...
+# Subtest: local edits are never overwritten, even with restore flag
+ok 78 - local edits are never overwritten, even with restore flag
+  ---
+  duration_ms: 230.892075
+  type: 'test'
+  ...
+# Subtest: incorrect source SHA is rejected without checkout modifications
+ok 79 - incorrect source SHA is rejected without checkout modifications
+  ---
+  duration_ms: 192.658434
+  type: 'test'
+  ...
+# Subtest: untrusted path and unsupported modes fail closed
+ok 80 - untrusted path and unsupported modes fail closed
+  ---
+  duration_ms: 185.173009
+  type: 'test'
+  ...
+# Subtest: existing Termux teamleader exposes pinned check and explicit no-clobber recovery
+ok 81 - existing Termux teamleader exposes pinned check and explicit no-clobber recovery
+  ---
+  duration_ms: 909.337007
+  type: 'test'
+  ...
+# Subtest: owner release entry point is valid bash
+ok 82 - owner release entry point is valid bash
+  ---
+  duration_ms: 11.493627
+  type: 'test'
+  ...
+# Subtest: owner approval is mandatory before any build or signing
+ok 83 - owner approval is mandatory before any build or signing
+  ---
+  duration_ms: 9.637589
+  type: 'test'
+  ...
+# Subtest: release refuses a different Render host and service name
+ok 84 - release refuses a different Render host and service name
+  ---
+  duration_ms: 0.20871
+  type: 'test'
+  ...
+# Subtest: release pins the installed Continuum Lokal app and signer, not Mentor Pair
+ok 85 - release pins the installed Continuum Lokal app and signer, not Mentor Pair
+  ---
+  duration_ms: 0.343546
+  type: 'test'
+  ...
+# Subtest: release requires approved v36 and performs real SHA-bound QA before signing
+ok 86 - release requires approved v36 and performs real SHA-bound QA before signing
+  ---
+  duration_ms: 0.318737
+  type: 'test'
+  ...
+# Subtest: manifest is written only for a verified, originally signed APK at the pinned host
+ok 87 - manifest is written only for a verified, originally signed APK at the pinned host
+  ---
+  duration_ms: 1.801589
+  type: 'test'
+  ...
+# Subtest: no public release proceeds without private original key
+ok 88 - no public release proceeds without private original key
+  ---
+  duration_ms: 40.949545
+  type: 'test'
+  ...
+# Subtest: 100 deterministic CPU tasks execute on one actual reserved slot
+ok 89 - 100 deterministic CPU tasks execute on one actual reserved slot
+  ---
+  duration_ms: 240.626625
+  type: 'test'
+  ...
+# Subtest: 50 logical experts execute 50 real bounded CPU calculations
+ok 90 - 50 logical experts execute 50 real bounded CPU calculations
+  ---
+  duration_ms: 15.137233
+  type: 'test'
+  ...
+# Subtest: a deterministic matrix hash is stable
+ok 91 - a deterministic matrix hash is stable
+  ---
+  duration_ms: 1.342917
+  type: 'test'
+  ...
+# Subtest: invalid computation size is rejected
+ok 92 - invalid computation size is rejected
+  ---
+  duration_ms: 1.2851
+  type: 'test'
+  ...
+# Subtest: 50 model instances comprise five equal logical roles
+ok 93 - 50 model instances comprise five equal logical roles
+  ---
+  duration_ms: 10.692236
+  type: 'test'
+  ...
+# Subtest: 100 expert declarations do not manufacture computation
+ok 94 - 100 expert declarations do not manufacture computation
+  ---
+  duration_ms: 1.947661
+  type: 'test'
+  ...
+# Subtest: coding-agent can reserve existing CPU capacity
+ok 95 - coding-agent can reserve existing CPU capacity
+  ---
+  duration_ms: 1.668603
+  type: 'test'
+  ...
+# Subtest: local agent and memory roles share bounded capacity
+ok 96 - local agent and memory roles share bounded capacity
+  ---
+  duration_ms: 1.546469
+  type: 'test'
+  ...
+# Subtest: training model must have actual authorized GPU and VRAM
+ok 97 - training model must have actual authorized GPU and VRAM
+  ---
+  duration_ms: 17.449095
+  type: 'test'
+  ...
+# Subtest: unknown components cannot submit
+ok 98 - unknown components cannot submit
+  ---
+  duration_ms: 1.903474
+  type: 'test'
+  ...
+# Subtest: owner resource node can revoke work
+ok 99 - owner resource node can revoke work
+  ---
+  duration_ms: 1.98798
+  type: 'test'
+  ...
+# Subtest: duplicate job IDs cannot be reused by alternate components
+ok 100 - duplicate job IDs cannot be reused by alternate components
+  ---
+  duration_ms: 0.567659
+  type: 'test'
+  ...
+# Subtest: 1000, 2000 and 3000 specialists are registered with five balanced roles
+ok 101 - 1000, 2000 and 3000 specialists are registered with five balanced roles
+  ---
+  duration_ms: 42.091446
+  type: 'test'
+  ...
+# Subtest: 3000 registrations do not create phantom GPU or CPU throughput
+ok 102 - 3000 registrations do not create phantom GPU or CPU throughput
+  ---
+  duration_ms: 4.895175
+  type: 'test'
+  ...
+# Subtest: 100 logical instances cannot create extra physical GPU throughput
+ok 103 - 100 logical instances cannot create extra physical GPU throughput
+  ---
+  duration_ms: 137.089631
+  type: 'test'
+  ...
+# Subtest: memory is not oversold
+ok 104 - memory is not oversold
+  ---
+  duration_ms: 2.378934
+  type: 'test'
+  ...
+# Subtest: tenant concurrency quota is enforced
+ok 105 - tenant concurrency quota is enforced
+  ---
+  duration_ms: 15.342449
+  type: 'test'
+  ...
+# Subtest: commercial workload is blocked on unlicensed nodes
+ok 106 - commercial workload is blocked on unlicensed nodes
+  ---
+  duration_ms: 7.826761
+  type: 'test'
+  ...
+# Subtest: short lease cannot admit a long job
+ok 107 - short lease cannot admit a long job
+  ---
+  duration_ms: 0.595827
+  type: 'test'
+  ...
+# Subtest: cancel and complete release resources exactly once
+ok 108 - cancel and complete release resources exactly once
+  ---
+  duration_ms: 1.153821
+  type: 'test'
+  ...
+# Subtest: revoked physical host cancels reservations
+ok 109 - revoked physical host cancels reservations
+  ---
+  duration_ms: 0.495334
+  type: 'test'
+  ...
+# Subtest: invalid IDs and duplicate jobs fail closed
+ok 110 - invalid IDs and duplicate jobs fail closed
+  ---
+  duration_ms: 4.606442
+  type: 'test'
+  ...
+# Subtest: lease validity covers the entire requested runtime
+ok 111 - lease validity covers the entire requested runtime
+  ---
+  duration_ms: 1.86667
+  type: 'test'
+  ...
+# Subtest: snapshots are defensive copies
+ok 112 - snapshots are defensive copies
+  ---
+  duration_ms: 0.873786
+  type: 'test'
+  ...
+# Subtest: timed-out job does not produce a false success
+ok 113 - timed-out job does not produce a false success
+  ---
+  duration_ms: 5.116111
+  type: 'test'
+  ...
+# Subtest: 3000 logical requests collapse to 30 actual distinct computations
+ok 114 - 3000 logical requests collapse to 30 actual distinct computations
+  ---
+  duration_ms: 189.047864
+  type: 'test'
+  ...
+# Subtest: tenant isolation prevents cross-user reuse
+ok 115 - tenant isolation prevents cross-user reuse
+  ---
+  duration_ms: 4.832503
+  type: 'test'
+  ...
+# Subtest: changed model revision prevents reuse
+ok 116 - changed model revision prevents reuse
+  ---
+  duration_ms: 0.456449
+  type: 'test'
+  ...
+# Subtest: changed memory epoch prevents stale computation reuse
+ok 117 - changed memory epoch prevents stale computation reuse
+  ---
+  duration_ms: 0.33803
+  type: 'test'
+  ...
+# Subtest: changed policy revision prevents context reuse
+ok 118 - changed policy revision prevents context reuse
+  ---
+  duration_ms: 0.285944
+  type: 'test'
+  ...
+# Subtest: changed generation parameters prevent reuse
+ok 119 - changed generation parameters prevent reuse
+  ---
+  duration_ms: 0.367115
+  type: 'test'
+  ...
+# Subtest: generative or non-deterministic work never coalesces
+ok 120 - generative or non-deterministic work never coalesces
+  ---
+  duration_ms: 0.39925
+  type: 'test'
+  ...
+# Subtest: default-deny receipt checker prevents cached unproven results
+ok 121 - default-deny receipt checker prevents cached unproven results
+  ---
+  duration_ms: 4.909464
+  type: 'test'
+  ...
+# Subtest: verification failure does not discard existing leader
+ok 122 - verification failure does not discard existing leader
+  ---
+  duration_ms: 0.511041
+  type: 'test'
+  ...
+# Subtest: cache TTL expires and forces new computation
+ok 123 - cache TTL expires and forces new computation
+  ---
+  duration_ms: 0.473903
+  type: 'test'
+  ...
+# Subtest: LRU evicts old result when full
+ok 124 - LRU evicts old result when full
+  ---
+  duration_ms: 0.365858
+  type: 'test'
+  ...
+# Subtest: leader cancellation releases joined tasks for retry
+ok 125 - leader cancellation releases joined tasks for retry
+  ---
+  duration_ms: 1.15876
+  type: 'test'
+  ...
+# Subtest: maximum waiter quota blocks unbounded fanout
+ok 126 - maximum waiter quota blocks unbounded fanout
+  ---
+  duration_ms: 0.543804
+  type: 'test'
+  ...
+# Subtest: active request limit prevents memory exhaustion
+ok 127 - active request limit prevents memory exhaustion
+  ---
+  duration_ms: 0.313861
+  type: 'test'
+  ...
+# Subtest: invalid input digest or repeated job id is rejected
+ok 128 - invalid input digest or repeated job id is rejected
+  ---
+  duration_ms: 4.866811
+  type: 'test'
+  ...
+# Subtest: 3000 recurring tasks are reduced to 30 real matrix computations
+ok 129 - 3000 recurring tasks are reduced to 30 real matrix computations
+  ---
+  duration_ms: 636.530452
+  type: 'test'
+  ...
+# Subtest: counterexample: 3000 distinct tasks require 3000 real computations
+ok 130 - counterexample: 3000 distinct tasks require 3000 real computations
+  ---
+  duration_ms: 898.675913
+  type: 'test'
+  ...
+# Subtest: matrix kernel repeatability
+ok 131 - matrix kernel repeatability
+  ---
+  duration_ms: 1.18602
+  type: 'test'
+  ...
+# Subtest: invalid workload requests rejected
+ok 132 - invalid workload requests rejected
+  ---
+  duration_ms: 1.099919
+  type: 'test'
+  ...
+# Subtest: 3000 unique tasks reuse 30 shared heavy computation stages
+ok 133 - 3000 unique tasks reuse 30 shared heavy computation stages
+  ---
+  duration_ms: 498.126716
+  type: 'test'
+  ...
+# Subtest: counterexample: distinct source versions require all heavy computations
+ok 134 - counterexample: distinct source versions require all heavy computations
+  ---
+  duration_ms: 493.974448
+  type: 'test'
+  ...
+# Subtest: bad stage parameter bounds are rejected
+ok 135 - bad stage parameter bounds are rejected
+  ---
+  duration_ms: 0.694249
+  type: 'test'
+  ...
+1..135
+# tests 135
+# suites 0
+# pass 135
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9779.521467

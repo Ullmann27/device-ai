@@ -1,0 +1,2 @@
+rank=[]
+grounded=false; ids=[]; answer=Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten.

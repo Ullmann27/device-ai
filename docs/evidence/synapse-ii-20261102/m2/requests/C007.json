@@ -1,0 +1,24 @@
+{
+  "id": "C007",
+  "question": "Wo lebt Zyrufavo?",
+  "sources": [
+    {
+      "revision": 7,
+      "sha256": "f0fdeadf5cfa90a7c04f6892b5e45eacb7331b36ebbed08377a78ae16dcded15",
+      "sourceId": "bc:C007:s1",
+      "text": "Qejedobe lebt in Uvcobepo. Qepogiro lebt in Uvnejure."
+    },
+    {
+      "revision": 1,
+      "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+      "sourceId": "bc:C007:s2",
+      "text": "Qefopeci lebt in Uvpuzubi Uvcokujo, Zyrufavo lebt in Uvtolasa."
+    },
+    {
+      "revision": 2,
+      "sha256": "db789bbf75e76a0dbe392d96956dfc8863d15154e6a04dc5755c7f283a1198de",
+      "sourceId": "bc:C007:s3",
+      "text": "Qehovufi lebt in Uvjokede. Qepogiro lebt in Uvnejure."
+    }
+  ]
+}

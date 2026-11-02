@@ -1,0 +1,949 @@
+[
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-version"
+    ],
+    "exitCode": 0,
+    "name": "java-version",
+    "wallMillis": 48.74217799999769
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/bin/kotlinc",
+      "-version"
+    ],
+    "exitCode": 0,
+    "name": "kotlin-version",
+    "wallMillis": 2167.719033999987
+  },
+  {
+    "command": [
+      "node",
+      "--version"
+    ],
+    "exitCode": 0,
+    "name": "node-version",
+    "wallMillis": 11.136392000025808
+  },
+  {
+    "command": [
+      "node",
+      "--test",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.test.mjs"
+    ],
+    "exitCode": 0,
+    "name": "scorer-tests",
+    "wallMillis": 524.7418459999835
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/bin/kotlinc",
+      "-cp",
+      "/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "/workspace/continuum-post-fable/tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "/workspace/continuum-post-fable/app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+      "-d",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes"
+    ],
+    "exitCode": 0,
+    "name": "compile",
+    "wallMillis": 19274.241305999993
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C001.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C001.json"
+    ],
+    "exitCode": 0,
+    "name": "C001",
+    "wallMillis": 183.84565799999564
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C002.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C002.json"
+    ],
+    "exitCode": 0,
+    "name": "C002",
+    "wallMillis": 238.58640399998876
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C003.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C003.json"
+    ],
+    "exitCode": 0,
+    "name": "C003",
+    "wallMillis": 244.60625800000457
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C004.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C004.json"
+    ],
+    "exitCode": 0,
+    "name": "C004",
+    "wallMillis": 202.15704099999243
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C005.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C005.json"
+    ],
+    "exitCode": 0,
+    "name": "C005",
+    "wallMillis": 248.56251100001714
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C006.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C006.json"
+    ],
+    "exitCode": 0,
+    "name": "C006",
+    "wallMillis": 242.70040700000095
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C007.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C007.json"
+    ],
+    "exitCode": 0,
+    "name": "C007",
+    "wallMillis": 191.5930379999793
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C008.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C008.json"
+    ],
+    "exitCode": 0,
+    "name": "C008",
+    "wallMillis": 276.1951199999828
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C009.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C009.json"
+    ],
+    "exitCode": 0,
+    "name": "C009",
+    "wallMillis": 264.14145299997926
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C010.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C010.json"
+    ],
+    "exitCode": 0,
+    "name": "C010",
+    "wallMillis": 245.18261099998995
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C011.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C011.json"
+    ],
+    "exitCode": 0,
+    "name": "C011",
+    "wallMillis": 175.196432000007
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C012.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C012.json"
+    ],
+    "exitCode": 0,
+    "name": "C012",
+    "wallMillis": 292.4375070000167
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C013.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C013.json"
+    ],
+    "exitCode": 0,
+    "name": "C013",
+    "wallMillis": 162.51052299998037
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C014.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C014.json"
+    ],
+    "exitCode": 0,
+    "name": "C014",
+    "wallMillis": 238.2281300000102
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C015.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C015.json"
+    ],
+    "exitCode": 0,
+    "name": "C015",
+    "wallMillis": 195.8127730000001
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C016.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C016.json"
+    ],
+    "exitCode": 0,
+    "name": "C016",
+    "wallMillis": 204.18766999998184
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C017.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C017.json"
+    ],
+    "exitCode": 0,
+    "name": "C017",
+    "wallMillis": 216.3394880000169
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C018.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C018.json"
+    ],
+    "exitCode": 0,
+    "name": "C018",
+    "wallMillis": 185.8905429999993
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C019.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C019.json"
+    ],
+    "exitCode": 0,
+    "name": "C019",
+    "wallMillis": 305.4262910000034
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C020.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C020.json"
+    ],
+    "exitCode": 0,
+    "name": "C020",
+    "wallMillis": 275.503987999997
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C021.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C021.json"
+    ],
+    "exitCode": 0,
+    "name": "C021",
+    "wallMillis": 210.1622739999982
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C022.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C022.json"
+    ],
+    "exitCode": 0,
+    "name": "C022",
+    "wallMillis": 283.1597189999968
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C023.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C023.json"
+    ],
+    "exitCode": 0,
+    "name": "C023",
+    "wallMillis": 263.89403499999275
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C024.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C024.json"
+    ],
+    "exitCode": 0,
+    "name": "C024",
+    "wallMillis": 543.7322719999997
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C025.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C025.json"
+    ],
+    "exitCode": 0,
+    "name": "C025",
+    "wallMillis": 278.1324389999895
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C026.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C026.json"
+    ],
+    "exitCode": 0,
+    "name": "C026",
+    "wallMillis": 248.7754789999883
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C027.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C027.json"
+    ],
+    "exitCode": 0,
+    "name": "C027",
+    "wallMillis": 243.4190299999841
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C028.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C028.json"
+    ],
+    "exitCode": 0,
+    "name": "C028",
+    "wallMillis": 210.680042000007
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C029.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C029.json"
+    ],
+    "exitCode": 0,
+    "name": "C029",
+    "wallMillis": 210.60714300000427
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C030.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C030.json"
+    ],
+    "exitCode": 0,
+    "name": "C030",
+    "wallMillis": 209.77375600000414
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C031.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C031.json"
+    ],
+    "exitCode": 0,
+    "name": "C031",
+    "wallMillis": 216.65602199999512
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C032.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C032.json"
+    ],
+    "exitCode": 0,
+    "name": "C032",
+    "wallMillis": 196.60725200000684
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C033.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C033.json"
+    ],
+    "exitCode": 0,
+    "name": "C033",
+    "wallMillis": 267.5616039999795
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C034.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C034.json"
+    ],
+    "exitCode": 0,
+    "name": "C034",
+    "wallMillis": 186.6720709999754
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C035.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C035.json"
+    ],
+    "exitCode": 0,
+    "name": "C035",
+    "wallMillis": 229.34606600000507
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C036.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C036.json"
+    ],
+    "exitCode": 0,
+    "name": "C036",
+    "wallMillis": 250.75816499997927
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C037.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C037.json"
+    ],
+    "exitCode": 0,
+    "name": "C037",
+    "wallMillis": 202.91163500002085
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C038.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C038.json"
+    ],
+    "exitCode": 0,
+    "name": "C038",
+    "wallMillis": 168.8331260000382
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C039.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C039.json"
+    ],
+    "exitCode": 0,
+    "name": "C039",
+    "wallMillis": 231.011312000021
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C040.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C040.json"
+    ],
+    "exitCode": 0,
+    "name": "C040",
+    "wallMillis": 198.66133499999705
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C041.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C041.json"
+    ],
+    "exitCode": 0,
+    "name": "C041",
+    "wallMillis": 333.4920610000154
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C042.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C042.json"
+    ],
+    "exitCode": 0,
+    "name": "C042",
+    "wallMillis": 266.50072399996816
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C043.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C043.json"
+    ],
+    "exitCode": 0,
+    "name": "C043",
+    "wallMillis": 257.01808700000583
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C044.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C044.json"
+    ],
+    "exitCode": 0,
+    "name": "C044",
+    "wallMillis": 278.10984399997096
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C045.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C045.json"
+    ],
+    "exitCode": 0,
+    "name": "C045",
+    "wallMillis": 192.17852100001664
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C046.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C046.json"
+    ],
+    "exitCode": 0,
+    "name": "C046",
+    "wallMillis": 353.1144680000011
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C047.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C047.json"
+    ],
+    "exitCode": 0,
+    "name": "C047",
+    "wallMillis": 164.4464130000074
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C048.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C048.json"
+    ],
+    "exitCode": 0,
+    "name": "C048",
+    "wallMillis": 366.818612999964
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C049.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C049.json"
+    ],
+    "exitCode": 0,
+    "name": "C049",
+    "wallMillis": 272.1887659999993
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C050.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C050.json"
+    ],
+    "exitCode": 0,
+    "name": "C050",
+    "wallMillis": 238.04773399996293
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C051.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C051.json"
+    ],
+    "exitCode": 0,
+    "name": "C051",
+    "wallMillis": 329.7293429999968
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C052.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C052.json"
+    ],
+    "exitCode": 0,
+    "name": "C052",
+    "wallMillis": 408.5869989999651
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C053.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C053.json"
+    ],
+    "exitCode": 0,
+    "name": "C053",
+    "wallMillis": 294.4932359999939
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C054.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C054.json"
+    ],
+    "exitCode": 0,
+    "name": "C054",
+    "wallMillis": 522.5560599999994
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/requests/C055.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/outputs/C055.json"
+    ],
+    "exitCode": 0,
+    "name": "C055",
+    "wallMillis": 643.7698530000375
+  },
+  {
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/predictions.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/independent-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "name": "independent-score",
+    "wallMillis": 209.58451000001332
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/positive-source-copy-request.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/positive-source-copy-output.json"
+    ],
+    "exitCode": 0,
+    "name": "positive-source-copy",
+    "wallMillis": 533.3910300000184
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/mutated-source-stale-hash-request.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/mutated-source-stale-hash-output.json"
+    ],
+    "exitCode": 0,
+    "name": "mutated-source-stale-hash",
+    "wallMillis": 459.7423010000057
+  },
+  {
+    "command": [
+      "/workspace/post-fable-toolchain/jdk21/bin/java",
+      "-cp",
+      "/workspace/continuum-checks/synapse-ii-20261102/m2-classes:/workspace/continuum-toolchain/json.jar:/workspace/continuum-toolchain/stdlib.jar",
+      "at.heinz.deviceai.learning.span.Cdx2PointerCandidate",
+      "predict",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/invalid-revision-request.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/controls/invalid-revision-output.json"
+    ],
+    "exitCode": 0,
+    "name": "invalid-revision",
+    "wallMillis": 484.7752430000014
+  },
+  {
+    "command": [
+      "node",
+      "/workspace/continuum-post-fable/scripts/cdx2-blind-score.mjs",
+      "/workspace/continuum-post-fable/docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/previous-predictions-adapted.json",
+      "/workspace/continuum-post-fable/docs/evidence/synapse-ii-20261102/m2/previous-independent-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "name": "previous-independent-score",
+    "wallMillis": 127.69870400001082
+  }
+]

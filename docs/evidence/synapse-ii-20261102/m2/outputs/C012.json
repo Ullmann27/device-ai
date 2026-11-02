@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C012:s3",
+    "decision": "SPAN",
+    "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+    "endExclusive": 72,
+    "start": 46,
+    "text": "Uvnebaka Uvjibile Uvlogase",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "RULE": {
+    "sourceId": "bc:C012:s3",
+    "decision": "SPAN",
+    "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+    "endExclusive": 72,
+    "start": 46,
+    "text": "Uvnebaka Uvjibile Uvlogase",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C012:s3",
+    "decision": "SPAN",
+    "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+    "endExclusive": 72,
+    "start": 46,
+    "text": "Uvnebaka Uvjibile Uvlogase",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "rawMillis": 69.118908
+}

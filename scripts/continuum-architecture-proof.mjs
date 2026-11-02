@@ -49,6 +49,8 @@ export const REQUIRED_JUNIT = Object.freeze([
   'at.heinz.deviceai.cognitive.InternetConsentPolicyTest',
   'at.heinz.deviceai.cognitive.JarvisUnifiedEvidenceContractTest',
   'at.heinz.deviceai.learning.OwnerMemoryAgeSpecialistTest',
+  'at.heinz.deviceai.learning.OwnerLocationRevisionBarrierTest',
+  'at.heinz.deviceai.cognitive.UnscopedLocationCorrectionTest',
   'at.heinz.deviceai.cognitive.SessionEvidenceIntegrityTest',
   'at.heinz.deviceai.cognitive.SessionLocationRoutingTest',
   'at.heinz.deviceai.cognitive.LocalGenerationDeadlinePolicyTest',

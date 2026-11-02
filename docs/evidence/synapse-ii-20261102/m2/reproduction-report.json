@@ -1,0 +1,271 @@
+{
+  "caseCount": 55,
+  "checkpointBytes": 910,
+  "classifierNll": {
+    "reason": "Frozen predict CLI emits argmax tuple, no classifier distribution or gold probability.",
+    "status": "NOT_RECORDED"
+  },
+  "controls": [
+    {
+      "name": "positive-source-copy",
+      "passed": true
+    },
+    {
+      "name": "mutated-source-stale-hash",
+      "passed": true
+    },
+    {
+      "name": "invalid-revision",
+      "passed": true
+    }
+  ],
+  "dependencySha256": {
+    "/workspace/continuum-toolchain/json.jar": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed",
+    "/workspace/continuum-toolchain/stdlib.jar": "f31cc53f105a7e48c093683bbd5437561d1233920513774b470805641bedbc09"
+  },
+  "deviceStatus": "DEVICE_NOT_RUN",
+  "freshBlindTest": false,
+  "frozenPins": {
+    "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt": "7b29fbef554c3771c1d8ed735aa683429952f4dddabc2662fbca13d0e5d87a4a",
+    "docs/evidence/issue340-20261101/m2/blind-c/MANIFEST.json": "df5eaaf87077190394927fb72020d17b21d0d894cb7649da641cc3682d9693f5",
+    "docs/evidence/issue340-20261101/m2/blind-c/corpus.json": "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c",
+    "docs/evidence/issue340-20261101/m2/blind-c/inputs.json": "167de32908d1d4bde41c78024e315dbd3780606dd9be64b0b93bfb765f70ae6d",
+    "docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json": "629c8319ede2aba3cd60f0448b6469034c8550530e0326739b79c26bfc40939d",
+    "tools/continuum-span-research/Cdx2PointerCandidate.kt": "9c7d33b64d7fb1b13e3ceb22f2b538f3e4e62608d477f7e9868ce1f3b79c5f2e"
+  },
+  "immutability": {
+    "allFrozenFilesUnchanged": true,
+    "files": {
+      "docs/evidence/issue340-20261101/m2/blind-c/MANIFEST.json": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/SCORING.md": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/SHA256SUMS": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.json": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.schema.json": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/freeze.py": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/generate.py": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/inputs.json": true,
+      "docs/evidence/issue340-20261101/m2/blind-c/overlap.json": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/DEV.json": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/FREEZE.md": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/FREEZE.sha256": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/TRAIN.json": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/controls.log": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/dev-report.json": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/red-copy.log": true,
+      "docs/evidence/issue340-20261101/m2/frozen-dev/train-report.json": true,
+      "docs/evidence/issue340-20261101/m2/independent-dev-reproduction.txt": true
+    }
+  },
+  "limitations": [
+    "Consumed Blind-C reproduced without tuning; no fresh generalization evidence.",
+    "Handwritten grammar plus 11 learned weights, not repaired CDX1 generation.",
+    "Host JVM evidence; no Android/Fold7/app build or device claim."
+  ],
+  "modelParameterCount": 11,
+  "paired": {
+    "ADVERSARIAL": {
+      "RAW_vs_RULE": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [
+          "C048",
+          "C049"
+        ],
+        "predictionDisagreementIds": [
+          "C048",
+          "C049"
+        ]
+      },
+      "RAW_vs_VERIFIED": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [
+          "C048",
+          "C049"
+        ],
+        "predictionDisagreementIds": [
+          "C048",
+          "C049"
+        ]
+      },
+      "VERIFIED_vs_RULE": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [],
+        "predictionDisagreementIds": []
+      }
+    },
+    "PRIMARY": {
+      "RAW_vs_RULE": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [],
+        "predictionDisagreementIds": []
+      },
+      "RAW_vs_VERIFIED": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [],
+        "predictionDisagreementIds": []
+      },
+      "VERIFIED_vs_RULE": {
+        "aOnlyCorrect": [],
+        "bOnlyCorrect": [],
+        "predictionDisagreementIds": []
+      }
+    }
+  },
+  "predictionInputs": "id/question/sources only; no expected/split/category",
+  "previousOutputComparison": {
+    "comparedDecisions": 165,
+    "disagreements": [],
+    "metricsIdentical": true,
+    "previousDirectory": "/workspace/continuum-checks/issue340-blind-c-evaluation",
+    "previousExecutionSha256": "b9354bbbf1f06593e399e0c244dc9d04b0521b17d589b6bf1077d49c37932e17",
+    "previousReportSha256": "bc6e82a58520626c900d22bccb69ec918219e284321c3fbbacab03ec4fb7e305",
+    "status": "COMPARED_ALL_55_ALL_3_MODES"
+  },
+  "promotion": "FORBIDDEN_RESEARCH_ONLY",
+  "schema": "SYNAPSE_II_M2_REPRODUCTION_V1",
+  "scorerTests": {
+    "evidence": "logs/scorer-tests.stdout",
+    "negativeTupleMutations": 100,
+    "passed": 11,
+    "tests": 11
+  },
+  "sourceAndToolSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt": "7b29fbef554c3771c1d8ed735aa683429952f4dddabc2662fbca13d0e5d87a4a",
+    "scripts/cdx2-blind-score.mjs": "9836e16afcc2035b47443d3083eab82f7f1761d03a1faa5bb32b54060d5616c5",
+    "tools/continuum-span-research/Cdx2PointerCandidate.kt": "9c7d33b64d7fb1b13e3ceb22f2b538f3e4e62608d477f7e9868ce1f3b79c5f2e",
+    "tools/continuum-span-research/reproduce-cdx2-blind-c.py": "fe407d88650147c5870af84e6d28c90808c031f561d1604d8216ecafafd0b8f2"
+  },
+  "sourceGitHeadAtRun": "ec37288555fc29d8af99a276ea7323792a9f4bf8",
+  "splitMetrics": {
+    "ADVERSARIAL": {
+      "RAW": {
+        "abstainWilson95": [
+          0.7503389104960532,
+          0.9777795987151519
+        ],
+        "correctAbstentions": 23,
+        "exactSupported": 5,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 25,
+        "primaryGate": false,
+        "supported": 5,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "unsupportedPositive": 2
+      },
+      "RULE": {
+        "abstainWilson95": [
+          0.8668077490609579,
+          1
+        ],
+        "correctAbstentions": 25,
+        "exactSupported": 5,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 25,
+        "primaryGate": false,
+        "supported": 5,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "unsupportedPositive": 0
+      },
+      "VERIFIED": {
+        "abstainWilson95": [
+          0.8668077490609579,
+          1
+        ],
+        "correctAbstentions": 25,
+        "exactSupported": 5,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 25,
+        "primaryGate": false,
+        "supported": 5,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "unsupportedPositive": 0
+      }
+    },
+    "PRIMARY": {
+      "RAW": {
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "correctAbstentions": 5,
+        "exactSupported": 20,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 5,
+        "primaryGate": true,
+        "supported": 20,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "unsupportedPositive": 0
+      },
+      "RULE": {
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "correctAbstentions": 5,
+        "exactSupported": 20,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 5,
+        "primaryGate": true,
+        "supported": 20,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "unsupportedPositive": 0
+      },
+      "VERIFIED": {
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "correctAbstentions": 5,
+        "exactSupported": 20,
+        "falseAbstentions": 0,
+        "falseSourceAssignments": 0,
+        "malformed": 0,
+        "missing": 5,
+        "primaryGate": true,
+        "supported": 20,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "unsupportedPositive": 0
+      }
+    }
+  },
+  "status": "COMPLETED_REPRODUCTION_CONSUMED_BLIND_C",
+  "timing": {
+    "childSystemCpuSeconds": 2.423922,
+    "childUserCpuSeconds": 17.718133,
+    "environment": "HOST_JVM_NOT_ANDROID",
+    "note": "Each case starts a fresh JVM; rawMillis excludes verifier/rule work.",
+    "processCount": 55,
+    "rawPredictionMillisMedian": 78.830427,
+    "rawPredictionMillisP95NearestRank": 183.962063,
+    "rawPredictionMillisSum": 4769.155192,
+    "wholePredictionRunWallSeconds": 14.378271691000009
+  }
+}

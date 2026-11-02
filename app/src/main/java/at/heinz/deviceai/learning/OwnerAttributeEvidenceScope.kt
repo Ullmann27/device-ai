@@ -29,6 +29,8 @@ internal object OwnerAttributeEvidenceScope {
     private val familyAgeHead = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
         "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\b")
     private val correction = Regex("(?iu)^(?:korrektur|berichtigung)\\s*:\\s*")
+    private val locationChange = Regex("(?iu)\\b(?:umgezogen|weggezogen|ausgezogen|fortgezogen|verzogen|widerrufen|ungültig)\\b|" +
+        "\\b(?:zieht|zog)\\s+(?:weg|fort|um|nach|aus)\\b")
     private val directAgeValue = Regex("(?iu)^$NAME\\s+ist\\s+([0-9]{1,3})(?:\\s+Jahre(?:\\s+alt)?)?\\s*\\.?$")
     private val familyAgeValue = Regex("(?iu)^(?:meine|mein|unsere|unser)\\s+" +
         "(?:tochter|sohn|schwester|bruder|enkelin|enkel)\\s+$NAME\\s+ist\\s+([0-9]{1,3})(?:\\s+Jahre(?:\\s+alt)?)?\\s*\\.?$")
@@ -60,6 +62,16 @@ internal object OwnerAttributeEvidenceScope {
         val owner = records.filter { it.type == LearningExperienceType.USER_FACT &&
             it.provenance == LearningProvenance.USER_CONFIRMED && it.trust == LearningTrustClass.OWNER_CONFIRMED &&
             it.status in setOf(LearningStatus.CONFIRMED, LearningStatus.LEARNED, LearningStatus.REPLAY_PENDING, LearningStatus.REVOKED) }
+        // A move need not contain "wohnen" or a new place. Keep its ledger revision as
+        // a REMOVE-ONLY barrier before narrowing to parseable residence assertions.
+        // It cannot supply an answer, and a later explicit residence can supersede it.
+        fun assertionAt(e: LearningExperience) = if(e.status == LearningStatus.CONFIRMED)e.updatedAt else e.createdAt
+        val namedLocationHead = if (ask.kind == "LOCATION") Regex("(?iu)^" + Regex.escape(ask.holder) +
+            "\\s+(?:ist|war|wurde|wohnt|wohnte|lebt|lebte|zieht|zog)\\b") else null
+        val locationBarrier = if (namedLocationHead == null) null else owner.filter { e ->
+            val text = Normalizer.normalize(e.content.replaceFirst(correction, ""), Normalizer.Form.NFC)
+            namedLocationHead.containsMatchIn(text) && locationChange.containsMatchIn(text)
+        }.maxOfOrNull(::assertionAt)
         val heads = owner.mapNotNull { e ->
             val cleaned = e.content.replaceFirst(correction, "")
             // The broad NAME grammar can read "Meine Tochter Klara" as an
@@ -112,8 +124,8 @@ internal object OwnerAttributeEvidenceScope {
         if(parsed.isEmpty())return emptySet()
         // CONFIRMED updatedAt can be an explicit reactivation by confirmOwnerFact.
         // A later revocation of an older assertion does not make that assertion new.
-        fun assertionAt(e: LearningExperience) = if(e.status == LearningStatus.CONFIRMED)e.updatedAt else e.createdAt
         val newestTime = parsed.maxOf { assertionAt(it.first) }
+        if (locationBarrier != null && locationBarrier >= newestTime) return emptySet()
         val tied = parsed.filter { assertionAt(it.first) == newestTime }
         val newest = tied.singleOrNull() ?: tied.filter { it.second.hasUpdateMarker }.singleOrNull() ?: return emptySet()
         if(newest.first.status == LearningStatus.REVOKED)return emptySet()

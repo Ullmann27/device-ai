@@ -1,0 +1,18 @@
+{
+  "id": "C014",
+  "question": "Wo wohnt Zycihizo?",
+  "sources": [
+    {
+      "revision": 7,
+      "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+      "sourceId": "bc:C014:s1",
+      "text": "Qebumuri wohnt in Uvtahofo Uvrufegi Uvzoruji; Zycihizo wohnt in Uvpubuca Uvcomite."
+    },
+    {
+      "revision": 1,
+      "sha256": "76410c033cbb6c167077df128613b8fc8b7b87ddcb4f152d6cd7511eabbb1049",
+      "sourceId": "bc:C014:s2",
+      "text": "Qemusacu wohnt in Uvnijabo. Qebepuso wohnt in Uvsumuze."
+    }
+  ]
+}

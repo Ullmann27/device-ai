@@ -1,0 +1,18 @@
+{
+  "id": "C031",
+  "question": "Wo ist Zysacoze?",
+  "sources": [
+    {
+      "revision": 3,
+      "sha256": "300f4e01c75b2fba10665f6fcd5629a55535b24b0cdb043be59d4e913a149585",
+      "sourceId": "bc:C031:s1",
+      "text": "Zysacoze ist in Uvtebalo."
+    },
+    {
+      "revision": 4,
+      "sha256": "1abd263eb621f0fc176dde53bb21add30e7cf63abc5c06aef08b557b83d0add3",
+      "sourceId": "bc:C031:s2",
+      "text": "Zysacoze ist in Uvfipugi."
+    }
+  ]
+}

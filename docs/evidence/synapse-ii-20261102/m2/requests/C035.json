@@ -1,0 +1,30 @@
+{
+  "id": "C035",
+  "question": "Wo ist Zygeriva?",
+  "sources": [
+    {
+      "revision": 7,
+      "sha256": "36e97085f6b54ad08bbb0db9916be234bc42f4fcbe7fe22fe6488ed92f04557d",
+      "sourceId": "bc:C035:s1",
+      "text": "Zygeriva ist in Uvpevija Uvgijemo."
+    },
+    {
+      "revision": 1,
+      "sha256": "4b631027842d143c1bcd65d336a8429fe8ef8b4fd3841ce791793dca563e0cae",
+      "sourceId": "bc:C035:s2",
+      "text": "Zygeriva ist in Uvjociki."
+    },
+    {
+      "revision": 2,
+      "sha256": "2002baa7776cd82a07f388802f80110e1d026bad639871c5c482472f844419d2",
+      "sourceId": "bc:C035:s3",
+      "text": "Qerepugi ist in Uvfehopo."
+    },
+    {
+      "revision": 3,
+      "sha256": "131c3a4065bbbb6a359a44f466abeca3f12915b41ff03aaa98377a1b94604a57",
+      "sourceId": "bc:C035:s4",
+      "text": "Qegidepu steht in Uvzigiju."
+    }
+  ]
+}

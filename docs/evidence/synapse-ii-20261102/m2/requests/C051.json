@@ -1,0 +1,18 @@
+{
+  "id": "C051",
+  "question": "Wo ist Zymiholo?",
+  "sources": [
+    {
+      "revision": 2,
+      "sha256": "60ed866391b1ddfdaa645fb73616932e644b4988661835273c2b63c5c520230d",
+      "sourceId": "bc:C051:s1",
+      "text": "Zymiholo ist in Uvlofeni."
+    },
+    {
+      "revision": 3,
+      "sha256": "60ed866391b1ddfdaa645fb73616932e644b4988661835273c2b63c5c520230d",
+      "sourceId": "bc:C051:s2",
+      "text": "Zymiholo ist in Uvlofeni."
+    }
+  ]
+}
