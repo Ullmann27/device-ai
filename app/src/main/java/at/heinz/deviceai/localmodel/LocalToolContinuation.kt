@@ -31,4 +31,9 @@ internal object LocalToolContinuation {
             existingTokens < 0 || contextTokens <= 0 || outputReserve < 0) return false
         return existingTokens.toLong() + payloadBytes + MESSAGE_RESERVE + outputReserve <= contextTokens
     }
+
+    fun allowsSubmission(payloadBytes: Int,existingTokens: Int?,contextTokens: Int,
+                         outputReserve: Int,continuation: Boolean): Boolean =
+        payloadBytes in 1..MAX_INPUT_BYTES &&
+            (!continuation || fitsContext(payloadBytes,existingTokens,contextTokens,outputReserve))
 }

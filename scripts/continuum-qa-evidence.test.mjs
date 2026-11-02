@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {androidEvidence,nodeReceiptEvidence,REQUIRED_ANDROID_SUITES} from './continuum-qa-evidence.mjs';
 
 function fixture(t) {
@@ -58,4 +60,36 @@ test('Node receipt requires exact current-source completed executed tests',()=>{
     r=>{r.checks[0].tests.failed=1;},r=>{r.checks[0].code=1;}
   ]) {const bad=structuredClone(r);mutate(bad);
     assert.equal(nodeReceiptEvidence(bad,'a'.repeat(40),'full-node',from).status,'FAIL');}
+});
+
+test('extra malformed XML cannot inflate the complete Android result',t=>{
+  const f=fixture(t);
+  fs.writeFileSync(path.join(f.dir,'TEST-at.heinz.deviceai.OtherTest.xml'),
+    '<testsuite><testcase classname="at.heinz.deviceai.OtherTest" name="fake"/></testsuite><');
+  assert.equal(androidEvidence(f).status,'FAIL');
+});
+
+test('a symlinked report-directory ancestor cannot supply Android evidence',t=>{
+  const f=fixture(t),parent=path.dirname(f.dir),outside=path.join(f.root,'outside-results');
+  fs.renameSync(parent,outside);fs.symlinkSync(outside,parent,'dir');
+  assert.equal(androidEvidence(f).status,'FAIL');
+});
+
+test('Node CLI refuses a redirected receipt before reading its contents',t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-node-link-'));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const target=path.join(root,'original.json'),link=path.join(root,'receipt.json');
+  fs.writeFileSync(target,JSON.stringify(receipt()));fs.symlinkSync(target,link);
+  const r=spawnSync(process.execPath,[fileURLToPath(new URL('./continuum-qa-evidence.mjs',import.meta.url)),
+    'node',link,'a'.repeat(40),'full-node',String(Date.now()-1000)],{encoding:'utf8'});
+  assert.equal(r.status,1);assert.match(r.stderr,/INVALID_NODE_RECEIPT_FILE/);
+});
+
+test('honestly counted optional skips remain visible and cannot replace required execution',t=>{
+  const f=fixture(t),klass='at.heinz.deviceai.OptionalTest';
+  fs.writeFileSync(path.join(f.dir,'TEST-'+klass+'.xml'),
+    `<testsuite name="${klass}" tests="1" skipped="1" failures="0" errors="0"><testcase name="optional" classname="${klass}"><skipped/></testcase></testsuite>`);
+  const r=androidEvidence(f);
+  assert.equal(r.status,'PASS',JSON.stringify(r));assert.equal(r.counts.skipped,1);
+  assert.equal(r.counts.executed,REQUIRED_ANDROID_SUITES.length);
 });

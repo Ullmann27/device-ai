@@ -6,8 +6,9 @@ import sys
 import xml.etree.ElementTree as ET
 
 def main(argv):
-    if len(argv) != 3:
-        raise ValueError("usage: validator XML_FILE REQUIRED_CLASS")
+    if len(argv) not in (3, 4) or len(argv) == 4 and argv[3] != "--allow-skipped":
+        raise ValueError("usage: validator XML_FILE REQUIRED_CLASS [--allow-skipped]")
+    allow_skipped = len(argv) == 4
     path, klass = pathlib.Path(argv[1]), argv[2]
     if not klass.startswith("at.heinz.deviceai.") or len(klass) > 250:
         raise ValueError("Invalid suite class")
@@ -29,19 +30,29 @@ def main(argv):
     skipped = count("skipped")
     failures = count("failures")
     errors = count("errors")
-    if tests < 1 or skipped or failures or errors:
+    if tests < 1 or (skipped and not allow_skipped) or failures or errors:
         raise ValueError("JUnit suite skipped, failed, errored or empty")
     cases = [c for c in suite if c.tag == "testcase"]
     if len(cases) != tests:
         raise ValueError("JUnit tests count differs from actual testcase count")
+    actual_skipped = 0
+    identities = set()
     for case in cases:
         if case.attrib.get("classname") != klass or not case.attrib.get("name"):
             raise ValueError("JUnit testcase name/class mismatch")
-        if any(e.tag in ("skipped","failure","error") for e in case.iter()):
+        identity = case.attrib["name"]
+        if identity in identities:
+            raise ValueError("Duplicate JUnit testcase identity")
+        identities.add(identity)
+        is_skipped = case.find("skipped") is not None
+        actual_skipped += int(is_skipped)
+        if any(e.tag in ("failure","error") or (e.tag == "skipped" and not allow_skipped) for e in case.iter()):
             raise ValueError("JUnit testcase skipped/failed/errored")
+    if actual_skipped != skipped:
+        raise ValueError("JUnit skipped count differs from actual testcase count")
     if suite.find(".//testsuite") is not None:
         raise ValueError("Unexpected nested testsuite")
-    print(json.dumps({"tests":tests,"executed":tests,"skipped":0,"failures":0,"errors":0}))
+    print(json.dumps({"tests":tests,"executed":tests-skipped,"skipped":skipped,"failures":0,"errors":0}))
 
 if __name__ == "__main__":
     try:

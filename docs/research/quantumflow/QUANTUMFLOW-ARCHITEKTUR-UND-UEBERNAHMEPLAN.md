@@ -1,6 +1,13 @@
 # QUANTUMFLOW — Technischer Open-Source-Integrationsplan
 Datum: 02.11.2026 | Repository: Ullmann27/device-ai | Audit PR #350
 
+Portierungsbefunde aus Review PR360: Der unveränderte MediaPipe-Snapshot
+`FaceLandmarkerHelper.kt` benötigt vor einer Runtime-Übernahme Prüfungen für
+fehlgeschlagene `detectForVideo`-Ergebnisse, null erfolgreiche Frames vor der
+Durchschnittsdivision und `MediaMetadataRetriever.release()` in `finally`.
+Diese Befunde sind Backlog für eine spätere geprüfte Portierung. Lizenzierte
+Originalsnapshots und ihre Blob-Pins bleiben unverändert; LIVE_3D_NOT_IMPLEMENTED.
+
 **Status: CODE / LICENSE SNAPSHOTS VERIFIED. LIVE_3D_NOT_IMPLEMENTED.** Dieses Dokument ist kein Release-Nachweis. Forschungs-Branch #350 stammt von PR #349 @ `93422eb6`. PR #349 hat danach das neue reale Statusband mit Commit `df3b6930` erhalten: die beiden Branches NICHT blind synchronisieren; UI-Event-Anbindung muss den neuesten PR349-Stand verwenden. Hauptrepository, bestehendes Gemma, TTS, ToolGate und SWB1/EWM2 bleiben unverändert.
 
 ## 1. Schon vorhandene Continuum-Technik – nicht neu erfinden

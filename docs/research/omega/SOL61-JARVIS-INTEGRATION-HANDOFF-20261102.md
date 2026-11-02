@@ -105,6 +105,42 @@ SOURCE_INTEGRATED / focused HOST_VERIFIED; alternative native engine and Fold7 N
 Next: freeze a source checkpoint, execute complete SDK/Node suites and independent
 review. No signing, release freeze lift or Fold7 execution has occurred.
 
+## Independent review and second RED→GREEN cycle
+
+Reviewed source `5060ec4470f49e3f9aa217189cd69adbb0f42f1a` had **CHANGES REQUESTED**,
+not approval. Independent host probes found model retry of UNKNOWN under a new ID,
+UNKNOWN entering a mixed skill group, journal-conflict/cancel uncertainty loss,
+late text after reentrant cancellation/unload, a native/callback lock inversion,
+malformed optional XML and redirected evidence paths. Gitar also found the new
+conservative gate could disable initial chats with missing capacity metadata.
+
+Repairs stop UNKNOWN/replayed runs immediately with a typed BLOCKED proof, withhold
+output and store no learning experience. Journal conflicts and cancelled recovery
+retain uncertainty. Native submission uses the existing atomic start latch;
+external callbacks drain from a per-generation queue outside runtime monitors.
+Queued text is discarded after revocation. Already committed native work may
+continue and receives cancellation again after submission returns; this is a
+logical commitment guarantee, not proof of physical preemption or rollback.
+
+Strict cumulative admission applies to continuations; initial/isolated calls keep
+the existing byte-bounded path even when optional model metadata is unavailable.
+No invented bytes-per-token ratio is used. All XML now receives strict structure,
+case/count/class checks; optional skips stay visible, mandatory suites must execute.
+Node and Android evidence reject symlinks, including ancestor redirects.
+
+Actual 5060 SDK run: **1,681 total / 1,678 executed / 1,676 passed / 2 failed /
+3 skipped**. One failure was missing external evidence directory (driver setup);
+the other expected old FAILED instead of new UNKNOWN_AFTER_DISPATCH for incomplete
+output. Its test now additionally asserts uncertainty and no success digest.
+Actual 5060 Node24 full: **1,978 total / 1,965 executed / 1,964 passed / 1 failed /
+13 skipped**. The failure was an outdated exact call-signature regex; updated
+assertions require the fresh-conversation flag AND actual UTF-8 byte arguments.
+These RED results are retained; they are not reported as completed acceptance.
+
+Post-repair focused host checks: 22 core/shell JUnit and 9 native-policy/delivery
+JUnit PASS (native API stand-ins explicitly scoped). Full final SDK/Node runs and
+fresh independent approval remain pending at this checkpoint.
+
 ## Release boundary
 
 Owner wants an original-signed in-place update without data loss. This instruction

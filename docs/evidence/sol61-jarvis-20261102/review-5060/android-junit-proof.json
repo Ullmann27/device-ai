@@ -1,0 +1,82 @@
+{
+  "status": "FAIL",
+  "startedAtMillis": 1793647413732,
+  "finishedAtMillis": 1793647862194,
+  "xmlFiles": 309,
+  "mandatory": [
+    {
+      "name": "at.heinz.deviceai.ToolExecutionStartLatchTest",
+      "tests": 7,
+      "executed": 7,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ReadOnlyToolSizeRegressionTest",
+      "tests": 3,
+      "executed": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalPromptFrameTest",
+      "tests": 8,
+      "executed": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolDurableOutcomeTest",
+      "tests": 8,
+      "executed": 8,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalToolContinuationTest",
+      "tests": 6,
+      "executed": 6,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest",
+      "tests": 1,
+      "executed": 1,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest",
+      "tests": 3,
+      "executed": 3,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest",
+      "tests": 2,
+      "executed": 2,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "counts": {
+    "total": 1681,
+    "executed": 1678,
+    "passed": 1676,
+    "failed": 2,
+    "skipped": 3
+  },
+  "failures": [
+    "INCOMPLETE_OR_FAILED_JUNIT"
+  ]
+}

@@ -12,7 +12,9 @@ export const REQUIRED_ANDROID_SUITES=Object.freeze([
   'at.heinz.deviceai.localmodel.LocalToolContinuationTest',
   'at.heinz.deviceai.cognitive.ModelNeutralBrainIntegrationTest',
   'at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest',
-  'at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest'
+  'at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest',
+  'at.heinz.deviceai.cognitive.UnknownOutcomeSafetyTest',
+  'at.heinz.deviceai.localmodel.LocalInferenceDeliveryTest'
 ]);
 const validator=fileURLToPath(new URL('./continuum-junit-validator.py',import.meta.url));
 
@@ -25,7 +27,9 @@ export function androidEvidence({root,startedAtMillis,finishedAtMillis=Date.now(
       !Number.isSafeInteger(finishedAtMillis)||finishedAtMillis<startedAtMillis)
     reject('INVALID_TEST_TIME_BOUNDARY');
   const stat=fs.lstatSync(dir,{throwIfNoEntry:false});
-  const names=stat?.isDirectory()&&!stat.isSymbolicLink()?fs.readdirSync(dir):[];
+  const safeDirectory=stat?.isDirectory()&&!stat.isSymbolicLink()&&fs.realpathSync(dir)===path.resolve(dir);
+  if(stat&&!safeDirectory)reject('SYMLINKED_OR_INVALID_JUNIT_DIRECTORY');
+  const names=safeDirectory?fs.readdirSync(dir):[];
   const files=names.filter(n=>n.endsWith('.xml'));
   if(files.length===0||files.length>2000)reject('EMPTY_OR_OVERSIZED_JUNIT');
   for(const name of files) {
@@ -36,18 +40,22 @@ export function androidEvidence({root,startedAtMillis,finishedAtMillis=Date.now(
   }
   for(const klass of REQUIRED_ANDROID_SUITES) {
     const name='TEST-'+klass+'.xml';
-    if(!files.includes(name)){reject('MISSING_REQUIRED_SUITE:'+klass);continue;}
+    if(!files.includes(name))reject('MISSING_REQUIRED_SUITE:'+klass);
+  }
+  for(const name of files) {
+    const klass=name.replace(/^TEST-/,'').replace(/\.xml$/,'');
+    const required=REQUIRED_ANDROID_SUITES.includes(klass);
     if(failures.some(x=>x==='STALE_OR_INVALID_JUNIT:'+name))continue;
     try {
-      const counts=JSON.parse(execFileSync('python3',[validator,path.join(dir,name),klass],
+      const counts=JSON.parse(execFileSync('python3',[validator,path.join(dir,name),klass,...(required?[]:['--allow-skipped'])],
         {encoding:'utf8',timeout:10000,maxBuffer:32768,stdio:['ignore','pipe','pipe']}));
-      if(!Number.isSafeInteger(counts.executed)||counts.executed<1||counts.skipped!==0||
+      if(!Number.isSafeInteger(counts.executed)||(required&&(counts.executed<1||counts.skipped!==0))||
           counts.failures!==0||counts.errors!==0)throw Error('Invalid execution counts');
-      mandatory.push({name:klass,...counts});
-    } catch {reject('REQUIRED_SUITE_NOT_EXECUTED:'+klass);}
+      if(required)mandatory.push({name:klass,...counts});
+    } catch {reject('INVALID_OR_UNEXECUTED_SUITE:'+klass);}
   }
   // Never follow symlinked XML into the aggregate parser.
-  const aggregate=failures.some(x=>x.startsWith('STALE_OR_INVALID_JUNIT:'))?null:
+  const aggregate=failures.length?null:
     readJUnitDirectory(dir,root);
   if(!aggregate?.evidenceComplete||aggregate.executed<1||aggregate.failed!==0||
       aggregate.placeholders!==0)reject('INCOMPLETE_OR_FAILED_JUNIT');
@@ -79,9 +87,14 @@ export function nodeReceiptEvidence(receipt,expectedHead,profile,startedAtMillis
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
     const [kind,rootOrFile,sourceOrStart,profile,start]=process.argv.slice(2);
-    const result=kind==='android'?androidEvidence({root:rootOrFile,startedAtMillis:Number(sourceOrStart)}):
-      kind==='node'?nodeReceiptEvidence(JSON.parse(fs.readFileSync(rootOrFile,'utf8')),
-        sourceOrStart,profile,Number(start)):null;
+    let result;
+    if(kind==='android')result=androidEvidence({root:rootOrFile,startedAtMillis:Number(sourceOrStart)});
+    else if(kind==='node') {
+      const file=path.resolve(rootOrFile),s=fs.lstatSync(file);
+      if(!s.isFile()||s.isSymbolicLink()||s.size<1||s.size>8_000_000||fs.realpathSync(file)!==file||
+          s.mtimeMs<Number(start)-1000||s.mtimeMs>Date.now()+1000)throw Error('INVALID_NODE_RECEIPT_FILE');
+      result=nodeReceiptEvidence(JSON.parse(fs.readFileSync(file,'utf8')),sourceOrStart,profile,Number(start));
+    }
     if(!result)throw Error('Usage: continuum-qa-evidence.mjs android ROOT START | node RECEIPT SHA PROFILE START');
     process.stdout.write(JSON.stringify(result,null,2)+'\n');
     process.exitCode=result.status==='PASS'?0:1;

@@ -398,6 +398,18 @@ class BoundedAgentOrchestrator(
                                     sha256Bytes(it.toByteArray(Charsets.UTF_8)).toHex()
                                 }, fresh, lastRecord.outcomeUncertain)
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
+                            if (lastRecord.outcomeUncertain || requiresReview) {
+                                // Do not let a model reissue an unresolved effect under
+                                // a new call id or turn a replay into fresh experience.
+                                val blocked = if(lastRecord.outcomeUncertain)
+                                    "Werkzeugausgang UNKNOWN: Eine bereits ausgelöste Wirkung kann fortbestehen. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else "Gespeicherte Quittung: keine neue Ausführung oder frische Beobachtung. " +
+                                    "Weitere Aktionen benötigen Besitzerprüfung."
+                                emit(CognitiveWorkState.BLOCKED, invocation.id)
+                                return AgentRunResult(blocked,AgentState.OBSERVE_RESULT,audit.toList(),
+                                    null,blocked,proof())
+                            }
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output
                             )

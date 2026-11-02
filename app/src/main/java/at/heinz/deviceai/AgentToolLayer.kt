@@ -180,13 +180,15 @@ class ToolGate(
         if (cancelled.get()) {
             runCatching {
                 val prior = receiptStore?.get(request.callId)
+                uncertainOutcome = prior?.outcomeUncertain == true || prior?.state == ToolReceiptState.START_PENDING
                 if (prior != null && prior.state in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
-                    receiptStore.transition(
-                        request.callId, prior.state, ToolReceiptState.CANCELLED, receiptClock().coerceAtLeast(0)
-                    )
+                    val saved=receiptStore.transition(request.callId, prior.state, ToolReceiptState.CANCELLED,
+                        receiptClock().coerceAtLeast(prior.transitions.last().atMillis))
+                    if(saved==null)uncertainOutcome=true
                 }
-            }
-            return result(ToolExecutionStatus.CANCELLED, "Task cancelled.")
+            }.onFailure {uncertainOutcome=true}
+            return result(ToolExecutionStatus.CANCELLED,if(uncertainOutcome)
+                "Task cancelled; prior or concurrent dispatch outcome UNKNOWN, operator review required." else "Task cancelled before dispatch.")
         }
         val validation = ToolProposal(request.name, request.arguments).validate()
         if (validation != null) return result(ToolExecutionStatus.REJECTED, validation)
@@ -222,8 +224,10 @@ class ToolGate(
             if (current != null) {
                 val terminal = if (status == ToolExecutionStatus.CANCELLED) ToolReceiptState.CANCELLED
                 else ToolReceiptState.REJECTED
-                runCatching { receiptStore?.transition(request.callId, current.state, terminal,
-                    receiptClock().coerceAtLeast(current.transitions.last().atMillis)) }
+                val saved=runCatching { receiptStore?.transition(request.callId, current.state, terminal,
+                    receiptClock().coerceAtLeast(current.transitions.last().atMillis)) }.getOrNull()
+                if(saved==null)return result(status,
+                    "Receipt conflict: concurrent dispatch outcome UNKNOWN; operator review required.",uncertain=true)
             }
             return result(status, reason)
         }
@@ -251,7 +255,8 @@ class ToolGate(
         }
         if (!consumedCallIds.add(request.callId)) {
             calls.decrementAndGet()
-            return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Duplicate tool call id rejected by replay guard.")
+            return result(ToolExecutionStatus.REJECTED,
+                "Duplicate active call id; concurrent outcome UNKNOWN, replay blocked.",uncertain=true)
         }
         if (receipt != null) {
             if (receipt.state == ToolReceiptState.PROPOSED) {
@@ -268,7 +273,8 @@ class ToolGate(
                 calls.decrementAndGet()
                 return result(
                     ToolExecutionStatus.REJECTED,
-                    "Durable receipt state changed; execution was blocked for operator review."
+                    "Durable receipt conflict: concurrent outcome UNKNOWN; execution blocked for operator review.",
+                    uncertain=true
                 )
             }
         }

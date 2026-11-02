@@ -1,0 +1,3 @@
+MODEL_OBSERVATIONS_AFTER_UNKNOWN=[AgentToolObservation(toolName=stop_app, status=FAILED, output=null)]
+UNKNOWN_AUTORETRY effects=2 approvals=2 callIds=[ambiguous-task-1, ambiguous-task-2] flags=[true, true] blocker=null response=App successfully stopped. experience=PARTIAL verified=false
+UNKNOWN_COMPILER_INCLUDED=true occurrenceCount=5 successRate=0.8 eligible=true sources=[agent-e441b07e57f59d128f6c25a634b137d7-1793647781407-0, known-success-1, known-success-2, known-success-3, known-success-4]
