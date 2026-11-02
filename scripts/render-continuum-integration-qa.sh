@@ -77,10 +77,32 @@ node --test scripts/continuum-atomic-acceptance.test.mjs scripts/continuum-gguf-
   { tail -n 100 continuum-all-systems-logs/NODE-SPECIAL.txt; fail 'Node special contract failed'; }
 qa_proofs="$(mktemp -d "${TMPDIR:-/tmp}/continuum-integrated-qa.XXXXXXXX")"
 node scripts/continuum-reliability-qa.mjs critical --out "$qa_proofs/critical" > continuum-all-systems-logs/NODE-CRITICAL.txt 2>&1 ||
-  { tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt; fail 'Node critical failed'; }
+  { if [[ -f "$qa_proofs/critical/report.json" ]]; then
+    node - "$qa_proofs/critical/report.json" <<'NODE'
+const fs=require('node:fs');
+const report=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+for(const check of report.checks||[])
+  console.log('NODE_GATE '+JSON.stringify({id:check.id,status:check.status,
+    code:check.code,reason:check.reason,diagnostics:(check.tests?.diagnostics||[]).map(d=>({
+      id:d.id,fingerprint:d.fingerprint})).slice(0,8)}));
+NODE
+  fi
+  tail -n 100 continuum-all-systems-logs/NODE-CRITICAL.txt
+  fail 'Node critical failed'
+}
 cp "$qa_proofs/critical/report.json" continuum-all-systems-logs/CRITICAL-RECEIPT.json
 node scripts/continuum-reliability-qa.mjs full-node --out "$qa_proofs/full-node" > continuum-all-systems-logs/NODE-FULL.txt 2>&1 ||
-  { tail -n 100 continuum-all-systems-logs/NODE-FULL.txt; fail 'Full Node failed'; }
+  { if [[ -f "$qa_proofs/full-node/report.json" ]]; then
+    node - "$qa_proofs/full-node/report.json" <<'NODE'
+const fs=require('node:fs'),r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+for(const c of r.checks||[])console.log('NODE_FULL_GATE '+JSON.stringify({
+  id:c.id,status:c.status,code:c.code,reason:c.reason,
+  diagnostics:(c.tests?.diagnostics||[]).map(x=>x.fingerprint).slice(0,8)}));
+NODE
+  fi
+  tail -n 100 continuum-all-systems-logs/NODE-FULL.txt
+  fail 'Full Node failed'
+}
 cp "$qa_proofs/full-node/report.json" continuum-all-systems-logs/FULL-NODE-RECEIPT.json
 gradle --no-daemon --rerun-tasks --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m' -Pkotlin.compiler.execution.strategy=in-process -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=38 :app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug > continuum-all-systems-logs/ANDROID-TESTS.txt 2>&1 ||
   { tail -n 150 continuum-all-systems-logs/ANDROID-TESTS.txt; fail 'Android test/lint failure'; }
