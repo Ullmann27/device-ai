@@ -234,6 +234,7 @@ class AgentActivity : Activity() {
     private var voiceEngine: TextToSpeech? = null
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var appLookupGeneration: Long = 0L
+    private var appLookupActive: Boolean = false
     private var pendingLocalSpeechRequest: Int? = null
     private var pendingLocalSpeechSession: String? = null
     private var pendingLocalSpeechGeneration: Long = -1L
@@ -551,6 +552,11 @@ class AgentActivity : Activity() {
     override fun onPause() {
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
+        if (appLookupActive) {
+            appLookupActive = false
+            activeLocalRequest = false
+            setBusy(false)
+        }
         // Ending the full recognition scope also invalidates pending Android permission callbacks.
         cancelSpeechInputScope()
         foregroundLearningActive = false
@@ -2448,11 +2454,13 @@ class AgentActivity : Activity() {
     private fun runExplicitAppLookup(query: String) {
         val ownerSession = sessionId
         val generation = ++appLookupGeneration
+        appLookupActive = true
         activeLocalRequest = true
         setBusy(true)
         val invocation = ToolCallRequest("explicit-lookup-" + UUID.randomUUID(), "find_app", mapOf("query" to query))
         executeTool(invocation, false, false) { raw ->
             if (isFinishing || isDestroyed || sessionId != ownerSession || appLookupGeneration != generation) return@executeTool
+            appLookupActive = false
             activeLocalRequest = false
             setBusy(false)
             val response = runCatching {
@@ -7072,6 +7080,13 @@ class AgentActivity : Activity() {
 
     private fun cancelLocalRequest() {
         appLookupGeneration++
+        if (appLookupActive) {
+            appLookupActive = false
+            activeLocalRequest = false
+            setBusy(false)
+            addToolActivity("Appsuche abgebrochen; spätes Ergebnis wird ignoriert")
+            return
+        }
         cancelSpeechInputScope()
         if (::executor.isInitialized) executor.cancelPendingActions()
         // Clear synchronously; already queued native deltas also check the
