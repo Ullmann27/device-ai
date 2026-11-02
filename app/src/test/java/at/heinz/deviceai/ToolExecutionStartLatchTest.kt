@@ -162,6 +162,27 @@ class ReadOnlyToolSizeRegressionTest {
             Risk.READ_ONLY,emptyMap(),"",ToolExecutionStatus.SUCCEEDED,1,raw.length)).success)
     }
 
+    @Test fun completeRenderedResponseBoundaryPreservesEvidenceOrBlocks() {
+        val prefixLength = ToolRegistry.label("get_storage_info").length + 2
+        for (length in listOf(1, 500, 7_990, 8_000 - prefixLength,
+                8_001 - prefixLength, 8_000, 8_001)) {
+            val plan = ReadOnlyToolPlan(ToolProposal("get_storage_info", emptyMap()))
+            val raw = "x".repeat(length)
+            val response = plan.generate("Prüfe Speicher", emptyList(), null,
+                listOf(AgentToolObservation("get_storage_info", ToolExecutionStatus.SUCCEEDED, raw)))
+            val record = ToolExecutionRecord("case-$length", "get_storage_info", Risk.READ_ONLY,
+                emptyMap(), "", ToolExecutionStatus.SUCCEEDED, 0, length)
+            assertTrue(response.response.length <= 8_000)
+            if (length + prefixLength <= 8_000) {
+                assertTrue(response.response.endsWith(raw))
+                assertTrue(plan.evaluate(response.response, record).success)
+            } else {
+                assertTrue(response.response.contains("nicht bestätigt"))
+                assertFalse(plan.evaluate(response.response, record).success)
+            }
+        }
+    }
+
     @Test fun shortFullOutputRemainsVerifiable() {
         val plan=ReadOnlyToolPlan(ToolProposal("get_storage_info",emptyMap()))
         val raw="Gesamt: 123 Byte"
