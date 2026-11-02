@@ -30,13 +30,16 @@ async function fixture(t){
     '#!/bin/sh\nif [ "$CONTINUUM_TEST_FAIL_GRADLE" = "yes" ]; then exit 1; fi\n'+
     'if [ "$CONTINUUM_TEST_FIXTURE_EMIT_JUNIT" = "yes" ]; then\n'+
     'mkdir -p app/build/test-results/testDebugUnitTest\n'+
-    'printf \'%s\\n\' \'<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>\' > app/build/test-results/testDebugUnitTest/TEST-synthetic.xml\n'+
+    'for suite in at.heinz.deviceai.ToolExecutionStartLatchTest at.heinz.deviceai.ReadOnlyToolSizeRegressionTest at.heinz.deviceai.cognitive.LocalPromptFrameTest; do\n'+
+    'if [ "$CONTINUUM_TEST_FIXTURE_OMIT_SUITE" = "yes" ] && [ "$suite" = "at.heinz.deviceai.cognitive.LocalPromptFrameTest" ]; then continue; fi\n'+
+    'printf \'%s\\n\' \'<testsuite tests="1" failures="0"><testcase name="synthetic"/></testsuite>\' > "app/build/test-results/testDebugUnitTest/TEST-$suite.xml"\n'+
+    'done\n'+
     'fi\nexit 0\n');
   await fs.writeFile(path.join(repo,'.github/continuum/repair-diagnostics.mjs'),[
     'import fs from "node:fs"; import path from "node:path";',
     'export function readJUnitDirectory(dir){',
-    'const ok=fs.existsSync(path.join(dir,"TEST-synthetic.xml"));',
-    'return {total:ok?1:0,executed:ok?1:0,passed:ok?1:0,failed:0,',
+    'const total=fs.existsSync(dir)?fs.readdirSync(dir).filter(x=>x.startsWith("TEST-")&&x.endsWith(".xml")).length:0;',
+    'return {total,executed:total,passed:total,failed:0,',
     'skipped:0,placeholders:0,evidenceComplete:true};',
     '}'
   ].join('\n')+'\n');
@@ -104,6 +107,13 @@ test('exact-SHA local QA wrapper refuses false evidence and protects source',asy
   assert.equal(r.receipt?.checks[1].status,'FAIL');
 
   const newJunit={CONTINUUM_TEST_FIXTURE_EMIT_JUNIT:'yes'};
+  r=await invoke(f,'missing-critical-suite',f.sha,{
+    ...newJunit,CONTINUUM_TEST_FIXTURE_OMIT_SUITE:'yes'
+  });
+  assert.equal(r.result.status,1);
+  assert.equal(r.receipt?.status,'FAIL');
+  assert.equal(r.receipt?.checks[1].status,'FAIL');
+
   r=await invoke(f,'node-report-bad',f.sha,{...newJunit,CONTINUUM_TEST_NODE_BAD:'yes'});
   assert.equal(r.result.status,1);
   assert.equal(r.receipt?.status,'FAIL');
