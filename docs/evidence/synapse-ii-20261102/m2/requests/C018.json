@@ -1,0 +1,18 @@
+{
+  "id": "C018",
+  "question": "Wo wohnt Zykunote?",
+  "sources": [
+    {
+      "revision": 4,
+      "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+      "sourceId": "bc:C018:s1",
+      "text": "Zykunote wohnt in Uvrosabo Uvsogosu Uvpaveza und Qecarizi wohnt in Uvfonedi."
+    },
+    {
+      "revision": 5,
+      "sha256": "86d8ea8d3037cc64216394382b657c166eb35f5c03a93742a6d16b56d38fd2fc",
+      "sourceId": "bc:C018:s2",
+      "text": "Qevilece wohnt in Uvzohaje. Qepekabi wohnt in Uvlisili."
+    }
+  ]
+}

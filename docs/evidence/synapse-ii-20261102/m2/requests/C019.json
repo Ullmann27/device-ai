@@ -1,0 +1,24 @@
+{
+  "id": "C019",
+  "question": "Wo lebt Zyzefove?",
+  "sources": [
+    {
+      "revision": 5,
+      "sha256": "389753cadc493bca6304699e1eb514868995b46ed7eb248e09b7c73ed6b7a999",
+      "sourceId": "bc:C019:s1",
+      "text": "Qecibesi lebt in Uvcucama. Qefojalu lebt in Uvlimezo."
+    },
+    {
+      "revision": 6,
+      "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+      "sourceId": "bc:C019:s2",
+      "text": "Qefofuci lebt in Uvfugoco Uvgavonu; Zyzefove lebt in Uvdaniti."
+    },
+    {
+      "revision": 7,
+      "sha256": "3b6e01456207b352161431ad8d910793eca777ff1aa039b5b2157a3f00e127eb",
+      "sourceId": "bc:C019:s3",
+      "text": "Qesujutu lebt in Uvkolizu. Qefojalu lebt in Uvlimezo."
+    }
+  ]
+}

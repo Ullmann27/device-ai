@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C014:s1",
+    "decision": "SPAN",
+    "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvpubuca Uvcomite",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "RULE": {
+    "sourceId": "bc:C014:s1",
+    "decision": "SPAN",
+    "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvpubuca Uvcomite",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C014:s1",
+    "decision": "SPAN",
+    "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+    "endExclusive": 81,
+    "start": 64,
+    "text": "Uvpubuca Uvcomite",
+    "offsetEncoding": "UTF-16",
+    "revision": 7
+  },
+  "rawMillis": 78.998942
+}

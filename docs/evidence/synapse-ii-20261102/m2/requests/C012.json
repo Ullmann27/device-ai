@@ -1,0 +1,30 @@
+{
+  "id": "C012",
+  "question": "Wo steht Zysenodu?",
+  "sources": [
+    {
+      "revision": 5,
+      "sha256": "9683f06695ff654acba09f27bedeea45f559072b14bf4262a38ee0fa08df1cb3",
+      "sourceId": "bc:C012:s1",
+      "text": "Qerukaje steht in Uvzojatu. Qecemasa steht in Uvsabuli."
+    },
+    {
+      "revision": 6,
+      "sha256": "792a1fde4660f6a3e1448e611c8ad11cf713fac9b2522451fb9065832912d64b",
+      "sourceId": "bc:C012:s2",
+      "text": "Qebejude steht in Uvcitavu. Qecemasa steht in Uvsabuli."
+    },
+    {
+      "revision": 7,
+      "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+      "sourceId": "bc:C012:s3",
+      "text": "Qemonocu steht in Uvjaloti, Zysenodu steht in Uvnebaka Uvjibile Uvlogase."
+    },
+    {
+      "revision": 1,
+      "sha256": "4f95296d8656fc444e498733e3d82efe56a6b87a8767471a21f07e71d116d8d6",
+      "sourceId": "bc:C012:s4",
+      "text": "Qetidiga steht in Uvbucaca. Qecemasa steht in Uvsabuli."
+    }
+  ]
+}

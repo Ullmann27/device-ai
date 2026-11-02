@@ -1,0 +1,18 @@
+{
+  "id": "C052",
+  "question": "Wo wohnt Zydelucu?",
+  "sources": [
+    {
+      "revision": 3,
+      "sha256": "3d288d42c9930cbc7127c5dc4e84aad6f7a6c1241d64fb852f6cebada93c5970",
+      "sourceId": "bc:C052:s1",
+      "text": "Zydelucu wohnt in Uvzitalo Uvpubogu."
+    },
+    {
+      "revision": 4,
+      "sha256": "fbb84a1f295dd101b29bab6f5951f7764fde9b5203cef656127a6efdcb28e7ff",
+      "sourceId": "bc:C052:s2",
+      "text": "Zydelucu wohnt nicht in Uvvofoci."
+    }
+  ]
+}

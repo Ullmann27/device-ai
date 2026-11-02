@@ -1,0 +1,38 @@
+{
+  "schema": "CDX2_POINTER_LOG_LINEAR_V1",
+  "checkpointBytes": 910,
+  "verifierAccepted": true,
+  "classificationOnly": true,
+  "parameterCount": 11,
+  "RAW": {
+    "sourceId": "bc:C019:s2",
+    "decision": "SPAN",
+    "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+    "endExclusive": 61,
+    "start": 53,
+    "text": "Uvdaniti",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "RULE": {
+    "sourceId": "bc:C019:s2",
+    "decision": "SPAN",
+    "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+    "endExclusive": 61,
+    "start": 53,
+    "text": "Uvdaniti",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "VERIFIED": {
+    "sourceId": "bc:C019:s2",
+    "decision": "SPAN",
+    "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+    "endExclusive": 61,
+    "start": 53,
+    "text": "Uvdaniti",
+    "offsetEncoding": "UTF-16",
+    "revision": 6
+  },
+  "rawMillis": 66.140193
+}

@@ -1,0 +1,18 @@
+{
+  "id": "C023",
+  "question": "Wo lebt Zyfaluda?",
+  "sources": [
+    {
+      "revision": 2,
+      "sha256": "292225813232afa839fc8842af0ca6e6eb76359e64086da87668b871973d0429",
+      "sourceId": "bc:C023:s1",
+      "text": "Qebigeno lebt in Uvtamicu Uvcefonu Uvbiculi."
+    },
+    {
+      "revision": 3,
+      "sha256": "ab26d0c7572f7d13f498dc35a99369bd17bac6d43c66e49584e0ac31d0217320",
+      "sourceId": "bc:C023:s2",
+      "text": "Zyfaluda spielt Schach."
+    }
+  ]
+}
