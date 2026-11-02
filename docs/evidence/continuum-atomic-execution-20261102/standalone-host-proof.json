@@ -17,6 +17,12 @@
       "githubBlobSha1": "323252e6c51c4014aa601117b0c80b232392e4bc",
       "localCompiledCopyGitBlobSha1": "323252e6c51c4014aa601117b0c80b232392e4bc",
       "match": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlan.kt",
+      "githubBlobSha1": "ce3df482e8750f6b570dc1166daefe56e3563369",
+      "localCompiledCopyGitBlobSha1": "ce3df482e8750f6b570dc1166daefe56e3563369",
+      "match": true
     }
   ],
   "commands": [
@@ -32,13 +38,28 @@
       "environment": "Linux x64 JDK21 Kotlin1.9; exact identical GitHub file plus manually reconstructed equivalent ChatReasoningRouter.composePrompt and LocalChatPromptBudget stubs",
       "status": "PASS",
       "meaning": "Mandatory owner text, negation, optional history omission, advisory exclusion, Unicode/CJK/emoji; does NOT prove full Android Activity"
+    },
+    {
+      "cmd": "kotlinc ToolExecutionStartLatch.kt WrappedCancellationHarness.kt -include-runtime -d wrapped-cancel.jar && java -jar wrapped-cancel.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact ToolExecutionStartLatch class, standalone JDK future simulation, not full ToolGate",
+      "status": "PASS",
+      "cases": 2,
+      "meaning": "FutureTask worker CancellationException is wrapped in ExecutionException; test decision maps wrapper to CANCELLED; cannot certify ToolGate integration alone"
+    },
+    {
+      "cmd": "kotlinc ReadOnlyToolPlan.kt ReadOnlyToolStubs.kt ReadOnlyCognitiveStubs.kt ReadOnlyOutputHarness.kt -include-runtime -d output-test.jar && java -jar output-test.jar",
+      "environment": "Linux x64 JDK21 Kotlin1.9; exact GitHub ReadOnlyToolPlan class blob with controlled minimal project interface stubs",
+      "status": "PASS",
+      "cases": 8204,
+      "meaning": "Length 1..8200 inclusive: 7990 accepted/verified, 210 rejected oversized; 3 oversized Unicode cases blocked; failed observation rejected, no response >8000. Real BoundedAgent/ExperienceCompiler not compiled here."
     }
   ],
   "githubSourceChanges": [
     "Atomic start-commit latch integrated into existing ToolGate; cancel+commit serialized and pending timeout uses atomic revocation; already committed outcome explicitly ambiguous when terminalized",
     "ReadOnlyToolPlan rejects complete formatted output >8000 with unverified response instead of throwing or falsely promoting success",
     "LocalPromptFrame protects mandatory body and tail; Activity no longer duplicates task when compiled; optional history omitted whole if no room; explicit clarification on mandatory budget overflow",
-    "JUnit regression files committed but full project JUnit NOT_RUN"
+    "JUnit regression files committed but full project JUnit NOT_RUN",
+    "Gitar finding: unwrap worker-side CancellationException from FutureTask ExecutionException as CANCELLED, not FAILED; new isolated regressions cover the wrapped cause and post-commit UNKNOWN no-retry"
   ],
   "unverified": [
     "Full Android Gradle and Kotlin2.4 compile",
@@ -47,7 +68,8 @@
     "Full Node suite and Android lint",
     "Late side-effecting backend after logical commit under OS preemption",
     "Fold7 native device/APK/owner model",
-    "Gitar/CodeRabbit new review approval"
+    "Gitar/CodeRabbit new review approval",
+    "New JUnit exact boundary and wrapped-cancellation tests are committed, but actual Gradle project test run NOT_RUN"
   ],
   "status": "SOURCE_INTEGRATED / STANDALONE_HOST_VERIFIED; PRODUCT_HOST_QA_NOT_RUN; DEVICE_NOT_RUN",
   "safety": "No main merge; no owner data or signing changes; no PR354 Android-click or PR356 GGUF/Termux file changes; backend commit does not imply observed side-effect or safe rollback. Fail-closed and no automatic replay."
