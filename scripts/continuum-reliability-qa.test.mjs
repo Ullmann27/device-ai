@@ -2,9 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {assessNodeOutcome,renderReport,GATES} from './continuum-reliability-qa.mjs';
+import {assessNodeOutcome,renderReport,sameSource,GATES} from './continuum-reliability-qa.mjs';
 const good={ok:true,code:0,terminationConfirmed:true,error:null,exitSignal:null};
 const xml=body=>`<testsuites><testsuite name="suite"><testcase name="real assertion" classname="suite">${body}</testcase></testsuite></testsuites>`;
+test('source binding includes branch-dependent gates even when HEAD and bytes stay identical',()=>{
+  const before={commit:'a'.repeat(40),branch:'research/qa',treeDigest:'b'.repeat(64)};
+  assert.equal(sameSource(before,{...before}),true);
+  for(const field of ['commit','branch','treeDigest'])assert.equal(sameSource(before,{...before,[field]:'changed'}),false);
+});
 test('QA requires actual executed evidence and confirmed cleanup',()=>{
   assert.equal(assessNodeOutcome(good,xml('')).status,'PASS');
   for(const result of [{...good,terminationConfirmed:false},{...good,code:3},{...good,error:'TIMEOUT'},

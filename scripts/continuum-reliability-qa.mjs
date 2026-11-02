@@ -52,6 +52,9 @@ function identity() {
   return {commit:git(['rev-parse','HEAD']),branch:git(['branch','--show-current']),inputsSha256:inputs,
     treeDigest:hash(JSON.stringify(inputs))};
 }
+export function sameSource(before,after) {
+  return after.commit===before.commit&&after.branch===before.branch&&after.treeDigest===before.treeDigest;
+}
 export function renderReport(report) {
   const rows=report.checks.map(c=>`| ${c.id} | ${c.severity} | ${c.status} | ${c.code??'—'} | ${c.tests?.passed??'—'} / ${c.tests?.failed??'—'} / ${c.tests?.skipped??'—'} |`).join('\n');
   return '<!-- coderabbit-ai-generated:v1 -->\n\n# Continuum reliability QA\n\n'+
@@ -78,7 +81,8 @@ async function main(args) {
   const full={id:'full-node',severity:'P0',files:['.github/continuum','scripts'].flatMap(dir=>
     fs.readdirSync(path.join(root,dir)).filter(n=>n.endsWith('.test.mjs')).sort().map(n=>dir+'/'+n))};
   const selected=profile==='critical'?GATES:[full];
-  const report={schemaVersion:1,profile,source,startedAt,environment:{node:process.versions.node,
+  const report={schemaVersion:1,generatedBy:'CodeRabbit Agent',generator:'scripts/continuum-reliability-qa.mjs',
+    profile,source,startedAt,environment:{node:process.versions.node,
     platform:process.platform,arch:process.arch,release:os.release()},checks:[],status:'FAIL',sourceUnchanged:false};
   const controller=new AbortController();
   const cancel=()=>controller.abort();
@@ -103,9 +107,10 @@ async function main(args) {
     }
   } finally {
     process.removeListener('SIGINT',cancel);process.removeListener('SIGTERM',cancel);
-    const after=identity();report.sourceUnchanged=after.commit===source.commit&&after.treeDigest===source.treeDigest;
+    const after=identity();report.sourceUnchanged=sameSource(source,after);
+    report.cancelled=controller.signal.aborted;
     report.finishedAt=new Date().toISOString();
-    report.status=report.sourceUnchanged&&report.checks.length===selected.length&&report.checks.every(c=>c.status==='PASS')?'PASS':'FAIL';
+    report.status=!report.cancelled&&report.sourceUnchanged&&report.checks.length===selected.length&&report.checks.every(c=>c.status==='PASS')?'PASS':'FAIL';
     for(const id of ['gradle','lint','apk','fold7','model-inference'])report.checks.push({id,severity:'P0',status:'NOT_RUN',reason:'OUTSIDE_SELECTED_HOST_SCOPE'});
     fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n',{mode:0o600});
     fs.writeFileSync(path.join(out,'report.md'),renderReport(report),{flag:'wx',mode:0o600});

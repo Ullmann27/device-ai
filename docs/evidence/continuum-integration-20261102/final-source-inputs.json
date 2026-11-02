@@ -1,0 +1,13 @@
+{
+  "generatedBy": "CodeRabbit Agent",
+  "baseCommit": "40915a079463aabf26db4ba48b7ffcf191835409",
+  "inputSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumScreenObservationService.kt": "9cce5b01af33fe339c4977e63b93dd502b7798e500a78b51f03b01ce2ec51a26",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt": "bd5957a3b2081f912c544abfef5c6944e33c921d7e617a86fb0c580d34f13ad5",
+    "app/src/main/res/xml/continuum_screen_observation.xml": "4f8cbc33a3d61e8991ffb3a5a24245e2fcae256d9fdc6f88ca01e95e8ccef358",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoffTest.kt": "e92edc5399757615a8318e1dddd770846af47e08267f5922ab26ca4d6f74ec84",
+    "scripts/continuum-reliability-qa.mjs": "ce3e3e6478ea8e986dea5d96ee94a32808f043f25c88983cfa9b3cecc8afca8a",
+    "scripts/continuum-reliability-qa.test.mjs": "c3a0e2342eb5776717d04fd4f403fd8223357fc64393a3e615c6fff68c48fe22",
+    "app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt": "6d3091221dcbb656ad6c37aba284c4376c50190a1e4e921d9dc084010f85eced"
+  }
+}

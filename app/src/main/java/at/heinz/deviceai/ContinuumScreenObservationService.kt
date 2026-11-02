@@ -13,6 +13,10 @@ class ContinuumScreenObservationService:AccessibilityService(){
     override fun onServiceConnected(){super.onServiceConnected();ScreenObservationBus.connect(this)}
     override fun onAccessibilityEvent(event:AccessibilityEvent?){
         if(event==null)return
+        if(event.eventType==AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED){
+            ScreenObservationBus.contentChanged(this)
+            return // Invalidate an in-flight read; do not capture text or invent a launch observation.
+        }
         if(event.eventType==AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED||
             event.eventType==AccessibilityEvent.TYPE_WINDOWS_CHANGED){
             val root=rootInActiveWindow?:return
@@ -51,6 +55,8 @@ internal object ScreenObservationBus:ForegroundEvents{
     fun interrupt(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){epoch++;latest=null;wakeSequence++;lock.notifyAll()}}
     fun observed(s:ContinuumScreenObservationService,pkg:String)=synchronized(lock){if(service===s&&pkg.isNotBlank()){
         latest=ForegroundWindow(pkg,++sequence,epoch);lock.notifyAll()}}
+    fun contentChanged(s:ContinuumScreenObservationService)=synchronized(lock){if(service===s){
+        sequence++;lock.notifyAll()}}
     override fun grantEpoch():Long?=synchronized(lock){if(service!=null)epoch else null}
     override fun revision():Long=synchronized(lock){sequence}
     override fun wake()=synchronized(lock){wakeSequence++;lock.notifyAll()}
