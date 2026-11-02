@@ -35,7 +35,13 @@ internal object NativeAppLookup {
             .replace(Regex("(?iu)\\s+app$"), "").trim()
         require(needle.length >= 2) { "INVALID_APP_QUERY" }
         val apps = available.asSequence()
-            .filter { packagePattern.matches(it.packageName) && it.label.isNotBlank() }
+            .filter { app ->
+                packagePattern.matches(app.packageName) && app.label.isNotBlank() &&
+                    app.label.length <= 200 && app.label.none { ch ->
+                        ch.isISOControl() || ch in '\u202A'..'\u202E' ||
+                            ch in '\u2066'..'\u2069' || ch in '\u200B'..'\u200F'
+                    }
+            }
             .distinctBy { it.packageName }
             .toList()
         val exact = apps.filter {
