@@ -27,6 +27,15 @@ Evidence: `docs/evidence/continuum-atomic-execution-20261102/standalone-host-pro
 - Neue JUnit-Regressionsquellen: `ToolExecutionStartLatchTest.kt` (wrapped cancellation, 128 Raceversuche, Timeout/Widerruf/UNKNOWN, Ausgabegrenzen), `LocalPromptFrameTest.kt` (Spätkorrekturen und UTF-8-Mehrbyte-Grenzen). Gegen produktiven Android-/Gradle-Quellbaum weiterhin **NOT_RUN**.
 - Der vorherige CodeRabbit-`full review`-Aufruf wurde aufgrund einer in der Zwischenzeit verschobenen HEAD-SHA abgewiesen. Nach finalem Dokumentationscommit muss er für die dann aktuelle HEAD **erneut** gestartet und separat als ausstehend oder erfolgreich belegt werden.
 
+## Nachtrag: zweiter unabhängiger Gitar-Befund und frühe UTF-8-Grenze
+
+- Gitar meldete nach Einführung des konservativen UTF-8-Promptlimits einen zweiten realen Randfall: `LocalChatPromptBudget.acceptsCompleteTask` prüfte nur UTF-16-Zeichen, sodass ein großer CJK-/Emoji-Auftrag zunächst zugelassen und erst nach der kognitiven Vorbereitung abgewiesen wurde.
+- Produktquelltext `LocalChatPromptBudget.kt` wurde deshalb um **denselben konservativen UTF-8-Byte-Check** ergänzt; Eingaben über 7.900 Zeichen **oder** UTF-8-Bytes erhalten früh `CLARIFICATION` und erreichen nicht erst den Modellaufruf. Eigener JUnit-Grenztest für ASCII/CJK/Emoji ergänzt.
+- Exakte Quelle des Früh-Gates Git-Blob `1db85d0b57d35c5ee1e5c5f69d92a62bd918f009`; gemeinsam mit exakter neuer `LocalPromptFrame.kt` auf Linux/JDK21/Kotlin1.9 mit kontrollierten Klassifizierer-/Router-Stubs kompiliert. Grenzfälle **PASS**; der tatsächliche Android-Lauf, reale Modelltokenlänge und vollständige Gradle-Prüfung sind weiterhin **NOT_RUN**.
+- Das zweite Gitar-Review hat den Befund als `Approved with suggestions` angemahnt; die Abhilfe ist committet. Eine neue Bestätigung durch unabhängige Nachprüfung ist separat abzuwarten; **nicht** aus einem Commit selbst ableiten, dass der Review geschlossen ist.
+- Der bisherige CodeRabbit-Aufruf war zwischenzeitlich wegen bewegter HEAD-SHA ungültig geworden. Ein neuer Review ist erst auf der stabilen finalen SHA belastbar.
+- Die isolierte Quellkompilierung mit Stubs beweist nur den geprüften Ausschnitt. Es gibt **keinen** vollständigen Android-Quellbaum im lokalen Host, und Render bietet aktuell keine unverändert auf PR359 zeigende QA-Instanz. Keine bestehenden QA-Dienste für fremde Branches umkonfiguriert, keine neue Dienstinstanz erstellt.
+
 ## Next independent verification commands in a real complete checkout
 ```bash
 git rev-parse HEAD
