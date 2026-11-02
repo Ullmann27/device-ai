@@ -6504,18 +6504,21 @@ class AgentActivity : Activity() {
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
                     if (internetConsent.revision() != internetRevisionAtTurnStart) {
+                        lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Internetfreigabe geändert, Antwort verworfen; bitte die Anfrage neu starten")
                         return@onSuccess
                     }
                     if (modelWebSessions.any { !it.isAuthorized() }) {
+                        lastLocalReply = null
                         if (sessionId == localSessionId && !ephemeralScreenRun.get())
                             localConversationContext.recordUnanswered(localSessionId, text)
                         addToolActivity("WEB · Freigabe widerrufen, lokale Antwort verworfen")
                         return@onSuccess
                     }
                     if(!at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {
+                        lastLocalReply = null
                         addToolActivity("Bildschirmfreigabe geändert: Antwort verworfen.")
                         setBusy(false);return@onSuccess
                     }
