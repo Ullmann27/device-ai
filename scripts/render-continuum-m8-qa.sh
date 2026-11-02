@@ -30,6 +30,7 @@ case "$(git branch --show-current)" in \
   research/continuum-sol61-post-fable-20261101|\
   research/continuum-340-evidence-routing-20261101|\
   research/continuum-341-brain-wiring-qa-20261101|\
+  research/continuum-synapse-ii-20261102|\
   release/continuum-v35-integrated-20261031|"") ;; \
   *) die "Unexpected branch" ;; \
 esac

@@ -9,3 +9,9 @@ M2: reproduce frozen55case corpus with existing independent PR342scorer, unchang
 M3: existing CCC1 submitRepair→cycle→canonical repairSession→isolatedworktree→publishRepair(push:false) in disposable fixtureGitrepo. Actual RED/GREEN, independent control and fixture commit/receipt required, not simulated workers. DeviceTermuxNOT_RUN. No duplicate scheduler/backlog or paidAPI requirement.
 
 Models: Astra/high for independent architecture/security review, Sol/high for candidate execution and bounded real worker proof. All outcomes must be independently read and checked by root before claims. Final status, exact commits, artifacts, commands and next GPT-6 coding task will be recorded here. Existing frozen tests/old research preserved; meaningful steps, no invented100-step counter.
+
+## M1 first code result
+
+Current-source RED2/4 new dialogue tests: a confirmed named move/revoked move/equal timestamp left old Graz in actual memoryIds and grounded=true. Fix in existing OwnerAttributeEvidenceScope adds only a remove-only full-owner-ledger move barrier BEFORE verb/relation narrowing; same-name anchored head, existingassertionAt semantics, tombstones, equal/newer blocks; later fresh explicit residence can pass. Other names/attributes/web/unconfirmed sources do not invalidate it. No fact deleted or weight touched. New4tests + existing owner location/age/family20/20 focused JVM PASS. Independent Astra reproduced actualdialogue rank=[]/grounded=false after fix. This is narrow named move grammar, not general temporal/coreference resolution. Session 'Das stimmt nicht'/'Sie zog...' remains a documented next task. Full immutable-source host running.
+
+PR342 exact Render73273678 proof and all10log hashes readbackmatch. Old NOT_RUN statements in prior handoff are historical; current baseline built/JUnit/lint/unsigned artifacts confirmed, not a new owner release.
