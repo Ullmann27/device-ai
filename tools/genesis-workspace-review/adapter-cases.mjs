@@ -2,8 +2,8 @@
 const H='a'.repeat(64),S='b'.repeat(40);
 export function fresh(){return {
  now:1000,
- profiles:[{agentId:'bot-atlas',workspaceId:'workspace-bot-atlas'},{agentId:'bot-forge',workspaceId:'workspace-bot-forge'},{agentId:'bot-lint',workspaceId:'workspace-bot-lint'}],
- canonical:{taskId:'t-'+'c'.repeat(16),jobId:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',sourceCommit:S,attemptId:'attempt-1',requestMessageId:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',requestHash:H,grantFingerprint:H,currentGrant:true,terminal:false,unknownEffect:false,builderId:'bot-forge',verifierId:'bot-lint',allowedTools:['fixed-node-test'],remainingModelCalls:2,remainingToolCalls:2,expiresAt:2000,seenMessageIds:[]},
+ profiles:['atlas','forge','lint'].map(name=>({agentId:'bot-'+name,workspaceId:'workspace-bot-'+name,resourceBudget:{maxModelCalls:1,maxToolCalls:4,deadlineMillis:120000}})),
+ canonical:{taskId:'t-'+'c'.repeat(16),jobId:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',sourceCommit:S,attemptId:'attempt-1',requestMessageId:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',requestHash:H,grantFingerprint:H,currentGrant:true,terminal:false,unknownEffect:false,builderId:'bot-forge',verifierId:'bot-lint',allowedTools:['fixed-node-test'],remainingModelCalls:2,remainingToolCalls:2,expiresAt:2000,seenMessageIds:[],stageSenders:{BUILD:'bot-atlas',VERIFY:'bot-forge',REMEMBER:'bot-lint',REPORT:'bot-mnemos'}},
  message:{schemaVersion:1,messageId:'ffffffff-ffff-4fff-8fff-ffffffffffff',fromAgentId:'bot-atlas',toAgentId:'bot-forge',stage:'BUILD',taskId:'t-'+'c'.repeat(16),jobId:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',sourceCommit:S,attemptId:'attempt-1',requestMessageId:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',requestHash:H,grantFingerprint:H,persistentWorkspaceId:'workspace-bot-forge',expiresAt:1900,requestedTools:['fixed-node-test'],modelCalls:1,toolCalls:1,evidenceRefs:[]}
 };}
 const mutation=(id,mutate)=>({id,expected:'REJECT',make(){const x=fresh();mutate(x);return x;}});
