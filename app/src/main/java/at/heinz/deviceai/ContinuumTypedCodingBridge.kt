@@ -26,7 +26,7 @@ internal object ContinuumTypedCodingBridge {
         }
     }
     data class Result(val operation:Operation,val id:String,val hash:String,val status:String,
-        val message:String,val prepared:Boolean=false,val patchSha256:String?=null)
+        val message:String,val prepared:Boolean=false,val patchSha256:String?=null,val ccc1TaskId:String?=null)
 
     fun parseAuthorization(json:String?,hash:String?):ContinuumCodingTask.Authorization? {
         if(json == null || json.length !in 2..MAX_JSON || hash==null || !SHA.matches(hash))return null
@@ -56,11 +56,19 @@ internal object ContinuumTypedCodingBridge {
         }.getOrNull()
     }
 
+    /** All saved fields must describe the same complete reviewed snapshot. */
+    fun parseBoundAuthorization(json:String?,hash:String?,id:String?,sourceCommit:String?):ContinuumCodingTask.Authorization? =
+        parseAuthorization(json,hash)?.takeIf { it.task.id==id && it.task.sourceCommit==sourceCommit }
+
     /**
      * Human-readable, lossless review of exactly the task bound to the typed bridge.
      * This remains presentation only; a task hash cannot authenticate its author.
      */
-    fun preparationReview(authorization:ContinuumCodingTask.Authorization):String? = runCatching {
+    fun preparationReview(authorization:ContinuumCodingTask.Authorization):String? = taskReview(authorization,false)
+
+    fun executionReview(authorization:ContinuumCodingTask.Authorization):String? = taskReview(authorization,true)
+
+    private fun taskReview(authorization:ContinuumCodingTask.Authorization,execute:Boolean):String? = runCatching {
         val task=authorization.task
         require(task.problems().isEmpty() && task.fingerprint()==authorization.taskSha256)
         require(task.canonicalJson().length in 2..MAX_JSON)
@@ -83,8 +91,14 @@ internal object ContinuumTypedCodingBridge {
             append("Maximale Modellaufrufe: ").append(task.limits.maxModelCalls).append('\n')
             append("Maximale Kontextzeichen: ").append(task.limits.maxContextChars).append("\n\n")
             append("Vollständiger Task-SHA-256:\n").append(authorization.taskSha256).append("\n\n")
-            append("VORBEREITUNG: Nur den an den Fingerabdruck gebundenen CCC1-Auftrag anlegen. ")
-            append("Kein KI-Modell ausführen, keinen Patch übernehmen, keine APK installieren. ")
+            if(execute) {
+                append("AUSFÜHRUNG: Nur diesen vollständig geprüften Auftrag mit den angegebenen Grenzen starten. ")
+                append("CCC1, feste Testkette, Reparatur und unabhängige Prüfung bleiben erforderlich. ")
+                append("Keinen Patch automatisch übernehmen, keine APK installieren. ")
+            } else {
+                append("VORBEREITUNG: Nur den an den Fingerabdruck gebundenen CCC1-Auftrag anlegen. ")
+                append("Kein KI-Modell ausführen, keinen Patch übernehmen, keine APK installieren. ")
+            }
             append("Ein passender SHA-256-Fingerabdruck ist keine kryptografische Besitzeridentität.")
         }
     }.getOrNull()
@@ -124,9 +138,11 @@ internal object ContinuumTypedCodingBridge {
         val source=(o["sourceCommit"] as? String)?.takeIf { COMMIT.matches(it) }?:return invalid()
         if(!COMMIT.matches(expectedSourceCommit)||source!=expectedSourceCommit)return invalid()
         if(operation==Operation.PREPARE && status=="PREPARED_NOT_EXECUTED") {
-            if(!CCC1.matches(o["ccc1TaskId"] as? String ?: "" ) || o["replayed"] !is Boolean)return invalid()
+            val ccc1TaskId=o["ccc1TaskId"] as? String ?: return invalid()
+            if(!CCC1.matches(ccc1TaskId) || o["replayed"] !is Boolean)return invalid()
             return Result(operation,id,hash,status,
-                "Coding-Auftrag für Commit ${source.take(12)} vorbereitet. Noch kein Modell gestartet.",prepared=true)
+                "Coding-Auftrag für Commit ${source.take(12)} vorbereitet. Noch kein Modell gestartet.",
+                prepared=true,ccc1TaskId=ccc1TaskId)
         }
         if(operation==Operation.RUN && status in setOf("EXECUTION_REPORTED_UNVERIFIED","PATCH_PENDING_OWNER_REVIEW")){
             val patch=(o["patchSha256"] as? String)?.takeIf { SHA.matches(it) }

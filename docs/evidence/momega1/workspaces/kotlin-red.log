@@ -1,0 +1,184 @@
+Exact existing compiled pool/mailbox classpath; absent adapter RED exit 1
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:14:58: error: unresolved reference 'WorkspaceTaskScope'.
+    private fun scope(worker: String = "worker-alpha") = WorkspaceTaskScope(
+                                                         ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:18:30: error: unresolved reference 'WorkspaceTaskScope'.
+    private fun brief(scope: WorkspaceTaskScope) = WorkerBrief(scope.workerId, "synthetic bounded host profile", emptySet(), 2_000)
+                             ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:18:70: error: unresolved reference 'workerId'.
+    private fun brief(scope: WorkspaceTaskScope) = WorkerBrief(scope.workerId, "synthetic bounded host profile", emptySet(), 2_000)
+                                                                     ^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:19:36: error: unresolved reference 'WorkspaceTaskScope'.
+    private fun observation(scope: WorkspaceTaskScope) = WorkspaceObservation(scope,
+                                   ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:19:58: error: unresolved reference 'WorkspaceObservation'.
+    private fun observation(scope: WorkspaceTaskScope) = WorkspaceObservation(scope,
+                                                         ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:25:48: error: unresolved reference 'WorkspaceDelivery'.
+        val deliveries = ConcurrentLinkedQueue<WorkspaceDelivery>()
+                                               ^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:26:29: error: unresolved reference 'ChiefWorkspacePort'.
+        val port = object : ChiefWorkspacePort {
+                            ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:27:41: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun execute(scope: WorkspaceTaskScope) = observation(scope)
+                                        ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:28:40: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun cancel(scope: WorkspaceTaskScope) = Unit
+                                       ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:30:20: error: unresolved reference 'ChiefWorkspaceWiring'.
+        val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { deliveries += it })
+                   ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:30:102: error: unresolved reference 'it'.
+        val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { deliveries += it })
+                                                                                                     ^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:31:44: error: unresolved reference 'ChiefWorkspaceWiring'.
+        val pool = ChiefWorkerPool(1, 0) { ChiefWorkspaceWiring.job(it, scope, port) }
+                                           ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:39:26: error: unresolved reference 'WorkspaceDeliveryStatus'.
+            assertEquals(WorkspaceDeliveryStatus.DELIVERED, deliveries.single().status)
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:39:72: error: unresolved reference 'WorkspaceDelivery'.
+            assertEquals(WorkspaceDeliveryStatus.DELIVERED, deliveries.single().status)
+                                                                       ^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:39:81: error: unresolved reference 'status'.
+            assertEquals(WorkspaceDeliveryStatus.DELIVERED, deliveries.single().status)
+                                                                                ^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:24: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                       ^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:50: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                 ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:50: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                 ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:50: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                 ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:106: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                                                                         ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:106: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                                                                         ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:45:106: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        for (result in listOf(observation(scope).copy(scope = scope("worker-other")), observation(scope).copy(teardownConfirmed = false))) {
+                                                                                                         ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:46:33: error: unresolved reference 'ChiefWorkspacePort'.
+            val port = object : ChiefWorkspacePort {
+                                ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:47:45: error: unresolved reference 'WorkspaceTaskScope'.
+                override fun execute(scope: WorkspaceTaskScope) = result
+                                            ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:48:44: error: unresolved reference 'WorkspaceTaskScope'.
+                override fun cancel(scope: WorkspaceTaskScope) = Unit
+                                           ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:50:63: error: unresolved reference 'ChiefWorkspaceWiring'.
+            assertThrows(IllegalStateException::class.java) { ChiefWorkspaceWiring.job(brief(scope), scope, port).run() }
+                                                              ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:50:115: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            assertThrows(IllegalStateException::class.java) { ChiefWorkspaceWiring.job(brief(scope), scope, port).run() }
+                                                                                                                  ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:50:115: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            assertThrows(IllegalStateException::class.java) { ChiefWorkspaceWiring.job(brief(scope), scope, port).run() }
+                                                                                                                  ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:52:68: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(sourceCommit = "main") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:52:68: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(sourceCommit = "main") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:52:68: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(sourceCommit = "main") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:53:68: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(profile = "free-shell") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:53:68: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(profile = "free-shell") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:53:68: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(profile = "free-shell") }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:54:68: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(memoryMb = 99_999) }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:54:68: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(memoryMb = 99_999) }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:54:68: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertThrows(IllegalArgumentException::class.java) { scope.copy(memoryMb = 99_999) }
+                                                                   ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:55:62: error: unresolved reference 'ChiefWorkspaceWiring'.
+        assertThrows(IllegalArgumentException::class.java) { ChiefWorkspaceWiring.job(brief(scope("worker-other")), scope, object : ChiefWorkspacePort {
+                                                             ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:55:133: error: unresolved reference 'ChiefWorkspacePort'.
+        assertThrows(IllegalArgumentException::class.java) { ChiefWorkspaceWiring.job(brief(scope("worker-other")), scope, object : ChiefWorkspacePort {
+                                                                                                                                    ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:56:41: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun execute(scope: WorkspaceTaskScope) = observation(scope)
+                                        ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:57:40: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun cancel(scope: WorkspaceTaskScope) = Unit
+                                       ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:66:29: error: unresolved reference 'ChiefWorkspacePort'.
+        val port = object : ChiefWorkspacePort {
+                            ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:67:41: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun execute(scope: WorkspaceTaskScope): WorkspaceObservation {
+                                        ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:67:62: error: unresolved reference 'WorkspaceObservation'.
+            override fun execute(scope: WorkspaceTaskScope): WorkspaceObservation {
+                                                             ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:72:40: error: unresolved reference 'WorkspaceTaskScope'.
+            override fun cancel(scope: WorkspaceTaskScope) { cancelled.countDown() }
+                                       ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:75:44: error: unresolved reference 'ChiefWorkspaceWiring'.
+        val pool = ChiefWorkerPool(1, 0) { ChiefWorkspaceWiring.job(it, scope, port) }
+                                           ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:84:19: error: unresolved reference 'ChiefWorkspaceWiring'.
+        val job = ChiefWorkspaceWiring.job(brief(scope), scope, port)
+                  ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:86:84: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertThrows(java.util.concurrent.CancellationException::class.java) { job.run() }
+                                                                                   ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:86:84: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        assertThrows(java.util.concurrent.CancellationException::class.java) { job.run() }
+                                                                                   ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:94:48: error: unresolved reference 'WorkspaceDelivery'.
+        val deliveries = ConcurrentLinkedQueue<WorkspaceDelivery>()
+                                               ^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:95:20: error: unresolved reference 'ChiefWorkspaceWiring'.
+        val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { deliveries += it })
+                   ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:95:102: error: unresolved reference 'it'.
+        val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { deliveries += it })
+                                                                                                     ^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:96:9: error: unresolved reference 'sink'.
+        sink(WorkerReport(scope.workerId, WorkerStatus.FAILED, "failed profile", 1))
+        ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:97:9: error: unresolved reference 'sink'.
+        sink(WorkerReport("other-worker", WorkerStatus.DONE, "fake scope", 1))
+        ^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:29: error: unresolved reference 'WorkspaceDeliveryStatus'.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:71: error: unresolved reference 'WorkspaceDeliveryStatus'.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:130: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                                                                                                                                 ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:130: error: unresolved reference 'WorkspaceDelivery'.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                                                                                                                                 ^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:134: error: unresolved reference 'WorkspaceDelivery'.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                                                                                                                                     ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/chief/ChiefWorkspaceWiringTest.kt:98:139: error: unresolved reference 'status'.
+        assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
+                                                                                                                                          ^^^^^^

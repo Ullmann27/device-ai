@@ -1,0 +1,30 @@
+✔ normal caller cannot certify a serialized runtime observation (1.244779ms)
+✔ coding CLI blocks endpoint-only configuration before any network/model call (52.425714ms)
+✔ unapproved or absent local weights never produce runtime observations (0.997095ms)
+✔ actual namespace binds admitted descriptors and fixture output; never inference evidence (58.323466ms)
+✔ altered model/runtime, unsafe executable and mismatched request cannot execute (36.998446ms)
+✔ deadline cancels actual isolated process with bounded return (289.825089ms)
+✔ STOP cancels actual isolated process and leaves no trusted observation (182.571733ms)
+✔ malformed/oversized output and missing generation counters are rejected (134.279605ms)
+✔ sandbox exposes no checkout, HOME, network, secret or configurable shell (1.084246ms)
+✔ actual FD mount retains selected inode across model path replacement (48.881494ms)
+✔ prompt evaluation counter alone cannot masquerade as output generation (41.958348ms)
+✔ inference sandbox denies host files, external interfaces, secrets and writable model (45.021934ms)
+✔ seccomp denies fork and rlimits bound native memory/descriptor budgets (46.114257ms)
+✔ changing model during actual execution invalidates otherwise valid output (245.057686ms)
+✔ production provider rejects synthetic fixture receipt even when transport MAC is valid (123.728756ms)
+✔ self-asserted inference flag is rejected instead of upgraded or accepted (58.184616ms)
+✔ native worker threads remain permitted while process creation stays denied (46.418497ms)
+✔ unavailable isolation launcher fails closed and creates no observation (36.405943ms)
+✔ integration strict observation option rejects injected unobserved provider replies (58.121741ms)
+✔ integration technical recall enters prompt as bounded untrusted data within context budget (56.231549ms)
+✔ integration malformed recall and strict remote selection fail before transport (49.947023ms)
+✔ process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind (134.502965ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1830.023061

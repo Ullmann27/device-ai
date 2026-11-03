@@ -1,0 +1,57 @@
+{
+  "status": 0,
+  "error": null,
+  "signal": null,
+  "stdout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"actual filesystem namespace, no network and cgroup limits\" time=\"3.006539\" classname=\"test\" file=\"/work/.github/continuum/isolation.test.mjs\"/>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3062.790218 -->\n</testsuites>\n\n",
+  "stderr": "",
+  "ms": 0,
+  "junitFiles": [
+    "/workspace/momega1-workspace-review/docs/evidence/momega1/workspace-review/host-8aba17c6/isolated-22d5b81053a501530d97/TEST-0.xml"
+  ],
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 256,
+    "pids": 64,
+    "cpus": 1,
+    "timeoutMs": 15000,
+    "runtime": "runc",
+    "sourceSha256": "d8452de0de8981ee0786fed24a3f10f851cdf49c02f9df62599f03eba4111b09",
+    "profile": "node-continuum",
+    "untrustedReports": true,
+    "workspaceId": "continuum-f03b752aa5de65257b49224c",
+    "workspaceBinding": {
+      "workerId": "worker-alpha",
+      "taskId": "t-2c9843492c944f63",
+      "requestMessageId": "e327e236-a889-46a7-b4bf-2fe7159cc154",
+      "requestHash": "063cd8d72af028d5a2e8134ebfe2bd2745eca32724a57b675e7f1f2aca5e8316",
+      "sourceCommit": "494ac1982dc67829e6a94f1b47c86d6608854fdf",
+      "jobId": "8adc0d56-b94f-4d65-8894-a3436a383f38"
+    },
+    "observed": {
+      "containerId": "40ceb3fe07645032c10d29a4f82f8a1051571ce4f2148b19a2b0db4bbb67fdd3",
+      "runtime": "runc",
+      "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+      "user": "1000:1000",
+      "network": "none",
+      "readOnly": true,
+      "memoryBytes": 268435456,
+      "memorySwapBytes": 268435456,
+      "nanoCpus": 1000000000,
+      "pids": 64,
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges:true"
+      ],
+      "writableHostMounts": 0
+    },
+    "teardownConfirmed": true
+  }
+}

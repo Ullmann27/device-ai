@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: MΩ Android run selects admitted local-model observation gate
+not ok 1 - MΩ Android run selects admitted local-model observation gate
+  ---
+  duration_ms: 2.535929
+  type: 'test'
+  location: '/workspace/momega1-loop/scripts/continuum-momega1-bridge.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + undefined
+    - true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/scripts/continuum-momega1-bridge.test.mjs:8:52)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 260.118117

@@ -1,0 +1,25 @@
+{
+  "candidate": "37e16cefac4ee3b794d79540214a69f1c6181b82",
+  "base": "ca93fb4f7a17ff7a2a13debd93197ba485594f06",
+  "classification": [
+    "CONTRACT_TEST",
+    "HOST_INTEGRATION"
+  ],
+  "actual_model_inference": "NOT_RUN",
+  "fold7": "FOLD7_NOT_RUN",
+  "node": "v24.19.0",
+  "tests": {
+    "pass": 35,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "post_suite_owned_fixture_pgrep_exit": 1,
+  "sha256": {
+    "docs/evidence/momega1/challenger/runtime-full.diff": "32d184ae3ec0ce63bdf417a0a13dbd01d4cb5be11236c251d05c116fd9cb497a",
+    "tools/momega1-challenger/runtime-review.test.mjs": "cedf626877e1880fd9646517591f81f4ed754662fb372fedeb2ce721e182dc81",
+    "tools/momega1-challenger/provider-contract.test.mjs": "bcccaa2cb8f04c539333974c6b43e793ebb9aa58c5b5d24a85fc74dc7a95e02b",
+    "tools/momega1-challenger/synthetic-runtime.c": "9f2989a10c2666b20fce4fb985c46b54bb84c47573bb7fc1307a7b1370231a3e",
+    "docs/evidence/momega1/challenger/runtime-review.tap": "5c0b5292599e929560bc9a603d7f5c6f7862251824794d49fa69ac95ae5bf473"
+  }
+}
