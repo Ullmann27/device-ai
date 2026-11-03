@@ -273,6 +273,7 @@ class AgentActivity : Activity() {
     private var readinessVoiceSampleId: String? = null
     private var readinessVoiceSampleStarted = false
     private var readinessIntroShown = false
+    private var readinessWelcomePending = false
     private lateinit var neuralMonitor: TextView
     private lateinit var neuralProgress: ProgressBar
     private var neuralAutoButton: Button? = null
@@ -456,21 +457,10 @@ class AgentActivity : Activity() {
         bootstrapMemory = BootstrapMemoryStore(this)
         voiceEnabled = bootstrapMemory.voiceEnabled
         restoreInternetMode()
+        val regularVoiceGreeting = savedInstanceState == null &&
+            getSharedPreferences("continuum-readiness", MODE_PRIVATE).getBoolean("introduced", false)
         voiceEngine = TextToSpeech(this) { status ->
-            voiceInitialized = true
-            if (status == TextToSpeech.SUCCESS) {
-                installVoiceProgressListener()
-                val language = voiceEngine?.setLanguage(Locale.GERMAN)
-                val offlineVoice=voiceEngine?.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language=="de" }
-                    ?.maxByOrNull { it.quality }
-                if(offlineVoice!=null)voiceEngine?.setVoice(offlineVoice)
-                voiceEngine?.setPitch(at.heinz.deviceai.cognitive.JarvisVoiceProfile.pitch)
-                voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
-                voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE &&
-                    at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)
-                if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
-            }
-            refreshReadinessGuide()
+            onLocalVoiceInitialized(status, regularVoiceGreeting)
         }
         backend = AgentBackendClient(this)
         // process-wide: a recreated activity keeps a loaded model (LocalModelHost)
@@ -595,8 +585,12 @@ class AgentActivity : Activity() {
         if (!readinessIntroShown && !getSharedPreferences("continuum-readiness", MODE_PRIVATE)
                 .getBoolean("introduced", false)) {
             readinessIntroShown = true
+            readinessWelcomePending = true
             showReadinessGuide()
+            if (readinessDialog?.isShowing == true) getSharedPreferences("continuum-readiness", MODE_PRIVATE)
+                .edit().putBoolean("introduced", true).apply()
         }
+        maybePlayReadinessWelcome()
     }
 
     override fun onPause() {
@@ -613,6 +607,7 @@ class AgentActivity : Activity() {
         stopReadinessCamera()
         readinessVoiceSampleId = null
         readinessVoiceSampleStarted = false
+        readinessWelcomePending = false
         readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
         readinessVoiceResult = "Hörtest noch nicht bestätigt."
         foregroundLearningActive = false
@@ -2145,6 +2140,7 @@ class AgentActivity : Activity() {
                 if (voiceUtteranceId == readinessVoiceSampleId) { voiceEngine?.stop(); stopVoiceAnimation() }
                 readinessVoiceSampleId = null
                 readinessVoiceSampleStarted = false
+                readinessWelcomePending = false
                 readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
                 getSharedPreferences("continuum-readiness", MODE_PRIVATE).edit().putBoolean("introduced", true).apply()
             }
@@ -2261,7 +2257,7 @@ class AgentActivity : Activity() {
             }
         }, matchWidth(top = 16))
         box.addView(actionButton("AKTUALISIEREN").apply {
-            setOnClickListener { refreshReadinessGuide() }
+            setOnClickListener { refreshOfflineVoice(); refreshReadinessGuide() }
         }, matchWidth(top = 6))
     }
 
@@ -2315,6 +2311,7 @@ class AgentActivity : Activity() {
     }
 
     private fun playReadinessVoiceSample() {
+        readinessWelcomePending = false
         readinessVoiceSampleStarted = false
         readinessVoiceSampleId = null
         if (!voiceEnabled || !voiceReady || !foregroundLearningActive) {
@@ -2325,6 +2322,47 @@ class AgentActivity : Activity() {
         speakBootstrap(ContinuumReadinessGuide.VOICE_SAMPLE)
         readinessVoiceSampleId = voiceUtteranceId
         if (readinessVoiceSampleId == null) readinessVoiceResult = "Die Stimme konnte gerade nicht gestartet werden."
+    }
+
+    private fun maybePlayReadinessWelcome() {
+        if (!readinessWelcomePending) return
+        if (!voiceEnabled || isFinishing || isDestroyed || readinessDialog?.isShowing != true) {
+            readinessWelcomePending = false
+            return
+        }
+        if (!voiceReady || !foregroundLearningActive) return
+        // One welcome only after the selected offline engine and visible guide are ready.
+        // Its actual TTS onStart still gates hearing confirmation; no input device opens.
+        playReadinessVoiceSample()
+        refreshReadinessGuide()
+    }
+
+    private fun onLocalVoiceInitialized(status: Int, allowRegularGreeting: Boolean) {
+        if (voiceInitialized || isFinishing || isDestroyed) return
+        voiceInitialized = true
+        if (status == TextToSpeech.SUCCESS) {
+            installVoiceProgressListener()
+            refreshOfflineVoice()
+            if (readinessWelcomePending) maybePlayReadinessWelcome()
+            else if (allowRegularGreeting && voiceReady && voiceEnabled)
+                speakBootstrap("Hallo. Device AI ist bereit.")
+        }
+        refreshReadinessGuide()
+    }
+
+    private fun refreshOfflineVoice() {
+        if (!voiceInitialized) return
+        voiceReady = runCatching {
+            val engine = voiceEngine ?: return@runCatching false
+            val offline = engine.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language == "de" }
+                ?.maxByOrNull { it.quality } ?: return@runCatching false
+            engine.setVoice(offline) == TextToSpeech.SUCCESS &&
+                at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
+        }.getOrDefault(false)
+        if (voiceReady) {
+            voiceEngine?.setPitch(at.heinz.deviceai.cognitive.JarvisVoiceProfile.pitch)
+            voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
+        }
     }
 
     /**
