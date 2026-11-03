@@ -325,7 +325,14 @@ class FileLearningExperienceStore(private val directory:File) {
             Lex3LearningExperienceStore.requireRegular(lock)
         java.nio.channels.FileChannel.open(lock.toPath(),java.nio.file.StandardOpenOption.CREATE,
             java.nio.file.StandardOpenOption.WRITE,java.nio.file.LinkOption.NOFOLLOW_LINKS).use { channel ->
-            channel.lock().use { block() }
+            channel.lock().use {
+                val result=block()
+                // A no-op retry may follow a failed post-rename fsync. Content equality alone
+                // must not acknowledge a mutation until the committed directories are durable.
+                if(write && primary.exists() && Lex3LearningExperienceStore.isManifest(readPrimary()))
+                    lex3.forceCommittedDirectories()
+                result
+            }
         }
     }
 

@@ -86,6 +86,15 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
         runCatching { cleanup(descriptors.map { it.hash }.toSet()); syncDirectory(root) }
     }
 
+    /** Reassert publication durability before acknowledging ANY mutation, including idempotent retries.
+     * A prior call may have renamed the manifest successfully then failed its directory fsync.
+     */
+    fun forceCommittedDirectories() {
+        requireDirectory(root)
+        syncDirectory(root)
+        syncDirectory(directory)
+    }
+
     private fun cleanup(keep: Set<String>) {
         Files.newDirectoryStream(root.toPath(),"*.seg").use { paths ->
             for (path in paths) {
