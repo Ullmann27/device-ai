@@ -12,3 +12,7 @@ First increment: independent GLB validation criteria frozen before inspecting ge
 Read: AGENTS, current state, Frontier handoff, experiment contract/register, issue41, PR287, avatar contract, avatar-live results, hologram design, actual AvatarDirector/Contract/renderer/view/Activity calls. Device/GPU/visual performance and face likeness NOT_RUN.
 
 Rollback: revert this branch; default orb and existing 2D remain. Next: freeze independent contract, pin/read official Filament artifacts, implement first increment and focused tests.
+
+First source increment: 6 focused JVM JUnit tests PASS for metadata negatives, named mappings, gaze, reduced motion, stale/stop utterance handling through existing reducer. Optional native path WIP/UNVERIFIED: pinned Filament + gltfio 1.56.0 official Maven Central artifacts/source inspected, Apache-2.0, arm64-v8a/armeabi-v7a/x86/x86_64. No ModelViewer or utilities dependency. Metadata validator runs before JNI; native engine exists only for visible selected validated asset/surface, detached/paused/thermal/power save releases native resources. Asset is not bundled on this Android branch; absent asset gives existing 2D fallback. Geometry branch supplies independently reviewed candidate.
+
+Current code needs focused Android API compile, stronger binary index/skin validation, independent geometric validator implementation and QA review. Full Gradle/device/GPU NOT_RUN. Draft PR https://github.com/Ullmann27/device-ai/pull/405.
