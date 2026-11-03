@@ -124,7 +124,6 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         views.values.forEach { removeView(it) }
         views.clear()
         hologram.setGeometry(when {
-            spec.wide && ContinuumHomeLayout.isPortraitFold(windowWidthDp, windowHeightDp) -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
             spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
             else -> ContinuumHologramRenderer.Geometry.PHONE
         })

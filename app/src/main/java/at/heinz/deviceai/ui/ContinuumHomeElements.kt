@@ -45,7 +45,7 @@ class HeaderBrandElement(textScale: Float = 1f, private val large: Boolean = fal
             h / 2f + 1f, title, solid(ContinuumTheme.TEXT))
         val subtitle = t(400, 10f)
         p.drawText(ContinuumSurfaces.fit(p, "Dein lokaler KI-Assistent", subtitle, w - x - 4f), x,
-            h / 2f + 18f * textScale, subtitle, solid(ContinuumTheme.TEXT_SECONDARY))
+            h - 7f, subtitle, solid(ContinuumTheme.TEXT_SECONDARY))
     }
     override fun describe(s: ContinuumDashboardState) = "Continuum. Dein lokaler KI-Assistent. Cockpit öffnen."
 
