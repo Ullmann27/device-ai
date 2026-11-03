@@ -1,0 +1,1 @@
+HARNESS_COMPILE_FAILURE: screenshot fixture CharSequence?.orEmpty does not compile. No product tests executed. Existing XML, if present, is stale from prior run and NOT a result. Corrected fixture95842979 runs only on final645 source.
