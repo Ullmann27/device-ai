@@ -35,13 +35,13 @@ class IndependentFirstWelcomeUiTest {
     private fun set(a:AgentActivity,name:String,value:Any?)=AgentActivity::class.java.getDeclaredField(name).apply {isAccessible=true}.set(a,value)
     private fun get(a:AgentActivity,name:String)=AgentActivity::class.java.getDeclaredField(name).apply {isAccessible=true}.get(a)
     private fun invoke(a:AgentActivity,name:String)=AgentActivity::class.java.getDeclaredMethod(name).apply {isAccessible=true}.invoke(a)
-    private fun fixture(muted:Boolean=false,network:Boolean=false):Pair<AgentActivity,TextToSpeech> {
+    private fun fixture(muted:Boolean=false,network:Boolean=false,notInstalled:Boolean=false):Pair<AgentActivity,TextToSpeech> {
         val a=Robolectric.buildActivity(AgentActivity::class.java).get()
         val memory=BootstrapMemoryStore(a)
         if(muted)memory.voiceEnabled=false
         set(a,"bootstrapMemory",memory);set(a,"voiceEnabled",memory.voiceEnabled)
         ShadowTextToSpeech.addLanguageAvailability(Locale.GERMAN)
-        val v=Voice("independent-${if(network)"network" else "offline"}",Locale.GERMAN,Voice.QUALITY_NORMAL,Voice.LATENCY_NORMAL,network,emptySet())
+        val v=Voice("independent-${if(network)"network" else "offline"}",Locale.GERMAN,Voice.QUALITY_NORMAL,Voice.LATENCY_NORMAL,network,if(notInstalled)setOf(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) else emptySet())
         ShadowTextToSpeech.addVoice(v)
         // Same immutable allow flag captured by the real constructor before first onResume.
         regularGreetingAllowed[a]=a.getSharedPreferences("continuum-readiness",Context.MODE_PRIVATE).getBoolean("introduced",false)
@@ -126,6 +126,15 @@ class IndependentFirstWelcomeUiTest {
             invoke(a,"onResume");initialized(a)
             assertTrue(ControlledTts.spoken.isEmpty());assertEquals(false,get(a,"voiceReady"))
             assertEquals(false,get(a,"readinessVoiceSampleStarted"))
+        }finally {close(a,tts)}
+    }
+    @Test fun uninstalledOfflineFlagCannotProduceWelcomeOrTriggerDownload() {
+        val(a,tts)=fixture(notInstalled=true)
+        try {
+            invoke(a,"onResume");initialized(a)
+            assertTrue(ControlledTts.spoken.isEmpty());assertEquals(false,get(a,"voiceReady"))
+            assertNull(shadowOf(a.application).nextStartedService)
+            assertNull(shadowOf(a).nextStartedActivity)
         }finally {close(a,tts)}
     }
 }
