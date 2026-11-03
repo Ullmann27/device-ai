@@ -159,6 +159,29 @@ test('repair receipt proof binds coverage to command details without losing inde
  });
 });
 
+test('non-success repair verdicts require completed baseline evidence',async t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-repair-refutation-'));
+ t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const good=verifiedReceipt(dir),bind={job:good.job,commit:good.commit,chain:'node'};
+ for(const status of ['NO_FAILURE_FOUND','FAILED_REPAIR']){
+  const r={...structuredClone(good),status,patch:null,evidence:null,commands:[{...good.commands[0]}]};
+  if(status==='NO_FAILURE_FOUND')Object.assign(r.commands[0],{passed:true,exitCode:0,failed:0});
+  await t.test(status+' valid completed baseline',()=>assert.equal(verifyRepairReceipt(r,bind).verdict,'REFUTED'));
+  const changes=[
+   ['timeout',x=>{x.commands[0].timedOut=true;}],
+   ['signal exit',x=>{x.commands[0].exitCode=null;}],
+   ['contradicting exit',x=>{x.commands[0].exitCode=status==='NO_FAILURE_FOUND'?1:0;}],
+   ['zero executed tests',x=>{x.commands[0].executed=0;}],
+   ['string executed count',x=>{x.commands[0].executed='3';}],
+   ['extra run record',x=>{x.commands.push({...x.commands[0],phase:'extra'});}],
+  ];
+  for(const [what,mutate] of changes)await t.test(status+' '+what,()=>{
+   const x=structuredClone(r);mutate(x);
+   assert.equal(verifyRepairReceipt(x,bind).verdict,'INCONCLUSIVE');
+  });
+ }
+});
+
 test('CCC1 repairs a real regression end to end and records it once for the owner to review',{skip:nested,timeout:300000},async()=>{
  const f=fixture();
  assert.equal(compileRepair({project:f.root,stateDir:f.state,chain:'node'}).status,'BLOCKED','the fixture lacks the CCC1 runtime files the preflight requires');
