@@ -1,7 +1,8 @@
 # BOT GENESIS Team A — private bot conversation
 
 SOURCE_IMPLEMENTED / HOST_TESTED at **a9acd007bc7bd485b2bda3c2db2dc2e57791af73**.
-Independent final signoff pending at this writing. Root owns Activity integration and combined QA.
+INDEPENDENTLY_VERIFIED for the source slice: separate PR438 accepted this exact source with27
+review groups plus4 existing compiler tests. Root owns Activity integration and combined QA.
 Baseline4b881f81ddfbe38729a551d9e460e818c6b3b715, EXP-05/EXP-11/EXP-12. Draft PR448.
 Independent criteria4851d50f893119344db4d05f7309c2fd93d3f4eb froze before API/implementation.
 No Fold7, local inference quality, verified coding capability or release claim.
@@ -112,13 +113,15 @@ reviewer branch. Initial and interim author logs are retained, not overwritten o
 
 Additional independent review found isCurrent omitted persisted revision checks. Repaired checks
 include current notes/profile revision, and distinguish prepared from post-commit profile versions.
-The separate reviewer reported15 conversation,3 storage/migration,5 pressure and4 existing compiler
-groups passing at a9acd007; final V1-object compatibility/malformedUTF8 probes were still in progress
-when this handoff was written. These are contract tests, not local intelligence improvements.
+The separate reviewer accepted a9acd007 after15 conversation,3 storage/migration,5 pressure and4
+codec groups (27 total), plus4 existing compiler JUnit tests. Codec checks include actual old
+fcea5908 V1 writer -> candidate reader/rewrite, Unicode whole-pair retention and malformed UTF8/
+length rejection. These are contract tests, not local intelligence improvements. See PR438 and
+`docs/research/omega/bot-genesis/brain-review/HANDOFF.md` on its final review branch.
 
 ## Next step and rollback
 
-Finish independent exact-source review, integrate root Activity/roster adapters, run combined
+Integrate the independently accepted source with root Activity/roster adapters, run combined
 Android/JVM/Node checks and device acceptance. Measure actual model behavior/resource costs separately.
 Add reviewed conversation-object reclamation and task-authorized experience use before long-lived
 unattended bots. No main merge/signing/installation/publication/owner-data mutation occurred here.
