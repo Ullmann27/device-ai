@@ -2,6 +2,20 @@
 
 Status: RUNNING / CANDIDATES_NOT_ACCEPTED. Wochenkontingent NOT_VISIBLE. Ausgangsquelle `64ec06a73f50cae9ee49035c840710d87777d50f`, vollständige Abnahme im `ASTRA-OMEGA-HANDOFF-20261103.md`. Ein früheres PASS gilt nicht für neue Kandidaten.
 
+## Zwischenstand und Dual-Agent-Erweiterung
+
+Frische PR-/HEAD-Inventur: `docs/evidence/omega-inventory-20261103/breakthrough-pr-snapshot.json` (03.11.18:40UTC), zusätzlich neue Challenger-PRs406/407 und EPSILON-Android405. Main weiterhin unverändert. Keine erneute Implementierung der bereits geprüften256→4096-Erweiterung.
+
+- Cognition Quelle107a7bb0: Autor57/57, bekannte M3 unverändert77/81. Unabhängige erstmals ungesehene24 breiteren Formulierungen: Baseline8/24, Kandidat8/24. Keine nachgewiesene Verallgemeinerung;16 Mengenrücknahmen bleiben unerkannt. Ein einzelner Folgeversuch nur mit getrennt neu eingefrorener Reserve; erste24 danach verbraucht.
+- Memory Quellea6007442: Autor50/50+6/6+4/4, QA16/16 ebenso wie Baseline. Warmes gleichartiges Replay4096 synthetische Einträge66,18→5,35ms; kein Nachweis schnellerer Gesamt-App, reguläre Trainingsschreibvorgänge invalidieren oft den Cache. Neuer unabhängiger Challenger GAMMA prüft Ressourcen/Concurrency vor dritter Integrations-QA.
+- Autonomy Quelle799dd763: echter Testidentitätsschutz, Autor154/154. Separater DELTA-Challenger friert eigene Gegenbeispiele ohne Autorenresultate ein; QA hat zusätzlich eigene zwölf Programme. Keine autonome Modell-Reparaturbehauptung.
+- Research Quelle6308ccad: Autor44/50→50/50. Unabhängige16:6→15, verbleibende direkte Prompt-Graph-Grenze mit ungefiltertem `[INST]` wird repariert. Erster Satz danach verbraucht; keine Darstellung als umfassende Injection-Immunität.
+- Neural: echte48-Beispiele-/Zwei-Gewichte-Adaption, DEV RAW24→32/40; alterC RAW55→54/55 mit neuer unbelegter Antwort. Unabhängige64: aktuelles13er-Modell und neuer15er-Kandidat beide52/64, RULE/VERIFIED ebenso52. REJECTED_FOR_PROMOTION, unveränderte produktive Gewichte; separater Forschungsbranch402 bleibt erhalten.
+
+Der neueste Besitzerauftrag verlangt Entwickler-/Prüferpaare und nahtlose3D-Arbeit. Tatsächliche weitere Sitzungen: `/root/gamma_challenger` (PR406), `/root/delta_challenger` (PR407), `/root/epsilon_geometry` (PR404) und `/root/epsilon_android` (PR405). Die fünf ersten Builder schließen ihre eingefrorenen Läufe ab und geben Slots frei; sie werden für konkrete Reviewfehler gezielt erneut aktiviert. QA bleibt als dritte Integrationsprüfung getrennt. Es sind maximal sieben aktive Sitzungen einschließlich Chief möglich, daher Wellen statt erfundener gleichzeitiger Teams.
+
+EPSILON A erstellt lokal in Blender4.3.2 eine wirkliche Geometrie mit geprüften CC0-MakeHuman-Daten und Referenzanpassung; EPSILON B hat vorher einen eigenen GLB-/Rig-Vertrag eingefroren und implementiert die optionale Filament-Anbindung über dieselben AvatarEvents. Eine automatisch angefragte Tripo-Erzeugung wurde wegen fehlender Credits ohne Job abgewiesen; keine weitere bezahlte Anfrage. Die tatsächlich erzeugte neutrale Bildreferenz ist in404 gesichert. Kein vorhandenes3D-Modell oder Geräteergebnis wird erfunden.
+
 ## Tatsächlich gestartete Arbeit
 
 | Agent | Branch (jeweils von64ec) | Exklusiver Umfang | Hypothese |
