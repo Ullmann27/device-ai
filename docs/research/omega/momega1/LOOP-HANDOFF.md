@@ -2,9 +2,10 @@
 
 Status: HOST_INTEGRATION / final SOURCE freeze `9ed11151b64fa85685e0f8b7c2358281af4694a8`.
 Initial independently assessed source `e8f5e218`; final QA follow-up pending.
-Remote last successful source push `034b60bb`; two later source commits are
-LOCAL_ONLY because GitHub rejected the configured gh credential helper twice.
-The exact local commits remain in the common official repository Git storage.
+The configured gh credential helper transiently rejected two pushes; retry
+succeeded. Final source and evidence are pushed at checkpoint
+`c7d0fb2dcf28c518c1a2380189376674d3760fc4`; source freeze9ed11151 is an ancestor.
+No local-only implementation remains.
 Branch `codex/momega1-loop-20261103`, Draft PR
 https://github.com/Ullmann27/device-ai/pull/411 against
 `codex/momega1-chief-20261103`. Base `ca93fb4f`.

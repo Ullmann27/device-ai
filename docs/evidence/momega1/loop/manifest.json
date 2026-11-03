@@ -4,8 +4,8 @@
   "createdAt": "2026-11-03T19:30:09.060142+00:00",
   "sourceFreeze": "9ed11151b64fa85685e0f8b7c2358281af4694a8",
   "base": "ca93fb4f",
-  "remoteLastSuccessfulSource": "034b60bb",
-  "pushStatus": "LATEST_LOCAL_ONLY_CREDENTIAL_REJECTED",
+  "remoteLastSuccessfulSource": "9ed11151b64fa85685e0f8b7c2358281af4694a8",
+  "pushStatus": "PUSHED_FINAL_SOURCE_AND_EVIDENCE",
   "evidenceClasses": [
     "CONTRACT_TEST",
     "HOST_INTEGRATION"
@@ -171,5 +171,6 @@
     "regression.tap": "7c28ef50a5d88adf4360e1d32ee6507e0925a69eee773a144254dd054a217692",
     "verifier-green.tap": "bcf1a6e5ec450b34bd503642a2362bf75c55c9bf9271e9b0b82cdba619a4db98",
     "verifier-red.tap": "433e047d3c7cf334a0eab80fc600fa296bdeb47d2558c0e62f416d2c38172217"
-  }
+  },
+  "remoteCheckpoint": "c7d0fb2dcf28c518c1a2380189376674d3760fc4"
 }
