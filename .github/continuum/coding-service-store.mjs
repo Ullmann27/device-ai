@@ -11,6 +11,8 @@ import {getReviewedLocalModelPair} from '../../scripts/continuum-local-model-pin
 
 export const SERVICE_SOURCE_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 export const SERVICE_ID=/^[a-z][a-z0-9-]{2,63}$/;
+export const hostServiceDirectory=()=>'/tmp/continuum-coding-owner-'+process.getuid();
+export const hostExecutionBarrier=()=>path.join(hostServiceDirectory(),'unresolved-execution.json');
 const SHA=/^[a-f0-9]{64}$/;
 const RUNTIME_KEYS=new Set(['CONTINUUM_LOCAL_BRAIN_MODEL','CONTINUUM_LOCAL_BRAIN_MODEL_PATH',
  'CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST','CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT','CONTINUUM_LOCAL_BRAIN_MODEL_SHA256',

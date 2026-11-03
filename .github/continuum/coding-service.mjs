@@ -14,7 +14,7 @@ import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.
 import {createCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 import {loadCodingServiceConfig,readDeliveries,saveDeliveries,privateJson,writePrivateJson,privateDirectory,
  realDirectory,assertServiceSource,assertServiceArtifacts,reviewServiceTask,linuxProcessIdentity,sameLiveProcess,
- serviceEnvironment,SERVICE_ID,assertProfileBridge} from './coding-service-store.mjs';
+ serviceEnvironment,SERVICE_ID,assertProfileBridge,hostServiceDirectory,hostExecutionBarrier} from './coding-service-store.mjs';
 import {createCodingServiceReader,readServiceDescriptor,currentCanonicalTask} from './coding-service-reader.mjs';
 
 const CHILD=fileURLToPath(new URL('./coding-service-worker.mjs',import.meta.url));
@@ -168,7 +168,7 @@ export async function runCodingService({configPath}={}){
  // local model for this OS user, even when several state directories exist.
  let releaseHost=null;
  try{
-  const hostState=privateDirectory('/tmp/continuum-coding-owner-'+process.getuid(),{create:true});
+  const hostState=privateDirectory(hostServiceDirectory(),{create:true});
   releaseHost=exclusiveLock({stateDir:hostState},'model-admission.lock');
  }catch(error){release();throw error;}
  const instanceId=crypto.randomBytes(16).toString('hex'),controller=new AbortController();
@@ -187,6 +187,7 @@ export async function runCodingService({configPath}={}){
   },5000);
  };
  try{
+  if(fs.existsSync(hostExecutionBarrier()))throw Error('SERVICE_RESOURCE_RECONCILIATION_REQUIRED');
   transaction(config,()=>{
    const items=readDeliveries(config);
    for(const d of items)if(['RESERVING','DISPATCHED','CANCEL_REQUESTED'].includes(d.delivery)){
@@ -252,7 +253,7 @@ export async function runCodingService({configPath}={}){
    });
    if(!active){update({state:'IDLE',activeTaskId:null});return {outcome:'IDLE'};}
    update({state:'TASK_ACTIVE',activeTaskId:active.id});
-   let childResult=null,childError=null;
+   let childResult=null,childError=null,childExitCode=null,childSignal=null;
    const child=fork(CHILD,[],{stdio:['ignore','ignore','ignore','ipc'],env:serviceEnvironment(config),execArgv:[]});
    let settled=false;
    const completed=new Promise(resolve=>{
@@ -268,33 +269,53 @@ export async function runCodingService({configPath}={}){
         d.workerProcess=processIdentity;saveDeliveries(config,items);active={...d};
        });
        releaseHost.setWorker(processIdentity);
+       // Reserve globally before GO. If any process disappears, uncertain
+       // descendants/OCI work cannot be overlapped by another service or task.
+       writePrivateJson(hostExecutionBarrier(),{schema:'continuum-host-execution-barrier',version:1,status:'IN_FLIGHT',
+        stateDir:config.stateDir,taskId:active.id,instanceId,ownerProcess:linuxProcessIdentity(),workerProcess:processIdentity,
+        sourceCommit:config.sourceCommit,at:new Date().toISOString()},{exclusive:true});
        child.send({type:'run',configPath,taskId:active.id,instanceId});
       }catch(error){childError=String(error.message).slice(0,160);child.disconnect();}
      }else if(message?.type==='result'&&message.taskId===active?.id){childResult=message;}
     });
-    child.on('exit',(code,signal)=>{if(code!==0&&!childError)childError='SERVICE_WORKER_EXIT_'+(signal??code);finish();});
+    child.on('exit',(code,signal)=>{childExitCode=code;childSignal=signal;if(code!==0&&!childError)childError='SERVICE_WORKER_EXIT_'+(signal??code);finish();});
    });
    await completed;
-   releaseHost.setWorker(null);
    const taskId=active.id;
-   transaction(config,()=>{
+   let resourceClear=false;
+   try{transaction(config,()=>{
     const items=readDeliveries(config),d=items.find(i=>i.id===taskId);
     // A process exit, empty message or unverified success string is not a result.
-    if(childResult?.ok===true){
+    if(childResult?.ok===true&&childExitCode===0&&childSignal===null){
      const current=currentCanonicalTask(config,d);
      const resultFile=path.join(config.stateDir,'public-evidence',d.id+'.json');
      const stored=privateJson(resultFile,65536);
      if(stored.journalHead!==current.entries.at(-1)?.hash)throw Error('SERVICE_RESULT_STALE');
      d.delivery=current.status.terminal?'RETIRED':'UNKNOWN';
+     resourceClear=current.status.terminal;
     }else{d.delivery='UNKNOWN';d.failureCode=childResult?.error??childError??'SERVICE_WORKER_RESULT_MISSING';}
+    if(childResult?.ok===false&&childResult.executionStarted===false&&childExitCode===1&&childSignal===null)resourceClear=true;
     d.finishedAt=new Date().toISOString();saveDeliveries(config,items);
-   });
+   });}finally{
+    if(fs.existsSync(hostExecutionBarrier())){
+     const barrier=privateJson(hostExecutionBarrier());
+     if(barrier.instanceId!==instanceId||barrier.taskId!==taskId)throw Error('SERVICE_RESOURCE_BARRIER_CHANGED');
+     if(resourceClear){fs.unlinkSync(hostExecutionBarrier());releaseHost.setWorker(null);}
+     else{
+      writePrivateJson(hostExecutionBarrier(),{...barrier,status:'UNRESOLVED'});
+      stopping=true;controller.abort();notify();
+      update({state:'RESOURCE_RECONCILIATION_REQUIRED',failureCode:'WORKER_DESCENDANT_TEARDOWN_UNCONFIRMED'});
+     }
+    }
+   }
    if(stopping||readDeliveries(config).find(i=>i.id===taskId)?.cancelRequestedAt){
     try{cancelOwnerTask({configPath,taskId});}catch{}
    }
    active=null;update({state:stopping?'STOPPING':'IDLE',activeTaskId:null});
    return {outcome:childResult?.ok===true?'DONE_INVESTIGATION':'ERROR',detail:'CCC1 task '+taskId+'; inspect canonical result'};
   };
+  // An idle start must not spend the owner's finite work-cycle budget.
+  await wait();
   await runTeamleaderLoop({work,intervalMinutes:1,maxCycles:config.limits.maxCycles,signal:controller.signal,wait,
    stateFile:path.join(config.stateDir,'sessions',instanceId+'.json'),sourceRoot:config.sourceRoot,
    onHeartbeat:heartbeat=>update({cycles:heartbeat.cycles,loopState:heartbeat.state})});

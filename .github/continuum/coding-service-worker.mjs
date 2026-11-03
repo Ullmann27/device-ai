@@ -11,6 +11,7 @@ import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.
 import {runCodingTask} from './coding-orchestrator.mjs';
 import {ownerCodingExecutor} from '../../scripts/continuum-typed-coding-bridge.mjs';
 
+let executionStarted=false;
 function errorCode(error){const value=String(error?.code??error?.message??'SERVICE_WORKER_FAILED');return /^[A-Z][A-Z0-9_]{2,100}$/.test(value)?value:'SERVICE_WORKER_FAILED';}
 export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  const config=loadCodingServiceConfig(configPath);assertServiceArtifacts(config);
@@ -25,6 +26,7 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
   builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',
   profileStore:profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath})});
  const started=Date.now(),before=process.resourceUsage();
+ executionStarted=true;
  const result=await runCodingTask({project:config.project,stateDir:current.state,id:taskId,executor,
   executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,requireLocalModelObservation:true,
   expectedTaskFingerprint:delivery.fingerprint,technicalRecallEnabled:true,botAssignment:assignment,env});
@@ -45,7 +47,7 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  // task outcome or verifier receipt; current canonical records remain required.
  const metricsMac=createHmac('sha256',runtimeKey(current.state)).update(canonical(snapshot)).digest('hex');
  writePrivateJson(path.join(config.stateDir,'public-evidence',taskId+'.json'),{...snapshot,metricsMac},{exclusive:true});
- return {type:'result',taskId,ok:true};
+ return {type:'result',taskId,ok:true,executionStarted:true};
 }
 // Importing this module cannot start work; the fixed IPC child must receive one
 // parent-issued GO, after its process identity has been durably recorded.
@@ -56,7 +58,7 @@ if(process.send){
   if(consumed||message?.type!=='run')return;consumed=true;
   let response;
   try{response=await executeServiceDelivery(message);}
-  catch(error){response={type:'result',taskId:message.taskId,ok:false,error:errorCode(error)};}
+  catch(error){response={type:'result',taskId:message.taskId,ok:false,error:errorCode(error),executionStarted};}
   if(process.connected)process.send(response,()=>{process.disconnect();process.exitCode=response.ok?0:1;});
   else process.exitCode=1;
  });

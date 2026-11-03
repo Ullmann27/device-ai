@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHmac,timingSafeEqual} from 'node:crypto';
-import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge} from './coding-service-store.mjs';
+import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge,hostExecutionBarrier} from './coding-service-store.mjs';
 import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {taskState} from './ccc1-orchestrator.mjs';
 import {taskFingerprint,validateCodingTask} from './coding-task.mjs';
@@ -120,7 +120,14 @@ export function createCodingServiceReader({configPath}={}){
    const c=config(),d=readServiceDescriptor(c),items=readDeliveries(c),alive=d!==null&&sameLiveProcess(d.process);
    const orphan=items.some(item=>item.workerProcess&&sameLiveProcess(item.workerProcess)&&!alive);
    const active=Boolean(alive&&d.activeTaskId||orphan);
-   return {schema:'continuum-coding-service-status',version:1,state:alive?d.state:orphan?'ORPHAN_WORKER':'STOPPED',
+   let resourceReconciliationRequired=false;
+   if(fs.existsSync(hostExecutionBarrier())){
+    const barrier=privateJson(hostExecutionBarrier());
+    resourceReconciliationRequired=barrier.status==='UNRESOLVED'||!sameLiveProcess(barrier.ownerProcess);
+   }
+   return {schema:'continuum-coding-service-status',version:1,
+    state:resourceReconciliationRequired?'RESOURCE_RECONCILIATION_REQUIRED':alive?d.state:orphan?'ORPHAN_WORKER':'STOPPED',
+    resourceReconciliationRequired,
     processVerified:alive,sourceCommit:c.sourceCommit,executionEnvironment:'HOST',deviceVerified:false,
     activeTaskId:alive?d.activeTaskId??null:null,queued:items.filter(i=>i.delivery==='PENDING').length,
     unknown:items.filter(i=>['UNKNOWN','RESERVING','DISPATCHED','CANCEL_REQUESTED'].includes(i.delivery)&&(!alive||i.delivery==='UNKNOWN')).length,
