@@ -6489,7 +6489,8 @@ class AgentActivity : Activity() {
                     // session's owner sentences stay unverified and ephemeral. Model
                     // replies, persistent owner memories and external data are never parsed.
                     if (requiresPriorDialogue && priorOwnerEvidence != null) {
-                        at.heinz.deviceai.cognitive.TaskScopedRingStateProjector
+                        // M2: domain-neutral successor of TaskScopedRingStateProjector.
+                        at.heinz.deviceai.cognitive.OwnerStatementTimeline
                             .project(priorOwnerEvidence, text)?.let { append(it.render()) }
                     }
                     // Current task and retrieval precede optional compiled/history data.
