@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "PLANNED_UNVERIFIED",
+  "status": "INDEPENDENT_RUNTIME_GEOMETRY_PASS_VISUAL_PARTIAL",
   "asset": "assets/avatar/jarvis-research-v1.glb",
   "coordinateSystem": {
     "up": "+Y",
@@ -50,5 +50,8 @@
   },
   "referenceSha256": "a850c508fc5b44700024de0248b799650d160198f0e6a2039550ea266198bb78",
   "identityStatus": "REQUIRES_VISUAL_REVIEW",
-  "deviceStatus": "NOT_RUN"
+  "deviceStatus": "NOT_RUN",
+  "runtimeAsset": "assets/avatar/jarvis-runtime-v1.glb",
+  "runtimeAnimationPolicy": "No embedded clips; existing AvatarPose events only",
+  "researchAnimationPolicy": "Separate research GLB retains three authored demonstration clips"
 }

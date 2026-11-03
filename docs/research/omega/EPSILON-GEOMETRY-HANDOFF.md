@@ -1,23 +1,54 @@
-# EPSILON geometry — research checkpoint
+# EPSILON geometry — actual local 3D research candidate
 
-Branch `codex/living-jarvis-3d-20261103`, Draft PR404, initial source `3ca9df08`.
+Current accepted runtime SHA256: `f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e`. Authored-animation proof GLB SHA256: `63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca`. Actual artifacts, Blender scene and WIP render evidence are remotely preserved at [a9dc09c0](https://github.com/Ullmann27/device-ai/commit/a9dc09c0), branch `codex/living-jarvis-3d-20261103`, Draft [PR404](https://github.com/Ullmann27/device-ai/pull/404). Geometry source `9633d4e9aab997580bc0be31f20e7e10479f1433`; later `05a3e091` only adds a lower-cost review render mode.
 
-Scope: actual local Blender bust and facial morph research, explicit owner authorization through root. No Android source, Gradle, Activity, main, signing, installation, release, paid jobs, or login. Existing AvatarDirector/Sink/PoseReducer contract is unchanged.
+Status: actual geometry + independent structural/runtime-metadata acceptance; visual identity, phonetic accuracy and physical Android acceptance remain open. Final30-view/render packaging is still in progress at this checkpoint. No completed30 or turntable claim yet.
 
-Viewed the binding derived portrait `docs/avatar-live/reference-work/jarvis-neutral-frontal-generated.png`, SHA256 `a850c508fc5b44700024de0248b799650d160198f0e6a2039550ea266198bb78`. Original chat portraits are not invented local files. No finished likeness claim.
+## Artifact and interface
 
-Upstream MakeHuman data at immutable revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482` explicitly licenses base mesh, targets and expressions as CC0. `tools/avatar-3d/vendor/makehuman/provenance.json` records every downloaded byte count, SHA256 and immutable URL; original license statements preserved. Only graphical data imported, no upstream program logic. Independently authored local Blender builder is next.
+- `assets/avatar/jarvis-runtime-v1.glb`: no authored clips, intended for existing AvatarPose-driven runtime.
+- `assets/avatar/jarvis-research-v1.glb`: same geometry, with VisemeSweep, ExpressionAndSpeech and IndependentControlDemo clips for inspection.
+- `assets/avatar/jarvis-research-v1.blend`: authored scene for inspection.
+- Frozen names/axis convention: `docs/avatar-live/geometry-work/asset-contract.v1.json`; actual pivots, indices, hashes and counts: `asset-manifest.json`.
+- The Face mesh is a continuous head/neck/shoulder bust. Skin joints are AvatarRoot, Neck and Head; separate EyeLeft/EyeRight controls parent physical eyeballs, iris and pupil meshes. Jaw is a separate lower-dental/interior control.
+- Exactly21 real distinct morph targets: SIL PP FF TH DD KK CH SS NN RR AA E I O U BlinkLeft BlinkRight BrowUp BrowDown Smile JawOpen. Neutral means all zero. Exterior mouth opening uses JawOpen; rotating Jaw affects inner lower dental geometry. No double jaw application implied.
+- +Y up, +Z front, +X anatomical left, metres. Rest rotations identity; local translation hierarchy has canonical pivots.
 
-Planned schema: `docs/avatar-live/geometry-work/asset-contract.v1.json`; 15 OVR targets plus BlinkLeft/BlinkRight/BrowUp/BrowDown/Smile/JawOpen. Anatomical left is +X from a +Z camera. Independent challenger receives schema only before its freeze, no candidate outcomes.
+## Provenance and likeness
 
-Environment evidence: Blender 4.3.2, Node24.19.0, ffmpeg available. `game-dev` CLI unavailable, so its packaging workflow cannot run; local Blender plus Khronos validator will be used directly under existing authorization. No mesh generated yet. Tests/render/import/device all NOT_RUN.
+Viewed binding derived portrait `docs/avatar-live/reference-work/jarvis-neutral-frontal-generated.png`, SHA256 `a850c508fc5b44700024de0248b799650d160198f0e6a2039550ea266198bb78`. Original chat portraits were never invented as local files. No portrait image is projected onto the mesh or modified by the geometry scripts.
 
-Next: generate actual geometry, inspect front/profile/back and expression renders, preserve reproducible build/export/validation scripts, create 30 same-mesh views and turntable within 2 CPU threads. Rollback: omit research asset/tools; no app is changed.
+MakeHuman graphical data at immutable revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482` explicitly licenses base mesh, targets and expressions as CC0-1.0. Original scope and license statements, all immutable URLs, byte counts and SHA256 values are preserved in `tools/avatar-3d/vendor/makehuman/`. No upstream program logic imported. The local Blender builder/exporter are authored here.
 
-## Local candidate checkpoint after 06bd9d91
+The licensed base was cropped/capped into a bust, adapted to a slender oval head with reduced crown height and facial mass, widened eye apertures, neutral lip seal, natural dark irises, recessed teeth and actual cyan/violet triangular filaments. This is **partial reference adaptation**, not exact facial identity or owner visual acceptance. Rear skull/shoulder form is inferred from the base topology. Filament density/style is an approximation. No tongue choreography, production-grade FF/TH articulation, corrective facial normals or collision-free arbitrary combinations are claimed.
 
-Authored `build_bust.py` and ordinary glTF exporter now produce actual CC0-derived 3D head/neck/shoulder geometry, distinct eyeballs/irises/pupils, recessed dental arches, 21 real morph targets, 3-joint smooth neck/head skin, and morph-bound physical triangular filaments. Shape keys use licensed source expression deltas plus authored combinations. This is a research candidate with partial reference adaptation, **not exact identity or completed visual acceptance**.
+## Actual acceptance and defects repaired
 
-First raw glTF validation finds zero errors but many zero-weight-joint warnings and non-root skinned mesh warnings. These are being repaired; the preserved first report is `khronos-validator-first-export.json`. Original denoising and first custom-export errors are preserved in raw logs. No physical phone render/performance result. Candidate total87,618 triangles (head skin32,452 before cutoff definition refinement), so the initial60k-total goal is NOT met. Textures0, uncompressed GLB ~13.65 MB. Production LOD remains open.
+Current asset:57,000 triangles total, ~8.69MB uncompressed runtime, no textures. Head skin19,104 triangles (exact current metric file is authoritative); fixed limits30k head/60k total. Every referenced skin weight normalizes; all21 target deltas are nonzero and unique.
 
-All node/target names remain the frozen contract. Actual glTF geometric origin is base center, +Y up/+Z forward, anatomical left +X. Runtime must use `JawOpen` for exterior skin; `Jaw` rotation is separate lower inner-mouth geometry. Source Blender scene is rendered directly; glTF roundtrip rendering is still to run.
+Exact neutral mirror pairing: max and mean head error0, head-normalized max error0. Face topology has0 open boundary edges,0 edges with more than2 adjacent faces,0 degenerate triangles. `neutral-mirror-pairs.json` includes the complete pairing map. This is a mesh measurement, not likeness evidence.
+
+Actual Khronos glTF-validator2.0.0-dev.3.10:0 errors and0 warnings on research and runtime variants. A structural script:62 checks passed each. Reports under `docs/avatar-live/geometry-work/` and `runtime/`.
+
+B independently froze executable protocol771aec34 before inspecting the candidate, then reported exact runtimef39a89fc… PASS unchanged geometry checker (42,292 per-primitive vertex references,57,000 triangles,3 morphed primitives), plus actual Android metadata preflightPASS. B retains independent evidence and mutation controls in its own branch. These results do not certify Android GPU rendering, phone FPS/thermal behaviour, likeness, viseme phonetics or owner acceptance.
+
+Earlier failures remain recoverable: first exporter998 warnings preserved in `khronos-validator-first-export.json`; original authored clips fail B's event-driven preflight; an explicitly clip-stripped diagnostic still failed mouth locality. Source mouth expression deltas moved upper face by ~0.5mm. The fix applies a smooth speech-region mask (full belowY.245m, exact zero at/aboveY.260m) after barycentric topology transfer, and again to filaments. Eyelids and brows remain independent. Earlier GLB hashes are preserved in commits060a506b and17d73451.
+
+A transient topology reduction had unmatched neutral vertices; exact half-mirror + seam weld repaired this before final acceptance. Mirror seam artifacts were removed; final topology metrics above were measured on the resulting mesh. Raw interrupted/failed Blender logs remain preserved, not presented as successful builds.
+
+## Reproduce and resume
+
+```sh
+# Blender4.3.2, bounded CPU2; nice10 yields to active Gradle work.
+nice -n 10 env OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 blender -b -t 2 --python-exit-code 1 --python tools/avatar-3d/build_bust.py -- --quick-views
+node tools/avatar-3d/derive-runtime.mjs
+node tools/avatar-3d/validate-glb.mjs assets/avatar/jarvis-research-v1.glb docs/avatar-live/geometry-work
+node tools/avatar-3d/validate-glb.mjs assets/avatar/jarvis-runtime-v1.glb docs/avatar-live/geometry-work/runtime --runtime
+python tools/avatar-3d/assemble_review.py
+```
+
+`-- --export-only` rebuilds without rendering. Default rendering is640px/32samples; `--quick-views` is512px/16samples, no denoiser (this Blender lacks OpenImageDenoise). `--preview` creates four diagnostic views, `--expressions-only` recreates the six expression views. `roundtrip_check.py` deletes source meshes then imports the real runtime GLB before rendering; its execution evidence must be checked separately. Node validator dependencies are pinned; `npm ci --ignore-scripts` only in `tools/avatar-3d`. The game-dev CLI is unavailable; no paid job, login, credit purchase or provider retry occurred.
+
+Next: finish30 exact-candidate renders, compare rebuild hashes, assemble contact sheet/turntable, inspect runtime-import expression renders, append final evidence links and push. Existing24-orbit plus6-expression design derives every view from one geometry; no ImageGen face substitutions.
+
+Scope boundary: no Android Kotlin, Activity, Gradle, main, signing, release or installation changed. Existing AvatarDirector/Sink/PoseReducer remain the sole interface. Rollback: omit this optional research asset and tool directory; default orb and brain paths are unaffected.
