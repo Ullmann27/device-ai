@@ -1,5 +1,12 @@
 # Native service acceptance handoff
 
+Latest: [S01-RESULT.md](S01-RESULT.md). S01 consumed one actual native request on
+accepted8fd and FAILED (ABSTAINED/REFUTED; CHILD_EXIT_NONZERO; no admitted model
+observation/candidate/LINT/ECHO). Independent negative audit PASS, fresh recall0.
+No replay. All raw evidence is secured in `s01-evidence/`. Global UNRESOLVED
+barrier intentionally retained; Chief owns any verified reconciliation/new
+development scope. The preparation text below is historical, not current status.
+
 Branch `codex/independence-native-review-20261103` from94069cec. Owns only
 `tools/independence-native-review/` and this documentation directory.
 S01 source/tests/requirements/budget frozen before inspecting service candidate;
