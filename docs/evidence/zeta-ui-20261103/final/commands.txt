@@ -1,0 +1,5 @@
+Working directory: /workspace/zeta-ui
+Source: de86cff67b1b028645d7bf77f5fee171d66530a0
+bash docs/evidence/zeta-ui-20261103/run-native-ui.sh /workspace/zeta-ui-runs/final-de86 candidate
+bash docs/evidence/zeta-ui-20261103/run-layout-tests.sh /workspace/zeta-ui-runs/final-layout-de86
+bash docs/evidence/zeta-ui-20261103/run-screen-tests.sh /workspace/zeta-ui-runs/final-screen-de86

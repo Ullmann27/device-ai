@@ -31,3 +31,12 @@ The same `ContinuumDashboardState` collector and `AgentActivity.openHomeSlot` co
 The free stage sizes are: phone320:296×310dp; phone412:388×390dp; Fold600:576×390dp; Fold840:816×470dp; tablet1280:836.19×470dp at ordinary font size, beside a292dp status column. EPSILON owns the optional real3D72%/orb28% composition inside that same stage. At large fonts, cards reflow and the tablet sidebar joins the grid.
 
 No physical folding, microphone, TTS engine, GPU frame rate, power/thermal behavior, model inference, camera, actual3D visual likeness, APK or release is verified by this lane.
+
+## Final author gate at de86cff67b1b028645d7bf77f5fee171d66530a0
+
+- Native Android Canvas: **2/2 tests PASS**,53.387s host wall time. Fifteen real widget snapshots; separate measured text-bounds/collision checks at font1/1.3/1.6/2 and long synthetic labels. Timing includes the whole host test and is not device render latency.
+- Layout: **9/9 tests PASS**,0.285s host test wall time; two unchanged pre-implementation acceptance tests now pass, alongside preserved reflow/rail checks and explicit new grid/font assertions.
+- Header target at320dp: previously32×320/412=24.85dp, now48dp. All six actions are below the hero; every declared data-card destination is present at every tested size.
+- `final/manifest.json` pins exact production/test hashes and the compiled baseline runtime JAR used for host linkage. `image-sha256.json` pins original baseline/final PNGs.
+- Java2D screen/data regressions: **3/3 PASS**,1.997s host test time, including unknown values/no example counters and all existing renderer modes.
+- Independent holdout and full integrated Android build are separate gates; not claimed from author tests.

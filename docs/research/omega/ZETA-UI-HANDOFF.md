@@ -1,8 +1,8 @@
 # ZETA — responsive native cockpit
 
-Source checkpoint: `d8340ff10c9efec5cfdfe8baa63bcf58bdfbe3d4`. Baseline Chief: `04b4292d796bc151c40ab18405226cd9faef01cf`. Branch: `codex/zeta-ui-20261103`. Draft PR: https://github.com/Ullmann27/device-ai/pull/408. Quota: `NOT_VISIBLE`; work is checkpointed regularly.
+Source checkpoint: `de86cff67b1b028645d7bf77f5fee171d66530a0`. Baseline Chief: `04b4292d796bc151c40ab18405226cd9faef01cf`. Branch: `codex/zeta-ui-20261103`. Draft PR: https://github.com/Ullmann27/device-ai/pull/408. Quota: `NOT_VISIBLE`; work is checkpointed regularly.
 
-Status at this checkpoint: SOURCE_IMPLEMENTED. Focused host checks are running on the frozen source; independent Challenger owns a separate, pre-frozen holdout. No full Android/physical Fold7/release claim. No main merge, release, signing, install, permissions or owner-data changes.
+Status: SOURCE_IMPLEMENTED and HOST_TESTED. Frozen source passes nine layout tests, two native UI tests (15 actual widget snapshots and font1–2 text bounds with long values), and three Java2D screen/data regression tests. Independent Challenger owns a separate, pre-frozen holdout; its final verdict remains pending. No full Android/physical Fold7/release claim. No main merge, release, signing, install, permissions or owner-data changes.
 
 ## Contract frozen before edits
 
