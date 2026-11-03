@@ -91,3 +91,17 @@ BETA/GAMMA MUST NOT equate this brand with actual inference. Chief notified.
 Helper replay/revoke/capacity are upstream responsibilities; direct repeated nonce
 and simultaneous requests both execute. UI/provider STOP and combined chat/coding
 resource/lifecycle not certified. Return for integration changes only if assigned.
+
+## Actual-model review authorized / new freeze
+
+Owner expressly authorized exact official Qwen1.5B Q4_K_M SHA cc324af0...bb046 and
+llama.cpp commit6cb3e672...23133 CPU build on existing free host. This supersedes
+only prior absence-of-model blocker. No additional models, paid resources, device,
+sign/install or release authority. Author builds/downloads outside Git; reviewer
+independently checks provenance/hash and actual execution. Max2 compile jobs.
+
+ACTUAL-MODEL-FROZEN-CRITERIA.md and separate synthetic blind prompt are frozen
+before reviewing pair-registry implementation. Runtime author must not inspect
+challenger blind prompt until run evidence is published. QA holdouts remain unseen.
+Status ACTUAL_MODEL_REVIEW_PENDING. Original fixed-ELF counterexample still applies;
+config runtime kind cannot mint genuine inference. FOLD7_NOT_RUN remains final.
