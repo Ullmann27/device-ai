@@ -5,7 +5,9 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import * as provider from '../.github/continuum/coding-provider.mjs';
-import {assertCodingModelObservationBinding} from '../.github/continuum/coding-orchestrator.mjs';
+import {assertCodingModelObservationBinding,prepareCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {recordTechnicalExperience} from '../.github/continuum/ccc1-technical-recall.mjs';
+import {runtimeKey} from '../.github/continuum/ccc1-journal.mjs';
 
 test('normal caller cannot certify a serialized runtime observation',()=>{
  assert.equal(typeof provider.isTrustedLocalModelObservation,'function');
@@ -212,4 +214,11 @@ test('process evidence classification cannot claim LOCAL_MODEL_HOST from a confi
  assert.equal(result.trace.verifiedModelExecution,false);
  assert.equal(provider.isTrustedLocalModelObservation(result.trace.modelObservation),true);
  assert.throws(()=>assertCodingModelObservationBinding({task:f.task,raw:result}),/BLOCKED_LOCAL_MODEL_UNAVAILABLE/);
+ const remote=spawnSync('git',['remote','add','origin','https://github.com/synthetic/momega1-fixture.git'],{cwd:f.root,encoding:'utf8'});
+ assert.equal(remote.status,0,remote.stderr);
+ const stateDir=path.join(f.dir,'state');
+ const prepared=prepareCodingTask({project:f.root,stateDir,task:f.task});
+ assert.throws(()=>recordTechnicalExperience({stateDir,taskId:prepared.ccc1TaskId,task:f.task,
+  modelObservation:result.trace.modelObservation,key:runtimeKey(stateDir)}),/TECHNICAL_MODEL_EXECUTION_PROOF_UNAVAILABLE/);
+ assert.equal(fs.existsSync(path.join(stateDir,'experience.jsonl')),false);
 });
