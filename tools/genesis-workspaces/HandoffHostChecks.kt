@@ -17,16 +17,33 @@ object HandoffHostChecks {
             "admission-json" -> { println(evaluate(JSONObject(readln()))); return }
             "seed" -> { val store=ChiefBotProfileStore(java.io.File(args[1])); println(JSONObject().put("count",store.seedDefaults(20).size)); return }
             "get" -> {
+                require(args.size == 3) { "PROFILE_BRIDGE_ARGUMENTS" }
                 val p=ChiefBotProfileStore(java.io.File(args[1])).get(args[2])
-                println(if(p==null) "null" else JSONObject().put("agentId",p.agentId).put("workspaceId",p.workspaceId)
-                    .put("resourceBudget",JSONObject().put("maxModelCalls",p.resourceBudget.maxModelCalls)
-                        .put("maxToolCalls",p.resourceBudget.maxToolCalls).put("deadlineMillis",p.resourceBudget.deadlineMillis)
-                        .put("workspaceBytes",p.resourceBudget.workspaceBytes)))
+                println(if(p==null) "null" else profileMetadata(p))
+                return
+            }
+            "page" -> {
+                require(args.size == 4) { "PROFILE_BRIDGE_ARGUMENTS" }
+                val page=ChiefBotProfileStore(java.io.File(args[1])).page(args[2].takeUnless { it == "-" },args[3].toInt())
+                println(JSONObject().put("items",org.json.JSONArray(page.items.map(::profileMetadata)))
+                    .put("nextAfterId",page.nextAfterId ?: JSONObject.NULL))
                 return
             }
         }
+        require(args.isEmpty()) { "PROFILE_BRIDGE_COMMAND_UNKNOWN" }
         tests()
     }
+
+    /** Explicit metadata projection. No private notes, conversations, object references or grants. */
+    private fun profileMetadata(p: ChiefBotProfile) = JSONObject()
+        .put("agentId",p.agentId).put("profileVersion",p.profileVersion).put("displayName",p.displayName)
+        .put("role",p.role).put("communicationStyle",p.communicationStyle).put("modelPolicy",p.modelPolicy)
+        .put("memoryNamespace",p.memoryNamespace).put("workspaceId",p.workspaceId)
+        .put("resourceBudget",JSONObject().put("maxModelCalls",p.resourceBudget.maxModelCalls)
+            .put("maxToolCalls",p.resourceBudget.maxToolCalls).put("deadlineMillis",p.resourceBudget.deadlineMillis)
+            .put("workspaceBytes",p.resourceBudget.workspaceBytes))
+        .put("verifiedCapabilities",org.json.JSONArray(p.verifiedCapabilities))
+        .put("permissionScope",org.json.JSONArray(p.permissionScope)).put("lifecycleState",p.lifecycleState)
 
     private fun evaluate(f: JSONObject): JSONObject {
         // Current production API has no owner budget editor. Do not pretend that a
@@ -81,6 +98,24 @@ object HandoffHostChecks {
                 block(store,Authority(),{now},{now=it})
             } finally {root.deleteRecursively()}
         }
+        checkCase("metadata reflects persisted rename without exposing private working context") { fixture { store,_,_,_ ->
+            val initial=store.get("bot-forge")!!
+            val renamed=store.rename(initial.agentId,"Werkstatt",initial.profileVersion)
+            val current=store.saveWorkingContext(renamed.agentId,renamed.agentId,"PRIVATE-NOTE-DO-NOT-EXPORT",renamed.profileVersion)
+            val view=profileMetadata(store.get(current.agentId)!!)
+            check(view.getString("displayName")=="Werkstatt" && view.getLong("profileVersion")==current.profileVersion)
+            check(view.getJSONArray("permissionScope").isEmpty && view.getJSONArray("verifiedCapabilities").isEmpty)
+            check(view.getString("lifecycleState")=="REGISTERED")
+            check(!view.toString().contains("PRIVATE-NOTE") && !view.has("contextObjectId") && !view.has("conversationObjectId"))
+        } }
+        checkCase("metadata paging covers persisted identities once and rejects invalid limits") { fixture { store,_,_,_ ->
+            var cursor:String?=null; val seen=mutableSetOf<String>()
+            do { val page=store.page(cursor,3);check(page.items.size in 1..3)
+                page.items.forEach { check(seen.add(profileMetadata(it).getString("agentId"))) };cursor=page.nextAfterId
+            } while(cursor!=null)
+            check(seen.size==20 && store.page("zzz",3).items.isEmpty())
+            for(limit in listOf(-1,0,101))check(runCatching { store.page(limit=limit) }.isFailure)
+        } }
         checkCase("mailbox transports immutable references and consumes current authority") { fixture { store,a,clock,set ->
             val admission=ChiefBotHandoffAdmission(store,AgentMailbox(),a,clock); val h=message()
             check(admission.send(h)==ChiefBotHandoffDecision.ADMIT)
