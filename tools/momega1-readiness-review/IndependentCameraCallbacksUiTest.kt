@@ -68,12 +68,15 @@ class IndependentCameraCallbacksUiTest {
     @Before fun prepare() {
         opened=CountDownLatch(1);openCallback.set(null);configureCallback=null;deviceCloses=0;sessionCloses=0;opens=0
         shadowOf(app).grantPermissions(Manifest.permission.CAMERA)
+        installCamera(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME)
+    }
+    private fun installCamera(clock:Int) {
         val characteristics=ShadowCameraCharacteristics.newCameraCharacteristics()
         val c=Shadow.extract<ShadowCameraCharacteristics>(characteristics)
         c.set(CameraCharacteristics.LENS_FACING,CameraCharacteristics.LENS_FACING_FRONT)
         c.set(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES,intArrayOf(CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE))
         c.set(CameraCharacteristics.STATISTICS_INFO_MAX_FACE_COUNT,4)
-        c.set(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE,CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME)
+        c.set(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE,clock)
         c.set(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE,Rect(0,0,1000,1000))
         c.set(CameraCharacteristics.SENSOR_ORIENTATION,0)
         c.set(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP,Shadow.newInstanceOf(StreamConfigurationMap::class.java))
@@ -127,9 +130,8 @@ class IndependentCameraCallbacksUiTest {
         assertEquals(CameraTrackingState.STARTING,first.state);assertTrue(observations.isEmpty())
     }
     @Test fun unknownSensorClockCannotBeAdmittedAsRealtimeEvidence() {
-        val manager=app.getSystemService(CameraManager::class.java)
-        Shadow.extract<ShadowCameraCharacteristics>(manager.getCameraCharacteristics("front"))
-            .set(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE,CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN)
+        Shadow.extract<Manager>(app.getSystemService(CameraManager::class.java)).removeCamera("front")
+        installCamera(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN)
         val c=camera();assertFalse(c.hardwareSupported());assertFalse(c.start(true,true,0))
         assertEquals(CameraTrackingState.UNSUPPORTED,c.state);assertEquals(0,opens)
     }
