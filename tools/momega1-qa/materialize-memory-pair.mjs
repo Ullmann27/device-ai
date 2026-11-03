@@ -26,7 +26,10 @@ fs.writeFileSync(repository+'.task.json',JSON.stringify(later,null,2)+'\n');
 assert.equal(git('rev-parse','HEAD^'),earlier.task.sourceCommit,'Direct ancestry required');
 const arms=[];
 for(const [name,binding] of [['earlier-u02',earlier],['later-u12-memory-off',later],['later-u12-memory-on',later]]){
- const checkout=path.join(base,name);git('worktree','add','--detach',checkout,binding.task.sourceCommit);
+ // Existing repositoryOf uses checkout basename without origin. Keep the same
+ // canonical identity across ordinary detached worktrees without inventing a remote.
+ const checkout=path.join(base,name,'device-ai');fs.mkdirSync(path.dirname(checkout));
+ git('worktree','add','--detach',checkout,binding.task.sourceCommit);
  fs.writeFileSync(checkout+'.task.json',JSON.stringify(binding,null,2)+'\n');
  const red=spawnSync(process.execPath,['--test','--test-reporter=tap','.github/continuum/frozen.test.mjs'],{cwd:checkout,encoding:'utf8',timeout:15000});
  fs.writeFileSync(path.join(base,name+'.baseline.tap'),red.stdout??'');
@@ -34,10 +37,12 @@ for(const [name,binding] of [['earlier-u02',earlier],['later-u12-memory-off',lat
  assert.equal(red.status,1);assert.match(red.stdout,/ERR_ASSERTION/);
  arms.push({name,checkout,binding,baseline:{exit:red.status,tapSha256:digest(red.stdout),stderrSha256:digest(red.stderr??'')}});
 }
-const manifest={schema:'momega1-related-memory-operational-freeze-v1',createdAt:new Date().toISOString(),
+const manifest={schema:'momega1-related-memory-operational-freeze-v2',createdAt:new Date().toISOString(),
  phase:'FROZEN_BEFORE_ANY_MODEL_EXPOSURE',originalManifestSha256:digest(fs.readFileSync(path.join(here,'FROZEN-MANIFEST.json'))),
  experimentBoundary:'Separate paired protocol. Original 12-task fixtures and original materialized SHAs remain unchanged.',
  history:{earlier:earlier.task.sourceCommit,later:later.task.sourceCommit,directParent:true},arms,
+ canonicalRepositoryIdentity:'local/device-ai',
+ supersedes:'v1 never executed inference; distinct arm basenames would produce distinct existing repositoryOf identities.',
  controls:{sameLaterCommit:true,sameLaterSourceAndTests:true,sameModelRuntimeAndBudgetsRequired:true,
   perTaskLimits:later.task.limits,inheritedSyntheticState:'Both later arms must start from identical completed earlier-state snapshot; keys stay private.',
   differingTreatment:'Only independently accepted explicit technical-recall toggle. Interface currently NOT_YET_ACCEPTED.',
