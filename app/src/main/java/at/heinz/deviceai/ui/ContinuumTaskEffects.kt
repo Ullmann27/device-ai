@@ -20,6 +20,7 @@ class ContinuumTaskEffects {
     private var lastNow=-1L
     private val cyan=Fill.Solid(0xff54d8ff.toInt())
     private val violet=Fill.Solid(0xffae9aff.toInt())
+    private val backing=Fill.Solid(0xff050817.toInt()) // Existing app background palette.
     private val page=VectorPath()
 
     fun setScope(value:String?) {
@@ -48,6 +49,7 @@ class ContinuumTaskEffects {
             is Event.Read -> {
                 if(!fresh || current==null || current.kind!=Kind.TOOL || current.read)return false
                 current.read=true;current.last=occurredAtMillis
+                pulses.removeAll { it.id==event.id && it.type==0 }
                 pulse(Pulse(event.id,1,current.kind,occurredAtMillis,current.slot,1400))
             }
             is Event.Finished -> {
@@ -67,10 +69,12 @@ class ContinuumTaskEffects {
         if(scope==null || !width.isFinite() || !height.isFinite() || width<=0 || height<=0 || nowMillis<lastNow)return
         lastNow=nowMillis;expire(nowMillis)
         val hubX=width*.5f;val hubY=height*.61f
-        val size=minOf(12f,width*.04f,height*.05f)
+        // Nominal 24dp icon stays legible in the real 88dp compact chat hero.
+        val size=minOf(24f,width*.10f,height*.27f)
+        val pad=size*.9f
         for(pulse in pulses) {
             val t=((nowMillis-pulse.at).toFloat()/pulse.duration).coerceIn(0f,1f)
-            val fade=sin(PI*t).toFloat().coerceAtLeast(0f)*.72f
+            val fade=sin(PI*t).toFloat().coerceAtLeast(0f)*.88f
             if(fade<=0f)continue
             val ease=t*t*(3-2*t)
             val side=if(pulse.slot%2==0) -1 else 1
@@ -78,35 +82,44 @@ class ContinuumTaskEffects {
             if(pulse.type==2) {
                 val x=hubX+side*width*.33f*ease
                 val y=hubY-height*.13f*ease
-                painter.drawLine(hubX,hubY,x,y,.6f,fill,fade*.18f)
+                painter.drawLine(hubX,hubY,x,y,.9f,fill,fade*.35f)
                 painter.fillCircle(x,y,size*.17f,fill,fade)
                 continue
             }
             val x:Float;val y:Float
             if(pulse.type==1) {
-                x=width*.88f+(hubX-width*.88f)*ease
-                y=height*.22f+(hubY-height*.22f)*ease-sin(PI*t).toFloat()*height*.10f
+                x=(width*(.92f-.16f*ease)).coerceIn(pad,width-pad)
+                y=(height*(.22f+.44f*ease)-sin(PI*t).toFloat()*height*.08f).coerceIn(pad,height-pad)
             } else {
-                x=hubX+side*width*(.40f-.18f*ease)
-                y=height*(.22f+.08f*pulse.slot+.10f*ease)
+                x=(hubX+side*width*(.43f-.08f*ease)).coerceIn(pad,width-pad)
+                y=(height*(.22f+.08f*pulse.slot+.10f*ease)).coerceIn(pad,height-pad)
             }
-            painter.drawLine(x,y,hubX,hubY,2f,fill,fade*.07f)
-            painter.drawLine(x,y,hubX,hubY,.6f,fill,fade*.23f)
-            painter.fillCircle(hubX,hubY,1.6f,fill,fade*.4f)
+            painter.drawLine(x,y,hubX,hubY,5f,fill,fade*.16f)
+            painter.drawLine(x,y,hubX,hubY,1.1f,fill,fade*.65f)
+            painter.fillCircle(hubX,hubY,2.2f,fill,fade*.65f)
+            painter.fillCircle(x,y,size*.78f,backing,fade*.95f)
+            painter.strokeCircle(x,y,size*.80f,3f,fill,fade*.20f)
+            painter.strokeCircle(x,y,size*.73f,1f,fill,fade*.8f)
             if(pulse.type==1) {
                 // Generic page; not a PDF, account message, filename, or claim about contents.
                 page.reset().moveTo(x-size*.35f,y-size*.5f).lineTo(x+size*.12f,y-size*.5f)
                     .lineTo(x+size*.35f,y-size*.25f).lineTo(x+size*.35f,y+size*.5f)
                     .lineTo(x-size*.35f,y+size*.5f).close()
-                painter.strokePath(page,.8f,fill,fade)
-                painter.drawLine(x-size*.19f,y+size*.04f,x+size*.18f,y+size*.04f,.6f,fill,fade*.8f)
-                painter.drawLine(x-size*.19f,y+size*.24f,x+size*.1f,y+size*.24f,.6f,fill,fade*.8f)
+                painter.strokePath(page,1.3f,fill,fade)
+                painter.drawLine(x+size*.12f,y-size*.5f,x+size*.12f,y-size*.25f,1f,fill,fade)
+                painter.drawLine(x+size*.12f,y-size*.25f,x+size*.35f,y-size*.25f,1f,fill,fade)
+                painter.drawLine(x-size*.19f,y+size*.04f,x+size*.18f,y+size*.04f,1f,fill,fade)
+                painter.drawLine(x-size*.19f,y+size*.24f,x+size*.1f,y+size*.24f,1f,fill,fade)
             } else if(pulse.kind==Kind.WORKER) {
-                painter.strokeCircle(x,y-size*.24f,size*.22f,.8f,fill,fade)
-                painter.strokeArc(x-size*.42f,y+size*.02f,x+size*.42f,y+size*.7f,180f,180f,.8f,fill,fade)
+                painter.strokeCircle(x,y-size*.25f,size*.20f,1.3f,fill,fade)
+                page.reset().moveTo(x-size*.4f,y+size*.42f)
+                    .quadTo(x-size*.4f,y+size*.05f,x,y+size*.05f)
+                    .quadTo(x+size*.4f,y+size*.05f,x+size*.4f,y+size*.42f).close()
+                painter.strokePath(page,1.3f,fill,fade)
             } else {
-                painter.strokeRoundRect(x-size*.4f,y-size*.36f,x+size*.4f,y+size*.36f,size*.12f,.8f,fill,fade)
-                painter.drawLine(x-size*.2f,y,x+size*.2f,y,.7f,fill,fade)
+                painter.strokeRoundRect(x-size*.45f,y-size*.4f,x+size*.45f,y+size*.4f,size*.12f,1.3f,fill,fade)
+                painter.drawLine(x-size*.25f,y-size*.13f,x+size*.2f,y-size*.13f,1.2f,fill,fade)
+                painter.drawLine(x-size*.25f,y+size*.13f,x+size*.08f,y+size*.13f,1.2f,fill,fade)
             }
         }
     }
