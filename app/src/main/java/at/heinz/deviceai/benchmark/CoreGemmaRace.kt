@@ -100,7 +100,7 @@ object CoreGemmaPairedRunner {
 /**
  * Conservative scoring gate, not a device proof. 30+ independent frozen holdout
  * tasks from >=3 domains, with >=3 examples per domain, are mandatory to declare
- * even a provisional lead. A failed, missing or 0-ms measurement is never discarded.
+ * even a provisional lead. A successful 0-ms tick is allowed (millisecond clock resolution); failed or missing measurements are blockers.
  */
 object CoreGemmaRaceEvaluator {
     private const val MIN_PAIRS = 30
@@ -124,9 +124,9 @@ object CoreGemmaRaceEvaluator {
         val expectedSystems = setOf(CoreGemmaPairedRunner.CORE, CoreGemmaPairedRunner.GEMMA)
         if (rows.any { (_, ms) ->
             ms.size != 2 || ms.map { it.system }.toSet() != expectedSystems ||
-                ms.any { it.error != null || !it.success || it.latencyMillis <= 0 ||
+                ms.any { it.error != null || !it.success || it.latencyMillis < 0 ||
                     it.invalidToolProposals != 0L }
-        }) return no(RaceAssessment.INCOMPLETE, "Missing, failed, invalid or zero-latency measurement.")
+        }) return no(RaceAssessment.INCOMPLETE, "Missing, failed, invalid or negative-latency measurement.")
 
         val byTask = grades.groupBy { it.taskId }
         if (grades.size != rows.size || byTask.keys != rows.keys || byTask.values.any { it.size != 1 })
