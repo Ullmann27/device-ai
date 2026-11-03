@@ -1,0 +1,73 @@
+{
+  "kind": "SOURCE_AUDIT_ONLY",
+  "noRuntimeTestsExecuted": true,
+  "noUnknownBenchmarkTaskBodiesRead": true,
+  "sources": [
+    {
+      "sourceCommit": "7473ffb6584b70b1023b1156fca823e2a76dff36",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "bytes": 540896,
+      "sha256": "5f4a13f6c933bcad1bd41a66445f85e410be8c2cd7b6e7b82ef429ebc5561531"
+    },
+    {
+      "sourceCommit": "7473ffb6584b70b1023b1156fca823e2a76dff36",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt",
+      "bytes": 13129,
+      "sha256": "9f7411e86aed2caa7ac05238b369649d31ceb7a32a7d5413b3df431e8bed99c7"
+    },
+    {
+      "sourceCommit": "7473ffb6584b70b1023b1156fca823e2a76dff36",
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotAddressRouter.kt",
+      "bytes": 1831,
+      "sha256": "18aaaad9f77e8a81d4c48fad8556f2138fabc52843e6ec7f07c573fa35d61b07"
+    },
+    {
+      "sourceCommit": "7473ffb6584b70b1023b1156fca823e2a76dff36",
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "bytes": 31606,
+      "sha256": "8b0af54349c404ec87c009c2b0ef23e3ef7cc88a3b84f085337e51268229b74e"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "bytes": 540896,
+      "sha256": "5f4a13f6c933bcad1bd41a66445f85e410be8c2cd7b6e7b82ef429ebc5561531"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt",
+      "bytes": 13129,
+      "sha256": "9f7411e86aed2caa7ac05238b369649d31ceb7a32a7d5413b3df431e8bed99c7"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotAddressRouter.kt",
+      "bytes": 1831,
+      "sha256": "18aaaad9f77e8a81d4c48fad8556f2138fabc52843e6ec7f07c573fa35d61b07"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "bytes": 31606,
+      "sha256": "8b0af54349c404ec87c009c2b0ef23e3ef7cc88a3b84f085337e51268229b74e"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt",
+      "bytes": 17793,
+      "sha256": "253c49fa5a062eed636adcdd9640b15b6d268a5f83a92a316a9fc1d30ce26271"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+      "bytes": 24673,
+      "sha256": "aafe16f7787ade779b658b63063d723844a10ecdd45f508b5f9eef0ba5162e28"
+    },
+    {
+      "sourceCommit": "66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44",
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "bytes": 11497,
+      "sha256": "60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1"
+    }
+  ]
+}

@@ -328,6 +328,7 @@ class AgentActivity : Activity() {
     private val dashboardRefresh = object : Runnable {
         override fun run() {
             refreshDashboard()
+            botRosterDialog?.refreshRuntimeStatus()
             mainHandler.postDelayed(this, 5_000L)
         }
     }
@@ -371,6 +372,15 @@ class AgentActivity : Activity() {
     // use a dedicated worker thread, and never touch the shared native Gemma session.
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private var botRosterDialog: ContinuumBotRosterDialog? = null
+    private val botProfiles by lazy {
+        at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots"))
+    }
+    private val botConversation by lazy { at.heinz.deviceai.chief.ChiefBotConversation(botProfiles) }
+    private var selectedBot: at.heinz.deviceai.chief.ChiefBotProfile? = null
+    private var botLookupPending = false
+    private var botLookupRevision = 0L
+    @Volatile private var activeBotId: String? = null
+    @Volatile private var activeBotTurn: at.heinz.deviceai.chief.ChiefBotConversationTurn? = null
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
@@ -554,6 +564,9 @@ class AgentActivity : Activity() {
                 "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
                 "Mit „Was kannst du?“ erfährst du meine aktuellen Fähigkeiten."
         )
+        savedInstanceState?.getString("chief_bot_selection_v1")?.takeIf {
+            Regex("[a-z][a-z0-9-]{2,63}").matches(it)
+        }?.let { selectBot(it) }
     }
 
     override fun onResume() {
@@ -575,6 +588,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        botLookupRevision++
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
         if (appLookupActive) {
@@ -599,6 +613,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        selectedBot?.let { outState.putString("chief_bot_selection_v1", it.agentId) }
         pendingModelImport?.let { (id, version, sha) ->
             outState.putString(MODEL_IMPORT_ID_STATE_KEY, id)
             outState.putString(MODEL_IMPORT_VERSION_STATE_KEY, version)
@@ -614,6 +629,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        botLookupRevision++
+        botConversation.invalidate()
         avatarDirector.attach(at.heinz.deviceai.avatar.NoOpAvatarSink)
         cancelSpeechInputScope();onDeviceSpeech=null
         at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(lastLocalReply?.let {
@@ -1444,9 +1461,231 @@ class AgentActivity : Activity() {
 
     private fun showBotRoster() {
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
-            at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots")),
-            backlogExecutor).also { botRosterDialog = it }
+            botProfiles, backlogExecutor,
+            onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus,
+            onContextChanging = ::botContextChanging
+        ).also { botRosterDialog = it }
         roster.show()
+    }
+
+    private fun botContextChanging(agentId: String) {
+        // A pending selection may have loaded this profile before its owner edit.
+        botLookupRevision++
+        if (selectedBot?.agentId != agentId) return
+        cancelSpeechInputScope()
+        // Invalidate synchronously before an owner edit is queued, not after its disk write.
+        // This closes the gap between a worker's strict read and the UI's display callback.
+        botConversation.invalidate()
+        voiceEngine?.stop(); stopVoiceAnimation()
+        if (activeBotId == agentId) {
+            activeChatCancellation?.cancel()
+            activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
+            localRuntime.cancel()
+        }
+        chatContainer.removeAllViews()
+        addBubble("Bot-Kontext wird geändert. Bitte den Bot danach erneut auswählen.", false)
+    }
+
+    private fun botRuntimeStatus(profile: at.heinz.deviceai.chief.ChiefBotProfile): String {
+        val model = if (::localRuntime.isInitialized) localRuntime.loadedModel else null
+        val active = activeBotId == profile.agentId && localRuntime.state == LocalModelState.GENERATING
+        val connected = model != null && localRuntime.state in setOf(LocalModelState.READY, LocalModelState.GENERATING)
+        return "PROFILE_CREATED · " + (if (active) "MODELL AKTIV" else "RUHEND") +
+            "\n" + (if (connected) "MODEL_CONNECTED · ${model?.id} / ${model?.version}" else "Kein lokales Modell bereit") +
+            "\nPrivater Dialog · Gemeinsame Modellverwaltung" +
+            "\nWerkzeuge/Computer: nicht verbunden · Keine unabhängig bestätigte Fachleistung"
+    }
+
+    /** Selection and history I/O never import bot text into owner memory or public learning. */
+    private fun selectBot(agentId: String) {
+        if (busy || botLookupPending || backlogExecutor.isShutdown) {
+            Toast.makeText(this, "Bitte den laufenden Dialogschritt abwarten.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        cancelSpeechInputScope()
+        botLookupPending = true
+        val revision = ++botLookupRevision
+        try { backlogExecutor.execute {
+            val loaded = runCatching {
+                val profile = requireNotNull(botProfiles.get(agentId))
+                profile to botProfiles.loadConversation(agentId, agentId)
+            }
+            runOnUiThread {
+                botLookupPending = false
+                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
+                if (busy) return@runOnUiThread
+                loaded.fold({ (profile, history) ->
+                    enterBotConversation(profile)
+                    showBotHistory(profile, history)
+                }, { Toast.makeText(this, "Bot-Kontext nicht sicher lesbar; keine Daten ersetzt.", Toast.LENGTH_LONG).show() })
+            }
+        } } catch (_: java.util.concurrent.RejectedExecutionException) { botLookupPending = false }
+    }
+
+    private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile) {
+        cancelSpeechInputScope()
+        voiceEngine?.stop(); stopVoiceAnimation()
+        botConversation.select(profile.agentId)
+        selectedBot = profile
+        conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection(); refreshConversationLayout()
+        chatContainer.removeAllViews()
+        input.hint = "Nachricht an ${profile.displayName} · JARVIS zum Wechseln"
+        addBubble("${profile.displayName} · ${profile.role}\n${profile.communicationStyle}\n" +
+            "Privater lokaler Dialog. Werkzeugaufträge benötigen eine getrennt geprüfte Verbindung.", false)
+    }
+
+    private fun showBotHistory(profile: at.heinz.deviceai.chief.ChiefBotProfile,
+                               history: at.heinz.deviceai.chief.ChiefBotConversationHistory) {
+        history.turns.forEach { turn ->
+            addBubble(turn.request, true)
+            addBubble("${profile.displayName} · ${turn.response}", false)
+        }
+        if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
+    }
+
+    private fun returnToJarvis() {
+        cancelSpeechInputScope()
+        voiceEngine?.stop(); stopVoiceAnimation()
+        botConversation.select(null)
+        selectedBot = null
+        chatContainer.removeAllViews()
+        input.hint = "Was soll ich auf deinem Gerät tun?"
+        addBubble("JARVIS · Zentraler Dialog", false)
+    }
+
+    /** Addressing is metadata selection, never an action grant. Runs before owner-only routers. */
+    private fun routeBotInput(request: String): Boolean {
+        val address = at.heinz.deviceai.chief.ChiefBotAddressRouter.parse(request)
+        if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Jarvis) {
+            returnToJarvis()
+            input.setText(address.text.orEmpty())
+            if (address.text != null) sendCurrentInput(botRoutingChecked = true)
+            return true
+        }
+        if (address == null && selectedBot == null) return false
+        if (botLookupPending || backlogExecutor.isShutdown) return true
+        cancelSpeechInputScope()
+        botLookupPending = true
+        val revision = ++botLookupRevision
+        try { backlogExecutor.execute {
+            val found = runCatching {
+                botProfiles.seedDefaults(20)
+                val profile = when (address) {
+                    is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select ->
+                        at.heinz.deviceai.chief.ChiefBotAddressRouter.resolve(botProfiles, address.name)
+                    is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message ->
+                        at.heinz.deviceai.chief.ChiefBotAddressRouter.resolve(botProfiles, address.name)
+                    else -> selectedBot?.agentId?.let(botProfiles::get)
+                }
+                profile to if (profile != null && selectedBot?.agentId != profile.agentId &&
+                    address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message)
+                    botProfiles.loadConversation(profile.agentId, profile.agentId) else null
+            }
+            runOnUiThread {
+                botLookupPending = false
+                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
+                if (busy || input.text.toString().trim() != request) return@runOnUiThread
+                if (found.isFailure) {
+                    Toast.makeText(this, "Bot-Zuordnung unklar oder nicht lesbar. Bitte über Team auswählen.", Toast.LENGTH_LONG).show()
+                    return@runOnUiThread
+                }
+                val (profile, history) = found.getOrThrow()
+                if (profile == null) {
+                    if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
+                        Toast.makeText(this, "Kein eindeutiger Bot dieses Namens gefunden.", Toast.LENGTH_LONG).show()
+                    } else if (selectedBot != null) {
+                        input.text.clear(); runBotDialogue(selectedBot!!, request)
+                    } else sendCurrentInput(botRoutingChecked = true)
+                    return@runOnUiThread
+                }
+                input.text.clear()
+                if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
+                    selectBot(profile.agentId)
+                    return@runOnUiThread
+                }
+                if (selectedBot?.agentId != profile.agentId) {
+                    enterBotConversation(profile)
+                    history?.let { showBotHistory(profile, it) }
+                }
+                else selectedBot = profile
+                val text = (address as? at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message)?.text ?: request
+                runBotDialogue(profile, text)
+            }
+        } } catch (_: java.util.concurrent.RejectedExecutionException) { botLookupPending = false }
+        return true
+    }
+
+    private fun runBotDialogue(profile: at.heinz.deviceai.chief.ChiefBotProfile, request: String) {
+        if (busy || localAgentExecutor.isShutdown) return
+        addBubble(request, true)
+        val model = localRuntime.loadedModel
+        val state = continuumState
+        if (model == null || localRuntime.state != LocalModelState.READY || state == null) {
+            addBubble("${profile.displayName} · Kein lokales Modell im Zustand BEREIT. Der Auftrag wurde nicht ausgeführt.", false)
+            return
+        }
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val turnSession = sessionId
+        activeChatCancellation = cancellation
+        activeBotId = profile.agentId
+        activeLocalRequest = true
+        setBusy(true)
+        addToolActivity("${profile.displayName} · Privater lokaler Dialog")
+        try { localAgentExecutor.execute {
+            val result = runCatching {
+                cancellation.throwIfCancelled()
+                val turn = botConversation.prepare(profile.agentId, request, state, model, turnSession)
+                activeBotTurn = turn
+                cancellation.throwIfCancelled()
+                check(localRuntime.loadedModel == model) { "BOT_MODEL_CHANGED" }
+                val remainingMillis = turn.remainingMillis()
+                check(remainingMillis > 0) { "BOT_DEADLINE_EXCEEDED" }
+                val generated = generateLocal(cancellation, promptCharacters = turn.prompt.length,
+                    hardDeadlineMillis = remainingMillis,
+                    maxOutputBytes = at.heinz.deviceai.chief.ChiefBotConversationEntry.MAX_RESPONSE_BYTES) {
+                    localRuntime.streamThinking(turn.prompt, it)
+                }
+                cancellation.throwIfCancelled()
+                generated.failure?.let { error(it) }
+                check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TOOL_NOT_AUTHORIZED" }
+                check(generated.response.isNotBlank()) { "BOT_EMPTY_RESPONSE" }
+                check(botConversation.complete(turn, generated.response, localRuntime.loadedModel, sessionId)) { "BOT_STALE_TURN" }
+                check(botConversation.isCurrent(turn, localRuntime.loadedModel, sessionId)) { "BOT_STALE_PRESENTATION" }
+                generated.response
+            }
+            runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result) }
+        } } catch (_: java.util.concurrent.RejectedExecutionException) {
+            finishBotDialogue(cancellation, profile, turnSession, Result.failure(IllegalStateException("BOT_EXECUTOR_CLOSED")))
+        }
+    }
+
+    private fun finishBotDialogue(cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation,
+                                  profile: at.heinz.deviceai.chief.ChiefBotProfile, turnSession: String,
+                                  result: Result<String>) {
+        if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
+        // Cancellation is not native termination. Keep the shared lane occupied until it really ends.
+        if (localRuntime.state == LocalModelState.GENERATING) {
+            mainHandler.postDelayed({ finishBotDialogue(cancellation, profile, turnSession, result) }, 250L)
+            return
+        }
+        val uncancelled = runCatching { cancellation.throwIfCancelled() }.isSuccess
+        val current = uncancelled && selectedBot?.agentId == profile.agentId && sessionId == turnSession &&
+            (activeBotTurn?.let { botConversation.isPresentationBound(it, localRuntime.loadedModel, sessionId) } ?: result.isFailure)
+        activeBotTurn?.let(botConversation::cancel)
+        activeBotTurn = null; activeBotId = null
+        activeChatCancellation = null; activeLocalRequest = false
+        setBusy(false)
+        if (!current) { addToolActivity("Bot-Dialog beendet · Veraltete Ausgabe verworfen"); return }
+        result.fold({ answer ->
+            addBubble("${profile.displayName} · $answer", false)
+            speakBootstrap(answer)
+            addToolActivity("${profile.displayName} · Modellantwort gespeichert; keine unabhängig geprüfte Werkzeugleistung")
+        }, {
+            addBubble("${profile.displayName} · Dialog nicht abgeschlossen. Keine Werkzeugaktion ausgeführt.", false)
+            addToolActivity("Bot-Dialog fehlgeschlagen · ${it.javaClass.simpleName}")
+        })
     }
 
     private fun refreshConversationLayout() {
@@ -2591,7 +2830,8 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun sendCurrentInput() {
+    private fun sendCurrentInput(botRoutingChecked: Boolean = false) {
+        if (botLookupPending) return
         // A read-only Chief status question is allowed while Gemma is busy.
         // It must never cancel or queue behind the current model generation.
         val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
@@ -2605,6 +2845,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        if (!botRoutingChecked && routeBotInput(request)) return
         if (chiefStatusRequest) {
             input.text.clear()
             addUserMessage(request)
@@ -5485,8 +5726,10 @@ class AgentActivity : Activity() {
             awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
-    private fun stopVoiceAnimation() {
-        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = true) }
+    private fun stopVoiceAnimation() = stopVoiceAnimation(true)
+
+    private fun stopVoiceAnimation(interrupted: Boolean) {
+        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = interrupted) }
         voiceUtteranceId = null
         voiceSpeaking = false
         voiceSignal.stop()
@@ -5498,11 +5741,10 @@ class AgentActivity : Activity() {
     private fun installVoiceProgressListener() {
         voiceEngine?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
             override fun onStart(utteranceId: String?) {
-                if(utteranceId == null || utteranceId != voiceUtteranceId) return
-                voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
-                avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                 runOnUiThread {
-                    if(utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
+                    if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
+                    voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
+                    avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                     voiceSpeaking = true
                     refreshHologramState()
                     mainHandler.removeCallbacks(voiceFrame)
@@ -5516,7 +5758,8 @@ class AgentActivity : Activity() {
                 if(utteranceId != null && utteranceId == voiceUtteranceId && audio != null) voiceSignal.append(utteranceId,audio)
             }
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
-                if(utteranceId != null && utteranceId == voiceUtteranceId) {
+                runOnUiThread {
+                    if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
                     voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
                     avatarDirector.wordRange(utteranceId, start, end)
                 }
@@ -5527,8 +5770,11 @@ class AgentActivity : Activity() {
             override fun onError(utteranceId: String?, errorCode: Int) = finish(utteranceId)
             override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId, interrupted)
             private fun finish(id: String?, interrupted: Boolean = false) {
-                if (id != null) avatarDirector.speechEnded(id, interrupted)
-                runOnUiThread { if(id != null && id == voiceUtteranceId) stopVoiceAnimation() }
+                runOnUiThread {
+                    if(id != null && id == voiceUtteranceId) {
+                        stopVoiceAnimation(interrupted)
+                    }
+                }
             }
         })
     }
@@ -7426,6 +7672,17 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        if (activeBotId != null) {
+            // Stop this utterance/model turn only. An independent CCC1 job is not a speech turn.
+            voiceEngine?.stop(); stopVoiceAnimation()
+            activeBotTurn?.let(botConversation::cancel)
+            botConversation.invalidate()
+            activeChatCancellation?.cancel()
+            activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
+            localRuntime.cancel()
+            addToolActivity("Bot-Dialogabbruch angefordert · Warte auf tatsächliches Modellende")
+            return
+        }
         appLookupGeneration++
         if (appLookupActive) {
             appLookupActive = false
@@ -7480,8 +7737,12 @@ class AgentActivity : Activity() {
         cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null,
         turnTrace: CognitiveTurnTrace? = null,
         promptCharacters: Int? = null,
+        hardDeadlineMillis: Long? = null,
+        maxOutputBytes: Int? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
+        require(hardDeadlineMillis == null || hardDeadlineMillis in 1..600_000)
+        require(maxOutputBytes == null || maxOutputBytes in 1..64_000)
         cancellation?.throwIfCancelled()
         val completed = CountDownLatch(1)
         val response = StringBuilder()
@@ -7489,6 +7750,7 @@ class AgentActivity : Activity() {
         val proposalGuard = ToolProposalTurnGuard()
         val eventLock = Any()
         var terminalEventReceived = false
+        var outputBudgetExceeded = false
         var failure: String? = null
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
@@ -7516,6 +7778,15 @@ class AgentActivity : Activity() {
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
+                    if (event is LocalInferenceEvent.TextDelta && maxOutputBytes != null &&
+                        (response.length.toLong() + event.text.length > maxOutputBytes ||
+                            (response.toString() + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
+                        outputBudgetExceeded = true
+                        failure = "BOT_OUTPUT_BUDGET_EXCEEDED"
+                        terminalEventReceived = true
+                        completed.countDown()
+                        return@LocalInferenceCallback
+                    }
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> if (
                             event.text.isNotEmpty() &&
@@ -7584,7 +7855,16 @@ class AgentActivity : Activity() {
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
         while (true) {
             cancellation?.throwIfCancelled()
-            if (completed.await(250, TimeUnit.MILLISECONDS)) break
+            if (completed.await(250, TimeUnit.MILLISECONDS)) {
+                if (synchronized(eventLock) { outputBudgetExceeded }) localRuntime.cancel()
+                break
+            }
+            if (hardDeadlineMillis != null &&
+                System.nanoTime() - generationStartedNanos >= TimeUnit.MILLISECONDS.toNanos(hardDeadlineMillis)) {
+                synchronized(eventLock) { terminalEventReceived = true }
+                localRuntime.cancel()
+                return LocalGeneration("", null, emptyList(), "BOT_DEADLINE_EXCEEDED")
+            }
             val diagnostic = synchronized(eventLock) {
                 val elapsedMillis = (System.nanoTime() - generationStartedNanos)
                     .coerceAtLeast(0L) / 1_000_000L
@@ -7827,6 +8107,7 @@ class AgentActivity : Activity() {
 
     private fun loadModel(model: ImportedLocalModel) {
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
+        botConversation.invalidate()
         resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
@@ -7868,6 +8149,8 @@ class AgentActivity : Activity() {
     }
 
     private fun unloadModel() {
+        botConversation.invalidate()
+        if (activeBotId != null) activeChatCancellation?.cancel()
         // The owner explicitly chose to unload. Do not silently re-enable
         // Gemma on the next launch until a new successful manual load.
         gemmaRestorePreferences().edit()
@@ -7908,6 +8191,7 @@ class AgentActivity : Activity() {
             return
         }
         pendingModelImport = null
+        botConversation.invalidate()
         resetM2NativeProof()
         modelImportActive = true
         latestModelImportSnapshot = null
@@ -8578,6 +8862,23 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        selectedBot?.let { profile ->
+            if (botLookupPending || backlogExecutor.isShutdown) return
+            botContextChanging(profile.agentId)
+            botLookupPending = true
+            val revision = ++botLookupRevision
+            try { backlogExecutor.execute {
+                val reset = runCatching { botConversation.reset(profile.agentId) }
+                runOnUiThread {
+                    botLookupPending = false
+                    if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
+                    reset.fold({ enterBotConversation(it) }, {
+                        Toast.makeText(this, "Bot-Dialog konnte nicht zurückgesetzt werden.", Toast.LENGTH_LONG).show()
+                    })
+                }
+            } } catch (_: java.util.concurrent.RejectedExecutionException) { botLookupPending = false }
+            return
+        }
         val closingSession = sessionId
         setBusy(true)
         onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) { sessionResetLifetime.get() } }) { result ->
@@ -8761,6 +9062,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        botRosterDialog?.refreshRuntimeStatus()
         if(!value) learningVisualActive = false
         refreshConversationLayout()
         refreshHologramState()
@@ -8805,9 +9107,11 @@ class AgentActivity : Activity() {
     }
 
     private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
-        if (busy) {
-            if(activeLocalRequest)cancelLocalRequest()
-            else { Toast.makeText(this,"Bitte die laufende Aufgabe zuerst über Stopp beenden.",Toast.LENGTH_LONG).show();return }
+        // Dictation is a new composer draft, not authorization to abort a coding/tool job.
+        // A running job can still be stopped with its explicit action, independently of TTS.
+        if (busy && requestCode == DEV_SPEECH_REQUEST) {
+            Toast.makeText(this,"Der Entwicklungsauftrag läuft. Eine neue Frage kannst du im Chat diktieren.",Toast.LENGTH_LONG).show()
+            return
         }
         // Barge-in: silence voice AND avatar mouth now; the TTS onStop callback is asynchronous.
         voiceEngine?.stop()

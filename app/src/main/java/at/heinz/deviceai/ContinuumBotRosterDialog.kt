@@ -23,11 +23,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ContinuumBotRosterDialog(
     private val activity: Activity,
     private val store: ChiefBotProfileStore,
-    private val io: Executor
+    private val io: Executor,
+    private val onSelect: ((ChiefBotProfile) -> Unit)? = null,
+    private val runtimeStatus: ((ChiefBotProfile) -> String)? = null,
+    private val onContextChanging: ((String) -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
     private var revision = 0L
     private val storagePending = AtomicBoolean()
+    private val statusViews = mutableListOf<Pair<ChiefBotProfile, TextView>>()
     private val cyan = Color.rgb(79, 224, 255)
     private val violet = Color.rgb(159, 120, 255)
     private val surfaceColor = Color.rgb(5, 13, 29)
@@ -41,7 +45,18 @@ class ContinuumBotRosterDialog(
         revision++
         dialog?.dismiss()
         dialog = null
+        statusViews.clear()
     }
+
+    /** Reuses the Activity's existing state/tick callbacks; no per-bot timers or render loops. */
+    fun refreshRuntimeStatus() {
+        val status = runtimeStatus ?: return
+        if (activity.isFinishing || activity.isDestroyed || dialog?.isShowing != true) return
+        statusViews.forEach { (profile, view) -> view.text = status(profile) }
+    }
+
+    private fun statusLabel(profile: ChiefBotProfile, fallback: String): TextView =
+        label(runtimeStatus?.invoke(profile) ?: fallback).also { statusViews += profile to it }
 
     private fun column() = LinearLayout(activity).apply {
         orientation = LinearLayout.VERTICAL
@@ -67,6 +82,7 @@ class ContinuumBotRosterDialog(
 
     private fun open(title: String, content: LinearLayout): Long {
         dialog?.dismiss()
+        statusViews.clear()
         val token = ++revision
         dialog = AlertDialog.Builder(activity).setTitle(title)
             .setView(ScrollView(activity).apply { addView(content) })
@@ -134,7 +150,11 @@ class ContinuumBotRosterDialog(
                 }
                 card.addView(label(profile.displayName + " · " + profile.role, 18f))
                 card.addView(label(profile.communicationStyle))
-                card.addView(label("REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
+                card.addView(statusLabel(profile,
+                    "REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
+                onSelect?.let { select -> card.addView(action("Mit ${profile.displayName} sprechen") {
+                    if (live(token)) { close(); select(profile) }
+                }) }
                 card.addView(action("Profil und Arbeitsbereich öffnen") { showProfile(profile.agentId) })
                 body.addView(card, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) })
             }
@@ -155,8 +175,11 @@ class ContinuumBotRosterDialog(
             body.removeAllViews()
             body.addView(label(profile.displayName + " · " + profile.role, 21f))
             body.addView(label(profile.communicationStyle))
-            body.addView(label("REGISTRIERT · Kein aktueller Auftrag\n" +
+            body.addView(statusLabel(profile, "REGISTRIERT · Kein aktueller Auftrag\n" +
                 "Geprüfte Fähigkeiten: noch keine\nLetztes bestätigtes Arbeitsergebnis: noch keines"))
+            onSelect?.let { select -> body.addView(action("Mit ${profile.displayName} sprechen") {
+                if (live(token)) { close(); select(profile) }
+            }) }
             body.addView(label("Arbeitsplatz: ${profile.workspaceId}\n" +
                 "Speicherort: private App-Daten auf diesem Gerät\n" +
                 "Ausführung: noch keine isolierte Umgebung verbunden.\n" +
@@ -170,7 +193,9 @@ class ContinuumBotRosterDialog(
             body.addView(editor)
             val save = action("Arbeitsnotiz speichern") {}
             save.setOnClickListener {
+                if (!live(token)) return@setOnClickListener
                 save.isEnabled = false
+                onContextChanging?.invoke(profile.agentId)
                 val text = editor.text.toString()
                 load(token, body, {
                     // Principal is selected by this trusted owner UI, never parsed from model text.
@@ -200,8 +225,10 @@ class ContinuumBotRosterDialog(
         val token = open("${profile.displayName} · Name", body)
         val save = action("Name speichern") {}
         save.setOnClickListener {
+            if (!live(token)) return@setOnClickListener
             if (name.text.isBlank()) { name.error = "Bitte einen Namen eingeben"; return@setOnClickListener }
             save.isEnabled = false
+            onContextChanging?.invoke(profile.agentId)
             val value = name.text.toString()
             load(token, body, { store.rename(profile.agentId, value, profile.profileVersion) }) {
                 showProfile(it.agentId)
@@ -240,10 +267,12 @@ class ContinuumBotRosterDialog(
         val token = open("${profile.displayName} · Rollenprofil", body)
         val save = action("Rollenprofil speichern") {}
         save.setOnClickListener {
+            if (!live(token)) return@setOnClickListener
             if (role.text.isBlank() || style.text.isBlank()) {
                 role.error = "Bitte Fachgebiet und Arbeitsstil ausfüllen"; return@setOnClickListener
             }
             save.isEnabled = false
+            onContextChanging?.invoke(profile.agentId)
             val roleText = role.text.toString()
             val styleText = style.text.toString()
             load(token, body, {

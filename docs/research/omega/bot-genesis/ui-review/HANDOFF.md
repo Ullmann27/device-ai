@@ -1,0 +1,99 @@
+# Bot Genesis independent UI review
+
+**Final unfiltered Android host gate PASS on exact1595389274acb840c4ab544fa699c9eb2a04bd53:**2241 total tests =2224 PASS,0 FAIL,17 SKIP,0 errors across404 suites. The34 independent reviewer tests are included in that total and all pass. Production/test compilation PASS; `lintDebug` PASS with0 issues under the repository's existing NewApi-only configuration. Gradle exit0 in185s. Raw evidence: `final-1595-full/`. No APK assembly, signing, installation, release, local-model inference or Fold7/audio/GPU acceptance is implied.
+
+All877 tracked production/repository-test/build files,6 external reviewer files and the test-JVM init hash are identical before/after; exact candidate checkout remains clean. A temporary environment-status interruption occurred after the unit task; on recovery the existing Gradle log and exit file proved successful completion. No retry or duplicate build was launched. CPU window is RELEASED; no reviewer background build or native model remains running. QuotaNOT_VISIBLE.
+
+The following sections preserve earlier checkpoints and RED evidence; their pending statuses are historical where superseded by the final result above.
+
+**407 roster repair independently HOST_TESTED:15/15 PASS,0 FAIL,0 SKIP.** Actual Android production/test compile PASS, Gradle exit0. Exact tested baseline4b881f81ddfbe38729a551d9e460e818c6b3b715, production equivalentc7ec853e2ffaa488b92826306f015bfaa67f5bb7. Reviewer test freeze7bb1cfd5cf3beab9d5a1caf0d84180c815172bd0; all source/test hashes identical before/after. Review-only branch codex/genesis-ui-review-20261103. PR437 merged into Chief Genesis at38427adc; subsequent tests/evidence continue in draftPR446. No production edits.
+
+## What changed and what was actually proved
+
+The original c502 source compiled but16 opens queued16 jobs;13 widget checks gave12PASS/1FAIL. That exact original failure, testsource and handoff remain retained via prior reviewer merge. Root407 reuses one Activity roster controller and admits only one storage operation. The identical16-open/bound1 counterexample now passes. Two earlier tests expected multiple admitted reads; their acceptance intent was preserved with the explicitly documented busy/retry semantics, before this candidate run. An old callback must not fill the new window; explicit retry after completion loads fresh data; an accepted save remains bound to its selected stable identity. Two additional tests prove close-during-save preserves that write without reviving the window, and show-after-Activity-destroy admits zero storage work.
+
+All actual store/UI tests pass:20 initial profiles, pagination, profile21, rename/private-note continuity across new store/dialog instances, asynchronous IO, stale/dismiss/destroy handling, corruption fail-closed, optimistic write conflict, rejected executor,320dp/fontScale2 scrolling and accessible working-note label. These are actual Robolectric widgets and filesystem operations, not Fold7/process-death/voice/GPU or cognitive-quality evidence. Full combined unfiltered Android/Node/lint/parity is a separate final-source gate.
+
+## Evidence and reproduction
+
+`407-resumed/{before.json,after.json,gradle.log,gradle.exit,junit.xml,summary.json}` contains exact source/test hashes, actual raw Gradle/JUnit and results. Source checkout status was clean. Elapsed Gradle50s; testtime11.052s, not app-latency benchmarks.
+
+```
+./tools/synapse-ui-review/run-scoped.sh 4b881f81ddfbe38729a551d9e460e818c6b3b715 /absolute/frozen/candidate /absolute/fresh/evidence-directory
+```
+
+The helper uses the already provisioned /workspace/continuum-build-env toolchain. Its init script locates its own reviewtest directory; no historical fixed reviewer worktree path is required. It adds tests without excluding production sources. Scoped flag synapseUiReviewOnly is for this narrow run only; omit for final full QA. No CLI --tests is used because the existing QA task allowlist evaluates those values as task names. Release guards are unchanged.
+
+## Next independent package
+
+TEAM-E-FROZEN-CONTRACT.md froze ten connection requirements before future bot-selection implementation inspection: actual registry IDs and model-connected states, one shared model host, private context canaries, late callback identity/model revision, one TTS path, existing AvatarDirector, no invented activity, unchanged permission/lifecycle/budget guarantees. Await Chief's exact source/API contract before implementing those tests. Do not count this roster proof as a model-connected bot or autonomous task success.
+
+CPU window was explicitly released after this completed Gradle run so the native model builder can proceed. No model build/inference ran in parallel with this reviewer's build. No signing, installation, release, Main merge, owner data or production weights changed. Fold7/audio/camera/GPU/energy remain NOT_RUN; quotaNOT_VISIBLE.
+
+## Actual speech interruption baseline — RED retained
+
+On the same exact4b881f81 source, independently frozen real-Activity listener tests executed: **3 total,2 PASS,1 FAIL,0 SKIP**. Compilation PASS; Gradle exit1 after45s; test time2.195s. The failure is the predicted race: `startInterruptedAfterInitialIdentityCheckCannotReviveAvatarOrReplayOnAttach` reports `Interrupted speech must not emit a new start after stop`. Holding the real audio-signal monitor let onStart pass its initial ID check, then stop completed before the callback emitted a new AvatarDirector.SpeechStarted. Ordinary sequential stop and stale A completion while B speaks passed.
+
+Raw evidence: `speech-baseline-4b/{before.json,after.json,gradle.log,gradle.exit,junit.xml,summary.json}`. Before/after hashes match, candidate clean. These tests install the actual Activity listener in Robolectric's Android TTS shadow without onCreate/model/audio hardware. They prove a software callback defect, not audible-device behavior. Chief's proposed UI-thread serialization remains unverified until the corrected combined candidate executes the same assertions.
+
+Reproduction, from the exact source checkout with provisioned toolchain:
+
+```sh
+source /workspace/continuum-build-env/env.sh
+gradle --no-daemon --max-workers=2 --console=plain \
+  -I /workspace/continuum-build-env/test-jvm21.init.gradle \
+  -I /workspace/genesis-ui-review/tools/genesis-ui-review/connection.init.gradle \
+  -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true \
+  -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true \
+  -PgenesisSpeechBaselineOnly=true -Pkotlin.compiler.execution.strategy=in-process \
+  :app:testDebugUnitTest
+```
+
+Reviewer source freezee9492e26 includes the previously frozen speech3, selection8 and router3. Selection/router11 remain NOT_RUN while the Chief obtains the accepted conversation API. `connection.init.gradle` with `-PgenesisUiReviewOnly=true` will run29 scoped tests (15 roster +3 speech +8 selection +3 router); omit both filters for final complete QA. Baseline mode deliberately does not add later selection source because its constructor API did not exist in4b. No production or existing tests are excluded. CPU window released again after baseline completed.
+
+## Combined candidate66f — independently accepted scoped behavior
+
+The above pending checks have now executed unchanged on66fce742: roster15/15, Activity speech3/3, selection8/8, address router3/3, all with0 skips. Gradle exit0,62s wall time; individual test suite times5.369s,2.254s,1.636s,0.254s are host test durations, not app latency measurements. All393 tracked app/main/build files and5 external reviewer inputs match their before/after hashes. The candidate checkout remained clean.
+
+The actual TTS interruption defect is independently RED→GREEN. The roster now rejects repeated/stale/dismissed/destroyed selection callbacks, uses actual persisted profile names and IDs (including custom21/rename), and invalidates selected context before queued note writes. Address lookup finds a custom renamed profile beyond the first100 and rejects duplicate/colliding names across pages. These are software contract results; no synthetic callback is counted as genuine local inference, verified expertise, native audio, GPU output or a completed tool job.
+
+Source review confirms bot dialogue uses the existing `streamThinking` path, whose LiteRT implementation creates a fresh tool-free native Conversation on the shared model engine. The new direct bot caller avoids owner addUserMessage/addAssistantMessage learning/context paths and retains the existing TTS/AvatarDirector. Source inspection alone does not prove successful bot inference on the Fold7. A remaining responsiveness hypothesis was reported: controller completion/current checks hold a shared monitor while reading/writing disk, so UI invalidate/cancel may wait on that monitor; no timing failure has been measured or claimed.
+
+Reproduction uses the speech command above on66fce742, replacing `-PgenesisSpeechBaselineOnly=true` with `-PgenesisUiReviewOnly=true`. Raw Gradle log,4JUnit files, exit code, summary and before/after manifests live in `combined-66f-scoped/`. Final full acceptance omits both filters and must rerun against the final exact source after any further production integration. CPU window released after the completed scoped run; reviewer owns no background model or build job.
+
+## ASR scope and coding-safe dictation baseline —5 actual REDs
+
+Caller review identified missing bot-switch ASR invalidation. Independent tests were frozenc22531cd/a936c006 before execution and run on unchanged66fce742: compilation PASS,5 tests/5 FAIL/0 SKIP, Gradle exit1 in23s, test time5.289s. These are actual assertions rather than setup failures: old transcripts entered the new bot/JARVIS/edited context; an old permission grant started the recognizer in another bot scope; microphone activation called the bound DevelopmentCoordinator's cancellation port once. The tests use actual Activity/controller objects with SDK35 Android speech shadows and counting cancellation/inference ports. No native audio/model/coding task ran.
+
+Raw logs, JUnit and identical before/after source/reviewer hashes are retained in `asr-baseline-66f/`. Reproduction uses `-PgenesisAsrReviewOnly=true` on66fce742. Chief's corrected final sourcec5f9b06b02fbe8b80f9472a17784fb000812398c is now under the unchanged34-case scoped check (previous29 plus5ASR); no corrected result is claimed until its actual output is captured. An unfiltered full unit/lint/compile pass follows on that same frozen source. Reviewer currently owns the sole Gradle window; no native inference runs concurrently.
+
+## c5f scoped GREEN, full gate RED
+
+On exactc5f9b06b the unchanged34 scoped checks passed with0 failures/skips; actual production/test compilation PASS, Gradle57s. The5 ASR baseline failures are now independently RED→GREEN. All394 source and6 reviewer hashes stayed equal. Evidence: `final-c5f-scoped/`.
+
+The following unfiltered run included2241 tests in404 suites:2223 PASS,1 FAIL,17 SKIP,0 errors. The only failure was the pre-existing actual-avatar UI test reflecting `AgentActivity.stopVoiceAnimation()` without arguments. Chief's new Boolean default parameter had removed that JVM entry point. Lint did NOT_RUN because the unit task failed. The full raw404-suite JUnit archive, exact failure, skip names, counts and unchanged manifests are retained in `final-c5f-full/`; Gradle87s, exit1. No failure or skipped case was converted to PASS.
+
+Chief supplied source1595389274acb840c4ab544fa699c9eb2a04bd53 with a minimal compatibility repair: the original no-argument private wrapper delegates to the Boolean overload withtrue. Repository/reviewer assertions were not changed. An unfiltered full unit/lint/compile recheck is in progress on this exact source, including the34 reviewer checks as a subset of the total (never added twice). All877 tracked production/repository-test/build files,6 reviewer files and the JVM init hash are frozen for this final run. `SKIPPED-CASES.md/json` lists all17 previous skipped methods and their actual source gates; historical annotation text is distinguished from current architecture findings. `FINAL-ENVIRONMENT.json` records real JDKs, host and available adb with no attached device.
+
+## Final1595 result and continuation
+
+The full command completed with exit0 and all configured targets passed. The original no-argument speech-stop test now passes without changing its assertion. The34-case independent subset also passes unchanged:15 roster,3 actual TTS-listener callback checks,8 selection/edit-order checks,3 actual paginated address checks,5 actual Activity/ASR scope and coding-safe microphone checks. Separate RED baselines remain available:4b speech2/3,66f ASR0/5 andc5f full compatibility2223PASS/1FAIL/17SKIP. These results demonstrate software fixes, not improved intelligence scores or completed native coding work.
+
+The17 skipped identities are unchanged fromc5f and all are listed with source reasons in `SKIPPED-CASES.md/json`:12 historical ignored placeholders,2 explicit real-container host-proof gates and3 generated parity-fixture gates. None is counted as passed. The404-suite raw archive SHA256 is `c933ba4164c7bef2f43418ac06133afec247100aaa5444afa866394e502d800a`. `final-1595-full/` contains that archive, raw Gradle output/exit, exact suite counts, summary, lint XML/text/HTML and before/after manifests. The JDK17 compiler and JRE21 tests used the provisioned Gradle8.11.1/SDK36 host; Robolectric SDK28/35 speech checks use platform shadows. Actual adb is available with no device attached at the recorded check.
+
+Final reproduction, from a clean checkout of1595389274acb840c4ab544fa699c9eb2a04bd53 with this reviewer source present externally:
+
+```sh
+source /workspace/continuum-build-env/env.sh
+gradle --no-daemon --max-workers=2 --console=plain \
+  -I /workspace/continuum-build-env/test-jvm21.init.gradle \
+  -I /workspace/genesis-ui-review/tools/genesis-ui-review/connection.init.gradle \
+  -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true \
+  -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin
+```
+
+All reviewer filter properties are deliberately absent. Do not pass both reviewer init files: connection.init.gradle already includes the original roster source. No guard was disabled and no release task was invoked. Repeat only if production/test/toolchain inputs change or a new unresolved failure warrants it. Next practical acceptance remains real-device bot/ASR/TTS/model-switch/fold behavior; genuine native MΩ results belong to the independent coding lane. The monitor-held-during-store-I/O UI responsiveness concern is a documented unmeasured follow-up, not a claimed failing test.

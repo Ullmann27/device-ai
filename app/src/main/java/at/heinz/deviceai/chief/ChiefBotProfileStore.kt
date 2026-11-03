@@ -38,9 +38,11 @@ data class ChiefBotProfile(
     val workspaceId: String,
     val resourceBudget: ChiefBotResourceBudget,
     val provenance: String,
-    val contextObjectId: String? = null
+    val contextObjectId: String? = null,
+    val conversationObjectId: String? = null,
+    val conversationVersion: Long = 0
 ) {
-    // V1 cannot import or self-assert verified skills, permissions or successful work.
+    // Profile metadata cannot import or self-assert verified skills, permissions or successful work.
     val verifiedCapabilities: Set<String> get() = emptySet()
     val permissionScope: Set<String> get() = emptySet()
     val avatarProfile: String get() = "SHARED_CONTINUUM_RIG"
@@ -56,6 +58,8 @@ data class ChiefBotProfile(
         require(modelPolicy == MODEL_POLICY && provenance == PROVENANCE)
         require(memoryNamespace == "bot-$agentId" && workspaceId == "workspace-$agentId")
         require(contextObjectId == null || contextObjectId.matches(Regex("[a-f0-9]{64}")))
+        require(conversationObjectId == null || conversationObjectId.matches(Regex("[a-f0-9]{64}")))
+        require(conversationVersion >= 0 && (conversationObjectId == null || conversationVersion > 0))
     }
     companion object {
         internal val ID = Regex("[a-z][a-z0-9-]{2,63}")
@@ -162,29 +166,95 @@ class ChiefBotProfileStore(
                     FileChannel.open(directory, READ).use { it.force(true) }
                     stored.id.value
                 }
-                old.copy(contextObjectId = id, profileVersion = nextVersion(old))
+                val changed = id != old.contextObjectId
+                old.copy(contextObjectId = id, profileVersion = nextVersion(old),
+                    conversationObjectId = if (changed) null else old.conversationObjectId,
+                    conversationVersion = if (changed) Math.addExact(old.conversationVersion, 1) else old.conversationVersion)
             }
         }
     }
 
     fun workingContext(requesterId: String, agentId: String): String? {
         require(requesterId == agentId && ChiefBotProfile.ID.matches(agentId)) { "BOT_CONTEXT_SCOPE_REJECTED" }
+        return locked { workingContextLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")) }
+    }
+
+    private fun workingContextLocked(profile: ChiefBotProfile): String? {
+        val id = profile.contextObjectId ?: return null
+        val directory = contextDirectory(profile)
+        checkPlain(directory.resolve("$id.obj"))
+        val stored = FileContinuumObjectStore(directory.toFile(), maxContextBytes + 256, maxContextStoreBytes)
+            .get(ContinuumObjectId(id)) ?: error("BOT_CONTEXT_OBJECT_MISSING")
+        require(stored.metadata.type == ContinuumObjectType.TASK_CHECKPOINT)
+        val input = DataInputStream(ByteArrayInputStream(stored.payload))
+        require(input.readUTF() == "BOT_WORKING_CONTEXT_V1" && input.readUTF() == profile.agentId &&
+            input.readUTF() == profile.memoryNamespace) { "BOT_CONTEXT_IDENTITY_MISMATCH" }
+        val size = input.readInt()
+        require(size in 1..maxContextBytes && size == input.available())
+        val bytes = ByteArray(size); input.readFully(bytes)
+        return decodeText(bytes)
+    }
+
+    /** One lock-consistent private snapshot. Not an owner-memory or external-tool grant. */
+    internal fun conversationSnapshot(agentId: String): ChiefBotConversationSnapshot {
+        require(ChiefBotProfile.ID.matches(agentId))
         return locked {
             val profile = read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")
-            val id = profile.contextObjectId ?: return@locked null
-            val directory = contextDirectory(profile)
-            checkPlain(directory.resolve("$id.obj"))
-            val stored = FileContinuumObjectStore(directory.toFile(), maxContextBytes + 256, maxContextStoreBytes)
-                .get(ContinuumObjectId(id)) ?: error("BOT_CONTEXT_OBJECT_MISSING")
-            require(stored.metadata.type == ContinuumObjectType.TASK_CHECKPOINT)
-            val input = DataInputStream(ByteArrayInputStream(stored.payload))
-            require(input.readUTF() == "BOT_WORKING_CONTEXT_V1" && input.readUTF() == profile.agentId &&
-                input.readUTF() == profile.memoryNamespace) { "BOT_CONTEXT_IDENTITY_MISMATCH" }
-            val size = input.readInt()
-            require(size in 1..maxContextBytes && size == input.available())
-            val bytes = ByteArray(size); input.readFully(bytes)
-            decodeText(bytes)
+            ChiefBotConversationSnapshot(profile, workingContextLocked(profile), conversationLocked(profile))
         }
+    }
+
+    fun loadConversation(requesterId: String, agentId: String): ChiefBotConversationHistory {
+        require(requesterId == agentId && ChiefBotProfile.ID.matches(agentId)) { "BOT_CONTEXT_SCOPE_REJECTED" }
+        return locked { conversationLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")) }
+    }
+
+    internal fun saveConversation(profile: ChiefBotProfile, history: ChiefBotConversationHistory,
+                                  stillCurrent: () -> Boolean): ChiefBotProfile = locked {
+        update(profile.agentId, profile.profileVersion) { current ->
+            require(current == profile) { "BOT_CONVERSATION_SNAPSHOT_CHANGED" }
+            require(stillCurrent()) { "BOT_CONVERSATION_COMMIT_EXPIRED" }
+            val payload = ChiefBotConversationCodec.encode(current, history)
+            val objectId = ContinuumObjectId.of(ContinuumObjectType.TASK_CHECKPOINT, payload)
+            val directory = conversationDirectory(current)
+            val target = directory.resolve(objectId.value + ".obj")
+            checkPlain(target)
+            if (!Files.exists(target, NOFOLLOW_LINKS)) require(contextUsedBytes(directory) <= CONVERSATION_STORE_BYTES - payload.size - 256) {
+                "BOT_CONVERSATION_STORE_FULL"
+            }
+            val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)
+                .put(ContinuumObjectType.TASK_CHECKPOINT, payload)
+            FileChannel.open(directory, READ).use { it.force(true) }
+            require(stillCurrent()) { "BOT_CONVERSATION_COMMIT_EXPIRED" }
+            current.copy(conversationObjectId = stored.id.value,
+                conversationVersion = Math.addExact(current.conversationVersion, 1), profileVersion = nextVersion(current))
+        }
+    }
+
+    internal fun clearConversation(agentId: String): ChiefBotProfile {
+        require(ChiefBotProfile.ID.matches(agentId))
+        return locked {
+            val profile = read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")
+            update(agentId, profile.profileVersion) { it.copy(conversationObjectId = null,
+                conversationVersion = Math.addExact(it.conversationVersion, 1), profileVersion = nextVersion(it)) }
+        }
+    }
+
+    private fun conversationLocked(profile: ChiefBotProfile): ChiefBotConversationHistory {
+        val id = profile.conversationObjectId ?: return ChiefBotConversationHistory(emptyList(), 0)
+        val directory = conversationDirectory(profile)
+        checkPlain(directory.resolve("$id.obj"))
+        val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)
+            .get(ContinuumObjectId(id)) ?: error("BOT_CONVERSATION_OBJECT_MISSING")
+        require(stored.metadata.type == ContinuumObjectType.TASK_CHECKPOINT)
+        return ChiefBotConversationCodec.decode(profile, stored.payload)
+    }
+
+    private fun conversationDirectory(profile: ChiefBotProfile): java.nio.file.Path {
+        val directory = root.resolve("conversations").resolve(profile.memoryNamespace)
+        safeDirectory(directory)
+        require(contextUsedBytes(directory) <= CONVERSATION_STORE_BYTES) { "BOT_CONVERSATION_STORE_FULL" }
+        return directory
     }
 
     private fun contextPayload(profile: ChiefBotProfile, bytes: ByteArray): ByteArray = ByteArrayOutputStream().also { buffer ->
@@ -248,7 +318,9 @@ class ChiefBotProfileStore(
         require(bytes.size <= maxBytes)
         try {
             val input = DataInputStream(ByteArrayInputStream(bytes))
-            require(input.readUTF() == MAGIC && input.readInt() == 1) { "BOT_REGISTRY_UNSUPPORTED_SCHEMA" }
+            require(input.readUTF() == MAGIC) { "BOT_REGISTRY_UNSUPPORTED_SCHEMA" }
+            val schema = input.readInt()
+            require(schema in 1..2) { "BOT_REGISTRY_UNSUPPORTED_SCHEMA" }
             val size = input.readInt()
             require(size >= 4 && size <= maxBytes && size == input.available() - 32)
             val payload = ByteArray(size); input.readFully(payload)
@@ -261,7 +333,9 @@ class ChiefBotProfileStore(
                 val profile = ChiefBotProfile(data.readUTF(), data.readLong(), data.readUTF(), data.readUTF(), data.readUTF(),
                     data.readUTF(), data.readUTF(), data.readUTF(),
                     ChiefBotResourceBudget(data.readInt(), data.readInt(), data.readLong(), data.readLong()), data.readUTF(),
-                    if (data.readBoolean()) data.readUTF() else null)
+                    if (data.readBoolean()) data.readUTF() else null,
+                    if (schema >= 2 && data.readBoolean()) data.readUTF() else null,
+                    if (schema >= 2) data.readLong() else 0)
                 require(profiles.put(profile.agentId, profile) == null) { "BOT_DUPLICATE_ID" }
             }
             require(data.available() == 0) { "BOT_REGISTRY_TRAILING_DATA" }
@@ -280,12 +354,14 @@ class ChiefBotProfileStore(
                     out.writeInt(p.resourceBudget.maxModelCalls); out.writeInt(p.resourceBudget.maxToolCalls)
                     out.writeLong(p.resourceBudget.deadlineMillis); out.writeLong(p.resourceBudget.workspaceBytes)
                     out.writeUTF(p.provenance); out.writeBoolean(p.contextObjectId != null); p.contextObjectId?.let(out::writeUTF)
+                    out.writeBoolean(p.conversationObjectId != null); p.conversationObjectId?.let(out::writeUTF)
+                    out.writeLong(p.conversationVersion)
                 }
             }
         }.toByteArray()
         val encoded = ByteArrayOutputStream().also { buffer ->
             DataOutputStream(buffer).use { out ->
-                out.writeUTF(MAGIC); out.writeInt(1); out.writeInt(payload.size); out.write(payload); out.write(digest(payload))
+                out.writeUTF(MAGIC); out.writeInt(2); out.writeInt(payload.size); out.write(payload); out.write(digest(payload))
             }
         }.toByteArray()
         require(encoded.size <= maxBytes) { "BOT_REGISTRY_CAPACITY_EXCEEDED" }
@@ -335,6 +411,7 @@ class ChiefBotProfileStore(
 
     companion object {
         private const val MAGIC = "CONTINUUM_BOT_PROFILES"
+        private const val CONVERSATION_STORE_BYTES = 4L * 1024 * 1024
         private val LOCKS = Array(64) { Any() }
         private fun digest(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes)
         private fun encodeText(text: String): ByteArray {

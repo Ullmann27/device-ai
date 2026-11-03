@@ -1,0 +1,8 @@
+21cf1394f08b68615cea63706baae5e262ceffaed84a818aa2801727e843ac76  tools/genesis-workspace-review/adapter-cases.mjs
+d86a4556e27cb3d26fe4a58b898db315ae18f2690f6fd366cca47dc7472e4a2b  tools/genesis-workspace-review/canonical-boundaries.test.mjs
+b321bb005bf3401a9ab60fbe230acde7359a0bdbe687f3b30f162646d2f8b801  tools/genesis-workspace-review/run-adapter-cases.mjs
+2634eccce83eecf296004336b7b4a24b21e8554cfd9afada81daf60ecfed209c  app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt
+e1ddd13e8736a9aa997a321608296a5f479867f6f8059f49bc8129da32a2360e  app/src/main/java/at/heinz/deviceai/chief/ChiefDelegationCoordinator.kt
+2a10e1284720a96d15ae7e5248826ee06bd6c9b0bd483c06882d0e891808e4db  .github/continuum/ccc1-workspace.mjs
+d3d91266fe8cc987e6db39fcb019e0f28765f87266d7c3b991284f8f3d48eabc  .github/continuum/coding-orchestrator.mjs
+aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7  .github/continuum/ccc1-technical-recall.mjs

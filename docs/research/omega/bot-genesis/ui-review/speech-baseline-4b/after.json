@@ -1,0 +1,14 @@
+{
+  "source": "4b881f81ddfbe38729a551d9e460e818c6b3b715",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "d4f9b4a84443eeab72cc5e5ee444605e60ab541abfbc63c8c6749d6cbf47513c",
+    "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "d47d92718709f93d4a0a8534c447a5cf47dbbb96cc66da7b3abadf4665b5350a",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "60c3054afaa7de851c603d6635daab72eec2c015a69f8c24abd563e4e6b062c9"
+  },
+  "reviewSha256": {
+    "tools/genesis-ui-review/speech/IndependentActivitySpeechTest.kt": "f3326c41a3925560e18a1f1630b09120716ecd0e8a8731888ca6fe34565fbc4d",
+    "tools/genesis-ui-review/connection.init.gradle": "ff0b0a5953ada6eba0857d374193c9b502eb3d7a5b86318e1c4c26a1c59129ba",
+    "tools/synapse-ui-review/IndependentBotRosterUiTest.kt": "e73820805756b7e69e4b90a1f898a1228eef26866e314e0723ad3fb127708373"
+  }
+}

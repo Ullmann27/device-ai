@@ -328,7 +328,7 @@ export function runTeamleaderCycle({
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
-export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null}={}){
+export async function localTeamleaderDriver({candidateProvider=null,executor=null,verifierExecutor=null,executorAbortMode=null}={}){
  const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
@@ -378,7 +378,7 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
    return executeOwnerRepairTask({
     root,file:path.join(stateDir,'development-backlog.json'),
     out:path.join(stateDir,'reports','owner-repair'),
-    id:taskId,budgetMinutes,actor:'continuum-task-worker',candidateProvider,executor,executorAbortMode
+    id:taskId,budgetMinutes,actor:'continuum-task-worker',candidateProvider,executor,verifierExecutor,executorAbortMode
    });
   },
   readyInvestigation(root,stateDir){

@@ -1,0 +1,6 @@
+{
+  "id": "g04",
+  "requirements": [
+    "median(values) returns the numeric median of a nonempty array of finite numbers: middle value for odd length; arithmetic mean of the two middle values for even length. It must not change the input array or its order. Values may be negative, repeated or fractional."
+  ]
+}

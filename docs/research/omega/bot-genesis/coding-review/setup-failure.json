@@ -1,0 +1,38 @@
+{
+  "phase": "PREFLIGHT_BEFORE_GRANT",
+  "case": "g03",
+  "error": "CODING_TASK_INVALID",
+  "reason": "Frozen requirement length exceeds existing 300-character acceptance item cap",
+  "requirementLength": 339,
+  "modelCalls": 0,
+  "grantCreated": false,
+  "oldBinding": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "genesis-g03",
+      "sourceCommit": "f755d6616096cd2e6b32bc153a7a253b305fe313",
+      "kind": "BUGFIX",
+      "goal": "isWithinPath(candidate, root) must return true exactly when candidate is root itself or a descendant by complete path components. Inputs are normalized nonempty relative POSIX paths without dot or empty components and without trailing slashes. Comparison is case-sensitive; a sibling whose name merely begins with root is not a descendant.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "isWithinPath(candidate, root) must return true exactly when candidate is root itself or a descendant by complete path components. Inputs are normalized nonempty relative POSIX paths without dot or empty components and without trailing slashes. Comparison is case-sensitive; a sibling whose name merely begins with root is not a descendant."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 2,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "g03",
+    "sourceSha256": "6019ac4267d2a64bbfebb657235a69980756662099bda126fc015f9f8b184d71",
+    "frozenTestSha256": "3c6bb0f186843a878d1235c3c642d2cf62f42ab302acfa0c84dfabce4e2b0ea2",
+    "materializedTestSha256": "3c6bb0f186843a878d1235c3c642d2cf62f42ab302acfa0c84dfabce4e2b0ea2",
+    "transformation": "File paths materialized only; assertions, imports and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "resolution": "Losslessly partition same text into <=300-character clauses; exact rejoin, no fixture/source/requirement edits. Rematerialize g03 in distinct path before any inference."
+}

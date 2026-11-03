@@ -1,0 +1,9 @@
+{
+  "runtimeEnvPath": "/workspace/synapse-local-model/runtime-env.json",
+  "runtimeEnvSha256": "68a86ab17da65ae7b1b2cad326b35aacdab6f83eb76ca99b66a5b3e7ecec8a47",
+  "modelManifestPath": "/workspace/synapse-local-model/model-pin.json",
+  "modelManifestSha256": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+  "environmentContainsOnlyPublicPinsAndLocalPaths": true,
+  "inferenceStatus": "NOT_RUN",
+  "permissionScope": "Existing explicit alternate-model consent; canonical task grants still required"
+}

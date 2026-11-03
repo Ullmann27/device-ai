@@ -13,13 +13,18 @@ data class AiContextPolicy(
         PrivacyClass.PUBLIC,
         PrivacyClass.PRIVATE,
         PrivacyClass.DEVICE_LOCAL_ONLY
-    )
+    ),
+    /** False for existing isolated tool-free conversations; this does not grant or revoke tools. */
+    val includeToolCatalog: Boolean = true,
+    /** A private bot frame must not disclose owner-specific state IDs or custom policy text. */
+    val includeIdentityDetails: Boolean = true
 ) {
     init {
         require(maxBytes in 1_024..64 * 1024)
         require(memoryLimit in 0..32)
         require(researchSourceLimit in 0..24)
         require(allowedPrivacy.isNotEmpty())
+        require(includeIdentityDetails || !includeToolCatalog)
     }
 }
 
@@ -64,6 +69,9 @@ class AiContextCompiler(
     private val policy: AiContextPolicy = AiContextPolicy(),
     private val nowMillis: () -> Long = System::currentTimeMillis
 ) {
+    internal fun permitsPrivateBotFrame(): Boolean = !policy.includeIdentityDetails && !policy.includeToolCatalog &&
+        policy.memoryLimit == 0 && policy.researchSourceLimit == 0
+
     fun compile(input: AiContextInput): CompiledAiContext {
         val buffer = StringBuilder()
         val includedMemoryIds = mutableListOf<String>()
@@ -91,7 +99,13 @@ class AiContextCompiler(
 
         appendSection(
             "CONTINUUM IDENTITY / GOVERNANCE",
-            buildString {
+            if (!policy.includeIdentityDetails) {
+                "identity=selected_private_bot_profile\n" +
+                    "operator_authority=explicit_current_owner_authorization\n" +
+                    "tool_policy=no_tools_in_this_conversation\n" +
+                    "memory_policy=private_unverified_context_only\n" +
+                    "self_replication=false\nhidden_persistence=false\nshutdown_evasion=false"
+            } else buildString {
                 append("instance=").append(input.seed.instanceId.value).append('\n')
                 append("identity_generation=").append(input.identityState.generation).append('\n')
                 append("governance_version=").append(input.seed.governanceVersion.value).append('\n')
@@ -182,6 +196,7 @@ class AiContextCompiler(
 
         // M2: with natively registered LiteRT-LM tools the schema text is a duplicate;
         // keep names and risk classes only (authorization stays in ToolGate).
+        if (policy.includeToolCatalog) {
         if (policy.nativeToolCatalog) appendSection(
             "REGISTERED TOOLS (Schemas nativ registriert)",
             ToolRegistry.all().joinToString("\n") { "- " + it.name + " (" + it.risk.name + ")" }
@@ -191,6 +206,8 @@ class AiContextCompiler(
                 "- " + it.name + ": risk=" + it.risk.name + "; " + it.description.take(160)
             }
         )
+
+        }
 
         input.model?.let { model ->
             appendSection(

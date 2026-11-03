@@ -213,6 +213,31 @@ test('signed process-only historical proof remains ineligible for technical stra
  const f=fixture(t);f.publish(p=>{p.modelObservation.verifiedModelExecution=false;return p;});
  assert.equal(f.recall().items.length,0);
 });
+test('CONTRACT_TEST real producer serialization signs the persisted verifier snapshot before restart',async t=>{
+ const f=fixture(t);
+ // Independent producers use private WeakSets in production; this isolated seam
+ // supplies synthetic brands solely to exercise the actual persistence boundary.
+ const runtimeUrl='data:text/javascript;base64,'+Buffer.from(`const seen=new WeakSet();export const isTrustedLocalModelObservation=x=>seen.has(x);export function fixture(value){const x=Object.freeze({...value});seen.add(x);return x;}`).toString('base64');
+ const verifierUrl='data:text/javascript;base64,'+Buffer.from(`const seen=new WeakSet();export const isTrustedCodingVerification=x=>seen.has(x);export function fixture(value){seen.add(value);return value;}`).toString('base64');
+ const source=fs.readFileSync(new URL('./ccc1-technical-recall.mjs',import.meta.url),'utf8').replace(/from '([^']+)'/g,(all,spec)=>{
+  if(spec==='./coding-provider.mjs')return 'from '+JSON.stringify(runtimeUrl);
+  if(spec==='./ccc1-redgreen-verifier.mjs')return 'from '+JSON.stringify(verifierUrl);
+  return spec.startsWith('.')?'from '+JSON.stringify(new URL(spec,import.meta.url).href):all;
+ });
+ const api=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+ const rt=await import(runtimeUrl),vr=await import(verifierUrl);
+ const verification=vr.fixture({...f.verification,optional:undefined,
+  red:{...f.verification.red,optional:undefined,metadata:[undefined,{file:undefined}]}});
+ assert.equal(api.recordTechnicalExperience({...f.options,taskId:f.taskId,modelTask:f.modelTask,
+  modelObservation:rt.fixture(f.modelObservation),verification,reflection:f.reflection}),true);
+ const {mac,...stored}=new ExperienceLog(f.file).entries()[0].record.technicalProof;
+ assert.equal(mac,sign(stored,f.key).mac,'MAC must authenticate the actual durable JSON bytes');
+ const module=new URL('./ccc1-technical-recall.mjs',import.meta.url).href;
+ const child=spawnSync(process.execPath,['--input-type=module','-e',
+  `import fs from 'node:fs';import {recallTechnicalExperiences} from ${JSON.stringify(module)};const q=JSON.parse(fs.readFileSync(0,'utf8'));q.key=Buffer.from(q.key,'hex');process.stdout.write(JSON.stringify(recallTechnicalExperiences(q)));`],
+  {input:JSON.stringify({...f.options,key:f.key.toString('hex')}),encoding:'utf8',timeout:10000});
+ assert.equal(child.status,0,child.stderr);assert.equal(JSON.parse(child.stdout).items.length,1);
+});
 test('withdrawal refuses to overwrite a concurrently changed canonical grant',t=>{
  const f=fixture(t);f.publish();const file=path.join(f.stateDir,'coding-grants',f.task.id+'.json'),original=fs.fsyncSync;
  let injected=false;
