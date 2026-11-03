@@ -1,0 +1,98 @@
+{"cases": [
+  {
+    "scenario": "LITERAL_SINGLE_SOURCE",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-001"
+  },
+  {
+    "scenario": "LITERAL_TWO_DOCUMENTS",
+    "pass": true,
+    "claims": 2,
+    "id": "QB-R-002"
+  },
+  {
+    "scenario": "FABRICATED_LITERAL",
+    "pass": true,
+    "claims": 0,
+    "id": "QB-R-003"
+  },
+  {
+    "scenario": "BORROWED_OTHER_DOCUMENT_TEXT",
+    "pass": true,
+    "claims": 0,
+    "id": "QB-R-004"
+  },
+  {
+    "scenario": "FABRICATED_EXTRA_REFERENCE",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-005"
+  },
+  {
+    "scenario": "FOREIGN_REVISION",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-006"
+  },
+  {
+    "scenario": "OWNER_PROVENANCE_FROM_WEB",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-007"
+  },
+  {
+    "scenario": "UNSUPPORTED_VALIDATED_CLAIM",
+    "pass": true,
+    "claims": 0,
+    "id": "QB-R-008"
+  },
+  {
+    "scenario": "SUPPLIER_HASH_MISMATCH",
+    "pass": true,
+    "claims": 0,
+    "id": "QB-R-009"
+  },
+  {
+    "scenario": "ROLE_MARKER_IN_GRAPH_ID",
+    "pass": false,
+    "id": "QB-R-010",
+    "error": "java.lang.IllegalStateException: raw role/tool/control delimiter escaped direct graph boundary\n\tat at.heinz.deviceai.cognitive.ResearchHoldout.main(ResearchHoldout.kt:61)\n"
+  },
+  {
+    "scenario": "TOOL_MARKER_IN_GRAPH_TEXT",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-011"
+  },
+  {
+    "scenario": "BIDI_IN_GRAPH_ID",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-012"
+  },
+  {
+    "scenario": "ZERO_WIDTH_IN_GRAPH_TEXT",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-013"
+  },
+  {
+    "scenario": "DUPLICATE_TEXT_CORROBORATION",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-014"
+  },
+  {
+    "scenario": "EMPTY_EXCERPT",
+    "pass": true,
+    "guard": "Claim constructor",
+    "id": "QB-R-015"
+  },
+  {
+    "scenario": "KNOWN_LITERAL_WITH_SAFE_PUNCTUATION",
+    "pass": true,
+    "claims": 1,
+    "id": "QB-R-016"
+  }
+]}

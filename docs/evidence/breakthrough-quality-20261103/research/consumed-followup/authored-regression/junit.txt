@@ -1,0 +1,10 @@
+SOURCE_SHA=78b9691a1e9684e3e37b2389d3ec01c20d5b75fc
+COMMAND=['java', '-Xmx256m', '-cp', '/workspace/qa-research-followup-regression-fresh/classes:/workspace/qa-research-consumed-followup-fresh/candidate/classes:/workspace/continuum-quality/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar:/workspace/continuum-breakthrough-quality/app/src/test/resources', 'org.junit.runner.JUnitCore', 'at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest', 'at.heinz.deviceai.cognitive.ResearchPromptGraphBoundaryTest', 'at.heinz.deviceai.cognitive.ResearchEngineTest', 'at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest', 'at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest', 'at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest', 'at.heinz.deviceai.cognitive.ResearchNegationSignalsTest', 'at.heinz.deviceai.cognitive.ResearchQuestionFocusTest', 'at.heinz.deviceai.cognitive.ResearchTest', 'at.heinz.deviceai.cognitive.ResearchPromptControlTokenTest']
+JUnit version 4.13.2
+........................................................
+Time: 1.024
+
+OK (56 tests)
+
+
+EXIT=0
