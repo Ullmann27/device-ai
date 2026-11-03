@@ -1,0 +1,6 @@
+tools/genesis-workspaces/HandoffHostChecks.kt:189:42: warning: the corresponding parameter in the supertype 'ChiefBotHandoffAuthority' is named 'handoff'. This may cause problems when calling this function with named arguments.
+        @Synchronized override fun claim(h:ChiefBotHandoff):Boolean {
+                                         ^
+tools/genesis-workspaces/HandoffHostChecks.kt:194:49: warning: the corresponding parameter in the supertype 'ChiefBotHandoffAuthority' is named 'handoff'. This may cause problems when calling this function with named arguments.
+        @Synchronized override fun claimCurrent(h:ChiefBotHandoff)=h.messageId in current.seenMessageIds
+                                                ^

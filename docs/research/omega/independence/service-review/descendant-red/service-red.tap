@@ -1,0 +1,30 @@
+✖ S10 critical supplement: unexpected worker death pauses a different queued task (8248.08196ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8335.041487
+
+✖ failing tests:
+
+test at tools/independence-service-review/active-recovery.test.mjs:166:1
+✖ S10 critical supplement: unexpected worker death pauses a different queued task (8248.08196ms)
+  AssertionError [ERR_ASSERTION]: unknown descendants prohibit starting another queued job
+  + actual - expected
+  
+  + 'UNKNOWN'
+  - 'PENDING'
+  
+      at TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:181:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'UNKNOWN',
+    expected: 'PENDING',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,22 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "independence-s01",
+  "sourceCommit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+  "kind": "BUGFIX",
+  "goal": "rotateRight(items, amount) must return a new dense array of the same elements after a circular RIGHT rotation by amount positions. A positive amount moves trailing elements to the front; a negative amount rotates left. amount is any JavaScript safe integer, including zero and magnitudes greater than the array length. Do not mutate the input array or elements. Preserve element references and order modulo the rotation. Return a distinct array even for zero/full rotations. Empty and singleton arrays are valid. Change only lib/subject.mjs; tests and dependencies are fixed.",
+  "allowedPaths": [
+    "lib/subject.mjs"
+  ],
+  "acceptance": [
+    "rotateRight(items, amount) must return a new dense array of the same elements after a circular RIGHT rotation by amount positions.",
+    "A positive amount moves trailing elements to the front; a negative amount rotates left.",
+    "amount is any JavaScript safe integer, including zero and magnitudes greater than the array length.",
+    "Do not mutate the input array or elements. Preserve element references and order modulo the rotation. Return a distinct array even for zero/full rotations. Empty and singleton arrays are valid. Change only lib/subject.mjs; tests and dependencies are fixed."
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 1,
+    "maxContextChars": 8192
+  }
+}

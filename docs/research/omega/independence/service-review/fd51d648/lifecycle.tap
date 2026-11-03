@@ -1,0 +1,16 @@
+✔ S01/S15: real idle daemon starts, stops and starts again without creating model work (4787.518167ms)
+✔ S02: concurrent actual starts leave exactly one daemon ownership (1935.427446ms)
+✔ S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely (3689.592302ms)
+✔ S03: stale descriptor pointing at an unrelated live process never authorizes killing it (2198.032615ms)
+✔ S05: last-slot admission is atomic across independent CLI processes (5553.020791ms)
+✔ S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection (7292.674914ms)
+✔ S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag (2743.039606ms)
+✔ S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue (1571.968961ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 29889.220864
