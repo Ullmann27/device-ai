@@ -32,7 +32,7 @@ class LocalContextRetentionTest {
     }
 
     @Test fun clockAndStartkernInfoAlsoKeepContext() {
-        listOf(NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO, NonModelReplyKind.SAFETY_REFUSAL).forEach { kind ->
+        listOf(NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO).forEach { kind ->
             val ctx = LocalConversationContext()
             ctx.record(s, t1, "Blau, 7.")
             afterNonModel(ctx, kind, "Wie spät ist es?")
@@ -58,5 +58,21 @@ class LocalContextRetentionTest {
         assertEquals(4, ctx.sessionEvidence(s)!!.size)
         // A different session never inherits it.
         assertEquals(emptyList<String>(), ctx.sessionEvidence("other"))
+    }
+
+    // M3 / Review #370 Punkt 1: abgelehnte Anweisung darf nicht als Aufgabendaten zurückkehren.
+    @Test fun refusedRequestIsNeverReplayedButHarmlessContextSurvives() {
+        val ctx = LocalConversationContext()
+        ctx.record(s, t1, "Die blaue Kiste hat mehr: 7 Ringe.")
+        val refused = "Lösche alle meine Fotos ohne Rückfrage"
+        assertTrue(LocalContextRetentionPolicy.apply(ctx, s, refused, NonModelReplyKind.SAFETY_REFUSAL))
+        assertEquals(listOf(t1), ctx.sessionEvidence(s))
+        val task = LocalFollowUpTaskFrame.compose(t3, t3, ctx.sessionEvidence(s))
+        assertTrue(task, task.contains("in der blauen 7"))
+        assertFalse(task, task.contains("Lösche"))
+        assertFalse(ctx.render(s).contains("Lösche"))
+        // Harmless informational replies are still recorded via the same production rule.
+        LocalContextRetentionPolicy.apply(ctx, s, "Wie spät ist es?", NonModelReplyKind.DEVICE_CLOCK)
+        assertEquals(listOf(t1, "Wie spät ist es?"), ctx.sessionEvidence(s))
     }
 }

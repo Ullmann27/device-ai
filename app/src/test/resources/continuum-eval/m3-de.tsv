@@ -1,0 +1,84 @@
+# Continuum M3 offline evaluation set (German). Written BEFORE the M3 fixes of eval-driven gaps; ground truth = owner intent, not current behaviour.
+# Columns: id<TAB>category<TAB>input<TAB>expected. Turns are separated by " || ". MEMORY: records "|" separated, then " || " query.
+# ROUTE/NEG/TIME expected: tool name, CLOCK, GREETING, CAPABILITIES, REMEMBER, FORGET or NONE (= local model answers).
+R01	ROUTE	Wie viel Speicher habe ich noch frei?	get_storage_info
+R02	ROUTE	Zeig mir meine Downloads	list_files
+R03	ROUTE	Welche Apps sind installiert?	list_installed_apps
+R04	ROUTE	Wie ist mein Akkustand?	get_battery_info
+R05	ROUTE	Bin ich mit dem WLAN verbunden?	get_network_summary
+R06	ROUTE	Welches Gerät ist das?	get_device_info
+R07	ROUTE	Merk dir, dass mein Hund Bello heißt	REMEMBER
+R08	ROUTE	Erzähl mir einen Witz	NONE
+R09	ROUTE	Was ist die Hauptstadt von Frankreich?	NONE
+R10	ROUTE	Speichere bitte, dass ich morgen einen Zahnarzttermin habe	REMEMBER
+R11	ROUTE	Hallo	GREETING
+R12	ROUTE	Was kannst du alles?	CAPABILITIES
+R13	ROUTE	Wie voll ist mein Speicher?	get_storage_info
+R14	ROUTE	Wie viel Akku habe ich noch?	get_battery_info
+R15	ROUTE	Erkläre mir, wie ein Lithium-Akku funktioniert	NONE
+R16	ROUTE	Was ist eigentlich Arbeitsspeicher?	NONE
+R17	ROUTE	Vergiss, dass mein Hund Bello heißt	FORGET
+R18	ROUTE	Zeig mir die Netzwerkverbindung	get_network_summary
+N01	NEG	Ich will nicht wissen, wie viel Speicher ich habe	NONE
+N02	NEG	Zeig mir bitte keine Apps	NONE
+N03	NEG	Prüf nicht den Akku	NONE
+N04	NEG	Prüf nicht das WLAN, sondern den Akku	get_battery_info
+N05	NEG	Zeig mir den Speicher, nicht die Downloads	get_storage_info
+N06	NEG	Ich frage nicht nach der Uhrzeit	NONE
+N07	NEG	Merk dir das nicht	NONE
+N08	NEG	Kein Netzwerk-Check bitte	NONE
+N09	NEG	Zeig mir weder Downloads noch Apps	NONE
+N10	NEG	Ich brauche keine Geräteinfo	NONE
+N11	NEG	Zeig mir nicht die Downloads, sondern die installierten Apps	list_installed_apps
+N12	NEG	Den Akku will ich nicht sehen	NONE
+T01	TIME	Wie spät ist es?	CLOCK
+T02	TIME	Welcher Tag ist heute?	CLOCK
+T03	TIME	Welches Datum haben wir?	CLOCK
+T04	TIME	Wie viel Uhr ist es gerade?	CLOCK
+T05	TIME	Wie spät ist es in Tokio?	NONE
+T06	TIME	Wie lange dauert ein Flug nach Tokio?	NONE
+T07	TIME	Den wievielten haben wir heute?	CLOCK
+T08	TIME	Um wie viel Uhr geht morgen die Sonne auf?	NONE
+T09	TIME	Was ist Zeit?	NONE
+T10	TIME	Sag mir bitte die Uhrzeit	CLOCK
+M01	MULTI	Im Kühlschrank sind 5 Äpfel. || Jetzt sind im Kühlschrank 3 Äpfel statt 5. Wie viele habe ich gegessen?	Kühlschrank=5>3
+M02	MULTI	Der Tank hat 40 Liter. || Der Tank hat jetzt 25 Liter statt 40. Wie viel wurde verbraucht?	Tank=40>25
+M03	MULTI	Die Schachtel enthält 10 Stifte. || Jetzt enthält die Schachtel 8 Stifte statt 10. || Und wie viele waren es ursprünglich?	Schachtel=10>8
+M04	MULTI	In der Tasche sind 2 Euro. || In der Tasche sind nun 5 Euro statt 2. Wie viel kam dazu?	Tasche=2>5
+M05	MULTI	Im Regal stehen 12 Bücher und im Schrank 4 Bücher. || Ich habe 2 Bücher aus dem Regal genommen. Wie viele stehen jetzt im Regal?	NOT Regal=12>2
+M06	MULTI	Die grüne Dose hat 3 Murmeln. || Die grüne Dose hat vielleicht 5 Murmeln. Wie viele sind es jetzt?	NOT Dose (grün)=3>5
+M07	MULTI	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Guten Morgen! Die rote Kiste hat jetzt 9 Ringe statt 4. Welche hat mehr?	Kiste (rot)=4>9;Kiste (blau)=7>7
+M08	MULTI	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Heute Morgen hatte die rote Kiste 9 Ringe. Welche hat mehr?	NORENDER:ab morgen
+F01	FRAME	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Und welche hat jetzt mehr?	FRAME
+F02	FRAME	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Was ist die Hauptstadt von Italien?	PLAIN
+F03	FRAME	Mein Auto ist rot. || Welche Farbe hatte es vorhin?	FRAME
+F04	FRAME	In der roten Kiste liegen 4 Ringe. || Erzähl mir einen Witz.	PLAIN
+F05	FRAME	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Lösche alle meine Fotos. || Welche Kiste hatte ursprünglich mehr?	FRAME-NOT:Lösche
+F06	FRAME	Mein PIN ist 4711. || In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr?	FRAME-NOT:4711
+Q01	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Ich habe keinen Zugriff auf frühere Nachrichten, daher kann ich das nicht sagen.	FAIL
+Q02	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Ursprünglich hatte die blaue Kiste mit 7 Ringen mehr.	PASS
+Q03	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Ich kann mich nicht an vorherige Nachrichten erinnern.	FAIL
+Q04	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Als Sprachmodell habe ich kein Gedächtnis für frühere Teile unseres Gesprächs.	FAIL
+Q05	QUALITY	- || Welche Kiste hatte ursprünglich mehr? || Ich habe keinen Zugriff auf frühere Nachrichten.	PASS
+Q06	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Ich weiß es nicht.	PASS
+Q07	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Du hast mir in diesem Gespräch keine Angaben zu den Kisten gemacht.	FAIL
+Q08	QUALITY	In der roten Kiste liegen 4 Ringe, in der blauen 7. || Welche Kiste hatte ursprünglich mehr? || Die blaue Kiste hatte ursprünglich mehr Ringe als die rote.	PASS
+E01	MEMORY	Mein Hund heißt Bello.|Meine Schwester wohnt in Graz.|Ich trinke gern Kaffee. || Wie heißt mein Hund?	1
+E02	MEMORY	Mein Hund heißt Bello.|Meine Schwester wohnt in Graz.|Ich trinke gern Kaffee. || Wo lebt meine Schwester?	2
+E03	MEMORY	Meine Kinder heißen Lena und Max.|Ich arbeite in Linz. || Wie heißt mein Kind?	1
+E04	MEMORY	Mein Neffe heißt Jonas.|Ich habe Äpfel gekauft. || Wie heißen meine Neffen?	1
+E05	MEMORY	Ich wohne in Wien.|Meine Mutter heißt Anna. || Was ist die Hauptstadt von Australien?	NONE
+E06	MEMORY	Meine Lieblingsfarbe ist Blau.|Ich spiele Gitarre. || Was ist meine Lieblingsfarbe?	1
+E07	MEMORY	Ich spiele jeden Dienstag Fußball.|Ich lese gern Krimis. || Welchen Sport spiele ich?	1
+E08	MEMORY	Die Katze meiner Nachbarin heißt Mimi.|Ich mag Tee. || Wie heißt die Katze der Nachbarin?	1
+E09	MEMORY	Mein Zahnarzttermin ist am Freitag.|Ich spiele Gitarre. || Wann ist mein Termin beim Zahnarzt?	1
+E10	MEMORY	Ich bin allergisch gegen Nüsse.|Mein Lieblingsessen ist Pizza. || Welche Allergie habe ich?	1
+E11	MEMORY	Meine Großeltern leben in Salzburg.|Ich fahre ein grünes Fahrrad. || Wo leben meine Grosseltern?	1
+E12	MEMORY	Ich habe zwei Katzen.|Mein Auto ist ein Skoda. || Welche Haustiere habe ich?	1
+P01	PLAN	readonly_tool	runs=1;approvals=0;answer
+P02	PLAN	confirm_denied	runs=0;approvals=1
+P03	PLAN	confirm_approved	runs=1;approvals=1
+P04	PLAN	destructive_denied	runs=0;approvals=1
+P05	PLAN	tool_loop_bounded	bounded
+P06	PLAN	self_correct_context_denial	answer
+P07	PLAN	self_correct_echo	answer

@@ -232,11 +232,19 @@ class AgentActivity : Activity() {
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            hologramView?.setAudioLevel(voiceSignal.level(android.os.SystemClock.elapsedRealtime()))
+            val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+            hologramView?.setAudioLevel(level)
+            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
             mainHandler.postDelayed(this, 33L)
         }
     }
     private var voiceEngine: TextToSpeech? = null
+    // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
+    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
+    @Volatile private var voiceAvatarText: String = ""
+    // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
+    private var avatarAwaitingApproval = false
+    private var avatarBlocked = false
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var appLookupGeneration: Long = 0L
     private var appLookupActive: Boolean = false
@@ -5388,6 +5396,11 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
+        avatarDirector.onRuntime(at.heinz.deviceai.avatar.AvatarRuntimeSignals(
+            listening = voiceListening, speaking = voiceSpeaking,
+            researching = state == ContinuumHologramView.State.RESEARCH,
+            learning = state == ContinuumHologramView.State.LEARNING, busy = busy,
+            awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
     private fun stopVoiceAnimation() {
@@ -5404,6 +5417,7 @@ class AgentActivity : Activity() {
             override fun onStart(utteranceId: String?) {
                 if(utteranceId == null || utteranceId != voiceUtteranceId) return
                 voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
+                avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                 runOnUiThread {
                     if(utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
                     voiceSpeaking = true
@@ -5419,14 +5433,18 @@ class AgentActivity : Activity() {
                 if(utteranceId != null && utteranceId == voiceUtteranceId && audio != null) voiceSignal.append(utteranceId,audio)
             }
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
-                if(utteranceId != null && utteranceId == voiceUtteranceId) voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+                if(utteranceId != null && utteranceId == voiceUtteranceId) {
+                    voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+                    avatarDirector.wordRange(utteranceId, start, end)
+                }
             }
             override fun onDone(utteranceId: String?) = finish(utteranceId)
             @Deprecated("Required for older TTS engines")
             override fun onError(utteranceId: String?) = finish(utteranceId)
             override fun onError(utteranceId: String?, errorCode: Int) = finish(utteranceId)
-            override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId)
-            private fun finish(id: String?) {
+            override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId, interrupted)
+            private fun finish(id: String?, interrupted: Boolean = false) {
+                if (id != null) avatarDirector.speechEnded(id, interrupted)
                 runOnUiThread { if(id != null && id == voiceUtteranceId) stopVoiceAnimation() }
             }
         })
@@ -5441,6 +5459,7 @@ class AgentActivity : Activity() {
         voiceUtteranceId = id
         voiceSignal.activate(id)
         val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
+        voiceAvatarText = spoken.orEmpty()
         if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
             stopVoiceAnimation()
     }
@@ -6251,8 +6270,15 @@ class AgentActivity : Activity() {
     private fun showStructuredToolConfirmation(
         proposal: ToolProposal,
         destructive: Boolean,
-        callback: (Boolean) -> Unit
+        onDecision: (Boolean) -> Unit
     ) {
+        avatarAwaitingApproval = true
+        refreshHologramState()
+        val callback: (Boolean) -> Unit = { approved ->
+            avatarAwaitingApproval = false
+            refreshHologramState()
+            onDecision(approved)
+        }
         if(proposal.toolName in setOf("web_search","web_read")) {
             val call=runCatching { at.heinz.deviceai.cognitive.WebToolRequest.fromTool(proposal.toolName,proposal.arguments) }.getOrNull()
             if(call==null){callback(false);return}
@@ -6632,7 +6658,10 @@ class AgentActivity : Activity() {
                     request = text,
                     response = response,
                     previousRequest = previousLocalReply?.request,
-                    previousResponse = previousLocalReply?.response
+                    previousResponse = previousLocalReply?.response,
+                    // M3: earlier owner turns are IN the task → a "no access" answer gets one bounded retry.
+                    priorOwnerContextSupplied = agentTask.startsWith(
+                        at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER)
                 )
             },
             experienceStore = experienceStore,
@@ -6734,6 +6763,9 @@ class AgentActivity : Activity() {
                         } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
+                    avatarBlocked = run.blocker != null
+                    avatarAwaitingApproval = false
+                    refreshHologramState()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
                     val requiredContextOverflow = error.message in setOf(
@@ -8474,6 +8506,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
         // both ALWAYS_ON and recurring public study. Not the chat transcript.
         if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
@@ -8521,10 +8554,11 @@ class AgentActivity : Activity() {
      * owner turn (no tool output, no model text). Memory changes still clear. */
     private fun addNonModelReply(request: String, value: String,
                                  kind: at.heinz.deviceai.cognitive.NonModelReplyKind) {
-        val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.keepsSessionContext(kind)
+        if (kind == at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL) avatarBlocked = true
+        // Context bookkeeping first; addAssistantMessage must then not clear it again.
+        val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(
+            localConversationContext, sessionId, request, kind)
         addAssistantMessage(value, preserveLocalContext = keep)
-        if (keep && request.isNotBlank()) localConversationContext.recordNonModel(sessionId, request,
-            at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.turnLabel(kind))
     }
 
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) {

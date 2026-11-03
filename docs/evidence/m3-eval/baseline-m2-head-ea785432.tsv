@@ -1,0 +1,92 @@
+id	category	pass	expected	actual
+R01	ROUTE	1	get_storage_info	get_storage_info
+R02	ROUTE	1	list_files	list_files
+R03	ROUTE	0	list_installed_apps	NONE
+R04	ROUTE	0	get_battery_info	NONE
+R05	ROUTE	0	get_network_summary	NONE
+R06	ROUTE	0	get_device_info	NONE
+R07	ROUTE	0	REMEMBER	NONE
+R08	ROUTE	1	NONE	NONE
+R09	ROUTE	1	NONE	NONE
+R10	ROUTE	0	REMEMBER	NONE
+R11	ROUTE	1	GREETING	GREETING
+R12	ROUTE	1	CAPABILITIES	CAPABILITIES
+R13	ROUTE	0	get_storage_info	NONE
+R14	ROUTE	1	get_battery_info	get_battery_info
+R15	ROUTE	1	NONE	NONE
+R16	ROUTE	1	NONE	NONE
+R17	ROUTE	0	FORGET	NONE
+R18	ROUTE	1	get_network_summary	get_network_summary
+N01	NEG	1	NONE	NONE
+N02	NEG	1	NONE	NONE
+N03	NEG	1	NONE	NONE
+N04	NEG	0	get_battery_info	NONE
+N05	NEG	1	get_storage_info	get_storage_info
+N06	NEG	1	NONE	NONE
+N07	NEG	1	NONE	NONE
+N08	NEG	1	NONE	NONE
+N09	NEG	0!	NONE	list_files
+N10	NEG	1	NONE	NONE
+N11	NEG	1	list_installed_apps	list_installed_apps
+N12	NEG	1	NONE	NONE
+T01	TIME	1	CLOCK	CLOCK
+T02	TIME	1	CLOCK	CLOCK
+T03	TIME	1	CLOCK	CLOCK
+T04	TIME	1	CLOCK	CLOCK
+T05	TIME	1	NONE	NONE
+T06	TIME	1	NONE	NONE
+T07	TIME	0	CLOCK	NONE
+T08	TIME	1	NONE	NONE
+T09	TIME	1	NONE	NONE
+T10	TIME	0	CLOCK	NONE
+M01	MULTI	0	Kühlschrank=5>3	NONE
+M02	MULTI	1	Tank=40>25	Tank=40>25
+M03	MULTI	1	Schachtel=10>8	Schachtel=10>8
+M04	MULTI	1	Tasche=2>5	Tasche=2>5
+M05	MULTI	1	NOT Regal=12>2	NONE
+M06	MULTI	1	NOT Dose (grün)=3>5	NONE
+M07	MULTI	1	Kiste (rot)=4>9;Kiste (blau)=7>7	Kiste (rot)=4>9;Kiste (blau)=7>7
+M08	MULTI	0	NORENDER:ab morgen	Kiste (rot)=4>4+9;Kiste (blau)=7>7
+F01	FRAME	0	FRAME	PLAIN
+F02	FRAME	1	PLAIN	PLAIN
+F03	FRAME	1	FRAME	FRAME
+F04	FRAME	1	PLAIN	PLAIN
+F05	FRAME	0	FRAME-NOT:Lösche	FRAME
+F06	FRAME	0	FRAME-NOT:4711	FRAME
+Q01	QUALITY	0	FAIL	PASS
+Q02	QUALITY	1	PASS	PASS
+Q03	QUALITY	0	FAIL	PASS
+Q04	QUALITY	0	FAIL	PASS
+Q05	QUALITY	1	PASS	PASS
+Q06	QUALITY	1	PASS	PASS
+Q07	QUALITY	0	FAIL	PASS
+Q08	QUALITY	1	PASS	PASS
+E01	MEMORY	1	1	1
+E02	MEMORY	1	2	2
+E03	MEMORY	0	1	NONE
+E04	MEMORY	0	1	NONE
+E05	MEMORY	1	NONE	NONE
+E06	MEMORY	1	1	1
+E07	MEMORY	1	1	1
+E08	MEMORY	1	1	1
+E09	MEMORY	0	1	NONE
+E10	MEMORY	0	1	NONE
+E11	MEMORY	1	1	1
+E12	MEMORY	1	1	1
+P01	PLAN	1	runs=1;approvals=0;answer	runs=1;approvals=0;calls=2;response=Erledigt laut Werkzeugergebnis.
+P02	PLAN	1	runs=0;approvals=1	runs=0;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P03	PLAN	1	runs=1;approvals=1	runs=1;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P04	PLAN	1	runs=0;approvals=1	runs=0;approvals=1;calls=2;response=Erledigt laut Werkzeugergebnis.
+P05	PLAN	1	bounded	runs=2;approvals=0;calls=3;response=Agent step budget exhausted.
+P06	PLAN	0	answer	runs=0;approvals=0;calls=1;response=Ich habe keinen Zugriff auf frühere Nachrichten.
+P07	PLAN	1	answer	runs=0;approvals=0;calls=2;response=Ursprünglich hatte die blaue Kiste mit 7 Ringen mehr.
+# summary
+# ROUTE 10/18 harmful=0
+# NEG 10/12 harmful=1
+# TIME 8/10 harmful=0
+# MULTI 6/8
+# FRAME 3/6
+# QUALITY 4/8
+# MEMORY 8/12
+# PLAN 6/7
+# TOTAL 55/81 harmful=1
