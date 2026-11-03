@@ -5,7 +5,9 @@ Status: WIP / UNVERIFIED. No device/model-quality claim.
 ## Source and authority
 
 - Repository: `Ullmann27/device-ai`.
-- Branch: `codex/team-01-intelligence/omega-20261103`.
+- Branch: `codex/team-01-intelligence-omega-20261103`. Original nested name was
+  rejected by GitHub because `codex/team-01-intelligence` already exists; that
+  existing branch is untouched.
 - Baseline: PR #390, `b4f61ae9765e26dd401db928b76fa9f233c0742a`.
 - Draft target: `fix/continuum-code40-router-race-review-20261103`.
 - Current Operation Continuum Ω owner instruction authorizes isolated work, tests,

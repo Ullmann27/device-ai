@@ -53,6 +53,33 @@ class OwnerStatementTimelineTest {
         assertNull(p(listOf("Gestern hatte die rote Kiste 3 Ringe.", "Die rote Kiste hat 4 Ringe."), t3))
     }
 
+    @Test fun suffixNegationCannotReplaceEarlierQuantityWithDeniedValue() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Korrektur: Die rote Kiste enthält 9 Ringe nicht mehr. Welche Kiste hatte vorher mehr?"))
+    }
+
+    @Test fun lateQualifierBeyondExtractionWindowCannotBecomeAffirmativeState() {
+        val correction = "Korrektur: Die rote Kiste hat 9 Ringe, wobei diese Angabe aus einer " +
+            "inzwischen verworfenen und wiederholt überprüften Zählung stammt und nicht stimmt."
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), correction))
+    }
+
+    @Test fun suffixUncertaintyAndPrefixNegationCannotBecomeCurrentState() {
+        for (correction in listOf(
+            "Die rote Kiste hat 9 Ringe, vielleicht.",
+            "Nicht die rote Kiste hat 9 Ringe."
+        )) {
+            assertNull(correction, p(listOf("Die rote Kiste hat 4 Ringe."), correction))
+        }
+    }
+
+    @Test fun separateNoSaveInstructionDoesNotInvalidatePlainCorrection() {
+        val projection = p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Nun hat die rote Kiste 9 Ringe statt 4. Speichere diese Angaben nicht dauerhaft.")!!
+        assertEquals(4L, projection.entry("Kiste (rot)")!!.original)
+        assertEquals(9L, projection.entry("Kiste (rot)")!!.current)
+    }
+
     @Test fun futureIsSeparatedAndMixedFutureFailsClosed() {
         val f = p(listOf(repoT1), "Ab morgen hat die blaue Kiste 8 Ringe. Welche hat dann ursprünglich mehr?")!!
         assertEquals(7L, f.entry("Kiste (blau)")!!.current)
