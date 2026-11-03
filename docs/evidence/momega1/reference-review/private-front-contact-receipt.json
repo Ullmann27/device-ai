@@ -1,0 +1,72 @@
+{
+  "schema": "private-reference-pose-contact",
+  "version": 1,
+  "privateReferenceMediaCommitted": false,
+  "sameHeadHeightPixels": 380,
+  "manualAlignmentNotGroundTruth": true,
+  "uniformScalingOnly": true,
+  "colorExposureContrastUnchanged": true,
+  "items": [
+    {
+      "sourceFile": "primary-1000ms.png",
+      "sourceSha256": "919d86e445bd1f4a102f3f7ab77c4e4210512aa177cc11b1d989027316cdab80",
+      "sourcePixels": [
+        1280,
+        720
+      ],
+      "manualCrop": [
+        472,
+        68,
+        808,
+        510
+      ],
+      "resizedPixels": [
+        289,
+        380
+      ],
+      "label": "Private primary reference / 1.0 s",
+      "pose": "Near-front; mouth partly occluded"
+    },
+    {
+      "sourceFile": "baseline-front.png",
+      "sourceSha256": "474b876a40228bce2266d263dbbd7a14b50b17ce7e416514727b11f8f5aa5514",
+      "sourcePixels": [
+        384,
+        448
+      ],
+      "manualCrop": [
+        52,
+        56,
+        334,
+        365
+      ],
+      "resizedPixels": [
+        347,
+        380
+      ],
+      "label": "Actual baseline GLB f39a89fc",
+      "pose": "Neutral front / Blender 32 samples"
+    },
+    {
+      "sourceFile": "candidate-front.png",
+      "sourceSha256": "95bba609825c8af4db92d2666bc3eb49626608d26d070431973a5f109a1c0995",
+      "sourcePixels": [
+        384,
+        448
+      ],
+      "manualCrop": [
+        52,
+        56,
+        334,
+        365
+      ],
+      "resizedPixels": [
+        347,
+        380
+      ],
+      "label": "Surface variant fe76e85d",
+      "pose": "Neutral front / Blender 32 samples"
+    }
+  ],
+  "contactSha256": "3b97707bf787e643f806b9964d52a429c1db9b80883cf410fe395d62cdbc90da"
+}
