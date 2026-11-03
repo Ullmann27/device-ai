@@ -1,0 +1,7 @@
+bbb9553b1d024733e34f19969dc367f72e2584100c4cb7e0691660ee2194d409  /workspace/synapse-registry/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt
+e1ddd13e8736a9aa997a321608296a5f479867f6f8059f49bc8129da32a2360e  /workspace/synapse-registry/app/src/main/java/at/heinz/deviceai/chief/ChiefDelegationCoordinator.kt
+14c33a1ab7b82db27d5c295ae3eaaefce46161cfb68ea1cca283ef85b164ac7a  /workspace/synapse-registry/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt
+6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713  /workspace/synapse-registry/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt
+567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110  /workspace/synapse-registry/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt
+f7581f81c974524aa6ec6085ec9979a92d6388e78bf63c95202faf6a22ddf03f  /workspace/synapse-registry-review/tools/synapse-registry-review/RegistryIndependentChecks.kt
+009015ca63ae70d1c86ee49a9fe526964e4ffb979ac24ceea734e72f92bd0136  /workspace/synapse-registry-review/tools/synapse-registry-review/CoordinatorIndependentChecks.kt

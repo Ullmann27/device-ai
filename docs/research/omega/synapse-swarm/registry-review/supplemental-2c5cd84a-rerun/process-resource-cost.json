@@ -1,0 +1,10 @@
+{
+  "scope": "test process including fixture generation and waited JVM descendants; not Fold7",
+  "exitCode": 0,
+  "elapsedNanos": 6119016814,
+  "childUserCpuSeconds": 10.859189,
+  "childSystemCpuSeconds": 1.225689,
+  "maximumChildRssKiB": 270144,
+  "rssSemantics": "Linux RUSAGE_CHILDREN high-water mark; not sum of simultaneous processes",
+  "deviceEnergy": "NOT_MEASURED"
+}

@@ -1,0 +1,9 @@
+PASS checksum-valid-duplicate-id-and-all-bindings
+PASS checksum-valid-foreign-workspace-binding
+PASS checksum-valid-traversal-namespace
+PASS checksum-valid-invalid-profile-version
+PASS checksum-valid-invalid-resource-bounds
+PASS smaller-read-budget-does-not-reset-existing-store
+PASS missing-or-corrupt-private-object-fails-closed
+PASS full-context-store-still-allows-pointer-withdrawal
+RESULT passed=8 failed=0
