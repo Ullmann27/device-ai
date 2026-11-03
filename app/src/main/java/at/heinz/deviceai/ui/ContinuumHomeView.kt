@@ -121,6 +121,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
         layoutSpec = spec
         offset = railOffset
+        // The portrait hero retains its exact layout/3D viewport. Its decorative
+        // floor rings may paint behind the later foreground controls, without
+        // moving or enlarging their touch targets or introducing another surface.
+        clipChildren = spec[Slot.WORKERS] == null
         views.values.forEach { removeView(it) }
         views.clear()
         hologram.setGeometry(when {
