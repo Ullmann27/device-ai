@@ -102,6 +102,7 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
             }
             return@guarded existing
         }
+        evictOldestCertainTerminal(records)
         require(records.size < MAX_RECEIPTS) { "Tool receipt store is full; operator cleanup is required." }
         records[receipt.callId] = receipt
         writeAll(records)
@@ -128,6 +129,23 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
         records[callId] = updated
         writeAll(records)
         updated
+    }
+
+    /**
+     * Bounded retention. Without it the 512-receipt cap turns into a permanent
+     * ToolGate outage after 512 tool calls. Only receipts whose outcome is
+     * certainly terminal are dropped, oldest first. PROPOSED/APPROVED/
+     * START_PENDING and every outcome-UNKNOWN receipt stay for operator review
+     * and replay blocking; a journal full of those still fails closed.
+     */
+    private fun evictOldestCertainTerminal(records: LinkedHashMap<String, ToolExecutionReceipt>) {
+        val excess = records.size - MAX_RECEIPTS + 1
+        if (excess <= 0) return
+        records.values
+            .filter { it.state in CERTAIN_TERMINAL_STATES && !it.outcomeUncertain }
+            .sortedWith(compareBy<ToolExecutionReceipt> { it.transitions.last().atMillis }.thenBy { it.callId })
+            .take(excess)
+            .forEach { records.remove(it.callId) }
     }
 
     /** One transaction across instances/processes; never fall back to unlocked I/O. */
@@ -284,6 +302,10 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
 
     companion object {
         private val PROCESS_MONITOR = Any()
+        private val CERTAIN_TERMINAL_STATES = setOf(
+            ToolReceiptState.SUCCEEDED, ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT,
+            ToolReceiptState.CANCELLED, ToolReceiptState.REJECTED
+        )
         private const val FILE_NAME = "tool-execution-receipts.bin"
         private const val MAGIC = "DEVICE_AI_TOOL_RECEIPTS"
         private const val SCHEMA_VERSION = 1
