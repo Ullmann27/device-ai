@@ -32,6 +32,7 @@ class ChiefDelegationCoordinatorTest {
 
     @Test fun chiefDelegatesOnlyToQualifiedAuthorizedSpecialistAndReportsToChief() {
         val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val reported = CountDownLatch(1)
         lateinit var chief: ChiefDelegationCoordinator
         val assigned = ConcurrentLinkedQueue<String>()
         val pool = ChiefWorkerPool(1, 1) { brief ->
@@ -43,9 +44,10 @@ class ChiefDelegationCoordinatorTest {
             assertTrue(chief.register(specialist("memory", "memory", setOf("get_storage_info"))))
             assertTrue(chief.register(specialist("coding", "coding", setOf("get_battery_info"))))
             val request = ChiefDelegation("task1", "Batterie prüfen", "coding", setOf("get_battery_info"))
-            assertEquals(ChiefDispatchOutcome.SUBMITTED, chief.delegate(request) { reports += it })
+            assertEquals(ChiefDispatchOutcome.SUBMITTED, chief.delegate(request) { reports += it; reported.countDown() })
             assertEquals(ChiefDispatchOutcome.DUPLICATE_TASK, chief.delegate(request) { reports += it })
             assertTrue(pool.awaitIdle(2_000))
+            assertTrue(reported.await(2, TimeUnit.SECONDS))
             assertEquals(listOf("coding"), assigned.toList())
             assertEquals(WorkerStatus.DONE, reports.single().status)
             assertEquals("done by coding", reports.single().summary)
@@ -61,6 +63,8 @@ class ChiefDelegationCoordinatorTest {
 
     @Test fun unverifiedWorkerClaimsNeverTrainReliabilityAndValidProofUpdatesOnce() {
         val reported = ConcurrentLinkedQueue<WorkerReport>()
+        val firstDone = CountDownLatch(1)
+        val secondDone = CountDownLatch(1)
         lateinit var chief: ChiefDelegationCoordinator
         val selected = ConcurrentLinkedQueue<String>()
         val pool = ChiefWorkerPool(1, 0) { brief ->
@@ -74,8 +78,9 @@ class ChiefDelegationCoordinatorTest {
             assertTrue(chief.register(specialist("alpha")))
             assertTrue(chief.register(specialist("beta")))
             assertEquals(ChiefDispatchOutcome.SUBMITTED,
-                chief.delegate(ChiefDelegation("first", "Code prüfen", "coding")) { reported += it })
+                chief.delegate(ChiefDelegation("first", "Code prüfen", "coding")) { reported += it; firstDone.countDown() })
             assertTrue(pool.awaitIdle(2_000))
+            assertTrue(firstDone.await(2, TimeUnit.SECONDS))
             assertEquals(listOf("alpha"), selected.toList())
             assertEquals(ChiefSpecialistStats(0, 0), chief.stats("alpha"))
 
@@ -89,8 +94,9 @@ class ChiefDelegationCoordinatorTest {
             assertEquals(ChiefSpecialistStats(0, 1), chief.stats("alpha"))
 
             assertEquals(ChiefDispatchOutcome.SUBMITTED,
-                chief.delegate(ChiefDelegation("second", "Code prüfen", "coding")) { reported += it })
+                chief.delegate(ChiefDelegation("second", "Code prüfen", "coding")) { reported += it; secondDone.countDown() })
             assertTrue(pool.awaitIdle(2_000))
+            assertTrue(secondDone.await(2, TimeUnit.SECONDS))
             assertEquals(listOf("alpha", "beta"), selected.toList())
             assertEquals(2, reported.size)
         } finally {
