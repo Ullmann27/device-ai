@@ -68,6 +68,9 @@ data class ToolExecutionReceipt(
     }
 }
 
+/** A readable journal binds this call id to other tool arguments (no outage, no dispatch). */
+class ToolCallIdReuseException : IllegalArgumentException("Tool call id was reused with different arguments.")
+
 interface ToolExecutionReceiptStore {
     fun get(callId: String): ToolExecutionReceipt?
     fun propose(receipt: ToolExecutionReceipt): ToolExecutionReceipt
@@ -96,10 +99,9 @@ class FileToolExecutionReceiptStore(private val directory: File) : ToolExecution
         val records = readAll()
         val existing = records[receipt.callId]
         if (existing != null) {
-            require(existing.toolName == receipt.toolName &&
-                existing.argumentFingerprint == receipt.argumentFingerprint) {
-                "Tool call id was reused with different arguments."
-            }
+            if (existing.toolName != receipt.toolName ||
+                existing.argumentFingerprint != receipt.argumentFingerprint)
+                throw ToolCallIdReuseException()
             return@guarded existing
         }
         evictOldestCertainTerminal(records)
