@@ -20,3 +20,19 @@ QA owns every Gradle schedule; this reviewer will coordinate focused host checks
 ## Next step and rollback
 
 Obtain final candidate freeze and prior actual RED evidence from QA, then inspect actual source and execute independently written focused adversarial checks. Rollback is omission of this review-only branch. No main merge, signature, installation, owner data or deployment changes.
+
+## Candidate and independent checks in progress
+
+Frozen author candidate: `b95858c103243ec921c1de9c8fb9ae8da0e88c29`. Original frozen review cases: local `4556be48`, byte-identical connector publication `56ee1f008f9f850573758484f12d3671950d65b8`, draft PR419. CLI GitHub token expired; connector publication does not reuse the local commit identity.
+
+Independent exact-production Kotlin checks: `./tools/momega1-android-review/run-pure.sh b95858c103243ec921c1de9c8fb9ae8da0e88c29 docs/evidence/momega1/android-review/pure-b95858c1`, compile exit0, run exit0,31/31 cases PASS,0 skipped. Actual production bridge/task/canonical JSON/build-plan files are extracted by SHA and compiled; no Android or transport stubs. Checks cover maximal full review (3 paths,8 criteria, full600-character goal), per-field tamper, binding omissions, canonical bytes, numeric overflow, fixed command construction and hostile callback results. Initial reviewer harness compile typo and invalid chain-fixture construction failed before correction; both retained in sibling evidence directories and are not product REDs.
+
+Separate independent9-case Robolectric UI suite is frozen at local `a3e257a1`, connector `ae0120f68d982bd93b67810e44a6fc6a96950c23`. QA owns execution. Reviewer mistakenly added separate pure-harness files to its registered source directory while initial QA compile was pending. The UI class bytes stayed unchanged, but QA will retain that initial attempt and rerun an isolated copy of only the frozen UI class; ambiguous compilation input is not accepted as evidence.
+
+Static candidate finding under reproduction: matching terminal CCC1 abort removes canonical target but retains prepared task authorization. Existing RUN dialog can apparently restore canceled target and dispatch. This is an Android consent/dispatch defect; canonical Node `runTask` checks terminal journal state before invoking the repair/model callback, so this finding is not evidence of canceled model re-execution. No feature edits made by reviewer.
+
+## Actual call-path audit
+
+`AgentActivity.showCodingTaskDraftDialog` manually constructs a typed task via `ContinuumCodingConversation`, checks reviewed revision/hash/JSON again on confirmation and opens the Builder using JSON/hash extras. Builder is exported, so hash is not an author credential; it parses exact canonical task bytes and requires a new complete preparation dialog. PREPARE persists full expected snapshot, then fixed Node arguments are sent through explicit Termux RUN_COMMAND with one-shot mutable PendingIntent to the nonexported result receiver. Immutable callback URI and pending request/operation gate result consumption. Validated PREPARE stores snapshot plus journal ID. RUN shows full task and journal ID again, rechecks the current snapshot and journal ID, durably removes preparation while recording pending state, then starts Termux. Process death after recording pending state cannot automatically restore a consumed RUN approval; actual device death remains untested.
+
+`AgentActivity.runLocal` separately constructs the existing model adapter/orchestrator; no model-to-coding-draft dispatch was added. The Node typed bridge routes through existing `runCodingTask` and canonical CCC1 `runTask`. The canonical terminal journal gate returns before model/repair callback execution. AgentActivity, AndroidManifest, typed Node bridge and canonical orchestrator files are unchanged between ca93fb4f and b95858c1. These source observations are not real local inference or Fold7 evidence.
