@@ -32,7 +32,12 @@ enum class WorkerStatus { DONE, BLOCKED, FAILED, TIMED_OUT, CANCELLED }
 data class WorkerReport(val id: String, val status: WorkerStatus, val summary: String, val durationMillis: Long)
 
 /** The work itself; typically wraps BoundedAgentOrchestrator.run(brief.goal). Throw ToolBackendFailure/any error to fail. */
-fun interface WorkerJob { fun run(): String }
+fun interface WorkerJob {
+    fun run(): String
+
+    /** Cooperative stop for agent generation and ToolGate; interrupting a Future alone is insufficient. */
+    fun cancel() {}
+}
 
 /**
  * Chief pattern point 2: the chief (AgentActivity's conversation) stays responsive and hands
@@ -50,6 +55,7 @@ class ChiefWorkerPool(
         val reported = AtomicBoolean()
         val cancelled = AtomicBoolean()
         @Volatile var work: Future<String>? = null
+        @Volatile var job: WorkerJob? = null
     }
 
     private val runners: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker").apply { isDaemon = true } }
@@ -68,6 +74,7 @@ class ChiefWorkerPool(
     fun cancel(id: String): Boolean {
         val slot = slots[id] ?: return false
         slot.cancelled.set(true)
+        runCatching { slot.job?.cancel() }
         slot.work?.cancel(true)
         return true
     }
@@ -99,18 +106,32 @@ class ChiefWorkerPool(
         if (slot.cancelled.get()) return report(WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
         try {
             val job = factory(slot.brief)
+            slot.job = job
+            if (slot.cancelled.get()) {
+                runCatching { job.cancel() }
+                return report(WorkerStatus.CANCELLED, "Abbruch angefordert, bevor der Worker startete.")
+            }
             val future = workers.submit<String> { job.run() }
             slot.work = future
-            if (slot.cancelled.get()) future.cancel(true)
+            if (slot.cancelled.get()) {
+                runCatching { job.cancel() }
+                future.cancel(true)
+            }
             val result = future.get(slot.brief.deadlineMillis, TimeUnit.MILLISECONDS)
-            report(WorkerStatus.DONE, result)
+            report(if (slot.cancelled.get()) WorkerStatus.CANCELLED else WorkerStatus.DONE,
+                if (slot.cancelled.get()) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else result)
         } catch (_: TimeoutException) {
+            slot.cancelled.set(true)
+            runCatching { slot.job?.cancel() }
             slot.work?.cancel(true)
-            report(WorkerStatus.TIMED_OUT, "Frist von ${slot.brief.deadlineMillis} ms überschritten.")
+            report(WorkerStatus.TIMED_OUT, "Frist überschritten; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: CancellationException) {
-            report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
+            runCatching { slot.job?.cancel() }
+            report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: InterruptedException) {
-            report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
+            slot.cancelled.set(true)
+            runCatching { slot.job?.cancel() }
+            report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (e: Exception) {
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
             if (cause is WorkerBlocked && !slot.cancelled.get()) report(WorkerStatus.BLOCKED, cause.message ?: "Blockiert.")
@@ -132,6 +153,6 @@ object WorkerScope {
         val out = delegate.generate(task, memories, reflection, observations)
         val proposal = out.proposal
         if (proposal == null || proposal.toolName in brief.allowedTools) out
-        else AgentModelOutput(out.modelId, "Werkzeug ${proposal.toolName} ist für diesen Auftrag nicht freigegeben.", null)
+        else throw WorkerBlocked("Werkzeug ${proposal.toolName} ist für Auftrag ${brief.id} nicht freigegeben.")
     }
 }
