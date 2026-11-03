@@ -1,4 +1,14 @@
-# Independent 7B review — admission remains blocked
+# Independent7B review — exact pair approved after CPU correction
+
+Latest decision: **APPROVE_EXACT_PAIR_FOR_LOCAL_MODEL_HOST** for frozen source a135a9ae72e1494676d709ae496cf74048310537 and the exact official7B model/runtime tuple. Immutable certificate `APPROVED-7B-PAIR-REVIEW.json` SHA25629a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec. Registry status promotion and final status-only source verification remain pending; the observed canonical run correctly still reported candidatefalse.
+
+Exact same sourcecommit/prompt as the failed tiny probe, unchanged180000ms review wall budget: normal default-provider/fixedCLI completion,156 decodedtokens,104746ms, exit0. New7B aggregate CPU allowance352seconds matches remaining175800ms and actual kernel limits. Original authenticated observation is frozen; clone/repeat/restart refusals pass. Bounded synthetic patch passes5/5 tests; this consumed probe is not an unknown coding benchmark. PrimaryQA60000ms wall protocol stays unchanged; no decode throughput is inferred because normal native stderr/perf timing is not retained.
+
+Independent84host controls PASS (five cgroup-only cases run inside Docker),21real-container controls PASS, actual resident-native cancellation PASS at4235→4258ms. Maximum contemporaneous RSS sum across all container processes plus host provider/Dockerclient tree:5412020KiB=5.161GiB, leaving2.839GiB below8GiB. Native peak RSS5257124KiB/PSS5255710KiB; host tree peak51156KiB. Leaf charge777097216bytes undercounts ancestor-charged cached weight pages; do not confuse that with resident footprint. Sampler reader is included; shared Docker daemon/unrelated jobs excluded, and sampling may miss transients. Actual2CPU/7GiB/no-swap cgroup,7GiB nativeAS and CLI old256/semi16 heap limits independently observed. No OOM or leftover container/runtime. Existing failed runs below remain preserved.
+
+No general coding score, canonical accepted repair loop, memory-learning, Android/device or release acceptance. FOLD7_NOT_RUN.
+
+## Preserved prior review and failures
 
 Reviewed production source: e192b9a6af55f599de5d33725265ac348e84a12e. No production changes by challenger. Frozen criteria/public contracts precede implementation inspection. The exact approved 7B bytes were independently streamed and checked against official revision metadata; the runtime is the previously independently rebuilt byte-identical official executable.
 
