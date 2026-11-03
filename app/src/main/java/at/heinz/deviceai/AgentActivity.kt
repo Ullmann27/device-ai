@@ -210,7 +210,9 @@ class AgentActivity : Activity() {
     private data class LocalReplySnapshot(val sessionId: String, val request: String, val response: String)
     // Current chat only; model text has no owner-fact authority and is never stored as a memory.
     private var lastLocalReply: LocalReplySnapshot? = null
-    private val localConversationContext = at.heinz.deviceai.cognitive.LocalConversationContext()
+    // Process-scoped (RAM only): survives a Fold7 recreation (density/theme/font/keyboard)
+    // of the same session; forgotten on a real finish or a different session id.
+    private val localConversationContext = at.heinz.deviceai.cognitive.LocalDialogueRetention.context
     // Presentation only: native text is an unverified draft until the existing
     // orchestrator/quality checks complete. Never speak or save this preview.
     private var activeLocalStreamToken: Any? = null
@@ -408,6 +410,12 @@ class AgentActivity : Activity() {
         savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
             Regex("[a-f0-9-]{36}").matches(it)
         }?.let { sessionId = it }
+        // Only a recreated instance of the same chat restores its last local answer anchor.
+        if (savedInstanceState != null) {
+            at.heinz.deviceai.cognitive.LocalDialogueRetention.replyFor(sessionId)?.let {
+                lastLocalReply = LocalReplySnapshot(it.sessionId, it.request, it.response)
+            }
+        }
 
         window.statusBarColor = BG
         window.navigationBarColor = BG
@@ -592,6 +600,10 @@ class AgentActivity : Activity() {
 
     override fun onDestroy() {
         cancelSpeechInputScope();onDeviceSpeech=null
+        at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(lastLocalReply?.let {
+            at.heinz.deviceai.cognitive.LocalDialogueRetention.RetainedReply(it.sessionId, it.request, it.response)
+        })
+        at.heinz.deviceai.cognitive.LocalDialogueRetention.activityDestroyed(isChangingConfigurations)
         if (::executor.isInitialized) executor.cancelPendingActions()
         modelImportObservation?.close()
         modelImportObservation = null
