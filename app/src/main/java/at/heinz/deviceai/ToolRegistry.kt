@@ -7,7 +7,63 @@ data class ToolSpec(
     val risk: Risk,
     val required: Set<String> = emptySet(),
     val optional: Set<String> = emptySet()
-)
+) {
+    /** Typed schema for every declared argument; derived from the argument name so all tools stay consistent. */
+    val schema: Map<String, ArgSchema> get() = (required + optional).associateWith { ArgSchema.forArgument(it) }
+}
+
+/** Typed argument schema (chief pattern point 3). */
+sealed interface ArgSchema {
+    data class Text(val maxLength: Int) : ArgSchema
+    data class Integer(val min: Long, val max: Long) : ArgSchema
+    object Flag : ArgSchema
+    object SharedPath : ArgSchema
+    object HttpsUrl : ArgSchema
+    object PathList : ArgSchema
+
+    /** Returns a German rejection reason, or null when the value conforms. */
+    fun check(value: Any?): String? = when (this) {
+        is Text -> if (value !is String) "muss Text sein" else if (value.length > maxLength) "ist länger als $maxLength Zeichen"
+            else if (value.any { it.isISOControl() }) "enthält Steuerzeichen" else null
+        is Integer -> {
+            val n = when (value) { is Number -> value.toLong().takeIf { value.toDouble() % 1.0 == 0.0 }; is String -> value.trim().toLongOrNull(); else -> null }
+            if (n == null) "muss eine ganze Zahl sein" else if (n < min || n > max) "muss zwischen $min und $max liegen" else null
+        }
+        Flag -> if (value is Boolean || value is String && (value.equals("true", true) || value.equals("false", true))) null else "muss true oder false sein"
+        SharedPath -> pathProblem(value)
+        HttpsUrl -> if (value !is String || value.length > 2_048 || value.any { it.isISOControl() || it.isWhitespace() } ||
+                !value.startsWith("https://", ignoreCase = true)) "muss eine HTTPS-Adresse sein" else null
+        PathList -> when (value) {
+            is String -> pathProblem(value)
+            is List<*> -> if (value.size > 16) "hat mehr als 16 Pfade" else value.firstNotNullOfOrNull { pathProblem(it) }
+            else -> "muss Pfad oder Pfadliste sein"
+        }
+    }
+
+    companion object {
+        private fun pathProblem(value: Any?): String? = when {
+            value !is String -> "muss ein Pfad sein"
+            value.length > 1_024 -> "ist zu lang"
+            value.any { it.isISOControl() } -> "enthält Steuerzeichen"
+            value.split('/', '\\').any { it == ".." } -> "darf den freigegebenen Speicher nicht verlassen"
+            else -> null
+        }
+
+        fun forArgument(name: String): ArgSchema = when (name) {
+            "url" -> HttpsUrl
+            "path", "source", "destination" -> SharedPath
+            "roots" -> PathList
+            "userOnly" -> Flag
+            "lines" -> Integer(1, 600)
+            "limit" -> Integer(1, 250)
+            "seconds" -> Integer(1, 60)
+            "query" -> Text(500)
+            "packageOrName" -> Text(256)
+            "page", "filter" -> Text(200)
+            else -> Text(1_000)
+        }
+    }
+}
 
 object ToolRegistry {
     private val allSpecs = listOf(
@@ -72,6 +128,11 @@ object ToolRegistry {
         val unknown = call.arguments.keys.filterNot { it in allowed }
         if (unknown.isNotEmpty()) {
             return "Nicht erlaubte Argumente für ${call.name}: ${unknown.joinToString()}"
+        }
+        spec.schema.forEach { (key, schema) ->
+            if (call.arguments.containsKey(key) && call.arguments[key] != null) {
+                schema.check(call.arguments[key])?.let { return "Argument $key für ${call.name} $it." }
+            }
         }
         return null
     }
