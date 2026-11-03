@@ -142,6 +142,7 @@ class OwnerStatementTimelineTest {
         for (correction in listOf(
             "Bei der Menge in der grünen Dose bin ich unsicher.",
             "Die Anzahl der Perlen ist nicht gesichert.",
+            "Die Anzahl der Perlen in der grünen Dose ist nicht gesichert.",
             "Meine Mengenangabe zur grünen Dose ist nur geschätzt.",
             "Die Zahl der Perlen ist möglicherweise falsch."
         )) assertNull(correction, p(prior, correction))
@@ -161,6 +162,7 @@ class OwnerStatementTimelineTest {
         for (correction in listOf(
             "Die Mengenangabe für die blaue Dose ist falsch.",
             "Die Anzahl der Knöpfe ist unklar.",
+            "Die Anzahl der Knöpfe in der grünen Dose ist unklar.",
             "Die Angabe von 12 Knöpfen für die grüne Dose ist falsch.",
             "Die Farbangabe für die grüne Dose ist falsch."
         )) assertEquals(correction, 12L, p(prior, correction)?.entry("Dose (grün)")?.current)

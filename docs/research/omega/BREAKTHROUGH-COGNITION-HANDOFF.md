@@ -200,3 +200,38 @@ never a newly asserted value. Unknown entities/units, no reference, quoted or
 conditional text and unrelated properties do not match. The same all-or-null
 fallback preserves raw chronological owner text. Unrecognized natural-language
 forms remain possible; no general semantic completeness claim is made.
+
+## Follow-up candidate freeze
+
+Production checkpoint `b9be799d4ad1fd5dcb1020f478f4e1377b11970a` is unchanged in
+the commit containing this freeze. Production SHA-256:
+`eb6649687aeb0d6ba589ae2cc178898dd921b4ab087ce4f25eb4134762f74bf0`.
+Two additional assertions cover a counted-unit reference scoped to a known
+entity, and the same grammar with an unrelated unit. Final authored suite:
+**63/63 passed**, no warnings, `followup-scoped-controls-green.txt`.
+All original57 methods remain intact; the new six methods cover this follow-up.
+
+Published24, unchanged fixture/hash and original QA harness: initial107a **8/24**
+→ follow-up **24/24**, **16 improvements / 0 regressions**. Every setup remains
+valid. Raw source-bound paired receipt/results/logs:
+`followup-development24-green/`. This is consumed development evidence, not an
+unseen gain. Reproduce with the published QA runner at60e70d25:
+
+```
+source /workspace/continuum-build-env/env.sh
+python3 /workspace/continuum-breakthrough-quality/docs/evidence/breakthrough-quality-20261103/harness/run-kotlin.py cognition 107a7bb0ce680ad0c362b4226308942aa0dfaaec b9be799d4ad1fd5dcb1020f478f4e1377b11970a /workspace/continuum-breakthrough-quality/docs/evidence/breakthrough-quality-20261103/fixtures/cognition-cases.json /tmp/cognition-followup-replay-new-directory
+```
+
+Unchanged M3 rerun: **77/81, 0 harmful**, byte-identical to the original Chief and
+initial107a reports, **0 regressions / 0 improvements**. Evidence:
+`followup-m3-candidate-jvm.txt`, `followup-m3-candidate.tsv`,
+`followup-m3-comparison.json`. Existing route misses remain unchanged.
+
+This commit freezes follow-up source and tests before requesting private20 QA.
+Private reserve hash above remains unread; independent results and combined
+Gradle are **PENDING**, not inferred from development tests. No further tuning
+after the reserve result is authorized in this bounded follow-up. Quoted,
+conditional, missing-reference and unsupported paraphrase behavior outside the
+tested bounded grammar remains a limitation, as does whole-projection abstention.
+Original owner text and explicit old-count corrections remain chronological
+ephemeral context for the existing model path; no replacement value is inferred.
