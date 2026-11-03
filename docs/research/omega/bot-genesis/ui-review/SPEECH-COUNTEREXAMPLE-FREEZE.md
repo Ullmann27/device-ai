@@ -1,0 +1,9 @@
+# Actual TTS listener counterexample — prospective execution freeze
+
+Status: SOURCE_IMPLEMENTED / NOT_RUN. Reviewer-written before executing against any candidate or inspecting future Bot Genesis speech changes. Source inspected: baseline4b881f81 / productionc7ec853. This is an existing callback-order hypothesis, not a claimed reproduced defect yet.
+
+The actual `AgentActivity` listener checks the utterance ID, calls synchronized `TtsHologramSignal.anchor`, then calls `AvatarDirector.speechStarted` outside the UI callback. A stop can occur between the initial ID check and the avatar event. Proposed deterministic schedule: hold the signal monitor; start the real listener on a background thread; wait for its anchor to block (or for a future serialized callback to finish posting); stop on the main thread; release the monitor; drain the main queue. No `SpeechStarted` may occur after stop, and attaching a replacement sink must not replay the interrupted utterance.
+
+Controls exercise ordinary stop followed by late callbacks, and an old A completion while B is speaking. Tests instantiate the actual Activity and install its actual listener in Android's Robolectric TTS shadow, without invoking Activity.onCreate, model inference, a renderer or Android services. This proves callback ordering only, never actual audio/phoneme timing, identity routing of future bot inference, device performance or Fold7 execution.
+
+Source: `tools/genesis-ui-review/IndependentActivitySpeechTest.kt`. Integration: `connection.init.gradle` adds this and the original15 roster tests; scoped test filter opts in through `-PgenesisUiReviewOnly=true`. Final complete acceptance must omit the filter. No heavy build is started while the native model builder owns the CPU window. Preserve any compile/setup error separately from actual assertions, and retain any baseline RED after repair.
