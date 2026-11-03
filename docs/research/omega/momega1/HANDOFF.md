@@ -1,23 +1,29 @@
 # MΩ-1 / DAN Ω integration handoff
 
-Status: **HOST_IMPLEMENTATION_IN_PROGRESS / BLOCKED_LOCAL_MODEL_UNAVAILABLE / FOLD7_NOT_RUN**.
+Status: **HOST_IMPLEMENTATION_IN_PROGRESS / NATIVE_MODEL_ADMISSION_IN_REVIEW / FOLD7_NOT_RUN**.
 This is an isolated research increment, not FIRST_COGNITIVE_LOOP_VERIFIED, MΩ-1A,
 MΩ-1B or RELEASE_READY. The owner explicitly confirmed no device access and
-authorized continuing host work. No model weights were supplied or downloaded.
+authorized continuing host work. The owner subsequently approved the exact
+Qwen2.5-Coder-1.5B-Instruct Q4_K_M host model and locally built llama.cpp recorded
+in `MODEL-ADMISSION.md`. Download/hash checks and genuine native inference have
+occurred; combined benchmark and final source acceptance are still pending.
 
 ## Source and publication
 
 Research branch `codex/momega1-chief-20261103`, draft PR410, targets the ongoing
 Chief research branch. Code40 `64ec06a73f50cae9ee49035c840710d87777d50f` remains the
 unchanged historical rollback source. Initial current Chief was `786436f5`;
-the later remote refresh was `6393d49ff7c3dae88875e628200323060b490b80`.
+the latest fetched Chief was `7247e99d0b93b62dfb2b5eee22486d22911cb722`.
 The user-supplied `30b70a0d` was not treated as current acceptance.
 
 The refreshed Chief also contains separate optional avatar/UI research and its
 own pending combined QA. Those changes were compared and left in that branch.
-Only its independently rerun native JVM harness repair `54a338e3` was imported
+Its independently rerun native JVM harness repair `54a338e3` was imported
 as `8ced39b7`; actual transitive source/dependency lists, no disabled test roots.
 Its 84 + 59 selected JVM cases passed independently on our baseline graph.
+The narrow ChiefWorkerPool completion race fix and independent tests were also
+imported (root `4a398aa8`, 13/13 selected checks), as was release-inventory test
+metadata handling (`95b6cb1f`, 6/6). Foreign avatar/UI feature changes stay separate.
 `REMOTE-SNAPSHOT.json`, `REMOTE-REFRESH.json` and `ARCHITECTURE.md` preserve context.
 GitHub's compare file list can be bounded; local fetched Git comparison remains
 the complete source comparison.
@@ -82,7 +88,7 @@ observation's tier to `HOST_INTEGRATION`; a configuration label cannot produce
 checks passed at `a2f30181`, followed by unchanged 35/35 independent checks.
 
 The strict coding boundary requires the private, immutable observation and actual
-verified execution. The current producer never certifies that stronger property.
+verified execution. The earlier process-only producer never certifies that stronger property.
 The real branded fixture is therefore rejected with
 `BLOCKED_LOCAL_MODEL_UNAVAILABLE` before its repair candidate can execute. A
 self-asserted Boolean, copied receipt, HMAC transport or model ID cannot admit it.
@@ -90,8 +96,13 @@ The combined runtime/loop checks at `e8af3967` passed 36/36. Genuine inference
 needs a separately reviewed real runtime/weights observation producer; changing
 configuration or setting a flag is not a completion step.
 
-No approved neural weights or real llama.cpp build were available. No external
-model solved a final local benchmark, and no cloud fallback was added. Android
+After explicit owner consent, the approved GGUF and official pinned llama.cpp
+were obtained and verified outside Git. A second independent build produced the
+same executable hash. Native generation, cancellation and file-swap checks have
+been observed by the independent critic; exact-pair producer admission is being
+reviewed before the combined benchmark. One blinded native repair still failed
+two of eight tests. This is actual inference, not a successful coding loop.
+No external model solved a final local benchmark, and no cloud fallback was added. Android
 shared-LiteRT IPC, simultaneous chat/coding admission, owner STOP during synchronous
 provider execution, native ARM64 compatibility and device resource tests remain
 open. Missing isolation must block rather than fall back to host shell execution.
@@ -108,14 +119,19 @@ The memory reviewer reproduced a full-ledger withdrawal failure, missing current
 task grant enforcement and resurrection after deleting/rewriting only the ledger
 revocation. The corrected candidate anchors withdrawal in the existing canonical
 grant and treats the ledger tombstone as an audit mirror. Full trusted-state
-rollback remains outside this filesystem trust model. Historical recall remains
-restricted to the same source SHA and overlapping files. Changed-code transfer,
-post-success model reflection and measured learning benefit remain unproved.
+rollback remains outside this filesystem trust model. Optional trusted-project
+recall now verifies a clean current checkout and bounded local Git ancestry,
+while retaining authorization, overlapping files, expiry, revocation and proof
+gates. Source `ed6e5910` passed 27 independent lineage checks; `22136ce6` passed
+six independent real provider-input ablation controls. Default and explicit true
+retrieve eligible history; false omits it. These use synthetic proof fixtures,
+not model inference. Actual changed-code transfer and learning benefit remain unproved.
 
 The Android reviewer reproduced stale RUN availability and redispatch after a
 terminal abort. This is a local authorization/dispatch defect, not evidence that
 the terminal canonical journal actually re-executed a model. Target-bound snapshot
-revocation is being checked before integration.
+revocation is integrated and passed 45 actual Android/Robolectric cases (32 author,
+13 independent); actual device lifecycle tests remain unavailable.
 
 ## Experiments, raw evidence and final QA
 
@@ -123,7 +139,7 @@ Every lane retains RED failures, exact candidate SHAs, commands, exit codes,
 test identities and raw GREEN/review logs under `docs/evidence/momega1/`.
 See each `*-HANDOFF.md` for reproduction. The independent QA lane froze twelve
 synthetic unknown tasks before candidate runs; all twelve genuine baseline REDs
-were observed. None was solved by an available local model. No model benchmark
+were observed. None has yet been run through the admitted combined model loop. No model benchmark
 success rate, experience-ablation gain or Fold7 latency is reported.
 
 Final combined source freeze, all affected tests, unfiltered Android JUnit, Node,
@@ -141,7 +157,7 @@ not Fold7 latency, thermal, energy, PSS or GPU measurements.
 
 | Property | Status | Evidence / missing prerequisite |
 |---|---|---|
-| Local model | BLOCKED | No actual approved runtime/weights inference producer |
+| Local model | BLOCKED | Real native host inference observed; final exact-pair producer review pending; no device |
 | Independent planning | BLOCKED | No local model solving unknown task |
 | Tool execution | NOT_RUN | Required Fold7 app-to-worker run unavailable; host paths separate |
 | RED | PASS | Twelve frozen synthetic failures; host only |
@@ -149,7 +165,7 @@ not Fold7 latency, thermal, energy, PSS or GPU measurements.
 | Independent verification | PASS | Separate host verifier counterexamples/raw receipts; device unrun |
 | Self-correction | BLOCKED | Software feedback path tested; real model revision absent |
 | Persistence | NOT_RUN | Synthetic durability tests exist; no genuine model experience admitted |
-| Reuse | NOT_RUN | No changed-code model retrieval/ablation experiment |
+| Reuse | NOT_RUN | Git-lineage retrieval and ablation controls pass; actual model benefit unmeasured |
 | Safety | NOT_RUN | Target end-to-end safety acceptance requires device/model; host reviews separate |
 | Resources | NOT_RUN | No Fold7 measurements |
 | Integration | NOT_RUN | Final combined freeze and full QA pending |
