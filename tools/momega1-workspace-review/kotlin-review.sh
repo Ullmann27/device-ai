@@ -37,3 +37,6 @@ for review_case in pool-mailbox cancel; do
  rm -rf "$review_out/host/$review_case/worker-alpha" "$review_out/host/$review_case/worker-beta" "$review_out/host/$review_case/worker-alpha-state" "$review_out/host/$review_case/worker-beta-state"
  rm -f "$review_out/host/$review_case/synthetic-fixture.json"
 done
+for review_phase in existing adversarial host; do
+ if [ "$(cat "$review_out/$review_phase.exit")" -ne 0 ]; then exit 1; fi
+done
