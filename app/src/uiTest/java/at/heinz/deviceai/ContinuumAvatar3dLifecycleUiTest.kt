@@ -89,9 +89,14 @@ class ContinuumAvatar3dLifecycleUiTest {
             view.setForegroundActive(true)
             val reducer = field(view, "avatarPose") as AvatarPoseReducer
             fun observe() {
-                // Move past the previous lifecycle clear watermark, using the real view clock.
-                shadowOf(Looper.getMainLooper()).idleFor(2, TimeUnit.MILLISECONDS)
-                view.onAvatarEvent(AvatarEvent.GazeObserved(GazeTarget(.4f, -.2f), 80, System.currentTimeMillis()))
+                // The View's clear uses wall time; virtual Looper idle need not advance that clock.
+                val cleared = AvatarPoseReducer::class.java.getDeclaredField("gazeClearedAtMillis")
+                    .apply { isAccessible = true }.getLong(reducer)
+                val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(100)
+                while (System.currentTimeMillis() <= cleared && System.nanoTime() < deadline) Thread.sleep(1)
+                val now = System.currentTimeMillis()
+                assertTrue("Real wall time did not advance beyond the actual clear watermark within 100ms", now > cleared)
+                view.onAvatarEvent(AvatarEvent.GazeObserved(GazeTarget(.4f, -.2f), 80, now))
             }
             observe()
             assertTrue(reducer.pose(System.currentTimeMillis()).gazeObserved)

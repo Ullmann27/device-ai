@@ -2,6 +2,7 @@ package at.heinz.deviceai
 
 import android.content.Context
 import android.media.AudioManager
+import android.media.AudioFormat
 import android.media.AudioTrack
 import android.os.Looper
 import android.provider.Settings
@@ -12,10 +13,13 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.Implements
+import org.robolectric.annotation.Implementation
+import org.robolectric.shadows.ShadowAudioTrack
 import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk=[28])
+@Config(sdk=[28],shadows=[Pcm16FeedbackAudioTrackShadow::class])
 class ContinuumUiFeedbackTest {
     private val app get()=RuntimeEnvironment.getApplication()
     private fun type():Class<*> = runCatching { Class.forName("at.heinz.deviceai.ui.ContinuumUiFeedback") }.getOrNull()
@@ -80,5 +84,24 @@ class ContinuumUiFeedbackTest {
             Settings.System.putInt(app.contentResolver,Settings.System.SOUND_EFFECTS_ENABLED,1)
             audio.ringerMode=AudioManager.RINGER_MODE_SILENT;assertFalse(play(f));assertNull(track(f))
         } finally { close(f) }
+    }
+}
+
+/**
+ * Robolectric 4.14.1 lacks only native_write_short. Bridge that native seam to its
+ * existing byte-write shadow; public Android write/state/play/release stay real.
+ * Host contract only: this does not emulate a speaker or prove audible playback.
+ */
+@Implements(AudioTrack::class)
+class Pcm16FeedbackAudioTrackShadow:ShadowAudioTrack() {
+    @Implementation
+    protected fun native_write_short(pcm:ShortArray,offset:Int,count:Int,format:Int,blocking:Boolean):Int {
+        require(format==AudioFormat.ENCODING_PCM_16BIT && offset>=0 && count in 0..960 && offset+count<=pcm.size)
+        val bytes=ByteArray(count*2)
+        repeat(count) { n ->
+            bytes[n*2]=(pcm[offset+n].toInt() and 255).toByte()
+            bytes[n*2+1]=((pcm[offset+n].toInt() shr 8) and 255).toByte()
+        }
+        return super.native_write_byte(bytes,0,bytes.size,format,blocking)/2
     }
 }
