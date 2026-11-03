@@ -35,18 +35,23 @@ MCP builder owns new `coding-mcp*.mjs`, its tests, `scripts/continuum-coding-mcp
 
 ## Implemented and measured
 
-Implementation: `83b805cb`; independent B02 schema repair: `3ca1dd9a`; real process tests: `af26cb09`; canonical integration driver: `60074b69`. Draft [PR #459](https://github.com/Ullmann27/device-ai/pull/459). Existing Git MCP files remain unchanged.
+Implementation: `83b805cb`; independent B02 schema repair: `3ca1dd9a`; real process tests: `af26cb09`; canonical integration driver: `60074b69`; GET-session repair: `5cf463a7`. Draft [PR #459](https://github.com/Ullmann27/device-ai/pull/459). Existing Git MCP files remain unchanged.
 
 - Authenticated loopback-only Streamable HTTP and exact four-tool allowlist; token outside source/project/profile/service roots, owner-only file/parent permissions, no symlinks/hardlinks, immediate credential rotation/removal revocation, bounded random sessions.
 - Session/tool-bound opaque pagination, strict JSON schemas, Host/Origin defenses, no query authentication, fixed read-only child entrypoint, cleared child environment, 9-second process-group timeout, no arbitrary module/command/path input.
 - Service builder's canonical reader checks actual profile metadata, current task grant/source/journal/receipt, evidence ID and projected content hashes. The transport recomputes returned JSON hashes and does not invent terminal results.
 - First independent finding B02: `limit:null` incorrectly selected the default via null coalescing. Corrected by distinguishing an absent property; explicit `arguments:null` is rejected too. The original failure and fix remain documented rather than reporting an uninterrupted green history.
+- Follow-up builder counterexample: an unknown session on GET returned optional-stream 405 before session validation. Corrected to 404 consistently with POST; independent reviewer agreed with the protocol reading and added separate checks. Full RED 15/16 and GREEN 16/16 preserved as `get-session-red.log` and `get-session-green.log`.
 
 On clean combined source **`1aae431d08e01342ed509b57513e73e118fdd877`** (service `fd51d648` + MCP `60074b69`), 15 own transport/process tests passed, 0 failed/0 skipped. Raw integrated log: `integrated-tests.log`.
 
 The separate real CLI/HTTP integration used the actual Kotlin registry, fresh temporary profiles and canonical owner task intake. Five checks passed: authenticated separate process, all 20 persisted profiles, actual owner-reviewed pending task without execution claims, fresh-process persistence, and canonical owner cancellation with evidence denial. Byte digests confirmed reads left service/profile files unchanged. No neural model or isolated repair was run by this check. The test task was canceled and all temporary state/processes were removed.
 
 Actual 12 service reads: p50 **139.03 ms**, p95 **257.13 ms**; total **3.96 s**. These are host observations from one check, not Fold7/performance guarantees. Controller-only maxRSS 65,108 KiB excludes Java/Node children; it is not total RAM or energy. Full source/limits/counts in `canonical-first.json`.
+
+After service hardening, clean combined **`c900dfa8ec022cb0db31f5f74a172000e6d6ca3d`** (service `0c54a7bc`, MCP `5cf463a7`) passed all **16** own transport/process tests and the same five actual canonical integration checks. `canonical-hardened.json` and `hardened-tests.log` preserve exact evidence. Fresh hash checks before Java profile reads raise measured observer overhead in this single run: 12 reads, p50 **184.64 ms**, p95 **526.39 ms**, total **5.24 s**. This is a safety/measurement tradeoff, not a claimed speedup. The first run remains historical, not the final hardened timing.
+
+Independent [PR #460](https://github.com/Ullmann27/device-ai/pull/460) reported 19 socket groups against `3ca1dd9a` and 8 real-reader groups against `1aae431d`, with separate new GET/classpath counterchecks in progress. These are the reviewer's own results, not added to the builder's test count. Final shared Chief acceptance must still pin its resulting SHA.
 
 ```sh
 node --test .github/continuum/coding-mcp.test.mjs .github/continuum/coding-mcp-process.test.mjs
