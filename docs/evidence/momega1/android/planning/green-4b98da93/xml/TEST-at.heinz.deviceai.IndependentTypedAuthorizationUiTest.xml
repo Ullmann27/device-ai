@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T20:45:10" hostname="b354f2cb821b" time="1.771">
+  <properties/>
+  <testcase name="fullyValidReplacementWhileDialogOpenNeedsFreshApproval" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.163"/>
+  <testcase name="everyPreparedTupleFieldFailsClosedWhenMissingOrChanged" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.876"/>
+  <testcase name="duplicatePositiveClickDispatchesAtMostOnce" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.159"/>
+  <testcase name="terminalCancellationWhileApprovalDialogOpenCannotDispatch" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.142"/>
+  <testcase name="oldCallbackCannotConsumeTheReplacementPendingSlot" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.027"/>
+  <testcase name="canceledPreparedTaskCannotBeOfferedForExecution" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.099"/>
+  <testcase name="destroyedActivityCannotConsumeOrDispatchItsOldDialog" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.165"/>
+  <testcase name="matchingExtrasWithWrongImmutableUriCannotPrepare" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.022"/>
+  <testcase name="duplicatePreparationCallbackCannotResurrectConsumedPreparation" classname="at.heinz.deviceai.IndependentTypedAuthorizationUiTest" time="0.117"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

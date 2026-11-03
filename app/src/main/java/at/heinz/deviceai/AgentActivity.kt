@@ -375,6 +375,8 @@ class AgentActivity : Activity() {
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
     private var lastVisibleCognitiveTrace: Pair<String,String>? = null
     private var activeChatCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
+    // A queued coding candidate never reappears after leaving its foreground scope.
+    private var codingPlanningEpoch = 0L
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
     private val devController = DevelopmentUiController { "dev-" + UUID.randomUUID() }
     @Volatile private var activeDevCoordinator: DevelopmentCoordinator? = null
@@ -574,6 +576,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        codingPlanningEpoch++
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
         if (appLookupActive) {
@@ -6466,8 +6469,10 @@ class AgentActivity : Activity() {
 
     private fun runLocal(text: String, resolvedQuestion: String = text,
                          groundedRecall: at.heinz.deviceai.cognitive.LocalGroundedRecall? = null,
-                         turnTrace: CognitiveTurnTrace = CognitiveTurnTrace(sessionId)) {
+                         turnTrace: CognitiveTurnTrace = CognitiveTurnTrace(sessionId),
+                         codingPlanning: ContinuumCodingPlanning? = null) {
         val localSessionId = sessionId
+        val planningEpoch = codingPlanningEpoch
         val internetModeAtTurnStart = internetConsent.mode
         val internetRevisionAtTurnStart = internetConsent.revision()
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
@@ -6512,7 +6517,7 @@ class AgentActivity : Activity() {
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
         // becomes one self-contained task from the owner's own earlier turns of this
         // session. Owner-write/tool authorization still uses only 'text'.
-        val agentTask = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(
+        val agentTask = codingPlanning?.ownerGoal ?: at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(
             text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
@@ -6520,7 +6525,7 @@ class AgentActivity : Activity() {
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
         val orchestrator = BoundedAgentOrchestrator(
-            model = AgentModel { task, memories, reflection, rawObservations ->
+            model = codingPlanning?.model(localRuntime,cancellation) ?: AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
                 // M6: every step runs on the model this turn started with (owner may swap it during an approval dialog).
                 check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
@@ -6714,11 +6719,13 @@ class AgentActivity : Activity() {
                 )
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
-            memories = { memoryStore.all() + ownerFactMemories() },
+            memories = { if(codingPlanning == null) memoryStore.all() + ownerFactMemories() else emptyList() },
             toolGate = createToolGate(ownerTurn = text, consentRevisionAtTurnStart = internetRevisionAtTurnStart,
                 ephemeralScreenContext = ephemeralScreenRun::get),
             evaluator = AgentEvaluator { response, _ ->
-                LocalDialogueQualityGate.evaluate(
+                if(codingPlanning != null) Evaluation(codingPlanning.decode(response) != null,0.0,
+                    "Requirements candidate only; no outcome or authorization verified.")
+                else LocalDialogueQualityGate.evaluate(
                     request = text,
                     response = response,
                     previousRequest = previousLocalReply?.request,
@@ -6728,7 +6735,9 @@ class AgentActivity : Activity() {
                         at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER)
                 )
             },
-            experienceStore = experienceStore,
+            experienceStore = if(codingPlanning == null) experienceStore else InMemoryExperienceStore(),
+            limits = if(codingPlanning == null) at.heinz.deviceai.cognitive.AgentLimits()
+                else at.heinz.deviceai.cognitive.AgentLimits(maxToolCalls=0,maxRetries=0),
             evaluationConfirmsOutcome = false,
             turnTrace = turnTrace,
             approvalProvider = AgentToolApprovalProvider { proposal, risk ->
@@ -6762,7 +6771,7 @@ class AgentActivity : Activity() {
                 cancellation.throwIfCancelled()
                 approval
             },
-            checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
+            checkpointStore = if(codingPlanning == null) FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")) else null,
             callIdPrefix = "local-$turnId",
             cancellation = cancellation,
             eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, show = { line ->
@@ -6787,12 +6796,24 @@ class AgentActivity : Activity() {
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeChatCancellation !== cancellation) return@runOnUiThread
+                val planningDeliveryCurrent = codingPlanning == null ||
+                    (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
+                        runCatching { cancellation.throwIfCancelled() }.isSuccess &&
+                        LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
                 chiefTurn.deliver()
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
+                    if(codingPlanning != null) {
+                        val draft = if(planningDeliveryCurrent && run.blocker == null)
+                            codingPlanning.decode(run.response) else null
+                        if(draft != null) showCodingTaskDraftDialog(draft)
+                        addToolActivity(if(draft != null) "Coding-Entwurf bereit · vollständig prüfen; nichts übergeben oder gestartet"
+                            else "Coding-Entwurf verworfen · keine gültige aktuelle Modellantwort")
+                        return@onSuccess
+                    }
                     if (internetConsent.revision() != internetRevisionAtTurnStart) {
                         lastLocalReply = null // Revoked turn cannot leave an old apparent-answer anchor.
                         if (sessionId == localSessionId && !ephemeralScreenRun.get())
@@ -6841,6 +6862,10 @@ class AgentActivity : Activity() {
                     refreshHologramState()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
+                    if(codingPlanning != null) {
+                        addToolActivity("Coding-Entwurf fehlgeschlagen · nichts übergeben oder gestartet")
+                        return@onFailure
+                    }
                     val requiredContextOverflow = error.message in setOf(
                         "MANDATORY_CONTEXT_EXCEEDS_BUDGET",
                         "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET",
@@ -7129,10 +7154,13 @@ class AgentActivity : Activity() {
         refreshDevelopmentUi()
     }
 
-    /** General task intake only. This dialog has no transport, model or tool execution hook. */
-    private fun showCodingTaskDraftDialog() {
+    private fun showCodingTaskDraftDialog() = showCodingTaskDraftDialog(null)
+
+    /** Candidate prefill retains all existing explicit draft, prepare and RUN reviews. */
+    private fun showCodingTaskDraftDialog(initialDraft: ContinuumCodingTask.Draft?) {
         val conversation = ContinuumCodingConversation()
-        val taskId = "job-${java.util.UUID.randomUUID()}"
+        val taskId = initialDraft?.id ?: "job-${java.util.UUID.randomUUID()}"
+        var draftDialog: AlertDialog? = null
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = rounded(Color.rgb(13, 23, 43), 16, BORDER)
@@ -7141,7 +7169,8 @@ class AgentActivity : Activity() {
         box.addView(textView("CODING-AUFTRAG ENTWERFEN", 18f, TEXT, true))
         box.addView(textView(
             "Formuliere ein konkretes Ziel und wähle höchstens drei JS- oder Kotlin-Quellpfade aus einem vollständigen Git-Commit. " +
-                "Dieser Dialog prüft nur Auftragsfelder und kopiert einen Entwurf. Quelltext wird hier nicht gelesen. Für eine spätere Ausführung sind Worker-Konfiguration " +
+                "Manuell entwerfen oder ausdrücklich einen lokalen Modellvorschlag anfordern. Quelltext wird hier nicht gelesen. " +
+                "Ein Modellvorschlag braucht vorher Ziel, vollständigen Commit, Dateiumfang und feste Grenzen; er erteilt keine Freigabe. Für eine spätere Ausführung sind Worker-Konfiguration " +
                 "und eine gesonderte ausdrückliche Besitzerbestätigung erforderlich. TEST/DEPENDENCY bleiben zunächst Untersuchungsaufträge.",
             12f, MUTED), matchWidth(top = 8))
         var copiedDraft: String? = null
@@ -7176,14 +7205,31 @@ class AgentActivity : Activity() {
                 box.addView(this, matchWidth(top = 4))
             }
         }
-        val goal = field("Ziel", "Welche konkrete Änderung soll entstehen?", 2)
-        val kind = field("Auftragsart", "BUGFIX / FEATURE / REFACTOR / TEST / COMPILER / DEPENDENCY")
-        val commit = field("Quell-Commit", "Vollständige Git-SHA, 40 kleine Hex-Zeichen")
-        val paths = field("Ausdrücklich erlaubte Dateien · 1 bis 3", "Ein relativer JS-/Kotlin-Quellpfad pro Zeile", 3)
-        val acceptance = field("Akzeptanzkriterien · 1 bis 8", "Ein prüfbares Ergebnis pro Zeile", 3)
-        val chain = field("Feste Prüfkette", "node für JS oder android für Kotlin")
-        val modelCalls = field("Höchstens Modellaufrufe · 1 bis 3", "1..3", initial = "1", number = true)
-        val contextChars = field("Höchstens Kontextzeichen · 2048 bis 24000", "2048..24000", initial = "8192", number = true)
+        val goal = field("Ziel", "Welche konkrete Änderung soll entstehen?", 2,initialDraft?.goal.orEmpty())
+        val kind = field("Auftragsart", "BUGFIX / FEATURE / REFACTOR / TEST / COMPILER / DEPENDENCY",initial=initialDraft?.kind?.name.orEmpty())
+        val commit = field("Quell-Commit", "Vollständige Git-SHA, 40 kleine Hex-Zeichen",initial=initialDraft?.sourceCommit.orEmpty())
+        val paths = field("Ausdrücklich erlaubte Dateien · 1 bis 3", "Ein relativer JS-/Kotlin-Quellpfad pro Zeile", 3,initialDraft?.allowedPaths?.joinToString("\n").orEmpty())
+        val acceptance = field("Akzeptanzkriterien · 1 bis 8", "Ein prüfbares Ergebnis pro Zeile", 3,initialDraft?.acceptance?.joinToString("\n").orEmpty())
+        val chain = field("Feste Prüfkette", "node für JS oder android für Kotlin",initial=initialDraft?.chain?.wire.orEmpty())
+        val modelCalls = field("Höchstens Modellaufrufe · 1 bis 3", "1..3", initial = (initialDraft?.limits?.maxModelCalls ?: 1).toString(), number = true)
+        val contextChars = field("Höchstens Kontextzeichen · 2048 bis 24000", "2048..24000", initial = (initialDraft?.limits?.maxContextChars ?: 8192).toString(), number = true)
+        box.addView(actionButton("MIT LOKALEM MODELL ENTWERFEN").apply {
+            setOnClickListener {
+                val planning = ContinuumCodingPlanning.create(goal.text.toString().trim(),commit.text.toString().trim(),
+                    paths.text.toString().lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList(),
+                    ContinuumCodingTask.Limits(modelCalls.text.toString().toIntOrNull() ?: 0,contextChars.text.toString().toIntOrNull() ?: 0))
+                if(planning == null) {
+                    status.text = "Für den Modellvorschlag zuerst Ziel, vollständigen 40-stelligen Commit, 1 bis 3 passende Quelldateien und gültige Grenzen angeben."
+                    return@setOnClickListener
+                }
+                if(busy || localAgentExecutor.isShutdown || !foregroundLearningActive) {
+                    status.text = "Lokale Planung ist gerade nicht verfügbar. Bitte im aktiven Chat erneut versuchen."
+                    return@setOnClickListener
+                }
+                draftDialog?.dismiss()
+                runLocal(planning.ownerGoal,codingPlanning=planning)
+            }
+        },matchWidth(top=12))
         box.addView(actionButton("ENTWURF PRÜFEN", accent = true).apply {
             setOnClickListener {
                 val draft = ContinuumCodingTask.Draft(
@@ -7261,7 +7307,7 @@ class AgentActivity : Activity() {
         }
         box.addView(prepareButton, matchWidth(top = 6))
         box.addView(status.apply { setTextIsSelectable(true) }, matchWidth(top = 10))
-        AlertDialog.Builder(this)
+        draftDialog = AlertDialog.Builder(this)
             .setView(ScrollView(this).apply { addView(box) })
             .setNegativeButton("SCHLIESSEN", null)
             .show()
