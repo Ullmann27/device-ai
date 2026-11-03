@@ -1,6 +1,6 @@
 # Continuum Ω — Independent quality handoff, 2026-11-03
 
-Status: WIP / UNVERIFIED. Baseline source: `b4f61ae9765e26dd401db928b76fa9f233c0742a` (#390). Branch: `codex/team-05-quality/omega-20261103`. No implementation changes are owned by this lane.
+Status: WIP / UNVERIFIED. Baseline source: `b4f61ae9765e26dd401db928b76fa9f233c0742a` (#390). Branch: `codex/team-05-quality-omega-20261103`. No implementation changes are owned by this lane.
 
 ## Scope and authorization
 
@@ -26,3 +26,11 @@ Shared toolchain provisioning is exclusively owned by Quality at `/workspace/con
 ## Resume / rollback
 
 Read this handoff and actual remote HEAD first. Resume dependency setup, record baseline results, then review exact lane SHAs supplied by Chief. This branch changes documentation/evidence only; no feature rollback is needed. No existing branch was reset.
+
+## Checkpoint 2
+
+Draft PR: https://github.com/Ullmann27/device-ai/pull/396. The requested nested branch name conflicted with an existing remote branch; the existing branch was preserved and this lane uses the hyphenated name above.
+
+Official Kotlin2.4.0/JUnit4.13.2 harness, pinned JDK17.0.20.1+1, SDK36/build-tools35, Gradle8.11.1 are provisioned. Full Node baseline: 2061 pass / 13 skip / 0 fail (2074 total); backend: 64/64 pass; unchanged timeline/store Kotlin: 11/11 pass. Gradle with real SDK, widget tests and Code40 QA flags is RUNNING. Real Kotlin CLI skipped tests are being rerun after setup.
+
+Chief granted exclusive lease for `scripts/continuum-omega-quality-acceptance.test.mjs`. It holds independent repair-receipt adversarial checks, RED on #390 and 24/24 GREEN on c9e52a64. Original CCC1 repair suite independently passes 27/27 including real isolated repair/replay. No synthetic consistency test establishes receipt authenticity or Android behavior. See `docs/evidence/omega-quality-20261103/COMMANDS.md`.
