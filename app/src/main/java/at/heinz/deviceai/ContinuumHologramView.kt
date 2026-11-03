@@ -21,6 +21,12 @@ import android.provider.Settings
 import android.util.AttributeSet
 import android.widget.Toast
 import android.view.View
+import android.view.TextureView
+import android.view.Surface
+import android.graphics.SurfaceTexture
+import android.widget.FrameLayout
+import at.heinz.deviceai.avatar3d.AvatarGlbContract
+import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import kotlin.math.exp
@@ -33,13 +39,23 @@ import kotlin.math.sqrt
 class ContinuumHologramView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : View(context, attrs), AvatarSink {
+) : FrameLayout(context, attrs), AvatarSink {
     enum class State { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }
 
     private val avatarRenderer = ContinuumAvatarRenderer()
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
     private var headEnabled = appearancePrefs.getBoolean("native-head", false)
+    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d", false)
+    private var native3d: FilamentAvatarRenderer? = null
+    private var nativeTexture: TextureView? = null
+    private var nativeSurface: Surface? = null
+    private var assetBytes: ByteArray? = null
+    private var assetMetadata: AvatarGlbContract.Metadata? = null
+    private var assetLoading = false
+    private var assetGeneration = 0
+    private var native3dFailed = false
+    private var native3dDrawn = false
     private var avatarSeconds = 0f
     private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
     private val avatarInvalidation = Runnable {
@@ -100,7 +116,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private val drawFrame = Runnable {
         framePending = false
-        if (canAnimate()) {
+        if (canAnimateFrame()) {
             visibleFrameCount++
             // The motion clock advances independently of a completed Canvas draw.
             // Invalidation requests only rendering, not the next state transition.
@@ -112,10 +128,10 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Owns the single visible-view frame callback, even before the first draw. */
     private fun scheduleFrame() {
-        if (canAnimate() && !framePending) {
+        if (canAnimateFrame() && !framePending) {
             framePending = true
             // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
-            postOnAnimationDelayed(drawFrame, if (thermalStatus >= 2) 32L else 8L)
+            postOnAnimationDelayed(drawFrame, if (head3dEnabled) { if (thermalStatus >= 2) 65L else 25L } else if (thermalStatus >= 2) 32L else 8L)
         }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
@@ -126,6 +142,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     init {
+        setWillNotDraw(false)
         // State has an accessible text label beside the hero; avoid a duplicate announcement.
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         isClickable = false
@@ -148,16 +165,117 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** Explicit local appearance preference; the original orb remains the default. */
     fun setNativeHeadEnabled(enabled: Boolean) {
         headEnabled = enabled
-        appearancePrefs.edit().putBoolean("native-head", enabled).apply()
-        invalidate()
+        head3dEnabled = false
+        appearancePrefs.edit().putBoolean("native-head", enabled).putBoolean("native-head-3d", false).apply()
+        release3d(clearAsset = true)
+        updateMotionPolicy()
     }
 
     fun isNativeHeadEnabled(): Boolean = headEnabled
 
+    /** Appearance only; preserves the Director, brain, TTS, and shared pose reducer. */
+    fun setNative3dEnabled(enabled: Boolean) {
+        head3dEnabled = enabled
+        if (enabled) headEnabled = true
+        native3dFailed = false
+        appearancePrefs.edit().putBoolean("native-head", headEnabled).putBoolean("native-head-3d", enabled).apply()
+        if (!enabled) release3d(clearAsset = true)
+        updateMotionPolicy()
+    }
+
+    private fun canDisplay3d() = head3dEnabled && foregroundActive && isAttachedToWindow && isShown &&
+        windowVisibility == VISIBLE && !powerManager.isPowerSaveMode && thermalStatus < 3
+
+    private fun update3d() {
+        if (!canDisplay3d()) { release3d(clearAsset = !head3dEnabled); return }
+        if (native3dFailed) return
+        if (assetBytes == null) {
+            if (assetLoading) return
+            assetLoading = true
+            val generation = assetGeneration
+            // Packaged local bytes only; no model, owner data, permission or network access.
+            Thread({
+                val candidate = runCatching {
+                    val bytes = context.assets.open(AvatarGlbContract.ASSET_PATH).use { input ->
+                        val out = java.io.ByteArrayOutputStream()
+                        val chunk = ByteArray(8192)
+                        while (true) {
+                            val read = input.read(chunk); if (read < 0) break
+                            require(out.size() + read <= AvatarGlbContract.MAX_BYTES)
+                            out.write(chunk, 0, read)
+                        }
+                        out.toByteArray()
+                    }
+                    val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                        .joinToString("") { "%02x".format(it) }
+                    require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }
+                    bytes to AvatarGlbContract.validate(bytes)
+                }
+                mainHandler.post {
+                    assetLoading = false
+                    if (generation != assetGeneration) { if (canDisplay3d()) update3d(); return@post }
+                    candidate.onSuccess { (bytes, metadata) -> assetBytes = bytes; assetMetadata = metadata; update3d(); invalidate() }
+                        .onFailure { fail3d() }
+                }
+            }, "continuum-avatar-asset").start()
+            return
+        }
+        if (nativeTexture == null) {
+            val texture = TextureView(context).apply {
+                isOpaque = false
+                alpha = 1f
+                importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            }
+            nativeTexture = texture
+            texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                    nativeSurface = Surface(surface)
+                    ensure3dRenderer(); invalidate()
+                }
+                override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { invalidate() }
+                override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
+                override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                    native3d?.close(); native3d = null
+                    nativeSurface?.release(); nativeSurface = null
+                    native3dDrawn = false
+                    return true
+                }
+            }
+            addView(texture, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        }
+        ensure3dRenderer()
+    }
+
+    private fun ensure3dRenderer() {
+        if (native3d != null || native3dFailed || !canDisplay3d()) return
+        val surface = nativeSurface ?: return
+        if (!surface.isValid) return
+        val bytes = assetBytes ?: return
+        val metadata = assetMetadata ?: return
+        runCatching { FilamentAvatarRenderer.create(surface, bytes, metadata) }
+            .onSuccess { native3d = it }.onFailure { fail3d() }
+    }
+
+    private fun fail3d() {
+        native3dFailed = true
+        release3d(clearAsset = true)
+        if (isAttachedToWindow && foregroundActive) Toast.makeText(context,
+            "3D-Kopf derzeit nicht verfügbar · native 2D-Vorschau aktiv", Toast.LENGTH_LONG).show()
+        invalidate()
+    }
+
+    private fun release3d(clearAsset: Boolean) {
+        native3d?.close(); native3d = null; native3dDrawn = false
+        nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
+        nativeTexture = null
+        nativeSurface?.release(); nativeSurface = null
+        if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null }
+    }
+
     fun showAppearanceChooser() {
         AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
-            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native Vorschau"), if (headEnabled) 1 else 0) { dialog, item ->
-                setNativeHeadEnabled(item == 1)
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau"), if (head3dEnabled) 2 else if (headEnabled) 1 else 0) { dialog, item ->
+                if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
                 dialog.dismiss()
             }
             .setNeutralButton("Bewegung prüfen") { _, _ ->
@@ -175,7 +293,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         consumedAudioMs = 0L
         audio.reset()
         audioEnergy = 0f
-        if (!canAnimate()) settleState()
+        if (!canAnimateFrame()) settleState()
         invalidate()
     }
 
@@ -213,6 +331,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        release3d(clearAsset = true)
         mainHandler.removeCallbacks(avatarInvalidation)
         avatarInvalidationPending.set(false)
         synchronized(avatarPose) { avatarPose.clearSpeech() }
@@ -251,7 +370,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Actual View visibility, not a callback-cached flag that can go stale. */
-    private fun canAnimate() =
+    private fun canAnimateFrame() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
@@ -276,13 +395,14 @@ class ContinuumHologramView @JvmOverloads constructor(
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
-        if (!canAnimate()) {
+        if (!canAnimateFrame()) {
             settleState()
             audio.reset()
             audioEnergy = 0f
             pendingAudioMs = 0L
             consumedAudioMs = 0L
         }
+        update3d()
         invalidate()
         scheduleFrame()
     }
@@ -294,10 +414,12 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(
-            resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec),
-            resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
-        )
+        val measuredWidth = resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec)
+        val measuredHeight = resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
+        // 3D occupies the left side; the existing orb remains visible alongside it.
+        nativeTexture?.layoutParams?.width = (measuredWidth * .72f).toInt()
+        super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY))
     }
 
     /** Phone or Fold composition of the reference images (see ContinuumHologramRenderer.Geometry). */
@@ -320,14 +442,30 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.audio = audioEnergy
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
-            avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimate())
+            if (canDisplay3d() && native3d != null) {
+                runCatching { native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
+                    .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
+                    .onFailure { fail3d() }
+            }
+            if (!native3dDrawn) avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimateFrame())
+            else {
+                // Same original orb, same actual app state and speech frame; no second animation loop.
+                val orbWidth = width / density * .28f
+                val orbHeight = height / density * .40f
+                val orbCanvas = canvas.save()
+                canvas.translate(width / density * .72f, height / density * .30f)
+                canvas.clipRect(0f, 0f, orbWidth, orbHeight)
+                renderer.layout(orbWidth, orbHeight)
+                renderer.draw(painter, renderFrame)
+                canvas.restoreToCount(orbCanvas)
+            }
         } else renderer.draw(painter, renderFrame)
         drawnFrameCount++
         canvas.restoreToCount(saved)
     }
 
     private fun advanceFrame() {
-        if (!canAnimate()) return
+        if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
