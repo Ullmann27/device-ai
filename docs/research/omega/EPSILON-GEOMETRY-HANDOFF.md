@@ -2,7 +2,7 @@
 
 Current accepted runtime SHA256: `f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e`. Authored-animation proof GLB SHA256: `63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca`. Actual artifacts, Blender scene and WIP render evidence are remotely preserved at [a9dc09c0](https://github.com/Ullmann27/device-ai/commit/a9dc09c0), branch `codex/living-jarvis-3d-20261103`, Draft [PR404](https://github.com/Ullmann27/device-ai/pull/404). Geometry source `9633d4e9aab997580bc0be31f20e7e10479f1433`; later `05a3e091` only adds a lower-cost review render mode.
 
-Status: actual geometry + independent structural/runtime-metadata acceptance; visual identity, phonetic accuracy and physical Android acceptance remain open. Final30-view/render packaging is still in progress at this checkpoint. No completed30 or turntable claim yet.
+Status: actual geometry + independent structural/runtime-metadata acceptance; visual identity, phonetic accuracy and physical Android acceptance remain open. Final visual proof is now packaged:30 requested semantic anchors represented by31 exact-runtime images (anchor20 up/down),12 exact-runtime orbit frames, contact sheet and8.8-second stepped pose/turntable video. All512px, not high resolution; **appearance NOT_ACCEPTED**. This is not smooth live animation or phone FPS evidence.
 
 ## Artifact and interface
 
@@ -24,7 +24,7 @@ The licensed base was cropped/capped into a bust, adapted to a slender oval head
 
 ## Actual acceptance and defects repaired
 
-Current asset:57,000 triangles total, ~8.69MB uncompressed runtime, no textures. Head skin19,104 triangles (exact current metric file is authoritative); fixed limits30k head/60k total. Every referenced skin weight normalizes; all21 target deltas are nonzero and unique.
+Current asset:57,000 triangles total, ~8.69MB uncompressed runtime, no textures. Head skin19,060 triangles (exact current metric file is authoritative); fixed limits30k head/60k total. Every referenced skin weight normalizes; all21 target deltas are nonzero and unique.
 
 Exact neutral mirror pairing: max and mean head error0, head-normalized max error0. Face topology has0 open boundary edges,0 edges with more than2 adjacent faces,0 degenerate triangles. `neutral-mirror-pairs.json` includes the complete pairing map. This is a mesh measurement, not likeness evidence.
 
@@ -49,6 +49,12 @@ python tools/avatar-3d/assemble_review.py
 
 `-- --export-only` rebuilds without rendering. Default rendering is640px/32samples; `--quick-views` is512px/16samples, no denoiser (this Blender lacks OpenImageDenoise). `--preview` creates four diagnostic views, `--expressions-only` recreates the six expression views. `roundtrip_check.py` deletes source meshes then imports the real runtime GLB before rendering; its execution evidence must be checked separately. Node validator dependencies are pinned; `npm ci --ignore-scripts` only in `tools/avatar-3d`. The game-dev CLI is unavailable; no paid job, login, credit purchase or provider retry occurred.
 
-Next: finish30 exact-candidate renders, compare rebuild hashes, assemble contact sheet/turntable, inspect runtime-import expression renders, append final evidence links and push. Existing24-orbit plus6-expression design derives every view from one geometry; no ImageGen face substitutions.
+Completed exact-runtime proof: `docs/avatar-live/geometry-work/runtime-anchors/README.md`, `semantic-contact-sheet.png`, `runtime-proof.mp4`, `runtime-anchor-manifest.json`, raw `runtime-anchors.log`. Renderer source81b22f54 imports exactf39 after deleting all source meshes/rigs. Existing `contact-sheet-30.png` is a separate24-orbit+6-expression source-scene sheet, not the requested30 semantic anchors. No ImageGen face substitutions.
+
+Full procedural GLB rebuild byte identity **FAILED**: research49df… vs canonical63b… due rigid UV-sphere triangle ordering and normal float rounding (~1.5e-7). The entire JSON, every mesh POSITION array, all triangle sets ignoring order, and all morph data match exactly; `reproduction.json` and `rebuild-diagnostics/` preserve evidence. The accepted canonical63b/f39 files were restored unchanged. Runtime derivation from frozen63b is byte reproducible; do not claim identical bytes from a fresh procedural Blender rebuild.
+
+Independent B final source/evidence7caef9b6, PR405, reports `A-V2-INDEPENDENT-VALIDATION.json` and `A-V2-ANDROID-PREFLIGHT.json` under `docs/evidence/epsilon-android-20261103/`. B visual review separately rejects reference appearance (wire density/material/eyes/lips). Anchor24 stresscase AA1+JawOpen0+innerJaw12.6° visibly protrudes lower teeth; it does not reproduce actual mapper AA+JawOpenq+Jaw12q°. B is checking reachable cases, no runtime defect claim yet. No new modeling cycle is authorized in this closing package.
+
+Next owner/design gate: refine reference appearance and phonetics with explicit visual acceptance; then exact-app GPU/lifecycle/thermal/device checks. Current asset is reviewable research, not finished identity or release.
 
 Scope boundary: no Android Kotlin, Activity, Gradle, main, signing, release or installation changed. Existing AvatarDirector/Sink/PoseReducer remain the sole interface. Rollback: omit this optional research asset and tool directory; default orb and brain paths are unaffected.

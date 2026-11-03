@@ -1,0 +1,1100 @@
+{
+  "runtimeAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "sourceMeshesDeletedBeforeImport": true,
+  "importer": "Blender4.3.2 glTF2 importer",
+  "semanticAnchorCount": 30,
+  "anchorRenderCount": 31,
+  "orbitFrameCount": 12,
+  "pixels": [
+    512,
+    512
+  ],
+  "samples": 16,
+  "cpuThreads": 2,
+  "cameraOrthoScaleMetres": 0.4,
+  "records": [
+    {
+      "file": "01-neutral.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "511d222cada7bae06a40ced370ec7d51578ebac98362683a16ebf353394af5a3",
+      "bytes": 481631
+    },
+    {
+      "file": "02-midline-landmarks.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "6e074dafde8a8ce3b06c970632529405b734d8a83ac9843658a31fdfd7a4e3d1",
+      "bytes": 481631
+    },
+    {
+      "file": "03-left45.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 45.0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "629a63e5514331b3593228a0be27a4b5c6b5a6407ce1b5accb41d94e1f481af2",
+      "bytes": 482043
+    },
+    {
+      "file": "04-right45.png",
+      "weights": {},
+      "cameraAzimuthDegrees": -45,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "25fb784096fe3fae6094cb2f2da100d3298cfab4c9451ccc78bebc85db83c2ce",
+      "bytes": 483898
+    },
+    {
+      "file": "05-left90.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 90,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "5d1ec3276b190cf6dd9e57230c4ce145fa46e5b299b4c142fe3684b38132ba5c",
+      "bytes": 439027
+    },
+    {
+      "file": "06-right90.png",
+      "weights": {},
+      "cameraAzimuthDegrees": -90,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "af905589cde1c02e7f0ecc6392319a2b777fed2023a138c39ea13aa496f8620f",
+      "bytes": 441327
+    },
+    {
+      "file": "07-head-up.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        -9,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "b71f419adba215a2502dab826cf4a39519573e6c4375107a45ffde4695f794b2",
+      "bytes": 483878
+    },
+    {
+      "file": "08-head-down.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        9,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "62c84e69ca85f1ff36c291f21ddde6aa6e35422e74047cac03658f1c087fcc04",
+      "bytes": 479715
+    },
+    {
+      "file": "09-top-oblique.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 35,
+      "cameraElevationDegrees": 35,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "ec4c56c62fbeac50bcc48c9e92e606895aeb4e3575e210d302fd43aeff0b0f0c",
+      "bytes": 491337
+    },
+    {
+      "file": "10-rear.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 180,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "112213a4c247b3d60605b8cf8d10f6d6b0ba1b26d0e44297c0105c2557badd58",
+      "bytes": 477617
+    },
+    {
+      "file": "11-subtle-smile.png",
+      "weights": {
+        "Smile": 0.35
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "ed7e10eb51f2ff42d05a441beb06913b4d2972d0994827fc2e930fe41953a806",
+      "bytes": 481717
+    },
+    {
+      "file": "12-broader-smile.png",
+      "weights": {
+        "Smile": 0.85
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "da03ad3e9a3ee1768f863219951a063fb2f1135aaac2f99b9ca4820f9b09d4c4",
+      "bytes": 481942
+    },
+    {
+      "file": "13-attentive-brows.png",
+      "weights": {
+        "BrowUp": 0.6
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "942269727a463904b48150db8e26b9aaf02860c93da540e531a9f37259436475",
+      "bytes": 481505
+    },
+    {
+      "file": "14-focused-side-gaze.png",
+      "weights": {
+        "BrowDown": 0.35
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        5,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        -15,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "445b5147da2dff956fa5d20cff694d2b7322f5f4e3c40a8a6b8915026f90bff9",
+      "bytes": 482060
+    },
+    {
+      "file": "15-curious-approximation.png",
+      "weights": {
+        "BrowUp": 0.4
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        7
+      ],
+      "eyesYawPitchDegrees": [
+        8,
+        -3
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "d5398674e8c5152aa8b30a99c09550c5836712877ac9a337b61bf9314056527f",
+      "bytes": 482172
+    },
+    {
+      "file": "16-eyes-closed.png",
+      "weights": {
+        "BlinkLeft": 1,
+        "BlinkRight": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "8885c572d300b1a0ded17e3196eab88d5ce8d3b34bc69bbee4c107067fdfe8c9",
+      "bytes": 481248
+    },
+    {
+      "file": "17-half-blink.png",
+      "weights": {
+        "BlinkLeft": 0.5,
+        "BlinkRight": 0.5
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "1f541966e492a56aa85f49dd92cd07ef1f04529deae7d02d01206ac3803de658",
+      "bytes": 481294
+    },
+    {
+      "file": "18-eyes-viewer-left.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        -18,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "9ba923dd9986340b1b8a52a1bc95848e6be11d7400daf80a8fb08cd9dbc35b7b",
+      "bytes": 481666
+    },
+    {
+      "file": "19-eyes-viewer-right.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        18,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "4aa9ee27596d4ef63924ddb3b5f1c83979c56eb5cf69bbb8ea4c199d37d07664",
+      "bytes": 481711
+    },
+    {
+      "file": "20a-eyes-up.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        -12
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "4cd9f781cb384880aaba367778dee6c96e320a45bb5c1c4cad2dc29b13be6a68",
+      "bytes": 481735
+    },
+    {
+      "file": "20b-eyes-down.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        12
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "6469bddcbad3c0970e5573a0dca1d0f0febfc0d23904776b0f4a58e89776eeb3",
+      "bytes": 481698
+    },
+    {
+      "file": "21-mouth-rest.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "86ab073f97de780ef652186ef0909f2fb52876cd270df0daadf122975f184edd",
+      "bytes": 481631
+    },
+    {
+      "file": "22-PP.png",
+      "weights": {
+        "PP": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "4cf59b19f1c6874c26e5e0dacbc949c23b4de69a1e53493659132bffc9d9b410",
+      "bytes": 481716
+    },
+    {
+      "file": "23-FF.png",
+      "weights": {
+        "FF": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "3cdca3a77962f331c1367bfa68d44c57010f04d541a0634ec7c2e691a5b6337a",
+      "bytes": 481704
+    },
+    {
+      "file": "24-AA.png",
+      "weights": {
+        "AA": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 12.6,
+      "sha256": "96cc173fc945df3983ba1e8177b3d803190d6a6cb422c242376615b6be38fdb0",
+      "bytes": 481826
+    },
+    {
+      "file": "25-E.png",
+      "weights": {
+        "E": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "5d21c4f63e72b1f994391c8d95be343659b3fe6919c835aea4fb6ce6f70cb0d3",
+      "bytes": 482119
+    },
+    {
+      "file": "26-I.png",
+      "weights": {
+        "I": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "a3a1e425deeb9bb02d74a76590729a3160b6389c0d0bfcf48bf4b405eb451117",
+      "bytes": 482004
+    },
+    {
+      "file": "27-O.png",
+      "weights": {
+        "O": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 6.3,
+      "sha256": "c9b1ebeff17a20619cc66791faed96e0b4c752891764cd2e430e3a1a3ab80f12",
+      "bytes": 481601
+    },
+    {
+      "file": "28-U.png",
+      "weights": {
+        "U": 1
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "916799b40db3647fc4d41893558fca34e76faa8e31a64942f10372e8f23664b5",
+      "bytes": 482143
+    },
+    {
+      "file": "29-slight-jaw.png",
+      "weights": {
+        "JawOpen": 0.2
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 3.6,
+      "sha256": "4021512bb353338b670f0e9381b028a4307a9d147efefe46775536ca10b8d767",
+      "bytes": 481258
+    },
+    {
+      "file": "30-smiling-speech.png",
+      "weights": {
+        "Smile": 0.55,
+        "AA": 0.5
+      },
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 7,
+      "sha256": "d89e520a5f10e3be465658c61d7d9c0fef1e69adaa5f533fcaa764289c0f4b5b",
+      "bytes": 481980
+    },
+    {
+      "file": "orbit-00-000.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 0,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "a035bce0326e8b04bcff5507abf6ee8ba718c6a61569978ac6f859d8f225f862",
+      "bytes": 481631
+    },
+    {
+      "file": "orbit-01-030.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 30,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "fe0b490d88eee3ac53153b6a44411315c8121ce2a02c3688cdd2d87f1c5943db",
+      "bytes": 486653
+    },
+    {
+      "file": "orbit-02-060.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 60,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "305103301120afccb3e52171e9266bdb0d1eb95e8e0068b8f3da2116a7669987",
+      "bytes": 466062
+    },
+    {
+      "file": "orbit-03-090.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 90,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "10de00980037de99e1c02c332fc1b41369669844a5ac503a9277a59db1954f6c",
+      "bytes": 439027
+    },
+    {
+      "file": "orbit-04-120.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 120,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "285ba3ab5c530b747af64093b2306f6664c8bc5d8f210f46936ceb115b64881b",
+      "bytes": 478126
+    },
+    {
+      "file": "orbit-05-150.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 150,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "08846cbaf055801a226bf08e02910557ac0ddd05a524ec25c0a36c605daca4d5",
+      "bytes": 488087
+    },
+    {
+      "file": "orbit-06-180.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 180,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "98a690510c1b866a5a431e9fa004540ca385cb1ce6a159c6e2040712fc9bbd54",
+      "bytes": 477617
+    },
+    {
+      "file": "orbit-07-210.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 210,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "da8cb3477c7daf6f90eaa9c42b5a6ec02eefbf3cba91e7cdc90db00961092a9a",
+      "bytes": 488820
+    },
+    {
+      "file": "orbit-08-240.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 240,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "c2ecc7c28945c9fcc221fe1f5c938de6f3070732c56e35abe94b032202fd9cca",
+      "bytes": 477642
+    },
+    {
+      "file": "orbit-09-270.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 270,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "4aa0da2172cb9d8483469f4a42d08a99cc13d77a8ea0d168ba78c0402b0598e4",
+      "bytes": 441327
+    },
+    {
+      "file": "orbit-10-300.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 300,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "29440814ad6e1a246c63dc0241bb68bb19b40a5f1dd9f297489e4e398d495776",
+      "bytes": 469307
+    },
+    {
+      "file": "orbit-11-330.png",
+      "weights": {},
+      "cameraAzimuthDegrees": 330,
+      "cameraElevationDegrees": 0,
+      "headYawPitchRollDegrees": [
+        0,
+        0,
+        0
+      ],
+      "eyesYawPitchDegrees": [
+        0,
+        0
+      ],
+      "innerJawPitchDegrees": 0,
+      "sha256": "f5acd8da10e420c55d88cb9bf0fc30ea0a37765ac8da9502c53fefff873639b2",
+      "bytes": 488528
+    }
+  ],
+  "controlImplementation": "Head pose bone; EyeLeft/EyeRight/Jaw imported glTF empties; world-pivot bounded rotations; named imported morph keys",
+  "limitations": [
+    "Appearance not owner accepted",
+    "512px is not high resolution",
+    "Curious/focused/attentive are deliberate bounded approximations using available controls",
+    "Bigger smile scales existing Smile target; no independent cheek-smile target",
+    "Anchor20 is two subviews: up and down",
+    "No phonetic accuracy or phone-performance claim"
+  ],
+  "annotations": {
+    "landmarks": "02-midline-landmarks-annotated.png",
+    "upDownPanel": "20-eyes-up-down-panel.png",
+    "contactSheet": "semantic-contact-sheet.png",
+    "referenceImageProcessed": false
+  },
+  "artifacts": [
+    {
+      "file": "01-neutral.png",
+      "sha256": "511d222cada7bae06a40ced370ec7d51578ebac98362683a16ebf353394af5a3",
+      "bytes": 481631
+    },
+    {
+      "file": "02-midline-landmarks-annotated.png",
+      "sha256": "2d90f19d6d94b4cb8a903bf0c75a0f8b0425b31b6dc41f3462396a7d5233b177",
+      "bytes": 382341
+    },
+    {
+      "file": "02-midline-landmarks.png",
+      "sha256": "6e074dafde8a8ce3b06c970632529405b734d8a83ac9843658a31fdfd7a4e3d1",
+      "bytes": 481631
+    },
+    {
+      "file": "03-left45.png",
+      "sha256": "629a63e5514331b3593228a0be27a4b5c6b5a6407ce1b5accb41d94e1f481af2",
+      "bytes": 482043
+    },
+    {
+      "file": "04-right45.png",
+      "sha256": "25fb784096fe3fae6094cb2f2da100d3298cfab4c9451ccc78bebc85db83c2ce",
+      "bytes": 483898
+    },
+    {
+      "file": "05-left90.png",
+      "sha256": "5d1ec3276b190cf6dd9e57230c4ce145fa46e5b299b4c142fe3684b38132ba5c",
+      "bytes": 439027
+    },
+    {
+      "file": "06-right90.png",
+      "sha256": "af905589cde1c02e7f0ecc6392319a2b777fed2023a138c39ea13aa496f8620f",
+      "bytes": 441327
+    },
+    {
+      "file": "07-head-up.png",
+      "sha256": "b71f419adba215a2502dab826cf4a39519573e6c4375107a45ffde4695f794b2",
+      "bytes": 483878
+    },
+    {
+      "file": "08-head-down.png",
+      "sha256": "62c84e69ca85f1ff36c291f21ddde6aa6e35422e74047cac03658f1c087fcc04",
+      "bytes": 479715
+    },
+    {
+      "file": "09-top-oblique.png",
+      "sha256": "ec4c56c62fbeac50bcc48c9e92e606895aeb4e3575e210d302fd43aeff0b0f0c",
+      "bytes": 491337
+    },
+    {
+      "file": "10-rear.png",
+      "sha256": "112213a4c247b3d60605b8cf8d10f6d6b0ba1b26d0e44297c0105c2557badd58",
+      "bytes": 477617
+    },
+    {
+      "file": "11-subtle-smile.png",
+      "sha256": "ed7e10eb51f2ff42d05a441beb06913b4d2972d0994827fc2e930fe41953a806",
+      "bytes": 481717
+    },
+    {
+      "file": "12-broader-smile.png",
+      "sha256": "da03ad3e9a3ee1768f863219951a063fb2f1135aaac2f99b9ca4820f9b09d4c4",
+      "bytes": 481942
+    },
+    {
+      "file": "13-attentive-brows.png",
+      "sha256": "942269727a463904b48150db8e26b9aaf02860c93da540e531a9f37259436475",
+      "bytes": 481505
+    },
+    {
+      "file": "14-focused-side-gaze.png",
+      "sha256": "445b5147da2dff956fa5d20cff694d2b7322f5f4e3c40a8a6b8915026f90bff9",
+      "bytes": 482060
+    },
+    {
+      "file": "15-curious-approximation.png",
+      "sha256": "d5398674e8c5152aa8b30a99c09550c5836712877ac9a337b61bf9314056527f",
+      "bytes": 482172
+    },
+    {
+      "file": "16-eyes-closed.png",
+      "sha256": "8885c572d300b1a0ded17e3196eab88d5ce8d3b34bc69bbee4c107067fdfe8c9",
+      "bytes": 481248
+    },
+    {
+      "file": "17-half-blink.png",
+      "sha256": "1f541966e492a56aa85f49dd92cd07ef1f04529deae7d02d01206ac3803de658",
+      "bytes": 481294
+    },
+    {
+      "file": "18-eyes-viewer-left.png",
+      "sha256": "9ba923dd9986340b1b8a52a1bc95848e6be11d7400daf80a8fb08cd9dbc35b7b",
+      "bytes": 481666
+    },
+    {
+      "file": "19-eyes-viewer-right.png",
+      "sha256": "4aa9ee27596d4ef63924ddb3b5f1c83979c56eb5cf69bbb8ea4c199d37d07664",
+      "bytes": 481711
+    },
+    {
+      "file": "20-eyes-up-down-panel.png",
+      "sha256": "ed2445adf33ad91fc6fcf55395b14893ff1a191f1193c53c8b58e9a1b5d9d6d3",
+      "bytes": 92222
+    },
+    {
+      "file": "20a-eyes-up.png",
+      "sha256": "4cd9f781cb384880aaba367778dee6c96e320a45bb5c1c4cad2dc29b13be6a68",
+      "bytes": 481735
+    },
+    {
+      "file": "20b-eyes-down.png",
+      "sha256": "6469bddcbad3c0970e5573a0dca1d0f0febfc0d23904776b0f4a58e89776eeb3",
+      "bytes": 481698
+    },
+    {
+      "file": "21-mouth-rest.png",
+      "sha256": "86ab073f97de780ef652186ef0909f2fb52876cd270df0daadf122975f184edd",
+      "bytes": 481631
+    },
+    {
+      "file": "22-PP.png",
+      "sha256": "4cf59b19f1c6874c26e5e0dacbc949c23b4de69a1e53493659132bffc9d9b410",
+      "bytes": 481716
+    },
+    {
+      "file": "23-FF.png",
+      "sha256": "3cdca3a77962f331c1367bfa68d44c57010f04d541a0634ec7c2e691a5b6337a",
+      "bytes": 481704
+    },
+    {
+      "file": "24-AA.png",
+      "sha256": "96cc173fc945df3983ba1e8177b3d803190d6a6cb422c242376615b6be38fdb0",
+      "bytes": 481826
+    },
+    {
+      "file": "25-E.png",
+      "sha256": "5d21c4f63e72b1f994391c8d95be343659b3fe6919c835aea4fb6ce6f70cb0d3",
+      "bytes": 482119
+    },
+    {
+      "file": "26-I.png",
+      "sha256": "a3a1e425deeb9bb02d74a76590729a3160b6389c0d0bfcf48bf4b405eb451117",
+      "bytes": 482004
+    },
+    {
+      "file": "27-O.png",
+      "sha256": "c9b1ebeff17a20619cc66791faed96e0b4c752891764cd2e430e3a1a3ab80f12",
+      "bytes": 481601
+    },
+    {
+      "file": "28-U.png",
+      "sha256": "916799b40db3647fc4d41893558fca34e76faa8e31a64942f10372e8f23664b5",
+      "bytes": 482143
+    },
+    {
+      "file": "29-slight-jaw.png",
+      "sha256": "4021512bb353338b670f0e9381b028a4307a9d147efefe46775536ca10b8d767",
+      "bytes": 481258
+    },
+    {
+      "file": "30-smiling-speech.png",
+      "sha256": "d89e520a5f10e3be465658c61d7d9c0fef1e69adaa5f533fcaa764289c0f4b5b",
+      "bytes": 481980
+    },
+    {
+      "file": "orbit-00-000.png",
+      "sha256": "a035bce0326e8b04bcff5507abf6ee8ba718c6a61569978ac6f859d8f225f862",
+      "bytes": 481631
+    },
+    {
+      "file": "orbit-01-030.png",
+      "sha256": "fe0b490d88eee3ac53153b6a44411315c8121ce2a02c3688cdd2d87f1c5943db",
+      "bytes": 486653
+    },
+    {
+      "file": "orbit-02-060.png",
+      "sha256": "305103301120afccb3e52171e9266bdb0d1eb95e8e0068b8f3da2116a7669987",
+      "bytes": 466062
+    },
+    {
+      "file": "orbit-03-090.png",
+      "sha256": "10de00980037de99e1c02c332fc1b41369669844a5ac503a9277a59db1954f6c",
+      "bytes": 439027
+    },
+    {
+      "file": "orbit-04-120.png",
+      "sha256": "285ba3ab5c530b747af64093b2306f6664c8bc5d8f210f46936ceb115b64881b",
+      "bytes": 478126
+    },
+    {
+      "file": "orbit-05-150.png",
+      "sha256": "08846cbaf055801a226bf08e02910557ac0ddd05a524ec25c0a36c605daca4d5",
+      "bytes": 488087
+    },
+    {
+      "file": "orbit-06-180.png",
+      "sha256": "98a690510c1b866a5a431e9fa004540ca385cb1ce6a159c6e2040712fc9bbd54",
+      "bytes": 477617
+    },
+    {
+      "file": "orbit-07-210.png",
+      "sha256": "da8cb3477c7daf6f90eaa9c42b5a6ec02eefbf3cba91e7cdc90db00961092a9a",
+      "bytes": 488820
+    },
+    {
+      "file": "orbit-08-240.png",
+      "sha256": "c2ecc7c28945c9fcc221fe1f5c938de6f3070732c56e35abe94b032202fd9cca",
+      "bytes": 477642
+    },
+    {
+      "file": "orbit-09-270.png",
+      "sha256": "4aa0da2172cb9d8483469f4a42d08a99cc13d77a8ea0d168ba78c0402b0598e4",
+      "bytes": 441327
+    },
+    {
+      "file": "orbit-10-300.png",
+      "sha256": "29440814ad6e1a246c63dc0241bb68bb19b40a5f1dd9f297489e4e398d495776",
+      "bytes": 469307
+    },
+    {
+      "file": "orbit-11-330.png",
+      "sha256": "f5acd8da10e420c55d88cb9bf0fc30ea0a37765ac8da9502c53fefff873639b2",
+      "bytes": 488528
+    },
+    {
+      "file": "semantic-contact-sheet.png",
+      "sha256": "65e8f98f4e977fa353f8813d435daf6857e9a22b22fe41dc11402e90473ffb97",
+      "bytes": 2225310
+    }
+  ],
+  "video": {
+    "file": "runtime-proof.mp4",
+    "sha256": "fa07641aeee9ae877f463beff97b180adc158bab135eb08be88c1b6e5c4b6e36",
+    "bytes": 608699,
+    "durationSeconds": 8.791667,
+    "description": "Stepped12-angle turntable plus static blink/smile/mouth pose sequence; no smooth live-animation or phone FPS claim",
+    "encoderCommand": "nice -n 10 ffmpeg -threads 2 -filter_threads 2 -f concat -safe 0 -i proof-sequence.ffconcat -r 24 -c:v libx264 -threads 2 -pix_fmt yuv420p -crf 22 -movflags +faststart runtime-proof.mp4"
+  },
+  "rendererSourceCommit": "81b22f54",
+  "anchor24StressScope": {
+    "AA": 1,
+    "JawOpen": 0,
+    "allOtherMorphs": 0,
+    "innerJawDegrees": 12.6,
+    "axis": "canonical+X/worldBlender+X about fixedJawpivot",
+    "headDegrees": [
+      0,
+      0,
+      0
+    ],
+    "eyesDegrees": [
+      0,
+      0
+    ],
+    "finding": "Lower dental geometry protrudes underlip in this independentlycomposedstresspose",
+    "runtimeReachability": "NOT_ASSERTED; actualmapper combinesAAwithJawOpenqandJaw12qdegrees. IndependentBdiagnosis pending; preserveadverseframe."
+  }
+}

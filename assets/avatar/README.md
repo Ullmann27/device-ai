@@ -20,3 +20,7 @@ node tools/avatar-3d/validate-glb.mjs assets/avatar/jarvis-research-v1.glb docs/
 `-- --preview` renders four diagnostic views instead of30. Khronos validator dependency is pinned in `tools/avatar-3d/package-lock.json`; install with `npm ci --ignore-scripts` in that directory if needed.
 
 This is a reviewable 3D asset and rig research candidate, not an installed Android feature, phone-performance result, or completed visual/phonetic acceptance.
+
+Current canonical runtimeSHA256 `f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e`; canonical researchSHA256 `63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca`. Exact-runtime visual evidence: `docs/avatar-live/geometry-work/runtime-anchors/`. Appearance remains NOT_ACCEPTED.
+
+Reproduction boundary: frozen research→runtime derivation is deterministic. A full procedural Blender rebuild may reorder rigid UV-sphere triangles and round normals differently; `reproduction.json` records a real byte mismatch while positions, triangle sets and morph data remain identical. Rebuilds should be isolated/reviewed before replacing the accepted canonical files.
