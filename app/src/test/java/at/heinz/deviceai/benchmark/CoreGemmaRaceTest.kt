@@ -48,23 +48,32 @@ class CoreGemmaRaceTest {
         assertEquals(RaceAssessment.CORE_SAFETY_OR_QUALITY_BELOW_PARITY, result.assessment)
     }
 
-    @Test fun refusesUnpairedSkippedZeroLatencyAndFailedMeasurements() {
+    @Test fun refusesUnpairedSkippedNegativeLatencyAndFailedMeasurements() {
         val run = pairedRun()
         val missing = run.copy(measurements = run.measurements.dropLast(1))
         assertEquals(RaceAssessment.INCOMPLETE,
             CoreGemmaRaceEvaluator.evaluate(missing, grades()).assessment)
         assertEquals(RaceAssessment.INCOMPLETE,
             CoreGemmaRaceEvaluator.evaluate(run.copy(skippedTasks = 1), grades()).assessment)
-        val zero = run.copy(measurements = run.measurements.mapIndexed { index, m ->
-            if (index == 0) m.copy(latencyMillis = 0) else m
+        val negative = run.copy(measurements = run.measurements.mapIndexed { index, m ->
+            if (index == 0) m.copy(latencyMillis = -1) else m
         })
         assertEquals(RaceAssessment.INCOMPLETE,
-            CoreGemmaRaceEvaluator.evaluate(zero, grades()).assessment)
+            CoreGemmaRaceEvaluator.evaluate(negative, grades()).assessment)
         val failed = run.copy(measurements = run.measurements.mapIndexed { index, m ->
             if (index == 0) m.copy(error = "timeout") else m
         })
         assertEquals(RaceAssessment.INCOMPLETE,
             CoreGemmaRaceEvaluator.evaluate(failed, grades()).assessment)
+    }
+
+    @Test fun successfulSubMillisecondCoreAnswersDoNotInvalidateTheRace() {
+        // A millisecond-resolution monotonic clock can legitimately report 0 ms.
+        val result = CoreGemmaRaceEvaluator.evaluate(pairedRun(coreMs = 0), grades())
+        assertEquals(RaceAssessment.CORE_FASTER_AT_COMPARABLE_QUALITY, result.assessment)
+        assertEquals(0L, result.summary.coreP50Ms)
+        assertEquals(0L, result.summary.coreP95Ms)
+        assertFalse(result.measurementEvidenceIsDeviceVerified)
     }
 
     @Test fun refusesSelfClaimedQualityWithoutIndependentGrading() {

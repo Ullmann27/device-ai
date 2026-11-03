@@ -19,8 +19,13 @@ sealed class ContinuumWorkerChatCommand {
 
 object ContinuumWorkerChatRouter {
     private val draftPattern = Regex(
-        """^(?:worker|baumeister|coding[ -]?agent|programmierer|jarvis)\s*:\s*(.{1,400})$""",
+        """^(?:worker|baumeister|coding[ -]?agent|programmierer)\s*:\s*(.{1,400})$""",
         setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
+    )
+    // General Jarvis questions must not become coding tasks by colon alone.
+    private val jarvisDraftPattern = Regex(
+        """^jarvis\s*:\s*((?:erstelle|baue|entwickle|programmiere)\s+.{1,390})$""",
+        RegexOption.IGNORE_CASE
     )
     // Voice recognition frequently omits the colon, so accept only an
     // explicitly addressed, development-specific imperative.
@@ -50,7 +55,7 @@ object ContinuumWorkerChatRouter {
             else null
         }
         val normalized = text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')
-        val chiefStatus = Regex("""^jarvis[, ]+(?:teamstatus|mitarbeiterstatus|botstatus|wie\s+weit\s+(?:sind\s+(?:deine|die)\s+(?:mitarbeiter|bots)|ist\s+der\s+programmierer)|was\s+machen\s+(?:deine|die)\s+(?:mitarbeiter|bots))$""")
+        val chiefStatus = Regex("""^jarvis(?:\s*[:,]\s*|\s+)(?:teamstatus|mitarbeiterstatus|botstatus|wie\s+weit\s+(?:sind\s+(?:deine|die)\s+(?:mitarbeiter|bots)|ist\s+der\s+programmierer)|was\s+machen\s+(?:deine|die)\s+(?:mitarbeiter|bots))$""")
         if (chiefStatus.matches(normalized)) return ContinuumWorkerChatCommand.ChiefStatus
         if (repairHelpPattern.matches(normalized)) return ContinuumWorkerChatCommand.RepairHelp
         return when (normalized) {
@@ -80,7 +85,8 @@ object ContinuumWorkerChatRouter {
             "worker handy builder", "baumeister handy builder" ->
                 ContinuumWorkerChatCommand.MobileBuilder
             else -> {
-                val match = draftPattern.matchEntire(text) ?: spokenDraftPattern.matchEntire(text)
+                val match = draftPattern.matchEntire(text) ?: jarvisDraftPattern.matchEntire(text)
+                    ?: spokenDraftPattern.matchEntire(text)
                     ?: return null
                 val goal = match.groupValues[1].trim()
                 if (goal.isBlank() || goal.any { it.code < 0x20 }) null
