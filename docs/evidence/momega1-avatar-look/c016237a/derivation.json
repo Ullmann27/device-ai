@@ -1,0 +1,20 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "sourceSha256": "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+  "candidateSha256": "c016237ab6d7be99dc0c0c0cc49a4de1b11f03896e8a03a4a8efaa20f6ff08f8",
+  "originalBinaryPrefixSha256": "0ce513d0a47df89186e9fe5cdcba28a8965d9a809937390fe5769790fe73ee3c",
+  "geometryMorphRigAndToothMaterialsUnchanged": true,
+  "frontSurfaceAlphaMode": "OPAQUE",
+  "texturePixels": [
+    1024,
+    1024
+  ],
+  "addedEmbeddedPngBytes": 285121,
+  "coveredTexels": 1026546,
+  "runtimeRequirement": "Standard glTF emissiveTexture; no custom shader or external resources",
+  "limitations": [
+    "Fixed object-space front-oriented contour light pattern, not view-dependent Fresnel",
+    "Actual Filament appearance and cost NOT_RUN",
+    "FOLD7_NOT_RUN"
+  ]
+}
