@@ -1,0 +1,29 @@
+Volle Android-JVM-Suite · 2026-11-03 14:05 CET · ./gradlew --no-daemon :app:testDebugUnitTest --continue
+Zwischenlauf (vor Präferenz-Fix): 1787 tests completed, 1 failed, 5 skipped → ContinuumPublicCurriculumTest.ownerFactsAreNeverPromotedOrDeletedBySyntheticCorpus ('Ich wünsche Antworten auf Deutsch.' fälschlich INTENTION)
+Endlauf:
+tests=1787 failures=0 errors=0 skipped=5
+ContinuumTemporalMemoryBenchmarkTest tests 2 failures 0
+   M2-METRIC owner_fact_capacity=256 failure=IllegalStateException
+   M2-METRIC statements_written=220
+   M2-METRIC ledger_records=220 ledger_bytes=46294
+   M2-METRIC hypothetical_statements=25 leaked_into_confirmed=0
+   M2-METRIC questions=273 specialist_correct=273 baseline_correct=67
+   M2-METRIC category=current n=21 specialist=21 baseline=13
+   M2-METRIC category=original n=21 specialist=21 baseline=0
+   M2-METRIC category=year n=231 specialist=231 baseline=54
+   M2-METRIC trap_city_in_answer specialist=0 baseline=0
+   M2-METRIC latency_ms specialist_p50=17.95 specialist_p95=22.60 baseline_p50=5.40 baseline_p95=8.61
+   M2-METRIC write_ms p50=3.94 p95=7.39
+ContinuumTemporalMemoryHoldoutTest tests 1 failures 0
+   M2-METRIC holdout_cases=20 correct=18 abstained=2 wrong=0
+ContinuumTemporalMemorySpecialistTest tests 6 failures 0
+ContinuumTemporalMemoryTest tests 13 failures 0
+OwnerHypotheticalGateTest tests 5 failures 0
+OwnerStatementModalityTest tests 8 failures 0
+
+Node (58 Android-bezogene .mjs aus .github/continuum, scripts, backend; Liste wie M1):
+ℹ tests 362
+ℹ pass 359
+ℹ fail 0
+ℹ skipped 3
+Lint: ./gradlew --no-daemon :app:lintDebug → BUILD SUCCESSFUL
