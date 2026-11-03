@@ -15,7 +15,9 @@ class OwnerStatementModalityTest {
         "Mein Hund heißt Bello.", "Ich wohne in Graz.", "Meine Tochter Klara ist 29.",
         "Ich arbeite bei der Voestalpine.", "Ich bin nach Linz gezogen.",
         "Korrektur: Ich wohne nicht in Graz, sondern in Linz.", "Mein Projekt heißt „Astrolux“.",
-        "Emma wohnt seit 2024 in Wien.", "Ich wohne jetzt in Salzburg.")
+        "Emma wohnt seit 2024 in Wien.", "Ich wohne jetzt in Salzburg.",
+        // preferences are assertions about the owner (existing ContinuumPublicCurriculumTest fixture)
+        "Ich wünsche Antworten auf Deutsch.", "Ich möchte immer kurze Antworten.")
 
     @Test fun conditionalAndCounterfactualStatementsAreHypothetical() = assertKind(StatementModality.HYPOTHETICAL,
         "Wenn ich im Lotto gewinne, kaufe ich ein Haus in Kitzbühel.",

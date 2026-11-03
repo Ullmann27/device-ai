@@ -12,3 +12,6 @@ Zeitbezug: gültig ab deiner Angabe vom 01.01.2024.
 
 M2-WRONG Wo wohne ich? <- [Ich wohne in Graz und in Wien.] => Du wohnst in Graz.
 Zeitbezug: gültig ab deiner Angabe vom 01.01.2024.
+
+Holdout-GREEN:
+   M2-METRIC holdout_cases=20 correct=18 abstained=2 wrong=0

@@ -66,13 +66,21 @@ data class ClaimEvent(
 class ContinuumTemporalMemory private constructor(
     private val claims:List<ClaimEvent>,
     private val held:List<HeldStatement>,
+    private val unparsed:List<UnparsedStatement>,
     val zone:ZoneId
 ) {
+    /** A confirmed statement outside the grammar. It cannot answer, but it may end what was known before
+     * ("Ich bin umgezogen, …"): for a matching subject/predicate it is replayed as an UNCLEAR barrier. */
+    internal data class UnparsedStatement(val sourceId:String, val text:String, val atMillis:Long, val retractedAt:Long?,
+                                          val tier:MemoryTier)
     internal data class HeldStatement(val text:String, val atMillis:Long, val modality:StatementModality, val tier:MemoryTier)
     private data class Interval(val value:String, var from:Long, var to:Long?, val sources:MutableList<String>,
                                 val tier:MemoryTier, val fromLabel:String?, val assertedAt:Long, val sourceText:String)
 
     val claimCount:Int get() = claims.size
+    private fun source(id:String):Pair<String, Long>? =
+        claims.firstOrNull { it.sourceId == id }?.let { it.sourceText to it.assertedAt }
+            ?: unparsed.firstOrNull { it.sourceId == id }?.let { it.text to it.atMillis }
     fun claims():List<ClaimEvent> = claims
 
     /** Point lookup on both time axes; the last step is the existing [TemporalRoleEvidenceLedger]. */
@@ -91,7 +99,8 @@ class ContinuumTemporalMemory private constructor(
         return when (val r = TemporalRoleEvidenceLedger.lookup(facts, subject.take(80), predicate, validAtMillis, knownAtMillis)) {
             is TemporalRoleEvidenceLedger.Lookup.Found -> {
                 val chosen = live.filter { it.value.equals(r.value, ignoreCase = true) }
-                TemporalResolution.Found(listOf(merge(chosen)))
+                if (r.value == UNCLEAR) TemporalResolution.Conflict(chosen.flatMap { it.sources }.distinct(), listOf(UNCLEAR))
+                else TemporalResolution.Found(listOf(merge(chosen)))
             }
             is TemporalRoleEvidenceLedger.Lookup.Conflict ->
                 TemporalResolution.Conflict(live.flatMap { it.sources }.distinct(), live.map { it.value }.distinct())
@@ -110,6 +119,8 @@ class ContinuumTemporalMemory private constructor(
             if (overlap && !a.value.equals(b.value, true))
                 return TemporalResolution.Conflict((a.sources + b.sources).distinct(), listOf(a.value, b.value))
         }
+        if (live.any { it.value == UNCLEAR })
+            return TemporalResolution.Conflict(live.flatMap { it.sources }.distinct(), live.map { it.value }.distinct())
         return TemporalResolution.Found(live.groupBy { it.value.lowercase(Locale.ROOT) }.values.map(::merge).sortedBy { it.validFromMillis })
     }
 
@@ -119,7 +130,7 @@ class ContinuumTemporalMemory private constructor(
         if (all.isEmpty()) return unconfirmedOr(subject, predicate, knownAtMillis)
         val first = all.minOf { it.from }
         val earliest = all.filter { it.from == first }
-        return if (earliest.map { it.value.lowercase(Locale.ROOT) }.distinct().size > 1)
+        return if (earliest.map { it.value.lowercase(Locale.ROOT) }.distinct().size > 1 || earliest.any { it.value == UNCLEAR })
             TemporalResolution.Conflict(earliest.flatMap { it.sources }.distinct(), earliest.map { it.value })
         else TemporalResolution.Found(listOf(merge(earliest)))
     }
@@ -156,8 +167,13 @@ class ContinuumTemporalMemory private constructor(
 
     /** Replays the confirmed claims known at [knownAt] in knowledge-time order into validity intervals. */
     private fun timeline(subject:String, predicate:String, knownAt:Long):List<Interval> {
-        val relevant = claims.filter { it.confirmed && it.subject == subject && it.predicate == predicate &&
-            it.assertedAt <= knownAt && (it.retractedAt == null || it.retractedAt > knownAt) }
+        val barriers = unparsed.filter { it.atMillis <= knownAt && (it.retractedAt == null || it.retractedAt > knownAt) &&
+            mentions(it.text, subject, predicate) }.map { u ->
+            ClaimEvent(u.sourceId, u.tier, u.text, subject, predicate, UNCLEAR, null, StatementModality.ASSERTED,
+                u.atMillis, null, null, null, ClaimRevision.CHANGE, true, null)
+        }
+        val relevant = (claims.filter { it.confirmed && it.subject == subject && it.predicate == predicate &&
+            it.assertedAt <= knownAt && (it.retractedAt == null || it.retractedAt > knownAt) } + barriers)
             .sortedWith(compareBy<ClaimEvent> { it.assertedAt }.thenBy { it.sourceId })
         require(relevant.size <= MAX_CLAIMS_PER_KEY) { "too many claims for one subject/predicate" }
         val out = mutableListOf<Interval>()
@@ -233,10 +249,16 @@ class ContinuumTemporalMemory private constructor(
             emptyList(), emptySet())
         is TemporalResolution.Conflict -> {
             val sources = r.sourceIds
-            TemporalAnswer(TemporalAnswerKind.CLARIFY,
-                "Dazu habe ich widersprüchliche Angaben ohne ausdrückliche Änderung: " + r.values.joinToString(" und ") +
-                    ". Was davon stimmt? Sag z. B. „Merke dir: Ich wohne jetzt in …“ oder „Korrektur: …“.",
-                sources, tiersOf(sources))
+            val clear = r.values.filter { it != UNCLEAR }
+            val unclear = sources.filter { id -> unparsed.any { it.sourceId == id } }
+            val text = if (UNCLEAR in r.values)
+                "Das kann ich nicht sicher beantworten: Deine Angabe vom " +
+                    unclear.mapNotNull { source(it)?.second }.joinToString(", ") { date(it) } +
+                    " kann ich nicht eindeutig einordnen" + (if (clear.isEmpty()) "" else " (bekannt sind: ${clear.joinToString(", ")})") +
+                    ". Sag es mir bitte in einem einfachen Satz, z. B. „Merke dir: Ich wohne jetzt in …“."
+            else "Dazu habe ich widersprüchliche Angaben ohne ausdrückliche Änderung: " + clear.joinToString(" und ") +
+                ". Was davon stimmt? Sag z. B. „Merke dir: Ich wohne jetzt in …“ oder „Korrektur: …“."
+            TemporalAnswer(TemporalAnswerKind.CLARIFY, text, sources, tiersOf(sources))
         }
         is TemporalResolution.Found -> {
             val values = r.values
@@ -285,8 +307,8 @@ class ContinuumTemporalMemory private constructor(
             else if (MemoryTier.WORKING in tiers) "bestätigte Erinnerung und Angabe aus diesem Gespräch"
             else "bestätigte Langzeiterinnerung"
             val proof = ids.take(4).joinToString("; ") { id ->
-                val c = claims.first { it.sourceId == id }
-                id + " (gesagt am " + date(c.assertedAt) + ", SHA-256 " + sha(c.sourceText).take(12) + "…)"
+                val (text, at) = source(id)!!
+                id + " (gesagt am " + date(at) + ", SHA-256 " + sha(text).take(12) + "…)"
             }
             TemporalAnswer(TemporalAnswerKind.ANSWER, "$main$time\nBeleg: $proof · $tierText", ids, tiers)
         }
@@ -310,7 +332,8 @@ class ContinuumTemporalMemory private constructor(
     private fun claimFor(v:TemporalValue) = v.sourceIds.mapNotNull { id -> claims.firstOrNull { it.sourceId == id } }
         .minByOrNull { it.validFrom ?: it.assertedAt }
 
-    private fun tiersOf(ids:List<String>) = ids.mapNotNull { id -> claims.firstOrNull { it.sourceId == id }?.tier }.toSet()
+    private fun tiersOf(ids:List<String>) = ids.mapNotNull { id ->
+        claims.firstOrNull { it.sourceId == id }?.tier ?: unparsed.firstOrNull { it.sourceId == id }?.tier }.toSet()
 
     private fun startOfYear(y:Int) = LocalDate.of(y, 1, 1).atStartOfDay(zone).toInstant().toEpochMilli()
     private fun date(ms:Long) = DATE.format(Instant.ofEpochMilli(ms).atZone(zone))
@@ -319,7 +342,11 @@ class ContinuumTemporalMemory private constructor(
         val q = Normalizer.normalize(question.trim(), Normalizer.Form.NFC).trimEnd('?', '.', '!', ' ').take(160)
         val low = q.lowercase(Locale.ROOT)
         val now = "(?:\\s+(?:jetzt|aktuell|derzeit|heute|momentan|gerade))?"
-        Regex("^wo\\s+(?:wohne|lebe)\\s+ich$now$").find(low)?.let { return Ask(OWNER, RESIDENCE, "current", display = "du") }
+        Regex("^(?:wo|in\\s+welche[rm]\\s+(?:stadt|ort|land|gemeinde))\\s+(?:wohne|lebe)\\s+ich$now$").find(low)
+            ?.let { return Ask(OWNER, RESIDENCE, "current", display = "du") }
+        Regex("^was\\s+(?:arbeite|mache)\\s+ich(?:\\s+beruflich)?$now$").find(low)?.let { return Ask(OWNER, WORK, "current", display = "du") }
+        Regex("^wo\\s+bin\\s+ich\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\s+(?:gewohnt|gelebt)$").find(low)
+            ?.let { return Ask(OWNER, RESIDENCE, "year", it.groupValues[1].toInt(), "du") }
         Regex("^(?:wo|bei\\s+wem|für\\s+wen|bei\\s+welcher\\s+firma)\\s+arbeite\\s+ich$now$").find(low)
             ?.let { return Ask(OWNER, WORK, "current", display = "du") }
         Regex("^wie\\s+alt\\s+bin\\s+ich$").find(low)?.let { return Ask(OWNER, AGE, "age", display = "Du") }
@@ -364,6 +391,8 @@ class ContinuumTemporalMemory private constructor(
         const val WORK = "arbeit"
         const val AGE = "alter"
         const val NAME = "name"
+        /** Value of an UNCLEAR barrier interval; never shown as an answer. */
+        internal const val UNCLEAR = "?"
         private const val MAX_CLAIMS_PER_KEY = 256
         private val DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.GERMAN)
         private const val NAME_RE = "\\p{Lu}[\\p{L}'’-]{1,39}(?:\\s+\\p{Lu}[\\p{L}'’-]{1,39})?"
@@ -373,6 +402,7 @@ class ContinuumTemporalMemory private constructor(
             require(records.size <= 4096 && working.size <= 64)
             val claims = mutableListOf<ClaimEvent>()
             val held = mutableListOf<HeldStatement>()
+            val unparsed = mutableListOf<UnparsedStatement>()
             for (r in records) {
                 if (r.type != LearningExperienceType.USER_FACT) continue
                 val modality = OwnerStatementModality.classify(r.content)
@@ -385,8 +415,9 @@ class ContinuumTemporalMemory private constructor(
                     continue
                 }
                 val retracted = if (r.status == LearningStatus.REVOKED) r.updatedAt else null
-                ClaimGrammar.extract(r.content, r.id, MemoryTier.LONG_TERM, r.createdAt, modality, zone)
-                    ?.let { claims += it.copy(confirmed = true, retractedAt = retracted) }
+                val c = ClaimGrammar.extract(r.content, r.id, MemoryTier.LONG_TERM, r.createdAt, modality, zone)
+                if (c != null) claims += c.copy(confirmed = true, retractedAt = retracted)
+                else unparsed += UnparsedStatement(r.id, r.content, r.createdAt, retracted, MemoryTier.LONG_TERM)
             }
             for (turn in working) {
                 val modality = OwnerStatementModality.classify(turn.text)
@@ -395,10 +426,11 @@ class ContinuumTemporalMemory private constructor(
                     continue
                 }
                 val id = "wm-" + sha(turn.text + "\u0000" + turn.atMillis).take(20)
-                ClaimGrammar.extract(turn.text, id, MemoryTier.WORKING, turn.atMillis, modality, zone)
-                    ?.let { claims += it.copy(confirmed = true) }
+                val c = ClaimGrammar.extract(turn.text, id, MemoryTier.WORKING, turn.atMillis, modality, zone)
+                if (c != null) claims += c.copy(confirmed = true)
+                else unparsed += UnparsedStatement(id, turn.text, turn.atMillis, null, MemoryTier.WORKING)
             }
-            return ContinuumTemporalMemory(claims, held, zone)
+            return ContinuumTemporalMemory(claims, held, unparsed, zone)
         }
 
         internal fun sha(text:String):String = MessageDigest.getInstance("SHA-256")
@@ -416,6 +448,11 @@ internal object ClaimGrammar {
         "april" to 4, "mai" to 5, "juni" to 6, "juli" to 7, "august" to 8, "september" to 9, "oktober" to 10,
         "november" to 11, "dezember" to 12)
     private const val MONTH = "(?:(jänner|januar|februar|feber|märz|april|mai|juni|juli|august|september|oktober|november|dezember)\\s+)?"
+    private val inversion = Regex("(?iu)^(?:jetzt|inzwischen|mittlerweile|nun|neuerdings|derzeit|aktuell|heute|früher|damals|ehemals|" +
+        "(?:seit|ab)\\s+(?:(?:jänner|januar|februar|feber|märz|april|mai|juni|juli|august|september|oktober|november|dezember)\\s+)?(?:19|20)\\d{2}|" +
+        "(?:im\\s+jahr\\s+)?(?:19|20)\\d{2})\\s+(wohne|lebe|wohnte|lebte|arbeite|arbeitete)\\s+ich\\b(.*)$")
+    private val qualifier = Regex("(?iu)\\b(?:und|oder|aber|nur|teilweise|manchmal|meistens|abwechselnd|zeitweise|" +
+        "unter\\s+der\\s+woche|am\\s+wochenende|im\\s+sommer|im\\s+winter|bei\\s+bedarf)\\b")
     private val NOT_SUBJECTS = setOf("ich", "mein", "meine", "meinen", "meinem", "meiner", "wenn", "falls", "vielleicht",
         "korrektur", "jetzt", "früher", "damals", "seit", "heute", "nächstes", "dein", "deine", "er", "sie", "es", "wir")
 
@@ -424,7 +461,11 @@ internal object ClaimGrammar {
         if (original.length > 320 || Regex("[.!?;]\\s+\\S").containsMatchIn(original.trimEnd('.', '!', ' '))) return null
         val corrected = correctionPrefix.containsMatchIn(original)
         val s0 = original.replaceFirst(correctionPrefix, "").trimEnd('.', '!', ' ')
-        val s = s0.replaceFirst(leadingAdverb, "").let { it.replaceFirstChar { c -> c.uppercase() } }
+        val inverted = inversion.find(s0)
+        val s = (if (inverted != null) "Ich " + inverted.groupValues[1] + inverted.groupValues[2]
+            else s0.replaceFirst(leadingAdverb, "")).let { it.replaceFirstChar { c -> c.uppercase() } }
+        // Coordinated or restricted values ("in Graz und in Wien", "aber nur unter der Woche") are not one value.
+        if (qualifier.containsMatchIn(s)) return null
         val low = s0.lowercase(Locale.ROOT)
         val words = low.split(Regex("[^\\p{L}\\p{N}]+")).filter(String::isNotEmpty).toSet()
         val negated = modality == StatementModality.NEGATED
@@ -464,9 +505,14 @@ internal object ClaimGrammar {
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
                 ?.copy(revision = if (isCorrection) ClaimRevision.CORRECTION else ClaimRevision.CHANGE)
         }
+        Regex("(?u)^Mein\\s+(?:Wohnort|Wohnsitz|Zuhause)\\s+ist\\s+(?:nicht\\s+)?$PLACE$").find(s)?.let {
+            return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
+        }
         // Work: owner
         Regex("(?iu)^Ich\\s+(?:arbeite|arbeitete)\\s+(?:.*?\\s)?(bei|als|für)\\s+(.+)$").find(s)?.let {
-            return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.WORK, workValue(it.groupValues[2]))
+            val v = workValue(it.groupValues[2])
+            return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.WORK,
+                if (it.groupValues[1].lowercase(Locale.ROOT) == "als") "als $v" else v)
         }
         // Age: owner
         Regex("(?iu)^Ich\\s+bin\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(s)?.let {
@@ -491,7 +537,8 @@ internal object ClaimGrammar {
             "wohnt", "lebt", "wohnte", "lebte" -> Regex("(?u)\\b(?:in|im)\\s+$PLACE").find(rest)
                 ?.let { claim(key, ContinuumTemporalMemory.RESIDENCE, placeAfterIn(rest) ?: it.groupValues[1]) }
             "arbeitet", "arbeitete" -> Regex("(?iu)\\b(bei|als|für)\\s+(.+)$").find(rest)
-                ?.let { claim(key, ContinuumTemporalMemory.WORK, workValue(it.groupValues[2])) }
+                ?.let { claim(key, ContinuumTemporalMemory.WORK,
+                    if (it.groupValues[1].lowercase(Locale.ROOT) == "als") "als " + workValue(it.groupValues[2]) else workValue(it.groupValues[2])) }
             else -> {
                 Regex("(?iu)^\\s+(?:.*?\\s)?nach\\s+$PLACE\\s+(?:gezogen|umgezogen|übersiedelt)$").find(rest)?.let {
                     return claim(key, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
@@ -532,6 +579,10 @@ internal object ClaimGrammar {
             val to = until?.let { endOf(it.groupValues[1].ifEmpty { null }, it.groupValues[2].toInt()) }
             if (from != null && to != null && to <= from) return Triple(null, null, null)
             return Triple(from, to, since?.let { label(it.groupValues[1].ifEmpty { null }, it.groupValues[2].toInt()) })
+        }
+        Regex("\\b(?:im\\s+)?$MONTH((?:19|20)\\d{2})\\s+(?:.*\\s)?(?:gezogen|umgezogen|übersiedelt|hergezogen)\\b").find(low)?.let {
+            val month = it.groupValues[1].ifEmpty { null }; val y = it.groupValues[2].toInt()
+            return Triple(start(month, y), null, label(month, y))
         }
         if (past) Regex("\\b(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\b").find(low)?.let {
             val y = it.groupValues[1].toInt()

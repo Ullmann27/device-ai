@@ -27,8 +27,13 @@ object OwnerStatementModality {
         "wahrscheinlich", "womöglich", "ggf", "gegebenenfalls", "unsicher", "anscheinend", "scheinbar")
     private val uncertainPhrases = Regex("(?iu)\\b(?:ich\\s+(?:glaube|glaub|denke|vermute|schätze|meine)\\s*(?:,|\\bdass\\b)|" +
         "(?:glaube|denke|vermute|schätze|meine)\\s+ich\\b|nicht\\s+sicher|keine\\s+ahnung|weiß\\s+(?:ich\\s+)?nicht,?\\s+ob)")
-    private val intentionPhrases = Regex("(?iu)\\b(?:ich\\s+(?:überlege|plane|möchte|mag\\s+gern|träume|wünsche|hoffe|" +
-        "habe\\s+vor|hab\\s+vor|will)|vorhaben|vorhabe)\\b|\\b(?:werde|wirst|wird|werden|werdet)\\b")
+    // Plans and wishes about a CHANGE of state are not states. A plain preference ("Ich wünsche Antworten auf
+    // Deutsch") is an assertion about the owner and stays confirmable (existing ContinuumPublicCurriculumTest).
+    private val intentionPhrases = Regex("(?iu)\\b(?:ich\\s+(?:überlege|plane|hoffe|träume|habe\\s+vor|hab\\s+vor)|" +
+        "vorhaben|vorhabe)\\b|\\b(?:werde|wirst|wird|werden|werdet)\\b")
+    private val wishVerb = Regex("(?iu)\\bich\\s+(?:möchte|will|wünsche\\s+mir|mag)\\b")
+    private val stateChangeInfinitive = Regex("(?iu)\\b(?:zu\\s+)?(?:ziehen|umziehen|übersiedeln|kaufen|wohnen|leben|arbeiten|" +
+        "werden|heiraten|wechseln|anfangen|aufhören|studieren|auswandern|kündigen|bauen)\\b")
     private val accordingTo = Regex("(?u)(?:^|[\\s,;(])[Ll]aut\\s+(?:\\p{Lu}|dem\\b|der\\b|den\\b|meinem\\b|meiner\\b)")
     private val reportedWords = Ewm1Lexicon.SAYING + setOf("angeblich", "erzählen", "behaupten", "sagen",
         "schrieb", "schreibt", "gesagt", "erzählt", "behauptet", "geschrieben")
@@ -48,7 +53,8 @@ object OwnerStatementModality {
             return StatementModality.REPORTED
         if (wordSet.any { it in uncertainWords } || uncertainPhrases.containsMatchIn(low))
             return StatementModality.UNCERTAIN
-        if (intentionPhrases.containsMatchIn(low) || wordSet.any { it in Ewm1Lexicon.FUTURE_CUES })
+        if (intentionPhrases.containsMatchIn(low) || wordSet.any { it in Ewm1Lexicon.FUTURE_CUES } ||
+            (wishVerb.containsMatchIn(low) && stateChangeInfinitive.containsMatchIn(low)))
             return StatementModality.INTENTION
         val negated = wordSet.any { it in Ewm1Lexicon.NEGATIONS }
         val replaced = "sondern" in wordSet || "stattdessen" in wordSet
