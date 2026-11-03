@@ -1,0 +1,23 @@
+✔ even exact reviewed-pair fields and valid request-key MAC cannot brand injected run (48.034024ms)
+✔ forged actual-inference error cannot attach a trusted error observation (33.60699ms)
+✔ re-MACed wrong resourceProfileId still rejected (32.630274ms)
+✔ re-MACed wrong nativeAddressSpaceBytes still rejected (29.043966ms)
+✔ re-MACed wrong disableWeightRepacking still rejected (36.086157ms)
+✔ re-MACed wrong jobMemoryLimit still rejected (30.097897ms)
+✔ re-MACed wrong verifiedModelExecution still rejected (25.61534ms)
+✔ re-MACed wrong executionId still rejected (26.90091ms)
+✔ re-MACed wrong sourceCommit still rejected (28.098734ms)
+✔ re-MACed wrong contextSha256 still rejected (29.872277ms)
+✔ re-MACed wrong runtimePromptSha256 still rejected (26.802156ms)
+✔ re-MACed wrong runtimeSchemaSha256 still rejected (26.693482ms)
+✔ re-MACed wrong modelSha256 still rejected (25.709012ms)
+✔ re-MACed wrong runtimeSha256 still rejected (27.839032ms)
+✔ re-MACed wrong proposalSha256 still rejected (30.220732ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 561.408326
