@@ -1,0 +1,2 @@
+action_exit=0
+dialogue_exit=0
