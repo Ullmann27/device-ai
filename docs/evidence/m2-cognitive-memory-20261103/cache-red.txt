@@ -1,0 +1,28 @@
+# M2.1 view cache — RED run 2026-11-03 14:24:45 CET
+HEAD ea7d08f1 + uncommitted RED tests (ledgerViewCacheStats stub returns 0/0)
+ContinuumTemporalMemoryBenchmarkTest > specialistLatencyBudgetOnTenYearHistory FAILED
+ContinuumTemporalMemoryCacheTest > anUnchangedLedgerIsReusedAcrossCoreInstances FAILED
+8 tests completed, 2 failed
+> Task :app:testDebugUnitTest FAILED
+BUILD FAILED in 37s
+FAIL specialistLatencyBudgetOnTenYearHistory :: java.lang.AssertionError: p95 30.056 ms must be < 5 ms
+PASS ledgerCapacityIsAMeasuredHardLimit
+PASS tenYearOwnerHistoryIsAnsweredCorrectlyAndHypotheticalsNeverLeak
+M2-METRIC warm_latency_ms n=819 p50=17.286 p95=30.056 max=59.557 correct=819/819
+M2-METRIC owner_fact_capacity=256 failure=IllegalStateException
+M2-METRIC statements_written=220
+M2-METRIC ledger_records=220 ledger_bytes=46294
+M2-METRIC hypothetical_statements=25 leaked_into_confirmed=0
+M2-METRIC questions=273 specialist_correct=273 baseline_correct=67
+M2-METRIC category=current n=21 specialist=21 baseline=13
+M2-METRIC category=original n=21 specialist=21 baseline=0
+M2-METRIC category=year n=231 specialist=231 baseline=54
+M2-METRIC trap_city_in_answer specialist=0 baseline=0
+M2-METRIC latency_ms specialist_p50=18.19 specialist_p95=23.64 baseline_p50=5.31 baseline_p95=9.93
+M2-METRIC write_ms p50=3.36 p95=6.69
+FAIL anUnchangedLedgerIsReusedAcrossCoreInstances :: java.lang.AssertionError: at least two of three views must be cache hits: (0, 0) -> (0, 0)
+PASS workingMemoryNeverLeaksIntoTheCachedLedgerView
+PASS aRewriteWithTheSameMtimeAndLengthIsStillDetected
+PASS aRevocationRacingTheTurnStillFailsClosedWithTheCache
+PASS aStatusFlipBetweenViewsIsSeenByAnotherInstance
+

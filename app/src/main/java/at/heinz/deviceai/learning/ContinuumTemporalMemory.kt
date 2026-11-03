@@ -78,6 +78,26 @@ class ContinuumTemporalMemory private constructor(
                                 val tier:MemoryTier, val fromLabel:String?, val assertedAt:Long, val sourceText:String)
 
     val claimCount:Int get() = claims.size
+
+    /** This (typically cached, ledger-only) view plus working-memory turns. Never mutates this instance, so a
+     * shared cached view cannot absorb one conversation's working memory. */
+    fun withWorking(working:List<WorkingTurn>):ContinuumTemporalMemory {
+        if (working.isEmpty()) return this
+        require(working.size <= 64)
+        val c = claims.toMutableList(); val h = held.toMutableList(); val u = unparsed.toMutableList()
+        for (turn in working) {
+            val modality = OwnerStatementModality.classify(turn.text)
+            if (!OwnerStatementModality.mayBecomeConfirmedFact(modality)) {
+                h += HeldStatement(turn.text, turn.atMillis, modality, MemoryTier.WORKING)
+                continue
+            }
+            val id = "wm-" + sha(turn.text + "\u0000" + turn.atMillis).take(20)
+            val e = ClaimGrammar.extract(turn.text, id, MemoryTier.WORKING, turn.atMillis, modality, zone)
+            if (e != null) c += e.copy(confirmed = true)
+            else u += UnparsedStatement(id, turn.text, turn.atMillis, null, MemoryTier.WORKING)
+        }
+        return ContinuumTemporalMemory(c, h, u, zone)
+    }
     private fun source(id:String):Pair<String, Long>? =
         claims.firstOrNull { it.sourceId == id }?.let { it.sourceText to it.assertedAt }
             ?: unparsed.firstOrNull { it.sourceId == id }?.let { it.text to it.atMillis }
@@ -151,14 +171,14 @@ class ContinuumTemporalMemory private constructor(
     private fun mentions(text:String, subject:String, predicate:String):Boolean {
         val low = text.lowercase(Locale.ROOT)
         val who = when {
-            subject == OWNER -> Regex("\\b(?:ich|mein|meine|mir|mich)\\b").containsMatchIn(low)
+            subject == OWNER -> rx("\\b(?:ich|mein|meine|mir|mich)\\b").containsMatchIn(low)
             subject.startsWith("mein ") -> low.contains(subject.removePrefix("mein "))
-            else -> Regex("\\b" + Regex.escape(subject) + "\\b").containsMatchIn(low)
+            else -> rx("\\b" + Regex.escape(subject) + "\\b").containsMatchIn(low)
         }
         val what = when (predicate) {
-            RESIDENCE -> Regex("wohn|leb|zieh|gezogen|umzug").containsMatchIn(low)
+            RESIDENCE -> rx("wohn|leb|zieh|gezogen|umzug").containsMatchIn(low)
             WORK -> low.contains("arbeit")
-            AGE -> low.contains("alt") || Regex("\\b\\d{1,3}\\b").containsMatchIn(low)
+            AGE -> low.contains("alt") || rx("\\b\\d{1,3}\\b").containsMatchIn(low)
             NAME -> low.contains("heiß")
             else -> false
         }
@@ -315,7 +335,7 @@ class ContinuumTemporalMemory private constructor(
     }
 
     private fun prep(v:String):String =
-        if (Regex("(?iu)^(?:bei|als|in|für|im)\\s").containsMatchIn(v)) v else "bei $v"
+        if (rx("(?iu)^(?:bei|als|in|für|im)\\s").containsMatchIn(v)) v else "bei $v"
 
     private fun range(tv:TemporalValue, year:Int):String {
         val from = tv.validFromMillis; val to = tv.validToMillis
@@ -342,36 +362,36 @@ class ContinuumTemporalMemory private constructor(
         val q = Normalizer.normalize(question.trim(), Normalizer.Form.NFC).trimEnd('?', '.', '!', ' ').take(160)
         val low = q.lowercase(Locale.ROOT)
         val now = "(?:\\s+(?:jetzt|aktuell|derzeit|heute|momentan|gerade))?"
-        Regex("^(?:wo|in\\s+welche[rm]\\s+(?:stadt|ort|land|gemeinde))\\s+(?:wohne|lebe)\\s+ich$now$").find(low)
+        rx("^(?:wo|in\\s+welche[rm]\\s+(?:stadt|ort|land|gemeinde))\\s+(?:wohne|lebe)\\s+ich$now$").find(low)
             ?.let { return Ask(OWNER, RESIDENCE, "current", display = "du") }
-        Regex("^was\\s+(?:arbeite|mache)\\s+ich(?:\\s+beruflich)?$now$").find(low)?.let { return Ask(OWNER, WORK, "current", display = "du") }
-        Regex("^wo\\s+bin\\s+ich\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\s+(?:gewohnt|gelebt)$").find(low)
+        rx("^was\\s+(?:arbeite|mache)\\s+ich(?:\\s+beruflich)?$now$").find(low)?.let { return Ask(OWNER, WORK, "current", display = "du") }
+        rx("^wo\\s+bin\\s+ich\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\s+(?:gewohnt|gelebt)$").find(low)
             ?.let { return Ask(OWNER, RESIDENCE, "year", it.groupValues[1].toInt(), "du") }
-        Regex("^(?:wo|bei\\s+wem|für\\s+wen|bei\\s+welcher\\s+firma)\\s+arbeite\\s+ich$now$").find(low)
+        rx("^(?:wo|bei\\s+wem|für\\s+wen|bei\\s+welcher\\s+firma)\\s+arbeite\\s+ich$now$").find(low)
             ?.let { return Ask(OWNER, WORK, "current", display = "du") }
-        Regex("^wie\\s+alt\\s+bin\\s+ich$").find(low)?.let { return Ask(OWNER, AGE, "age", display = "Du") }
-        Regex("^wie\\s+heißt\\s+(mein|meine)\\s+(\\p{L}{2,40})$").find(low)?.let {
+        rx("^wie\\s+alt\\s+bin\\s+ich$").find(low)?.let { return Ask(OWNER, AGE, "age", display = "Du") }
+        rx("^wie\\s+heißt\\s+(mein|meine)\\s+(\\p{L}{2,40})$").find(low)?.let {
             return Ask("mein " + it.groupValues[2], NAME, "name", display = "dein" + (if (it.groupValues[1] == "meine") "e " else " ") +
-                q.split(Regex("\\s+")).last())
+                q.split(rx("\\s+")).last())
         }
         val year = Regex("^wo\\s+(wohnte|lebte|arbeitete)\\s+(ich|$NAME_RE)\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})$")
-            .find(q.replaceFirst(Regex("^Wo"), "wo"))
+            .find(q.replaceFirst(rx("^Wo"), "wo"))
         if (year != null) return named(year.groupValues[2], if (year.groupValues[1] == "arbeitete") WORK else RESIDENCE,
             "year", year.groupValues[3].toInt())
-        Regex("^wo\\s+(habe|hat)\\s+(ich|$NAME_RE)\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\s+(gewohnt|gelebt|gearbeitet)$")
-            .find(q.replaceFirst(Regex("^Wo"), "wo"))?.let {
+        rx("^wo\\s+(habe|hat)\\s+(ich|$NAME_RE)\\s+(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\s+(gewohnt|gelebt|gearbeitet)$")
+            .find(q.replaceFirst(rx("^Wo"), "wo"))?.let {
                 return named(it.groupValues[2], if (it.groupValues[4] == "gearbeitet") WORK else RESIDENCE, "year", it.groupValues[3].toInt())
             }
-        Regex("^wo\\s+(?:habe|hat)\\s+(ich|$NAME_RE)\\s+(?:ursprünglich|zuerst|anfangs|als\\s+erstes|zu\\s+beginn)\\s+(gewohnt|gelebt|gearbeitet)$")
-            .find(q.replaceFirst(Regex("^Wo"), "wo"))?.let {
+        rx("^wo\\s+(?:habe|hat)\\s+(ich|$NAME_RE)\\s+(?:ursprünglich|zuerst|anfangs|als\\s+erstes|zu\\s+beginn)\\s+(gewohnt|gelebt|gearbeitet)$")
+            .find(q.replaceFirst(rx("^Wo"), "wo"))?.let {
                 return named(it.groupValues[1], if (it.groupValues[2] == "gearbeitet") WORK else RESIDENCE, "original")
             }
-        Regex("^seit\\s+wann\\s+(?:wohne|lebe)\\s+ich\\s+in\\s+(\\p{Lu}[\\p{L}-]+)$").find(q.replaceFirst(Regex("^Seit wann"), "seit wann"))
+        rx("^seit\\s+wann\\s+(?:wohne|lebe)\\s+ich\\s+in\\s+(\\p{Lu}[\\p{L}-]+)$").find(q.replaceFirst(rx("^Seit wann"), "seit wann"))
             ?.let { return Ask(OWNER, RESIDENCE, "since", display = "du", place = it.groupValues[1]) }
-        Regex("^wo\\s+(wohnt|lebt|arbeitet)\\s+($NAME_RE)$now$").find(q.replaceFirst(Regex("^Wo"), "wo"))?.let {
+        rx("^wo\\s+(wohnt|lebt|arbeitet)\\s+($NAME_RE)$now$").find(q.replaceFirst(rx("^Wo"), "wo"))?.let {
             return named(it.groupValues[2], if (it.groupValues[1] == "arbeitet") WORK else RESIDENCE, "current")
         }
-        Regex("^wie\\s+alt\\s+ist\\s+($NAME_RE)$").find(q.replaceFirst(Regex("^Wie"), "wie"))?.let {
+        rx("^wie\\s+alt\\s+ist\\s+($NAME_RE)$").find(q.replaceFirst(rx("^Wie"), "wie"))?.let {
             return named(it.groupValues[1], AGE, "age")
         }
         return null
@@ -419,18 +439,7 @@ class ContinuumTemporalMemory private constructor(
                 if (c != null) claims += c.copy(confirmed = true, retractedAt = retracted)
                 else unparsed += UnparsedStatement(r.id, r.content, r.createdAt, retracted, MemoryTier.LONG_TERM)
             }
-            for (turn in working) {
-                val modality = OwnerStatementModality.classify(turn.text)
-                if (!OwnerStatementModality.mayBecomeConfirmedFact(modality)) {
-                    held += HeldStatement(turn.text, turn.atMillis, modality, MemoryTier.WORKING)
-                    continue
-                }
-                val id = "wm-" + sha(turn.text + "\u0000" + turn.atMillis).take(20)
-                val c = ClaimGrammar.extract(turn.text, id, MemoryTier.WORKING, turn.atMillis, modality, zone)
-                if (c != null) claims += c.copy(confirmed = true)
-                else unparsed += UnparsedStatement(id, turn.text, turn.atMillis, null, MemoryTier.WORKING)
-            }
-            return ContinuumTemporalMemory(claims, held, unparsed, zone)
+            return ContinuumTemporalMemory(claims, held, unparsed, zone).withWorking(working)
         }
 
         internal fun sha(text:String):String = MessageDigest.getInstance("SHA-256")
@@ -458,7 +467,7 @@ internal object ClaimGrammar {
 
     fun extract(text:String, sourceId:String, tier:MemoryTier, assertedAt:Long, modality:StatementModality, zone:ZoneId):ClaimEvent? {
         val original = Normalizer.normalize(text.trim(), Normalizer.Form.NFC)
-        if (original.length > 320 || Regex("[.!?;]\\s+\\S").containsMatchIn(original.trimEnd('.', '!', ' '))) return null
+        if (original.length > 320 || rx("[.!?;]\\s+\\S").containsMatchIn(original.trimEnd('.', '!', ' '))) return null
         val corrected = correctionPrefix.containsMatchIn(original)
         val s0 = original.replaceFirst(correctionPrefix, "").trimEnd('.', '!', ' ')
         val inverted = inversion.find(s0)
@@ -497,54 +506,54 @@ internal object ClaimGrammar {
         }
 
         // Residence: owner
-        Regex("(?iu)^Ich\\s+(?:wohne|lebe|wohnte|lebte|habe)\\b.*?\\b(?:in|im)\\s+$PLACE").find(s)?.let {
-            if (Regex("(?iu)^Ich\\s+habe\\b").containsMatchIn(s) && !Regex("(?iu)\\b(gewohnt|gelebt)\\b").containsMatchIn(s)) return null
+        rx("(?iu)^Ich\\s+(?:wohne|lebe|wohnte|lebte|habe)\\b.*?\\b(?:in|im)\\s+$PLACE").find(s)?.let {
+            if (rx("(?iu)^Ich\\s+habe\\b").containsMatchIn(s) && !rx("(?iu)\\b(gewohnt|gelebt)\\b").containsMatchIn(s)) return null
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.RESIDENCE, placeAfterIn(s) ?: it.groupValues[1])
         }
-        Regex("(?iu)^Ich\\s+bin\\s+(?:.*?\\s)?nach\\s+$PLACE\\s+(?:gezogen|umgezogen|übersiedelt|gezügelt)").find(s)?.let {
+        rx("(?iu)^Ich\\s+bin\\s+(?:.*?\\s)?nach\\s+$PLACE\\s+(?:gezogen|umgezogen|übersiedelt|gezügelt)").find(s)?.let {
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
                 ?.copy(revision = if (isCorrection) ClaimRevision.CORRECTION else ClaimRevision.CHANGE)
         }
-        Regex("(?u)^Mein\\s+(?:Wohnort|Wohnsitz|Zuhause)\\s+ist\\s+(?:nicht\\s+)?$PLACE$").find(s)?.let {
+        rx("(?u)^Mein\\s+(?:Wohnort|Wohnsitz|Zuhause)\\s+ist\\s+(?:nicht\\s+)?$PLACE$").find(s)?.let {
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
         }
         // Work: owner
-        Regex("(?iu)^Ich\\s+(?:arbeite|arbeitete)\\s+(?:.*?\\s)?(bei|als|für)\\s+(.+)$").find(s)?.let {
+        rx("(?iu)^Ich\\s+(?:arbeite|arbeitete)\\s+(?:.*?\\s)?(bei|als|für)\\s+(.+)$").find(s)?.let {
             val v = workValue(it.groupValues[2])
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.WORK,
                 if (it.groupValues[1].lowercase(Locale.ROOT) == "als") "als $v" else v)
         }
         // Age: owner
-        Regex("(?iu)^Ich\\s+bin\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(s)?.let {
+        rx("(?iu)^Ich\\s+bin\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(s)?.let {
             return claim(ContinuumTemporalMemory.OWNER, ContinuumTemporalMemory.AGE, it.groupValues[1])
         }
         // "Mein Hund heißt Bello."
-        Regex("(?u)^(?:Mein|Meine)\\s+(\\p{L}{2,40})\\s+heißt\\s+(?:nicht\\s+)?(?:„|\")?(\\p{Lu}[\\p{L}-]{0,39}(?:\\s+\\p{Lu}[\\p{L}-]{0,39})?)(?:“|\")?$").find(s)?.let {
+        rx("(?u)^(?:Mein|Meine)\\s+(\\p{L}{2,40})\\s+heißt\\s+(?:nicht\\s+)?(?:„|\")?(\\p{Lu}[\\p{L}-]{0,39}(?:\\s+\\p{Lu}[\\p{L}-]{0,39})?)(?:“|\")?$").find(s)?.let {
             return claim("mein " + it.groupValues[1].lowercase(Locale.ROOT), ContinuumTemporalMemory.NAME, it.groupValues[2])
         }
         // Family role + name + age: "Meine Tochter Klara ist 29."
-        Regex("(?u)^(?:Mein|Meine|Unser|Unsere)\\s+(?:Tochter|Sohn|Schwester|Bruder|Enkelin|Enkel|Frau|Mann|Partner|Partnerin|Mutter|Vater|Oma|Opa)\\s+$NAME_RE\\s+ist\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(s)?.let {
+        rx("(?u)^(?:Mein|Meine|Unser|Unsere)\\s+(?:Tochter|Sohn|Schwester|Bruder|Enkelin|Enkel|Frau|Mann|Partner|Partnerin|Mutter|Vater|Oma|Opa)\\s+$NAME_RE\\s+ist\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(s)?.let {
             return claim(it.groupValues[1].lowercase(Locale.ROOT), ContinuumTemporalMemory.AGE, it.groupValues[2])
         }
         // Named person
         val person = Regex("(?u)^$NAME_RE\\s+(wohnt|lebt|wohnte|lebte|arbeitet|arbeitete|ist)\\b(.*)$").find(s) ?: return null
         val name = person.groupValues[1]
-        if (name.split(Regex("\\s+")).first().lowercase(Locale.ROOT) in NOT_SUBJECTS) return null
+        if (name.split(rx("\\s+")).first().lowercase(Locale.ROOT) in NOT_SUBJECTS) return null
         val key = name.lowercase(Locale.ROOT)
         val verb = person.groupValues[2]
         val rest = person.groupValues[3]
         return when (verb) {
-            "wohnt", "lebt", "wohnte", "lebte" -> Regex("(?u)\\b(?:in|im)\\s+$PLACE").find(rest)
+            "wohnt", "lebt", "wohnte", "lebte" -> rx("(?u)\\b(?:in|im)\\s+$PLACE").find(rest)
                 ?.let { claim(key, ContinuumTemporalMemory.RESIDENCE, placeAfterIn(rest) ?: it.groupValues[1]) }
-            "arbeitet", "arbeitete" -> Regex("(?iu)\\b(bei|als|für)\\s+(.+)$").find(rest)
+            "arbeitet", "arbeitete" -> rx("(?iu)\\b(bei|als|für)\\s+(.+)$").find(rest)
                 ?.let { claim(key, ContinuumTemporalMemory.WORK,
                     if (it.groupValues[1].lowercase(Locale.ROOT) == "als") "als " + workValue(it.groupValues[2]) else workValue(it.groupValues[2])) }
             else -> {
-                Regex("(?iu)^\\s+(?:.*?\\s)?nach\\s+$PLACE\\s+(?:gezogen|umgezogen|übersiedelt)$").find(rest)?.let {
+                rx("(?iu)^\\s+(?:.*?\\s)?nach\\s+$PLACE\\s+(?:gezogen|umgezogen|übersiedelt)$").find(rest)?.let {
                     return claim(key, ContinuumTemporalMemory.RESIDENCE, it.groupValues[1])
                         ?.copy(revision = if (isCorrection) ClaimRevision.CORRECTION else ClaimRevision.CHANGE)
                 }
-                Regex("(?iu)^\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(rest)
+                rx("(?iu)^\\s+(?:nicht\\s+)?(\\d{1,3})(?:\\s+Jahre(?:\\s+alt)?)?$").find(rest)
                     ?.let { claim(key, ContinuumTemporalMemory.AGE, it.groupValues[1]) }
             }
         }
@@ -552,12 +561,12 @@ internal object ClaimGrammar {
 
     /** The place after the LAST "in" that is not a time phrase ("seit März 2019 in Linz"). */
     private fun placeAfterIn(s:String):String? =
-        Regex("(?u)\\b(?:in|im)\\s+$PLACE").findAll(s).map { it.groupValues[1] }
+        rx("(?u)\\b(?:in|im)\\s+$PLACE").findAll(s).map { it.groupValues[1] }
             .filterNot { it.lowercase(Locale.ROOT) in months.keys }.firstOrNull()
 
     private fun workValue(raw:String):String =
-        raw.split(Regex("(?iu)\\s+(?:seit|von|bis|ab|im\\s+jahr|sondern)\\b|,")).first().trim()
-            .replaceFirst(Regex("(?iu)^(?:der|die|dem|den|einer|einem)\\s+"), "").trim()
+        raw.split(rx("(?iu)\\s+(?:seit|von|bis|ab|im\\s+jahr|sondern)\\b|,")).first().trim()
+            .replaceFirst(rx("(?iu)^(?:der|die|dem|den|einer|einem)\\s+"), "").trim()
 
     private fun cleanValue(v:String):String = v.trim().trimEnd('.', ',', '!', ' ').take(160)
 
@@ -567,7 +576,7 @@ internal object ClaimGrammar {
         fun endOf(month:String?, year:Int) = (if (month != null) LocalDate.of(year, months.getValue(month), 1).plusMonths(1)
             else LocalDate.of(year + 1, 1, 1)).atStartOfDay(zone).toInstant().toEpochMilli()
         fun label(month:String?, year:Int) = (month?.replaceFirstChar { it.uppercase() }?.plus(" ") ?: "") + year
-        Regex("\\bvon\\s+$MONTH((?:19|20)\\d{2})\\s+bis\\s+$MONTH((?:19|20)\\d{2})\\b").find(low)?.let { m ->
+        rx("\\bvon\\s+$MONTH((?:19|20)\\d{2})\\s+bis\\s+$MONTH((?:19|20)\\d{2})\\b").find(low)?.let { m ->
             val (m1, y1, m2, y2) = m.destructured
             val from = start(m1.ifEmpty { null }, y1.toInt()); val to = endOf(m2.ifEmpty { null }, y2.toInt())
             return if (to > from) Triple(from, to, label(m1.ifEmpty { null }, y1.toInt())) else Triple(null, null, null)
@@ -580,14 +589,20 @@ internal object ClaimGrammar {
             if (from != null && to != null && to <= from) return Triple(null, null, null)
             return Triple(from, to, since?.let { label(it.groupValues[1].ifEmpty { null }, it.groupValues[2].toInt()) })
         }
-        Regex("\\b(?:im\\s+)?$MONTH((?:19|20)\\d{2})\\s+(?:.*\\s)?(?:gezogen|umgezogen|übersiedelt|hergezogen)\\b").find(low)?.let {
+        rx("\\b(?:im\\s+)?$MONTH((?:19|20)\\d{2})\\s+(?:.*\\s)?(?:gezogen|umgezogen|übersiedelt|hergezogen)\\b").find(low)?.let {
             val month = it.groupValues[1].ifEmpty { null }; val y = it.groupValues[2].toInt()
             return Triple(start(month, y), null, label(month, y))
         }
-        if (past) Regex("\\b(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\b").find(low)?.let {
+        if (past) rx("\\b(?:im\\s+jahr\\s+)?((?:19|20)\\d{2})\\b").find(low)?.let {
             val y = it.groupValues[1].toInt()
             return Triple(start(null, y), endOf(null, y), y.toString())
         }
         return Triple(null, null, null)
     }
 }
+
+/** M2.1: patterns used inside hot functions are compiled once. Bounded: past the cap, compile without caching
+ * (dynamic patterns embed names/subjects), so memory cannot grow without limit. */
+private val RX_CACHE = java.util.concurrent.ConcurrentHashMap<String, Regex>()
+private fun rx(pattern:String):Regex =
+    RX_CACHE[pattern] ?: Regex(pattern).also { if (RX_CACHE.size < 512) RX_CACHE.putIfAbsent(pattern, it) }

@@ -624,9 +624,21 @@ class ContinuumLearningCore(
     fun temporalMemoryView(working:List<WorkingTurn> = emptyList(),
                            zone:java.time.ZoneId = ContinuumTemporalMemory.VIENNA):ContinuumTemporalMemory =
         synchronized(CORE_LOCK) {
-            ContinuumTemporalMemory.fromLedger(store.all().filter { it.type==LearningExperienceType.USER_FACT &&
-                it.trust==LearningTrustClass.OWNER_CONFIRMED && it.provenance==LearningProvenance.USER_CONFIRMED },
-                working,zone)
+            // M2.1: the ledger-only view is cached per directory+zone, keyed by the ledger's SHA-256 content
+            // fingerprint read under the store's file lock on EVERY call. A changed ledger (incl. a revocation
+            // between answer and re-check) always rebuilds; working memory is merged per call, never cached.
+            val key=directory.canonicalPath+"|"+zone.id
+            val cached=synchronized(VIEW_CACHE) { VIEW_CACHE[key] }
+            val (fingerprint,records)=store.snapshotIfChanged(cached?.first)
+            val ledgerView=if(records==null && cached!=null) {
+                viewCacheHits.incrementAndGet(); cached.second
+            } else {
+                viewCacheMisses.incrementAndGet()
+                ContinuumTemporalMemory.fromLedger((records ?: store.all()).filter { it.type==LearningExperienceType.USER_FACT &&
+                    it.trust==LearningTrustClass.OWNER_CONFIRMED && it.provenance==LearningProvenance.USER_CONFIRMED },
+                    emptyList(),zone).also { v -> synchronized(VIEW_CACHE) { VIEW_CACHE[key]=fingerprint to v } }
+            }
+            ledgerView.withWorking(working)
         }
 
     /** Adds a missing owner fact; a fact the owner revoked stays revoked (see [confirmOwnerFact]). */
@@ -1093,6 +1105,18 @@ class ContinuumLearningCore(
     }
 
     companion object {
+        /** Ledger-view cache: key = canonical directory + zone, value = (content fingerprint, ledger-only view).
+         * Bounded LRU; entries are immutable views, so sharing them across instances is safe. */
+        private const val VIEW_CACHE_MAX=8
+        private val VIEW_CACHE=object:LinkedHashMap<String,Pair<String,ContinuumTemporalMemory>>(16,0.75f,true) {
+            override fun removeEldestEntry(eldest:MutableMap.MutableEntry<String,Pair<String,ContinuumTemporalMemory>>?)=
+                size>VIEW_CACHE_MAX
+        }
+        private val viewCacheHits=java.util.concurrent.atomic.AtomicLong()
+        private val viewCacheMisses=java.util.concurrent.atomic.AtomicLong()
+        /** (hits, misses) of the ledger-view cache, process-wide. */
+        internal fun ledgerViewCacheStats():Pair<Long,Long> = viewCacheHits.get() to viewCacheMisses.get()
+
         private val CORE_LOCK=Any()
 
         val INTENT_BOOTSTRAP=listOf(
