@@ -52,7 +52,6 @@ class ChiefWorkerPoolTest {
             })
             assertTrue("report callback entered", callbackEntered.await(2, TimeUnit.SECONDS))
             assertFalse("delivery is incomplete while its callback is blocked", pool.awaitIdle(0))
-            assertTrue("report delivery still owns its slot", "delivery" in pool.active())
             assertTrue(reports.isEmpty())
             releaseCallback.countDown()
             assertTrue(pool.awaitIdle(2_000))
@@ -85,6 +84,33 @@ class ChiefWorkerPoolTest {
             assertEquals(WorkerStatus.DONE, reports.single().status)
         } finally {
             pool.shutdown()
+        }
+    }
+
+    @Test fun reportCallbacksCanResubmitTheSameOrANewIdWithoutQueueCapacity() {
+        for (nextId in listOf("initial", "next")) {
+            val submitted = CountDownLatch(1)
+            val delivered = CountDownLatch(1)
+            val accepted = AtomicBoolean()
+            val reports = ConcurrentLinkedQueue<WorkerReport>()
+            val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+            try {
+                assertTrue(pool.submit(brief("initial")) { first ->
+                    reports += first
+                    accepted.set(pool.submit(brief(nextId)) { second ->
+                        reports += second
+                        delivered.countDown()
+                    })
+                    submitted.countDown()
+                })
+                assertTrue("callback attempted resubmission", submitted.await(2, TimeUnit.SECONDS))
+                assertTrue("callback may reuse released capacity for $nextId", accepted.get())
+                assertTrue("reentrant job delivered", delivered.await(2, TimeUnit.SECONDS))
+                assertTrue(pool.awaitIdle(2_000))
+                assertEquals(listOf("initial", nextId), reports.map { it.id })
+            } finally {
+                pool.shutdown()
+            }
         }
     }
 
