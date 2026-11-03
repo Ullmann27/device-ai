@@ -1,0 +1,12 @@
+app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt:24:17: error: cannot access 'fun sha256Bytes(bytes: ByteArray): ByteArray': it is internal in file.
+                sha256Bytes(type.name.toByteArray(Charsets.UTF_8) + byteArrayOf(0) + payload).toHex()
+                ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt:24:95: error: cannot access 'fun ByteArray.toHex(): String': it is internal in file.
+                sha256Bytes(type.name.toByteArray(Charsets.UTF_8) + byteArrayOf(0) + payload).toHex()
+                                                                                              ^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt:172:27: error: cannot access 'fun sha256Bytes(bytes: ByteArray): ByteArray': it is internal in file.
+                out.write(sha256Bytes(body))
+                          ^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt:188:75: error: cannot access 'fun sha256Bytes(bytes: ByteArray): ByteArray': it is internal in file.
+        require(input.available() == 0 && MessageDigest.isEqual(checksum, sha256Bytes(body))) {
+                                                                          ^^^^^^^^^^^
