@@ -129,3 +129,86 @@ test('a terminated process leaves an uncertain writer lease, never automatic sta
  const result=spawnSync(process.execPath,['--input-type=module','-e',source,f.file]);assert.equal(result.signal,'SIGKILL');
  assert.throws(()=>new ExperienceLog(f.file).append({taskId:'next'}),/locked/);
 });
+
+// Follow-up regression cases reproduce independent review C11/C14/C15/C17.
+// Positive replay fixtures still do not prove the live producer admission path.
+function rewriteRecords(file,records){
+ let prevHash=null;
+ fs.writeFileSync(file,records.map((record,sequence)=>{
+  const data={sequence,prevHash,record},row={...data,hash:sha256(canonical(data))};prevHash=row.hash;return JSON.stringify(row)+'\n';
+ }).join(''));
+}
+test('requesting task needs its own current canonical grant and authenticated owner GOAL',t=>{
+ const f=fixture(t);f.publish();const task={...f.task,id:'new-related-task',goal:'Compare negative counters'};
+ assert.equal(f.recall({task}).items.length,0,'task shape and overlapping source do not grant recall');
+ const taskId='t-1111111111111111',grantFile=path.join(f.stateDir,'coding-grants',task.id+'.json');
+ fs.writeFileSync(grantFile,JSON.stringify({task,ccc1TaskId:taskId,fingerprint:taskFingerprint(task)}));
+ assert.equal(f.recall({task}).items.length,0,'grant without MAC-authenticated owner GOAL is insufficient');
+ const requestJournal=DurableTaskJournal.forTask(f.stateDir,taskId,f.key);
+ requestJournal.append(envelope({binding:{...f.entries[0],taskId,sessionId:randomUUID(),deadline:NOW+60000},sender:'OWNER',kind:'GOAL',
+  payload:{text:task.goal+' [task '+taskFingerprint(task)+']',repair:{chain:'node'}},sequence:0}));
+ assert.equal(f.recall({task}).items.length,1,'new authorized same-source overlapping task may receive historical review data');
+ assert.equal(f.recall({task,repoFullName:'other/repo'}).items.length,0);
+ assert.equal(f.recall({task,now:NOW+60000}).items.length,0,'expired requesting grant cannot recall');
+ requestJournal.append(envelope({binding:requestJournal.entries()[0],sender:'OWNER',kind:'ABORT',payload:{reason:'Withdraw current task',code:'OWNER'},sequence:1}));
+ assert.equal(f.recall({task}).items.length,0,'withdrawn current task cannot recall');
+});
+test('a full 4096-record ledger cannot block durable withdrawal',t=>{
+ const f=fixture(t);f.publish();const record=new ExperienceLog(f.file).entries()[0].record;
+ rewriteRecords(f.file,[record,...Array.from({length:4095},(_,i)=>({taskId:'full-'+i}))]);
+ assert.equal(f.recall().items.length,1);
+ assert.equal(revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Withdraw despite full capacity'}),true);
+ assert.equal(new ExperienceLog(f.file).entries().length,4096);
+ assert.equal(f.recall().items.length,0);
+});
+test('a full byte-budget ledger cannot block withdrawal or exceed the bound',t=>{
+ const f=fixture(t);f.publish();let rows=new ExperienceLog(f.file).entries(),bytes=Buffer.byteLength(fs.readFileSync(f.file));
+ const max=16*1024*1024;
+ while(bytes<max){
+  const data={sequence:rows.length,prevHash:rows.at(-1).hash,record:{taskId:'byte-full-'+rows.length,padding:''}};
+  const empty=JSON.stringify({...data,hash:sha256(canonical(data))})+'\n';
+  const extra=Math.min(200000,max-bytes-Buffer.byteLength(empty));
+  assert.ok(extra>=0);data.record.padding='x'.repeat(extra);
+  const row={...data,hash:sha256(canonical(data))};const line=JSON.stringify(row)+'\n';rows.push(row);bytes+=Buffer.byteLength(line);
+ }
+ fs.writeFileSync(f.file,rows.map(r=>JSON.stringify(r)+'\n').join(''));assert.equal(fs.statSync(f.file).size,max);
+ assert.equal(revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Withdraw despite full bytes'}),true);
+ assert.equal(fs.statSync(f.file).size,max);assert.equal(f.recall().items.length,0);
+});
+test('canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping',t=>{
+ const f=fixture(t);f.publish();revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Durable withdrawal'});
+ const records=new ExperienceLog(f.file).entries().map(r=>r.record);
+ rewriteRecords(f.file,[records[0]]);assert.equal(f.recall().items.length,0,'canonical grant retains withdrawal when tombstone disappears');
+ rewriteRecords(f.file,[records[0],{taskId:'revoke:'+f.taskId,note:'stripped tombstone'}]);assert.equal(f.recall().items.length,0);
+ const grantFile=path.join(f.stateDir,'coding-grants',f.task.id+'.json'),grant=JSON.parse(fs.readFileSync(grantFile));
+ assert.ok(grant.technicalExperienceRevocation);grant.technicalExperienceRevocation.reason='changed without runtime key';
+ fs.writeFileSync(grantFile,JSON.stringify(grant));assert.equal(f.recall().items.length,0,'tampered canonical withdrawal fails closed');
+});
+test('withdrawal reaches canonical grant even if experience ledger is already damaged',t=>{
+ const f=fixture(t);f.publish();const record=new ExperienceLog(f.file).entries()[0].record;
+ fs.appendFileSync(f.file,'torn');
+ assert.equal(revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Withdraw with damaged ledger'}),true);
+ rewriteRecords(f.file,[record]);assert.equal(f.recall().items.length,0,'later ledger replacement cannot lose canonical withdrawal');
+});
+test('process-only or mutable observations cannot enter model-derived technical strategy tier',async t=>{
+ const f=fixture(t);
+ const runtimeCode=`const trusted=new WeakSet();export const isTrustedLocalModelObservation=x=>trusted.has(x);export function fixture(value,freeze=true){const x=freeze?Object.freeze({...value}):{...value};trusted.add(x);return x;}`;
+ const runtimeUrl='data:text/javascript;base64,'+Buffer.from(runtimeCode).toString('base64');
+ const verifierUrl='data:text/javascript;base64,'+Buffer.from('export const isTrustedCodingVerification=()=>true;').toString('base64');
+ const helperSource=fs.readFileSync(new URL('./ccc1-technical-recall.mjs',import.meta.url),'utf8').replace(/from '([^']+)'/g,(all,spec)=>{
+  if(spec==='./coding-provider.mjs')return 'from '+JSON.stringify(runtimeUrl);
+  if(spec==='./ccc1-redgreen-verifier.mjs')return 'from '+JSON.stringify(verifierUrl);
+  return spec.startsWith('.')?'from '+JSON.stringify(new URL(spec,import.meta.url).href):all;
+ });
+ const api=await import('data:text/javascript;base64,'+Buffer.from(helperSource).toString('base64'));
+ const rt=await import(runtimeUrl);
+ for(const modelObservation of [rt.fixture({...f.modelObservation,verifiedModelExecution:false}),rt.fixture({...f.modelObservation,verifiedModelExecution:true},false)]){
+  assert.throws(()=>api.recordTechnicalExperience({...f.options,taskId:f.taskId,modelTask:f.modelTask,modelObservation,
+   verification:f.verification,reflection:f.reflection}),/MODEL_EXECUTION_PROOF_UNAVAILABLE/);
+  assert.equal(fs.existsSync(f.file),false,'process attempt never becomes model-derived strategy');
+ }
+});
+test('signed process-only historical proof remains ineligible for technical strategy recall',t=>{
+ const f=fixture(t);f.publish(p=>{p.modelObservation.verifiedModelExecution=false;return p;});
+ assert.equal(f.recall().items.length,0);
+});
