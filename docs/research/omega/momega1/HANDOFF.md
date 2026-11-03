@@ -10,7 +10,10 @@ effects work while preserving the existing agreed application design.
 ## Source and authority
 
 Research branch `codex/momega1-chief-20261103`, [draft PR410](https://github.com/Ullmann27/device-ai/pull/410).
-Combined accepted-source checkpoint `705a6b7c08dbdb210f590dc939d4e800ef24ba94`.
+Guide acceptance checkpoint `705a6b7c08dbdb210f590dc939d4e800ef24ba94`.
+Current research candidate `7eefff23` additionally includes the narrowly reviewed
+mouth/rig correction and its independent evidence; the newly observed legacy
+EPSILON geometry gate below is unresolved. This is not full combined acceptance.
 Code40 `64ec06a73f50cae9ee49035c840710d87777d50f` remains the unchanged historical
 rollback source. Initial current Chief was `786436f5`; latest fetched foreign
 Chief `efe622dda00e620952483dedad19257efb3284e6` has the same application/runtime
@@ -172,8 +175,19 @@ solves the geometry defect. The independently frozen semantic V2 contract is
 is explicitly superseded, not reported green. All 112 independently frozen
 speech combinations plus neutral have zero visible tooth/face intersections in
 the combined candidate. Six original maximum poses and fixed-camera AA/O/blink/
-stopped images were also examined. Final asset/hash integration, portable luminous
-materials, complete 224-frame idle replay and visual acceptance remain pending.
+stopped images were also examined. Source `62122c55` packages that exact GLB and
+pin; final independent production-contract/asset validation and 27/27 cases
+passed. Complete correction plus review `0d53e401` was merged into research
+candidate `7eefff23`, with no luminous material or default-mode promotion.
+
+An additional legacy EPSILON Python geometry check subsequently failed: its old
+JawY maximum 0.25m and minimum eye/jaw separation 0.04m conflict with the new hinge
+at 0.267m / 0.0214m. Existing bounds remain unchanged and RED is retained while
+the independent reviewer assesses their anatomical/transform meaning. The narrow
+mouth-correction acceptance does not certify this unresolved legacy contract or
+all geometry checks. Node 5/5 and Python unit 8/8 checks are separate results.
+Portable luminous materials, complete 224-frame idle replay, visual acceptance
+and final combined QA remain pending.
 
 PR436 provides an optional local Camera2 face-position adapter and pure readiness
 projection. Native camera metadata, explicit foreground opt-in, permission,
