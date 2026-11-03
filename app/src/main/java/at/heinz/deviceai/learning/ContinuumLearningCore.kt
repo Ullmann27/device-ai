@@ -120,8 +120,13 @@ data class ContinuumLearningStatus(
  */
 class ContinuumLearningCore(
     baseDirectory:File,
-    private val nowMillis:()->Long=System::currentTimeMillis
+    /** M2.3: when set, every owner-fact mutation is also appended as a signed ProofCarryingMemory mutation to a
+     * sidecar journal (the LEX2 ledger format is unchanged). Null = previous behaviour. */
+    private val correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+    private val nowMillis:()->Long
 ) {
+    constructor(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):this(baseDirectory,null,nowMillis)
+
     private val directory=File(baseDirectory,"learning-core-v2")
     private val store=FileLearningExperienceStore(directory)
     private val modelFile=File(directory,"subword-v1.bin")
@@ -651,28 +656,47 @@ class ContinuumLearningCore(
      * one write. Like [recordOwnerFact] it never re-activates a revoked fact, so a
      * revocation is not undone by facts that are still listed elsewhere.
      */
-    fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) {
+    fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         quarantineUnconfirmableOwnerFacts()
         store.appendMissing(facts.map(::ownerFact))
-    }
+    } }
 
     /**
      * An explicit owner statement ("Merke dir: ..."): adds the fact, or confirms
      * again a fact the owner revoked earlier (the id is the content hash, so the
      * revoked record would otherwise stay revoked forever).
      */
-    fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) {
+    fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) { signedOwnerMutation { confirmOwnerFactUnsigned(content) } }
+
+    private fun confirmOwnerFactUnsigned(content:String):OwnerFactChange {
         val item=ownerFact(content)
         if(item.status==LearningStatus.OBSERVED) {
             store.append(item)
-            return@synchronized OwnerFactChange.HELD_UNCONFIRMED
+            return OwnerFactChange.HELD_UNCONFIRMED
         }
-        if(store.append(item))return@synchronized OwnerFactChange.ADDED
+        if(store.append(item))return OwnerFactChange.ADDED
         val existing=store.all().first { it.id==item.id }
         if(existing.status!=LearningStatus.REVOKED && existing.status!=LearningStatus.REJECTED)
-            return@synchronized OwnerFactChange.ALREADY_ACTIVE
+            return OwnerFactChange.ALREADY_ACTIVE
         check(store.updateStatus(item.id,LearningStatus.CONFIRMED,nowMillis())) { "Owner fact vanished" }
-        OwnerFactChange.REACTIVATED
+        return OwnerFactChange.REACTIVATED
+    }
+
+    private val correctionJournal=correctionSigner?.let { SignedOwnerCorrectionJournal(directory,it) }
+
+    /** Runs an owner-fact mutation; with a signer, the resulting ledger diff is signed into the sidecar journal
+     * after the ledger write succeeded. A failed journal write leaves an auditable UNSIGNED_LEDGER_CHANGE. */
+    private fun <T> signedOwnerMutation(block:()->T):T {
+        val journal=correctionJournal ?: return block()
+        val before=SignedOwnerCorrectionJournal.ownerFacts(store.all())
+        val result=block()
+        journal.recordDiff(before,SignedOwnerCorrectionJournal.ownerFacts(store.all()),nowMillis())
+        return result
+    }
+
+    /** M2.3: verifies the signed correction journal against the current ledger (read-only). */
+    fun correctionAudit():CorrectionAudit = synchronized(CORE_LOCK) {
+        correctionJournal?.audit(store.all()) ?: CorrectionAudit(CorrectionAuditStatus.NOT_CONFIGURED,0,emptyList())
     }
 
     /** Confirmed, not revoked owner facts (the memory the chat may cite), oldest first. */
@@ -712,21 +736,21 @@ class ContinuumLearningCore(
             active to scope
         }
 
-    fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
+    fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,content.trim(),
             LearningStatus.REVOKED,nowMillis()
         )
-    }
+    } }
 
-    fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) {
+    fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,null,
             LearningStatus.REVOKED,nowMillis()
         )
-    }
+    } }
 
     fun recordCommandMapping(phrase:String,tool:String):Boolean=synchronized(CORE_LOCK) {
         require(phrase.trim().length in 3..320 && tool.matches(Regex("[a-z_]{2,64}")))
