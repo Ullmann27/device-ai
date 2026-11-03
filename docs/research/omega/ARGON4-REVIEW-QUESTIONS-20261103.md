@@ -43,3 +43,11 @@ Argon soll höchstens eine kurze Chat-Kompaktantwort ausgeben und bei Umfang ein
 
 ## Freigabe / Offline
 Bestehende Benutzer-App bleibt Code39. Für Code40 gilt nur bestehender Originalsignierer, exakt geprüfter Source-SHA, versionCode>=40 und separate Besitzerfreigabe; niemals automatische Zweit-App oder Datenlöschung. Bis zum nächsten angekündigten Download-/Internet-Test: Fold7-Internet AUS und Continuum-Webfreigabe „Nicht zulassen“.
+
+## Externe Primärquellen-Stichprobe (03.11.2026)
+Diese Überprüfung ändert keine Produktfreigaben:
+- **Existenz bestätigt:** `LOCOMO-CONV` (Chang/Chen, Findings EMNLP Oktober 2026), URL: https://aclanthology.org/2026.findings-emnlp.1289/; Referenz passt zur wissenschaftlichen Dialog-Retrieval-Forschung, beweist keine Continuum-Verbesserung.
+- **Existenz bestätigt:** LongMemEval, ICLR 2025 / öffentliches Benchmarkprojekt: https://github.com/xiaowu0162/LongMemEval ; methodische Benchmark-Idee übernehmen, keine ungeprüften Leistungswerte.
+- **Existenz bestätigt:** xAI Grok 4.6, offizielle Mitteilung 12.08.2026 mit Fokus langlaufender Agenten: https://x.ai/news/grok-4-6 ; Herstellerbehauptungen sind keine Hardware-Fähigkeiten des Fold7.
+- **Lizenzrisiko bestätigt:** OHF `piper1-gpl` nutzt GPL-3.0-or-later, Quellnachweis https://github.com/OHF-Voice/piper1-gpl/blob/main/COPYING ; die einzelnen Sprachmodelle haben laut https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/VOICES.md getrennte MODEL_CARD-Lizenzen. ONNX-Datei direkt zu verwenden heißt **nicht automatisch**, dass Trainingsdaten-/Gewichte-Lizenzprobleme gelöst sind. Die PDF-Annahmen `65MB` und `p50 < 90ms` sind **keine** am Fold7 nachgewiesenen Messwerte.
+- **Android-Richtung bestätigt:** `whisper.cpp` enthält ein Android-Java-Beispiel, https://github.com/ggml-org/whisper.cpp/blob/master/examples/whisper.android.java/README.md ; Integration und ASR-Latenz in Continuum noch nicht ausgeführt.
