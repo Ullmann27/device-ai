@@ -50,6 +50,13 @@ received/reviewed when stopping. This follow-up performed **no fresh process or
 container scan**. Read errors, permission failures, process namespace coverage,
 transient process races and attribution therefore remain independently unchecked.
 
+After this assessment was saved, the native verifier confirmed the cleanup
+inspection used an uncommitted inline Python script and skipped
+`OSError`/`PermissionError` while enumerating processes. Consequently its empty
+process lists are **insufficient reconciliation evidence**, not an independent
+teardown clearance. A later read-only scan must account explicitly for unreadable
+entries and same-UID/executable-inode coverage. No new scan was run at shutdown.
+
 ## Exact unresolved state
 
 Barrier: `/tmp/continuum-coding-owner-1000/unresolved-execution.json`.
