@@ -1,0 +1,57 @@
+{
+  "status": 0,
+  "error": null,
+  "signal": null,
+  "stdout": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"actual filesystem namespace, no network and cgroup limits\" time=\"3.010616\" classname=\"test\" file=\"/work/.github/continuum/isolation.test.mjs\"/>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 3083.732244 -->\n</testsuites>\n\n",
+  "stderr": "",
+  "ms": 0,
+  "junitFiles": [
+    "/workspace/momega1-build-env/final-node-1bf0af5f/workspace-host/isolated-4530f8918d0ddd7e8c3b/TEST-0.xml"
+  ],
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 256,
+    "pids": 64,
+    "cpus": 1,
+    "timeoutMs": 15000,
+    "runtime": "runc",
+    "sourceSha256": "d1e43cc760e3a784a2624af4e5e789a6b6432c9e307f7460c5e20f258c98c68c",
+    "profile": "node-continuum",
+    "untrustedReports": true,
+    "workspaceId": "continuum-7e30f9060741933afa6bbd72",
+    "workspaceBinding": {
+      "workerId": "worker-beta",
+      "taskId": "t-63cfd8a31dd6f719",
+      "requestMessageId": "2b009185-9505-430c-8e3c-97a2802c1abd",
+      "requestHash": "32af1af17a0f0a1aed9143493d5661f491054746625fbb09fc37643c2a2879b0",
+      "sourceCommit": "13d639cf9d9875eedd0084ad4a35f1cc0caa2b2e",
+      "jobId": "54a45ae5-0d75-4688-b786-f37a01dd7b30"
+    },
+    "observed": {
+      "containerId": "d01efd4804cd95a729ec89e102ce110c73d9f5a1083735e09dc882af539b5115",
+      "runtime": "runc",
+      "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+      "user": "1000:1000",
+      "network": "none",
+      "readOnly": true,
+      "memoryBytes": 268435456,
+      "memorySwapBytes": 268435456,
+      "nanoCpus": 1000000000,
+      "pids": 64,
+      "capDrop": [
+        "ALL"
+      ],
+      "securityOpt": [
+        "no-new-privileges:true"
+      ],
+      "writableHostMounts": 0
+    },
+    "teardownConfirmed": true
+  }
+}

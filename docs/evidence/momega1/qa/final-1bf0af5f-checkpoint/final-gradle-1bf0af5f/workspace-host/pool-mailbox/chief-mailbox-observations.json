@@ -1,0 +1,14 @@
+[
+  {
+    "from": "workspace:worker-alpha",
+    "id": "workspace-365ae47d-ea29-4673-b5f0-85a0ec885ca7",
+    "to": "chief",
+    "body": "Workspace task=t-dfe3b93116467aaf source=f1d7a22ba00f38073ad3c9bcf585f9634653eb2b request=5485db0d-376c-4975-9869-eff7423fbcb7 workerStatus=DONE HOST_PROFILE_REPORTED task=t-dfe3b93116467aaf request=5485db0d-376c-4975-9869-eff7423fbcb7 workspace=continuum-25077c498a4ad0b7b8663428 profile=node-continuum exit=0 evidence=3a43c936888805c6562a09407d1a1d63daa107c48a2a558032d0305da09705c3 verification=PENDING"
+  },
+  {
+    "from": "workspace:worker-beta",
+    "id": "workspace-1ca2afdd-ed82-4d61-a2d7-0c2147c136a7",
+    "to": "chief",
+    "body": "Workspace task=t-1195a8461cde5be8 source=c17fa8b959994cabec80bcb308705444b38d09c1 request=646886ea-7389-4097-b789-ebc970b59146 workerStatus=DONE HOST_PROFILE_REPORTED task=t-1195a8461cde5be8 request=646886ea-7389-4097-b789-ebc970b59146 workspace=continuum-4ebc8c568fa80c66c9994b09 profile=node-continuum exit=0 evidence=564711cf0e5d659488fa274f1a618367f41ca07e165e996a80eaa49ad4cd4853 verification=PENDING"
+  }
+]

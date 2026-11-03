@@ -24,8 +24,10 @@ gap. Neither these images nor tests approve final face/reference equivalence.
 
 Final combined1bf QA was running when the owner requested immediate preservation
 at2%. Initial full Node has a recorded global Docker-container assertion failure
-while Android Docker tests ran concurrently; that confound needs independent
-confirmation and a quiet rerun. Do not claim full final source GREEN. No additional
+caused by another concurrent Node test (canonical-repair-report), confirmed by
+container receipt and Docker history. Own teardown assertions had passed. The
+unchanged tests need a quiet rerun, preferably one host test file at a time;
+this original full-run failure is not erased. Do not claim full final source GREEN. No additional
 runs should start in this closing session. Check QA PR413 and the newest raw
 checkpoint before resuming. Fully completed earlier combined source is645b2215
 with the PASS/FAIL/skip results below, not an acceptance of1bf.
