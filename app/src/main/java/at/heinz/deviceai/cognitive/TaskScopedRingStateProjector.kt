@@ -12,6 +12,8 @@ internal object TaskScopedRingStateProjector {
     private val invalidatingNegation = Regex("""(?iu)\b(?:nicht|keine?|ohne|niemals|weder|angeblich)\b""")
     private val tomorrow = Regex("""(?iu)\b(?:ab\s+morgen|morgen\s+(?:sind|hat|liegen))\b""")
     private val hypothesisCue = Regex("""(?iu)\b(?:beispiel|testaufgabe|denkaufgabe)\b""")
+    private val ambiguousQualifier = Regex("""(?iu)\b(?:vielleicht|eventuell|oder|ungefähr)\b""")
+    private val deniedTomorrow = Regex("""(?iu)\b(?:nicht|kein\p{L}*)\b[^.!?]{0,25}\bmorgen\b""")
 
     data class Slot(val original: Int, val current: Int, val future: Int? = null)
     data class Projection(val red: Slot, val blue: Slot) {
@@ -39,6 +41,9 @@ internal object TaskScopedRingStateProjector {
         var blueFuture: Int? = null
         for (text in previousOwnerTurns + currentTurn) {
             val candidates = box.findAll(text).toList()
+            // Mixed same-sentence current/future updates need a real temporal parser.
+            if (deniedTomorrow.containsMatchIn(text) ||
+                (tomorrow.containsMatchIn(text) && candidates.size > 1)) return null
             for ((i, match) in candidates.withIndex()) {
                 val end = if (i + 1 < candidates.size) candidates[i + 1].range.first else text.length
                 val clause = text.substring(match.range.last + 1, end).take(75)
@@ -46,7 +51,7 @@ internal object TaskScopedRingStateProjector {
                 val beforeQuantity = clause.take(number.range.first)
                 if (invalidatingNegation.containsMatchIn(beforeQuantity)) continue
                 // Ambiguous language is not a reliable source of state data.
-                if (Regex("""(?iu)\b(?:vielleicht|eventuell|oder|ungefähr)\b""").containsMatchIn(beforeQuantity)) continue
+                if (ambiguousQualifier.containsMatchIn(beforeQuantity)) continue
                 val value = number.groupValues[1].toIntOrNull() ?: continue
                 val future = tomorrow.containsMatchIn(text.take(match.range.first)) &&
                     match.range.first < 60
