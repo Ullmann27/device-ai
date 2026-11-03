@@ -19,3 +19,11 @@ test('contract stays rendering-free and defaults to the no-op placeholder',()=>{
  assert.match(contract,/var sink: AvatarSink = NoOpAvatarSink/);
  assert.doesNotMatch(contract,/android\.(view|graphics|opengl)|import android/);
 });
+
+test('approval dialogs and blocked outcomes drive WAITING_FOR_APPROVAL and BLOCKED',()=>{
+ assert.match(activity,/awaitingApproval = avatarAwaitingApproval/);
+ assert.match(activity,/blocked = avatarBlocked/);
+ assert.match(activity,/avatarAwaitingApproval = true/);
+ assert.match(activity,/avatarBlocked = run\.blocker != null/);
+ assert.match(activity,/NonModelReplyKind\.SAFETY_REFUSAL\) avatarBlocked = true/);
+});

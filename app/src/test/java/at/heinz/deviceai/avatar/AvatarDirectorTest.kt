@@ -65,3 +65,48 @@ class AvatarDirectorTest {
     }
 }
 
+
+/** M3 coordination: parts ported from the avatar lab (PR #338 branch) and PR #350 (TalkingHead lipsync-de rules, AvatarPose plan). */
+class AvatarPortedPartsTest {
+    private var now = 10_000L
+    private class Recorder : AvatarSink {
+        val events = mutableListOf<AvatarEvent>()
+        override fun onAvatarEvent(event: AvatarEvent) { events += event }
+    }
+
+    @Test fun wordRangeFallbackWhenTtsDeliversNoPcm() {
+        val r = Recorder(); val d = AvatarDirector(r) { now }
+        d.speechStarted("u", "Hallo Heinz"); d.wordRange("u", 0, 5)
+        now += 100; d.audioLevel("u", 0f)
+        now += 600; d.audioLevel("u", 0f)
+        now += 10; d.audioLevel("u", 0.6f)
+        val levels = r.events.filterIsInstance<AvatarEvent.AudioLevel>()
+        assertEquals(listOf(AudioLevelSource.WORD_RANGE_FALLBACK, AudioLevelSource.PCM_ENVELOPE, AudioLevelSource.PCM_ENVELOPE),
+            levels.map { it.source })
+        assertTrue(levels[0].level in 0.10f..0.28f)
+        assertEquals(0f, levels[1].level); assertEquals(0.6f, levels[2].level)
+    }
+
+    @Test fun germanDiphthongsBecomeTwoVisemes() {
+        assertEquals(listOf(Viseme.SIL, Viseme.AA, Viseme.U, Viseme.SS), GermanVisemeApproximation.visemes("Haus"))
+        assertEquals(listOf(Viseme.SIL, Viseme.PP, Viseme.AA, Viseme.I, Viseme.NN), GermanVisemeApproximation.visemes("Bein"))
+        assertEquals(listOf(Viseme.SIL, Viseme.NN, Viseme.O, Viseme.E), GermanVisemeApproximation.visemes("Leute"))
+    }
+
+    @Test fun poseReducerGivesRenderersOneBoundedPose() {
+        val p = AvatarPoseReducer()
+        p.apply(AvatarEvent.StateChanged(AvatarState.THINKING, AvatarExpression.FOCUSED, GazeTarget.THINKING_AWAY, 1))
+        assertEquals(GazeTarget.THINKING_AWAY.x, p.pose().gazeX)
+        p.apply(AvatarEvent.SpeechStarted("u", "Hallo", 2))
+        repeat(12) { p.apply(AvatarEvent.AudioLevel("u", 1f, 3L + it, AudioLevelSource.PCM_ENVELOPE)) }
+        assertTrue(p.pose().jawOpen in 0.9f..1f)
+        p.apply(AvatarEvent.VisemeCue("u", Viseme.O, 1f, 80, 20))
+        assertEquals(Viseme.O, p.pose().viseme)
+        p.apply(AvatarEvent.SpeechEnded("u", false, 30))
+        assertEquals(0f, p.pose().jawOpen); assertEquals(Viseme.SIL, p.pose().viseme)
+        // Small envelope noise below the dead zone never opens the mouth.
+        val q = AvatarPoseReducer(); q.apply(AvatarEvent.SpeechStarted("v", "x", 1))
+        repeat(10) { q.apply(AvatarEvent.AudioLevel("v", 0.02f, 2L + it, AudioLevelSource.PCM_ENVELOPE)) }
+        assertEquals(0f, q.pose().jawOpen)
+    }
+}

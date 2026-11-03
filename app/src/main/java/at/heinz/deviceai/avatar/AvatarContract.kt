@@ -23,6 +23,9 @@ data class GazeTarget(val x: Float, val y: Float) {
 /** 15-class viseme set as used by common lip-sync pipelines (Oculus/Meta OVRLipSync naming). */
 enum class Viseme { SIL, PP, FF, TH, DD, KK, CH, SS, NN, RR, AA, E, I, O, U }
 
+/** PCM_ENVELOPE = measured synthesized audio; WORD_RANGE_FALLBACK = coarse motion when the TTS engine gives word ranges but no PCM. */
+enum class AudioLevelSource { PCM_ENVELOPE, WORD_RANGE_FALLBACK }
+
 sealed interface AvatarEvent {
     val atMillis: Long
     data class StateChanged(val state: AvatarState, val expression: AvatarExpression, val gaze: GazeTarget,
@@ -32,7 +35,8 @@ sealed interface AvatarEvent {
     data class VisemeCue(val utteranceId: String, val viseme: Viseme, val weight: Float, val durationMs: Long,
                          override val atMillis: Long) : AvatarEvent
     /** Real synthesized-audio envelope 0..1 (from the existing TTS signal), ~30 Hz. */
-    data class AudioLevel(val utteranceId: String, val level: Float, override val atMillis: Long) : AvatarEvent
+    data class AudioLevel(val utteranceId: String, val level: Float, override val atMillis: Long,
+                          val source: AudioLevelSource = AudioLevelSource.PCM_ENVELOPE) : AvatarEvent
     data class SpeechEnded(val utteranceId: String, val interrupted: Boolean, override val atMillis: Long) : AvatarEvent
 }
 
@@ -53,3 +57,13 @@ data class AvatarRuntimeSignals(
  * Application subclass or a later avatar module). Default is the no-op placeholder.
  */
 object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
+
+/** Renderer-facing snapshot (subset of the PR #350 AvatarPose plan). Blink, head motion and idle are renderer-owned. */
+data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, val gazeX: Float, val gazeY: Float,
+                      val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float)
+
+/** RED stub. */
+class AvatarPoseReducer {
+    fun apply(event: AvatarEvent) = Unit
+    fun pose() = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
+}
