@@ -209,7 +209,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body)),
     modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,
     proposalSha256:responseStatus==='PROPOSAL'&&wire.proposal?sha256Hex(canonical(wire.proposal)):null,
-    responseStatus,verifiedModelExecution:verified,reviewedPairId:verified?pair.id:null};
+    responseStatus,verifiedModelExecution:verified,reviewedPairId:verified?pair.id:null,reviewedModelId:verified?pair.modelRepository:null};
    const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
    if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
     observation.evidenceClass!==(verified?'LOCAL_MODEL_HOST':'HOST_INTEGRATION')||observation.isolation!=='BWRAP_UNSHARE_ALL'||
@@ -229,6 +229,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    }
    trace.modelObservation=Object.freeze({...observation});trustedObservations.add(trace.modelObservation);
    trace.verifiedModelExecution=verified;
+   if(verified)Object.assign(trace,{reviewedPairId:pair.id,reviewedModelId:pair.modelRepository});
    return trace.modelObservation;
   };
   const failed=response.status!==0||response.error||response.signal;

@@ -12,8 +12,8 @@ const tuple=Object.freeze({
  runtimeSourceCommit:'6cb3e672e8d10fd4feab1a048bf2967c40623133',
  runtimeTarget:'llama-completion',
  runtimePlatform:'linux-x64',
- runtimeSha256:null,
- buildEvidenceSha256:null,
+ runtimeSha256:'c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a',
+ buildEvidenceSha256:'ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067',
  independentReviewEvidenceSha256:null
 });
 export const LOCAL_MODEL_RUNTIME_CANDIDATES=Object.freeze([tuple]);

@@ -87,6 +87,14 @@ export function localModelSeccompFilter(arch=process.arch){
  return buffer;
 }
 
+/** Native counter parser; prompt evaluation alone never counts as decoding. */
+export function parseNativeGenerationCount(stderr){
+ if(typeof stderr!=='string')return null;
+ const match=/(?:^|\n)(?:(?:[0-9.]+\s+[A-Z]\s+)?(?:llama_perf_context_print|common_perf_print):\s*)?eval time\s*=\s*[0-9.]+\s*ms\s*\/\s*(\d+)\s*(?:runs|tokens)/.exec(stderr);
+ const count=Number(match?.[1]);
+ return Number.isSafeInteger(count)&&count>=1&&count<=1800?count:null;
+}
+
 /** Bounded launcher; injection is explicitly CONTRACT_TEST and never branded. */
 export async function launchLocalModel({fds,promptFd,timeoutMs,signal,spawnImpl=spawn,bwrap=BWRAP}={}){
  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>300000)fail('INVALID_CODING_BOUNDS');
@@ -117,9 +125,8 @@ export async function launchLocalModel({fds,promptFd,timeoutMs,signal,spawnImpl=
    if(refusal){finish(Error(refusal));return;}
    if(code!==0||term){finish(Error('LOCAL_RUNTIME_PROCESS_FAILED'));return;}
    const stderr=Buffer.concat(err).toString('utf8');
-   const match=/(?:^|\n)(?:llama_perf_context_print:\s*)?eval time\s*=\s*[0-9.]+\s*ms\s*\/\s*(\d+)\s*(?:runs|tokens)/.exec(stderr);
-   const outputTokens=Number(match?.[1]);
-   if(!Number.isSafeInteger(outputTokens)||outputTokens<1||outputTokens>1800){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
+   const outputTokens=parseNativeGenerationCount(stderr);
+   if(outputTokens===null){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
    let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(out));}catch{finish(Error('LOCAL_RUNTIME_OUTPUT_INVALID'));return;}
    finish(null,{text,outputTokens,pid:child.pid,exitCode:code,
     evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'HOST_INTEGRATION':'CONTRACT_TEST'});
@@ -182,7 +189,8 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
    pin.sizeBytes===reviewedPair.modelBytes&&pin.license===reviewedPair.modelLicense;
   const observation={schema:'momega1-local-process-observation-v1',
    evidenceClass:verifiedModelExecution?'LOCAL_MODEL_HOST':env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='CONTRACT_FIXTURE'?'CONTRACT_TEST':execution.evidenceClass,
-   verifiedModelExecution,reviewedPairId:verifiedModelExecution?reviewedPair.id:null,...binding,
+   verifiedModelExecution,reviewedPairId:verifiedModelExecution?reviewedPair.id:null,
+   reviewedModelId:verifiedModelExecution?reviewedPair.modelRepository:null,...binding,
    requestSha256:hash(JSON.stringify(body)),runtimePromptSha256:hash(prompt),modelSha256:pin.sha256,runtimeSha256:runtimeHash,
    outputSha256:hash(execution.text),proposalSha256:parsed?hash(canonical(parsed.proposal)):null,
    responseStatus:responseError?'INVALID_MODEL_RESPONSE':'PROPOSAL',
