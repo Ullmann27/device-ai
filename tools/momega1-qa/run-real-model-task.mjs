@@ -18,7 +18,9 @@ assert.ok(out!==source&&!out.startsWith(source+path.sep)&&out!==project&&!out.st
 const binding=JSON.parse(fs.readFileSync(project+'.task.json','utf8'));
 assert.match(binding.fixture,/^u(?:0[1-9]|1[0-2])$/);
 const ownRoot=path.dirname(fileURLToPath(import.meta.url));
+assert.equal(digest(fs.readFileSync(path.join(ownRoot,'FROZEN-MANIFEST.json'))),'1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407');
 const frozen=path.join(ownRoot,'frozen/tasks',binding.fixture);
+const frozenMetadata=JSON.parse(fs.readFileSync(path.join(frozen,'task.json'),'utf8'));
 const frozenTest=fs.readFileSync(path.join(frozen,'acceptance.test.mjs'),'utf8');
 const materializedTest=path.join(project,'.github/continuum/frozen.test.mjs');
 assert.equal(digest(fs.readFileSync(path.join(frozen,'subject.mjs'))),binding.sourceSha256);
@@ -34,15 +36,35 @@ assert.equal(git(project,'status','--porcelain'),'','Fixture must be clean');
 const moduleAt=relative=>import(pathToFileURL(path.join(source,relative)).href);
 const {validateCodingTask,taskFingerprint}=await moduleAt('.github/continuum/coding-task.mjs');
 const task=validateCodingTask(binding.task);
+assert.equal(task.id,'momega1-'+binding.fixture);
+assert.equal(task.kind,'BUGFIX');
+assert.equal(task.goal,frozenMetadata.requirements[0]);
+assert.deepEqual(task.acceptance,frozenMetadata.requirements);
 assert.deepEqual(task.limits,{maxModelCalls:2,maxContextChars:8192});
 assert.deepEqual(task.allowedPaths,['lib/subject.mjs']);
 assert.equal(task.chain,'node');
 const fingerprint=taskFingerprint(task),stateDir=path.join(out,'private-synthetic-state');
+const recallControl=process.env.MOMEGA_QA_TECHNICAL_RECALL??'on';
+assert.ok(recallControl==='on'||recallControl==='off','Explicit on/off recall control required');
+const seedState=process.env.MOMEGA_QA_INHERITED_STATE;
+let seedIdentity=null;
+if(seedState){
+ assert.ok(path.isAbsolute(seedState)&&fs.realpathSync(seedState)===seedState,'Canonical inherited synthetic-state path required');
+ assert.ok(seedState.startsWith('/workspace/momega1-build-env/'),'Only isolated QA synthetic state may be inherited');
+ const entries=[];
+ function inspectSeed(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){
+  const file=path.join(dir,e.name);assert.ok(!e.isSymbolicLink(),'Inherited state must not contain symlinks');
+  if(e.isDirectory())inspectSeed(file);else {assert.ok(e.isFile());entries.push([path.relative(seedState,file),digest(fs.readFileSync(file))]);}
+ }}
+ inspectSeed(seedState);entries.sort((a,b)=>a[0].localeCompare(b[0]));
+ seedIdentity={path:seedState,fileCount:entries.length,contentsManifestSha256:digest(JSON.stringify(entries)),
+  keyHandling:'Private key copied only within isolated synthetic state; neither key nor individual key hash is exported.'};
+}
 if(mode==='--recall'){
  const {recallTechnicalExperiences}=await moduleAt('.github/continuum/ccc1-technical-recall.mjs');
  const {runtimeKey}=await moduleAt('.github/continuum/ccc1-journal.mjs');
  const {repositoryOf}=await moduleAt('.github/continuum/ccc1-worker.mjs');
- console.log(JSON.stringify(recallTechnicalExperiences({stateDir,task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)})));
+ console.log(JSON.stringify(recallTechnicalExperiences({stateDir,task,project,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)})));
  process.exit(0);
 }
 assert.ok(!fs.existsSync(out),'New evidence directory required; never silently rerun a consumed task');
@@ -61,7 +83,8 @@ const before={integratedSource:expectedSha,integratedTree:git(source,'rev-parse'
  qaRunnerSha256:digest(fs.readFileSync(fileURLToPath(import.meta.url))),fixture:binding,
  taskFingerprint:fingerprint,fixtureTree:git(project,'rev-parse','HEAD^{tree}'),
  freezeManifestSha256:digest(fs.readFileSync(path.join(ownRoot,'FROZEN-MANIFEST.json'))),
- configuration,fileHashes,nodeVersion:process.version,startedAt:new Date().toISOString(),
+ configuration,fileHashes,technicalRecallEnabled:recallControl==='on',inheritedState:seedIdentity,
+ nodeVersion:process.version,startedAt:new Date().toISOString(),
  deviceStatus:'FOLD7_NOT_RUN',modelAnswersSupplied:false};
 write('before.json',before);
 const baseline=spawnSync(process.execPath,['--test','--test-reporter=tap','.github/continuum/frozen.test.mjs'],{cwd:project,encoding:'utf8',timeout:15000});
@@ -79,6 +102,7 @@ assert.equal(configuration.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,'cc324af070c2ecbfd
 assert.equal(fileHashes.CONTINUUM_LOCAL_BRAIN_MODEL_PATH,configuration.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256);
 assert.equal(fileHashes.CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH,configuration.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256);
 assert.ok(fileHashes.CONTINUUM_CODING_ISOLATION_CONFIG,'Owner isolation configuration required');
+if(seedState)fs.cpSync(seedState,stateDir,{recursive:true,errorOnExist:true,force:false,preserveTimestamps:true});
 const started=Date.now(),usage=process.resourceUsage();
 let outcome;
 try{
@@ -89,7 +113,7 @@ try{
  assert.equal(grant.fingerprint,fingerprint);assert.equal(grant.replayed,false);
  const result=await runCodingTask({project,stateDir,id:task.id,executor,
   executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,requireLocalModelObservation:true,
-  expectedTaskFingerprint:fingerprint,env:process.env});
+  expectedTaskFingerprint:fingerprint,technicalRecallEnabled:recallControl==='on',env:process.env});
  write('result.json',result);
  outcome={status:'OBSERVED_RESULT',resultStatus:result.status,technicalExperienceStatus:result.technicalExperienceStatus,
   technicalRecallCount:result.technicalRecallCount,solved:'REQUIRES_INDEPENDENT_EVIDENCE_REVIEW'};
@@ -108,7 +132,7 @@ function walk(dir){if(!fs.existsSync(dir))return;for(const e of fs.readdirSync(d
  if(e.isDirectory())walk(file);else if(e.isFile())inventory.push({path:relative,bytes:fs.statSync(file).size,sha256:digest(fs.readFileSync(file))});
 }}
 walk(stateDir);write('state-evidence-inventory.json',inventory);
-const requests=inventory.filter(x=>/(^|\/)request-\d+\.json$/.test(x.path)).map(x=>({path:x.path,...JSON.parse(fs.readFileSync(path.join(stateDir,x.path),'utf8'))}));
+const requests=inventory.filter(x=>x.path.startsWith('coding-evidence/'+task.id+'/')&&/(^|\/)request-\d+\.json$/.test(x.path)).map(x=>({path:x.path,...JSON.parse(fs.readFileSync(path.join(stateDir,x.path),'utf8'))}));
 write('model-requests.json',requests);
 const after={integratedSource:git(source,'rev-parse','HEAD'),integratedStatus:git(source,'status','--porcelain'),
  fixtureSource:git(project,'rev-parse','HEAD'),fixtureStatus:git(project,'status','--porcelain'),
