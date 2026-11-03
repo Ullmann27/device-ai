@@ -1,6 +1,6 @@
 # MΩ-1 ALPHA runtime handoff
 
-Status: SOURCE_INTEGRATED / independent review pending; no model/device acceptance. Base ca93fb4f7a17ff7a2a13debd93197ba485594f06.
+Status: SOURCE_INTEGRATED / independently reviewed LOCAL_MODEL_HOST for the exact approved host pair; no repair, learning, device or release acceptance. Base ca93fb4f7a17ff7a2a13debd93197ba485594f06.
 Branch codex/momega1-runtime-20261103. EXP-00/01/02/03/05/07/08/11/12.
 No model download, productive weights, Android, main, signer, owner data or deployment changes.
 
@@ -46,8 +46,10 @@ actual serialized runtime prompt, model/runtime/output and canonical proposal
 hashes. Injected run transports and JSON clones cannot brand. BETA must retain the
 original object; GAMMA authenticates durable proof with existing CCC1 runtime key.
 proposalSha256 = sha256Hex(canonical({plan,hypothesis,patches})).
-verifiedModelExecution stays false: HMAC authenticates the fixed CLI transport,
-not model authorship, inference quality or a device/scientific result.
+Process-only verifiedModelExecution stays false. The exact independently reviewed
+model/runtime tuple may carry true after actual native inference. HMAC authenticates
+the fixed CLI transport; the reviewed build/run establishes conventional inference
+provenance, not inference quality or device/scientific acceptance.
 
 The child uses root-owned /usr/bin/prlimit and /usr/bin/bwrap, unshares namespaces,
 clears env, drops capabilities, binds admitted model/runtime FDs read-only and
@@ -72,8 +74,9 @@ fixtures exercise actual bubblewrap namespaces and FD mounts, modified bytes,
 host-file/network denial, fork denial, native thread compatibility, memory/FD
 budgets, timeout/STOP, malformed/flood output and synthetic-evidence refusal.
 Fixtures have no neural weights and never certify inference.
-Real approved model/runtime absent; no inference attempted. LOCAL_MODEL_HOST
-acceptance, native llama.cpp invocation, Android/Termux, ARM64 and Fold7 NOT_RUN.
+At the initial process-only phase real approved model/runtime was absent and no
+inference was attempted. That historical LOCAL_MODEL_HOST gate was NOT_RUN; see
+the approved genuine-model phase below. Android/Termux, ARM64 and Fold7 NOT_RUN.
 Bubblewrap support on this Linux host is not evidence of Android support; Termux
 without these kernel/tools is BLOCKED_LOCAL_ISOLATION_UNAVAILABLE.
 
@@ -101,7 +104,88 @@ The private WeakSet is in-process ingress protection, not a durable signature.
 Existing CCC1 grants, journals, verifier and repair loop remain authoritative.
 No FIRST_COGNITIVE_LOOP_VERIFIED, Fold7, learning benefit or release claim.
 
-Independent reviewer must challenge frozen candidate; ALPHA does not self-certify.
+Independent reviewer challenged the process-only candidate and then the genuine
+model pair/source separately; ALPHA does not self-certify.
 
 Read current branch SHA and raw logs in docs/evidence/momega1/runtime on resume.
 Rollback: omit isolated runtime commits; preserve existing CCC1 and owner gates.
+
+## Approved genuine-model phase
+
+Chief explicitly relayed owner approval for the exact Qwen1.5B Q4_K_M file and
+pinned official llama.cpp CPU build. Baseline95b6cb1f merged before work; prior
+reviewed process-only HOST_INTEGRATION semantics preserved. See
+LOCAL-MODEL-RUNTIME-ADMISSION.md. Download/build artifacts outside Git; independent
+challenger must approve reviewed tuple before true-inference admission is enabled.
+
+Actual-model phase checkpoint: weights match official approved1117320768bytes,
+SHA256 cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046;
+existing GGUF parser admits qwen2 architecture. Official source clean tree
+42065e172024f95eb242763caa06812c09d363e7 at6cb3e672. Initial llama-cli target
+unavailable with server disabled; approved classic llama-completion target build
+is progressing outside Git with same pinned source and2jobs. Registry remains
+CANDIDATE; no actual-model true receipt can be minted yet.
+Rejected model replies now retain a signed bounded failure envelope with hashes,
+decoded-token count and INVALID_MODEL_RESPONSE status; no raw rejected reply or
+candidate. Provider authenticates it, preserves private-branded observation on
+error.modelObservation/error.trace and durable trace, then throws the typed model
+response error. Inference failure is distinct from unavailable model. Config-only
+ELF fixtures remain HOST_INTEGRATION/verifiedModelExecution=false.
+
+Compatibility freeze8425b119e1b6485527de285dd3375f233b27fdf5:137/137 exact-source
+Node runtime/coding/GGUF checks PASS, zero skip. Real approved official Qwen and
+CPU/static binary load/decode observed; own valid123-token synthetic proposal
+returned via default CLI within60s, before final provenance-field freeze. Native
+counter RED, pinned trailer and JSON/schema/template repair evidence archived.
+Independent second build reported byte-identical c2c13a2a...cbf5a. Await untouched
+challenger blind rerun and explicit evidence hash before candidate registry can
+advance. See LOCAL-MODEL-RUNTIME-ADMISSION.md; no current genuine true flag yet.
+
+
+## Final actual host admission — independently accepted
+
+Production code frozen9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96.
+Only the exact modelcc324af0...bb046 / binaryc2c13a2a...cbf5a tuple is now
+REVIEWED_LOCAL_MODEL_HOST, following challenger approval certificate SHA256
+88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe.
+Registry status/review SHA were changed only after explicit independent approval.
+The artifact certificate is copied under actual-model/independent-approved-pair-review.json;
+its primary source is the challenger branch. Unknown binaries, dummy GGUF,
+configured kind/boolean, injected transport and JSON clone cannot gain genuine proof.
+
+Challenger then independently accepted finalsource9e28: actual DEFAULT fixed CLI
+provider generated142tokens in26.562s, verifiedModelExecution=true in both nested
+frozen observation and trace, private brand true, JSON clone false.50/50 controls
+PASS, zero fail/skip, including forged valid-MAC+exact-pair injected transport,
+consumed repeat/restart budgets and earlier real-model cancel/path-swap controls.
+No more author model inference was run after the frozen final review. Own final
+exactsource coding/runtime/GGUF regressions137/137PASS, zero fail/skip.
+
+Independent untouched blind response was bounded and normal-exit but passed6/8
+correctness checks with2regressions. That is NOT a verified repair or benchmark
+success. No patch applied by ALPHA; first cognitive loop, learning gain, Android,
+Fold7 and release remain separate gates. No weights/native executables in Git.
+
+Current Draft PR for this genuine phase: #427 (old process-only PR412 was merged).
+Source/app interface errors preserve original branded error.modelObservation and
+error.trace on CODING_RESPONSE_INVALID/CODING_NOOP_PATCH. responseStatus is
+INVALID_MODEL_RESPONSE and proposalSha256=null, so rejected text cannot become a
+candidate or experience. Normal proposal responseStatus is PROPOSAL. Exact
+reviewedPairId/modelSha256/runtimeSha256 must remain bound across the task.
+Abnormal native termination without final counters never synthesizes completion.
+
+Resume: verify codeSHA9e28 plus latest evidence-only head; inspect independent
+review evidence and MODEL-ADMISSION.md. Actual runtime env remains outside Git in
+/workspace/momega1-local-model/runtime-env.json, containing only public pins/local
+paths. Route real synthetic unknown tasks through existing strict CCC1 orchestration,
+not a direct ungranted worker. Rollback: remove/revert exact registry admission and
+isolated runtime commits; keep rejected/cancelled journals and owner gates intact.
+
+
+Final independent source evidence is pushed at
+https://github.com/Ullmann27/device-ai/commit/88a6e2fb1ce52ab090a8c6b13de7cd9bad4a7aaf:
+docs/evidence/momega1/challenger/actual-native-compatible/final-provider-result.json,
+actual-model-final-manifest.json and ACTUAL-MODEL-FINAL-ASSESSMENT.md. Original
+pair certificate remains88e886df...09fe. Final-source manifest records the final
+reviewer receipt hash. QA received the approved nonsecret runtime-env.json path;
+ALPHA performs no further native inference during its unknown-task benchmark.

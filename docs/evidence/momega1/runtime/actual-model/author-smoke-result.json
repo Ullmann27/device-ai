@@ -1,0 +1,77 @@
+{
+  "evidenceClass": "ACTUAL_MODEL_OBSERVED_ADMISSION_PENDING",
+  "status": "PROPOSAL_OBSERVED",
+  "elapsedMs": 25981,
+  "observationPrivateBranded": true,
+  "mode": "LOCAL_CODING_PATCH_PROPOSAL_V1",
+  "trusted": false,
+  "autoApply": false,
+  "plan": [
+    "Identify the issue in the twice function",
+    "Correct the function to return twice its integer argument",
+    "Test the function to ensure it works as expected"
+  ],
+  "hypothesis": "The twice function is returning the wrong value for negative numbers",
+  "patches": [
+    {
+      "file": "lib/twice.mjs",
+      "oldText": "export function twice(n) { return n; }",
+      "newText": "export function twice(n) { return n * 2; }"
+    }
+  ],
+  "localRequests": 1,
+  "context": {
+    "commit": "e27941330ca8c5477c80aec9ff2d91d804e89295",
+    "contextSha256": "c86bd69884de5f689f6c9954d1808b83f99095430e0e4a5e65cb4163b0eb5a7d",
+    "ranges": [
+      {
+        "file": "lib/twice.mjs",
+        "startLine": 1,
+        "endLine": 2,
+        "sha256": "7ef73dbdfd0218bde612ffcd65e4f5ff66ef84480c8f0e046d7bf7a3ffd8a884"
+      }
+    ]
+  },
+  "trace": {
+    "schema": "continuum-coding-model-request",
+    "version": 1,
+    "taskId": "author-native-smoke",
+    "taskFingerprint": "3e9c68ca12cf8c116556448f6e304ba790e27d39b7f89ad854190d1b8e953f6d",
+    "sourceCommit": "e27941330ca8c5477c80aec9ff2d91d804e89295",
+    "request": 1,
+    "startedAt": "2026-11-03T20:01:40.092Z",
+    "elapsedMs": 25955,
+    "configuredModel": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+    "verifiedModelExecution": false,
+    "contextSha256": "c86bd69884de5f689f6c9954d1808b83f99095430e0e4a5e65cb4163b0eb5a7d",
+    "promptSha256": "571fe5124c925af6b6046d22e57a816c0846f8f7bbe83da9d28286458eda671a",
+    "modelTimeoutMs": 60000,
+    "exitCode": 0,
+    "modelObservation": {
+      "schema": "momega1-local-process-observation-v1",
+      "evidenceClass": "HOST_INTEGRATION",
+      "verifiedModelExecution": false,
+      "reviewedPairId": null,
+      "reviewedModelId": null,
+      "executionId": "4fca37595d87cd8cf56a05df9a70c5675e423dc3f412dc5d047b50a81a031530",
+      "taskId": "author-native-smoke",
+      "sourceCommit": "e27941330ca8c5477c80aec9ff2d91d804e89295",
+      "taskFingerprint": "3e9c68ca12cf8c116556448f6e304ba790e27d39b7f89ad854190d1b8e953f6d",
+      "requestIndex": 1,
+      "contextSha256": "c86bd69884de5f689f6c9954d1808b83f99095430e0e4a5e65cb4163b0eb5a7d",
+      "promptSha256": "571fe5124c925af6b6046d22e57a816c0846f8f7bbe83da9d28286458eda671a",
+      "requestSha256": "2aca43223bffed8c8acb6cc21651e3404239aacbb68657a3780e55b82f1a9b35",
+      "runtimePromptSha256": "4a7a29616d7cbbad9f47a35b54d61a4a926463248dea44ff7fd33aeb70a36e31",
+      "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "outputSha256": "58531c7237e6b2440f371541eb0bf2fd8df36a9f13a1947a35d90f95adca4467",
+      "proposalSha256": "ebbc8e5770d21da2883c2a1043490d6987e32979c14bbf2eda231d62bfc270cb",
+      "responseStatus": "PROPOSAL",
+      "outputTokens": 123,
+      "pid": 185241,
+      "exitCode": 0,
+      "isolation": "BWRAP_UNSHARE_ALL",
+      "elapsedMs": 25862
+    }
+  }
+}
