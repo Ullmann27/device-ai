@@ -10,9 +10,11 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /** A bounded background assignment: own goal, own tool allowlist, own deadline. */
 data class WorkerBrief(
@@ -68,13 +70,22 @@ class ChiefWorkerPool(
     // Never spawn unbounded job threads if a native model ignores an interrupt.
     private val workers: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } }
     private val slots = ConcurrentHashMap<String, Slot>()
+    // Capacity is released before reporting so callbacks may submit again; completion includes delivery.
+    private val unfinishedAssignments = AtomicInteger()
 
     @Synchronized
     fun submit(brief: WorkerBrief, onReport: (WorkerReport) -> Unit): Boolean {
         if (slots.containsKey(brief.id) || slots.size >= maxConcurrent + maxQueued) return false
         val slot = Slot(brief, onReport)
+        unfinishedAssignments.incrementAndGet()
         slots[brief.id] = slot
-        runners.execute { supervise(slot) }
+        try {
+            runners.execute { supervise(slot) }
+        } catch (e: RejectedExecutionException) {
+            slots.remove(brief.id, slot)
+            unfinishedAssignments.decrementAndGet()
+            throw e
+        }
         return true
     }
 
@@ -88,9 +99,10 @@ class ChiefWorkerPool(
 
     fun active(): Set<String> = slots.keys.toSet()
 
+    /** Idle includes completion of synchronous report callbacks, even when they submit another job. */
     fun awaitIdle(timeoutMillis: Long): Boolean {
         val end = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMillis)
-        while (slots.isNotEmpty()) {
+        while (unfinishedAssignments.get() != 0) {
             if (System.nanoTime() > end) return false
             Thread.sleep(10)
         }
@@ -108,7 +120,11 @@ class ChiefWorkerPool(
             if (!slot.reported.compareAndSet(false, true)) return
             val ms = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
             slots.remove(slot.brief.id)
-            runCatching { slot.onReport(WorkerReport(slot.brief.id, status, summary.take(4_000), ms)) }
+            try {
+                runCatching { slot.onReport(WorkerReport(slot.brief.id, status, summary.take(4_000), ms)) }
+            } finally {
+                unfinishedAssignments.decrementAndGet()
+            }
         }
         if (slot.cancelled.get()) return report(WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
         try {
