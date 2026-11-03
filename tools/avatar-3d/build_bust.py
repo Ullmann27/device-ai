@@ -214,6 +214,43 @@ def bake_and_cap(obj):
 face,baked=bake_and_cap(face)
 points=baked['Basis'];morphpoints={n:baked[n] for n in MORPHS}
 
+def reduce_face(obj,baked):
+    """Symmetric neutral collapse; transfer each morph by source barycentrics."""
+    from mathutils.bvhtree import BVHTree
+    obj.data.calc_loop_triangles()
+    tris=[list(t.vertices) for t in obj.data.loop_triangles]
+    source=baked['Basis'];bvh=BVHTree.FromPolygons(source,tris,all_triangles=True)
+    modifier=obj.modifiers.new('MobileNeutralReduction','DECIMATE')
+    modifier.ratio=.65;modifier.use_symmetry=True;modifier.symmetry_axis='X'
+    modifier.use_collapse_triangulate=True
+    bpy.context.view_layer.update()
+    reduced=bpy.data.meshes.new_from_object(obj.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    result={'Basis':[canonical_vec(v.co) for v in reduced.vertices]}
+    polygons=[list(p.vertices) for p in reduced.polygons]
+    bindings=[];max_distance=0
+    for p in result['Basis']:
+        near,normal,index,distance=bvh.find_nearest(p);max_distance=max(max_distance,distance)
+        ids=tris[index];a,b,c=[source[i]for i in ids]
+        v0=b-a;v1=c-a;v2=near-a
+        d00=v0.dot(v0);d01=v0.dot(v1);d11=v1.dot(v1);d20=v2.dot(v0);d21=v2.dot(v1)
+        denominator=d00*d11-d01*d01
+        if abs(denominator)<1e-20:w=[1,0,0]
+        else:
+            v=(d11*d20-d01*d21)/denominator;w2=(d00*d21-d01*d20)/denominator;w=[1-v-w2,v,w2]
+        bindings.append((ids,w))
+    for name in MORPHS:
+        result[name]=[p+sum(((baked[name][i]-source[i])*w for i,w in zip(ids,weights)),Vector()) for p,(ids,weights) in zip(result['Basis'],bindings)]
+    new=mesh_object('ReducedFace',result['Basis'],polygons);new.data.materials.append(skin)
+    for name,pts in result.items():
+        key=new.shape_key_add(name=name)
+        for item,co in zip(key.data,pts):item.co=blender_vec(co)
+    bpy.data.objects.remove(obj,do_unlink=True);bpy.data.meshes.remove(reduced);new.name='Face'
+    (OUT/'reduction-transfer.json').write_text(json.dumps({'method':'symmetric neutral decimation + barycentric displacement transfer','ratio':.65,'sourceVertices':len(source),'outputVertices':len(result['Basis']),'maxNeutralSurfaceDistanceMetres':max_distance,'morphCount':21},indent=2)+'\n')
+    return new,result
+
+face,baked=reduce_face(face,baked)
+points=baked['Basis'];morphpoints={n:baked[n] for n in MORPHS}
+
 def make_threads():
     """Physical triangular filaments following a wavy isocontour field.
 
@@ -255,6 +292,14 @@ def make_threads():
                 a,b,t=item;p=points[a].lerp(points[b],t)
                 if last is None or (p-last).length>.007:sampled.append(item);last=p
             if len(sampled)>2:paths.append(sampled)
+    # Fixed total mobile triangle budget: reduce sampling uniformly, preserving
+    # contour distribution and morph bindings. Closed triangular tubes consume
+    # six triangles per path segment.
+    total_segments=sum(len(p)-1 for p in paths);budget=4400
+    if total_segments>budget:
+        ratio=budget/total_segments
+        paths=[[chain[round(j*(len(chain)-1)/(max(2,int((len(chain)-1)*ratio))))] for j in range(max(2,int((len(chain)-1)*ratio))+1)]for chain in paths]
+    while sum(len(p)-1 for p in paths)>budget:paths.pop()
     verts=[];polys=[];allmorph={n:[] for n in MORPHS};colors=[]
     for chain in paths:
         offset=len(verts)
@@ -263,9 +308,9 @@ def make_threads():
             tangent=normal.cross(Vector((0,1,0)))
             if tangent.length<.01:tangent=normal.cross(Vector((1,0,0)))
             tangent.normalize();other=normal.cross(tangent).normalized()
-            p+=normal*.00034
+            p+=normal*.00085
             for k in range(3):
-                delta=(tangent*math.cos(k*math.tau/3)+other*math.sin(k*math.tau/3))*.000105
+                delta=(tangent*math.cos(k*math.tau/3)+other*math.sin(k*math.tau/3))*.000085
                 verts.append(p+delta);colors.append(0 if p.x<0 else 1)
                 for name in MORPHS:
                     move=(morphpoints[name][a]-points[a]).lerp(morphpoints[name][b]-points[b],t)
@@ -326,6 +371,7 @@ reset()
 sys.path.insert(0,str(pathlib.Path(__file__).parent))
 from export_glb import export_avatar
 export_avatar(ASSETS/'jarvis-research-v1.glb',OUT/'asset-manifest.json',MORPHS)
+bpy.data.orphans_purge(do_recursive=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(ASSETS/'jarvis-research-v1.blend'))
 if PREVIEW:
     for name,angle,weights in [('anatomy-front',0,{}),('anatomy-profile',90,{}),('anatomy-blink',0,{'BlinkLeft':1,'BlinkRight':1}),('anatomy-aa',0,{'AA':1})]:render(name,angle,weights)

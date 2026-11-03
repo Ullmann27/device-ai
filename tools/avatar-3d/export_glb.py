@@ -3,7 +3,7 @@
 Writes ordinary uncompressed FLOAT accessors, skinning, named morphs, materials
 and animation channels. Runtime imports do not require Blender or this script.
 """
-import bpy, json, struct, math, hashlib
+import bpy, json, struct, math, hashlib, pathlib, subprocess
 from mathutils import Vector
 
 def export_avatar(path, manifest_path, morphs):
@@ -124,5 +124,36 @@ def export_avatar(path, manifest_path, morphs):
        'animations':[a['name']for a in animations],'textureCount':0,'identityStatus':'PARTIAL_REFERENCE_ADAPTATION_REQUIRES_OWNER_REVIEW','deviceStatus':'NOT_RUN',
        'jawPolicy':'Exterior via JawOpen; Jaw node rotates inner lower dental arch and mouth backing; expression and jaw weights independently controlled.',
        'limits':['No phonetic accuracy acceptance','No Fold7 FPS/thermal acceptance','No biometric identity claim','Morph POSITION only; normals use neutral vertex normals','Filament offset follows barycentric displacement without pose-corrective normal refit']}
+    from mathutils.kdtree import KDTree
+    face=bpy.data.objects['Face'];positions=[canon(v.co)for v in face.data.vertices]
+    kd=KDTree(len(positions))
+    for i,p in enumerate(positions):kd.insert(p,i)
+    kd.balance();distances=[];pairs=[]
+    for i,p in enumerate(positions):
+        near,j,distance=kd.find(Vector((-p.x,p.y,p.z)));distances.append(distance);pairs.append([i,j])
+    head_height=max(p.y for p in positions)-.19
+    head_distances=[d for p,d in zip(positions,distances)if p.y>.19]
+    edges={}
+    for p in face.data.polygons:
+        vs=list(p.vertices)
+        for a,b in zip(vs,vs[1:]+vs[:1]):
+            e=tuple(sorted((a,b)));edges[e]=edges.get(e,0)+1
+    face.data.calc_loop_triangles()
+    head_triangles=sum(1 for t in face.data.loop_triangles if min(positions[i].y for i in t.vertices)>.19)
+    metrics={'faceVertexCount':len(positions),'faceTriangleCount':len(face.data.loop_triangles),'headTriangleCountAboveY019':head_triangles,
+       'headHeightMetresAboveY019':head_height,'neutralMirrorMaxDistanceMetres':max(distances),'neutralHeadMirrorMaxDistanceMetres':max(head_distances),
+       'neutralHeadMirrorNormalizedMaxError':max(head_distances)/head_height,'neutralHeadMirrorMeanDistanceMetres':sum(head_distances)/len(head_distances),
+       'openBoundaryEdges':sum(v==1 for v in edges.values()),'nonManifoldEdgesOverTwoFaces':sum(v>2 for v in edges.values()),
+       'degenerateTriangles':sum(1 for t in face.data.loop_triangles if (positions[t.vertices[1]]-positions[t.vertices[0]]).cross(positions[t.vertices[2]]-positions[t.vertices[0]]).length<1e-12),
+       'boundsMetres':{'min':[min(p[k]for p in positions)for k in range(3)],'max':[max(p[k]for p in positions)for k in range(3)]},
+       'method':'Nearest mirrored neutral vertex in canonical coordinates, head subset Y>0.19m, error normalized by that subset height. Includes a complete vertex mirror map.',
+       'collisionStatus':'No exhaustive collision proof; neutral/blink/speech visual inspection and independent challenger remain required.'}
+    manifest['geometryMetrics']=metrics
+    manifest['budget']={'headTrianglesMaximum':30000,'totalTrianglesMaximum':60000,'headPass':head_triangles<=30000,'totalPass':manifest['totalTriangles']<=60000}
+    manifest['buildSourceCommit']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=path.parent).decode().strip()
+    source_root=pathlib.Path(__file__).parent
+    manifest['builderSha256']={n:hashlib.sha256((source_root/n).read_bytes()).hexdigest()for n in ['build_bust.py','export_glb.py']}
+    (manifest_path.parent/'neutral-mirror-pairs.json').write_text(json.dumps({'assetSha256':manifest['sha256'],'pairs':pairs},separators=(',',':'))+'\n')
+    (manifest_path.parent/'geometry-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
     manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
     print('GLB_EXPORTED',str(path),'bytes',len(result),'triangles',manifest['totalTriangles'],flush=True)
