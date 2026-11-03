@@ -1,0 +1,19 @@
+✔ unchanged complete frozen reports disclose actual counts and limits (4.579239ms)
+✔ improved reported case is visible without pretending to run Gemma (1.543372ms)
+✔ aggregate gain cannot conceal a newly wrong case (0.901416ms)
+✔ any reported harmful output blocks even unchanged parity (0.821526ms)
+✔ changed expected answer is rejected (1.138682ms)
+✔ changed category is rejected (0.623367ms)
+✔ missing and duplicate case coverage is rejected (1.672265ms)
+✔ unknown identifiers and invalid statuses are rejected (0.83743ms)
+✔ modified frozen input invalidates both reports (0.406051ms)
+✔ empty or malformed reports fail closed (1.019583ms)
+✔ result binds all input bytes and preserves per-category deltas (1.604193ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 141.784407
