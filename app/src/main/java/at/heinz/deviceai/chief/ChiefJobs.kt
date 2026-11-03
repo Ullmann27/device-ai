@@ -31,7 +31,10 @@ data class ChiefJobDeps(
     val approvalProvider: AgentToolApprovalProvider,
     val clock: () -> Long = System::currentTimeMillis,
     val limits: AgentLimits = AgentLimits(),
-    val eventObserver: (at.heinz.deviceai.cognitive.AgentCognitiveEvent) -> Unit = {}
+    val eventObserver: (at.heinz.deviceai.cognitive.AgentCognitiveEvent) -> Unit = {},
+    // Only an independently allocated model/session may receive cancelGeneration().
+    // A shared LiteRT-LM runtime may have other Chief/worker turns in flight and sticky cancellation state.
+    val modelOwnedByJob: Boolean = false
 )
 
 /**
@@ -50,7 +53,8 @@ object ChiefJobs {
             ): AgentModelOutput = scoped.generate(task, memories, reflection, toolObservations)
 
             override fun cancelGeneration() {
-                (deps.model as? CancellableAgentModel)?.cancelGeneration()
+                if (deps.modelOwnedByJob)
+                    (deps.model as? CancellableAgentModel)?.cancelGeneration()
             }
         }
         return object : WorkerJob {
