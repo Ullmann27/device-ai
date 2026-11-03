@@ -1,0 +1,3 @@
+Frozen source: 4d2e825f2caf783085dcb85c005960cd01347b14
+Executed working-tree HEAD: 8123e6df2bc48068b2eb32a088b6e6c6768cfe3d
+All manifest-bound predictor/checkpoint/scorer/source bytes identical. run.py independently checked every manifest hash before both executions.

@@ -1,0 +1,114 @@
+{"cases": [
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-001-7813749801686242469",
+    "scenario": "TYPE_FILTER_AND_RECENCY",
+    "pass": true,
+    "records": 257,
+    "id": "QB-M-001"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-002-4021709847047818100",
+    "scenario": "REVOKE_FROM_SECOND_INSTANCE",
+    "pass": true,
+    "records": 288,
+    "id": "QB-M-002"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-003-6360733678787887214",
+    "scenario": "CORRECTION_STATUS_AND_REPLAY",
+    "pass": true,
+    "records": 319,
+    "id": "QB-M-003"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-004-5895827958336245586",
+    "scenario": "DELETE_AND_RECREATE",
+    "pass": true,
+    "records": 1,
+    "id": "QB-M-004"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-005-7045343156826173804",
+    "scenario": "UNSELECTED_SEGMENT_CORRUPTION",
+    "pass": true,
+    "records": 257,
+    "id": "QB-M-005"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-006-13514669467865854726",
+    "scenario": "SELECTED_SEGMENT_CORRUPTION",
+    "pass": true,
+    "records": 288,
+    "id": "QB-M-006"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-007-652845367076903919",
+    "scenario": "SAME_LENGTH_TAMPER",
+    "pass": true,
+    "records": 319,
+    "id": "QB-M-007"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-008-9336897203141482353",
+    "scenario": "LIMIT_REJECTION",
+    "pass": true,
+    "records": 350,
+    "id": "QB-M-008"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-009-7563518190137089828",
+    "scenario": "TYPE_FILTER_AND_RECENCY",
+    "pass": true,
+    "records": 257,
+    "id": "QB-M-009"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-010-6168947064003585864",
+    "scenario": "REVOKE_FROM_SECOND_INSTANCE",
+    "pass": true,
+    "records": 288,
+    "id": "QB-M-010"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-011-8013673098434646352",
+    "scenario": "CORRECTION_STATUS_AND_REPLAY",
+    "pass": true,
+    "records": 319,
+    "id": "QB-M-011"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-012-6062344193158344073",
+    "scenario": "DELETE_AND_RECREATE",
+    "pass": true,
+    "records": 1,
+    "id": "QB-M-012"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-013-6201945747985165034",
+    "scenario": "UNSELECTED_SEGMENT_CORRUPTION",
+    "pass": true,
+    "records": 257,
+    "id": "QB-M-013"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-014-13614182963948698021",
+    "scenario": "SELECTED_SEGMENT_CORRUPTION",
+    "pass": true,
+    "records": 288,
+    "id": "QB-M-014"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-015-1049409715519150397",
+    "scenario": "SAME_LENGTH_TAMPER",
+    "pass": true,
+    "records": 319,
+    "id": "QB-M-015"
+  },
+  {
+    "temporaryDirectory": "/tmp/qa-replay-QB-M-016-6773848099380962945",
+    "scenario": "LIMIT_REJECTION",
+    "pass": true,
+    "records": 350,
+    "id": "QB-M-016"
+  }
+]}

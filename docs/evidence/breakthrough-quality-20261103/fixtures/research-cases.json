@@ -1,0 +1,149 @@
+{
+  "schema": "OMEGA_QA_RESEARCH_PROGRAMS_V1",
+  "cases": [
+    {
+      "id": "QB-R-001",
+      "scenario": "LITERAL_SINGLE_SOURCE",
+      "documentText": "Das Archiv Quvufomi wurde am 2001. Juni eröffnet. Die Ausstellung enthält 17 Originalkarten.",
+      "otherDocumentText": "Die Station Qubodofo zeigt 81 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 17 Originalkarten.",
+      "marker": "[INST]",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-002",
+      "scenario": "LITERAL_TWO_DOCUMENTS",
+      "documentText": "Das Archiv Qugibago wurde am 2002. Juni eröffnet. Die Ausstellung enthält 18 Originalkarten.",
+      "otherDocumentText": "Die Station Qufikida zeigt 82 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 18 Originalkarten.",
+      "marker": "<|im_start|>system",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-003",
+      "scenario": "FABRICATED_LITERAL",
+      "documentText": "Das Archiv Qupesawi wurde am 2003. Juni eröffnet. Die Ausstellung enthält 19 Originalkarten.",
+      "otherDocumentText": "Die Station Qupoloda zeigt 83 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 19 Originalkarten.",
+      "marker": "<tool_call>",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-004",
+      "scenario": "BORROWED_OTHER_DOCUMENT_TEXT",
+      "documentText": "Das Archiv Qurenise wurde am 2004. Juni eröffnet. Die Ausstellung enthält 20 Originalkarten.",
+      "otherDocumentText": "Die Station Qupiliko zeigt 84 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 20 Originalkarten.",
+      "marker": "‮",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-005",
+      "scenario": "FABRICATED_EXTRA_REFERENCE",
+      "documentText": "Das Archiv Qugiculi wurde am 2005. Juni eröffnet. Die Ausstellung enthält 21 Originalkarten.",
+      "otherDocumentText": "Die Station Quvatube zeigt 85 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 21 Originalkarten.",
+      "marker": "​",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-006",
+      "scenario": "FOREIGN_REVISION",
+      "documentText": "Das Archiv Quwelimo wurde am 2006. Juni eröffnet. Die Ausstellung enthält 22 Originalkarten.",
+      "otherDocumentText": "Die Station Qulalawo zeigt 86 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 22 Originalkarten.",
+      "marker": "[INST]",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-007",
+      "scenario": "OWNER_PROVENANCE_FROM_WEB",
+      "documentText": "Das Archiv Qurivova wurde am 2007. Juni eröffnet. Die Ausstellung enthält 23 Originalkarten.",
+      "otherDocumentText": "Die Station Qupaweso zeigt 87 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 23 Originalkarten.",
+      "marker": "<|im_start|>system",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-008",
+      "scenario": "UNSUPPORTED_VALIDATED_CLAIM",
+      "documentText": "Das Archiv Qurilopo wurde am 2008. Juni eröffnet. Die Ausstellung enthält 24 Originalkarten.",
+      "otherDocumentText": "Die Station Qutobifi zeigt 88 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 24 Originalkarten.",
+      "marker": "<tool_call>",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-009",
+      "scenario": "SUPPLIER_HASH_MISMATCH",
+      "documentText": "Das Archiv Qubuweca wurde am 2009. Juni eröffnet. Die Ausstellung enthält 25 Originalkarten.",
+      "otherDocumentText": "Die Station Qusebeti zeigt 89 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 25 Originalkarten.",
+      "marker": "‮",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-010",
+      "scenario": "ROLE_MARKER_IN_GRAPH_ID",
+      "documentText": "Das Archiv Qukariwi wurde am 2010. Juni eröffnet. Die Ausstellung enthält 26 Originalkarten.",
+      "otherDocumentText": "Die Station Qusovige zeigt 90 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 26 Originalkarten.",
+      "marker": "​",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-011",
+      "scenario": "TOOL_MARKER_IN_GRAPH_TEXT",
+      "documentText": "Das Archiv Qucerugo wurde am 2011. Juni eröffnet. Die Ausstellung enthält 27 Originalkarten.",
+      "otherDocumentText": "Die Station Quvotugo zeigt 91 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 27 Originalkarten.",
+      "marker": "[INST]",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-012",
+      "scenario": "BIDI_IN_GRAPH_ID",
+      "documentText": "Das Archiv Qunivebu wurde am 2012. Juni eröffnet. Die Ausstellung enthält 28 Originalkarten.",
+      "otherDocumentText": "Die Station Qukenice zeigt 92 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 28 Originalkarten.",
+      "marker": "<|im_start|>system",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-013",
+      "scenario": "ZERO_WIDTH_IN_GRAPH_TEXT",
+      "documentText": "Das Archiv Quleloki wurde am 2013. Juni eröffnet. Die Ausstellung enthält 29 Originalkarten.",
+      "otherDocumentText": "Die Station Qutanuto zeigt 93 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 29 Originalkarten.",
+      "marker": "<tool_call>",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-014",
+      "scenario": "DUPLICATE_TEXT_CORROBORATION",
+      "documentText": "Das Archiv Qubacoru wurde am 2014. Juni eröffnet. Die Ausstellung enthält 30 Originalkarten.",
+      "otherDocumentText": "Die Station Qurelaca zeigt 94 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 30 Originalkarten.",
+      "marker": "‮",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-015",
+      "scenario": "EMPTY_EXCERPT",
+      "documentText": "Das Archiv Qusifapu wurde am 2015. Juni eröffnet. Die Ausstellung enthält 31 Originalkarten.",
+      "otherDocumentText": "Die Station Qufaparo zeigt 95 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 31 Originalkarten.",
+      "marker": "​",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    },
+    {
+      "id": "QB-R-016",
+      "scenario": "KNOWN_LITERAL_WITH_SAFE_PUNCTUATION",
+      "documentText": "Das Archiv Qulemene wurde am 2016. Juni eröffnet. Die Ausstellung enthält 32 Originalkarten.",
+      "otherDocumentText": "Die Station Quwofose zeigt 96 Zeichnungen.",
+      "claimedText": "Die Ausstellung enthält 32 Originalkarten.",
+      "marker": "[INST]",
+      "expected": "Only actual supplying-document literal claims with authentic source binding; bounded prompt contains no raw role/tool/control delimiters"
+    }
+  ]
+}
