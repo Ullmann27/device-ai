@@ -1,0 +1,18 @@
+{
+  "schema": "genesis-known-u03-regression-v1",
+  "status": "KNOWN_REGRESSION_ONLY",
+  "sourceCommit": "10f4339a760f8a531993598200b1c3299d3b2b97",
+  "originalSuiteManifestSha256": "1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "originalFiles": {
+    "tools/momega1-qa/frozen/tasks/u03/subject.mjs": "606c4bd672923563c93ad18a91a7ccf67e0c82e89700a7b942e81e55fe5e0bac",
+    "tools/momega1-qa/frozen/tasks/u03/acceptance.test.mjs": "948b530ee774454553172bdbfa14628fffab1e33c77c8681e8bbb788514eb658",
+    "tools/momega1-qa/frozen/tasks/u03/task.json": "e2bc4644d46ac662861ef2cab03e8f1e6a5677044ff91fb11917a36fd2c67a6f"
+  },
+  "files": {
+    "acceptance.fixture": "948b530ee774454553172bdbfa14628fffab1e33c77c8681e8bbb788514eb658",
+    "subject.source": "606c4bd672923563c93ad18a91a7ccf67e0c82e89700a7b942e81e55fe5e0bac",
+    "task.json": "e2bc4644d46ac662861ef2cab03e8f1e6a5677044ff91fb11917a36fd2c67a6f"
+  },
+  "maximumModelCalls": 1,
+  "condition": "Run once only if the independently frozen g04 fails; keep separate denominator and fresh canonical grant/profile state. No external patch or fixture rewrite."
+}
