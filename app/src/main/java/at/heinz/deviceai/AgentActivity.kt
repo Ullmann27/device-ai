@@ -228,11 +228,16 @@ class AgentActivity : Activity() {
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            hologramView?.setAudioLevel(voiceSignal.level(android.os.SystemClock.elapsedRealtime()))
+            val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+            hologramView?.setAudioLevel(level)
+            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
             mainHandler.postDelayed(this, 33L)
         }
     }
     private var voiceEngine: TextToSpeech? = null
+    // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
+    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
+    @Volatile private var voiceAvatarText: String = ""
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var appLookupGeneration: Long = 0L
     private var appLookupActive: Boolean = false
@@ -5360,6 +5365,10 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
+        avatarDirector.onRuntime(at.heinz.deviceai.avatar.AvatarRuntimeSignals(
+            listening = voiceListening, speaking = voiceSpeaking,
+            researching = state == ContinuumHologramView.State.RESEARCH,
+            learning = state == ContinuumHologramView.State.LEARNING, busy = busy))
     }
 
     private fun stopVoiceAnimation() {
@@ -5376,6 +5385,7 @@ class AgentActivity : Activity() {
             override fun onStart(utteranceId: String?) {
                 if(utteranceId == null || utteranceId != voiceUtteranceId) return
                 voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
+                avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                 runOnUiThread {
                     if(utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
                     voiceSpeaking = true
@@ -5391,14 +5401,18 @@ class AgentActivity : Activity() {
                 if(utteranceId != null && utteranceId == voiceUtteranceId && audio != null) voiceSignal.append(utteranceId,audio)
             }
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
-                if(utteranceId != null && utteranceId == voiceUtteranceId) voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+                if(utteranceId != null && utteranceId == voiceUtteranceId) {
+                    voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+                    avatarDirector.wordRange(utteranceId, start, end)
+                }
             }
             override fun onDone(utteranceId: String?) = finish(utteranceId)
             @Deprecated("Required for older TTS engines")
             override fun onError(utteranceId: String?) = finish(utteranceId)
             override fun onError(utteranceId: String?, errorCode: Int) = finish(utteranceId)
-            override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId)
-            private fun finish(id: String?) {
+            override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId, interrupted)
+            private fun finish(id: String?, interrupted: Boolean = false) {
+                if (id != null) avatarDirector.speechEnded(id, interrupted)
                 runOnUiThread { if(id != null && id == voiceUtteranceId) stopVoiceAnimation() }
             }
         })
@@ -5412,6 +5426,7 @@ class AgentActivity : Activity() {
         voiceUtteranceId = id
         voiceSignal.activate(id)
         val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
+        voiceAvatarText = spoken.orEmpty()
         if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
             stopVoiceAnimation()
     }

@@ -47,3 +47,9 @@ data class AvatarRuntimeSignals(
     val learning: Boolean = false, val busy: Boolean = false, val awaitingApproval: Boolean = false,
     val blocked: Boolean = false
 )
+
+/**
+ * Plug-in point for the graphics side: set [sink] before AgentActivity is created (e.g. in an
+ * Application subclass or a later avatar module). Default is the no-op placeholder.
+ */
+object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
