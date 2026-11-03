@@ -24,7 +24,7 @@ test('single hologram frame callback advances phase independently of Canvas onDr
  assert.ok(callback.includes('scheduleFrame()'));
  assert.ok(!draw.includes('advanceFrame()'), 'onDraw must not drive the motion clock');
  assert.ok(!draw.includes('scheduleFrame()'), 'onDraw must not queue duplicate callbacks');
- assert.ok(orb.includes('if (canAnimate() && !framePending)'));
+ assert.ok(orb.includes('if (canAnimateFrame() && !framePending)'));
 });
 test('Android window visibility and focus can restore orbital clock without cached view visibility',()=>{
  assert.ok(orb.includes('override fun onVisibilityChanged(changedView: View, visibility: Int)'));

@@ -265,6 +265,9 @@ dependencies {
         uiTestResourceSdk("org.robolectric:android-all-instrumented:15-robolectric-12650502-i7")
         testImplementation("org.robolectric:robolectric:4.14.1")
     }
+    // Optional renderer; JNI is initialized only after explicit 3D selection and asset preflight.
+    implementation("com.google.android.filament:filament-android:1.56.0")
+    implementation("com.google.android.filament:gltfio-android:1.56.0")
     implementation("androidx.annotation:annotation:1.9.1")
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")

@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "1649a04346631ca4389159c03e0ab6c7333f4e1c",
+  "evidenceClass": "CONTRACT_TEST",
+  "status": "PASS",
+  "command": "EPSILON_BUILD_ENV=/workspace/momega1-build-env/env.sh CONTINUUM_FABRIC_JVM_DEPS=/workspace/momega1-build-env/jvm-deps EPSILON_FILAMENT_DIR=/workspace/jarvis-reference-build/filament-1.56.0 JAVA_OPTS=\"-Xmx768m -XX:ActiveProcessorCount=1\" JAVA_TOOL_OPTIONS=\"-XX:ActiveProcessorCount=1\" bash tools/epsilon-avatar-contract/test-android-contract.sh",
+  "rawLogSha256": "10de0d0e6c70567d6ccaee84574dcaa4f32e0b0d229ae6ab9d9266d5cf63f0fd",
+  "independent": false,
+  "fold7": "NOT_RUN",
+  "limitations": [
+    "No Android GPU execution",
+    "No actual camera observation",
+    "No voice listening or reference appearance acceptance"
+  ],
+  "tests": 33,
+  "passed": 33,
+  "failed": 0,
+  "skipped": 0,
+  "packagedGlbSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "rawLogFile": "contracts.log"
+}

@@ -34,6 +34,21 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         emit(stateEvent(next))
     }
 
+    /** Adapter computes age using elapsedRealtime; do not mix its timestamp with this clock.
+     * Permission and camera lifecycle remain with the owner-controlled hardware adapter. */
+    @Synchronized fun onObservedGaze(gaze: GazeTarget, confidence: Int, ageMillis: Long): Boolean {
+        if (!AvatarPoseReducer.permitsObservedGaze(state) || !gaze.x.isFinite() || !gaze.y.isFinite() ||
+            confidence !in AvatarPoseReducer.MIN_GAZE_CONFIDENCE..100 ||
+            ageMillis !in 0..AvatarPoseReducer.OBSERVED_GAZE_TTL_MS) {
+            clearObservedGaze()
+            return false
+        }
+        emit(AvatarEvent.GazeObserved(gaze, confidence, clock() - ageMillis))
+        return true
+    }
+
+    @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
+
     @Synchronized fun speechStarted(utteranceId: String, text: String) {
         if (utteranceId.isBlank()) return
         utterance = utteranceId
