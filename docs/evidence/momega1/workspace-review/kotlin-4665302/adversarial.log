@@ -1,0 +1,21 @@
+JUnit version 4.13.2
+.independent stale messages=[Workspace task=t-1111111111111111 source=2222222222222222222222222222222222222222 request=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa workerStatus=DONE HOST_PROFILE_REPORTED task=t-9999999999999999 request=cccccccc-cccc-4ccc-8ccc-cccccccccccc verification=PENDING]
+E.independent duplicate deliveries=[DELIVERED, DELIVERED] queued=2
+E
+Time: 0.095
+There were 2 failures:
+1) oldSameWorkerTaskMustNotBeRelabelledAsCurrentTask(at.heinz.deviceai.chief.WorkspaceIndependentReviewTest)
+java.lang.AssertionError: Old task report must not receive current task/source/request prefix
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.chief.WorkspaceIndependentReviewTest.oldSameWorkerTaskMustNotBeRelabelledAsCurrentTask(WorkspaceIndependentReviewTest.kt:27)
+2) repeatedTerminalReportMustNotBypassExistingMailboxDeduplication(at.heinz.deviceai.chief.WorkspaceIndependentReviewTest)
+java.lang.AssertionError: One execution must not create two fresh terminal messages expected:<1> but was:<2>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.chief.WorkspaceIndependentReviewTest.repeatedTerminalReportMustNotBypassExistingMailboxDeduplication(WorkspaceIndependentReviewTest.kt:18)
+
+FAILURES!!!
+Tests run: 2,  Failures: 2
+
