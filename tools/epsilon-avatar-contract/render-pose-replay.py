@@ -1,11 +1,12 @@
 """Actual production mapper pose replay on a real GLB, at a fixed camera.
 
-blender -b -t 1 --python this.py -- asset.glb independent-poses.json output anchors|idle
+blender -b -t 1 --python this.py -- asset.glb independent-poses.json output anchors|idle|ablation
 HOST_RENDER_NOT_DEVICE. Inputs are synthetic, never claimed as actual TTS/camera.
 """
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import bpy
@@ -13,28 +14,44 @@ from mathutils import Matrix, Vector
 
 asset, pose_file, out = map(Path, sys.argv[sys.argv.index("--") + 1:-1])
 mode = sys.argv[-1]
-assert mode in ["anchors", "idle"]
+assert mode in ["anchors", "idle", "ablation"]
 poses = json.loads(pose_file.read_text())
 assert poses["sourceSha"] == "26555aa6c59fdd4dd2e190defcdf49b983305555"
 assert hashlib.sha256(pose_file.read_bytes()).hexdigest() == "6c6ad2a59f881a0855cf19a5c6a8966e48b6ecdcb06bed13049bd3da466a6496"
 frames = poses["frames"]
 if mode == "anchors":
     selected = [frames[index] for index in [224, 228, 249, 253, 254]]
+elif mode == "ablation":
+    selected = []
+    for label, aa, jaw, bone in [("AA_ONLY", 1, 0, 0), ("JAW_MORPH_ONLY", 0, 1, 0),
+        ("JAW_BONE_ONLY", 0, 0, 12), ("AA_PLUS_JAW_MORPHS", 1, 1, 0), ("FULL_PRODUCTION_AA", 1, 1, 12)]:
+        frame = json.loads(json.dumps(frames[249]))
+        frame["weights"] = {name: 0 for name in frame["weights"]}
+        frame["weights"]["AA"] = aa
+        frame["weights"]["JawOpen"] = jaw
+        frame["jawPitch"] = bone
+        frame["diagnosticComponent"] = label
+        frame["isUnmodifiedProductionOutput"] = label == "FULL_PRODUCTION_AA"
+        selected.append(frame)
 else:
-    selected = [frame for frame in frames if frame["sequence"] == "idle-24fps" and frame["frame"] < 112]
+    idle_start = int(os.environ.get("AVATAR_REPLAY_START", "0"))
+    idle_count = int(os.environ.get("AVATAR_REPLAY_COUNT", "112"))
+    assert 0 <= idle_start < 224 and 1 <= idle_count <= 224 - idle_start
+    selected = [frame for frame in frames if frame["sequence"] == "idle-24fps"
+        and idle_start <= frame["frame"] < idle_start + idle_count]
 out.mkdir(parents=True, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=str(asset))
 scene = bpy.context.scene
 scene.render.engine = "CYCLES"
 scene.cycles.device = "CPU"
-scene.cycles.samples = 16 if mode == "anchors" else 2
+scene.cycles.samples = 2 if mode == "idle" else 16
 scene.cycles.seed = 11
 scene.cycles.use_denoising = False
 scene.render.threads_mode = "FIXED"
 scene.render.threads = 1
-scene.render.resolution_x = 384 if mode == "anchors" else 192
-scene.render.resolution_y = 448 if mode == "anchors" else 224
+scene.render.resolution_x = 192 if mode == "idle" else 384
+scene.render.resolution_y = 224 if mode == "idle" else 448
 scene.render.resolution_percentage = 100
 scene.render.image_settings.file_format = "PNG"
 scene.world = bpy.data.worlds.new("FixedReplayWorld")
@@ -100,20 +117,27 @@ for number, frame in enumerate(selected):
         pivot = world.translation.copy()
         obj.matrix_world = Matrix.Translation(pivot) @ world_rotation @ Matrix.Translation(-pivot) @ world
         bpy.context.view_layer.update()
-    path = out / f"frame-{number:04d}.png"
+    output_index = frame["frame"] if mode == "idle" else number
+    path = out / f"frame-{output_index:04d}.png"
     scene.render.filepath = str(path)
     bpy.ops.render.render(write_still=True)
-    records.append({"file": path.name, "imageSha256": hashlib.sha256(path.read_bytes()).hexdigest(), "pose": frame})
+    records.append({"file": path.name, "imageSha256": hashlib.sha256(path.read_bytes()).hexdigest(), "pose": frame,
+        "jawWorldMatrixBlenderRowMajor": [value for row in controls["Jaw"].matrix_world for value in row]})
     print("ACTUAL_MAPPER_POSE_REPLAY", number, frame["sequence"], frame["frame"], flush=True)
 
-(out / "replay-manifest.json").write_text(json.dumps({
+manifest_name = "replay-manifest.json" if mode != "idle" else f"replay-idle-{idle_start:04d}-{idle_start + idle_count - 1:04d}.json"
+(out / manifest_name).write_text(json.dumps({
     "evidenceClass": "HOST_RENDER_NOT_DEVICE", "backend": f"Blender {bpy.app.version_string}, Cycles CPU",
     "assetSha256": hashlib.sha256(asset.read_bytes()).hexdigest(),
     "poseFileSha256": hashlib.sha256(pose_file.read_bytes()).hexdigest(),
     "productionMapperSource": poses["sourceSha"], "inputOrigin": poses["inputOrigin"],
+    "poseInputModifiedForAblation": mode == "ablation",
     "fixedCamera": {"targetBlender": list(target), "orthoScale": .34},
     "pixels": [scene.render.resolution_x, scene.render.resolution_y],
     "samples": scene.cycles.samples, "cpuThreads": 1, "framesPerSecond": 24 if mode == "idle" else None,
+    "idleSourceFrameCount": 224 if mode == "idle" else None,
+    "selectedSourceFrameIndices": [frame["frame"] for frame in selected],
+    "sequenceComplete": mode == "anchors" or len(selected) == 224,
     "limitations": ["Scripted pose inputs", "Not actual TTS/audio/camera", "Not Filament or device rendering"],
     "frames": records,
 }, indent=2) + "\n")
