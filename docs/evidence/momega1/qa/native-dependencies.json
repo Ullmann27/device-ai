@@ -1,0 +1,20 @@
+[
+  {
+    "name": "android-all-15.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/robolectric/android-all/15-robolectric-12650502/android-all-15-robolectric-12650502.jar",
+    "publishedSha1": "d58d66c41a3ca3acd2043811cea1910bb2c4149a",
+    "sha256": "6c0670454f6fcee9f1b17aa393e81d71bf26e7e6ae7c5777ed3924b062191d5b"
+  },
+  {
+    "name": "okhttp-4.12.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar",
+    "publishedSha1": "2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd",
+    "sha256": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0"
+  },
+  {
+    "name": "okio-jvm-3.6.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar",
+    "publishedSha1": "5600569133b7bdefe1daf9ec7f4abeb6d13e1786",
+    "sha256": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412"
+  }
+]
