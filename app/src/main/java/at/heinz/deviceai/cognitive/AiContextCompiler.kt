@@ -180,7 +180,12 @@ class AiContextCompiler(
             )
         }
 
-        appendSection(
+        // M2: with natively registered LiteRT-LM tools the schema text is a duplicate;
+        // keep names and risk classes only (authorization stays in ToolGate).
+        if (policy.nativeToolCatalog) appendSection(
+            "REGISTERED TOOLS (Schemas nativ registriert)",
+            ToolRegistry.all().joinToString("\n") { "- " + it.name + " (" + it.risk.name + ")" }
+        ) else appendSection(
             "REGISTERED TOOLS",
             ToolRegistry.all().joinToString("\n") {
                 "- " + it.name + ": risk=" + it.risk.name + "; " + it.description.take(160)
