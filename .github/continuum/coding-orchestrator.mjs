@@ -61,6 +61,10 @@ export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}
  const observation=raw?.trace?.modelObservation;
  if(codingRuntime.isTrustedLocalModelObservation?.(observation)!==true)
   throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ // A process brand authenticates execution, not inference. No current producer
+ // establishes actual model execution; only independently admitted immutable
+ // observations may ever carry true. A caller flag or JSON clone cannot admit.
+ if(!Object.isFrozen(observation)||observation.verifiedModelExecution!==true)throw Error('BLOCKED_LOCAL_MODEL_UNAVAILABLE');
  const spec=validateCodingTask(task);
  const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},spec);
  if(observation.taskId!==spec.id||observation.taskFingerprint!==taskFingerprint(spec)||
