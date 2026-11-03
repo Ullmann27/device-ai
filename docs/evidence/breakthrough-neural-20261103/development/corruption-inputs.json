@@ -1,0 +1,58 @@
+{
+  "cases": [
+    {
+      "id": "CORRUPTION_hash_mismatch",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "corruption-a",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "id": "CORRUPTION_text_changed",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "corruption-a",
+          "revision": 1,
+          "text": "Névara wohnt in Bréval.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        }
+      ]
+    },
+    {
+      "id": "CORRUPTION_revision_zero",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "corruption-a",
+          "revision": 0,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        }
+      ]
+    },
+    {
+      "id": "CORRUPTION_duplicate_source_id",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "corruption-a",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        },
+        {
+          "sourceId": "corruption-a",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        }
+      ]
+    }
+  ]
+}

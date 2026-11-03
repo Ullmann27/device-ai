@@ -1,0 +1,796 @@
+{
+  "cases": [
+    {
+      "id": "NEURALDEV001",
+      "split": "ADVERSARIAL",
+      "category": "unknown_names",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV001-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV001-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV002",
+      "split": "ADVERSARIAL",
+      "category": "role_swap",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV002-s0",
+          "revision": 1,
+          "text": "Qerim wohnt in Sølvik. Névara wohnt in Bréval.",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV002-s0",
+        "revision": 1,
+        "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+        "text": "Bréval",
+        "start": 39,
+        "endExclusive": 45
+      }
+    },
+    {
+      "id": "NEURALDEV003",
+      "split": "ADVERSARIAL",
+      "category": "unknown_entity",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV003-s0",
+          "revision": 1,
+          "text": "Qerim wohnt in Sølvik.",
+          "sha256": "7969ead3bb0767be891c148f06558b35ed22276054fd9446e9575c8df5eb1d3d"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV004",
+      "split": "ADVERSARIAL",
+      "category": "entity_as_location",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV004-s0",
+          "revision": 1,
+          "text": "Qerim wohnt in Névara.",
+          "sha256": "16b6df51ec60901dd069fea1c80f6dc1dd8ff8bf1707b733672e193bd02e598a"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV005",
+      "split": "ADVERSARIAL",
+      "category": "mixed_relation",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV005-s0",
+          "revision": 1,
+          "text": "Névara lebt in Sølvik. Qerim wohnt in Bréval.",
+          "sha256": "2dba737bcddee6d9204145b712aeff1e60a7fdee0da44718bb14f5a785d72297"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV006",
+      "split": "ADVERSARIAL",
+      "category": "conflicting_sources",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV006-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        },
+        {
+          "sourceId": "NEURALDEV006-s1",
+          "revision": 2,
+          "text": "Névara wohnt in Bréval.",
+          "sha256": "66ac283bc1e25ad4c1bdaa76b5fbd02ee5c93b47dfbcdfd5664bf3684b250060"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV007",
+      "split": "ADVERSARIAL",
+      "category": "explicit_correction",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV007-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik. Korrektur: Névara wohnt in Bréval.",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV007-s0",
+        "revision": 1,
+        "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+        "text": "Bréval",
+        "start": 51,
+        "endExclusive": 57
+      }
+    },
+    {
+      "id": "NEURALDEV008",
+      "split": "ADVERSARIAL",
+      "category": "explicit_revocation",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV008-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik. Diese Aussage wurde widerrufen.",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV009",
+      "split": "ADVERSARIAL",
+      "category": "negative",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV009-s0",
+          "revision": 1,
+          "text": "Névara wohnt nicht in Sølvik.",
+          "sha256": "1e2ca0b90b09ddbf2ceb325ceb951998fed5e16af0619e0ca4be1d988f4ec7c7"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV010",
+      "split": "ADVERSARIAL",
+      "category": "unrelated_negative_source",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV010-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        },
+        {
+          "sourceId": "NEURALDEV010-s1",
+          "revision": 2,
+          "text": "Qerim wohnt nicht in Bréval.",
+          "sha256": "6504639fe916e4b209c26ef66ee0ee97b8127a999cc270727ca035f6b22e40c3"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV010-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV011",
+      "split": "ADVERSARIAL",
+      "category": "unrelated_negative_clause",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV011-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik. Qerim wohnt nicht in Bréval.",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV011-s0",
+        "revision": 1,
+        "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV012",
+      "split": "ADVERSARIAL",
+      "category": "question_as_evidence",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV012-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik?",
+          "sha256": "48286401129835e5a07d522649a4021082b9c8b81ed5a2fb9cbf02543876d22d"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV013",
+      "split": "ADVERSARIAL",
+      "category": "past_only",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV013-s0",
+          "revision": 1,
+          "text": "Névara wohnte früher in Sølvik.",
+          "sha256": "d238c373f6413b96d381edf61dbf4f33e0c86a8b6700962481f7456098070d21"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV014",
+      "split": "ADVERSARIAL",
+      "category": "unicode_city",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV014-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik Nord.",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV014-s0",
+        "revision": 1,
+        "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+        "text": "Sølvik Nord",
+        "start": 16,
+        "endExclusive": 27
+      }
+    },
+    {
+      "id": "NEURALDEV015",
+      "split": "ADVERSARIAL",
+      "category": "natural_word_order",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV015-s0",
+          "revision": 1,
+          "text": "In Sølvik wohnt Névara.",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV015-s0",
+        "revision": 1,
+        "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+        "text": "Sølvik",
+        "start": 3,
+        "endExclusive": 9
+      }
+    },
+    {
+      "id": "NEURALDEV016",
+      "split": "ADVERSARIAL",
+      "category": "natural_question",
+      "question": "In welchem Ort wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV016-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik.",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV016-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV017",
+      "split": "ADVERSARIAL",
+      "category": "apostrophe_city",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV017-s0",
+          "revision": 1,
+          "text": "Névara wohnt in L’Sølvik.",
+          "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV017-s0",
+        "revision": 1,
+        "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c",
+        "text": "L’Sølvik",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "NEURALDEV018",
+      "split": "ADVERSARIAL",
+      "category": "lowercase_place_connector",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV018-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Sølvik am See.",
+          "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV018-s0",
+        "revision": 1,
+        "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+        "text": "Sølvik am See",
+        "start": 16,
+        "endExclusive": 29
+      }
+    },
+    {
+      "id": "NEURALDEV019",
+      "split": "ADVERSARIAL",
+      "category": "four_word_place",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV019-s0",
+          "revision": 1,
+          "text": "Névara wohnt in Neu Groß Sølvik Nord.",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV019-s0",
+        "revision": 1,
+        "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+        "text": "Neu Groß Sølvik Nord",
+        "start": 16,
+        "endExclusive": 36
+      }
+    },
+    {
+      "id": "NEURALDEV020",
+      "split": "ADVERSARIAL",
+      "category": "unicode_offset_prefix",
+      "question": "Wo wohnt Névara?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV020-s0",
+          "revision": 1,
+          "text": "🧭. Névara wohnt in Sølvik.",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV020-s0",
+        "revision": 1,
+        "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+        "text": "Sølvik",
+        "start": 20,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "NEURALDEV021",
+      "split": "ADVERSARIAL",
+      "category": "unknown_names",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV021-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira.",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV021-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV022",
+      "split": "ADVERSARIAL",
+      "category": "role_swap",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV022-s0",
+          "revision": 1,
+          "text": "Þórin wohnt in Łomira. Želina wohnt in Dun-Mara.",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV022-s0",
+        "revision": 1,
+        "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+        "text": "Dun-Mara",
+        "start": 39,
+        "endExclusive": 47
+      }
+    },
+    {
+      "id": "NEURALDEV023",
+      "split": "ADVERSARIAL",
+      "category": "unknown_entity",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV023-s0",
+          "revision": 1,
+          "text": "Þórin wohnt in Łomira.",
+          "sha256": "3439d57ab5f78bf6ad681eb7eeec42863c45caab006889c817fe19050ef60722"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV024",
+      "split": "ADVERSARIAL",
+      "category": "entity_as_location",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV024-s0",
+          "revision": 1,
+          "text": "Þórin wohnt in Želina.",
+          "sha256": "d659a05aed95150a6667190e4ce3a4ebe51768af9b7e8cd2632c516444729521"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV025",
+      "split": "ADVERSARIAL",
+      "category": "mixed_relation",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV025-s0",
+          "revision": 1,
+          "text": "Želina lebt in Łomira. Þórin wohnt in Dun-Mara.",
+          "sha256": "6f143f716a62998afd9200f1afc08eef537d4fdaf63f30dd4f9a9221b9ea1178"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV026",
+      "split": "ADVERSARIAL",
+      "category": "conflicting_sources",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV026-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira.",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5"
+        },
+        {
+          "sourceId": "NEURALDEV026-s1",
+          "revision": 2,
+          "text": "Želina wohnt in Dun-Mara.",
+          "sha256": "e8324ee19326e453294094b54bb8e3edd752a55d6bd183bc32b29ff16e4cbccc"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV027",
+      "split": "ADVERSARIAL",
+      "category": "explicit_correction",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV027-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira. Korrektur: Želina wohnt in Dun-Mara.",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV027-s0",
+        "revision": 1,
+        "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+        "text": "Dun-Mara",
+        "start": 51,
+        "endExclusive": 59
+      }
+    },
+    {
+      "id": "NEURALDEV028",
+      "split": "ADVERSARIAL",
+      "category": "explicit_revocation",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV028-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira. Diese Aussage wurde widerrufen.",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV029",
+      "split": "ADVERSARIAL",
+      "category": "negative",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV029-s0",
+          "revision": 1,
+          "text": "Želina wohnt nicht in Łomira.",
+          "sha256": "7d5a8939b1db066d76f3e199db5e9b8c328f486641a7bf4b1c8410081e5662c8"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV030",
+      "split": "ADVERSARIAL",
+      "category": "unrelated_negative_source",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV030-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira.",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5"
+        },
+        {
+          "sourceId": "NEURALDEV030-s1",
+          "revision": 2,
+          "text": "Þórin wohnt nicht in Dun-Mara.",
+          "sha256": "dd914b76b0cfc1785f496060694ea4639b030b8b9ccce272310dcb004fceffac"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV030-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV031",
+      "split": "ADVERSARIAL",
+      "category": "unrelated_negative_clause",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV031-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira. Þórin wohnt nicht in Dun-Mara.",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV031-s0",
+        "revision": 1,
+        "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV032",
+      "split": "ADVERSARIAL",
+      "category": "question_as_evidence",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV032-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira?",
+          "sha256": "5969556fe923c6d2835a2bbd846037c0447247213f81182841ddca3af7680eed"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV033",
+      "split": "ADVERSARIAL",
+      "category": "past_only",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV033-s0",
+          "revision": 1,
+          "text": "Želina wohnte früher in Łomira.",
+          "sha256": "94d8996abd7e7a13786441bd13f2348c005a4d6e291b7b9b8d6a19e56cfcc791"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALDEV034",
+      "split": "ADVERSARIAL",
+      "category": "unicode_city",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV034-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira Nord.",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV034-s0",
+        "revision": 1,
+        "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+        "text": "Łomira Nord",
+        "start": 16,
+        "endExclusive": 27
+      }
+    },
+    {
+      "id": "NEURALDEV035",
+      "split": "ADVERSARIAL",
+      "category": "natural_word_order",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV035-s0",
+          "revision": 1,
+          "text": "In Łomira wohnt Želina.",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV035-s0",
+        "revision": 1,
+        "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+        "text": "Łomira",
+        "start": 3,
+        "endExclusive": 9
+      }
+    },
+    {
+      "id": "NEURALDEV036",
+      "split": "ADVERSARIAL",
+      "category": "natural_question",
+      "question": "In welchem Ort wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV036-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira.",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV036-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      }
+    },
+    {
+      "id": "NEURALDEV037",
+      "split": "ADVERSARIAL",
+      "category": "apostrophe_city",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV037-s0",
+          "revision": 1,
+          "text": "Želina wohnt in L’Łomira.",
+          "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV037-s0",
+        "revision": 1,
+        "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f",
+        "text": "L’Łomira",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "NEURALDEV038",
+      "split": "ADVERSARIAL",
+      "category": "lowercase_place_connector",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV038-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Łomira am See.",
+          "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV038-s0",
+        "revision": 1,
+        "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+        "text": "Łomira am See",
+        "start": 16,
+        "endExclusive": 29
+      }
+    },
+    {
+      "id": "NEURALDEV039",
+      "split": "ADVERSARIAL",
+      "category": "four_word_place",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV039-s0",
+          "revision": 1,
+          "text": "Želina wohnt in Neu Groß Łomira Nord.",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV039-s0",
+        "revision": 1,
+        "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+        "text": "Neu Groß Łomira Nord",
+        "start": 16,
+        "endExclusive": 36
+      }
+    },
+    {
+      "id": "NEURALDEV040",
+      "split": "ADVERSARIAL",
+      "category": "unicode_offset_prefix",
+      "question": "Wo wohnt Želina?",
+      "sources": [
+        {
+          "sourceId": "NEURALDEV040-s0",
+          "revision": 1,
+          "text": "🧭. Želina wohnt in Łomira.",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALDEV040-s0",
+        "revision": 1,
+        "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+        "text": "Łomira",
+        "start": 20,
+        "endExclusive": 26
+      }
+    }
+  ]
+}
