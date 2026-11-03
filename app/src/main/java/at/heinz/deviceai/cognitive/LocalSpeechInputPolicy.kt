@@ -17,6 +17,21 @@ internal object LocalSpeechInputPolicy {
                  mode:InternetAccessMode=InternetAccessMode.OFF,offlineVeto:Boolean=false,
                  microphoneActive:Boolean=false):Boolean = !microphoneActive && (
         networkVoiceRequired==false || networkVoiceRequired==true&&externalAudioGrant&&mode!=InternetAccessMode.OFF&&!offlineVeto)
+
+    data class DictationMerge(val text:String, val cursor:Int)
+
+    /** Speech -> composer handoff: insert the transcript at the owner's cursor (replacing only an
+     * explicit selection) instead of overwriting a typed or restored draft. Preview only; never sends. */
+    fun mergeDictation(draft:String, selectionStart:Int, selectionEnd:Int, spoken:String):DictationMerge {
+        val known=selectionStart in 0..draft.length && selectionEnd in 0..draft.length
+        val from=if(known)minOf(selectionStart,selectionEnd) else draft.length
+        val to=if(known)maxOf(selectionStart,selectionEnd) else draft.length
+        val before=draft.substring(0,from); val after=draft.substring(to)
+        val lead=if(before.isNotEmpty()&&!before.last().isWhitespace()&&spoken.isNotEmpty())" " else ""
+        val trail=if(after.isNotEmpty()&&!after.first().isWhitespace()&&spoken.isNotEmpty())" " else ""
+        val head=before+lead+spoken
+        return DictationMerge(head+trail+after, head.length)
+    }
 }
 
 /** Only token/time state is retained, never microphone audio or a transcript. */

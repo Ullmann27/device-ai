@@ -38,7 +38,9 @@ test('voice text is always previewed; neither recognition nor chat command execu
   const end=activity.indexOf('override fun onRequestPermissionsResult(',start);
   assert.ok(start>=0 && end>start);
   const speech=activity.slice(start,end);
-  assert.match(speech,/input\.setText\(spoken\)/);
+  // M5: dictation is merged into the composer draft at the cursor (still preview-only).
+  assert.match(speech,/LocalSpeechInputPolicy\.mergeDictation\(/);
+  assert.match(speech,/input\.setText\(merged\.text\)/);
   assert.match(speech,/devController\.setGoal\(safe\)/);
   assert.doesNotMatch(speech,/startDevelopmentJob\(|dispatch\(|startService\(|openMobileBuilder\(|sendCurrentInput\(/);
   assert.match(activity,/if \(task == null\)/);

@@ -8661,7 +8661,15 @@ class AgentActivity : Activity() {
             if(devDialog?.isShowing==true){
                 val safe=spoken.take(400);devGoalInput?.setText(safe);devController.setGoal(safe);refreshDevelopmentUi()
             }
-        }else {input.setText(spoken);input.setSelection(spoken.length)}
+        }else {
+            // Keep a typed/restored draft: dictation continues at the owner's cursor instead of
+            // replacing it. Without composer focus the cursor is not the owner's, so append.
+            val focused=input.hasFocus()
+            val merged=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
+                input.text.toString(),if(focused)input.selectionStart else -1,
+                if(focused)input.selectionEnd else -1,spoken)
+            input.setText(merged.text);input.setSelection(merged.cursor.coerceIn(0,input.text.length))
+        }
         // Recognition only fills the composer. Sending/actions remain an explicit owner gesture.
     }
 
