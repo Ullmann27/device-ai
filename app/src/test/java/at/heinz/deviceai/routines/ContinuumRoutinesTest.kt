@@ -97,7 +97,13 @@ class ContinuumRoutinesTest {
         assertEquals(2, box.drain("chief").size)
         assertTrue("drain frees global capacity", box.send(msg("4", "memory")))
         assertTrue("drain also frees recipient slots", box.send(msg("5", "new-recipient")))
-        assertFalse("byte budget must be enforced", box.send(msg("6", "new-recipient", "ö".repeat(3_000))))
+        // Isolate the UTF-8 byte guard: the message-count guard must NOT be responsible for rejection.
+        val bytes = AgentMailbox(maxQueuedMessages = 512, maxQueuedBytes = 4_096)
+        assertTrue(bytes.send(msg("b1", "chief", "ö".repeat(2_000)))) // 4,000 UTF-8 bytes
+        assertFalse("byte budget must be enforced independently",
+            bytes.send(msg("b2", "memory", "ö".repeat(50)))) // 100 > 96 remaining bytes
+        assertEquals(1, bytes.drain("chief").size)
+        assertTrue("drain frees UTF-8 bytes", bytes.send(msg("b2", "memory", "ö".repeat(50))))
         assertEquals(1, box.pending("new-recipient"))
     }
 
