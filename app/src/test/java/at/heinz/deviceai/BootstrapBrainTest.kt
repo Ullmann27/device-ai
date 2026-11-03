@@ -56,7 +56,11 @@ class BootstrapBrainTest {
             "Für diese Testaufgabe gilt: In der roten Kiste liegen 4 Kupferringe und in der blauen Kiste 7 Kupferringe. Welche Kiste enthält mehr? Antworte kurz. Speichere diese Angaben nicht dauerhaft.",
             "Speichere diese Angaben nicht dauerhaft.",
             "Ich möchte die Zahlen nicht speichern, sondern vergleichen.",
-            "Bitte speichere die Kistenzahlen nicht."
+            "Bitte speichere die Kistenzahlen nicht.",
+            "Speicher das nicht.",
+            "Bitte speicher diese Angaben nicht dauerhaft.",
+            "Speicher die Bilder nicht, bitte zeige mir die Zahlen.",
+            "Speicher mir diese Zahlen nicht."
         )
         utterances.forEach { utterance ->
             val decision = BootstrapBrain.decide(utterance, emptyList())
@@ -64,7 +68,11 @@ class BootstrapBrainTest {
             assertNull(utterance, decision.tool)
             assertTrue(utterance, decision.allowNeuralRecall)
         }
-        listOf("Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherstatus", "Speicherkapazität").forEach { request ->
+        listOf(
+            "Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherstatus",
+            "Speicherkapazität", "Prüfe freien Speicher", "Speicher prüfen",
+            "Wie viel Speicher ist frei?"
+        ).forEach { request ->
             val decision = BootstrapBrain.decide(request, emptyList())
             assertEquals(request, BootstrapKind.DEVICE_TOOL, decision.kind)
             assertEquals(request, "get_storage_info", decision.tool)
