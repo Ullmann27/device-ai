@@ -28,3 +28,12 @@ test('assistant TTS is refused while the on-device microphone turn is active',()
   const speak=body('private fun speakBootstrap(');
   assert.match(speak,/LocalSpeechInputPolicy\.maySpeak\([^)]*microphoneActive\s*=\s*voiceListening/);
 });
+
+// M5 milestone 3: speech -> composer handoff keeps the owner's typed draft.
+test('dictation is merged at the cursor and never overwrites a typed composer draft',()=>{
+  const apply=body('private fun applyLocalSpeechText(');
+  assert.match(apply,/LocalSpeechInputPolicy\.mergeDictation\(\s*input\.text\.toString\(\)\s*,\s*input\.selectionStart\s*,\s*input\.selectionEnd\s*,\s*spoken\s*\)/);
+  assert.doesNotMatch(apply,/input\.setText\(spoken\)/);
+  // Still preview-only: recognition never sends or executes.
+  assert.doesNotMatch(apply,/sendCurrentInput\(|dispatch\(|startDevelopmentJob\(/);
+});
