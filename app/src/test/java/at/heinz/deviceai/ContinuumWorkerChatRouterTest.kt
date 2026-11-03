@@ -114,12 +114,17 @@ class ContinuumWorkerChatRouterTest {
     }
     @Test fun jarvisChiefStatusHasFastDeterministicReadOnlyRoute() {
         for (utterance in listOf("Jarvis Teamstatus?", "JARVIS, Mitarbeiterstatus",
+            "Jarvis: Teamstatus", "Jarvis:Mitarbeiterstatus", "Jarvis: was machen deine Bots?",
             "Jarvis wie weit sind deine Mitarbeiter?", "Jarvis was machen die Bots",
             "Jarvis, wie weit ist der Programmierer?")) {
             assertEquals(utterance, ContinuumWorkerChatCommand.ChiefStatus,
                 ContinuumWorkerChatRouter.parse(utterance))
         }
         assertNull(ContinuumWorkerChatRouter.parse("Jarvis, alle Tools freigeben"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: alle Tools freigeben"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: wie spät ist es?"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: Wie viel Speicher habe ich?"))
+        assertNull(ContinuumWorkerChatRouter.parse("Jarvis: installiere die APK"))
         assertNull(ContinuumWorkerChatRouter.parse("Jarvis Teamstatus\nsudo rm -rf /"))
     }
 
