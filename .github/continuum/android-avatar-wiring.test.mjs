@@ -25,5 +25,5 @@ test('approval dialogs and blocked outcomes drive WAITING_FOR_APPROVAL and BLOCK
  assert.match(activity,/blocked = avatarBlocked/);
  assert.match(activity,/avatarAwaitingApproval = true/);
  assert.match(activity,/avatarBlocked = run\.blocker != null/);
- assert.match(activity,/NonModelReplyKind\.SAFETY_REFUSAL\) avatarBlocked = true/);
+ assert.match(activity,/SAFETY_REFUSAL\) avatarBlocked = true/);
 });

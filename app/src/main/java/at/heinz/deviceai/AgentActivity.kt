@@ -238,6 +238,9 @@ class AgentActivity : Activity() {
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
     private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
     @Volatile private var voiceAvatarText: String = ""
+    // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
+    private var avatarAwaitingApproval = false
+    private var avatarBlocked = false
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var appLookupGeneration: Long = 0L
     private var appLookupActive: Boolean = false
@@ -5368,7 +5371,8 @@ class AgentActivity : Activity() {
         avatarDirector.onRuntime(at.heinz.deviceai.avatar.AvatarRuntimeSignals(
             listening = voiceListening, speaking = voiceSpeaking,
             researching = state == ContinuumHologramView.State.RESEARCH,
-            learning = state == ContinuumHologramView.State.LEARNING, busy = busy))
+            learning = state == ContinuumHologramView.State.LEARNING, busy = busy,
+            awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
     private fun stopVoiceAnimation() {
@@ -6237,8 +6241,15 @@ class AgentActivity : Activity() {
     private fun showStructuredToolConfirmation(
         proposal: ToolProposal,
         destructive: Boolean,
-        callback: (Boolean) -> Unit
+        onDecision: (Boolean) -> Unit
     ) {
+        avatarAwaitingApproval = true
+        refreshHologramState()
+        val callback: (Boolean) -> Unit = { approved ->
+            avatarAwaitingApproval = false
+            refreshHologramState()
+            onDecision(approved)
+        }
         if(proposal.toolName in setOf("web_search","web_read")) {
             val call=runCatching { at.heinz.deviceai.cognitive.WebToolRequest.fromTool(proposal.toolName,proposal.arguments) }.getOrNull()
             if(call==null){callback(false);return}
@@ -6723,6 +6734,9 @@ class AgentActivity : Activity() {
                         } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
+                    avatarBlocked = run.blocker != null
+                    avatarAwaitingApproval = false
+                    refreshHologramState()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
                     val requiredContextOverflow = error.message in setOf(
@@ -8454,6 +8468,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
         // both ALWAYS_ON and recurring public study. Not the chat transcript.
         if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
@@ -8501,6 +8516,7 @@ class AgentActivity : Activity() {
      * owner turn (no tool output, no model text). Memory changes still clear. */
     private fun addNonModelReply(request: String, value: String,
                                  kind: at.heinz.deviceai.cognitive.NonModelReplyKind) {
+        if (kind == at.heinz.deviceai.cognitive.NonModelReplyKind.SAFETY_REFUSAL) avatarBlocked = true
         // Context bookkeeping first; addAssistantMessage must then not clear it again.
         val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(
             localConversationContext, sessionId, request, kind)

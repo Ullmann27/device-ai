@@ -62,8 +62,33 @@ object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
 data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, val gazeX: Float, val gazeY: Float,
                       val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float)
 
-/** RED stub. */
+/**
+ * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
+ * the same way. Jaw mapping from the avatar lab (#338): smoothing 0.4, dead zone 0.025, gain 1.5.
+ * Not thread-safe by itself: call from the renderer thread after handing events over.
+ */
 class AvatarPoseReducer {
-    fun apply(event: AvatarEvent) = Unit
-    fun pose() = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
+    private var state = AvatarState.IDLE
+    private var expression = AvatarExpression.NEUTRAL
+    private var gaze = GazeTarget.OWNER
+    private var energy = 0f
+    private var viseme = Viseme.SIL
+    private var visemeWeight = 0f
+    private var utterance: String? = null
+
+    fun apply(event: AvatarEvent) {
+        when (event) {
+            is AvatarEvent.StateChanged -> { state = event.state; expression = event.expression; gaze = event.gaze }
+            is AvatarEvent.SpeechStarted -> { utterance = event.utteranceId; energy = 0f }
+            is AvatarEvent.AudioLevel -> if (event.utteranceId == utterance) energy += (event.level.coerceIn(0f, 1f) - energy) * 0.4f
+            is AvatarEvent.VisemeCue -> if (event.utteranceId == utterance) { viseme = event.viseme; visemeWeight = event.weight.coerceIn(0f, 1f) }
+            is AvatarEvent.SpeechEnded -> if (event.utteranceId == utterance) {
+                utterance = null; energy = 0f; viseme = Viseme.SIL; visemeWeight = 0f }
+        }
+    }
+
+    fun pose(): AvatarPose {
+        val jaw = if (utterance == null) 0f else ((energy - 0.025f) * 1.5f).coerceIn(0f, 1f)
+        return AvatarPose(state, expression, gaze.x, gaze.y, jaw, viseme, visemeWeight, energy)
+    }
 }

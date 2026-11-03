@@ -9,6 +9,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Volatile var state: AvatarState = AvatarState.IDLE; private set
     private var utterance: String? = null
     private var text: String = ""
+    private var lastRangeAt = Long.MIN_VALUE
 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
@@ -34,6 +35,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Synchronized fun speechStarted(utteranceId: String, text: String) {
         if (utteranceId.isBlank()) return
         utterance = utteranceId
+        lastRangeAt = Long.MIN_VALUE
         this.text = text.take(MAX_TEXT)
         emit(AvatarEvent.SpeechStarted(utteranceId, this.text, clock()))
     }
@@ -45,6 +47,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         if (visemes.isEmpty()) return
         val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
         val at = clock()
+        lastRangeAt = at
         visemes.forEachIndexed { i, v ->
             emit(AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per))
         }
@@ -52,7 +55,15 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun audioLevel(utteranceId: String, level: Float) {
         if (utteranceId != utterance || !level.isFinite()) return
-        emit(AvatarEvent.AudioLevel(utteranceId, level.coerceIn(0f, 1f), clock()))
+        val at = clock()
+        val measured = level.coerceIn(0f, 1f)
+        // Avatar lab (#338): engines that report word ranges but no PCM get coarse word motion,
+        // explicitly flagged so a renderer never mistakes it for measured audio.
+        val sinceRange = at - lastRangeAt
+        if (measured == 0f && lastRangeAt != Long.MIN_VALUE && sinceRange in 0 until FALLBACK_MS) {
+            val motion = 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(sinceRange / 75f))
+            emit(AvatarEvent.AudioLevel(utteranceId, motion, at, AudioLevelSource.WORD_RANGE_FALLBACK))
+        } else emit(AvatarEvent.AudioLevel(utteranceId, measured, at, AudioLevelSource.PCM_ENVELOPE))
     }
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
@@ -81,6 +92,7 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         const val MAX_TEXT = 4_000
         const val WORD_MS = 320L
         const val MIN_VISEME_MS = 40L
+        const val FALLBACK_MS = 500L
     }
 }
 
@@ -90,10 +102,14 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
  * non-letters silent. A graphics side with its own phoneme source may ignore these cues.
  */
 object GermanVisemeApproximation {
+    // Diphthongs follow met4citizen/TalkingHead lipsync-de.mjs (MIT), pinned in PR #350:
+    // [AU]=aa U, [AI]/[EI]=aa I, [EU]/[ÄU]=O.
     private val rules = listOf(
-        "sch" to Viseme.CH, "tsch" to Viseme.CH, "ch" to Viseme.KK, "ck" to Viseme.KK, "ng" to Viseme.NN,
-        "ie" to Viseme.I, "ei" to Viseme.AA, "ai" to Viseme.AA, "au" to Viseme.AA, "eu" to Viseme.O, "äu" to Viseme.O,
-        "pf" to Viseme.PP, "qu" to Viseme.KK, "th" to Viseme.DD, "ph" to Viseme.FF
+        "sch" to listOf(Viseme.CH), "tsch" to listOf(Viseme.CH), "ch" to listOf(Viseme.KK), "ck" to listOf(Viseme.KK),
+        "ng" to listOf(Viseme.NN),
+        "ie" to listOf(Viseme.I), "ei" to listOf(Viseme.AA, Viseme.I), "ai" to listOf(Viseme.AA, Viseme.I),
+        "au" to listOf(Viseme.AA, Viseme.U), "eu" to listOf(Viseme.O), "äu" to listOf(Viseme.O),
+        "pf" to listOf(Viseme.PP), "qu" to listOf(Viseme.KK), "th" to listOf(Viseme.DD), "ph" to listOf(Viseme.FF)
     ).sortedByDescending { it.first.length }
     private val single = mapOf(
         'b' to Viseme.PP, 'p' to Viseme.PP, 'm' to Viseme.PP, 'f' to Viseme.FF, 'v' to Viseme.FF, 'w' to Viseme.FF,
@@ -110,9 +126,9 @@ object GermanVisemeApproximation {
         var i = 0
         while (i < w.length) {
             val rule = rules.firstOrNull { w.startsWith(it.first, i) }
-            val v = rule?.second ?: single[w[i]]
+            val vs = rule?.second ?: listOfNotNull(single[w[i]])
             i += rule?.first?.length ?: 1
-            if (v != null && v != out.last()) out += v
+            vs.forEach { v -> if (v != out.last()) out += v }
         }
         return out
     }

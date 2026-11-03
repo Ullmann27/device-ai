@@ -90,7 +90,7 @@ class AvatarPortedPartsTest {
     @Test fun germanDiphthongsBecomeTwoVisemes() {
         assertEquals(listOf(Viseme.SIL, Viseme.AA, Viseme.U, Viseme.SS), GermanVisemeApproximation.visemes("Haus"))
         assertEquals(listOf(Viseme.SIL, Viseme.PP, Viseme.AA, Viseme.I, Viseme.NN), GermanVisemeApproximation.visemes("Bein"))
-        assertEquals(listOf(Viseme.SIL, Viseme.NN, Viseme.O, Viseme.E), GermanVisemeApproximation.visemes("Leute"))
+        assertEquals(listOf(Viseme.SIL, Viseme.NN, Viseme.O, Viseme.DD, Viseme.E), GermanVisemeApproximation.visemes("Leute"))
     }
 
     @Test fun poseReducerGivesRenderersOneBoundedPose() {
