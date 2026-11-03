@@ -10,6 +10,12 @@ Die zwei im Besitzerchat beigefügten Kopfporträts definieren die Identität, d
 
 Blender4.3.2 ist lokal ausführbar. MeshyCLI0.8.2 wurde installiert, Status unauthenticated; kein bezahlter Meshy-Job und keine neue Anmeldung ausgeführt. Verfügbarer Higgsfield/Tripo-H3.1-Image-to-3D-Connector wurde per Modellkatalog geprüft; ein Kosten-Preflight für einen30kFace-Kandidaten ergibt10,5Credits, kein Job dadurch gestartet. Eine bestehende angebundene3D-Pipeline ist einem zusätzlichen Login vorzuziehen.
 
+## Tatsächlicher Generierungsversuch
+
+Draft https://github.com/Ullmann27/device-ai/pull/404. Der einmalige Auftrag an `tripo_h3_1_image_to_3d` mit der oben gesicherten Referenz wurde vor Joberzeugung abgewiesen: `Out of credits on free (null) plan in Private workspace.` Kein Job-ID/GLB ausgegeben, kein Erfolg und kein Mesh behauptet. Parameter: count1, face_limit30000, geometry_qualitystandard, texturetrue, pbrtrue, texture_qualitystandard, quadtrue, orientationalign_image. Kein Wiederholungsauftrag, Kauf oder Login ausgelöst. Lokale Suche fand keine vorhandene GLB/glTF/Blend/OBJ/FBX-Datei im Workspace. Blender kann für spätere lokale Modellierung und Validierung genutzt werden; eine andere generische Kopfgeometrie würde die verbindliche Identität nicht automatisch erfüllen.
+
+Bildauftrag (inhaltlich unverändert dokumentiert): beide Besitzerporträts als bindende Referenzen; eine hochauflösende neutrale exakte Frontalansicht, orthografisch angefordert, Kopf aufrecht, Augen offen/vorn, Mund geschlossen; gleiche schmale haarlose androgyne erwachsene Gesichtsproportionen, natürliche Iris, Nase/Wangen/Lippen/Kinn/Kiefer/Ohren/Hals/Schultern; feine leuchtende räumliche neuronale Fäden, violett links/cyan rechts, dunkler Hintergrund, keine UI/Schrift/Metallhaut, wenig Ringe zur freien Silhouette. Tool `image_gen.imagegen`, `num_last_images_to_include=2`, `transparent_background=false`. Originalausgabe bleibt zusätzlich `/workspace/generated_images/exec-075deea2-ed17-4a2b-bc7d-fc882334d01c.png`.
+
 ## Geplante konkrete Prüfung
 
 Ein neutraler Mesh-Kandidat wird vor Rigging auf tatsächliche Geometrie, Proportionen, Augen/Lippen/Ohren, Rückseite, Materialien und Lizenz geprüft. Weitere30Ansichten kommen aus EINER gemeinsamen Blender-Geometrie, nicht aus separat neu interpretierten Gesichtern. Vor Android-Integration müssen15OVR-MorphTargets, getrennte Augen-/Kopf-/Kiefersteuerung, Gesichtsausdrücke, Symmetrie und echte Animation nachgewiesen sein. Ein generierter Monomesh oder humanoides Körperrig erfüllt Gesichtsmimik nicht automatisch.
