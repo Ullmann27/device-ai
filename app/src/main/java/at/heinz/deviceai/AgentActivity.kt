@@ -5462,6 +5462,7 @@ class AgentActivity : Activity() {
     }
 
     private fun stopVoiceAnimation() {
+        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = true) }
         voiceUtteranceId = null
         voiceSpeaking = false
         voiceSignal.stop()

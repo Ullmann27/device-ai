@@ -28,3 +28,10 @@ Fixed three baseline regressions with unchanged tests against actual #390 Avatar
 Existing PR #391 at `a0b19100352e1876c180af51e126a0644a70aa68` was inspected read-only: currently only design checkpoint, no delivered images. That design lane remains separate. No competing portrait generation.
 
 Android lifecycle/Canvas tests added in `ContinuumAvatarNativeUiTest`; Gradle/UI/Fold7 still NOT_RUN pending shared Quality build slot. Fixed-size Java2D production-renderer previews are being prepared; they do not measure device performance.
+
+
+## Stop-path review
+
+Chief review checked pause/resume: existing `AgentActivity.onPause()` already stops the TTS engine, so the renderer must not resume background speech. Additional real gap repaired: `stopVoiceAnimation()` now calls existing Director.speechEnded before clearing the utterance ID, making pause/barge-in/failed-speak closure synchronous instead of waiting for onStop. The UI regression invokes this actual Activity method without onCreate/model bootstrap. This test remains NOT_RUN until the shared Gradle acceptance slot completes. No new TTS listener or state source was introduced.
+
+Preview source and six rendered PNGs are now versioned at `docs/evidence/omega-avatar-20261103/`; original idle fixture inspected visually. Node existing avatar wiring tests: 3 PASS. Renderer paths/gradients are allocated once; drawing uses the shared painter caches. Only bounded pose/cue handling allocates at frame/event boundaries; no full-screen bitmap or blur is used in production. Fold7 FPS/thermal/battery measurement remains NOT_RUN.

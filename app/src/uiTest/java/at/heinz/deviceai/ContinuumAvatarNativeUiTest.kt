@@ -73,6 +73,29 @@ class ContinuumAvatarNativeUiTest {
         }
     }
 
+    @Test fun actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback() {
+        // Construct the real Activity without onCreate: no model/bootstrap/background research is started.
+        val controller = Robolectric.buildActivity(AgentActivity::class.java)
+        val activity = controller.get()
+        val events = mutableListOf<at.heinz.deviceai.avatar.AvatarEvent>()
+        val field = AgentActivity::class.java.getDeclaredField("avatarDirector").apply { isAccessible = true }
+        val director = field.get(activity) as AvatarDirector
+        try {
+            director.attach(at.heinz.deviceai.avatar.AvatarSink { events += it })
+            AgentActivity::class.java.getDeclaredField("voiceUtteranceId").apply { isAccessible = true }.set(activity, "active")
+            director.speechStarted("active", "Hallo")
+            director.audioLevel("active", .8f)
+            AgentActivity::class.java.getDeclaredMethod("stopVoiceAnimation").apply { isAccessible = true }.invoke(activity)
+            val ended = events.filterIsInstance<at.heinz.deviceai.avatar.AvatarEvent.SpeechEnded>().single()
+            assertEquals("active", ended.utteranceId)
+            assertTrue(ended.interrupted)
+            val count = events.size
+            director.audioLevel("active", 1f)
+            director.wordRange("active", 0, 5)
+            assertEquals("Callbacks after synchronous stop must stay rejected", count, events.size)
+        } finally { controller.destroy() }
+    }
+
     @Test fun optionalHeadPersistsAndSharesOnePausedReducedMotionClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
