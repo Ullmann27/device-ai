@@ -22,7 +22,7 @@ function fixture(t){
 test('MΩ PR400 self-closing suite does not capture following actual Node cases',t=>{
  const f=fixture(t),run=runNodeProfile(f.root,f.green);assert.equal(run.ok,true);
  // This prefix is valid JUnit and can be emitted for an empty suite by reporters.
- const raw=spawnSync(process.execPath,['--test','--test-reporter=junit','tests/math.test.mjs'],{cwd:f.root,encoding:'utf8'});assert.equal(raw.status,0);
+ const raw=spawnSync(process.execPath,['--test','--test-reporter=junit','tests/math.test.mjs'],{cwd:f.root,encoding:'utf8',env:{PATH:process.env.PATH,HOME:f.dir}});assert.equal(raw.status,0);
  const original=parseJunit(raw.stdout,{root:f.root}),prefixed=parseJunit('<testsuite name="empty"/>'+raw.stdout,{root:f.root});
  assert.deepEqual([...prefixed.values()].map(c=>c.identity),[...original.values()].map(c=>c.identity));
 });
