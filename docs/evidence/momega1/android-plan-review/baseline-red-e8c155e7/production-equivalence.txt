@@ -1,0 +1,3 @@
+git diff --name-only 19474261 e8c155e7 -- app/src/main
+exit=0
+output=EMPTY: all production app sources byte-equivalent
