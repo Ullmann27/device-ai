@@ -23,6 +23,11 @@ Memory programs do not claim semantic owner-fact promotion: all records are synt
 
 Research claims use literal source excerpts and authentic supplying-document references as the tested contract. A blank excerpt is already rejected by the unchanged Claim constructor. No semantic truth, online fact-checking or universal prompt-injection guarantee follows from this gate.
 
+
+### Memory timing scope
+
+An independent host microbenchmark used the exact compiled baseline/candidate store classes, fixed 256MiB heap and two active processors, four warmups and twenty-one measured samples. Same-type repeated replay p50 was 37.66 → 3.25ms for 384 records and 81.85 → 2.54ms for 2,048 records. Raw samples and p95 are retained in `memory/microbenchmark/`; the runner is `harness/ReplayMicrobenchmark.kt`. Runs were sequential (baseline then candidate), not randomized or a device measurement. Alternating-type workloads are recorded as a control, and their noisy timing differences do not establish a general improvement. This supports the specific repeated same-type optimization; normal dialogue `all()` and write-before-read teaching loops do not receive the cache benefit.
+
 ## Neural independent result
 
 Frozen predictor/checkpoint manifest: `4d2e825f2caf783085dcb85c005960cd01347b14`. All manifest bytes were verified before inference, and labels were supplied only to the unchanged scorer after all predictions existed. The later executed checkout HEAD is documented separately; bound source/checkpoint/scorer files match the freeze exactly.
