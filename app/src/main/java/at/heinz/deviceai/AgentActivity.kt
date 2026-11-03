@@ -1621,8 +1621,10 @@ class AgentActivity : Activity() {
                 activeBotTurn = turn
                 cancellation.throwIfCancelled()
                 check(localRuntime.loadedModel == model) { "BOT_MODEL_CHANGED" }
+                val remainingMillis = turn.remainingMillis()
+                check(remainingMillis > 0) { "BOT_DEADLINE_EXCEEDED" }
                 val generated = generateLocal(cancellation, promptCharacters = turn.prompt.length,
-                    hardDeadlineMillis = turn.deadlineMillis,
+                    hardDeadlineMillis = remainingMillis,
                     maxOutputBytes = at.heinz.deviceai.chief.ChiefBotConversationEntry.MAX_RESPONSE_BYTES) {
                     localRuntime.streamThinking(turn.prompt, it)
                 }
