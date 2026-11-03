@@ -120,7 +120,7 @@ class ChiefMemoryAndJobTest {
                 memory = port, evaluator = AgentEvaluator { _, _ -> Evaluation(true, 0.5) },
                 experienceStore = InMemoryExperienceStore(),
                 approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(false) },
-                clock = { 100L }))
+                clock = { 100L }, modelOwnedByJob = true))
         }
         try {
             assertTrue(pool.submit(task) { reports += it })
@@ -132,6 +132,58 @@ class ChiefMemoryAndJobTest {
             assertEquals(0, toolRuns.get())
             assertEquals(WorkerStatus.CANCELLED, reports.single().status)
         } finally {
+            pool.shutdown()
+        }
+    }
+
+    @Test fun cancelingSharedModelWorkerMustNotPoisonModelForNextJob() {
+        val started = CountDownLatch(1)
+        val release = AtomicBoolean(false)
+        val cancels = AtomicInteger()
+        val calls = AtomicInteger()
+        val model = object : CancellableAgentModel {
+            override fun generate(
+                task: String, memories: List<MemoryRecord>, reflection: AgentReflection?,
+                toolObservations: List<AgentToolObservation>
+            ): AgentModelOutput {
+                calls.incrementAndGet()
+                started.countDown()
+                val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
+                while (!release.get() && System.nanoTime() < until) {
+                    try { Thread.sleep(5) } catch (_: InterruptedException) { }
+                }
+                return AgentModelOutput("shared", "Keine Geräteaktion.")
+            }
+            override fun cancelGeneration() {
+                cancels.incrementAndGet()
+                // Simulates a process-wide, sticky native-model cancellation.
+            }
+        }
+        val deps = ChiefJobDeps(
+            model = model, runner = ToolRunner { "should-not-run" },
+            policy = ToolPolicy(readOnlyEnabled = true),
+            memory = port, evaluator = AgentEvaluator { _, _ -> Evaluation(true, 0.5) },
+            experienceStore = InMemoryExperienceStore(),
+            approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(false) },
+            clock = { 100L }) // modelOwnedByJob defaults false: shared native runtime
+        val results = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { b -> ChiefJobs.agentJob(b, deps) }
+        try {
+            val first = WorkerBrief("shared-first", "Erste Frage", emptySet())
+            assertTrue(pool.submit(first) { results += it })
+            assertTrue(started.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.cancel(first.id))
+            release.set(true)
+            assertTrue(pool.awaitIdle(3_000))
+            assertEquals("shared model must not receive global cancelGeneration", 0, cancels.get())
+
+            val second = WorkerBrief("shared-next", "Zweite Frage", emptySet())
+            assertTrue(pool.submit(second) { results += it })
+            assertTrue(pool.awaitIdle(3_000))
+            assertTrue("shared model remains reusable", calls.get() >= 2)
+            assertEquals(0, cancels.get())
+        } finally {
+            release.set(true)
             pool.shutdown()
         }
     }
