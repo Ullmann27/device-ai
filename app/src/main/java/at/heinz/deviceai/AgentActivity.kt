@@ -4353,6 +4353,20 @@ class AgentActivity : Activity() {
                 showModelImportDialog(useSelectedGemma = true)
             }
         ), 2)
+        // A READY model is not proof that native generation works.
+        // Give the owner one explicit offline, tool-free inference check.
+        box.addView(cockpit.action(this, "3 · GEMMA-DIREKTTEST · OFFLINE", primary = true) {
+            if (busy) {
+                Toast.makeText(this, "Ein anderer Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
+            } else {
+                modelCenterDialog?.dismiss()
+                activeWorkArea = ContinuumWorkArea.CHAT
+                conversationActive = true
+                refreshWorkAreaSelection()
+                refreshConversationLayout()
+                runLocalSmokeTest(direct = true)
+            }
+        }, matchWidth(top = 10))
         box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()

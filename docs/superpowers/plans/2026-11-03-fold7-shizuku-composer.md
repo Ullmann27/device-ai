@@ -50,3 +50,7 @@ Prepared on this existing draft repair branch:
 **Evidence boundary:** This checkpoint is a source-code change. Full Android SDK/Gradle lint/JUnit and a physical Fold7 Shizuku permission/bind test have NOT been executed within this GitHub-only environment. Do not claim the release/device bug is solved until the device verifies that the manager runs, permission is granted, the shell binder becomes READY, and a consented read-only device command succeeds.
 
 Next: execute full Android QA on this exact commit, run UI tests, check any Robolectric Shizuku shadow behavior, and perform a real device test. Only after GREEN and owner acceptance prepare a separately versioned, originally signed APK through the pinned update channel; leave `main`, current APK 0.3.37, and user data unchanged.
+
+## Model-proof shortcut
+
+The existing `runLocalSmokeTest(direct = true)` is now exposed in the model center as **GEMMA-DIREKTTEST · OFFLINE**. It switches to the chat display and invokes the unchanged tool-free local runtime; it does not reinterpret a READY UI badge as successful inference. An actual nonempty response and elapsed time (or a concrete failure) are shown. The test uses the currently loaded local model only, without Web, memory retriever or an external API. No Fold7 native generation has been executed in this GitHub-only checkpoint.
