@@ -6447,17 +6447,19 @@ class AgentActivity : Activity() {
                 screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
-                val toolResponses = newObservations.take(4).map {
-                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
-                        it.toolName, it.status.name, it.output
-                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
-                }
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                        if (hasScreen || toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
-                        else localRuntime.respondToTools(toolResponses, callback)
+                        at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
+                            localRuntime, prompt, forceFresh = hasScreen,
+                            responses = {
+                                newObservations.take(4).map {
+                                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
+                                        it.toolName, it.status.name, it.output
+                                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
+                                }
+                            }, callback = callback)
                     }
                 }
                 generation.failure?.let { error(it) }
