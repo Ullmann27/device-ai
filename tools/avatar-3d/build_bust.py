@@ -223,6 +223,12 @@ def reduce_face(obj,baked):
     modifier=obj.modifiers.new('MobileNeutralReduction','DECIMATE')
     modifier.ratio=.65;modifier.use_symmetry=True;modifier.symmetry_axis='X'
     modifier.use_collapse_triangulate=True
+    # Decimate's symmetry preference alone can leave unmatched vertices. Enforce
+    # a bisected neutral half and its exact mirror before transferring the full
+    # independent left/right expression deltas from the original baked source.
+    mirror=obj.modifiers.new('ExactNeutralMirror','MIRROR')
+    mirror.use_axis=(True,False,False);mirror.use_bisect_axis=(True,False,False)
+    mirror.use_mirror_merge=True;mirror.merge_threshold=.000001
     bpy.context.view_layer.update()
     reduced=bpy.data.meshes.new_from_object(obj.evaluated_get(bpy.context.evaluated_depsgraph_get()))
     result={'Basis':[canonical_vec(v.co) for v in reduced.vertices]}
