@@ -11,11 +11,12 @@ kotlinc app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt \
   app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt \
   app/src/test/java/at/heinz/deviceai/avatar/*.kt \
-  app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt \
+  app/src/test/java/at/heinz/deviceai/avatar3d/*.kt \
   tools/epsilon-avatar-contract/ValidateAvatarGlb.kt -cp "$cp_path" -d "$artifact/tests.jar"
 runtime_cp="$artifact/tests.jar:$cp_path:$CONTINUUM_FABRIC_JVM_DEPS/kotlin-stdlib-2.4.0.jar"
 java -cp "$runtime_cp" org.junit.runner.JUnitCore \
   at.heinz.deviceai.avatar3d.Avatar3dContractTest \
+  at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest \
   at.heinz.deviceai.avatar.AvatarDirectorTest \
   at.heinz.deviceai.avatar.AvatarPortedPartsTest \
   at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest \
