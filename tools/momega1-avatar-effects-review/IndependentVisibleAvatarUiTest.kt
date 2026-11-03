@@ -42,7 +42,7 @@ class IndependentVisibleAvatarUiTest {
         set(a,"renderedWindowWidthDp",w.toFloat());set(a,"renderedWindowHeightDp",h.toFloat())
         val pane=AgentActivity::class.java.getDeclaredMethod("buildConversationPane",Boolean::class.javaPrimitiveType)
             .apply {isAccessible=true}.invoke(a,wide) as View
-        val host=Robolectric.buildActivity(Activity::class.java).setup();host.get().setContentView(pane)
+        val host=Robolectric.buildActivity(Activity::class.java).setup().visible();host.get().setContentView(pane)
         shadowOf(Looper.getMainLooper()).idle();measure(pane,w,h)
         return Fixture(a,host,pane,get(a,"hologramView") as ContinuumHologramView,get(a,"homeView") as ContinuumHomeView,
             get(a,"chatColumn") as LinearLayout,get(a,"avatarDirector") as AvatarDirector)
