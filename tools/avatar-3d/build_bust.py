@@ -14,8 +14,22 @@ ASSETS = ROOT / 'assets/avatar'
 OUT.mkdir(parents=True, exist_ok=True); ASSETS.mkdir(parents=True, exist_ok=True)
 ARGS = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 PREVIEW = '--preview' in ARGS
+EXPORT_ONLY = '--export-only' in ARGS
+EXPRESSIONS_ONLY = '--expressions-only' in ARGS
 MORPHS = ['SIL','PP','FF','TH','DD','KK','CH','SS','NN','RR','AA','E','I','O','U',
           'BlinkLeft','BlinkRight','BrowUp','BrowDown','Smile','JawOpen']
+
+def mouth_weight(y):
+    """Confine speech to lower facial anatomy, independent of eyes/brows.
+
+    The jaw hinge is at .227m; eyes are at .2884m. End the transition below the
+    upper nose/eye region. Apply again to filaments to prevent edge interpolation
+    from leaking micrometre displacements beyond this region.
+    """
+    if y<=.245:return 1.0
+    if y>=.260:return 0.0
+    t=(y-.245)/.015
+    return 1-t*t*(3-2*t)
 
 def obj_data():
     verts=[]; groups=defaultdict(list); group=''
@@ -254,6 +268,8 @@ def reduce_face(obj,baked):
         bindings.append((ids,w))
     for name in MORPHS:
         result[name]=[p+sum(((baked[name][i]-source[i])*w for i,w in zip(ids,weights)),Vector()) for p,(ids,weights) in zip(result['Basis'],bindings)]
+        if name in MORPHS[:15] or name=='JawOpen':
+            result[name]=[p+(q-p)*mouth_weight(p.y) for p,q in zip(result['Basis'],result[name])]
     new=mesh_object('ReducedFace',result['Basis'],polygons);new.data.materials.append(skin)
     for name,pts in result.items():
         key=new.shape_key_add(name=name)
@@ -328,6 +344,7 @@ def make_threads():
                 verts.append(p+delta);colors.append(0 if p.x<0 else 1)
                 for name in MORPHS:
                     move=(morphpoints[name][a]-points[a]).lerp(morphpoints[name][b]-points[b],t)
+                    if name in MORPHS[:15] or name=='JawOpen':move*=mouth_weight((p+delta).y)
                     allmorph[name].append(p+delta+move)
         for j in range(len(chain)-1):
             for k in range(3):
@@ -387,11 +404,14 @@ from export_glb import export_avatar
 export_avatar(ASSETS/'jarvis-research-v1.glb',OUT/'asset-manifest.json',MORPHS)
 bpy.data.orphans_purge(do_recursive=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(ASSETS/'jarvis-research-v1.blend'))
-if PREVIEW:
+if EXPORT_ONLY:
+    print('EXPORT_ONLY_COMPLETE',flush=True)
+elif PREVIEW:
     for name,angle,weights in [('anatomy-front',0,{}),('anatomy-profile',90,{}),('anatomy-blink',0,{'BlinkLeft':1,'BlinkRight':1}),('anatomy-aa',0,{'AA':1})]:render(name,angle,weights)
     print('PREVIEW_COMPLETE',flush=True)
 else:
-    for n in range(24):render('view-%02d-neutral-%03d'%(n,n*15),n*15)
+    if not EXPRESSIONS_ONLY:
+        for n in range(24):render('view-%02d-neutral-%03d'%(n,n*15),n*15)
     for n,label,weights in [(24,'blink',{'BlinkLeft':1,'BlinkRight':1}),(25,'smile',{'Smile':1}),(26,'speech-aa',{'AA':1}),(27,'speech-o',{'O':1}),(28,'speech-u',{'U':1}),(29,'brow-speech',{'BrowUp':.7,'E':.7})]:render('view-%02d-%s'%(n,label),0,weights)
     reset()
     print('THIRTY_SAME_GEOMETRY_VIEWS_COMPLETE',flush=True)
