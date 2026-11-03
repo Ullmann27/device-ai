@@ -18,6 +18,12 @@ sources=(
  "$root/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt"
  "$root/tools/genesis-workspaces/HandoffHostChecks.kt"
 )
+# The integrated V2 registry references its real conversation codec. Compile the
+# candidate's sources when present, never substitute old V1 classes for a final run.
+if [[ -f "$root/app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt" ]]; then
+ sources+=("$root/app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt"
+  "$root/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt")
+fi
 git -C "$root" rev-parse HEAD > "$out/source-sha.txt"
 git -C "$root" status --short > "$out/source-status.txt"
 sha256sum "${sources[@]}" > "$out/inputs.sha256"

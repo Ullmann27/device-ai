@@ -29,6 +29,14 @@ object HandoffHostChecks {
     }
 
     private fun evaluate(f: JSONObject): JSONObject {
+        // Current production API has no owner budget editor. Do not pretend that a
+        // custom fixture budget was persisted, or count its setup error as denial.
+        val fixtureProfiles=f.getJSONArray("profiles")
+        for(i in 0 until fixtureProfiles.length()) {
+            val budget=fixtureProfiles.getJSONObject(i).optJSONObject("resourceBudget") ?: continue
+            require(budget.optInt("maxModelCalls",1)==1 && budget.optInt("maxToolCalls",4)==4 &&
+                budget.optLong("deadlineMillis",120000)==120000L) { "NOT_TESTABLE_CUSTOM_PROFILE_BUDGET" }
+        }
         val root=Files.createTempDirectory("genesis-admission-fixture").toFile()
         try {
             val store=ChiefBotProfileStore(root)

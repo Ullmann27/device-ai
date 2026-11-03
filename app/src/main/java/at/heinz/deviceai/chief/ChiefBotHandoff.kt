@@ -98,7 +98,9 @@ class ChiefBotHandoffAdmission(
             "android-unit" -> "fixed-android-test"
             else -> error("BOT_HANDOFF_PROFILE_UNAVAILABLE")
         }
-        require(capability in handoff.requestedTools) { "BOT_HANDOFF_PROFILE_SCOPE_MISMATCH" }
+        require(capability in handoff.requestedTools && brief.allowedTools.containsAll(handoff.requestedTools)) {
+            "BOT_HANDOFF_PROFILE_SCOPE_MISMATCH"
+        }
         require(scope.workerId == handoff.toAgentId && scope.taskId == handoff.taskId &&
             scope.jobId == handoff.jobId && scope.sourceCommit == handoff.sourceCommit &&
             scope.requestMessageId == handoff.requestMessageId && scope.requestHash == handoff.requestHash)
