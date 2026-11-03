@@ -147,6 +147,32 @@ test('run requires saved exact fingerprint and cannot claim installation',async 
  assert.equal(falsePositive.status,'EXECUTION_REPORTED_UNVERIFIED');
  assert.equal(falsePositive.patchSha256,null);
 });
+test('verified coding review rejects consistently reduced baseline test coverage',()=>{
+ const job='11111111-1111-4111-8111-111111111111';
+ const patchSha256='c'.repeat(64);
+ const receipt={schema:RECEIPT_SCHEMA,version:RECEIPT_VERSION,job,taskId:jobTaskId(job),
+  order:{chain:'node'},approvedForMerge:false,installed:false,deviceVerified:false,
+  operation:'code-repair',status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',commit:SOURCE,
+  backlog:{state:'DONE'},patch:{sha256:patchSha256},
+  evidence:{verificationSha256:'e'.repeat(64),evidenceSufficient:true,
+   baselineExecuted:30,baselineFailed:1,candidateExecuted:30,independentExecuted:30},
+  commands:[{phase:'baseline',executed:30,failed:1,exitCode:1,passed:false},
+   {phase:'candidate',executed:30,failed:0,exitCode:0,passed:true},
+   {phase:'independent',executed:30,failed:0,exitCode:0,passed:true}]};
+ const result={status:'PATCH_PENDING_OWNER_REVIEW',ccc1TaskId:'t-'+'f'.repeat(16),
+  sourceCommit:SOURCE,chain:'node',receiptJobs:[job],receipts:[receipt]};
+ assert.equal(verifiedCodingReviewReceipt(result),patchSha256);
+
+ for(const [candidateExecuted,independentExecuted] of [[1,1],[29,30],[30,29]]){
+  const reduced={...receipt,
+   evidence:{...receipt.evidence,candidateExecuted,independentExecuted},
+   commands:[receipt.commands[0],{...receipt.commands[1],executed:candidateExecuted},
+    {...receipt.commands[2],executed:independentExecuted}]};
+  assert.equal(verifiedCodingReviewReceipt({...result,receipts:[reduced]}),null,
+   `baseline 30 -> candidate ${candidateExecuted} -> independent ${independentExecuted}`);
+ }
+});
+
 test('archived real Qwen repair receipt stays reviewable only with explicit bound chain',()=>{
  const archive=new URL('../docs/evidence/sol-autonomous-coding-20261024/first-model-run/result.json',import.meta.url);
  const evidence=JSON.parse(fs.readFileSync(archive,'utf8'));

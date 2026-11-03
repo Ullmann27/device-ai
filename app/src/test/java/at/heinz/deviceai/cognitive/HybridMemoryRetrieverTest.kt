@@ -6,6 +6,43 @@ import org.junit.Test
 
 class HybridMemoryRetrieverTest {
     @Test
+    fun functionWordOverlapDoesNotRecallUnrelatedOwnerMemory() {
+        val now = 100L * DAY
+        val unrelated = memory(
+            id = "private-unrelated",
+            content = "Meine Schwester ist Ärztin in Wien.",
+            updatedAt = now
+        ).copy(tags = emptyList())
+
+        for (query in listOf("Was ist Photosynthese?", "Wie ist das Wetter?", "What is photosynthesis?")) {
+            val candidate = if (query.startsWith("What"))
+                unrelated.copy(content = "My sister is a doctor in Vienna.") else unrelated
+            assertTrue(
+                "Unrelated private memory was recalled for: $query",
+                HybridMemoryRetriever.retrieve(query, listOf(candidate), nowMillis = now).isEmpty()
+            )
+        }
+    }
+
+    @Test
+    fun removingFunctionWordsPreservesAUniqueTopicOrEntityMatch() {
+        val now = 100L * DAY
+        val fact = memory(
+            id = "owner-location",
+            content = "Meine Schwester ist Ärztin in Wien.",
+            updatedAt = now
+        ).copy(tags = listOf("Schwester"))
+
+        for (query in listOf("Wien", "Was ist über meine Schwester bekannt?")) {
+            assertEquals(
+                listOf("owner-location"),
+                HybridMemoryRetriever.retrieve(query, listOf(fact), nowMillis = now).map { it.memory.id }
+            )
+        }
+        assertTrue(HybridMemoryRetriever.retrieve("Was ist das?", listOf(fact), nowMillis = now).isEmpty())
+    }
+
+    @Test
     fun verifiedRecentMemoryOutranksContradictedOlderMemory() {
         val now = 100L * DAY
         val recent = memory(

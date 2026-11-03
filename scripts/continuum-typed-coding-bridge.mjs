@@ -99,7 +99,8 @@ export function verifiedCodingReviewReceipt(result){
      !SHA.test(evidence?.verificationSha256??'')||evidence.evidenceSufficient!==true||
      !Number.isSafeInteger(evidence.baselineExecuted)||evidence.baselineExecuted<1||
      !Number.isSafeInteger(evidence.baselineFailed)||evidence.baselineFailed<1||
-     !Number.isSafeInteger(evidence.candidateExecuted)||evidence.candidateExecuted<1||
+     !Number.isSafeInteger(evidence.candidateExecuted)||
+     evidence.candidateExecuted<evidence.baselineExecuted||
      !Number.isSafeInteger(evidence.independentExecuted)||
      evidence.independentExecuted<evidence.candidateExecuted)continue;
   const phases=receipt.commands;
