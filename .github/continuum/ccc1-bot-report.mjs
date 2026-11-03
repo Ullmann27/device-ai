@@ -17,11 +17,15 @@ export function writeCcc1BotReport({assignment,task,ccc1TaskId,project,stateDir,
  const spec=validateCodingTask(task),fingerprint=taskFingerprint(spec);
  const reporter=assertCcc1BotAssignment(assignment,{task:spec,ccc1TaskId,stage:'REPORT'});
  if(typeof readPreparedGrant!=='function')throw Error('BOT_REPORT_CURRENT_GRANT_REQUIRED');
- const grant=readPreparedGrant();
- if(grant.ccc1TaskId!==ccc1TaskId||grant.fingerprint!==fingerprint||taskFingerprint(grant.task)!==fingerprint)
-  throw Error('BOT_REPORT_GRANT_CHANGED');
- if(git(project,['rev-parse','HEAD']).stdout.trim()!==spec.sourceCommit||git(project,['status','--porcelain']).stdout.trim())
-  throw Error('BOT_REPORT_SOURCE_CHANGED');
+ const assertCurrentGrantAndSource=()=>{
+  assertCcc1BotAssignment(assignment,{task:spec,ccc1TaskId,stage:'REPORT'});
+  const grant=readPreparedGrant();
+  if(grant.ccc1TaskId!==ccc1TaskId||grant.fingerprint!==fingerprint||taskFingerprint(grant.task)!==fingerprint)
+   throw Error('BOT_REPORT_GRANT_CHANGED');
+  if(git(project,['rev-parse','HEAD']).stdout.trim()!==spec.sourceCommit||git(project,['status','--porcelain']).stdout.trim())
+   throw Error('BOT_REPORT_SOURCE_CHANGED');
+ };
+ assertCurrentGrantAndSource();
  const state=ensureCcc1StateOutsideSource(project,stateDir);
  const journal=DurableTaskJournal.forTask(state,ccc1TaskId,runtimeKey(state));
  const entries=journal.entries(),goal=entries[0],status=taskState(entries);
@@ -62,8 +66,8 @@ export function writeCcc1BotReport({assignment,task,ccc1TaskId,project,stateDir,
    throw Error('BOT_REPORT_PATH_UNSAFE');
  }
  // Recheck current identities/expiry and canonical journal head immediately before writing.
- assertCcc1BotAssignment(assignment,{task:spec,ccc1TaskId,stage:'REPORT'});
- if(journal.entries().at(-1)?.hash!==body.journalHead)throw Error('BOT_REPORT_JOURNAL_CHANGED');
+ assertCurrentGrantAndSource();
+ if(journal.entries().at(-1)?.hash!==body.journalHead||goal.deadline<=Date.now())throw Error('BOT_REPORT_JOURNAL_CHANGED');
  const file=path.join(directory,'bot-report-'+assignment.sha256+'.json');
  if(fs.existsSync(file)){
   if(!fs.lstatSync(file).isFile()||fs.lstatSync(file).isSymbolicLink()||!fs.readFileSync(file).equals(bytes))
@@ -74,9 +78,8 @@ export function writeCcc1BotReport({assignment,task,ccc1TaskId,project,stateDir,
  }
  const sha256=sha256Hex(bytes);
  if(sha256Hex(fs.readFileSync(file))!==sha256)throw Error('BOT_REPORT_ARTIFACT_CHANGED');
- assertCcc1BotAssignment(assignment,{task:spec,ccc1TaskId,stage:'REPORT'});
- if(journal.entries().at(-1)?.hash!==body.journalHead||readPreparedGrant().fingerprint!==fingerprint||
-    git(project,['rev-parse','HEAD']).stdout.trim()!==spec.sourceCommit)throw Error('BOT_REPORT_RESULT_STALE');
+ assertCurrentGrantAndSource();
+ if(journal.entries().at(-1)?.hash!==body.journalHead||goal.deadline<=Date.now())throw Error('BOT_REPORT_RESULT_STALE');
  return Object.freeze({reporterId:reporter.agentId,operation:body.operation,path:file,sha256,status:body.status,
   journalHead:body.journalHead,modelCalls:0,deviceVerified:false});
 }
