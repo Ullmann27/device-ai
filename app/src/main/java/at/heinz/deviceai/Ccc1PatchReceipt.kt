@@ -59,8 +59,31 @@ data class Ccc1PatchReceipt(
         else Evaluation(Verdict.INVALID, invalid)
     }
 
-    /** RED stub: attestation ignored. */
-    fun evaluateAttested(attestationJson: String): Evaluation = evaluate()
+    /**
+     * GREEN only if this receipt is self-consistent AND the host verifier attested exactly these bytes:
+     * receiptSha256 == sha256(toJson()), verdict VERIFIED without reasons, same patch digest, its OWN
+     * re-run saw RED fail as claimed and GREEN with zero failures, and both JUnit artifacts are hashed.
+     */
+    fun evaluateAttested(attestationJson: String): Evaluation {
+        val self = evaluate()
+        if (self.verdict != Verdict.SELF_CONSISTENT_UNATTESTED) return self
+        val a = try { StrictJson.parseObject(attestationJson) } catch (_: IllegalArgumentException) { null }
+            ?: return Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, listOf("ATTESTATION_UNREADABLE"))
+        val why = mutableListOf<String>()
+        if (a["schema"] != ATTESTATION_SCHEMA || a["version"] != 1L) why += "ATTESTATION_SCHEMA"
+        if (a["receiptSha256"] != sha256(toJson())) why += "ATTESTATION_FOR_OTHER_RECEIPT"
+        if (a["verdict"] != "VERIFIED" || (a["reasons"] as? List<*>)?.isEmpty() != true) why += "VERIFIER_REJECTED"
+        if (a["patchSha256"] != patchSha256) why += "PATCH_HASH_MISMATCH"
+        val r = a["red"] as? Map<*, *>; val g = a["green"] as? Map<*, *>
+        if (r == null || g == null || listOf(r, g).any { (it["xmlSha256"] as? String)?.let(SHA256::matches) != true })
+            why += "ARTIFACTS_MISSING"
+        else {
+            if (r["failed"] != red?.failed || r["executed"] != red?.executed || r["exitCode"] == 0L) why += "RED_RUN_DIFFERS"
+            if (g["failed"] != 0L || g["exitCode"] != 0L || g["executed"] != green?.executed) why += "GREEN_RUN_DIFFERS"
+        }
+        return if (why.isEmpty()) Evaluation(Verdict.GREEN_ATTESTED_PENDING_REVIEW, emptyList())
+        else Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, why)
+    }
 
     private fun incomplete(run: Ccc1TestRun) = run.exitCode == null || run.timedOut || run.cancelled
 
@@ -80,6 +103,9 @@ data class Ccc1PatchReceipt(
 
     companion object {
         const val SCHEMA = "continuum-ccc1-patch-receipt"
+        const val ATTESTATION_SCHEMA = "continuum-ccc1-redgreen-attestation"
+        private fun sha256(s: String) = java.security.MessageDigest.getInstance("SHA-256")
+            .digest(s.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
         private const val MAX_TESTS = 512
         private val SHA1 = Regex("[0-9a-f]{40}")
         private val SHA256 = Regex("[0-9a-f]{64}")

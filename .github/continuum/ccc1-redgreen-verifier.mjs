@@ -108,13 +108,49 @@ function compareRuns(receipt,red,green,reasons){
  if(!targets.every(t=>g.passedTargets.includes(t)))reasons.push('CLAIMED_GREEN_TARGETS_DIFFER');
 }
 
-/** RED stub (M2 behaviour): trusts the receipt's own claims, no git or re-run. */
-export function verifyCommitReceipt({repo,receiptBytes}){
- let r=null;try{r=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{}
- if(!r||r.schema!==RECEIPT_SCHEMA)return attestation(receiptBytes,'REJECTED',['RECEIPT_SCHEMA']);
- return attestation(receiptBytes,'VERIFIED',[]);
+/** Commit mode: receipt fields baseSha/redSha/greenSha/patchSha256/targetTests/red/green (Kotlin canonical JSON). */
+export function verifyCommitReceipt({repo,receiptBytes,run=runNodeProfile}){
+ const reasons=[];
+ let receipt;
+ try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{receipt=null;}
+ if(!receipt||receipt.schema!==RECEIPT_SCHEMA||receipt.version!==1)return attestation(receiptBytes,'REJECTED',['RECEIPT_SCHEMA']);
+ const {baseSha,redSha,greenSha,patchSha256,targetTests}=receipt;
+ if(!Array.isArray(targetTests)||!targetTests.length)reasons.push('TARGET_TESTS');
+ if(![baseSha,redSha,greenSha].every(s=>isCommit(repo,s)))reasons.push('COMMIT_NOT_IN_REPOSITORY');
+ if(new Set([baseSha,redSha,greenSha]).size!==3)reasons.push('COMMITS_NOT_DISTINCT');
+ if(receipt.approvedForMerge||receipt.installed||receipt.deviceVerified)reasons.push('FORBIDDEN_CLAIM');
+ if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
+ if(!ancestor(repo,baseSha,redSha)||!ancestor(repo,redSha,greenSha))reasons.push('NOT_A_LINEAR_BASE_RED_GREEN_CHAIN');
+ const diff=git(repo,['diff','--binary','--full-index',redSha,greenSha],{binary:true});
+ if(diff.code!==0||!SHA256.test(patchSha256)||sha256(diff.out)!==patchSha256)reasons.push('PATCH_HASH_MISMATCH');
+ if(!changed(repo,baseSha,redSha).some(isTestFile))reasons.push('RED_COMMIT_ADDS_NO_TEST');
+ if(changed(repo,redSha,greenSha).some(isTestFile))reasons.push('FIX_MODIFIES_TESTS');
+ if(receipt.red?.sha!==redSha||receipt.green?.sha!==greenSha)reasons.push('RUN_SHA_MISMATCH');
+ if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
+ const red=run(repo,redSha),green=run(repo,greenSha);
+ compareRuns(receipt,red,green,reasons);
+ return attestation(receiptBytes,reasons.length?'REJECTED':'VERIFIED',reasons,red,green,patchSha256);
 }
-export function verifyRepairPatch({receiptBytes}){return attestation(receiptBytes,'VERIFIED',[]);}
+
+/** Patch mode for CCC1 repair receipts: RED = base commit, GREEN = base + patch file. */
+export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receiptBytes,run=runNodeProfile}){
+ const reasons=[];
+ let receipt=null;
+ try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{}
+ if(!receipt||!Array.isArray(receipt.targetTests)||!receipt.targetTests.length)reasons.push('TARGET_TESTS');
+ if(!isCommit(repo,baseCommit))reasons.push('COMMIT_NOT_IN_REPOSITORY');
+ let bytes=null;try{bytes=fs.readFileSync(patchPath);}catch{reasons.push('PATCH_MISSING');}
+ if(bytes&&(!SHA256.test(patchSha256)||sha256(bytes)!==patchSha256))reasons.push('PATCH_HASH_MISMATCH');
+ if(bytes){
+  const ns=spawnSync('git',['apply','--numstat',patchPath],{encoding:'utf8'});
+  const files=ns.status===0?ns.stdout.split('\n').filter(Boolean).map(l=>l.split('\t')[2]):null;
+  if(!files||!files.length)reasons.push('PATCH_UNREADABLE');else if(files.some(isTestFile))reasons.push('FIX_MODIFIES_TESTS');
+ }
+ if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
+ const red=run(repo,baseCommit),green=run(repo,baseCommit,{patchPath});
+ compareRuns(receipt,red,green,reasons);
+ return attestation(receiptBytes,reasons.length?'REJECTED':'VERIFIED',reasons,red,green,patchSha256);
+}
 
 function attestation(receiptBytes,verdict,reasons,red=null,green=null,patchSha256=null){
  const slim=r=>r&&r.ok?{xmlSha256:r.xmlSha256,exitCode:r.exitCode,executed:r.executed,failed:r.failed}:null;
