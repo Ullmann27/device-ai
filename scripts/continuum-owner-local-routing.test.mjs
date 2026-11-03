@@ -33,3 +33,9 @@ test('rendering a conversation updates the selected navigation destination', () 
     assert.match(method, /conversationActive = true\s+activeWorkArea = ContinuumWorkArea.CHAT\s+refreshWorkAreaSelection\(\)/);
   }
 });
+
+test('oversized local replies show the existing user guidance in the conversation', () => {
+  const failure = activity.split('val keepFailedOwnerTurn =')[1].split('if (keepFailedOwnerTurn)')[0];
+  assert.match(failure, /LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT/);
+  assert.match(failure, /ContinuumUiCopy.modelFailure/);
+});

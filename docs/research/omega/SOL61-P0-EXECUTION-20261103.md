@@ -21,9 +21,19 @@ The private GitHub connector restored all executable/build/test inputs and requi
 
 ## Phase status and external boundaries
 
-- P0: IN_PROGRESS until fresh full evidence is committed.
+- P0: SOURCE_ONLY until a fresh matching acceptance receipt passes. The final receipt and raw logs are published on an `evidence/continuum-p0-<source-prefix>-20261103` branch in this same official repository, linked from PR364. `docs/evidence/sol61-p0-20261103/acceptance.json` must identify the exact unchanged PR364 source HEAD. Missing, mismatched or failed evidence is not acceptance. This avoids changing the tested source commit merely to embed its own future test results.
 - P1: DEVICE_NOT_RUN. ADB device list is empty and this workspace has no Fold7 VPN/device connection. The live existing catalog was independently read: approved code38/0.3.37, original package and pinned signer. No new release is approved by this observation.
 - P2–P6: not passed. No Fold7 native Gemma inference, on-device model-driven CCC1 RED→GREEN, worker endurance or trained quality improvement is claimed. These phases remain subject to the Master Handoff sequence.
 - Release: original P12 remains on the existing trusted publisher. A higher code39+ candidate still needs full QA, actual Fold7 acceptance and release approval. Code38 scripts have not been represented as code39-compatible.
 
 Rollback: retain the draft, revert only reviewed source changes with a new commit; do not reset shared history or uninstall the app. Next execution starts from the real remote HEAD, runs `scripts/continuum-fold7-repair-qa.sh` with its exact SHA and preserves every RED/GREEN log.
+
+## Independent review and one repair pass
+
+Independent read-only review of `1824..8c46e3f` identified one Important gap: READY-model greeting/capability inference could still propose a web tool under ALWAYS_ON. The canonical `NetworkTurnConstraint` now recognizes the existing bounded owner-local intents. It is used both by runLocal's prompt/approval upper bound and by the actual tool runner with the original owner turn. A fake-model behavioral regression exercises the real orchestrator and ToolGate with authorized ALWAYS_ON and a rewritten web query: the original local requests reach zero network delegate calls; a public-topic positive control still reaches one. These are policy fixtures, not actual model or internet evidence.
+
+The same review's two user-visible diagnostic issues were also addressed under the owner's total-repair instruction: a real late permission denial now replaces a watchdog timeout, and oversized-model output shows the existing shorter-answer guidance in the conversation. The actual permission state remains authoritative. No new model/memory/worker subsystem was introduced.
+
+RED:22 focused Android/JVM cases,2 failed (local-intent web execution and late denial); the conversation/source wiring and old teardown literal also failed in Node. GREEN:22 Android/JVM cases,0 failed/0 skipped, plus30 Node integration cases. The old Node teardown check now verifies stop→resetBinding→shell/connection invalidation; native bridge lifecycle behavior remains independently exercised, with no assertion disabled.
+
+The independent reviewer did not claim Fold7, JNI generation/cancellation, real Shizuku service, thermal/memory quality, signing, installation or CCC1 autonomy. Those remain explicit device/release gates. Full exact-source QA follows this source checkpoint; historical targeted or pre-reconciliation results do not substitute for it.

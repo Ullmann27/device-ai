@@ -6676,6 +6676,8 @@ class AgentActivity : Activity() {
                     val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
                     addAssistantMessage(if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
+                    else if (error.message == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT")
+                        ContinuumUiCopy.modelFailure(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)

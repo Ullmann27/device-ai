@@ -17,6 +17,7 @@ done
 tests=(ContinuumResidualSpanCoreTest ContinuumResidualSpanCoreVariantsTest EvidenceBoundNaturalLocationProbeTest NaturalLocationVerificationTest NaturalEntitySpanCoreTest LocationEvidenceSnapshotTest NaturalLocationLabComparisonTest RoleAwareShadowTest DualEvidenceReadContractTest)
 files+=("$root/app/src/test/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCoreChecks.kt")
 files+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt")
+files+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/OwnerChatIntentRouter.kt")
 classes=(at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest)
 for name in "${tests[@]}"; do
   files+=("$root/app/src/test/java/at/heinz/deviceai/learning/span/$name.kt")

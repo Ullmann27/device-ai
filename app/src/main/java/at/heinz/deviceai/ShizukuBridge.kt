@@ -112,18 +112,16 @@ class ShizukuBridge(
         }
     }
 
-    private val permissionResult = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
+    private val permissionResult = Shizuku.OnRequestPermissionResultListener { requestCode, _ ->
         synchronized(this) {
             if (requestCode == REQUEST_CODE && started) {
-                val wasPending = permissionPending
                 clearPermissionPending()
                 // A person may approve after the watchdog expired. The callback
                 // is a wake-up signal; actual permission and Binder state are
                 // checked again before binding, even for a reported grant.
-                if (grantResult == PackageManager.PERMISSION_GRANTED &&
-                    runCatching { Shizuku.checkSelfPermission() }.getOrNull() == PackageManager.PERMISSION_GRANTED) {
+                if (runCatching { Shizuku.checkSelfPermission() }.getOrNull() == PackageManager.PERMISSION_GRANTED) {
                     ensurePermissionAndBind()
-                } else if (wasPending) {
+                } else {
                     reportStatus("Shizuku-Zugriff abgelehnt · Berechtigung in Shizuku prüfen")
                 }
             }

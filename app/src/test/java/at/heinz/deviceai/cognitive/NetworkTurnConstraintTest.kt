@@ -7,6 +7,49 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NetworkTurnConstraintTest {
+    @Test fun ownerLocalQuestionsCannotBecomeRewrittenWebSearchesEvenWithAlwaysOn() {
+        for (ownerTurn in listOf("Hallo?", "Was kannst du?", "Wie viel Speicher habe ich?")) {
+            org.junit.Assert.assertEquals(ownerTurn, 0, modelProposedNetworkExecutions(ownerTurn))
+        }
+    }
+
+    @Test fun publicQuestionStillUsesTheExistingOwnerAuthorizedWebPath() {
+        org.junit.Assert.assertEquals(1, modelProposedNetworkExecutions("Was ist Photosynthese?"))
+    }
+
+    private fun modelProposedNetworkExecutions(ownerTurn: String): Int {
+        // This is a behavior fixture, not real model inference or real internet.
+        val rewrittenQuery = "Funktionen eines Android-Assistenten"
+        val webConsent = ApprovedWebToolGate(InternetConsentPolicy(InternetAccessMode.ALWAYS_ON))
+        var networkExecutions = 0
+        var turns = 0
+        val agent = BoundedAgentOrchestrator(
+            model = AgentModel { _, _, _, _ ->
+                if (turns++ == 0) AgentModelOutput("fixture-model", "Werkzeugvorschlag",
+                    at.heinz.deviceai.ToolProposal("web_search", mapOf("query" to rewrittenQuery)))
+                else AgentModelOutput("fixture-model", "Lokale Antwort")
+            },
+            memories = { emptyList() },
+            toolGate = at.heinz.deviceai.ToolGate(
+                at.heinz.deviceai.ToolPolicy(readOnlyEnabled = true),
+                at.heinz.deviceai.ToolRunner { request ->
+                    NetworkTurnConstraint.withOriginalTurn(ownerTurn, request.name) {
+                        networkExecutions++
+                        "Fixture-Ergebnis"
+                    }
+                }
+            ),
+            evaluator = AgentEvaluator { _, _ -> Evaluation(true, 1.0) },
+            experienceStore = InMemoryExperienceStore(),
+            approvalProvider = AgentToolApprovalProvider { _, _ ->
+                AgentToolApproval(webConsent.authorizeAlwaysOn(
+                    WebToolRequest.Search(rewrittenQuery), ResearchMode.QUICK) != null)
+            }
+        )
+        agent.run(ownerTurn)
+        return networkExecutions
+    }
+
     @Test fun originalOfflineTurnCannotBeBypassedByARewrittenModelQuery() {
         var executions = 0
         val delegate = at.heinz.deviceai.ToolRunner { executions++; "executed" }

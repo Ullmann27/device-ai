@@ -58,6 +58,19 @@ class ShizukuBridgeLifecycleTest {
 
     private fun bridge(status: MutableList<String>) = ShizukuBridge(RuntimeEnvironment.getApplication()) { status += it }
 
+    @Test fun lateDenialReplacesTheExpiredPermissionTimeoutDiagnosis() {
+        Server.granted = false
+        val statuses = mutableListOf<String>(); val bridge = bridge(statuses)
+        bridge.start()
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(21))
+        assertTrue(statuses.last().contains("Zeit"))
+        Server.permissionListener!!.onRequestPermissionResult(ShizukuBridge.REQUEST_CODE, PackageManager.PERMISSION_DENIED)
+        assertTrue("the actual decision replaces the timeout", statuses.last().contains("abgelehnt"))
+        assertTrue(Server.connections.isEmpty())
+        bridge.stop()
+    }
+
+
     @Test fun permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted() {
         Server.granted = false
         val statuses = mutableListOf<String>(); val bridge = bridge(statuses)
