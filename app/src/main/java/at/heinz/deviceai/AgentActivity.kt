@@ -1421,7 +1421,7 @@ class AgentActivity : Activity() {
     private fun showMoreWorkAreas() {
         val labels = arrayOf(
             "Forschung & Quellen", "Lokale KI-Modelle", "Wissensspeicher",
-            "System & Sicherheit", "Handy-Builder · Termux"
+            "System & Sicherheit", "Handy-Builder · Termux", "Team · Bots"
         )
         AlertDialog.Builder(this)
             .setTitle("Weitere Arbeitsbereiche")
@@ -1432,10 +1432,17 @@ class AgentActivity : Activity() {
                     2 -> showMemoryCenter()
                     3 -> showSystemCenter()
                     4 -> openMobileBuilder()
+                    5 -> showBotRoster()
                 }
             }
             .setNegativeButton("Schließen", null)
             .show()
+    }
+
+    private fun showBotRoster() {
+        ContinuumBotRosterDialog(this,
+            at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots")),
+            backlogExecutor).show()
     }
 
     private fun refreshConversationLayout() {
@@ -1803,6 +1810,7 @@ class AgentActivity : Activity() {
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
+            CenterAction("TEAM · BOT-ARBEITSBEREICHE") { showBotRoster() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
             CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() },
