@@ -23,7 +23,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 class ContinuumBotRosterDialog(
     private val activity: Activity,
     private val store: ChiefBotProfileStore,
-    private val io: Executor
+    private val io: Executor,
+    private val onSelect: ((ChiefBotProfile) -> Unit)? = null,
+    private val runtimeStatus: ((ChiefBotProfile) -> String)? = null
 ) {
     private var dialog: AlertDialog? = null
     private var revision = 0L
@@ -134,7 +136,11 @@ class ContinuumBotRosterDialog(
                 }
                 card.addView(label(profile.displayName + " · " + profile.role, 18f))
                 card.addView(label(profile.communicationStyle))
-                card.addView(label("REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
+                card.addView(label(runtimeStatus?.invoke(profile) ?:
+                    "REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
+                onSelect?.let { select -> card.addView(action("Mit ${profile.displayName} sprechen") {
+                    close(); select(profile)
+                }) }
                 card.addView(action("Profil und Arbeitsbereich öffnen") { showProfile(profile.agentId) })
                 body.addView(card, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) })
             }
@@ -155,8 +161,12 @@ class ContinuumBotRosterDialog(
             body.removeAllViews()
             body.addView(label(profile.displayName + " · " + profile.role, 21f))
             body.addView(label(profile.communicationStyle))
-            body.addView(label("REGISTRIERT · Kein aktueller Auftrag\n" +
+            body.addView(label(runtimeStatus?.invoke(profile) ?: ("REGISTRIERT · Kein aktueller Auftrag\n" +
                 "Geprüfte Fähigkeiten: noch keine\nLetztes bestätigtes Arbeitsergebnis: noch keines"))
+            )
+            onSelect?.let { select -> body.addView(action("Mit ${profile.displayName} sprechen") {
+                close(); select(profile)
+            }) }
             body.addView(label("Arbeitsplatz: ${profile.workspaceId}\n" +
                 "Speicherort: private App-Daten auf diesem Gerät\n" +
                 "Ausführung: noch keine isolierte Umgebung verbunden.\n" +
