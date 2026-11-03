@@ -226,6 +226,21 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
   const files=ns.status===0?ns.stdout.split('\n').filter(Boolean).map(l=>l.split('\t')[2]):null;
   if(!files||!files.length)reasons.push('PATCH_UNREADABLE');else if(files.some(isTestFile))reasons.push('FIX_MODIFIES_TESTS');
  }
+ // A supplied green SHA must name the actual post-patch tree, not merely
+ // agree with another supplied receipt field. Legacy omitted claims stay optional.
+ if(!reasons.length&&Object.hasOwn(receipt,'greenSha')){
+  if(!isCommit(repo,receipt.greenSha))reasons.push('GREEN_COMMIT_NOT_IN_REPOSITORY');
+  else{
+   let checkTree=null;
+   try{
+    checkTree=createWorktree(repo,baseCommit);
+    if(git(checkTree,['apply','--binary',patchPath]).code!==0||
+       git(checkTree,['add','--all','--force']).code!==0)reasons.push('PATCH_DOES_NOT_APPLY');
+    else if(git(checkTree,['write-tree']).out.trim()!==git(repo,['rev-parse',receipt.greenSha+'^{tree}']).out.trim())
+     reasons.push('GREEN_SOURCE_TREE_MISMATCH');
+   }finally{if(checkTree)removeWorktree(repo,checkTree);}
+  }
+ }
  if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
  const red=run(repo,baseCommit),green=run(repo,baseCommit,{patchPath});
  compareRuns(receipt,red,green,reasons);
