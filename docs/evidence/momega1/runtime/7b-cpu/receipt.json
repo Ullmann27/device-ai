@@ -24,5 +24,17 @@
     "run-cpu-tests.sh": "87e8c71400f8faeea4b8c93758301eba815d653eb881397af3c681dac8e29bcf",
     "candidate-green-expanded.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
     "candidate-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "testedSourceCommit": "a135a9ae72e1494676d709ae496cf74048310537",
+  "testedSourceHashesMatch": true,
+  "exactSourceResults": {
+    "a135-regression": {
+      "exit": 0,
+      "sha256": "4624d545e515240d6c63ec8fd789ee2bb10b86a8ef69a7f36fb8e229a465254b"
+    },
+    "a135-cpu": {
+      "exit": 0,
+      "sha256": "725f2bc26aec99496abed5836f0e09ccf3ddf8c2e23ada06fffffdf2c5cc21de"
+    }
   }
 }
