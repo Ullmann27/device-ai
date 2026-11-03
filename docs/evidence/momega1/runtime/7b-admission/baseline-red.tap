@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: 7B exact owner pin admits a bounded manifest with independently reviewed exact tuple
+not ok 1 - 7B exact owner pin admits a bounded manifest with independently reviewed exact tuple
+  ---
+  duration_ms: 11.601381
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-7b.test.mjs:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(pair)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-7b.test.mjs:19:9)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
+ok 2 - resource profile is frozen and restricted to every exact pin field plus runtime hash
+  ---
+  duration_ms: 1.100583
+  type: 'test'
+  ...
+# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
+ok 3 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
+  ---
+  duration_ms: 0.451332
+  type: 'test'
+  ...
+# Subtest: 7B total-job memory check is real and cannot accept the shared16GiB host group
+ok 4 - 7B total-job memory check is real and cannot accept the shared16GiB host group
+  ---
+  duration_ms: 1.076637
+  type: 'test'
+  ...
+# Subtest: large header requires exact complete provenance, no caller file-size bypass
+ok 5 - large header requires exact complete provenance, no caller file-size bypass
+  ---
+  duration_ms: 1.270569
+  type: 'test'
+  ...
+# Subtest: fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
+ok 6 - fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
+  ---
+  duration_ms: 216.650757
+  type: 'test'
+  ...
+# Subtest: reviewed 7B registry never promotes altered binary/weights or caller-forged observations
+not ok 7 - reviewed 7B registry never promotes altered binary/weights or caller-forged observations
+  ---
+  duration_ms: 1.454207
+  type: 'test'
+  location: '/workspace/momega1-runtime/scripts/continuum-local-model-7b.test.mjs:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(pair)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-runtime/scripts/continuum-local-model-7b.test.mjs:63:91)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 5
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 320.233325
