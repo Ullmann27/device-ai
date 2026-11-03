@@ -172,13 +172,14 @@ export async function runCodingService({configPath}={}){
   releaseHost=exclusiveLock({stateDir:hostState},'model-admission.lock');
  }catch(error){release();throw error;}
  const instanceId=crypto.randomBytes(16).toString('hex'),controller=new AbortController();
- let server=null,active=null,wake=null,stopping=false,descriptor,stopTimer=null;
+ let server=null,active=null,wake=null,stopping=false,ownerStopRequested=false,descriptor,stopTimer=null;
  const update=extra=>{
   descriptor={...descriptor,...extra};writePrivateJson(path.join(config.stateDir,'service.json'),descriptor);
  };
  const notify=()=>{wake?.();wake=null;};
  const stop=()=>{
   if(stopping)return;stopping=true;
+  ownerStopRequested=true;
   update({state:'STOPPING'});
   if(active){try{cancelOwnerTask({configPath,taskId:active.id});}catch(error){update({stopFailureCode:String(error.message).slice(0,160)});}}
   controller.abort();notify();
@@ -187,7 +188,6 @@ export async function runCodingService({configPath}={}){
   },5000);
  };
  try{
-  if(fs.existsSync(hostExecutionBarrier()))throw Error('SERVICE_RESOURCE_RECONCILIATION_REQUIRED');
   transaction(config,()=>{
    const items=readDeliveries(config);
    for(const d of items)if(['RESERVING','DISPATCHED','CANCEL_REQUESTED'].includes(d.delivery)){
@@ -196,6 +196,7 @@ export async function runCodingService({configPath}={}){
    saveDeliveries(config,items);
    if(items.some(d=>d.workerProcess&&sameLiveProcess(d.workerProcess)))throw Error('SERVICE_ORPHAN_WORKER_ACTIVE');
   });
+  if(fs.existsSync(hostExecutionBarrier()))throw Error('SERVICE_RESOURCE_RECONCILIATION_REQUIRED');
   const socket=socketPath(config);
   if(fs.existsSync(socket)){
    if(!fs.lstatSync(socket).isSocket())throw Error('SERVICE_SOCKET_UNSAFE');fs.unlinkSync(socket);
@@ -308,7 +309,7 @@ export async function runCodingService({configPath}={}){
      }
     }
    }
-   if(stopping||readDeliveries(config).find(i=>i.id===taskId)?.cancelRequestedAt){
+   if(ownerStopRequested||readDeliveries(config).find(i=>i.id===taskId)?.cancelRequestedAt){
     try{cancelOwnerTask({configPath,taskId});}catch{}
    }
    active=null;update({state:stopping?'STOPPING':'IDLE',activeTaskId:null});
