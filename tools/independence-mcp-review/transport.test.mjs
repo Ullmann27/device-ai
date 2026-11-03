@@ -19,7 +19,9 @@ function fixtureReader(){
     getStatus:async()=>{calls.push('getStatus');return {schema:'independent-status-fixture',generation,status:'STOPPED'};},
     listAgents:async args=>{calls.push(['listAgents',args]);return {items:[{agentId:'bot-forge',displayName:'FORGE'}],nextCursor:null};},
     listTasks:async args=>{calls.push(['listTasks',args]);return {items:[{taskId:'review-task',state:'BLOCKED'}],nextCursor:null};},
-    getEvidence:async args=>{calls.push(['getEvidence',args]);return {taskId:args.taskId,evidenceId:args.evidenceId,status:'UNVERIFIED'};}
+    getEvidence:async args=>{calls.push(['getEvidence',args]);const content={status:'UNVERIFIED'};
+      return {...args,sha256:crypto.createHash('sha256').update(JSON.stringify(content)).digest('hex'),
+        mediaType:'application/json',content,environment:'HOST',deviceVerified:false};}
   };
 }
 async function withServer(fn,{reader=fixtureReader(),limits={},...options}={}){
@@ -49,7 +51,7 @@ test('P01/P03/P04: actual HTTP initialization, notification, exact read-only dis
     validRpc(await client.call('get_status'));
     validRpc(await client.call('list_agents',{limit:1}));
     validRpc(await client.call('list_tasks',{limit:1}));
-    validRpc(await client.call('get_evidence',{taskId:'review-task',evidenceId:'review-evidence'}));
+    validRpc(await client.call('get_evidence',{taskId:'review-task',evidenceId:'result'}));
     assert.equal(reader.calls.length,4);
   });
 });
@@ -71,10 +73,10 @@ test('A01/A02/A03/A04: bearer checked every request; body/query/session never cr
     const publicHeaders={'Content-Type':'application/json','Accept':'application/json, text/event-stream',
       'MCP-Protocol-Version':MCP_PROTOCOL_VERSION,'MCP-Session-Id':client.session};
     for(const headers of [publicHeaders,{...publicHeaders,Authorization:'Bearer wrong'},
-      {...publicHeaders,Authorization:'Basic '+token},{...publicHeaders,Authorization:'Bearer '},
-      {...publicHeaders,Authorization:['Bearer '+token,'Bearer wrong']}]){
+      {...publicHeaders,Authorization:'Basic '+token},{...publicHeaders,Authorization:'Bearer '}]){
       const reply=await send(server.url,{headers,body});assert.equal(reply.status,401);assert.ok(!reply.text.includes(token));
     }
+    rejected(await send(server.url,{headers:{...publicHeaders,Authorization:['Bearer '+token,'Bearer wrong']},body}),'duplicate authorization');
     const query=await send(server.url+'?access_token='+token,{headers:publicHeaders,body});rejected(query,'query-only token');
     const embedded=await send(server.url,{headers:publicHeaders,body:{...body,access_token:token,role:'OWNER'}});
     assert.equal(embedded.status,401);assert.equal(reader.calls.length,0);
@@ -103,7 +105,7 @@ test('P05/P07/A07: no writable/dynamic tool route and no actor-name authorizatio
     await client.ready();
     for(const method of ['PUT','PATCH']){const r=await client.raw({submit:true},{method});assert.equal(r.status,405);}
     const get=await send(server.url,{method:'GET',headers:client.headers({'Accept':'text/event-stream'})});assert.equal(get.status,405);
-    const wrong=await client.rpc('tools/list',{}, {url:new URL('/owner/submit',server.url)});assert.equal(wrong.status,404);
+    const wrong=await client.rpc('tools/list',{}, {url:new URL('/owner/submit',server.url)});rejected(wrong,'wrong endpoint');
     for(const name of ['submit','cancel','start','stop','read_file','constructor','__proto__','toString','GET_STATUS','get_status\u0000']){
       rejected(await client.call(name),'forged tool '+name);
     }
@@ -153,7 +155,7 @@ test('B02/B04: bounded page arguments, forged cursors and unknown fields',async(
   await withServer(async({client,reader})=>{
     await client.ready();
     for(const name of ['list_agents','list_tasks']){
-      for(const limit of [0,-1,1.5,1000000,'1',null])rejected(await client.call(name,{limit}),'page limit');
+      for(const limit of [0,-1,1.5,1000000,'1',null])rejected(await client.call(name,{limit}),'page limit '+JSON.stringify(limit));
       for(const cursor of ['../../secret','unknown-cursor',crypto.randomBytes(24).toString('base64url')]){
         rejected(await client.call(name,{cursor,limit:1}),'cursor');
       }
@@ -169,7 +171,7 @@ test('D04: evidence selectors cannot be paths or caller-selected permission',asy
     for(const evidenceId of ['../secret','/etc/passwd','..%2fsecret','a/b','a\\b','a\u0000b','']){
       rejected(await client.call('get_evidence',{taskId:'review-task',evidenceId}),'evidence path');
     }
-    rejected(await client.call('get_evidence',{taskId:'review-task',evidenceId:'review-evidence',role:'OWNER'}),'evidence role');
+    rejected(await client.call('get_evidence',{taskId:'review-task',evidenceId:'result',role:'OWNER'}),'evidence role');
     assert.equal(reader.calls.length,0);
   });
 });
@@ -213,4 +215,69 @@ test('D01: each call obtains the fresh read projection',async()=>{
     const b=toolResult(await client.call('get_status'));assert.equal(a.generation,1);assert.equal(b.generation,2);
     assert.equal(reader.calls.length,2);
   });
+});
+
+test('B03/B04: real pages are bounded, cursor-bound to tool and session, no duplicate identities',async()=>{
+  const reader=fixtureReader();
+  const ids=['bot-atlas','bot-forge','bot-lint','bot-mnemos'];
+  reader.listAgents=async({cursor,limit})=>{
+    const offset=cursor===null?0:ids.indexOf(cursor)+1;
+    const page=ids.slice(offset,offset+limit);
+    return {items:page.map(agentId=>({agentId})),nextCursor:offset+limit<ids.length?page.at(-1):null};
+  };
+  await withServer(async({client,server,token})=>{
+    await client.ready();const first=toolResult(await client.call('list_agents',{limit:2}));
+    assert.deepEqual(first.items.map(x=>x.agentId),ids.slice(0,2));assert.ok(first.nextCursor);
+    rejected(await client.call('list_tasks',{cursor:first.nextCursor,limit:2}),'cross-collection cursor');
+    const b=new WireClient(server.url,token);await b.ready();
+    rejected(await b.call('list_agents',{cursor:first.nextCursor,limit:2}),'cross-session cursor');
+    const last=toolResult(await client.call('list_agents',{cursor:first.nextCursor,limit:2}));
+    assert.deepEqual([...first.items,...last.items].map(x=>x.agentId),ids);assert.equal(last.nextCursor,null);
+  },{reader});
+});
+
+test('A08/P09: bearer rotation and deletion invalidate existing sessions',async()=>{
+  await withServer(async({client,tokenFile,reader})=>{
+    await client.ready();const replacement=crypto.randomBytes(32).toString('hex');
+    fs.writeFileSync(tokenFile,replacement+'\n',{mode:0o600});
+    assert.equal((await client.call('get_status')).status,401);
+    client.token=replacement;assert.equal((await client.call('get_status')).status,404);
+    client.session=null;await client.ready();validRpc(await client.call('get_status'));
+    const ended=await client.raw(undefined,{method:'DELETE'});assert.equal(ended.status,204);
+    assert.equal((await client.call('get_status')).status,404);assert.equal(reader.calls.length,1);
+  });
+});
+
+test('B01/P06: explicit null arguments and malformed UTF-8 cannot become valid calls',async()=>{
+  await withServer(async({client,reader})=>{
+    await client.ready();
+    for(const name of tools)rejected(await client.rpc('tools/call',{name,arguments:null}),'explicit null args');
+    const payload=Buffer.concat([Buffer.from('{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"x":"'),
+      Buffer.from([0xc3,0x28]),Buffer.from('"}}')]);
+    rejected(await client.raw(payload),'malformed utf8');assert.equal(reader.calls.length,0);
+  });
+});
+
+test('B05/P08: simultaneous reads are bounded; cancellation ends only that read',async()=>{
+  const reader=fixtureReader();let entered;
+  const started=new Promise(resolve=>{entered=resolve;});let aborted=false;
+  reader.getStatus=(_args,{signal})=>new Promise((_resolve,reject)=>{
+    entered();signal.addEventListener('abort',()=>{aborted=true;reject(Error('cancelled'));},{once:true});
+  });
+  await withServer(async({client,server,token})=>{
+    await client.ready();const b=new WireClient(server.url,token);await b.ready();
+    const pending=client.call('get_status');const requestId=client.id;await started;
+    assert.equal((await b.call('get_status')).status,429);
+    const cancel=await client.raw({jsonrpc:'2.0',method:'notifications/cancelled',params:{requestId}});
+    assert.equal(cancel.status,202);rejected(await pending,'cancelled read');assert.equal(aborted,true);
+    validRpc(await b.rpc('tools/list'));assert.equal(server.getMetrics().activeReads,0);
+  },{reader,limits:{maxConcurrentReads:1}});
+});
+
+test('D08: MCP rejects mismatched evidence content hash instead of forwarding it',async()=>{
+  const reader=fixtureReader();const original=reader.getEvidence;
+  reader.getEvidence=async args=>({...await original(args),sha256:'0'.repeat(64)});
+  await withServer(async({client})=>{
+    await client.ready();rejected(await client.call('get_evidence',{taskId:'review-task',evidenceId:'result'}),'invalid evidence hash');
+  },{reader});
 });
