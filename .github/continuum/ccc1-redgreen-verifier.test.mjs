@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {verifyCommitReceipt,verifyRepairPatch,parseJunit,ATTESTATION_SCHEMA} from './ccc1-redgreen-verifier.mjs';
+import {verifyCommitReceipt,verifyRepairPatch,parseJunit,runNodeProfile,ATTESTATION_SCHEMA} from './ccc1-redgreen-verifier.mjs';
 
 const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
 function g(repo,...args){const r=spawnSync('git',['-C',repo,...args],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout.trim();}
@@ -92,4 +92,75 @@ test('JUnit parser maps node test files to stable ids and sees failures',()=>{
  const c=parseJunit('<testsuites><testcase name="a" classname="test" file="/x/sum.test.mjs"/>'+
   '<testcase name="b" classname="test" file="/x/sum.test.mjs" failure="x"><failure message="x">e</failure></testcase></testsuites>');
  assert.equal(c.get('sum.a').failed,false);assert.equal(c.get('sum.b').failed,true);
+});
+
+function coverageFixture(t,mode){
+ const repo=fs.mkdtempSync(path.join(os.tmpdir(),'rg-coverage-'));
+ t.after(()=>fs.rmSync(repo,{recursive:true,force:true}));g(repo,'init','-q');
+ const broken='export const fixed=false; export const sum=(a,b)=>a-b;\n';
+ const corrected='export const fixed=true; export const sum=(a,b)=>a+b;\n';
+ const base=commit(repo,{'src/sum.mjs':broken},'base');
+ const registration={
+  missing:"if(!fixed)test('retained',()=>assert.ok(1));",
+  renamed:"test(fixed?'replacement':'retained',()=>assert.ok(1));",
+  skipped:"test('retained',{skip:fixed},()=>assert.ok(1));",
+  todo:"test('retained',{todo:fixed},()=>assert.ok(1));",
+  suite:"describe(fixed?'replacement':'original',()=>test('retained',()=>assert.ok(1)));",
+  duplicate:"test('retained',()=>assert.ok(1));if(!fixed)test('retained',()=>assert.ok(1));",
+  reordered:"for(const name of (fixed?['b','a']:['a','b']))test(name,()=>assert.ok(1));",
+  skipType:"test('retained',fixed?{todo:true}:{skip:true},()=>assert.ok(1));",
+  retain:"describe('outer',()=>describe('inner',()=>{test('parameter [a & b]',()=>assert.ok(1));test('retained',()=>assert.ok(1));test('retained',()=>assert.ok(1));}));test('later',{todo:true},()=>{});",
+  extension:"test('retained',()=>assert.ok(1));if(fixed)test('additional',()=>assert.ok(1));"
+ }[mode];
+ const tests=`${T}import {describe} from 'node:test';import {sum,fixed} from '../src/sum.mjs';test('adds_two',()=>assert.equal(sum(1,1),2));${registration}\n`;
+ const red=commit(repo,{'tests/sum.test.mjs':tests},'red');
+ const green=commit(repo,{'src/sum.mjs':corrected},'green');
+ const f={repo,base,red,green};const r=JSON.parse(receipt(f));
+ r.red.executed=mode==='retain'?4:['duplicate','reordered'].includes(mode)?3:mode==='skipType'?1:2;
+ r.green.executed=mode==='retain'?4:mode==='extension'||mode==='reordered'?3:['missing','skipped','todo','skipType'].includes(mode)?1:2;
+ r.red.skipped=mode==='retain'||mode==='skipType'?1:0;
+ r.green.skipped=['retain','skipped','todo','skipType'].includes(mode)?1:0;
+ const patch=spawnSync('git',['-C',repo,'diff','--binary','--full-index',red,green]).stdout;
+ const patchPath=path.join(repo,'fix.patch');fs.writeFileSync(patchPath,patch);
+ return {...f,bytes:Buffer.from(JSON.stringify(r)),patch,patchPath,tests};
+}
+
+for(const mode of ['missing','renamed','skipped','todo','suite','duplicate','reordered','skipType']){
+ test('executor coverage rejects '+mode+' in commit and patch modes',t=>{
+  const f=coverageFixture(t,mode),before=g(f.repo,'status','--porcelain'),worktrees=g(f.repo,'worktree','list','--porcelain');
+  const commitResult=verifyCommitReceipt({repo:f.repo,receiptBytes:f.bytes});
+  const patchResult=verifyRepairPatch({repo:f.repo,baseCommit:f.red,patchPath:f.patchPath,patchSha256:sha256(f.patch),receiptBytes:f.bytes});
+  if(process.env.CCC1_PROOF_DIR){
+   fs.mkdirSync(process.env.CCC1_PROOF_DIR,{recursive:true});
+   fs.writeFileSync(path.join(process.env.CCC1_PROOF_DIR,mode+'.json'),JSON.stringify({mode,fixture:{repo:f.repo,base:f.base,red:f.red,green:f.green,testPath:'tests/sum.test.mjs',testSha256:sha256(f.tests),tests:f.tests},patchSha256:sha256(f.patch),patch:f.patch.toString(),receipt:JSON.parse(f.bytes),commitResult,patchResult},null,2)+'\n');
+  }
+  assert.equal(g(f.repo,'status','--porcelain'),before);assert.equal(g(f.repo,'worktree','list','--porcelain'),worktrees);
+  for(const result of [commitResult,patchResult]){
+   assert.equal(result.verdict,'REJECTED',mode+' accepted: '+JSON.stringify(result));
+   assert.ok(result.reasons.some(x=>x.startsWith('BASELINE_')),mode+': '+result.reasons.join());
+  }
+ });
+}
+
+for(const mode of ['retain','extension'])test('executor coverage accepts '+mode,t=>{
+ const f=coverageFixture(t,mode);
+ for(const result of [verifyCommitReceipt({repo:f.repo,receiptBytes:f.bytes}),
+  verifyRepairPatch({repo:f.repo,baseCommit:f.red,patchPath:f.patchPath,patchSha256:sha256(f.patch),receiptBytes:f.bytes})]){
+  assert.equal(result.verdict,'VERIFIED',result.reasons.join());
+ }
+});
+
+test('executor coverage rejects interrupted execution and then verifies a fresh retry',t=>{
+ const f=coverageFixture(t,'extension');
+ const slow=commit(f.repo,{'tests/timeout.test.mjs':"import test from 'node:test';test('slow',async()=>new Promise(()=>{}));setInterval(()=>{},1000);\n"},'timeout');
+ assert.deepEqual(runNodeProfile(f.repo,slow,{timeoutMs:100}),{ok:false,reason:'TIMEOUT_OR_SIGNAL'});
+ assert.equal(verifyCommitReceipt({repo:f.repo,receiptBytes:f.bytes}).verdict,'VERIFIED');
+ assert.equal(g(f.repo,'worktree','list','--porcelain').match(/^worktree /gm).length,1);
+});
+
+test('executor coverage rejects ambiguous repeated target claims before running',t=>{
+ const f=coverageFixture(t,'extension'),r=JSON.parse(f.bytes);r.targetTests.push(r.targetTests[0]);
+ let calls=0;
+ const result=verifyCommitReceipt({repo:f.repo,receiptBytes:Buffer.from(JSON.stringify(r)),run:()=>{calls++;throw Error('must reject before execution');}});
+ assert.equal(result.verdict,'REJECTED');assert.ok(result.reasons.includes('TARGET_TESTS'));assert.equal(calls,0);
 });
