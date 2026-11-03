@@ -40,3 +40,7 @@ Das verpflichtende Referenzdesign bleibt offen. Der echte lokale Blender-/CC0-Pr
 5. 3D-Quellen/Renderpaket, alle Rohlogs und genaue Agenten-HEADs sichern; neue zehn Prioritäten und PR392-Abschluss aktualisieren.
 
 Folgetests auf Fold7: reale Gemma-Baselines, GPU/Filament, Sprachzeitpunkte/Unterbrechung, Falten/Rotation, Speicherlecks, thermische Last/Energie, echte Bedienung und spätere Kameraeinwilligung. Keine dieser Prüfungen ist durch Hostbilder oder synthetische Daten ersetzt.
+
+## Parallel entdeckter fremder Forschungsstrang
+
+Die frische Remote-Inventur zeigt zusätzlich MΩ-1 in PR410–418 (Chief `codex/momega1-chief-20261103`, beim Lesen `cf34fb6af6cc0daf64cb925b078174341e597ecf`). Diese separate Sitzung arbeitet an Runtime-, CCC1-, Memory- und Android-Aufrufern auf einem eigenen Zweig. Ihre Agenten sind nicht unsere gestarteten Sitzungen; ihre Ergebnisse wurden hier nicht geprüft oder übernommen. Vor weiteren Arbeiten an den Punkten4–7 des Fortsetzungsplans zuerst deren tatsächliche neuen HEADs und Handoffs lesen, um Doppelarbeit zu vermeiden. Unser Design-/3D-Strang und die Abnahme auf PR392 bleiben separat.
