@@ -83,9 +83,13 @@ repair; the rejected defect is contradictory reported metadata, not fabricated
 execution or cryptographic authentication. Parser-only malformed XML diagnostics
 were not treated as exploits and remain outside this bounded follow-up.
 
-New freeze: the implementation commit containing this section. Full CCC1 run,
-DELTA-B consumed-case rerun and independent Quality reserve/acceptance follow
-that freeze. No source changes are planned during assessment.
+New freeze: `8ab7b6811ec3713bc8b0ce16e48394e9c27fe928`.
+Full CCC1 run on that exact commit: **173/173 pass, zero skips**, including all
+prior 154 checks and actual SIGKILL/interrupted-owner-approval recovery guards.
+`delta-manifest.json` binds source/test and raw evidence hashes. DELTA-B
+consumed-case rerun and independent Quality reserve/acceptance are pending.
+No source changes are planned during assessment. The two parser-only malformed
+XML findings remain explicitly open, without a demonstrated executed bypass.
 
 Commands and complete exits are in `coverage-red.tap`, `coverage-green.tap` and
 `ccc1-regression.tap`. Runs began on the RED parent with repaired working-tree
