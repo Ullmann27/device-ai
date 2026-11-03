@@ -1,0 +1,12 @@
+{
+  "schema": "BREAKTHROUGH_NEURAL_DEVELOPMENT_V1",
+  "author": "neural implementer",
+  "contamination": "AUTHOR_KNOWN_DEVELOPMENT_ONLY",
+  "cases": 40,
+  "semantics": "Exact source spans for explicit corrected/latest statements; unresolved conflicts abstain. Natural-language positives may exceed frozen static grammar.",
+  "hashes": {
+    "corpus.json": "8b7ce98c02ca3713d85f7e6e7b201a24768419f547c98c7454664b1bdc4e25a3",
+    "inputs.json": "70b477ef61afd4572f4e3a4c5478d9caf784f76e5a8f61781ddc68f4a8f7bee5",
+    "corruption-inputs.json": "5d9086e035b8af3daaed0860332ac7998420657397565616736e6801a7244936"
+  }
+}

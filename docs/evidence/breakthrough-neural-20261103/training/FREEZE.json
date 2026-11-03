@@ -1,0 +1,7 @@
+{
+  "schema": "BREAKTHROUGH_NEURAL_TRAINING_V1",
+  "cases": 48,
+  "author": "neural implementer",
+  "selection": "fixed seed17 epochs60 rate0.05; two residual weights; frozen prior13",
+  "corpusSha256": "4aceeb9f056d6834d4f58d9c68f81d54094a718ddd788c25e099794d08f9f4bd"
+}

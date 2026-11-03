@@ -1,0 +1,1242 @@
+{
+  "schema": "CDX2_BLIND_SCORE_V1",
+  "cases": 40,
+  "splits": {
+    "ADVERSARIAL": {
+      "RAW": {
+        "supported": 24,
+        "exactSupported": 16,
+        "missing": 16,
+        "correctAbstentions": 16,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 8,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.4670631683813228,
+          0.8202780967270192
+        ],
+        "abstainWilson95": [
+          0.8063923194655722,
+          1
+        ],
+        "primaryGate": false
+      },
+      "VERIFIED": {
+        "supported": 24,
+        "exactSupported": 8,
+        "missing": 16,
+        "correctAbstentions": 16,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 16,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.17972190327298068,
+          0.5329368316186772
+        ],
+        "abstainWilson95": [
+          0.8063923194655722,
+          1
+        ],
+        "primaryGate": false
+      },
+      "RULE": {
+        "supported": 24,
+        "exactSupported": 12,
+        "missing": 16,
+        "correctAbstentions": 16,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 12,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.31427425819573795,
+          0.685725741804262
+        ],
+        "abstainWilson95": [
+          0.8063923194655722,
+          1
+        ],
+        "primaryGate": false
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "NEURALDEV001",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV001-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV001-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV001-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV001-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV002",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV002-s0",
+        "revision": 1,
+        "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+        "text": "Bréval",
+        "start": 39,
+        "endExclusive": 45
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 45,
+          "start": 39,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 45,
+          "start": 39,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 45,
+          "start": 39,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV003",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV004",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV005",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV006",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV007",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV007-s0",
+        "revision": 1,
+        "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+        "text": "Bréval",
+        "start": 51,
+        "endExclusive": 57
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV008",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV009",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV010",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV010-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV010-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV011",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV011-s0",
+        "revision": 1,
+        "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV011-s0",
+          "decision": "SPAN",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV012",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV013",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV014",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV014-s0",
+        "revision": 1,
+        "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+        "text": "Sølvik Nord",
+        "start": 16,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV015",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV015-s0",
+        "revision": 1,
+        "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+        "text": "Sølvik",
+        "start": 3,
+        "endExclusive": 9
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV015-s0",
+          "decision": "SPAN",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+          "endExclusive": 9,
+          "start": 3,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV016",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV016-s0",
+        "revision": 1,
+        "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+        "text": "Sølvik",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV017",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV017-s0",
+        "revision": 1,
+        "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c",
+        "text": "L’Sølvik",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV017-s0",
+          "decision": "SPAN",
+          "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "L’Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV018",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV018-s0",
+        "revision": 1,
+        "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+        "text": "Sølvik am See",
+        "start": 16,
+        "endExclusive": 29
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV018-s0",
+          "decision": "SPAN",
+          "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+          "endExclusive": 29,
+          "start": 16,
+          "text": "Sølvik am See",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV019",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV019-s0",
+        "revision": 1,
+        "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+        "text": "Neu Groß Sølvik Nord",
+        "start": 16,
+        "endExclusive": 36
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 36,
+          "start": 16,
+          "text": "Neu Groß Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV020",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV020-s0",
+        "revision": 1,
+        "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+        "text": "Sølvik",
+        "start": 20,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV020-s0",
+          "decision": "SPAN",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV020-s0",
+          "decision": "SPAN",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV020-s0",
+          "decision": "SPAN",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV021",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV021-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV021-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV021-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV021-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV022",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV022-s0",
+        "revision": 1,
+        "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+        "text": "Dun-Mara",
+        "start": 39,
+        "endExclusive": 47
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 47,
+          "start": 39,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 47,
+          "start": 39,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 47,
+          "start": 39,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV023",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV024",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV025",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV026",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV027",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV027-s0",
+        "revision": 1,
+        "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+        "text": "Dun-Mara",
+        "start": 51,
+        "endExclusive": 59
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV028",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV029",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV030",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV030-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV030-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV031",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV031-s0",
+        "revision": 1,
+        "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV031-s0",
+          "decision": "SPAN",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV032",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV033",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV034",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV034-s0",
+        "revision": 1,
+        "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+        "text": "Łomira Nord",
+        "start": 16,
+        "endExclusive": 27
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "NEURALDEV035",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV035-s0",
+        "revision": 1,
+        "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+        "text": "Łomira",
+        "start": 3,
+        "endExclusive": 9
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV035-s0",
+          "decision": "SPAN",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+          "endExclusive": 9,
+          "start": 3,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV036",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV036-s0",
+        "revision": 1,
+        "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+        "text": "Łomira",
+        "start": 16,
+        "endExclusive": 22
+      },
+      "RAW": {
+        "prediction": null,
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV037",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV037-s0",
+        "revision": 1,
+        "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f",
+        "text": "L’Łomira",
+        "start": 16,
+        "endExclusive": 24
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV037-s0",
+          "decision": "SPAN",
+          "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "L’Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV038",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV038-s0",
+        "revision": 1,
+        "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+        "text": "Łomira am See",
+        "start": 16,
+        "endExclusive": 29
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV038-s0",
+          "decision": "SPAN",
+          "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+          "endExclusive": 29,
+          "start": 16,
+          "text": "Łomira am See",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV039",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV039-s0",
+        "revision": 1,
+        "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+        "text": "Neu Groß Łomira Nord",
+        "start": 16,
+        "endExclusive": 36
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 36,
+          "start": 16,
+          "text": "Neu Groß Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": false
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": false
+      }
+    },
+    {
+      "id": "NEURALDEV040",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "sourceId": "NEURALDEV040-s0",
+        "revision": 1,
+        "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+        "text": "Łomira",
+        "start": 20,
+        "endExclusive": 26
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "NEURALDEV040-s0",
+          "decision": "SPAN",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "NEURALDEV040-s0",
+          "decision": "SPAN",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "NEURALDEV040-s0",
+          "decision": "SPAN",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    }
+  ],
+  "corpusSha256": "8b7ce98c02ca3713d85f7e6e7b201a24768419f547c98c7454664b1bdc4e25a3",
+  "predictionsSha256": "28bc5e15b396ea627a20f88e1ffa991345bbb21dfa2121eb6a3eaebe3bddf67e",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}

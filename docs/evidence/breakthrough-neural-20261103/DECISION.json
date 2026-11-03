@@ -1,0 +1,23 @@
+{
+  "schema": "BREAKTHROUGH_NEURAL_DECISION_V1",
+  "status": "REJECTED_FOR_PROMOTION",
+  "attempts": 1,
+  "predictiveSourceCommit": "daf1f40b2d1e0e09826eb19a0acd0ac78f7409df",
+  "freezeCommit": "4d2e825f2caf783085dcb85c005960cd01347b14",
+  "candidateSha256": "b80b4bd16f04cd6cabd473f4701fb9b19675a1df65f2fe8908da5f1e06772519",
+  "reasons": [
+    "Old-C case C054 regressed to unsupported RAW positive",
+    "No development VERIFIED improvement; candidate VERIFIED four cases worse than RULE"
+  ],
+  "gates": {
+    "oldCRawRetention": false,
+    "oldCVerifiedRetention": true,
+    "developmentVerifiedBenefit": false,
+    "developmentVsRuleBenefit": false,
+    "developmentCorruptionControls": true,
+    "independentHoldout": "PENDING_QA"
+  },
+  "noFurtherPredictorTuning": true,
+  "productionIntegration": "NONE_RESEARCH_TOOLS_ONLY",
+  "device": "NOT_RUN"
+}

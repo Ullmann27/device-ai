@@ -1,0 +1,497 @@
+[
+  {
+    "id": "C001",
+    "category": "SUPPORTED",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0017785564152938554,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C002",
+    "category": "SUPPORTED",
+    "candidateCount": 16,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.015572777038149186,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C003",
+    "category": "SUPPORTED",
+    "candidateCount": 18,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.03421743185988316,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C004",
+    "category": "SUPPORTED",
+    "candidateCount": 19,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0065447192525991404,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C005",
+    "category": "SUPPORTED",
+    "candidateCount": 12,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.014227832571004129,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C006",
+    "category": "SUPPORTED",
+    "candidateCount": 12,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.03223665126456308,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C007",
+    "category": "SUPPORTED",
+    "candidateCount": 15,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.005187569292911903,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C008",
+    "category": "SUPPORTED",
+    "candidateCount": 24,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.018257251479580235,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C009",
+    "category": "SUPPORTED",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.031575518218563345,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C010",
+    "category": "SUPPORTED",
+    "candidateCount": 11,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0038285749738561584,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C011",
+    "category": "SUPPORTED",
+    "candidateCount": 13,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.01622471579167439,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C012",
+    "category": "SUPPORTED",
+    "candidateCount": 22,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.03553577589174937,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C013",
+    "category": "SUPPORTED",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0024677312756604384,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C014",
+    "category": "SUPPORTED",
+    "candidateCount": 16,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.015572777038149186,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C015",
+    "category": "SUPPORTED",
+    "candidateCount": 18,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.03421743185988316,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C016",
+    "category": "SUPPORTED",
+    "candidateCount": 15,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.005858349392478156,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C017",
+    "category": "SUPPORTED",
+    "candidateCount": 13,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.014228983918453737,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C018",
+    "category": "SUPPORTED",
+    "candidateCount": 14,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.03289734750243053,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C019",
+    "category": "SUPPORTED",
+    "candidateCount": 15,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.005187569292911903,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C020",
+    "category": "SUPPORTED",
+    "candidateCount": 24,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.018257251479580346,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C021",
+    "category": "MISSING",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0023161513399199913,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C022",
+    "category": "MISSING",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 8.167068499308998e-09,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C023",
+    "category": "MISSING",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 8.309773015356295e-09,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C024",
+    "category": "MISSING",
+    "candidateCount": 8,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 1.2732975754899136e-08,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C025",
+    "category": "MISSING",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 8.167068499308998e-09,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C026",
+    "category": "NEGATION",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "C027",
+    "category": "NEGATION",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019712541544235876,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "C028",
+    "category": "NEGATION",
+    "candidateCount": 9,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 1.1010925505312594e-10,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "C029",
+    "category": "NEGATION",
+    "candidateCount": 4,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019481973431871688,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "C030",
+    "category": "NEGATION",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.001971263246114176,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "C031",
+    "category": "CONFLICT",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006451138498078078,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C032",
+    "category": "CONFLICT",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006489226903714742,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C033",
+    "category": "CONFLICT",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0065463567921953784,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C034",
+    "category": "CONFLICT",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006451138498078078,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C035",
+    "category": "CONFLICT",
+    "candidateCount": 11,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006492059033914376,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C036",
+    "category": "TIME",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C037",
+    "category": "TIME",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.881828440678293e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C038",
+    "category": "TIME",
+    "candidateCount": 8,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 9.634559817082217e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C039",
+    "category": "TIME",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019482018891373261,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C040",
+    "category": "TIME",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.881828440678293e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C041",
+    "category": "ROLE",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.014207936726977906,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C042",
+    "category": "ROLE",
+    "candidateCount": 12,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.031583339579646035,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C043",
+    "category": "ROLE",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0024798098039816078,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C044",
+    "category": "ROLE",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.014207936726977906,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C045",
+    "category": "ROLE",
+    "candidateCount": 13,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.031584471117290285,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "C046",
+    "category": "RELATION",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006423887413627525,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C047",
+    "category": "RELATION",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006499695428953161,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C048",
+    "category": "RELATION",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.335446437639225,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "C049",
+    "category": "RELATION",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.335390496564393,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "C050",
+    "category": "RELATION",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.00880085856060992,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "C051",
+    "category": "SAME_NAME_SOURCE_BOUNDARY",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006451138498078078,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "C052",
+    "category": "SAME_NAME_SOURCE_BOUNDARY",
+    "candidateCount": 7,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.001971256427346227,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "C053",
+    "category": "SAME_NAME_SOURCE_BOUNDARY",
+    "candidateCount": 10,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.002005840647371894,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "C054",
+    "category": "SAME_NAME_SOURCE_BOUNDARY",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019481996161621893,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "C055",
+    "category": "SAME_NAME_SOURCE_BOUNDARY",
+    "candidateCount": 13,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.006530145881014641,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  }
+]

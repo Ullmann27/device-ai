@@ -1,0 +1,1 @@
+GROUND_SLOT_TRAINED train=48 frozen=13 learned=2 epochs=60 seed=17

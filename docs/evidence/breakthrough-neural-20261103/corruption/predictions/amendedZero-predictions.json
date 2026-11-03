@@ -1,0 +1,118 @@
+{"cases": [
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "CORRUPTION_hash_mismatch",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "CORRUPTION_text_changed",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNTRUSTED_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "CORRUPTION_revision_zero",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [{
+      "tuple": {"decision": "NOANSWER"},
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "probability": 1
+    }],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "DUPLICATE_SOURCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "CORRUPTION_duplicate_source_id",
+    "inputValid": false,
+    "VERIFIED": {"decision": "NOANSWER"}
+  }
+]}

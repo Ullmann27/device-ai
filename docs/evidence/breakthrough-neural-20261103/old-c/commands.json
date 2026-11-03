@@ -1,0 +1,105 @@
+[
+  {
+    "name": "compile",
+    "command": [
+      "kotlinc",
+      "-cp",
+      "/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/breakthrough-neural-20261103/GeneralizationProbe.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/breakthrough-neural-20261103/GroundedSlotResidual.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2CounterfactualShadow.kt",
+      "/workspace/breakthrough-neural/app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+      "-d",
+      "/workspace/neural-old-c-normalized/classes"
+    ],
+    "exitCode": 0,
+    "wallMillis": 11467.157641000085,
+    "userCpuSeconds": 17.605465,
+    "systemCpuSeconds": 0.467371,
+    "cumulativeChildPeakRssKiB": 607948
+  },
+  {
+    "name": "predict",
+    "command": [
+      "java",
+      "-cp",
+      "/workspace/neural-old-c-normalized/classes:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.span.GeneralizationProbe",
+      "/workspace/breakthrough-neural/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/breakthrough-neural/docs/evidence/synapse-iii-20261102/m2-adapter/candidate/checkpoint-17.json",
+      "/workspace/neural-old-c-inputs.json",
+      "/workspace/neural-old-c-normalized/predictions",
+      "docs/evidence/breakthrough-neural-20261103/checkpoints/residual15.json"
+    ],
+    "exitCode": 0,
+    "wallMillis": 1763.0244920001132,
+    "userCpuSeconds": 3.219995000000001,
+    "systemCpuSeconds": 0.130235,
+    "cumulativeChildPeakRssKiB": 607948
+  },
+  {
+    "name": "score-base11",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/neural-old-c-normalized/predictions/base11-predictions.json",
+      "/workspace/neural-old-c-normalized/base11-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "wallMillis": 47.553227999742376,
+    "userCpuSeconds": 0.037382000000000914,
+    "systemCpuSeconds": 0.00923099999999999,
+    "cumulativeChildPeakRssKiB": 607948
+  },
+  {
+    "name": "score-current13",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/neural-old-c-normalized/predictions/current13-predictions.json",
+      "/workspace/neural-old-c-normalized/current13-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "wallMillis": 41.67868000013186,
+    "userCpuSeconds": 0.03470700000000093,
+    "systemCpuSeconds": 0.007755000000000067,
+    "cumulativeChildPeakRssKiB": 607948
+  },
+  {
+    "name": "score-amendedZero",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/neural-old-c-normalized/predictions/amendedZero-predictions.json",
+      "/workspace/neural-old-c-normalized/amendedZero-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "wallMillis": 43.855077999978676,
+    "userCpuSeconds": 0.0273469999999989,
+    "systemCpuSeconds": 0.016376999999999975,
+    "cumulativeChildPeakRssKiB": 607948
+  },
+  {
+    "name": "score-trained15",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/issue340-20261101/m2/blind-c/corpus.json",
+      "/workspace/neural-old-c-normalized/predictions/trained15-predictions.json",
+      "/workspace/neural-old-c-normalized/trained15-score.json",
+      "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c"
+    ],
+    "exitCode": 0,
+    "wallMillis": 41.752269999960845,
+    "userCpuSeconds": 0.03185799999999972,
+    "systemCpuSeconds": 0.007912999999999948,
+    "cumulativeChildPeakRssKiB": 607948
+  }
+]
