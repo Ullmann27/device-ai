@@ -101,15 +101,17 @@ test('S09: cancellation of a real dispatched child reaches the canonical task an
 
 test('S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work', {timeout: 45000}, async () => {
   const f = await fixture('active-crash', ['--max-cycles', '4'], {isolatedRuntimeCopy: true});
-  let active;
+  let active, daemon;
   try {
     const running = await dispatchWithoutExecutableRuntime(f, 'active-crash-order');
-    active = running.active;
+    active = running.active; daemon = running.daemon;
     signal(running.daemon.process, 'SIGKILL');
     await until(() => alive(running.daemon.process), value => !value);
     const orphan = json(await f.call('status'));
     assert.equal(orphan.processVerified, false);
-    assert.equal(orphan.state, 'ORPHAN_WORKER');
+    assert.equal(orphan.state, 'RESOURCE_RECONCILIATION_REQUIRED');
+    assert.equal(orphan.resourceReconciliationRequired, true);
+    assert.equal(orphan.modelLoaded, null, 'descendant model presence is unknown after daemon death');
     assert.equal(orphan.unknown, 1);
     // This is the test operator cleaning up its own frozen child, never an
     // automatic replay or a PID inferred from untrusted presentation metadata.
@@ -132,6 +134,8 @@ test('S10: actual daemon crash after dispatch preserves UNKNOWN and never restar
       'restart cannot replace the crashed attempt with a new worker identity');
   } finally {
     signal(active?.workerProcess, 'SIGKILL');
+    const barrier=path.join('/tmp','continuum-coding-owner-'+process.getuid(),'unresolved-execution.json');
+    if(active&&daemon&&fs.existsSync(barrier))await reconcileZeroExecutionFixture(f,daemon,active);
     await f.close();
   }
 });
@@ -161,13 +165,15 @@ test('S02 supplement: per-UID admission excludes a second different project and 
 test('S10 supplement: per-UID admission retains a live orphan across different project and state directories', {timeout: 45000}, async () => {
   const first = await fixture('global-orphan', ['--max-cycles', '4'], {isolatedRuntimeCopy: true});
   const second = await fixture('global-orphan-contender');
-  let active;
+  let active, daemon;
   try {
     const running = await dispatchWithoutExecutableRuntime(first, 'global-orphan-order');
-    active = running.active;
+    active = running.active; daemon = running.daemon;
     signal(running.daemon.process, 'SIGKILL');
     await until(() => alive(running.daemon.process), value => !value);
-    assert.equal(json(await first.call('status')).state, 'ORPHAN_WORKER');
+    const unknown=json(await first.call('status'));
+    assert.equal(unknown.state, 'RESOURCE_RECONCILIATION_REQUIRED');
+    assert.equal(unknown.resourceReconciliationRequired, true);
     const rejected = await second.call('start');
     assert.notEqual(rejected.code, 0, 'dead parent does not free admission while its worker remains alive');
     assert.equal(alive(active.workerProcess), true, 'contender must not kill an orphan to claim success');
@@ -186,6 +192,8 @@ test('S10 supplement: per-UID admission retains a live orphan across different p
       secondRejectedWhileOrphanAlive: true, secondStartedAfterVerifiedChildTeardown: true});
   } finally {
     signal(active?.workerProcess, 'SIGKILL');
+    const barrier=path.join('/tmp','continuum-coding-owner-'+process.getuid(),'unresolved-execution.json');
+    if(active&&daemon&&fs.existsSync(barrier))await reconcileZeroExecutionFixture(first,daemon,active);
     await second.close(); await first.close();
   }
 });
