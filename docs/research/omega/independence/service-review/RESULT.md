@@ -1,5 +1,10 @@
 # Independent service lifecycle review
 
+Final critical finding: a dead worker could leave descendants alive while the
+service started the next queued task. This was independently reproduced and
+corrected with a durable uncertainty barrier. See `DESCENDANT-FINDING.md` for
+the actual RED→GREEN evidence and explicit fixture-only cleanup.
+
 The criteria were frozen before candidate/API inspection at
 `d1a280b64e092e063339b44e3e9426b3a7dcf43e` (criteria SHA-256
 `874268217036c5309b7d5fd5c4de47dffffe8386dab9919691f3bca00d29f7bd`).
@@ -13,10 +18,14 @@ The criteria were frozen before candidate/API inspection at
 | Attempted active-worker tests while the builder changed its worktree | BLOCKED at setup, 2 test errors | Both startups refused `SERVICE_SOURCE_DIRTY`. No worker or native inference ran. Retained under `source-dirty-blocked/`. |
 | Candidate `a588d361274af22e4ede602c3bfabcf3b08b8f22`, Linux x86_64 | PASS 10/10, 0 skipped; 43.603 seconds | All eight original cases plus real dispatched-child cancellation and daemon crash/no replay. |
 | Candidate `0c54a7bc33bc3979f59a1b4d1bcd9e5b4e39a115`, Linux x86_64 | PASS 4/4, 0 skipped; 28.137 seconds | Both active-child cases repeated, plus two different project/config/state directories and live orphan exclusion. |
+| `0c54a7bc`, supplemental descendant hazard | FAIL 1/1; 8.335 seconds | Unexpected worker death allowed a different queued task to dispatch; harmless actual-launcher proof independently showed descendant survival. |
+| `d84689868631466640893c9ee9a0374db857a8b8`, critical fix | PASS 1/1; 9.314 seconds | Next task stays pending; restored-runtime restart refuses until explicit reconciliation. |
 
-The latter two rows contain twelve distinct scenarios, with two repeated across
-source revisions. They are not fourteen unique cases. The entire twelve-case
-suite must run again on the final integrated source.
+The a588d361/0c54a7bc success rows contain twelve distinct scenarios, with two
+repeated across revisions. The additional critical case makes thirteen current
+scenarios. The older successful orphan tests predate the stricter persistent
+barrier and do not certify its safety. Their raw results remain unchanged.
+The final thirteen-case integration rerun belongs to the separate final QA gate.
 
 The eight candidate cases exercised idle start/stop/restart, simultaneous starts,
 SIGKILL of an idle daemon, refusal to kill an unrelated live PID named in stale
@@ -88,10 +97,10 @@ idle/repeated lifecycle and global admission, not long-duration device resource
 stress. S18 proves credential-free local control and no model calls in these
 fixtures; genuine offline neural work is a separate acceptance requirement.
 
-No production vulnerability was independently reproduced in this lifecycle
-scope. The earlier source-only concern about repeated retries of an invalid
-pending grant was addressed by the builder before execution testing; there is
-no fabricated RED result for that observation.
+The earlier source-only concern about repeated retries of an invalid pending
+grant was addressed before execution testing; no RED result is invented for
+that observation. The later descendant/resource gap was actually reproduced,
+and its distinct RED and GREEN runs are retained.
 
 No original signature, owner data, main branch, installation or release changed.
 Weekly quota: `NOT_VISIBLE`; work and raw logs are saved regularly in Draft PR #458.
