@@ -1,0 +1,128 @@
+TAP version 13
+# Subtest: MΩ PR400 self-closing suite does not capture following actual Node cases
+ok 1 - MΩ PR400 self-closing suite does not capture following actual Node cases
+  ---
+  duration_ms: 236.514986
+  type: 'test'
+  ...
+# Subtest: MΩ PR400 actual Node identities survive a symlinked TMPDIR
+not ok 2 - MΩ PR400 actual Node identities survive a symlinked TMPDIR
+  ---
+  duration_ms: 296.082916
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    BASELINE_TEST_IDENTITY_MISSING
+    + actual - expected
+    
+    + 'REJECTED'
+    - 'VERIFIED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'VERIFIED'
+  actual: 'REJECTED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:34:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects patchSha256
+not ok 3 - MΩ quality embedded patch receipt rejects patchSha256
+  ---
+  duration_ms: 279.091156
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:36:58'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"8957821c99d0fb253507b027a0f3fa639c4cf99129bd03275c7c0a5e2c189f88","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"bd8d42c3c886c3b74d5fc255d3688b0130b213ab98a9a7986016a4b2af5fa962","red":{"xmlSha256":"e258d7f11aab6fcfd32b29afadb5ff79cca5c5c5bbc8ef878f2017b5b0fecc89","exitCode":1,"executed":1,"failed":1},"green":{"xmlSha256":"ead4883840ba44aa012f91880759c92a47a83718840af00d2b6ce793e8e95693","exitCode":0,"executed":1,"failed":0}}
+    + actual - expected
+    
+    + 'VERIFIED'
+    - 'REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'REJECTED'
+  actual: 'VERIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:40:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects red.sha
+not ok 4 - MΩ quality embedded patch receipt rejects red.sha
+  ---
+  duration_ms: 310.978553
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:36:58'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"3df7f43ed90a317bc6e7d387c1b7b2173b4d2639565d056ba15ddb8b0859931c","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"bd8d42c3c886c3b74d5fc255d3688b0130b213ab98a9a7986016a4b2af5fa962","red":{"xmlSha256":"61a7de1960e27d5deb131b8f639f13a8e5873d3c88c571f6b0e5bff9a785cb30","exitCode":1,"executed":1,"failed":1},"green":{"xmlSha256":"8fa06fd79c8d92e9d196519fb84e53a2aee2190d74f73b8b157a5e1b841533b8","exitCode":0,"executed":1,"failed":0}}
+    + actual - expected
+    
+    + 'VERIFIED'
+    - 'REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'REJECTED'
+  actual: 'VERIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:40:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: MΩ quality embedded patch receipt rejects green.sha
+not ok 5 - MΩ quality embedded patch receipt rejects green.sha
+  ---
+  duration_ms: 352.400374
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:36:58'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"e5d65027f2f057c5693087dc616be3f27c402d8f02ff5169fbeec093c72411a7","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"bd8d42c3c886c3b74d5fc255d3688b0130b213ab98a9a7986016a4b2af5fa962","red":{"xmlSha256":"e92d5bedddf4638b79761d43e5d0749a8aeb6726e2490e98126149e897860d41","exitCode":1,"executed":1,"failed":1},"green":{"xmlSha256":"7a9a632afc731b2ac05b0cf522a6b42e64aa1a52c74fe76754a83d4a0d225c1b","exitCode":0,"executed":1,"failed":0}}
+    + actual - expected
+    
+    + 'VERIFIED'
+    - 'REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'REJECTED'
+  actual: 'VERIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:40:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1563.482024
