@@ -1,0 +1,11 @@
+allprojects { tasks.withType(Test).configureEach { executable = '/usr/bin/java'; filter {
+includeTestsMatching 'at.heinz.deviceai.ui.ContinuumTaskEffectsTest'
+includeTestsMatching 'at.heinz.deviceai.ContinuumTaskEffectsUiTest'
+includeTestsMatching 'at.heinz.deviceai.ContinuumUiFeedbackTest'
+includeTestsMatching 'at.heinz.deviceai.ContinuumHologramMotionUiTest'
+includeTestsMatching 'at.heinz.deviceai.HologramAudioTest'
+includeTestsMatching 'at.heinz.deviceai.TtsHologramSignalTest'
+includeTestsMatching 'at.heinz.deviceai.ui.CognitiveWorkPresentationTest'
+includeTestsMatching 'at.heinz.deviceai.ContinuumAvatarNativeUiTest'
+includeTestsMatching 'at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest'
+} } }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:28:04" hostname="b354f2cb821b" time="0.03">
+  <properties/>
+  <testcase name="boundedReplayHistoryFailsClosedUntilNewScope" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.007"/>
+  <testcase name="idleHasNoWorkGlyphAndActualStartDrawsThenExpires" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.017"/>
+  <testcase name="staleFutureAndUnknownEventsCannotInventActivity" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.002"/>
+  <testcase name="scopeEndAndDuplicateStartNeverReplayArrivals" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.0"/>
+  <testcase name="boundedCapacityAndStaleFinishReleaseOnlyMatchingSlot" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.0"/>
+  <testcase name="readFlightsRequireMatchingToolAndNeverRenderContentOrCounts" classname="at.heinz.deviceai.ui.ContinuumTaskEffectsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
