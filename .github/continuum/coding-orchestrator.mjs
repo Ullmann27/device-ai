@@ -95,6 +95,7 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  if(git(project,['rev-parse','HEAD']).stdout.trim()!==grant.task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
  if(git(project,['status','--porcelain']).stdout.trim())throw Error('CODING_TASK_DIRTY_SOURCE');
  const receipts=[],technicalCandidates=[],seenObservations=new Set();
+ let admittedModelCalls=0,modelAdmissionFailure=null;
  let technicalRecall={items:[],text:''},technicalExperienceStatus='NOT_RECORDED';
  let technical=null;
  try{
@@ -112,7 +113,10 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
    if(strictMomega&&taskFingerprint(supplied.taskSpec)!==taskFingerprint(task))throw Error('CODING_TASK_BINDING_MISMATCH');
    const candidateProvider=Object.assign(input=>{
     const raw=supplied(input);
-    if(strictMomega)assertCodingModelObservationBinding({task,raw,seen:seenObservations});
+    if(strictMomega){
+     try{assertCodingModelObservationBinding({task,raw,seen:seenObservations});admittedModelCalls++;}
+     catch(error){modelAdmissionFailure=error.message;throw error;}
+    }
     return raw;
    },{taskSpec:supplied.taskSpec,allowedPaths:supplied.allowedPaths,
      onVerifiedCandidate:entry=>technicalCandidates.push(entry)});
@@ -127,8 +131,8 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  const receiptJobs=[...new Set((result.entries??[])
   .filter(entry=>entry.kind==='RECEIPT'&&typeof entry.payload?.job==='string')
   .map(entry=>entry.payload.job))];
- if(strictMomega&&!technicalCandidates.length)
-  throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ if(strictMomega&&admittedModelCalls===0)
+  throw Error(modelAdmissionFailure??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
  for(const candidate of technicalCandidates){
   try{
    if(!technical)continue;
