@@ -36,7 +36,15 @@ class IndependentActivitySpeechTest {
 
     private fun field(name: String) = AgentActivity::class.java.getDeclaredField(name).apply { isAccessible = true }
     private fun set(name: String, value: Any?) { field(name).set(activity, value) }
-    private fun call(name: String) { AgentActivity::class.java.getDeclaredMethod(name).apply { isAccessible = true }.invoke(activity) }
+    private fun call(name: String) {
+        // Chief555 adds an explicit interrupted parameter; reflection does not apply Kotlin defaults.
+        // Preserve the same interruption operation on both old and repaired actual listeners.
+        val methods = AgentActivity::class.java.declaredMethods.filter { it.name == name }
+        val method = methods.firstOrNull { it.parameterCount == 0 }
+            ?: methods.single { name == "stopVoiceAnimation" && it.parameterTypes.contentEquals(arrayOf(Boolean::class.javaPrimitiveType)) }
+        method.isAccessible = true
+        if (method.parameterCount == 0) method.invoke(activity) else method.invoke(activity, true)
+    }
     private fun main() { Shadows.shadowOf(Looper.getMainLooper()).idle() }
     private fun active(id: String, text: String) {
         set("voiceUtteranceId", id); set("voiceAvatarText", text)
