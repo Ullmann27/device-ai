@@ -14,7 +14,7 @@ import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.
 import {createCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 import {loadCodingServiceConfig,readDeliveries,saveDeliveries,privateJson,writePrivateJson,privateDirectory,
  realDirectory,assertServiceSource,assertServiceArtifacts,reviewServiceTask,linuxProcessIdentity,sameLiveProcess,
- serviceEnvironment,SERVICE_ID,plainBytes} from './coding-service-store.mjs';
+ serviceEnvironment,SERVICE_ID,assertProfileBridge} from './coding-service-store.mjs';
 import {createCodingServiceReader,readServiceDescriptor,currentCanonicalTask} from './coding-service-reader.mjs';
 
 const CHILD=fileURLToPath(new URL('./coding-service-worker.mjs',import.meta.url));
@@ -26,16 +26,23 @@ function exclusiveLock(config,name){
   try{
    fs.mkdirSync(directory,{mode:0o700});
    writePrivateJson(path.join(directory,'owner.json'),{process:identity,nonce},{exclusive:true});
-   return ()=>{
+   const release=()=>{
     if(privateJson(path.join(directory,'owner.json')).nonce!==nonce)throw Error('SERVICE_LOCK_OWNER_CHANGED');
     fs.rmSync(directory,{recursive:true});
    };
+   release.setWorker=workerProcess=>{
+    const old=privateJson(path.join(directory,'owner.json'));
+    if(old.nonce!==nonce)throw Error('SERVICE_LOCK_OWNER_CHANGED');
+    writePrivateJson(path.join(directory,'owner.json'),{...old,workerProcess});
+   };
+   return release;
   }catch(error){
    if(error.code!=='EEXIST')throw error;
    privateDirectory(directory);
    const old=privateJson(path.join(directory,'owner.json'));
    if(!old.process||!/^[a-f0-9]{32}$/.test(old.nonce??''))throw Error('SERVICE_LOCK_UNKNOWN_OWNER');
    if(sameLiveProcess(old.process))throw Error('SERVICE_BUSY');
+   if(old.workerProcess&&sameLiveProcess(old.workerProcess))throw Error('SERVICE_ORPHAN_WORKER_ACTIVE');
    // An exclusive recovery marker serializes stale lock takeover. Unknown/torn
    // metadata is deliberately not removed automatically.
    const recovering=path.join(directory,'recovering');
@@ -54,6 +61,7 @@ function currentConfig(config){
  assertServiceSource(current);return current;
 }
 function requireProfiles(config,task,canonicalTaskId='t-0000000000000000'){
+ assertProfileBridge(config);
  return createCcc1BotAssignment({task,ccc1TaskId:canonicalTaskId,builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',
   profileStore:profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath})});
 }
@@ -156,8 +164,15 @@ export async function startCodingService({configPath}={}){
 export async function runCodingService({configPath}={}){
  const config=loadCodingServiceConfig(configPath);assertServiceArtifacts(config);
  const release=exclusiveLock(config,'service.lock');
+ // An admission lease, not another scheduler: at most one service may own the
+ // local model for this OS user, even when several state directories exist.
+ let releaseHost=null;
+ try{
+  const hostState=privateDirectory('/tmp/continuum-coding-owner-'+process.getuid(),{create:true});
+  releaseHost=exclusiveLock({stateDir:hostState},'model-admission.lock');
+ }catch(error){release();throw error;}
  const instanceId=crypto.randomBytes(16).toString('hex'),controller=new AbortController();
- let server=null,active=null,wake=null,stopping=false,descriptor;
+ let server=null,active=null,wake=null,stopping=false,descriptor,stopTimer=null;
  const update=extra=>{
   descriptor={...descriptor,...extra};writePrivateJson(path.join(config.stateDir,'service.json'),descriptor);
  };
@@ -167,6 +182,9 @@ export async function runCodingService({configPath}={}){
   update({state:'STOPPING'});
   if(active){try{cancelOwnerTask({configPath,taskId:active.id});}catch(error){update({stopFailureCode:String(error.message).slice(0,160)});}}
   controller.abort();notify();
+  if(active)stopTimer=setTimeout(()=>{
+   if(active)update({state:'STOP_BLOCKED_WORKER_ACTIVE',stopFailureCode:'WORKER_TEARDOWN_NOT_CONFIRMED',activeTaskId:active.id});
+  },5000);
  };
  try{
   transaction(config,()=>{
@@ -197,7 +215,8 @@ export async function runCodingService({configPath}={}){
      if(!request.payload||Array.isArray(request.payload)||typeof request.payload!=='object')throw Error('SERVICE_REQUEST_INVALID');
      let result;
      if(request.operation==='ping')result={state:descriptor.state};
-     else if(request.operation==='stop'){stop();result={state:'STOPPING',activeTaskId:active?.id??null};}
+     else if(request.operation==='stop'){stop();result={state:descriptor.state,activeTaskId:active?.id??null,
+      boundaryWaitMillis:5000,stopped:false};}
      else if(request.operation==='submit'){
       if(stopping)throw Error('SERVICE_STOPPING');
       result=submitOwnerTask({configPath,task:request.payload.task,approve:request.payload.approve});notify();
@@ -246,6 +265,7 @@ export async function runCodingService({configPath}={}){
         if(d.delivery!=='DISPATCHED'||d.instanceId!==instanceId||stopping)throw Error('SERVICE_DISPATCH_REVOKED');
         d.workerProcess=processIdentity;saveDeliveries(config,items);active={...d};
        });
+       releaseHost.setWorker(processIdentity);
        child.send({type:'run',configPath,taskId:active.id,instanceId});
       }catch(error){childError=String(error.message).slice(0,160);child.disconnect();}
      }else if(message?.type==='result'&&message.taskId===active?.id){childResult=message;}
@@ -253,6 +273,7 @@ export async function runCodingService({configPath}={}){
     child.on('exit',(code,signal)=>{if(code!==0&&!childError)childError='SERVICE_WORKER_EXIT_'+(signal??code);finish();});
    });
    await completed;
+   releaseHost.setWorker(null);
    const taskId=active.id;
    transaction(config,()=>{
     const items=readDeliveries(config),d=items.find(i=>i.id===taskId);
@@ -279,8 +300,10 @@ export async function runCodingService({configPath}={}){
   return {state:'STOPPED',instanceId};
  }finally{
   controller.abort();notify();process.removeListener('SIGTERM',stop);process.removeListener('SIGINT',stop);
+  if(stopTimer!==null)clearTimeout(stopTimer);
   if(server)await new Promise(resolve=>server.close(resolve));
   const socket=socketPath(config);if(fs.existsSync(socket)&&fs.lstatSync(socket).isSocket())fs.unlinkSync(socket);
   release();
+  releaseHost();
  }
 }

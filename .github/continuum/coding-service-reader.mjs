@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHmac,timingSafeEqual} from 'node:crypto';
-import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID} from './coding-service-store.mjs';
+import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge} from './coding-service-store.mjs';
 import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {taskState} from './ccc1-orchestrator.mjs';
 import {taskFingerprint,validateCodingTask} from './coding-task.mjs';
@@ -74,6 +74,7 @@ function evidence(config,delivery,evidenceId){
    patchSha256:receipt.patch?.sha256??null});
  }
  if(current.status.state==='COMPLETED'&&!receipts.some(r=>r.verdict==='CONFIRMED'))throw Error('SERVICE_NO_CONFIRMED_RECEIPT');
+ assertProfileBridge(config);
  const store=profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath});
  for(const id of ['bot-forge','bot-lint','bot-echo'])if(store.get(id)?.workspaceId!=='workspace-'+id)throw Error('SERVICE_PROFILE_UNAVAILABLE');
  let content;
@@ -141,7 +142,8 @@ export function createCodingServiceReader({configPath}={}){
    return {items,nextCursor:hasMore?items.at(-1).taskId:null};
   },
   listAgents(args={}){
-   const {cursor,limit}=pageArgs(args),c=config(),store=profileStoreReader(c.profileDirectory,{classpath:c.profileClasspath});
+   const {cursor,limit}=pageArgs(args),c=config();assertProfileBridge(c);
+   const store=profileStoreReader(c.profileDirectory,{classpath:c.profileClasspath});
    if(typeof store.page!=='function')throw Error('SERVICE_PROFILE_PAGE_BRIDGE_UNAVAILABLE');
    const page=store.page({afterAgentId:cursor,limit});
    const d=readServiceDescriptor(c),active=d&&sameLiveProcess(d.process)?d.activeTaskId:null;
