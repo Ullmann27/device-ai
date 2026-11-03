@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumFirstVoiceUiTest" tests="2" skipped="0" failures="1" errors="0" timestamp="2026-11-03T21:15:49" hostname="b354f2cb821b" time="1.939">
+  <properties/>
+  <testcase name="storedMuteChoiceAndOwnerFactsAreNeverChangedByTheNewDefault" classname="at.heinz.deviceai.ContinuumFirstVoiceUiTest" time="1.897"/>
+  <testcase name="unconfiguredInstallOffersVoiceOutputFromItsFirstOpen" classname="at.heinz.deviceai.ContinuumFirstVoiceUiTest" time="0.041">
+    <failure message="java.lang.AssertionError: The requested first-open companion remains silent by default" type="java.lang.AssertionError">java.lang.AssertionError: The requested first-open companion remains silent by default
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumFirstVoiceUiTest.unconfiguredInstallOffersVoiceOutputFromItsFirstOpen(ContinuumFirstVoiceUiTest.kt:17)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
