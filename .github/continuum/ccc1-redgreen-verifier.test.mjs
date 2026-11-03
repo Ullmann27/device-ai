@@ -164,3 +164,42 @@ test('executor coverage rejects ambiguous repeated target claims before running'
  const result=verifyCommitReceipt({repo:f.repo,receiptBytes:Buffer.from(JSON.stringify(r)),run:()=>{calls++;throw Error('must reject before execution');}});
  assert.equal(result.verdict,'REJECTED');assert.ok(result.reasons.includes('TARGET_TESTS'));assert.equal(calls,0);
 });
+
+test('public Delta findings reject contradictory receipt claims after genuine execution',async t=>{
+ const f=coverageFixture(t,'extension');
+ const cases=[['D13-resolved-alias','commit',r=>{r.targetTests=['sum.adds_two','test.adds_two'];r.green.passedTargets=r.targetTests;}]];
+ for(const side of ['red','green'])for(const [field,value] of Object.entries({exitCode:side==='red'?0:9,
+  command:'not-node-redgreen',timedOut:true,cancelled:true,skipped:99,...(side==='red'?{passedTargets:['not.real']}:{})})){
+  cases.push([`D16-${side}-${field}`,'commit',r=>{r[side][field]=value;}]);
+ }
+ for(const [field,value] of Object.entries({approvedForMerge:true,installed:true,deviceVerified:true,schema:'forged',version:999})){
+  cases.push([`D17-${field}`,'patch',r=>{r[field]=value;}]);
+ }
+ for(const [id,mode,mutate] of cases)await t.test(id,()=>{
+  const r=JSON.parse(f.bytes);mutate(r);const receiptBytes=Buffer.from(JSON.stringify(r));
+  const before=g(f.repo,'worktree','list','--porcelain');
+  const result=mode==='commit'?verifyCommitReceipt({repo:f.repo,receiptBytes}):
+   verifyRepairPatch({repo:f.repo,baseCommit:f.red,patchPath:f.patchPath,patchSha256:sha256(f.patch),receiptBytes});
+  assert.equal(g(f.repo,'worktree','list','--porcelain'),before);
+  if(process.env.CCC1_DELTA_PROOF_DIR){
+   fs.mkdirSync(process.env.CCC1_DELTA_PROOF_DIR,{recursive:true});
+   fs.writeFileSync(path.join(process.env.CCC1_DELTA_PROOF_DIR,id+'.json'),JSON.stringify({id,mode,
+    publicChallenge:'b1bca66f54f80ef627ab17201e29335ee3210f86',fixture:{base:f.base,red:f.red,green:f.green,
+     testPath:'tests/sum.test.mjs',testSha256:sha256(f.tests)},patchSha256:sha256(f.patch),receipt:r,result},null,2)+'\n');
+  }
+  assert.equal(result.verdict,'REJECTED',JSON.stringify(result));
+ });
+});
+
+test('Delta follow-up preserves omitted optional legacy metadata and unique aliases',t=>{
+ const f=coverageFixture(t,'extension'),r=JSON.parse(f.bytes);
+ for(const side of ['red','green'])for(const field of ['command','exitCode','skipped','timedOut','cancelled'])delete r[side][field];
+ delete r.red.passedTargets;
+ for(const field of ['approvedForMerge','installed','deviceVerified'])delete r[field];
+ r.targetTests=['test.adds_two'];r.green.passedTargets=r.targetTests;
+ const receiptBytes=Buffer.from(JSON.stringify(r));
+ for(const result of [verifyCommitReceipt({repo:f.repo,receiptBytes}),
+  verifyRepairPatch({repo:f.repo,baseCommit:f.red,patchPath:f.patchPath,patchSha256:sha256(f.patch),receiptBytes})]){
+  assert.equal(result.verdict,'VERIFIED',result.reasons.join());
+ }
+});
