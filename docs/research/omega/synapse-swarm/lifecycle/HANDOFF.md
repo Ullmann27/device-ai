@@ -4,7 +4,9 @@ Date: 2026-11-03. Branch: `codex/synapse-lifecycle-20261103`, draft PR425.
 Baseline: `efe622dda00e620952483dedad19257efb3284e6`.
 First shutdown source: `7e94529e7d327658643ccc51c715b871ae3d8e1e`.
 Final production source: `8eddcdb5b307cbab9c1e3bbcfdf37bbac8637cd7`.
-Status: SOURCE_IMPLEMENTED / HOST_TESTED. Independent challenger pending.
+Status: SOURCE_IMPLEMENTED / HOST_TESTED / INDEPENDENTLY_VERIFIED (host slice).
+Independent review: `573525c9ff6bcb63ecefd22fa184070e0d1442ff`, PR424.
+Decision: `ACCEPT_HOST_LIFECYCLE_RESOURCE_SLICE` on exact source8eddcdb5.
 MΩ-1 local inference, Android SDK combined acceptance and Fold7: NOT_RUN here.
 
 ## Actual change and connection
@@ -67,7 +69,11 @@ Separate resource follow-up (not counted as original blind acceptance):
 * Source8eddcdb5: same14 author tests pass,0 fail,0 skip; cancelled queue size0 and
   physical calls1. Logs: `red-retention-7e94529e/`, `green-bounded-queue/`.
 * Reviewer strengthened follow-up criteria froze separately at `73e6f1ef` before
-  seeing the resource repair; independent results pending at this document revision.
+  seeing the resource repair. Final independent checks:8/8 frozen shutdown cases
+  and9/9 existing pool cases pass,0 skip. Separate unchanged retention/recovery
+  probe:25 attempts,25 accepted,one physical call;24 retained entries on baseline
+  versus0 on candidate. A fresh job succeeds after native release; no cancelled
+  queued work replays. These resource results are not an inference benchmark.
 
 Reproduce the latest author comparison:
 
@@ -85,6 +91,6 @@ external/native effects. Cooperative cancel/report callbacks must remain bounded
 No persistence/restart or model-based task was exercised by these lifecycle tests.
 No timing speedup, learning benefit or Fold7 claim is made.
 
-Next: independent challenger, then rerun affected Chief/Workspace/Routine tests on
-the actual integration SHA and the combined Android graph. Revert only the pool
+Next: rerun affected Chief/Workspace/Routine tests on the actual integration SHA
+and the combined Android graph. Revert only the pool
 patch to roll back; there is no persisted data format to migrate or restore.
