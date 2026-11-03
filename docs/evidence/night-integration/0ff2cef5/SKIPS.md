@@ -1,0 +1,166 @@
+# Exact skipped cases
+
+Source: `0ff2cef550db8fc84c32690793921edf3a7830e9`. Parsed from original JUnit XML; empty reasons remain empty. Counts: Android **14**, full Node **37**. These are not passing cases.
+
+## Android
+
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s7_pending_agentMessagesUrgentWakesInfoWaits`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s4b_pending_profileDiarySharedLayers`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s8d_pending_limitGuardIsWiredBeforeWorkerStart`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s5b_pending_textFileSkillLibraryLoadedOnDemand`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s6_pending_routineReportsOnlyWhenSomethingIsNew`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefPatternE2ETest` — `s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefPatternE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest` — `actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest` — `cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox`
+  - Report: `TEST-at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt1b_ziel_turnLifecycleQuittiertGenauEinmal`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt6b_lernen_hypotheseUndTagebuchEintrag`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+- `at.heinz.deviceai.chief.FirstThinkingRunE2ETest` — `schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen`
+  - Report: `TEST-at.heinz.deviceai.chief.FirstThinkingRunE2ETest.xml`
+  - Original XML reason: null; text: null
+
+## Full Node
+
+- `test` — `HOST SOFTWARE CONTRACT: real persisted Forge/Lint profiles receive distinct observed containers for builder and both verifier sites`
+  - Report: `full-node.xml`; source: `.github/continuum/ccc1-bot-workspace-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `HOST_INTEGRATION: two canonical worker jobs run in separate confined Docker workspaces`
+  - Report: `full-node.xml`; source: `.github/continuum/ccc1-workspace-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `HOST_INTEGRATION: actual canonical worker claim admits RED, repaired GREEN and independent Docker runs`
+  - Report: `full-node.xml`; source: `.github/continuum/ccc1-workspace-lifecycle-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `HOST_INTEGRATION: live canonical lease clamps the real Docker timeout`
+  - Report: `full-node.xml`; source: `.github/continuum/ccc1-workspace-lifecycle-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `HOST_INTEGRATION: in-flight owner revocation suppresses the completed profile result at checkpoint`
+  - Report: `full-node.xml`; source: `.github/continuum/ccc1-workspace-lifecycle-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `actual Android shell adapters compile against official APIs and the unchanged Binder contract`
+  - Report: `full-node.xml`; source: `.github/continuum/cognitive-action-integration.test.mjs`
+  - Original XML reason: "NOT_RUN: configure official Kotlin and Shizuku/annotation jars"; text: null
+- `test` — `native natural request → actual tool → receipt → persisted episode, with negative regressions`
+  - Report: `full-node.xml`; source: `.github/continuum/cognitive-action-integration.test.mjs`
+  - Original XML reason: "NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph"; text: null
+- `test` — `actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces`
+  - Report: `full-node.xml`; source: `.github/continuum/cognitive-action-integration.test.mjs`
+  - Original XML reason: "NOT_RUN: configure official Kotlin/JUnit jars"; text: null
+- `test` — `native JVM export feeds Node byte-for-byte when cross-language runner is configured`
+  - Report: `full-node.xml`; source: `.github/continuum/compute-fabric-model-adapter.test.mjs`
+  - Original XML reason: "Run scripts/continuum-fabric-jvm-check.sh for the actual JVM→Node test"; text: null
+- `test` — `real Harness service preserves the existing strict wire schema without mounting tools`
+  - Report: `full-node.xml`; source: `.github/continuum/harness-coding-provider.test.mjs`
+  - Original XML reason: "NOT_RUN: configure actual reviewed Harness SDK"; text: null
+- `test` — `authority smuggling, no-op and HTTP failure remain rejected without hidden retries`
+  - Report: `full-node.xml`; source: `.github/continuum/harness-coding-provider.test.mjs`
+  - Original XML reason: "NOT_RUN: actual SDK required"; text: null
+- `test` — `fixed isolated Android runner rejects 401 reports instead of returning a green subset`
+  - Report: `full-node.xml`; source: `.github/continuum/isolated-report-cap.test.mjs`
+  - Original XML reason: "Requires explicitly configured Docker; synthetic Gradle reports, not an Android build"; text: null
+- `test` — `generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs`
+  - Report: `full-node.xml`; source: `.github/continuum/kotlin-delegate-acceptance.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `wrong independent expected output rejects a compiling patch`
+  - Report: `full-node.xml`; source: `.github/continuum/kotlin-delegate-acceptance.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `an arbitrary red baseline is never accepted as proof of the requested missing method`
+  - Report: `full-node.xml`; source: `.github/continuum/kotlin-delegate-acceptance.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `new method compiles and computes a nontrivial result with real kotlinc`
+  - Report: `full-node.xml`; source: `.github/continuum/kotlin-delegate-synthesizer.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay`
+  - Report: `full-node.xml`; source: `.github/continuum/momega1-typed-workspace-host.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles`
+  - Report: `full-node.xml`; source: `.github/continuum/owner-kotlin-preview.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `false owner output cannot create a verified Kotlin preview`
+  - Report: `full-node.xml`; source: `.github/continuum/owner-kotlin-preview.test.mjs`
+  - Original XML reason: "true"; text: null
+- `test` — `fixed Docker CLI transport rejects mismatched weights before native launch, with no observation`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-7b.test.mjs`
+  - Original XML reason: "HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable"; text: null
+- `test` — `actual launcher gives exact private 7B profile two CPU seconds per remaining wall second`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-cpu.test.mjs`
+  - Original XML reason: "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"; text: null
+- `test` — `two-thread CPU allowance leaves the existing wall cancellation deadline unchanged`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-cpu.test.mjs`
+  - Original XML reason: "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"; text: null
+- `test` — `actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-cpu.test.mjs`
+  - Original XML reason: "HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT"; text: null
+- `test` — `actual namespace binds admitted descriptors and fixture output; never inference evidence`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `deadline cancels actual isolated process with bounded return`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `STOP cancels actual isolated process and leaves no trusted observation`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `malformed/oversized output and missing generation counters are rejected`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `actual FD mount retains selected inode across model path replacement`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `prompt evaluation counter alone cannot masquerade as output generation`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `inference sandbox denies host files, external interfaces, secrets and writable model`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `seccomp denies fork and rlimits bound native memory/descriptor budgets`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `changing model during actual execution invalidates otherwise valid output`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `production provider rejects synthetic fixture receipt even when transport MAC is valid`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `native worker threads remain permitted while process creation stays denied`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `invalid model JSON retains authenticated process observation without a candidate`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+- `test` — `provider retains authenticated rejected-response observation and consumed durable budget`
+  - Report: `full-node.xml`; source: `scripts/continuum-local-model-observation.test.mjs`
+  - Original XML reason: "HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted"; text: null
+
+## Interpretation
+
+The six ChiefPatternE2ETest and six FirstThinkingRunE2ETest cases are explicitly ignored pending scenarios in the source; their XML supplies no message. ChiefWorkspaceWiringHostTest requires the opt-in real workspace host-proof environment and remains skipped here. Node reasons preserve missing official JVM/SDK dependencies, unconfigured Docker, unavailable CPU/isolation kernel prerequisites and explicitly gated independent harnesses. A literal `true` is the original runner reason, not a newly inferred success. Negative refusal tests that ran are still counted in the passing cases. Host capability skips do not relax production security/resource gates.

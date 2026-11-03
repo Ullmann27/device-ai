@@ -1,4 +1,49 @@
 # Overnight owner APK integration — 2026-11-03
+
+**Current status: LOCAL_GATES_PASS / PUBLISHER_BUILD_RUNNING.**
+
+Exact tested application source: `0ff2cef550db8fc84c32690793921edf3a7830e9`, branch `release/continuum-night-integration-20261103`. Original publisher service `srv-dbf1tr2vcj2c73ehpfog`, deployment `dep-dbl70arm8hqs73ch40pg`, is building that source. The guard-environment update started this existing deployment; no second deploy is needed. This checkpoint does not claim a verified live code40 release, original signature on newly downloaded bytes, or a device installation. Root preserves publisher/readback evidence separately after the deployment completes.
+
+## Current exact-source evidence
+
+Durable repository evidence: [local receipt and scope](../../../evidence/night-integration/0ff2cef5/README.md), [machine summary](../../../evidence/night-integration/0ff2cef5/SUMMARY.json), [file integrity manifest](../../../evidence/night-integration/0ff2cef5/MANIFEST.sha256), [exact commands](../../../evidence/night-integration/0ff2cef5/commands.json).
+
+| Completed local gate | Exact result |
+|---|---|
+| Full Android/JVM, widget and independent review tests | 2501 total; 2487 PASS; 0 FAIL/errors; 14 SKIP |
+| Full Node | 2306 total; 2269 PASS; 0 FAIL/errors; 37 SKIP; sourceUnchanged=true |
+| Critical Node subset rerun | 135 PASS; 0 FAIL; 0 SKIP; sourceUnchanged=true |
+| Backend | 64 PASS; 0 FAIL; 0 SKIP |
+| Configured NewApi lint | 0 issues |
+| Original-package unsigned APK/AAB | Built; package at.heinz.deviceai.continuumlocal, code40, name0.3.39; hashes preserved |
+| Cross-runtime parity | Fresh backlog Node→Kotlin→Node, SWB/SWB2 and CRE1 verification PASS |
+
+Critical and fresh roundtrip reruns overlap full-suite coverage; do not add them to a unique total. All original Android XML is in a deterministic archive, full Node/backend XML is preserved, and compact report summaries retain original full-report hashes plus exact source commit/treeDigest. The exact [skip list](../../../evidence/night-integration/0ff2cef5/SKIPS.md) remains part of acceptance. No APK, keys or owner data is added to this evidence directory.
+
+The backlog verifier consumes/mutates its fixture. An inadvertent second call against the earlier completed fixture failed; its original [failure receipt](../../../evidence/night-integration/0ff2cef5/parity-second-invocation.json) remains preserved. A fresh Node preparation and actual fresh Kotlin roundtrip, followed by a single verify invocation, produced the [final parity receipt](../../../evidence/night-integration/0ff2cef5/parity-final.json). The before/after synthetic fixture, preparation and native JUnit/log are retained. Do not rerun verify against an already-consumed fixture and interpret that as a source regression.
+
+## Integrated behavior and update compatibility
+
+PR410 reference geometry, avatar/chat/readiness/camera/effects/planning and lifecycle guards remain integrated with PR456 persistent bot selection/personality/private conversation/delegation and roster access. Normal layouts retain the PR410 composition; enlarged fonts/narrow windows use the adaptive layout. A single HomeView intendedGeometry drives home/chat transitions. Chief/JARVIS status remains available during active bot work without switching the selected bot or submitting another model task. The new geometry, large-font and busy-status UI regressions are part of the passing full Android run.
+
+The read-only code39→candidate review is recorded in [update compatibility](../../../evidence/night-integration/0ff2cef5/update-compatibility.json). The five updater source files remain byte-identical to documented code39 source a9709854f48d2fd6589f9ce5ea97f6ec3be0d233. The old Download catalog URL, exact schema, package and required original signer remain unchanged. Candidate code40/name0.3.39 is higher; final live catalog and signed bytes still require publisher verification.
+
+Existing preferences/models/runtime/backlog paths remain in use; bot/readiness/avatar data is additive. An absent voice preference now defaults on, while a saved mute choice is retained. LEX2 overflow can later migrate the learning store to a segmented LEX3 manifest with original legacy bytes retained; an old APK cannot read that new manifest, so no blanket lossless downgrade promise is made. Existing hypothetical/uncertain owner statements can become OBSERVED rather than confirmed facts without deleting their content. At receipt capacity, oldest certainly terminal receipts can be removed while pending/uncertain records remain protected. No owner files were inspected or changed by this source review or evidence assembly.
+
+The full Android result includes all35 existing learning migration/transfer tests: Lex3LearningExperienceStoreTest20, LearningExperienceStoreTest4 and PersonalLearningTransferTest11, all PASS/no skips. Their exact original-copy, interrupted-migration, atomic-commit, revocation and export cases are listed in [migration-test-cases.json](../../../evidence/night-integration/0ff2cef5/migration-test-cases.json).
+
+## Boundaries and next step
+
+Physical Fold7, GPU/avatar likeness, voice/acoustics, thermals, actual device upgrade, native ARM64 autonomous build/isolation and real-model success remain unverified by these host receipts. The consumed failed S01 real-model case was not rerun; its unresolved crash/resource barrier is unchanged. No main merge, key replacement or installation was performed. The host coding service/read-only MCP surface is not proof of an established ChatGPT connection or a completed on-device coding milestone.
+
+Continue with the existing publisher deployment only. Preserve its exact-source result and verify the downloaded APK's package, higher versionCode, original certificate, hash/length and strict old-button catalog. Keep publisher outcome separate from the completed local gates and retain any failure literally. Evidence-only documentation commits after 0ff2cef5 do not retroactively change the tested application-source identity.
+
+---
+
+## Historical checkpoints — superseded by the current status above
+
+The following original checkpoint text is retained as history. Its WIP labels, environment availability, preliminary counts, old catalog observations and future-tense next steps describe earlier times in this integration, not the current state.
+
 Status: WIP / UNVERIFIED. No new build, test or publication is claimed by this checkpoint.
 
 ## Owner request and exact inputs
