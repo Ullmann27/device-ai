@@ -613,6 +613,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        avatarDirector.attach(at.heinz.deviceai.avatar.NoOpAvatarSink)
         cancelSpeechInputScope();onDeviceSpeech=null
         at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(lastLocalReply?.let {
             at.heinz.deviceai.cognitive.LocalDialogueRetention.RetainedReply(it.sessionId, it.request, it.response)
@@ -875,6 +876,7 @@ class AgentActivity : Activity() {
         // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
         val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also {
             hologramView = it
+            avatarDirector.attach(it)
             // The dashboard may be rebuilt while the Activity is already resumed
             // (Fold layout or home/chat navigation). New views must inherit the
             // current lifecycle immediately, not wait for another onResume().
@@ -2072,6 +2074,7 @@ class AgentActivity : Activity() {
             },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
+            CenterAction("AVATAR · KUGEL ODER KOPF") { hologramView?.showAppearanceChooser() },
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )

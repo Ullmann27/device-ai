@@ -18,3 +18,13 @@ Checkpoint only: JUnit/Gradle/UI screenshots/Fold7: NOT_RUN. Quality lane owns S
 Rollback: revert this lane's commits or retain orb selection. No persistence migration, permission, manifest or release configuration changes.
 
 Remote namespace: initial push of codex/team-04-android/omega-20261103 was rejected with directory/file conflict; preserved existing remote ref and renamed only this local lane.
+
+## Native implementation checkpoint
+
+Native head is now connected to AgentActivity's existing Director via attach when the home view is built and no-op detach on destroy. Systemstatus → AVATAR · KUGEL ODER KOPF and long-press choose the persistent local appearance; default remains original orb. The head uses original procedural 2D paths, existing AndroidContinuumPainter and the same foreground/power/thermal/reduced-motion loop. It is not a GLB/3D rig. Blink and slight sway are cosmetic. Runtime gaze/expression and measured/fallback TTS jaw remain event-driven; camera remains absent.
+
+Fixed three baseline regressions with unchanged tests against actual #390 AvatarContract/Director: new utterance inherited previous viseme; NaN audio produced NaN jaw; replacement sink during TTS never received current utterance. Exact unchanged `AvatarExistingContractRegressionTest` baseline: 3/3 FAILED; fixed working tree: all 14 avatar JUnit tests PASS (7 existing + 7 added). Source copied from base via git show, no baseline compatibility stubs in this final RED run. New timed cue/expiry/interruption/stale callback cases pass. Log paths: `docs/evidence/omega-avatar-20261103/jvm-{baseline-red,green}.log`. Kotlin 2.4.0/JVM, OpenJDK17, JUnit4.13.2; CLI compiler from quality-provisioned dependency set. This is host logic verification, not Android build acceptance.
+
+Existing PR #391 at `a0b19100352e1876c180af51e126a0644a70aa68` was inspected read-only: currently only design checkpoint, no delivered images. That design lane remains separate. No competing portrait generation.
+
+Android lifecycle/Canvas tests added in `ContinuumAvatarNativeUiTest`; Gradle/UI/Fold7 still NOT_RUN pending shared Quality build slot. Fixed-size Java2D production-renderer previews are being prepared; they do not measure device performance.
