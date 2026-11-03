@@ -30,7 +30,9 @@ Eight warmups followed by 25 measured samples per workload. `cold_instance` mean
 | Records / workload | Baseline p50 / p95 ms | Candidate p50 / p95 ms | Baseline → candidate allocation bytes |
 | --- | --- | --- | --- |
 | 256 warm same type | 5.747 / 7.274 | 0.443 / 0.551 | 6,928,728 → 415,712 |
+| 256 cold instance | 10.696 / 15.887 | 8.748 / 27.157 | 7,068,224 → 7,105,456 |
 | 1024 warm same type | 17.141 / 20.273 | 2.093 / 5.827 | 28,722,760 → 2,549,984 |
+| 1024 cold instance | 18.912 / 24.241 | 21.401 / 26.696 | 28,727,336 → 28,729,384 |
 | 4096 warm same type | 66.181 / 74.827 | 5.348 / 5.980 | 114,648,944 → 9,960,648 |
 | 4096 cold instance | 60.926 / 68.450 | 58.367 / 63.536 | 114,650,744 → 114,654,752 |
 | 4096 type-switch pair | 121.460 / 159.762 | 120.386 / 135.295 | 229,302,648 → 229,312,360 |
@@ -54,6 +56,10 @@ bash scripts/continuum-feedback-review-jvm.sh /tmp/breakthrough-memory-feedback-
 ```
 
 Existing **4096-record/32 MiB** bounds remain. Full decoding on cold/type-changing reads, full segment integrity I/O on every warm read, and full materialization by `all()` remain deliberate limits. This is not a 10k-record index, general retrieval-scale improvement, model-quality gain or measured overall replay/training speedup. Cache storage is bounded per instance, not globally across arbitrarily many store objects. It is transient derived owner data, with no disk copy or separate consent state. Current app-private directories and protocol-aware writers remain assumptions; checksums cannot authenticate valid-file rollback.
+
+Actual caller qualification: `teachIntent` confirms a lesson before replay, source training appends observations then switches SOURCE_TEXT to INTENT_LABEL, and curriculum/import checks normally append an audit afterward. Those writes/type switches deliberately miss the cache. Repeated same-type reads without intervening mutation (including interrupted curriculum retry sequences without an audit) can reuse it. The main dialogue uses `store.all()` and receives no improvement from this change. No end-to-end app benchmark or production cache-hit rate was measured. Cold p95 at 256 and cold p50/p95 at 1024 increased in this run; cold allocations are nearly unchanged, so no cold-path improvement is asserted.
+
+`git diff --check` on production/test changes passes. The repository-wide check reports one trailing blank line in the preserved raw JUnit output `feedback-a6007442/junit.txt`; the raw log is retained byte-for-byte rather than rewritten.
 
 Mandatory root instructions, experiment contract/register, issue #41, PR #287 and memory/inventory handoffs were inspected. Rollback is a source revert of `a6007442`; no data migration or recovery is required. Android/Fold7 latency, loaded-model RAM, thermal cost and physical power loss: **NOT_RUN**. Broad Gradle belongs to Chief/Quality.
 
