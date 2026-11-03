@@ -24,7 +24,8 @@ object LocalDialogueQualityGate {
         request: String,
         response: String,
         previousRequest: String? = null,
-        previousResponse: String? = null
+        previousResponse: String? = null,
+        priorOwnerContextSupplied: Boolean = false
     ): Evaluation {
         val candidate = response.trim()
         if (candidate.isEmpty()) {
