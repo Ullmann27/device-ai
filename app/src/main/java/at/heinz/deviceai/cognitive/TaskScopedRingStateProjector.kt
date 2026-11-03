@@ -57,9 +57,12 @@ internal object TaskScopedRingStateProjector {
                 val clause = text.substring(match.range.last + 1, end).take(75)
                 val number = quantity.find(clause) ?: continue
                 val beforeQuantity = clause.take(number.range.first)
-                if (invalidatingNegation.containsMatchIn(beforeQuantity)) continue
+                // A negated or hedged quantity must poison the whole projection.
+                // Skipping only that clause let a later correction ("9 statt 4")
+                // silently become the "original" value (RED: full JUnit 03.11.2026).
+                if (invalidatingNegation.containsMatchIn(beforeQuantity)) return null
                 // Ambiguous language is not a reliable source of state data.
-                if (ambiguousQualifier.containsMatchIn(beforeQuantity)) continue
+                if (ambiguousQualifier.containsMatchIn(beforeQuantity)) return null
                 val value = number.groupValues[1].toIntOrNull() ?: continue
                 val future = tomorrow.containsMatchIn(text.take(match.range.first)) &&
                     match.range.first < 60

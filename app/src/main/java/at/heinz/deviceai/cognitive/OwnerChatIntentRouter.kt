@@ -3,7 +3,7 @@ package at.heinz.deviceai.cognitive
 import java.util.Locale
 
 /** Exact local conversation and on-device read-only intents, before web or memory recall. */
-internal enum class OwnerChatLocalIntent { GREETING, CAPABILITIES, STORAGE }
+internal enum class OwnerChatLocalIntent { GREETING, CAPABILITIES, STORAGE, CLOCK }
 
 internal object OwnerChatIntentRouter {
     private val whitespace = Regex("\\s+")
@@ -26,6 +26,7 @@ internal object OwnerChatIntentRouter {
             normalized in greetings -> OwnerChatLocalIntent.GREETING
             normalized in capabilities -> OwnerChatLocalIntent.CAPABILITIES
             normalized in storage || storageQuestion.matches(normalized) -> OwnerChatLocalIntent.STORAGE
+            LocalClockIntent.isClockQuestion(message) -> OwnerChatLocalIntent.CLOCK
             else -> null
         }
     }

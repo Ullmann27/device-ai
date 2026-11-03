@@ -56,6 +56,18 @@ object BootstrapBrain {
                     (batteryNoun.containsMatchIn(text) && batteryReadCue.containsMatchIn(text)))
         }
 
+    // Every read-only device cue is clause-scoped like storage/battery: a negated
+    // clause never starts a tool, an independent affirmative clause still may.
+    private fun affirmativeClause(input: String, cue: (String) -> Boolean): Boolean =
+        input.trim().split(storageClauseBoundary).any { untrimmed ->
+            val text = untrimmed.trim()
+            text.isNotBlank() && !storageNegation.containsMatchIn(text) && cue(text)
+        }
+    private val appsCue = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:installierte[nm]?\s+apps|alle\s+apps|apps\s+installiert)(?![\p{L}\p{N}_])"""
+    )
+    private val appMutation = Regex("""(?iu)(?<![\p{L}\p{N}_])(?:schließ\p{L}*|schliess\p{L}*|beend\p{L}*|stopp\p{L}*|aktualisier\p{L}*)""")
+
     private fun isStorageReadRequest(input: String): Boolean {
         val clauses = input.trim().split(storageClauseBoundary)
         val bare = setOf("speicher", "speicherstatus", "speicherplatz", "speicherkapazität")
@@ -169,11 +181,11 @@ object BootstrapBrain {
             return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
                 arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
         }
-        if ("fehler lumo" in low || ("lumo" in low && "logcat" in low))
+        if (affirmativeClause(low) { "fehler lumo" in it || ("lumo" in it && "logcat" in it) })
             return tool("read_logcat", mapOf("packageOrName" to "Lumo", "lines" to 180))
-        if ("lumo" in low && ("prüf" in low || "version" in low || "installiert" in low))
+        if (affirmativeClause(low) { "lumo" in it && ("prüf" in it || "version" in it || "installiert" in it) })
             return tool("get_app_info", mapOf("packageOrName" to "Lumo"))
-        if ("downloads" in low || "download-ordner" in low) return tool("list_files",
+        if (affirmativeClause(low) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
         val wantsStorageInspection = isStorageReadRequest(low) || "große dateien" in low
         val wantsBatteryInspection = isBatteryReadRequest(low)
@@ -185,8 +197,9 @@ object BootstrapBrain {
         )
         if (wantsStorageInspection) return tool("get_storage_info")
         if (wantsBatteryInspection) return tool("get_battery_info")
-        if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
-        if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
+        if (affirmativeClause(low) { appsCue.containsMatchIn(it) && !appMutation.containsMatchIn(it) })
+            return tool("list_installed_apps")
+        if (affirmativeClause(low) { "gerät" in it && ("info" in it || "prüf" in it) }) return tool("get_device_info")
         // An explicit offline instruction is neither a web-search request nor
         // a reason to withhold a local model attempt. The ToolGate applies the
         // independent hard veto to any network execution.
@@ -195,7 +208,7 @@ object BootstrapBrain {
                 "Ich beantworte diese Anfrage nur aus lokal verfügbaren Informationen. " +
                     "Falls dafür keine ausreichenden Belege vorliegen, sage ich das ausdrücklich.",
                 allowNeuralRecall = true)
-        if ("netzwerk" in low || "internetverbindung" in low) return tool("get_network_summary")
+        if (affirmativeClause(low) { "netzwerk" in it || "internetverbindung" in it }) return tool("get_network_summary")
         if ("internet" in low || "recherch" in low) return BootstrapDecision(
             BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +
                 "Tippe WEB RECHERCHE und nenne eine direkte HTTPS-Quelle. " +
