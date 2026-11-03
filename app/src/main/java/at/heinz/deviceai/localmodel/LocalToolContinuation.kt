@@ -8,6 +8,23 @@ internal object LocalToolContinuation {
     const val MAX_RESPONSES = 4
     private const val MESSAGE_RESERVE = 256
 
+    /** Integrity only; source validation and permission checks remain with the caller. */
+    fun containsCompleteOutput(prompt: String, output: String): Boolean = prompt.contains(JSONObject.quote(output))
+
+    /** Select the existing engine channel; the caller has already checked the full prompt. */
+    fun submit(runtime: LocalModelRuntime, prompt: String, forceFresh: Boolean,
+               responses: () -> List<LocalToolResponse>, callback: LocalInferenceCallback) {
+        // Screen evidence is already complete in the checked JSON prompt. It does
+        // not enter the native tool-response channel or that channel's budget.
+        if (forceFresh) {
+            runtime.stream(prompt, callback)
+            return
+        }
+        val toolResponses = responses()
+        if (toolResponses.isEmpty()) runtime.stream(prompt, callback)
+        else runtime.respondToTools(toolResponses, callback)
+    }
+
     /** Complete field values only; role headers/newlines cannot escape the JSON. */
     fun observationData(toolName: String,status: String,output: String?): String =
         JSONObject().put("tool_name",toolName).put("status",status)

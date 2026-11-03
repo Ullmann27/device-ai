@@ -252,7 +252,10 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  const main=fs.readFileSync(dir+'MainActivity.kt','utf8');
  ensure('plan step chain stops when the activity is gone',/fun runStep\(index: Int\) \{\s*\/\/[^\n]*\n\s*if \(isFinishing \|\| isDestroyed\) return/.test(main));
  const bridge=fs.readFileSync(dir+'ShizukuBridge.kt','utf8');
- ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
+ const stop=bodyOf(bridge,'fun stop('),reset=bodyOf(bridge,'private fun resetBinding(');
+ ensure('stopped bridge drops its shell',stop?.includes('started = false') &&
+   stop.includes('resetBinding()') && reset?.includes('shell = null') &&
+   reset.includes('activeConnection = null'));
 });
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
  const slots=bodyOf(activity,'private fun openHomeSlot(');

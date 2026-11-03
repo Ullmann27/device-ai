@@ -10,6 +10,12 @@ root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$root"
 
 # The original Render service keeps its established build command and pinned URL.
+# Future in-place updates use ONE original-package and original-signer pipeline.
+# No cloned application and no new update host. Code38 remains historical.
+if [[ "${CONTINUUM_RELEASE_VERSION_CODE:-}" =~ ^[0-9]+$ ]] &&
+   [[ "${CONTINUUM_RELEASE_VERSION_CODE}" -ge 39 ]]; then
+  exec bash "$root/scripts/render-continuum-owner-continuous-release.sh"
+fi
 # 0.3.37/code38 uses its own exact-SHA, freeze, original-signer and QA gates.
 if [[ "${CONTINUUM_RELEASE_VERSION_CODE:-}" == "38" ]]; then
   exec bash "$root/scripts/render-continuum-owner-v38-release.sh"

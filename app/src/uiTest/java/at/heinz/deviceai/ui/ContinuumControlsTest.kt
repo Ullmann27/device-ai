@@ -26,6 +26,21 @@ import org.robolectric.annotation.GraphicsMode
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumControlsTest {
+    @Test fun scrollingEditorKeepsItsNativeSelectionAndHasNoForegroundFrame() {
+        val editor = android.widget.EditText(context()).apply {
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            setText((1..80).joinToString("\n") { "Zeile $it: längerer unveränderter Entwurf" })
+            setSelection(7, 25)
+        }
+        val draft = editor.text.toString()
+        ContinuumControls.feedback(editor)
+        measure(editor, 240)
+        editor.scrollTo(0, 120)
+        assertNull("a foreground outline scrolls over editable text on Android", editor.foreground)
+        assertEquals(draft, editor.text.toString())
+        assertEquals(7, editor.selectionStart); assertEquals(25, editor.selectionEnd)
+    }
+
     private fun context(font: Float = 1f): Context {
         val app = RuntimeEnvironment.getApplication()
         val config = Configuration(app.resources.configuration).apply { fontScale = font }

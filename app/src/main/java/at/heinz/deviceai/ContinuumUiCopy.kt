@@ -67,6 +67,13 @@ object ContinuumUiCopy {
             "Deine Eingabe bleibt stehen."
 
     fun modelFailure(problem: String?): String = when {
+        problem == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" ->
+            "Die lokale Modellantwort überschreitet das Ausgabelimit. " +
+                "Bitte fordere eine kürzere Antwort an oder teile die Aufgabe in kleinere Schritte."
+        problem == "LOCAL_MODEL_UNLOAD_REQUIRED" ->
+            "Das bisherige Modell wurde noch nicht vollständig entladen. " +
+                "Entlade es zuerst in der Modellverwaltung. Lade das gewünschte Modell erst " +
+                "nach erfolgreichem Entladen erneut."
         problem?.contains("sha", ignoreCase = true) == true ||
             problem?.contains("checksum", ignoreCase = true) == true ||
             problem?.contains("digest", ignoreCase = true) == true ->
