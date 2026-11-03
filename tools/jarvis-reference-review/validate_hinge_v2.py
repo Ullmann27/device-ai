@@ -95,7 +95,7 @@ def validate(original_bytes, candidate_bytes, legacy):
     bounds = [(min(p[a] for p in points), max(p[a] for p in points)) for a in range(3)]
     require(all(lo < actual_hinge[a] < hi for a, (lo, hi) in enumerate(bounds)),
             "Actual hinge outside rest face bounds")
-    tooth_centres = []
+    tooth_points = []
     for i, name in enumerate(actual.names):
         # Preserve actual mouth-interior/tooth meshes, not just empty controls.
         if not (name.startswith("Tooth") or name == "MouthInterior"):
@@ -110,8 +110,12 @@ def validate(original_bytes, candidate_bytes, legacy):
             require(actual.accessor(a["indices"]) == original.accessor(o["indices"]),
                     "Rigid mouth topology changed")
         if name.startswith("Tooth"):
-            tooth_centres.append(legacy.transform(actual_world[i], (0, 0, 0)))
-    require(tooth_centres and actual_hinge[2] < min(p[2] for p in tooth_centres),
+            # Exported rigid meshes can bake the tooth position into vertices;
+            # their empty node origin is not the tooth's anatomical location.
+            for primitive in ap:
+                tooth_points.extend(legacy.transform(actual_world[i], point) for point in
+                                    actual.accessor(primitive["attributes"]["POSITION"]))
+    require(tooth_points and actual_hinge[2] < min(p[2] for p in tooth_points),
             "Actual hinge must be behind all teeth")
     # An explicit diagnostic coordinate view: undo hinge height, inversely
     # compensate its rigid children, and retain the candidate's actual mesh data.
@@ -134,6 +138,7 @@ def validate(original_bytes, candidate_bytes, legacy):
     return {"status": "PASS_SEPARATE_HINGE_AND_FIXED_REGION_V2",
             "actualAssetSha256": sha(candidate_bytes), "originalLandmarkSha256": sha(original_bytes),
             "actualHinge": actual_hinge, "actualOralSupportMaximumY": oral_top,
+            "actualToothMinimumZ": min(p[2] for p in tooth_points),
             "actualEyeY": [left[1], right[1]], "neutralWorldMaximumError": neutral_error,
             "diagnosticNeutralMaximumError": normalized_error,
             "diagnosticViewSha256": sha(diagnostic_bytes),

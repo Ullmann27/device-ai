@@ -255,3 +255,42 @@ to this anatomy correction. Identical-input geometry is referenced, not relabele
 as another measurement. The original material is still not the accepted reference
 look. `packaged-rig-62122-acceptance.json` records commands, actual final-source
 output, hashes and the separate visual/device limitations.
+
+## Final visual checkpoint and newly disclosed legacy gate
+
+Experimental styled asset `3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb`
+also passes all 113 unchanged actual-pose frontmost-intersection checks, exit 0.
+It remains a research asset: HDR material portability and final appearance are
+not accepted. Its two 112-frame render batches were independently checked against
+every actual exported pose and image hash. All 224 frames were viewed in seven
+complete contact sheets. The fixed camera, contiguous 24 Hz timing, two blink
+events and absence of idle mouth motion are confirmed. Maximum per-frame changes
+are 0.0314 degrees head yaw and 0.0882 degrees eye yaw; the batch join is smaller.
+
+The two-sample, 192x224 CPU renders are very noisy. They do not establish final
+humanlike naturalness, fine eyelid/material quality, real-time playback, native
+Filament or device performance. H01 remains NOT_ACCEPTED. Full author clip and
+manifests are retained under `docs/evidence/momega1-avatar-look/3805ba43/` on
+author source `60be37f98eb5b8d741c92ab2305d3f34cc7c57c8`; private reference media
+remains outside Git. Independent receipt: `idle224-3805-independent-review.json`.
+
+Renderer `0996b42e` separately receives bounded source-review acceptance: existing
+View postprocessing and low-budget bloom, no new engine/entity/callback and the
+existing cleanup path. This is not native pixel/GPU evidence and does not approve
+the experimental HDR material. Receipt: `renderer-bloom-0996-source-review.json`.
+
+An additional old EPSILON validator rejects the corrected rig because its Jaw
+position also defines the morph-localization boundary. This actual V1 FAIL is
+preserved and must not be reported as a full regression PASS. The explicit
+supplemental contract `JAW-HINGE-V2-FREEZE.md` separates the actual control axis
+from the pinned anatomical mouth-region landmark. No original V1 boundary is
+widened. Its diagnostic coordinate view is never presented as the actual asset.
+
+The first supplemental checker confused rigid node origins with baked tooth
+vertices; its 15/16 result is retained, and the implementation now checks actual
+transformed vertices without changing the requirement. The next full batch
+completed cases 1–13, then hit its 60-second process budget during case 14. A
+following batch was interrupted when all four CPUs were reserved for final QA.
+Both timeout and resource interruption remain recorded. Uncompleted cases are
+not counted as PASS. Final supplemental outcome is recorded separately after the
+remaining unchanged cases finish.
