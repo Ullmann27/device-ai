@@ -1,0 +1,94 @@
+{
+  "baselineSource": "645b2215022008e2149da81b48683f15077b1fb0",
+  "portraitSourceCommit": "7c74e23a802895fd902d2993647a3154c2ffc2ab",
+  "chiefIdleBandCommit": "49a141fb",
+  "combinedExecutedSource": "0a933373bf2129c9a1692e07d2659488bea12cc8",
+  "polishFixtureSha256": "bb39895c725240b1160626374c943b4fed5f2944ccaefb257d4ad613e9a676a9",
+  "baseline": {
+    "tests": "3",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.113",
+    "testIdentities": [
+      "actualActiveAndBlockedWorkStatusRemainVisible",
+      "portraitPaintsOuterRingsWithoutMovingHeroOrControls",
+      "actualIdleWorkStatusDoesNotOccupyDashboardSpace"
+    ]
+  },
+  "greenPolish": {
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.684",
+    "testIdentities": [
+      "actualActiveAndBlockedWorkStatusRemainVisible",
+      "portraitPaintsOuterRingsWithoutMovingHeroOrControls",
+      "actualIdleWorkStatusDoesNotOccupyDashboardSpace"
+    ]
+  },
+  "greenFullLayouts": {
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "3.364",
+    "testIdentities": [
+      "phoneHomeAndChat",
+      "foldLandscapeHomeAndChat",
+      "foldPortraitHomeAndChat"
+    ]
+  },
+  "nativeOutsideHeroPaintPixels": {
+    "red": 0,
+    "green": 27339,
+    "definition": "Pixels changed by hiding actual HologramView outside its unchanged x240..600 bounds within its y60..403 band; includes rings and glow, not a semantic ring segmentation."
+  },
+  "heroPixels": {
+    "left": 240,
+    "top": 60,
+    "width": 360,
+    "height": 343
+  },
+  "targetedVisualFixes": "CONFIRMED_BY_AUTHOR_AND_CHIEF",
+  "fullVisualEquivalence": "NOT_ACCEPTED",
+  "fold7": "FOLD7_NOT_RUN",
+  "filamentAppearance": "NOT_RUN",
+  "remainingPresentationGap": "Existing genuine offline-semantic-bootstrap accepted550steps text is now visible; technical wording differs from reference. No further product edits in this freeze.",
+  "files": {
+    "green-0a933373/fold-landscape-840x649-chat-orb-host.png": "cefaefabc27b31d782e29c39d06ab0be312eb5e21c0d47be5232f96360fdc6e9",
+    "green-0a933373/fold-landscape-840x649-chat-orb-host.views.txt": "6c4b4609541cd4c4498033faa373460755d54401aec0a41a504eefa323cf378f",
+    "green-0a933373/fold-landscape-840x649-home-orb-host.png": "132bc5adfa959b149ee017c60739aa8825454ddab206aec059e21e37fa4a0eb1",
+    "green-0a933373/fold-landscape-840x649-home-orb-host.views.txt": "4970903045a77b0486c07e6cc9a37bcfbb4ee02d66ec041ddb917d3286564e99",
+    "green-0a933373/fold-portrait-840x1050-chat-orb-host.png": "2fa44d3a73eeb3139194a4fea0388c193d893b8486e9530eb6d23c05d6292960",
+    "green-0a933373/fold-portrait-840x1050-chat-orb-host.views.txt": "249264d1c6258478f22f3cba04d5aa7702c8af401be3a033da45856f559bf471",
+    "green-0a933373/fold-portrait-840x1050-home-orb-host.png": "7cbc8e6434079c2bf8192c2cee7d501d69365a5906b2e87a474cd5ee6e858845",
+    "green-0a933373/fold-portrait-840x1050-home-orb-host.views.txt": "2cefbd82d6d8d4a5d3cd4b82570ae54addf90ebf4b02df117b64f8d863846b00",
+    "green-0a933373/gradle.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "green-0a933373/gradle.txt": "92c87aed3dbef715cb04a99e158fc0fd9dab2ad54fefa6fe2841f02f2624a5d1",
+    "green-0a933373/init.gradle": "652a2d0fa9e8a0bae5887e4464fc920d9b7d7ca4fa54349eaa350b08508cd0bb",
+    "green-0a933373/junit.xml": "34beee2291616ba26fe4d2e067abadf30144a671d807f641432d73b03c2b00e2",
+    "green-0a933373/layout.xml": "d3111013cb5c20c985d6c4774cd0bea07849a6d803b229046c560c4b707484de",
+    "green-0a933373/phone-412x915-chat-orb-host.png": "16e6439010f8be392b2f64ee817fc0f35c39398979dec941e0f10f9de0187f26",
+    "green-0a933373/phone-412x915-chat-orb-host.views.txt": "3e82c2d7168b0aed1132d4496b44d0077492f1143f1e59687a14120344ff4453",
+    "green-0a933373/phone-412x915-home-orb-host.png": "4a7593eb272a9c0dc534826fd0535eea32f4de27906356c6454e73940c9e5474",
+    "green-0a933373/phone-412x915-home-orb-host.views.txt": "ffdf92e0d1eb03bc462f6b9c645067280b59e5698f40467caaacdedc0fa669be",
+    "green-0a933373/portrait-orb-hidden-control.png": "743a6dad9943c42b4e3c87e0b64db00fa111e900f6951e5c18ba885a21104b4b",
+    "green-0a933373/portrait-orb-visible.png": "dc168295a53c2b38dd590e96e313e0e8159e8e45e1ad2fed741c18fafae3b0ad",
+    "green-0a933373/run.sh": "a51b2d0e72288843b8d58025a0b7c35a339dd6ce87856e0bc6e115c63d628af4",
+    "green-0a933373/source-after.txt": "941a2688ec5aca4aba4747bdcdb816e6235d2b086697f298d07eb9fc7b89223e",
+    "green-0a933373/source-before.txt": "941a2688ec5aca4aba4747bdcdb816e6235d2b086697f298d07eb9fc7b89223e",
+    "red-645b2215/fold-portrait-home-before.png": "fc0e820a74468a6ecf5f23ec8893e1aba944c31550628c4ef7acdb9e28c8443a",
+    "red-645b2215/gradle.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "red-645b2215/gradle.txt": "b70b3a205328ee9cd1433c4b67b8b7004f6aabec535d4c74b11ca83abac8ff14",
+    "red-645b2215/init.gradle": "e6eaa63c44d84403b275d67f3f5d656ed2f68521218bfa1d131ce1a7c398ed82",
+    "red-645b2215/junit.xml": "e0e2ce7ac11c3ecd50812645743cdce99f759f3c123bc226d8521c84dcde3398",
+    "red-645b2215/phone-home-before.png": "3b4c03783fea51c804e1856a9c759cee666a00ff0ca6296974076a2b8e49afcf",
+    "red-645b2215/portrait-orb-hidden-control.png": "fa3366f3009c6894b9172d064060be95d067245fecd7f230a4dd06dfa6569aea",
+    "red-645b2215/portrait-orb-visible.png": "11d15f922dfd9b3831e228d549aee20fc33f75c24cbc14c7770d7ccac9a418cb",
+    "red-645b2215/run.sh": "97085a27f7147c55ebf17feae0f9496a6d37875cfd2e543525a8a65f2d63b55b",
+    "red-645b2215/source-after.txt": "5dffafcb182ecbf735a66bdea7f3bdcc72fed9492b3fddf1654401160c7be7a5",
+    "red-645b2215/source-before.txt": "5dffafcb182ecbf735a66bdea7f3bdcc72fed9492b3fddf1654401160c7be7a5"
+  }
+}
