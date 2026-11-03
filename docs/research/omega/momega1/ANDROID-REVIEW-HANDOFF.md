@@ -1,6 +1,6 @@
 # Independent Android review
 
-Status: WIP / UNVERIFIED. Reviewer branch begins at ca93fb4f7a17ff7a2a13debd93197ba485594f06. Final Android candidate not yet inspected. Independent reviewer is distinct from feature author and QA. Scope is review artifacts only; no feature edits.
+Status: ACCEPT scoped host/source repair037370f0544d3ed2ee7686082c41c78046daa64d; FOLD7_NOT_RUN. Reviewer branch begins at ca93fb4f7a17ff7a2a13debd93197ba485594f06. Final Android candidate not yet inspected. Independent reviewer is distinct from feature author and QA. Scope is review artifacts only; no feature edits.
 
 ## Frozen adversarial cases (before candidate inspection)
 
@@ -36,3 +36,9 @@ Static candidate finding under reproduction: matching terminal CCC1 abort remove
 `AgentActivity.showCodingTaskDraftDialog` manually constructs a typed task via `ContinuumCodingConversation`, checks reviewed revision/hash/JSON again on confirmation and opens the Builder using JSON/hash extras. Builder is exported, so hash is not an author credential; it parses exact canonical task bytes and requires a new complete preparation dialog. PREPARE persists full expected snapshot, then fixed Node arguments are sent through explicit Termux RUN_COMMAND with one-shot mutable PendingIntent to the nonexported result receiver. Immutable callback URI and pending request/operation gate result consumption. Validated PREPARE stores snapshot plus journal ID. RUN shows full task and journal ID again, rechecks the current snapshot and journal ID, durably removes preparation while recording pending state, then starts Termux. Process death after recording pending state cannot automatically restore a consumed RUN approval; actual device death remains untested.
 
 `AgentActivity.runLocal` separately constructs the existing model adapter/orchestrator; no model-to-coding-draft dispatch was added. The Node typed bridge routes through existing `runCodingTask` and canonical CCC1 `runTask`. The canonical terminal journal gate returns before model/repair callback execution. AgentActivity, AndroidManifest, typed Node bridge and canonical orchestrator files are unchanged between ca93fb4f and b95858c1. These source observations are not real local inference or Fold7 evidence.
+
+## Final independent acceptance
+
+Finding AR-1 was reproduced on b95858c1:9 independent UI tests,7PASS/2FAIL/0SKIP, exit1. The exact repair037370f0544d3ed2ee7686082c41c78046daa64d passes13/13 independent UI tests plus32/32 authored regressions,0skips, Gradle exit0; before/after source manifests match. Reviewer inspected original XML, not just reported totals. Pure exact-source Kotlin checks31/31PASS on both candidates (compile/run exits0). **ACCEPT this narrowly scoped Android consent/callback repair**, with no claim of local inference, model-to-draft integration, real process death, Fold7 or release acceptance.
+
+Read `ANDROID-INDEPENDENT-REVIEW.md` for finding, source call paths, commands, limitations and failed harness/scheduling attempts. Evidence is self-contained under `docs/evidence/momega1/android-review`, including RED/GREEN raw logs/XML/source hashes and SHA256SUMS.json. Test sources are in `tools/momega1-android-review`. QA alone ran Gradle from immutable snapshots of the two reviewer UI classes. No production files were changed in this review branch. Chief should integrate only reviewed feature source037370f0 (or prove identical production bytes), then run combined exact-source checks; do not transfer host acceptance to a changed feature source.
