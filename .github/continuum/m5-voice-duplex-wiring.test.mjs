@@ -38,3 +38,13 @@ test('dictation is merged at the cursor and never overwrites a typed composer dr
   // Still preview-only: recognition never sends or executes.
   assert.doesNotMatch(apply,/sendCurrentInput\(|dispatch\(|startDevelopmentJob\(/);
 });
+
+// M5 milestone 4: the only native model-load path passes the resource/thermal admission.
+test('model load path is gated by measured RAM/thermal admission before the native engine starts',()=>{
+  const load=body('private fun loadModel(');
+  const gate=load.indexOf('LocalModelLoadAdmission.loadIfAdmitted(');
+  assert.ok(gate>=0,'loadModel must route through LocalModelLoadAdmission');
+  assert.match(load,/localModelResourceSnapshot\(\)/);
+  assert.doesNotMatch(load.replace(/LocalModelLoadAdmission\.loadIfAdmitted\(localRuntime/g,''),/localRuntime\.load\(/,
+    'no direct localRuntime.load bypass');
+});
