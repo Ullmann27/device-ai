@@ -138,11 +138,12 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {
                 editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)
                     .remove(TYPED_PREPARED_JSON)
-                if(result?.prepared==true && expectedCommit!=null && authorization!=null)
+                if(result?.prepared==true && expectedCommit!=null && authorization!=null && result.ccc1TaskId!=null)
                     editor.putString(TYPED_PREPARED_ID,result.id)
                         .putString(TYPED_PREPARED_SHA,result.hash)
                         .putString(TYPED_PREPARED_COMMIT,expectedCommit)
                         .putString(TYPED_PREPARED_JSON,authorization.task.canonicalJson())
+                        .putString(CCC1_TASK,result.ccc1TaskId)
             }
             if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)
             editor.commit()

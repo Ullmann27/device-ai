@@ -114,13 +114,14 @@ class ContinuumTypedExecutionReviewUiTest {
         } finally { controller.pause().stop().destroy() }
     }
 
-    private fun deliverPreparedReceipt(ccc1TaskId: String = "t-aaaaaaaaaaaaaaaa"): Intent {
+    private fun deliverPreparedReceipt(ccc1TaskId: String = "t-aaaaaaaaaaaaaaaa",
+                                       json: String = task.canonicalJson()): Intent {
         prefs.edit().putString("job_id", "prepare-request")
             .putString("job_operation", "TYPED_CODING_PREPARE")
             .putString("typed_coding_expected_id_v1", task.id)
             .putString("typed_coding_expected_sha_v1", task.fingerprint())
             .putString("typed_coding_expected_commit_v1", task.sourceCommit)
-            .putString(expectedJson, task.canonicalJson()).commit()
+            .putString(expectedJson, json).commit()
         val stdout = """{"schema":"continuum-typed-coding-bridge","version":1,"operation":"prepare","id":"${task.id}","status":"PREPARED_NOT_EXECUTED","taskSha256":"${task.fingerprint()}","sourceCommit":"${task.sourceCommit}","ccc1TaskId":"$ccc1TaskId","replayed":false,"approvedForMerge":false,"installed":false,"deviceVerified":false}"""
         val callback = Intent().setData(android.net.Uri.parse("continuum://termux-callback/TYPED_CODING_PREPARE/prepare-request"))
             .putExtra("job_id", "prepare-request").putExtra("job_operation", "TYPED_CODING_PREPARE")
@@ -200,5 +201,17 @@ class ContinuumTypedExecutionReviewUiTest {
         ContinuumMobileBuildResultReceiver().onReceive(app, oldCallback)
         assertEquals("Consumed callback cannot retarget a newer task", current,
             prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+    }
+
+    @Test fun changedFullTaskCannotBecomePreparedOrEnableRunWithTheOldDigest() {
+        val changed = task.copy(goal = "Ein anderes Ziel").canonicalJson()
+        deliverPreparedReceipt(json = changed)
+        assertNull(prefs.getString(preparedJson, null))
+        assertNull(prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+        seed()
+        prefs.edit().putString(preparedJson, changed).commit()
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try { assertFalse(runButton(controller.get()).isEnabled) }
+        finally { controller.pause().stop().destroy() }
     }
 }

@@ -26,7 +26,7 @@ internal object ContinuumTypedCodingBridge {
         }
     }
     data class Result(val operation:Operation,val id:String,val hash:String,val status:String,
-        val message:String,val prepared:Boolean=false,val patchSha256:String?=null)
+        val message:String,val prepared:Boolean=false,val patchSha256:String?=null,val ccc1TaskId:String?=null)
 
     fun parseAuthorization(json:String?,hash:String?):ContinuumCodingTask.Authorization? {
         if(json == null || json.length !in 2..MAX_JSON || hash==null || !SHA.matches(hash))return null
@@ -138,9 +138,11 @@ internal object ContinuumTypedCodingBridge {
         val source=(o["sourceCommit"] as? String)?.takeIf { COMMIT.matches(it) }?:return invalid()
         if(!COMMIT.matches(expectedSourceCommit)||source!=expectedSourceCommit)return invalid()
         if(operation==Operation.PREPARE && status=="PREPARED_NOT_EXECUTED") {
-            if(!CCC1.matches(o["ccc1TaskId"] as? String ?: "" ) || o["replayed"] !is Boolean)return invalid()
+            val ccc1TaskId=o["ccc1TaskId"] as? String ?: return invalid()
+            if(!CCC1.matches(ccc1TaskId) || o["replayed"] !is Boolean)return invalid()
             return Result(operation,id,hash,status,
-                "Coding-Auftrag für Commit ${source.take(12)} vorbereitet. Noch kein Modell gestartet.",prepared=true)
+                "Coding-Auftrag für Commit ${source.take(12)} vorbereitet. Noch kein Modell gestartet.",
+                prepared=true,ccc1TaskId=ccc1TaskId)
         }
         if(operation==Operation.RUN && status in setOf("EXECUTION_REPORTED_UNVERIFIED","PATCH_PENDING_OWNER_REVIEW")){
             val patch=(o["patchSha256"] as? String)?.takeIf { SHA.matches(it) }

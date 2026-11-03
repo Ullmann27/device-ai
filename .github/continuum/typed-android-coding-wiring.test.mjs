@@ -15,7 +15,7 @@ test('Android confirmed task is passed only to the existing in-app Termux Builde
  assert.match(agent,/Intent\(this, ContinuumMobileBuilderActivity::class\.java\)/);
  assert.match(builder,/ContinuumTypedCodingBridge\.parseAuthorization\(/);
  assert.match(builder,/setPositiveButton\("Vorbereiten"\).*dispatchTypedPrepare\(incoming\)/s);
- assert.match(builder,/setPositiveButton\("Jetzt ausführen"\).*dispatchTypedRun\(id,hash\)/s);
+ assert.match(builder,/setPositiveButton\("Jetzt ausführen"\).*dispatchTypedRun\(authorization\)/s);
  assert.doesNotMatch(agent,/CONTINUUM_OWNER_V22_APPROVED_SHA/);
 });
 test('existing protected Android Termux receiver binds both callback identity and reviewed task digest',()=>{
@@ -27,7 +27,7 @@ test('existing protected Android Termux receiver binds both callback identity an
  assert.match(activity,/putString\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_ID,typedId\)/);
  assert.match(callback,/id != prefs\.getString\(JOB_ID, null\)/);
  assert.match(callback,/ContinuumTypedCodingBridge\.evaluate\(typed,expectedId,expectedHash,/);
- assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null\)/);
+ assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null && authorization!=null && result\.ccc1TaskId!=null\)/);
  assert.match(callback,/if\(result\?\.patchSha256!=null\)/);
  assert.match(bridge,/o\["approvedForMerge"\]!=false\|\|o\["installed"\]!=false\|\|o\["deviceVerified"\]!=false/);
  assert.match(bridge,/private const val SCRIPT=ContinuumMobileBuildPlan\.PROJECT_DIR/);
@@ -59,17 +59,20 @@ test('approved task source commit stays bound through Android prepare, run, call
  // Only the reviewed source is accepted for PREPARE.
  assert.match(activity,/typedCommit=authorization\.task\.sourceCommit/);
  // RUN binds to a prepared record from the same private storage, not mutable model stdout.
- assert.match(activity,/val commit=preferences\.getString\(ContinuumMobileBuildResultReceiver\.TYPED_PREPARED_COMMIT,null\)/);
- assert.match(activity,/typedId=id,typedHash=hash,typedCommit=commit/);
- assert.match(activity,/mit Quell-Commit \$\{commit\.take\(12\)\} wird gestartet/);
+ assert.match(activity,/private fun preparedTypedAuthorization\(\): ContinuumCodingTask\.Authorization\?/);
+ assert.match(activity,/preferences\.getString\(ContinuumMobileBuildResultReceiver\.TYPED_PREPARED_COMMIT,null\)/);
+ assert.match(activity,/typedId=authorization\.task\.id,typedHash=authorization\.taskSha256/);
+ assert.match(activity,/current\.task\.canonicalJson\(\)!=authorization\.task\.canonicalJson\(\)/);
+ assert.match(activity,/ContinuumTypedCodingBridge::executionReview/);
+ assert.match(activity,/TYPED_PREPARED_JSON/);
  assert.match(activity,/edit\.remove\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_ID\)[\s\S]*\.remove\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_COMMIT\)/);
  assert.match(activity,/TYPED_EXPECTED_COMMIT,typedCommit/);
  assert.match(activity,/TYPED_PREPARED_COMMIT\)/);
  assert.match(callback,/const val TYPED_EXPECTED_COMMIT =/);
  assert.match(callback,/const val TYPED_PREPARED_COMMIT =/);
  assert.match(callback,/val expectedCommit=prefs\.getString\(TYPED_EXPECTED_COMMIT,null\)/);
- assert.match(callback,/if\(expectedId!=null && expectedHash!=null && expectedCommit!=null\)/);
- assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null\)/);
+ assert.match(callback,/if\(authorization!=null && expectedId!=null && expectedHash!=null && expectedCommit!=null\)/);
+ assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null && authorization!=null && result\.ccc1TaskId!=null\)/);
  assert.match(callback,/putString\(TYPED_PREPARED_COMMIT,expectedCommit\)/);
  assert.match(callback,/remove\(TYPED_EXPECTED_COMMIT\)/);
  // A matching SHA task-id pair cannot silently endorse any other well-formed Git SHA.
