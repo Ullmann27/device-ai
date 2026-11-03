@@ -147,6 +147,37 @@ class PersonalLearningTransferTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun nearMaximumLex3BytesExportCompletelyWithMaximumPackageLength() {
+        val dir=Files.createTempDirectory("personal-transfer-byte-boundary").toFile()
+        try {
+            fun large(index:Int,chars:Int)=LearningExperienceFactory.create(LearningExperienceType.USER_FACT,
+                LearningProvenance.SYNTHETIC_FIXTURE,LearningTrustClass.OWNER_CONFIRMED,
+                LearningStatus.CONFIRMED,index.toString().padStart(4,'0')+"界".repeat(chars),
+                "界".repeat(160),"界".repeat(500),index.toLong())
+            val count=FileLearningExperienceStore.MAX_DURABLE_RECORDS
+            val perRecord=LearningExperienceCodec.encode(listOf(large(0,1900))).size-40
+            val baselineBytes=count.toLong()*perRecord+(count/32)*40
+            var remaining=((Lex3LearningExperienceStore.MAX_TOTAL_BYTES-1024-baselineBytes)/3).toInt()
+            val records=(0 until count).map { index ->
+                val extra=minOf(remaining,144);remaining-=extra;large(index,1900+extra)
+            }
+            assertEquals(0,remaining)
+            val segmentBytes=records.chunked(32).sumOf { LearningExperienceCodec.encode(it).size.toLong() }
+            assertTrue(segmentBytes<Lex3LearningExperienceStore.MAX_TOTAL_BYTES)
+            assertTrue(segmentBytes>Lex3LearningExperienceStore.MAX_TOTAL_BYTES-2048)
+            val store=FileLearningExperienceStore(dir)
+            assertEquals(count,store.appendMissing(records))
+            val maxPackage="a."+"b".repeat(254)
+            val exported=PersonalLearningTransfer.export(maxPackage,FileLearningExperienceStore(dir))
+            assertTrue(exported.size>Lex3LearningExperienceStore.MAX_TOTAL_BYTES)
+            val actual=PersonalLearningTransfer.inspect(exported)
+            assertEquals(maxPackage,actual.claimedSourcePackage)
+            assertEquals(records.toSet(),actual.records.toSet())
+            println("LEX3_TRANSFER_METRIC records=$count segment_bytes=$segmentBytes export_bytes=${exported.size} " +
+                "source_package_chars=${maxPackage.length} complete=true")
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun capacityPressureIsExplicitAndDoesNotEvictExistingProtectedRecords() {
         val target = (1..FileLearningExperienceStore.MAX_DURABLE_RECORDS).map { fact("Synthetic existing fact $it.") }
         val bytes = PersonalLearningTransfer.encode(source, listOf(fact("Synthetic extra fact.")))

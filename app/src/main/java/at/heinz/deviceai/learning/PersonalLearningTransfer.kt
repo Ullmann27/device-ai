@@ -41,8 +41,13 @@ data class PersonalLearningMergePlan(
 
 object PersonalLearningTransfer {
     const val SCHEMA_VERSION = 1
-    /** Bounded complete export of a LEX3 ledger; older readers reject larger documents safely. */
-    const val MAX_BYTES = 32 * 1024 * 1024
+    /** LEX3 segment bytes are capped at 32 MiB. CLPT adds at most 12 bytes/record
+     * (six ASCII UTF fields use 4-byte rather than 2-byte lengths), plus 304 bytes
+     * for header/checksum/max source package, and removes each 40-byte segment wrapper.
+     * Extra <= 12*4096+304 = 49,456 bytes, so 33 MiB exports every valid ledger.
+     * Older readers reject larger documents safely; the wire schema is unchanged.
+     */
+    const val MAX_BYTES = 33 * 1024 * 1024
     private const val MAGIC = 0x434c5054 // CLPT
     private const val DIGEST_BYTES = 32
     private const val MAX_FIELD_BYTES = 8192
