@@ -2,7 +2,7 @@ TAP version 13
 # Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
 not ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
   ---
-  duration_ms: 24.341804
+  duration_ms: 35.322569
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:25:1'
   failureType: 'testCodeFailure'
@@ -28,7 +28,7 @@ not ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only i
 # Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
 not ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
   ---
-  duration_ms: 17.129004
+  duration_ms: 27.014379
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:33:1'
   failureType: 'testCodeFailure'
@@ -54,15 +54,31 @@ not ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
     async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
   ...
 # Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
-ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+not ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
   ---
-  duration_ms: 1197.058034
+  duration_ms: 1351.905909
   type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    independent failure must reach the next existing bounded provider call
+    
+    1 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:47:9)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
   ...
 # Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
 not ok 4 - MΩ strict execution blocks before provider or missing journal when isolation is absent
   ---
-  duration_ms: 0.862163
+  duration_ms: 0.986551
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:53:1'
   failureType: 'testCodeFailure'
@@ -96,9 +112,9 @@ not ok 4 - MΩ strict execution blocks before provider or missing journal when i
 1..4
 # tests 4
 # suites 0
-# pass 1
-# fail 3
+# pass 0
+# fail 4
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 1390.233841
+# duration_ms 1627.1041
