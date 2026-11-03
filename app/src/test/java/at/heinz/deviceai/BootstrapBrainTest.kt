@@ -64,7 +64,7 @@ class BootstrapBrainTest {
             assertNull(utterance, decision.tool)
             assertTrue(utterance, decision.allowNeuralRecall)
         }
-        listOf("Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherkapazität").forEach { request ->
+        listOf("Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherstatus", "Speicherkapazität").forEach { request ->
             val decision = BootstrapBrain.decide(request, emptyList())
             assertEquals(request, BootstrapKind.DEVICE_TOOL, decision.kind)
             assertEquals(request, "get_storage_info", decision.tool)
