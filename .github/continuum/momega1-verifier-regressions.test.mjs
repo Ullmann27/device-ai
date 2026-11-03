@@ -39,3 +39,11 @@ for(const field of ['patchSha256','red.sha','green.sha'])test('MΩ quality embed
  const result=verifyRepairPatch({repo:f.root,baseCommit:f.red,patchPath:f.patchPath,patchSha256:f.patchSha256,receiptBytes:Buffer.from(JSON.stringify(receipt))});
  assert.equal(result.verdict,'REJECTED',JSON.stringify(result));
 });
+test('MΩ QA isolated localized file attributes retain actual Node identities under path aliases',t=>{
+ const f=fixture(t),alias=path.join(f.dir,'repo-alias');fs.symlinkSync(f.root,alias);
+ const raw=spawnSync(process.execPath,['--test','--test-reporter=junit','tests/math.test.mjs'],{cwd:f.root,encoding:'utf8',env:{PATH:process.env.PATH,HOME:f.dir}});assert.equal(raw.status,0);
+ const actual=parseJunit(raw.stdout,{root:f.root});
+ // runProfile localizes /work/ to the executor's lexical checkout path.
+ const localized=parseJunit(raw.stdout.replaceAll(f.root+'/',alias+'/'),{root:alias});
+ assert.deepEqual([...localized.values()].map(c=>c.identity),[...actual.values()].map(c=>c.identity));
+});
