@@ -1502,6 +1502,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Bitte den laufenden Dialogschritt abwarten.", Toast.LENGTH_SHORT).show()
             return
         }
+        cancelSpeechInputScope()
         botLookupPending = true
         val revision = ++botLookupRevision
         try { backlogExecutor.execute {
@@ -1565,6 +1566,7 @@ class AgentActivity : Activity() {
         }
         if (address == null && selectedBot == null) return false
         if (botLookupPending || backlogExecutor.isShutdown) return true
+        cancelSpeechInputScope()
         botLookupPending = true
         val revision = ++botLookupRevision
         try { backlogExecutor.execute {
