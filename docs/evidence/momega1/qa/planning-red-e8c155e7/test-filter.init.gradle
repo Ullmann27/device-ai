@@ -1,0 +1,13 @@
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/planning-independent-red')
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter {
+   includeTestsMatching 'at.heinz.deviceai.ContinuumCodingPlanningTest'
+   includeTestsMatching 'at.heinz.deviceai.ContinuumCodingPlanningUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningIntakeUiTest'
+  }
+ }
+}
