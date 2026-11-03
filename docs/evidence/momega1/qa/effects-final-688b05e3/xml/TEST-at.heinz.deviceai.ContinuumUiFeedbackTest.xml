@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumUiFeedbackTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:47:54" hostname="b354f2cb821b" time="1.153">
+  <properties/>
+  <testcase name="generatedChirpsAreShortQuietFinitePcmWithNoAssets" classname="at.heinz.deviceai.ContinuumUiFeedbackTest" time="0.989"/>
+  <testcase name="defaultMuteVoiceAndBackgroundNeverPlayOrRetainResources" classname="at.heinz.deviceai.ContinuumUiFeedbackTest" time="0.051"/>
+  <testcase name="actualBoundedTrackPlaysWithoutChangingSystemVolumeThenReleasesOnVoiceOrClose" classname="at.heinz.deviceai.ContinuumUiFeedbackTest" time="0.076"/>
+  <testcase name="systemSoundToggleAndSilentRingerCannotBeBypassed" classname="at.heinz.deviceai.ContinuumUiFeedbackTest" time="0.035"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

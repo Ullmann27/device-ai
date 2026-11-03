@@ -1,0 +1,1 @@
+HARNESS-CONFOUNDED:5cases2PASS3FAIL. Worker fails uninitialized chatContainer; hidden host can suppress positive arrivals. Not accepted as clean behavioral RED. Subsequent582 fixture corrects these initial issues, but cross-Activity window visibility remains unproven.
