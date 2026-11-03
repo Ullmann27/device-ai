@@ -43,15 +43,48 @@ Independent RED on the unchanged PR405 source: reviewer freeze `8c43f017`,
 12 actual Kotlin/JUnit cases, 10 PASS and 2 FAIL: idle head and idle gaze never
 move. The other ten cover bounds, event gaze, speech provenance, blink, reduced
 motion and buffer reuse. These are presentation contracts, not visual acceptance.
-Source import is WIP; the original eight tests and API compile have not yet been
-rerun in this environment. The shared benchmark has CPU priority.
+The import was checkpointed as `f5cd37e9`. Motion/gaze implementation is
+`da067717`, followed by the 460-second clock-wrap correction `1649a043`.
+Actual native contract run on `1649a043`: 33 PASS, 0 FAIL, 0 SKIP, including all
+eight imported GLB/morph contracts, existing Director/reducer regressions and
+eleven new observed-gaze/clock-boundary cases. Actual packaged GLB preflight PASS.
+Actual Android SDK36 + pinned Filament/gltfio AAR API compile on `da067717` PASS;
+one pre-existing unnecessary-cast warning. These author checks are recorded under
+`docs/evidence/momega1-avatar-motion/`, each bound to its own exact source commit.
+They do not constitute independent acceptance, a full APK build or device evidence.
 
-Next: add bounded natural idle movement using the existing render clock, then
-run the same frozen tests and all affected native contracts. Observed face-position
-gaze, if integrated, must expire, yield to real task state and remain distinct
-from cosmetic idle gaze. Material/look changes require same-conditions real GLB
+Observed gaze API: `AvatarDirector.onObservedGaze(GazeTarget, confidence, ageMillis)`
+accepts confidence 60..100 and age 0..750 ms only. The Camera2 adapter computes age
+in its monotonic domain; the Director translates that age into its existing clock.
+The reducer expires observations and gives task/approval/blocked gaze priority.
+Pause/detach/reduced motion clear observations, and inactive views reject late
+camera events. `gazeObserved=false` preserves existing pose constructors. The
+adapter/Activity caller is a separate integration lane and is not proven by these
+synthetic event contracts. Face position is not eye tracking or identity.
+
+Independent reviewer is checking `1649a043` against 12 unchanged mapper tests and
+13 pre-frozen new gaze cases. A further post-inspection future-timestamp lockout
+counterexample is pending actual execution; no independent GREEN is claimed yet.
+
+Next: complete independent motion/gaze counterchecks and remedy measured failures.
+Observed face-position gaze must expire, yield to real task state and remain
+distinct from cosmetic idle gaze. Material/look changes require same-conditions real GLB
 renders and independent review. Audio identity, real TTS synchrony, device
 thermal/FPS, actual work-event effects and final visual approval remain unrun.
+
+The two added 20.032-second reference videos extend the original clip with
+document/folder/agent flights and Gmail/PDF/choice/weather/calendar illustrations.
+Hashes are `5c73ce6cf204fe2c29cc572da80514c7a2c8657a411c049255a476647bfe7c878`
+and `7bd81c97a8c6d1a8e84b776461bbb454dcb4368777c6ecf97a90c1be7d10ea1d`.
+Both were visually sampled; audio hearing remains NOT_RUN. Their fictional
+telemetry and capability displays never become actual app status.
+
+Material experiment tools derive a separate GLB from the known `f39a89fc` source,
+preserving its geometry/skinning/morph BIN bytes, and render A/B front, oblique
+and profile views with identical Blender settings. The first derivative
+`15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5`
+is EXPERIMENT_NOT_ACCEPTED and has not replaced the packaged asset. Rendering is
+queued behind the local-model benchmark; this is not an image-quality result.
 
 Rollback: revert this isolated import/increment or leave the optional 3D choice
 disabled; no persistence migration or owner data is involved. The existing orb

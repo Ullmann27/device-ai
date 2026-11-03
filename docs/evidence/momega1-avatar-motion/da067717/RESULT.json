@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "da067717d79421617b58368b78d94d0dd0588bd7",
+  "evidenceClass": "HOST_INTEGRATION",
+  "status": "PASS",
+  "command": "EPSILON_BUILD_ENV=/workspace/momega1-build-env/env.sh CONTINUUM_FABRIC_JVM_DEPS=/workspace/momega1-build-env/jvm-deps EPSILON_FILAMENT_DIR=/workspace/jarvis-reference-build/filament-1.56.0 JAVA_OPTS=\"-Xmx768m -XX:ActiveProcessorCount=1\" JAVA_TOOL_OPTIONS=\"-XX:ActiveProcessorCount=1\" bash tools/epsilon-avatar-contract/compile-android-view.sh",
+  "rawLogSha256": "db7dae1e5191e99fb1ff8a3ac319d01d89bd59175de88764f8dd68c74d7299e9",
+  "independent": false,
+  "fold7": "NOT_RUN",
+  "limitations": [
+    "No Android GPU execution",
+    "No actual camera observation",
+    "No voice listening or reference appearance acceptance"
+  ]
+}
