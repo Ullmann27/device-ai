@@ -234,7 +234,9 @@ export async function runCodingService({configPath}={}){
    await new Promise(resolve=>{wake=resolve;if(controller.signal.aborted)notify();});
   };
   const work=async()=>{
-   currentConfig(config);
+   try{currentConfig(config);}catch(error){
+    controller.abort();notify();update({failureCode:String(error.message).slice(0,160)});throw error;
+   }
    active=transaction(config,()=>{
     const items=readDeliveries(config),d=items.find(i=>i.delivery==='PENDING');
     if(!d)return null;

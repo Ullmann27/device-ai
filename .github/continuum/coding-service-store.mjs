@@ -48,8 +48,10 @@ export function writePrivateJson(file,value,{exclusive=false}={}){
  const fd=fs.openSync(target,'wx',0o600);
  try{fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
  if(!exclusive){
-  if(fs.existsSync(file))plainBytes(file,4*1024*1024,{privateFile:true});
-  fs.renameSync(target,file);
+  try{
+   if(fs.existsSync(file))plainBytes(file,4*1024*1024,{privateFile:true});
+   fs.renameSync(target,file);
+  }finally{fs.rmSync(target,{force:true});}
  }
  const directory=fs.openSync(path.dirname(file),'r');try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
 }
@@ -114,6 +116,8 @@ function validateConfig(c,stateDir){
   if(inside(root,stateDir)||inside(stateDir,root))throw Error('SERVICE_STATE_OVERLAPS_SOURCE_OR_PROFILES');
  if(!SHA.test(c.profileClasspathSha256??'')||typeof c.profileClasspath!=='string'||c.profileClasspath.length<1||c.profileClasspath.length>16000||
    c.profileClasspath.split(path.delimiter).some(p=>!path.isAbsolute(p)||p.includes('*')||p.includes('\0')))throw Error('SERVICE_PROFILE_CLASSPATH_INVALID');
+ for(const entry of c.profileClasspath.split(path.delimiter))
+  if([c.project,c.profileDirectory,stateDir].some(root=>inside(root,entry)||inside(entry,root)))throw Error('SERVICE_PROFILE_CLASSPATH_OVERLAPS_DATA');
  runtimeConfiguration(c.runtimeEnv);
  if(!SHA.test(c.modelManifestSha256??''))throw Error('SERVICE_MANIFEST_PIN_INVALID');
  if(!SHA.test(c.isolationConfigSha256??'')||!path.isAbsolute(c.isolationConfig??'')||
