@@ -1,0 +1,63 @@
+{
+  "integratedSource": "1595389274acb840c4ab544fa699c9eb2a04bd53",
+  "integratedTree": "8af597f1662a6c437b33f0edf810add9ffd43314",
+  "qaRunnerSha256": "862d55ccdb8ee5c26393868a2ec07f9cc7cd2928e0b10d07c517404559048a96",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "genesis-known-u03",
+      "sourceCommit": "ad610792fab3960df1a4c8946a895eb833dc7e76",
+      "kind": "BUGFIX",
+      "goal": "Use default only when setting is null or undefined; preserve zero, false and empty string.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "Use default only when setting is null or undefined; preserve zero, false and empty string."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 1,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "u03",
+    "sourceSha256": "606c4bd672923563c93ad18a91a7ccf67e0c82e89700a7b942e81e55fe5e0bac",
+    "frozenTestSha256": "948b530ee774454553172bdbfa14628fffab1e33c77c8681e8bbb788514eb658",
+    "materializedTestSha256": "51a54ad8c973e79bc5d8b58cabf54d8a9f4efbc361b0f0444f82fcc9bc263ca4",
+    "transformation": "Only fixed relative import changed; source/assertions unchanged. Known original u03, no new generalization claim.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "d654600e32812708fd6e65a991abc93eb8ce483107560f51b1779ebbcfa36fff",
+  "fixtureTree": "6fff8d94b51c01e4e26db4148fc9c761dba0aada",
+  "freezeManifestSha256": "f1a2bda8f582d09b74ade64a73b72e59147a915183f4397ae5ec3d5a815b4c1e",
+  "configuration": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME": "llama.cpp",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT": "gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_SHA256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL": "OWNER_APPROVED_ALTERNATE_GGUF",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "/workspace/synapse-local-model/model-pin.json",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND": "LLAMA_CPP",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "/workspace/genesis-known-u03-experiment/isolation.json",
+    "GENESIS_PROFILE_STORE": "/workspace/genesis-known-u03-experiment/profile-store",
+    "GENESIS_HANDOFF_CLASSPATH": "/workspace/genesis-g04-experiment/kotlin-host/classes:/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/native-graph-deps/json-20240303.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/junit-4.13.2.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/native-graph-deps/annotations-13.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/hamcrest-core-1.3.jar:/workspace/continuum-build-env/native-graph-deps/okio-jvm-3.6.0.jar:/workspace/continuum-build-env/native-graph-deps/okhttp-4.12.0.jar:/workspace/continuum-build-env/native-graph-deps/android-all-15-robolectric-12650502.jar:"
+  },
+  "fileHashes": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "5f97ba4c52712414d4fcf7588c62b80de2b10fb34d98a65d92fde0c52e920594"
+  },
+  "technicalRecallEnabled": false,
+  "inheritedState": null,
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T21:35:40.233Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}
