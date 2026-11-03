@@ -1,0 +1,91 @@
+{"label":"CLAIMED_TASK_EXECUTED","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-5ca6dbc7df64c68914e40cc0","workspaceBinding":{"workerId":"worker-review","taskId":"t-a044aec5712d1628","requestMessageId":"2a8dcfda-9d01-496e-bd55-a154614c3156","requestHash":"675eae2df9b57a59834843662f40db1689a042e12a79e0a74828400ab4de6a0e","sourceCommit":"8f3d9ee180ae9f9a1de3d7ebed38ce3c35fd74ad","jobId":"91920a2b-ecdb-436b-bda1-315d53913448"},"observed":{"containerId":"f277eb97b0141dfd9ee103ec8e8643975ff71b7541963142b2f934e53596a143","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+{"label":"FIRST_EXECUTION","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-30cdf5d3a2ae66cb596c49df","workspaceBinding":{"workerId":"worker-review","taskId":"t-fd324ef2258d8234","requestMessageId":"1cf166d1-66c7-4b1e-8546-fdcd079eab68","requestHash":"3d17a697b30df310a9f930bf1e4cfc5832109f271a2c42a53299bb0f5094453e","sourceCommit":"8f3d9ee180ae9f9a1de3d7ebed38ce3c35fd74ad","jobId":"78fe63a2-c572-4956-9122-7bb1c828e904"},"observed":{"containerId":"a48f1e861c1f9bd79e920a48a6a0fb3fad31d283fcede1f94c21da670759ab61","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+{"label":"REPEATED_EXECUTION","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-49c81918dd9d7cbe194ca988","workspaceBinding":{"workerId":"worker-review","taskId":"t-fd324ef2258d8234","requestMessageId":"1cf166d1-66c7-4b1e-8546-fdcd079eab68","requestHash":"3d17a697b30df310a9f930bf1e4cfc5832109f271a2c42a53299bb0f5094453e","sourceCommit":"8f3d9ee180ae9f9a1de3d7ebed38ce3c35fd74ad","jobId":"78fe63a2-c572-4956-9122-7bb1c828e904"},"observed":{"containerId":"77dd1b7db9176933e23485b1d6f0baa16b5d57761bce9897f7d520856f455072","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+{"label":"CORRUPT_JOURNAL_EXECUTED","status":0,"isolation":{"schema":"continuum-isolation-v1","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","network":"none","user":"1000:1000","readOnly":true,"noNewPrivileges":true,"capabilities":[],"memoryMb":256,"pids":64,"cpus":1,"timeoutMs":5000,"runtime":"runc","sourceSha256":"f9e8fcf161fba9916e6e412bbcf2cd77634c4d30f26029aaeb0be53529094517","profile":"node-continuum","untrustedReports":true,"workspaceId":"continuum-4651fa4610c1627127400281","workspaceBinding":{"workerId":"worker-review","taskId":"t-b872b86446999247","requestMessageId":"b9916808-706c-4504-958c-8a32a5239317","requestHash":"1b76b2eb3cd676f9f238a7e6bac097276c9f9da1ad51144a2d55bcde313bc126","sourceCommit":"9303ac14dce3fb3ebb05e53088315f17d5aa7e71","jobId":"02b0271d-bffc-4295-9777-4a23f6f1f8c5"},"observed":{"containerId":"63ea750dda15cf14f4f5cfb54adc0f6aa88c62e10d2d1cbc8a99a5f0150aadc9","runtime":"runc","image":"sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1","user":"1000:1000","network":"none","readOnly":true,"memoryBytes":268435456,"memorySwapBytes":268435456,"nanoCpus":1000000000,"pids":64,"capDrop":["ALL"],"securityOpt":["no-new-privileges:true"],"writableHostMounts":0},"teardownConfirmed":true}}
+✖ owner ABORT after binding must prevent a real Docker launch (46.920767ms)
+✖ canonical claimed job after binding must prevent replay in real Docker (454.19689ms)
+✖ bound request cannot execute twice without fresh canonical admission (785.944363ms)
+✖ corrupted MAC journal after binding must prevent execution (404.967549ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1784.123372
+
+✖ failing tests:
+
+test at tools/momega1-workspace-review/adversarial.test.mjs:17:1
+✖ owner ABORT after binding must prevent a real Docker launch (46.920767ms)
+  Error: invalid envelope: ABORT: reason and code OWNER|DEADLINE|BUDGET|ROUND_LIMIT|STALE_BASE|APPROVAL_DENIED|CAPABILITY_DENIED|PROTOCOL_VIOLATION
+      at DurableTaskJournal.append (file:///workspace/momega1-workspace-review-candidate/.github/continuum/ccc1-journal.mjs:100:28)
+      at ownerAction (file:///workspace/momega1-workspace-review-candidate/.github/continuum/ccc1-orchestrator.mjs:118:18)
+      at file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:18:2
+      at fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+      at TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:17:72)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tools/momega1-workspace-review/adversarial.test.mjs:22:1
+✖ canonical claimed job after binding must prevent replay in real Docker (454.19689ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:26:9
+      at fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+      at TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:22:83)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /WORKSPACE_|APPROVAL|REPLAY/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tools/momega1-workspace-review/adversarial.test.mjs:28:1
+✖ bound request cannot execute twice without fresh canonical admission (785.944363ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:30:9
+      at fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+      at TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:28:81)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /WORKSPACE_|REPLAY|ALREADY/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tools/momega1-workspace-review/adversarial.test.mjs:32:1
+✖ corrupted MAC journal after binding must prevent execution (404.967549ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:35:9
+      at fixture (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:15:342)
+      at TestContext.<anonymous> (file:///workspace/momega1-workspace-review/tools/momega1-workspace-review/adversarial.test.mjs:32:71)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /WORKSPACE_|modified|CORRUPT/,
+    operator: 'throws',
+    diff: 'simple'
+  }

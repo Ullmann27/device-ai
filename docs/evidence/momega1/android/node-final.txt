@@ -1,0 +1,23 @@
+✔ Android confirmed task is passed only to the existing in-app Termux Builder (4.50519ms)
+✔ existing protected Android Termux receiver binds both callback identity and reviewed task digest (0.5887ms)
+✔ Node Termux accepts fixed operations and never promotes an unevidenced success status (3.245966ms)
+✔ approved task source commit stays bound through Android prepare, run, callback and restart (0.629582ms)
+✔ fixed command grammar rejects arbitrary CLI paths, shell and unbound run (0.343209ms)
+✔ strict canonical JSON and SHA binding prevent duplicate-key/changed-authorization replay (4.218307ms)
+✔ prepared confirmation is separate from execution; same bound task is idempotent (1.020373ms)
+✔ run requires saved exact fingerprint and cannot claim installation (2.971272ms)
+✔ verified coding review rejects consistently reduced baseline test coverage (0.339103ms)
+✔ archived real Qwen repair receipt stays reviewable only with explicit bound chain (0.521839ms)
+✔ failed host runtime redacts unexpected exception text (0.533527ms)
+✔ actual CCC1 preparation and execution through typed Termux boundary preserve fail-closed verification (91.794749ms)
+✔ trusted isolation configuration is mandatory and unsafe paths are rejected (0.36404ms)
+✔ sandbox absence blocks before any entrusted run callback and does not claim verified repair (0.252602ms)
+✔ the protected runner receives an explicit strict-isolation requirement (0.313373ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 230.817942

@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: MΩ QA correlated green source claims reject existing-wrong-tree
+not ok 1 - MΩ QA correlated green source claims reject existing-wrong-tree
+  ---
+  duration_ms: 301.441193
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:50:58'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"835b97d49e881bc5411d7e89dd1ecd99fbb46925f82a7e6c0372d5c7aca715f2","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"bd8d42c3c886c3b74d5fc255d3688b0130b213ab98a9a7986016a4b2af5fa962","red":{"xmlSha256":"d92f0a9020001d7d8c6355f58064472ea51035201f2fbb02649b837ae7381c96","exitCode":1,"executed":1,"failed":1},"green":{"xmlSha256":"0db612224a536fc3951d9c9abe9df570a64960996afe5e6110af4a84166d1dbe","exitCode":0,"executed":1,"failed":0}}
+    + actual - expected
+    
+    + 'VERIFIED'
+    - 'REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'REJECTED'
+  actual: 'VERIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:54:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: MΩ QA correlated green source claims reject nonexistent
+not ok 2 - MΩ QA correlated green source claims reject nonexistent
+  ---
+  duration_ms: 289.623835
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:50:58'
+  failureType: 'testCodeFailure'
+  error: |-
+    {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"abc83fe03fe838051092b51070fa143f08e5b9e66d1f8632d434f50cf8e5107f","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"bd8d42c3c886c3b74d5fc255d3688b0130b213ab98a9a7986016a4b2af5fa962","red":{"xmlSha256":"417068aa7cf4f4bdd39c73d1bac8fdf4142fe2183040c208e70dfcb7b8a3fa2d","exitCode":1,"executed":1,"failed":1},"green":{"xmlSha256":"a72d7b4d00ebbba54190740000f2e1b09fb748e22c4fa831e99481c5160be8a3","exitCode":0,"executed":1,"failed":0}}
+    + actual - expected
+    
+    + 'VERIFIED'
+    - 'REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'REJECTED'
+  actual: 'VERIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:54:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 685.223942

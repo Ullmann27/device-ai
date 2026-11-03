@@ -1,0 +1,16 @@
+PASS valid complete bounded authorization
+PASS maximal complete execution review
+PASS snapshot field mutation 0 with old digest
+PASS snapshot field mutation 1 with old digest
+PASS snapshot field mutation 2 with old digest
+PASS snapshot field mutation 3 with old digest
+PASS snapshot field mutation 4 with old digest
+PASS snapshot field mutation 5 with old digest
+PASS snapshot field mutation 6 with old digest
+PASS snapshot field mutation 7 with old digest
+Exception in thread "main" java.lang.IllegalArgumentException: Ungültiger Coding-Auftragsentwurf
+	at at.heinz.deviceai.ContinuumCodingTask.canonicalJson(ContinuumCodingTask.kt:62)
+	at at.heinz.deviceai.IndependentTypedBridgeChecksKt.main$lambda$3(IndependentTypedBridgeChecks.kt:28)
+	at at.heinz.deviceai.IndependentTypedBridgeChecksKt.main$test(IndependentTypedBridgeChecks.kt:6)
+	at at.heinz.deviceai.IndependentTypedBridgeChecksKt.main(IndependentTypedBridgeChecks.kt:27)
+	at at.heinz.deviceai.IndependentTypedBridgeChecksKt.main(IndependentTypedBridgeChecks.kt)
