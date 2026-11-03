@@ -1,0 +1,17 @@
+{
+  "FROZEN-ACCEPTANCE.md": "ca30b34c45f2296634af000077fff98762364d62d57cc8550dc2abcde8fe0507",
+  "HANDOFF.md": "d3aa954a6904f8b77f9ac098f997b46a9f6ced67640b7e59c0f3af5db63749a3",
+  "admission-counterexamples.json": "4ce8b07f1f6c71e2387f981bbeb1b241f9a20f4d1fec9d337df3e6059eda9eb7",
+  "admission-counterexamples.tap": "4cc871179a847ca32d1820a3ef6cef487a7836b378dc5e8ac05dbe76a2696469",
+  "admission-counterexamples.test.mjs": "61d016924132c0f180c7f2ec94cc629fd54d0c1c5611c4202145b00d2712bcc2",
+  "environment.json": "70a103967a61f5b62e4cbd6f4c3a5a1f51743c4ad9e52f07e60e11845defea09",
+  "focused-regressions.json": "148441ab7d36f99b2f685b02b693b77c3aa05de0e85e5673869b3003871f90d1",
+  "focused-regressions.tap": "9e4670f917f8fec3d213f70e7aa2d83093d326280a0fad3e98715071b7b9ae87",
+  "memory-independent.json": "7c903b8e8e4b16e884967211121611d5a9842eb9d842a4157a285334bc8fd53b",
+  "memory-independent.tap": "8b40a8eaff759a2ba81804829e64cf8833d51402b9efe57bae52a8a5b51b74c6",
+  "native-runtime.json": "0489a5ed9bcb9b43c2394e89286a0cb1cb3f28e427b45a0d24bfc4ba2f94f0bf",
+  "native-runtime.tap": "be435ae325bf932fa52003ba64702864f7a4809a2b61f8c47462956f310588c3",
+  "runtime-independent.json": "3e0bad1e06764f5c2a0e02a8898dcf1a969c959adb282ec7e92cd059fa98ce99",
+  "runtime-independent.tap": "dfe543b4b47e3bbf13d87a359300a45b47738a5526ea76ace4357e92e7f0ad60",
+  "source-equivalence.json": "f06424665815cac1c9040001b9946a07053a86064458cb9a061619cdc506465d"
+}

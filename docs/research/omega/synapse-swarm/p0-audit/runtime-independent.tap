@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: IDENTITY/CORRELATION explicit forged execution receipt rejected: boolean-only
+ok 1 - IDENTITY/CORRELATION explicit forged execution receipt rejected: boolean-only
+  ---
+  duration_ms: 36.613197
+  type: 'test'
+  ...
+# Subtest: IDENTITY/CORRELATION explicit forged execution receipt rejected: hash-and-id
+ok 2 - IDENTITY/CORRELATION explicit forged execution receipt rejected: hash-and-id
+  ---
+  duration_ms: 30.465933
+  type: 'test'
+  ...
+# Subtest: IDENTITY/CORRELATION explicit forged execution receipt rejected: wrong-request
+ok 3 - IDENTITY/CORRELATION explicit forged execution receipt rejected: wrong-request
+  ---
+  duration_ms: 24.450083
+  type: 'test'
+  ...
+# Subtest: AUTHORITY shadow result cannot become trusted or verified
+ok 4 - AUTHORITY shadow result cannot become trusted or verified
+  ---
+  duration_ms: 24.723169
+  type: 'test'
+  ...
+# Subtest: REPLAY consumed failed call survives provider restart
+ok 5 - REPLAY consumed failed call survives provider restart
+  ---
+  duration_ms: 25.05615
+  type: 'test'
+  ...
+# Subtest: TIMEOUT expired task invokes no child
+ok 6 - TIMEOUT expired task invokes no child
+  ---
+  duration_ms: 18.057656
+  type: 'test'
+  ...
+# Subtest: BUDGET source mismatch invokes no child
+ok 7 - BUDGET source mismatch invokes no child
+  ---
+  duration_ms: 12.621041
+  type: 'test'
+  ...
+# Subtest: AUTHORITY candidate cannot introduce tool authority
+ok 8 - AUTHORITY candidate cannot introduce tool authority
+  ---
+  duration_ms: 23.921935
+  type: 'test'
+  ...
+# Subtest: NETWORK child environment excludes ambient secret and proxy
+ok 9 - NETWORK child environment excludes ambient secret and proxy
+  ---
+  duration_ms: 22.709065
+  type: 'test'
+  ...
+# Subtest: native fixture mode 0: actual launch succeeds only as CONTRACT_TEST
+ok 10 - native fixture mode 0: actual launch succeeds only as CONTRACT_TEST
+  ---
+  duration_ms: 96.154052
+  type: 'test'
+  ...
+# Subtest: native fixture mode 5: actual launch succeeds only as CONTRACT_TEST
+ok 11 - native fixture mode 5: actual launch succeeds only as CONTRACT_TEST
+  ---
+  duration_ms: 77.625753
+  type: 'test'
+  ...
+# Subtest: native fixture mode 6: actual launch succeeds only as CONTRACT_TEST
+ok 12 - native fixture mode 6: actual launch succeeds only as CONTRACT_TEST
+  ---
+  duration_ms: 71.413706
+  type: 'test'
+  ...
+# Subtest: native fixture mode 8: actual launch succeeds only as CONTRACT_TEST
+ok 13 - native fixture mode 8: actual launch succeeds only as CONTRACT_TEST
+  ---
+  duration_ms: 63.48426
+  type: 'test'
+  ...
+# Subtest: native fixed reply with no decoding counter is rejected
+ok 14 - native fixed reply with no decoding counter is rejected
+  ---
+  duration_ms: 71.82683
+  type: 'test'
+  ...
+# Subtest: native TERM-ignore / descendant mode 1 times out and joins
+ok 15 - native TERM-ignore / descendant mode 1 times out and joins
+  ---
+  duration_ms: 305.760527
+  type: 'test'
+  ...
+# Subtest: native TERM-ignore / descendant mode 4 times out and joins
+ok 16 - native TERM-ignore / descendant mode 4 times out and joins
+  ---
+  duration_ms: 297.163418
+  type: 'test'
+  ...
+# Subtest: native overflow/nonzero mode 2 rejects
+ok 17 - native overflow/nonzero mode 2 rejects
+  ---
+  duration_ms: 64.909503
+  type: 'test'
+  ...
+# Subtest: native overflow/nonzero mode 3 rejects
+ok 18 - native overflow/nonzero mode 3 rejects
+  ---
+  duration_ms: 88.283828
+  type: 'test'
+  ...
+# Subtest: native abort joins TERM-ignoring fixture
+ok 19 - native abort joins TERM-ignoring fixture
+  ---
+  duration_ms: 257.545774
+  type: 'test'
+  ...
+# Subtest: native admission rejects model and runtime pin mismatch
+ok 20 - native admission rejects model and runtime pin mismatch
+  ---
+  duration_ms: 59.665169
+  type: 'test'
+  ...
+# Subtest: native modelPath replacement during execution rejects
+ok 21 - native modelPath replacement during execution rejects
+  ---
+  duration_ms: 379.871008
+  type: 'test'
+  ...
+# Subtest: native runtimePath replacement during execution rejects
+ok 22 - native runtimePath replacement during execution rejects
+  ---
+  duration_ms: 376.834668
+  type: 'test'
+  ...
+# Subtest: native child cannot read host synthetic sentinel or parent credentials
+ok 23 - native child cannot read host synthetic sentinel or parent credentials
+  ---
+  duration_ms: 61.826112
+  type: 'test'
+  ...
+# Subtest: native provider rejects honestly labelled contract fixture receipt
+ok 24 - native provider rejects honestly labelled contract fixture receipt
+  ---
+  duration_ms: 174.3674
+  type: 'test'
+  ...
+# Subtest: A/B label-only change creates process brand, never proves inference; clone is untrusted
+ok 25 - A/B label-only change creates process brand, never proves inference; clone is untrusted
+  ---
+  duration_ms: 168.991505
+  type: 'test'
+  ...
+# Subtest: strict injected valid-shaped proposal without observation rejected
+ok 26 - strict injected valid-shaped proposal without observation rejected
+  ---
+  duration_ms: 92.566353
+  type: 'test'
+  ...
+# Subtest: bounded recall is untrusted data and no raw hint is persisted
+ok 27 - bounded recall is untrusted data and no raw hint is persisted
+  ---
+  duration_ms: 110.670864
+  type: 'test'
+  ...
+# Subtest: native helper duplicate request is not itself replay or revocation authority
+ok 28 - native helper duplicate request is not itself replay or revocation authority
+  ---
+  duration_ms: 139.142645
+  type: 'test'
+  ...
+# Subtest: native concurrent coding requests both run; no shared capacity gate established
+ok 29 - native concurrent coding requests both run; no shared capacity gate established
+  ---
+  duration_ms: 342.891703
+  type: 'test'
+  ...
+# Subtest: native modelPath symlink/hardlink rejected before launch
+ok 30 - native modelPath symlink/hardlink rejected before launch
+  ---
+  duration_ms: 84.171948
+  type: 'test'
+  ...
+# Subtest: native runtimePath symlink/hardlink rejected before launch
+ok 31 - native runtimePath symlink/hardlink rejected before launch
+  ---
+  duration_ms: 62.961105
+  type: 'test'
+  ...
+# Subtest: native pre-aborted request cannot return a process observation
+ok 32 - native pre-aborted request cannot return a process observation
+  ---
+  duration_ms: 62.09938
+  type: 'test'
+  ...
+# Subtest: native memory, CPU, FD and file limits apply inside process
+ok 33 - native memory, CPU, FD and file limits apply inside process
+  ---
+  duration_ms: 61.450609
+  type: 'test'
+  ...
+# Subtest: native fork denial is kernel enforced
+ok 34 - native fork denial is kernel enforced
+  ---
+  duration_ms: 70.546942
+  type: 'test'
+  ...
+# Subtest: provider independent observation MAC forgery and nonce replay are rejected
+ok 35 - provider independent observation MAC forgery and nonce replay are rejected
+  ---
+  duration_ms: 92.623311
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4118.698549
