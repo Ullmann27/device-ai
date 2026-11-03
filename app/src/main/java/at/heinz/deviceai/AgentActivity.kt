@@ -3122,10 +3122,15 @@ class AgentActivity : Activity() {
                         turn.grounded -> at.heinz.deviceai.learning.ContinuumBaselineSource.MEMORY
                         else -> at.heinz.deviceai.learning.ContinuumBaselineSource.NONE
                     },turn.memoryIds,archiveHit?.source?.id?.takeIf { archiveAnswer!=null })
-                val shown=runCatching {
-                    at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,
-                        request.take(512),baseline).outcome
-                }.getOrDefault(baseline)
+                // H1: EWM2 brain, then the temporal memory specialist (#371); both owner-switched,
+                // default OFF; each failing stage keeps its input outcome.
+                val nowMs=System.currentTimeMillis()
+                val shown=at.heinz.deviceai.cognitive.ChatSpecialistChain.run(baseline,
+                    brain={ b -> at.heinz.deviceai.learning.ContinuumBrainBridge.decide(filesDir,core,requestSessionId,
+                        request.take(512),b).outcome },
+                    temporal={ b -> at.heinz.deviceai.learning.ContinuumTemporalMemorySpecialist.decide(filesDir,core,
+                        request.take(512),b,working=at.heinz.deviceai.cognitive.ChatSpecialistChain.workingTurns(
+                            localConversationContext.priorUserTurns(requestSessionId),nowMs),nowMillis=nowMs).outcome })
                 Triple(Triple(shown.answer,shown.evidenceLine,shown.grounded),
                     cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)
             }
