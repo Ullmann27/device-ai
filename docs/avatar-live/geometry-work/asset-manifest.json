@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "asset": "jarvis-research-v1.glb",
-  "sha256": "50cb34627384432d3f6744b924c250807def02c892d8336645dac7845a029d28",
-  "bytes": 8697044,
+  "sha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
+  "bytes": 8697048,
   "coordinateSystem": {
     "up": "+Y",
     "front": "+Z",
@@ -319,9 +319,9 @@
     "headPass": true,
     "totalPass": true
   },
-  "buildSourceCommit": "e9c7f9feb7b63eb10db5c83e8509b60dc502c19a",
+  "buildSourceCommit": "9633d4e9aab997580bc0be31f20e7e10479f1433",
   "builderSha256": {
-    "build_bust.py": "ac95f8069f09d281b4cf48235442755798bf9e8b87391b868e9c611f1b1cefce",
+    "build_bust.py": "33222fd106972cafae35d8f9784cfd76dca64976da8361fe90134c38cf01777d",
     "export_glb.py": "f15693ce5b2e398aa989b76308de497d65434f458d8f9143495adc31da056f34"
   }
 }

@@ -1,6 +1,6 @@
 {
   "asset": "/workspace/continuum-jarvis3d/assets/avatar/jarvis-runtime-v1.glb",
-  "sha256": "5278f398f784c8c6129d87fe447ab85e0c3e74618469fc9b8d3f73b748df4c31",
+  "sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
   "validatorVersion": "2.0.0-dev.3.10",
   "runtimeMode": true,
   "checks": [
@@ -69,10 +69,10 @@
       "pass": true,
       "details": {
         "name": "SIL",
-        "changedVertices": 1805,
+        "changedVertices": 1783,
         "maxDeltaMetres": 0.00027493122428361876,
-        "positiveX": 877,
-        "negativeX": 877
+        "positiveX": 866,
+        "negativeX": 866
       }
     },
     {
@@ -80,10 +80,10 @@
       "pass": true,
       "details": {
         "name": "PP",
-        "changedVertices": 2141,
+        "changedVertices": 2123,
         "maxDeltaMetres": 0.004825197318544966,
-        "positiveX": 1036,
-        "negativeX": 1036
+        "positiveX": 1027,
+        "negativeX": 1027
       }
     },
     {
@@ -91,10 +91,10 @@
       "pass": true,
       "details": {
         "name": "FF",
-        "changedVertices": 3607,
+        "changedVertices": 3381,
         "maxDeltaMetres": 0.00263675990347871,
-        "positiveX": 1745,
-        "negativeX": 1746
+        "positiveX": 1635,
+        "negativeX": 1636
       }
     },
     {
@@ -102,10 +102,10 @@
       "pass": true,
       "details": {
         "name": "TH",
-        "changedVertices": 3538,
+        "changedVertices": 3340,
         "maxDeltaMetres": 0.007138033488030183,
-        "positiveX": 1715,
-        "negativeX": 1714
+        "positiveX": 1615,
+        "negativeX": 1616
       }
     },
     {
@@ -113,10 +113,10 @@
       "pass": true,
       "details": {
         "name": "DD",
-        "changedVertices": 3602,
+        "changedVertices": 3386,
         "maxDeltaMetres": 0.009695727818228932,
-        "positiveX": 1748,
-        "negativeX": 1747
+        "positiveX": 1639,
+        "negativeX": 1640
       }
     },
     {
@@ -124,10 +124,10 @@
       "pass": true,
       "details": {
         "name": "KK",
-        "changedVertices": 3546,
+        "changedVertices": 3337,
         "maxDeltaMetres": 0.011687099370357367,
-        "positiveX": 1721,
-        "negativeX": 1720
+        "positiveX": 1616,
+        "negativeX": 1616
       }
     },
     {
@@ -135,10 +135,10 @@
       "pass": true,
       "details": {
         "name": "CH",
-        "changedVertices": 3539,
+        "changedVertices": 3347,
         "maxDeltaMetres": 0.006106210808680488,
-        "positiveX": 1717,
-        "negativeX": 1717
+        "positiveX": 1621,
+        "negativeX": 1621
       }
     },
     {
@@ -146,10 +146,10 @@
       "pass": true,
       "details": {
         "name": "SS",
-        "changedVertices": 2509,
+        "changedVertices": 2381,
         "maxDeltaMetres": 0.0034104084359681815,
-        "positiveX": 1210,
-        "negativeX": 1210
+        "positiveX": 1146,
+        "negativeX": 1146
       }
     },
     {
@@ -157,10 +157,10 @@
       "pass": true,
       "details": {
         "name": "NN",
-        "changedVertices": 3642,
+        "changedVertices": 3398,
         "maxDeltaMetres": 0.004254902892666682,
-        "positiveX": 1763,
-        "negativeX": 1763
+        "positiveX": 1644,
+        "negativeX": 1644
       }
     },
     {
@@ -168,10 +168,10 @@
       "pass": true,
       "details": {
         "name": "RR",
-        "changedVertices": 3563,
+        "changedVertices": 3357,
         "maxDeltaMetres": 0.009185790095349266,
-        "positiveX": 1727,
-        "negativeX": 1727
+        "positiveX": 1625,
+        "negativeX": 1625
       }
     },
     {
@@ -179,10 +179,10 @@
       "pass": true,
       "details": {
         "name": "AA",
-        "changedVertices": 3619,
+        "changedVertices": 3399,
         "maxDeltaMetres": 0.026442508723877333,
-        "positiveX": 1756,
-        "negativeX": 1756
+        "positiveX": 1646,
+        "negativeX": 1646
       }
     },
     {
@@ -190,10 +190,10 @@
       "pass": true,
       "details": {
         "name": "E",
-        "changedVertices": 3605,
+        "changedVertices": 3395,
         "maxDeltaMetres": 0.013804460783870048,
-        "positiveX": 1749,
-        "negativeX": 1749
+        "positiveX": 1644,
+        "negativeX": 1644
       }
     },
     {
@@ -201,10 +201,10 @@
       "pass": true,
       "details": {
         "name": "I",
-        "changedVertices": 3594,
+        "changedVertices": 3381,
         "maxDeltaMetres": 0.010927173460432602,
-        "positiveX": 1744,
-        "negativeX": 1743
+        "positiveX": 1637,
+        "negativeX": 1637
       }
     },
     {
@@ -212,10 +212,10 @@
       "pass": true,
       "details": {
         "name": "O",
-        "changedVertices": 3582,
+        "changedVertices": 3369,
         "maxDeltaMetres": 0.016432515343079428,
-        "positiveX": 1737,
-        "negativeX": 1736
+        "positiveX": 1630,
+        "negativeX": 1630
       }
     },
     {
@@ -223,10 +223,10 @@
       "pass": true,
       "details": {
         "name": "U",
-        "changedVertices": 3554,
+        "changedVertices": 3353,
         "maxDeltaMetres": 0.014510764989640707,
-        "positiveX": 1722,
-        "negativeX": 1723
+        "positiveX": 1622,
+        "negativeX": 1622
       }
     },
     {
@@ -289,10 +289,10 @@
       "pass": true,
       "details": {
         "name": "JawOpen",
-        "changedVertices": 3560,
+        "changedVertices": 3349,
         "maxDeltaMetres": 0.03094476793591258,
-        "positiveX": 1727,
-        "negativeX": 1728
+        "positiveX": 1622,
+        "negativeX": 1622
       }
     },
     {
@@ -316,10 +316,10 @@
       "pass": true,
       "details": {
         "name": "SIL",
-        "changedVertices": 777,
+        "changedVertices": 756,
         "maxDeltaMetres": 0.00024683609534153475,
-        "positiveX": 376,
-        "negativeX": 401
+        "positiveX": 373,
+        "negativeX": 383
       }
     },
     {
@@ -327,10 +327,10 @@
       "pass": true,
       "details": {
         "name": "PP",
-        "changedVertices": 996,
+        "changedVertices": 957,
         "maxDeltaMetres": 0.004623579832114917,
-        "positiveX": 500,
-        "negativeX": 496
+        "positiveX": 482,
+        "negativeX": 475
       }
     },
     {
@@ -338,10 +338,10 @@
       "pass": true,
       "details": {
         "name": "FF",
-        "changedVertices": 2274,
+        "changedVertices": 2027,
         "maxDeltaMetres": 0.0025969828472001927,
-        "positiveX": 1159,
-        "negativeX": 1115
+        "positiveX": 1045,
+        "negativeX": 982
       }
     },
     {
@@ -349,10 +349,10 @@
       "pass": true,
       "details": {
         "name": "TH",
-        "changedVertices": 2271,
+        "changedVertices": 2039,
         "maxDeltaMetres": 0.007077525431509242,
-        "positiveX": 1159,
-        "negativeX": 1112
+        "positiveX": 1050,
+        "negativeX": 989
       }
     },
     {
@@ -360,10 +360,10 @@
       "pass": true,
       "details": {
         "name": "DD",
-        "changedVertices": 2301,
+        "changedVertices": 2069,
         "maxDeltaMetres": 0.009667652703311127,
-        "positiveX": 1177,
-        "negativeX": 1124
+        "positiveX": 1068,
+        "negativeX": 1001
       }
     },
     {
@@ -371,10 +371,10 @@
       "pass": true,
       "details": {
         "name": "KK",
-        "changedVertices": 2295,
+        "changedVertices": 2061,
         "maxDeltaMetres": 0.011570720556697835,
-        "positiveX": 1171,
-        "negativeX": 1124
+        "positiveX": 1061,
+        "negativeX": 1000
       }
     },
     {
@@ -382,10 +382,10 @@
       "pass": true,
       "details": {
         "name": "CH",
-        "changedVertices": 2286,
+        "changedVertices": 2046,
         "maxDeltaMetres": 0.005948283910982984,
-        "positiveX": 1168,
-        "negativeX": 1118
+        "positiveX": 1052,
+        "negativeX": 994
       }
     },
     {
@@ -393,10 +393,10 @@
       "pass": true,
       "details": {
         "name": "SS",
-        "changedVertices": 1152,
+        "changedVertices": 1063,
         "maxDeltaMetres": 0.003399368214696948,
-        "positiveX": 595,
-        "negativeX": 557
+        "positiveX": 542,
+        "negativeX": 521
       }
     },
     {
@@ -404,10 +404,10 @@
       "pass": true,
       "details": {
         "name": "NN",
-        "changedVertices": 2292,
+        "changedVertices": 2040,
         "maxDeltaMetres": 0.0042416374607588845,
-        "positiveX": 1168,
-        "negativeX": 1124
+        "positiveX": 1051,
+        "negativeX": 989
       }
     },
     {
@@ -415,10 +415,10 @@
       "pass": true,
       "details": {
         "name": "RR",
-        "changedVertices": 2295,
+        "changedVertices": 2058,
         "maxDeltaMetres": 0.009060207654087018,
-        "positiveX": 1168,
-        "negativeX": 1127
+        "positiveX": 1057,
+        "negativeX": 1001
       }
     },
     {
@@ -426,10 +426,10 @@
       "pass": true,
       "details": {
         "name": "AA",
-        "changedVertices": 2328,
+        "changedVertices": 2093,
         "maxDeltaMetres": 0.026255750523004946,
-        "positiveX": 1195,
-        "negativeX": 1133
+        "positiveX": 1078,
+        "negativeX": 1015
       }
     },
     {
@@ -437,10 +437,10 @@
       "pass": true,
       "details": {
         "name": "E",
-        "changedVertices": 2319,
+        "changedVertices": 2080,
         "maxDeltaMetres": 0.013756141058057846,
-        "positiveX": 1180,
-        "negativeX": 1139
+        "positiveX": 1069,
+        "negativeX": 1011
       }
     },
     {
@@ -448,10 +448,10 @@
       "pass": true,
       "details": {
         "name": "I",
-        "changedVertices": 2292,
+        "changedVertices": 2053,
         "maxDeltaMetres": 0.0108281557593891,
-        "positiveX": 1174,
-        "negativeX": 1118
+        "positiveX": 1060,
+        "negativeX": 993
       }
     },
     {
@@ -459,10 +459,10 @@
       "pass": true,
       "details": {
         "name": "O",
-        "changedVertices": 2310,
+        "changedVertices": 2076,
         "maxDeltaMetres": 0.01617658743969937,
-        "positiveX": 1183,
-        "negativeX": 1127
+        "positiveX": 1071,
+        "negativeX": 1005
       }
     },
     {
@@ -470,10 +470,10 @@
       "pass": true,
       "details": {
         "name": "U",
-        "changedVertices": 2271,
+        "changedVertices": 2037,
         "maxDeltaMetres": 0.013620531155457723,
-        "positiveX": 1165,
-        "negativeX": 1106
+        "positiveX": 1051,
+        "negativeX": 986
       }
     },
     {
@@ -536,10 +536,10 @@
       "pass": true,
       "details": {
         "name": "JawOpen",
-        "changedVertices": 2307,
+        "changedVertices": 2075,
         "maxDeltaMetres": 0.030848345363755473,
-        "positiveX": 1183,
-        "negativeX": 1124
+        "positiveX": 1069,
+        "negativeX": 1006
       }
     },
     {
@@ -561,108 +561,108 @@
     "Face": [
       {
         "name": "SIL",
-        "changedVertices": 1805,
+        "changedVertices": 1783,
         "maxDeltaMetres": 0.00027493122428361876,
-        "positiveX": 877,
-        "negativeX": 877
+        "positiveX": 866,
+        "negativeX": 866
       },
       {
         "name": "PP",
-        "changedVertices": 2141,
+        "changedVertices": 2123,
         "maxDeltaMetres": 0.004825197318544966,
-        "positiveX": 1036,
-        "negativeX": 1036
+        "positiveX": 1027,
+        "negativeX": 1027
       },
       {
         "name": "FF",
-        "changedVertices": 3607,
+        "changedVertices": 3381,
         "maxDeltaMetres": 0.00263675990347871,
-        "positiveX": 1745,
-        "negativeX": 1746
+        "positiveX": 1635,
+        "negativeX": 1636
       },
       {
         "name": "TH",
-        "changedVertices": 3538,
+        "changedVertices": 3340,
         "maxDeltaMetres": 0.007138033488030183,
-        "positiveX": 1715,
-        "negativeX": 1714
+        "positiveX": 1615,
+        "negativeX": 1616
       },
       {
         "name": "DD",
-        "changedVertices": 3602,
+        "changedVertices": 3386,
         "maxDeltaMetres": 0.009695727818228932,
-        "positiveX": 1748,
-        "negativeX": 1747
+        "positiveX": 1639,
+        "negativeX": 1640
       },
       {
         "name": "KK",
-        "changedVertices": 3546,
+        "changedVertices": 3337,
         "maxDeltaMetres": 0.011687099370357367,
-        "positiveX": 1721,
-        "negativeX": 1720
+        "positiveX": 1616,
+        "negativeX": 1616
       },
       {
         "name": "CH",
-        "changedVertices": 3539,
+        "changedVertices": 3347,
         "maxDeltaMetres": 0.006106210808680488,
-        "positiveX": 1717,
-        "negativeX": 1717
+        "positiveX": 1621,
+        "negativeX": 1621
       },
       {
         "name": "SS",
-        "changedVertices": 2509,
+        "changedVertices": 2381,
         "maxDeltaMetres": 0.0034104084359681815,
-        "positiveX": 1210,
-        "negativeX": 1210
+        "positiveX": 1146,
+        "negativeX": 1146
       },
       {
         "name": "NN",
-        "changedVertices": 3642,
+        "changedVertices": 3398,
         "maxDeltaMetres": 0.004254902892666682,
-        "positiveX": 1763,
-        "negativeX": 1763
+        "positiveX": 1644,
+        "negativeX": 1644
       },
       {
         "name": "RR",
-        "changedVertices": 3563,
+        "changedVertices": 3357,
         "maxDeltaMetres": 0.009185790095349266,
-        "positiveX": 1727,
-        "negativeX": 1727
+        "positiveX": 1625,
+        "negativeX": 1625
       },
       {
         "name": "AA",
-        "changedVertices": 3619,
+        "changedVertices": 3399,
         "maxDeltaMetres": 0.026442508723877333,
-        "positiveX": 1756,
-        "negativeX": 1756
+        "positiveX": 1646,
+        "negativeX": 1646
       },
       {
         "name": "E",
-        "changedVertices": 3605,
+        "changedVertices": 3395,
         "maxDeltaMetres": 0.013804460783870048,
-        "positiveX": 1749,
-        "negativeX": 1749
+        "positiveX": 1644,
+        "negativeX": 1644
       },
       {
         "name": "I",
-        "changedVertices": 3594,
+        "changedVertices": 3381,
         "maxDeltaMetres": 0.010927173460432602,
-        "positiveX": 1744,
-        "negativeX": 1743
+        "positiveX": 1637,
+        "negativeX": 1637
       },
       {
         "name": "O",
-        "changedVertices": 3582,
+        "changedVertices": 3369,
         "maxDeltaMetres": 0.016432515343079428,
-        "positiveX": 1737,
-        "negativeX": 1736
+        "positiveX": 1630,
+        "negativeX": 1630
       },
       {
         "name": "U",
-        "changedVertices": 3554,
+        "changedVertices": 3353,
         "maxDeltaMetres": 0.014510764989640707,
-        "positiveX": 1722,
-        "negativeX": 1723
+        "positiveX": 1622,
+        "negativeX": 1622
       },
       {
         "name": "BlinkLeft",
@@ -701,117 +701,117 @@
       },
       {
         "name": "JawOpen",
-        "changedVertices": 3560,
+        "changedVertices": 3349,
         "maxDeltaMetres": 0.03094476793591258,
-        "positiveX": 1727,
-        "negativeX": 1728
+        "positiveX": 1622,
+        "negativeX": 1622
       }
     ],
     "NeuralThreads": [
       {
         "name": "SIL",
-        "changedVertices": 777,
+        "changedVertices": 756,
         "maxDeltaMetres": 0.00024683609534153475,
-        "positiveX": 376,
-        "negativeX": 401
+        "positiveX": 373,
+        "negativeX": 383
       },
       {
         "name": "PP",
-        "changedVertices": 996,
+        "changedVertices": 957,
         "maxDeltaMetres": 0.004623579832114917,
-        "positiveX": 500,
-        "negativeX": 496
+        "positiveX": 482,
+        "negativeX": 475
       },
       {
         "name": "FF",
-        "changedVertices": 2274,
+        "changedVertices": 2027,
         "maxDeltaMetres": 0.0025969828472001927,
-        "positiveX": 1159,
-        "negativeX": 1115
+        "positiveX": 1045,
+        "negativeX": 982
       },
       {
         "name": "TH",
-        "changedVertices": 2271,
+        "changedVertices": 2039,
         "maxDeltaMetres": 0.007077525431509242,
-        "positiveX": 1159,
-        "negativeX": 1112
+        "positiveX": 1050,
+        "negativeX": 989
       },
       {
         "name": "DD",
-        "changedVertices": 2301,
+        "changedVertices": 2069,
         "maxDeltaMetres": 0.009667652703311127,
-        "positiveX": 1177,
-        "negativeX": 1124
+        "positiveX": 1068,
+        "negativeX": 1001
       },
       {
         "name": "KK",
-        "changedVertices": 2295,
+        "changedVertices": 2061,
         "maxDeltaMetres": 0.011570720556697835,
-        "positiveX": 1171,
-        "negativeX": 1124
+        "positiveX": 1061,
+        "negativeX": 1000
       },
       {
         "name": "CH",
-        "changedVertices": 2286,
+        "changedVertices": 2046,
         "maxDeltaMetres": 0.005948283910982984,
-        "positiveX": 1168,
-        "negativeX": 1118
+        "positiveX": 1052,
+        "negativeX": 994
       },
       {
         "name": "SS",
-        "changedVertices": 1152,
+        "changedVertices": 1063,
         "maxDeltaMetres": 0.003399368214696948,
-        "positiveX": 595,
-        "negativeX": 557
+        "positiveX": 542,
+        "negativeX": 521
       },
       {
         "name": "NN",
-        "changedVertices": 2292,
+        "changedVertices": 2040,
         "maxDeltaMetres": 0.0042416374607588845,
-        "positiveX": 1168,
-        "negativeX": 1124
+        "positiveX": 1051,
+        "negativeX": 989
       },
       {
         "name": "RR",
-        "changedVertices": 2295,
+        "changedVertices": 2058,
         "maxDeltaMetres": 0.009060207654087018,
-        "positiveX": 1168,
-        "negativeX": 1127
+        "positiveX": 1057,
+        "negativeX": 1001
       },
       {
         "name": "AA",
-        "changedVertices": 2328,
+        "changedVertices": 2093,
         "maxDeltaMetres": 0.026255750523004946,
-        "positiveX": 1195,
-        "negativeX": 1133
+        "positiveX": 1078,
+        "negativeX": 1015
       },
       {
         "name": "E",
-        "changedVertices": 2319,
+        "changedVertices": 2080,
         "maxDeltaMetres": 0.013756141058057846,
-        "positiveX": 1180,
-        "negativeX": 1139
+        "positiveX": 1069,
+        "negativeX": 1011
       },
       {
         "name": "I",
-        "changedVertices": 2292,
+        "changedVertices": 2053,
         "maxDeltaMetres": 0.0108281557593891,
-        "positiveX": 1174,
-        "negativeX": 1118
+        "positiveX": 1060,
+        "negativeX": 993
       },
       {
         "name": "O",
-        "changedVertices": 2310,
+        "changedVertices": 2076,
         "maxDeltaMetres": 0.01617658743969937,
-        "positiveX": 1183,
-        "negativeX": 1127
+        "positiveX": 1071,
+        "negativeX": 1005
       },
       {
         "name": "U",
-        "changedVertices": 2271,
+        "changedVertices": 2037,
         "maxDeltaMetres": 0.013620531155457723,
-        "positiveX": 1165,
-        "negativeX": 1106
+        "positiveX": 1051,
+        "negativeX": 986
       },
       {
         "name": "BlinkLeft",
@@ -850,10 +850,10 @@
       },
       {
         "name": "JawOpen",
-        "changedVertices": 2307,
+        "changedVertices": 2075,
         "maxDeltaMetres": 0.030848345363755473,
-        "positiveX": 1183,
-        "negativeX": 1124
+        "positiveX": 1069,
+        "negativeX": 1006
       }
     ]
   },
