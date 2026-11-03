@@ -100,6 +100,10 @@ class IndependentCodingPlanningDeliveryUiTest {
     @Test fun modelWeightSwapAfterWorkerCompletionBeforeUiDeliveryDropsResult() = withRun({_,r->
         r.loadedModel=r.loadedModel!!.copy(sha256="b".repeat(64))
     },false)
+    @Test fun pauseAndReturnAfterCompletionCannotReviveOldForegroundEpoch() = withRun({a,_->
+        AgentActivity::class.java.getDeclaredMethod("onPause").apply {isAccessible=true}.invoke(a)
+        set(a,"foregroundLearningActive",true)
+    },false)
     @Test fun finishingActivityAfterWorkerCompletionDropsResult() = withRun({a,_->a.finish()},false)
     @Test fun structuredToolEventCannotOpenDraftOrDispatch() = withRun({_,_->},false,malicious=true)
 }
