@@ -28,3 +28,10 @@ JSON-Escape-Überlauf (M5): per Sonde nachgewiesen (8.000 Rohzeichen → 8.064 k
 - S4 Prompt-Injection-Guard und S5 Limitwächter: nicht umgesetzt (Abbruch wegen Nutzungslimit); RED-Entwurf nur auf der Box.
 
 Details: `docs/research/omega/M5-INTEGRATION-REPAIR-HANDOFF-20261103.md`.
+
+## Nachtrag S4 – Schutz gegen eingeschleuste Befehle (Code-HEAD `afa2c7e5`)
+- RED `2254d6ef`: `ExternalContentInjectionGuardTest` 3 Tests, 2 rot (`injectedDeleteInAToolResultNeverReachesExecution`, `externalContentIsMarkedUntrustedInTheModelContext`).
+- Fix `afa2c7e5`: `ExternalContentActionGuard` an der Werkzeug-Schnittstelle von `BoundedAgent`; Tool-Beobachtungen werden im Modellkontext als nicht vertrauenswürdig markiert.
+- GREEN: `ExternalContentInjectionGuardTest` 4/4.
+- Volle Regression auf `afa2c7e5`: JUnit 1781 Tests, 0 Fehler, 5 übersprungen; Node 367 Tests, 364 bestanden, 0 Fehler, 3 übersprungen; Lint "No issues found".
+- Offen (bei Limit-Abschluss nicht begonnen): Kürzung der Werkzeug-Ausgabe auf ~3900 Zeichen; Einbau des Freigabe-/S4-Gates in ChiefWorkerPool (HAUPT) und Lumo-Aufgabenschleife.
