@@ -19,12 +19,14 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.android.controller.ActivityController
 import java.util.concurrent.TimeUnit
 
 /** Actual pane builder/navigation methods; a plain Activity window avoids unrelated full app startup. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class IndependentVisibleAvatarUiTest {
     private fun set(a:AgentActivity,n:String,v:Any?)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.set(a,v)
     private fun get(a:AgentActivity,n:String)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.get(a)
@@ -126,10 +128,12 @@ class IndependentVisibleAvatarUiTest {
                 fun describe(v:View)="${v.javaClass.simpleName}: shown=${v.isShown} attached=${v.isAttachedToWindow} window=${v.windowVisibility} visibility=${v.visibility}"
                 println("HOST_DIAGNOSTIC $label hostFinishing=${f.host.get().isFinishing} hostFocus=${f.host.get().hasWindowFocus()} host=${describe(f.host.get().window.decorView)} pane=${describe(f.pane)} home=${describe(f.home)} chat=${describe(f.chat)} head=${describe(f.head)}")
             }
-            snapshot("before-chat");chat(f,true);snapshot("after-reparent")
+            snapshot("before-chat");assertEquals("Fixture must have a real visible host window",View.VISIBLE,f.head.windowVisibility)
+            chat(f,true);snapshot("after-reparent")
             shadowOf(Looper.getMainLooper()).idleFor(100,TimeUnit.MILLISECONDS);snapshot("after-idle")
             val state="shown=${f.head.isShown} attached=${f.head.isAttachedToWindow} window=${f.head.windowVisibility} motion=${f.head.sampleMotion()} pending=${field(f.head,"framePending")} foreground=${field(f.head,"foregroundActive")} allowed=${field(f.head,"motionAllowed") }"
             println("VISIBILITY_DIAGNOSTIC $state")
+            assertEquals("Moved head must remain in visible window",View.VISIBLE,f.head.windowVisibility)
             assertTrue("Head must be shown: $state",f.head.isShown);assertTrue("Visible clock must advance: $state",f.head.sampleMotion().callbackCount>0)
             invoke(f.a,"onPause")
             val stopped=f.head.sampleMotion().callbackCount

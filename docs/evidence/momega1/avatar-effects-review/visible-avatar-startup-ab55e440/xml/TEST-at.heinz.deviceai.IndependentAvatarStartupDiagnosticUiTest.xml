@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentAvatarStartupDiagnosticUiTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-11-03T21:55:41" hostname="b354f2cb821b" time="4.746">
+  <properties/>
+  <testcase name="realActivityWindowAndChatClockHavePositiveLifecycleControls" classname="at.heinz.deviceai.IndependentAvatarStartupDiagnosticUiTest" time="4.746">
+    <failure message="java.lang.AssertionError: Real startup window must be visible before testing frame progression expected:&lt;0&gt; but was:&lt;8&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Real startup window must be visible before testing frame progression expected:&lt;0&gt; but was:&lt;8&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.IndependentAvatarStartupDiagnosticUiTest.realActivityWindowAndChatClockHavePositiveLifecycleControls(IndependentAvatarStartupDiagnosticUiTest.kt:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <system-out><![CDATA[FULL_STARTUP_HOME decor=8 head=8 shown=true MotionSample(callbackCount=0, drawCount=0, phase=0.4, reason=Avatar: View derzeit unsichtbar.)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
