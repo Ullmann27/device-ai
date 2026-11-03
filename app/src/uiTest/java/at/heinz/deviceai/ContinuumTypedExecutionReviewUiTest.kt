@@ -92,6 +92,7 @@ class ContinuumTypedExecutionReviewUiTest {
             val dialog = clickRun(controller.get())
             prefs.edit().putString("typed_coding_prepared_commit_v1", "b".repeat(40)).commit()
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
             assertNull("A stale review must not approve a replacement commit", shadowOf(app).nextStartedService)
             assertNull(prefs.getString("job_id", null))
         } finally { controller.pause().stop().destroy() }
@@ -102,6 +103,7 @@ class ContinuumTypedExecutionReviewUiTest {
         val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
         try {
             clickRun(controller.get()).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
             assertNotNull(shadowOf(app).nextStartedService)
             assertNull("RUN must consume the prepared authorization", prefs.getString("typed_coding_prepared_id_v1", null))
             assertNull(prefs.getString(preparedJson, null))
