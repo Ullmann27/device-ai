@@ -24,6 +24,13 @@ class AvatarControllerTest {
             .forEach { (h, a) -> assertEquals(h, a, AvatarController.activityOf(h)) }
     }
 
+    @Test fun everyHologramStateHasAnAvatarActivity() {
+        at.heinz.deviceai.ContinuumHologramView.State.values().forEach { h ->
+            val a = AvatarController.activityOf(h.name)
+            assertEquals(h.name, h.name == "READY", a == AvatarActivity.IDLE)
+        }
+    }
+
     @Test fun forwardsOnlyRealStateChanges() {
         val r = Recorder(); val c = AvatarController(r)
         c.update(AvatarActivity.THINKING, null); c.update(AvatarActivity.THINKING, null)
