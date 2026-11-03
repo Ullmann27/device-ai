@@ -1,0 +1,77 @@
+{
+  "id": "D17-schema",
+  "mode": "patch",
+  "publicChallenge": "b1bca66f54f80ef627ab17201e29335ee3210f86",
+  "fixture": {
+    "base": "aa5a76dfb7bc0bb3cf153eb3ec9a0bbf02930bb8",
+    "red": "873f0492135fb8b1ce16b2ea9afb2a1136fe2c16",
+    "green": "68a84bbe5e0544da01e2d17ac31efb42494a5793",
+    "testPath": "tests/sum.test.mjs",
+    "testSha256": "814abae84ee7b83e6fb3f417408bc919e31083ddec2ddc49a9a91e6f12b91c76"
+  },
+  "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+  "receipt": {
+    "schema": "forged",
+    "version": 1,
+    "repo": "Ullmann27/device-ai",
+    "baseSha": "aa5a76dfb7bc0bb3cf153eb3ec9a0bbf02930bb8",
+    "redSha": "873f0492135fb8b1ce16b2ea9afb2a1136fe2c16",
+    "greenSha": "68a84bbe5e0544da01e2d17ac31efb42494a5793",
+    "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+    "targetTests": [
+      "sum.adds_two"
+    ],
+    "red": {
+      "sha": "873f0492135fb8b1ce16b2ea9afb2a1136fe2c16",
+      "command": "node-redgreen",
+      "executed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "failingTests": [
+        "sum.adds_two"
+      ],
+      "passedTargets": [],
+      "exitCode": 1,
+      "timedOut": false,
+      "cancelled": false
+    },
+    "green": {
+      "sha": "68a84bbe5e0544da01e2d17ac31efb42494a5793",
+      "command": "node-redgreen",
+      "executed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "failingTests": [],
+      "passedTargets": [
+        "sum.adds_two"
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "cancelled": false
+    },
+    "approvedForMerge": false,
+    "installed": false,
+    "deviceVerified": false
+  },
+  "result": {
+    "schema": "continuum-ccc1-redgreen-attestation",
+    "version": 1,
+    "receiptSha256": "02ef7ad11c1648a9205acd95d8cfed3f72f94aa9bf244de5cf7be8f416d63a0d",
+    "verdict": "VERIFIED",
+    "reasons": [],
+    "command": "node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)",
+    "patchSha256": "37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce",
+    "red": {
+      "xmlSha256": "33f7820acd928345f12b9306ba7da38f201fe333fb141499a26e67d9b9b73d52",
+      "exitCode": 1,
+      "executed": 2,
+      "failed": 1
+    },
+    "green": {
+      "xmlSha256": "a86cfc5138c539039e9fbec420f630b9f97e9b038ea4dd0c352eb474b03f7d95",
+      "exitCode": 0,
+      "executed": 3,
+      "failed": 0
+    }
+  }
+}
