@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumHologramMotionUiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:47:51" hostname="b354f2cb821b" time="1.013">
+  <properties/>
+  <testcase name="deviceMotionDiagnosticNeverReportsLiveBeforeForegroundActivation" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.065"/>
+  <testcase name="realFrameClockChangesPhoneAndFoldPixelsWithoutInjectingPhase" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.692"/>
+  <testcase name="renderingAtRestDoesNotByItselfAdvanceTheOrbitClock" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.05"/>
+  <testcase name="thermalPressureStopsAndRecoversTheSameClock" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.048"/>
+  <testcase name="foregroundAndReducedMotionHaveOneBoundedLifecycleClock" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.044"/>
+  <testcase name="differentOrbitalPhasesActuallyChangeRenderedPixels" classname="at.heinz.deviceai.ContinuumHologramMotionUiTest" time="0.112"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
