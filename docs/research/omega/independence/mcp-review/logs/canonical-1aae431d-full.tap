@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: D10: real HTTP -> fixed subprocess -> canonical CCC1 and actual persisted Kotlin profiles
+ok 1 - D10: real HTTP -> fixed subprocess -> canonical CCC1 and actual persisted Kotlin profiles
+  ---
+  duration_ms: 2173.218282
+  type: 'test'
+  ...
+# Subtest: D01/D08/D09/D10: real service canonical reader uses actual20 profiles and immutable negative evidence
+ok 2 - D01/D08/D09/D10: real service canonical reader uses actual20 profiles and immutable negative evidence
+  ---
+  duration_ms: 2793.450236
+  type: 'test'
+  ...
+# Subtest: D03/D07: snapshot status/private nested fields cannot override canonical abstention or leak
+ok 3 - D03/D07: snapshot status/private nested fields cannot override canonical abstention or leak
+  ---
+  duration_ms: 1458.019725
+  type: 'test'
+  ...
+# Subtest: D02/D03: revoked owner grant and changed source never reuse prior successful read
+ok 4 - D02/D03: revoked owner grant and changed source never reuse prior successful read
+  ---
+  duration_ms: 1192.628679
+  type: 'test'
+  ...
+# Subtest: D03/D08: tampered metrics/hash/journal binding are refused
+ok 5 - D03/D08: tampered metrics/hash/journal binding are refused
+  ---
+  duration_ms: 398.611328
+  type: 'test'
+  ...
+# Subtest: D04/D05/D06: evidence, grant, key, journal and parent links never become arbitrary reads
+ok 6 - D04/D05/D06: evidence, grant, key, journal and parent links never become arbitrary reads
+  ---
+  duration_ms: 1558.098348
+  type: 'test'
+  ...
+# Subtest: D03: fabricated confirmed journal verdict lacks an independent receipt and is refused
+ok 7 - D03: fabricated confirmed journal verdict lacks an independent receipt and is refused
+  ---
+  duration_ms: 315.622703
+  type: 'test'
+  ...
+# Subtest: D01/B02: corrupted delivery/descriptor and invalid page bounds fail closed
+ok 8 - D01/B02: corrupted delivery/descriptor and invalid page bounds fail closed
+  ---
+  duration_ms: 252.929045
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10293.288053

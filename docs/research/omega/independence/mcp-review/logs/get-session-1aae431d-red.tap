@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: P09: unknown GET sessions return404 before the unsupported-SSE405 response
+not ok 1 - P09: unknown GET sessions return404 before the unsupported-SSE405 response
+  ---
+  duration_ms: 24.047319
+  type: 'test'
+  location: '/workspace/independence-mcp-review/tools/independence-mcp-review/transport.test.mjs:308:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    405 !== 404
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 404
+  actual: 405
+  operator: 'strictEqual'
+  stack: |-
+    file:///workspace/independence-mcp-review/tools/independence-mcp-review/transport.test.mjs:312:154
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async withServer (file:///workspace/independence-mcp-review/tools/independence-mcp-review/transport.test.mjs:36:5)
+    async TestContext.<anonymous> (file:///workspace/independence-mcp-review/tools/independence-mcp-review/transport.test.mjs:309:3)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 110.217951

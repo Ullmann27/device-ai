@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: P01/P03/P04: actual HTTP initialization, notification, exact read-only discovery and calls
+ok 1 - P01/P03/P04: actual HTTP initialization, notification, exact read-only discovery and calls
+  ---
+  duration_ms: 41.358551
+  type: 'test'
+  ...
+# Subtest: P02: unknown initialization version negotiates supported; invalid subsequent version400
+ok 2 - P02: unknown initialization version negotiates supported; invalid subsequent version400
+  ---
+  duration_ms: 6.685314
+  type: 'test'
+  ...
+# Subtest: A01/A02/A03/A04: bearer checked every request; body/query/session never credentials
+ok 3 - A01/A02/A03/A04: bearer checked every request; body/query/session never credentials
+  ---
+  duration_ms: 12.240429
+  type: 'test'
+  ...
+# Subtest: A05/A06: cross-origin and rebinding names cannot access local read state
+ok 4 - A05/A06: cross-origin and rebinding names cannot access local read state
+  ---
+  duration_ms: 9.684119
+  type: 'test'
+  ...
+# Subtest: P05/P07/A07: no writable/dynamic tool route and no actor-name authorization
+ok 5 - P05/P07/A07: no writable/dynamic tool route and no actor-name authorization
+  ---
+  duration_ms: 19.716291
+  type: 'test'
+  ...
+# Subtest: P06: malformed JSON and invalid RPC objects reject without crashing or reading
+ok 6 - P06: malformed JSON and invalid RPC objects reject without crashing or reading
+  ---
+  duration_ms: 11.169889
+  type: 'test'
+  ...
+# Subtest: P08/P09/A04: cancellation notifications do not cancel tasks; unknown sessions deny
+ok 7 - P08/P09/A04: cancellation notifications do not cancel tasks; unknown sessions deny
+  ---
+  duration_ms: 8.375526
+  type: 'test'
+  ...
+# Subtest: B01: transport media/body limits before reads; valid request still works
+ok 8 - B01: transport media/body limits before reads; valid request still works
+  ---
+  duration_ms: 7.238095
+  type: 'test'
+  ...
+# Subtest: B02/B04: bounded page arguments, forged cursors and unknown fields
+ok 9 - B02/B04: bounded page arguments, forged cursors and unknown fields
+  ---
+  duration_ms: 21.038715
+  type: 'test'
+  ...
+# Subtest: D04: evidence selectors cannot be paths or caller-selected permission
+ok 10 - D04: evidence selectors cannot be paths or caller-selected permission
+  ---
+  duration_ms: 15.606571
+  type: 'test'
+  ...
+# Subtest: B06: backend errors are sanitized instead of publishing key/path/debug details
+ok 11 - B06: backend errors are sanitized instead of publishing key/path/debug details
+  ---
+  duration_ms: 9.001608
+  type: 'test'
+  ...
+# Subtest: B06: oversized and hung canonical views have hard response/time bounds
+ok 12 - B06: oversized and hung canonical views have hard response/time bounds
+  ---
+  duration_ms: 118.050857
+  type: 'test'
+  ...
+# Subtest: B05: bounded session admission and rate limit
+ok 13 - B05: bounded session admission and rate limit
+  ---
+  duration_ms: 13.988987
+  type: 'test'
+  ...
+# Subtest: D01: each call obtains the fresh read projection
+ok 14 - D01: each call obtains the fresh read projection
+  ---
+  duration_ms: 4.065274
+  type: 'test'
+  ...
+# Subtest: B03/B04: real pages are bounded, cursor-bound to tool and session, no duplicate identities
+ok 15 - B03/B04: real pages are bounded, cursor-bound to tool and session, no duplicate identities
+  ---
+  duration_ms: 6.864584
+  type: 'test'
+  ...
+# Subtest: A08/P09: bearer rotation and deletion invalidate existing sessions
+ok 16 - A08/P09: bearer rotation and deletion invalidate existing sessions
+  ---
+  duration_ms: 6.530912
+  type: 'test'
+  ...
+# Subtest: B01/P06: explicit null arguments and malformed UTF-8 cannot become valid calls
+ok 17 - B01/P06: explicit null arguments and malformed UTF-8 cannot become valid calls
+  ---
+  duration_ms: 6.980799
+  type: 'test'
+  ...
+# Subtest: B05/P08: simultaneous reads are bounded; cancellation ends only that read
+ok 18 - B05/P08: simultaneous reads are bounded; cancellation ends only that read
+  ---
+  duration_ms: 6.762651
+  type: 'test'
+  ...
+# Subtest: D08: MCP rejects mismatched evidence content hash instead of forwarding it
+ok 19 - D08: MCP rejects mismatched evidence content hash instead of forwarding it
+  ---
+  duration_ms: 3.753315
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 428.898169
