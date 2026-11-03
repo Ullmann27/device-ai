@@ -14,45 +14,24 @@ object ContinuumHomeScreen {
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
-        val wide = layout.wide
-        val portrait = wide && layout[Slot.WORKERS] != null
         val map = linkedMapOf<Slot, ContinuumElement>(
-            Slot.BRAND to HeaderBrandElement(textScale, large = wide),
+            Slot.BRAND to HeaderBrandElement(textScale, large = layout.wide),
             Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
             Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
             Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
-            Slot.LABEL_CONNECTED to CoreLabelElement(Icon.GLOBE, "VERBUNDEN", { it.core.connected }, textScale, wide, portrait = portrait),
-            Slot.LABEL_LEARNING to CoreLabelElement(Icon.BOOK, "LERNEN", { it.core.learning }, textScale, wide, portrait = portrait),
-            Slot.LABEL_DEVELOPING to CoreLabelElement(Icon.CODE, "ENTWICKELN", { it.core.developing }, textScale, wide, portrait = portrait),
-            Slot.LABEL_THINKING to CoreLabelElement(Icon.BRAIN, "DENKEN", { it.core.thinking }, textScale, wide, mirrored = true, portrait = portrait),
-            Slot.LABEL_ANALYSING to CoreLabelElement(Icon.CHART_UP, "ANALYSIEREN", { it.core.analysing }, textScale, wide, mirrored = true, portrait = portrait),
-            Slot.LABEL_EVOLVING to CoreLabelElement(Icon.ATOM, "EVOLVIEREN", { it.core.evolving }, textScale, wide, mirrored = true, portrait = portrait)
+            Slot.LABEL_THINKING to CockpitActionTile(Icon.CHAT, "Chat", { it.core.thinking }, textScale),
+            Slot.LABEL_ANALYSING to CockpitActionTile(Icon.GLOBE, "Forschung", { it.core.analysing }, textScale),
+            Slot.LABEL_LEARNING to CockpitActionTile(Icon.BOOK, "Lernen", { it.core.learning }, textScale),
+            Slot.LABEL_DEVELOPING to CockpitActionTile(Icon.CODE, "Entwicklung", { it.core.developing }, textScale),
+            Slot.LABEL_CONNECTED to CockpitActionTile(Icon.WIFI, "Verbindung", { it.core.connected }, textScale),
+            Slot.LABEL_EVOLVING to CockpitActionTile(Icon.ATOM, "Lernstatus", { it.core.evolving }, textScale)
         )
-        if (portrait) {
-            map[Slot.MODEL] = PortraitModelCard(textScale)
-            map[Slot.LEARNING] = PortraitLearningCard(textScale)
-            map[Slot.STORAGE] = PortraitStorageCard(textScale)
-            map[Slot.DEVELOPMENT] = PortraitDevelopmentCard(textScale)
-            map[Slot.SYSTEM_STATUS] = PortraitSystemStatusStrip(textScale)
-            map[Slot.SYSTEM_ACTIVITY] = PortraitActivityCard(textScale)
-            map[Slot.WORKERS] = PortraitWorkersCard(textScale)
-            // The portrait reference has NO legacy left rail, top model pill or phone bar.
-        } else if (wide) {
-            map[Slot.MODEL] = WideModelCardElement(textScale)
-            map[Slot.LEARNING] = WideLearningCardElement(textScale)
-            map[Slot.STORAGE] = WideStorageCardElement(textScale)
-            map[Slot.DEVELOPMENT] = WideDevelopmentCardElement(textScale)
-            map[Slot.SYSTEM_STATUS] = SystemStatusElement(textScale)
-            map[Slot.SYSTEM_ACTIVITY] = SystemActivityElement(textScale)
-            map[Slot.MODEL_PILL] = ModelPillElement(textScale)
-            map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
-        } else {
-            map[Slot.MODEL] = ModelStatusCardElement(textScale)
-            map[Slot.LEARNING] = LearningCardElement(textScale)
-            map[Slot.STORAGE] = StorageCardElement(textScale)
-            map[Slot.DEVELOPMENT] = DevelopmentCardElement(textScale)
-            map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
+        for (slot in listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
+            Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)) {
+            if (layout[slot] != null) map[slot] = CockpitMetricCard(slot, textScale, layout.wide)
         }
+        if (layout[Slot.RAIL] != null) map[Slot.RAIL] = RailElement(railNavigation, 0, textScale)
+        if (layout[Slot.NAV] != null) map[Slot.NAV] = BottomNavElement(phoneNavigation, 0, textScale)
         return map
     }
 

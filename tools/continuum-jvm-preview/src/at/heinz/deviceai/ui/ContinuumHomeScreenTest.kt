@@ -25,7 +25,8 @@ class ContinuumHomeScreenTest {
                 assertFalse("cards overlap", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
             }
         }
-        assertEquals(360f / 412f, ContinuumHomeLayout.phone(360f).scale, 1e-6f)
+        // Adaptive design uses fixed dp; the previous scaled-reference assertion is archived in ZETA evidence.
+        assertEquals(1f, ContinuumHomeLayout.phone(360f).scale, 0f)
         assertTrue(ContinuumHomeLayout.isWide(840f, 600f))
         assertFalse(ContinuumHomeLayout.isWide(412f, 900f))
     }

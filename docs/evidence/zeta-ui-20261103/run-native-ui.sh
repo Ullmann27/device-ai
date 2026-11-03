@@ -14,7 +14,7 @@ if [[ ${2:-baseline} == candidate ]]; then
 fi
 git -C "$repo" rev-parse HEAD > "$out/source.txt"
 kotlinc "${sources[@]}" -jvm-target 17 -cp "$cp_path" \
-  -Xfriend-paths=/workspace/continuum-quality/app/build/tmp/kotlin-classes/debug -d "$out/classes" > "$out/compile.txt" 2>&1
+  -Xfriend-paths=/workspace/continuum-quality/app/build/intermediates/runtime_app_classes_jar/debug/bundleDebugClassesToRuntimeJar/classes.jar -d "$out/classes" > "$out/compile.txt" 2>&1
 cd /workspace/continuum-quality/app
 /usr/bin/java -Xmx512m -Drobolectric.offline=true \
   -Drobolectric.dependency.dir=/workspace/continuum-quality/app/build/ui-test-sdk \

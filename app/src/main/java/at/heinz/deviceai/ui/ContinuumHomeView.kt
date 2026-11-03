@@ -20,7 +20,7 @@ import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
 class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :
     ViewGroup(context) {
     private val density = resources.displayMetrics.density
-    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 1.3f)
+    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)
     private var layoutSpec: ContinuumHomeLayout.Layout? = null
     private var offset = 0f
     private val views = linkedMapOf<Slot, ElementView>()
@@ -117,14 +117,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      */
     fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
                   windowHeightDp: Float = 0f) {
-        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp) else ContinuumHomeLayout.phone(windowWidthDp)
+        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
         layoutSpec = spec
         offset = railOffset
         views.values.forEach { removeView(it) }
         views.clear()
         hologram.setGeometry(when {
-            spec[Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+            spec.wide && ContinuumHomeLayout.isPortraitFold(windowWidthDp, windowHeightDp) -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
             spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
             else -> ContinuumHologramRenderer.Geometry.PHONE
         })
