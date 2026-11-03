@@ -41,7 +41,7 @@ data class PersonalLearningMergePlan(
 
 object PersonalLearningTransfer {
     const val SCHEMA_VERSION = 1
-    const val MAX_BYTES = 1024 * 1024
+    const val MAX_BYTES = 32 * 1024 * 1024
     private const val MAGIC = 0x434c5054 // CLPT
     private const val DIGEST_BYTES = 32
     private const val MAX_FIELD_BYTES = 8192
@@ -67,7 +67,7 @@ object PersonalLearningTransfer {
 
     fun encode(sourcePackage: String, records: List<LearningExperience>): ByteArray {
         requirePackage(sourcePackage)
-        require(records.size <= FileLearningExperienceStore.MAX_RECORDS)
+        require(records.size <= FileLearningExperienceStore.MAX_DURABLE_RECORDS)
         require(records.map { it.id }.distinct().size == records.size) { "Duplicate learning identity" }
         val payload = ByteArrayOutputStream().also { buffer ->
             DataOutputStream(buffer).use { out ->
@@ -105,7 +105,7 @@ object PersonalLearningTransfer {
             require(input.readInt() == MAGIC && input.readInt() == SCHEMA_VERSION)
             val source = readString(input).also(::requirePackage)
             val count = input.readInt()
-            require(count in 0..FileLearningExperienceStore.MAX_RECORDS)
+            require(count in 0..FileLearningExperienceStore.MAX_DURABLE_RECORDS)
             val records = List(count) {
                 LearningExperience(
                     id = readString(input),
@@ -158,7 +158,7 @@ object PersonalLearningTransfer {
         preview(inspect(bytes), targetRecords)
 
     private fun preview(backup: PersonalLearningBackup, targetRecords: List<LearningExperience>): PersonalLearningMergePlan {
-        require(targetRecords.size <= FileLearningExperienceStore.MAX_RECORDS)
+        require(targetRecords.size <= FileLearningExperienceStore.MAX_DURABLE_RECORDS)
         require(targetRecords.map { it.id }.distinct().size == targetRecords.size)
         val target = targetRecords.associateBy { it.id }
         val additions = mutableListOf<LearningExperience>()
@@ -187,7 +187,7 @@ object PersonalLearningTransfer {
         }
         return PersonalLearningMergePlan(
             backup, additions.toList(), revocations.toList(), blocked.toList(), duplicates,
-            reviewOnly, conflicts.toList(), targetRecords.size + additions.size > FileLearningExperienceStore.MAX_RECORDS
+            reviewOnly, conflicts.toList(), targetRecords.size + additions.size > FileLearningExperienceStore.MAX_DURABLE_RECORDS
         )
     }
 

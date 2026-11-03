@@ -125,18 +125,34 @@ class PersonalLearningTransferTest {
                 out.writeInt(0x434c5054); out.writeInt(1)
                 val name = source.toByteArray(Charsets.UTF_8)
                 out.writeInt(name.size); out.write(name)
-                out.writeInt(FileLearningExperienceStore.MAX_RECORDS + 1)
+                out.writeInt(FileLearningExperienceStore.MAX_DURABLE_RECORDS + 1)
             }
         }.toByteArray()
         failure { PersonalLearningTransfer.inspect(payload + MessageDigest.getInstance("SHA-256").digest(payload)) }
     }
 
+    @Test fun segmentedLedgerExportRoundTripsRevocationAndLargeTargetPreview() {
+        val dir=Files.createTempDirectory("personal-transfer-lex3").toFile()
+        try {
+            val records=(0 until 1000).map { fact("Synthetic transfer record $it",now=it.toLong()) }
+            val store=FileLearningExperienceStore(dir)
+            assertEquals(1000,store.appendMissing(records))
+            store.updateStatus(records[19].id,LearningStatus.REVOKED,2000)
+            val exported=PersonalLearningTransfer.export(source,store)
+            assertEquals(store.all().toSet(),PersonalLearningTransfer.inspect(exported).records.toSet())
+            val plan=PersonalLearningTransfer.preview(exported,store)
+            assertEquals(1000,plan.duplicateCount)
+            assertFalse(plan.capacityExceeded)
+            assertFalse(plan.canApplyAutomatically)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun capacityPressureIsExplicitAndDoesNotEvictExistingProtectedRecords() {
-        val target = (1..FileLearningExperienceStore.MAX_RECORDS).map { fact("Synthetic existing fact $it.") }
+        val target = (1..FileLearningExperienceStore.MAX_DURABLE_RECORDS).map { fact("Synthetic existing fact $it.") }
         val bytes = PersonalLearningTransfer.encode(source, listOf(fact("Synthetic extra fact.")))
         val plan = PersonalLearningTransfer.preview(bytes, target)
         assertTrue(plan.capacityExceeded)
         assertFalse(plan.canApplyAutomatically)
-        assertEquals(FileLearningExperienceStore.MAX_RECORDS, target.size)
+        assertEquals(FileLearningExperienceStore.MAX_DURABLE_RECORDS, target.size)
     }
 }

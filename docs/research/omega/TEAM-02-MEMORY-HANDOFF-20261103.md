@@ -1,7 +1,7 @@
 # Operation Continuum Ω — Team 02 memory
 
 Status: WIP / UNVERIFIED. Base #390: b4f61ae9765e26dd401db928b76fa9f233c0742a.
-Branch: codex/team-02-memory/omega-20261103. EXP-12 continuity; EXP-04 replay boundaries unchanged.
+Branch: codex/team-02-memory-omega-20261103. EXP-12 continuity; EXP-04 replay boundaries unchanged.
 
 The current master authorizes isolated implementation/tests/push/draft PR and supersedes historical v31 research freeze. No production memory, keys, main, release version, device install or model training is changed.
 
@@ -20,3 +20,11 @@ NOT_RUN: new implementation, Kotlin/JVM, Android SDK, device, LLM quality. Quali
 ## Rollback and next entry
 
 Before activation the unchanged LEX2 source remains usable. After migration do not downgrade or restore LEX2 automatically: old bytes may predate revocation. Keep original files as diagnosis/owner-reviewed recovery evidence. Next: implement tests, reproduce capacity failure, implement bounded migration, rerun focused and relevant consumer tests. Raw evidence must record exact tested SHA.
+
+## Checkpoint 2
+
+Draft PR: https://github.com/Ullmann27/device-ai/pull/397. Initial docs and RED tests pushed as d9869c114a8bf7c51655e63d798151ac3f04253c. Three new capacity tests compiled and FAILED at the 256-record boundary; raw log in `docs/evidence/omega-memory-20261103/red-d9869c11.txt`.
+
+Implementation WIP: LEX3 uses 32-record immutable LEX2-encoded segments (existing validated record codec), maximum 4096 records / 32 MiB decoded segment input, checksummed manifest at the original primary path, atomic-only replacement and fsync, cross-process file lock, original LEX2 primary preserved under `experiences-v3/legacy-v2.bin`, old `.lkg` never overwritten after migration. No automatic fallback. Ordinary legacy observation churn retains 256-bound behavior; protected overflow or legacy byte overflow migrates. CLPT schema unchanged; count/byte acceptance expands to 4096/32 MiB with same review-only semantics. Current users of `all()` still materialize all records: this is a bounded milestone, NOT tens-of-thousands scale or indexed retrieval.
+
+First development run: 17/17 focused Kotlin/JVM tests PASS using official Kotlin 2.4.0 and JUnit 4.13.2 / JDK17 (shared quality harness); this was an uncommitted working tree, not final frozen evidence. Additional negative, process, holdout and capacity tests added; not yet run. Android/device/power-loss fsync behavior NOT_RUN. Independent review should check directory fsync portability, canonical-path trust assumption, commit/cleanup order, transfer allocation and readAll cost. Host checksums do not authenticate malicious filesystem rollback.
