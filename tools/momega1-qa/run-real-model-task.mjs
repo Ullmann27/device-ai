@@ -50,6 +50,12 @@ assert.deepEqual(task.limits,{maxModelCalls:2,maxContextChars:8192});
 assert.deepEqual(task.allowedPaths,['lib/subject.mjs']);
 assert.equal(task.chain,'node');
 const fingerprint=taskFingerprint(task),stateDir=path.join(out,'private-synthetic-state');
+const modelProfile=process.env.MOMEGA_QA_MODEL_PROFILE??'1.5b';
+const approvedModels={
+ '1.5b':{sha256:'cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046',bytes:1117320768},
+ '7b':{sha256:'509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c',bytes:4683073536}
+};
+assert.ok(Object.hasOwn(approvedModels,modelProfile),'Only explicitly approved pinned model profiles');
 const recallControl=process.env.MOMEGA_QA_TECHNICAL_RECALL??'on';
 assert.ok(recallControl==='on'||recallControl==='off','Explicit on/off recall control required');
 const seedState=process.env.MOMEGA_QA_INHERITED_STATE;
@@ -89,7 +95,7 @@ const before={integratedSource:expectedSha,integratedTree:git(source,'rev-parse'
  qaRunnerSha256:digest(fs.readFileSync(fileURLToPath(import.meta.url))),fixture:binding,
  taskFingerprint:fingerprint,fixtureTree:git(project,'rev-parse','HEAD^{tree}'),
  freezeManifestSha256:digest(fs.readFileSync(path.join(ownRoot,'FROZEN-MANIFEST.json'))),
- configuration,fileHashes,technicalRecallEnabled:recallControl==='on',inheritedState:seedIdentity,
+ configuration,fileHashes,modelProfile,technicalRecallEnabled:recallControl==='on',inheritedState:seedIdentity,
  nodeVersion:process.version,startedAt:new Date().toISOString(),
  deviceStatus:'FOLD7_NOT_RUN',modelAnswersSupplied:false};
 write('before.json',before);
@@ -104,8 +110,9 @@ if(mode==='--preflight'){
  process.exit(0);
 }
 // Environment configuration is explicit; default provider remains the actual implementation.
-assert.equal(configuration.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,'cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046');
+assert.equal(configuration.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,approvedModels[modelProfile].sha256);
 assert.equal(fileHashes.CONTINUUM_LOCAL_BRAIN_MODEL_PATH,configuration.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256);
+assert.equal(fs.statSync(configuration.CONTINUUM_LOCAL_BRAIN_MODEL_PATH).size,approvedModels[modelProfile].bytes);
 assert.equal(fileHashes.CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH,configuration.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256);
 assert.ok(fileHashes.CONTINUUM_CODING_ISOLATION_CONFIG,'Owner isolation configuration required');
 if(seedState)fs.cpSync(seedState,stateDir,{recursive:true,errorOnExist:true,force:false,preserveTimestamps:true});
@@ -147,6 +154,7 @@ const after={integratedSource:git(source,'rev-parse','HEAD'),integratedStatus:gi
  resourceScope:'Node driver only; child runtime and Docker limits are recorded by their existing receipts.'};
 write('after.json',after);
 outcome.modelCallsReserved=requests.length;
+outcome.protocolLimitsObserved=requests.length<=2&&requests.every(r=>Number.isSafeInteger(r.modelTimeoutMs)&&r.modelTimeoutMs>=100&&r.modelTimeoutMs<=60000);
 outcome.sourceIdentityStable=after.integratedSource===expectedSha&&after.integratedStatus===''&&after.fixtureSource===task.sourceCommit&&after.fixtureStatus===''&&after.testSha256===binding.materializedTestSha256;
 write('outcome.json',outcome);console.log(JSON.stringify({...outcome,fixture:binding.fixture,out}));
-if(outcome.status==='FAILED'||!outcome.sourceIdentityStable)process.exitCode=1;
+if(outcome.status==='FAILED'||!outcome.sourceIdentityStable||!outcome.protocolLimitsObserved)process.exitCode=1;
