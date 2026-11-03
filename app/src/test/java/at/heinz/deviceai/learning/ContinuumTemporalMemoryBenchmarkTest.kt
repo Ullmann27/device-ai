@@ -162,6 +162,40 @@ class ContinuumTemporalMemoryBenchmarkTest {
         } finally { dir.deleteRecursively() }
     }
 
+    /** Step-1 budget (M2.1): warm, repeated questions over the unchanged 10-year ledger must stay p95 < 5 ms on
+     * the JVM host, including the revocation re-check. One warm-up pass is excluded from the measurement. */
+    @Test fun specialistLatencyBudgetOnTenYearHistory() {
+        val dir = Files.createTempDirectory("continuum-m2-latency").toFile()
+        try {
+            var clock = 0L
+            val core = ContinuumLearningCore(dir) { clock }
+            val (statements, stays, _) = fixture()
+            for (s in statements) { clock = s.at; core.confirmOwnerFact(s.text) }
+            clock = now
+            ContinuumBrainSettings(dir).set(ContinuumBrainMode.ON)
+            val settings = ContinuumBrainSettings(dir)
+            val baseline0 = ContinuumChatOutcome("—", "baseline", "trace", false, ContinuumBaselineSource.NONE)
+            val qs = questions(stays)
+            qs.forEach { ContinuumTemporalMemorySpecialist.decide(dir, core, it.text, baseline0, settings = settings, nowMillis = now) }
+            val nanos = mutableListOf<Long>()
+            var correct = 0
+            repeat(3) {
+                for (q in qs) {
+                    val s0 = System.nanoTime()
+                    val r = ContinuumTemporalMemorySpecialist.decide(dir, core, q.text, baseline0, settings = settings, nowMillis = now)
+                    nanos += System.nanoTime() - s0
+                    if (correct(r.outcome.answer, q.expected)) correct++
+                }
+            }
+            nanos.sort()
+            fun ms(n: Long) = "%.3f".format(java.util.Locale.ROOT, n / 1e6)
+            println("M2-METRIC warm_latency_ms n=${nanos.size} p50=${ms(pct(nanos, 50))} p95=${ms(pct(nanos, 95))} " +
+                "max=${ms(nanos.last())} correct=$correct/${nanos.size}")
+            assertEquals("caching must not change answers", nanos.size, correct)
+            assertTrue("p95 ${ms(pct(nanos, 95))} ms must be < 5 ms", pct(nanos, 95) < 5_000_000L)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun ledgerCapacityIsAMeasuredHardLimit() {
         val dir = Files.createTempDirectory("continuum-m2-capacity").toFile()
         try {

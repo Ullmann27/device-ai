@@ -105,6 +105,21 @@ class FileLearningExperienceStore(private val directory:File) {
 
     fun all():List<LearningExperience> = synchronized(FILE_LOCK) { loadValidated() }
 
+    /** One locked read of the ledger: its SHA-256 content fingerprint, plus the decoded records only when the
+     * fingerprint differs from [knownFingerprint]. Content-keyed (not mtime/length), so a rewrite that keeps
+     * mtime and size is still detected. Same validation as [all]; the on-disk format is untouched. */
+    internal fun snapshotIfChanged(knownFingerprint:String?):Pair<String, List<LearningExperience>?> =
+        synchronized(FILE_LOCK) {
+            if(!primary.exists()) {
+                check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
+                return@synchronized ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
+            }
+            val bytes=primary.readBytes()
+            val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                .joinToString("") { "%02x".format(it) }
+            fingerprint to (if(fingerprint==knownFingerprint) null else LearningExperienceCodec.decode(bytes))
+        }
+
     fun append(experience:LearningExperience):Boolean = synchronized(FILE_LOCK) {
         val current=loadValidated()
         val existing=current.firstOrNull { it.id==experience.id }
@@ -284,6 +299,7 @@ class FileLearningExperienceStore(private val directory:File) {
             LearningExperienceCodec.decode(bytes)
 
         private val FILE_LOCK=Any()
+        internal const val ABSENT_FINGERPRINT="absent"
     }
 }
 
