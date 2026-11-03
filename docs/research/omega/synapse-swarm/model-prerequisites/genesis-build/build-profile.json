@@ -1,0 +1,24 @@
+{
+  "cacheSha256": "77dd31702ea23d8316a3778259cedb33d8361f0a43c881fee8318736c3fc11af",
+  "verifiedSettings": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "BUILD_SHARED_LIBS": "OFF",
+    "GGML_NATIVE": "OFF",
+    "GGML_OPENMP": "OFF",
+    "GGML_BLAS": "OFF",
+    "GGML_CUDA": "OFF",
+    "GGML_VULKAN": "OFF",
+    "GGML_BACKEND_DL": "OFF",
+    "LLAMA_BUILD_TESTS": "OFF",
+    "LLAMA_BUILD_EXAMPLES": "OFF",
+    "LLAMA_BUILD_SERVER": "OFF",
+    "LLAMA_BUILD_TOOLS": "ON",
+    "LLAMA_OPENSSL": "OFF",
+    "LLAMA_SUBPROCESS": "OFF",
+    "LLAMA_CONNECT": "OFF",
+    "LLAMA_LLGUIDANCE": "OFF"
+  },
+  "cFlags": "-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp",
+  "cxxFlags": "-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp",
+  "noInferenceRun": true
+}

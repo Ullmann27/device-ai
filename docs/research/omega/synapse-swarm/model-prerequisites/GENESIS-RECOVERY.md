@@ -19,10 +19,10 @@ Current ownerUID1000 matches the model owner; one hardlink. Pinned runtime sourc
 `6cb3e672e8d10fd4feab1a048bf2967c40623133` remains tracked-clean.
 Exact observations are in `genesis-recovery.json`.
 
-The CPU gate is currently reserved for independent Android UI QA. Native build
-resumption must wait for Chief's explicit resource release, then use the existing
-unchanged CPU/static recipe with at most2 jobs. No model inference is authorized
-by a build-success result; independent canonical-task QA owns that separate run.
+After independent UI QA finished, Chief explicitly released the CPU gate. The
+same build was resumed with the unchanged CPU/static recipe and at most2 jobs.
+No model inference is authorized by a build-success result; independent
+canonical-task QA owns that separate run.
 
 ## Fresh remote context
 
@@ -49,3 +49,34 @@ Never change reviewed admission pins to fit another binary. Only after that matc
 write a nonsecret runtime-env.json with actual local paths and the six-field GGUF
 manifest. Pass paths to the separate challenger; no builder-authored repair patch.
 No main, package, owner data, model weight, signing, device or release change.
+
+## Completed host build and runtime handoff
+
+Resume completed at2026-11-03T20:50:16Z, exit0,130.744 seconds wall time. Observed
+child process CPU237.231 user +10.990 system seconds; maximum child RSS520540KiB.
+These are compiler/build measurements, not model inference or Fold7 performance.
+Raw interrupted and resumed logs, actual command/exit, build-profile checks,
+post-recovery tool hashes and an evidence manifest are in `genesis-build/`.
+
+The actual executable is12476968 bytes and its complete SHA256 is exactly
+`c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a`.
+Tracked official source remains clean. All nine compiler/linker/CMake/support
+library hashes still match the previously independently approved provenance.
+Sixteen CPU/static/offline build settings were checked in actual CMakeCache.
+No registry pin or runtime producer was changed to achieve this match.
+
+After that verification, these owner-owned nonsymlink files were created with
+mode0600, exclusive creation and fsync:
+
+* `/workspace/synapse-local-model/model-pin.json`: canonical six-field manifest,
+  SHA256 `85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b`.
+* `/workspace/synapse-local-model/runtime-env.json`: ten public model/runtime
+  pins, local paths and existing explicit alternate-model consent;
+  SHA256 `68a86ab17da65ae7b1b2cad326b35aacdab6f83eb76ca99b66a5b3e7ecec8a47`.
+
+Neither file contains runtime keys, task grants or model answers. Existing canonical
+task authorization remains necessary. Paths and exact receipts were handed to the
+separate runtime/coding challenger, who must recheck them and coordinate the CPU
+gate before a canonical task. This builder executed zero inference calls and read
+no frozen unknown task bodies. No statement of solved-task, learned-experience,
+Android/device or release acceptance follows from reproducing the binary.
