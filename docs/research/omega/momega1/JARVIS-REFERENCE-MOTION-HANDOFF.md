@@ -62,9 +62,16 @@ camera events. `gazeObserved=false` preserves existing pose constructors. The
 adapter/Activity caller is a separate integration lane and is not proven by these
 synthetic event contracts. Face position is not eye tracking or identity.
 
-Independent reviewer is checking `1649a043` against 12 unchanged mapper tests and
-13 pre-frozen new gaze cases. A further post-inspection future-timestamp lockout
-counterexample is pending actual execution; no independent GREEN is claimed yet.
+Independent reviewer checked `1649a043` against 12 unchanged mapper tests,
+13 pre-frozen new gaze cases and a post-inspection future-timestamp counterexample:
+25 PASS / 1 FAIL. A rejected future sample poisoned later observation ordering.
+The narrow fix `26555aa6c59fdd4dd2e190defcdf49b983305555` restores only the last
+actually fresh watermark when rejecting a future sample. The same unchanged
+26 independent cases now PASS (0 FAIL, 0 SKIP). Independent acceptance is limited
+to the motion/gaze contract. Actual camera and visual/device acceptance remain open.
+The final author rerun on `26555aa6` also has 34 Kotlin/JUnit, 5 Node source
+contracts and 8 Python geometry contracts PASS; actual SDK36/Filament API compile
+PASS. Raw outputs are under `docs/evidence/momega1-avatar-motion/26555aa6/`.
 
 Next: complete independent motion/gaze counterchecks and remedy measured failures.
 Observed face-position gaze must expire, yield to real task state and remain
@@ -84,7 +91,19 @@ preserving its geometry/skinning/morph BIN bytes, and render A/B front, oblique
 and profile views with identical Blender settings. The first derivative
 `15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5`
 is EXPERIMENT_NOT_ACCEPTED and has not replaced the packaged asset. Rendering is
-queued behind the local-model benchmark; this is not an image-quality result.
+complete: six same-condition real GLB renders were independently inspected and
+rejected for appearance (opaque face, coarse wires, pale staring iris).
+
+Second experiment `fe76e85d8396c24543ae14d7fe31cc2c952d383ab30606393f0deb18204f9e8a`
+adds UVs and a procedural embedded texture, preserving all original binary mesh,
+skinning and morph bytes. Four actual 32-sample A/B renders show denser lines but
+an unsuitable cylindrical grid over anatomy; this variant is also NOT_ACCEPTED.
+Further experimental tools derive lines from the actual triangle topology, and
+separately test a 15% neutral blink relaxation with rescaled remaining blink
+targets and 1.30x pupil XY scale. These are explicitly changed geometry/morphs,
+not a material-only claim. No experimental derivative replaces the packaged GLB.
+The independent review lane has exported actual reachable production-mapper poses
+for a fixed-camera replay; synthetic inputs are labeled and never called real TTS.
 
 Rollback: revert this isolated import/increment or leave the optional 3D choice
 disabled; no persistence migration or owner data is involved. The existing orb
