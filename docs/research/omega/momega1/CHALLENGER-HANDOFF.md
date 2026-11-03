@@ -1,5 +1,23 @@
 # MΩ-1 independent runtime / reliability challenger
 
+## CURRENT — actual native review complete
+
+Final source9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96 APPROVED for exact reviewed
+pair LOCAL_MODEL_HOST. Independent duplicate CPU build byte-identical; actual
+DEFAULT provider142tokens/26.562s, genuine frozen privatebrand, clone refused,
+durable repeat/restart budget refused.50/50 independent controlsPASS. Real weights
+cancel and disposable-copy swap reject without accepting output. FOLD7_NOT_RUN.
+
+Actual inference is now observed, superseding historical model-unavailable status
+below. **Generated repair still fails2 of8 independent boundary tests; no accepted
+repair, cognitive-loop, learning or release claim.** Detailed final assessment:
+docs/evidence/momega1/challenger/ACTUAL-MODEL-FINAL-ASSESSMENT.md.
+
+Immutable approved-pair review JSON SHA
+88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe is pinned in runtime
+registry. Preserve its exact bytes. QA receives actual executable-inode resource
+sampler; no QA holdout prompt was read. No further model inference pending.
+
 Baseline ca93fb4f; branch codex/momega1-challenger-20261103.
 Exclusive writes: tools/momega1-challenger, docs/evidence/momega1/challenger,
 this handoff. No feature code. Frozen criteria and initial executable provider
@@ -91,3 +109,17 @@ BETA/GAMMA MUST NOT equate this brand with actual inference. Chief notified.
 Helper replay/revoke/capacity are upstream responsibilities; direct repeated nonce
 and simultaneous requests both execute. UI/provider STOP and combined chat/coding
 resource/lifecycle not certified. Return for integration changes only if assigned.
+
+## Actual-model review authorized / new freeze
+
+Owner expressly authorized exact official Qwen1.5B Q4_K_M SHA cc324af0...bb046 and
+llama.cpp commit6cb3e672...23133 CPU build on existing free host. This supersedes
+only prior absence-of-model blocker. No additional models, paid resources, device,
+sign/install or release authority. Author builds/downloads outside Git; reviewer
+independently checks provenance/hash and actual execution. Max2 compile jobs.
+
+ACTUAL-MODEL-FROZEN-CRITERIA.md and separate synthetic blind prompt are frozen
+before reviewing pair-registry implementation. Runtime author must not inspect
+challenger blind prompt until run evidence is published. QA holdouts remain unseen.
+Status ACTUAL_MODEL_REVIEW_PENDING. Original fixed-ELF counterexample still applies;
+config runtime kind cannot mint genuine inference. FOLD7_NOT_RUN remains final.
