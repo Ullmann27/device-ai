@@ -1,0 +1,5 @@
+12b8599c5e9fadc10af185d0a0187dd78b1a689a240d847321b45c5b0c84d0ab  /workspace/momega1-build-env/effects-caller-native-candidate-ae221ecc/source-before.txt
+ae221eccde625dc30200db1bc51290d98249a1ee
+100644 fd4d5dcf07ed1202301bfc7bf8b307d0722f0a03 0	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+100644 e7591367df95ade9859e632e18227260add6c668 0	app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt
+12b8599c5e9fadc10af185d0a0187dd78b1a689a240d847321b45c5b0c84d0ab  /workspace/momega1-build-env/effects-caller-native-candidate-ae221ecc/source-after.txt
