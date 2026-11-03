@@ -85,8 +85,8 @@ class IndependentFullLayoutUiTest {
     }
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
     fun phoneHomeAndChat() = capture("phone-412x915", 412, 915)
-    @Test @Config(qualifiers = "w840dp-h649dp-mdpi-land")
+    @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
     fun foldLandscapeHomeAndChat() = capture("fold-landscape-840x649", 840, 649)
-    @Test @Config(qualifiers = "w840dp-h1050dp-mdpi-port")
+    @Test @Config(qualifiers = "w840dp-h1050dp-port-mdpi")
     fun foldPortraitHomeAndChat() = capture("fold-portrait-840x1050", 840, 1050)
 }
