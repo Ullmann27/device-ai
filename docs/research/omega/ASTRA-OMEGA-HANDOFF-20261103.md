@@ -1,5 +1,7 @@
 # Operation Continuum Ω — gesicherter erster Meilenstein, 2026-11-03
 
+**Aktueller Einstieg:** [Dual-Agent-Welle](DUAL-AGENT-WAVE-HANDOFF-20261103.md), gemeinsamer Quellfreeze `7247e99d0b93b62dfb2b5eee22486d22911cb722`. Dieses Dokument bewahrt den vorherigen Meilenstein beziehungsweise die Forschungsentscheidungen. Aktuelle Gesamtprüfung, 3D-/UI-Artefakte und Folgereparaturen stehen im verlinkten Handoff; ältere PASS-Zahlen nicht auf neue Quellen übertragen.
+
 Status: SOURCE_INTEGRATED / HOST_VERIFIED / UNSIGNED_APK_BUILT. Wochenkontingent: NOT_VISIBLE. Keine verfügbare unterstützte Quotenabfrage gefunden. Checkpoints nach bedeutenden Schritten, spätestens nach etwa 5–10 Minuten; bei wachsendem Unterbrechungsrisiko Abschluss statt neuer Großexperimente. Folgezyklus siehe `BREAKTHROUGH-CHIEF-HANDOFF.md`; dessen Kandidaten sind getrennt von diesem geprüften Stand zu bewerten.
 
 Final geprüfte Android-Quelle: `64ec06a73f50cae9ee49035c840710d87777d50f`. Vollständiger Node-Lauf: `67f437e35bfe32a343c1b89b7c60e49090a2f59a`; Node-, Backend-, Tool- und App-Hauptquellen sind zwischen beiden SHAs unverändert. Einzig ausführbarer Unterschied: fehlenden Testimport ergänzt. QA-Nachweise in Dokumentationscommit `e934ba31`; keine Source-Änderung danach für diesen Meilenstein.
