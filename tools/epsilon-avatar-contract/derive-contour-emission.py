@@ -21,6 +21,7 @@ parser.add_argument("output", type=Path)
 parser.add_argument("--expected-sha256", required=True)
 parser.add_argument("--variant", choices=["broad", "narrow"], default="broad")
 parser.add_argument("--emissive-strength", type=float, default=1)
+parser.add_argument("--topology-emission", action="store_true")
 args = parser.parse_args()
 assert 1 <= args.emissive_strength <= 8
 assert args.source.resolve() != args.output.resolve()
@@ -115,7 +116,25 @@ cyan = np.array([104, 229, 255], dtype=np.float32)
 violet = np.array([124, 63, 239], dtype=np.float32)
 horizontal_mix = np.clip((normal_map[..., 0] + .4) / .8, 0, 1)
 edge = violet * (1 - horizontal_mix[..., None]) + cyan * horizontal_mix[..., None]
-rgb = np.clip(base + (edge - base) * rim[..., None], 0, 255).astype(np.uint8)
+emission = base + (edge - base) * rim[..., None]
+if args.topology_emission:
+    # Reuse the already density-normalized actual triangle-edge texture. This
+    # preserves the anatomy-following paths and does not add a new grid/mask.
+    material = doc["materials"][primitive["material"]]
+    texture = doc["textures"][material["pbrMetallicRoughness"]["baseColorTexture"]["index"]]
+    image = doc["images"][texture["source"]]
+    assert image["mimeType"] == "image/png" and "uri" not in image
+    texture_view = doc["bufferViews"][image["bufferView"]]
+    begin = texture_view.get("byteOffset", 0)
+    with Image.open(io.BytesIO(original_binary[begin:begin + texture_view["byteLength"]])) as source_texture:
+        assert source_texture.size == (size, size)
+        surface_rgb = np.asarray(source_texture.convert("RGB"), dtype=np.float32)
+    # Both original thread endpoint colors use blue255; background is blue46.
+    thread = np.clip((surface_rgb[..., 2] - 46) / 209, 0, .65)
+    if args.variant == "narrow":
+        thread *= eye_fade
+    emission += edge * (thread * .75)[..., None]
+rgb = np.clip(emission, 0, 255).astype(np.uint8)
 rgb[~coverage] = base.astype(np.uint8)
 encoded_texture = io.BytesIO()
 Image.fromarray(rgb).save(encoded_texture, format="PNG")
@@ -160,6 +179,7 @@ record = {"status": "EXPERIMENT_NOT_ACCEPTED", "sourceSha256": source_sha,
     "frontSurfaceAlphaMode": "OPAQUE", "texturePixels": [size, size],
     "variant": args.variant,
     "emissiveStrength": args.emissive_strength,
+    "actualTopologyEmission": args.topology_emission,
     "addedEmbeddedPngBytes": len(png), "coveredTexels": int(coverage.sum()),
     "runtimeRequirement": "glTF emissiveTexture and optional KHR_materials_emissive_strength; no custom shader or external resources",
     "limitations": ["Fixed object-space front-oriented contour light pattern, not view-dependent Fresnel",

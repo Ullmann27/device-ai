@@ -1,0 +1,37 @@
+{
+  "status": "MOTION_PREVIEW_COMPLETE_APPEARANCE_NOT_ACCEPTED",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "mapperSource": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "poseFileSha256": "8d2af24cb1e0bb22a8e35a456f9be41de91d322980d7f46c63159be6628b7677",
+  "assetSha256": "3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb",
+  "frames": 224,
+  "framesPerSecond": 24,
+  "durationSeconds": 9.333333333333334,
+  "actualRenderPixels": [
+    192,
+    224
+  ],
+  "samples": 2,
+  "fixedCamera": true,
+  "syntheticInputs": true,
+  "actualTtsOrCamera": false,
+  "independentGeometry": "PR434: same frozen 113 actual-reducer poses all executed, zero front-surface tooth-edge intersections at this exact asset",
+  "appAssetChangedToThisLook": false,
+  "nativeFilamentAppearance": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "knownLimits": [
+    "Low-sample Cycles noise prevents final appearance judgment",
+    "Host pixels do not establish Filament equivalence",
+    "Pinned1.56 AssetLoader and Ubershader source suggest emissive-strength may be multiplied twice; HDR4 asset not promoted",
+    "Legacy EPSILON chin-pivot test remains RED pending separate independent hinge-v2 semantic validation"
+  ],
+  "completionEvidence": {
+    "firstBatchExitCode": 0,
+    "secondBatchShellExitCode": null,
+    "secondBatchNote": "Executor session handle expired before status retrieval; complete112-frame manifest, all hashes and Blender quit log present",
+    "hashVerifiedEncodingExitCode": 0,
+    "ffprobeFrames": 224,
+    "ffprobeAudioStreams": 0
+  },
+  "videoSha256": "be5841f5bb57f708efeb09eb0b2c368bb95ac48c7f3b5cd7e0f68266745d9bca"
+}
