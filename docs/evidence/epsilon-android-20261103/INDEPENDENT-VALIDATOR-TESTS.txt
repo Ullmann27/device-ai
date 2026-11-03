@@ -7,6 +7,6 @@ test_nonfinite_geometry_rejected (test_validate_glb.GeometryContractTest.test_no
 test_zero_non_silent_target_and_excessive_deformation (test_validate_glb.GeometryContractTest.test_zero_non_silent_target_and_excessive_deformation) ... ok
 
 ----------------------------------------------------------------------
-Ran 7 tests in 0.178s
+Ran 7 tests in 0.060s
 
 OK

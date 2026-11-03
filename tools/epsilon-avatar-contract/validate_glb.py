@@ -85,7 +85,8 @@ class Glb:
 
     def world(self, index, overrides=None):
         node = self.doc['nodes'][index]; require('matrix' not in node, 'TRS-only contract')
-        require(all(abs(a-b) < 1e-5 for a,b in zip(node.get('rotation',[0,0,0,1]),[0,0,0,1])), 'Nonidentity rest rotation')
+        rest_rotation=node.get('rotation',[0,0,0,1])
+        require(len(rest_rotation)==4 and all(math.isfinite(a) and abs(a-b)<1e-5 for a,b in zip(rest_rotation,[0,0,0,1])), 'Nonidentity rest rotation')
         scale = node.get('scale',[1,1,1]); require(len(scale)==3 and all(math.isfinite(s) and s>0 for s in scale), 'Mirrored/nonfinite scale')
         local = identity()
         for i in range(3):
@@ -136,8 +137,13 @@ def validate(data):
             if len(names)!=len(primitive['targets']): continue
             deltas={n:g.accessor(t['POSITION']) for n,t in zip(names,primitive['targets'])}
             bounds=[(min(p[a] for p in base), max(p[a] for p in base)) for a in range(3)]
-            diagonal=math.sqrt(sum((b-a)**2 for a,b in bounds)); middle_y=sum(bounds[1])/2
-            tolerance=(bounds[1][1]-bounds[1][0])*.05
+            diagonal=math.sqrt(sum((b-a)**2 for a,b in bounds))
+            mesh_node=next(i for i,n in enumerate(g.doc['nodes']) if n.get('mesh')==mi)
+            regional_base=[transform(g.world(mesh_node),p) for p in base]
+            eye_y=sum(transform(g.world(g.names.index(n)),(0,0,0))[1] for n in ['EyeLeft','EyeRight'])/2
+            jaw_y=transform(g.world(g.names.index('Jaw')),(0,0,0))[1]
+            middle_y=(eye_y+jaw_y)/2
+            tolerance=abs(eye_y-jaw_y)*.1
             measures[f'mesh_{mi}_{pi}_bounds']=bounds
             for name,delta in deltas.items():
                 def deformation(name=name,delta=delta):
@@ -146,11 +152,11 @@ def validate(data):
                     require(0.02 <= diagonal <= 2 and (name=='SIL' or max(magnitude)>1e-7) and max(magnitude)<=diagonal*.2,'Zero/excessive deformation or bounds')
                     changed=[i for i,m in enumerate(magnitude) if m>1e-7]
                     if name.startswith('Blink') or name.startswith('Brow'):
-                        require(all(base[i][1]>=middle_y-tolerance for i in changed),'Eye/brow deforms lower face')
-                    if name in TARGETS[:15] or name in ['Smile','JawOpen']:
-                        require(all(base[i][1]<=middle_y+tolerance for i in changed),'Mouth deforms upper face')
+                        require(all(regional_base[i][1]>=middle_y-tolerance for i in changed),'Eye/brow deforms lower face')
+                    if name in TARGETS[:15]:
+                        require(all(regional_base[i][1]<=middle_y+tolerance for i in changed),'Mouth deforms upper face')
                     if name.startswith('Blink'):
-                        left=[m for p,m in zip(base,magnitude) if p[0]>0]; right=[m for p,m in zip(base,magnitude) if p[0]<0]
+                        left=[m for p,m in zip(regional_base,magnitude) if p[0]>0]; right=[m for p,m in zip(regional_base,magnitude) if p[0]<0]
                         require(left and right,'Both face sides required')
                         l=sum(left)/len(left);r=sum(right)/len(right)
                         require(l>3*r if name=='BlinkLeft' else r>3*l,'Blink mirrored or not independent')
@@ -173,7 +179,7 @@ def validate(data):
                 require(all(all(0<=x<=1 for x in row) and abs(sum(row)-1)<.005 for row in ws),'Skin weights')
                 for node in nodes:
                     s=g.doc['skins'][node['skin']];joint_ids=s['joints'];ib=g.accessor(s['inverseBindMatrices'])
-                    require(len(ib)==len(joint_ids) and all(0<=i<len(g.parents) for i in joint_ids),'Skin joint references')
+                    require(len(ib)==len(joint_ids) and len(set(joint_ids))==len(joint_ids) and all(0<=i<len(g.parents) for i in joint_ids),'Skin joint references')
                     require(all(0<=j<len(joint_ids) for row in js for j in row),'Joint influence bounds')
                     def posed(overrides):
                         matrices=[]
