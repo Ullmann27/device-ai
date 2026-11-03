@@ -36,9 +36,10 @@ class ContinuumTaskEffectsCallerUiTest {
     private fun advance()=shadowOf(Looper.getMainLooper()).idleFor(20,TimeUnit.MILLISECONDS)
     private fun withFixture(block:(AgentActivity,ContinuumHologramView)->Unit) {
         val a=Robolectric.buildActivity(AgentActivity::class.java).get()
-        val host=Robolectric.buildActivity(Activity::class.java).setup()
+        val host=Robolectric.buildActivity(Activity::class.java).setup().visible()
         val h=ContinuumHologramView(a)
         set(a,"hologramView",h);set(a,"foregroundLearningActive",true)
+        set(a,"chatContainer",android.widget.LinearLayout(a))
         set(a,"receiptStore",FileToolExecutionReceiptStore(java.io.File(a.filesDir,"effects-"+UUID.randomUUID())))
         host.get().setContentView(h);advance()
         h.measure(View.MeasureSpec.makeMeasureSpec(412,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(307,View.MeasureSpec.EXACTLY))
