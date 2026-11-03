@@ -36,3 +36,8 @@ test('claim activated before backlog abort cannot execute or reactivate',()=>fix
 test('controlled-clock expired lease cannot execute',()=>fixture(f=>{const active=f.scoped.forClaim(f.claim),realNow=Date.now;try{Date.now=()=>f.at+61000;assert.throws(()=>active.execute('node-continuum',f.root,f.out));}finally{Date.now=realNow;}}));
 test('controlled-clock expired goal cannot execute with a longer live lease',()=>fixture(f=>{f.store.apply([{op:'renew',actor:'independent-review',at:Date.now()+5,id:f.claim.id,token:f.claim.token,leaseMs:3600000}]);const active=f.scoped.forClaim(f.claim),realNow=Date.now;try{Date.now=()=>f.journal.entries()[0].deadline+1;assert.throws(()=>active.execute('node-continuum',f.root,f.out));}finally{Date.now=realNow;}}));
 test('claim cannot expand fixed chain or introduce arbitrary shell profile',()=>fixture(f=>{const active=f.scoped.forClaim(f.claim);for(const profile of ['node-backend','sh -c echo escaped','android-build'])assert.throws(()=>active.execute(profile,f.root,f.out));}));
+test('replaced canonical claim token invalidates already activated executor',()=>fixture(f=>{
+ const active=f.scoped.forClaim(f.claim),future=f.at+61000,realNow=Date.now;
+ f.store.apply([{op:'expire',actor:'independent-review',at:future},{op:'claim',actor:'independent-review',at:future+1,id:f.claim.id,owner:'replacement-worker',token:'b'.repeat(32),leaseMs:60000}]);
+ try{Date.now=()=>future+2;assert.throws(()=>active.execute('node-continuum',f.root,f.out));}finally{Date.now=realNow;}
+}));
