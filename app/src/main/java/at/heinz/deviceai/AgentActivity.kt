@@ -2656,6 +2656,34 @@ class AgentActivity : Activity() {
                 return
             }
         }
+        // First resolve narrowly recognized owner-local utterances. A greeting,
+        // self-capability question or live storage probe is never public research,
+        // a random archival hit, or evidence that native Gemma produced a reply.
+        when (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request)) {
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
+                val canonical = if (
+                    at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request) ==
+                        at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
+                ) "Hallo" else "Was kannst du?"
+                input.text.clear()
+                addUserMessage(request)
+                addAssistantMessage(
+                    BootstrapBrain.decide(canonical, bootstrapMemory.facts(),
+                        bootstrapMemory.learnedCommands()).message
+                )
+                addToolActivity("STARTKERN · eindeutige lokale Antwort · kein Web oder Modellaufruf")
+                return
+            }
+            at.heinz.deviceai.cognitive.OwnerChatLocalIntent.STORAGE -> {
+                input.text.clear()
+                addUserMessage(request)
+                executeBootstrapReadOnly(request,
+                    BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = "get_storage_info"))
+                return
+            }
+            null -> Unit
+        }
         if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
             input.text.clear()
             addUserMessage(request)
@@ -2795,7 +2823,7 @@ class AgentActivity : Activity() {
         // Personal or ambiguous dialogue remains local; no silent chat upload.
         // B2: need-based, not mode-based. A conceptual why/how question is explained locally
         // even under ALWAYS_ON; the grant is spent only on questions that need world knowledge.
-        val publicTopic = if (!ownerForbidsExternalNetwork && internetConsent.mode ==
+        val publicTopic = if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && internetConsent.mode ==
             at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON &&
             !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request))
             at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request) else null
@@ -2818,7 +2846,7 @@ class AgentActivity : Activity() {
         // re-researched only within the same ASK consent; otherwise it stays visibly flagged.
         val staleResearch = localConversationContext.researchFreshness(sessionId, request)
             ?.takeIf { it.mustFlag && !at.heinz.deviceai.cognitive.FreshKnowledgeNeed.prefersLocalExplanation(request) }
-        if (!ownerForbidsExternalNetwork && !researchArmed &&
+        if (mode != AssistantMode.LOCAL && !ownerForbidsExternalNetwork && !researchArmed &&
             internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK &&
             (at.heinz.deviceai.cognitive.FreshKnowledgeNeed.needsCurrentWeb(request) || staleResearch != null)) {
             val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(request)
