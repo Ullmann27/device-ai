@@ -62,8 +62,12 @@ async function fixture(t){
 }
 async function invoke(f,name,sha=f.sha,environment={}){
   const out=path.join(f.dir,'out-'+name);
+  const inheritedPath=environment.PATH||process.env.PATH||'';
+  const javaHome=process.env.JAVA_HOME;
+  const javaBin=javaHome ? path.join(javaHome,'bin') : '';
+  const env={...environment,PATH:javaBin ? javaBin+path.delimiter+inheritedPath : inheritedPath};
   const result=execute('bash',[path.join(f.repo,'scripts/continuum-atomic-acceptance.sh'),
-    '--expected-head',sha,'--out',out],f.repo,environment);
+    '--expected-head',sha,'--out',out],f.repo,env);
   let receipt=null;
   try{receipt=JSON.parse(await fs.readFile(path.join(out,'acceptance.json'),'utf8'));}
   catch(error){if(error.code!=='ENOENT')throw error;}
