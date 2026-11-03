@@ -1,0 +1,6 @@
+{
+  "checkedAt": "2026-11-03T21:03:56.604614+00:00",
+  "nativeExecutableMatchingPids": [],
+  "dockerContinuumContainers": "docker ps -a --filter name=continuum- returned no rows",
+  "toolProcessesUnknownEffect": false
+}

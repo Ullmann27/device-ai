@@ -1,0 +1,61 @@
+{
+  "integratedSource": "fd743adce297c0958aadce1576b80580817837f0",
+  "integratedTree": "3817f035020ce7746cb45f29ee461d56c8dd97c4",
+  "qaRunnerSha256": "34f345939d3492063b8efe68d621a6142399573da739437f18de7fb27dd243ea",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "genesis-g01",
+      "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+      "kind": "BUGFIX",
+      "goal": "prefixCodePoints(text, count) must return the first count Unicode code points of text, preserving their order and values. count is a nonnegative integer. Return all code points when count exceeds the length; do not perform grapheme segmentation or normalization.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "prefixCodePoints(text, count) must return the first count Unicode code points of text, preserving their order and values. count is a nonnegative integer. Return all code points when count exceeds the length; do not perform grapheme segmentation or normalization."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 2,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "g01",
+    "sourceSha256": "46022b74122285dab962ceb7cb624da6c5792c6a1e96118d274432ac331a3e2d",
+    "frozenTestSha256": "15692fe4a4909db2643744271a02769a628f3056a7b6df1283a0fc9cb7beb3d9",
+    "materializedTestSha256": "15692fe4a4909db2643744271a02769a628f3056a7b6df1283a0fc9cb7beb3d9",
+    "transformation": "File paths materialized only; assertions, imports and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "8a5cd4f4d20bac723d9270dbc9fbe5de7032d2ea82cac7ca53f25c319be36046",
+  "fixtureTree": "0aff46f6b070cd34be4ca87f74706d71877e158e",
+  "freezeManifestSha256": "de03def3edee6d3a86228b587fb0dcc45e5d80047a9f17000ed31b605ee0988e",
+  "configuration": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME": "llama.cpp",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT": "gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_SHA256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL": "OWNER_APPROVED_ALTERNATE_GGUF",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "/workspace/synapse-local-model/model-pin.json",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND": "LLAMA_CPP",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "/workspace/genesis-a0-experiment/isolation.json"
+  },
+  "fileHashes": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "5f97ba4c52712414d4fcf7588c62b80de2b10fb34d98a65d92fde0c52e920594"
+  },
+  "technicalRecallEnabled": false,
+  "inheritedState": null,
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T20:58:35.427Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}
