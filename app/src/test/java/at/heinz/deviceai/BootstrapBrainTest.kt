@@ -79,6 +79,32 @@ class BootstrapBrainTest {
         }
     }
 
+    @Test fun negatedStorageInspectionNeverSilentlyExecutesDeviceTool() {
+        val negatives = listOf(
+            "Prüfe nicht den Speicher.",
+            "Bitte den Speicher nicht prüfen!",
+            "Nicht Speicher prüfen.",
+            "Zeige mir nicht den Speicherstatus.",
+            "Ohne Speicherprüfung: sag einfach Hallo.",
+            "Prüfe keinesfalls die Speicherkapazität."
+        )
+        negatives.forEach { request ->
+            val result = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.REPLY, result.kind)
+            assertNull(request, result.tool)
+        }
+        val contrasting = listOf(
+            "Nutze nicht das Web, sondern prüfe den lokalen Speicher.",
+            "Prüfe nicht den Akku, sondern zeige den Speicherplatz.",
+            "Speichere das nicht. Prüfe Speicher."
+        )
+        contrasting.forEach { request ->
+            val result = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.DEVICE_TOOL, result.kind)
+            assertEquals(request, "get_storage_info", result.tool)
+        }
+    }
+
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {
         val phrases = listOf(
             "Prüfe Akku", "Speicher", "Zeig meine Downloads",
