@@ -135,8 +135,7 @@ const name = process.env.CONTINUUM_RELEASE_VERSION_NAME;
 const host = 'continuum-owner-v23-release-preflight.onrender.com';
 const release = {
   schema: 1,
-  channel: 'OWNER_RELEASE_CANDIDATE',
-  status: 'SIGNED_STAGED_DEVICE_NOT_RUN',
+  channel: 'OWNER_RELEASE',
   packageName: 'at.heinz.deviceai.continuumlocal',
   versionCode: 38,
   versionName: name,
@@ -145,8 +144,8 @@ const release = {
   byteLength: size,
   sourceCommit: sha,
   signerSha256: '6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23',
-  approved: false,
-  notes: 'Originalsigniertes, nicht freigegebenes Update: Fold7-Abnahme und separate Besitzerfreigabe erforderlich.'
+  approved: true,
+  notes: 'Originalsigniertes, vom Besitzer freigegebenes Continuum Lokal Update. Installation nur nach Android-Bestätigung.'
 };
 if (!Number.isSafeInteger(size) || size < 1_000_000 || size > 2_000_000_000 ||
     !/^[a-f0-9]{40}$/.test(sha) || !/^[a-f0-9]{64}$/.test(digest) ||
@@ -154,6 +153,8 @@ if (!Number.isSafeInteger(size) || size < 1_000_000 || size > 2_000_000_000 ||
 writeFileSync(target, JSON.stringify(release) + '\n', {flag:'wx', mode:0o600});
 NODE
 test -s "$out/latest.json" || fail 'No valid owner update catalog'
+node scripts/continuum-owner-catalog-contract.mjs "$out/latest.json" ||
+  fail 'Owner update manifest incompatible with the installed Android app'
 # Publishing the site is a separate Render deployment operation; do not claim
 # success unless the Render hosting service actually serves these bytes.
 printf 'source_sha=%s\nversion=0.3.37\npackage=%s\nsigner_sha256=%s\napk_sha256=%s\nstatus=SIGNED_STAGED_FOR_PINNED_HOST\n' \
