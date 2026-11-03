@@ -17,7 +17,7 @@ class ContinuumTaskEffectsTest {
     private fun event(name:String,id:String="job-1")=Class.forName(type().name+"\$Event\$$name").getConstructor(String::class.java).newInstance(id)
     private fun accept(e:Any,event:Any,at:Long=1000,now:Long=at,s:String="turn-1"):Boolean =
         type().methods.single { it.name=="accept" }.invoke(e,s,event,at,now) as Boolean
-    private fun draw(e:Any,now:Long):List<String> {
+    private fun draw(e:Any,now:Long,width:Float=412f,height:Float=307f):List<String> {
         val commands=mutableListOf<String>()
         val p=Proxy.newProxyInstance(javaClass.classLoader,arrayOf(ContinuumPainter::class.java)) { _,m,args ->
             if(m.name.startsWith("draw")||m.name.startsWith("fill")||m.name.startsWith("stroke")) {
@@ -27,7 +27,7 @@ class ContinuumTaskEffectsTest {
             when(m.returnType) { Float::class.javaPrimitiveType -> 1f; else -> null }
         } as ContinuumPainter
         type().getMethod("draw",ContinuumPainter::class.java,Float::class.javaPrimitiveType,Float::class.javaPrimitiveType,Long::class.javaPrimitiveType)
-            .invoke(e,p,412f,307f,now)
+            .invoke(e,p,width,height,now)
         return commands
     }
     @Test fun idleHasNoWorkGlyphAndActualStartDrawsThenExpires() {
@@ -106,6 +106,24 @@ class ContinuumTaskEffectsTest {
                 .invoke(e,p,w,h,1300L)
             assertTrue("Legible tool glyph width at ${w}x$h: $glyphWidth",glyphWidth in 20f..26f)
             assertTrue("Legible tool glyph height at ${w}x$h: $glyphHeight",glyphHeight in 18f..26f)
+        }
+    }
+    @Test fun compactReadReplacesOnlyItsOwnObsoleteToolMarker() {
+        for(height in listOf(88f,160f)) {
+            val e=effect();scope(e)
+            assertTrue(accept(e,started("reading-call"),1000))
+            assertTrue(accept(e,started("other-worker",true),1050))
+            assertTrue(accept(e,started("other-tool"),1070))
+            assertEquals(2,draw(e,1100,412f,height).count { it=="strokeRoundRect" })
+            assertTrue(accept(e,event("Read","reading-call"),1150))
+            val frame=draw(e,1350,412f,height)
+            assertEquals("Read must supersede its own tool badge at compact height $height",1,
+                frame.count { it=="strokeRoundRect" })
+            assertEquals("Both the unrelated worker and the page remain visible",2,
+                frame.count { it=="strokePath" })
+            assertTrue(accept(e,event("Finished","reading-call"),1400))
+            assertFalse(accept(e,event("Read","reading-call"),1401))
+            assertFalse(accept(e,started("reading-call"),1402))
         }
     }
 }
