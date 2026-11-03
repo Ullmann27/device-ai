@@ -1,0 +1,222 @@
+{
+  "schema": "momega1-coding-verification",
+  "version": 1,
+  "taskFingerprint": "a983d916af580e027a7222503fa4355f9def5f8db21982141d822eafaa3dee55",
+  "sourceCommit": "83a29810a169e9b77aaec20858ae7becc1560288",
+  "chain": "node",
+  "patchSha256": "6da4b4ab42526074164e592626cdef17ae34ba8af3504aca8c9dc91db7897d8d",
+  "proposalSha256": "41ed7b72fa0c1900e5aa57748eca25d0acb7c12ddc7e35a3c3aef59739bfbef2",
+  "verdict": "VERIFIED",
+  "reasons": [],
+  "red": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "cfb2f1926d9d4ac87324eae9c60fff078b7988d5b100cec410ed13d58e735706",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-2d5544e931126c1aeb1b8da1",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-2c0129a4b83d190f",
+            "requestMessageId": "1e74a32e-a5c8-4e12-8867-d7fb10f9fabb",
+            "requestHash": "6b48777f7f31ba6740582e54e2c845455d147391de36a48e24f768609b672fe0",
+            "sourceCommit": "83a29810a169e9b77aaec20858ae7becc1560288",
+            "jobId": "df4775a0-f55b-4717-8b0a-689caea431c3"
+          },
+          "observed": {
+            "containerId": "893ec245013414d774968ceb6f4f994097681b224748cd745d03cbe539e9b6da",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"First occurrence deduplication\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "9878f0ac8f88502741b434d511076cdc7744ed75ad0e759c95764089be4dc5f0"
+          ],
+          "executedCaseHashes": [
+            "62881e1dfe56c9ab8495aa8cfe7106da290293c2dd89f4442550f0116cad6bca"
+          ]
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.First occurrence deduplication",
+            "file": ".github/continuum/frozen.test.mjs",
+            "line": 5,
+            "col": 8,
+            "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'b',\n+   'c',\n    'a',\n-   'c'\n  ]",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "091b0dfb05a13570"
+          }
+        ],
+        "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"First occurrence deduplication\" time=\"0.002546\" classname=\"test\" file=\"/tmp/continuum-repair-wt-H8RCHn/.github/continuum/frozen.test.mjs\" failure=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;    'b',&#10;+   'c',&#10;    'a',&#10;-   'c'&#10;  ]&#10;\">\n\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly deep-equal:&#10;+ actual - expected&#10;&#10;  [&#10;    'b',&#10;+   'c',&#10;    'a',&#10;-   'c'&#10;  ]\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'b',\n+   'c',\n    'a',\n-   'c'\n  ]\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    [\n      'b',\n  +   'c',\n      'a',\n  -   'c'\n    ]\n  \n      at TestContext.&lt;anonymous> (file:///tmp/continuum-repair-wt-H8RCHn/.github/continuum/frozen.test.mjs:5:8)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: [ 'b', 'c', 'a' ],\n    expected: [ 'b', 'a', 'c' ],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n}\n\t\t</failure>\n\t</testcase>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 72.024108 -->\n</testsuites>\n\n\n"
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.First occurrence deduplication",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 8,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'b',\n+   'c',\n    'a',\n-   'c'\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "091b0dfb05a13570"
+      }
+    ]
+  },
+  "green": {
+    "passed": true,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "28d1e211dbc49b48e5e305bf0d1d8acd341865f997d80edfde4584d99d81efeb",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-5137b6ee088c72e0b6f79f6e",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-2c0129a4b83d190f",
+            "requestMessageId": "1e74a32e-a5c8-4e12-8867-d7fb10f9fabb",
+            "requestHash": "6b48777f7f31ba6740582e54e2c845455d147391de36a48e24f768609b672fe0",
+            "sourceCommit": "83a29810a169e9b77aaec20858ae7becc1560288",
+            "jobId": "df4775a0-f55b-4717-8b0a-689caea431c3"
+          },
+          "observed": {
+            "containerId": "97a07c1e5a2eee077b02d019dd25f2569d9cff48159dc086ff45d173a40e93c0",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 1,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"First occurrence deduplication\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "5f323e9ede1fd36f9bfaa44b0f51f1d41d2a442651e17a756f0a43a67f3bd556"
+          ],
+          "executedCaseHashes": [
+            "62881e1dfe56c9ab8495aa8cfe7106da290293c2dd89f4442550f0116cad6bca"
+          ]
+        },
+        "diagnostics": [],
+        "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"First occurrence deduplication\" time=\"0.001134\" classname=\"test\" file=\"/tmp/continuum-repair-wt-6CPt4B/.github/continuum/frozen.test.mjs\"/>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 74.864731 -->\n</testsuites>\n\n\n"
+      }
+    ],
+    "diagnostics": []
+  },
+  "diagnostics": [
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.First occurrence deduplication",
+      "file": ".github/continuum/frozen.test.mjs",
+      "line": 5,
+      "col": 8,
+      "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'b',\n+   'c',\n    'a',\n-   'c'\n  ]",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "091b0dfb05a13570"
+    }
+  ],
+  "evidenceClass": "HOST_INTEGRATION",
+  "execution": "OS_ISOLATED"
+}

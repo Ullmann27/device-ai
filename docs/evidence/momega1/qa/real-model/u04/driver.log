@@ -1,0 +1,3 @@
+Verified 37 immutable fixture files; 12 tasks; no model execution.
+{"status":"OBSERVED_RESULT","resultStatus":"PATCH_PENDING_OWNER_REVIEW","technicalExperienceStatus":"RECORDED_TECHNICAL_REVIEW_ONLY","technicalRecallCount":0,"solved":"REQUIRES_INDEPENDENT_EVIDENCE_REVIEW","modelCallsReserved":1,"sourceIdentityStable":true,"fixture":"u04","out":"/workspace/momega1-build-env/real-model-benchmark/u04/task"}
+{"resourceReport": "/workspace/momega1-build-env/real-model-benchmark/u04/native-resources.json", "exit": 0, "nativeProcesses": 1, "samples": 92}

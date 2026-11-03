@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python3",
+    "/workspace/momega1-qa/tools/momega1-qa/observe-native-resources.py",
+    "/workspace/momega1-build-env/real-model-benchmark/u07/native-resources.json",
+    "/workspace/momega1-local-model/build-cpu/bin/llama-completion",
+    "node",
+    "/workspace/momega1-qa/tools/momega1-qa/run-real-model-task.mjs",
+    "/workspace/momega1-build-env/combined-19474261",
+    "19474261c15a3503a9f041244b4b4c3eaed4636f",
+    "/workspace/momega1-build-env/frozen-materialized/u07",
+    "/workspace/momega1-build-env/real-model-benchmark/u07/task"
+  ],
+  "publicRuntimeEnvironmentSha256": "cf6a6f4e5ad0ddf51ea59075a4a1cd4fe5261b8807f7cdbd3ee7b4aaeccda872"
+}
