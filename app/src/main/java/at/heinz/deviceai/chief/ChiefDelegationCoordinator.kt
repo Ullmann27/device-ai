@@ -87,6 +87,7 @@ class ChiefDelegationCoordinator(
     private val completed = LinkedHashMap<String, Pair<String, WorkerReport>>()
     private val seenTaskIds = LinkedHashSet<String>()
     private val trustedReceiptHashes = LinkedHashSet<String>()
+    private val learnedTaskIds = LinkedHashSet<String>()
     private val scores = HashMap<String, ChiefSpecialistStats>()
 
     fun register(candidate: ChiefSpecialist): Boolean {
@@ -165,6 +166,7 @@ class ChiefDelegationCoordinator(
         if (!verifyOutcome(evidence, report)) return false
         return synchronized(this) {
             if (completed[evidence.taskId] != completedRun ||
+                evidence.taskId in learnedTaskIds ||
                 evidence.receiptSha256 in trustedReceiptHashes) false
             else {
                 val old = scores[specialistId] ?: ChiefSpecialistStats(0, 0)
@@ -172,7 +174,9 @@ class ChiefDelegationCoordinator(
                     old.copy(verifiedSuccesses = (old.verifiedSuccesses + 1).coerceAtMost(1_000_000))
                 else old.copy(verifiedFailures = (old.verifiedFailures + 1).coerceAtMost(1_000_000))
                 trustedReceiptHashes += evidence.receiptSha256
+                learnedTaskIds += evidence.taskId
                 while (trustedReceiptHashes.size > 4_096) trustedReceiptHashes.remove(trustedReceiptHashes.first())
+                while (learnedTaskIds.size > 4_096) learnedTaskIds.remove(learnedTaskIds.first())
                 true
             }
         }
