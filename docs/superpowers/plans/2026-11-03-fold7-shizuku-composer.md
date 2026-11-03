@@ -66,3 +66,20 @@ Review of the concrete Shizuku state machine identified two still-open P0 failur
 Three additional Robolectric source tests cover silent permission timeout/retry, permission granted despite missing permission callback, and server death without binder-death callback followed by safe rebind. Existing timeout/reentrancy/late callback/permission-dedup cases remain.
 
 **Verification boundary:** This is a source and regression-test patch, not a physical Fold7 test. The reviewed exact Kotlin files must still be compiled and the complete Robolectric suite run with the project's Android SDK36/JDK17/Gradle8.11.1 toolchain; no GitHub Actions run/status was available for the previous commit. Refuse publication or main merge until this exact head has GREEN QA and owner-device evidence. Do not loosen tool authorization, request shell effects or uninstall code38.
+
+
+## Executable local QA gate — same research branch
+
+The new `scripts/continuum-fold7-repair-qa.sh` provides a **noninstallable, unsigned, source-pinned** local QA path on a computer with Android SDK36, JDK17, Node, Python and Gradle. It runs with:
+
+- `-PcontinuumLocalStandaloneQa=true`, `-PcontinuumUiWidgetTests=true`, and `-PcontinuumStandaloneVersionCode=39`; Gradle's existing QA guard expressly prohibits assemble/install with this configuration.
+- `:app:compileDebugKotlin :app:testDebugUnitTest :app:lintDebug` using `--rerun-tasks`.
+- Strict parsing of **all** JUnit XML reports and minimum executed-case counts for Shizuku's 11 Robolectric lifecycle cases, `ContinuumControlsTest`, `OwnerChatIntentRouterTest` and `HybridMemoryRetrieverTest`. Malformed, stale, failed, absent or skipped mandatory suites block the gate.
+- Focused Node UI routing, Gemma-picker lifecycle and coding-bridge tests.
+- Independent output logs/status outside the checkout, including a signed-APK/device-test **NOT_RUN** declaration and a source cleanliness check.
+
+Usage on the exact pushed branch: `CONTINUUM_FOLD7_QA_SHA="$(git rev-parse HEAD)" bash scripts/continuum-fold7-repair-qa.sh`. For an intentionally offline run add `--offline`. The QA runner never reads an owner signer, signs, publishes, installs, merges branches or changes app data.
+
+**Special compatibility boundary:** `LocalModelReloadLifecycleTest` has an explicit JDK21-only prerequisite because the host LiteRT 0.18 classes have Java 21 bytecode. The JDK17 Android QA run must **not** label the intentionally skipped JDK21 cases as successful. Their unverified status remains recorded; a separately configured JDK21 host experiment is required. None of this proves actual on-device generation.
+
+**Status at authoring time: SCRIPT WRITTEN / NOT EXECUTED.** This remote GitHub editing environment has not run the new Android/Node gate. No green build, physical Shizuku connection or signed code39 APK is claimed. Next step is execution by the existing isolated Codex build environment, RED->GREEN repairs based on raw output, then owner Fold7 acceptance.
