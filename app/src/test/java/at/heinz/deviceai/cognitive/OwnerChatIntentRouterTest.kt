@@ -34,4 +34,21 @@ class OwnerChatIntentRouterTest {
         assertEquals("stern", PublicKnowledgeTopicRouter.topic("Was ist ein Stern?"))
         assertEquals("hacking", PublicKnowledgeTopicRouter.topic("Wie funktioniert Hacking?"))
     }
+
+    @Test fun activeNeuronCoachKeepsExamplesAndQuestionsForTheTutor() {
+        listOf(
+            "Hallo", "Servus", "Guten Abend", "Was kannst du?",
+            "Wie viel Speicher habe ich?", "Speicherstatus"
+        ).forEach { example ->
+            assertNull(
+                "Active tutor must receive this example unmodified: $example",
+                OwnerChatIntentRouter.route(example, coachActive = true)
+            )
+        }
+        assertEquals(
+            OwnerChatLocalIntent.GREETING,
+            OwnerChatIntentRouter.route("Hallo", coachActive = false)
+        )
+    }
+
 }

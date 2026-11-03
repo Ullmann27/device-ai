@@ -2659,12 +2659,14 @@ class AgentActivity : Activity() {
         // First resolve narrowly recognized owner-local utterances. A greeting,
         // self-capability question or live storage probe is never public research,
         // a random archival hit, or evidence that native Gemma produced a reply.
-        when (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request)) {
+        val ownerLocalIntent = at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(
+            request, neuralCoach.isActive()
+        )
+        when (ownerLocalIntent) {
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
                 val canonical = if (
-                    at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request) ==
-                        at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
+                    ownerLocalIntent == at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
                 ) "Hallo" else "Was kannst du?"
                 input.text.clear()
                 addUserMessage(request)

@@ -246,7 +246,10 @@ object HybridMemoryRetriever {
         "eines", "er", "es", "für", "hat", "haben", "ich", "ihm", "ihn", "ihr", "im", "ist",
         "kann", "kannst", "mein", "meine", "meiner", "mir", "mit", "oder", "sein", "seine",
         "sich", "sie", "sind", "und", "vom", "von", "war", "warum", "welche", "welcher",
-        "welches", "wer", "wie", "wir", "wird", "wo", "zu", "zum", "zur"
+        "welches", "wer", "wie", "wir", "wird", "wo", "zu", "zum", "zur",
+        "über", "nicht", "auch", "noch", "wann", "wenn", "so", "man", "uns", "unser",
+        "dein", "deine", "weißt", "weiß", "etwas", "mich", "dich", "nach", "bis", "um",
+        "about", "tell", "know", "not", "any", "some", "there", "would", "will"
     )
 
     private const val K1 = 1.2
