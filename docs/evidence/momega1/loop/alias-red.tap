@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: MΩ QA isolated localized file attributes retain actual Node identities under path aliases
+not ok 1 - MΩ QA isolated localized file attributes retain actual Node identities under path aliases
+  ---
+  duration_ms: 140.371413
+  type: 'test'
+  location: '/workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:42:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   '["../repo-alias/tests/math.test.mjs",[],"addition",1]'
+    -   '["tests/math.test.mjs",[],"addition",1]'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: '["tests/math.test.mjs",[],"addition",1]'
+  actual:
+    0: '["../repo-alias/tests/math.test.mjs",[],"addition",1]'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-verifier-regressions.test.mjs:48:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 211.000725

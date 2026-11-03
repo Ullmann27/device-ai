@@ -1,0 +1,314 @@
+TAP version 13
+# Subtest: experience journal refuses complete JSON without newline as uncertain torn append
+ok 1 - experience journal refuses complete JSON without newline as uncertain torn append
+  ---
+  duration_ms: 2.901002
+  type: 'test'
+  ...
+# Subtest: experience journal validates sequence independently of rehashed bytes
+ok 2 - experience journal validates sequence independently of rehashed bytes
+  ---
+  duration_ms: 1.713562
+  type: 'test'
+  ...
+# Subtest: experience journal rejects an oversized record before publication
+ok 3 - experience journal rejects an oversized record before publication
+  ---
+  duration_ms: 22.152621
+  type: 'test'
+  ...
+# Subtest: experience journal refuses a held cross-process writer lease
+ok 4 - experience journal refuses a held cross-process writer lease
+  ---
+  duration_ms: 2008.323317
+  type: 'test'
+  ...
+# Subtest: experience journal refuses symlink storage
+ok 5 - experience journal refuses symlink storage
+  ---
+  duration_ms: 1.163283
+  type: 'test'
+  ...
+# Subtest: experience journal enforces record and byte hard bounds
+ok 6 - experience journal enforces record and byte hard bounds
+  ---
+  duration_ms: 88.878831
+  type: 'test'
+  ...
+# Subtest: experience journal rejects blank lines and duplicate tasks even with recomputed hashes
+ok 7 - experience journal rejects blank lines and duplicate tasks even with recomputed hashes
+  ---
+  duration_ms: 2.106691
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST signed fixture survives a genuine fresh Node process restart
+ok 8 - CONTRACT_TEST signed fixture survives a genuine fresh Node process restart
+  ---
+  duration_ms: 198.404727
+  type: 'test'
+  ...
+# Subtest: unbranded observations and copied success flags cannot be admitted
+ok 9 - unbranded observations and copied success flags cannot be admitted
+  ---
+  duration_ms: 11.576548
+  type: 'test'
+  ...
+# Subtest: legacy successful terminal records do not become technical proof
+ok 10 - legacy successful terminal records do not become technical proof
+  ---
+  duration_ms: 11.983548
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted source SHA
+ok 11 - CONTRACT_TEST replay rejects substituted source SHA
+  ---
+  duration_ms: 32.031751
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/source
+ok 12 - CONTRACT_TEST replay rejects substituted model/source
+  ---
+  duration_ms: 11.868172
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/task
+ok 13 - CONTRACT_TEST replay rejects substituted model/task
+  ---
+  duration_ms: 12.179027
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/request
+ok 14 - CONTRACT_TEST replay rejects substituted model/request
+  ---
+  duration_ms: 15.011745
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/output
+ok 15 - CONTRACT_TEST replay rejects substituted model/output
+  ---
+  duration_ms: 15.057454
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/identity
+ok 16 - CONTRACT_TEST replay rejects substituted model/identity
+  ---
+  duration_ms: 8.574332
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted model/proposal
+ok 17 - CONTRACT_TEST replay rejects substituted model/proposal
+  ---
+  duration_ms: 29.449534
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted verifier/patch
+ok 18 - CONTRACT_TEST replay rejects substituted verifier/patch
+  ---
+  duration_ms: 13.432127
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted verifier/task
+ok 19 - CONTRACT_TEST replay rejects substituted verifier/task
+  ---
+  duration_ms: 16.160516
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing verification
+ok 20 - CONTRACT_TEST replay rejects substituted missing verification
+  ---
+  duration_ms: 10.320683
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing diagnostics
+ok 21 - CONTRACT_TEST replay rejects substituted missing diagnostics
+  ---
+  duration_ms: 5.06368
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted missing RED
+ok 22 - CONTRACT_TEST replay rejects substituted missing RED
+  ---
+  duration_ms: 5.221619
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted receipt
+ok 23 - CONTRACT_TEST replay rejects substituted receipt
+  ---
+  duration_ms: 5.031019
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted journal head
+ok 24 - CONTRACT_TEST replay rejects substituted journal head
+  ---
+  duration_ms: 4.563096
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted permission promotion
+ok 25 - CONTRACT_TEST replay rejects substituted permission promotion
+  ---
+  duration_ms: 6.165048
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted evidence class
+ok 26 - CONTRACT_TEST replay rejects substituted evidence class
+  ---
+  duration_ms: 8.206911
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted future time
+ok 27 - CONTRACT_TEST replay rejects substituted future time
+  ---
+  duration_ms: 2.87932
+  type: 'test'
+  ...
+# Subtest: CONTRACT_TEST replay rejects substituted unbounded age
+ok 28 - CONTRACT_TEST replay rejects substituted unbounded age
+  ---
+  duration_ms: 24.251124
+  type: 'test'
+  ...
+# Subtest: hash-chain recomputation does not replace the runtime proof MAC
+ok 29 - hash-chain recomputation does not replace the runtime proof MAC
+  ---
+  duration_ms: 8.598849
+  type: 'test'
+  ...
+# Subtest: wrong runtime key cannot authenticate persisted proof or canonical journal
+ok 30 - wrong runtime key cannot authenticate persisted proof or canonical journal
+  ---
+  duration_ms: 9.105872
+  type: 'test'
+  ...
+# Subtest: revocation persists and is consulted by the next fresh recall
+ok 31 - revocation persists and is consulted by the next fresh recall
+  ---
+  duration_ms: 15.453528
+  type: 'test'
+  ...
+# Subtest: forged revocations block recall instead of being silently ignored
+ok 32 - forged revocations block recall instead of being silently ignored
+  ---
+  duration_ms: 10.634421
+  type: 'test'
+  ...
+# Subtest: deleted current canonical grant fails closed even with valid historical proof
+ok 33 - deleted current canonical grant fails closed even with valid historical proof
+  ---
+  duration_ms: 5.898742
+  type: 'test'
+  ...
+# Subtest: canonical journal corruption and torn experience tail fail closed
+ok 34 - canonical journal corruption and torn experience tail fail closed
+  ---
+  duration_ms: 9.093623
+  type: 'test'
+  ...
+# Subtest: freshness and exact repository/source/file scope are enforced
+ok 35 - freshness and exact repository/source/file scope are enforced
+  ---
+  duration_ms: 12.146747
+  type: 'test'
+  ...
+# Subtest: no partial historical proof is emitted when it exceeds context budget
+ok 36 - no partial historical proof is emitted when it exceeds context budget
+  ---
+  duration_ms: 31.981975
+  type: 'test'
+  ...
+# (node:145723) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# (node:145723) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+# (node:145723) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+# Subtest: real concurrent child writers preserve every task exactly once
+ok 37 - real concurrent child writers preserve every task exactly once
+  ---
+  duration_ms: 498.83579
+  type: 'test'
+  ...
+# Subtest: a terminated process leaves an uncertain writer lease, never automatic stale recovery
+ok 38 - a terminated process leaves an uncertain writer lease, never automatic stale recovery
+  ---
+  duration_ms: 2096.684414
+  type: 'test'
+  ...
+# Subtest: requesting task needs its own current canonical grant and authenticated owner GOAL
+ok 39 - requesting task needs its own current canonical grant and authenticated owner GOAL
+  ---
+  duration_ms: 13.143466
+  type: 'test'
+  ...
+# Subtest: a full 4096-record ledger cannot block durable withdrawal
+ok 40 - a full 4096-record ledger cannot block durable withdrawal
+  ---
+  duration_ms: 279.892343
+  type: 'test'
+  ...
+# Subtest: a full byte-budget ledger cannot block withdrawal or exceed the bound
+ok 41 - a full byte-budget ledger cannot block withdrawal or exceed the bound
+  ---
+  duration_ms: 479.388935
+  type: 'test'
+  ...
+# Subtest: canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping
+ok 42 - canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping
+  ---
+  duration_ms: 26.297699
+  type: 'test'
+  ...
+# Subtest: withdrawal reaches canonical grant even if experience ledger is already damaged
+ok 43 - withdrawal reaches canonical grant even if experience ledger is already damaged
+  ---
+  duration_ms: 5.05141
+  type: 'test'
+  ...
+# Subtest: process-only or mutable observations cannot enter model-derived technical strategy tier
+ok 44 - process-only or mutable observations cannot enter model-derived technical strategy tier
+  ---
+  duration_ms: 9.141295
+  type: 'test'
+  ...
+# Subtest: signed process-only historical proof remains ineligible for technical strategy recall
+ok 45 - signed process-only historical proof remains ineligible for technical strategy recall
+  ---
+  duration_ms: 5.822927
+  type: 'test'
+  ...
+# Subtest: withdrawal refuses to overwrite a concurrently changed canonical grant
+ok 46 - withdrawal refuses to overwrite a concurrently changed canonical grant
+  ---
+  duration_ms: 4.771043
+  type: 'test'
+  ...
+# Subtest: uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability
+ok 47 - uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability
+  ---
+  duration_ms: 8.214382
+  type: 'test'
+  ...
+# Subtest: real concurrent withdrawing processes keep one canonical anchor and one mirror
+ok 48 - real concurrent withdrawing processes keep one canonical anchor and one mirror
+  ---
+  duration_ms: 485.289415
+  type: 'test'
+  ...
+# Subtest: a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility
+ok 49 - a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility
+  ---
+  duration_ms: 178.639605
+  type: 'test'
+  ...
+# Subtest: historical canonical withdrawal is checked independently of a different authorized requesting grant
+ok 50 - historical canonical withdrawal is checked independently of a different authorized requesting grant
+  ---
+  duration_ms: 35.646711
+  type: 'test'
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5002.750564

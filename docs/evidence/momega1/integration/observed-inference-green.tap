@@ -1,0 +1,328 @@
+TAP version 13
+# Subtest: typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+ok 1 - typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source
+  ---
+  duration_ms: 1861.902133
+  type: 'test'
+  ...
+# Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+ok 2 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+  ---
+  duration_ms: 343.609199
+  type: 'test'
+  ...
+# Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
+ok 3 - MΩ canonical fresh verifier rejects removal of a baseline identity
+  ---
+  duration_ms: 352.386302
+  type: 'test'
+  ...
+# Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
+ok 4 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+  ---
+  duration_ms: 2452.969676
+  type: 'test'
+  ...
+# Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
+ok 5 - MΩ strict execution blocks before provider or missing journal when isolation is absent
+  ---
+  duration_ms: 0.684313
+  type: 'test'
+  ...
+# Subtest: MΩ model-observation gate rejects self-certified task-bound JSON
+ok 6 - MΩ model-observation gate rejects self-certified task-bound JSON
+  ---
+  duration_ms: 0.392964
+  type: 'test'
+  ...
+# Subtest: MΩ recall ablation accepts only a trusted Boolean option before any state access
+ok 7 - MΩ recall ablation accepts only a trusted Boolean option before any state access
+  ---
+  duration_ms: 0.240934
+  type: 'test'
+  ...
+# Subtest: MΩ rejected response cannot self-certify a genuine inference or manufacture call counts
+ok 8 - MΩ rejected response cannot self-certify a genuine inference or manufacture call counts
+  ---
+  duration_ms: 0.286022
+  type: 'test'
+  ...
+# Subtest: owner worker refuses a supplied untrusted executor before claim or checks
+ok 9 - owner worker refuses a supplied untrusted executor before claim or checks
+  ---
+  duration_ms: 27.28965
+  type: 'test'
+  ...
+# Subtest: scoped task identity and commit are checked before claiming the owner task
+ok 10 - scoped task identity and commit are checked before claiming the owner task
+  ---
+  duration_ms: 75.612939
+  type: 'test'
+  ...
+# Subtest: scoped revision receives actual failed diagnostics and bounded history then verifies independently
+ok 11 - scoped revision receives actual failed diagnostics and bounded history then verifies independently
+  ---
+  duration_ms: 1899.362837
+  type: 'test'
+  ...
+# Subtest: repeated scoped patch is rejected without a second candidate check
+ok 12 - repeated scoped patch is rejected without a second candidate check
+  ---
+  duration_ms: 403.195422
+  type: 'test'
+  ...
+# Subtest: same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again
+ok 13 - same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again
+  ---
+  duration_ms: 658.540851
+  type: 'test'
+  ...
+# Subtest: durable scoped diagnostics never cross task authorization or source boundaries
+ok 14 - durable scoped diagnostics never cross task authorization or source boundaries
+  ---
+  duration_ms: 1554.283702
+  type: 'test'
+  ...
+# Subtest: exhausted or corrupt durable model budgets retain explicit codes and stop revision retries
+ok 15 - exhausted or corrupt durable model budgets retain explicit codes and stop revision retries
+  ---
+  duration_ms: 438.29797
+  type: 'test'
+  ...
+# Subtest: scoped proposals cannot edit outside task grants or change context commit
+ok 16 - scoped proposals cannot edit outside task grants or change context commit
+  ---
+  duration_ms: 316.344166
+  type: 'test'
+  ...
+# Subtest: scoped pure numeric changes can cover two files on the host
+ok 17 - scoped pure numeric changes can cover two files on the host
+  ---
+  duration_ms: 349.492576
+  type: 'test'
+  ...
+# Subtest: general scoped source is blocked before executing candidate code without isolation
+ok 18 - general scoped source is blocked before executing candidate code without isolation
+  ---
+  duration_ms: 167.202317
+  type: 'test'
+  ...
+# Subtest: new coding and isolation control files stay protected by the critic
+ok 19 - new coding and isolation control files stay protected by the critic
+  ---
+  duration_ms: 0.4175
+  type: 'test'
+  ...
+# Subtest: general scoped proposals cannot mutate test APIs or write their own reports
+ok 20 - general scoped proposals cannot mutate test APIs or write their own reports
+  ---
+  duration_ms: 0.19252
+  type: 'test'
+  ...
+# Subtest: scoped successes remain owner-review evidence without automatic learning
+ok 21 - scoped successes remain owner-review evidence without automatic learning
+  ---
+  duration_ms: 0.477231
+  type: 'test'
+  ...
+# Subtest: scoped provider failures count against the fixed model-call budget
+ok 22 - scoped provider failures count against the fixed model-call budget
+  ---
+  duration_ms: 185.540789
+  type: 'test'
+  ...
+# Subtest: total scoped candidate limit bounds revisions even when model budget remains
+ok 23 - total scoped candidate limit bounds revisions even when model budget remains
+  ---
+  duration_ms: 366.968196
+  type: 'test'
+  ...
+# Subtest: local teamleader forwards the scoped provider through the canonical owner worker
+ok 24 - local teamleader forwards the scoped provider through the canonical owner worker
+  ---
+  duration_ms: 1271.614526
+  type: 'test'
+  ...
+# Subtest: infrastructure failures without executed failed tests do not blacklist a candidate after restart
+ok 25 - infrastructure failures without executed failed tests do not blacklist a candidate after restart
+  ---
+  duration_ms: 567.811167
+  type: 'test'
+  ...
+# Subtest: native pinned completion counters preserve actual timestamped format
+ok 26 - native pinned completion counters preserve actual timestamped format
+  ---
+  duration_ms: 1.704304
+  type: 'test'
+  ...
+# Subtest: only known native completion trailer is removed; raw hash input is unchanged
+ok 27 - only known native completion trailer is removed; raw hash input is unchanged
+  ---
+  duration_ms: 0.360154
+  type: 'test'
+  ...
+# Subtest: official Qwen bytes select ChatML, with schema constraint supplied as inert data
+ok 28 - official Qwen bytes select ChatML, with schema constraint supplied as inert data
+  ---
+  duration_ms: 0.817084
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 29 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.334336
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 30 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 66.382996
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 31 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.458653
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 32 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 95.586811
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 33 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 59.006508
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 34 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 293.885914
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 35 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 190.60495
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 36 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 174.82342
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 37 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 1.116797
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 38 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 53.068902
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 39 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 63.931573
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 40 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 64.278597
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 41 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 57.866079
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 42 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 253.451604
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 43 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 165.320399
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 44 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 70.985248
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 45 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 50.591195
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 46 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 43.813947
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 47 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 71.741906
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 48 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 59.511019
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 49 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 61.680758
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 50 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 182.038444
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 51 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.449038
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 52 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 59.191257
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 53 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 148.528177
+  type: 'test'
+  ...
+1..53
+# tests 53
+# suites 0
+# pass 53
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8393.89132

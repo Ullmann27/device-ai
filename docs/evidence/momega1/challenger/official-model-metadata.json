@@ -1,0 +1,17 @@
+{
+  "source_api": "https://huggingface.co/api/models/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/tree/f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+  "matching_entries": [
+    {
+      "type": "file",
+      "oid": "fd69246985bc9ee8451624c55d3118e9f5251a1c",
+      "size": 1117320768,
+      "lfs": {
+        "oid": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "size": 1117320768,
+        "pointerSize": 135
+      },
+      "xetHash": "eaf7c99d99dcc2e20f1c1f1b114249fa090354dfed87131397b265a221f4d9c8",
+      "path": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
+    }
+  ]
+}

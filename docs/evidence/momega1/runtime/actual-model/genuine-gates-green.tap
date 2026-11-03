@@ -1,0 +1,243 @@
+baseline: 7f69a13211104cc7d9ede849135f73a6dfff7e15
+status: candidate source staged after RED; registry not independently reviewed
+utc: 2026-11-03T19:56:29.769081+00:00
+command: node --test --test-reporter=tap scripts/continuum-local-model-observation.test.mjs .github/continuum/coding-provider.test.mjs .github/continuum/coding-provider-remote.test.mjs
+exit: 0
+TAP version 13
+# Subtest: remote seam needs explicit config, server credential and durable canonical job evidence
+ok 1 - remote seam needs explicit config, server credential and durable canonical job evidence
+  ---
+  duration_ms: 25.790474
+  type: 'test'
+  ...
+# Subtest: declined or mismatched per-request consent consumes no reservation and starts no child
+ok 2 - declined or mismatched per-request consent consumes no reservation and starts no child
+  ---
+  duration_ms: 57.848406
+  type: 'test'
+  ...
+# Subtest: approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents
+ok 3 - approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents
+  ---
+  duration_ms: 32.399667
+  type: 'test'
+  ...
+# Subtest: remote CLI failure cannot silently invoke a local or another remote model
+ok 4 - remote CLI failure cannot silently invoke a local or another remote model
+  ---
+  duration_ms: 36.320898
+  type: 'test'
+  ...
+# Subtest: fixed remote failure reason and offline fallback survive the canonical provider boundary
+ok 5 - fixed remote failure reason and offline fallback survive the canonical provider boundary
+  ---
+  duration_ms: 32.515093
+  type: 'test'
+  ...
+# Subtest: canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
+ok 6 - canonical provider preserves explicit model admission metadata without forwarding unrelated credentials
+  ---
+  duration_ms: 41.401736
+  type: 'test'
+  ...
+# Subtest: provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
+ok 7 - provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI
+  ---
+  duration_ms: 25.427577
+  type: 'test'
+  ...
+# Subtest: model child receives only local credentials and durable trace excludes raw source/model output
+ok 8 - model child receives only local credentials and durable trace excludes raw source/model output
+  ---
+  duration_ms: 28.700472
+  type: 'test'
+  ...
+# Subtest: malformed model name is rejected before invoking the local child
+ok 9 - malformed model name is rejected before invoking the local child
+  ---
+  duration_ms: 48.168376
+  type: 'test'
+  ...
+# Subtest: unsafe evidence paths fail before dirtying the source checkout
+ok 10 - unsafe evidence paths fail before dirtying the source checkout
+  ---
+  duration_ms: 20.982359
+  type: 'test'
+  ...
+# Subtest: same canonical job resumes its request budget without repeating evidence slots
+ok 11 - same canonical job resumes its request budget without repeating evidence slots
+  ---
+  duration_ms: 47.503157
+  type: 'test'
+  ...
+# Subtest: request reservation is durable before inference and interrupted calls consume the budget
+ok 12 - request reservation is durable before inference and interrupted calls consume the budget
+  ---
+  duration_ms: 27.176047
+  type: 'test'
+  ...
+# Subtest: foreign or corrupt persisted requests block before another inference
+ok 13 - foreign or corrupt persisted requests block before another inference
+  ---
+  duration_ms: 28.626321
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 14 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 0.901621
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 15 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 65.714647
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 16 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.256548
+  type: 'test'
+  ...
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 17 - actual namespace binds admitted descriptors and fixture output; never inference evidence
+  ---
+  duration_ms: 71.798057
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 18 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 57.575154
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 19 - deadline cancels actual isolated process with bounded return
+  ---
+  duration_ms: 291.574539
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 20 - STOP cancels actual isolated process and leaves no trusted observation
+  ---
+  duration_ms: 184.864018
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 21 - malformed/oversized output and missing generation counters are rejected
+  ---
+  duration_ms: 166.728681
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 22 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 1.121092
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 23 - actual FD mount retains selected inode across model path replacement
+  ---
+  duration_ms: 45.666654
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 24 - prompt evaluation counter alone cannot masquerade as output generation
+  ---
+  duration_ms: 49.455139
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 25 - inference sandbox denies host files, external interfaces, secrets and writable model
+  ---
+  duration_ms: 49.752723
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 26 - seccomp denies fork and rlimits bound native memory/descriptor budgets
+  ---
+  duration_ms: 51.509821
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 27 - changing model during actual execution invalidates otherwise valid output
+  ---
+  duration_ms: 251.795757
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 28 - production provider rejects synthetic fixture receipt even when transport MAC is valid
+  ---
+  duration_ms: 141.776058
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 29 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 61.008021
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 30 - native worker threads remain permitted while process creation stays denied
+  ---
+  duration_ms: 62.214364
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 31 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 42.933301
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 32 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 72.68798
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 33 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 72.031491
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 34 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 54.109426
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 35 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+  ---
+  duration_ms: 167.025604
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 36 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.49024
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 37 - invalid model JSON retains authenticated process observation without a candidate
+  ---
+  duration_ms: 43.720495
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 38 - provider retains authenticated rejected-response observation and consumed durable budget
+  ---
+  duration_ms: 152.659083
+  type: 'test'
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2272.085566
