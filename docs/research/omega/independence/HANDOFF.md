@@ -1,7 +1,7 @@
 # Continuum Independence — Coding Agent Release 1
 
 Date: 2026-11-03. Quota: NOT_VISIBLE. Chief branch:
-`codex/continuum-independence-chief-20261103`.
+`codex/continuum-independence-chief-20261103`, Draft PR456.
 
 Base is Bot Genesis PR439 HEAD `527d43f93f6b1837bd8da38cfefcfc84a84fd464`.
 Its product source is `1595389274acb840c4ab544fa699c9eb2a04bd53`:
@@ -33,7 +33,8 @@ deployment or a tunnel. Owner CLI/postbox authority is separate from MCP reads.
 | independence_service_challenger | Frozen lifecycle/recovery/budget counterexamples, review tools/docs only |
 | independence_mcp_builder | `coding-mcp*.mjs`, MCP CLI, actual protocol/auth integration |
 | independence_mcp_challenger | Frozen MCP/security tests and protocol review only |
-| genesis_final_native_verifier | Finish prior frozen g04/known-u03 evidence; no new product edits |
+| genesis_final_native_verifier | Prior evidence preserved; new independent S01 service acceptance (PR461), no product edits |
+| synapse_p0_audit | Third-party combined exact-source integration/Android acceptance, no product edits |
 
 Builders must publish concrete interface contracts before dependent integration.
 Reviewers freeze counterexamples before inspecting candidate expectations. Only
@@ -50,7 +51,10 @@ Separately frozen KNOWN-u03 regression: one genuine local call, RED→GREEN and
 independent verification; actual FORGE/LINT observations, ECHO report, confirmed
 technical experience and one eligible EXACT_SOURCE recall from a fresh process.
 This demonstrates known-case plumbing, not a new unknown-task improvement.
-Final raw evidence and independent receipt audit are being secured on PR455.
+Raw evidence and independent receipt audit are preserved from PR455 commit
+`0176702a95815f8d6e6f3c1328489216ed160358`: 88 files, 614,776 bytes; all hashes
+independently rechecked at integration. Actual task times40.919s /36.647s; native
+peak RSS2,078,960 /2,078,692KiB. No Fold7 or energy measurement.
 
 ## First implementation gates
 
@@ -64,3 +68,24 @@ Final raw evidence and independent receipt audit are being secured on PR455.
    genuine local-model owner task through the released CLI.
 5. Freeze final source and rerun Node/Kotlin/Android/security gates. ARM64/Fold7
    stays a separate acceptance; current ADB inventory is empty.
+
+## First source increment
+
+`773fbc94` adds get/page metadata to the existing Kotlin profile bridge and its
+Node adapter. No replacement registry and no app-source change. It projects only
+profile metadata, not private notes, conversations or object references. Page
+limits1..100; stored role/name/version changes are reflected. REGISTERED does not
+mean executing. Compilation and10 host software checks PASS; raw logs/hashes in
+`profile-bridge/`. Authority/workspace doubles in those contract checks are not
+neural/execution evidence. Independent MCP challenger owns additional bridge checks.
+
+Service reviewer criteria: d1a280b6 (PR458),18 cases frozen before candidate.
+MCP reviewer criteria: cc3da6e1 (PR460),35 cases frozen before candidate.
+New native S01:630f77c6 (PR461), frozen before service-candidate inspection;
+owner6 tests and separate4 additional independent tests. No model call yet.
+Service/MCP are WIP; no standalone acceptance or ChatGPT connection is claimed.
+
+Relevant existing experiments: EXP-01/02/05/07/08/11/12. Official Issue41 read;
+Android-first remains the product goal. This release increment is a tested local
+host route until ARM64 isolation, approved native artifacts and device access are
+available; it does not enable an unsafe phone shell or replace the original APK.

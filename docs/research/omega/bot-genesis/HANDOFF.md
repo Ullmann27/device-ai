@@ -34,10 +34,13 @@ commits do not change the tested production files.
   observations, no false success or verified repair memories. Preserve this
   negative result. The original prior12-case4/12 result is a different experiment.
 
-The final frozen g04 model case and conditional KNOWN-u03 plumbing regression
-are still pending at this checkpoint. A successor independent verifier must
-inspect retained journals/processes before execution; the environment transition
-removed earlier live agent sessions. Never rerun an uncertain action automatically.
+Final native acceptance has completed (PR455 commit0176702a, integrated into
+Independence PR456): g04 FAIL with one genuine call and correct abstention;
+separate KNOWN-u03 PASS with one genuine call, FORGE/LINT execution, deterministic
+ECHO report and one eligible fresh-process experience recall. Both independent
+audits PASS. Raw logs and hashes: `coding-review/final-native/`; interpretation:
+`coding-review/FINAL-NATIVE-RESULTS.md`. Both attempts are consumed; no rerun is
+pending. The known success does not replace the unknown failure.
 
 ## Remaining limits
 
@@ -100,8 +103,9 @@ Only one Gradle/native-build/model workload runs at a time.
 ## Current acceptance
 
 PROFILE_CREATED: prior implementation and restart tests PASS.
-MODEL_CONNECTED / WORKSPACE_CONNECTED / TASK_EXECUTED for the new bot path:
-NOT_RUN. Three-bot genuine end-to-end acceptance: NOT_RUN.
+MODEL_CONNECTED / WORKSPACE_CONNECTED / TASK_EXECUTED: host known-u03 PASS;
+independent LINT execution and ECHO report confirmed. New unknown g04 FAIL.
+Standalone-service acceptance is a separate open Independence milestone.
 Fold7, APK, installation, thermal/audio/display acceptance: NOT_RUN.
 
 ## Next executable steps
