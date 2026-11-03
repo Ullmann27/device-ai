@@ -1621,7 +1621,9 @@ class AgentActivity : Activity() {
                 activeBotTurn = turn
                 cancellation.throwIfCancelled()
                 check(localRuntime.loadedModel == model) { "BOT_MODEL_CHANGED" }
-                val generated = generateLocal(cancellation, promptCharacters = turn.prompt.length) {
+                val generated = generateLocal(cancellation, promptCharacters = turn.prompt.length,
+                    hardDeadlineMillis = turn.deadlineMillis,
+                    maxOutputBytes = at.heinz.deviceai.chief.ChiefBotConversationEntry.MAX_RESPONSE_BYTES) {
                     localRuntime.streamThinking(turn.prompt, it)
                 }
                 cancellation.throwIfCancelled()
@@ -7712,8 +7714,12 @@ class AgentActivity : Activity() {
         cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null,
         turnTrace: CognitiveTurnTrace? = null,
         promptCharacters: Int? = null,
+        hardDeadlineMillis: Long? = null,
+        maxOutputBytes: Int? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
+        require(hardDeadlineMillis == null || hardDeadlineMillis in 1..600_000)
+        require(maxOutputBytes == null || maxOutputBytes in 1..64_000)
         cancellation?.throwIfCancelled()
         val completed = CountDownLatch(1)
         val response = StringBuilder()
@@ -7721,6 +7727,7 @@ class AgentActivity : Activity() {
         val proposalGuard = ToolProposalTurnGuard()
         val eventLock = Any()
         var terminalEventReceived = false
+        var outputBudgetExceeded = false
         var failure: String? = null
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
@@ -7748,6 +7755,15 @@ class AgentActivity : Activity() {
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
+                    if (event is LocalInferenceEvent.TextDelta && maxOutputBytes != null &&
+                        (response.length.toLong() + event.text.length > maxOutputBytes ||
+                            (response.toString() + event.text).toByteArray(Charsets.UTF_8).size > maxOutputBytes)) {
+                        outputBudgetExceeded = true
+                        failure = "BOT_OUTPUT_BUDGET_EXCEEDED"
+                        terminalEventReceived = true
+                        completed.countDown()
+                        return@LocalInferenceCallback
+                    }
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> if (
                             event.text.isNotEmpty() &&
@@ -7816,7 +7832,16 @@ class AgentActivity : Activity() {
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
         while (true) {
             cancellation?.throwIfCancelled()
-            if (completed.await(250, TimeUnit.MILLISECONDS)) break
+            if (completed.await(250, TimeUnit.MILLISECONDS)) {
+                if (synchronized(eventLock) { outputBudgetExceeded }) localRuntime.cancel()
+                break
+            }
+            if (hardDeadlineMillis != null &&
+                System.nanoTime() - generationStartedNanos >= TimeUnit.MILLISECONDS.toNanos(hardDeadlineMillis)) {
+                synchronized(eventLock) { terminalEventReceived = true }
+                localRuntime.cancel()
+                return LocalGeneration("", null, emptyList(), "BOT_DEADLINE_EXCEEDED")
+            }
             val diagnostic = synchronized(eventLock) {
                 val elapsedMillis = (System.nanoTime() - generationStartedNanos)
                     .coerceAtLeast(0L) / 1_000_000L
