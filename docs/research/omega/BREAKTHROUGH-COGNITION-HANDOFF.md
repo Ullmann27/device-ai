@@ -1,6 +1,7 @@
 # Continuum Ω cognition breakthrough lane — 2026-11-03
 
-Status: WIP / UNVERIFIED. No production change or test run at this checkpoint.
+Status: SOURCE_INTEGRATED / focused HOST_VERIFIED. Combined Gradle gate pending.
+Draft PR: https://github.com/Ullmann27/device-ai/pull/398.
 
 Base: Chief PR #392, `64ec06a73f50cae9ee49035c840710d87777d50f`, verified via
 GitHub PR metadata. Branch: `codex/breakthrough-cognition-20261103`.
@@ -69,3 +70,55 @@ Gemma/Fold7 are unavailable in this environment; no inference/device result.
 Rollback: revert only this lane's scoped production/test commit. No data migration
 or owner-memory rollback. Next: add focused regression/control tests and record
 RED, then minimally fix and re-run unchanged tests before freezing for QA.
+
+## Development result and candidate freeze
+
+Root cause confirmed: the unmodified timeline returned stale affirmative 4/6
+after four independently asserted number-free owner denial/uncertainty cases.
+The candidate passes known entity units into the existing bounded parser and
+checks number-free clauses before skipping them. A present quantity predicate,
+the recognized same entity and counted unit, a denial/hedge, and only permitted
+modifiers must all match. It returns the existing whole-projection null fallback.
+No zero, new fact, persistence, consent or model authority is inferred.
+
+New context integration test:
+`app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineContextIntegrationTest.kt`.
+It exercises actual `recordUnanswered` → `sessionEvidence` → follow-up task frame
+→ timeline → required prompt frame and integrity probe. Original owner text
+remains in the model prompt while the stale derived summary disappears. Model
+answers and other-session denials cannot invalidate owner quantities.
+
+Actual real Kotlin/JUnit runs (JUnit 4.13.2, Kotlin compiler 2.4.0, OpenJDK 17.0.20.1):
+
+- `red-jvm.txt`: 28 tests, 4 assertion failures, 24 passed. Production still
+  byte-identical to Chief baseline; tests and sources hash-bound in the log.
+- `green-jvm.txt`: same 28 tests passed after the source change.
+- `context-red-jvm.txt`: baseline replay with unchanged expanded tests,
+  57 tests / 5 failures / 52 passed. Fifth failure is the stale derived quantity
+  present in the actual context/prompt component composition.
+- `context-green-jvm.txt`: identical 57 tests passed against candidate source.
+  Runner `bash docs/evidence/breakthrough-cognition-20261103/run-context-jvm.sh`
+  supports `--baseline` for the exact 64ec06a7 source replay.
+- Integration runner compiles exact changed source/tests against a copied
+  snapshot of actual Gradle-produced baseline dependency classes, with no stubs.
+  QA confirmed those dependencies match Chief 64ec06a7; `git diff 64ec06a7
+  e934ba31 -- app/src/main` is empty. Snapshot aggregate hash is
+  `9f1f7524d8490f7c5d021b87de0107fc0c31334181362ab0e78392bf9320b3ba`.
+  This focused host composition is not an Android Activity/inference run.
+
+Negative controls retain quantities for different entities/units/properties,
+no-save instructions, questions, hypotheticals, quotes/reported speech, nested
+negation, and past/future number-free clauses. The original 12 timeline methods
+and surrounding existing context/retention/prompt methods remain unchanged.
+
+Limits: the bounded present-clause grammar is deliberately narrow. Pronouns,
+missing counted units, plural/hard paraphrases, nested or ambiguous prose and
+unsupported retractions are not a general semantic solution. Whole-projection
+abstention also removes unaffected derived entries while preserving raw owner
+history. A later positive restatement after a retraction still conservatively
+abstains within that retained history. Full project and independent frozen tests
+remain pending. Native Gemma/Fold7 are unavailable. No broad intelligence gain.
+
+Candidate source is frozen in the commit containing this section, before any
+independent unseen test result is requested. Future unseen failures will be
+reported without tuning this frozen candidate.

@@ -79,6 +79,54 @@ class OwnerStatementTimelineTest {
         assertEquals(9L, projection.entry("Kiste (rot)")!!.current)
     }
 
+    @Test fun numberFreeQuantityDenialCannotResurrectEarlierCount() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Korrektur: Die rote Kiste enthält keine Ringe mehr. Was war vorher?"))
+    }
+
+    @Test fun numberFreeUncertaintyCannotConfirmEarlierCount() {
+        assertNull(p(listOf("In der Schale liegen 6 Eier."),
+            "Korrektur: In der Schale liegen vielleicht noch Eier. Wie viele waren es vorher?"))
+    }
+
+    @Test fun numberFreeDenialInEarlierTurnRemainsEffectiveOnLaterQuestion() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe.", "Die rote Kiste hat keine Ringe mehr."), t3))
+    }
+
+    @Test fun numberFreeDenialInSameOwnerTurnCannotLeaveItsEarlierCount() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe. Die rote Kiste enthält keine Ringe mehr."), t3))
+    }
+
+    @Test fun unrelatedEntitiesPropertiesUnitsAndNoSaveInstructionsKeepQuantity() {
+        for (current in listOf(
+            "Die blaue Kiste hat keine Ringe mehr.",
+            "Die rote Kiste hat keine Eier mehr.",
+            "Die rote Kiste ist nicht beschädigt.",
+            "Die rote Kiste soll nicht gespeichert werden.",
+            "Speichere die rote Kiste und ihre Ringe nicht dauerhaft."
+        )) {
+            val projection = p(listOf("Die rote Kiste hat 4 Ringe."), "$current Was war vorher?")
+            assertEquals(current, 4L, projection?.entry("Kiste (rot)")?.current)
+        }
+    }
+
+    @Test fun numberFreeQuestionsHypotheticalsQuotesAndDoubleNegationsKeepQuantity() {
+        for (current in listOf(
+            "Hat die rote Kiste keine Ringe mehr?",
+            "Wenn die rote Kiste keine Ringe mehr hat, wäre sie leer.",
+            "Angenommen, die rote Kiste enthält keine Ringe mehr.",
+            "\"Die rote Kiste hat keine Ringe mehr\", sagte Max.",
+            "Max sagt: Die rote Kiste hat keine Ringe mehr.",
+            "Die rote Kiste hat nicht keine Ringe.",
+            "Es ist nicht wahr, dass die rote Kiste keine Ringe mehr hat.",
+            "Gestern hatte die rote Kiste keine Ringe.",
+            "Ab morgen hat die rote Kiste keine Ringe mehr."
+        )) {
+            val projection = p(listOf("Die rote Kiste hat 4 Ringe."), "$current Was war vorher?")
+            assertEquals(current, 4L, projection?.entry("Kiste (rot)")?.current)
+        }
+    }
+
     @Test fun futureIsSeparatedAndMixedFutureFailsClosed() {
         val f = p(listOf(repoT1), "Ab morgen hat die blaue Kiste 8 Ringe. Welche hat dann ursprünglich mehr?")!!
         assertEquals(7L, f.entry("Kiste (blau)")!!.current)

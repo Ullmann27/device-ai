@@ -16,6 +16,8 @@ package at.heinz.deviceai.cognitive
  * explicit past ("gestern/früher/damals"), mixed future in one sentence,
  * two values for the same entity in one message, unit conflicts, >8 entities,
  * oversized/too many turns. Questions ("…?") never assert values.
+ * A simple number-free denial/uncertainty of a known entity's counted unit
+ * also drops the projection; it never guesses zero or a replacement value.
  * "statt 4", "anstelle von 4" and "von 4 auf 9" select the NEW value.
  */
 internal object OwnerStatementTimeline {
@@ -61,6 +63,12 @@ internal object OwnerStatementTimeline {
         "auf", "von", "hat", "haben", "sind", "ist", "liegen", "im", "in", "der", "die", "das")
     // Grammatical words that look like nouns after a determiner at sentence start.
     private val nonEntityNouns = setOf("Anzahl", "Zahl", "Menge", "Frage", "Antwort", "Aufgabe")
+    private val quantityRetractionPrefix = Regex(
+        """(?iu)^(?:(?:korrektur|berichtigung|richtigstellung|änderung)\s*:\s*)?(?:in\s+)?$""")
+    private val quantityRetractionTail = Regex(
+        """(?iu)^\s+(?:hat|haben|enthält|enthalten|liegen|sind)\s+([\p{L}\s,]+)[.!;]?$""")
+    private val quantityRetractionModifiers = setOf("kein", "keine", "keinen", "keinem", "keiner", "keines",
+        "nicht", "mehr", "noch", "vielleicht", "eventuell", "wahrscheinlich", "angeblich")
 
     private class Fact(val key: String, val display: String, val unit: String?, val value: Long, val future: Boolean)
 
@@ -74,9 +82,25 @@ internal object OwnerStatementTimeline {
 
     private class Poisoned : RuntimeException()
 
+    /** Only a simple present-tense quantity clause can retract a known count.
+     * Requiring the counted unit prevents unrelated properties or no-save
+     * instructions from invalidating it. Quotes, reported speech, conditionals,
+     * other times and nested negation do not match this bounded clause grammar. */
+    private fun retractsQuantity(body: String, start: Int, end: Int, unit: String): Boolean {
+        if (!quantityRetractionPrefix.matches(body.substring(0, start))) return false
+        val tail = quantityRetractionTail.matchEntire(body.substring(end)) ?: return false
+        val tokens = tail.groupValues[1].trim().lowercase().split(Regex("[\\s,]+"))
+        if (tokens.count { negation.matches(it) } > 1) return false
+        if (tokens.none { negation.matches(it) || hedge.matches(it) }) return false
+        return tokens.any { compatibleUnits(it, unit) } && tokens.all {
+            it in quantityRetractionModifiers || compatibleUnits(it, unit)
+        }
+    }
+
     /** Facts of one owner message, in order; throws Poisoned on any unsafe statement. */
-    private fun facts(text: String): List<Fact> {
+    private fun facts(text: String, priorUnits: Map<String, String?>): List<Fact> {
         val out = mutableListOf<Fact>()
+        val knownUnits = priorUnits.toMutableMap()
         for (s in sentence.findAll(text).map { it.value }) {
             val body = s.trim()
             if (body.isEmpty() || body.endsWith("?")) continue
@@ -105,7 +129,14 @@ internal object OwnerStatementTimeline {
                     chosen.groupValues[1].toLong(), futureMarker.containsMatchIn(body))
                 lastNoun = noun; if (unit != null) lastUnit = unit
             }
-            if (sentenceFacts.isEmpty()) continue
+            if (sentenceFacts.isEmpty()) {
+                for (hit in hits) {
+                    val key = "${hit.noun?.lowercase()}|${hit.adj?.let(::stem).orEmpty()}"
+                    val unit = knownUnits[key] ?: continue
+                    if (retractsQuantity(body, hit.start, hit.end, unit)) throw Poisoned()
+                }
+                continue
+            }
             // Qualifiers can precede the entity or follow the number, even beyond
             // the extraction window. Validate the complete sentence before admitting
             // a value; a separate no-save instruction has no facts and is skipped above.
@@ -114,6 +145,9 @@ internal object OwnerStatementTimeline {
                 morningNoun.containsMatchIn(body)) throw Poisoned()
             if (sentenceFacts.any { it.future } && sentenceFacts.size > 1) throw Poisoned()
             out += sentenceFacts
+            sentenceFacts.forEach { fact ->
+                if (fact.unit != null || fact.key !in knownUnits) knownUnits[fact.key] = fact.unit
+            }
         }
         if (out.groupBy { it.key }.any { (_, v) -> v.size > 1 }) throw Poisoned()
         return out
@@ -127,7 +161,7 @@ internal object OwnerStatementTimeline {
         try {
             for ((index, turn) in (previousOwnerTurns + currentTurn).withIndex()) {
                 if (index > 0 && newScenario.containsMatchIn(turn)) state.clear()
-                for (f in facts(turn)) {
+                for (f in facts(turn, state.mapValues { it.value.unit })) {
                     val s = state[f.key]
                     if (s == null) {
                         if (f.future) state[f.key] = State(f.display, f.unit, f.value, f.value, f.value).also { return null }
