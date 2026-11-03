@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-11-03T22:11:24.456013+00:00",
+  "phase": "CLOSING_CRITICAL_REPAIR_REVIEW_PENDING",
+  "quotaApi": "NOT_VISIBLE",
+  "ownerReportedRemainingPercent": 20,
+  "heads": {
+    "codex/continuum-independence-chief-20261103": "243d3a16e8468afa1d48a2ed0fc589a3d7fbffc4",
+    "codex/bot-genesis-chief-20261103": "527d43f93f6b1837bd8da38cfefcfc84a84fd464",
+    "codex/independence-service-20261103": "d84689868631466640893c9ee9a0374db857a8b8",
+    "codex/independence-service-review-20261103": "23d141027dc8e878ca3abd7cd069a7c47ccbaf90",
+    "codex/independence-mcp-20261103": "2424a35e2b6a3ed7198d6938c8e5b1b6303a7fc7",
+    "codex/independence-mcp-review-20261103": "e4c6213fbf31e33e929d1a4bf685a5c26b6a1424",
+    "codex/independence-native-review-20261103": "226c49926ee5dbeda60d5f9cda362e809c682c2c",
+    "codex/independence-final-qa-20261103": "996c5d95beb12203b5ffe5c72b38bc0076fda640"
+  }
+}

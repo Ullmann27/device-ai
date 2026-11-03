@@ -102,3 +102,26 @@ MCP official docs require authenticated reachable transport (OAuth and HTTPS or
 an owner-configured Secure MCP Tunnel); localBearer alone is not a ChatGPT link.
 No custom-MCP registration or tunnel-management tool exists in this session.
 No endpoint/tunnel/key registration was performed.
+
+## Owner-requested closing mode
+
+Owner reports20% remaining and explicitly requests repair, final verification,
+commit/push, then stop. Actual quotaAPI remains NOT_VISIBLE. No new experiment or
+neural invocation begins. S01 remains frozen and NOT_RUN on PR461. No automatic
+continuation after closure.
+
+Late independent counterexample on service0c54a7bc: killing the outer worker can
+leave its separate local-brain CLI and sandbox alive. The former service could
+then dispatch a different pending task. An actual harmless C-sleep launcher
+experiment reproduced process survival (not neural inference), and a real-service
+regression failed with the second task advancing. Barrier repair is in07ed91e5 /
+3b3f51d8 /d8468986; independent targetedGREEN is still pending at this checkpoint.
+Do not infer final acceptance from earlier10/10 or32/32 checks. Preserve their
+exact source and scope. The repaired global unresolved-execution barrier has no
+unsafe force-clear/reconciliation command; manual host reconciliation remains a
+separate explicit operational limit.
+
+FinalQA agent has exact-source Node/Kotlin/MCP/Android runners prepared; runs only
+after the critical fix passes and Chief freezes integrated source. Current branch
+checkpoints are in CLOSEOUT-HEADS.json. Final facts will supersede this checkpoint
+in CLOSEOUT.md; absence of that completed report means no final acceptance claim.
