@@ -375,7 +375,9 @@ test('new visual start screen is local, accessible and honest about capabilities
  ensure('drawing is local and motion follows visibility and power policy',
    art.includes('class ContinuumHologramView') &&
    art.includes('override fun onDraw(') &&
-   art.includes('canAnimate()') && art.includes('isPowerSaveMode') &&
+   art.includes('private fun canAnimateFrame()') &&
+   art.includes('foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE') &&
+   art.includes('motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode && thermalStatus < 3') &&
    !/URL\(|https?:\/\//.test(art+renderer));
  ensure('start screen uses real native drawing and named slots',
    pane.includes('ContinuumHologramView(this)') && pane.includes('ContinuumHomeView('));

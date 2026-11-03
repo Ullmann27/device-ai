@@ -1,0 +1,29 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (12.252297ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (2.464026ms)
+✔ background consolidation records failure without losing interrupted source trials (0.329896ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (4.628251ms)
+✔ activity request codes are unique and every one has a result handler (24.561278ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.476507ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (45.681121ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (3.807947ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (4.561089ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.550358ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (1.116359ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (1.047705ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (6.002608ms)
+✔ Teamleader Android UI reports status without false success (0.248143ms)
+✔ live model status does not revert the beginner cockpit to English (0.475826ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (0.575445ms)
+✔ new visual start screen is local, accessible and honest about capabilities (1.146725ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (2.720271ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.370196ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.464168ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.700894ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 439.233936
