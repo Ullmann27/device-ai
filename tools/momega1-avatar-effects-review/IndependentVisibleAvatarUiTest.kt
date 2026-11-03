@@ -123,7 +123,9 @@ class IndependentVisibleAvatarUiTest {
         val f=fixture()
         try {
             chat(f,true);shadowOf(Looper.getMainLooper()).idleFor(100,TimeUnit.MILLISECONDS)
-            assertTrue(f.head.isShown);assertTrue(f.head.sampleMotion().callbackCount>0)
+            val state="shown=${f.head.isShown} attached=${f.head.isAttachedToWindow} window=${f.head.windowVisibility} motion=${f.head.sampleMotion()} pending=${field(f.head,"framePending")} foreground=${field(f.head,"foregroundActive")} allowed=${field(f.head,"motionAllowed") }"
+            println("VISIBILITY_DIAGNOSTIC $state")
+            assertTrue("Head must be shown: $state",f.head.isShown);assertTrue("Visible clock must advance: $state",f.head.sampleMotion().callbackCount>0)
             invoke(f.a,"onPause")
             val stopped=f.head.sampleMotion().callbackCount
             shadowOf(Looper.getMainLooper()).idleFor(200,TimeUnit.MILLISECONDS)
