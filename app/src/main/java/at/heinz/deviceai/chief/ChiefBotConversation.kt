@@ -78,10 +78,20 @@ class ChiefBotConversationTurn internal constructor(
     val profileVersion: Long,
     val model: ImportedLocalModel,
     val prompt: String,
+    val deadlineMillis: Long,
+    internal val startedAtNanos: Long,
     internal val epoch: Long,
     internal val request: String,
     internal val snapshot: ChiefBotConversationSnapshot
-)
+) {
+    /** Remaining task budget, not a license to release an unfinished native generation. */
+    fun remainingMillis(): Long {
+        val elapsed = System.nanoTime() - startedAtNanos
+        if (elapsed < 0) return 0
+        val remainingNanos = java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(deadlineMillis) - elapsed
+        return if (remainingNanos <= 0) 0 else java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(remainingNanos)
+    }
+}
 
 /**
  * A frame/persistence adapter for the existing Chief and shared LocalModelRuntime, not a scheduler.
@@ -122,6 +132,7 @@ class ChiefBotConversation(
         require(request.isNotBlank() && ChiefBotConversationEntry.utf8Bytes(request) <= ChiefBotConversationEntry.MAX_REQUEST_BYTES)
         require(sessionId.isNotBlank() && sessionId.length <= 160 && sessionId.none { it.isISOControl() })
         val marker = Any()
+        val startedAtNanos = System.nanoTime()
         val generation = synchronized(lock) {
             check(selected == agentId) { "BOT_SELECTION_CHANGED" }
             check(pending == null) { "BOT_CONVERSATION_BUSY" }
@@ -129,6 +140,7 @@ class ChiefBotConversation(
         }
         try {
             val snapshot = store.conversationSnapshot(agentId)
+            check(snapshot.profile.resourceBudget.maxModelCalls >= 1) { "BOT_MODEL_CALL_BUDGET_EXHAUSTED" }
             val immutableModel = model.copy(capabilities = model.capabilities.copy(
                 supportedBackends = Collections.unmodifiableSet(LinkedHashSet(model.capabilities.supportedBackends))))
             // No archive memory, owner history, research, skill or model-catalog labels are copied.
@@ -171,7 +183,9 @@ class ChiefBotConversation(
                 ?: error("BOT_MANDATORY_CONTEXT_EXCEEDS_BUDGET")
             compiled.requireCompleteIn(prompt)
             val turn = ChiefBotConversationTurn(agentId, snapshot.profile.displayName, UUID.randomUUID().toString(),
-                sessionId, snapshot.profile.profileVersion, immutableModel, prompt, generation, request, snapshot)
+                sessionId, snapshot.profile.profileVersion, immutableModel, prompt,
+                snapshot.profile.resourceBudget.deadlineMillis, startedAtNanos, generation, request, snapshot)
+            check(turn.remainingMillis() > 0) { "BOT_DEADLINE_EXPIRED" }
             synchronized(lock) {
                 check(pending === marker && epoch == generation && selected == agentId) { "BOT_SELECTION_CHANGED" }
                 pending = turn
@@ -187,7 +201,7 @@ class ChiefBotConversation(
      * Use after an off-UI isCurrent check; accepted UI mutations must call invalidate before refresh.
      * Cross-process writes are detected by strict checks, not instantly broadcast to this adapter. */
     fun isPresentationBound(turn: ChiefBotConversationTurn, currentModel: ImportedLocalModel?, sessionId: String): Boolean = synchronized(lock) {
-        (pending === turn || committed === turn) && bound(turn, currentModel, sessionId)
+        ((pending === turn && turn.remainingMillis() > 0) || committed === turn) && bound(turn, currentModel, sessionId)
     }
 
     /** Display correlation only, with a bounded persistent revision check (not for every render frame).
@@ -198,7 +212,7 @@ class ChiefBotConversation(
             committed === turn -> committedProfile
             else -> null
         }
-        expected != null && bound(turn, currentModel, sessionId) &&
+        expected != null && (committed === turn || turn.remainingMillis() > 0) && bound(turn, currentModel, sessionId) &&
             runCatching { store.get(turn.agentId) == expected }.getOrDefault(false)
     }
 
@@ -209,15 +223,18 @@ class ChiefBotConversation(
     /** The caller must supply a real terminal model response, not a partial stream or tool result. */
     fun complete(turn: ChiefBotConversationTurn, response: String, currentModel: ImportedLocalModel?, sessionId: String): Boolean = synchronized(lock) {
         if (pending !== turn) return@synchronized false
-        if (!bound(turn, currentModel, sessionId)) { invalidateLocked(); return@synchronized false }
+        if (!bound(turn, currentModel, sessionId) || turn.remainingMillis() <= 0) { invalidateLocked(); return@synchronized false }
         try {
             val current = store.get(turn.agentId) ?: return@synchronized false
             if (current != turn.snapshot.profile) return@synchronized false
             val entry = ChiefBotConversationEntry(turn.request, response, turn.model.id, turn.model.version, turn.model.sha256)
             try {
-                committedProfile = store.saveConversation(turn.snapshot.profile, turn.snapshot.history.append(entry))
+                committedProfile = store.saveConversation(turn.snapshot.profile, turn.snapshot.history.append(entry)) {
+                    turn.remainingMillis() > 0 && bound(turn, currentModel, sessionId)
+                }
             } catch (failure: IllegalArgumentException) {
-                if (failure.message == "BOT_PROFILE_VERSION_CONFLICT" || failure.message == "BOT_CONVERSATION_SNAPSHOT_CHANGED") return@synchronized false
+                if (failure.message == "BOT_PROFILE_VERSION_CONFLICT" || failure.message == "BOT_CONVERSATION_SNAPSHOT_CHANGED" ||
+                    failure.message == "BOT_CONVERSATION_COMMIT_EXPIRED") return@synchronized false
                 throw failure
             }
             committed = turn

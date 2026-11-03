@@ -209,9 +209,11 @@ class ChiefBotProfileStore(
         return locked { conversationLocked(read()[agentId] ?: throw IllegalArgumentException("BOT_NOT_REGISTERED")) }
     }
 
-    internal fun saveConversation(profile: ChiefBotProfile, history: ChiefBotConversationHistory): ChiefBotProfile = locked {
+    internal fun saveConversation(profile: ChiefBotProfile, history: ChiefBotConversationHistory,
+                                  stillCurrent: () -> Boolean): ChiefBotProfile = locked {
         update(profile.agentId, profile.profileVersion) { current ->
             require(current == profile) { "BOT_CONVERSATION_SNAPSHOT_CHANGED" }
+            require(stillCurrent()) { "BOT_CONVERSATION_COMMIT_EXPIRED" }
             val payload = ChiefBotConversationCodec.encode(current, history)
             val objectId = ContinuumObjectId.of(ContinuumObjectType.TASK_CHECKPOINT, payload)
             val directory = conversationDirectory(current)
@@ -223,6 +225,7 @@ class ChiefBotProfileStore(
             val stored = FileContinuumObjectStore(directory.toFile(), ChiefBotConversationCodec.MAX_BYTES, CONVERSATION_STORE_BYTES)
                 .put(ContinuumObjectType.TASK_CHECKPOINT, payload)
             FileChannel.open(directory, READ).use { it.force(true) }
+            require(stillCurrent()) { "BOT_CONVERSATION_COMMIT_EXPIRED" }
             current.copy(conversationObjectId = stored.id.value,
                 conversationVersion = Math.addExact(current.conversationVersion, 1), profileVersion = nextVersion(current))
         }
