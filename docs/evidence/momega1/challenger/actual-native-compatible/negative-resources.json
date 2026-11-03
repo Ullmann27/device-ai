@@ -1,0 +1,20 @@
+{
+  "command": [
+    "node",
+    "tools/momega1-challenger/actual-runtime-negative.mjs",
+    "/workspace/momega1-challenger-hostcandidate",
+    "docs/evidence/momega1/challenger/actual-native-compatible/negative-results.json"
+  ],
+  "runtimePath": "/workspace/momega1-local-model/build-cpu/bin/llama-completion",
+  "runtimeDevice": 27,
+  "runtimeInode": 1619360,
+  "exit": 0,
+  "elapsedSeconds": 18.331,
+  "matchedRuntimeProcesses": 2,
+  "samples": 61,
+  "peakObservedRssKiB": 2063468,
+  "peakObservedVmHwmKiB": 2063468,
+  "peakObservedThreads": 3,
+  "procAccessMisses": 291223,
+  "measurement": "Executable-inode-matched /proc status samples; sampled peak may miss transients; not a standalone benchmark"
+}

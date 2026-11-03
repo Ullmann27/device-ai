@@ -1,0 +1,23 @@
+{
+  "classification": "ACTUAL_APPROVED_MODEL_NEGATIVE_TESTS",
+  "candidate": "/workspace/momega1-challenger-hostcandidate",
+  "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "cases": [
+    {
+      "name": "real model active cancellation",
+      "elapsedMs": 4045,
+      "eventAtMs": 4002,
+      "errorCode": "CODING_CANCELLED",
+      "verifiedReceiptReturned": false
+    },
+    {
+      "name": "real model path replacement retains old FD but invalidates acceptance",
+      "elapsedMs": 13792,
+      "eventAtMs": 4001,
+      "errorCode": "LOCAL_RUNTIME_FILE_CHANGED",
+      "verifiedReceiptReturned": false
+    }
+  ],
+  "approvedOriginalStatUnchanged": true
+}
