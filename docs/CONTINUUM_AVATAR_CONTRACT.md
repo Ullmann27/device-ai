@@ -2,7 +2,7 @@
 
 Gültig ab PR #373 (`continuum/m3-grok-selbstrekonstruktion-20261103`). Laut Koordinationsbeschluss des Besitzers ist **diese** Schnittstelle
 (`app/src/main/java/at/heinz/deviceai/avatar/`) die einzige Avatar-Schnittstelle in device-ai. Andere Avatar-Interfaces werden nicht weitergebaut.
-Es gibt **kein Rendering**. Standard ist `NoOpAvatarSink`, das Hologramm (`ContinuumHologramView`) bleibt unverändert.
+Update 03.11.2026 (Operation Ω): Der optionale native 2D-Kopf in `ContinuumHologramView` verwendet diesen Vertrag und den bestehenden Zeichen-/Lifecycle-Loop. Die Originalkugel bleibt Standard; Auswahl unter Systemstatus → AVATAR · KUGEL ODER KOPF. Keine neue TTS, Kamera oder 3D-Assets. Die Registry bleibt standardmäßig `NoOpAvatarSink`; `AgentActivity` hängt ihre aktuelle View direkt über `attach` an und beim Zerstören ab. Status/Tests/Grenzen: [Omega-Avatar-Handoff](research/omega/OMEGA-AVATAR-HANDOFF.md).
 Evidenz: Logik, Port und Verdrahtung sind `HOST_VERIFIED` (JUnit und Node-Verdrahtungstest). TTS-Timing auf dem Fold7 ist `DEVICE_REQUIRED`.
 
 ## 1. Rollen – wer was tut
@@ -37,7 +37,7 @@ AvatarSinkRegistry.sink = MeinAvatarRenderer()
 - **Threading:** `onAvatarEvent` läuft auf dem UI-Thread **und** auf dem TTS-Callback-Thread. Der Director ist synchronisiert, der Sink muss
   Ereignisse selbst in eine Queue legen. `AvatarPoseReducer` ist nicht threadsicher und gehört nur in den Render-Thread.
 - Wirft der Sink eine Exception, wird sie verschluckt. Chat, Werkzeuge und Sprache laufen weiter.
-- `AvatarDirector.attach(sink)` sendet sofort den aktuellen Zustand. Die Activity liest die Registry einmal beim Erzeugen, ein Umschalten zur Laufzeit gibt es nicht.
+- `AvatarDirector.attach(sink)` sendet sofort den aktuellen Zustand und bei laufender TTS die aktuelle SpeechStarted-Identität. Damit kann eine neue Fold-/Home-View die folgenden Audiowerte übernehmen. Der Renderer speichert keinen Sprechtext. Die Activity liest die Registry beim Erzeugen, hängt danach die jeweils aktuelle View an und beim Zerstören den NoOp-Sink.
 
 ## 3. Ereignisse und Raten
 | Ereignis | Wann / Rate | Quelle |
@@ -75,7 +75,7 @@ Das Viseme-Set umfasst 15 Klassen mit OVRLipSync-Namen: `SIL PP FF TH DD KK CH S
 Android-TTS liefert nur Wortbereiche. `GermanVisemeApproximation` bildet deutsche Grapheme deshalb grob ab. Diphthonge folgen den
 `lipsync-de`-Regeln von met4citizen/TalkingHead (MIT, in PR #350 gesichert): au → AA U, ei/ai → AA I, eu/äu → O.
 `AvatarPoseReducer.jawOpen` übernimmt die Abbildung aus dem Avatar-Labor: Glättung 0,4, Totzone 0,025, Faktor 1,5.
-Die Mundöffnung soll über `jawOpen` laufen, die Mundform über `viseme`.
+Die Mundöffnung läuft über `jawOpen`, die Mundform über `viseme`. Native Renderer rufen `pose(System.currentTimeMillis())` auf: zukünftige Cues werden erst am Zeitstempel sichtbar, enden nach ihrer Dauer und sind auf 64 begrenzt. Neue oder unterbrochene Äußerungen löschen vorige Cues; ausbleibende Audioereignisse schließen den Mund nach 250 ms. `clearSpeech()` entfernt beim Pause/Detach den transienten Mundzustand.
 
 ## 6. Abgleich mit den Grafik-Assets (`/workspace/jarvis-grafik/avatar/`, nur gelesen)
 Vorhanden sind 4 PNG-Standbilder mit 1024×1024, RGB und ohne Alpha (`holo-aaa_v1/v2`, `pixar-3d_v1/v2`) sowie eine Vorlage `vorlage-quantumflow.jpg` mit 1968×2184.

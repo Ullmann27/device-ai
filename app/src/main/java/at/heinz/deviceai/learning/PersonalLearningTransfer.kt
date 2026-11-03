@@ -41,7 +41,13 @@ data class PersonalLearningMergePlan(
 
 object PersonalLearningTransfer {
     const val SCHEMA_VERSION = 1
-    const val MAX_BYTES = 1024 * 1024
+    /** LEX3 segment bytes are capped at 32 MiB. CLPT adds at most 12 bytes/record
+     * (six ASCII UTF fields use 4-byte rather than 2-byte lengths), plus 304 bytes
+     * for header/checksum/max source package, and removes each 40-byte segment wrapper.
+     * Extra <= 12*4096+304 = 49,456 bytes, so 33 MiB exports every valid ledger.
+     * Older readers reject larger documents safely; the wire schema is unchanged.
+     */
+    const val MAX_BYTES = 33 * 1024 * 1024
     private const val MAGIC = 0x434c5054 // CLPT
     private const val DIGEST_BYTES = 32
     private const val MAX_FIELD_BYTES = 8192
@@ -67,9 +73,18 @@ object PersonalLearningTransfer {
 
     fun encode(sourcePackage: String, records: List<LearningExperience>): ByteArray {
         requirePackage(sourcePackage)
-        require(records.size <= FileLearningExperienceStore.MAX_RECORDS)
+        require(records.size <= FileLearningExperienceStore.MAX_DURABLE_RECORDS)
         require(records.map { it.id }.distinct().size == records.size) { "Duplicate learning identity" }
-        val payload = ByteArrayOutputStream().also { buffer ->
+        val payload = object : ByteArrayOutputStream() {
+            override fun write(value:Int) {
+                require(size()<MAX_BYTES-DIGEST_BYTES) { "Personal learning backup exceeds limit" }
+                super.write(value)
+            }
+            override fun write(bytes:ByteArray,offset:Int,length:Int) {
+                require(size().toLong()+length<=MAX_BYTES-DIGEST_BYTES) { "Personal learning backup exceeds limit" }
+                super.write(bytes,offset,length)
+            }
+        }.also { buffer ->
             DataOutputStream(buffer).use { out ->
                 out.writeInt(MAGIC)
                 out.writeInt(SCHEMA_VERSION)
@@ -105,7 +120,7 @@ object PersonalLearningTransfer {
             require(input.readInt() == MAGIC && input.readInt() == SCHEMA_VERSION)
             val source = readString(input).also(::requirePackage)
             val count = input.readInt()
-            require(count in 0..FileLearningExperienceStore.MAX_RECORDS)
+            require(count in 0..FileLearningExperienceStore.MAX_DURABLE_RECORDS)
             val records = List(count) {
                 LearningExperience(
                     id = readString(input),
@@ -158,7 +173,7 @@ object PersonalLearningTransfer {
         preview(inspect(bytes), targetRecords)
 
     private fun preview(backup: PersonalLearningBackup, targetRecords: List<LearningExperience>): PersonalLearningMergePlan {
-        require(targetRecords.size <= FileLearningExperienceStore.MAX_RECORDS)
+        require(targetRecords.size <= FileLearningExperienceStore.MAX_DURABLE_RECORDS)
         require(targetRecords.map { it.id }.distinct().size == targetRecords.size)
         val target = targetRecords.associateBy { it.id }
         val additions = mutableListOf<LearningExperience>()
@@ -187,7 +202,7 @@ object PersonalLearningTransfer {
         }
         return PersonalLearningMergePlan(
             backup, additions.toList(), revocations.toList(), blocked.toList(), duplicates,
-            reviewOnly, conflicts.toList(), targetRecords.size + additions.size > FileLearningExperienceStore.MAX_RECORDS
+            reviewOnly, conflicts.toList(), targetRecords.size + additions.size > FileLearningExperienceStore.MAX_DURABLE_RECORDS
         )
     }
 

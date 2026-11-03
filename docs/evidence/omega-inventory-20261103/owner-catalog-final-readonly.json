@@ -1,0 +1,19 @@
+{
+  "retrievedAt": "2026-11-03T19:42:22.616385+00:00",
+  "url": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "catalog": {
+    "schema": 1,
+    "channel": "OWNER_RELEASE",
+    "packageName": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 39,
+    "versionName": "0.3.38",
+    "apkUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/Continuum-Lokal-b22ac165abb1532eb893afd3f8fbe4d135bacaf2d094de9cbe6d38b81a4dbad9.apk",
+    "apkSha256": "b22ac165abb1532eb893afd3f8fbe4d135bacaf2d094de9cbe6d38b81a4dbad9",
+    "byteLength": 54673371,
+    "sourceCommit": "a9709854f48d2fd6589f9ce5ea97f6ec3be0d233",
+    "signerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+    "approved": true,
+    "notes": "Originalsigniertes, vom Besitzer freigegebenes Continuum Lokal Update. Installation nur nach Android-Best\u00e4tigung."
+  },
+  "scope": "READ_ONLY; no publication or device installation"
+}

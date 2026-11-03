@@ -1,0 +1,7 @@
+JUnit version 4.13.2
+......................LEX3_METRIC synthetic_days=1000 records=4000 append_ms=61.985634 read_p50_ms=70.955962 read_max_ms=119.584067 disk_bytes=829186 replay_limit=128
+.................
+Time: 10.222
+
+OK (39 tests)
+

@@ -1,0 +1,14 @@
+SOURCE_SHA=e39881e01062a16fd04b8776ba1700936012f5e0
+TRACKED_STATUS=
+COMMAND=['java', '-Xmx256m', '-cp', '/workspace/continuum-build-env/memory-green:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar', 'org.junit.runner.JUnitCore', 'at.heinz.deviceai.learning.LearningExperienceStoreTest', 'at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest', 'at.heinz.deviceai.learning.PersonalLearningTransferTest', 'at.heinz.deviceai.learning.HistoricalLearningLedgerTest']
+JUnit version 4.13.2
+......................LEX3_METRIC synthetic_days=1000 records=4000 append_ms=14.826972 read_p50_ms=49.494163 read_max_ms=56.159079 disk_bytes=829186 replay_limit=128
+....LEX3_TRANSFER_METRIC records=4096 segment_bytes=33553407 export_bytes=33597743 source_package_chars=256 complete=true
+..............
+Time: 5.779
+
+OK (40 tests)
+
+WALL_SECONDS=5.991975987999922
+PEAK_CHILD_RSS_KIB=365732
+EXIT=0

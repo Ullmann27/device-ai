@@ -1,0 +1,515 @@
+TAP version 13
+# Subtest: quality control: consistent baseline failure and two retained passes are accepted
+ok 1 - quality control: consistent baseline failure and two retained passes are accepted
+  ---
+  duration_ms: 7.880263
+  type: 'test'
+  ...
+# Subtest: quality rejects candidate expansion lost at independent run
+not ok 2 - quality rejects candidate expansion lost at independent run
+  ---
+  duration_ms: 2.632126
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: quality rejects summary conceals candidate count
+not ok 3 - quality rejects summary conceals candidate count
+  ---
+  duration_ms: 2.391584
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects summary conceals independent count
+not ok 4 - quality rejects summary conceals independent count
+  ---
+  duration_ms: 0.984479
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline summary lies about failed count
+not ok 5 - quality rejects baseline summary lies about failed count
+  ---
+  duration_ms: 0.916708
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline summary lies about executed count
+not ok 6 - quality rejects baseline summary lies about executed count
+  ---
+  duration_ms: 5.660146
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects string counts
+not ok 7 - quality rejects string counts
+  ---
+  duration_ms: 2.192976
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects fractional counts
+not ok 8 - quality rejects fractional counts
+  ---
+  duration_ms: 1.910451
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects nonfinite counts
+not ok 9 - quality rejects nonfinite counts
+  ---
+  duration_ms: 5.490922
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects unsafe integer counts
+not ok 10 - quality rejects unsafe integer counts
+  ---
+  duration_ms: 0.827874
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline failure count exceeds total
+not ok 11 - quality rejects baseline failure count exceeds total
+  ---
+  duration_ms: 0.635065
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline timeout
+not ok 12 - quality rejects baseline timeout
+  ---
+  duration_ms: 0.554564
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline successful exit
+not ok 13 - quality rejects baseline successful exit
+  ---
+  duration_ms: 0.457087
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline signal-like exit
+not ok 14 - quality rejects baseline signal-like exit
+  ---
+  duration_ms: 0.906072
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects baseline negative exit
+not ok 15 - quality rejects baseline negative exit
+  ---
+  duration_ms: 0.542606
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects candidate timeout marker absent
+not ok 16 - quality rejects candidate timeout marker absent
+  ---
+  duration_ms: 0.426692
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CONFIRMED'
+    - 'INCONCLUSIVE'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'INCONCLUSIVE'
+  actual: 'CONFIRMED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects duplicate candidate phase
+ok 17 - quality rejects duplicate candidate phase
+  ---
+  duration_ms: 0.354763
+  type: 'test'
+  ...
+# Subtest: quality rejects null command item
+not ok 18 - quality rejects null command item
+  ---
+  duration_ms: 0.370427
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of null (reading 'phase')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    file:///workspace/continuum-quality/.github/continuum/ccc1-verifier.mjs:63:34
+    Array.find (<anonymous>)
+    run (file:///workspace/continuum-quality/.github/continuum/ccc1-verifier.mjs:63:24)
+    verifyRepairReceipt (file:///workspace/continuum-quality/.github/continuum/ccc1-verifier.mjs:74:12)
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+  ...
+# Subtest: quality rejects object commands
+not ok 19 - quality rejects object commands
+  ---
+  duration_ms: 0.303055
+  type: 'test'
+  location: '/workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:63:40'
+  failureType: 'testCodeFailure'
+  error: 'runs.find is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    run (file:///workspace/continuum-quality/.github/continuum/ccc1-verifier.mjs:63:24)
+    verifyRepairReceipt (file:///workspace/continuum-quality/.github/continuum/ccc1-verifier.mjs:65:17)
+    TestContext.<anonymous> (file:///workspace/continuum-quality/scripts/continuum-omega-quality-acceptance.test.mjs:66:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: quality rejects missing baseline
+ok 20 - quality rejects missing baseline
+  ---
+  duration_ms: 0.388473
+  type: 'test'
+  ...
+# Subtest: quality rejects extra unaudited phase
+ok 21 - quality rejects extra unaudited phase
+  ---
+  duration_ms: 26.033974
+  type: 'test'
+  ...
+# Subtest: quality rejects non-allowlisted command
+ok 22 - quality rejects non-allowlisted command
+  ---
+  duration_ms: 0.738911
+  type: 'test'
+  ...
+# Subtest: quality rejects unbound commit
+ok 23 - quality rejects unbound commit
+  ---
+  duration_ms: 4.176737
+  type: 'test'
+  ...
+# Subtest: quality rejects unrecognized chain without looking up inherited profile properties
+ok 24 - quality rejects unrecognized chain without looking up inherited profile properties
+  ---
+  duration_ms: 0.719101
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 7
+# fail 17
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 427.032822

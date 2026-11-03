@@ -7,6 +7,7 @@ out=${1:?external output directory}; mkdir -p "$out"; out=$(cd "$out" && pwd -P)
 [[ "$out" != "$root" && "$out" != "$root/"* ]] || exit 2
 cp=$(find "$deps" -maxdepth 1 -name '*.jar' -type f -printf '%p:')
 sources=("$root/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt"
+ "$root/app/src/main/java/at/heinz/deviceai/learning/Lex3LearningExperienceStore.kt"
  "$root/app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackFileLock.kt"
  "$root/app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedback.kt"
  "$root/app/src/test/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackTest.kt"

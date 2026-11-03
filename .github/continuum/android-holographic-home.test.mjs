@@ -10,7 +10,7 @@ const renderer=fs.readFileSync(ui+'ContinuumHologramRenderer.kt','utf8');
 const homeView=fs.readFileSync(ui+'ContinuumHomeView.kt','utf8');
 const homeScreen=fs.readFileSync(ui+'ContinuumHomeScreen.kt','utf8');
 const dashboardState=fs.readFileSync(ui+'ContinuumDashboardState.kt','utf8');
-const drawn=['ContinuumHomeElements.kt','ContinuumWideElements.kt','ContinuumSurfaces.kt']
+const drawn=['ContinuumHomeElements.kt','ContinuumWideElements.kt','ContinuumCockpitElements.kt','ContinuumSurfaces.kt']
   .map(f=>fs.readFileSync(ui+f,'utf8')).join('\n');
 const section=(start,end)=>{
  const a=activity.indexOf(start),b=activity.indexOf(end,a);
@@ -95,9 +95,14 @@ test('reference-style composer keeps real model/web/file actions and truthful id
  assert.match(busy,/else "➤"/);
 });
 
-test('large text scales the drawn start screen in a bounded range instead of cropping',()=>{
- assert.match(homeView,/fontScale\.coerceIn\(\.85f, 1\.3f\)/);
+test('large text is bounded and propagated into adaptive layout without window shrinking',()=>{
+ assert.match(homeView,/fontScale\.coerceIn\(\.85f, 2f\)/);
  assert.match(homeScreen,/fun elements\(layout: ContinuumHomeLayout\.Layout, textScale: Float\)/);
+ assert.match(homeView,/ContinuumHomeLayout\.wide\(windowWidthDp, windowHeightDp, textScale\)/);
+ assert.match(homeView,/ContinuumHomeLayout\.phone\(windowWidthDp, textScale\)/);
+ const layout=fs.readFileSync(ui+'ContinuumHomeLayout.kt','utf8');
+ assert.match(layout,/return Layout\(wide, width, 1f, contentHeight, boxes\)/);
+ assert.match(layout,/font > 1\.3f/);
  // text that does not fit its card is shortened with an ellipsis instead of running into a neighbour
  assert.match(drawn,/fun fit\(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float\): String/);
  assert.match(drawn,/"…"/);

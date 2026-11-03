@@ -1,0 +1,170 @@
+{"cases": [
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-001",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-002",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-003",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-004",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-005",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-006",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-007",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-008",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-009",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-010",
+    "category": "RETRACTION",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-011",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-012",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-013",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-014",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-015",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-016",
+    "category": "UNCERTAINTY",
+    "render": null
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-017",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 45 Münzen (unverändert)\n- Truhe (silbern): 89 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-018",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 47 Münzen (unverändert)\n- Truhe (silbern): 92 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-019",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 49 Münzen (unverändert)\n- Truhe (silbern): 95 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-020",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 51 Münzen (unverändert)\n- Truhe (silbern): 98 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-021",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 53 Münzen (unverändert)\n- Truhe (silbern): 101 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-022",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 55 Münzen (unverändert)\n- Truhe (silbern): 104 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-023",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 57 Münzen (unverändert)\n- Truhe (silbern): 107 Münzen (unverändert)\n"
+  },
+  {
+    "pass": true,
+    "setupValid": true,
+    "id": "QB-C-024",
+    "category": "UNRELATED_CONTROL",
+    "render": "\nFLÜCHTIGER GESPRÄCHSZUSTAND (nur Aussagen des Nutzers in diesem Gespräch; unbestätigt; nicht speichern; spätere Angaben ersetzen frühere; \"ursprünglich\" = erste Angabe):\n- Truhe (violett): 59 Münzen (unverändert)\n- Truhe (silbern): 110 Münzen (unverändert)\n"
+  }
+]}

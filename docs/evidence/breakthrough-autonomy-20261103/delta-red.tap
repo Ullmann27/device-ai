@@ -1,0 +1,523 @@
+# {"utc": "2026-11-03T18:47:45.358687+00:00", "head": "43a50b8f852f04b8165af5064804e75b67f68a33", "command": ["node", "--test", "--test-reporter=tap", "--test-name-pattern=public Delta|Delta follow-up", ".github/continuum/ccc1-redgreen-verifier.test.mjs"], "verifierSha256": "c2995353ec6a5f82dec94717699daec9792a755a028bfdac8897f87136eec53d", "exit": 1}
+TAP version 13
+# Subtest: public Delta findings reject contradictory receipt claims after genuine execution
+    # Subtest: D13-resolved-alias
+    not ok 1 - D13-resolved-alias
+      ---
+      duration_ms: 300.935561
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"199a81b209fec7f10943ad2c2f9edaecb11420e6a186e12e4df9027d7f7674b4","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"ca7fe7c7762b645c6e51beb835d411599dc74879d764d7a85917702f36f3edf8","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"2459ce4cadd65369b9ef62010ff7221bbfa00ac083d9816c7b6511e543555cd2","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+      ...
+    # Subtest: D16-red-exitCode
+    not ok 2 - D16-red-exitCode
+      ---
+      duration_ms: 292.233292
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"a4bbd3394bf55bba59df11f0e3ee9f4f2b56cbbfb5a1f38709f5e353a74dd13a","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"7f80cc962e7f15259f11ffaa8f045b8d60f500de5f35129dc80fbc2fc8fb0613","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"68425be4aaa0b677d472765c6892d34f098fd54f151a916e380fe23c718a21c1","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-red-command
+    not ok 3 - D16-red-command
+      ---
+      duration_ms: 288.932687
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"b15e14ae64aa8b13dd1bcb37a826776fa39c9583a48d3947487000db40f1fc1d","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"1af768ca76fc8ba89c7889dffb301ec22b163ebda09bd48abd402d98451a4587","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"f80583015734a682bf7b496fbc0d497f7ec10e03971cc48ae005ac6df4162d41","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-red-timedOut
+    not ok 4 - D16-red-timedOut
+      ---
+      duration_ms: 326.464454
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"c61c2be3ac215a436626024bdefe548d0fa0fcc86f75db96af09db0bf0bac051","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"f756dca555ce57fe5d9b90b553919b7f04ee04e58cf968ed69232bea6a2beaca","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"c167310cd18f4ac870d22aaba8aa6a49443ac24173878b900aa9e061e2b3ba2a","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-red-cancelled
+    not ok 5 - D16-red-cancelled
+      ---
+      duration_ms: 327.977772
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"ce61bbf93d42bf29dce1972ccce41914f658c705e23f598392b72120aba64c35","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"596bcd9a01e0313e4a167578eae38334fe7d18b7cf075a7be8ceb91d7891f756","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"b36be0db8f2d6077d3794dc1e566269741db9c27154ffa121a461664f0e2b6d7","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-red-skipped
+    not ok 6 - D16-red-skipped
+      ---
+      duration_ms: 355.579857
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"9fc00a1743eaabdb00e5f606c85e9bd85faeccf7b788b9b21c67a7495d852827","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"40aeb30985b9d3279e08e205837859bcf4a3d1f35e2c66557640316239405bf8","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"d87d94e70921747a3b30d155e4c21f2c1decd50e7828562acbd647afb7e5a667","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-red-passedTargets
+    not ok 7 - D16-red-passedTargets
+      ---
+      duration_ms: 283.521429
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"ad42842f827fbe727b0db6cc4d4bab216c10e0b116ac70a14f560733121281d7","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"f928ddb408309d37e3ab38a731335f593fa6da04308e9c092e3b2af6570fcc33","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"9098034e10efe0c6c2e7162dbf947d26cc68d8b466a4851adcea127ad17f9a27","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-green-exitCode
+    not ok 8 - D16-green-exitCode
+      ---
+      duration_ms: 275.501056
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"2423344a67d9f44abc91cc72fea85fa913cc9ad2837a0d06eba4930712757056","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"ef3e712d01d61d017abd6aa5d971964ab46c3520c3ad34cd9381b1294ce3bce7","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"cd12b00f7b362e7f6c11ec593dbeda1cfbce86805791f78f2d655d28e049db44","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-green-command
+    not ok 9 - D16-green-command
+      ---
+      duration_ms: 253.155802
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"e7cc16939956cffcfd2ccdd55648e4fa970a762da7be6e9e46520183b92fd0c8","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"64a5c393fd84baeb414b36b826798988d4fb2de22d35e2ef03f73b3c8d616fa3","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"5247b74b06bd814a87e8c89baae2a0a62220c59ee0c9c98245232ef0d2dea4f0","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-green-timedOut
+    not ok 10 - D16-green-timedOut
+      ---
+      duration_ms: 244.945391
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"3df813899774c717c24084e38718b62e0068259f9963d4c2be1868fcf18b672f","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"461d8479cc67bb22ad5cd549be6ea42733616ed18c9e2387b4601a6f71042771","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"cee977c39d5578b8008a7d704011815b9f50c4de97f149762f3a1e7ab120a792","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-green-cancelled
+    not ok 11 - D16-green-cancelled
+      ---
+      duration_ms: 245.10061
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"96af2a353496fcd285417eb8303045c99175925c51f92491564186c9e20183bd","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"ee8bd0ad8cdea04c87aba9b1dce4b8d607fdb7b60385c43c6989ae273d01d6b1","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"2d5d85d63b154287f495b1990968a3ec7fb4983e3f75ba306099d52d6d87f334","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D16-green-skipped
+    not ok 12 - D16-green-skipped
+      ---
+      duration_ms: 246.271388
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"173d6aaa05f10bdd21956179f432eae4a19bbeda1361697705f1b1af7eee5af5","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"6319a2ca17746ac67bbd02591ebfa95db06d482e5adc629e98aac0d12133b570","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"599ffb7051b7261f49d474315564246b3d237e67ab4d9f154ae965426ef3a34a","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D17-approvedForMerge
+    not ok 13 - D17-approvedForMerge
+      ---
+      duration_ms: 228.50005
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"02297d5c8ab178aa183e2fb2b1e688e3de4227f19ccf0221683e80ca8f5a00b7","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"babd1e553e2d229e943495feedc29252e062f8aee9f1dae4e0f4d94b6a689592","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"0933ea2c5e8646cacaeca21a0775c42a0d2739a131cfe8a22ac4ea8bcd3b62d9","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D17-installed
+    not ok 14 - D17-installed
+      ---
+      duration_ms: 251.004598
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"8b4274daa67cefa48ffc9e5031124a827862af6abd8b55f56d6141b9cbb36daf","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"b0c7df66ce731e3a8072f2740ef83cd4bc013d29c1aaeb5a052e81aafa9a61bc","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"88b433e674ff95307e96e637adca57c3a3db1d46f9b1b9b530468582f98fd2ed","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D17-deviceVerified
+    not ok 15 - D17-deviceVerified
+      ---
+      duration_ms: 283.956735
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"3dde28de567fc94e4f54e1015b53834ec36077a493f30db4ef1c5eeedaa714f5","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"67ef6e9d9f39b8242459a3799d76e8cb1a0bb9d8c833059a16a2bddee3c6b240","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"03e0b19b66fd1dafb3be6d70af99e46edf1a500f19b509ee94907ca4647cd80a","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D17-schema
+    not ok 16 - D17-schema
+      ---
+      duration_ms: 291.905469
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"02ef7ad11c1648a9205acd95d8cfed3f72f94aa9bf244de5cf7be8f416d63a0d","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"33f7820acd928345f12b9306ba7da38f201fe333fb141499a26e67d9b9b73d52","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"a86cfc5138c539039e9fbec420f630b9f97e9b038ea4dd0c352eb474b03f7d95","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: D17-version
+    not ok 17 - D17-version
+      ---
+      duration_ms: 301.742713
+      type: 'test'
+      location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46'
+      failureType: 'testCodeFailure'
+      error: |-
+        {"schema":"continuum-ccc1-redgreen-attestation","version":1,"receiptSha256":"310d5921e1966a7155130918f26033e0e93210e127ee84acfb60ac225619e416","verdict":"VERIFIED","reasons":[],"command":"node --test --test-reporter=junit (fixed profile node-redgreen, detached worktree)","patchSha256":"37c736b33e9a564bf99bdf0538052c0efe3305fcbc269b5954dd7574891c98ce","red":{"xmlSha256":"b1be2d2a45e4d38d5e62f966f6a9d7d615dc1c2a3e1c4c33bf618bb1567f7ab2","exitCode":1,"executed":2,"failed":1},"green":{"xmlSha256":"bab628804df6d063dace8940f037099c6635c3350bebca76e362bc406ead328f","exitCode":0,"executed":3,"failed":0}}
+        + actual - expected
+        
+        + 'VERIFIED'
+        - 'REJECTED'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 'REJECTED'
+      actual: 'VERIFIED'
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:190:10)
+        Test.runInAsyncScope (node:async_hooks:227:14)
+        Test.run (node:internal/test_runner/test:1382:25)
+        Test.start (node:internal/test_runner/test:1242:17)
+        TestContext.test (node:internal/test_runner/test:394:20)
+        TestContext.<anonymous> (file:///workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:178:46)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    1..17
+not ok 1 - public Delta findings reject contradictory receipt claims after genuine execution
+  ---
+  duration_ms: 4847.230048
+  type: 'test'
+  location: '/workspace/breakthrough-autonomy/.github/continuum/ccc1-redgreen-verifier.test.mjs:168:1'
+  failureType: 'subtestsFailed'
+  error: '17 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: Delta follow-up preserves omitted optional legacy metadata and unique aliases
+ok 2 - Delta follow-up preserves omitted optional legacy metadata and unique aliases
+  ---
+  duration_ms: 707.814709
+  type: 'test'
+  ...
+1..2
+# tests 19
+# suites 0
+# pass 1
+# fail 18
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5658.189716

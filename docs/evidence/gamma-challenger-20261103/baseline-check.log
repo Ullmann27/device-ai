@@ -1,0 +1,25 @@
+64ec06a73f50cae9ee49035c840710d87777d50f
+1da1535deb7ad7e8212b173a1f328fc55bd5b34810663754ae86bc5ed8130ff8  /workspace/gamma-challenger/docs/evidence/gamma-challenger-20261103/GammaChallenger.kt
+385b130f67e7c11564fc0b789f19182f42b4de0615665e424789ed9f2477163c  /workspace/continuum-build-env/gamma-challenger-b.kPiQbf/ContinuumLearningExperience.kt
+54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa  /workspace/continuum-build-env/gamma-challenger-b.kPiQbf/Lex3LearningExperienceStore.kt
+info: kotlinc-jvm 2.4.0 (JRE 17.0.20.1+1)
+ENV	java=17.0.20.1	vm=OpenJDK 64-Bit Server VM
+PASS	selection-ties-status-type-limit-rotation
+DETAIL	caller-list-mutable=false
+PASS	caller-returned-list-ownership
+PASS	same-instance-independent-instance-status-changes
+PASS	real-concurrent-cross-instance-writer
+PASS	real-child-jvm-lease-and-revocation
+PASS	unselected-segment-preserved-size-mtime-corruption
+PASS	unselected-segment-delete-symlink-and-restoration
+PASS	manifest-corruption-and-primary-loss
+PASS	whole-store-deletion-and-disjoint-recreation
+DETAIL	retained-INTENT_LABEL=0
+DETAIL	retained-SOURCE_TEXT=0
+DETAIL	retained-SEMANTIC_PAIR=0
+DETAIL	retained-TRAINING_AUDIT=0
+DETAIL	retained-USER_FACT=0
+DETAIL	retained-COMMAND_MAPPING=0
+DETAIL	retained-USER_FEEDBACK=0
+PASS	retained-record-and-unchanged-storage-caps
+CORRECTNESS	checks=10

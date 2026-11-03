@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+......E..
+Time: 0.331
+There was 1 failure:
+1) awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns(at.heinz.deviceai.chief.ChiefWorkerPoolTest)
+java.lang.AssertionError: delivery is incomplete while its callback is blocked
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolTest.awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns(ChiefWorkerPoolTest.kt:54)
+
+FAILURES!!!
+Tests run: 8,  Failures: 1
+

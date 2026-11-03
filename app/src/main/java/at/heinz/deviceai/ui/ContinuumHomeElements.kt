@@ -37,23 +37,18 @@ abstract class ContinuumElement(protected val textScale: Float = 1f) {
 /** Logo, "Continuum" and the subtitle (phone reference: 64 dp tall header). */
 class HeaderBrandElement(textScale: Float = 1f, private val large: Boolean = false) : ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
-        if (large) {
-            // Fold reference: logo 66 x 34 dp, title 20.7 sp, subtitle 8.5 sp (box origin 80/30 dp)
-            ContinuumIcons.logo(p, 45.3f, 23.2f, 66f, 34f)
-            p.drawText("Continuum", 87f, 31.7f, d(500, 20.7f), solid(ContinuumTheme.TEXT))
-            val subtitle = "Dein KI-Universum. Ohne Grenzen."
-            val style = fittedTitle(p, subtitle, 400, 8.5f, (w - 91f).coerceAtLeast(1f))
-            p.drawText(ContinuumSurfaces.fit(p, subtitle, style, w - 91f), 87.5f, 48f, style, solid(Argb.rgb(166, 190, 226)))
-            return
-        }
-        val cy = h * .52f
-        ContinuumIcons.logo(p, 43.3f, cy, 48.6f, 25f)
-        p.drawText("Continuum", 79f, cy + 7.5f, d(500, 21.66f), solid(ContinuumTheme.TEXT))
-        val subtitle = "Dein KI-Universum. Ohne Grenzen."
-        val style = fittedTitle(p, subtitle, 400, 8.74f, (w - 83f).coerceAtLeast(1f))
-        p.drawText(ContinuumSurfaces.fit(p, subtitle, style, w - 83f), 79.5f, cy + 17.9f, style, solid(Argb.rgb(166, 190, 226)))
+        val logoWidth = 44f
+        ContinuumIcons.logo(p, 24f, h / 2f, logoWidth, 24f)
+        val x = 56f
+        val title = t(600, 19f)
+        p.drawText(ContinuumSurfaces.fit(p, "CONTINUUM", title, w - x - 4f), x,
+            h / 2f + 1f, title, solid(ContinuumTheme.TEXT))
+        val subtitle = t(400, 10f)
+        p.drawText(ContinuumSurfaces.fit(p, "Dein lokaler KI-Assistent", subtitle, w - x - 4f), x,
+            h - 7f, subtitle, solid(ContinuumTheme.TEXT_SECONDARY))
     }
-    override fun describe(s: ContinuumDashboardState) = "Continuum. Dein KI-Universum. Ohne Grenzen."
+    override fun describe(s: ContinuumDashboardState) = "Continuum. Dein lokaler KI-Assistent. Cockpit öffnen."
+
 }
 
 /** Round header button: search, notifications (red badge only for real pending items) and the profile orb. */

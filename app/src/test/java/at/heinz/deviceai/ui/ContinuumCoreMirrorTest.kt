@@ -6,16 +6,12 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Geometric symmetry must survive a Fold reflow and the owner's larger display zoom. */
+/** Adaptive owner design: equal usable controls below a free stage, without scaling the desktop. */
 class ContinuumCoreMirrorTest {
-    private val pairs = listOf(
-        Slot.LABEL_CONNECTED to Slot.LABEL_THINKING,
-        Slot.LABEL_LEARNING to Slot.LABEL_ANALYSING,
-        Slot.LABEL_DEVELOPING to Slot.LABEL_EVOLVING
-    )
+    private val actions = listOf(Slot.LABEL_CONNECTED, Slot.LABEL_THINKING, Slot.LABEL_LEARNING,
+        Slot.LABEL_ANALYSING, Slot.LABEL_DEVELOPING, Slot.LABEL_EVOLVING)
 
-    /** Original symmetry contract stays MANDATORY for phone and the old landscape geometry. */
-    @Test fun allSixControlsHaveEqualAndReflectedBounds() {
+    @Test fun allSixControlsHaveEqualUsableBoundsInRowsBelowTheHero() {
         val layouts = listOf(
             ContinuumHomeLayout.phone(360f),
             ContinuumHomeLayout.phone(411f),
@@ -26,24 +22,30 @@ class ContinuumCoreMirrorTest {
         )
         layouts.forEach { layout ->
             val hero = layout.boxes.getValue(Slot.HERO)
-            val centerX = (hero.left + hero.right) / 2f
-            pairs.forEach { (leftSlot, rightSlot) ->
-                val left = layout.boxes.getValue(leftSlot)
-                val right = layout.boxes.getValue(rightSlot)
-                assertEquals("$leftSlot / $rightSlot width", left.width, right.width, .002f)
-                assertEquals("$leftSlot / $rightSlot top", left.top, right.top, .002f)
-                assertEquals("$leftSlot / $rightSlot bottom", left.bottom, right.bottom, .002f)
-                assertEquals("$leftSlot / $rightSlot outer reflection",
-                    2f * centerX, left.left + right.right, .002f)
-                assertEquals("$leftSlot / $rightSlot inner reflection",
-                    2f * centerX, left.right + right.left, .002f)
-                assertTrue(left.left >= 0f && right.right <= layout.width)
-                assertTrue(left.right < centerX && right.left > centerX)
+            val controls = actions.map { layout.boxes.getValue(it) }
+            val first = controls.first()
+            controls.forEach { box ->
+                assertEquals(first.width, box.width, .002f)
+                assertEquals(first.height, box.height, .002f)
+                assertTrue("touch target must not shrink", box.width >= 48f && box.height >= 48f)
+                assertTrue("action stays below free stage", box.top >= hero.bottom + 8f)
+                assertTrue(box.left >= 0f && box.right <= layout.width)
+                assertTrue(box.bottom <= layout.contentHeight)
+            }
+            for (i in controls.indices) for (j in i + 1 until controls.size) {
+                val a = controls[i]; val b = controls[j]
+                assertFalse("action targets intersect", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
+            }
+            controls.groupBy { it.top }.values.forEach { row ->
+                row.sortedBy { it.left }.zipWithNext().forEach { (left, right) ->
+                    assertTrue("grid controls have a clear gap", right.left - left.right >= 8f)
+                }
             }
         }
     }
 
-    @Test fun foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows() {
+    @Test fun foldOrbStaysVisibleInsideFreeStageAndClearOfEveryAction() {
+        // The unchanged FOLD renderer geometry is the native Home fallback, not a claim about the optional3D asset.
         val fold = ContinuumHologramRenderer.Geometry.FOLD
         val layouts = listOf(
             ContinuumHomeLayout.wide(840f, 649f),
@@ -54,66 +56,64 @@ class ContinuumCoreMirrorTest {
         layouts.forEach { layout ->
             val hero = layout.boxes.getValue(Slot.HERO)
             val centerX = (hero.left + hero.right) / 2f
-            val sphereRadius = minOf(
-                hero.width * fold.radiusOfWidth,
-                hero.height * fold.radiusOfHeight
-            ) * fold.sphere
-            val clearance = 8f * layout.scale
-            pairs.forEach { (leftSlot, rightSlot) ->
-                val left = layout.boxes.getValue(leftSlot)
-                val right = layout.boxes.getValue(rightSlot)
-                assertTrue("$leftSlot sphere collision", left.right + clearance <= centerX - sphereRadius + .01f)
-                assertTrue("$rightSlot sphere collision", centerX + sphereRadius + clearance <= right.left + .01f)
+            val centerY = hero.top + hero.height * fold.centerY
+            val radius = minOf(hero.width * fold.radiusOfWidth, hero.height * fold.radiusOfHeight) * fold.sphere
+            assertTrue("orb has a visible radius", radius > 0f)
+            assertTrue("orb left clipping", centerX - radius >= hero.left)
+            assertTrue("orb right clipping", centerX + radius <= hero.right)
+            assertTrue("orb top clipping", centerY - radius >= hero.top)
+            assertTrue("orb bottom clipping", centerY + radius <= hero.bottom)
+            actions.forEach { slot ->
+                assertTrue("$slot sphere collision", centerY + radius + 8f <= layout.boxes.getValue(slot).top)
             }
         }
     }
 
-    /**
-     * The owner corrected the Fold portrait reference after device inspection:
-     * both action columns must now have exactly equal width and height, with
-     * the large animated orb visible between the columns. Keep actual geometry
-     * and chart alignment under test rather than relying on stale screenshot values.
-     */
-    @Test fun portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror() {
-        for ((w,h) in listOf(656f to 690f, 750f to 790f, 840f to 1010f)) {
-            val layout=ContinuumHomeLayout.wide(w,h)
-            val u=w/840f
-            val hero=layout.boxes.getValue(Slot.HERO)
-            val left=layout.boxes.getValue(Slot.LABEL_CONNECTED)
-            val right=layout.boxes.getValue(Slot.LABEL_THINKING)
-            assertEquals(216f*u,left.width,.002f)
-            assertEquals(216f*u,right.width,.002f)
-            assertEquals(82f*u,left.height,.002f)
-            assertEquals(left.width,right.width,.002f)
-            assertEquals(w-left.left,right.right,.002f)
-            assertEquals(left.top,right.top,.002f)
-            assertEquals(left.bottom,right.bottom,.002f)
-            assertTrue("both buttons outside the orb center",left.right<hero.left+hero.width/2f &&
-                right.left>hero.left+hero.width/2f)
-            assertTrue("new owner layout keeps an unobstructed orb gap",right.left-left.right>=370f*u)
-            assertTrue("left control does not overlap hero stage",left.right<hero.left)
-            assertTrue("right control does not overlap hero stage",right.left>hero.right)
-            assertTrue("full-width card grid must not use landscape rail",layout.boxes[Slot.RAIL]==null)
-            val upper=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map{layout.boxes.getValue(it)}
-            val lower=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map{layout.boxes.getValue(it)}
-            for(i in 0..2){
-                assertEquals(upper[i].left,lower[i].left,.002f)
-                assertEquals(upper[i].width,lower[i].width,.002f)
-                assertEquals(upper[i].height,lower[i].height,.002f)
+    @Test fun portraitFoldCardsReflowFromTwoColumnsForLargerFonts() {
+        val cardSlots = listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
+            Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)
+        for ((width, height) in listOf(656f to 690f, 750f to 790f, 840f to 1010f)) {
+            val normal = ContinuumHomeLayout.wide(width, height)
+            val large = ContinuumHomeLayout.wide(width, height, 2f)
+            assertEquals("portrait must not reserve a landscape rail", null, normal[Slot.RAIL])
+            assertEquals(null, large[Slot.RAIL])
+            assertEquals(2, cardSlots.map { normal.boxes.getValue(it).left }.distinct().size)
+            assertEquals("large type reflows into one column", 1, cardSlots.map { large.boxes.getValue(it).left }.distinct().size)
+            assertTrue(large.boxes.getValue(Slot.MODEL).height > normal.boxes.getValue(Slot.MODEL).height)
+            for (layout in listOf(normal, large)) {
+                val hero = layout.boxes.getValue(Slot.HERO)
+                val actionBottom = actions.maxOf { layout.boxes.getValue(it).bottom }
+                actions.forEach { assertTrue(layout.boxes.getValue(it).top > hero.bottom) }
+                val cards = cardSlots.map { layout.boxes.getValue(it) }
+                for (box in cards) {
+                    assertEquals(cards.first().width, box.width, .002f)
+                    assertEquals(cards.first().height, box.height, .002f)
+                    assertTrue(box.left >= 0f && box.right <= width)
+                    assertTrue(box.top > actionBottom && box.bottom <= layout.contentHeight)
+                }
+                for (i in cards.indices) for (j in i + 1 until cards.size) {
+                    val a = cards[i]; val b = cards[j]
+                    assertFalse("card overlap", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
+                }
             }
         }
     }
 
-    @Test fun onlyRightHandCardsReverseElementOrderNotLetters() {
+    @Test fun everyActionTileUsesItsOwnRealStatusAndKeepsReadableLabels() {
+        val state = ContinuumDashboardState(core = ContinuumDashboardState.CoreStatus(
+            connected = "Verbindung-Zustand", thinking = "Dialog-Zustand", learning = "Lernen-Zustand",
+            analysing = "Recherche-Zustand", developing = "Entwicklung-Zustand", evolving = "Lernstatus-Zustand"))
+        val expected = mapOf(Slot.LABEL_CONNECTED to "Verbindung: Verbindung-Zustand",
+            Slot.LABEL_THINKING to "Chat: Dialog-Zustand", Slot.LABEL_LEARNING to "Lernen: Lernen-Zustand",
+            Slot.LABEL_ANALYSING to "Forschung: Recherche-Zustand", Slot.LABEL_DEVELOPING to "Entwicklung: Entwicklung-Zustand",
+            Slot.LABEL_EVOLVING to "Lernstatus: Lernstatus-Zustand")
         for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.wide(750f, 790f))) {
             val elements = ContinuumHomeScreen.elements(layout, 1f)
-            pairs.forEach { (left, right) ->
-                val l = elements.getValue(left) as CoreLabelElement
-                val r = elements.getValue(right) as CoreLabelElement
-                assertFalse(l.mirrored)
-                assertTrue(r.mirrored)
-                assertTrue(l.title.isNotBlank())
-                assertTrue(r.title.isNotBlank())
+            for (slot in actions) {
+                val element = elements.getValue(slot)
+                assertTrue("action uses the shared adaptive tile", element is CockpitActionTile)
+                assertEquals(expected.getValue(slot), element.describe(state))
+                assertTrue(element.describe(state).isNotBlank())
             }
         }
     }

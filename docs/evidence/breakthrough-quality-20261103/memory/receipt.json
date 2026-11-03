@@ -1,0 +1,46 @@
+{
+  "fixtureSha256": "72e388828c64b41a8167e0bce2687dd7be44df644a5e5e60efc8264086284fc7",
+  "runnerSha256": "c015f4c7c7bdab9f988cf8d640bffebe9c74db33f23bc5fbf26e8af0f47be65a",
+  "runs": [
+    {
+      "label": "baseline",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 8.809116654999798
+    },
+    {
+      "label": "baseline",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 9.830615492000106
+    },
+    {
+      "label": "candidate",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 8.934433849000015
+    },
+    {
+      "label": "candidate",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 2.473423867999827
+    }
+  ],
+  "baseline": {
+    "sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+    "sources": {
+      "/workspace/qa-memory-holdout-fresh/baseline/ContinuumLearningExperience.kt": "385b130f67e7c11564fc0b789f19182f42b4de0615665e424789ed9f2477163c",
+      "/workspace/qa-memory-holdout-fresh/baseline/Lex3LearningExperienceStore.kt": "54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa",
+      "/workspace/qa-memory-holdout-fresh/baseline/PersonalLearningTransfer.kt": "f1e59e100cace3815b019acceb4b1acc7b8b01abd74ae21ecdb2fd4dc4fa9296"
+    }
+  },
+  "candidate": {
+    "sha": "a6007442768b24f5aa700c61dae7c46049c1911a",
+    "sources": {
+      "/workspace/qa-memory-holdout-fresh/candidate/ContinuumLearningExperience.kt": "fa48bd2ef74caa41efee6cc64f3f3de58b25f7aa6e27d4dca24ee6ff94346665",
+      "/workspace/qa-memory-holdout-fresh/candidate/Lex3LearningExperienceStore.kt": "54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa",
+      "/workspace/qa-memory-holdout-fresh/candidate/PersonalLearningTransfer.kt": "f1e59e100cace3815b019acceb4b1acc7b8b01abd74ae21ecdb2fd4dc4fa9296"
+    }
+  }
+}

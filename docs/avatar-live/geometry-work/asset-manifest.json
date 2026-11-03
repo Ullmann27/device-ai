@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "asset": "jarvis-research-v1.glb",
+  "sha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
+  "bytes": 8697048,
+  "coordinateSystem": {
+    "up": "+Y",
+    "front": "+Z",
+    "anatomicalLeft": "+X",
+    "units": "metres"
+  },
+  "controlNodes": [
+    {
+      "name": "AvatarRoot",
+      "nodeIndex": 0,
+      "pivotWorld": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent": null
+    },
+    {
+      "name": "Neck",
+      "nodeIndex": 1,
+      "pivotWorld": [
+        0.0,
+        0.14902499318122864,
+        0.006804999895393848
+      ],
+      "parent": "AvatarRoot"
+    },
+    {
+      "name": "Head",
+      "nodeIndex": 2,
+      "pivotWorld": [
+        0.0,
+        0.2240000069141388,
+        0.02500000037252903
+      ],
+      "parent": "Neck"
+    },
+    {
+      "name": "EyeLeft",
+      "nodeIndex": 3,
+      "pivotWorld": [
+        0.030511943623423576,
+        0.2884144186973572,
+        0.12453499436378479
+      ],
+      "parent": "Head"
+    },
+    {
+      "name": "EyeRight",
+      "nodeIndex": 4,
+      "pivotWorld": [
+        -0.030511943623423576,
+        0.2884144186973572,
+        0.12453499436378479
+      ],
+      "parent": "Head"
+    },
+    {
+      "name": "Jaw",
+      "nodeIndex": 5,
+      "pivotWorld": [
+        0.0,
+        0.22699999809265137,
+        0.03500000014901161
+      ],
+      "parent": "Head"
+    }
+  ],
+  "morphNames": [
+    "SIL",
+    "PP",
+    "FF",
+    "TH",
+    "DD",
+    "KK",
+    "CH",
+    "SS",
+    "NN",
+    "RR",
+    "AA",
+    "E",
+    "I",
+    "O",
+    "U",
+    "BlinkLeft",
+    "BlinkRight",
+    "BrowUp",
+    "BrowDown",
+    "Smile",
+    "JawOpen"
+  ],
+  "morphIndices": {
+    "SIL": 0,
+    "PP": 1,
+    "FF": 2,
+    "TH": 3,
+    "DD": 4,
+    "KK": 5,
+    "CH": 6,
+    "SS": 7,
+    "NN": 8,
+    "RR": 9,
+    "AA": 10,
+    "E": 11,
+    "I": 12,
+    "O": 13,
+    "U": 14,
+    "BlinkLeft": 15,
+    "BlinkRight": 16,
+    "BrowUp": 17,
+    "BrowDown": 18,
+    "Smile": 19,
+    "JawOpen": 20
+  },
+  "meshes": [
+    {
+      "name": "EyeballLeft",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "EyeballRight",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "Face",
+      "vertices": 12980,
+      "triangles": 25924,
+      "morphTargets": 21
+    },
+    {
+      "name": "IrisLeft",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "IrisRight",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "MouthInterior",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "NeuralThreads",
+      "vertices": 13389,
+      "triangles": 26100,
+      "morphTargets": 21
+    },
+    {
+      "name": "PupilLeft",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "PupilRight",
+      "vertices": 266,
+      "triangles": 528,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower0",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower1",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower2",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower3",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower4",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower5",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower6",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothLower7",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper0",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper1",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper2",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper3",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper4",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper5",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper6",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    },
+    {
+      "name": "ToothUpper7",
+      "vertices": 42,
+      "triangles": 80,
+      "morphTargets": 0
+    }
+  ],
+  "totalTriangles": 57000,
+  "animations": [
+    "VisemeSweep",
+    "ExpressionAndSpeech",
+    "IndependentControlDemo"
+  ],
+  "textureCount": 0,
+  "identityStatus": "PARTIAL_REFERENCE_ADAPTATION_REQUIRES_OWNER_REVIEW",
+  "deviceStatus": "NOT_RUN",
+  "jawPolicy": "Exterior via JawOpen; Jaw node rotates inner lower dental arch and mouth backing; expression and jaw weights independently controlled.",
+  "limits": [
+    "No phonetic accuracy acceptance",
+    "No Fold7 FPS/thermal acceptance",
+    "No biometric identity claim",
+    "Morph POSITION only; normals use neutral vertex normals",
+    "Filament offset follows barycentric displacement without pose-corrective normal refit"
+  ],
+  "geometryMetrics": {
+    "faceVertexCount": 12980,
+    "faceTriangleCount": 25924,
+    "headTriangleCountAboveY019": 19060,
+    "headHeightMetresAboveY019": 0.20267638325691223,
+    "neutralMirrorMaxDistanceMetres": 0.0,
+    "neutralHeadMirrorMaxDistanceMetres": 0.0,
+    "neutralHeadMirrorNormalizedMaxError": 0.0,
+    "neutralHeadMirrorMeanDistanceMetres": 0.0,
+    "openBoundaryEdges": 0,
+    "nonManifoldEdgesOverTwoFaces": 0,
+    "degenerateTriangles": 0,
+    "boundsMetres": {
+      "min": [
+        -0.25803142786026,
+        -2.887162224851636e-07,
+        -0.058718241751194
+      ],
+      "max": [
+        0.25803142786026,
+        0.39267638325691223,
+        0.16772781312465668
+      ]
+    },
+    "method": "Nearest mirrored neutral vertex in canonical coordinates, head subset Y>0.19m, error normalized by that subset height. Includes a complete vertex mirror map.",
+    "collisionStatus": "No exhaustive collision proof; neutral/blink/speech visual inspection and independent challenger remain required."
+  },
+  "budget": {
+    "headTrianglesMaximum": 30000,
+    "totalTrianglesMaximum": 60000,
+    "headPass": true,
+    "totalPass": true
+  },
+  "buildSourceCommit": "9633d4e9aab997580bc0be31f20e7e10479f1433",
+  "builderSha256": {
+    "build_bust.py": "33222fd106972cafae35d8f9784cfd76dca64976da8361fe90134c38cf01777d",
+    "export_glb.py": "f15693ce5b2e398aa989b76308de497d65434f458d8f9143495adc31da056f34"
+  }
+}

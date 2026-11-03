@@ -1,0 +1,373 @@
+{
+  "schema": "OMEGA_QA_REPLAY_PROGRAMS_V1",
+  "cases": [
+    {
+      "id": "QB-M-001",
+      "seed": 9271,
+      "records": 257,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 1,
+      "scenario": "TYPE_FILTER_AND_RECENCY",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-002",
+      "seed": 9308,
+      "records": 288,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 7,
+      "scenario": "REVOKE_FROM_SECOND_INSTANCE",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-003",
+      "seed": 9345,
+      "records": 319,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 64,
+      "scenario": "CORRECTION_STATUS_AND_REPLAY",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-004",
+      "seed": 9382,
+      "records": 350,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 128,
+      "scenario": "DELETE_AND_RECREATE",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-005",
+      "seed": 9419,
+      "records": 257,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 1,
+      "scenario": "UNSELECTED_SEGMENT_CORRUPTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-006",
+      "seed": 9456,
+      "records": 288,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 7,
+      "scenario": "SELECTED_SEGMENT_CORRUPTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-007",
+      "seed": 9493,
+      "records": 319,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 64,
+      "scenario": "SAME_LENGTH_TAMPER",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-008",
+      "seed": 9530,
+      "records": 350,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 128,
+      "scenario": "LIMIT_REJECTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-009",
+      "seed": 9567,
+      "records": 257,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 1,
+      "scenario": "TYPE_FILTER_AND_RECENCY",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-010",
+      "seed": 9604,
+      "records": 288,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 7,
+      "scenario": "REVOKE_FROM_SECOND_INSTANCE",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-011",
+      "seed": 9641,
+      "records": 319,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 64,
+      "scenario": "CORRECTION_STATUS_AND_REPLAY",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-012",
+      "seed": 9678,
+      "records": 350,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 128,
+      "scenario": "DELETE_AND_RECREATE",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-013",
+      "seed": 9715,
+      "records": 257,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 1,
+      "scenario": "UNSELECTED_SEGMENT_CORRUPTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-014",
+      "seed": 9752,
+      "records": 288,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 7,
+      "scenario": "SELECTED_SEGMENT_CORRUPTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-015",
+      "seed": 9789,
+      "records": 319,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 64,
+      "scenario": "SAME_LENGTH_TAMPER",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    },
+    {
+      "id": "QB-M-016",
+      "seed": 9826,
+      "records": 350,
+      "types": [
+        "USER_FACT",
+        "SOURCE_TEXT",
+        "TRAINING_AUDIT",
+        "USER_FEEDBACK"
+      ],
+      "statuses": [
+        "OBSERVED",
+        "CONFIRMED",
+        "LEARNED",
+        "REPLAY_PENDING",
+        "REJECTED",
+        "REVOKED"
+      ],
+      "limit": 128,
+      "scenario": "LIMIT_REJECTION",
+      "oracle": "Independent in-memory state/filter/sort; no partial return on corrupted committed ledger",
+      "newOwnerFactsPromotion": false
+    }
+  ]
+}

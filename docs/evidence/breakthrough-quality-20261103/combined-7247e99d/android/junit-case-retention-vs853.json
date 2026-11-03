@@ -1,0 +1,66 @@
+{
+  "baseline": "853a8ee08359ce41375ddb9334ac8ae9c2e2c59e",
+  "candidate": "7247e99d0b93b62dfb2b5eee22486d22911cb722",
+  "removed": [
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "allSixControlsHaveEqualAndReflectedBounds"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "onlyRightHandCardsReverseElementOrderNotLetters"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror"
+    ]
+  ],
+  "added": [
+    [
+      "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "aThrowingReportCallbackReleasesItsSlotAndDoesNotReportTwice"
+    ],
+    [
+      "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns"
+    ],
+    [
+      "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "reportCallbacksCanResubmitTheSameOrANewIdWithoutQueueCapacity"
+    ],
+    [
+      "at.heinz.deviceai.chief.ChiefWorkerPoolTest",
+      "submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "allSixControlsHaveEqualUsableBoundsInRowsBelowTheHero"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "everyActionTileUsesItsOwnRealStatusAndKeepsReadableLabels"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "foldOrbStaysVisibleInsideFreeStageAndClearOfEveryAction"
+    ],
+    [
+      "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "portraitFoldCardsReflowFromTwoColumnsForLargerFonts"
+    ]
+  ],
+  "status_changes": [
+    {
+      "id": [
+        "at.heinz.deviceai.chief.ChiefBrainWiringTest",
+        "routineRunsAsWorkerJobAndReportsOnlyNews"
+      ],
+      "before": "FAIL",
+      "after": "PASS"
+    }
+  ]
+}

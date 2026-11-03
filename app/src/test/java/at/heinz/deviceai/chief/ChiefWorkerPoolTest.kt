@@ -12,6 +12,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -37,6 +38,94 @@ class ChiefWorkerPoolTest {
         assertTrue(reports.all { it.status == WorkerStatus.DONE })
         assertEquals("fertig a", reports.first { it.id == "a" }.summary)
         pool.shutdown()
+    }
+
+    @Test fun awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns() {
+        val callbackEntered = CountDownLatch(1)
+        val releaseCallback = CountDownLatch(1)
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+        try {
+            assertTrue(pool.submit(brief("delivery")) { report ->
+                callbackEntered.countDown()
+                releaseCallback.await()
+                reports += report
+            })
+            assertTrue("report callback entered", callbackEntered.await(2, TimeUnit.SECONDS))
+            assertFalse("delivery is incomplete while its callback is blocked", pool.awaitIdle(0))
+            assertTrue(reports.isEmpty())
+            releaseCallback.countDown()
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(1, reports.size)
+            assertEquals(WorkerStatus.DONE, reports.single().status)
+        } finally {
+            releaseCallback.countDown()
+            pool.shutdown()
+        }
+    }
+
+    @Test fun aThrowingReportCallbackReleasesItsSlotAndDoesNotReportTwice() {
+        val callbacks = AtomicInteger()
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+        try {
+            assertTrue(pool.submit(brief("reusable")) {
+                callbacks.incrementAndGet()
+                error("report consumer failed")
+            })
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(1, callbacks.get())
+            assertTrue(pool.active().isEmpty())
+            assertTrue(pool.submit(brief("reusable")) {
+                callbacks.incrementAndGet()
+                reports += it
+            })
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(2, callbacks.get())
+            assertEquals(WorkerStatus.DONE, reports.single().status)
+        } finally {
+            pool.shutdown()
+        }
+    }
+
+    @Test fun reportCallbacksCanResubmitTheSameOrANewIdWithoutQueueCapacity() {
+        for (nextId in listOf("initial", "next")) {
+            val submitted = CountDownLatch(1)
+            val delivered = CountDownLatch(1)
+            val accepted = AtomicBoolean()
+            val reports = ConcurrentLinkedQueue<WorkerReport>()
+            val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+            try {
+                assertTrue(pool.submit(brief("initial")) { first ->
+                    reports += first
+                    accepted.set(pool.submit(brief(nextId)) { second ->
+                        reports += second
+                        delivered.countDown()
+                    })
+                    submitted.countDown()
+                })
+                assertTrue("callback attempted resubmission", submitted.await(2, TimeUnit.SECONDS))
+                assertTrue("callback may reuse released capacity for $nextId", accepted.get())
+                assertTrue("reentrant job delivered", delivered.await(2, TimeUnit.SECONDS))
+                assertTrue(pool.awaitIdle(2_000))
+                assertEquals(listOf("initial", nextId), reports.map { it.id })
+            } finally {
+                pool.shutdown()
+            }
+        }
+    }
+
+    @Test fun submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork() {
+        val callbacks = AtomicInteger()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "must not run" } }
+        pool.shutdown()
+        val failure = runCatching {
+            pool.submit(brief("closed")) { callbacks.incrementAndGet() }
+        }.exceptionOrNull()
+        assertTrue("executor rejection still reaches the caller", failure is RejectedExecutionException)
+        assertEquals(0, callbacks.get())
+        assertTrue("rejected admission must not retain capacity", pool.active().isEmpty())
+        assertTrue("rejected admission is not unfinished work", pool.awaitIdle(0))
     }
 
     @Test fun deadlineCancelAndFailureBecomeHonestReports() {

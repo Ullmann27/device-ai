@@ -1,0 +1,1301 @@
+{
+  "schema": "OMEGA_QA_UNSEEN_NEURAL_V1",
+  "cases": [
+    {
+      "id": "QB-N-001",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo ist Quducuso?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-001-source-1",
+          "revision": 3,
+          "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+          "text": "Quducuso ist in Qukamube. Qukelaco ist in Qumumugu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-001-source-1",
+        "revision": 3,
+        "sha256": "b65de4c68cdca4761dbb1898095949d50ab3674bacfe18929a57d5ff49371544",
+        "text": "Qukamube",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "QB-N-002",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo wohnt Qupodogo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-002-source-1",
+          "revision": 3,
+          "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+          "text": "Qupodogo wohnt in Qumesalu. Qubobole wohnt in Qufeveto."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-002-source-1",
+        "revision": 3,
+        "sha256": "1aa16d31f2ea11e9b8172519e75f9b163c1d8eeae2346506476fc82996781ae9",
+        "text": "Qumesalu",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-003",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo lebt Quputipo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-003-source-1",
+          "revision": 3,
+          "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+          "text": "Quputipo lebt in Qucibete. Qucategi lebt in Qubuvosu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-003-source-1",
+        "revision": 3,
+        "sha256": "70b51ae021eb65191933c0a8beeb02433f037834ad0dd4c852b2fa2333213511",
+        "text": "Qucibete",
+        "start": 17,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "QB-N-004",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo steht Quticedu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-004-source-1",
+          "revision": 3,
+          "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+          "text": "Quticedu steht in Qufoniva. Qulovesu steht in Qugulobu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-004-source-1",
+        "revision": 3,
+        "sha256": "ebde11bdad52b03e877d04ea4219791b3a0c21cb63abb0e416106aa77c16f00d",
+        "text": "Qufoniva",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-005",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo ist Qusudopu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-005-source-1",
+          "revision": 3,
+          "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+          "text": "Qusudopu ist in Qurenage. Qugabowu ist in Qupanaba."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-005-source-1",
+        "revision": 3,
+        "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+        "text": "Qurenage",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "QB-N-006",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo wohnt Qulatise?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-006-source-1",
+          "revision": 3,
+          "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+          "text": "Qulatise wohnt in Qupenima. Qudadebe wohnt in Qurofilo."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-006-source-1",
+        "revision": 3,
+        "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+        "text": "Qupenima",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-007",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo lebt Qumicire?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-007-source-1",
+          "revision": 3,
+          "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+          "text": "Qumicire lebt in Quwopebe. Qulavobe lebt in Qupogede."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-007-source-1",
+        "revision": 3,
+        "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+        "text": "Quwopebe",
+        "start": 17,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "QB-N-008",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo steht Quruseba?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-008-source-1",
+          "revision": 3,
+          "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+          "text": "Quruseba steht in Qufiliti. Qururocu steht in Qubelapu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-008-source-1",
+        "revision": 3,
+        "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+        "text": "Qufiliti",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-009",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo ist Qufecoki?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-009-source-1",
+          "revision": 3,
+          "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+          "text": "Qufecoki ist in Qunudebi. Quvucenu ist in Qupulodo."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-009-source-1",
+        "revision": 3,
+        "sha256": "e84b02c9fd4b6cf94ccde2d97da8a9d398058266af34f0fa702fd57d0747ff49",
+        "text": "Qunudebi",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "QB-N-010",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo wohnt Qurilaro?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-010-source-1",
+          "revision": 3,
+          "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+          "text": "Qurilaro wohnt in Quceboci. Qurolunu wohnt in Qukevoda."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-010-source-1",
+        "revision": 3,
+        "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+        "text": "Quceboci",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-011",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo lebt Qubidogi?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-011-source-1",
+          "revision": 3,
+          "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+          "text": "Qubidogi lebt in Quwosuka. Qulumopa lebt in Qusadiba."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-011-source-1",
+        "revision": 3,
+        "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+        "text": "Quwosuka",
+        "start": 17,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "QB-N-012",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo steht Qusitima?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-012-source-1",
+          "revision": 3,
+          "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+          "text": "Qusitima steht in Qucedica. Qufokeru steht in Qupadago."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-012-source-1",
+        "revision": 3,
+        "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+        "text": "Qucedica",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-013",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo ist Quwinugi?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-013-source-1",
+          "revision": 3,
+          "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+          "text": "Quwinugi ist in Qukarole. Quficisa ist in Quferata."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-013-source-1",
+        "revision": 3,
+        "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+        "text": "Qukarole",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "QB-N-014",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo wohnt Qulerupu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-014-source-1",
+          "revision": 3,
+          "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+          "text": "Qulerupu wohnt in Qukesavu. Qugogotu wohnt in Qupuwalu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-014-source-1",
+        "revision": 3,
+        "sha256": "fc78792f57b18fbf943030d2e08797e2682b64cbc3423da63a2b153bd3819a2b",
+        "text": "Qukesavu",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-015",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo lebt Qunitoga?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-015-source-1",
+          "revision": 3,
+          "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+          "text": "Qunitoga lebt in Qumasale. Qumasabo lebt in Quwomave."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-015-source-1",
+        "revision": 3,
+        "sha256": "27d3044fbb36a5a15fdd4064e2a33b89f55accfaf5d7d9bc474a8513e2a3385d",
+        "text": "Qumasale",
+        "start": 17,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "QB-N-016",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo steht Quvatuso?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-016-source-1",
+          "revision": 3,
+          "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+          "text": "Quvatuso steht in Qugiciku. Qusasofu steht in Qufanose."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-016-source-1",
+        "revision": 3,
+        "sha256": "7c3728600901030d6fa5a9934c5662ec27496282fafd1e8dcceee613b91c8a51",
+        "text": "Qugiciku",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-017",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo ist Qululaco?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-017-source-1",
+          "revision": 3,
+          "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+          "text": "Qululaco ist in Qucanoru. Qudeteku ist in Qumitowa."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-017-source-1",
+        "revision": 3,
+        "sha256": "b0c79370a69a95ad9b506eecccb058073d71323779325ac12300b1982f0d241e",
+        "text": "Qucanoru",
+        "start": 16,
+        "endExclusive": 24
+      }
+    },
+    {
+      "id": "QB-N-018",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo wohnt Quwitebe?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-018-source-1",
+          "revision": 3,
+          "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+          "text": "Quwitebe wohnt in Qucotela. Qufewele wohnt in Qukurogu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-018-source-1",
+        "revision": 3,
+        "sha256": "b1ef0581447915ec78ece58327588fcd29ef29d76e192640c0f7a012717424ab",
+        "text": "Qucotela",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-019",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo lebt Qusokini?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-019-source-1",
+          "revision": 3,
+          "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+          "text": "Qusokini lebt in Quvibace. Qumagina lebt in Qulotita."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-019-source-1",
+        "revision": 3,
+        "sha256": "51d4d65a154ce5a1c19889e23ca4c91b2a9c3cdc5ed664f380a5da07893f941a",
+        "text": "Quvibace",
+        "start": 17,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "QB-N-020",
+      "split": "PRIMARY",
+      "category": "STATIC",
+      "question": "Wo steht Qubudemo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-020-source-1",
+          "revision": 3,
+          "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+          "text": "Qubudemo steht in Qukucufo. Qunamuta steht in Qulelolo."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-020-source-1",
+        "revision": 3,
+        "sha256": "22e8621b168da8c31294b72f866448a09215b8950955d32bce7d06ef2db6583c",
+        "text": "Qukucufo",
+        "start": 18,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "QB-N-021",
+      "split": "PRIMARY",
+      "category": "MISSING",
+      "question": "Wo ist Qudunoki?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-021-source-1",
+          "revision": 3,
+          "sha256": "6451686b520ee8c7d93f40f9dc1d34e3fa6155bc48315cdadfa35cd431c777e9",
+          "text": "Quduciro ist in Qutukiga. Quwunava ist in Qusowefe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-022",
+      "split": "PRIMARY",
+      "category": "MISSING",
+      "question": "Wo wohnt Qunukune?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-022-source-1",
+          "revision": 3,
+          "sha256": "5fe93882fd829e438d6254fe888a906512e573feb73c45e0665036ece40f23df",
+          "text": "Qulutiva wohnt in Qusevoka. Qucicege wohnt in Quvukawo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-023",
+      "split": "PRIMARY",
+      "category": "MISSING",
+      "question": "Wo lebt Qugiramu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-023-source-1",
+          "revision": 3,
+          "sha256": "ed31cedc028cbe9c64d7e14eaa0d2a9b297f4922812352cbd2ff4b274ed80370",
+          "text": "Qupegene lebt in Qureceki. Qusesapu lebt in Quniteku."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-024",
+      "split": "PRIMARY",
+      "category": "MISSING",
+      "question": "Wo steht Qusuvuri?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-024-source-1",
+          "revision": 3,
+          "sha256": "25f45de93a0d00a75cd03a6ddff3cc79c86e3342e78831d98a5a616b402f2cf0",
+          "text": "Quvifemo steht in Qurenegi. Qumaliku steht in Qusuculi."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-025",
+      "split": "PRIMARY",
+      "category": "MISSING",
+      "question": "Wo ist Qukofasa?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-025-source-1",
+          "revision": 3,
+          "sha256": "d45243c2d04d70c00eccac724ec9a8335b995e00f62e48e7ca4aee4223dfdb52",
+          "text": "Quvapera ist in Quleluse. Qukofani ist in Quresiko."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-026",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo wohnt Qutepika?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-026-source-1",
+          "revision": 3,
+          "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+          "text": "Qupofusa wohnt in Quviriga. Qutepika wohnt in Qutocone."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-026-source-1",
+        "revision": 3,
+        "sha256": "e76fafd289ebb3157b4b4520640ba468431c684fbbb9ed1ef1789706d0f37f8b",
+        "text": "Qutocone",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "QB-N-027",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo lebt Qurusece?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-027-source-1",
+          "revision": 3,
+          "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+          "text": "Qupemudo lebt in Qubonobi. Qurusece lebt in Quwudiso."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-027-source-1",
+        "revision": 3,
+        "sha256": "b473800a249a2eefbe8a44bb4fdb0213c21aad2592f8e17580e4e57976d46ad0",
+        "text": "Quwudiso",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "QB-N-028",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo steht Quvunori?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-028-source-1",
+          "revision": 3,
+          "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+          "text": "Qupovova steht in Qugogave. Quvunori steht in Quvacefi."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-028-source-1",
+        "revision": 3,
+        "sha256": "3d03e2948eea9ef002b5f1696a4e1b50a030eb73c4ec3fdcc8ee484fce3d43a9",
+        "text": "Quvacefi",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "QB-N-029",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo ist Qudunone?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-029-source-1",
+          "revision": 3,
+          "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+          "text": "Quwisasa ist in Qunadano. Qudunone ist in Qucivego."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-029-source-1",
+        "revision": 3,
+        "sha256": "f70954ac816659fd2ef3702aa042aaaf26c090d7efa7f7f7107ef4c553198068",
+        "text": "Qucivego",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "QB-N-030",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo wohnt Qurabobu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-030-source-1",
+          "revision": 3,
+          "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+          "text": "Qusutulu wohnt in Qudelati. Qurabobu wohnt in Qumuvuni."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-030-source-1",
+        "revision": 3,
+        "sha256": "07fc4ddabab5393cc433cd8e605f026bbd66cdf683c7c3c182d279af437fd9d4",
+        "text": "Qumuvuni",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "QB-N-031",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo lebt Qunugomu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-031-source-1",
+          "revision": 3,
+          "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+          "text": "Qurorici lebt in Qumamobu. Qunugomu lebt in Qulifelu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-031-source-1",
+        "revision": 3,
+        "sha256": "e6b11d7581b61544429c01f44b2f1a4f3b65a45608a2dd76598e406b3b5513c5",
+        "text": "Qulifelu",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "QB-N-032",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo steht Quravetu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-032-source-1",
+          "revision": 3,
+          "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+          "text": "Quvodori steht in Qusepova. Quravetu steht in Qudawola."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-032-source-1",
+        "revision": 3,
+        "sha256": "8470df82956620f26dc48eeac2dc4293437b3e5697ae22e60da5dcfffde2b1ce",
+        "text": "Qudawola",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "QB-N-033",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo ist Qunufoca?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-033-source-1",
+          "revision": 3,
+          "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+          "text": "Qugeroce ist in Qusurado. Qunufoca ist in Qufecaki."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-033-source-1",
+        "revision": 3,
+        "sha256": "02c6efc462cd11cc932879de4f9489966012598a7f37fb4c87e0de3af94daa98",
+        "text": "Qufecaki",
+        "start": 42,
+        "endExclusive": 50
+      }
+    },
+    {
+      "id": "QB-N-034",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo wohnt Qunudusu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-034-source-1",
+          "revision": 3,
+          "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+          "text": "Qucamive wohnt in Qumocabo. Qunudusu wohnt in Quvowupu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-034-source-1",
+        "revision": 3,
+        "sha256": "269724f0a87f14fe899e6affad0b74eafe953a09d3f52a8d7c0cb8f0cabd10c8",
+        "text": "Quvowupu",
+        "start": 46,
+        "endExclusive": 54
+      }
+    },
+    {
+      "id": "QB-N-035",
+      "split": "ADVERSARIAL",
+      "category": "ROLE_SWAP",
+      "question": "Wo lebt Quficagi?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-035-source-1",
+          "revision": 3,
+          "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+          "text": "Qulatola lebt in Qukaduwu. Quficagi lebt in Qupereki."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-035-source-1",
+        "revision": 3,
+        "sha256": "8e47093b46e7cccdf8b6bdc54f428609a4ca57ec518854c879e527215763d93a",
+        "text": "Qupereki",
+        "start": 44,
+        "endExclusive": 52
+      }
+    },
+    {
+      "id": "QB-N-036",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo steht Qufugiki?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-036-source-1",
+          "revision": 3,
+          "sha256": "46ce7ef68bfc15ce168c1a69c760c56b5dd14abf8b2fa52fbd26854461302c6e",
+          "text": "Qufugiki steht in Qunupani. Qufugiki wohnt in Qukenoga."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-037",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo ist Quniribe?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-037-source-1",
+          "revision": 3,
+          "sha256": "65269b9668b62cd3e823dede182c6a80df5ad8c3c20815ecb9ddd28ad816514b",
+          "text": "Quniribe ist in Qunewogu. Quniribe steht in Qulipalu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-038",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo wohnt Quloludo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-038-source-1",
+          "revision": 3,
+          "sha256": "6eaf56967c85820498e8d46ccb380efcfdd315eac2e161dd5207bd11d42f48a6",
+          "text": "Quloludo wohnt in Qufodiso. Quloludo lebt in Qudoluco."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-039",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo lebt Quwapuce?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-039-source-1",
+          "revision": 3,
+          "sha256": "f4ab804106c42f8c659b30c0a3fb00665d2beea09dee2acc96ac62f72e4d16bf",
+          "text": "Quwapuce lebt in Qureworo. Quwapuce ist in Qumatalo."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-040",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo steht Qurowure?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-040-source-1",
+          "revision": 3,
+          "sha256": "289ba860894ffdc9e3f558f61f367bb7eafdeec70569cac41985e26566f9b7aa",
+          "text": "Qurowure steht in Qucopafo. Qurowure wohnt in Qurowope."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-041",
+      "split": "ADVERSARIAL",
+      "category": "RELATION_CONFLICT",
+      "question": "Wo ist Qupukomo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-041-source-1",
+          "revision": 3,
+          "sha256": "59dbb711e2643f9970bfb63a0c46d848ad364188ad062098f0224c1a71a06b92",
+          "text": "Qupukomo ist in Qutifawu. Qupukomo steht in Qusepeva."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-042",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo wohnt Qugalera?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-042-source-1",
+          "revision": 3,
+          "sha256": "1486294b9c34ec16df65cbbc8272c90c95f3f4e0e5f541ecaf45fc685efb22ff",
+          "text": "Qugalera wohnt nicht in Qudedemo. Qucabore wohnt in Qubisano."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-043",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo lebt Qucusibo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-043-source-1",
+          "revision": 3,
+          "sha256": "9a567c377fee457021153f6a01edfacfe13ff0b4fcd29b177c444685281281f6",
+          "text": "Qucusibo lebt nicht in Qucivepo. Quriteke lebt in Qunaletu."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-044",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo steht Qunelebe?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-044-source-1",
+          "revision": 3,
+          "sha256": "5e802104ad40eda29c87b3397109c00ec48958973501e1103203e67d4f561b0b",
+          "text": "Qunelebe steht nicht in Qumevowi. Qupavite steht in Qudalipe."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-045",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo ist Qugobolu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-045-source-1",
+          "revision": 3,
+          "sha256": "6c6d132f68db164b506b5e6b703667b505cae586cc63be3a696dfbdbe29bfcf1",
+          "text": "Qugobolu ist nicht in Quvekoba. Qulaworo ist in Qunageci."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-046",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo wohnt Qunicine?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-046-source-1",
+          "revision": 3,
+          "sha256": "4de7aecc3fd5d7264f801a0e38acfef15686e77366289ac7104181f203a64d67",
+          "text": "Qunicine wohnt nicht in Qupicotu. Qusigacu wohnt in Quragede."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-047",
+      "split": "ADVERSARIAL",
+      "category": "NEGATED",
+      "question": "Wo lebt Qufakelo?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-047-source-1",
+          "revision": 3,
+          "sha256": "c551ef36353b445c539e8c38c0178ce4c3b0a9c4cfd200e0712ad9434620a2de",
+          "text": "Qufakelo lebt nicht in Qusabidu. Quradito lebt in Qurecita."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-048",
+      "split": "ADVERSARIAL",
+      "category": "EXPLICIT_CORRECTION",
+      "question": "Wo steht Qutodoge?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-048-source-1",
+          "revision": 3,
+          "sha256": "01a0f4463360ddf4a5b89a9ff169e4fc17eee49221e11e62979b57c8ab67862a",
+          "text": "Qutodoge steht in Qunaperi. Korrektur: Qutodoge steht jetzt in Qupelufo; die erste Ortsangabe ist veraltet."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-048-source-1",
+        "revision": 3,
+        "sha256": "01a0f4463360ddf4a5b89a9ff169e4fc17eee49221e11e62979b57c8ab67862a",
+        "text": "Qupelufo",
+        "start": 63,
+        "endExclusive": 71
+      }
+    },
+    {
+      "id": "QB-N-049",
+      "split": "ADVERSARIAL",
+      "category": "EXPLICIT_CORRECTION",
+      "question": "Wo ist Qudodete?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-049-source-1",
+          "revision": 3,
+          "sha256": "cc5c36a165fa4e5be0ecf60e34b9bb01762e63f83c67d8457b0baf748c7ca43c",
+          "text": "Qudodete ist in Qusomewu. Korrektur: Qudodete ist jetzt in Qusinora; die erste Ortsangabe ist veraltet."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-049-source-1",
+        "revision": 3,
+        "sha256": "cc5c36a165fa4e5be0ecf60e34b9bb01762e63f83c67d8457b0baf748c7ca43c",
+        "text": "Qusinora",
+        "start": 59,
+        "endExclusive": 67
+      }
+    },
+    {
+      "id": "QB-N-050",
+      "split": "ADVERSARIAL",
+      "category": "EXPLICIT_CORRECTION",
+      "question": "Wo wohnt Quwegike?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-050-source-1",
+          "revision": 3,
+          "sha256": "eee3f04c54bb9680049ec885990da04d03dcd7658ab1fbb72199f9283459dc52",
+          "text": "Quwegike wohnt in Qugabedu. Korrektur: Quwegike wohnt jetzt in Qupifofo; die erste Ortsangabe ist veraltet."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-050-source-1",
+        "revision": 3,
+        "sha256": "eee3f04c54bb9680049ec885990da04d03dcd7658ab1fbb72199f9283459dc52",
+        "text": "Qupifofo",
+        "start": 63,
+        "endExclusive": 71
+      }
+    },
+    {
+      "id": "QB-N-051",
+      "split": "ADVERSARIAL",
+      "category": "EXPLICIT_CORRECTION",
+      "question": "Wo lebt Qucelace?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-051-source-1",
+          "revision": 3,
+          "sha256": "791d814898bd6b21eb33611f6bf30754c320cf0a51e33753c56d4380e21c8862",
+          "text": "Qucelace lebt in Quseruga. Korrektur: Qucelace lebt jetzt in Qusafivo; die erste Ortsangabe ist veraltet."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-051-source-1",
+        "revision": 3,
+        "sha256": "791d814898bd6b21eb33611f6bf30754c320cf0a51e33753c56d4380e21c8862",
+        "text": "Qusafivo",
+        "start": 61,
+        "endExclusive": 69
+      }
+    },
+    {
+      "id": "QB-N-052",
+      "split": "ADVERSARIAL",
+      "category": "EXPLICIT_CORRECTION",
+      "question": "Wo steht Qulumevu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-052-source-1",
+          "revision": 3,
+          "sha256": "7027f30d8933fe100b00aa41228df8b92cbf8b329e100a1070e1acb238942bfc",
+          "text": "Qulumevu steht in Qusetivi. Korrektur: Qulumevu steht jetzt in Quketice; die erste Ortsangabe ist veraltet."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-052-source-1",
+        "revision": 3,
+        "sha256": "7027f30d8933fe100b00aa41228df8b92cbf8b329e100a1070e1acb238942bfc",
+        "text": "Quketice",
+        "start": 63,
+        "endExclusive": 71
+      }
+    },
+    {
+      "id": "QB-N-053",
+      "split": "ADVERSARIAL",
+      "category": "REVOKED",
+      "question": "Wo ist Qucicisu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-053-source-1",
+          "revision": 3,
+          "sha256": "4affaed8171aab90fcc10a96c49462e4a041c479f25c5d06eed50a52d756fc93",
+          "text": "Qucicisu ist in Quliwalu. Diese Ortsangabe für Qucicisu wurde widerrufen; der aktuelle Ort ist unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-054",
+      "split": "ADVERSARIAL",
+      "category": "REVOKED",
+      "question": "Wo wohnt Qutimevu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-054-source-1",
+          "revision": 3,
+          "sha256": "172e6699f47df2cdad12adc861c690ab0ccdf01631ad534c620cb8d0c67b0066",
+          "text": "Qutimevu wohnt in Qugekiki. Diese Ortsangabe für Qutimevu wurde widerrufen; der aktuelle Ort ist unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-055",
+      "split": "ADVERSARIAL",
+      "category": "REVOKED",
+      "question": "Wo lebt Qugikota?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-055-source-1",
+          "revision": 3,
+          "sha256": "25de7285737d9ee988fef62781f3afe8edc65871a3c6f10375cd5d6127528837",
+          "text": "Qugikota lebt in Qusobonu. Diese Ortsangabe für Qugikota wurde widerrufen; der aktuelle Ort ist unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-056",
+      "split": "ADVERSARIAL",
+      "category": "REVOKED",
+      "question": "Wo steht Qulesido?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-056-source-1",
+          "revision": 3,
+          "sha256": "594fbd17970ff0a3daef1cf04c78c90ca549538c5cf44bf786d07a09e9953c02",
+          "text": "Qulesido steht in Qulogosu. Diese Ortsangabe für Qulesido wurde widerrufen; der aktuelle Ort ist unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-057",
+      "split": "ADVERSARIAL",
+      "category": "REVOKED",
+      "question": "Wo ist Qunebapi?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-057-source-1",
+          "revision": 3,
+          "sha256": "a20c12cabd3d8ea7f14467845a6d35beb0fe064a45f2a96be27dc97a6d606753",
+          "text": "Qunebapi ist in Qucufosa. Diese Ortsangabe für Qunebapi wurde widerrufen; der aktuelle Ort ist unbekannt."
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "QB-N-058",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo wohnt Qurigetu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-058-source-1",
+          "revision": 3,
+          "sha256": "e399e604803342ad276cfc04abb0418fecc4573481f91a195b1fc8c8f88189f2",
+          "text": "🧭 Protokoll: Qusarunu wohnt in Quganuko."
+        },
+        {
+          "sourceId": "qa-neural-058-source-2",
+          "revision": 4,
+          "sha256": "bba74e7d87b6d9e882a9dce663926f5cbf41ca257cdfe8efc914dcfc1b913477",
+          "text": "Öffentliche Notiz: Qurigetu wohnt in Quwefilo."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-058-source-2",
+        "revision": 4,
+        "sha256": "bba74e7d87b6d9e882a9dce663926f5cbf41ca257cdfe8efc914dcfc1b913477",
+        "text": "Quwefilo",
+        "start": 37,
+        "endExclusive": 45
+      }
+    },
+    {
+      "id": "QB-N-059",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo lebt Qumugugu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-059-source-1",
+          "revision": 3,
+          "sha256": "4f997a70b27ed528156a5762d5a8f448e0063dcd1fdf5d8d60acf9edd1eeae6f",
+          "text": "🧭 Protokoll: Qusunedu lebt in Qubocisa."
+        },
+        {
+          "sourceId": "qa-neural-059-source-2",
+          "revision": 4,
+          "sha256": "d52bba39aaebac3584a72d59aa3c66aceb4b9930b81cdd64837a8fb929902e56",
+          "text": "Öffentliche Notiz: Qumugugu lebt in Qutafawe."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-059-source-2",
+        "revision": 4,
+        "sha256": "d52bba39aaebac3584a72d59aa3c66aceb4b9930b81cdd64837a8fb929902e56",
+        "text": "Qutafawe",
+        "start": 36,
+        "endExclusive": 44
+      }
+    },
+    {
+      "id": "QB-N-060",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo steht Qupetulu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-060-source-1",
+          "revision": 3,
+          "sha256": "bdf822bd663dbfadaeeabadf5b86a66f3ff7da7430313b3c5759fbd17be9a465",
+          "text": "🧭 Protokoll: Qumodolu steht in Qupabuce."
+        },
+        {
+          "sourceId": "qa-neural-060-source-2",
+          "revision": 4,
+          "sha256": "f6643cfca4726bfcc0a1c76e78e51f5f0ffc27c0cdf1efc2e25abf2a8bbf7c48",
+          "text": "Öffentliche Notiz: Qupetulu steht in Quruvera."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-060-source-2",
+        "revision": 4,
+        "sha256": "f6643cfca4726bfcc0a1c76e78e51f5f0ffc27c0cdf1efc2e25abf2a8bbf7c48",
+        "text": "Quruvera",
+        "start": 37,
+        "endExclusive": 45
+      }
+    },
+    {
+      "id": "QB-N-061",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo ist Quwegigu?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-061-source-1",
+          "revision": 3,
+          "sha256": "fba39d1d088d7865de39ccfed53865f5b2b4653786506a73d6148e53855f7ec0",
+          "text": "🧭 Protokoll: Quduseso ist in Qulumeni."
+        },
+        {
+          "sourceId": "qa-neural-061-source-2",
+          "revision": 4,
+          "sha256": "6f12640e5ee2021b9d1ffe62e6333b4521642057abb4cc50e8129248ce7dffae",
+          "text": "Öffentliche Notiz: Quwegigu ist in Qulabogi."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-061-source-2",
+        "revision": 4,
+        "sha256": "6f12640e5ee2021b9d1ffe62e6333b4521642057abb4cc50e8129248ce7dffae",
+        "text": "Qulabogi",
+        "start": 35,
+        "endExclusive": 43
+      }
+    },
+    {
+      "id": "QB-N-062",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo wohnt Qubavora?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-062-source-1",
+          "revision": 3,
+          "sha256": "752d1c97b310591285011593fd31a5dec0b4f32285987dee9e0a18ad2dea7b4d",
+          "text": "🧭 Protokoll: Qurupovi wohnt in Qugogede."
+        },
+        {
+          "sourceId": "qa-neural-062-source-2",
+          "revision": 4,
+          "sha256": "d4a9fc31819c98b2f158e5dce02709bbd588ecb899742d6d2b6f4c907df6d75d",
+          "text": "Öffentliche Notiz: Qubavora wohnt in Qucepemu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-062-source-2",
+        "revision": 4,
+        "sha256": "d4a9fc31819c98b2f158e5dce02709bbd588ecb899742d6d2b6f4c907df6d75d",
+        "text": "Qucepemu",
+        "start": 37,
+        "endExclusive": 45
+      }
+    },
+    {
+      "id": "QB-N-063",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo lebt Qudevapi?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-063-source-1",
+          "revision": 3,
+          "sha256": "78a4b54f8f79d708aa563e70829afe12312033848dcde3b3d35669bf7fd38128",
+          "text": "🧭 Protokoll: Qutuvawi lebt in Quropepi."
+        },
+        {
+          "sourceId": "qa-neural-063-source-2",
+          "revision": 4,
+          "sha256": "20c0ad4549674c18a1ec34d3b1198504726e4329b63c007056ae1866e1bee180",
+          "text": "Öffentliche Notiz: Qudevapi lebt in Qurebulu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-063-source-2",
+        "revision": 4,
+        "sha256": "20c0ad4549674c18a1ec34d3b1198504726e4329b63c007056ae1866e1bee180",
+        "text": "Qurebulu",
+        "start": 36,
+        "endExclusive": 44
+      }
+    },
+    {
+      "id": "QB-N-064",
+      "split": "ADVERSARIAL",
+      "category": "UNICODE_AND_DISTRACTOR",
+      "question": "Wo steht Qufoloka?",
+      "sources": [
+        {
+          "sourceId": "qa-neural-064-source-1",
+          "revision": 3,
+          "sha256": "abcf1bcec996a1e9bc9a7a93902ad9510bb3c12a8bbe9983f2b3fe0f87d1f22b",
+          "text": "🧭 Protokoll: Qutubevo steht in Qumevate."
+        },
+        {
+          "sourceId": "qa-neural-064-source-2",
+          "revision": 4,
+          "sha256": "8572406cf353b4704d89d9d5571ffc745156a68a4cb4e1a9ead7d0dc4293c7a3",
+          "text": "Öffentliche Notiz: Qufoloka steht in Qubedepu."
+        }
+      ],
+      "expected": {
+        "sourceId": "qa-neural-064-source-2",
+        "revision": 4,
+        "sha256": "8572406cf353b4704d89d9d5571ffc745156a68a4cb4e1a9ead7d0dc4293c7a3",
+        "text": "Qubedepu",
+        "start": 37,
+        "endExclusive": 45
+      }
+    }
+  ]
+}

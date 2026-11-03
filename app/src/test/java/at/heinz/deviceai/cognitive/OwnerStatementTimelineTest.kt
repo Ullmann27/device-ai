@@ -53,6 +53,141 @@ class OwnerStatementTimelineTest {
         assertNull(p(listOf("Gestern hatte die rote Kiste 3 Ringe.", "Die rote Kiste hat 4 Ringe."), t3))
     }
 
+    @Test fun suffixNegationCannotReplaceEarlierQuantityWithDeniedValue() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Korrektur: Die rote Kiste enthält 9 Ringe nicht mehr. Welche Kiste hatte vorher mehr?"))
+    }
+
+    @Test fun lateQualifierBeyondExtractionWindowCannotBecomeAffirmativeState() {
+        val correction = "Korrektur: Die rote Kiste hat 9 Ringe, wobei diese Angabe aus einer " +
+            "inzwischen verworfenen und wiederholt überprüften Zählung stammt und nicht stimmt."
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), correction))
+    }
+
+    @Test fun suffixUncertaintyCannotBecomeCurrentState() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), "Die rote Kiste hat 9 Ringe, vielleicht."))
+    }
+
+    @Test fun negationBeforeEntityCannotBecomeCurrentState() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), "Nicht die rote Kiste hat 9 Ringe."))
+    }
+
+    @Test fun separateNoSaveInstructionDoesNotInvalidatePlainCorrection() {
+        val projection = p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Nun hat die rote Kiste 9 Ringe statt 4. Speichere diese Angaben nicht dauerhaft.")!!
+        assertEquals(4L, projection.entry("Kiste (rot)")!!.original)
+        assertEquals(9L, projection.entry("Kiste (rot)")!!.current)
+    }
+
+    @Test fun numberFreeQuantityDenialCannotResurrectEarlierCount() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."),
+            "Korrektur: Die rote Kiste enthält keine Ringe mehr. Was war vorher?"))
+    }
+
+    @Test fun numberFreeUncertaintyCannotConfirmEarlierCount() {
+        assertNull(p(listOf("In der Schale liegen 6 Eier."),
+            "Korrektur: In der Schale liegen vielleicht noch Eier. Wie viele waren es vorher?"))
+    }
+
+    @Test fun numberFreeDenialInEarlierTurnRemainsEffectiveOnLaterQuestion() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe.", "Die rote Kiste hat keine Ringe mehr."), t3))
+    }
+
+    @Test fun numberFreeDenialInSameOwnerTurnCannotLeaveItsEarlierCount() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe. Die rote Kiste enthält keine Ringe mehr."), t3))
+    }
+
+    @Test fun unrelatedEntitiesPropertiesUnitsAndNoSaveInstructionsKeepQuantity() {
+        for (current in listOf(
+            "Die blaue Kiste hat keine Ringe mehr.",
+            "Die rote Kiste hat keine Eier mehr.",
+            "Die rote Kiste ist nicht beschädigt.",
+            "Die rote Kiste soll nicht gespeichert werden.",
+            "Speichere die rote Kiste und ihre Ringe nicht dauerhaft."
+        )) {
+            val projection = p(listOf("Die rote Kiste hat 4 Ringe."), "$current Was war vorher?")
+            assertEquals(current, 4L, projection?.entry("Kiste (rot)")?.current)
+        }
+    }
+
+    @Test fun numberFreeQuestionsHypotheticalsQuotesAndDoubleNegationsKeepQuantity() {
+        for (current in listOf(
+            "Hat die rote Kiste keine Ringe mehr?",
+            "Wenn die rote Kiste keine Ringe mehr hat, wäre sie leer.",
+            "Angenommen, die rote Kiste enthält keine Ringe mehr.",
+            "\"Die rote Kiste hat keine Ringe mehr\", sagte Max.",
+            "Max sagt: Die rote Kiste hat keine Ringe mehr.",
+            "Die rote Kiste hat nicht keine Ringe.",
+            "Es ist nicht wahr, dass die rote Kiste keine Ringe mehr hat.",
+            "Gestern hatte die rote Kiste keine Ringe.",
+            "Ab morgen hat die rote Kiste keine Ringe mehr."
+        )) {
+            val projection = p(listOf("Die rote Kiste hat 4 Ringe."), "$current Was war vorher?")
+            assertEquals(current, 4L, projection?.entry("Kiste (rot)")?.current)
+        }
+    }
+
+    @Test fun withdrawalOfKnownQuantityClaimCannotRetainItsCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Mengenangabe für die grüne Dose gilt nicht mehr.",
+            "Ich widerrufe meine Angabe zur grünen Dose.",
+            "Ich nehme die Zahl der Perlen zurück.",
+            "Die Zahl in der grünen Dose war ein Irrtum."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun uncertainQuantityClaimCannotRetainItsCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Bei der Menge in der grünen Dose bin ich unsicher.",
+            "Die Anzahl der Perlen ist nicht gesichert.",
+            "Die Anzahl der Perlen in der grünen Dose ist nicht gesichert.",
+            "Meine Mengenangabe zur grünen Dose ist nur geschätzt.",
+            "Die Zahl der Perlen ist möglicherweise falsch."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun withdrawnOldCountIsNotPromotedToANewEntityOrCurrentFact() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Angabe von 12 Perlen für die grüne Dose war falsch.",
+            "Die alte Zahl 12 in der grünen Dose stimmt nicht.",
+            "Ich widerrufe die Mengenangabe von 12 Perlen."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun quantityClaimAboutUnknownEntityOrUnitKeepsKnownCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Mengenangabe für die blaue Dose ist falsch.",
+            "Die Anzahl der Knöpfe ist unklar.",
+            "Die Anzahl der Knöpfe in der grünen Dose ist unklar.",
+            "Die Angabe von 12 Knöpfen für die grüne Dose ist falsch.",
+            "Die Farbangabe für die grüne Dose ist falsch."
+        )) assertEquals(correction, 12L, p(prior, correction)?.entry("Dose (grün)")?.current)
+    }
+
+    @Test fun nonAssertionsAboutQuantityClaimsKeepKnownCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Stimmt die Mengenangabe für die grüne Dose nicht?",
+            "Wenn die Mengenangabe für die grüne Dose falsch ist, zähle ich nach.",
+            "Angenommen, die Zahl der Perlen ist falsch.",
+            "\"Die Anzahl der Perlen ist falsch\", sagte Max.",
+            "Max sagt: Die Zahl der Perlen ist unklar.",
+            "Die Anzahl der Perlen ist nicht falsch.",
+            "Ich widerrufe die Mengenangabe für die grüne Dose nicht.",
+            "Bitte speichere die Mengenangabe für die grüne Dose nicht.",
+            "Die Angabe zur Farbe der grünen Dose stimmt nicht."
+        )) assertEquals(correction, 12L, p(prior, correction)?.entry("Dose (grün)")?.current)
+    }
+
+    @Test fun withdrawnAmbiguousQuantityReferenceAbstainsWithoutChoosingAnEntity() {
+        assertNull(p(listOf("Die grüne Dose hat 12 Perlen und die blaue Dose hat 7 Perlen."),
+            "Die Anzahl der Perlen ist unklar."))
+    }
+
     @Test fun futureIsSeparatedAndMixedFutureFailsClosed() {
         val f = p(listOf(repoT1), "Ab morgen hat die blaue Kiste 8 Ringe. Welche hat dann ursprünglich mehr?")!!
         assertEquals(7L, f.entry("Kiste (blau)")!!.current)
