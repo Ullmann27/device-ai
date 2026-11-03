@@ -1,0 +1,8 @@
+[
+  "node",
+  "--test",
+  "--test-concurrency=1",
+  "--test-reporter=tap",
+  "/workspace/independence-service-review/tools/independence-service-review/lifecycle.test.mjs",
+  "/workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs"
+]
