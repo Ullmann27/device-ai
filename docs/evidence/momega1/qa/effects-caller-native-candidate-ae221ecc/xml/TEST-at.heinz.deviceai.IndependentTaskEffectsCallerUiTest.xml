@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:08:11" hostname="b354f2cb821b" time="0.853">
+  <properties/>
+  <testcase name="actualPauseReleasesButtonTrackAndBackgroundCannotReviveIt" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.169"/>
+  <testcase name="gateCreatedForOldTurnCannotBorrowNewTurnScopeAtRunnerEntry" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.101"/>
+  <testcase name="actualCancelPathRevokesScopeBeforeLateBackendCompletion" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.082"/>
+  <testcase name="delayedRealExitCannotRenderIntoReplacementTurn" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.091"/>
+  <testcase name="recordedProposalAndBusyDoNotRepresentExecution" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.106"/>
+  <testcase name="actualChiefJobIsSilentWhileQueuedAndUsesRunTimeAfterLongQueue" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.157"/>
+  <testcase name="innerEphemeralContextRejectionDoesNotInventAdmittedToolActivity" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.08"/>
+  <testcase name="microphoneAndSavedMuteBlockActualButtonFeedback" classname="at.heinz.deviceai.IndependentTaskEffectsCallerUiTest" time="0.066"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
