@@ -42,6 +42,20 @@ object BootstrapBrain {
         """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|kein\p{L}*)(?![\p{L}\p{N}_])"""
     )
     private val storageClauseBoundary = Regex("""(?iu)\bsondern\b|[.;!?]""")
+    private val batteryNoun = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
+    )
+    private val batteryReadCue = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|wie viel|wieviel|wie voll|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
+    )
+    private fun isBatteryReadRequest(input: String): Boolean =
+        input.trim().split(storageClauseBoundary).any { untrimmed ->
+            val text = untrimmed.trim()
+            !storageNegation.containsMatchIn(text) &&
+                (text in setOf("akku", "batterie", "ladezustand", "akkustand") ||
+                    (batteryNoun.containsMatchIn(text) && batteryReadCue.containsMatchIn(text)))
+        }
+
     private fun isStorageReadRequest(input: String): Boolean {
         val clauses = input.trim().split(storageClauseBoundary)
         val bare = setOf("speicher", "speicherstatus", "speicherplatz", "speicherkapazität")
@@ -161,9 +175,16 @@ object BootstrapBrain {
             return tool("get_app_info", mapOf("packageOrName" to "Lumo"))
         if ("downloads" in low || "download-ordner" in low) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
-        if ("akku" in low || "batterie" in low || "ladezustand" in low)
-            return tool("get_battery_info")
-        if (isStorageReadRequest(low) || "große dateien" in low) return tool("get_storage_info")
+        val wantsStorageInspection = isStorageReadRequest(low) || "große dateien" in low
+        val wantsBatteryInspection = isBatteryReadRequest(low)
+        // A single read-only bootstrap action must not guess between two tools.
+        if (wantsStorageInspection && wantsBatteryInspection) return BootstrapDecision(
+            BootstrapKind.REPLY,
+            "Du fragst nach Akku und Speicher zugleich. Welchen Wert soll ich zuerst prüfen?",
+            allowNeuralRecall = true
+        )
+        if (wantsStorageInspection) return tool("get_storage_info")
+        if (wantsBatteryInspection) return tool("get_battery_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
         // An explicit offline instruction is neither a web-search request nor
