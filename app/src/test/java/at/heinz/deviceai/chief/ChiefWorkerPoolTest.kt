@@ -13,6 +13,8 @@ import org.junit.Test
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /** Chief pattern point 2: bounded background workers with own brief, scoped tools and exactly one report. */
 class ChiefWorkerPoolTest {
@@ -69,8 +71,69 @@ class ChiefWorkerPoolTest {
         assertEquals(1, ran)
         val model = WorkerScope.model(b, AgentModel { _, _, _, _ ->
             AgentModelOutput("m", "", ToolProposal("delete_file", mapOf("path" to "/x"))) })
-        val out = model.generate("t", emptyList(), null, emptyList())
-        assertEquals(null, out.proposal)
-        assertTrue(out.response.contains("nicht freigegeben"))
+        val blocked = runCatching { model.generate("t", emptyList(), null, emptyList()) }.exceptionOrNull()
+        assertTrue("an out-of-scope proposal must fail the job, never produce a successful answer", blocked is WorkerBlocked)
     }
+    @Test fun cancellingAnInterruptResistantWorkerInvokesItsCooperativeStop() {
+        val entered = CountDownLatch(1)
+        val stopped = CountDownLatch(1)
+        val mayStop = AtomicBoolean(false)
+        val stops = AtomicInteger(0)
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) {
+            object : WorkerJob {
+                override fun run(): String {
+                    entered.countDown()
+                    val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
+                    while (!mayStop.get() && System.nanoTime() < until) {
+                        try { Thread.sleep(5) } catch (_: InterruptedException) { /* simulate native call ignoring interrupts */ }
+                    }
+                    stopped.countDown()
+                    return "finished"
+                }
+                override fun cancel() { stops.incrementAndGet(); mayStop.set(true) }
+            }
+        }
+        try {
+            assertTrue(pool.submit(brief("interrupt-resistant")) { reports += it })
+            assertTrue("worker started", entered.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.cancel("interrupt-resistant"))
+            assertTrue("job stopped cooperatively instead of only cancelling its Future", stopped.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals("cooperative cancel is delivered exactly once", 1, stops.get())
+            assertEquals(WorkerStatus.CANCELLED, reports.single().status)
+        } finally {
+            pool.shutdown()
+        }
+    }
+
+    @Test fun timeoutsAlsoInvokeCooperativeStopBeforeReturningAReport() {
+        val mayStop = AtomicBoolean(false)
+        val stopped = CountDownLatch(1)
+        val stops = AtomicInteger()
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) {
+            object : WorkerJob {
+                override fun run(): String {
+                    val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
+                    while (!mayStop.get() && System.nanoTime() < until) {
+                        try { Thread.sleep(5) } catch (_: InterruptedException) { }
+                    }
+                    stopped.countDown()
+                    return "finished"
+                }
+                override fun cancel() { stops.incrementAndGet(); mayStop.set(true) }
+            }
+        }
+        try {
+            assertTrue(pool.submit(brief("timeout", deadline = 50)) { reports += it })
+            assertTrue(pool.awaitIdle(2_000))
+            assertTrue(stopped.await(2, TimeUnit.SECONDS))
+            assertEquals("timeout cancellation is delivered exactly once", 1, stops.get())
+            assertEquals(WorkerStatus.TIMED_OUT, reports.single().status)
+        } finally {
+            pool.shutdown()
+        }
+    }
+
 }

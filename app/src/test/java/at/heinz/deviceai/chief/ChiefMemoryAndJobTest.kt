@@ -5,6 +5,9 @@ import at.heinz.deviceai.ToolProposal
 import at.heinz.deviceai.ToolRunner
 import at.heinz.deviceai.cognitive.AgentEvaluator
 import at.heinz.deviceai.cognitive.AgentModel
+import at.heinz.deviceai.cognitive.CancellableAgentModel
+import at.heinz.deviceai.cognitive.AgentReflection
+import at.heinz.deviceai.cognitive.AgentToolObservation
 import at.heinz.deviceai.cognitive.AgentModelOutput
 import at.heinz.deviceai.cognitive.AgentToolApproval
 import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
@@ -17,6 +20,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /** Sprint 98: Gedächtnis (#371 layers.shared()/search()) → orchestrator memories; task loop as ChiefWorkerPool job. */
 class ChiefMemoryAndJobTest {
@@ -78,4 +85,107 @@ class ChiefMemoryAndJobTest {
         assertEquals(WorkerStatus.BLOCKED, reports.single().status)
         assertEquals("Freigabe verweigert", reports.single().summary)
     }
+    @Test fun chiefJobCancelPropagatesIntoTheUnderlyingCancellableModel() {
+        val entered = CountDownLatch(1)
+        val stopped = CountDownLatch(1)
+        val released = AtomicBoolean(false)
+        val cancelCalls = AtomicInteger(0)
+        val toolRuns = AtomicInteger(0)
+        val model = object : CancellableAgentModel {
+            override fun generate(
+                task: String, memories: List<MemoryRecord>, reflection: AgentReflection?,
+                toolObservations: List<AgentToolObservation>
+            ): AgentModelOutput {
+                entered.countDown()
+                val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
+                while (!released.get() && System.nanoTime() < until) {
+                    try { Thread.sleep(5) } catch (_: InterruptedException) { }
+                }
+                stopped.countDown()
+                return AgentModelOutput("m", "Antwort ohne Werkzeuge.")
+            }
+
+            override fun cancelGeneration() {
+                cancelCalls.incrementAndGet()
+                released.set(true)
+            }
+        }
+        val task = WorkerBrief("cancel-real-agent", "Prüfe den Kontext", allowedTools = emptySet())
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) {
+            ChiefJobs.agentJob(task, ChiefJobDeps(
+                model = model,
+                runner = ToolRunner { toolRuns.incrementAndGet(); "unexpected" },
+                policy = ToolPolicy(readOnlyEnabled = true),
+                memory = port, evaluator = AgentEvaluator { _, _ -> Evaluation(true, 0.5) },
+                experienceStore = InMemoryExperienceStore(),
+                approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(false) },
+                clock = { 100L }, modelOwnedByJob = true))
+        }
+        try {
+            assertTrue(pool.submit(task) { reports += it })
+            assertTrue("the real orchestrator should enter model generation", entered.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.cancel(task.id))
+            assertTrue("native cancellation bridge must stop model generation", stopped.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.awaitIdle(2_000))
+            assertTrue("cancelGeneration must be called", cancelCalls.get() >= 1)
+            assertEquals(0, toolRuns.get())
+            assertEquals(WorkerStatus.CANCELLED, reports.single().status)
+        } finally {
+            pool.shutdown()
+        }
+    }
+
+    @Test fun cancelingSharedModelWorkerMustNotPoisonModelForNextJob() {
+        val started = CountDownLatch(1)
+        val release = AtomicBoolean(false)
+        val cancels = AtomicInteger()
+        val calls = AtomicInteger()
+        val model = object : CancellableAgentModel {
+            override fun generate(
+                task: String, memories: List<MemoryRecord>, reflection: AgentReflection?,
+                toolObservations: List<AgentToolObservation>
+            ): AgentModelOutput {
+                calls.incrementAndGet()
+                started.countDown()
+                val until = System.nanoTime() + TimeUnit.SECONDS.toNanos(3)
+                while (!release.get() && System.nanoTime() < until) {
+                    try { Thread.sleep(5) } catch (_: InterruptedException) { }
+                }
+                return AgentModelOutput("shared", "Keine Geräteaktion.")
+            }
+            override fun cancelGeneration() {
+                cancels.incrementAndGet()
+                // Simulates a process-wide, sticky native-model cancellation.
+            }
+        }
+        val deps = ChiefJobDeps(
+            model = model, runner = ToolRunner { "should-not-run" },
+            policy = ToolPolicy(readOnlyEnabled = true),
+            memory = port, evaluator = AgentEvaluator { _, _ -> Evaluation(true, 0.5) },
+            experienceStore = InMemoryExperienceStore(),
+            approvalProvider = AgentToolApprovalProvider { _, _ -> AgentToolApproval(false) },
+            clock = { 100L }) // modelOwnedByJob defaults false: shared native runtime
+        val results = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { b -> ChiefJobs.agentJob(b, deps) }
+        try {
+            val first = WorkerBrief("shared-first", "Erste Frage", emptySet())
+            assertTrue(pool.submit(first) { results += it })
+            assertTrue(started.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.cancel(first.id))
+            release.set(true)
+            assertTrue(pool.awaitIdle(3_000))
+            assertEquals("shared model must not receive global cancelGeneration", 0, cancels.get())
+
+            val second = WorkerBrief("shared-next", "Zweite Frage", emptySet())
+            assertTrue(pool.submit(second) { results += it })
+            assertTrue(pool.awaitIdle(3_000))
+            assertTrue("shared model remains reusable", calls.get() >= 2)
+            assertEquals(0, cancels.get())
+        } finally {
+            release.set(true)
+            pool.shutdown()
+        }
+    }
+
 }
