@@ -57,26 +57,40 @@ export function prepareCodingTask({project,stateDir,task}){
   return {id:spec.id,ccc1TaskId,fingerprint,replayed:false};
  }finally{fs.closeSync(fd);}
 }
-/** Process-private runtime admission plus exact task/proposal binding. JSON flags grant nothing. */
-export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}){
- const observation=raw?.trace?.modelObservation;
+function checkedTaskObservation(task,observation,seen){
  if(codingRuntime.isTrustedLocalModelObservation?.(observation)!==true)
   throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
- // A process brand authenticates execution, not inference. No current producer
- // establishes actual model execution; only independently admitted immutable
- // observations may ever carry true. A caller flag or JSON clone cannot admit.
+ // Process identity alone is insufficient. The reviewed runtime producer must
+ // independently establish the stronger immutable execution observation.
  if(!Object.isFrozen(observation)||observation.verifiedModelExecution!==true)throw Error('BLOCKED_LOCAL_MODEL_UNAVAILABLE');
  const spec=validateCodingTask(task);
- const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},spec);
  if(observation.taskId!==spec.id||observation.taskFingerprint!==taskFingerprint(spec)||
-    observation.sourceCommit!==spec.sourceCommit||observation.proposalSha256!==sha256Hex(canonical(proposal))||
+    observation.sourceCommit!==spec.sourceCommit||
     seen.has(observation.executionId))throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ return observation;
+}
+/** Process-private runtime admission plus exact task/proposal binding. JSON flags grant nothing. */
+export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}){
+ const observation=checkedTaskObservation(task,raw?.trace?.modelObservation,seen);
+ const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},validateCodingTask(task));
+ if(observation.proposalSha256!==sha256Hex(canonical(proposal)))throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ seen.add(observation.executionId);return observation;
+}
+/** Records an observed failed inference, never an executable proposal or success. */
+export function assertCodingInferenceFailureBinding({task,error,seen=new Set()}={}){
+ const observation=checkedTaskObservation(task,error?.modelObservation,seen);
+ if(!['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PROPOSAL_INVALID'].includes(error?.code)||
+    !(observation.responseStatus==='INVALID_MODEL_RESPONSE'&&observation.proposalSha256===null||
+      observation.responseStatus==='PROPOSAL'&&/^[a-f0-9]{64}$/.test(observation.proposalSha256??'')))
+  throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
  seen.add(observation.executionId);return observation;
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
  requireIsolation=false,requireLocalModelObservation=false,expectedTaskFingerprint=null,
+ technicalRecallEnabled=true,
  providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),
  env=process.env}={}){
+ if(typeof technicalRecallEnabled!=='boolean')throw Error('CODING_RECALL_OPTION_INVALID');
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
  const strictMomega=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1';
@@ -97,11 +111,19 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  if(git(project,['status','--porcelain']).stdout.trim())throw Error('CODING_TASK_DIRTY_SOURCE');
  const receipts=[],technicalCandidates=[],seenObservations=new Set();
  let admittedModelCalls=0,modelAdmissionFailure=null;
+ let verifiedInferenceCalls=0,rejectedModelResponses=0,modelIdentity=null;
+ const observeInference=observation=>{
+  const identity={modelSha256:observation.modelSha256,runtimeSha256:observation.runtimeSha256,
+   reviewedPairId:observation.reviewedPairId};
+  if(modelIdentity&&canonical(modelIdentity)!==canonical(identity))throw Error('CODING_LOCAL_MODEL_CHANGED');
+  modelIdentity=identity;verifiedInferenceCalls++;
+ };
  let technicalRecall={items:[],text:''},technicalExperienceStatus='NOT_RECORDED';
  let technical=null;
  try{
   technical=await import('./ccc1-technical-recall.mjs');
-  technicalRecall=technical.recallTechnicalExperiences({stateDir,task:grant.task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)});
+  if(technicalRecallEnabled)technicalRecall=technical.recallTechnicalExperiences({stateDir,project,
+   task:grant.task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)});
  }catch{technicalRecall={items:[],text:''};}
  const result=await runTask({project,stateDir,taskId:grant.ccc1TaskId,
   reasoner:new Ccc1Reasoner({candidates:[],repairBudgetMinutes:20}),maxTurns:16,
@@ -115,9 +137,17 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
      technicalRecall:technicalRecall.text,requireLocalModelObservation:strictMomega});
    if(strictMomega&&taskFingerprint(supplied.taskSpec)!==taskFingerprint(task))throw Error('CODING_TASK_BINDING_MISMATCH');
    const candidateProvider=Object.assign(input=>{
-    const raw=supplied(input);
+    let raw;
+    try{raw=supplied(input);}catch(error){
+     if(strictMomega&&error?.modelObservation){
+      try{observeInference(assertCodingInferenceFailureBinding({task,error,seen:seenObservations}));rejectedModelResponses++;}
+      catch(admission){modelAdmissionFailure=admission.message;throw admission;}
+     }
+     if(strictMomega&&verifiedInferenceCalls===0)modelAdmissionFailure=error?.code??modelAdmissionFailure;
+     throw error;
+    }
     if(strictMomega){
-     try{assertCodingModelObservationBinding({task,raw,seen:seenObservations});admittedModelCalls++;}
+     try{observeInference(assertCodingModelObservationBinding({task,raw,seen:seenObservations}));admittedModelCalls++;}
      catch(error){modelAdmissionFailure=error.message;throw error;}
     }
     return raw;
@@ -134,7 +164,8 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  const receiptJobs=[...new Set((result.entries??[])
   .filter(entry=>entry.kind==='RECEIPT'&&typeof entry.payload?.job==='string')
   .map(entry=>entry.payload.job))];
- if(strictMomega&&admittedModelCalls===0)
+ if(strictMomega&&modelAdmissionFailure==='CODING_LOCAL_MODEL_CHANGED')throw Error(modelAdmissionFailure);
+ if(strictMomega&&verifiedInferenceCalls===0)
   throw Error(modelAdmissionFailure??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
  for(const candidate of technicalCandidates){
   try{
@@ -149,5 +180,7 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
   taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
   status:result.outcome==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':result.outcome,
-  receiptJobs,receipts,technicalExperienceStatus,technicalRecallCount:technicalRecall.items.length,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
+  receiptJobs,receipts,technicalExperienceStatus,technicalRecallCount:technicalRecall.items.length,
+  ...(strictMomega?{modelExecution:{verifiedCalls:verifiedInferenceCalls,acceptedProposals:admittedModelCalls,
+   rejectedResponses:rejectedModelResponses,identity:modelIdentity}}:{}),approvedForMerge:false,deviceVerified:false,neuralTraining:false};
 }

@@ -1,3 +1,58 @@
+# MΩ-1 independent memory review — Git-lineage and recall control
+
+**Verdict: ACCEPT_BOUNDED_GIT_LINEAGE_RESEARCH_POLICY on `ed6e59101d33faa830b1ac2c0beb8fb4f0972128`.** Also accept the explicit recall control in Chief `22136ce6c3c23682a40006d446ad9b7234ac76e0` at the independently tested provider boundary with that helper. This is not real-model inference, transfer benefit, learned capability or final combined-source acceptance. [Review PR #418](https://github.com/Ullmann27/device-ai/pull/418).
+
+| Independently executed check | Outcome |
+| --- | --- |
+| Preregistered lineage cases against old accepted `cf0f6a42` | **16 PASS / 11 FAIL / 0 SKIP; exit 1** |
+| Same unchanged lineage cases against `ed6e5910` | **27 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Prior frozen 46 cases against merged `ed6e5910` | **45 PASS / 1 FAIL / 0 SKIP; exit 1**, baseline metadata assertion C03 only |
+| Author focused suite freshly rerun on `ed6e5910` | **50 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Canonical worker/repair freshly rerun on `ed6e5910` | **52 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Independent recall-control boundary composition | **6 PASS / 0 FAIL / 0 SKIP; exit 0** |
+
+The 27 lineage cases were frozen/pushed at `fd9250b168b16102bd10540a5a79243dd97bdea4` **before author implementation**; author explicitly held and was released only after this freeze. Baseline RED is retained at review commit `a5b58daf`. Source/API inspection before that freeze covered the existing accepted implementation and agreed future interface, not a future implementation. No lineage test or expectation changed between RED and GREEN. Tests use real temporary Git commits/worktrees, fresh Node processes and manually signed disposable-key synthetic proofs. No QA holdout contents, original benchmark tasks, weights, model binaries or owner data were used.
+
+## Accepted policy and review evidence
+
+`recallTechnicalExperiences` now accepts optional trusted `project=null`. Omitted/null preserves the former exact-source gate. A supplied project must resolve to the actual Git root, with clean tracked/staged/untracked state, current HEAD equal to the approved source, matching canonical repository identity, locally available real commit objects, and historical commit an actual ancestor of current. Replacement refs and graft-file presence are conservatively refused. No lazy fetch or model-selected command/path is used. The caller, not model output, supplies project.
+
+The independently frozen cases prove positive direct/distant ancestor recall after restart, exact-source compatibility, canonical local basename identity and actual linked worktrees sharing the object database. Negative cases cover stale current HEAD, tracked/staged/untracked dirt, dirty same-SHA supplied projects, changed origin, invalid/nested project roots, reverse and unrelated history, missing objects, replace refs, grafts, incomplete shallow history and nonoverlapping allowed paths. Current grant removal/expiry/ABORT, original canonical revocation after ledger tombstone deletion and proof-MAC substitution remain effective, with explicit eligible positive preconditions before mutation.
+
+Each item retains historical `sourceCommit` and scoped `sourceFiles`, adds `currentSourceCommit` and `sourceLineage` (`GIT_ANCESTOR` or `EXACT_SOURCE`, exact old/current SHAs, ancestor flag). Returned text explicitly states that Git history does not establish semantic validity on current code. This supplies a conservative historical-provenance rule for the user's different-code scenario; actual usefulness or successful model transfer is still unmeasured. No free cross-repository or semantic generalization, owner fact, tool permission or patch authority follows.
+
+Source review confirms fixed local Git argv, sanitized Git environment, no shell, disabled hooks/fsmonitor/lazy fetch/replacements/grafts for graph queries, bounded stdout and wall time (32 calls, 10 seconds aggregate, 3 seconds per command, 64 KiB output; at most eight distinct historical-source checks). Checkout HEAD/clean state/identity/replacement/graft conditions are checked again before returning nonempty context. These budget/race checks were inspected; this review does not claim adversarial wall-time fault injection for every Git subprocess.
+
+Canonical identity intentionally reuses the existing GitHub owner/name or local/<checkout-basename> convention. A local basename is not a global repository UUID or cryptographic origin certificate. Root must select the trusted actual checkout. QA was notified that sibling worktrees with different basenames would produce different local identities; its separately frozen paired v2 uses .../{arm}/device-ai accordingly. Git object storage, trusted runtime key and canonical grants remain trusted; malicious simultaneous canonical-grant plus ledger rollback remains outside scope.
+
+## Baseline metadata change, fully disclosed
+
+The prior C03 test asserts `isTrustedLocalModelObservation` and `isTrustedCodingVerification` are absent, which was true on standalone `cf0f6a42`. GAMMA merged Chief `713949a8`, which supplies these real exports. Therefore the unchanged C03 fails with actual function versus expected undefined. This source-shape difference was reported to Chief **before the candidate run**, is preserved in `lineage-independent-regression.tap`, and is not counted as PASS or silently rewritten. All other 45 prior cases pass, including rejection of unbranded copied success objects and false persisted model tier. Presence of the export is not evidence of actual successful model admission; real approved producer observation and full loop remain separate QA gates.
+
+## Explicit recall-off control review
+
+The separately frozen six cases (`d673a504`) use an exact temporary composition of Chief `22136ce6` `.github/continuum` and `scripts`, replacing only `ccc1-technical-recall.mjs` with the exact `ed6e5910` blob. This composition is not a final combined Git SHA; no production worktree file was edited. The helper SHA-256 is `aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7`.
+
+Each case first establishes eligible synthetic ancestor history. Actual `runCodingTask` calls with omitted/true `technicalRecallEnabled` deliver that history (old/current SHA and ancestry labels) to the real `providerFactory` call; false delivers `''`. These cases intentionally throw at the factory boundary before model inference or repair execution. Separate terminal synthetic tasks verify returned `technicalRecallCount` 1 versus 0, with no merge/training authority. NonBoolean values refuse before state I/O. Historical experience bytes stay unchanged before provider dispatch. Separate synthetic cases establish control behavior; they are not a measured matched inference experiment. QA owns the actual paired same-snapshot/same-source model runs.
+
+## Exact reproduction and artifacts
+
+Lineage candidate:
+
+```sh
+mkdir -p /tmp/momega1-memory-candidate-ed6e5910
+git archive ed6e59101d33faa830b1ac2c0beb8fb4f0972128 .github/continuum scripts | tar -x -C /tmp/momega1-memory-candidate-ed6e5910
+MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-ed6e5910 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/git-lineage.test.mjs
+```
+
+The existing synthetic tier loader only transforms the original reviewer fixture URL to add manually signed `verifiedModelExecution:true`. It never changes candidate modules or establishes real model provenance. All original/supplemental/lineage/ablation freeze hashes were rechecked after execution.
+
+Commands, directories, exact source hashes, TAP hashes and exits: [`lineage-receipt.json`](../../../evidence/momega1/memory-review/lineage-receipt.json) and [`ablation-receipt.json`](../../../evidence/momega1/memory-review/ablation-receipt.json). Raw RED, GREEN, prior metadata failure and control outputs remain in the same directory. New diff: [`lineage-candidate.diff`](../../../evidence/momega1/memory-review/lineage-candidate.diff). Root and QA received accepted API/control boundaries promptly; author source remains frozen at `ed6e5910` (later `4f822df5` is docs only).
+
+Next acceptance belongs to the exact integrated caller/producer/helper source and QA's actual approved local-model experiment. No real inference, model-quality gain, paired transfer benefit, Fold7, Android build, signing or install was performed by this reviewer. Rollback: omit reviewer tests/docs; production choices remain Chief-owned. Previous verdicts below remain immutable historical evidence, superseded only within the exact new source scope stated here.
+
+---
+
 # MΩ-1 independent memory review — corrected candidate
 
 **Verdict: ACCEPT_RESEARCH_CONTRACT_SLICE on `cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb`.** The four original failing expectations are resolved. This accepts the bounded memory/revocation research implementation for Chief integration, **not** end-to-end MΩ1, actual inference, learned capability, changed-code transfer or mobile acceptance. Independent reviewer authored no production changes. [Draft PR #418](https://github.com/Ullmann27/device-ai/pull/418).
