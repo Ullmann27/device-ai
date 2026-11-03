@@ -91,7 +91,8 @@ class BootstrapMemoryStore(context: Context) {
 
 
     var voiceEnabled: Boolean
-        get() = prefs.getBoolean("voice_enabled", false)
+        // First-open companion voice is on; an explicitly saved mute choice always wins.
+        get() = prefs.getBoolean("voice_enabled", true)
         set(value) { prefs.edit().putBoolean("voice_enabled", value).apply() }
 
     val positiveCount: Int get() = prefs.getInt("positive", 0)

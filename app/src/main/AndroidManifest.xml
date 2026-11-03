@@ -4,6 +4,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Microphone is requested only after an explicit on-device speech gesture. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Optional foreground face-position input; runtime permission and owner opt-in remain required. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- CAMERA must not imply a mandatory rear camera or autofocus at distribution. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <!-- Required on Android 14+ to schedule JobScheduler network-constrained tasks. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
