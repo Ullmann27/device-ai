@@ -1,0 +1,33 @@
+# Frozen source: d32fe38ad2f6464bfaefa8001bfed1f2469165e7
+# Executed from /workspace/momega1-readiness in the QA-approved non-model window.
+# No Gradle daemon, device, app installation, network inference or account API call.
+# test-classpath.txt contains cached dependency jars only, not another worktree's
+# compiled production/tests. dependencies.json binds every jar and offline SDK.
+readiness_cp=$(cat docs/evidence/momega1/readiness/d32fe38a/test-classpath.txt)
+/workspace/momega1-build-env/jdk17/bin/java -XX:ActiveProcessorCount=1 -Xmx512m \
+  -cp '/workspace/momega1-build-env/jvm-deps/*' org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
+  -no-stdlib -no-reflect -jvm-target 17 -classpath "$readiness_cp" \
+  -d /tmp/momega1-readiness-d32fe38a.jar \
+  app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt \
+  app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt \
+  app/src/main/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuide.kt \
+  app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt \
+  app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt \
+  app/src/uiTest/java/at/heinz/deviceai/AndroidAvatarCameraInputUiTest.kt
+# Actual compile.exit: 0; stdout/stderr: compile.txt.
+/workspace/momega1-build-env/jdk17/bin/java -XX:ActiveProcessorCount=1 -Xmx512m \
+  -Drobolectric.offline=true \
+  -Drobolectric.dependency.dir=/workspace/momega1-android/app/build/ui-test-sdk \
+  -cp "/tmp/momega1-readiness-d32fe38a.jar:$readiness_cp" \
+  org.junit.runner.JUnitCore \
+  at.heinz.deviceai.cognitive.AvatarCameraPolicyTest \
+  at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest \
+  at.heinz.deviceai.AndroidAvatarCameraInputUiTest
+# Actual junit.exit: 0; stdout/stderr: junit.txt; 36/36 PASS.
+/workspace/momega1-build-env/jdk17/bin/java -XX:ActiveProcessorCount=1 -Xmx512m \
+  -Drobolectric.offline=true \
+  -Drobolectric.dependency.dir=/workspace/momega1-android/app/build/ui-test-sdk \
+  -cp "/tmp/momega1-readiness-d32fe38a.jar:$readiness_cp" \
+  docs/evidence/momega1/readiness/d32fe38a/ReadinessJUnit.java
+# Additional evidence run preserves actual test identities and rejects any skips.
+# Actual test-identities.exit: 0; test-identities.txt: 36 PASS, 0 FAIL/SKIP.
