@@ -12,6 +12,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -112,6 +113,19 @@ class ChiefWorkerPoolTest {
                 pool.shutdown()
             }
         }
+    }
+
+    @Test fun submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork() {
+        val callbacks = AtomicInteger()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "must not run" } }
+        pool.shutdown()
+        val failure = runCatching {
+            pool.submit(brief("closed")) { callbacks.incrementAndGet() }
+        }.exceptionOrNull()
+        assertTrue("executor rejection still reaches the caller", failure is RejectedExecutionException)
+        assertEquals(0, callbacks.get())
+        assertTrue("rejected admission must not retain capacity", pool.active().isEmpty())
+        assertTrue("rejected admission is not unfinished work", pool.awaitIdle(0))
     }
 
     @Test fun deadlineCancelAndFailureBecomeHonestReports() {
