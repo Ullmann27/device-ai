@@ -66,6 +66,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val renderer = ContinuumHologramRenderer()
     private val painter = AndroidContinuumPainter(context.assets)
     private val taskEffects = ContinuumTaskEffects()
+    private var taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     private val audio = HologramAudioEnvelope()
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
     private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
@@ -328,16 +329,22 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** UI thread, explicit owner-work scope only. Hidden/inactive views cannot queue arrivals. */
     fun setTaskEffectScope(scope: String?) {
-        if (canAnimateFrame()) taskEffects.setScope(scope) else taskEffects.clear()
+        if (scope != null && canAnimateFrame()) taskEffects.setScope(scope) else clearTaskEffects()
         invalidate()
     }
 
     /** Capture uptime at the actual work boundary, before posting to the UI. No default timestamp. */
     fun onTaskEffect(scope: String, event: ContinuumTaskEffects.Event, occurredAtMillis: Long): Boolean {
-        if (!canAnimateFrame()) { taskEffects.clear(); return false }
+        if (!canAnimateFrame()) { clearTaskEffects(); return false }
+        if (occurredAtMillis <= taskEffectsNotBeforeMs) return false
         return taskEffects.accept(scope,event,occurredAtMillis,SystemClock.uptimeMillis()).also {
             if(it) invalidate()
         }
+    }
+
+    private fun clearTaskEffects() {
+        taskEffects.clear()
+        taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     }
 
     override fun onAttachedToWindow() {
@@ -353,7 +360,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        taskEffects.clear()
+        clearTaskEffects()
         release3d(clearAsset = true)
         mainHandler.removeCallbacks(avatarInvalidation)
         avatarInvalidationPending.set(false)
@@ -422,7 +429,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
-            taskEffects.clear()
+            clearTaskEffects()
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()

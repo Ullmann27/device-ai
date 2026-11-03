@@ -91,4 +91,21 @@ class ContinuumTaskEffectsTest {
         assertFalse(accept(e,started("overflow"),66000))
         assertFalse(accept(e,started("call-0"),66001))
     }
+    @Test fun toolGlyphRemainsLegibleAtPhoneFoldAndCompactHeroSizes() {
+        for((w,h) in listOf(412f to 307f,410f to 291f,412f to 88f,412f to 160f)) {
+            val e=effect();scope(e);assertTrue(accept(e,started()))
+            var glyphWidth=0f;var glyphHeight=0f
+            val p=Proxy.newProxyInstance(javaClass.classLoader,arrayOf(ContinuumPainter::class.java)) { _,m,args ->
+                if(m.name=="strokeRoundRect") {
+                    glyphWidth=(args!![2] as Float)-(args[0] as Float)
+                    glyphHeight=(args[3] as Float)-(args[1] as Float)
+                }
+                when(m.returnType) { Float::class.javaPrimitiveType -> 1f; else -> null }
+            } as ContinuumPainter
+            type().getMethod("draw",ContinuumPainter::class.java,Float::class.javaPrimitiveType,Float::class.javaPrimitiveType,Long::class.javaPrimitiveType)
+                .invoke(e,p,w,h,1300L)
+            assertTrue("Legible tool glyph width at ${w}x$h: $glyphWidth",glyphWidth in 20f..26f)
+            assertTrue("Legible tool glyph height at ${w}x$h: $glyphHeight",glyphHeight in 18f..26f)
+        }
+    }
 }
