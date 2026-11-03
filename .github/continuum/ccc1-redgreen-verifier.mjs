@@ -62,7 +62,14 @@ export function parseJunit(xml,{root=null}={}){
   const skipped=/<skipped\b/.test(body);
   const skipType=skipped?(attr(body.match(/<skipped\b([^>]*)>/)?.[1]??'','type')??'skipped'):null;
   const stem=file?path.basename(file).replace(/\.test\.[cm]?js$/,'').replace(/\.[cm]?js$/,''):cls;
-  const source=file&&root?path.relative(fs.realpathSync(root),file).split(path.sep).join('/'):file??cls??'';
+  let source=file??cls??'';
+  if(file&&root){
+   const canonicalRoot=fs.realpathSync(root);let absolute=path.resolve(canonicalRoot,file);
+   // Native Node emits canonical file names; isolated /work reports are
+   // localized to lexical checkout paths. Resolve both to the same identity.
+   try{absolute=fs.realpathSync(absolute);}catch{}
+   source=path.relative(canonicalRoot,absolute).split(path.sep).join('/');
+  }
   const tuple=JSON.stringify([source,suites,name]),occurrence=(occurrences.get(tuple)??0)+1;
   occurrences.set(tuple,occurrence);
   const legacyId=`${stem}.${name}`;let id=legacyId;
