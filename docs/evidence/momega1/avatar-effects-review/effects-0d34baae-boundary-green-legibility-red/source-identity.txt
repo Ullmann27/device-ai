@@ -1,0 +1,7 @@
+4e9e3f2bff5d924af44ebfee9e56b7a5a3a9a3112512b73666653b48ef9154c9  /workspace/momega1-build-env/effects-combined-0d34baae/source-before.txt
+0d34baaeed1c28eb355a6cd37e27f89174a231ed
+100644 9ed0b405ae4b416f8dbf44651532eeffca43a223 0	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+100644 3f9829e131e672eb8b8124d60618a919962eac5b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumTaskEffects.kt
+100644 05c104bbbbfab3d1d9d1cd663d336b80d63ef47b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumUiFeedback.kt
+4e9e3f2bff5d924af44ebfee9e56b7a5a3a9a3112512b73666653b48ef9154c9  /workspace/momega1-build-env/effects-combined-0d34baae/source-after.txt
+6c31c1b531897fa8bfb39de6647d1c331f3d2a54ef0a2558f52144704322c8df  /workspace/momega1-build-env/effects-combined-0d34baae/ui/synthetic-task-412-307-2-read.png

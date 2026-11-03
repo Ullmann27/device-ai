@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTaskEffectsUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T22:09:40" hostname="b354f2cb821b" time="1.748">
+  <properties/>
+  <testcase name="actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="0.14"/>
+  <testcase name="productionCanvasSequenceUsesExplicitSyntheticEventsOnly" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="1.552"/>
+  <testcase name="pauseReducedMotionAndHeatDiscardEventsInsteadOfReplayingOnResume" classname="at.heinz.deviceai.ContinuumTaskEffectsUiTest" time="0.055"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
