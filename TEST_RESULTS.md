@@ -10,3 +10,8 @@ Stand 2026-11-03, 14:45 (Europe/Vienna). GREEN-SHA `9e811a87` (RED `cf164bcd`, B
 | `./gradlew :app:lintDebug` | BUILD SUCCESSFUL, keine neuen Lint-Fehler – HOST_VERIFIED |
 
 Ungetestet / offen: App-Verdrahtung von TurnLifecycle und ChiefWorkerPool (nicht enthalten), alle Fold7-Prüfungen (DEVICE_REQUIRED).
+
+## Nachtrag Sprint 98 (Abschluss 03.11.2026, 16:20 Europe/Vienna)
+Weitere Commits: RED `817bfe2b` → GREEN `f555b37e` (ChiefMemory-Port shared/search, `ChiefJobs.agentJob` im Job-Scope, BLOCKED-Bericht).
+Für `f555b37e` wurden die Gesamtzahlen wegen des erreichten Nutzungslimits **nicht** erneut in dieser Datei erfasst; vor einer Übernahme bitte `./gradlew :app:testDebugUnitTest` und `node --test .github/continuum/*.test.mjs` auf diesem SHA neu laufen lassen.
+Offen: `LayersMemoryPort` für #371 (Code in docs/CHIEF-PATTERN.md) auf dem Integrationsbranch, TurnLifecycle-Verdrahtung in `AgentActivity`, alle Fold7-Prüfungen (DEVICE_REQUIRED).
