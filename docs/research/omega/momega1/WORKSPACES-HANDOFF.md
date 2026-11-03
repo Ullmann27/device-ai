@@ -1,97 +1,126 @@
-# MΩ-1 workspaces handoff
+# MΩ-1 workspace repair handoff
 
-Final source candidate: `4665302f6c967c1bfb1e13c9acf01fad4e7eec20` (LOCAL_ONLY,
-not pushed because Chief reported expired Git credentials). Last actually pushed
-checkpoint: `ef1c20e9bb18e06ab7ef8392ecc5d8bc05ec13af`. Original Node candidate:
-`30cd8ce4c27cb78aada96b8ec5b405a2b5c8a127`,
-[PR417](https://github.com/Ullmann27/device-ai/pull/417), based on `cf34fb6a`.
-EXP-01/02/07/08/11/12. HOST_INTEGRATION only; independent review pending.
+Source freeze: `8aba17c6cc24b00a66d6c5de59d0c1fe1dc5c2db`.
+Branch `codex/momega1-workspaces-20261103`, [PR417](https://github.com/Ullmann27/device-ai/pull/417).
+The prior source `4665302f` was rejected by the independent workspace critic for
+stale execution admission and Kotlin report correlation; its old PASS evidence
+is historical. Chief published the formerly local `cce9be65` checkpoint; the old
+LOCAL_ONLY notice no longer describes that checkpoint. The independent workspace critic now reports ACCEPT_HOST_WORKSPACE_SLICE
+for exact source8aba17c6; its separate evidence checkpoint is owned by the critic.
 
-## Implemented connections
+EXP-01/02/07/08/11/12. HOST_INTEGRATION only. No model or device acceptance.
 
-`ccc1-workspace.mjs::bindCcc1Workspace` reads the MAC-verified existing
-`DurableTaskJournal` and existing `pendingRequest`, `jobIdFor`, `recover`,
-`taskState` and `gateTestRequest`. It binds the canonical task/source/request/job
-and a trusted caller's worker name to the existing fixed-profile executor.
-Binding does not grant capabilities. Wrong job, torn/corrupt journal, stale source,
-profile expansion and interrupted/replayed jobs are refused. Journal recovery,
-leases and replay authority stay in CCC1; there is no new state store.
+## Final interface and execution authority
 
-`createIsolatedExecutor().forWorkspace(binding,profiles)` creates a branded scoped
-view in the original WeakSet. Each execution generates a distinct workspace ID,
-snapshots actual tracked bytes, observes Docker HostConfig, validates CPU/RAM/pids,
-privileges/network/read-only policy, removes the container, then re-inspects its
-absence. `validWorkspaceEvidence` checks this new observation shape; it is
-consistency checking, not remote attestation or proof of correct tests/models.
-Unbound legacy callers remain supported.
+`bindCcc1Workspace({executor,project,stateDir,taskId,job,workerId})` is still called
+before `runMobileRepairJob` by the Chief's pending coding-orchestrator glue.
+It verifies the existing MAC-protected CCC1 journal, pending request, canonical
+job/source/chain, existing owner capability gate and recovery. Its branded view
+cannot execute until the real owner repair worker claims the canonical task.
+There is no unclaimed one-shot probe or second reservation store.
 
-BETA owns `coding-orchestrator.mjs`; Chief will integrate this reserved call before
-the driver and before `runMobileRepairJob` (not yet wired in this Node freeze):
+Immediately after the existing `BacklogStore` claim,
+`backlog-repair-worker.mjs` now derives:
 
 ```js
-const jobExecutor = executor === null ? null : bindCcc1Workspace({
-  executor, project, stateDir, taskId: grant.ccc1TaskId,
-  job: order.job, workerId: 'typed-coding-worker'
-});
-// existing localTeamleaderDriver receives executor: jobExecutor
+const activeExecutor = typeof executor?.forClaim === 'function'
+  ? executor.forClaim({backlog: backlogPath, id: task.id, token}) : executor;
 ```
 
-New `chief/ChiefWorkspaceWiring.kt` now supplies a typed trusted-port WorkerJob
-and an existing AgentMailbox reporter for the existing ChiefWorkerPool. Its
-mandatory delivery callback reports full/rejected/error mailboxes explicitly;
-no extra outbox/store exists. Scope/teardown/evidence identity must match; nonzero
-profiles become BLOCKED, repeated invocation is refused. DONE messages say
-verification=PENDING. The fixed test-only Node host harness also supports
-canonical-job-labelled cancellation so the existing executor reaps its container.
+The private existing token stays in this trusted worker/closure; it is never
+copied into model requests, workspace receipts or mailbox messages. Every
+baseline, candidate, fresh candidate verifier and final independent profile uses
+this active executor. Multiple profiles in the same live canonical job are valid;
+replay after completion/interruption, a replaced token or an expired lease is not.
+Legacy unbound callers retain their prior behavior.
 
-Five focused Kotlin contracts PASS; two real host JUnit tests PASS: actual existing
-pool + mailbox + two real fixed Node containers, then an observed real running
-container cancelled through that same pool, Node runner/container closure confirmed,
-CANCELLED delivered to Chief, and no success receipt produced. See
-`docs/evidence/momega1/workspaces/KOTLIN-PROOF.md` for commands, trust boundaries,
-raw observations and the exact compiled-class/source/dependency manifest.
+Every execution checks current verified journal MACs, terminal/revoked status,
+unchanged goal/request, canonical clean source and full base SHA, owner gate,
+exact backlog path/task/source/chain and live matching claim. It rechecks directly
+before Docker launch and after the profile. The runtime deadline is clamped to
+the existing caller deadline, goal deadline, claim lease and original request
+budget measured from claim time. Nothing refreshes the original request budget.
 
-Kotlin ChiefWorkerPool/ChiefBrainWiring/routines.AgentMailbox/cognitive.ComputeFabric
-remain the coordination authority. Their core sources are unchanged. The new
-adapter has no Activity or device IPC caller; its real connection is the explicit
-host test. `tools/continuum-virtual-fabric` is an unintegrated prototype, never
-claimed as capacity.
+Cancellation in this synchronous Node path remains CHECKPOINT_BOUNDARY_ONLY:
+an in-flight bounded profile may finish, but revocation then suppresses its result
+before the caller receives any accepted evidence. The existing fixed host test
+port separately proves active container kill and runner cleanup. No immediate
+Android cancellation guarantee or new exported IPC is claimed.
 
-## Actual evidence
+`isolated-executor.mjs` retains its original WeakSet branding, fixed profiles,
+read-only source/tool mounts, tmpfs, no network and enforced resource limits.
+Generated workspace IDs, actual Docker observations and confirmed teardown remain
+correlation/consistency evidence, not model execution or independent test truth.
 
-`docs/evidence/momega1/workspaces/red.log`: unchanged base missing-export RED.
-`green-contract.log`: 9/9 focused contract checks PASS.
-`host-green.log`: explicit real Docker proof PASS, two containers observed running
-at once; each fixed node-continuum profile observed cgroup memory=256MiB, CPU=1,
-pids=64; peer/host source reads and writes and Docker socket blocked; no network;
-independent scratch markers survive peer-named local scratch alias writes.
-HostConfig matched policy and each removal was independently inspected.
-An additional 1000ms outer timeout killed the deliberately slower fixed profile;
-no success receipt or remaining named container was accepted. Existing canonical
-IN_PROGRESS backlog status prevented automatic workspace replay.
-Original raw receipts/JUnit/summary are under `workspaces/host`.
-Final same-source Node run is `host-green-final.log` and `host-final/`; final
-Kotlin raw proof is `kotlin-host.log` and `chief-host/`.
+## Existing Chief and mailbox
 
-`host-attempt-1.log` is a preserved FAILED test-harness assumption: writing a
-peer-named file in one's own private scratch is legal. The corrected probe verifies
-that such a private write cannot alter the peer's distinct private marker.
-`host-attempt-2.log` records the corrected PASS before the final timeout probe.
+`ChiefWorkspaceWiring.briefId(scope)` now derives the existing WorkerBrief.id from
+the canonical job UUID, not the reusable logical worker name. The original
+ChiefWorkerPool report must match that exact ID. Logical worker identity remains
+in message provenance. Stable job-derived AgentMessage IDs plus the existing
+AgentMailbox deduplication and a successful-delivery flag prevent duplicate
+terminal callback delivery. Old-job callbacks cannot be relabelled as the current
+job. Failed/cancelled real pool reports need no model-authored prose to correlate.
+The required delivery callback still exposes rejected/full/error mailboxes.
 
-Reproduce from the repo root (local pinned image must already exist; no pull):
+No pool, mailbox, Activity, ToolGate or ComputeFabric core file is changed.
+There is no extra mailbox database, scheduler or durable outbox. CCC1 journals and
+canonical backlog remain recovery authority. The real Chief connection is still
+the explicit host integration test, with a trusted injected fixed Node port;
+production Android IPC and the Chief's typed coding caller glue remain separate.
+
+## Evidence for this repair
+
+- `review-original-4665302.tap`: unchanged original independent four real-Docker
+  counterexamples, copied from critic commit c87e0b06. All four failed on old source.
+- `review-red.tap`: author's reproduction of the critic's expanded old-source
+  tests; its deadline setup also exposed an overly narrow test admission window.
+- `review-claim-green.tap`: 13 frozen prospective critic claim tests PASS in the
+  author's run, including two valid real profiles within one claim, wrong/copied
+  claims, owner/journal/source revocation, expiry and token replacement. The critic has separately rerun and accepted the frozen candidate;
+  this copied author run remains authored evidence.
+- `repair-contract.tap`: 9 focused Node contract checks PASS.
+- `repair-host.tap`: updated two-container isolation/resource/network/timeout
+  proof PASS using existing canonical claims.
+- `canonical-repair.tap` and `repaired-canonical/`: 3 real host lifecycle checks
+  PASS. Actual `runMobileRepairJob -> localTeamleaderDriver -> owner worker`
+  repairs a genuine deterministic source regression with RED, candidate GREEN,
+  fresh independent Docker verification and durable normal receipt replay.
+  A controlled clock also proves the real Docker timeout uses a 400ms live-lease
+  remainder rather than its 10s configured cap. A real concurrent backlog abort
+  suppresses an in-flight completed profile result at the checkpoint.
+- `canonical-repair-attempt-1.tap`: preserved failed first fixture: no earlier good
+  commit meant the deterministic VCS repair had no candidate. The final fixture
+  creates actual good history and a subsequent regression; no model is simulated.
+- `repair-kotlin/`: unchanged critic build script used by author; existing pool,
+  mailbox and focused tests 19/19 PASS; adapted frozen report-correlation cases
+  3/3 PASS; actual pool/mailbox/two-container/cancel host tests 2/2 PASS. Actual
+  Gradle-compiled baseline classes are used without stubs, with source/class/jar
+  hashes. Synthetic keys/repositories are discarded, only observations retained.
+- `repair-proof-manifest.json`: exact frozen source and evidence hashes.
+
+The repair test base merges reviewed BETA9ed11151 as `6a66d58f`. The worker diff
+against that BETA version contains only private claim activation and propagation
+through its three existing execution routes, preserving fresh verification and
+onVerifiedCandidate hooks. No other BETA source is authored by this lane.
+
+Reproduce real Node lifecycle/isolated proof, with the local pinned image already
+available (no pull or model download):
 
 ```sh
 node --test .github/continuum/ccc1-workspace.test.mjs .github/continuum/isolated-executor.test.mjs
-CONTINUUM_WORKSPACE_HOST_PROOF=1 CONTINUUM_WORKSPACE_EVIDENCE_DIR=/tmp/workspace-proof node --test .github/continuum/ccc1-workspace-host.test.mjs
+CONTINUUM_WORKSPACE_HOST_PROOF=1 CONTINUUM_WORKSPACE_EVIDENCE_DIR=/tmp/fresh-workspace-lifecycle node --test .github/continuum/ccc1-workspace-lifecycle-host.test.mjs
+CONTINUUM_WORKSPACE_HOST_PROOF=1 CONTINUUM_WORKSPACE_EVIDENCE_DIR=/tmp/fresh-workspace-dual node --test .github/continuum/ccc1-workspace-host.test.mjs
 ```
 
-Image: `sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1`
-(local empty FROM scratch image). Docker28.4.0, Node24.19.0, runtime runc,
-nonroot1000, fixed trusted Node home mounted read-only. Containers are ephemeral,
-not virtual machines. Two logical worker jobs share the host's real capacity;
-no additional hardware/model count or throughput is claimed.
+Pinned image: `sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1`.
+Docker28.4, Node24.19, runc, nonroot1000; actual host capacity is shared. Containers
+are ephemeral OS workspaces, not new hardware, VMs or models. Worktrees are source
+checkouts only. No Android/Fold7, inference, learning, signing, installation,
+deployment or release readiness is established. Full Gradle belongs to QA.
 
-No model inference, Android/Fold7, owner data, signing, installation, deployment
-or production integration acceptance. Full Gradle belongs to QA. Independent critic and Chief caller wiring are next;
-do not infer production Android integration from host JUnit. Rollback: omit
-this branch; inspect canonical CCC1 journal/backlog before retrying uncertain jobs.
+Independent retest: critic reports13 claim PASS, Kotlin3 reviewer +19 existing
++2 real host PASS, Node13 policy/workspace/confinement/lifecycle PASS with zero
+skips. Acceptance remains HOST_WORKSPACE_SLICE with CHECKPOINT_BOUNDARY_ONLY.
+Next: Chief-reviewed typed caller wiring and exact-source QA. Rollback: omit this research package; never repeat
+uncertain jobs without the existing CCC1 recovery/owner process.
