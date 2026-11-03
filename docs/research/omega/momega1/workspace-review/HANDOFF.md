@@ -44,3 +44,35 @@ Prospective claim-adversarial.test.mjs written against the author's announced AP
 Harness detail: initial Kotlin orchestrating shell returned0 after printing/cleanup, while all three actual JUnit exit codes were individually retained (existing0/adversarial1/host0). The harness now returns aggregate1 if any JUnit phase failed; no earlier test result is reclassified.
 
 Kotlin repair protocol announced before source inspection: pool brief/report ID becomes canonical job-derived `ChiefWorkspaceWiring.briefId(scope)` instead of logical workerId; mailbox message ID likewise stable. Prospective reviewer tests adapt legitimate duplicate input to this explicit API and stale input to a distinct prior canonical job ID. Added cross-reporter duplicate check. No parsing report prose as authorization. Original2-test source/results remain in review history c144767e and evidence. Updated3 cases functional NOT_RUN until freeze.
+
+## Final independent decision on repaired source
+
+ACCEPT_HOST_WORKSPACE_SLICE for **8aba17c6cc24b00a66d6c5de59d0c1fe1dc5c2db**. Its BETA parent is6a66d58f; this review accepts the workspace delta, not every unrelated inherited change. Source manifest and exact hashes: `docs/evidence/momega1/workspace-review/manifest-8aba17c6.json`.
+
+All original blocking findings are resolved by a changed authorization contract: unclaimed execution is refused; the existing owner REPAIR worker alone activates the view after its canonical claim, with token and claim-generation binding. Every profile checks current MAC journal, goal/request, clean canonical checkout, source/chain, current claim and lease. Before launch it rechecks admission and clamps actual Docker time to the smallest policy/goal/request/lease/caller bound; after completion it suppresses results if authority changed. Multiple fixed profiles under the same active canonical claim remain permitted for RED/GREEN/independent verification. No second scheduler or durable state store was added. Source inspection confirmed all three existing worker execution routes use activeExecutor.
+
+Pool/report and mailbox identity now use the canonical job UUID. The existing mailbox deduplicates stable IDs, including across reporter recreation. Logical worker names and summary prose do not authorize assignment. Unknown wire status is not a supported input: current adapter uses the existing Kotlin enum and trusted in-process callback, with no external deserializer/IPC installed.
+
+Fresh repaired runs (all real exits0, no skips):
+
+| Check | Result | Evidence |
+|---|---:|---|
+| Independent canonical claim adversarial | 13/13 | claim-8aba17c6.tap |
+| Independent rerun of author workspace/lifecycle/isolated policy | 13/13 | authored-rerun-8aba17c6.tap |
+| Existing Kotlin pool/mailbox and author adapter | 19/19 | kotlin-8aba17c6/existing.log |
+| Independent Kotlin stale/duplicate/cross-reporter | 3/3 | kotlin-8aba17c6/adversarial.log |
+| Actual pool→Node→Docker→mailbox and cancellation | 2/2 | kotlin-8aba17c6/host.log |
+
+The Node lifecycle rerun actually repaired a synthetic regression through `runMobileRepairJob`, with real Docker RED, GREEN and independent checks, canonical terminal receipt and replay refusal. The two-container test independently observed simultaneous IDs and checked readonly snapshots, host/peer access denial, network denial and actual cgroup configuration. All test containers were absent at final inspection.
+
+Repaired Node command (cwd fixed candidate checkout):
+
+```
+CONTINUUM_WORKSPACE_HOST_PROOF=1 CONTINUUM_WORKSPACE_EVIDENCE_DIR=/absolute/fresh/evidence node --test --test-concurrency=1 --test-reporter=tap .github/continuum/ccc1-workspace.test.mjs .github/continuum/ccc1-workspace-host.test.mjs .github/continuum/ccc1-workspace-lifecycle-host.test.mjs .github/continuum/isolated-executor.test.mjs
+```
+
+Independent command: `WORKSPACE_REVIEW_TARGET=/workspace/momega1-workspace-review-repaired node --test --test-reporter=tap tools/momega1-workspace-review/claim-adversarial.test.mjs`. Native Kotlin command uses the earlier unchanged harness with repaired target and a fresh evidence path. Its aggregate shell exit is0. QA received standalone reviewer Kotlin path and SHA256 `c66722c02b84da71e773370d401590e9aefa9dd12b59de4d67fdd55be3385206` for final source-frozen Gradle inclusion; no Gradle was started here.
+
+Boundaries: canonical repair cancellation remains explicitly **CHECKPOINT_BOUNDARY_ONLY**. In-flight revocation prevents result admission after the profile; it does not promise immediate process termination. Deadlines bound the profile. The separate actual Chief host port cancellation test physically stops its container, but no production Android/Termux port is installed. Deadline/lease edge tests use controlled clocks with actual Docker timeout observations, not long wall-clock waits. Storage/report success is not verified coding/model success. Two simultaneous host containers share4CPU/16GiB; no ten VM/device claim. **FOLD7_NOT_RUN**, actual model unavailable; no signing/release/installation acceptance.
+
+Chief may integrate this reviewed workspace slice and its caller glue, then run exact integrated-source QA. No blanket acceptance transfers to future caller changes or full APK/device behavior. Rollback remains omission/reversion of isolated research commits; no owner state was touched.
