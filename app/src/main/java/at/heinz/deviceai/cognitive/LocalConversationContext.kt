@@ -71,6 +71,16 @@ class LocalConversationContext {
         while (turns.size > 4) turns.removeFirst()
     }
 
+    /** A visible non-model reply (read-only tool, device clock, start-core info).
+     * The owner's request is kept like any owner turn; the reply is only a fixed label,
+     * never tool output or model text. Bounded to four turns like every other turn. */
+    @Synchronized fun recordNonModel(sessionId: String, request: String, label: String) {
+        require(sessionId.isNotBlank() && request.isNotBlank() && label.isNotBlank())
+        if (session != sessionId) { clear(); session = sessionId }
+        turns.addLast(Turn(data(request, 300), data(label, 120), request.takeIf { it.length <= 1000 }))
+        while (turns.size > 4) turns.removeFirst()
+    }
+
     /** Research result becomes follow-up context: one short dialogue turn plus the typed research block.
      *  Replaces any earlier research digest; never persists and never becomes an owner fact. */
     @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {
