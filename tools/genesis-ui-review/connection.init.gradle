@@ -1,0 +1,26 @@
+// Independent actual-widget / Activity-listener source. No production exclusions.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.project(':app')
+    def reviewInit = gradle.startParameter.initScripts.find { it.name == 'connection.init.gradle' }
+    if (reviewInit == null) throw new GradleException('Independent connection init path missing')
+    app.android.sourceSets.getByName('test').java.srcDir(new File(reviewInit.parentFile, 'speech'))
+    if (gradle.rootProject.providers.gradleProperty('genesisSpeechBaselineOnly').orNull != 'true') {
+        app.android.sourceSets.getByName('test').java.srcDir(new File(reviewInit.parentFile, 'selection'))
+    }
+    app.android.sourceSets.getByName('test').java.srcDir(new File(reviewInit.parentFile.parentFile, 'synapse-ui-review'))
+}
+allprojects {
+    tasks.withType(Test).configureEach {
+        if (providers.gradleProperty('genesisSpeechBaselineOnly').orNull == 'true') {
+            filter { includeTestsMatching 'at.heinz.deviceai.IndependentActivitySpeechTest' }
+        } else if (providers.gradleProperty('genesisUiReviewOnly').orNull == 'true') {
+            filter {
+                includeTestsMatching 'at.heinz.deviceai.IndependentBotRosterUiTest'
+                includeTestsMatching 'at.heinz.deviceai.IndependentActivitySpeechTest'
+                includeTestsMatching 'at.heinz.deviceai.IndependentBotSelectionUiTest'
+                includeTestsMatching 'at.heinz.deviceai.IndependentBotAddressRouterTest'
+                includeTestsMatching 'at.heinz.deviceai.IndependentBotSpeechScopeTest'
+            }
+        }
+    }
+}
