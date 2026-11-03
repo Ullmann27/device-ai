@@ -12,7 +12,8 @@ internal object LocalPromptFrame {
         optionalHistory: String,
         advisory: String?,
         requiredTail: String,
-        maxCharacters: Int
+        maxCharacters: Int,
+        requireHistory: Boolean = false
     ): String? {
         if (maxCharacters !in 1..LocalChatPromptBudget.FULL_CHARACTERS ||
             requiredBody.isBlank()) return null
@@ -30,7 +31,11 @@ internal object LocalPromptFrame {
         // Old history is lower priority than the current request and evidence.
         // Never send an arbitrary prefix of a contradictory older conversation.
         val withHistory = requiredBody + optionalHistory
-        val body = if (fits(withHistory + requiredTail)) withHistory else requiredBody
+        val historyFits = optionalHistory.isNotBlank() && fits(withHistory + requiredTail)
+        // Owner-dependent follow-ups must never silently lose their earlier
+        // turns: native fresh-chat inference does not carry model history.
+        if (requireHistory && !historyFits) return null
+        val body = if (historyFits) withHistory else requiredBody
         val candidate = ChatReasoningRouter.composePrompt(body, advisory, requiredTail, maxCharacters)
         if (candidate.startsWith(body) && candidate.endsWith(requiredTail) && fits(candidate))
             return candidate
