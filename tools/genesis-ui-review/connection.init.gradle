@@ -18,6 +18,7 @@ allprojects {
                 includeTestsMatching 'at.heinz.deviceai.IndependentBotRosterUiTest'
                 includeTestsMatching 'at.heinz.deviceai.IndependentActivitySpeechTest'
                 includeTestsMatching 'at.heinz.deviceai.IndependentBotSelectionUiTest'
+                includeTestsMatching 'at.heinz.deviceai.IndependentBotAddressRouterTest'
             }
         }
     }
