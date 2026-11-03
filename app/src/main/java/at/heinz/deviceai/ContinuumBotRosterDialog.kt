@@ -145,7 +145,8 @@ class ContinuumBotRosterDialog(
                 body.addView(label("Gespeicherte Arbeitsnotiz · Objekt $hash"))
             }
             body.addView(label("Arbeitsnotiz für ${profile.displayName}"))
-            val editor = edit(notes, 8_000, multiline = true)
+            val editor = edit(notes, 4_000, multiline = true)
+            editor.contentDescription = "Arbeitsnotiz für ${profile.displayName}"
             body.addView(editor)
             val save = action("Arbeitsnotiz speichern") {}
             save.setOnClickListener {
@@ -157,7 +158,8 @@ class ContinuumBotRosterDialog(
                 }) { showProfile(it.agentId) }
             }
             body.addView(save)
-            body.addView(action("Profil bearbeiten") { editProfile(profile) })
+            body.addView(action("Namen ändern") { editProfile(profile) })
+            body.addView(action("Rolle und Arbeitsstil bearbeiten") { editDescription(profile) })
             body.addView(action("Zur Teamübersicht") { show() })
         }
     }
@@ -205,6 +207,28 @@ class ContinuumBotRosterDialog(
             val id = "bot-" + UUID.randomUUID().toString()
             val values = listOf(name, role, style).map { it.text.toString() }
             load(token, body, { store.create(id, values[0], values[1], values[2]) }) { showProfile(it.agentId) }
+        }
+        body.addView(save)
+    }
+
+    private fun editDescription(profile: ChiefBotProfile) {
+        val body = column()
+        body.addView(label("Rolle und Arbeitsstil sind Vorgaben. Sie bestätigen keine Fähigkeiten und ändern keine Rechte."))
+        val role = edit(profile.role, 240).apply { contentDescription = "Fachgebiet" }
+        val style = edit(profile.communicationStyle, 600, true).apply { contentDescription = "Arbeitsstil" }
+        body.addView(role); body.addView(style)
+        val token = open("${profile.displayName} · Rollenprofil", body)
+        val save = action("Rollenprofil speichern") {}
+        save.setOnClickListener {
+            if (role.text.isBlank() || style.text.isBlank()) {
+                role.error = "Bitte Fachgebiet und Arbeitsstil ausfüllen"; return@setOnClickListener
+            }
+            save.isEnabled = false
+            val roleText = role.text.toString()
+            val styleText = style.text.toString()
+            load(token, body, {
+                store.updateDescription(profile.agentId, roleText, styleText, profile.profileVersion)
+            }) { showProfile(it.agentId) }
         }
         body.addView(save)
     }
