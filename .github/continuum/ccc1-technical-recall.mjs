@@ -6,7 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import {createHmac,timingSafeEqual} from 'node:crypto';
+import {createHmac,timingSafeEqual,randomBytes} from 'node:crypto';
 import {canonical,sha256} from './ccc1-envelope.mjs';
 import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {experienceOf,ExperienceLog} from './ccc1-experience.mjs';
@@ -34,10 +34,19 @@ function safeRead(file,max){
  if(!s.isFile()||s.isSymbolicLink()||fs.realpathSync(full)!==full||s.size>max)fail('TECHNICAL_STATE_UNSAFE');
  return JSON.parse(fs.readFileSync(full,'utf8'));
 }
-function grantOf(stateDir,task,taskId){
- const stored=safeRead(path.join(stateDir,'coding-grants',task.id+'.json'),16000);
+function grantOf(stateDir,task,taskId,key,{allowRevoked=false,allowLease=false}={}){
+ const file=path.join(stateDir,'coding-grants',task.id+'.json');
+ if(!allowLease&&fs.existsSync(file+'.technical-revoke.lock'))fail('TECHNICAL_GRANT_WITHDRAWAL_IN_PROGRESS');
+ const stored=safeRead(file,16000);
  if(stored.ccc1TaskId!==taskId||stored.fingerprint!==taskFingerprint(task)||
     taskFingerprint(stored.task)!==stored.fingerprint)fail('TECHNICAL_GRANT_MISMATCH');
+ const revocation=stored.technicalExperienceRevocation;
+ if(Object.hasOwn(stored,'technicalExperienceRevocation')){
+  if(!authentic(revocation,key)||revocation.schema!=='momega1-technical-revocation'||revocation.version!==1||
+     revocation.targetTaskId!==taskId||revocation.taskFingerprint!==stored.fingerprint||
+     !Number.isSafeInteger(revocation.observedAt)||!HEX.test(revocation.journalHead??''))fail('TECHNICAL_GRANT_REVOCATION_INVALID');
+  if(!allowRevoked)fail('TECHNICAL_GRANT_REVOKED');
+ }
  return stored;
 }
 function journalOf(stateDir,taskId,key){
@@ -79,6 +88,7 @@ function checkProofBindings(proof,entries,task){
     proof.receiptSha256!==receipt.payload.receiptSha256||
     model?.taskFingerprint!==taskFingerprint(modelTask)||model.sourceCommit!==task.sourceCommit||model.taskId!==modelTask.id||
     model.schema!=='momega1-local-process-observation-v1'||model.evidenceClass!=='LOCAL_MODEL_HOST'||
+    model.verifiedModelExecution!==true||
     model.exitCode!==0||!Number.isSafeInteger(model.pid)||model.pid<1||
     typeof model.executionId!=='string'||!model.executionId||model.executionId.length>200||
     ['contextSha256','promptSha256','requestSha256','modelSha256','runtimeSha256','outputSha256','proposalSha256'].some(k=>!HEX.test(model[k]??''))||
@@ -96,8 +106,13 @@ function checkProofBindings(proof,entries,task){
  * JSON copies and self-certified flags cannot replace either live observation brand.
  */
 export function recordTechnicalExperience({stateDir,taskId,task,modelTask,modelObservation,verification,reflection,key,now=Date.now()}={}){
- const spec=validateCodingTask(task);grantOf(stateDir,spec,taskId);
+ const spec=validateCodingTask(task);grantOf(stateDir,spec,taskId,key);
  if(runtime.isTrustedLocalModelObservation?.(modelObservation)!==true)fail('TECHNICAL_RUNTIME_OBSERVATION_REQUIRED');
+ // A private process brand proves execution identity, not that a pinned binary
+ // actually performed neural inference. Current runtime producers never assert
+ // this stronger immutable observation; process-only attempts remain unverified.
+ if(!Object.isFrozen(modelObservation)||modelObservation.verifiedModelExecution!==true)
+  fail('TECHNICAL_MODEL_EXECUTION_PROOF_UNAVAILABLE');
  if(verifier.isTrustedCodingVerification?.(verification)!==true)fail('TECHNICAL_INDEPENDENT_VERIFICATION_REQUIRED');
  if(!Number.isSafeInteger(now)||now<0)fail('TECHNICAL_TIME_INVALID');
  const entries=journalOf(stateDir,taskId,key),{goal,summary,receipt,request}=terminalBinding(entries,spec);
@@ -112,12 +127,75 @@ export function recordTechnicalExperience({stateDir,taskId,task,modelTask,modelO
  return new ExperienceLog(path.join(stateDir,'experience.jsonl')).append({...summary,technicalProof:sign(data,key)});
 }
 
-/** Trusted runtime revocation; no replacement memory database or positive status promotion. */
-export function revokeTechnicalExperience({stateDir,taskId,key,reason,now=Date.now()}={}){
- if(!TASK.test(taskId??'')||typeof reason!=='string'||!reason.trim()||reason.length>300||!Number.isSafeInteger(now))
+function durableGrant(file){
+ const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+ try{fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
+ const dir=fs.openSync(path.dirname(file),fs.constants.O_RDONLY|fs.constants.O_DIRECTORY);
+ try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+}
+
+/** The EXISTING canonical grant is the withdrawal authority. Its ancillary
+ * MACed field survives experience-ledger truncation, rewrite and capacity limits.
+ * Grants are created once, before task execution; existing runtime consumers only
+ * read a final grant. Only completed canonical tasks may acquire this RMW lease.
+ * Future grant mutators must honor the same lease. No positive consent is reset.
+ */
+export function revokeTechnicalExperience({stateDir,taskId,task,key,reason,now=Date.now()}={}){
+ if(!TASK.test(taskId??'')||typeof reason!=='string'||!reason.trim()||reason.length>300||!Number.isSafeInteger(now)||now<0)
   fail('TECHNICAL_REVOCATION_INVALID');
- const proof=sign({schema:'momega1-technical-revocation',version:1,targetTaskId:taskId,reason,observedAt:now},key);
- return new ExperienceLog(path.join(stateDir,'experience.jsonl')).append({taskId:'revoke:'+taskId,revocation:proof});
+ if(!keyOk(key))fail('TECHNICAL_RUNTIME_KEY_REQUIRED');
+ const spec=validateCodingTask(task),file=path.resolve(stateDir,'coding-grants',spec.id+'.json');
+ // Refuse aliases before the first mutation. A missing/finalizing grant is never
+ // reconstructed from a possibly damaged or attacker-rehashed experience line.
+ safeRead(file,16000);
+ const lock=file+'.technical-revoke.lock',until=Date.now()+2000;
+ for(;;){
+  try{fs.mkdirSync(lock,{mode:0o700});break;}
+  catch(error){if(error.code!=='EEXIST')throw error;if(Date.now()>=until)fail('TECHNICAL_GRANT_WITHDRAWAL_LOCKED');Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,10);}
+ }
+ let proof,isNew=false;
+ try{
+  const original=fs.readFileSync(file),identity=fs.lstatSync(file,{bigint:true});
+  const stored=grantOf(stateDir,spec,taskId,key,{allowRevoked:true,allowLease:true});
+  const entries=journalOf(stateDir,taskId,key);terminalBinding(entries,spec);
+  proof=stored.technicalExperienceRevocation;
+  if(!proof){
+   proof=sign({schema:'momega1-technical-revocation',version:1,targetTaskId:taskId,taskFingerprint:taskFingerprint(spec),
+    journalHead:entries.at(-1).hash,reason,observedAt:now},key);
+   const bytes=Buffer.from(JSON.stringify({...stored,technicalExperienceRevocation:proof})+'\n');
+   if(bytes.length>16000)fail('TECHNICAL_GRANT_TOO_LARGE');
+   const temp=file+'.withdraw-'+process.pid+'-'+randomBytes(8).toString('hex');
+   let fd;
+   try{
+    fd=fs.openSync(temp,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_NOFOLLOW,0o600);
+    fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);fs.closeSync(fd);fd=undefined;
+    const current=fs.lstatSync(file,{bigint:true});
+    if(current.isSymbolicLink()||current.ino!==identity.ino||current.dev!==identity.dev||current.size!==identity.size||
+       current.mtimeNs!==identity.mtimeNs||current.ctimeNs!==identity.ctimeNs||!fs.readFileSync(file).equals(original))
+     fail('TECHNICAL_GRANT_CHANGED_DURING_WITHDRAWAL');
+    fs.renameSync(temp,file);isNew=true;
+   }finally{if(fd!==undefined)fs.closeSync(fd);fs.rmSync(temp,{force:true});}
+  }
+  // Also retry this barrier for an already committed anchor after uncertain EIO.
+  durableGrant(file);
+ }finally{fs.rmdirSync(lock);}
+ // The tombstone is an optional audit mirror in the SAME existing ledger. Its
+ // failure cannot undo the already durable canonical withdrawal or overflow the
+ // ledger's bounds. Report the mirror limitation without logging private reason.
+ try{new ExperienceLog(path.join(stateDir,'experience.jsonl')).append({taskId:'revoke:'+taskId,revocation:proof});}
+ catch{process.emitWarning('Technical experience withdrawal committed; experience ledger mirror unavailable.',{code:'TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE'});}
+ return isNew;
+}
+
+function requestingTaskAuthorized(stateDir,task,repoFullName,key,now){
+ const raw=safeRead(path.join(stateDir,'coding-grants',task.id+'.json'),16000);
+ if(!TASK.test(raw.ccc1TaskId??''))fail('TECHNICAL_REQUEST_GRANT_INVALID');
+ grantOf(stateDir,task,raw.ccc1TaskId,key);
+ const entries=journalOf(stateDir,raw.ccc1TaskId,key),goal=entries[0];
+ if(!goal||goal.repoFullName!==repoFullName||goal.baseCommitSha!==task.sourceCommit||goal.deadline<=now||
+    goal.payload.repair?.chain!==task.chain||!goal.payload.text.includes('[task '+taskFingerprint(task)+']')||
+    !goal.permissions.includes('node-repair:'+task.chain)||entries.some(e=>e.kind==='ABORT'))
+  fail('TECHNICAL_REQUEST_NOT_AUTHORIZED');
 }
 
 /** Every call rereads persisted records, canonical grants and MAC-verified journals.
@@ -129,6 +207,8 @@ export function recallTechnicalExperiences({stateDir,task,repoFullName,key,now=D
  if(!Number.isSafeInteger(now)||now<0||!Number.isSafeInteger(limit)||limit<1||limit>TECHNICAL_RECALL_LIMITS.maxItems||
     !Number.isSafeInteger(maxChars)||maxChars<128||maxChars>TECHNICAL_RECALL_LIMITS.maxChars)fail('TECHNICAL_RECALL_BOUND_INVALID');
  const result={schema:'momega1-technical-recall',version:1,status:'OK',items:[],text:''};
+ try{requestingTaskAuthorized(stateDir,spec,repoFullName,key,now);}
+ catch{result.status='BLOCKED_REQUEST_NOT_AUTHORIZED';return result;}
  let records;
  try{records=new ExperienceLog(path.join(stateDir,'experience.jsonl')).entries().map(x=>x.record);}
  catch{result.status='BLOCKED_LEDGER_DAMAGED';return result;}
@@ -148,7 +228,7 @@ export function recallTechnicalExperiences({stateDir,task,repoFullName,key,now=D
       !previous.allowedPaths.some(f=>spec.allowedPaths.includes(f))||
       !Number.isSafeInteger(p.observedAt)||p.observedAt>now||!Number.isSafeInteger(p.expiresAt)||
       p.expiresAt<=now||p.expiresAt-p.observedAt!==TECHNICAL_RECALL_LIMITS.maxAgeMs)continue;
-   grantOf(stateDir,previous,p.taskId);
+   grantOf(stateDir,previous,p.taskId,key);
    checkProofBindings(p,journalOf(stateDir,p.taskId,key),previous);
    const item={kind:p.kind,evidenceClass:p.evidenceClass,taskId:p.taskId,taskFingerprint:p.taskFingerprint,
     repoFullName:p.repoFullName,sourceCommit:previous.sourceCommit,sourceFiles:previous.allowedPaths,chain:previous.chain,

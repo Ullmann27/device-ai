@@ -35,7 +35,7 @@ function fixture(t){
  const entries=journal.entries(),modelObservation={schema:'momega1-local-process-observation-v1',evidenceClass:'LOCAL_MODEL_HOST',
   executionId:'synthetic-execution',taskId:modelTask.id,sourceCommit:SOURCE,taskFingerprint:modelFingerprint,requestIndex:1,
   contextSha256:H,promptSha256:H,requestSha256:H,modelSha256:H,runtimeSha256:H,outputSha256:H,proposalSha256:H,
-  outputTokens:2,pid:123,exitCode:0,isolation:{kind:'SYNTHETIC_CONTRACT_FIXTURE'}};
+  outputTokens:2,pid:123,exitCode:0,verifiedModelExecution:true,isolation:{kind:'SYNTHETIC_CONTRACT_FIXTURE'}};
  const verification={schema:'momega1-coding-verification',version:1,evidenceClass:'HOST_INTEGRATION',taskFingerprint:modelFingerprint,
   sourceCommit:SOURCE,chain:'node',patchSha256:H,proposalSha256:H,verdict:'VERIFIED',reasons:[],
   red:{profiles:[{identities:[H],exitCode:1}]},green:{profiles:[{identities:[H],exitCode:0}]},diagnostics:[{identity:H,message:'Synthetic failure'}]};
@@ -104,6 +104,7 @@ test('deleted current canonical grant fails closed even with valid historical pr
 });
 test('canonical journal corruption and torn experience tail fail closed',t=>{
  const f=fixture(t);f.publish();fs.appendFileSync(f.journal.file,'corrupt');assert.equal(f.recall().items.length,0);
+ fs.writeFileSync(f.journal.file,f.entries.map(e=>JSON.stringify(e)+'\n').join(''));
  fs.appendFileSync(f.file,'{');assert.equal(f.recall().status,'BLOCKED_LEDGER_DAMAGED');
 });
 test('freshness and exact repository/source/file scope are enforced',t=>{
@@ -211,4 +212,60 @@ test('process-only or mutable observations cannot enter model-derived technical 
 test('signed process-only historical proof remains ineligible for technical strategy recall',t=>{
  const f=fixture(t);f.publish(p=>{p.modelObservation.verifiedModelExecution=false;return p;});
  assert.equal(f.recall().items.length,0);
+});
+test('withdrawal refuses to overwrite a concurrently changed canonical grant',t=>{
+ const f=fixture(t);f.publish();const file=path.join(f.stateDir,'coding-grants',f.task.id+'.json'),original=fs.fsyncSync;
+ let injected=false;
+ fs.fsyncSync=fd=>{
+  if(!injected&&fs.readlinkSync('/proc/self/fd/'+fd).includes('.withdraw-')){
+   injected=true;const grant=JSON.parse(fs.readFileSync(file));grant.newerRevision='preserve newer canonical metadata';fs.writeFileSync(file,JSON.stringify(grant));
+  }
+  return original(fd);
+ };
+ try{assert.throws(()=>revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Conflicted withdrawal'}),/CHANGED_DURING_WITHDRAWAL/);}
+ finally{fs.fsyncSync=original;}
+ const grant=JSON.parse(fs.readFileSync(file));assert.equal(grant.newerRevision,'preserve newer canonical metadata');
+ assert.equal('technicalExperienceRevocation' in grant,false);assert.equal(fs.existsSync(file+'.technical-revoke.lock'),false);
+ assert.equal(fs.readdirSync(path.dirname(file)).filter(n=>n.includes('.withdraw-')).length,0);
+});
+test('uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability',t=>{
+ const f=fixture(t);f.publish();const file=path.join(f.stateDir,'coding-grants',f.task.id+'.json'),original=fs.fsyncSync;
+ let injected=false;
+ fs.fsyncSync=fd=>{if(!injected&&fs.readlinkSync('/proc/self/fd/'+fd)===file){injected=true;throw Error('injected anchor EIO');}return original(fd);};
+ try{assert.throws(()=>revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Uncertain withdrawal'}),/anchor EIO/);}
+ finally{fs.fsyncSync=original;}
+ assert.equal(f.recall().items.length,0);let syncs=0;fs.fsyncSync=fd=>{syncs++;return original(fd);};
+ try{assert.equal(revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Never replace original reason'}),false);}
+ finally{fs.fsyncSync=original;}
+ assert.ok(syncs>=2);assert.equal(JSON.parse(fs.readFileSync(file)).technicalExperienceRevocation.reason,'Uncertain withdrawal');
+});
+test('real concurrent withdrawing processes keep one canonical anchor and one mirror',async t=>{
+ const f=fixture(t);f.publish();const module=new URL('./ccc1-technical-recall.mjs',import.meta.url).href;
+ const code=`import fs from 'node:fs';import {revokeTechnicalExperience} from ${JSON.stringify(module)};const q=JSON.parse(fs.readFileSync(0,'utf8'));q.key=Buffer.from(q.key,'hex');process.stdout.write(JSON.stringify(revokeTechnicalExperience(q)));`;
+ const outcomes=await Promise.all(Array.from({length:4},(_,i)=>new Promise((resolve,reject)=>{
+  const child=spawn(process.execPath,['--input-type=module','-e',code]);let output='',error='';child.stdout.on('data',b=>output+=b);child.stderr.on('data',b=>error+=b);
+  child.on('error',reject);child.on('exit',status=>status===0?resolve(JSON.parse(output)):reject(Error(error)));
+  child.stdin.end(JSON.stringify({...f.options,key:f.key.toString('hex'),taskId:f.taskId,reason:'Concurrent withdrawal '+i}));
+ })));
+ assert.equal(outcomes.filter(Boolean).length,1);assert.equal(new ExperienceLog(f.file).entries().length,2);assert.equal(f.recall().items.length,0);
+ const source=`import fs from 'node:fs';import {recallTechnicalExperiences} from ${JSON.stringify(module)};const q=JSON.parse(fs.readFileSync(0,'utf8'));q.key=Buffer.from(q.key,'hex');process.stdout.write(JSON.stringify(recallTechnicalExperiences(q)));`;
+ const r=spawnSync(process.execPath,['--input-type=module','-e',source],{input:JSON.stringify({...f.options,key:f.key.toString('hex')}),encoding:'utf8',timeout:10000});
+ assert.equal(r.status,0,r.stderr);assert.equal(JSON.parse(r.stdout).items.length,0);
+});
+test('a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility',t=>{
+ const f=fixture(t);f.publish();const module=new URL('./ccc1-technical-recall.mjs',import.meta.url).href;
+ const code=`import fs from 'node:fs';import {revokeTechnicalExperience} from ${JSON.stringify(module)};const q=JSON.parse(fs.readFileSync(0,'utf8'));q.key=Buffer.from(q.key,'hex');const original=fs.renameSync;fs.renameSync=(a,b)=>{original(a,b);process.kill(process.pid,'SIGKILL');};revokeTechnicalExperience(q);`;
+ const r=spawnSync(process.execPath,['--input-type=module','-e',code],{input:JSON.stringify({...f.options,key:f.key.toString('hex'),taskId:f.taskId,reason:'Killed after canonical publication'}),encoding:'utf8',timeout:10000});
+ assert.equal(r.signal,'SIGKILL');assert.equal(f.recall().items.length,0);
+ const grant=path.join(f.stateDir,'coding-grants',f.task.id+'.json');assert.equal(fs.existsSync(grant+'.technical-revoke.lock'),true);
+});
+test('historical canonical withdrawal is checked independently of a different authorized requesting grant',t=>{
+ const f=fixture(t);f.publish();const task={...f.task,id:'independent-current-task',goal:'A new related authorized task'},taskId='t-2222222222222222';
+ const grant=path.join(f.stateDir,'coding-grants',task.id+'.json');fs.writeFileSync(grant,JSON.stringify({task,ccc1TaskId:taskId,fingerprint:taskFingerprint(task)}));
+ const journal=DurableTaskJournal.forTask(f.stateDir,taskId,f.key);
+ journal.append(envelope({binding:{...f.entries[0],taskId,sessionId:randomUUID(),deadline:NOW+60000},sender:'OWNER',kind:'GOAL',
+  payload:{text:task.goal+' [task '+taskFingerprint(task)+']',repair:{chain:'node'}},sequence:0}));
+ assert.equal(f.recall({task}).items.length,1);const records=new ExperienceLog(f.file).entries().map(e=>e.record);
+ revokeTechnicalExperience({...f.options,taskId:f.taskId,reason:'Withdraw only historical experience'});
+ rewriteRecords(f.file,records);assert.equal(f.recall({task}).status,'OK');assert.equal(f.recall({task}).items.length,0);
 });
