@@ -4,7 +4,6 @@ import at.heinz.deviceai.cognitive.*
 import at.heinz.deviceai.localmodel.*
 import org.junit.Assert.*
 import org.junit.Test
-import java.lang.reflect.InvocationTargetException
 
 /** Reflection keeps the tests executable on the unchanged baseline: missing feature is an assertion. */
 class ContinuumCodingPlanningTest {
@@ -90,9 +89,10 @@ class ContinuumCodingPlanningTest {
         assertTrue(failure is java.util.concurrent.CancellationException)
     }
     @Test fun modelSwapDuringGenerationCannotReturnDraft() {
+        val p = planning()!!
         lateinit var rt: FakeRuntime
         rt = FakeRuntime { cb -> cb.onEvent(LocalInferenceEvent.TextDelta(json)); rt.current = imported("b"); cb.onEvent(done()) }
-        assertNotNull(runCatching { model(planning()!!,rt).generate(goal,emptyList(),null,emptyList()) }.exceptionOrNull())
+        assertNotNull(runCatching { model(p,rt).generate(goal,emptyList(),null,emptyList()) }.exceptionOrNull())
     }
     private fun done() = LocalInferenceEvent.Completed(LocalInferenceMetrics(0,0,1,null,null,null,0))
     private fun imported(hash: String) = ImportedLocalModel("model","v1",hash.repeat(64),1,
