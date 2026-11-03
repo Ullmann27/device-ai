@@ -8,6 +8,9 @@ internal object LocalToolContinuation {
     const val MAX_RESPONSES = 4
     private const val MESSAGE_RESERVE = 256
 
+    /** Integrity only; source validation and permission checks remain with the caller. */
+    fun containsCompleteOutput(prompt: String, output: String): Boolean = prompt.contains(JSONObject.quote(output))
+
     /** Select the existing engine channel; the caller has already checked the full prompt. */
     fun submit(runtime: LocalModelRuntime, prompt: String, forceFresh: Boolean,
                responses: () -> List<LocalToolResponse>, callback: LocalInferenceCallback) {

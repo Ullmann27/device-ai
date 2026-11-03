@@ -94,6 +94,47 @@ deterministische CCC1-Reparatur und modellgesteuerte typisierte Coding-Aufgaben.
 Der aktuelle Android-ToolRegistry hat kein allgemeines `read_file`; nur wirklich
 registrierte/erteilte Fähigkeiten testen. Keine erfundenen Dateizugriffe.
 
+## Unabhängige Gegenprüfung und zweite Korrektur
+
+Der frische unabhängige Review auf f6c8f0bc fand einen zuvor bestehenden,
+entscheidenden Callerfehler: `prompt.contains(frame)` suchte unkodierte
+Zeilenumbrüche in JSON-kodierten Daten. Dadurch wäre die erste Kanalreparatur
+im tatsächlichen Bildschirm-Turn noch nicht erreicht worden. Die erste
+12er-Evidenz belegt die Kanalwahl, **nicht** diese finale Aufruferprüfung.
+Diese frühere Abgrenzung wird hier ausdrücklich korrigiert.
+
+AgentActivity nutzt jetzt denselben getesteten `containsCompleteOutput`-Gate:
+vollständige JSON-Darstellung vergleichen, Quellen-/Grant-/Ablaufprüfung behalten.
+Zweiter RED-Lauf **14 ausgeführt / 2 Fehler → GREEN 14 PASS / 0 Fehler/Skips**.
+Belege unter `screen-admission/`; unveränderter Review unter
+`docs/evidence/sol-max-autonomy-20261103/independent-review-f6c8f0bc.md`.
+Die unabhängige Bewertung lautet „With fixes“ auf f6c8f0bc; eine unabhängige
+End-SHA- oder Mergefreigabe ist damit nicht erteilt. Keine Threads geschlossen.
+
+Der erste vollständige Hostlauf f6c8f0bc ergab Node **1.976 PASS / 13 Skips /
+0 Fehler**, Quelle unverändert. Gradle führte 1.694 Fälle aus/auf (1.690 PASS,
+1 Fehler, 3 Skips): `ShellExecutionTest` konnte den vom Implementierer nicht
+angelegten externen `task-evidence`-Ordner nicht beschreiben. Das ist ein echter
+fehlgeschlagener Lauf, kein PASS. Das externe Startskript legt den Ordner künftig
+vorher an; kein Produktionstimeout und keine Testassertion wurden geändert.
+Originale Logs, alle 312 XML-Dateien und Nodequittungen sind im
+`preliminary-f6c8f0bc-raw.zip` erhalten. Neue Gesamtläufe sind noch ausstehend.
+
+## Aktualisierter Publisherbefund, 03.11.2026 00:29 UTC
+
+Der **parallele** bestehende Publisher hat inzwischen 2eae6b53 bereitgestellt.
+Neuer gelesener Katalog: zwölf Android-kompatible Felder, `OWNER_RELEASE`,
+`approved:true`, Code38. Erneut vollständig geladene APK: 54.673.371 Bytes,
+SHA256 `600ba56112840998e6b39666a9d7c3485f897ea8444592584035983b8fea27af`,
+korrekte Originalsignatur/Paket/Version durch apksigner/aapt2 bestätigt.
+Wir haben weder diesen Deploy noch eine Freigabe, Signierung oder Installation
+ausgelöst. Aktuelle installierte Fold7-Version weiterhin unbekannt.
+
+Die neue Publisher-Katalogkorrektur liegt **nicht** in diesem Forschungszweig.
+Vor einem künftigen Release diese kompatiblen Änderungen kontrolliert integrieren;
+den alten staged-Kataloggenerator dieses Zweiges nicht ungeprüft wieder deployen.
+Der neue Bildschirmfix ist in keiner der beiden geprüften Besitzer-APKs enthalten.
+
 Relevante Register: EXP-05 (lokale Inferenz), EXP-08 (bestehender
 Android/Termux-Kanal), EXP-11 (kanonische Orchestrierung), EXP-12 (Kontinuität);
 später EXP-00/01/02/04 für CCC1/Worker/Lernen. Issue #41, AGENTS.md,

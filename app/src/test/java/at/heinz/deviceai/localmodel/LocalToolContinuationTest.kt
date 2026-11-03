@@ -116,6 +116,8 @@ class LocalToolContinuationTest {
             LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", output)
         val prompt = LocalPromptFrame.assemble(body, "", null, "", 15_500)!!
         assertTrue(prompt.toByteArray(Charsets.UTF_8).size < 15_500)
+        assertTrue("The final caller gate must accept the complete JSON-encoded frame",
+            LocalToolContinuation.containsCompleteOutput(prompt, output))
         LocalToolContinuation.submit(adapter, prompt, forceFresh = true, responses = {
             listOf(LocalToolContinuation.encode("read_app_screen", "SUCCEEDED", output)
                 ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
@@ -156,5 +158,20 @@ class LocalToolContinuationTest {
         LocalToolContinuation.submit(adapter, "vollständiger Auftrag: NICHT ändern", false, { emptyList() }, {})
         assertEquals(listOf("vollständiger Auftrag: NICHT ändern"), adapter.prompts)
         assertTrue(adapter.toolBatches.isEmpty())
+    }
+
+    @Test fun completeOutputGateRejectsAPrefixOrAChangedLateNegation() {
+        val output = "Beobachtung:\n" + "x".repeat(384) + " NICHT freigegeben. Μην προχωρήσεις."
+        for (changed in listOf(output.take(384), output.replace("NICHT", "DOCH!"))) {
+            val prompt = LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", changed)
+            assertFalse(LocalToolContinuation.containsCompleteOutput(prompt, output))
+        }
+    }
+
+    @Test fun completeOutputGateRejectsUnquotedAndDoubleEncodedFrames() {
+        val output = "EXTERNE APPDATEN:\n\"Nicht senden\".\nENDE APPDATEN."
+        assertFalse(LocalToolContinuation.containsCompleteOutput("raw frame: $output", output))
+        val doubleEncoded = LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", JSONObject.quote(output))
+        assertFalse(LocalToolContinuation.containsCompleteOutput(doubleEncoded, output))
     }
 }

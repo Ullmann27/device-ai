@@ -1,0 +1,81 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:411:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:412:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:414:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:714:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1880:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3350:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3365:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3394:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5833:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6343:58 This call may have inconsistent results because 'AtomicReference' uses identity equality and 'Long?' does not have a consistent identity. Consider using 'AtomicLong' instead.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:6343:89 This call may have inconsistent results because the type of this argument, 'Long?', does not have a consistent identity.
+w: file:///workspace/continuum-jarvis/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:7265:59 Unnecessary safe call on a non-null receiver of type 'Long'.
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest FAILED
+Picked up JAVA_TOOL_OPTIONS: -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+
+LocalToolContinuationTest > freshScreenTurnDoesNotEncodeAnUnusedOversizedToolResponse FAILED
+    java.lang.AssertionError at LocalToolContinuationTest.kt:119
+
+LocalToolContinuationTest > completeOutputGateRejectsUnquotedAndDoubleEncodedFrames FAILED
+    java.lang.AssertionError at LocalToolContinuationTest.kt:173
+
+14 tests completed, 2 failed
+[Incubating] Problems report is available at: file:///workspace/continuum-jarvis/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/continuum-jarvis/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 44s
+25 actionable tasks: 5 executed, 20 up-to-date

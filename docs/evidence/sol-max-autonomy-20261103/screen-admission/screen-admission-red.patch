@@ -1,0 +1,64 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+index eecc5dd4..2e5d5ebc 100644
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -6444,7 +6444,11 @@ class AgentActivity : Activity() {
+                 ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
+                 compiledContext?.requireCompleteIn(prompt)
+                 // A screen frame is atomic. Never send a clipped negation/source block.
+-                screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
++                screenFrames.forEach {
++                    check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
++                        "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET"
++                    }
++                }
+                 val newObservations = observations.drop(submittedToolObservationCount)
+                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
+                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
+diff --git a/app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt b/app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt
+index 30005a85..b30152d5 100644
+--- a/app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt
++++ b/app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt
+@@ -8,6 +8,9 @@ internal object LocalToolContinuation {
+     const val MAX_RESPONSES = 4
+     private const val MESSAGE_RESERVE = 256
+ 
++    /** Integrity only; source validation and permission checks remain with the caller. */
++    fun containsCompleteOutput(prompt: String, output: String): Boolean = prompt.contains(output)
++
+     /** Select the existing engine channel; the caller has already checked the full prompt. */
+     fun submit(runtime: LocalModelRuntime, prompt: String, forceFresh: Boolean,
+                responses: () -> List<LocalToolResponse>, callback: LocalInferenceCallback) {
+diff --git a/app/src/test/java/at/heinz/deviceai/localmodel/LocalToolContinuationTest.kt b/app/src/test/java/at/heinz/deviceai/localmodel/LocalToolContinuationTest.kt
+index 0f7d4f84..103c3b31 100644
+--- a/app/src/test/java/at/heinz/deviceai/localmodel/LocalToolContinuationTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/localmodel/LocalToolContinuationTest.kt
+@@ -116,6 +116,8 @@ class LocalToolContinuationTest {
+             LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", output)
+         val prompt = LocalPromptFrame.assemble(body, "", null, "", 15_500)!!
+         assertTrue(prompt.toByteArray(Charsets.UTF_8).size < 15_500)
++        assertTrue("The final caller gate must accept the complete JSON-encoded frame",
++            LocalToolContinuation.containsCompleteOutput(prompt, output))
+         LocalToolContinuation.submit(adapter, prompt, forceFresh = true, responses = {
+             listOf(LocalToolContinuation.encode("read_app_screen", "SUCCEEDED", output)
+                 ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET"))
+@@ -157,4 +159,19 @@ class LocalToolContinuationTest {
+         assertEquals(listOf("vollständiger Auftrag: NICHT ändern"), adapter.prompts)
+         assertTrue(adapter.toolBatches.isEmpty())
+     }
++
++    @Test fun completeOutputGateRejectsAPrefixOrAChangedLateNegation() {
++        val output = "Beobachtung:\n" + "x".repeat(384) + " NICHT freigegeben. Μην προχωρήσεις."
++        for (changed in listOf(output.take(384), output.replace("NICHT", "DOCH!"))) {
++            val prompt = LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", changed)
++            assertFalse(LocalToolContinuation.containsCompleteOutput(prompt, output))
++        }
++    }
++
++    @Test fun completeOutputGateRejectsUnquotedAndDoubleEncodedFrames() {
++        val output = "EXTERNE APPDATEN:\n\"Nicht senden\".\nENDE APPDATEN."
++        assertFalse(LocalToolContinuation.containsCompleteOutput("raw frame: $output", output))
++        val doubleEncoded = LocalToolContinuation.observationData("read_app_screen", "SUCCEEDED", JSONObject.quote(output))
++        assertFalse(LocalToolContinuation.containsCompleteOutput(doubleEncoded, output))
++    }
+ }

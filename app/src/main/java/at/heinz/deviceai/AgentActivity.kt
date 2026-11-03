@@ -6444,7 +6444,11 @@ class AgentActivity : Activity() {
                 ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
                 // A screen frame is atomic. Never send a clipped negation/source block.
-                screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
+                screenFrames.forEach {
+                    check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
+                        "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET"
+                    }
+                }
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
