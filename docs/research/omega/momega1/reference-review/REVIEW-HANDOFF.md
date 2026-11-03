@@ -96,5 +96,51 @@ observations. Raw commands, seams and hashes: `memory-roundtrip-receipt.json`.
 - Evaluate real work-effect event binding separately from cosmetic motion.
 - Voice, guided first-run tests and actual Fold7 acceptance remain separate gates.
 
+## Observed gaze and additional video references
+
+`REFERENCE-ADDENDUM.md` freezes eight real-event/effect requirements for the two
+new 20-second videos, independently hashed and visually sampled. It also freezes
+thirteen additional gaze/lifetime checks at `000c48b7`. After source inspection,
+one separately labeled future-timestamp recovery challenge was added at `12586912`.
+
+Combined actual baseline `7caef9b6`: **26 run, 12 PASS, 14 FAIL, 0 SKIP**.
+Exact candidate `1649a04346631ca4389159c03e0ab6c7333f4e1c`: **26 run, 25 PASS,
+1 FAIL, 0 SKIP**. All original 25 frozen requirements pass. The additional
+challenge reproduces a lockout: future observation time 2000 is discarded at
+render time 1000, but retaining its ordering timestamp blocks a valid observation
+at 1001. A fix and unchanged rerun are required before contract acceptance.
+Raw output, exact commands and source hashes are in
+`gaze-motion-candidate-1649-receipt.json`.
+
+All 34 protected theme/font/layout/2D-painter file hashes remain unchanged.
+The separately authorized HologramView import preserves stored owner preferences,
+orb/2D fallback and shared frame/pose state. The narrow runtime/asset import adds
+no brain scheduler, TTS implementation, camera permission or Activity change.
+Source comparison does not replace a native-render/visual/lifecycle check.
+
+Follow-up exact source `26555aa6c59fdd4dd2e190defcdf49b983305555` passes the
+**same unchanged 26 cases, 26 PASS, 0 FAIL, 0 SKIP**, exit 0. The fix restores the
+last actually fresh timestamp after discarding a future sample, while preserving
+the separate clear watermark. **ACCEPT_MOTION_GAZE_CONTRACT** for that exact source;
+this does not accept head appearance, real camera integration, Filament rendering,
+first-run guidance, voice identity or Fold7 execution. Raw output and exact source
+hashes: `gaze-motion-fixed-2655-receipt.json`.
+
+## Independent material/appearance comparison
+
+Six actual-GLB A/B frames were inspected: front, slight yaw/pitch and full profile,
+with identical camera/lighting/exposure/seed, Blender 4.3.2 Cycles CPU, 384×448,
+eight samples and one CPU thread. Candidate material asset `15573963f9c3f862...`
+is brighter and easier to read, but **H01 remains FAIL / NOT_ACCEPTED**. The face
+is still opaque, the wire paths coarse/angular and the pale bright irises create
+a fixed stare. Neutral pose/camera-angle frames do not demonstrate natural motion.
+
+The reviewer independently verified all six frame hashes, byte-identical geometry
+BIN chunks and unchanged glTF semantics outside four material objects. The
+production asset remains `f39a89fc...`. `material-15573963-review.json` records
+exact hashes, render parameters, observations and limitations. Eight-sample grain
+limits fine appearance assessment; higher samples alone cannot fix the identified
+material/eye differences. These are host asset renders, not Filament/device pixels.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
