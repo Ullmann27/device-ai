@@ -17,6 +17,7 @@ import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handof
 import {validateVerifiedReport} from './repair-publish.mjs';
 import {validateCodingTask} from './coding-task.mjs';
 import {runCandidateVerifier} from './repair-research-verifier.mjs';
+import {verifyCodingCandidate} from './ccc1-redgreen-verifier.mjs';
 
 const COMMIT=/^[0-9a-f]{40}$/;
 const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -146,8 +147,19 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
+    let verificationIndex=0;
+    const independentVerifier=taskSpec?({patch,patchSha256,proposalSha256})=>{
+      checkpoint();
+      const verifyOut=path.join(reportDir,'candidate-independent-'+(++verificationIndex));
+      fs.mkdirSync(verifyOut,{recursive:true,mode:0o700});
+      const patchPath=path.join(verifyOut,'candidate.patch');fs.writeFileSync(patchPath,patch,{mode:0o600,flag:'wx'});
+      const verification=verifyCodingCandidate({repo:source,task:taskSpec,patchPath,patchSha256,proposalSha256,
+        out:verifyOut,deadline,executor,executorAbortMode,checkpoint,abortWatch});
+      fs.writeFileSync(path.join(verifyOut,'verification.json'),JSON.stringify(verification,null,2)+'\n',{mode:0o600});
+      return verification;
+    }:null;
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,checkpoint,abortWatch,executor,executorAbortMode,
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,independentVerifier,checkpoint,abortWatch,executor,executorAbortMode,
       onProgress:writeReport});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
@@ -191,6 +203,15 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
         }
       }
       const independentlyPassed=assessment.passed;
+      if(independentlyPassed&&taskSpec){
+        const attempt=report.attempts.find(a=>a.candidate===report.verified.candidate);
+        if(typeof candidateProvider.onVerifiedCandidate==='function')candidateProvider.onVerifiedCandidate({
+          modelTask:taskSpec,modelObservation:attempt?.modelObservation??null,verification:attempt?.independentVerification??null,
+          reflection:{summary:String(attempt?.hypothesis??taskSpec.goal).slice(0,500),
+            limits:['Fixed acceptance tests only; no model-quality or device acceptance.',
+              'Reflection is the pre-verification proposal hypothesis; post-GREEN model reflection has not run.'],
+            rejectedAlternatives:report.attempts.filter(a=>a.outcome!=='VERIFIED').slice(-4).map(a=>String(a.outcome).slice(0,200))}});
+      }
       if(report.coding)report.coding.milestones.push(independentlyPassed?'INDEPENDENT_VERIFIED':'INDEPENDENT_FAILED');
       report.independent={passed:independentlyPassed,profiles,
         evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
