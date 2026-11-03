@@ -17,7 +17,7 @@ def fixture(change=lambda d: None, zero=None, mirror=False, huge=False):
         while len(binary)%4:binary.append(0)
         accessors.append({'bufferView':len(views)-1,'componentType':component,'count':len(rows),'type':kind})
         return len(accessors)-1
-    positions=[(.03,.12,.01),(-.03,.12,.01),(.01,.09,.03),(.03,.01,.01),(-.03,.01,.01),(0,0,.04)]
+    positions=[(.03,.32,.01),(-.03,.32,.01),(.01,.29,.03),(.03,.21,.01),(-.03,.21,.01),(0,.20,.04)]
     position=accessor(positions); indices=accessor([(i,) for i in range(6)],'SCALAR',5123)
     joints=accessor([(1,0,0,0)]*6,'VEC4',5123); weights=accessor([(1,0,0,0)]*6,'VEC4')
     inverse=accessor([tuple(float(i in (0,5,10,15)) for i in range(16))]*2,'MAT4')
@@ -25,7 +25,7 @@ def fixture(change=lambda d: None, zero=None, mirror=False, huge=False):
     for name in TARGETS:
         deltas=[]
         for x,y,z in positions:
-            active=(y>.06 if name.startswith(('Blink','Brow')) else y<.06)
+            active=(y>.26 if name.startswith(('Blink','Brow')) else y<.26)
             if name=='BlinkLeft':active=active and (x<0 if mirror else x>0)
             if name=='BlinkRight':active=active and x<0
             value=(1 if huge else .002) if active and name!=zero else 0
@@ -33,8 +33,8 @@ def fixture(change=lambda d: None, zero=None, mirror=False, huge=False):
         targets.append({'POSITION':accessor(deltas)})
     doc={'asset':{'version':'2.0'},'buffers':[{'byteLength':len(binary)}],'bufferViews':views,'accessors':accessors,
          'nodes':[{'name':'AvatarRoot','children':[1,6]},{'name':'Neck','children':[2]}, {'name':'Head','children':[3,4,5]},
-                  {'name':'EyeLeft','translation':[.03,.1,.03]},{'name':'EyeRight','translation':[-.03,.1,.03]},
-                  {'name':'Jaw','translation':[0,.02,.01]},{'name':'Face','mesh':0,'skin':0}],
+                  {'name':'EyeLeft','translation':[.03,.30,.03]},{'name':'EyeRight','translation':[-.03,.30,.03]},
+                  {'name':'Jaw','translation':[0,.22,.01]},{'name':'Face','mesh':0,'skin':0}],
          'skins':[{'joints':[1,2],'inverseBindMatrices':inverse}],
          'meshes':[{'extras':{'targetNames':TARGETS.copy()},'primitives':[{'attributes':{'POSITION':position,'JOINTS_0':joints,'WEIGHTS_0':weights},'indices':indices,'targets':targets}]}]}
     change(doc)
@@ -57,7 +57,7 @@ class GeometryContractTest(unittest.TestCase):
                          lambda d:d['meshes'][0]['primitives'][0]['targets'].__setitem__(1,d['meshes'][0]['primitives'][0]['targets'][0])]:
             self.assertEqual('FAIL',validate(fixture(mutation))['status'])
     def test_eye_node_mirror_and_rig_nonmoving(self):
-        self.assertEqual('FAIL',validate(fixture(lambda d:d['nodes'][3].update(translation=[-.03,.1,.03])))['status'])
+        self.assertEqual('FAIL',validate(fixture(lambda d:d['nodes'][3].update(translation=[-.03,.30,.03])))['status'])
         self.assertEqual('FAIL',validate(fixture(lambda d:d['skins'][0].update(joints=[1,1])))['status'])
     def test_invalid_binary_and_resources_fail_before_geometry(self):
         valid=fixture()
@@ -70,6 +70,15 @@ class GeometryContractTest(unittest.TestCase):
         for candidate in candidates:
             with self.assertRaises((ValueError,KeyError,IndexError,struct.error)):
                 Glb(candidate)
+    def test_pivots_and_transforms_cannot_move_localization_boundary(self):
+        for change in [lambda d:d['nodes'][5].update(translation=[0,-9,0]),
+                       lambda d:d['nodes'][3].update(translation=[.03,2,.03]),
+                       lambda d:d['nodes'][4].update(translation=[-.03,.3,9]),
+                       lambda d:d['nodes'][0].update(scale=[1,-1,1]),
+                       lambda d:d['nodes'][0].update(scale=[100,100,100]),
+                       lambda d:d['nodes'][2].update(rotation=[]),
+                       lambda d:d['nodes'][5].update(translation=[0,.22,9])]:
+            result=validate(fixture(change));self.assertEqual('FAIL',result['status'],result)
     def test_nonfinite_geometry_rejected(self):
         data=bytearray(fixture());json_length=struct.unpack_from('<I',data,12)[0]
         struct.pack_into('<f',data,28+json_length,math.nan)

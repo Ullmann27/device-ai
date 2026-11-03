@@ -117,7 +117,14 @@ def validate(data):
         left,right,jaw=[transform(g.world(g.names.index(n)),(0,0,0)) for n in ['EyeLeft','EyeRight','Jaw']]
         separation=left[0]-right[0]; measures['eye_separation_m']=separation
         require(.01 <= separation <= .15 and min(left[1],right[1]) > jaw[1], 'Mirrored eyes, scale or vertical pivots')
+        # Quantitative schema ranges frozen before output inspection; pivots cannot move the test boundary freely.
+        eye_y=(left[1]+right[1])/2
+        require(.25 <= eye_y <= .32 and .20 <= jaw[1] <= .25 and .04 <= eye_y-jaw[1] <= .09,
+                'Eye/Jaw pivots outside preregistered metre-scale bust anatomy')
+        require(abs(left[1]-right[1]) <= .01 and abs(left[2]-right[2]) <= .01, 'Asymmetric rest eye pivots')
     check('rig_hierarchy_orientation',hierarchy)
+    if errors:
+        return {'status':'FAIL','sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data),'failures':errors,'measurements':measures}
     total_vertices=total_triangles=0; morph_sets=0
     for mi,mesh in enumerate(g.doc['meshes']):
         for pi,primitive in enumerate(mesh['primitives']):
@@ -144,6 +151,13 @@ def validate(data):
             jaw_y=transform(g.world(g.names.index('Jaw')),(0,0,0))[1]
             middle_y=(eye_y+jaw_y)/2
             tolerance=abs(eye_y-jaw_y)*.1
+            regional_bounds=[(min(p[a] for p in regional_base),max(p[a] for p in regional_base)) for a in range(3)]
+            def pivot_surface_bounds():
+                for name in ['EyeLeft','EyeRight','Jaw']:
+                    pivot=transform(g.world(g.names.index(name)),(0,0,0))
+                    require(all(lo-.01 <= pivot[a] <= hi+.01 for a,(lo,hi) in enumerate(regional_bounds)),
+                            name+' pivot lies outside rest skin bounds')
+            check(f'mesh_{mi}_{pi}_pivot_surface_bounds',pivot_surface_bounds)
             measures[f'mesh_{mi}_{pi}_bounds']=bounds
             for name,delta in deltas.items():
                 def deformation(name=name,delta=delta):
