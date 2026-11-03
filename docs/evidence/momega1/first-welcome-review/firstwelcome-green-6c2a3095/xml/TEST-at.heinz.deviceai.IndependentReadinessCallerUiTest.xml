@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentReadinessCallerUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:19:18" hostname="b354f2cb821b" time="0.77">
+  <properties/>
+  <testcase name="pauseClearsTemporarySpeechTextWithoutChangingComposer" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.177"/>
+  <testcase name="successfulSpeakReturnAloneCannotEnableHeardConfirmation" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.092"/>
+  <testcase name="queuedHeardTapAfterDismissCannotConfirmClosedTest" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.075"/>
+  <testcase name="queuedHeardTapAfterTtsErrorCannotConfirmFailedTest" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.068"/>
+  <testcase name="oldHeardTapCannotConfirmAnUnstartedReplacementSample" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.085"/>
+  <testcase name="lateStartCallbackAfterDismissCannotReopenOrEnableConfirmation" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.047"/>
+  <testcase name="permissionCallbacksDoNotStartOrRestoreAnySensor" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.096"/>
+  <testcase name="rotationRevokesCameraOptInWithoutAutoResume" classname="at.heinz.deviceai.IndependentReadinessCallerUiTest" time="0.129"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
