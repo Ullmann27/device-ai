@@ -90,7 +90,10 @@ export async function fixture(name, initExtra = []) {
   const project = path.join(top, 'project');
   const profiles = path.join(top, 'profiles');
   const config = path.join(top, 'service', 'config.json');
-  const cp = fs.readFileSync(process.env.SERVICE_REVIEW_CLASSPATH_FILE, 'utf8').trim();
+  // The older compiler artifact ends in ':'; remove empty Java classpath entries
+  // so the working directory cannot silently become an executable class source.
+  const cp = fs.readFileSync(process.env.SERVICE_REVIEW_CLASSPATH_FILE, 'utf8').trim()
+    .split(path.delimiter).filter(Boolean).join(path.delimiter);
   fs.mkdirSync(path.join(project, '.github/continuum'), {recursive: true});
   fs.mkdirSync(path.join(project, 'lib'));
   fs.writeFileSync(path.join(project, 'lib/count.mjs'), 'export const count = values => values.length;\n');
