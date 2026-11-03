@@ -4,7 +4,10 @@ import at.heinz.deviceai.learning.StrictJson
 
 /**
  * CCC1 RED→GREEN patch receipt (Argon-4-Dossier 9.1, Punkt 6) as a checkable
- * data object. A receipt is only GREEN_VERIFIED_PENDING_REVIEW when:
+ * data object. evaluate() alone yields at most SELF_CONSISTENT_UNATTESTED: it cannot see git.
+ * evaluateAttested() yields GREEN_ATTESTED_PENDING_REVIEW only with an attestation of
+ * .github/continuum/ccc1-redgreen-verifier.mjs (real git objects, patch digest, re-executed
+ * tests) bound to sha256 of exactly this canonical JSON. Self-consistency requires:
  *  - every commit id is a full 40-hex SHA, the patch hash is 64-hex SHA-256,
  *    base, RED and GREEN commits are pairwise different;
  *  - the RED run belongs to the RED commit, exited non-zero and really failed
@@ -27,7 +30,9 @@ data class Ccc1PatchReceipt(
     val red: Ccc1TestRun?, val green: Ccc1TestRun?,
     val approvedForMerge: Boolean = false, val installed: Boolean = false, val deviceVerified: Boolean = false
 ) {
-    enum class Verdict { GREEN_VERIFIED_PENDING_REVIEW, RED_ONLY, UNKNOWN, INVALID }
+    /** SELF_CONSISTENT_UNATTESTED = fields agree with each other only (M2 level, review #370/2);
+     *  GREEN_ATTESTED_PENDING_REVIEW additionally needs a matching host verifier attestation. */
+    enum class Verdict { GREEN_ATTESTED_PENDING_REVIEW, SELF_CONSISTENT_UNATTESTED, RED_ONLY, UNKNOWN, INVALID }
     data class Evaluation(val verdict: Verdict, val reasons: List<String>)
 
     fun evaluate(): Evaluation {
@@ -50,9 +55,12 @@ data class Ccc1PatchReceipt(
         if (g.sha != greenSha) invalid += "GREEN_SHA"
         if (g.exitCode != 0L || g.failed != 0L || g.failingTests.isNotEmpty() || g.executed < targetTests.size ||
             !g.passedTargets.containsAll(targetTests)) invalid += "GREEN_NOT_PASSING_ALL_TARGETS"
-        return if (invalid.isEmpty()) Evaluation(Verdict.GREEN_VERIFIED_PENDING_REVIEW, emptyList())
+        return if (invalid.isEmpty()) Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, listOf("NO_ATTESTATION"))
         else Evaluation(Verdict.INVALID, invalid)
     }
+
+    /** RED stub: attestation ignored. */
+    fun evaluateAttested(attestationJson: String): Evaluation = evaluate()
 
     private fun incomplete(run: Ccc1TestRun) = run.exitCode == null || run.timedOut || run.cancelled
 
