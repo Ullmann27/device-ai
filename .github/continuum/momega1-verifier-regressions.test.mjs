@@ -47,3 +47,9 @@ test('MΩ QA isolated localized file attributes retain actual Node identities un
  const localized=parseJunit(raw.stdout.replaceAll(f.root+'/',alias+'/'),{root:alias});
  assert.deepEqual([...localized.values()].map(c=>c.identity),[...actual.values()].map(c=>c.identity));
 });
+for(const claim of ['existing-wrong-tree','nonexistent'])test('MΩ QA correlated green source claims reject '+claim,t=>{
+ const f=fixture(t),receipt=structuredClone(f.receipt),sha=claim==='existing-wrong-tree'?f.red:'f'.repeat(40);
+ receipt.greenSha=sha;receipt.green.sha=sha;
+ const result=verifyRepairPatch({repo:f.root,baseCommit:f.red,patchPath:f.patchPath,patchSha256:f.patchSha256,receiptBytes:Buffer.from(JSON.stringify(receipt))});
+ assert.equal(result.verdict,'REJECTED',JSON.stringify(result));
+});
