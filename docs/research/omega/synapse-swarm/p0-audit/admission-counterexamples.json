@@ -1,0 +1,14 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "docs/research/omega/synapse-swarm/p0-audit/admission-counterexamples.test.mjs"
+  ],
+  "env": {
+    "SYNAPSE_P0_TARGET": "/workspace/synapse-p0-audit"
+  },
+  "exit": 0,
+  "elapsedSeconds": 0.15846681594848633
+}

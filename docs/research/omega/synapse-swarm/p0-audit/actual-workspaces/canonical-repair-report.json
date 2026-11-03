@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "base": "5871d9c0050ba86190f129f7e65cae866ebf6638",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:09:16.137Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "cdb85f5e5bb3d1b6858c8c1e7cb12df78dccf341771a05ed62f402587f4e34a9",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-62a88602cec55494a77b4f1e",
+          "workspaceBinding": {
+            "workerId": "worker-canonical",
+            "taskId": "t-0bdf9dc76035d009",
+            "requestMessageId": "572af04a-6707-4890-aa21-da5ffc707d92",
+            "requestHash": "cd68f91f62cf9ae78038a1356f3b393e5f095aaca0285027d1733c14447594a1",
+            "sourceCommit": "5871d9c0050ba86190f129f7e65cae866ebf6638",
+            "jobId": "33e90ef0-6f70-4ef9-8ca5-adcad8e99d28"
+          },
+          "observed": {
+            "containerId": "611a1cea2b81634ad428edef805d2b7a272a58b52001008c896ea52512555a0f",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/isolation.test.mjs\",[],\"slug lower case\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "a6e8ad332355776d1941d7bbcbaadd6ae4ed4d3741d772c1a49159a9100dcca5"
+          ],
+          "executedCaseHashes": [
+            "2a2973470887b049e099f5e5e028b355b007a1ac3bd3f93a1bc5f4ef2745d329"
+          ]
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.slug lower case",
+        "file": ".github/continuum/isolation.test.mjs",
+        "line": 1,
+        "col": 142,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'HALLO-WELT'\n- 'hallo-welt'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "c4218ffc1ac0cc55"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "833f7bc5359df30b",
+      "strategy": "REVERT_FILE_TO_PARENT",
+      "diagnostic": "c4218ffc1ac0cc55",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Restore .github/continuum/text-utils.mjs to the parent commit (regression culprit search)",
+      "score": 0.4,
+      "critic": {
+        "approved": true,
+        "risk": 0.637,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/text-utils.mjs",
+          "oldText": "  return title.trim().toUpperCase().replace(/\\s+/g,\"-\");",
+          "newText": "  return title.trim().toLowerCase().replace(/\\s+/g,\"-\");",
+          "line": 3
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/text-utils.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 0,
+          "tests": {
+            "total": 1,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 1,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/isolation.test.mjs\",[],\"slug lower case\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "cd61b4310324d47c5d633c45b7ef01d57b8846def1f5068794f8ba7f6ba16e3d"
+            ],
+            "executedCaseHashes": [
+              "2a2973470887b049e099f5e5e028b355b007a1ac3bd3f93a1bc5f4ef2745d329"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "833f7bc5359df30b",
+    "strategy": "REVERT_FILE_TO_PARENT",
+    "description": "Restore .github/continuum/text-utils.mjs to the parent commit (regression culprit search)",
+    "patch": "diff --git a/.github/continuum/text-utils.mjs b/.github/continuum/text-utils.mjs\nindex fcb34f8..d0a78f7 100644\n--- a/.github/continuum/text-utils.mjs\n+++ b/.github/continuum/text-utils.mjs\n@@ -1,4 +1,4 @@\n /** Slug of a title for file names. */\n export function slug(title){\n-  return title.trim().toUpperCase().replace(/\\s+/g,\"-\");\n+  return title.trim().toLowerCase().replace(/\\s+/g,\"-\");\n }\n",
+    "patchSha256": "14f52804b9f3c83bb08b50974a80fccf7e89d99878f0db0ffee3dba7b3e1059c",
+    "files": [
+      ".github/continuum/text-utils.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 1,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/isolation.test.mjs\",[],\"slug lower case\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "cd61b4310324d47c5d633c45b7ef01d57b8846def1f5068794f8ba7f6ba16e3d"
+          ],
+          "executedCaseHashes": [
+            "2a2973470887b049e099f5e5e028b355b007a1ac3bd3f93a1bc5f4ef2745d329"
+          ]
+        }
+      }
+    ],
+    "reviewRequired": true,
+    "confidence": 0.28
+  },
+  "outcome": "VERIFIED",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "finishedAt": "2026-11-03T20:09:17.160Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "5871d9c0050ba86190f129f7e65cae866ebf6638",
+    "chain": "node",
+    "conclusion": "VERIFIED",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "870b48bffc60af56",
+        "approved": true,
+        "proof": "ef20e35e322ef8971e6f57511efd0485fa26d18e5c4ca5dd830757ccb45241ce"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "870b48bffc60af56",
+        "editedFiles": 1,
+        "proof": "d63d31e766130cb14dbbb6fd1b99abd08856f9916704479af5d549baa60d1456"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "870b48bffc60af56",
+        "passed": true,
+        "executed": true,
+        "profiles": 1,
+        "proof": "9e8fbbf70f030d5d0590b566fa54c6d9f9389873e83e9eec9177b913ba1e3a7f"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "PATCH_PENDING_REVIEW",
+        "patchSha256": "14f52804b9f3c83bb08b50974a80fccf7e89d99878f0db0ffee3dba7b3e1059c",
+        "approvedForMerge": false,
+        "proof": "a36d7aacc994c23566a61233f5dfc526c8a3ef34f5af377dfb6554ff7a5f00fe"
+      }
+    ],
+    "integrity": "cf5fe3b53f46447534da2d6883e4f20f3eff2eafd1a1d1c0f5b77b3f6a3dad62"
+  },
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "2009afd319011414092f86361e232b88d9e7eb604ed19055650f5fb1498fd509",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-147844333e2cac664e0e18a2",
+          "workspaceBinding": {
+            "workerId": "worker-canonical",
+            "taskId": "t-0bdf9dc76035d009",
+            "requestMessageId": "572af04a-6707-4890-aa21-da5ffc707d92",
+            "requestHash": "cd68f91f62cf9ae78038a1356f3b393e5f095aaca0285027d1733c14447594a1",
+            "sourceCommit": "5871d9c0050ba86190f129f7e65cae866ebf6638",
+            "jobId": "33e90ef0-6f70-4ef9-8ca5-adcad8e99d28"
+          },
+          "observed": {
+            "containerId": "9d30edaaa473daad080f9a086d4045c253c6f7f6803a3c59ec9ac62b2176a115",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        }
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  }
+}
