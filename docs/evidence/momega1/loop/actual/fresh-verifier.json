@@ -1,0 +1,151 @@
+{
+  "task": {
+    "schema": "continuum-coding-task",
+    "version": 1,
+    "id": "momega-offset",
+    "sourceCommit": "1be6704abe94c351031317cafa938d66a1aff296",
+    "kind": "BUGFIX",
+    "goal": "Repair offset symmetry",
+    "allowedPaths": [
+      "lib/offset.mjs"
+    ],
+    "acceptance": [
+      "offset(3,8) must be 5"
+    ],
+    "chain": "node",
+    "limits": {
+      "maxModelCalls": 2,
+      "maxContextChars": 6000
+    }
+  },
+  "verification": {
+    "schema": "momega1-coding-verification",
+    "version": 1,
+    "taskFingerprint": "35d6ea6abb10e232462a849bfb3fa0e40c8d06624ebeda3d845f614788285c35",
+    "sourceCommit": "1be6704abe94c351031317cafa938d66a1aff296",
+    "chain": "node",
+    "patchSha256": "df557ce519d8a472d260db5d5185b25e9a65dd743c17a2a207475c8df2cb22fc",
+    "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "verdict": "VERIFIED",
+    "reasons": [],
+    "red": {
+      "passed": false,
+      "results": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "signal": null,
+          "error": null,
+          "timedOut": false,
+          "ms": 138,
+          "tests": {
+            "total": 1,
+            "failed": 1,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 0,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/offset.test.mjs\",[],\"offset\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "a790c16e02e546c711565dc24112afce5f37cde494706097cc7e9f17a16879a5"
+            ],
+            "executedCaseHashes": [
+              "eca8f96a07fd36844194760ba15c7e857c11bc9f2eac8f0676887aab18436f54"
+            ]
+          },
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.offset",
+              "file": ".github/continuum/offset.test.mjs",
+              "line": 2,
+              "col": 53,
+              "message": "Expected values to be strictly equal:\n\n-5 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "e4431aa0cf9e8831"
+            }
+          ],
+          "outputTail": "\n"
+        }
+      ],
+      "diagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.offset",
+          "file": ".github/continuum/offset.test.mjs",
+          "line": 2,
+          "col": 53,
+          "message": "Expected values to be strictly equal:\n\n-5 !== 5",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "e4431aa0cf9e8831"
+        }
+      ]
+    },
+    "green": {
+      "passed": true,
+      "results": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "signal": null,
+          "error": null,
+          "timedOut": false,
+          "ms": 101,
+          "tests": {
+            "total": 1,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 1,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/offset.test.mjs\",[],\"offset\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "3edbb43a376a34efa4b7fae3482d66952811d4b47458256278b67cf871dadf86"
+            ],
+            "executedCaseHashes": [
+              "eca8f96a07fd36844194760ba15c7e857c11bc9f2eac8f0676887aab18436f54"
+            ]
+          },
+          "diagnostics": [],
+          "outputTail": "\n"
+        }
+      ],
+      "diagnostics": []
+    },
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.offset",
+        "file": ".github/continuum/offset.test.mjs",
+        "line": 2,
+        "col": 53,
+        "message": "Expected values to be strictly equal:\n\n-5 !== 5",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e4431aa0cf9e8831"
+      }
+    ],
+    "evidenceClass": "HOST_INTEGRATION",
+    "execution": "HOST_REVIEWED_NUMERIC"
+  }
+}

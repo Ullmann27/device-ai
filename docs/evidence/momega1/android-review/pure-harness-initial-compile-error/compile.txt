@@ -1,0 +1,9 @@
+tools/momega1-android-review/IndependentTypedBridgeChecks.kt:53:93: error: syntax error: Expecting an expression.
+        "duplicate key" to output().replace("\"version\":1","\"version\":1,\"version\":1")))) test(name) { check(!evaluate(s).prepared) }
+                                                                                            ^
+tools/momega1-android-review/IndependentTypedBridgeChecks.kt:53:93: error: syntax error: Unexpected tokens (use ';' to separate expressions on the same line).
+        "duplicate key" to output().replace("\"version\":1","\"version\":1,\"version\":1")))) test(name) { check(!evaluate(s).prepared) }
+                                                                                            ^^^^^^^^^^^^
+tools/momega1-android-review/IndependentTypedBridgeChecks.kt:53:124: error: unresolved reference 's'.
+        "duplicate key" to output().replace("\"version\":1","\"version\":1,\"version\":1")))) test(name) { check(!evaluate(s).prepared) }
+                                                                                                                           ^

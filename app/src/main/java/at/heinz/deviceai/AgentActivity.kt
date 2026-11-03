@@ -370,6 +370,7 @@ class AgentActivity : Activity() {
     // First real ChiefWorkerPool entry in the owner chat: diagnostics are read-only,
     // use a dedicated worker thread, and never touch the shared native Gemma session.
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
+    private var botRosterDialog: ContinuumBotRosterDialog? = null
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
@@ -654,6 +655,8 @@ class AgentActivity : Activity() {
         activeBootstrapGate?.cancel()
         chiefStatusPool?.shutdown()
         chiefStatusPool = null
+        botRosterDialog?.close()
+        botRosterDialog = null
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
@@ -1421,7 +1424,7 @@ class AgentActivity : Activity() {
     private fun showMoreWorkAreas() {
         val labels = arrayOf(
             "Forschung & Quellen", "Lokale KI-Modelle", "Wissensspeicher",
-            "System & Sicherheit", "Handy-Builder · Termux"
+            "System & Sicherheit", "Handy-Builder · Termux", "Team · Bots"
         )
         AlertDialog.Builder(this)
             .setTitle("Weitere Arbeitsbereiche")
@@ -1432,10 +1435,18 @@ class AgentActivity : Activity() {
                     2 -> showMemoryCenter()
                     3 -> showSystemCenter()
                     4 -> openMobileBuilder()
+                    5 -> showBotRoster()
                 }
             }
             .setNegativeButton("Schließen", null)
             .show()
+    }
+
+    private fun showBotRoster() {
+        val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
+            at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots")),
+            backlogExecutor).also { botRosterDialog = it }
+        roster.show()
     }
 
     private fun refreshConversationLayout() {
@@ -1803,6 +1814,7 @@ class AgentActivity : Activity() {
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
+            CenterAction("TEAM · BOT-ARBEITSBEREICHE") { showBotRoster() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
             CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() },
@@ -1882,9 +1894,21 @@ class AgentActivity : Activity() {
     private fun showChiefWorkerStatus() {
         val pool = chiefStatusPool ?: at.heinz.deviceai.chief.ChiefWorkerPool(1, 2) { _ ->
             at.heinz.deviceai.chief.WorkerJob {
-                at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
+                val workerStatus = at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
                     ?: "Auf diesem Gerät liegt noch kein abgeschlossener lokaler Teamleiterlauf vor. " +
                         "Externe Coding-Bots und PC-Worker werden hier nicht automatisch gestartet."
+                // Public identity metadata only. Private working notes and owner memory
+                // never enter the shared status response; profiles are not running workers.
+                val roster = runCatching {
+                    val page = at.heinz.deviceai.chief.ChiefBotProfileStore(
+                        java.io.File(filesDir, "chief-bots")).page(limit = 20)
+                    if (page.items.isEmpty()) "Bot-Profile: noch nicht eingerichtet. Öffne Team · Bots."
+                    else "Gespeicherte Bot-Profile: " + page.items.size +
+                        (if (page.nextAfterId != null) " oder mehr" else "") + "\n" +
+                        page.items.joinToString(", ") { it.displayName } +
+                        "\nRegistrierung ist kein laufender Auftrag. Ausführbare Bot-Fähigkeiten sind noch nicht freigegeben."
+                }.getOrElse { "Bot-Bestand konnte nicht sicher gelesen werden." }
+                workerStatus + "\n\n" + roster
             }
         }.also { chiefStatusPool = it }
         val ownerSession = sessionId

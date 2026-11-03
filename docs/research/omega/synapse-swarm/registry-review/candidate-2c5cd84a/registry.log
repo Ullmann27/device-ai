@@ -1,0 +1,13 @@
+PASS three-identities-and-fresh-process-restart
+PASS default-profiles-have-no-execution-or-authority
+PASS cross-bot-context-and-summary-isolation
+PASS duplicate-identity-and-unsafe-ids
+PASS stale-version-does-not-clobber-concurrent-edit
+PASS bounded-profile-count-and-context-preserve-state
+PASS unknown-schema-truncation-bitrot-trailing-data-fail-closed
+PASS symlink-root-primary-and-lock-are-rejected
+PASS concurrent-instances-no-lost-successful-creates
+PASS concurrent-processes-no-lost-successful-creates
+METRIC synthetic1000_total_ms=1514 profiles=1000 model_calls=0
+PASS one-thousand-paginated-profiles-survive-reopen
+RESULT passed=11 failed=0

@@ -20,6 +20,9 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {createWorktree,removeWorktree,runChain,validateRepairExecutor} from './repair-loop.mjs';
+import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
+import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 
 export const ATTESTATION_SCHEMA='continuum-ccc1-redgreen-attestation';
 export const RECEIPT_SCHEMA='continuum-ccc1-patch-receipt';
@@ -51,7 +54,7 @@ export function parseJunit(xml,{root=null}={}){
  let m;
  while((m=re.exec(xml))){
   if(m[0].startsWith('</testsuite')){suites.pop();continue;}
-  if(m[1]!==undefined){suites.push(attr(m[1],'name')??'');continue;}
+  if(m[1]!==undefined){if(!/\/\s*$/.test(m[1]))suites.push(attr(m[1],'name')??'');continue;}
   const a=m[2],name=attr(a,'name'),cls=attr(a,'classname'),file=attr(a,'file');
   if(!name)continue;
   const body=m[4]??'';
@@ -59,7 +62,14 @@ export function parseJunit(xml,{root=null}={}){
   const skipped=/<skipped\b/.test(body);
   const skipType=skipped?(attr(body.match(/<skipped\b([^>]*)>/)?.[1]??'','type')??'skipped'):null;
   const stem=file?path.basename(file).replace(/\.test\.[cm]?js$/,'').replace(/\.[cm]?js$/,''):cls;
-  const source=file&&root?path.relative(root,file).split(path.sep).join('/'):file??cls??'';
+  let source=file??cls??'';
+  if(file&&root){
+   const canonicalRoot=fs.realpathSync(root);let absolute=path.resolve(canonicalRoot,file);
+   // Native Node emits canonical file names; isolated /work reports are
+   // localized to lexical checkout paths. Resolve both to the same identity.
+   try{absolute=fs.realpathSync(absolute);}catch{}
+   source=path.relative(canonicalRoot,absolute).split(path.sep).join('/');
+  }
   const tuple=JSON.stringify([source,suites,name]),occurrence=(occurrences.get(tuple)??0)+1;
   occurrences.set(tuple,occurrence);
   const legacyId=`${stem}.${name}`;let id=legacyId;
@@ -204,6 +214,11 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
  if(envelope.length)return attestation(receiptBytes,'REJECTED',envelope);
  if(!receipt||!validTargets(receipt.targetTests))reasons.push('TARGET_TESTS');
  if(!isCommit(repo,baseCommit))reasons.push('COMMIT_NOT_IN_REPOSITORY');
+ // Optional legacy fields remain optional; supplied source/hash claims must agree.
+ if(Object.hasOwn(receipt,'patchSha256')&&receipt.patchSha256!==patchSha256)reasons.push('RECEIPT_PATCH_HASH_MISMATCH');
+ if(Object.hasOwn(receipt,'redSha')&&receipt.redSha!==baseCommit||
+    Object.hasOwn(receipt.red??{},'sha')&&receipt.red.sha!==baseCommit||
+    Object.hasOwn(receipt.green??{},'sha')&&receipt.green.sha!==receipt.greenSha)reasons.push('RUN_SHA_MISMATCH');
  let bytes=null;try{bytes=fs.readFileSync(patchPath);}catch{reasons.push('PATCH_MISSING');}
  if(bytes&&(!SHA256.test(patchSha256)||sha256(bytes)!==patchSha256))reasons.push('PATCH_HASH_MISMATCH');
  if(bytes){
@@ -211,10 +226,86 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
   const files=ns.status===0?ns.stdout.split('\n').filter(Boolean).map(l=>l.split('\t')[2]):null;
   if(!files||!files.length)reasons.push('PATCH_UNREADABLE');else if(files.some(isTestFile))reasons.push('FIX_MODIFIES_TESTS');
  }
+ // A supplied green SHA must name the actual post-patch tree, not merely
+ // agree with another supplied receipt field. Legacy omitted claims stay optional.
+ if(!reasons.length&&Object.hasOwn(receipt,'greenSha')){
+  if(!isCommit(repo,receipt.greenSha))reasons.push('GREEN_COMMIT_NOT_IN_REPOSITORY');
+  else{
+   let checkTree=null;
+   try{
+    checkTree=createWorktree(repo,baseCommit);
+    if(git(checkTree,['apply','--binary',patchPath]).code!==0||
+       git(checkTree,['add','--all','--force']).code!==0)reasons.push('PATCH_DOES_NOT_APPLY');
+    else if(git(checkTree,['write-tree']).out.trim()!==git(repo,['rev-parse',receipt.greenSha+'^{tree}']).out.trim())
+     reasons.push('GREEN_SOURCE_TREE_MISMATCH');
+   }finally{if(checkTree)removeWorktree(repo,checkTree);}
+  }
+ }
  if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
  const red=run(repo,baseCommit),green=run(repo,baseCommit,{patchPath});
  compareRuns(receipt,red,green,reasons);
  return attestation(receiptBytes,reasons.length?'REJECTED':'VERIFIED',reasons,red,green,patchSha256);
+}
+
+
+const CODING_VERIFICATIONS=new WeakSet();
+export const isTrustedCodingVerification=value=>CODING_VERIFICATIONS.has(value);
+function freezeEvidence(value){
+ if(value&&typeof value==='object'){for(const child of Object.values(value))freezeEvidence(child);Object.freeze(value);}
+ return value;
+}
+/** Execute the canonical fixed chain twice from immutable source, never a worker boolean.
+ * Both checkouts are fresh; candidate build state and reports are never reused.
+ * Legacy reviewed numeric repairs retain host compatibility; general execution
+ * requires the existing branded OS executor. Missing isolation never falls back.
+ */
+export function verifyCodingCandidate({repo,task,patchPath,patchSha256,proposalSha256,out,deadline,
+ executor=null,executorAbortMode=null,checkpoint=null,abortWatch=null}={}){
+ const spec=validateCodingTask(task);
+ validateRepairExecutor(executor,{abortWatch,executorAbortMode});
+ if(!SHA256.test(proposalSha256??'')||!SHA256.test(patchSha256??'')||!Number.isSafeInteger(deadline)||Date.now()>=deadline)
+  throw Error('CODING_VERIFICATION_REQUEST_INVALID');
+ if(!isCommit(repo,spec.sourceCommit))throw Error('CODING_VERIFICATION_SOURCE_INVALID');
+ const patch=fs.readFileSync(patchPath);
+ if(sha256(patch)!==patchSha256)throw Error('CODING_VERIFICATION_PATCH_HASH');
+ let redTree=null,greenTree=null;
+ try{
+  greenTree=createWorktree(repo,spec.sourceCommit);
+  if(git(greenTree,['apply','--check','--binary',patchPath]).code!==0||
+     git(greenTree,['apply','--binary',patchPath]).code!==0)throw Error('CODING_VERIFICATION_PATCH_INVALID');
+  const files=git(greenTree,['diff','--name-only',spec.sourceCommit]).out.trim().split('\n').filter(Boolean);
+  if(!files.length||files.some(f=>!spec.allowedPaths.includes(f)||isTestFile(f)))throw Error('CODING_VERIFICATION_SCOPE');
+  if(!executor&&!files.every(file=>isLocalNumericPatch({file,
+    oldText:git(repo,['cat-file','blob',spec.sourceCommit+':'+file]).out,
+    newText:fs.readFileSync(path.join(greenTree,file),'utf8')})))throw Error('CODING_ISOLATION_REQUIRED');
+  redTree=createWorktree(repo,spec.sourceCommit);
+  const redOut=path.join(out,'red'),greenOut=path.join(out,'green');
+  fs.mkdirSync(redOut,{recursive:true,mode:0o700});fs.mkdirSync(greenOut,{recursive:true,mode:0o700});
+  const options={deadline,executor,executorAbortMode,checkpoint,abortWatch};
+  const red=runChain(spec.chain,redTree,redOut,options),green=runChain(spec.chain,greenTree,greenOut,options),reasons=[];
+  const redProfiles=red.results.filter(r=>r.testProfile);
+  if(red.passed||!redProfiles.some(r=>r.exitCode!==null&&r.exitCode!==0&&r.tests?.failed>0&&r.tests?.executed>0)||
+     red.results.some(r=>r.error||r.signal||r.timedOut))reasons.push('RED_DID_NOT_FAIL_COHERENTLY');
+  if(!green.passed)reasons.push('GREEN_HAS_FAILURES');
+  for(const before of redProfiles){
+    const after=green.results.find(r=>r.profile===before.profile);
+    if(!after){reasons.push('BASELINE_PROFILE_MISSING');continue;}
+    if(before.tests?.evidenceComplete===false||after.tests?.evidenceComplete===false)reasons.push('INCOMPLETE_TEST_EVIDENCE');
+    const a=before.tests?.caseIdentities,b=after.tests?.caseIdentities;
+    if(!Array.isArray(a)||!a.length||!Array.isArray(b)||!b.length){reasons.push('TEST_IDENTITIES_MISSING');continue;}
+    compareCoverage({cases:new Map(a.map((c,i)=>[i,c]))},{cases:new Map(b.map((c,i)=>[i,c]))},reasons);
+  }
+  if(!green.results.some(r=>r.testProfile&&r.tests?.executed>0))reasons.push('GREEN_NO_EXECUTED_TESTS');
+  const result=freezeEvidence({schema:'momega1-coding-verification',version:1,
+    taskFingerprint:taskFingerprint(spec),sourceCommit:spec.sourceCommit,chain:spec.chain,patchSha256,proposalSha256,
+    verdict:reasons.length?'REJECTED':'VERIFIED',reasons:[...new Set(reasons)],red,green,
+    diagnostics:[...red.diagnostics,...green.diagnostics],evidenceClass:'HOST_INTEGRATION',
+    execution:executor?'OS_ISOLATED':'HOST_REVIEWED_NUMERIC'});
+  CODING_VERIFICATIONS.add(result);return result;
+ }finally{
+  if(redTree)removeWorktree(repo,redTree);
+  if(greenTree)removeWorktree(repo,greenTree);
+ }
 }
 
 function attestation(receiptBytes,verdict,reasons,red=null,green=null,patchSha256=null){

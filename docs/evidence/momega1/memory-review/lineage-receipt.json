@@ -1,0 +1,81 @@
+{
+  "candidate": "ed6e59101d33faa830b1ac2c0beb8fb4f0972128",
+  "baseline": "cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb",
+  "preregistered_tests_commit": "fd9250b168b16102bd10540a5a79243dd97bdea4",
+  "verdict": "ACCEPT_BOUNDED_GIT_LINEAGE_RESEARCH_POLICY",
+  "evidence_class": "CONTRACT_TEST",
+  "model_inference": "NOT_RUN",
+  "checks": [
+    {
+      "name": "lineage-baseline-red",
+      "cwd": "/workspace/momega1-memory-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-cf0f6a42 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/git-lineage.test.mjs",
+      "exit": 1,
+      "pass": 16,
+      "fail": 11,
+      "skip": 0,
+      "log": "lineage-baseline-red.tap"
+    },
+    {
+      "name": "lineage-candidate",
+      "cwd": "/workspace/momega1-memory-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-ed6e5910 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/git-lineage.test.mjs",
+      "exit": 0,
+      "pass": 27,
+      "fail": 0,
+      "skip": 0,
+      "log": "lineage-candidate.tap"
+    },
+    {
+      "name": "lineage-independent-regression",
+      "cwd": "/workspace/momega1-memory-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-ed6e5910 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/challenge.test.mjs tools/momega1-memory-review/tests/canonical-anchor.test.mjs",
+      "exit": 1,
+      "pass": 45,
+      "fail": 1,
+      "skip": 0,
+      "log": "lineage-independent-regression.tap"
+    },
+    {
+      "name": "lineage-author-focused",
+      "cwd": "/tmp/momega1-memory-candidate-ed6e5910",
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-experience-durability.test.mjs .github/continuum/ccc1-technical-recall.test.mjs",
+      "exit": 0,
+      "pass": 50,
+      "fail": 0,
+      "skip": 0,
+      "log": "lineage-author-focused.tap"
+    },
+    {
+      "name": "lineage-canonical-regression",
+      "cwd": "/tmp/momega1-memory-candidate-ed6e5910",
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-worker.test.mjs .github/continuum/ccc1-repair.test.mjs",
+      "exit": 0,
+      "pass": 52,
+      "fail": 0,
+      "skip": 0,
+      "log": "lineage-canonical-regression.tap"
+    }
+  ],
+  "sha256": {
+    "docs/evidence/momega1/memory-review/lineage-author-focused.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/memory-review/lineage-author-focused.tap": "756a5ef56b38b13af856f98d816c1cf06ea4f1f06db1b476fdff27e6e227f393",
+    "docs/evidence/momega1/memory-review/lineage-baseline-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/memory-review/lineage-baseline-red.tap": "a18e366f85a84830bba3d8bd66dcb95e33c76962b0bdf16c1aac9bb76c2d594c",
+    "docs/evidence/momega1/memory-review/lineage-candidate.diff": "ef26062cca1601b93a5198d389c8b05ba1bbb2502a7dc20844b204feb4de98d3",
+    "docs/evidence/momega1/memory-review/lineage-candidate.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/memory-review/lineage-candidate.tap": "ff820e358ea9567326993f27a34cdcf4e9cb09503240a918868b0432bd8d25ad",
+    "docs/evidence/momega1/memory-review/lineage-canonical-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/memory-review/lineage-canonical-regression.tap": "4b139271c893c50d4f9ddfd78b24dc8674e57b773aa846891caaa694eff46eb9",
+    "docs/evidence/momega1/memory-review/lineage-frozen-tests.sha256": "8a87f15c7229b35d76761085370d58bb28f4e857a9f0814f9eacc8b68c8196be",
+    "docs/evidence/momega1/memory-review/lineage-independent-regression.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/memory-review/lineage-independent-regression.tap": "234853ad0512c79e8dcc96e3a6848f45eadbe2951a277c14f3c664d9b678530a",
+    "tools/momega1-memory-review/tests/git-lineage.test.mjs": "8175aced7edde6c71dfb93e7d0bb546071adb65fdfd4b4a9fb10cc3e3223d1dc",
+    "tools/momega1-memory-review/tests/fixture-tier-compat.mjs": "1303d3c74bebd77368f4a6bccca6ad9c60ce2a0657ff4b7eb86bb996f2ff6741",
+    "candidate/.github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+    "candidate/.github/continuum/ccc1-technical-recall.mjs": "aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7",
+    "candidate/.github/continuum/coding-provider.mjs": "db89b7cb5c6ebb680c6761b62c86018421ff624d8bc82e41ec67fdcbf6dca975",
+    "candidate/.github/continuum/ccc1-redgreen-verifier.mjs": "527c3a72d6cc803e0690ec2cb0f9f47ea59201a18ce3131221a2f864d8a476eb"
+  },
+  "prior_case_C03": "Unchanged frozen baseline metadata expects exports absent; Chief merge now exports actual private brand checks. Preserved failure, not a functional recall regression or model proof."
+}

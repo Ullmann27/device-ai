@@ -1,0 +1,24 @@
+JUnit version 4.13.2
+..........E..E.E
+Time: 1.375
+There were 3 failures:
+1) shutdownReportsQueuedJobsEvenWhileAFactoryIgnoresInterruption(at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest)
+java.lang.AssertionError: discarded supervisors still need terminal reports expected:<[queued-a, queued-b]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.shutdownReportsQueuedJobsEvenWhileAFactoryIgnoresInterruption(ChiefWorkerPoolShutdownTest.kt:39)
+2) callbackCanShutdownItsOwnPoolAndTerminateQueuedJobsExactlyOnce(at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest)
+java.lang.AssertionError: shutdown cannot orphan queued completion
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.callbackCanShutdownItsOwnPoolAndTerminateQueuedJobsExactlyOnce(ChiefWorkerPoolShutdownTest.kt:77)
+3) shutdownRejectsReentrantSubmissionBeforeCallingQueuedReportConsumers(at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest)
+java.lang.AssertionError: shutdown admission must close before terminal callbacks
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.chief.ChiefWorkerPoolShutdownTest.shutdownRejectsReentrantSubmissionBeforeCallingQueuedReportConsumers(ChiefWorkerPoolShutdownTest.kt:139)
+
+FAILURES!!!
+Tests run: 13,  Failures: 3
+

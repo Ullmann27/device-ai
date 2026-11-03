@@ -1,0 +1,18 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 193B done
+#1 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [1/1] WORKDIR /work
+#3 DONE 0.0s
+
+#4 exporting to image
+#4 exporting layers 0.0s done
+#4 writing image sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c done
+#4 naming to docker.io/library/continuum-synapse-p0-scratch:20261103 done
+#4 DONE 0.0s
