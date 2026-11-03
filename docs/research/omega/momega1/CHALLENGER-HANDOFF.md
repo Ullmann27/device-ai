@@ -123,3 +123,13 @@ before reviewing pair-registry implementation. Runtime author must not inspect
 challenger blind prompt until run evidence is published. QA holdouts remain unseen.
 Status ACTUAL_MODEL_REVIEW_PENDING. Original fixed-ELF counterexample still applies;
 config runtime kind cannot mint genuine inference. FOLD7_NOT_RUN remains final.
+
+## Separate7B review authorized — pending
+
+Chief5feb1a93 records explicit owner approval of official Qwen7B Q4_K_M exact
+509287f7...894d3c /4683073536bytes, existing runtime c2c13a2a...cbf5a, at most8GiB
+for model job. Independent criteria frozen in SEVEN-B-FROZEN-CRITERIA.md before
+candidate inspection. Preserve all prior1.5B evidence. No7B inference started;
+UI rendering has priority. Host cgroup root is read-only with16GiB shared limit,
+so per-job8GiB enforcement must be examined rather than inferred from host quota.
+Original consumed reviewer task and tests are reused unchanged; QA holdouts unseen.
