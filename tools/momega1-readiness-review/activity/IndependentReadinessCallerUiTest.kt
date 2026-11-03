@@ -87,7 +87,7 @@ class IndependentReadinessCallerUiTest {
     @Test fun queuedHeardTapAfterDismissCannotConfirmClosedTest() {
         val(a,d)=open();val(tts,listener)=voice(a)
         try {
-            started(a,listener);val old=checkNotNull(hearingButton(d));d.dismiss();old.performClick()
+            started(a,listener);val old=checkNotNull(hearingButton(d));d.dismiss();shadowOf(Looper.getMainLooper()).idle();old.performClick()
             assertNull(get(a,"readinessDialog"))
             assertFalse("A dismissed guide cannot accept an old confirmation",get(a,"readinessVoiceResult").toString().contains("Von dir"))
         }finally {d.dismiss();tts.shutdown()}
