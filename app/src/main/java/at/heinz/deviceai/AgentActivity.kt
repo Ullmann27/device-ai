@@ -104,6 +104,8 @@ import at.heinz.deviceai.localmodel.LocalInferenceEvent
 import at.heinz.deviceai.localmodel.LocalModelBackend
 import at.heinz.deviceai.localmodel.LocalModelCatalog
 import at.heinz.deviceai.localmodel.LocalModelRuntime
+import at.heinz.deviceai.localmodel.LocalModelLoadAdmission
+import at.heinz.deviceai.localmodel.localModelResourceSnapshot
 import at.heinz.deviceai.localmodel.LocalModelState
 import at.heinz.deviceai.localmodel.LocalToolResponse
 import java.util.concurrent.CountDownLatch
@@ -7669,8 +7671,17 @@ class AgentActivity : Activity() {
         resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
-        scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
-        localRuntime.load(model.id, model.version) { result ->
+        // M4: no multi-GB native load without measured RAM/thermal admission.
+        // A refusal is transient and therefore does NOT disable Gemma restore.
+        LocalModelLoadAdmission.loadIfAdmitted(localRuntime, model, localModelResourceSnapshot(),
+            onRefused = { refused ->
+                localRuntimeError = refused.exceptionOrNull()?.message
+                Toast.makeText(this, LocalModelLoadAdmission.ownerMessage(localRuntimeError), Toast.LENGTH_LONG).show()
+                refreshLocalModelUi()
+            },
+            onAdmitted = {
+                scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
+            }) { result ->
             runOnUiThread {
                 clearLifecycleTimeout()
                 if (isFinishing || isDestroyed) return@runOnUiThread
