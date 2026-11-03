@@ -2,7 +2,7 @@
 # Real selected Kotlin/JVM source graph. No Android UI, SDK or model-inference claim.
 set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
-deps=${CONTINUUM_FABRIC_JVM_DEPS:?set path to official Kotlin/JUnit/android-all dependency jars}
+deps=${CONTINUUM_FABRIC_JVM_DEPS:?set path to official Kotlin/JUnit/JSON/android-all/OkHttp/Okio dependency jars}
 out=${1:?pass an external output directory}
 mkdir -p "$out"
 out=$(cd "$out" && pwd -P)
@@ -20,6 +20,39 @@ for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore 
 done
 for name in LearningSnapshot TinyNeuralNetwork NeuralDialogue StructuredKnowledge OnlineNaiveBayes ContinuumRuntimeEventJournal; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt")
+done
+# Actual transitive source dependencies of the selected graph; no substitute API classes.
+for file in \
+    app/src/main/java/at/heinz/deviceai/ToolExecutionStartLatch.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/AdaptiveIdentity.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/AgentExperienceRecall.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/AgentTaskEvidence.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklog.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklogStore.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentProtocol.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentTypes.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklog.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ExternalContentActionGuard.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/FreshKnowledgeNeed.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/JarvisIntentIntake.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/JarvisUnifiedEvidenceContract.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/LocalClockIntent.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/NetworkTurnConstraint.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/OwnerChatIntentRouter.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/PublicKnowledgeTopicRouter.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/Research.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ResearchDialogueHandoff.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ResearchNegationSignals.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/ResearchQuestionFocus.kt \
+    app/src/main/java/at/heinz/deviceai/cognitive/VerifiedSkillReview.kt \
+    app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt; do
+    sources+=("$root/$file")
 done
 tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegressionTest ReadOnlyToolPlanTest
     AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest CognitiveTurnTraceTest ConversationControlTest ReadOnlyMultiStepTest)
