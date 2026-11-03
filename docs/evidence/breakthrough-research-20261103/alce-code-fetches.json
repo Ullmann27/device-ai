@@ -6,7 +6,9 @@
     "bytes": 1094,
     "license": "MIT",
     "retrieval": "GitHub connector text response",
-    "copiedIntoProduct": false
+    "copiedIntoProduct": false,
+    "upstreamCommit": "246c476a4edfc564266b7346b6e29ef4861ae937",
+    "pinnedUrl": "https://github.com/princeton-nlp/ALCE/blob/246c476a4edfc564266b7346b6e29ef4861ae937/LICENSE"
   },
   {
     "url": "https://github.com/princeton-nlp/ALCE/blob/main/eval.py",
@@ -15,6 +17,8 @@
     "bytes": 18961,
     "license": "MIT",
     "retrieval": "GitHub connector text response",
-    "copiedIntoProduct": false
+    "copiedIntoProduct": false,
+    "upstreamCommit": "246c476a4edfc564266b7346b6e29ef4861ae937",
+    "pinnedUrl": "https://github.com/princeton-nlp/ALCE/blob/246c476a4edfc564266b7346b6e29ef4861ae937/eval.py"
   }
 ]
