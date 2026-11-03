@@ -1,3 +1,53 @@
+# MΩ-1 independent review — inference accounting and repair reporting
+
+**Verdict: ACCEPT_CALLER_ACCOUNTING_AND_REPORT_CONTRACT on `19474261c15a3503a9f041244b4b4c3eaed4636f`.** Initial caller candidate `989361a5` had a reproduced report contradiction; the root-authored correction resolves all four independent failing expectations. No reviewer production edits. This is a contract/source acceptance for the pending benchmark, not reviewer attestation of real model execution or quality. [Review PR #418](https://github.com/Ullmann27/device-ai/pull/418).
+
+| Fresh execution | Result |
+| --- | --- |
+| Frozen independent cases on initial `989361a5` | **24 PASS / 4 FAIL / 0 SKIP; exit 1** |
+| Same unchanged cases on corrected `19474261` | **28 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Uninstrumented canonical caller/rejection/loop regressions on corrected source | **19 PASS / 0 FAIL / 0 SKIP; exit 0** |
+
+Independent tests were frozen/pushed at `adeb7861e42e5a93c2e2a07c3824b718b258c2ce` before execution and before root's reporting fix; RED was preserved in `f3f5537a`. All caller test hashes were checked again after GREEN. No failed expectation or fixture needed correction.
+
+## Findings resolved and scope accepted
+
+The initial `989361a5` caller code correctly distinguished an authenticated failed inference from an executable proposal, but `repair-loop` still initialized `report.inference.verifiedModelExecution:false`, `modelInvocations:null` and `modelId:null` and never updated them. Four tests reproduced this for a valid proposal, thrown invalid response, returned response rejected by exact-span checking, and repeated observation. Such hard-coded false metadata contradicted per-attempt observations and the new top-level accounting.
+
+The correction accepts reporting evidence only from the original private runtime brand, frozen observation, true verified-model tier, exact task/source/fingerprint and previously unseen execution ID. It records returned observations before patch-span checks and thrown observations in the rejection path. Duplicates count once. JSON copies, mutable objects, false model tier and wrong task binding retain unverified defaults. This reporting change grants no patch execution, independent-verification success or technical-memory admission.
+
+Caller negative cases additionally cover source/fingerprint mismatch, unknown error code, inconsistent response-status/proposal-hash combinations, failed-response conversion into an executable proposal, exact proposal digest substitution and execution-ID replay. The isolated caller accounting cases distinguish one rejected response from one admitted proposal, and reject model SHA, runtime SHA or reviewed-pair changes terminally across attempts. A real numeric `repairSession` case independently confirms `CODING_LOCAL_MODEL_CHANGED` stops after one call. Source inspection confirms the caller also rethrows that switch after the canonical run returns.
+
+`modelExecution.verifiedCalls` counts admitted distinct observations. `acceptedProposals` counts proposals accepted at the caller's schema/digest boundary; it does **not** mean a patch passed span checks, tests or independent verification. `rejectedResponses` counts recognized observed provider failures; subsequent patch/test failures remain separate repair outcomes. A canonical failed task may honestly contain verified inference while having zero accepted proposals and no success or merge authority. No unverified response is promoted into a model-success count.
+
+## Test methodology and limits
+
+For caller-unit cases, the exact candidate caller function bodies are loaded with explicitly substituted dependencies for runtime brand, executor and canonical-job plumbing. A test-only WeakSet issues synthetic brands; no production brand is obtained. This isolates counting and cross-call logic and is **not** evidence of real CCC1 integration, actual isolation or model inference.
+
+Report cases run the actual candidate `repairSession` in real temporary Git worktrees against harmless numeric Node fixtures. Only the runtime-brand dependency is replaced by the independent test WeakSet. Actual baseline/test execution is observed, but the model observations are synthetic. The separate 19-case regression run loads original candidate modules without this loader and passes; it still does not constitute a real-model benchmark.
+
+The caller relies on the actual authenticated producer's brand for well-formed execution/model/runtime/pair identity fields. The reviewed incoming producer binds the generated execution ID, task/source/fingerprint, response status and reviewed-pair identity into its authenticated observation. Changing that producer contract requires a new review. Full-state rollback, runtime-key secrecy and pending real model/runtime admission retain their separate boundaries. No model file was accessed or inference launched by this reviewer.
+
+## Reproduce
+
+```sh
+mkdir -p /tmp/momega1-memory-caller-19474261
+git archive 19474261c15a3503a9f041244b4b4c3eaed4636f .github/continuum scripts | tar -x -C /tmp/momega1-memory-caller-19474261
+MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-caller-19474261 node --import ./tools/momega1-memory-review/tests/caller-brand-loader.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/caller-accounting.test.mjs
+```
+
+From the extracted candidate, without the synthetic loader:
+
+```sh
+node --test --test-reporter=tap .github/continuum/coding-orchestrator.test.mjs .github/continuum/coding-rejection-feedback.test.mjs .github/continuum/momega1-loop.test.mjs
+```
+
+Raw RED/GREEN logs, exits, exact commands, source/test hashes and test seam disclosure: [`caller-receipt.json`](../../../evidence/momega1/memory-review/caller-receipt.json), `caller-baseline-red.tap`, `caller-corrected-green.tap`, `caller-canonical-regression.tap`. Original and correction diffs are preserved as `caller-candidate.diff` and `caller-corrected.diff`.
+
+Chief received acceptance before starting the pending QA task. Actual approved local-model runtime observations, benchmark outcomes, paired recall benefit and complete combined-source QA remain Chief/QA-owned. Android/Fold7, release/sign/install remain NOT_RUN by this reviewer. Only new tests/evidence/handoff were edited; prior review stages below remain preserved at their exact SHAs.
+
+---
+
 # MΩ-1 independent memory review — Git-lineage and recall control
 
 **Verdict: ACCEPT_BOUNDED_GIT_LINEAGE_RESEARCH_POLICY on `ed6e59101d33faa830b1ac2c0beb8fb4f0972128`.** Also accept the explicit recall control in Chief `22136ce6c3c23682a40006d446ad9b7234ac76e0` at the independently tested provider boundary with that helper. This is not real-model inference, transfer benefit, learned capability or final combined-source acceptance. [Review PR #418](https://github.com/Ullmann27/device-ai/pull/418).
