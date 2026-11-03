@@ -202,3 +202,12 @@ test('integration malformed recall and strict remote selection fail before trans
  assert.throws(()=>provider.createCodingCandidateProvider({...f,requireLocalModelObservation:'true'}),/CODING_MODEL_OBSERVATION_OPTION_INVALID/);
  assert.throws(()=>provider.createCodingCandidateProvider({...f,requireLocalModelObservation:true,remoteTeacher:{enabled:true}}),/CODING_LOCAL_MODEL_REQUIRED/);
 });
+
+test('process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind',t=>{
+ const f=taskFixture(t);
+ const p=provider.createCodingCandidateProvider({...f,env:{...f.env,CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND:'LLAMA_CPP'}});
+ const result=p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000});
+ assert.equal(result.trace.modelObservation.evidenceClass,'HOST_INTEGRATION');
+ assert.equal(result.trace.verifiedModelExecution,false);
+ assert.equal(provider.isTrustedLocalModelObservation(result.trace.modelObservation),true);
+});
