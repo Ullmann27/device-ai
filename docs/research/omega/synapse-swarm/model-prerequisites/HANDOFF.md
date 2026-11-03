@@ -7,8 +7,8 @@ Git in `/workspace/synapse-local-model`. Quota `NOT_VISIBLE`.
 
 ## Scope and consent
 
-Existing explicit consent is recorded in `../momega1/MODEL-ADMISSION.md` (resolve
-from `docs/research/omega/`, not from this directory). It covers only the exact
+Existing explicit consent is recorded in [MODEL-ADMISSION.md](../../momega1/MODEL-ADMISSION.md).
+It covers only the exact
 official Qwen2.5-Coder1.5B Q4_K_M and locally built official llama.cpp on the host.
 Chief assigned prerequisite replication and explicitly deferred compilation until
 the combined Android build permits it. No compilation or inference yet. No frozen
@@ -39,13 +39,26 @@ GitHub Actions artifact tools were not used. Replication is required.
 
 ## Current observations and pending gates
 
-18GiB free initially. Current GCC14.2/ld2.44 executable hashes and all five
-ELF-loader/C/C++/math support library hashes match the prior independent build
-provenance. Weight download, exact shallow source fetch and CMake staging started.
-The matching toolchain makes byte equality plausible; no binary equality is claimed.
+18GiB free initially. All nine checked compiler/linker/CMake/support-library hashes
+match the prior independent build provenance. Exact CMake3.31.6 wheel SHA and its
+binary SHA match. Pinned official runtime source/tree are present and tracked-clean;
+its MIT license was read. Configuration/build have not been executed.
 
-Next: finish downloads, assert full model byte count/SHA and GGUF magic/version,
-assert clean source/tree and licenses, record exact reproduced build recipe with
-source path mapping. Wait for Chief before CMake configure/build (max2 jobs).
+The complete model downloaded successfully (HTTP200,1117320768 bytes,67.383142s),
+its full-file SHA matches the approved value, and the header is GGUF version3.
+It is available at
+`/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf`.
+License SHA: `832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e`.
+
+Adjacent JSON files contain actual model/source verification, nine toolchain hash
+comparisons and the exact staged recipe (only source-root path substitution and
+the corresponding `/llama.cpp` prefix mapping). They contain public provenance,
+not credentials. No weights, native binaries or benchmark content are committed.
+The matching toolchain makes byte equality plausible; no runtime binary exists
+here yet and no binary equality or inference is claimed.
+
+Next: wait for Chief before executing `replication-recipe.json` configure/build
+commands (max2 jobs). Compare the complete resulting binary with the pinned size
+and SHA, verify clean source again, then hand paths to the actual runtime verifier.
 Keep any mismatch blocked; never change the runtime admission hash to fit a new
 binary. No APK/device/install/release/learning claim follows from these prerequisites.
