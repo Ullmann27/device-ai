@@ -17,6 +17,7 @@ object ToolRegistry {
         ToolSpec("get_battery_info", "Akku prüfen", "Liest den aktuellen Batteriestatus.", Risk.READ_ONLY),
         ToolSpec("get_storage_info", "Speicher prüfen", "Misst Gesamtgröße und nutzbaren Speicher des App-Datenträgers, ohne Dateien zu durchsuchen.", Risk.READ_ONLY),
         ToolSpec("list_installed_apps", "Apps auflisten", "Listet installierte Apps.", Risk.READ_ONLY, optional = setOf("userOnly")),
+        ToolSpec("find_app", "App anhand Name suchen", "Sucht ausschließlich lokal nach installierten Start-Apps. Liefert Paketnamen als Vorschlag, startet nichts; Start benötigt neue Bestätigung.", Risk.READ_ONLY, required = setOf("query")),
         ToolSpec("get_app_info", "App-Info lesen", "Liest Paket- und Versionsinformationen.", Risk.READ_ONLY, required = setOf("packageOrName")),
         ToolSpec("list_processes", "Prozesse prüfen", "Liest aktive Prozesse und CPU-Nutzung.", Risk.READ_ONLY),
         ToolSpec("read_logcat", "Logcat analysieren", "Liest aktuelle Android-Logs.", Risk.READ_ONLY, optional = setOf("packageOrName", "lines")),

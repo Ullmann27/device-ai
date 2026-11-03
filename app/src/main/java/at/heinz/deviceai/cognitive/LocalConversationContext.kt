@@ -52,6 +52,18 @@ class LocalConversationContext {
         while (turns.size > 4) turns.removeFirst()
     }
 
+    /** A failed or blocked inference must not erase the owner's original session statement.
+     * It is context-only: no model response, persistent memory, fact proof or tool grant.
+     * Long originals poison the evidence view instead of losing late negations.
+     */
+    @Synchronized fun recordUnanswered(sessionId: String, request: String) {
+        require(sessionId.isNotBlank() && request.isNotBlank())
+        if (session != sessionId) { clear(); session = sessionId }
+        turns.addLast(Turn(data(request, 300), "(Keine bestätigte Modellantwort)",
+            request.takeIf { it.length <= 1000 }))
+        while (turns.size > 4) turns.removeFirst()
+    }
+
     /** Research result becomes follow-up context: one short dialogue turn plus the typed research block.
      *  Replaces any earlier research digest; never persists and never becomes an owner fact. */
     @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {

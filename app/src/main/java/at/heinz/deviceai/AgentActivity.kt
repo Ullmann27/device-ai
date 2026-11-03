@@ -234,6 +234,9 @@ class AgentActivity : Activity() {
     private var voiceEngine: TextToSpeech? = null
     private var onDeviceSpeech: AndroidOnDeviceSpeechInput? = null
     private var pendingLocalSpeechRequest: Int? = null
+    private var pendingLocalSpeechSession: String? = null
+    private var pendingLocalSpeechGeneration: Long = -1L
+    private var pendingLocalSpeechDialog: AlertDialog? = null
     private var activeLocalSpeechRequest: Int? = null
     private var speechScopeGeneration = 0L
     private var voiceReady = false
@@ -418,6 +421,8 @@ class AgentActivity : Activity() {
                 val offlineVoice=voiceEngine?.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language=="de" }
                     ?.maxByOrNull { it.quality }
                 if(offlineVoice!=null)voiceEngine?.setVoice(offlineVoice)
+                voiceEngine?.setPitch(at.heinz.deviceai.cognitive.JarvisVoiceProfile.pitch)
+                voiceEngine?.setSpeechRate(at.heinz.deviceai.cognitive.JarvisVoiceProfile.speechRate)
                 voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE &&
                     at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
@@ -5251,7 +5256,8 @@ class AgentActivity : Activity() {
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
         voiceSignal.activate(id)
-        if(voiceEngine?.speak(message.take(800), TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
+        val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
+        if (spoken == null || voiceEngine?.speak(spoken, TextToSpeech.QUEUE_FLUSH, null, id) != TextToSpeech.SUCCESS)
             stopVoiceAnimation()
     }
 
@@ -6192,8 +6198,13 @@ class AgentActivity : Activity() {
             turnTrace.event(TraceStage.MODEL_NOT_READY)
             publishCognitiveTrace(turnTrace,TraceOutcome.BLOCKED)
             setBusy(false)
+            // F08: an unavailable model must not silently discard the owner's
+            // pending correction. Session context is provisional, never a fact.
+            val retainUnanswered = sessionId == localSessionId
             addAssistantMessage(groundedRecall?.failureAnswer() ?:
-                "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.")
+                "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.",
+                preserveLocalContext = retainUnanswered)
+            if (retainUnanswered) localConversationContext.recordUnanswered(localSessionId, text)
             refreshLocalModelUi()
             return
         }
@@ -6460,14 +6471,17 @@ class AgentActivity : Activity() {
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     val visibleAnswer=if(!successful && groundedRecall!=null)groundedRecall.failureAnswer()
                         else run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." }
-                    addAssistantMessage(visibleAnswer, preserveLocalContext = successful && !ephemeralScreenRun.get())
+                    val keepOwnerSession = !ephemeralScreenRun.get() && sessionId == localSessionId
+                    addAssistantMessage(visibleAnswer, preserveLocalContext = keepOwnerSession)
                     if(successful && groundedRecall!=null)addToolActivity(
                         "LOKALE MODELLSCHLUSSFOLGERUNG · ${imported.id}@${imported.version} · " +
                             "SHA-256 ${imported.sha256.take(16)} · nicht unabhängig bestätigt")
                     if (ephemeralScreenRun.get()) lastLocalReply=null
-                    if (successful && !ephemeralScreenRun.get() && sessionId == localSessionId) {
-                        lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
-                        localConversationContext.record(localSessionId, text, run.response)
+                    if (keepOwnerSession) {
+                        if (successful) {
+                            lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
+                            localConversationContext.record(localSessionId, text, run.response)
+                        } else localConversationContext.recordUnanswered(localSessionId, text)
                     }
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
@@ -6480,8 +6494,10 @@ class AgentActivity : Activity() {
                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
                     }
                     localRuntimeError = error.message ?: "Local inference failed."
+                    val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
                     addAssistantMessage(groundedRecall?.failureAnswer() ?:
-                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}")
+                        "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
+                    if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
                     addToolActivity("ERROR · lokale Inferenz")
                 }
                 setBusy(false)
@@ -8325,7 +8341,8 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelSpeechInputScope(){
-        speechScopeGeneration++;pendingLocalSpeechRequest=null;activeLocalSpeechRequest=null
+        speechScopeGeneration++;pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
+        pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null;activeLocalSpeechRequest=null
         voiceListening=false
         onDeviceSpeech?.cancel()
     }
@@ -8346,6 +8363,9 @@ class AgentActivity : Activity() {
         when(route){
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.REQUEST_MICROPHONE -> {
                 pendingLocalSpeechRequest=requestCode
+                pendingLocalSpeechSession=scopeSession
+                pendingLocalSpeechGeneration=scopeGeneration
+                pendingLocalSpeechDialog=scopeDialog
                 requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO),LOCAL_SPEECH_PERMISSION_REQUEST)
             }
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.ON_DEVICE -> runCatching { speech.start(
@@ -8372,8 +8392,18 @@ class AgentActivity : Activity() {
     override fun onRequestPermissionsResult(requestCode:Int,permissions:Array<out String>,grantResults:IntArray){
         super.onRequestPermissionsResult(requestCode,permissions,grantResults)
         if(requestCode==LOCAL_SPEECH_PERMISSION_REQUEST){
-            val pending=pendingLocalSpeechRequest;pendingLocalSpeechRequest=null
-            if(pending!=null&&!isFinishing&&!isDestroyed&&grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
+            val pending=pendingLocalSpeechRequest
+            val originalSession=pendingLocalSpeechSession
+            val originalGeneration=pendingLocalSpeechGeneration
+            val originalDialog=pendingLocalSpeechDialog
+            pendingLocalSpeechRequest=null;pendingLocalSpeechSession=null
+            pendingLocalSpeechGeneration=-1L;pendingLocalSpeechDialog=null
+            // A delayed system permission response must not start the microphone
+            // in a different chat or a dismissed development dialog.
+            if(pending!=null && !isFinishing && !isDestroyed && foregroundLearningActive &&
+                sessionId==originalSession && speechScopeGeneration==originalGeneration &&
+                (pending!=DEV_SPEECH_REQUEST || devDialog===originalDialog && originalDialog?.isShowing==true) &&
+                grantResults.firstOrNull()==android.content.pm.PackageManager.PERMISSION_GRANTED)
                 startVoiceInput(pending)
         }
     }
