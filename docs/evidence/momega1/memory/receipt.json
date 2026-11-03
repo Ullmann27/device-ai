@@ -1,0 +1,55 @@
+{
+  "schema": "momega1-memory-evidence",
+  "version": 1,
+  "observedAt": "2026-11-03T19:18:27.968393+00:00",
+  "sourceCommit": "78d94a3959f655cd512025824ca92d78e698a5a1",
+  "baseCommit": "ca93fb4f",
+  "node": "v24.19.0",
+  "evidenceClass": "CONTRACT_TEST",
+  "independentAcceptance": "NOT_RUN",
+  "modelExecution": "NOT_RUN",
+  "integratedRuntimeVerifierInvocation": "NOT_RUN_MISSING_ALPHA_BETA_HELPER_EXPORTS",
+  "providerPromptConsumption": "NOT_RUN_IN_THIS_LANE",
+  "fold7": "NOT_RUN",
+  "neuralTraining": false,
+  "ownerFactPromotion": false,
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-experience-durability.test.mjs",
+      "stage": "RED_BASELINE",
+      "exit": 1,
+      "passed": 0,
+      "failed": 5
+    },
+    {
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-experience-durability.test.mjs .github/continuum/ccc1-technical-recall.test.mjs",
+      "stage": "FROZEN_CONTRACT_GREEN",
+      "exit": 0,
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1-worker.test.mjs .github/continuum/ccc1-repair.test.mjs",
+      "stage": "CANONICAL_REGRESSION",
+      "exit": 0,
+      "passed": 52,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "sourceSha256": {
+    ".github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+    ".github/continuum/ccc1-technical-recall.mjs": "56bb9bdb41f1aa88343395ca6b5d4d775394d9147d0e117371b0f5a05ea95ee6",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
+    ".github/continuum/ccc1-technical-recall.test.mjs": "2c16d2fcd660cb1acb60c99d194bd519adcfb142d874fcb11ee6f5cfa1f495d2"
+  },
+  "logSha256": {
+    "docs/evidence/momega1/memory/durability-green.tap": "2505ffb2acb6d62ca049900b7ce7c2d6ed3c7ed4d417fbc24498df6dc1e38a9b",
+    "docs/evidence/momega1/memory/technical-recall-contract-frozen.tap": "6c76e5c449598e19b284f83287a7c1a8bfa6bb770811725ebc7f44fbe986a69b",
+    "docs/evidence/momega1/memory/canonical-regression.tap": "deade356233227d0d4162fde09aa92a58fc2d0ca8d58ad552fdc53e5cc4e7753",
+    "docs/evidence/momega1/memory/technical-recall-contract.tap": "631eceb703b48cf9d4451a03dbcb9fd14f76f287938a9cdcae60e64a95002d6a",
+    "docs/evidence/momega1/memory/durability-red.tap": "a57f39707393099e39cfda0a110357a812f46387f04731e3f2c314e90e2b9b90"
+  },
+  "trustBoundary": "Disposable-key signed positive replay fixtures are synthetic. Production admission requires the original privately branded runtime and independent verifier objects; hashes/MACs do not prove model quality or resist an attacker controlling the trusted runtime key and complete state rollback."
+}
