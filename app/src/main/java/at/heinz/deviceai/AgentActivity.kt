@@ -367,6 +367,9 @@ class AgentActivity : Activity() {
     private val localAgentExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-local-agent").apply { isDaemon = true }
     }
+    // First real ChiefWorkerPool entry in the owner chat: diagnostics are read-only,
+    // use a dedicated worker thread, and never touch the shared native Gemma session.
+    private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
@@ -648,6 +651,8 @@ class AgentActivity : Activity() {
         activeNeuralCancellation?.set(true)
         bootstrapCancelled.set(true)
         activeBootstrapGate?.cancel()
+        chiefStatusPool?.shutdown()
+        chiefStatusPool = null
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
@@ -1867,6 +1872,41 @@ class AgentActivity : Activity() {
         }
     }
 
+    /**
+     * Real ChiefWorkerPool read-only diagnostic, reached from the same owner chat
+     * even when the shared native model is generating. Never describes an absent
+     * external Grok bot as running and never starts arbitrary code or tools.
+     */
+    private fun showChiefWorkerStatus() {
+        val pool = chiefStatusPool ?: at.heinz.deviceai.chief.ChiefWorkerPool(1, 2) { _ ->
+            at.heinz.deviceai.chief.WorkerJob {
+                at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
+                    ?: "Auf diesem Gerät liegt noch kein abgeschlossener lokaler Teamleiterlauf vor. " +
+                        "Externe Coding-Bots und PC-Worker werden hier nicht automatisch gestartet."
+            }
+        }.also { chiefStatusPool = it }
+        val ownerSession = sessionId
+        val brief = at.heinz.deviceai.chief.WorkerBrief(
+            "status-" + UUID.randomUUID().toString().replace("-", "").take(20),
+            "Lokalen Teamleiterstatus ausschließlich lesen", emptySet(), 15_000
+        )
+        val accepted = pool.submit(brief) { report ->
+            runOnUiThread {
+                if (isFinishing || isDestroyed || sessionId != ownerSession) return@runOnUiThread
+                val result = if (report.status == at.heinz.deviceai.chief.WorkerStatus.DONE)
+                    report.summary
+                else "Chief-Statusprüfung: " + report.status.name +
+                    " (kein erfolgreiches Ergebnis, keine Geräteaktion ausgelöst)."
+                addAssistantMessage("JARVIS · Mitarbeiterstatus (lokale Diagnose)\n" + result)
+                addToolActivity("CHIEF · echter WorkerReport: " + report.id + " · " + report.status.name)
+            }
+        }
+        if (!accepted) addAssistantMessage(
+            "JARVIS · Die lokale Statusprüfung ist ausgelastet. " +
+                "Der laufende Sprachmodell- oder Coding-Auftrag wurde nicht abgebrochen."
+        )
+    }
+
     /** Device and desktop share one development backlog and agent identity.
      * This Android stage performs local diagnostics and lease recovery only.
      */
@@ -2479,7 +2519,10 @@ class AgentActivity : Activity() {
             textSize = 21f
             contentDescription = "Nachricht senden"
             setOnClickListener {
-                if (busy && activeLocalRequest) cancelLocalRequest() else sendCurrentInput()
+                val chiefStatus = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
+                    ContinuumWorkerChatCommand.ChiefStatus
+                if (busy && activeLocalRequest && !chiefStatus) cancelLocalRequest()
+                else sendCurrentInput()
             }
         }
         actions.addView(sendButton,
@@ -2522,13 +2565,23 @@ class AgentActivity : Activity() {
     }
 
     private fun sendCurrentInput() {
-        if (busy) return
+        // A read-only Chief status question is allowed while Gemma is busy.
+        // It must never cancel or queue behind the current model generation.
+        val chiefStatusRequest = ContinuumWorkerChatRouter.parse(input.text.toString()) ==
+            ContinuumWorkerChatCommand.ChiefStatus
+        if (busy && !chiefStatusRequest) return
         // Barge-in: the user takes precedence over any previous spoken answer.
         voiceEngine?.stop()
         stopVoiceAnimation()
         val request = input.text.toString().trim()
         if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (chiefStatusRequest) {
+            input.text.clear()
+            addUserMessage(request)
+            showChiefWorkerStatus()
             return
         }
         // A narrow deterministic, owner-initiated app search runs through the existing ToolGate.
@@ -2601,6 +2654,7 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.MilestoneStatus -> showM2MilestoneStatus()
                 ContinuumWorkerChatCommand.MilestoneModelTest -> runLocalSmokeTest(direct = true)
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
+                ContinuumWorkerChatCommand.ChiefStatus -> showChiefWorkerStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
                 ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
@@ -6447,6 +6501,8 @@ class AgentActivity : Activity() {
         addToolActivity("Lokales Modell plant …")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
+        val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle("local-" + turnId)
+        chiefTurn.acknowledge()?.let { addToolActivity("CHIEF · " + it) }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
@@ -6704,7 +6760,15 @@ class AgentActivity : Activity() {
             },
             checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
             callIdPrefix = "local-$turnId",
-            cancellation = cancellation
+            cancellation = cancellation,
+            eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, show = { line ->
+                runOnUiThread {
+                    if (!isFinishing && !isDestroyed && sessionId == localSessionId &&
+                        chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED) {
+                        addToolActivity("CHIEF · " + line)
+                    }
+                }
+            })
         )
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
@@ -6719,6 +6783,7 @@ class AgentActivity : Activity() {
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeChatCancellation !== cancellation) return@runOnUiThread
+                chiefTurn.deliver()
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
