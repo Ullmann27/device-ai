@@ -7,6 +7,7 @@ allprojects {
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/reference-independent-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/readiness-independent-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/guide-independent-caller-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/firstwelcome-independent-v2')
   }
  }
  tasks.withType(Test).configureEach {
