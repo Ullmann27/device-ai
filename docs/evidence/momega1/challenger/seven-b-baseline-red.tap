@@ -1,0 +1,165 @@
+✖ public resource API exists without configuring a generic memory override (1.570962ms)
+✖ only exact approved7B provenance yields immutable bounded resource profile (0.163888ms)
+✖ wrong7B repository cannot raise legacy resource limits (0.094793ms)
+✖ wrong7B revision cannot raise legacy resource limits (0.110196ms)
+✖ wrong7B filename cannot raise legacy resource limits (0.105319ms)
+✖ wrong7B sizeBytes cannot raise legacy resource limits (0.17855ms)
+✖ wrong7B sha256 cannot raise legacy resource limits (0.156366ms)
+✖ wrong7B license cannot raise legacy resource limits (0.080051ms)
+✖ unknown runtime and1.5B identity cannot borrow7B profile (0.14575ms)
+✖ environment memory claims cannot register a new profile (0.28512ms)
+✔ 7B candidate cannot become reviewed through resource-profile admission (0.433724ms)
+✖ actual kernel cgroup is required; host16GiB and env claims cannot pass (0.308876ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 1
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.816012
+
+✖ failing tests:
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:8:1
+✖ public resource API exists without configuring a generic memory override (1.570962ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:8:92)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:9:1
+✖ only exact approved7B provenance yields immutable bounded resource profile (0.163888ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:9:96)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B repository cannot raise legacy resource limits (0.094793ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B revision cannot raise legacy resource limits (0.110196ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B filename cannot raise legacy resource limits (0.105319ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B sizeBytes cannot raise legacy resource limits (0.17855ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B sha256 cannot raise legacy resource limits (0.156366ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:197
+✖ wrong7B license cannot raise legacy resource limits (0.080051ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:10:276)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:11:1
+✖ unknown runtime and1.5B identity cannot borrow7B profile (0.14575ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:11:83)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:12:1
+✖ environment memory claims cannot register a new profile (0.28512ms)
+  TypeError: get is not a function
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:12:192)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tools/momega1-challenger/seven-b-resource-contract.test.mjs:14:1
+✖ actual kernel cgroup is required; host16GiB and env claims cannot pass (0.308876ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-challenger/tools/momega1-challenger/seven-b-resource-contract.test.mjs:14:96)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
