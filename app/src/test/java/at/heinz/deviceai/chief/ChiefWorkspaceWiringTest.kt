@@ -15,7 +15,7 @@ class ChiefWorkspaceWiringTest {
         worker, "t-" + "a".repeat(16), "b".repeat(40),
         "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", "c".repeat(64),
         "dddddddd-dddd-4ddd-8ddd-dddddddddddd", "node-continuum", 256, 1, 64, 1_000)
-    private fun brief(scope: WorkspaceTaskScope) = WorkerBrief(scope.workerId, "synthetic bounded host profile", emptySet(), 2_000)
+    private fun brief(scope: WorkspaceTaskScope) = WorkerBrief(ChiefWorkspaceWiring.briefId(scope), "synthetic bounded host profile", emptySet(), 2_000)
     private fun observation(scope: WorkspaceTaskScope) = WorkspaceObservation(scope,
         "continuum-" + "e".repeat(24), "f".repeat(64), true, 0)
 
@@ -54,7 +54,7 @@ class ChiefWorkspaceWiringTest {
         assertThrows(IllegalArgumentException::class.java) { scope.copy(sourceCommit = "main") }
         assertThrows(IllegalArgumentException::class.java) { scope.copy(profile = "free-shell") }
         assertThrows(IllegalArgumentException::class.java) { scope.copy(memoryMb = 99_999) }
-        assertThrows(IllegalArgumentException::class.java) { ChiefWorkspaceWiring.job(brief(scope("worker-other")), scope, object : ChiefWorkspacePort {
+        assertThrows(IllegalArgumentException::class.java) { ChiefWorkspaceWiring.job(brief(scope("worker-other").copy(jobId="eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee")), scope, object : ChiefWorkspacePort {
             override fun execute(scope: WorkspaceTaskScope) = observation(scope)
             override fun cancel(scope: WorkspaceTaskScope) = Unit
         }) }
@@ -89,7 +89,7 @@ class ChiefWorkspaceWiringTest {
         try {
             assertTrue(pool.submit(brief(scope)) { reports += it })
             assertTrue(started.await(2, TimeUnit.SECONDS))
-            assertTrue(pool.cancel(scope.workerId)); assertTrue(pool.awaitIdle(5_000))
+            assertTrue(pool.cancel(ChiefWorkspaceWiring.briefId(scope))); assertTrue(pool.awaitIdle(5_000))
             assertEquals(0L, cancelled.count)
             assertEquals(1, calls.get())
             assertEquals(WorkerStatus.CANCELLED, reports.single().status)
@@ -106,7 +106,7 @@ class ChiefWorkspaceWiringTest {
         assertTrue(mailbox.send(AgentMessage("already-full", "fixture", "chief", AgentPriority.INFO, "occupied")))
         val deliveries = ConcurrentLinkedQueue<WorkspaceDelivery>()
         val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { deliveries += it })
-        sink(WorkerReport(scope.workerId, WorkerStatus.FAILED, "failed profile", 1))
+        sink(WorkerReport(ChiefWorkspaceWiring.briefId(scope), WorkerStatus.FAILED, "failed profile", 1))
         sink(WorkerReport("other-worker", WorkerStatus.DONE, "fake scope", 1))
         assertEquals(listOf(WorkspaceDeliveryStatus.MAILBOX_REJECTED, WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH), deliveries.map { it.status })
         assertEquals(1, mailbox.pending("chief"))

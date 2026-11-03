@@ -3,7 +3,6 @@ package at.heinz.deviceai.chief
 import at.heinz.deviceai.routines.AgentMailbox
 import at.heinz.deviceai.routines.AgentMessage
 import at.heinz.deviceai.routines.AgentPriority
-import java.util.UUID
 import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -50,15 +49,17 @@ interface ChiefWorkspacePort {
     fun cancel(scope: WorkspaceTaskScope)
 }
 
-enum class WorkspaceDeliveryStatus { DELIVERED, MAILBOX_REJECTED, MAILBOX_ERROR, REPORT_SCOPE_MISMATCH }
+enum class WorkspaceDeliveryStatus { DELIVERED, MAILBOX_REJECTED, MAILBOX_ERROR, REPORT_SCOPE_MISMATCH, DUPLICATE_REPORT }
 data class WorkspaceDelivery(val taskId: String, val workerId: String, val messageId: String, val status: WorkspaceDeliveryStatus)
 
 /** Adapters for the existing pool factory and existing single Chief mailbox.
  * Durable execution/replay remains CCC1; mailbox delivery is intentionally not
  * presented as durable storage. No Activity/device transport is installed. */
 object ChiefWorkspaceWiring {
+    /** Existing pool correlation is a canonical job, never a reusable worker name. */
+    fun briefId(scope: WorkspaceTaskScope): String = "workspace-" + scope.jobId
     fun job(brief: WorkerBrief, scope: WorkspaceTaskScope, port: ChiefWorkspacePort): WorkerJob {
-        require(brief.id == scope.workerId)
+        require(brief.id == briefId(scope))
         require(scope.timeoutMillis <= brief.deadlineMillis)
         val cancelled = AtomicBoolean()
         val started = AtomicBoolean()
@@ -97,15 +98,18 @@ object ChiefWorkspaceWiring {
         onDelivery: (WorkspaceDelivery) -> Unit
     ): (WorkerReport) -> Unit {
         require(chiefId.matches(Regex("[A-Za-z0-9_-]{1,64}")))
+        val delivered = AtomicBoolean()
         return { report ->
-            val messageId = "workspace-" + UUID.randomUUID()
-            val status = if (report.id != scope.workerId) WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH else {
+            val messageId = briefId(scope)
+            val status = if (report.id != briefId(scope)) WorkspaceDeliveryStatus.REPORT_SCOPE_MISMATCH
+            else if (delivered.get()) WorkspaceDeliveryStatus.DUPLICATE_REPORT else {
                 val message = AgentMessage(messageId, "workspace:" + scope.workerId.take(54), chiefId,
                     if (report.status == WorkerStatus.DONE) AgentPriority.INFO else AgentPriority.URGENT,
                     "Workspace task=${scope.taskId} source=${scope.sourceCommit} request=${scope.requestMessageId} " +
                         "workerStatus=${report.status} " + report.summary.take(1_000))
                 try {
-                    if (mailbox.send(message)) WorkspaceDeliveryStatus.DELIVERED else WorkspaceDeliveryStatus.MAILBOX_REJECTED
+                    if (mailbox.send(message)) { delivered.set(true); WorkspaceDeliveryStatus.DELIVERED }
+                    else WorkspaceDeliveryStatus.MAILBOX_REJECTED
                 } catch (_: Exception) { WorkspaceDeliveryStatus.MAILBOX_ERROR }
             }
             onDelivery(WorkspaceDelivery(scope.taskId, scope.workerId, messageId, status))

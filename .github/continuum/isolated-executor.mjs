@@ -131,19 +131,26 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
       readOnly:true,noNewPrivileges:true,capabilities:[],memoryMb,pids,cpus,timeoutMs,runtime}),
     // This view adds correlation only. It inherits the existing capability and
     // cannot supply a command, image, resources or additional authorization.
-    forWorkspace(binding,profiles=null){
+    forWorkspace(binding,profiles=null,admission=null){
       if(!validWorkspaceBinding(binding))throw Error('ISOLATION_INVALID_WORKSPACE_BINDING');
       if(profiles!==null&&(!(profiles instanceof Set)||!profiles.size||[...profiles].some(p=>!PROFILES.has(p))))
         throw Error('ISOLATION_UNKNOWN_PROFILE');
       const allowed=profiles===null?null:new Set(profiles);
       const frozen=Object.freeze({...binding});
-      const scoped={policy:executor.policy,execute:(profile,root,out,options={})=>{
+      const scoped={policy:executor.policy,forClaim:claim=>{
+        if(typeof admission?.forClaim!=='function')throw Error('WORKSPACE_CLAIM_UNAVAILABLE');
+        return executor.forWorkspace(frozen,allowed,admission.forClaim(claim));
+      },execute:(profile,root,out,options={})=>{
         if(allowed!==null&&!allowed.has(profile))throw Error('ISOLATION_WORKSPACE_PROFILE_DENIED');
-        return executor.execute(profile,root,out,{...options,workspaceBinding:frozen});
+        const admitted=admission===null?{}:admission.before(options);
+        const result=executor.execute(profile,root,out,{...options,...admitted,workspaceBinding:frozen,
+          beforeLaunch:admission===null?null:()=>admission.before(options)});
+        if(admission!==null)admission.after();
+        return result;
       }};
       INSTANCES.add(scoped);return Object.freeze(scoped);
     },
-    execute(profile,root,out,{deadline=null,workspaceBinding=null}={}){
+    execute(profile,root,out,{deadline=null,workspaceBinding=null,beforeLaunch=null}={}){
       if(!PROFILES.has(profile))throw Error('ISOLATION_UNKNOWN_PROFILE');
       const source=ordinaryDirectory(root);
       if(workspaceBinding!==null){
@@ -153,7 +160,7 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
       }
       if(profile.startsWith('android-')&&(!tools.jdk||!tools.gradle||!tools.android||!dependencies))throw Error('ISOLATION_ANDROID_TOOLCHAIN_UNAVAILABLE');
       if(profile==='kotlin-fixture'&&(!tools.jdk||!tools.kotlin))throw Error('ISOLATION_KOTLIN_TOOLCHAIN_UNAVAILABLE');
-      const remaining=Math.min(timeoutMs,deadline===null?timeoutMs:deadline-Date.now());
+      let remaining=Math.min(timeoutMs,deadline===null?timeoutMs:deadline-Date.now());
       if(remaining<1)throw Error('ISOLATION_DEADLINE_EXHAUSTED');
       // Container output never has a writable host bind. tmpfs dies with this generation.
       const stage=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-os-sandbox-'));
@@ -181,6 +188,10 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
         '/tools/node/bin/node','/control/runner.mjs',profile);
       let result,observed=null,teardownConfirmed=false;
       try{
+        if(beforeLaunch!==null){
+          const current=beforeLaunch();remaining=Math.min(remaining,current.deadline-Date.now());
+          if(remaining<1)throw Error('WORKSPACE_DEADLINE_EXHAUSTED');
+        }
         result=docker(args,{timeout:remaining,maxBuffer:8*1024*1024});
       }finally{
         try{

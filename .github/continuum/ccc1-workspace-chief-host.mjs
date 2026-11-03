@@ -4,7 +4,7 @@ import fs from 'node:fs';import path from 'node:path';import crypto from 'node:c
 import {spawnSync} from 'node:child_process';
 import {createIsolatedExecutor,validWorkspaceEvidence} from './isolated-executor.mjs';
 import {bindCcc1Workspace} from './ccc1-workspace.mjs';
-import {workspaceFixture} from './ccc1-workspace-fixture.mjs';
+import {workspaceFixture,claimWorkspaceFixture} from './ccc1-workspace-fixture.mjs';
 const [verb,home,index]=process.argv.slice(2);
 if(!['prepare','run','cancel','active'].includes(verb)||!path.isAbsolute(home??'')||
    (verb!=='prepare'&&!['0','1'].includes(index)))throw Error('FIXED_HOST_HARNESS_ARGUMENTS');
@@ -39,7 +39,8 @@ if(verb==='prepare'){
  if(verb==='run'){
   const executor=bindCcc1Workspace({executor:createIsolatedExecutor(config),project:f.root,stateDir:f.stateDir,
    taskId:f.scope.taskId,job:f.scope.jobId,workerId:f.scope.workerId});
-  const result=executor.execute(f.scope.profile,f.root,path.join(home,'junit'));
+  const active=executor.forClaim(claimWorkspaceFixture({...f,taskId:f.scope.taskId,job:f.scope.jobId}));
+  const result=active.execute(f.scope.profile,f.root,path.join(home,'junit'));
   if(!validWorkspaceEvidence(result.isolation,f.scope.profile))throw Error('HOST_OBSERVATION_INVALID');
   const bytes=JSON.stringify(result,null,2)+'\n',file=path.join(home,'receipt-'+index+'.json');
   fs.writeFileSync(file,bytes,{flag:'wx'});

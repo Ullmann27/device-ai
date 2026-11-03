@@ -90,9 +90,9 @@ class ChiefWorkspaceWiringHostTest {
         val mailbox = AgentMailbox()
         val delivered = CountDownLatch(2)
         val events = ConcurrentLinkedQueue<WorkspaceDelivery>()
-        val pool = ChiefWorkerPool(2, 0) { brief -> ChiefWorkspaceWiring.job(brief, scopes.single { it.workerId == brief.id }, port) }
+        val pool = ChiefWorkerPool(2, 0) { brief -> ChiefWorkspaceWiring.job(brief, scopes.single { ChiefWorkspaceWiring.briefId(it) == brief.id }, port) }
         try {
-            for (scope in scopes) assertTrue(pool.submit(WorkerBrief(scope.workerId, "synthetic fixed host profile", emptySet(), 20_000),
+            for (scope in scopes) assertTrue(pool.submit(WorkerBrief(ChiefWorkspaceWiring.briefId(scope), "synthetic fixed host profile", emptySet(), 20_000),
                 ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { events += it; delivered.countDown() })))
             assertTrue(pool.awaitIdle(30_000)); assertTrue(delivered.await(3, TimeUnit.SECONDS))
             assertEquals(2, events.size); assertTrue(events.all { it.status == WorkspaceDeliveryStatus.DELIVERED })
@@ -117,7 +117,7 @@ class ChiefWorkspaceWiringHostTest {
         val delivered = CountDownLatch(1)
         val pool = ChiefWorkerPool(1, 0) { ChiefWorkspaceWiring.job(it, scope, port) }
         try {
-            assertTrue(pool.submit(WorkerBrief(scope.workerId, "synthetic cancellation probe", emptySet(), 20_000),
+            assertTrue(pool.submit(WorkerBrief(ChiefWorkspaceWiring.briefId(scope), "synthetic cancellation probe", emptySet(), 20_000),
                 ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { delivered.countDown() })))
             val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5)
             var observed = false
@@ -128,7 +128,7 @@ class ChiefWorkspaceWiringHostTest {
                 if (!observed) Thread.sleep(50)
             }
             assertTrue("real running container observed before cancellation", observed)
-            assertTrue(pool.cancel(scope.workerId)); assertTrue(pool.awaitIdle(10_000))
+            assertTrue(pool.cancel(ChiefWorkspaceWiring.briefId(scope))); assertTrue(pool.awaitIdle(10_000))
             assertTrue(delivered.await(2, TimeUnit.SECONDS))
             val message = mailbox.drain("chief").single()
             assertTrue(message.body, message.body.contains("workerStatus=CANCELLED"))

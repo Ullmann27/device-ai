@@ -1,3 +1,6 @@
+import crypto from 'node:crypto';
+import {BacklogStore} from './development-backlog.mjs';
+import {jobTaskId} from '../../scripts/continuum-mobile-coding.mjs';
 import fs from 'node:fs';import path from 'node:path';
 import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';
 import {startTask} from './ccc1-orchestrator.mjs';
@@ -19,3 +22,18 @@ export function workspaceFixture(home,worker,{testSource=null}={}){
  return {root,stateDir,taskId,journal,request,job:jobIdFor(taskId,request.messageId),workerId:worker,git};
 }
 
+
+/** Test-only use of the existing owner backlog claim. Never serialize its token. */
+export function claimWorkspaceFixture(f,{leaseMs=60000}={}){
+ const backlog=path.join(f.stateDir,'teamleader/development-backlog.json');
+ const journal=DurableTaskJournal.forTask(f.stateDir,f.taskId,runtimeKey(f.stateDir));
+ const goal=journal.entries()[0],id=jobTaskId(f.job),token=crypto.randomBytes(16).toString('hex'),at=Date.now();
+ const store=new BacklogStore(backlog,{actor:'workspace-fixture'});
+ const result=store.apply([
+  {op:'propose',actor:'workspace-fixture',at,task:{id,title:'synthetic workspace profile',kind:'REPAIR',source:'owner',subject:{base:goal.baseCommitSha,chain:goal.payload.repair.chain}}},
+  {op:'accept',actor:'workspace-fixture',at,id},
+  {op:'claim',actor:'workspace-fixture',at,id,owner:'workspace-fixture',token,leaseMs}
+ ]);
+ assert.ok(result.results.every(r=>r.ok===true));
+ return {backlog,id,token};
+}

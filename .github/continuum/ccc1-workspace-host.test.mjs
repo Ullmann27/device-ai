@@ -6,7 +6,7 @@ import {spawnSync} from 'node:child_process';
 import {Worker,isMainThread,parentPort,workerData} from 'node:worker_threads';
 import {createIsolatedExecutor,isIsolatedExecutor,validWorkspaceEvidence} from './isolated-executor.mjs';
 import {bindCcc1Workspace} from './ccc1-workspace.mjs';
-import {workspaceFixture} from './ccc1-workspace-fixture.mjs';
+import {workspaceFixture,claimWorkspaceFixture} from './ccc1-workspace-fixture.mjs';
 import {BacklogStore} from './development-backlog.mjs';
 import {jobTaskId} from '../../scripts/continuum-mobile-coding.mjs';
 
@@ -20,7 +20,8 @@ if(!isMainThread){
   const executor=createIsolatedExecutor(config);
   const scoped=bindCcc1Workspace({...workerData,project:workerData.root,executor});
   parentPort.postMessage({ready:true,branded:isIsolatedExecutor(scoped)});
-  const result=scoped.execute('node-continuum',workerData.root,workerData.out);
+  const active=scoped.forClaim(claimWorkspaceFixture(workerData));
+  const result=active.execute('node-continuum',workerData.root,workerData.out);
   parentPort.postMessage({result});
  }catch(error){parentPort.postMessage({error:error.stack});}
 }else{
@@ -72,7 +73,8 @@ if(!isMainThread){
    assert.throws(()=>bindCcc1Workspace({...input,job:fixtures[1].job}),/REQUEST_MISMATCH/);
    const scoped=bindCcc1Workspace(input);assert.equal(isIsolatedExecutor(scoped),true);
    assert.throws(()=>scoped.execute('node-backend',f.root,out),/WORKSPACE_PROFILE_DENIED/);
-   assert.throws(()=>scoped.execute('node-continuum',fixtures[1].root,out),/STALE_SOURCE/);
+   assert.throws(()=>scoped.execute('node-continuum',fixtures[1].root,out),/CLAIM_REQUIRED/);
+   const timeoutBase=bindCcc1Workspace({...input,executor:createIsolatedExecutor({...config,timeoutMs:1000})});
    const raw=fs.readFileSync(f.journal.file,'utf8');fs.appendFileSync(f.journal.file,'{"torn":');
    assert.throws(()=>bindCcc1Workspace(input),/torn last line/);fs.writeFileSync(f.journal.file,raw);
    const results=fixtures.map(f=>new Promise((resolve,reject)=>{
@@ -103,8 +105,8 @@ if(!isMainThread){
    // A hanging fixed profile is killed at the configured outer deadline and
    // receives no success receipt; inspect all named containers after cleanup.
    const beforeTimeout=docker(['ps','-a','--filter','name=continuum-','--format','{{.ID}}']).stdout.trim();
-   const short=createIsolatedExecutor({...config,timeoutMs:1000});
-   const shortScoped=bindCcc1Workspace({...input,executor:short});
+   const existingClaim=new BacklogStore(path.join(f.stateDir,'teamleader/development-backlog.json')).read().doc.tasks.find(t=>t.id===jobTaskId(f.job));
+   const shortScoped=timeoutBase.forClaim({backlog:path.join(f.stateDir,'teamleader/development-backlog.json'),id:existingClaim.id,token:existingClaim.claim.token});
    const timeoutStart=Date.now();
    assert.throws(()=>shortScoped.execute('node-continuum',f.root,out),/ISOLATION_EXECUTION_FAILED/);
    const timeoutElapsedMs=Date.now()-timeoutStart;
@@ -112,11 +114,6 @@ if(!isMainThread){
    const afterTimeout=docker(['ps','-a','--filter','name=continuum-','--format','{{.ID}}']);
    assert.equal(afterTimeout.status,0,afterTimeout.stderr);assert.equal(afterTimeout.stdout.trim(),beforeTimeout);
    // Recovery authority remains the existing canonical backlog/journal.
-   const store=new BacklogStore(path.join(f.stateDir,'teamleader/development-backlog.json'),{actor:'workspace-test'});
-   const id=jobTaskId(f.job),at=Date.now();
-   store.apply([{op:'propose',actor:'workspace-test',at,task:{id,title:'synthetic interrupted workspace',kind:'TEST',source:'cli'}},
-    {op:'accept',actor:'workspace-test',at:at+1,id},
-    {op:'claim',actor:'workspace-test',at:at+2,id,owner:'worker-alpha',token:'a'.repeat(32),leaseMs:60000}]);
    assert.throws(()=>bindCcc1Workspace(input),/RECOVERY_BLOCKED: REQUIRE_OWNER_APPROVAL/);
    fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify({schema:'momega1-workspaces-host-v1',simultaneous,
     containerIds:done.map(r=>r.isolation.observed.containerId),fixedProfile:'node-continuum',
