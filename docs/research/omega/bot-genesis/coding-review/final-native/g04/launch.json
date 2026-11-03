@@ -1,0 +1,20 @@
+{
+  "case": "g04",
+  "command": [
+    "python3",
+    "/workspace/genesis-final-native-review/tools/genesis-coding-review/observe-native-resources.py",
+    "/workspace/genesis-g04-experiment/runs/g04/native-resources.json",
+    "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "node",
+    "/workspace/genesis-final-native-review/tools/genesis-coding-review/run-g04-task.mjs",
+    "/workspace/genesis-g04-source",
+    "1595389274acb840c4ab544fa699c9eb2a04bd53",
+    "/workspace/genesis-g04-experiment/fixtures/g04",
+    "/workspace/genesis-g04-experiment/runs/g04/evidence"
+  ],
+  "launcherSha256": "00effd270570b652703f959970462c03db8f6cdb2877ef97c415b9fd4cd38512",
+  "runtimeEnvironmentSha256": "68a86ab17da65ae7b1b2cad326b35aacdab6f83eb76ca99b66a5b3e7ecec8a47",
+  "fixture": "/workspace/genesis-g04-experiment/fixtures/g04",
+  "maxReservedCalls": 1,
+  "externalAnswer": false
+}

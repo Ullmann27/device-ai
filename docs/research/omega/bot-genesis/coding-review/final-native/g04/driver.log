@@ -1,0 +1,3 @@
+Verified immutable g04 fixture; model execution is not part of this verification.
+{"status":"OBSERVED_RESULT","resultStatus":"ABSTAINED","technicalExperienceStatus":"NOT_RECORDED","technicalRecallCount":0,"solved":"REQUIRES_INDEPENDENT_EVIDENCE_REVIEW","modelCallsReserved":1,"sourceIdentityStable":true,"fixture":"g04","out":"/workspace/genesis-g04-experiment/runs/g04/evidence"}
+{"resourceReport": "/workspace/genesis-g04-experiment/runs/g04/native-resources.json", "exit": 0, "nativeProcesses": 1, "samples": 111}

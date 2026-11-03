@@ -1,0 +1,116 @@
+{
+  "schema": "genesis-known-u03-independent-audit-v1",
+  "source": "1595389274acb840c4ab544fa699c9eb2a04bd53",
+  "auditorSha256": "6222e715704a14d84d25c9020097502d6d31f8211b583e9e176048c1bd262a07",
+  "taskFingerprint": "d654600e32812708fd6e65a991abc93eb8ce483107560f51b1779ebbcfa36fff",
+  "reservedCalls": 1,
+  "admittedGenuineCalls": 1,
+  "confirmedRepair": true,
+  "journalVerified": true,
+  "journalEntries": 6,
+  "taskState": "COMPLETED",
+  "receipts": [
+    {
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "verdict": "CONFIRMED",
+      "reasons": [
+        "a failing node chain was repaired; the patch passed in the repair worktree and in an independent second worktree"
+      ]
+    }
+  ],
+  "observedRoles": [
+    "bot-forge",
+    "bot-lint"
+  ],
+  "isolationObservations": [
+    {
+      "workerId": "bot-forge",
+      "workspaceId": "continuum-9e8ac65cc493445ab7bfbfda",
+      "containerId": "7df38e9591ce2a7015c1bc9a323c5f9623c3103e996eea9c963fb17163d15de6",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "221b43d1a6548bb05fa7b13edcdb7d41ee54ac12abd10b92769866418ceab702",
+      "teardownConfirmed": true
+    },
+    {
+      "workerId": "bot-forge",
+      "workspaceId": "continuum-f36bdbd9a9c43c286cd9455c",
+      "containerId": "6cb53e5c6935e29c6f765483365e698a10dbe47efdcf21860ace2030ecff2f64",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+      "teardownConfirmed": true
+    },
+    {
+      "workerId": "bot-lint",
+      "workspaceId": "continuum-d1339280ca6c0b74a99d6e28",
+      "containerId": "8c863ae5addd5e4b1c4f8051715e6a0049430d5f5773dde679f9082f4200a2e2",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "221b43d1a6548bb05fa7b13edcdb7d41ee54ac12abd10b92769866418ceab702",
+      "teardownConfirmed": true
+    },
+    {
+      "workerId": "bot-lint",
+      "workspaceId": "continuum-8ac9e818745d0b21a1f02a1f",
+      "containerId": "59fec2ee6ffb0e0761fc92c764f83586a266628eb92950c014be8253d5aa978f",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+      "teardownConfirmed": true
+    },
+    {
+      "workerId": "bot-forge",
+      "workspaceId": "continuum-f36bdbd9a9c43c286cd9455c",
+      "containerId": "6cb53e5c6935e29c6f765483365e698a10dbe47efdcf21860ace2030ecff2f64",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+      "teardownConfirmed": true
+    },
+    {
+      "workerId": "bot-lint",
+      "workspaceId": "continuum-4d821659edca71fc503a8a5a",
+      "containerId": "203f42aca66ecdb14a31ee72117ee986801765939766d364763c5d56ef6862ed",
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+      "teardownConfirmed": true
+    }
+  ],
+  "echo": {
+    "approvedForMerge": false,
+    "assignmentSha256": "d306bcfc2eba945acdb080dd5214c51e4052583431f2cb3082f3e1ca8f3622af",
+    "canonicalTaskId": "t-101718f341e89f76",
+    "deviceVerified": false,
+    "executionEnvironment": "HOST",
+    "independentVerifier": false,
+    "interpretation": "PATCH_PENDING_OWNER_REVIEW",
+    "journalHead": "06ff716465df9ffc5a275722a98d6327f7f5b541111d4188ead0206b28ee0242",
+    "modelCalls": 0,
+    "modelInferenceAttestedByReport": false,
+    "operation": "DETERMINISTIC_CANONICAL_REPORT",
+    "persistentWorkspaceId": "workspace-bot-echo",
+    "receipts": [
+      {
+        "artifactMatched": true,
+        "attempt": 1,
+        "execution": "EXECUTED",
+        "jobId": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+        "receiptMessageId": "2a4299c3-6ce4-4443-b3b0-2faabdb3d239",
+        "receiptSha256": "93ddd4dfafc8e1adab5e95ee212a63629200b901fa78b14f4098e0ebb514159d",
+        "requestHash": "05025fdfdd4cb1bf385e6e12ea038a40b15dd7c91f4ed3c98bda1f337a0f610a",
+        "requestMessageId": "bbf3539e-67c9-48d2-b06e-615b8b4115f1",
+        "verdict": "CONFIRMED"
+      }
+    ],
+    "reporterId": "bot-echo",
+    "schema": "continuum-bot-result-report",
+    "sourceCommit": "ad610792fab3960df1a4c8946a895eb833dc7e76",
+    "status": "COMPLETED",
+    "taskFingerprint": "d654600e32812708fd6e65a991abc93eb8ce483107560f51b1779ebbcfa36fff",
+    "taskId": "genesis-known-u03",
+    "version": 1,
+    "artifactSha256": "68cced472acce12e1c28169dde515c303bc2d6cc5b562e65cd187326f3bc5640"
+  },
+  "restartRecallCount": 1,
+  "registeredOnlyRoles": [
+    "bot-atlas",
+    "bot-mnemos"
+  ],
+  "sourceAndTestsUnchanged": true
+}
