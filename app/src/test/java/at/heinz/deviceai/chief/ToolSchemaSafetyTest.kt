@@ -64,6 +64,7 @@ class ToolSchemaSafetyTest {
             clock = { 1L })
         agent.run("Lies die Seite")
         assertEquals(0, deletes)
-        assertEquals(2, approvals) // web_read (CONFIRM) and delete_file (DESTRUCTIVE) both asked the owner
+        // Integration #372 S4: after external content a delete without owner intent is refused before any approval prompt.
+        assertEquals(1, approvals) // only web_read asked the owner; injected delete_file never reached the prompt
     }
 }

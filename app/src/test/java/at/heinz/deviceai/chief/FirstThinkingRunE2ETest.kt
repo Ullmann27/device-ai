@@ -46,7 +46,8 @@ import java.util.Collections
  */
 class FirstThinkingRunE2ETest {
 
-    private val goal = "Ziel: Schaffe Platz im Download-Ordner, ohne etwas zu loeschen."
+    // Integration #372 S4: the owner goal must carry the move intent itself ("verschiebe"), otherwise S4 refuses move_file after observations.
+    private val goal = "Ziel: Schaffe Platz im Download-Ordner und verschiebe grosse Dateien ins Archiv, ohne etwas zu loeschen."
     private val day = 86_400_000L
     private val now = 500 * day
 
@@ -238,7 +239,8 @@ class FirstThinkingRunE2ETest {
             MemoryRecord("lehre-2", MemoryType.PROCEDURAL, lesson, ProvenanceType.INFERENCE, 0.9, now, now,
                 validationState = ValidationState.VERIFIED)
         }
-        assertEquals(StatementModality.HYPOTHETICAL, OwnerStatementModality.classify(lesson))
+        // Integration: #371 @6ec1d5b5 classifies "Vielleicht …" as UNCERTAIN; the invariant is "never a confirmed fact".
+        assertTrue(OwnerStatementModality.classify(lesson) in setOf(StatementModality.HYPOTHETICAL, StatementModality.UNCERTAIN))
         assertFalse(OwnerStatementModality.mayBecomeConfirmedFact(OwnerStatementModality.classify(lesson)))
     }
 
