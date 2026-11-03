@@ -127,3 +127,12 @@ candidate. Provider authenticates it, preserves private-branded observation on
 error.modelObservation/error.trace and durable trace, then throws the typed model
 response error. Inference failure is distinct from unavailable model. Config-only
 ELF fixtures remain HOST_INTEGRATION/verifiedModelExecution=false.
+
+Compatibility freeze8425b119e1b6485527de285dd3375f233b27fdf5:137/137 exact-source
+Node runtime/coding/GGUF checks PASS, zero skip. Real approved official Qwen and
+CPU/static binary load/decode observed; own valid123-token synthetic proposal
+returned via default CLI within60s, before final provenance-field freeze. Native
+counter RED, pinned trailer and JSON/schema/template repair evidence archived.
+Independent second build reported byte-identical c2c13a2a...cbf5a. Await untouched
+challenger blind rerun and explicit evidence hash before candidate registry can
+advance. See LOCAL-MODEL-RUNTIME-ADMISSION.md; no current genuine true flag yet.
