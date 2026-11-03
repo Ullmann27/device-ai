@@ -6380,7 +6380,11 @@ class AgentActivity : Activity() {
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
-        val agentTask = resolvedQuestion
+        // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
+        // becomes one self-contained task from the owner's own earlier turns of this
+        // session. Owner-write/tool authorization still uses only 'text'.
+        val agentTask = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(
+            text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))
         val ephemeralScreenRun=java.util.concurrent.atomic.AtomicBoolean(false)
         val screenGrant=java.util.concurrent.atomic.AtomicReference<Long?>(null)
         var submittedToolObservationCount = 0
