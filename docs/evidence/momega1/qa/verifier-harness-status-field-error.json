@@ -1,0 +1,168 @@
+{
+  "evidenceClass": "HOST_INTEGRATION",
+  "verifier": "/workspace/momega1-qa/.github/continuum/ccc1-redgreen-verifier.mjs",
+  "verifierSha256": "c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c",
+  "harnessSha256": "7cc574759bcedbd8eec59bbaf041c1ff6fb1e709afd2b04d8cb10741df800c79",
+  "node": "v24.19.0",
+  "results": [
+    {
+      "id": "positive-control",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "positive-control",
+      "mode": "patch",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "stdout-does-not-create-tests",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "stdout-does-not-create-tests",
+      "mode": "patch",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "stdout-fake-target-rejected",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "stdout-fake-target-rejected",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "new-nontarget-failure",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "new-nontarget-failure",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "nonzero-process-after-pass",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "nonzero-process-after-pass",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "removed-case",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "removed-case",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "delimiter-nesting-positive",
+      "mode": "commit",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "delimiter-nesting-positive",
+      "mode": "patch",
+      "expected": "VERIFIED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "empty-targets",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "empty-targets",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "contradictory-nested-sha-red",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "contradictory-nested-sha-red",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "contradictory-nested-sha-green",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "contradictory-nested-sha-green",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "claim-installation",
+      "mode": "commit",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    },
+    {
+      "id": "claim-installation",
+      "mode": "patch",
+      "expected": "REJECTED",
+      "callerPreserved": true,
+      "pass": false
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "pass": 0,
+    "fail": 22
+  }
+}
