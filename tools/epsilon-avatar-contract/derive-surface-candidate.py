@@ -88,12 +88,16 @@ if pattern == "topology":
         draw.line((ua * (size - 1), va * (size - 1), ub * (size - 1), vb * (size - 1)), fill=255, width=1)
     core = np.asarray(mask, dtype=np.float32) / 255
     glow = np.asarray(mask.filter(ImageFilter.GaussianBlur(1.1)), dtype=np.float32) / 255
-    thread = np.clip(core * .72 + glow * .38, 0, 1)
+    density = np.asarray(mask.filter(ImageFilter.GaussianBlur(5)), dtype=np.float32) / 255
+    # Anatomically dense eyelid/lip triangles must not become an opaque white mask.
+    # Normalize local coverage, retaining thin edge positions and shaded facial volume.
+    local_gain = np.minimum(1, .11 / (density + .015))
+    thread = np.clip((core * .72 + glow * .38) * local_gain, 0, .65)
 mix = np.clip((u - .35) / .3, 0, 1)
 cyan = np.array([62, 200, 255], dtype=np.float32)
 violet = np.array([146, 92, 255], dtype=np.float32)
 color = violet[None, None, :] * (1 - mix[..., None]) + cyan[None, None, :] * mix[..., None]
-background = np.array([5, 13, 35] if pattern == "grid" else [10, 13, 38], dtype=np.float32)
+background = np.array([5, 13, 35] if pattern == "grid" else [20, 16, 46], dtype=np.float32)
 rgba = np.zeros((size, size, 4), dtype=np.uint8)
 rgba[..., :3] = np.clip(background + (color - background) * thread[..., None], 0, 255).astype(np.uint8)
 base_alpha = 110 if pattern == "grid" else 170
@@ -111,10 +115,11 @@ doc["textures"].append({"source": image_index, "sampler": sampler_index})
 materials = {material["name"]: material for material in doc["materials"]}
 skin = materials["DeepIndigoSkin"]
 skin["pbrMetallicRoughness"].update(baseColorFactor=[1, 1, 1, 1],
-    baseColorTexture={"index": texture_index}, metallicFactor=.15, roughnessFactor=.48)
-skin["emissiveFactor"] = [.65, .65, .65]
+    baseColorTexture={"index": texture_index}, metallicFactor=.15 if pattern == "grid" else .05,
+    roughnessFactor=.48 if pattern == "grid" else .62)
+skin["emissiveFactor"] = [.65, .65, .65] if pattern == "grid" else [.18, .18, .18]
 skin["emissiveTexture"] = {"index": texture_index}
-skin["alphaMode"] = "BLEND"
+skin["alphaMode"] = "BLEND" if pattern == "grid" else "OPAQUE"
 for name in ["CyanThreads", "VioletThreads"]:
     materials[name]["pbrMetallicRoughness"]["baseColorFactor"][3] = .22
     materials[name]["emissiveFactor"] = [value * .22 for value in materials[name]["emissiveFactor"]]
@@ -137,7 +142,8 @@ record = {"status": "EXPERIMENT_NOT_ACCEPTED", "sourceSha256": source_sha,
     "unchangedOriginalBinaryPrefixSha256": hashlib.sha256(original_binary).hexdigest(),
     "positionsNormalsIndicesSkinningMorphBytesUnchanged": True,
     "addedUvVertices": position["count"], "addedEmbeddedProceduralTexturePixels": [size, size],
-    "addedTexturePngBytes": len(texture_bytes), "surfacePattern": pattern, "device": "FOLD7_NOT_RUN",
+    "addedTexturePngBytes": len(texture_bytes), "surfacePattern": pattern,
+    "frontSurfaceAlphaMode": skin["alphaMode"], "device": "FOLD7_NOT_RUN",
     "limitations": ["Transparency sorting and mobile GPU cost require actual runtime testing",
         "Not accepted appearance", "Not a new humanoid mesh"]}
 output.with_suffix(".json").write_text(json.dumps(record, indent=2) + "\n")
