@@ -7,7 +7,7 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {createHmac} from 'node:crypto';
-import {fixture,canonical,writeRecords,url,root} from '../../../momega1-memory-review/tests/fixture.mjs';
+import {fixture,canonical,writeRecords,url} from '../../momega1-memory-review/tests/fixture.mjs';
 
 const rt=new WeakSet(),vf=new WeakSet();
 const key='jarvis-review-fixture-'+process.pid;
