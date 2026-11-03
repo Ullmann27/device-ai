@@ -1,0 +1,4 @@
+f2613e17e4183175ef5cdc17c8665dd018bd2da47559239e41245dec44b8728c  /workspace/genesis-brain-review/app/src/main/java/at/heinz/deviceai/localmodel/LocalConversationBoundary.kt
+0e68949eafab1a0582f536b6fff763ae8ea41b6cd525899c0715f547469a8439  /workspace/genesis-brain-review/app/src/main/java/at/heinz/deviceai/localmodel/LocalInferenceDelivery.kt
+600aca431204460ce7dbce015f39bd3337627ed09fbcb9385eba782a39677c0b  /workspace/genesis-brain-review/app/src/test/java/at/heinz/deviceai/localmodel/LocalConversationBoundaryTest.kt
+47e0fca9f6942f7352af9021704bb822ee5d7d0f505a557d455a1da892dcfa4f  /workspace/genesis-brain-review/app/src/test/java/at/heinz/deviceai/localmodel/LocalInferenceDeliveryTest.kt
