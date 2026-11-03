@@ -100,7 +100,7 @@ class ChiefWorkerPoolTest {
             assertTrue(pool.cancel("interrupt-resistant"))
             assertTrue("job stopped cooperatively instead of only cancelling its Future", stopped.await(2, TimeUnit.SECONDS))
             assertTrue(pool.awaitIdle(2_000))
-            assertTrue("cooperative cancel was invoked", stops.get() >= 1)
+            assertEquals("cooperative cancel is delivered exactly once", 1, stops.get())
             assertEquals(WorkerStatus.CANCELLED, reports.single().status)
         } finally {
             pool.shutdown()
@@ -129,7 +129,7 @@ class ChiefWorkerPoolTest {
             assertTrue(pool.submit(brief("timeout", deadline = 50)) { reports += it })
             assertTrue(pool.awaitIdle(2_000))
             assertTrue(stopped.await(2, TimeUnit.SECONDS))
-            assertTrue("timeout must reach actual job cancellation", stops.get() >= 1)
+            assertEquals("timeout cancellation is delivered exactly once", 1, stops.get())
             assertEquals(WorkerStatus.TIMED_OUT, reports.single().status)
         } finally {
             pool.shutdown()
