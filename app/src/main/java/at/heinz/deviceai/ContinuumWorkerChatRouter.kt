@@ -3,6 +3,7 @@ package at.heinz.deviceai
 /** Local chat command decoder. No network, shell, Git or device tools involved. */
 sealed class ContinuumWorkerChatCommand {
     data object Status : ContinuumWorkerChatCommand()
+    data object ChiefStatus : ContinuumWorkerChatCommand()
     data object Help : ContinuumWorkerChatCommand()
     data object RepairHelp : ContinuumWorkerChatCommand()
     data object MilestoneStatus : ContinuumWorkerChatCommand()
@@ -18,13 +19,13 @@ sealed class ContinuumWorkerChatCommand {
 
 object ContinuumWorkerChatRouter {
     private val draftPattern = Regex(
-        """^(?:worker|baumeister|coding[ -]?agent|programmierer)\s*:\s*(.{1,400})$""",
+        """^(?:worker|baumeister|coding[ -]?agent|programmierer|jarvis)\s*:\s*(.{1,400})$""",
         setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
     )
     // Voice recognition frequently omits the colon, so accept only an
     // explicitly addressed, development-specific imperative.
     private val spokenDraftPattern = Regex(
-        """^(?:worker|baumeister|coding[ -]?agent|programmierer)[, ]+""" +
+        """^(?:worker|baumeister|coding[ -]?agent|programmierer|jarvis)[, ]+""" +
             """(?:bitte\s+)?((?:erstelle|baue|entwickle|programmiere)\s+.{1,390})$""",
         RegexOption.IGNORE_CASE
     )
@@ -49,6 +50,8 @@ object ContinuumWorkerChatRouter {
             else null
         }
         val normalized = text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')
+        val chiefStatus = Regex("""^jarvis[, ]+(?:teamstatus|mitarbeiterstatus|botstatus|wie\s+weit\s+(?:sind\s+(?:deine|die)\s+(?:mitarbeiter|bots)|ist\s+der\s+programmierer)|was\s+machen\s+(?:deine|die)\s+(?:mitarbeiter|bots))$""")
+        if (chiefStatus.matches(normalized)) return ContinuumWorkerChatCommand.ChiefStatus
         if (repairHelpPattern.matches(normalized)) return ContinuumWorkerChatCommand.RepairHelp
         return when (normalized) {
             "meilenstein status", "continuum meilenstein", "meilenstein zwei",
