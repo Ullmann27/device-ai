@@ -40,6 +40,7 @@ class IndependentBotSelectionUiTest {
     private val pending = ConcurrentLinkedQueue<Runnable>()
     private val selected = mutableListOf<ChiefBotProfile>()
     private val statusIds = mutableListOf<String>()
+    private val invalidations = mutableListOf<Pair<String, Int>>()
     private val io = Executor { pending.add(it) }
 
     @Before fun setup() {
@@ -49,7 +50,8 @@ class IndependentBotSelectionUiTest {
         store = ChiefBotProfileStore(root)
         roster = ContinuumBotRosterDialog(activity, store, io,
             onSelect = { selected += it },
-            runtimeStatus = { profile -> statusIds += profile.agentId; "REGISTRIERT · Keine Inferenz gestartet" })
+            runtimeStatus = { profile -> statusIds += profile.agentId; "REGISTRIERT · Keine Inferenz gestartet" },
+            onContextChanging = { id -> invalidations += id to pending.size })
     }
     @After fun cleanup() {
         roster.close()
@@ -137,5 +139,35 @@ class IndependentBotSelectionUiTest {
         assertEquals(id, selected.single().agentId)
         assertEquals("Detailname bleibt editierbar", selected.single().displayName)
         assertEquals(store.get(id)?.profileVersion, selected.single().profileVersion)
+    }
+
+    @Test fun contextInvalidationHappensBeforeSelectedIdentityWriteIsQueuedOrCompleted() {
+        open()
+        views().filterIsInstance<Button>().first { it.text == "Profil und Arbeitsbereich öffnen" }.performClick(); drain()
+        val id = store.page(limit = 100).items.first().agentId
+        views().filterIsInstance<EditText>().single().setText("Neue private Arbeitsnotiz")
+        button("Arbeitsnotiz speichern").performClick(); main()
+        assertEquals(listOf(id to 0), invalidations)
+        assertEquals(1, pending.size)
+        assertNull(store.workingContext(id, id))
+        drain()
+        assertEquals("Neue private Arbeitsnotiz", store.workingContext(id, id))
+        assertEquals(1, invalidations.size)
+        assertTrue(selected.isEmpty())
+    }
+
+    @Test fun staleContextEditCannotInvalidateOrWriteAfterAnotherWindowOpens() {
+        open()
+        views().filterIsInstance<Button>().first { it.text == "Profil und Arbeitsbereich öffnen" }.performClick(); drain()
+        val id = store.page(limit = 100).items.first().agentId
+        views().filterIsInstance<EditText>().single().setText("Veraltete Eingabe")
+        val staleSave = button("Arbeitsnotiz speichern")
+        open(); val replacement = current()
+        staleSave.performClick(); main()
+        assertTrue(invalidations.isEmpty())
+        assertTrue(pending.isEmpty())
+        assertNull(store.workingContext(id, id))
+        assertSame(replacement, current())
+        assertTrue(replacement.isShowing)
     }
 }
