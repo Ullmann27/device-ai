@@ -8,6 +8,7 @@ import {randomBytes} from 'node:crypto';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const POLICY=fileURLToPath(new URL('./continuum-local-model-outer-seccomp.json',import.meta.url));
 export const LOCAL_MODEL_JOB_IMAGE='sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1';
+export const LOCAL_MODEL_JOB_NODE_ARGS=Object.freeze(['--max-old-space-size=256','--max-semi-space-size=16']);
 const MODEL='509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c';
 const RUNTIME='c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a';
 export function requiresPinnedModelJob(env){return env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256===MODEL&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256===RUNTIME&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='LLAMA_CPP';}
@@ -31,7 +32,7 @@ export function runPinnedModelJob({cli,command,options}){
   mount(file);
  }
  for(const key of ['CONTINUUM_LOCAL_BRAIN_MODEL','CONTINUUM_LOCAL_BRAIN_RUNTIME','CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT','CONTINUUM_LOCAL_BRAIN_MODEL_SHA256','CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL','CONTINUUM_LOCAL_BRAIN_MODEL_PATH','CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST','CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH','CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256','CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND'])args.push('--env',key+'='+options.env[key]);
- args.push(LOCAL_MODEL_JOB_IMAGE,'/source/'+path.relative(ROOT,cli),command);
+ args.push(LOCAL_MODEL_JOB_IMAGE,...LOCAL_MODEL_JOB_NODE_ARGS,'/source/'+path.relative(ROOT,cli),command);
  const config=fs.mkdtempSync('/tmp/continuum-model-docker-');fs.chmodSync(config,0o700);
  fs.writeFileSync(path.join(config,'config.json'),'{}',{mode:0o600});
  const fixed=['--host=unix:///var/run/docker.sock','--config='+config];

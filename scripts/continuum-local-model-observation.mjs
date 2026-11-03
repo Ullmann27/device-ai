@@ -6,7 +6,7 @@ import {createHash,createHmac} from 'node:crypto';
 import {readPinnedGgufManifest} from './continuum-gguf-preflight.mjs';
 import {admitGgufFile} from './continuum-gguf.mjs';
 import {buildCodingRequest,parseCodingResponse} from './continuum-local-brain.mjs';
-import {getReviewedLocalModelPair,getLocalModelResourceProfile,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
+import {getReviewedLocalModelPair,getLocalModelResourceProfile,isPinnedLocalModelResourceProfile,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
 import {canonical} from '../.github/continuum/development-backlog.mjs';
 import {requireCodingModelPreflight} from './continuum-m2-model-preflight.mjs';
 const BWRAP='/usr/bin/bwrap',PRLIMIT='/usr/bin/prlimit';
@@ -131,6 +131,9 @@ export function assertLocalModelJobMemoryLimit(profile){
 export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,signal,resourceProfile=null,spawnImpl=spawn,bwrap=BWRAP}={}){
  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>300000)fail('INVALID_CODING_BOUNDS');
  if(signal?.aborted)fail('CODING_CANCELLED');
+ if(resourceProfile!==null&&!isPinnedLocalModelResourceProfile(resourceProfile))fail('INVALID_LOCAL_RESOURCE_PROFILE');
+ const nativeCpuThreads=resourceProfile?.nativeCpuThreads??1;
+ const nativeCpuSeconds=nativeCpuThreads*Math.ceil(timeoutMs/1000);
  assertLocalModelJobMemoryLimit(resourceProfile);
  let filterDir,filterFd;
  try{
@@ -145,7 +148,7 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
   let refusal=null;
   const cancel=()=>{refusal='CODING_CANCELLED';kill();};
   const finish=(error,value)=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve(value);};
-  try{child=spawnImpl(PRLIMIT,['--as='+(resourceProfile?.nativeAddressSpaceBytes??4294967296),'--cpu='+Math.ceil(timeoutMs/1000),'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7,noRepack:resourceProfile?.disableWeightRepacking===true})],{shell:false,detached:true,
+  try{child=spawnImpl(PRLIMIT,['--as='+(resourceProfile?.nativeAddressSpaceBytes??4294967296),'--cpu='+nativeCpuSeconds,'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7,noRepack:resourceProfile?.disableWeightRepacking===true})],{shell:false,detached:true,
    cwd:'/',env:{},stdio:['ignore','pipe','pipe',fds[0],fds[1],promptFd,filterFd,...(jsonSchemaFd===undefined?[]:[jsonSchemaFd])]});}
   catch{finish(Error('BLOCKED_LOCAL_ISOLATION_UNAVAILABLE'));return;}
   timer=setTimeout(()=>{refusal='CODING_TIMEOUT';kill();},timeoutMs);
@@ -156,12 +159,16 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
   child.once('close',(code,term)=>{
    // A successful runtime must terminate normally and emit actual decoding stats.
    if(refusal){finish(Error(refusal));return;}
-   if(code!==0||term){finish(Error('LOCAL_RUNTIME_PROCESS_FAILED'));return;}
+   if(code!==0||term){
+    const failure=term==='SIGXCPU'?'LOCAL_RUNTIME_SIGNAL_SIGXCPU':term==='SIGKILL'?'LOCAL_RUNTIME_SIGNAL_SIGKILL':
+     code===137?'LOCAL_RUNTIME_EXIT_137':code===152?'LOCAL_RUNTIME_EXIT_152':'LOCAL_RUNTIME_PROCESS_FAILED';
+    finish(Error(failure));return;
+   }
    const stderr=Buffer.concat(err).toString('utf8');
    const outputTokens=parseNativeGenerationCount(stderr);
    if(outputTokens===null){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
    let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(out));}catch{finish(Error('LOCAL_RUNTIME_OUTPUT_INVALID'));return;}
-   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,
+   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,nativeCpuThreads,nativeCpuSeconds,nativeWallTimeoutMs:timeoutMs,
     evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'HOST_INTEGRATION':'CONTRACT_TEST'});
   });
  });
@@ -238,7 +245,7 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
    outputSha256:hash(execution.text),proposalSha256:parsed?hash(canonical(parsed.proposal)):null,
    responseStatus:responseError?'INVALID_MODEL_RESPONSE':'PROPOSAL',
    outputTokens:execution.outputTokens,pid:execution.pid,exitCode:execution.exitCode,
-   isolation:'BWRAP_UNSHARE_ALL',...(jobMemoryLimit?{jobMemoryLimit,resourceProfileId:resourceProfile.id,nativeAddressSpaceBytes:resourceProfile.nativeAddressSpaceBytes,disableWeightRepacking:resourceProfile.disableWeightRepacking}:{}),elapsedMs:Date.now()-started};
+   isolation:'BWRAP_UNSHARE_ALL',...(jobMemoryLimit?{jobMemoryLimit,resourceProfileId:resourceProfile.id,nativeAddressSpaceBytes:resourceProfile.nativeAddressSpaceBytes,disableWeightRepacking:resourceProfile.disableWeightRepacking,nativeCpuThreads:execution.nativeCpuThreads,nativeCpuSeconds:execution.nativeCpuSeconds,nativeWallTimeoutMs:execution.nativeWallTimeoutMs}:{}),elapsedMs:Date.now()-started};
   const observationMac=createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
   if(responseError){
    const errorCode=String(responseError.message).split(':')[0];

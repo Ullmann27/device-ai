@@ -28,7 +28,9 @@ const sevenB=Object.freeze({...tuple,
 });
 export const LOCAL_MODEL_RUNTIME_CANDIDATES=Object.freeze([tuple,sevenB]);
 const sevenBProfile=Object.freeze({id:sevenB.id,maxFileBytes:4683073536,
- nativeAddressSpaceBytes:7516192768,maxJobMemoryBytes:8589934592,requiresJobMemoryLimit:true,disableWeightRepacking:true});
+ nativeAddressSpaceBytes:7516192768,maxJobMemoryBytes:8589934592,requiresJobMemoryLimit:true,disableWeightRepacking:true,nativeCpuThreads:2});
+/** Runtime policy authority is the original frozen tuple, never a caller clone. */
+export function isPinnedLocalModelResourceProfile(profile){return profile===sevenBProfile;}
 function matchesProvenance(pin,p){return !!p&&pin.modelRepository===p.repository&&
  pin.modelRevision===p.revision&&pin.modelFilename===p.filename&&pin.modelLicense===p.license&&
  pin.modelBytes===p.sizeBytes&&pin.modelSha256===p.sha256;}

@@ -218,7 +218,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
     reviewedBuildEvidenceSha256:verified?pair.buildEvidenceSha256:null,independentReviewEvidenceSha256:verified?pair.independentReviewEvidenceSha256:null};
    const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
    if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
-    (requiresPinnedModelJob(childEnv)&&(observation.resourceProfileId!=='momega1-qwen25coder7b-q4km-llamacpp-6cb3e672-linux-x64'||observation.nativeAddressSpaceBytes!==7516192768||observation.disableWeightRepacking!==true||observation.jobMemoryLimit?.enforcement!=='CGROUP_V2'||observation.jobMemoryLimit?.maxJobMemoryBytes!==7516192768||observation.jobMemoryLimit?.maxJobSwapBytes!==0))||
+    (requiresPinnedModelJob(childEnv)&&(observation.resourceProfileId!=='momega1-qwen25coder7b-q4km-llamacpp-6cb3e672-linux-x64'||observation.nativeAddressSpaceBytes!==7516192768||observation.disableWeightRepacking!==true||observation.nativeCpuThreads!==2||!Number.isSafeInteger(observation.nativeWallTimeoutMs)||observation.nativeWallTimeoutMs<1||observation.nativeWallTimeoutMs>timeoutMs||observation.nativeCpuSeconds!==2*Math.ceil(observation.nativeWallTimeoutMs/1000)||observation.jobMemoryLimit?.enforcement!=='CGROUP_V2'||observation.jobMemoryLimit?.maxJobMemoryBytes!==7516192768||observation.jobMemoryLimit?.maxJobSwapBytes!==0))||
     observation.evidenceClass!==(verified?'LOCAL_MODEL_HOST':'HOST_INTEGRATION')||observation.isolation!=='BWRAP_UNSHARE_ALL'||
     Object.entries(expected).some(([key,value])=>observation[key]!==value)||wire.verifiedModelExecution!==verified||
     !/^[a-f0-9]{64}$/.test(observation.outputSha256??'')||observation.exitCode!==0||
@@ -255,8 +255,9 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
     /^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
      .exec(String(response.stderr??'').trim());
    const localBlock=!remoteTeacher&&/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (BLOCKED_LOCAL_[A-Z_]+)$/.exec(String(response.stderr??'').trim());
+   const localProcess=!remoteTeacher&&/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (LOCAL_RUNTIME_(?:SIGNAL_SIGXCPU|SIGNAL_SIGKILL|EXIT_137|EXIT_152|PROCESS_FAILED))$/.exec(String(response.stderr??'').trim());
    const localTimeout=!remoteTeacher&&String(response.stderr??'').trim()==='LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_TIMEOUT';
-   const failureKind=response.error?.code==='ETIMEDOUT'||localTimeout?'TIMEOUT':
+   const failureKind=response.error?.code==='ETIMEDOUT'||localTimeout?'TIMEOUT':localProcess?localProcess[1]:
     response.error?'PROCESS_ERROR':response.signal?'SIGNALLED':
     rejected?.[1]==='CODING_NOOP_PATCH'?'NOOP_PATCH':
     rejected?.[1]==='CODING_RESPONSE_INVALID'?'INVALID_MODEL_RESPONSE':'CHILD_EXIT_NONZERO';
@@ -267,6 +268,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    }
    if(localBlock)throw rejectedModelOutput(localBlock[1]);
    if(localTimeout)throw rejectedModelOutput('CODING_MODEL_TIMEOUT');
+   if(localProcess)throw rejectedModelOutput(localProcess[1]);
    if(rejected)throw rejectedModelOutput(rejected[1],rejected[2]);
    throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
   }
