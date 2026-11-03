@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import * as provider from '../.github/continuum/coding-provider.mjs';
+import {assertCodingModelObservationBinding} from '../.github/continuum/coding-orchestrator.mjs';
 
 test('normal caller cannot certify a serialized runtime observation',()=>{
  assert.equal(typeof provider.isTrustedLocalModelObservation,'function');
@@ -210,4 +211,5 @@ test('process evidence classification cannot claim LOCAL_MODEL_HOST from a confi
  assert.equal(result.trace.modelObservation.evidenceClass,'HOST_INTEGRATION');
  assert.equal(result.trace.verifiedModelExecution,false);
  assert.equal(provider.isTrustedLocalModelObservation(result.trace.modelObservation),true);
+ assert.throws(()=>assertCodingModelObservationBinding({task:f.task,raw:result}),/BLOCKED_LOCAL_MODEL_UNAVAILABLE/);
 });
