@@ -36,12 +36,24 @@ object BootstrapBrain {
     private val storageSaveImperative = Regex(
         """(?iu)^\s*(?:bitte\s+)?speicher\s+(?:(?:mir|dir)\s+)?(?:das|dies|diese|dieses|diesen|die|den|dem|meine|unsere|folgende|angaben|daten|zahlen|text|texte|bild|bilder|datei|dateien|notiz|notizen|nicht|nichts)(?![\p{L}\p{N}_])"""
     )
+    // Contrasting clauses have independent intent: "nicht Web, sondern prüfe Speicher"
+    // may still inspect local storage, while "prüfe nicht den Speicher" never does.
+    private val storageNegation = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|kein\p{L}*)(?![\p{L}\p{N}_])"""
+    )
+    private val storageClauseBoundary = Regex("""(?iu)\bsondern\b|[.;!?]""")
     private fun isStorageReadRequest(input: String): Boolean {
-        val text = input.trim().trimEnd(' ', '.', '!', '?')
-        if (text in setOf("speicher", "speicherstatus", "speicherplatz", "speicherkapazität")) return true
-        return storageNoun.containsMatchIn(text) &&
-            !storageSaveImperative.containsMatchIn(text) &&
-            storageReadCue.containsMatchIn(text)
+        val clauses = input.trim().split(storageClauseBoundary)
+        val bare = setOf("speicher", "speicherstatus", "speicherplatz", "speicherkapazität")
+        return clauses.any { untrimmed ->
+            val text = untrimmed.trim()
+            when {
+                text.isBlank() || storageSaveImperative.containsMatchIn(text) -> false
+                storageNegation.containsMatchIn(text) -> false
+                text in bare -> true
+                else -> storageNoun.containsMatchIn(text) && storageReadCue.containsMatchIn(text)
+            }
+        }
     }
 
     fun decide(utterance: String, facts: List<String>,
