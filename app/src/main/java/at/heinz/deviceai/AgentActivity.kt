@@ -6440,7 +6440,8 @@ class AgentActivity : Activity() {
                         onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))
                 val requiresPriorDialogue = at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy
                     .requiresPreviousOwnerTurn(text)
-                if (requiresPriorDialogue && (localConversationContext.sessionEvidence(localSessionId).isNullOrEmpty() ||
+                val priorOwnerEvidence = localConversationContext.sessionEvidence(localSessionId)
+                if (requiresPriorDialogue && (priorOwnerEvidence.isNullOrEmpty() ||
                         conversationContext.isBlank())) {
                     error("LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE")
                 }
@@ -6509,11 +6510,16 @@ class AgentActivity : Activity() {
                     else "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
                 if (requiresPriorDialogue) {
-                    check(prompt.contains(conversationContext)) { "LOCAL_FOLLOWUP_HISTORY_DROPPED" }
-                    val preservedTurns = localConversationContext.sessionEvidence(localSessionId)?.size ?: 0
+                    val receipt = at.heinz.deviceai.cognitive.LocalContextIntegrityProbe.inspect(
+                        requiresHistory = true,
+                        previousOwnerTurns = priorOwnerEvidence,
+                        safeRenderedHistory = conversationContext,
+                        finalPrompt = prompt
+                    )
+                    check(receipt.requiredHistoryAdmitted) { "LOCAL_FOLLOWUP_HISTORY_DROPPED" }
                     runOnUiThread {
                         if (sessionId == localSessionId && activeChatCancellation === cancellation)
-                            addToolActivity("KONTEXT · $preservedTurns frühere Nutzerangaben im lokalen Prompt enthalten · keine dauerhafte Speicherung")
+                            addToolActivity(receipt.diagnosticLine())
                     }
                 }
                 // A screen frame is atomic. Never send a clipped negation/source block.
