@@ -281,3 +281,36 @@ test('D08: MCP rejects mismatched evidence content hash instead of forwarding it
     await client.ready();rejected(await client.call('get_evidence',{taskId:'review-task',evidenceId:'result'}),'invalid evidence hash');
   },{reader});
 });
+
+test('A08/P09: server restart drops old sessions while the owner credential remains usable',async()=>{
+  await withServer(async({client,server,reader,tokenFile,token})=>{
+    await client.ready();const oldSession=client.session;await server.close();
+    const next=await startCodingMcpServer({reader,tokenFile,host:'127.0.0.1',port:0});
+    try{
+      const resumed=new WireClient(next.url,token);resumed.session=oldSession;
+      assert.equal((await resumed.call('get_status')).status,404);
+      resumed.session=null;await resumed.ready();validRpc(await resumed.call('get_status'));
+    }finally{await next.close();}
+  });
+});
+
+test('B05/P09: idle sessions expire and exhausted per-session read budget does not reset by new request IDs',async()=>{
+  await withServer(async({client})=>{
+    await client.ready();await new Promise(resolve=>setTimeout(resolve,80));
+    assert.equal((await client.call('get_status')).status,404);
+  },{limits:{sessionIdleMs:50}});
+  await withServer(async({client,reader})=>{
+    await client.ready();validRpc(await client.call('get_status'));
+    assert.equal((await client.call('get_status')).status,429);assert.equal(reader.calls.length,1);
+  },{limits:{maxCallsPerSession:1}});
+});
+
+test('P09: unknown GET sessions return404 before the unsupported-SSE405 response',async()=>{
+  await withServer(async({client,server})=>{
+    await client.ready();
+    const valid=await send(server.url,{method:'GET',headers:client.headers({'Accept':'text/event-stream'})});assert.equal(valid.status,405);
+    const unknown=await send(server.url,{method:'GET',headers:client.headers({'Accept':'text/event-stream','MCP-Session-Id':'no-such-session'})});assert.equal(unknown.status,404);
+    await client.raw(undefined,{method:'DELETE'});
+    const expired=await send(server.url,{method:'GET',headers:client.headers({'Accept':'text/event-stream'})});assert.equal(expired.status,404);
+  });
+});

@@ -1,5 +1,9 @@
 # Independent MCP review checkpoint
 
+Final combined candidate results supersede the open gates below; see
+[`RESULTS.md`](RESULTS.md): `c900dfa8`, 32/32 independent groups PASS.
+This file preserves the earlier checkpoint and its failure accounting.
+
 Frozen requirements: `cc3da6e167ec88a97a7466f53300111dd4af7e0e`.
 Draft PR: https://github.com/Ullmann27/device-ai/pull/460.
 
