@@ -5,7 +5,7 @@ const invoke=(cmd,args,opts={})=>{const p=spawnSync(cmd,args,{encoding:'utf8',..
 const g=(repo,...args)=>invoke('git',['-C',repo,...args]);
 const put=(repo,file,data)=>{const f=path.join(repo,file);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,data);};
 const commit=(repo,msg)=>{g(repo,'add','-A');g(repo,'-c','user.name=QA','-c','user.email=qa@example.invalid','commit','-qm',msg);return g(repo,'rev-parse','HEAD');};
-const snapshots=[['baseline','64ec06a73f50cae9ee49035c840710d87777d50f'],['candidate','799dd763e5a20de29d78fdd1dd26f7a5a5f0b0b0']];
+const snapshots=[['baseline','64ec06a73f50cae9ee49035c840710d87777d50f'],['candidate',process.env.QA_AUTONOMY_CANDIDATE??'799dd763e5a20de29d78fdd1dd26f7a5a5f0b0b0']];
 const modules=[];for(const [label,rev]of snapshots){const code=invoke('git',['show',rev+':.github/continuum/ccc1-redgreen-verifier.mjs']);const f=path.resolve(outPath,label+'.mjs');fs.writeFileSync(f,code+'\n');modules.push({label,rev,hash:sha(fs.readFileSync(f)),api:await import(pathToFileURL(f))});}
 const frozen=JSON.parse(fs.readFileSync(fixtureFile));const results=[];
 for(const c of frozen.cases){

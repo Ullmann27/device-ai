@@ -5,7 +5,7 @@ root=pathlib.Path(__file__).resolve().parents[4]
 lane,base,candidate,fixture,outdir=sys.argv[1:]
 out=pathlib.Path(outdir);out.mkdir(parents=True,exist_ok=False)
 here=pathlib.Path(__file__).resolve().parent
-sources={'cognition':['cognitive/OwnerStatementTimeline.kt'], 'memory':['learning/ContinuumLearningExperience.kt','learning/Lex3LearningExperienceStore.kt','learning/PersonalLearningTransfer.kt'], 'research':['cognitive/ResearchEngine.kt']}[lane]
+sources={'cognition':['cognitive/OwnerStatementTimeline.kt'], 'memory':['learning/ContinuumLearningExperience.kt','learning/Lex3LearningExperienceStore.kt','learning/PersonalLearningTransfer.kt'], 'research':['cognitive/ResearchEngine.kt','cognitive/BoundedResearchTextSanitizer.kt']}[lane]
 runner={'cognition':'CognitionHoldout','memory':'MemoryHoldout','research':'ResearchHoldout'}[lane]
 cp=':'.join(map(str,sorted(pathlib.Path('/workspace/continuum-build-env/jvm-deps').glob('*.jar'))))
 dep='/workspace/continuum-quality/app/build/tmp/kotlin-classes/debug'
