@@ -5,12 +5,20 @@ Baseline `527d43f93f6b1837bd8da38cfefcfc84a84fd464`. Acceptance is frozen in
 tools, synthetic fixture tests and evidence. Production service and MCP code are
 owned by other sessions.
 
-Current: criteria frozen; candidate/service execution `NOT_RUN`.
+Current: actual host lifecycle/admission accepted in the scope documented by
+`RESULT.md`; no production implementation changes were made here.
 
-Next: share the frozen contract, inspect the submitted API/source, implement a
-transparent executable adapter and run real-process start/stop/queue/crash cases.
-Record all failures without changing the frozen expectations. Then independently
-check the exact final integrated source and report remaining gaps to Chief.
+Executed: baseline scheduler 22/22; fd51d648 CLI lifecycle 8/8; a588d361 full
+lifecycle plus active faults 10/10; 0c54a7bc active/global admission 4/4. Two setup
+errors from a concurrently dirty builder checkout are preserved explicitly as
+BLOCKED. Native inference was impossible in fault fixtures because only a
+private exact-hash copy of the runtime executable was removed before submission.
+
+Next: integrate this review branch and run both test files on the exact final
+clean source (`12` cases), serialized against any other per-UID service. Use the
+reduced real profile bridge classpath. Then retain separate genuine local model,
+independent verifier/report/restart, full combined QA and ARM64/Fold7 evidence.
+No successful local coding result may be inferred from these lifecycle tests.
 
 No new runtime/model downloads, cloud calls, installation, signing, main merge,
 release or real-owner-data mutation are permitted by this reviewer task.
