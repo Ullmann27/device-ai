@@ -24,9 +24,25 @@ object BootstrapBrain {
     private val unsafe = Regex(
         "(?i)\\b(passwort|password|kennwort|pin|iban|bic|kreditkarte|api[ _-]?key|secret|token|tanf?nummer|zugangscode)\\b"
     )
-    // Match actual storage nouns, not verbs such as "speichere" or "speichern".
-    // A conversation request that forbids saving is never a storage probe.
-    private val storageNoun = Regex("""(?iu)\b(?:speicher|speicherplatz|speicherstatus|speicherkapazität)\b""")
+    // Read-only storage inspection is distinct from a request to SAVE data.
+    // Unicode lookarounds behave consistently on JVM and Android, unlike
+    // implementation-dependent word boundaries after accented characters.
+    private val storageNoun = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:speicher|speicherplatz|speicherstatus|speicherkapazität)(?![\p{L}\p{N}_])"""
+    )
+    private val storageReadCue = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|anzeigen|kontrolliere|wie viel|wieviel|frei|freien|freier|verfügbar|status|kapazität|auslastung)(?![\p{L}\p{N}_])"""
+    )
+    private val storageSaveImperative = Regex(
+        """(?iu)^\s*(?:bitte\s+)?speicher\s+(?:(?:mir|dir)\s+)?(?:das|dies|diese|dieses|diesen|die|den|dem|meine|unsere|folgende|angaben|daten|zahlen|text|texte|bild|bilder|datei|dateien|notiz|notizen|nicht|nichts)(?![\p{L}\p{N}_])"""
+    )
+    private fun isStorageReadRequest(input: String): Boolean {
+        val text = input.trim().trimEnd(' ', '.', '!', '?')
+        if (text in setOf("speicher", "speicherstatus", "speicherplatz", "speicherkapazität")) return true
+        return storageNoun.containsMatchIn(text) &&
+            !storageSaveImperative.containsMatchIn(text) &&
+            storageReadCue.containsMatchIn(text)
+    }
 
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
@@ -135,7 +151,7 @@ object BootstrapBrain {
             mapOf("path" to "/sdcard/Download"))
         if ("akku" in low || "batterie" in low || "ladezustand" in low)
             return tool("get_battery_info")
-        if (storageNoun.containsMatchIn(low) || "große dateien" in low) return tool("get_storage_info")
+        if (isStorageReadRequest(low) || "große dateien" in low) return tool("get_storage_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
         // An explicit offline instruction is neither a web-search request nor
