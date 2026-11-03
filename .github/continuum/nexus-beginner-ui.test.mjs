@@ -57,11 +57,13 @@ test('Nexus keeps real hologram and voice entry tied to Android speech and syste
 
 test('fold, small display and enlarged-font behaviour are expressed by a pure policy', () => {
   assert.match(home, /resources\.configuration\.screenWidthDp/);
-  assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/);
+  assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 2f\)/);
   assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\)/);
-  assert.match(layout, /fun phone\(widthDp: Float\): Layout/);
-  // still a pure function of the window: width, and since the upright-Fold fill also the height
-  assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f\): Layout/);
+  assert.match(layout, /fun phone\(widthDp: Float, fontScale: Float = 1f\): Layout/);
+  // Pure window/font policy: no Android state or side effects in the geometry.
+  assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f\): Layout/);
+  assert.match(layout, /require\(fontScale\.isFinite\(\) && fontScale > 0f\)/);
+  assert.doesNotMatch(layout, /import android\.|Runtime\.getRuntime|ProcessBuilder|FileOutputStream/);
   assert.match(spec, /usableWidthDp >= 320/);
   assert.match(spec, /fontScale\.isFinite\(\)/);
   assert.match(spec, /fontScale <= 1\.25f/);

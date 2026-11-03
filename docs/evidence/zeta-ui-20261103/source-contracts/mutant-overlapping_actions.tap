@@ -1,0 +1,528 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 1.815923
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 0.951532
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.287353
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.422225
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 0.343997
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 1.352746
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 2.15328
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.511159
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.310056
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.634535
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 11 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.27925
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.283647
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.298439
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.457458
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.410618
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.547343
+  type: 'test'
+  ...
+# Subtest: living hologram schedules subsequent visible frames and stops callbacks on detach
+ok 17 - living hologram schedules subsequent visible frames and stops callbacks on detach
+  ---
+  duration_ms: 1.806999
+  type: 'test'
+  ...
+# Subtest: orbital rings use visible phase movement, not the old near-static factor
+ok 18 - orbital rings use visible phase movement, not the old near-static factor
+  ---
+  duration_ms: 0.329556
+  type: 'test'
+  ...
+# Subtest: header and six live action tiles fit their boxes while legacy orbital controls stay available
+ok 19 - header and six live action tiles fit their boxes while legacy orbital controls stay available
+  ---
+  duration_ms: 1.131192
+  type: 'test'
+  ...
+# Subtest: battery, app CPU, RAM and GPU measurements remain honestly distinguished
+ok 20 - battery, app CPU, RAM and GPU measurements remain honestly distinguished
+  ---
+  duration_ms: 0.209755
+  type: 'test'
+  ...
+# Subtest: CCC1 integrated in same owner-app source without changing private app identity
+ok 21 - CCC1 integrated in same owner-app source without changing private app identity
+  ---
+  duration_ms: 0.221754
+  type: 'test'
+  ...
+# Subtest: existing on-device learning state and protected independent training are never reset by launch
+ok 22 - existing on-device learning state and protected independent training are never reset by launch
+  ---
+  duration_ms: 0.196696
+  type: 'test'
+  ...
+# Subtest: portrait selection keeps actual Fold window threshold and separate landscape rail
+ok 23 - portrait selection keeps actual Fold window threshold and separate landscape rail
+  ---
+  duration_ms: 1.236591
+  type: 'test'
+  ...
+# Subtest: seven live cards reflow in shared columns and remain inside scrolling content
+ok 24 - seven live cards reflow in shared columns and remain inside scrolling content
+  ---
+  duration_ms: 0.394123
+  type: 'test'
+  ...
+# Subtest: six controls stay below the shared hero and all real card data remains connected
+not ok 25 - six controls stay below the shared hero and all real card data remains connected
+  ---
+  duration_ms: 1.585506
+  type: 'test'
+  location: '/workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /val actionTop = heroTop \+ heroHeight \+ gap/. Input:
+    
+    'package at.heinz.deviceai.ui\n' +
+      '\n' +
+      '/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\n' +
+      'object ContinuumHomeLayout {\n' +
+      '    enum class Slot {\n' +
+      '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n' +
+      '        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n' +
+      '        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n' +
+      '    }\n' +
+      '\n' +
+      '    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n' +
+      '        val width: Float get() = right - left\n' +
+      '        val height: Float get() = bottom - top\n' +
+      '        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n' +
+      '    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n' +
+      '        operator fun get(slot: Slot): Box? = boxes[slot]\n' +
+      '    }\n' +
+      '\n' +
+      '    const val PHONE_REFERENCE_WIDTH = 412f\n' +
+      '    const val WIDE_REFERENCE_WIDTH = 840f\n' +
+      '    const val PHONE_NAV_HEIGHT = 74f\n' +
+      '\n' +
+      '    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n' +
+      '    fun railWidthDp(windowWidthDp: Float): Float {\n' +
+      '        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n' +
+      '        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n' +
+      '    }\n' +
+      '\n' +
+      '    /**\n' +
+      '     * The Activity may keep the cover-display configuration while its real window has\n' +
+      '     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n' +
+      '     * change; height-only changes (IME / system bars) must never reset the screen.\n' +
+      '     */\n' +
+      '    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n' +
+      '        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n' +
+      '            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n' +
+      '        ) return false\n' +
+      '        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n' +
+      '    }\n' +
+      '\n' +
+      '    /**\n' +
+      '     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n' +
+      '     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n' +
+      '     */\n' +
+      '    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n' +
+      '\n' +
+      '    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n' +
+      '    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n' +
+      '        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n' +
+      '\n' +
+      '    const val WIDE_REFERENCE_HEIGHT = 649f\n' +
+      '\n' +
+      '    @JvmOverloads\n' +
+      '    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n' +
+      '\n' +
+      '    @JvmOverloads\n' +
+      '    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n' +
+      '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+      '\n' +
+      '    @JvmOverloads\n' +
+      '    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n' +
+      '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+      '\n' +
+      '    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n' +
+      '        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n' +
+      '        require(fontScale.isFinite() && fontScale > 0f)\n' +
+      '        val font = fontScale.coerceIn(.85f, 2f)\n' +
+      '        val gap = 12f\n' +
+      '        val portrait = wide && height > 0f && isPortraitFold(width, height)\n' +
+      '        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n' +
+      '        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n' +
+      '        val left = rail + 12f\n' +
+      '        val right = width - 12f\n' +
+      '        val room = right - left\n' +
+      '        val boxes = linkedMapOf<Slot, Box>()\n' +
+      '        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n' +
+      '        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n' +
+      '        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n' +
+      '        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n' +
+      '        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n' +
+      '            val x = right - 160f + i * 56f\n' +
+      '            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n' +
+      '            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n' +
+      '        }\n' +
+      '        val heroTop = headerBottom + gap\n' +
+      '        val heroHeight = when {\n' +
+      '            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n' +
+      '            else -> (room * .58f).coerceIn(390f, 470f)\n' +
+      '        }\n' +
+      '        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n' +
+      '        val sidebar = wide && room >= 1000f && font <= 1.1f\n' +
+      '        val sideWidth = 292f\n' +
+      '        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n' +
+      '        if (sidebar) {\n' +
+      '            val middle = heroTop + (heroHeight - gap) / 2f\n' +
+      '            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n' +
+      '            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n' +
+      '        }\n' +
+      '        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n' +
+      '            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n' +
+      '        val actionColumns = when {\n' +
+      '            room < 420f && font > 1.3f -> 1\n' +
+      '            room >= 1000f && font <= 1.3f -> 6\n' +
+      '            room >= 530f && font <= 1.6f -> 3\n' +
+      '            else -> 2\n' +
+      '        }\n' +
+      '        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n' +
+      '        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n' +
+      '        val actionTop = heroTop\n' +
+      '        actions.forEachIndexed { index, slot ->\n' +
+      '            val x = left + (index % actionColumns) * (actionWidth + gap)\n' +
+      '            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n' +
+      '            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n' +
+      '        }\n' +
+      '        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n' +
+      '        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n' +
+      '        val columns = when {\n' +
+      '            room >= 1000f && font <= 1.3f -> 3\n' +
+      '            room >= 530f && room >= 420f * font -> 2\n' +
+      '            else -> 1\n' +
+      '        }\n' +
+      '        val cardWidth = (room - (columns - 1) * gap) / columns\n' +
+      '        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n' +
+      '        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n' +
+      '        cards.forEachIndexed { index, slot ->\n' +
+      '            val x = left + (index % columns) * (cardWidth + gap)\n' +
+      '            val y = cardTop + (index / columns) * (cardHeight + gap)\n' +
+      '            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n' +
+      '        }\n' +
+      '        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n' +
+      '        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n' +
+      '        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n' +
+      '        return Layout(wide, width, 1f, contentHeight, boxes)\n' +
+      '    }\n' +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai.ui
+    
+    /** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */
+    object ContinuumHomeLayout {
+        enum class Slot {
+            BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,
+            LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,
+            MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL
+        }
+    
+        data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
+            val width: Float get() = right - left
+            val height: Float get() = bottom - top
+            fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)
+        }
+    
+        /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */
+        data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {
+            operator fun get(slot: Slot): Box? = boxes[slot]
+        }
+    
+        const val PHONE_REFERENCE_WIDTH = 412f
+        const val WIDE_REFERENCE_WIDTH = 840f
+        const val PHONE_NAV_HEIGHT = 74f
+    
+        /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */
+        fun railWidthDp(windowWidthDp: Float): Float {
+            require(windowWidthDp.isFinite() && windowWidthDp > 0f)
+            return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH
+        }
+    
+        /**
+         * The Activity may keep the cover-display configuration while its real window has
+         * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH
+         * change; height-only changes (IME / system bars) must never reset the screen.
+         */
+        fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {
+            if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||
+                configuredWidthDp <= 0f || measuredWidthDp <= 0f
+            ) return false
+            return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f
+        }
+    
+        /**
+         * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display
+         * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
+         */
+        fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f
+    
+        /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */
+        fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =
+            isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f
+    
+        const val WIDE_REFERENCE_HEIGHT = 649f
+    
+        @JvmOverloads
+        fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)
+    
+        @JvmOverloads
+        fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =
+            adaptive(widthDp, heightDp, true, fontScale)
+    
+        @JvmOverloads
+        fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =
+            adaptive(widthDp, heightDp, true, fontScale)
+    
+        private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {
+            require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)
+            require(fontScale.isFinite() && fontScale > 0f)
+            val font = fontScale.coerceIn(.85f, 2f)
+            val gap = 12f
+            val portrait = wide && height > 0f && isPortraitFold(width, height)
+            // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.
+            val rail = if (wide && !portrait) railWidthDp(width) else 0f
+            val left = rail + 12f
+            val right = width - 12f
+            val room = right - left
+            val boxes = linkedMapOf<Slot, Box>()
+            val separateHeaderRows = room < 420f || font > 1.3f && room < 650f
+            val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f
+            val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)
+            boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)
+            listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->
+                val x = right - 160f + i * 56f
+                val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f
+                boxes[slot] = Box(x, y, x + 48f, y + 48f)
+            }
+            val heroTop = headerBottom + gap
+            val heroHeight = when {
+                !wide -> (room * 1.02f).coerceIn(310f, 390f)
+                else -> (room * .58f).coerceIn(390f, 470f)
+            }
+            // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.
+            val sidebar = wide && room >= 1000f && font <= 1.1f
+            val sideWidth = 292f
+            boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)
+            if (sidebar) {
+                val middle = heroTop + (heroHeight - gap) / 2f
+                boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)
+                boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)
+            }
+            val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,
+                Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)
+            val actionColumns = when {
+                room < 420f && font > 1.3f -> 1
+                room >= 1000f && font <= 1.3f -> 6
+                room >= 530f && font <= 1.6f -> 3
+                else -> 2
+            }
+            val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns
+            val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f
+            val actionTop = heroTop
+            actions.forEachIndexed { index, slot ->
+                val x = left + (index % actionColumns) * (actionWidth + gap)
+                val y = actionTop + (index / actionColumns) * (actionHeight + gap)
+                boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)
+            }
+            val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)
+            if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)
+            val columns = when {
+                room >= 1000f && font <= 1.3f -> 3
+                room >= 530f && room >= 420f * font -> 2
+                else -> 1
+            }
+            val cardWidth = (room - (columns - 1) * gap) / columns
+            val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f
+            val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f
+            cards.forEachIndexed { index, slot ->
+                val x = left + (index % columns) * (cardWidth + gap)
+                val y = cardTop + (index / columns) * (cardHeight + gap)
+                boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)
+            }
+            val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)
+            if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)
+            if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)
+            return Layout(wide, width, 1f, contentHeight, boxes)
+        }
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:62:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+ok 26 - Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+  ---
+  duration_ms: 0.316957
+  type: 'test'
+  ...
+# Subtest: phone and Fold preserve renderer lifecycle through the shared adaptive layout
+ok 27 - phone and Fold preserve renderer lifecycle through the shared adaptive layout
+  ---
+  duration_ms: 0.258378
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 28 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 0.849678
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 29 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 3.30944
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 30 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 0.2923
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 31 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.447192
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 32 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.216556
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 33 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.185549
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 34 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.862959
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 35 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.44156
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 36 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 1.467157
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 37 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.316406
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 36
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164.531711

@@ -27,12 +27,20 @@ test('orbital rings use visible phase movement, not the old near-static factor',
   assert.match(ring,/val yaw = \(phase - \.4f\) \* 1\.25f \* speed/);
   assert.doesNotMatch(ring,/val yaw = \(phase - \.4f\) \* \.18f \* speed/);
 });
-test('header and the six orbital text labels are fitted to their real drawing boxes',()=>{
+test('header and six live action tiles fit their boxes while legacy orbital controls stay available',()=>{
   assert.match(labels,/protected fun fittedTitle/);
   assert.match(labels,/ContinuumSurfaces\.fit\(p, title, titleStyle, available\)/);
   assert.match(labels,/val alignment = if \(mirrored\) TextAlign\.RIGHT else TextAlign\.LEFT/);
   assert.match(labels,/ContinuumSurfaces\.raisedControlCard\(p,/);
-  assert.match(labels,/ContinuumSurfaces\.fit\(p, subtitle, style, w - 91f\)/);
+  assert.match(labels,/ContinuumSurfaces\.fit\(p, "CONTINUUM", title, w - x - 4f\)/);
+  assert.match(labels,/ContinuumSurfaces\.fit\(p, "Dein lokaler KI-Assistent", subtitle, w - x - 4f\)/);
+  assert.match(labels,/h - 7f, subtitle/);
+  const home=read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt');
+  const cockpit=read('app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitElements.kt');
+  assert.equal((home.match(/Slot\.LABEL_\w+ to CockpitActionTile\(/g)||[]).length,6);
+  assert.match(cockpit,/cockpitLines\(p, label, style, w - 16f, 2\)/);
+  assert.match(cockpit,/ContinuumSurfaces\.fit\(p, status\(s\), stateStyle, w - 16f\)/);
+  assert.match(cockpit,/override fun describe\(s: ContinuumDashboardState\) = "\$label: \$\{status\(s\)\}"/);
 });
 test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',()=>{
   assert.match(collector,/BatteryManager\.BATTERY_PROPERTY_CAPACITY/);

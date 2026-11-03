@@ -27,7 +27,10 @@ test('home dashboard remains in a scrolling viewport, not hidden behind the navi
   assert.match(buildPane, /dashboardSection = dashboardScroll/);
   assert.match(activity, /dashboardSection\?\.visibility = if \(chat\) View\.GONE else View\.VISIBLE/);
   assert.match(homeView, /setMeasuredDimension\(width, maxOf\(contentHeight, suggestedMinimumHeight\)\)/);
-  assert.match(homeLayout, /fun phone\(widthDp: Float\): Layout/);
+  assert.match(homeLayout, /fun phone\(widthDp: Float, fontScale: Float = 1f\): Layout/);
+  // Scrolling height follows the complete reflowed grid; optional phone NAV starts after that content.
+  assert.match(homeLayout, /val contentHeight = cardTop \+ \(\(cards\.size \+ columns - 1\) \/ columns\) \* \(cardHeight \+ gap\)/);
+  assert.match(homeLayout, /boxes\[Slot\.NAV\] = Box\(0f, contentHeight, width, contentHeight \+ PHONE_NAV_HEIGHT\)/);
 });
 
 test('keyboard hides phone navigation and frees the same reserved space', () => {
