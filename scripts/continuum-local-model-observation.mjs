@@ -121,7 +121,7 @@ export async function launchLocalModel({fds,promptFd,timeoutMs,signal,spawnImpl=
    if(!Number.isSafeInteger(outputTokens)||outputTokens<1||outputTokens>1800){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
    let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(out));}catch{finish(Error('LOCAL_RUNTIME_OUTPUT_INVALID'));return;}
    finish(null,{text,outputTokens,pid:child.pid,exitCode:code,
-    evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'LOCAL_MODEL_HOST':'CONTRACT_TEST'});
+    evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'HOST_INTEGRATION':'CONTRACT_TEST'});
   });
  });
  }finally{if(filterFd!==undefined)fs.closeSync(filterFd);if(filterDir)fs.rmSync(filterDir,{recursive:true,force:true});}

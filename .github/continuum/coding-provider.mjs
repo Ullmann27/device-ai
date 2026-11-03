@@ -252,7 +252,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
      proposalSha256:sha256Hex(canonical(result.proposal))};
     const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
     if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
-     observation.evidenceClass!=='LOCAL_MODEL_HOST'||observation.isolation!=='BWRAP_UNSHARE_ALL'||
+     observation.evidenceClass!=='HOST_INTEGRATION'||observation.isolation!=='BWRAP_UNSHARE_ALL'||
      Object.entries(expected).some(([key,value])=>typeof value!=='string'&&key!=='requestIndex'||observation[key]!==value)||
      !/^[a-f0-9]{64}$/.test(observation.outputSha256??'')||observation.exitCode!==0||
      !Number.isSafeInteger(observation.pid)||observation.pid<1||
