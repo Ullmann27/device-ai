@@ -29,3 +29,13 @@ New reduced profile classpath pending Chief validation:
 `/workspace/independence-profile-773fbc94/runtime-classpath.txt`. Prior1595 full
 classpath is not substituted silently. No Docker/Gradle/model work starts while
 the service challenger owns the CPU window. Quota NOT_VISIBLE.
+
+`run-service-client.py` is syntax-checked only, not executed. It rechecks clean
+source/fixture identities and approved artifact hashes, seeds a real store,
+uses actual owner CLI operations, reserves only this one immutable task, records
+all commands/exits, stops the service and restarts without another submission.
+It requires the same terminal evidence after restart. Raw prepare/submit logs
+contain scoped approval material and must stay private during artifact export.
+Additional tests and eligible technical recall are separate post-run checks;
+client completion alone is not final acceptance. Native resource sampling will
+reuse the committed executable-inode observer from review0176702a.
