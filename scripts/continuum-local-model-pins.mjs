@@ -1,7 +1,7 @@
 /** Code-reviewed tuples only. Configuration claims never admit genuine inference. */
 const tuple=Object.freeze({
  id:'momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64',
- status:'CANDIDATE_INDEPENDENT_REVIEW_REQUIRED',
+ status:'REVIEWED_LOCAL_MODEL_HOST',
  modelRepository:'Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF',
  modelRevision:'f86cb2c1fa58255f8052cc32aeede1b7482d4361',
  modelFilename:'qwen2.5-coder-1.5b-instruct-q4_k_m.gguf',
@@ -14,7 +14,7 @@ const tuple=Object.freeze({
  runtimePlatform:'linux-x64',
  runtimeSha256:'c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a',
  buildEvidenceSha256:'ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067',
- independentReviewEvidenceSha256:null
+ independentReviewEvidenceSha256:'88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe'
 });
 export const LOCAL_MODEL_RUNTIME_CANDIDATES=Object.freeze([tuple]);
 const sha=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
