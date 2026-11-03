@@ -1,19 +1,85 @@
 {
-  "source": "cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb",
-  "capture": "Chief recovered unfinished author documentation after agent capacity error; existing raw logs unchanged. Independent exact-source receipt is ../memory-review/corrected-receipt.json.",
+  "schema": "momega1-memory-followup-evidence",
+  "version": 1,
+  "observedAt": "2026-11-03T19:56:30.593788+00:00",
+  "sourceCommit": "cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb",
+  "redCommit": "50a6d13d",
+  "evidenceClass": "CONTRACT_TEST",
+  "authorFocused": {
+    "passed": 50,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0
+  },
+  "canonicalRegression": {
+    "passed": 52,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0
+  },
+  "independentOriginalRed": {
+    "passed": 27,
+    "failed": 4,
+    "exit": 1
+  },
+  "independentOriginalFixtureWithNewTier": {
+    "passed": 28,
+    "failed": 3,
+    "exit": 1,
+    "explanation": "C01/C27/C28 original positive synthetic fixtures omit newly required genuine-model tier; feature author did not edit independent fixtures"
+  },
+  "independentCorrected": {
+    "commit": "7282bd89",
+    "pr": 418,
+    "passed": 46,
+    "failed": 0,
+    "skipped": 0,
+    "verdict": "ACCEPT_RESEARCH_CONTRACT_SLICE",
+    "evidenceOwnedBy": "independent reviewer"
+  },
+  "modelInference": "NOT_RUN_BY_MEMORY_LANE",
+  "providerPromptConsumption": "NOT_RUN_BY_MEMORY_LANE",
+  "changedSourcePolicy": "NOT_IMPLEMENTED_AT_THIS_FREEZE",
+  "fold7": "NOT_RUN",
   "sourceSha256": {
     ".github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
     ".github/continuum/ccc1-technical-recall.mjs": "339eb0bc4ef885f124c56a5be31fbc5c93b45a7e05bc517b05fdc7f50cdefc75",
+    ".github/continuum/ccc1-experience-durability.test.mjs": "72047810a525fcf901ca16533d5d18147dcf67fa188feaf4416e124085159b78",
     ".github/continuum/ccc1-technical-recall.test.mjs": "91fd2f0e21b32319816c198e51b3dcc28337810a9109fcf761088027c0e89ce1"
   },
-  "logs": {
-    "review-findings-red.tap": "c0f1a2df5632961fa85b5f2abc57c6bc00a61e7a9ec7a4dea08c355bce0ca70d",
-    "review-followup-red.tap": "e1ca4ac388e2a12cd6095bac6eb6e512a957c10c90b8cca6527ce83da47304b2",
-    "review-followup-green.tap": "5f4cd06e67b45f58c9f797bdfc89b047c8b5407da460ee182a3e34aa7727d657",
-    "review-followup-canonical-regression.tap": "ca07b0535ce3292f511281d684cf6cc73bbfa2e65b13c4b5f3e615e7a0874039",
-    "review-original-fixture-new-tier.tap": "f19bbbff3a54a53f1cd1fd1d47e829c8ab5c3a0dc1c2ba3cc89e85a7991fcdb2",
-    "review-followup-initial-green-failed.tap": "6cb967a2cf379092a6909babcbde009ad56684af022ea705b38b9896067ddedb"
+  "logSha256": {
+    "docs/evidence/momega1/memory/review-followup-canonical-regression.tap": "ca07b0535ce3292f511281d684cf6cc73bbfa2e65b13c4b5f3e615e7a0874039",
+    "docs/evidence/momega1/memory/review-original-fixture-new-tier.tap": "f19bbbff3a54a53f1cd1fd1d47e829c8ab5c3a0dc1c2ba3cc89e85a7991fcdb2",
+    "docs/evidence/momega1/memory/review-findings-red.tap": "c0f1a2df5632961fa85b5f2abc57c6bc00a61e7a9ec7a4dea08c355bce0ca70d",
+    "docs/evidence/momega1/memory/review-followup-red.tap": "e1ca4ac388e2a12cd6095bac6eb6e512a957c10c90b8cca6527ce83da47304b2",
+    "docs/evidence/momega1/memory/review-followup-initial-green-failed.tap": "6cb967a2cf379092a6909babcbde009ad56684af022ea705b38b9896067ddedb",
+    "docs/evidence/momega1/memory/review-followup-green.tap": "5f4cd06e67b45f58c9f797bdfc89b047c8b5407da460ee182a3e34aa7727d657"
   },
-  "evidenceClass": "CONTRACT_TEST",
-  "actualModel": "BLOCKED_LOCAL_MODEL_UNAVAILABLE"
+  "commands": [
+    "node --test --test-reporter=tap .github/continuum/ccc1-experience-durability.test.mjs .github/continuum/ccc1-technical-recall.test.mjs",
+    "node --test --test-reporter=tap .github/continuum/ccc1-worker.test.mjs .github/continuum/ccc1-repair.test.mjs",
+    "MOMEGA1_CANDIDATE_ROOT=/workspace/momega1-memory node --test --test-reporter=tap /workspace/momega1-memory-review/tools/momega1-memory-review/tests/challenge.test.mjs"
+  ],
+  "chiefRecoveryCheckpoint": {
+    "commit": "d5eb499a",
+    "preservedReceipt": {
+      "source": "cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb",
+      "capture": "Chief recovered unfinished author documentation after agent capacity error; existing raw logs unchanged. Independent exact-source receipt is ../memory-review/corrected-receipt.json.",
+      "sourceSha256": {
+        ".github/continuum/ccc1-experience.mjs": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d",
+        ".github/continuum/ccc1-technical-recall.mjs": "339eb0bc4ef885f124c56a5be31fbc5c93b45a7e05bc517b05fdc7f50cdefc75",
+        ".github/continuum/ccc1-technical-recall.test.mjs": "91fd2f0e21b32319816c198e51b3dcc28337810a9109fcf761088027c0e89ce1"
+      },
+      "logs": {
+        "review-findings-red.tap": "c0f1a2df5632961fa85b5f2abc57c6bc00a61e7a9ec7a4dea08c355bce0ca70d",
+        "review-followup-red.tap": "e1ca4ac388e2a12cd6095bac6eb6e512a957c10c90b8cca6527ce83da47304b2",
+        "review-followup-green.tap": "5f4cd06e67b45f58c9f797bdfc89b047c8b5407da460ee182a3e34aa7727d657",
+        "review-followup-canonical-regression.tap": "ca07b0535ce3292f511281d684cf6cc73bbfa2e65b13c4b5f3e615e7a0874039",
+        "review-original-fixture-new-tier.tap": "f19bbbff3a54a53f1cd1fd1d47e829c8ab5c3a0dc1c2ba3cc89e85a7991fcdb2",
+        "review-followup-initial-green-failed.tap": "6cb967a2cf379092a6909babcbde009ad56684af022ea705b38b9896067ddedb"
+      },
+      "evidenceClass": "CONTRACT_TEST",
+      "actualModel": "BLOCKED_LOCAL_MODEL_UNAVAILABLE"
+    }
+  }
 }
