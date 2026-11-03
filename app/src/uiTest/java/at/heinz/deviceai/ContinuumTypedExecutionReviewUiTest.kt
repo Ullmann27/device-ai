@@ -33,6 +33,7 @@ class ContinuumTypedExecutionReviewUiTest {
     // Literal persisted keys let these regressions execute against the unchanged baseline.
     private val preparedJson = "typed_coding_prepared_json_v1"
     private val expectedJson = "typed_coding_expected_json_v1"
+    private val preparedCcc1 = "typed_coding_prepared_ccc1_task_v1"
 
     @Before fun reset() {
         prefs.edit().clear().commit()
@@ -51,6 +52,7 @@ class ContinuumTypedExecutionReviewUiTest {
         prefs.edit().putString("typed_coding_prepared_id_v1", task.id)
             .putString("typed_coding_prepared_sha_v1", task.fingerprint())
             .putString("typed_coding_prepared_commit_v1", task.sourceCommit).apply {
+                putString(preparedCcc1, "t-aaaaaaaaaaaaaaaa")
                 if (full) putString(preparedJson, task.canonicalJson())
             }.commit()
     }
@@ -213,5 +215,31 @@ class ContinuumTypedExecutionReviewUiTest {
         val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
         try { assertFalse(runButton(controller.get()).isEnabled) }
         finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun typedRunRestoresItsOwnCancelTargetAfterAnInterveningStatus() {
+        deliverPreparedReceipt()
+        prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, "t-bbbbbbbbbbbbbbbb").commit()
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            clickRun(controller.get()).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertNotNull(shadowOf(app).nextStartedService)
+            assertEquals("RUN must restore its own validated prepared CCC1 task, not the newer status target",
+                "t-aaaaaaaaaaaaaaaa", prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun changedPreparedJournalIdWhileRunDialogIsOpenCannotDispatch() {
+        deliverPreparedReceipt()
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            val dialog = clickRun(controller.get())
+            prefs.edit().putString(preparedCcc1, "t-bbbbbbbbbbbbbbbb").commit()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertNull("A replaced journal ID needs a fresh owner review", shadowOf(app).nextStartedService)
+            assertNull(prefs.getString("job_id", null))
+        } finally { controller.pause().stop().destroy() }
     }
 }
