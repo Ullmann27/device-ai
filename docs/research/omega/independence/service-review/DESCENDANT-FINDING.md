@@ -71,3 +71,12 @@ the complete integrated suite, ARM64 and Fold7 are not certified by this check.
 Closing mode: Chief relayed the owner's 20% remaining-budget notice. No further
 model experiment or service run was started by this reviewer after the targeted
 GREEN. Direct quota visibility remains `NOT_VISIBLE`.
+
+Final-QA follow-up: an outdated harness status assertion, not the product,
+caused the first thirteen-case group to stop before its normal fixture
+reconciliation. The only remaining barrier was matched to exact synthetic state,
+task, instance and dead process identities; its private runtime was still absent
+and its canonical journal contained no TEST_REQUEST or RECEIPT. That explicit
+cleanup is recorded in `final-qa-harness-correction/fixture-reconciliation.json`.
+Harness `ef0673ac` now requires the stronger uncertainty status and performs
+attributable cleanup on early assertion failure. P0 owns the final rerun.

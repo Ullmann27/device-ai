@@ -27,6 +27,15 @@ scenarios. The older successful orphan tests predate the stricter persistent
 barrier and do not certify its safety. Their raw results remain unchanged.
 The final thirteen-case integration rerun belongs to the separate final QA gate.
 
+The first final integrated service group hit a reviewer-harness mismatch:
+production correctly prioritizes `RESOURCE_RECONCILIATION_REQUIRED`, while two
+older assertions still required `ORPHAN_WORKER`. The first failure prevented
+its normal fixture reconciliation and the retained barrier then blocked later
+setups. Raw output and the narrowly verified cleanup are preserved in
+`final-qa-harness-correction/`. Harness `ef0673ac` fixes the status contract and
+exception-safe fixture cleanup without weakening no-replay assertions. The
+separate P0 reviewer owns its single rerun; no success is inferred here.
+
 The eight candidate cases exercised idle start/stop/restart, simultaneous starts,
 SIGKILL of an idle daemon, refusal to kill an unrelated live PID named in stale
 metadata, concurrent last-slot admission, durable task identity and queued
