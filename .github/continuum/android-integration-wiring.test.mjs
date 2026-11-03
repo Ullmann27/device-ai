@@ -81,13 +81,18 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   activity.includes('val agentTask = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(\n            text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))') &&
+   activity.includes('val agentTask = codingPlanning?.ownerGoal ?: at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(\n            text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))') &&
    !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
    bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
    bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <
      bodyOf(activity,'private fun runLocal(text:').indexOf('activeLocalRequest = true') &&
    bodyOf(activity,'private fun runLocal(text:').includes('publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)') &&
    !activity.includes('persistRequestedMemory(') && !bodyOf(activity,'private fun runLocal(text:').includes('memoryStore.put('));
+ const local=bodyOf(activity,'runLocal');
+ ensure('owner tool authorization uses untouched input and planning has no memory/tool authority',
+   /createToolGate\(ownerTurn\s*=\s*text,\s*consentRevisionAtTurnStart\s*=\s*internetRevisionAtTurnStart/.test(codeOnly(local)) &&
+   /memories\s*=\s*\{\s*if\(codingPlanning\s*==\s*null\)\s*memoryStore\.all\(\)\s*\+\s*ownerFactMemories\(\)\s*else\s*emptyList\(\)\s*\}/.test(codeOnly(local)) &&
+   /else\s+at\.heinz\.deviceai\.cognitive\.AgentLimits\(maxToolCalls\s*=\s*0,maxRetries\s*=\s*0\)/.test(codeOnly(local)));
  ensure('only explicit confirmed fact can retry unanswered turn',
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));
@@ -123,17 +128,42 @@ test('experimental module is inspectable and not on any automatic model promotio
 // onActivityResult dispatches on the first matching `when` branch, so two equal
 // request codes silently route one picker's result into another handler (the
 // backlog export once landed in the model-weight import this way).
-const bodyOf=(source,signature)=>{
- const start=source.indexOf(signature);
- if(start<0)return null;
- const open=source.indexOf('{',start);
- let depth=0;
- for(let i=open;i<source.length;i++){
-  if(source[i]==='{')depth++;
-  else if(source[i]==='}'&&--depth===0)return source.slice(open,i+1);
+// Match real function bodies, not the next declaration or braces in strings/comments.
+function codeOnly(source) {
+ const out=source.split('');
+ for(let i=0;i<source.length;) {
+  const start=i;
+  if(source.startsWith('//',i)) { i=source.indexOf('\n',i);if(i<0)i=source.length; }
+  else if(source.startsWith('/*',i)) {
+   i+=2;let depth=1;
+   while(i<source.length&&depth) { if(source.startsWith('/*',i)){depth++;i+=2;}else if(source.startsWith('*/',i)){depth--;i+=2;}else i++; }
+  } else if(source.startsWith('"""',i)) { const end=source.indexOf('"""',i+3);i=end<0?source.length:end+3; }
+  else if('"\'`'.includes(source[i])) {
+   const quote=source[i++];while(i<source.length) { if(source[i]==='\\'){i+=2;continue;}if(source[i++]===quote)break; }
+  } else { i++;continue; }
+  for(let j=start;j<i;j++)if(source[j]!=='\n')out[j]=' ';
  }
- return null;
-};
+ return out.join('');
+}
+function bracedBody(source,open) {
+ const code=codeOnly(source);assert.equal(code[open],'{','missing body opening');let depth=0;
+ for(let i=open;i<code.length;i++){if(code[i]==='{')depth++;else if(code[i]==='}'&&--depth===0)return source.slice(open,i+1);}
+ assert.fail('unbalanced function body');
+}
+function bodyOf(source,signature) {
+ const name=signature.match(/\b(?:fun|function)\s+(\w+)\s*\(/)?.[1]??signature;
+ assert.match(name,/^[A-Za-z_]\w*$/);
+ const code=codeOnly(source),match=new RegExp('\\b(?:fun|function)\\s+'+name+'\\s*\\(').exec(code);
+ if(!match)return null;
+ let i=code.indexOf('(',match.index),depth=0;
+ for(;i<code.length;i++){if(code[i]==='(')depth++;else if(code[i]===')'&&--depth===0){i++;break;}}
+ const open=code.indexOf('{',i),equals=code.indexOf('=',i);
+ if(equals>=0&&(open<0||equals<open)) {
+  // The expression-bodied motion predicate ends before the next blank line/declaration.
+  const end=code.indexOf('\n\n',equals);return source.slice(equals,end<0?source.length:end);
+ }
+ return open<0?null:bracedBody(source,open);
+}
 test('activity request codes are unique and every one has a result handler',()=>{
  for(const file of ['AgentActivity.kt','MainActivity.kt']){
   const source=fs.readFileSync(dir+file,'utf8');
@@ -148,12 +178,22 @@ test('activity request codes are unique and every one has a result handler',()=>
   assert.ok(handler,file+': onActivityResult not found');
   for(const c of codes){
    // Speech codes now scope in-process callbacks; they must never launch an external recognizer.
-   if(file==='AgentActivity.kt' && ['SPEECH_REQUEST','DEV_SPEECH_REQUEST'].includes(c.name)) {
+   if(file==='AgentActivity.kt' && ['SPEECH_REQUEST','DEV_SPEECH_REQUEST','READINESS_SPEECH_REQUEST'].includes(c.name)) {
     ensure(c.name+' uses the local recognizer', source.includes('AndroidOnDeviceSpeechInput(this)') &&
       source.includes('private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST)') &&
       source.includes('startVoiceInput(DEV_SPEECH_REQUEST)') &&
       source.includes('applyLocalSpeechText(requestCode,spoken)'));
     ensure(c.name+' never launches an Activity result', !source.includes('startActivityForResult(intent, requestCode)'));
+    continue;
+   }
+   if(file==='AgentActivity.kt' && ['READINESS_CAMERA_PERMISSION_REQUEST','READINESS_MIC_PERMISSION_REQUEST'].includes(c.name)) {
+    const permission=bodyOf(source,'onRequestPermissionsResult');
+    const marker=/if\s*\(requestCode\s*==\s*READINESS_CAMERA_PERMISSION_REQUEST\s*\|\|\s*requestCode\s*==\s*READINESS_MIC_PERMISSION_REQUEST\s*\)\s*\{/.exec(codeOnly(permission));
+    assert.ok(marker,'readiness permissions must have their own callback branch');
+    const refreshOnly=bracedBody(permission,marker.index+marker[0].lastIndexOf('{'));
+    assert.match(codeOnly(refreshOnly),/refreshReadinessGuide\(\)\s*return/);
+    assert.doesNotMatch(codeOnly(refreshOnly),/\b(?:startVoiceInput|startReadinessCamera|start|openCamera|requestPermissions)\s*\(/,
+      'readiness permission callback refreshes only; an explicit later gesture starts sensors');
     continue;
    }
    if(file==='AgentActivity.kt' && c.name==='LOCAL_SPEECH_PERMISSION_REQUEST') {
@@ -375,7 +415,8 @@ test('new visual start screen is local, accessible and honest about capabilities
  ensure('drawing is local and motion follows visibility and power policy',
    art.includes('class ContinuumHologramView') &&
    art.includes('override fun onDraw(') &&
-   art.includes('canAnimate()') && art.includes('isPowerSaveMode') &&
+   art.includes('canAnimateFrame()') && art.includes('isPowerSaveMode') &&
+   /foregroundActive\s*&&\s*motionAllowed\s*&&\s*isAttachedToWindow\s*&&\s*isShown\s*&&\s*windowVisibility\s*==\s*VISIBLE/.test(codeOnly(bodyOf(art,'canAnimateFrame'))) &&
    !/URL\(|https?:\/\//.test(art+renderer));
  ensure('start screen uses real native drawing and named slots',
    pane.includes('ContinuumHologramView(this)') && pane.includes('ContinuumHomeView('));
