@@ -3,7 +3,8 @@
 import {pathToFileURL} from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import {cases} from './adapter-cases.mjs';
+import {cases as originalCases} from './adapter-cases.mjs';
+const cases=process.argv[3]?(await import(pathToFileURL(path.resolve(process.argv[3])).href)).cases:originalCases;
 const file=process.argv[2];
 if(!file){console.error('NOT_RUN: provide candidate bridge exporting evaluateCase(fixture); no production adapter exists in this baseline.');process.exit(2);}
 const adapter=await import(pathToFileURL(path.resolve(file)).href);
