@@ -1,0 +1,60 @@
+{
+  "candidate": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "initial_candidate": "989361a5",
+  "initial_diff_base": "ba820fcf",
+  "freeze": "adeb7861e42e5a93c2e2a07c3824b718b258c2ce",
+  "verdict": "ACCEPT_CALLER_ACCOUNTING_AND_REPORT_CONTRACT",
+  "evidence_class": "CONTRACT_TEST",
+  "actual_model_inference": "NOT_RUN",
+  "checks": [
+    {
+      "name": "caller-baseline-red",
+      "cwd": "/workspace/momega1-memory-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-caller-989361a5 node --import ./tools/momega1-memory-review/tests/caller-brand-loader.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/caller-accounting.test.mjs",
+      "exit": 1,
+      "pass": 24,
+      "fail": 4,
+      "skip": 0,
+      "log": "caller-baseline-red.tap"
+    },
+    {
+      "name": "caller-corrected-green",
+      "cwd": "/workspace/momega1-memory-review",
+      "command": "MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-caller-19474261 node --import ./tools/momega1-memory-review/tests/caller-brand-loader.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/caller-accounting.test.mjs",
+      "exit": 0,
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "log": "caller-corrected-green.tap"
+    },
+    {
+      "name": "caller-canonical-regression",
+      "cwd": "/tmp/momega1-memory-caller-19474261",
+      "command": "node --test --test-reporter=tap .github/continuum/coding-orchestrator.test.mjs .github/continuum/coding-rejection-feedback.test.mjs .github/continuum/momega1-loop.test.mjs",
+      "exit": 0,
+      "pass": 19,
+      "fail": 0,
+      "skip": 0,
+      "log": "caller-canonical-regression.tap"
+    }
+  ],
+  "sha256": {
+    "docs/evidence/momega1/memory-review/caller-candidate.diff": "0829289ab3a4b6c1419ffceb6c120efef114be5e340cfc2dbc9d648b152e46c5",
+    "docs/evidence/momega1/memory-review/caller-frozen-tests.sha256": "86cbe52c05c8381036de0bccb0e99f583425b17e84652eb5786a55299a0e8797",
+    "docs/evidence/momega1/memory-review/caller-corrected.diff": "31c3cd2e613a7c3467c53d52037cf14e13575c259f8ffe757bfd9571699d0358",
+    "docs/evidence/momega1/memory-review/caller-corrected-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/memory-review/caller-baseline-red.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "docs/evidence/momega1/memory-review/caller-corrected-green.tap": "3d1ce8c2c71e5279fc89939c930118d755f71b2b8b2622b48b6ee3a81f8c01d2",
+    "docs/evidence/momega1/memory-review/caller-canonical-regression.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "docs/evidence/momega1/memory-review/caller-baseline-red.tap": "b02aea539abb0403eb877fcef37d36bcce0e03ebe6dd5897363e08d9d63863a0",
+    "docs/evidence/momega1/memory-review/caller-canonical-regression.tap": "24cd88599d126dd7352a1b4a5248461e3929e664bc7bb883fcff911743bb951e",
+    "tools/momega1-memory-review/tests/caller-fixture-runtime.mjs": "c2cdff4cfeba12f0047ce8520bdea4aedbdbe30c9b214f7f9681eee61b1b738f",
+    "tools/momega1-memory-review/tests/caller-fixture-deps.mjs": "c63cc073a19dfdcf9e928a3d939706c2c4f3e3e494615b60f9f7088f43eea026",
+    "tools/momega1-memory-review/tests/caller-brand-loader.mjs": "1a08ca361bbcb3230e11ce157d3eda795591a90e09ff37aff1ade63e14c9a586",
+    "tools/momega1-memory-review/tests/caller-accounting.test.mjs": "ec9fa822a48a6525bfbeefc9f88e42a1146b8ee589d9efe6c40152837c4b8f25",
+    "candidate/.github/continuum/coding-orchestrator.mjs": "d3d91266fe8cc987e6db39fcb019e0f28765f87266d7c3b991284f8f3d48eabc",
+    "candidate/.github/continuum/repair-loop.mjs": "82c85fc68ed5fbdf21daa78c0bad448906d6d7a8407d0f906ba9011ba1e4184a",
+    "candidate/.github/continuum/coding-provider.mjs": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a"
+  },
+  "instrumentation": "Caller source bodies with explicit synthetic dependencies; real repairSession with test-only WeakSet runtime-brand module. Separate regressions uninstrumented."
+}
