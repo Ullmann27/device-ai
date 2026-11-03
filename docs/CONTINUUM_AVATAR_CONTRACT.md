@@ -1,61 +1,102 @@
-# Continuum Avatar-Vertrag (Vorbereitung, M3) – für die Grafikseite
+# Continuum Avatar – Andock-Leitfaden (einzige Avatar-Schnittstelle)
 
-Status: `HOST_VERIFIED` für Logik und Verdrahtung im Quellcode. Es gibt **keine Grafik und kein 3D-Rendering**.
-Bis die Grafikseite einen eigenen `AvatarSink` einsteckt, läuft der Platzhalter `NoOpAvatarSink`.
-Der bestehende Hologramm-Kern (`ContinuumHologramView`) bleibt unverändert. Der Avatar bekommt dieselben Signale zusätzlich.
+Gültig ab PR #373 (`continuum/m3-grok-selbstrekonstruktion-20261103`). Laut Koordinationsbeschluss des Besitzers ist **diese** Schnittstelle
+(`app/src/main/java/at/heinz/deviceai/avatar/`) die einzige Avatar-Schnittstelle in device-ai. Andere Avatar-Interfaces werden nicht weitergebaut.
+Es gibt **kein Rendering**. Standard ist `NoOpAvatarSink`, das Hologramm (`ContinuumHologramView`) bleibt unverändert.
+Evidenz: Logik, Port und Verdrahtung sind `HOST_VERIFIED` (JUnit und Node-Verdrahtungstest). TTS-Timing auf dem Fold7 ist `DEVICE_REQUIRED`.
 
-## Einstecken
+## 1. Rollen – wer was tut
+| Rolle | Darf | Darf NICHT |
+|---|---|---|
+| **AgentActivity (Continuum-App)** | Als einzige Stelle `AvatarDirector` füttern: `onRuntime`, `speechStarted/wordRange/audioLevel/speechEnded` | – |
+| **Grafik-Bot** | `AvatarSinkRegistry.sink` setzen, `AvatarEvent` konsumieren, optional `AvatarPoseReducer` benutzen | Eigene TTS-Listener, eigene Zustandslogik, Netzwerkzugriffe |
+| **Continuum 1 (Agent/Orchestrator)** | Bestehende Flags setzen (`busy`, Freigabedialog über `showStructuredToolConfirmation`, `run.blocker`) | `AvatarEvent` direkt erzeugen |
+| **REPERATEUR (CCC1/Reparatur)** | Den Status über die vorhandenen App-Flags spiegeln (z. B. `busy` während eines Laufs, Blocker als `run.blocker`/Ablehnung) | Eigenen Avatar-Zustand, „SUCCEEDED“ vor der Postcondition |
+| **Gedächtnis** | Nichts emittieren. Lernphasen laufen schon über `learningVisualActive` → `LEARNING` | Gedächtnisinhalte in Avatar-Ereignisse schreiben |
+
+Wer einen neuen Zustand braucht, erweitert `AvatarRuntimeSignals` und die Prioritätsliste im `AvatarDirector` mit Test.
+Ein zweites Enum oder ein paralleles Interface ist nicht erlaubt.
+
+## 2. Einstecken (Grafikseite)
 ```kotlin
-// vor dem Start von AgentActivity, z. B. in einer Application-Unterklasse eines Avatar-Moduls:
-at.heinz.deviceai.avatar.AvatarSinkRegistry.sink = AvatarSink { event -> meinRenderer.post(event) }
+import at.heinz.deviceai.avatar.*
+
+class MeinAvatarRenderer : AvatarSink {
+    private val queue = java.util.concurrent.ConcurrentLinkedQueue<AvatarEvent>()
+    private val reducer = AvatarPoseReducer()                 // gleiche Mund-/Blick-Abbildung für alle
+    override fun onAvatarEvent(event: AvatarEvent) { queue.add(event) }   // schnell zurückkehren!
+    fun onFrame() {                                           // Render-Thread, 30–60 fps
+        while (true) reducer.apply(queue.poll() ?: break)
+        val p = reducer.pose()                                // state, expression, gazeX/Y, jawOpen, viseme, …
+        // zeichnen …
+    }
+}
+// vor dem Start von AgentActivity (z. B. Application.onCreate eines Avatar-Moduls):
+AvatarSinkRegistry.sink = MeinAvatarRenderer()
 ```
-- `AvatarSink.onAvatarEvent` wird auf **beliebigen Threads** aufgerufen (UI-Thread und TTS-Callback-Thread).
-  Die Methode muss schnell zurückkehren und Ereignisse selbst an den Render-Thread übergeben.
-- Eine Exception im Sink wird verschluckt. Chat, Werkzeuge und Sprache laufen dann trotzdem weiter.
-- `AvatarDirector.attach(sink)` sendet sofort den aktuellen Zustand, damit ein spät gestarteter Renderer nicht im Leerlauf beginnt.
-  Zur Laufzeit wird nicht umgeschaltet: Die Activity liest die Registry nur beim Erzeugen.
+- **Threading:** `onAvatarEvent` läuft auf dem UI-Thread **und** auf dem TTS-Callback-Thread. Der Director ist synchronisiert, der Sink muss
+  Ereignisse selbst in eine Queue legen. `AvatarPoseReducer` ist nicht threadsicher und gehört nur in den Render-Thread.
+- Wirft der Sink eine Exception, wird sie verschluckt. Chat, Werkzeuge und Sprache laufen weiter.
+- `AvatarDirector.attach(sink)` sendet sofort den aktuellen Zustand. Die Activity liest die Registry einmal beim Erzeugen, ein Umschalten zur Laufzeit gibt es nicht.
 
-## Ereignisse (`AvatarEvent`, alle mit `atMillis` = `System.currentTimeMillis()`)
-| Ereignis | Bedeutung | Quelle in der App |
+## 3. Ereignisse und Raten
+| Ereignis | Wann / Rate | Quelle |
 |---|---|---|
-| `StateChanged(state, expression, gaze)` | Nur bei einer echten Änderung | `refreshHologramState()` (dieselben Flags wie das Hologramm) |
-| `SpeechStarted(utteranceId, text)` | Die TTS beginnt den Text, der ohnehin vorgelesen wird | `UtteranceProgressListener.onStart` |
-| `VisemeCue(utteranceId, viseme, weight, durationMs)` | Ungefähre Mundform für das gerade gesprochene Wort | `onRangeStart(start, end)` → `GermanVisemeApproximation` |
-| `AudioLevel(utteranceId, level 0..1)` | Echte Hüllkurve des synthetisierten Audios, ca. 30 Hz | `voiceSignal.level()` im 33-ms-Frame |
-| `SpeechEnded(utteranceId, interrupted)` | Ende, Fehler oder Abbruch | `onDone/onError/onStop` |
+| `StateChanged(state, expression, gaze)` | nur bei einer Änderung | `refreshHologramState()` |
+| `SpeechStarted(utteranceId, text)` | einmal pro Äußerung; `text` = der hörbar vorgelesene Text | TTS `onStart` |
+| `VisemeCue(utteranceId, viseme, weight, durationMs)` | pro Wort, ca. 320 ms gleichmäßig verteilt, ≥ 40 ms je Visem | TTS `onRangeStart` |
+| `AudioLevel(utteranceId, level 0..1, source)` | ca. 30 Hz (33-ms-Frame) | `TtsHologramSignal.level()` |
+| `SpeechEnded(utteranceId, interrupted)` | einmal; auch bei Fehler oder Abbruch | `onDone/onError/onStop` |
 
-Ereignisse einer veralteten oder schon beendeten `utteranceId` werden verworfen.
+`source = PCM_ENVELOPE` ist die gemessene Audiohüllkurve. `WORD_RANGE_FALLBACK` (übernommen aus dem Avatar-Labor) ist eine **grobe**
+Wortbewegung (0,10–0,28) für TTS-Engines ohne PCM, maximal 500 ms nach einer Wortgrenze. Sie ist nie als Messung zu werten.
+Ereignisse einer veralteten oder beendeten `utteranceId` werden verworfen. Alle Zeitstempel kommen aus `System.currentTimeMillis()`.
 
-## Zustände und Vorgaben
-Priorität, von oben nach unten: `WAITING_FOR_APPROVAL` > `LISTENING` > `SPEAKING` > `BLOCKED` > `RESEARCHING` > `LEARNING` (busy+lernen) > `THINKING` (busy) > `IDLE`.
+## 4. Zustände, Ausdruck, Blick
+Priorität, von oben nach unten: `WAITING_FOR_APPROVAL` > `LISTENING` > `SPEAKING` > `BLOCKED` > `RESEARCHING` > `LEARNING` > `THINKING` > `IDLE`.
 
-| AvatarState | Ausdruck | Blick (`GazeTarget`, x/y in −1..1, 0/0 = Besitzer/Kamera) |
-|---|---|---|
-| IDLE | NEUTRAL | OWNER (0, 0) |
-| LISTENING | ATTENTIVE | OWNER |
-| THINKING | FOCUSED | THINKING_AWAY (0,35, 0,25) |
-| RESEARCHING | CURIOUS | READING_DOWN (0, −0,4) |
-| LEARNING | FOCUSED | READING_DOWN |
-| WAITING_FOR_APPROVAL | ATTENTIVE | OWNER |
-| SPEAKING | NEUTRAL | OWNER |
-| BLOCKED | CONCERNED | OWNER |
+| AvatarState | Auslöser in der App | Ausdruck | Blick |
+|---|---|---|---|
+| IDLE | nichts aktiv | NEUTRAL | OWNER (0, 0) |
+| LISTENING | Spracheingabe aktiv | ATTENTIVE | OWNER |
+| THINKING | `busy` | FOCUSED | THINKING_AWAY (0,35, 0,25) |
+| RESEARCHING | Webrecherche aktiv | CURIOUS | READING_DOWN (0, −0,4) |
+| LEARNING | busy + Lernlauf | FOCUSED | READING_DOWN |
+| WAITING_FOR_APPROVAL | Werkzeug-Freigabedialog offen (`showStructuredToolConfirmation`) | ATTENTIVE | OWNER |
+| SPEAKING | TTS spricht | NEUTRAL | OWNER |
+| BLOCKED | Orchestrator-Blocker oder Sicherheitsablehnung; endet mit der nächsten Nutzernachricht | CONCERNED | OWNER |
 
-Ausdruck und Blick sind **Vorgaben**. Die Grafikseite darf sie animieren und überblenden (Lidschlag, Mikrobewegungen),
-aber keinen anderen Zustand erfinden.
+**Koordinaten:** `GazeTarget` liegt jeweils in −1..1, 0/0 = Kamera bzw. Besitzer. **+x = rechts aus Sicht des Betrachters, +y = oben.**
+Für 3D empfohlen: x·25° Gier und y·15° Nicken. Ein 2D-Bild hat y nach unten, der Renderer muss y deshalb umkehren.
+Ausdruck und Blick sind Vorgaben. Lidschlag, Kopfbewegung, Mikromimik und Idle-Animation gehören dem Renderer.
 
-## Viseme
-Das Viseme-Set umfasst 15 Klassen, benannt wie bei OVRLipSync: `SIL PP FF TH DD KK CH SS NN RR AA E I O U`.
-Android-TTS liefert nur **Wortbereiche** und keine Phoneme. `GermanVisemeApproximation` bildet deshalb deutsche Grapheme grob ab
-(sch→CH, ch→KK, b/p/m→PP, f/v/w→FF, s/z/ß→SS, n/l→NN, r→RR, Vokale→AA/E/I/O/U). `SIL` steht am Wortanfang, und doppelte Folgen werden zusammengefasst.
-Ein Wort bekommt etwa 320 ms, gleichmäßig verteilt, mit mindestens 40 ms pro Visem.
-**Empfehlung:** Die Mundöffnung über `AudioLevel` (echtes Signal) steuern und die Form über `VisemeCue` (Näherung). Eine Grafikseite mit eigener
-Phonemquelle darf die Cues ignorieren.
+## 5. Viseme und Mund
+Das Viseme-Set umfasst 15 Klassen mit OVRLipSync-Namen: `SIL PP FF TH DD KK CH SS NN RR AA E I O U`.
+Android-TTS liefert nur Wortbereiche. `GermanVisemeApproximation` bildet deutsche Grapheme deshalb grob ab. Diphthonge folgen den
+`lipsync-de`-Regeln von met4citizen/TalkingHead (MIT, in PR #350 gesichert): au → AA U, ei/ai → AA I, eu/äu → O.
+`AvatarPoseReducer.jawOpen` übernimmt die Abbildung aus dem Avatar-Labor: Glättung 0,4, Totzone 0,025, Faktor 1,5.
+Die Mundöffnung soll über `jawOpen` laufen, die Mundform über `viseme`.
 
-## Datenschutz und Grenzen
-- Kein Ereignis enthält Werkzeugausgaben, Gedächtnisinhalte oder Modell-Zwischentexte. `SpeechStarted.text` ist nur der Text, der hörbar vorgelesen wird.
-- Noch nicht verdrahtet (`SOURCE_ONLY`): `WAITING_FOR_APPROVAL` und `BLOCKED`. Das Signal existiert im Vertrag, aber die Freigabedialoge der Activity
-  setzen es noch nicht. Es gibt keine Kopf- oder Augenverfolgung über die Kamera.
-- Auf dem Fold7 ist noch nichts geprüft (`DEVICE_REQUIRED`): echte Zeitpunkte von `onRangeStart` je TTS-Engine sowie Thread und Latenz der Callbacks.
+## 6. Abgleich mit den Grafik-Assets (`/workspace/jarvis-grafik/avatar/`, nur gelesen)
+Vorhanden sind 4 PNG-Standbilder mit 1024×1024, RGB und ohne Alpha (`holo-aaa_v1/v2`, `pixar-3d_v1/v2`) sowie eine Vorlage `vorlage-quantumflow.jpg` mit 1968×2184.
+Alle Bilder zeigen einen frontalen, holografisch blau-violetten Kopf.
+- **Was jetzt schon passt:** Ein 2D-Overlay-Renderer wie im Avatar-Labor kann Zustände, `jawOpen`, Blick-Offset und Ausdruck sofort benutzen.
+- **Lücken (die Grafikseite muss sie liefern):** kein Mesh, kein Rig und keine Blendshapes. Augen und Mund liegen nicht auf eigenen Ebenen, und es gibt keinen Alphakanal.
+  Für 2D fehlen außerdem Ankerkoordinaten je Bild (Augen und Mund in normierten Bildkoordinaten).
+  Für 3D braucht es GLB/glTF mit 15 Visem-Morph-Targets in OVR-Benennung (alternativ ARKit-52 plus Mapping-Tabelle) und Augen-Bones für den Blick.
+  Zielraten der Grafik (FPS, Thermalbudget neben Gemma) sind nicht angegeben.
+- Das Format gibt die Grafikseite vor. Der Vertrag braucht dafür keine Änderung, solange sie das 15er-Visem-Set und die Blickkonvention oben übernimmt.
 
-Tests: `app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt` (Logik) und
-`.github/continuum/android-avatar-wiring.test.mjs` (Verdrahtung in `AgentActivity`).
+## 7. Was übernommen wurde und was nicht
+- Aus dem Avatar-Labor (`experiment/continuum-avatar-lab-offline-20261101`, nicht verändert): Wortbereich-Fallback, Mundabbildung (Totzone, Faktor, Glättung).
+  **Nicht übernommen:** die eigene Activity, der Bildimport und der zweite TTS-Listener. Das wäre die doppelte Sprachpipeline, die hier vermieden wird.
+- Aus PR #350 (Quantumflow, nicht verändert): die Diphthongregeln aus TalkingHead `lipsync-de` und eine Teilmenge des `AvatarPose`-Plans
+  (gaze, jawOpen, speakEnergy). **Nicht übernommen:** WebView/three-vrm/SceneView/MediaPipe-Kamera und der HUD-`AvatarWorkEvent`-Vertrag.
+  Dieser gehört zum Statusband und ist nicht Teil des Avatars. Kamera-Tracking wäre nur mit eigener Opt-in-Freigabe möglich.
+
+## 8. Nicht doppelt bauen
+Folgendes nicht noch einmal bauen: TTS-Listener, Audiohüllkurve (`TtsHologramSignal`), Zustandsableitung, Visem-Abbildung, eigene Avatar-Enums, ein zweites Avatar-Interface.
+Wer etwas davon braucht, konsumiert `AvatarEvent` bzw. `AvatarPose`.
+
+Tests: `app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt` (Director, Viseme, Fallback, PoseReducer) und
+`.github/continuum/android-avatar-wiring.test.mjs` (Verdrahtung inklusive Freigabe- und Blocked-Zustand).
