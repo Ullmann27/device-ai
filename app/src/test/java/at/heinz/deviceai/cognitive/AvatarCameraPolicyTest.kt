@@ -114,4 +114,34 @@ class AvatarCameraPolicyTest {
         assertNull(p.acceptFrame(token, List(9) { face() }, geometry))
         assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
     }
+    @Test fun delayedNativeCallbackCannotRelabelOldCaptureAsCurrent() {
+        val p = policy(); val token = start(p)
+        val capturedAt = now
+        now += 751
+        assertNull(p.acceptFrame(token, listOf(face()), geometry, capturedAt))
+        assertNull(p.latest())
+        assertEquals(CameraTrackingState.NO_FACE, p.state)
+    }
+    @Test fun futureOrMissingCaptureTimeCannotRenewHeartbeat() {
+        for (invalid in listOf(-1L, Long.MAX_VALUE)) {
+            val p = policy(); val token = start(p)
+            repeat(5) {
+                now += 1_000
+                assertNull(p.acceptFrame(token, listOf(face()), geometry, invalid))
+            }
+            assertTrue(p.expireHeartbeat(token))
+            assertEquals(CameraTrackingState.ERROR, p.state)
+        }
+    }
+    @Test fun validCaptureKeepsItsActualTimestampAndOriginalExpiry() {
+        val p = policy(); val token = start(p)
+        val capturedAt = now
+        now += 600
+        val observed = p.acceptFrame(token, listOf(face()), geometry, capturedAt)!!
+        assertEquals(capturedAt, observed.observedAtElapsedMillis)
+        now += 150
+        assertNotNull(p.latest())
+        now++
+        assertNull(p.latest())
+    }
 }

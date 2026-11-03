@@ -89,10 +89,17 @@ internal class AvatarCameraPolicy(private val elapsedMillis: () -> Long) {
     }
 
     @Synchronized fun acceptFrame(token: Long, faces: List<CameraFaceBox>,
-                                   geometry: CameraFrameGeometry): CameraGazeSample? {
+                                   geometry: CameraFrameGeometry,
+                                   observedAtElapsedMillis: Long? = null): CameraGazeSample? {
         if (!isCurrent(token)) return null
         val now = elapsedMillis()
         if (now < lastFrameAt) { stop(CameraTrackingState.ERROR); return null }
+        val observedAt = observedAtElapsedMillis ?: now
+        // A delayed native callback must not relabel an old capture as fresh.
+        // Invalid observations also cannot keep a stalled camera alive.
+        if (observedAt < 0 || observedAt > now || now - observedAt > GAZE_FRESHNESS_MS) {
+            clearFace(CameraTrackingState.NO_FACE); return null
+        }
         lastFrameAt = now
         if (faces.size != 1) {
             clearFace(if (faces.isEmpty()) CameraTrackingState.NO_FACE else CameraTrackingState.AMBIGUOUS)
@@ -102,8 +109,8 @@ internal class AvatarCameraPolicy(private val elapsedMillis: () -> Long) {
         if (target == null) { clearFace(CameraTrackingState.NO_FACE); return null }
         val previousAt = lastMotionAt
         // Duplicate or unexpectedly rapid metadata does not accelerate motion.
-        if (previousAt != null && now - previousAt < MIN_MOTION_INTERVAL_MS) return sample
-        val dt = if (previousAt == null) 60L else (now - previousAt).coerceIn(1, 250)
+        if (previousAt != null && observedAt - previousAt < MIN_MOTION_INTERVAL_MS) return sample
+        val dt = if (previousAt == null) 60L else (observedAt - previousAt).coerceIn(1, 250)
         val alpha = (1.0 - exp(-dt / 120.0)).toFloat()
         val maxDelta = 2f * dt / 1000f
         fun step(current: Float, targetValue: Float): Float {
@@ -111,9 +118,9 @@ internal class AvatarCameraPolicy(private val elapsedMillis: () -> Long) {
             if (abs(difference) < 0.015f) return current
             return (current + (difference * alpha).coerceIn(-maxDelta, maxDelta)).coerceIn(-1f, 1f)
         }
-        x = step(x, target.first); y = step(y, target.second); lastMotionAt = now
+        x = step(x, target.first); y = step(y, target.second); lastMotionAt = observedAt
         state = CameraTrackingState.TRACKING
-        return CameraGazeSample(x, y, faces[0].score, now).also { sample = it }
+        return CameraGazeSample(x, y, faces[0].score, observedAt).also { sample = it }
     }
 
     @Synchronized fun latest(): CameraGazeSample? {

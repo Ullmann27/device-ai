@@ -127,7 +127,11 @@ internal class AndroidAvatarCameraInput(
                                                     val rect = face.bounds
                                                     CameraFaceBox(rect.left, rect.top, rect.right, rect.bottom, face.score)
                                                 }
-                                                val observed = policy.acceptFrame(run.token, faces, selected.geometry)
+                                                // plan() requires REALTIME timestamps: these share
+                                                // SystemClock.elapsedRealtimeNanos' clock domain.
+                                                val sensorNanos = result.get(CaptureResult.SENSOR_TIMESTAMP)
+                                                val observedAt = if (sensorNanos == null || sensorNanos < 0) -1L else sensorNanos / 1_000_000L
+                                                val observed = policy.acceptFrame(run.token, faces, selected.geometry, observedAt)
                                                 if (!policy.isCurrent(run.token)) { finish(run, CameraTrackingState.ERROR); return }
                                                 deliver(run, observed)
                                             }
@@ -249,6 +253,8 @@ internal class AndroidAvatarCameraInput(
             if (c.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES)
                     ?.contains(CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE) != true) continue
             if ((c.get(CameraCharacteristics.STATISTICS_INFO_MAX_FACE_COUNT) ?: 0) < 1) continue
+            if (c.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE) !=
+                CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME) continue
             val sensor = c.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE) ?: continue
             val orientation = c.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: continue
             if (orientation !in listOf(0, 90, 180, 270)) continue
