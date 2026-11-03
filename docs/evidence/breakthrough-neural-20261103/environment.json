@@ -1,0 +1,43 @@
+{
+  "schema": "BREAKTHROUGH_NEURAL_HOST_ENVIRONMENT_V1",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "tools": {
+    "java": {
+      "executable": "/workspace/continuum-build-env/jdk17/bin/java",
+      "exitCode": 0,
+      "version": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+    },
+    "kotlinc": {
+      "executable": "/workspace/continuum-build-env/kotlin-official/kotlinc/bin/kotlinc",
+      "exitCode": 0,
+      "version": "info: kotlinc-jvm 2.4.0 (JRE 17.0.20.1+1)"
+    },
+    "node": {
+      "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "exitCode": 0,
+      "version": "v24.19.0"
+    },
+    "python3": {
+      "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "exitCode": 0,
+      "version": "Python 3.12.14"
+    }
+  },
+  "jarHashes": {
+    "/workspace/continuum-build-env/jvm-deps/json-20240303.jar": "3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed",
+    "/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c"
+  },
+  "resources": {
+    "cpuAffinity": [
+      0,
+      1
+    ],
+    "jvmHeapCapBytes": 1073741824
+  },
+  "limitations": [
+    "host only",
+    "RSS includes compilation",
+    "no Android/Fold7, energy, battery or thermal measurement"
+  ]
+}
