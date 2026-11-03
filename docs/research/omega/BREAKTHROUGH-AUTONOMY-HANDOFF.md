@@ -1,8 +1,10 @@
 # Breakthrough autonomy handoff — 2026-11-03
 
-Status: WIP / UNVERIFIED. Base `64ec06a73f50cae9ee49035c840710d87777d50f`.
+Status: focused host GREEN; candidate source freeze for independent Quality.
+Base `64ec06a73f50cae9ee49035c840710d87777d50f`.
 Branch `codex/breakthrough-autonomy-20261103`, intended Draft PR base
-`codex/team-chief/omega-20261103`. User authorized isolated research, tests,
+`codex/team-chief/omega-20261103`, Draft https://github.com/Ullmann27/device-ai/pull/400.
+User authorized isolated research, tests,
 commit/push and Draft PR. No main merge, device release or signing.
 
 EXP-02 / EXP-07 / EXP-08 / EXP-11 / EXP-12. Owned source paths:
@@ -23,7 +25,35 @@ verifier and exact strategy/failure/source binding. Actual host bridge and
 durable recovery are explicitly absent. No #384–387 code is needed for this
 bounded fault and none is imported.
 
-Tests: NOT_RUN. Local Gemma, Android/Gradle, APK and Fold7: NOT_RUN. This task
+Implemented: the existing JUnit parser retains repeated test names, decoded
+parameterized names, full repository-relative file paths, suite ancestry and
+occurrence. RED/GREEN coverage compares every baseline case and execution state
+(including skip versus todo), retaining baseline order while allowing new tests.
+Duplicate target claims fail before execution; ambiguous short target aliases
+fail closed. No new receipt schema, authenticator or scheduler was introduced.
+
+Preserved RED commit `34e6dbcd488e5eb2c5e11343f6f9710f61ca62f8`: 12 focused
+tests, 2 pass / 10 fail. Seven fault variants were wrongly VERIFIED (missing,
+renamed, skipped, todo, suite rename, reorder and skip→todo); duplicate cases
+also exposed undercounting. A valid repeated-name suite was rejected before the
+repair. Actual temporary Git sources, commit/patch receipt bytes, patch content,
+path binding, per-run JUnit hashes and verdicts are in `red/` and `green/`.
+
+Focused repaired suite: 17/17 pass, zero skips; Node v24.19.0 / Git 2.52.0.
+Verifier source SHA-256 `c2995353ec6a5f82dec94717699daec9792a755a028bfdac8897f87136eec53d`.
+Both commit and patch modes execute actual fixed-profile tests. Existing forged
+self-report cases remain rejected. A real 100ms execution timeout is rejected;
+fresh retry succeeds and no additional worktree is retained. Caller HEAD/status
+and registered worktree list are preserved around the fault experiments.
+Full CCC1 regression: RUNNING at candidate freeze; independent Quality: PENDING.
+
+Commands and complete exits are in `coverage-red.tap`, `coverage-green.tap` and
+the forthcoming `ccc1-regression.tap`. Fixture test sources are synthetic and
+reviewed; detached worktrees are source isolation, not an OS security sandbox.
+The verifier's own execution authenticates neither arbitrary untrusted test
+semantics nor a remote worker. Existing journal/runtime authority remains separate.
+
+Local Gemma, Android/Gradle, APK and Fold7: NOT_RUN. This task
 can establish host pipeline behavior only, not general coding intelligence.
 Quota: NOT_VISIBLE.
 

@@ -36,20 +36,36 @@ const isCommit=(repo,sha)=>SHA1.test(sha)&&git(repo,['cat-file','-t',sha]).out?.
 const ancestor=(repo,a,b)=>git(repo,['merge-base','--is-ancestor',a,b]).code===0;
 const changed=(repo,a,b)=>git(repo,['diff','--name-only',a,b]).out.split('\n').filter(Boolean);
 
-/** Parses node/JUnit XML into {id -> passed}; id = <file stem>.<testcase name> and <classname>.<name>. */
-export function parseJunit(xml){
- const cases=new Map();
- const re=/<testcase\b([^>]*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
- const attr=(s,k)=>(s.match(new RegExp('\\b'+k+'="([^"]*)"'))||[])[1];
+/** Parse the fixed Node reporter, retaining duplicate cases, suite ancestry and repository-relative paths.
+ * Short ids remain receipt aliases; they are not sufficient coverage identities on their own.
+ */
+export function parseJunit(xml,{root=null}={}){
+ const cases=new Map(),suites=[],occurrences=new Map();
+ const re=/<testsuite\b([^>]*?)>|<\/testsuite\s*>|<testcase\b([^>]*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
+ const decode=s=>s?.replace(/&(?:amp|lt|gt|quot|apos);|&#(?:x[0-9a-f]+|[0-9]+);/gi,x=>{
+  const known={'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&apos;':"'"};
+  if(known[x])return known[x];const n=x.startsWith('&#x')?parseInt(x.slice(3,-1),16):Number(x.slice(2,-1));
+  return Number.isInteger(n)&&n>0&&n<=0x10ffff?String.fromCodePoint(n):x;
+ });
+ const attr=(s,k)=>decode((s.match(new RegExp('\\b'+k+'="([^"]*)"'))||[])[1]);
  let m;
  while((m=re.exec(xml))){
-  const a=m[1],name=attr(a,'name'),cls=attr(a,'classname'),file=attr(a,'file');
+  if(m[0].startsWith('</testsuite')){suites.pop();continue;}
+  if(m[1]!==undefined){suites.push(attr(m[1],'name')??'');continue;}
+  const a=m[2],name=attr(a,'name'),cls=attr(a,'classname'),file=attr(a,'file');
   if(!name)continue;
-  const body=m[3]??'';
+  const body=m[4]??'';
   const failed=/<(failure|error)\b/.test(body)||/\bfailure="/.test(a);
   const skipped=/<skipped\b/.test(body);
+  const skipType=skipped?(attr(body.match(/<skipped\b([^>]*)>/)?.[1]??'','type')??'skipped'):null;
   const stem=file?path.basename(file).replace(/\.test\.[cm]?js$/,'').replace(/\.[cm]?js$/,''):cls;
-  cases.set(`${stem}.${name}`,{failed,skipped,alias:cls?`${cls}.${name}`:null});
+  const source=file&&root?path.relative(root,file).split(path.sep).join('/'):file??cls??'';
+  const tuple=JSON.stringify([source,suites,name]),occurrence=(occurrences.get(tuple)??0)+1;
+  occurrences.set(tuple,occurrence);
+  const legacyId=`${stem}.${name}`;let id=legacyId;
+  // Do not collapse parameterized or repeated names into one reported test.
+  while(cases.has(id))id+='\0';
+  cases.set(id,{failed,skipped,skipType,legacyId,identity:JSON.stringify([source,suites,name,occurrence]),alias:cls?`${cls}.${name}`:null});
  }
  return cases;
 }
@@ -77,7 +93,7 @@ export function runNodeProfile(repo,commit,{patchPath=null,timeoutMs=120000}={})
    {cwd:wt,encoding:'utf8',timeout:timeoutMs,env:{PATH:process.env.PATH,HOME:dir}});
   if(r.error||r.signal)return {ok:false,reason:'TIMEOUT_OR_SIGNAL'};
   const xml=fs.existsSync(out)?fs.readFileSync(out):Buffer.alloc(0);
-  const cases=parseJunit(xml.toString('utf8'));
+  const cases=parseJunit(xml.toString('utf8'),{root:wt});
   return {ok:true,exitCode:r.status,xmlSha256:sha256(xml),cases,
    executed:[...cases.values()].filter(c=>!c.skipped).length,failed:[...cases.values()].filter(c=>c.failed).length};
  }finally{
@@ -86,22 +102,42 @@ export function runNodeProfile(repo,commit,{patchPath=null,timeoutMs=120000}={})
  }
 }
 
-const lookup=(cases,id)=>cases.get(id)??[...cases.values()].find(c=>c.alias===id);
+const matching=(cases,id)=>[...cases].filter(([key,c])=>key===id||c.legacyId===id||c.alias===id).map(([,c])=>c);
+const lookup=(cases,id)=>{const matches=matching(cases,id);return matches.length===1?matches[0]:null;};
 const sameSet=(a,b)=>a.length===b.length&&[...a].sort().every((x,i)=>x===[...b].sort()[i]);
+const validTargets=targets=>Array.isArray(targets)&&targets.length>0&&targets.every(t=>typeof t==='string'&&t.length>0)&&new Set(targets).size===targets.length;
+
+function compareCoverage(red,green,reasons){
+ const candidate=[...green.cases.values()];let cursor=0;
+ for(const baseline of red.cases.values()){
+  const identity=baseline.identity;
+  const index=candidate.findIndex(c=>c.identity===identity);
+  if(!identity||index<0){reasons.push('BASELINE_TEST_IDENTITY_MISSING');continue;}
+  const observed=candidate[index];
+  if(baseline.skipped!==observed.skipped||baseline.skipType!==observed.skipType)
+   reasons.push('BASELINE_TEST_EXECUTION_CHANGED');
+  if(index<cursor)reasons.push('BASELINE_TEST_ORDER_CHANGED');
+  cursor=index+1;
+ }
+}
 
 function compareRuns(receipt,red,green,reasons){
  const targets=receipt.targetTests;
  if(!red.ok)reasons.push('RED_RUN_'+red.reason);
  if(!green.ok)reasons.push('GREEN_RUN_'+green.reason);
  if(!red.ok||!green.ok)return;
+ compareCoverage(red,green,reasons);
  const redFailing=[...red.cases].filter(([,c])=>c.failed).map(([id])=>id);
  if(red.exitCode===0||redFailing.length===0)reasons.push('RED_DID_NOT_FAIL');
  if(redFailing.some(id=>!targets.includes(id)&&!targets.includes(red.cases.get(id)?.alias)))reasons.push('RED_FAILS_OUTSIDE_TARGETS');
  if(targets.some(t=>!lookup(red.cases,t)))reasons.push('TARGET_MISSING_IN_RED');
+ if(targets.some(t=>matching(red.cases,t).length>1||matching(green.cases,t).length>1))reasons.push('TARGET_IDENTITY_AMBIGUOUS');
  for(const t of targets){const c=lookup(green.cases,t);if(!c||c.failed||c.skipped)reasons.push('TARGET_NOT_PASSING_IN_GREEN');}
  if(green.exitCode!==0||green.failed!==0)reasons.push('GREEN_HAS_FAILURES');
  const r=receipt.red,g=receipt.green;
- if(!r||!g){reasons.push('CLAIMED_RUN_MISSING');return;}
+ if(!r||!g||!Array.isArray(r.failingTests)||!Array.isArray(g.failingTests)||!Array.isArray(g.passedTargets)){
+  reasons.push('CLAIMED_RUN_MISSING');return;
+ }
  if(!sameSet(r.failingTests,redFailing))reasons.push('CLAIMED_RED_FAILURES_DIFFER');
  if(r.executed!==red.executed||r.failed!==red.failed)reasons.push('CLAIMED_RED_COUNTS_DIFFER');
  if(g.executed!==green.executed||g.failed!==green.failed||g.failingTests.length)reasons.push('CLAIMED_GREEN_COUNTS_DIFFER');
@@ -115,7 +151,7 @@ export function verifyCommitReceipt({repo,receiptBytes,run=runNodeProfile}){
  try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{receipt=null;}
  if(!receipt||receipt.schema!==RECEIPT_SCHEMA||receipt.version!==1)return attestation(receiptBytes,'REJECTED',['RECEIPT_SCHEMA']);
  const {baseSha,redSha,greenSha,patchSha256,targetTests}=receipt;
- if(!Array.isArray(targetTests)||!targetTests.length)reasons.push('TARGET_TESTS');
+ if(!validTargets(targetTests))reasons.push('TARGET_TESTS');
  if(![baseSha,redSha,greenSha].every(s=>isCommit(repo,s)))reasons.push('COMMIT_NOT_IN_REPOSITORY');
  if(new Set([baseSha,redSha,greenSha]).size!==3)reasons.push('COMMITS_NOT_DISTINCT');
  if(receipt.approvedForMerge||receipt.installed||receipt.deviceVerified)reasons.push('FORBIDDEN_CLAIM');
@@ -137,7 +173,7 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
  const reasons=[];
  let receipt=null;
  try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{}
- if(!receipt||!Array.isArray(receipt.targetTests)||!receipt.targetTests.length)reasons.push('TARGET_TESTS');
+ if(!receipt||!validTargets(receipt.targetTests))reasons.push('TARGET_TESTS');
  if(!isCommit(repo,baseCommit))reasons.push('COMMIT_NOT_IN_REPOSITORY');
  let bytes=null;try{bytes=fs.readFileSync(patchPath);}catch{reasons.push('PATCH_MISSING');}
  if(bytes&&(!SHA256.test(patchSha256)||sha256(bytes)!==patchSha256))reasons.push('PATCH_HASH_MISMATCH');
