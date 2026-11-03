@@ -63,6 +63,7 @@ if(!['health','chat','patch','coding','coding-remote'].includes(command)) {
       process.stdout.write(result.text+'\n');
     }
   } catch(e) {
+    if(command==='coding'&&e?.modelInferenceEnvelope)process.stdout.write(JSON.stringify(e.modelInferenceEnvelope)+'\n');
     if(command==='coding-remote') {
       // Even JSON parser and transport exceptions must never echo private input.
       const code=REMOTE_FAILURE_CODES.includes(e?.code)?e.code:'REMOTE_REQUEST_INVALID';

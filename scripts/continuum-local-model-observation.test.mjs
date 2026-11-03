@@ -148,8 +148,8 @@ int main(){usleep(200000);puts("{\\"plan\\":[\\"fixture\\"],\\"hypothesis\\":\\"
  const timer=setTimeout(()=>fs.appendFileSync(f.modelPath,'changed'),100);
  try{await assert.rejects(queryPinnedLocalCoding(f),/LOCAL_RUNTIME_FILE_CHANGED/);}finally{clearTimeout(timer);}
 });
-function taskFixture(t){
- const f=fixture(t),root=path.join(f.dir,'checkout');fs.mkdirSync(path.join(root,'lib'),{recursive:true});
+function taskFixture(t,options){
+ const f=fixture(t,options),root=path.join(f.dir,'checkout');fs.mkdirSync(path.join(root,'lib'),{recursive:true});
  fs.writeFileSync(path.join(root,'lib/pages.mjs'),'export const pages=(a,b)=>a/b;\n');
  for(const args of [['init','-q'],['add','lib/pages.mjs'],['-c','user.name=Runtime Test','-c','user.email=runtime@test.invalid','commit','-qm','fixture']]){
   const result=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(result.status,0,result.stderr);
@@ -245,4 +245,24 @@ test('invalid model JSON retains authenticated process observation without a can
   assert.equal(envelope?.proposal,undefined);
   return true;
  });
+});
+
+test('provider retains authenticated rejected-response observation and consumed durable budget',t=>{
+ const f=taskFixture(t,{program:'#include <stdio.h>\nint main(){puts("PRIVATE_INVALID_REPLY_SENTINEL");fputs("eval time = 1 ms / 5 runs\\n",stderr);}'});
+ f.env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND='LLAMA_CPP';
+ const evidenceDir=path.join(f.dir,'evidence'),p=provider.createCodingCandidateProvider({...f,evidenceDir});
+ assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),error=>{
+  assert.equal(error.code,'CODING_RESPONSE_INVALID');
+  assert.equal(error.modelObservation?.responseStatus,'INVALID_MODEL_RESPONSE');
+  assert.equal(error.modelObservation?.verifiedModelExecution,false);
+  assert.equal(error.modelObservation?.proposalSha256,null);
+  assert.equal(provider.isTrustedLocalModelObservation(error.modelObservation),true);
+  assert.equal(provider.isTrustedLocalModelObservation(JSON.parse(JSON.stringify(error.modelObservation))),false);
+  return true;
+ });
+ const trace=JSON.parse(fs.readFileSync(path.join(evidenceDir,'request-1.json'),'utf8'));
+ assert.equal(trace.status,'INVALID_MODEL_RESPONSE');assert.equal(trace.modelObservation.outputTokens,5);
+ assert.ok(!JSON.stringify(trace).includes('PRIVATE_INVALID_REPLY_SENTINEL'));
+ const resumed=provider.createCodingCandidateProvider({...f,evidenceDir});
+ assert.throws(()=>resumed({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),/BUDGET_EXHAUSTED/);
 });

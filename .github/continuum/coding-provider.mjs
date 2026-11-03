@@ -1,6 +1,7 @@
 /** Generative candidate adapter for the canonical Repair Loop; no model-provided tool actions. */
 import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {fileURLToPath} from 'node:url';
 import {randomBytes,createHmac,timingSafeEqual} from 'node:crypto';
+import {getReviewedLocalModelPair} from '../../scripts/continuum-local-model-pins.mjs';
 import {serializeLocalCodingPrompt} from '../../scripts/continuum-local-model-observation.mjs';
 import {buildCodingRequest} from '../../scripts/continuum-local-brain.mjs';
 import {validateCodingTask,taskFingerprint,validateCodingProposal} from './coding-task.mjs';
@@ -195,8 +196,51 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    if(evidence)writeTrace(number,{...trace,status,...extras,responseSha256,
     responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false});
   };
+  const attachObservation=error=>{
+   if(trace.modelObservation)Object.assign(error,{modelObservation:trace.modelObservation,trace});
+   return error;
+  };
+  const authenticateLocalResult=(wire,responseStatus)=>{
+   const observation=wire?.modelObservation;
+   const {body}=buildCodingRequest({userPrompt,allowedTrackedPaths:spec.allowedPaths,model});
+   const pair=getReviewedLocalModelPair({modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,
+    runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256});
+   const verified=!!pair&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='LLAMA_CPP';
+   const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body)),
+    modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,
+    proposalSha256:responseStatus==='PROPOSAL'&&wire.proposal?sha256Hex(canonical(wire.proposal)):null,
+    responseStatus,verifiedModelExecution:verified,reviewedPairId:verified?pair.id:null};
+   const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
+   if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
+    observation.evidenceClass!==(verified?'LOCAL_MODEL_HOST':'HOST_INTEGRATION')||observation.isolation!=='BWRAP_UNSHARE_ALL'||
+    Object.entries(expected).some(([key,value])=>observation[key]!==value)||wire.verifiedModelExecution!==verified||
+    !/^[a-f0-9]{64}$/.test(observation.outputSha256??'')||observation.exitCode!==0||
+    !Number.isSafeInteger(observation.pid)||observation.pid<1||
+    !Number.isSafeInteger(observation.outputTokens)||observation.outputTokens<1||observation.outputTokens>1800||
+    !Number.isSafeInteger(observation.elapsedMs)||observation.elapsedMs<0||observation.elapsedMs>timeoutMs||
+    !/^[a-f0-9]{64}$/.test(wire.observationMac??'')||
+    !timingSafeEqual(Buffer.from(expectedMac,'hex'),Buffer.from(wire.observationMac,'hex'))){
+    finishTrace('INVALID_OUTPUT',{failureKind:'MODEL_OBSERVATION_INVALID'});
+    throw rejectedModelOutput('CODING_MODEL_OBSERVATION_INVALID');
+   }
+   if(run!==spawnSync){
+    finishTrace('INVALID_OUTPUT',{failureKind:'CONTRACT_TRANSPORT_UNTRUSTED'});
+    throw rejectedModelOutput('CODING_MODEL_OBSERVATION_UNTRUSTED');
+   }
+   trace.modelObservation=Object.freeze({...observation});trustedObservations.add(trace.modelObservation);
+   trace.verifiedModelExecution=verified;
+   return trace.modelObservation;
+  };
   const failed=response.status!==0||response.error||response.signal;
   if(failed){
+   let failureWire=null;
+   if(!remoteTeacher){try{failureWire=JSON.parse(responseText);}catch{}}
+   if(failureWire?.mode==='LOCAL_CODING_INFERENCE_FAILURE_V1'&&failureWire.trusted===false&&failureWire.autoApply===false&&
+    ['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH'].includes(failureWire.errorCode)){
+    const observation=authenticateLocalResult(failureWire,'INVALID_MODEL_RESPONSE');
+    finishTrace('INVALID_MODEL_RESPONSE',{failureKind:failureWire.errorCode});
+    throw attachObservation(rejectedModelOutput(failureWire.errorCode,observation.outputSha256));
+   }
    // Only exact codes from our fixed local CLI are diagnostic data. Never
    // persist untrusted stderr or treat an exit code as successful inference.
    const rejected=!remoteTeacher&&
@@ -233,42 +277,16 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    finishTrace('INVALID_OUTPUT',{failureKind:'REMOTE_IDENTITY_INVALID'});
    throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);
   }
-  if(!remoteTeacher&&result.verifiedModelExecution===true){
-   finishTrace('INVALID_OUTPUT',{failureKind:'SELF_ASSERTED_MODEL_EXECUTION'});
-   throw rejectedModelOutput('CODING_MODEL_OBSERVATION_INVALID');
+  if(!remoteTeacher){
+   if(result.modelObservation!==undefined||result.verifiedModelExecution===true||run===spawnSync||strictObservation)
+    authenticateLocalResult(result,'PROPOSAL');
+   else trace.evidenceClass='CONTRACT_TEST';
   }
   let proposal;
   try{proposal=validateCodingProposal(result.proposal,spec);}
   catch{
    finishTrace('INVALID_OUTPUT',{failureKind:'PROPOSAL_REJECTED'});
-   throw rejectedModelOutput('CODING_PROPOSAL_INVALID',responseSha256);
-  }
-  if(!remoteTeacher){
-   const observation=result.modelObservation;
-   if(observation!==undefined||run===spawnSync||strictObservation){
-    const {body}=buildCodingRequest({userPrompt,allowedTrackedPaths:spec.allowedPaths,model});
-    const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body)),
-     modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,
-     proposalSha256:sha256Hex(canonical(result.proposal))};
-    const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
-    if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
-     observation.evidenceClass!=='HOST_INTEGRATION'||observation.isolation!=='BWRAP_UNSHARE_ALL'||
-     Object.entries(expected).some(([key,value])=>typeof value!=='string'&&key!=='requestIndex'||observation[key]!==value)||
-     !/^[a-f0-9]{64}$/.test(observation.outputSha256??'')||observation.exitCode!==0||
-     !Number.isSafeInteger(observation.pid)||observation.pid<1||
-     !Number.isSafeInteger(observation.outputTokens)||observation.outputTokens<1||observation.outputTokens>1800||
-     !Number.isSafeInteger(observation.elapsedMs)||observation.elapsedMs<0||observation.elapsedMs>timeoutMs||
-     !/^[a-f0-9]{64}$/.test(result.observationMac??'')||
-     !timingSafeEqual(Buffer.from(expectedMac,'hex'),Buffer.from(result.observationMac,'hex'))){
-     finishTrace('INVALID_OUTPUT',{failureKind:'MODEL_OBSERVATION_INVALID'});
-     throw rejectedModelOutput('CODING_MODEL_OBSERVATION_INVALID');
-    }
-    if(run!==spawnSync){
-     finishTrace('INVALID_OUTPUT',{failureKind:'CONTRACT_TRANSPORT_UNTRUSTED'});
-     throw rejectedModelOutput('CODING_MODEL_OBSERVATION_UNTRUSTED');
-    }
-    trace.modelObservation=Object.freeze({...observation});trustedObservations.add(trace.modelObservation);
-   }else trace.evidenceClass='CONTRACT_TEST';
+   throw attachObservation(rejectedModelOutput('CODING_PROPOSAL_INVALID',responseSha256));
   }
   // Syntactically bounded proposal, not a verified code repair. The existing
   // branded CCC1 gate remains solely responsible for execution and proof.

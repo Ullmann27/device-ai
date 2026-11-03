@@ -6,6 +6,7 @@ import {createHash,createHmac} from 'node:crypto';
 import {readPinnedGgufManifest} from './continuum-gguf-preflight.mjs';
 import {admitGgufFile} from './continuum-gguf.mjs';
 import {buildCodingRequest,parseCodingResponse} from './continuum-local-brain.mjs';
+import {getReviewedLocalModelPair} from './continuum-local-model-pins.mjs';
 import {canonical} from '../.github/continuum/development-backlog.mjs';
 import {requireCodingModelPreflight} from './continuum-m2-model-preflight.mjs';
 const BWRAP='/usr/bin/bwrap',PRLIMIT='/usr/bin/prlimit';
@@ -171,14 +172,30 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
   const execution=await launchLocalModel({fds:[model.fd,runtime.fd],promptFd,
    timeoutMs:Math.max(1,timeoutMs-(Date.now()-started)),signal:controller.signal});active();
   if(await digestFile(model,active)!==pin.sha256||await digestFile(runtime,active)!==runtimeHash)fail('LOCAL_RUNTIME_FILE_CHANGED');
-  const parsed=parseCodingResponse({choices:[{message:{content:execution.text.trim()}}]},paths);
-  const observation={schema:'momega1-local-process-observation-v1',evidenceClass:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='CONTRACT_FIXTURE'?'CONTRACT_TEST':execution.evidenceClass,...binding,
+  let parsed,responseError=null;
+  try{parsed=parseCodingResponse({choices:[{message:{content:execution.text.trim()}}]},paths);}
+  catch(error){responseError=error;}
+  const reviewedPair=getReviewedLocalModelPair({modelSha256:pin.sha256,runtimeSha256:runtimeHash});
+  const verifiedModelExecution=!!reviewedPair&&execution.evidenceClass==='HOST_INTEGRATION'&&
+   env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='LLAMA_CPP'&&pin.repository===reviewedPair.modelRepository&&
+   pin.revision===reviewedPair.modelRevision&&pin.filename===reviewedPair.modelFilename&&
+   pin.sizeBytes===reviewedPair.modelBytes&&pin.license===reviewedPair.modelLicense;
+  const observation={schema:'momega1-local-process-observation-v1',
+   evidenceClass:verifiedModelExecution?'LOCAL_MODEL_HOST':env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='CONTRACT_FIXTURE'?'CONTRACT_TEST':execution.evidenceClass,
+   verifiedModelExecution,reviewedPairId:verifiedModelExecution?reviewedPair.id:null,...binding,
    requestSha256:hash(JSON.stringify(body)),runtimePromptSha256:hash(prompt),modelSha256:pin.sha256,runtimeSha256:runtimeHash,
-   outputSha256:hash(execution.text),proposalSha256:hash(canonical(parsed.proposal)),
+   outputSha256:hash(execution.text),proposalSha256:parsed?hash(canonical(parsed.proposal)):null,
+   responseStatus:responseError?'INVALID_MODEL_RESPONSE':'PROPOSAL',
    outputTokens:execution.outputTokens,pid:execution.pid,exitCode:execution.exitCode,
    isolation:'BWRAP_UNSHARE_ALL',elapsedMs:Date.now()-started};
-  return {...parsed,verifiedModelExecution:false,modelObservation:observation,
-   observationMac:createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex')};
+  const observationMac=createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
+  if(responseError){
+   const errorCode=String(responseError.message).split(':')[0];
+   responseError.modelInferenceEnvelope=Object.freeze({mode:'LOCAL_CODING_INFERENCE_FAILURE_V1',
+    trusted:false,autoApply:false,errorCode,verifiedModelExecution,modelObservation:Object.freeze(observation),observationMac});
+   throw responseError;
+  }
+  return {...parsed,verifiedModelExecution,modelObservation:observation,observationMac};
  }catch(error){
   const code=String(error?.message??'');
   if(/^(?:LOCAL_|BLOCKED_LOCAL_|GGUF_|CODING_|INVALID_|MODEL_|ALTERNATE_|EXPLICIT_|GEMMA_|UNSUPPORTED_)[A-Z0-9_:a-f]+$/.test(code))throw error;

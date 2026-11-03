@@ -113,3 +113,17 @@ pinned official llama.cpp CPU build. Baseline95b6cb1f merged before work; prior
 reviewed process-only HOST_INTEGRATION semantics preserved. See
 LOCAL-MODEL-RUNTIME-ADMISSION.md. Download/build artifacts outside Git; independent
 challenger must approve reviewed tuple before true-inference admission is enabled.
+
+Actual-model phase checkpoint: weights match official approved1117320768bytes,
+SHA256 cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046;
+existing GGUF parser admits qwen2 architecture. Official source clean tree
+42065e172024f95eb242763caa06812c09d363e7 at6cb3e672. Initial llama-cli target
+unavailable with server disabled; approved classic llama-completion target build
+is progressing outside Git with same pinned source and2jobs. Registry remains
+CANDIDATE; no actual-model true receipt can be minted yet.
+Rejected model replies now retain a signed bounded failure envelope with hashes,
+decoded-token count and INVALID_MODEL_RESPONSE status; no raw rejected reply or
+candidate. Provider authenticates it, preserves private-branded observation on
+error.modelObservation/error.trace and durable trace, then throws the typed model
+response error. Inference failure is distinct from unavailable model. Config-only
+ELF fixtures remain HOST_INTEGRATION/verifiedModelExecution=false.
