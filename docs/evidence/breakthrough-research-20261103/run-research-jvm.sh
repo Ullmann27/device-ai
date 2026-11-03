@@ -12,14 +12,15 @@ cp="$dependency_classes:$jars/junit-4.13.2.jar:$jars/hamcrest-core-1.3.jar:$jars
 {
     git -C "$source_root" rev-parse HEAD
     git -C "$source_root" status --short
-    sha256sum "$source_root/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt"
+    sha256sum "$source_root/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt" "$source_root/app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt"
     java -version
     kotlinc -version
 } > "$out/environment.txt" 2>&1
 kotlinc "$source_root/app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt" \
+    "$source_root/app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt" \
     -module-name app -Xfriend-paths="$dependency_classes" -cp "$dependency_classes" \
     -XXLanguage:+BreakContinueInInlineLambdas -d "$out/main" > "$out/compile-main.log" 2>&1
-classes=(ResearchClaimAdmissionTest ResearchPromptGraphBoundaryTest ResearchEngineTest
+classes=(ResearchClaimAdmissionTest ResearchPromptGraphBoundaryTest ResearchPromptControlTokenTest ResearchEngineTest
     UntrustedResearchEvidenceTest ResearchSanitizerBudgetTest ResearchSanitizerEdgeCaseTest
     ResearchNegationSignalsTest ResearchQuestionFocusTest ResearchTest)
 test_sources=()

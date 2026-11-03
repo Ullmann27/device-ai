@@ -28,7 +28,15 @@
       }
     }
   },
-  "independentQA": "PENDING_SOURCE_FREEZE",
+  "independentQA": {
+    "fixtureSha256": "1d3fadb7c3a6fdbb9a31f440f7c756161847280f74eaf031d50cc4d95d9f848c",
+    "initialBaselinePassed": 6,
+    "initialCandidatePassed": 15,
+    "total": 16,
+    "failedCase": "QB-R-010",
+    "state": "CONSUMED_AFTER_FIRST_EVALUATION",
+    "followup": "PENDING_REGRESSION_RERUN"
+  },
   "status": "NARROW_JVM_PASS_NOT_DEVICE_OR_MODEL_VERIFIED",
   "dependencyClasses": "/workspace/continuum-quality/app/build/tmp/kotlin-classes/debug, supplied by independent quality lane from full gate on baseline64ec; ResearchEngine.kt recompiled separately for baseline and candidate.",
   "rawLogs": [

@@ -40,3 +40,11 @@ Literal occurrence does not prove entailment, factual truth, freshness or correc
 The strict literal grouping uses exact-text claim IDs rather than case-folded IDs; claims are recomputed by the existing engine, with no file-format migration or memory writes. Any future paraphrase extractor needs its own evidence contract.
 
 Next step: record untouched QA results for frozen6308, then Chief review/integration against the exact source and full combined gate. If independent cases fail, keep the result visible; any subsequent repair needs a fresh independent holdout. Rollback is a normal revert of isolated R1 production/test changes; no state or weight rollback is required. No main merge, branch deletion, APK publication or installation is authorized here.
+
+## Targeted QA followup: bracketed control delimiters
+
+The first untouched independent16 run reported baseline **6/16**, frozen6308 candidate **15/16**. Case QB-R-010 retained `[INST]` in a directly supplied ResearchPromptBoundary claim ID; actual engine claim IDs are regenerated, but the public rendering boundary still had a raw delimiter. Its raw result and source-bound receipt are retained under `control-followup/`. The 16 cases are now **consumed regression cases**, never a new blind success after this repair.
+
+Chief explicitly extended the lane lease to `BoundedResearchTextSanitizer.kt`. The narrow scanner now renders untrusted input square brackets as fullwidth brackets, preserving readable math/units/quotes and preventing raw bracketed controls or forged SOURCE markers. Only its fixed harmless display-marker vocabulary remains stable across repeated sanitization; those strings are formatting, not authenticated metadata. App-generated SOURCE markers are emitted after sanitization and remain intact. Claim.text and ResearchEngine source admission are unchanged.
+
+Six authored control tests reproduced **1/6 before → 6/6 after**; all prior50 pass unchanged, for **56/56**. Tests cover the known QA ID, common angle/bracket delimiters across prompt surfaces, actual engine literal preservation, source marker separation, ordinary bracketed math/units, and idempotence across budgets0..128. Raw RED/GREEN/compiler logs and exact source hashes are in `control-followup/`. Known16 regression rerun pending. No model immunity, semantic correctness or device result is claimed.
