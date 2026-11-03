@@ -1,0 +1,10 @@
+{
+  "source": "c50266b27ba65a7e253be75c67b5f4d7f89a6973",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt": "795fc761c4a3952567cf01515c537a364f3bd6bd19c507a99959c3ea78b04e95",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "226f68649bfb28563ec4e07f82b7190c2af5dec77c754a7c1a73fd8a2328b662",
+    "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt": "bbb9553b1d024733e34f19969dc367f72e2584100c4cb7e0691660ee2194d409"
+  },
+  "testSha256": "8fca3157f599d473bfa2d058c252e9c973b7487f602e2372f03ef18ec4fef7d3",
+  "sourceInitSha256": "e8b1efd30d5bbe0a566edeee1aaf75a0da925b12664f34b7ae37b41c7302b25e"
+}
