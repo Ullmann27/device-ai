@@ -19,6 +19,7 @@ internal object PublicKnowledgeTopicRouter {
 
     fun topic(message: String): String? {
         val cleaned = message.trim().replace(Regex("\\s+"), " ")
+        if (OwnerChatIntentRouter.route(cleaned) != null) return null
         if (cleaned.length !in 8..220 || !startsAsKnowledgeQuestion.containsMatchIn(cleaned) ||
             privateMarkers.containsMatchIn(cleaned) ||
             cleaned.any { it.isISOControl() }) return null
