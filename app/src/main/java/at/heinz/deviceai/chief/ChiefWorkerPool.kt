@@ -59,7 +59,8 @@ class ChiefWorkerPool(
     }
 
     private val runners: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker").apply { isDaemon = true } }
-    private val workers: ExecutorService = Executors.newCachedThreadPool { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } }
+    // Never spawn unbounded job threads if a native model ignores an interrupt.
+    private val workers: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } }
     private val slots = ConcurrentHashMap<String, Slot>()
 
     @Synchronized
