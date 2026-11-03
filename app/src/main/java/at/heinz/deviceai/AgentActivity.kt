@@ -1469,6 +1469,8 @@ class AgentActivity : Activity() {
     }
 
     private fun botContextChanging(agentId: String) {
+        // A pending selection may have loaded this profile before its owner edit.
+        botLookupRevision++
         if (selectedBot?.agentId != agentId) return
         cancelSpeechInputScope()
         // Invalidate synchronously before an owner edit is queued, not after its disk write.
