@@ -8,6 +8,15 @@ import * as provider from '../.github/continuum/coding-provider.mjs';
 import {assertCodingModelObservationBinding,prepareCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
 import {recordTechnicalExperience} from '../.github/continuum/ccc1-technical-recall.mjs';
 import {runtimeKey} from '../.github/continuum/ccc1-journal.mjs';
+import {inspectModelIsolationTestHost} from './continuum-model-test-host.mjs';
+
+let observedIsolationHost;
+const isolationHost=()=>observedIsolationHost??=inspectModelIsolationTestHost();
+function requireIsolationProofHost(t,kind='query'){
+ const capability=isolationHost()[kind];
+ if(capability.available)return true;
+ t.skip('HOST_ISOLATION_PROOF_NOT_RUN: '+capability.reason);return false;
+}
 
 test('normal caller cannot certify a serialized runtime observation',()=>{
  assert.equal(typeof provider.isTrustedLocalModelObservation,'function');
@@ -57,7 +66,30 @@ function fixture(t,{program}={}){
  const env={CONTINUUM_LOCAL_BRAIN_MODEL:'contract-fixture',CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:sha(bytes),CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF',CONTINUUM_LOCAL_BRAIN_MODEL_PATH:modelPath,CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST:manifestPath,CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH:runtimePath,CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256:sha(fs.readFileSync(runtimePath)),CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND:'CONTRACT_FIXTURE'};
  return {dir,modelPath,runtimePath,manifestPath,userPrompt,binding,env,observationKey:'d'.repeat(64),allowedTrackedPaths:['lib/pages.mjs'],timeoutMs:3000};
 }
+test('real host isolation admission matches independent capability and refuses without an observation',async t=>{
+ const host=isolationHost(),f=fixture(t);
+ t.diagnostic('HOST_ISOLATION_CAPABILITY: '+JSON.stringify(host));
+ const refuses=expected=>error=>{
+  assert.equal(error.message,expected);
+  assert.equal(error.modelObservation,undefined);assert.equal(error.modelInferenceEnvelope,undefined);
+  return true;
+ };
+ if(host.query.available){
+  // An always-rejecting production guard on a capable host must fail this test.
+  const result=await queryPinnedLocalCoding(f);
+  assert.equal(result.modelObservation.evidenceClass,'CONTRACT_TEST');assert.equal(result.verifiedModelExecution,false);
+ }else{
+  await assert.rejects(queryPinnedLocalCoding(f),refuses(host.query.expectedFailure));
+ }
+ if(!host.launcher.available){
+  const model=fs.openSync(f.modelPath,'r'),runtime=fs.openSync(f.runtimePath,'r'),prompt=fs.openSync(f.manifestPath,'r');
+  try{await assert.rejects(launchLocalModel({fds:[model,runtime],promptFd:prompt,timeoutMs:1000}),
+   refuses(host.launcher.expectedFailure));}
+  finally{fs.closeSync(model);fs.closeSync(runtime);fs.closeSync(prompt);}
+ }
+});
 test('actual namespace binds admitted descriptors and fixture output; never inference evidence',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t);const result=await queryPinnedLocalCoding(f);
  assert.equal(result.modelObservation.evidenceClass,'CONTRACT_TEST');
  assert.equal(result.verifiedModelExecution,false);
@@ -76,16 +108,19 @@ test('altered model/runtime, unsafe executable and mismatched request cannot exe
  await assert.rejects(queryPinnedLocalCoding({...f,env:{...f.env,CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH:path.join(f.dir,'alias')}}),/UNSAFE_FILE/);
 });
 test('deadline cancels actual isolated process with bounded return',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:'#include <unistd.h>\nint main(){while(1)sleep(1);}'});const start=Date.now();
  await assert.rejects(queryPinnedLocalCoding({...f,timeoutMs:250}),/CODING_TIMEOUT/);
  assert.ok(Date.now()-start<2000);
 });
 test('STOP cancels actual isolated process and leaves no trusted observation',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:'#include <unistd.h>\nint main(){while(1)sleep(1);}'}),controller=new AbortController();
  const timer=setTimeout(()=>controller.abort(),150);
  try{await assert.rejects(queryPinnedLocalCoding({...f,signal:controller.signal}),/CODING_CANCELLED/);}finally{clearTimeout(timer);}
 });
 test('malformed/oversized output and missing generation counters are rejected',async t=>{
+ if(!requireIsolationProofHost(t))return;
  for(const program of [
  '#include <stdio.h>\nint main(){puts("not JSON");fputs("eval time = 1 ms / 5 runs\\n",stderr);}',
  '#include <stdio.h>\nint main(){for(int i=0;i<70000;i++)putchar(65);}',
@@ -100,6 +135,7 @@ test('sandbox exposes no checkout, HOME, network, secret or configurable shell',
 });
 
 test('actual FD mount retains selected inode across model path replacement',async t=>{
+ if(!requireIsolationProofHost(t,'launcher'))return;
  const f=fixture(t),model=fs.openSync(f.modelPath,'r'),runtime=fs.openSync(f.runtimePath,'r');
  const promptPath=path.join(f.dir,'prompt.txt');fs.writeFileSync(promptPath,'contract fixture',{mode:0o600});
  const prompt=fs.openSync(promptPath,'r');
@@ -110,10 +146,12 @@ test('actual FD mount retains selected inode across model path replacement',asyn
  }finally{fs.closeSync(model);fs.closeSync(runtime);fs.closeSync(prompt);}
 });
 test('prompt evaluation counter alone cannot masquerade as output generation',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:'#include <stdio.h>\nint main(){puts("{}");fputs("llama_perf_context_print: prompt eval time = 1 ms / 5 tokens\\n",stderr);}'});
  await assert.rejects(queryPinnedLocalCoding(f),/GENERATION_UNOBSERVED/);
 });
 test('inference sandbox denies host files, external interfaces, secrets and writable model',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:`#include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -129,6 +167,7 @@ int main(){
 });
 
 test('seccomp denies fork and rlimits bound native memory/descriptor budgets',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:`#include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
@@ -142,6 +181,7 @@ int main(){
  const result=await queryPinnedLocalCoding(f);assert.equal(result.modelObservation.evidenceClass,'CONTRACT_TEST');
 });
 test('changing model during actual execution invalidates otherwise valid output',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:`#include <stdio.h>
 #include <unistd.h>
 int main(){usleep(200000);puts("{\\"plan\\":[\\"fixture\\"],\\"hypothesis\\":\\"fixture\\",\\"patches\\":[{\\"file\\":\\"lib/pages.mjs\\",\\"oldText\\":\\"a/b\\",\\"newText\\":\\"a+b\\"}]}");fputs("eval time = 1 ms / 5 runs\\n",stderr);return 0;}`});
@@ -159,6 +199,7 @@ function taskFixture(t,options){
  return {...f,root,task};
 }
 test('production provider rejects synthetic fixture receipt even when transport MAC is valid',t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=taskFixture(t),p=provider.createCodingCandidateProvider(f);
  assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),/CODING_MODEL_OBSERVATION_INVALID/);
  assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),/BUDGET_EXHAUSTED/);
@@ -168,6 +209,7 @@ test('self-asserted inference flag is rejected instead of upgraded or accepted',
  assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),/CODING_MODEL_OBSERVATION_INVALID/);
 });
 test('native worker threads remain permitted while process creation stays denied',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:`#include <stdio.h>
 #include <pthread.h>
 void*work(void*x){return x;}
@@ -207,6 +249,7 @@ test('integration malformed recall and strict remote selection fail before trans
 });
 
 test('process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind',t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=taskFixture(t);
  const p=provider.createCodingCandidateProvider({...f,env:{...f.env,CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND:'LLAMA_CPP'}});
  const result=p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000});
@@ -233,6 +276,7 @@ test('genuine admission registry rejects unknown model/runtime tuple and caller 
  }
 });
 test('invalid model JSON retains authenticated process observation without a candidate',async t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=fixture(t,{program:'#include <stdio.h>\nint main(){puts("invalid synthetic output");fputs("eval time = 1 ms / 5 runs\\n",stderr);}'});
  await assert.rejects(queryPinnedLocalCoding(f),error=>{
   const envelope=error.modelInferenceEnvelope;
@@ -248,6 +292,7 @@ test('invalid model JSON retains authenticated process observation without a can
 });
 
 test('provider retains authenticated rejected-response observation and consumed durable budget',t=>{
+ if(!requireIsolationProofHost(t))return;
  const f=taskFixture(t,{program:'#include <stdio.h>\nint main(){puts("PRIVATE_INVALID_REPLY_SENTINEL");fputs("eval time = 1 ms / 5 runs\\n",stderr);}'});
  f.env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND='LLAMA_CPP';
  const evidenceDir=path.join(f.dir,'evidence'),p=provider.createCodingCandidateProvider({...f,evidenceDir});

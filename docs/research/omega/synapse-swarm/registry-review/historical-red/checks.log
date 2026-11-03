@@ -1,0 +1,7 @@
+FAIL caller-owned-profile-sets-cannot-expand-approved-scope: IllegalStateException: unapproved scope accepted as SUBMITTED
+FAIL listed-profile-sets-cannot-expand-internal-scope: IllegalStateException: listed alias broadened authority: SUBMITTED
+FAIL delegation-tool-set-snapshot-survives-queued-caller-mutation: IllegalStateException: queued brief changed after admission: [get_battery_info, delete_file]
+FAIL shutdown-rejection-does-not-leave-phantom-assignment: IllegalStateException: rejected work remains active: {after-shutdown=review-bot}
+RESULT passed=0 failed=4
+Exception in thread "main" java.lang.IllegalStateException: 4 coordinator counterexamples
+	at at.heinz.deviceai.chief.CoordinatorIndependentChecks.main(CoordinatorIndependentChecks.kt:70)

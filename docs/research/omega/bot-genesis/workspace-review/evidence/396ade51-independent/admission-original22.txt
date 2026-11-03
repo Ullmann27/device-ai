@@ -1,0 +1,23 @@
+PASS A00-current-bound-request
+PASS A01-unknown-recipient
+PASS A02-display-name-is-not-id
+PASS A03-foreign-persistent-workspace
+PASS A04-container-name-is-not-persistent-workspace
+PASS A05-source-mismatch
+PASS A06-stale-attempt
+PASS A07-wrong-job
+PASS A08-grant-revoked
+PASS A09-expired-at-consumption
+PASS A10-child-extends-parent-deadline
+PASS A11-tool-expansion
+PASS A12-model-budget-inflation
+PASS A13-tool-budget-inflation
+PASS A14-message-replay
+PASS A15-terminal-late-result
+PASS A16-unknown-effect-replay
+PASS A17-same-builder-and-verifier
+PASS A18-request-hash-mismatch
+PASS A19-grant-fingerprint-mismatch
+PASS A20-task-mismatch
+PASS A21-negative-reservation
+{"kind":"ADMISSION_CONTRACT_ONLY","total":22,"passed":22,"failed":0,"actualModelInference":false,"deviceVerified":false}

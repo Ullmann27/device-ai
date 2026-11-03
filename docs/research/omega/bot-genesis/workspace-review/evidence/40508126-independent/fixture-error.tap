@@ -1,0 +1,129 @@
+✖ pending deterministic report hashes actual bytes, repeats and never mutates journal (16.922678ms)
+✖ canonical grant substitution during reporting is rechecked before returning (16.398959ms)
+✖ uncommitted source mutation during reporting is rechecked before returning (13.649631ms)
+✖ initial dirty source is rejected (13.845791ms)
+✖ reporter removal invalidates report without changing canonical state (13.867563ms)
+✖ assignment expiry cannot produce a report (14.969401ms)
+✖ tampered report cannot be accepted by deterministic regeneration (13.099333ms)
+✖ symlink evidence directory never receives report bytes (12.366998ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 244.15605
+
+✖ failing tests:
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:31:1
+✖ pending deterministic report hashes actual bytes, repeats and never mutates journal (16.922678ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:32:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:40:1
+✖ canonical grant substitution during reporting is rechecked before returning (16.398959ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:41:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:45:1
+✖ uncommitted source mutation during reporting is rechecked before returning (13.649631ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:46:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:50:1
+✖ initial dirty source is rejected (13.845791ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:51:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:53:1
+✖ reporter removal invalidates report without changing canonical state (13.867563ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:54:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:57:1
+✖ assignment expiry cannot produce a report (14.969401ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:58:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:61:1
+✖ tampered report cannot be accepted by deterministic regeneration (13.099333ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:62:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tools/genesis-workspace-review/reporter-independent.test.mjs:64:1
+✖ symlink evidence directory never receives report bytes (12.366998ms)
+  Error: CODING_TASK_INVALID
+      at reject (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:8:25)
+      at validateCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-task.mjs:33:126)
+      at prepareCodingTask (file:///tmp/genesis-review-echo-405/.github/continuum/coding-orchestrator.mjs:38:13)
+      at fixture (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:21:17)
+      at TestContext.<anonymous> (file:///workspace/genesis-workspace-review/tools/genesis-workspace-review/reporter-independent.test.mjs:65:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)

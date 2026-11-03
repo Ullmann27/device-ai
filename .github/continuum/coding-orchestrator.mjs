@@ -18,6 +18,7 @@ import {git} from './repair-loop.mjs';
 import {isIsolatedExecutor} from './isolated-executor.mjs';
 import {bindCcc1Workspace} from './ccc1-workspace.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
+import {assertCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 
 const ID=/^[a-z][a-z0-9-]{2,63}$/;
 function grantFile(project,stateDir,id){
@@ -87,13 +88,13 @@ export function assertCodingInferenceFailureBinding({task,error,seen=new Set()}=
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
  requireIsolation=false,requireLocalModelObservation=false,expectedTaskFingerprint=null,
- technicalRecallEnabled=true,
+ technicalRecallEnabled=true,botAssignment=null,
  providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),
  env=process.env}={}){
  if(typeof technicalRecallEnabled!=='boolean')throw Error('CODING_RECALL_OPTION_INVALID');
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
- const strictMomega=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1';
+ const strictMomega=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1'||botAssignment!==null;
  if(strictMomega&&env.CONTINUUM_CODING_AGENT_LOOP==='1')throw Error('CODING_ADMITTED_AGENT_UNAVAILABLE');
  if((requireIsolation||strictMomega) && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
   throw Error('CODING_ISOLATION_REQUIRED');
@@ -101,6 +102,11 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  // The grant file name, embedded task identity and journal identity must agree.
  if(grant.task.id!==id || !/^t-[a-f0-9]{16}$/.test(grant.ccc1TaskId))
   throw Error('CODING_GRANT_CORRUPT');
+ const botIdentity=stage=>assertCcc1BotAssignment(botAssignment,{task:grant.task,ccc1TaskId:grant.ccc1TaskId,stage});
+ if(botAssignment!==null){
+  if(!isIsolatedExecutor(executor)||executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY')throw Error('CODING_ISOLATION_REQUIRED');
+  botIdentity('BUILD');botIdentity('VERIFY');
+ }
  // Check the owner's prepared-task SHA BEFORE CCC1 journal mutation, model
  // inference or running any untrusted candidate. Null preserves older callers.
  if(expectedTaskFingerprint!==null &&
@@ -132,7 +138,11 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
    const task=validateCodingTask({...grant.task,id:jobTaskId(order.job)});
    const evidenceDir=path.join(stateDir,'coding-evidence',grant.task.id,order.job);
    const jobExecutor=executor===null?null:bindCcc1Workspace({executor,project,stateDir,
-    taskId:grant.ccc1TaskId,job:order.job,workerId:'typed-coding-worker'});
+    taskId:grant.ccc1TaskId,job:order.job,workerId:botAssignment===null?'typed-coding-worker':botIdentity('BUILD').agentId,
+    identityGuard:botAssignment===null?null:()=>botIdentity('BUILD')});
+   const verifierExecutor=botAssignment===null?null:bindCcc1Workspace({executor,project,stateDir,
+    taskId:grant.ccc1TaskId,job:order.job,workerId:botIdentity('VERIFY').agentId,
+    identityGuard:()=>botIdentity('VERIFY')});
    const supplied=providerFactory({root:project,task,env,evidenceDir,executor:jobExecutor,executorAbortMode,
      technicalRecall:technicalRecall.text,requireLocalModelObservation:strictMomega});
    if(strictMomega&&taskFingerprint(supplied.taskSpec)!==taskFingerprint(task))throw Error('CODING_TASK_BINDING_MISMATCH');
@@ -153,7 +163,7 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
     return raw;
    },{taskSpec:supplied.taskSpec,allowedPaths:supplied.allowedPaths,
      onVerifiedCandidate:entry=>technicalCandidates.push(entry)});
-   const driver=await localTeamleaderDriver({candidateProvider,executor:jobExecutor,executorAbortMode});
+   const driver=await localTeamleaderDriver({candidateProvider,executor:jobExecutor,verifierExecutor,executorAbortMode});
    const receipt=await runMobileRepairJob({...order,driver});receipts.push(receipt);return receipt;
   }});
  for(const entry of result.entries??[]){
@@ -177,10 +187,20 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  }
  const experience=experienceOf(grant.ccc1TaskId,result.entries??[],{coreId:'typed-coding-adapter-v1'});
  if(experience)new ExperienceLog(path.join(stateDir,'experience.jsonl')).append(experience);
- return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
+ const publicResult={schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
   taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
   status:result.outcome==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':result.outcome,
   receiptJobs,receipts,technicalExperienceStatus,technicalRecallCount:technicalRecall.items.length,
+  ...(botAssignment===null?{}:{botAssignment:{sha256:botAssignment.sha256,builder:botAssignment.builder,
+   verifier:botAssignment.verifier,reporter:botAssignment.reporter,status:'ASSIGNED_IDENTITIES_ONLY',executionEvidence:'FIXED_PROFILE_OBSERVATIONS'}}),
   ...(strictMomega?{modelExecution:{verifiedCalls:verifiedInferenceCalls,acceptedProposals:admittedModelCalls,
    rejectedResponses:rejectedModelResponses,identity:modelIdentity}}:{}),approvedForMerge:false,deviceVerified:false,neuralTraining:false};
+ if(botAssignment?.reporter){
+  try{
+   const {writeCcc1BotReport}=await import('./ccc1-bot-report.mjs');
+   publicResult.botReport=writeCcc1BotReport({assignment:botAssignment,task:grant.task,ccc1TaskId:grant.ccc1TaskId,
+    project,stateDir,readPreparedGrant:()=>readGrant(grantFile(project,stateDir,id))});
+  }catch(error){publicResult.botReport={status:'BLOCKED',reason:String(error?.message??error).slice(0,160),modelCalls:0};}
+ }
+ return publicResult;
 }

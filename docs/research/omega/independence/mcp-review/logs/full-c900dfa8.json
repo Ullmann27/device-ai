@@ -1,0 +1,59 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tools/independence-mcp-review/transport.test.mjs",
+    "tools/independence-mcp-review/profile-bridge.test.mjs",
+    "tools/independence-mcp-review/canonical-reader.test.mjs",
+    "tools/independence-mcp-review/canonical-http.test.mjs"
+  ],
+  "environment": {
+    "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "node": "v24.19.0",
+    "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+  },
+  "before": {
+    "head": "c900dfa8ec022cb0db31f5f74a172000e6d6ca3d",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-canonical-check.mjs": "03ab6cff39e414e6ad3e4fffc2bf877b963721477af4956e2a814e98f81ef3ce",
+      ".github/continuum/coding-mcp-process.test.mjs": "0e25142e66f445f6dd3f47a0a874036eb8214151ef9303a03e3a2830180456c0",
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "4a3db639300c6a9645d6a732e78ea6aaa44fe36eee9cacb9cdaab55e4b6f8547",
+      ".github/continuum/coding-mcp.test.mjs": "42c026baf0c220a9e83f52c8d0432e9fc4e8308ce687adade56ce6b600c5945b",
+      ".github/continuum/coding-service-reader.mjs": "a7e49b231bbddbb87cda7636068e9576aa9805cd0fe3abdd616559b507807ba0",
+      ".github/continuum/coding-service-store.mjs": "fca1d6b390916cb109cd49dda50610512fc78d9ede7ed9bc44132215656fad3d",
+      ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+      ".github/continuum/coding-service.mjs": "6a60507f0ac574b0a904bbe5dbdab10ce33b8ce8ac479803d60c694915fba54e",
+      ".github/continuum/coding-service.test.mjs": "c741740288a23f9e8001d0ad406c7c37bc5a093cf4db2bb53e5757efec31799f",
+      "tools/genesis-workspaces/HandoffHostChecks.kt": "847d9c7e0eeab5c611edd2621138d207e16651a97e87e23dbbdc23a2a93696fe",
+      "tools/genesis-workspaces/adapter-bridge.mjs": "28d5850857df0097b551b84b519eabee24c845932dab50ad4f11c41e4ff92de8"
+    }
+  },
+  "after": {
+    "head": "c900dfa8ec022cb0db31f5f74a172000e6d6ca3d",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-canonical-check.mjs": "03ab6cff39e414e6ad3e4fffc2bf877b963721477af4956e2a814e98f81ef3ce",
+      ".github/continuum/coding-mcp-process.test.mjs": "0e25142e66f445f6dd3f47a0a874036eb8214151ef9303a03e3a2830180456c0",
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "4a3db639300c6a9645d6a732e78ea6aaa44fe36eee9cacb9cdaab55e4b6f8547",
+      ".github/continuum/coding-mcp.test.mjs": "42c026baf0c220a9e83f52c8d0432e9fc4e8308ce687adade56ce6b600c5945b",
+      ".github/continuum/coding-service-reader.mjs": "a7e49b231bbddbb87cda7636068e9576aa9805cd0fe3abdd616559b507807ba0",
+      ".github/continuum/coding-service-store.mjs": "fca1d6b390916cb109cd49dda50610512fc78d9ede7ed9bc44132215656fad3d",
+      ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+      ".github/continuum/coding-service.mjs": "6a60507f0ac574b0a904bbe5dbdab10ce33b8ce8ac479803d60c694915fba54e",
+      ".github/continuum/coding-service.test.mjs": "c741740288a23f9e8001d0ad406c7c37bc5a093cf4db2bb53e5757efec31799f",
+      "tools/genesis-workspaces/HandoffHostChecks.kt": "847d9c7e0eeab5c611edd2621138d207e16651a97e87e23dbbdc23a2a93696fe",
+      "tools/genesis-workspaces/adapter-bridge.mjs": "28d5850857df0097b551b84b519eabee24c845932dab50ad4f11c41e4ff92de8"
+    }
+  },
+  "sourceStable": true,
+  "classpath": "/workspace/independence-profile-aa52e7e6/classes:/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug:/workspace/continuum-build-env/native-graph-deps/json-20240303.jar:/workspace/continuum-build-env/native-graph-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/native-graph-deps/kotlinx-coroutines-core-jvm-1.8.0.jar",
+  "exitCode": 0,
+  "elapsedSeconds": 19.530324459075928
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports.md",
+    "final_url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports.md",
+    "status": 200,
+    "bytes": 14257,
+    "sha256": "ef3adb3c16d935f7e7d7e0278c4656e08091f4ad4f00b7afc038f6ec1b695660",
+    "specificationVersion": "2025-06-18",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization.md",
+    "final_url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization.md",
+    "status": 200,
+    "bytes": 20818,
+    "sha256": "95727f0319783bbbabc5b35fb0d854a5d29fc96500867162447e45fab8e39cd8",
+    "specificationVersion": "2025-06-18",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle.md",
+    "final_url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle.md",
+    "status": 200,
+    "bytes": 8541,
+    "sha256": "20f3fe0b90931fbf8bfa46d45547f76f728f164e1e634d4251bd735a39ce5868",
+    "specificationVersion": "2025-06-18",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools.md",
+    "final_url": "https://modelcontextprotocol.io/specification/2025-06-18/server/tools.md",
+    "status": 200,
+    "bytes": 11063,
+    "sha256": "d43a6fb732df129ae89b1ce33769e2b466a4fd5ddeca6f9b75ba9a6e76166816",
+    "specificationVersion": "2025-06-18",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "id": "transports",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports.md",
+    "finalUrl": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports.md",
+    "status": 200,
+    "bytes": 16321,
+    "sha256": "ae9bb7be00604a66a8f70f439ef028eced174bce4a5cb0f6fc11bbeaa625afcc",
+    "specificationVersion": "2025-11-25",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "id": "authorization",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization.md",
+    "finalUrl": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization.md",
+    "status": 200,
+    "bytes": 41634,
+    "sha256": "deb62f8dd69b406de6138d0bcf6604c4653d94d249b69ea31be253241017bad4",
+    "specificationVersion": "2025-11-25",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "id": "lifecycle",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle.md",
+    "finalUrl": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle.md",
+    "status": 200,
+    "bytes": 9789,
+    "sha256": "06926121e173ff0b355b2d70e4e6df6d18b72bc7b8e5c1ac686fccb92b0053fd",
+    "specificationVersion": "2025-11-25",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  },
+  {
+    "id": "tools",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools.md",
+    "finalUrl": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools.md",
+    "status": 200,
+    "bytes": 14400,
+    "sha256": "115e4f690d42615bf2c59000e2a7e8401bab3e984060a7054fcdf980ce3496b9",
+    "specificationVersion": "2025-11-25",
+    "retrievedAt": "2026-11-03",
+    "sourceType": "official_primary_documentation"
+  }
+]

@@ -1,0 +1,3 @@
+Android API implementation from official Maven Central Robolectric artifact15-robolectric-12650502; publishedSHA1 matched: d58d66c41a3ca3acd2043811cea1910bb2c4149a
+SHA256=6c0670454f6fcee9f1b17aa393e81d71bf26e7e6ae7c5777ed3924b062191d5b
+OkHttp4.12.0 and Okio3.6.0 from actual Gradle dependency cache (official original artifacts); other jars copied unchanged from previously verified jvm-deps.

@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "status": "GEOMETRY_AND_RUNTIME_METADATA_PASS_APPEARANCE_NOT_ACCEPTED",
+  "runtimeAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "researchAssetSha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
+  "rendererSourceCommit": "81b22f545d059e49a1c62fd06f407bf50486e1c0",
+  "geometrySourceCommit": "9633d4e9aab997580bc0be31f20e7e10479f1433",
+  "independentSourceEvidenceCommit": "7caef9b6",
+  "independentFrozenProtocol": "771aec34",
+  "tools": {
+    "blender": "4.3.2",
+    "gltf-validator": "2.0.0-dev.3.10",
+    "node": "24.19.0"
+  },
+  "canonicalTriangles": 57000,
+  "headTrianglesAboveY019": 19060,
+  "semanticAnchorCount": 30,
+  "semanticRenderCount": 31,
+  "runtimeOrbitFrames": 12,
+  "renderPixels": [
+    512,
+    512
+  ],
+  "sourceSceneAdditionalViews": 30,
+  "claimsExcluded": [
+    "exact face identity",
+    "owner appearance acceptance",
+    "high resolution",
+    "smooth live animation",
+    "phonetic quality",
+    "collision-free arbitrary control combinations",
+    "phone FPS or thermal",
+    "release signing installation"
+  ],
+  "files": [
+    {
+      "path": "assets/avatar/README.md",
+      "sha256": "f7e2127dc445f3325ab67b708e8943f3ba82a8a60927cd5e96b1743135e66372",
+      "bytes": 2871
+    },
+    {
+      "path": "assets/avatar/jarvis-research-v1.blend",
+      "sha256": "1d2db841b924b3e01fc992f3eb609e1e99e47c9f2eaab20e14c38d449ed1ffaf",
+      "bytes": 10234888
+    },
+    {
+      "path": "assets/avatar/jarvis-research-v1.glb",
+      "sha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
+      "bytes": 8697048
+    },
+    {
+      "path": "assets/avatar/jarvis-runtime-v1.glb",
+      "sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+      "bytes": 8690400
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/anatomy-aa.png",
+      "sha256": "5e3d57d6cfe3353d1a7bf751f1fb9867aa2fe3307675470dca6561c526255cd1",
+      "bytes": 674626
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/anatomy-blink.png",
+      "sha256": "bc0e27db73606a0e5986c94bdd13f2a24185769065ee7f20dc1b2cb292380097",
+      "bytes": 674619
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/anatomy-front.png",
+      "sha256": "b37b966c86acc50da6b7a107521d27552fb047f88a405b6e2b01531a7c37688e",
+      "bytes": 674904
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/anatomy-profile.png",
+      "sha256": "ce5f00e1146212d30002342a9138f58bc8542845d56304432dda043e88f8169d",
+      "bytes": 596339
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/asset-contract.v1.json",
+      "sha256": "f03dcb02d8534b91d16f20a0556764dbd06e1718f867880ecc3d33f7b61f3c03",
+      "bytes": 1321
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/asset-manifest.json",
+      "sha256": "861c3717eae6658359f0d4d191bd3af7cf6bd309028572998bf8a5de006c15e1",
+      "bytes": 6934
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-final-30views.log",
+      "sha256": "0d1a0d0c5bc352307644a087e639c7017a4ed1c36dc7990c84a7eb50a20302ba",
+      "bytes": 63103
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-final-localized-30views.log",
+      "sha256": "a0be9d64d3a8ee461a6f3dda65a9f09bc172b8c9ebde442e315c5f305fca59da",
+      "bytes": 32220
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-final-review-30views.log",
+      "sha256": "5e31fb540774a6b108bfe76a8cdad5a7f7359d512f66d470d411312569be69bb",
+      "bytes": 241301
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-final-symmetric-30views.log",
+      "sha256": "5cb99e43d7ad67fe98af1973014ac7706ce18d9bb482e97f5650359c1eb50091",
+      "bytes": 47860
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-final-welded-30views.log",
+      "sha256": "12df3eeb6cfd7438a5d379b1cd68105b4fd7538a14fa9e2190f7ba8ba013d49f",
+      "bytes": 176051
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-mobile-preview.log",
+      "sha256": "0e704a81f44b95fe4d0fb8de8e58f690d5ce1e9c07c0a994fa41112729069b15",
+      "bytes": 32192
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-preview-fixed.log",
+      "sha256": "d4f63699d3d763ec8ea91b78d917e1cefad1c57c3ec43dafdc39baef89d3dc52",
+      "bytes": 23390
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-preview-v2.log",
+      "sha256": "b2c06af283962ad59e290675a00fc188aec3823dee64b68729ef8a890ca829e5",
+      "bytes": 24050
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-preview-v3-fixed.log",
+      "sha256": "8f9bb7f084a0cd2da39ccea650a82df16463ccf4e06a8bc46ad2fcd14092995e",
+      "bytes": 32193
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-preview-v3.log",
+      "sha256": "ae116a0e1b153d525617d3a31a7699d06bedfcedbabc9626cb1aeb77eb4ce59f",
+      "bytes": 821
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/build-preview.log",
+      "sha256": "8d85b29f8c5dd74387d11692c7d8d66d850511ea0643eced8a2a2a089db56948",
+      "bytes": 3214
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/contact-sheet-30.png",
+      "sha256": "d22ecf1104e04aac79817be529c07c7596c862d29207edcc4ffeff1f3846be0a",
+      "bytes": 2805606
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/geometry-metrics.json",
+      "sha256": "352b752f78d90c28ea29156765dc8d90cc99bbb5907806d9ee824108a55a39a7",
+      "bytes": 953
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/khronos-validator-first-export.json",
+      "sha256": "6d64d6517107bb5ebfe9b33d8f318722489d4c3603a8244e6f16f7eb7c62c233",
+      "bytes": 288452
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/khronos-validator.json",
+      "sha256": "f1253d24749f81ddf1bb64e43584e7adbf60014125ac14360c01b2bc8929d0ae",
+      "bytes": 893
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/neutral-mirror-pairs.json",
+      "sha256": "7bbd2036d51b4e41bc373c1f8cbe4a033d4d8b08fbcd600f5066e18b31714725",
+      "bytes": 159593
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/rebuild-diagnostics/asset-manifest.json",
+      "sha256": "8fa7da670552c4de69617c0c69d3916d1197b3b1c2f780220b8508f6fba6d2b7",
+      "bytes": 6934
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/rebuild-diagnostics/research-49df.glb",
+      "sha256": "49df4e35ab58b0e4d8cf8561d2fae2e28a9211ef227dc1e67146bf0be9debed7",
+      "bytes": 8697048
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/reduction-transfer.json",
+      "sha256": "812944e0475d6579a1c91839bf27d78f4c404ade48ac0e8d744654aef1636da3",
+      "bytes": 234
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/render-manifest.json",
+      "sha256": "fa0026b976c8de7fc1b2c42e773c08b7934fe655bf202692f4b1e7cce4c49c2d",
+      "bytes": 6975
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/reproduction.json",
+      "sha256": "866eb871d76fe3d31df9763ccdd3df29707f674285d2829e0249aa5997b14c5b",
+      "bytes": 5530
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime/khronos-validator.json",
+      "sha256": "4e8c5da7dbf7c5abdd6b60004c188c513a449c2716622ca6bb59f72e4ac79c81",
+      "bytes": 923
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime/structural-validation.json",
+      "sha256": "e648b2a9721535959026c2d882a3f99dc219a4f56cf4ae0dbef84425c79918a3",
+      "bytes": 20074
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/01-neutral.png",
+      "sha256": "511d222cada7bae06a40ced370ec7d51578ebac98362683a16ebf353394af5a3",
+      "bytes": 481631
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/02-midline-landmarks-annotated.png",
+      "sha256": "2d90f19d6d94b4cb8a903bf0c75a0f8b0425b31b6dc41f3462396a7d5233b177",
+      "bytes": 382341
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/02-midline-landmarks.png",
+      "sha256": "6e074dafde8a8ce3b06c970632529405b734d8a83ac9843658a31fdfd7a4e3d1",
+      "bytes": 481631
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/03-left45.png",
+      "sha256": "629a63e5514331b3593228a0be27a4b5c6b5a6407ce1b5accb41d94e1f481af2",
+      "bytes": 482043
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/04-right45.png",
+      "sha256": "25fb784096fe3fae6094cb2f2da100d3298cfab4c9451ccc78bebc85db83c2ce",
+      "bytes": 483898
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/05-left90.png",
+      "sha256": "5d1ec3276b190cf6dd9e57230c4ce145fa46e5b299b4c142fe3684b38132ba5c",
+      "bytes": 439027
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/06-right90.png",
+      "sha256": "af905589cde1c02e7f0ecc6392319a2b777fed2023a138c39ea13aa496f8620f",
+      "bytes": 441327
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/07-head-up.png",
+      "sha256": "b71f419adba215a2502dab826cf4a39519573e6c4375107a45ffde4695f794b2",
+      "bytes": 483878
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/08-head-down.png",
+      "sha256": "62c84e69ca85f1ff36c291f21ddde6aa6e35422e74047cac03658f1c087fcc04",
+      "bytes": 479715
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/09-top-oblique.png",
+      "sha256": "ec4c56c62fbeac50bcc48c9e92e606895aeb4e3575e210d302fd43aeff0b0f0c",
+      "bytes": 491337
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/10-rear.png",
+      "sha256": "112213a4c247b3d60605b8cf8d10f6d6b0ba1b26d0e44297c0105c2557badd58",
+      "bytes": 477617
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/11-subtle-smile.png",
+      "sha256": "ed7e10eb51f2ff42d05a441beb06913b4d2972d0994827fc2e930fe41953a806",
+      "bytes": 481717
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/12-broader-smile.png",
+      "sha256": "da03ad3e9a3ee1768f863219951a063fb2f1135aaac2f99b9ca4820f9b09d4c4",
+      "bytes": 481942
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/13-attentive-brows.png",
+      "sha256": "942269727a463904b48150db8e26b9aaf02860c93da540e531a9f37259436475",
+      "bytes": 481505
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/14-focused-side-gaze.png",
+      "sha256": "445b5147da2dff956fa5d20cff694d2b7322f5f4e3c40a8a6b8915026f90bff9",
+      "bytes": 482060
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/15-curious-approximation.png",
+      "sha256": "d5398674e8c5152aa8b30a99c09550c5836712877ac9a337b61bf9314056527f",
+      "bytes": 482172
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/16-eyes-closed.png",
+      "sha256": "8885c572d300b1a0ded17e3196eab88d5ce8d3b34bc69bbee4c107067fdfe8c9",
+      "bytes": 481248
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/17-half-blink.png",
+      "sha256": "1f541966e492a56aa85f49dd92cd07ef1f04529deae7d02d01206ac3803de658",
+      "bytes": 481294
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/18-eyes-viewer-left.png",
+      "sha256": "9ba923dd9986340b1b8a52a1bc95848e6be11d7400daf80a8fb08cd9dbc35b7b",
+      "bytes": 481666
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/19-eyes-viewer-right.png",
+      "sha256": "4aa9ee27596d4ef63924ddb3b5f1c83979c56eb5cf69bbb8ea4c199d37d07664",
+      "bytes": 481711
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/20-eyes-up-down-panel.png",
+      "sha256": "ed2445adf33ad91fc6fcf55395b14893ff1a191f1193c53c8b58e9a1b5d9d6d3",
+      "bytes": 92222
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/20a-eyes-up.png",
+      "sha256": "4cd9f781cb384880aaba367778dee6c96e320a45bb5c1c4cad2dc29b13be6a68",
+      "bytes": 481735
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/20b-eyes-down.png",
+      "sha256": "6469bddcbad3c0970e5573a0dca1d0f0febfc0d23904776b0f4a58e89776eeb3",
+      "bytes": 481698
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/21-mouth-rest.png",
+      "sha256": "86ab073f97de780ef652186ef0909f2fb52876cd270df0daadf122975f184edd",
+      "bytes": 481631
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/22-PP.png",
+      "sha256": "4cf59b19f1c6874c26e5e0dacbc949c23b4de69a1e53493659132bffc9d9b410",
+      "bytes": 481716
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/23-FF.png",
+      "sha256": "3cdca3a77962f331c1367bfa68d44c57010f04d541a0634ec7c2e691a5b6337a",
+      "bytes": 481704
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/24-AA.png",
+      "sha256": "96cc173fc945df3983ba1e8177b3d803190d6a6cb422c242376615b6be38fdb0",
+      "bytes": 481826
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/25-E.png",
+      "sha256": "5d21c4f63e72b1f994391c8d95be343659b3fe6919c835aea4fb6ce6f70cb0d3",
+      "bytes": 482119
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/26-I.png",
+      "sha256": "a3a1e425deeb9bb02d74a76590729a3160b6389c0d0bfcf48bf4b405eb451117",
+      "bytes": 482004
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/27-O.png",
+      "sha256": "c9b1ebeff17a20619cc66791faed96e0b4c752891764cd2e430e3a1a3ab80f12",
+      "bytes": 481601
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/28-U.png",
+      "sha256": "916799b40db3647fc4d41893558fca34e76faa8e31a64942f10372e8f23664b5",
+      "bytes": 482143
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/29-slight-jaw.png",
+      "sha256": "4021512bb353338b670f0e9381b028a4307a9d147efefe46775536ca10b8d767",
+      "bytes": 481258
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/30-smiling-speech.png",
+      "sha256": "d89e520a5f10e3be465658c61d7d9c0fef1e69adaa5f533fcaa764289c0f4b5b",
+      "bytes": 481980
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/README.md",
+      "sha256": "783c75a066761801cf53c549014a343807de64a916f268e996db1de553b00257",
+      "bytes": 2239
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/landmarks.json",
+      "sha256": "14a0d0e44ebc5eb3e00d212281064bd13282cac14fb3827cd5f77a796da21c35",
+      "bytes": 1682
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-00-000.png",
+      "sha256": "a035bce0326e8b04bcff5507abf6ee8ba718c6a61569978ac6f859d8f225f862",
+      "bytes": 481631
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-01-030.png",
+      "sha256": "fe0b490d88eee3ac53153b6a44411315c8121ce2a02c3688cdd2d87f1c5943db",
+      "bytes": 486653
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-02-060.png",
+      "sha256": "305103301120afccb3e52171e9266bdb0d1eb95e8e0068b8f3da2116a7669987",
+      "bytes": 466062
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-03-090.png",
+      "sha256": "10de00980037de99e1c02c332fc1b41369669844a5ac503a9277a59db1954f6c",
+      "bytes": 439027
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-04-120.png",
+      "sha256": "285ba3ab5c530b747af64093b2306f6664c8bc5d8f210f46936ceb115b64881b",
+      "bytes": 478126
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-05-150.png",
+      "sha256": "08846cbaf055801a226bf08e02910557ac0ddd05a524ec25c0a36c605daca4d5",
+      "bytes": 488087
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-06-180.png",
+      "sha256": "98a690510c1b866a5a431e9fa004540ca385cb1ce6a159c6e2040712fc9bbd54",
+      "bytes": 477617
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-07-210.png",
+      "sha256": "da8cb3477c7daf6f90eaa9c42b5a6ec02eefbf3cba91e7cdc90db00961092a9a",
+      "bytes": 488820
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-08-240.png",
+      "sha256": "c2ecc7c28945c9fcc221fe1f5c938de6f3070732c56e35abe94b032202fd9cca",
+      "bytes": 477642
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-09-270.png",
+      "sha256": "4aa0da2172cb9d8483469f4a42d08a99cc13d77a8ea0d168ba78c0402b0598e4",
+      "bytes": 441327
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-10-300.png",
+      "sha256": "29440814ad6e1a246c63dc0241bb68bb19b40a5f1dd9f297489e4e398d495776",
+      "bytes": 469307
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/orbit-11-330.png",
+      "sha256": "f5acd8da10e420c55d88cb9bf0fc30ea0a37765ac8da9502c53fefff873639b2",
+      "bytes": 488528
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/proof-sequence.ffconcat",
+      "sha256": "ea7ce8e3041a2e47ea616cc05b52d9136b81603244a26ee5f20f45c9aca683b6",
+      "bytes": 1007
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/runtime-anchor-manifest.json",
+      "sha256": "eebbe739e1ffe3185e515f82e0d795fa96b167fa1546f7fabaee5a2725851749",
+      "bytes": 27665
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/runtime-proof.mp4",
+      "sha256": "fa07641aeee9ae877f463beff97b180adc158bab135eb08be88c1b6e5c4b6e36",
+      "bytes": 608699
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/semantic-contact-sheet.png",
+      "sha256": "65e8f98f4e977fa353f8813d435daf6857e9a22b22fe41dc11402e90473ffb97",
+      "bytes": 2225310
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors/video-metadata.json",
+      "sha256": "180ad06435d1e82b226639a90f6946c51a0fcd981113b4f94e65309184fa6436",
+      "bytes": 306
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-anchors.log",
+      "sha256": "8ccb4971bbdfcf31a2ed339ec72742596ac3c0ea71688c32208187768feba6b6",
+      "bytes": 346689
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-derivation.json",
+      "sha256": "baaa7211447fdca2abb739e18900faf431fe2727a2774634557eb95c3d06e2db",
+      "bytes": 824
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-import-controls.log",
+      "sha256": "f958f11ebf931859d993bd17e036bd5946c26452e45cc0f44fa8feb3d4ade69d",
+      "bytes": 1727
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/runtime-reproduction.json",
+      "sha256": "3bac8f87ec85f3ca88ff1f50291392d0b0ddf7ebd162fd39b59f41b9619df7ef",
+      "bytes": 832
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/source-integrity.json",
+      "sha256": "056f14db75f3a270412cfa5370aa0f48d092488e91d8fa986bb416dd17428bbc",
+      "bytes": 136
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/structural-validation.json",
+      "sha256": "fec9ec31bab03303d6abeb2f1d441154d342d48f3a1e2b90aaeca59317d08fe2",
+      "bytes": 20275
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-00-neutral-000.png",
+      "sha256": "b74800bc8782a9615c821851effc53e7be50ca699e45fbb342a697b364914992",
+      "bytes": 466031
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-01-neutral-015.png",
+      "sha256": "fe9ceb002f4fb7232176389fcc027fca6da8f1c57e9a29abfd67222c8107fa4c",
+      "bytes": 464493
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-02-neutral-030.png",
+      "sha256": "128d40f9028b1988c03b1aa8f4c9025f83a5fbfa0391ca3e7ddbb81d8a987a7b",
+      "bytes": 462420
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-03-neutral-045.png",
+      "sha256": "4f105502b71399ea2a896fda9f26826322bb3587a18a4050cea2a5e8c383c395",
+      "bytes": 451448
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-04-neutral-060.png",
+      "sha256": "85b3c9b1f7d233bf5710ee892139ad2e23a4ae44cedb5bbcc8745bbb40d94c98",
+      "bytes": 432699
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-05-neutral-075.png",
+      "sha256": "b549e87eb0cc013ce505e9dd31a614f4c9b328ba36c6e4c7681f538c014ba647",
+      "bytes": 415171
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-06-neutral-090.png",
+      "sha256": "bd046f58b17adc6ba3f6f032844547f6827d1ae19076434db79e332f04e8f6dc",
+      "bytes": 408921
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-07-neutral-105.png",
+      "sha256": "108a49e011a6411d3de975f5af9a223d0af47501841ef4c7fecfdcd559875f84",
+      "bytes": 429055
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-08-neutral-120.png",
+      "sha256": "1cffa7e1020b5d847c0e7b98af828cdba78ad0cc3281359725eb699dd6451fe6",
+      "bytes": 445626
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-09-neutral-135.png",
+      "sha256": "48fb7f1fb1c1ce6e5178a43cbe3e2b523f9a11f073f2e7244533326e34437b1c",
+      "bytes": 458083
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-10-neutral-150.png",
+      "sha256": "696ade248fff01224e4df2cc79aee6582196862a4278981ff0ed60ac34d9be9e",
+      "bytes": 461274
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-11-neutral-165.png",
+      "sha256": "01bad42d7bd9906b9b3d0402032aa616863614e7bc0df44d2c0314e1a2a50bec",
+      "bytes": 458327
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-12-neutral-180.png",
+      "sha256": "6c726e6ebf84c3d3bb56f9deef36c7d2427866ee3f94fd34305e4ccd84344e52",
+      "bytes": 457680
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-13-neutral-195.png",
+      "sha256": "8592f4b50e74bff09d75c853cc26363695bdcc65a9670c3528b68eb3b6b18e48",
+      "bytes": 458959
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-14-neutral-210.png",
+      "sha256": "e597017b1977431d64b4c3ebef284fe4911d148fa7033edd877ec346a9c9b82c",
+      "bytes": 461237
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-15-neutral-225.png",
+      "sha256": "4c3583d56df3fd9014f14792faf9821c3c7316f0c8b8a09af52ec776b4f124ab",
+      "bytes": 458311
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-16-neutral-240.png",
+      "sha256": "d28814a83db2b9a3ebdb4ec95dd76de5b48191d8c2c8d10d415725b294bd4ded",
+      "bytes": 447179
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-17-neutral-255.png",
+      "sha256": "35e9f86e40b4503bbd620a598551a175523334218409a8fc5f2d130b0645848f",
+      "bytes": 430702
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-18-neutral-270.png",
+      "sha256": "e18a73cbe6c2acdadb08280d55880c61833bb32716a55867bf635482234a238c",
+      "bytes": 413124
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-19-neutral-285.png",
+      "sha256": "9925ff211d79c35c1455fcce523fcb3106de98fec5eba812fb0283d7b025ad2b",
+      "bytes": 422434
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-20-neutral-300.png",
+      "sha256": "22324c017e5c80d01cc96d00c47e9044d1da0ee1386468914d5bb31b8ea53dd0",
+      "bytes": 439235
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-21-neutral-315.png",
+      "sha256": "ffb65ae555fc51118db58f898d17fb12e44db9542cbf1f9e9f8cf8c3bc9cf26f",
+      "bytes": 456452
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-22-neutral-330.png",
+      "sha256": "3141d8512c463de8cd5b8c4457aee7a0908522958436fce1b9b598fe673787e0",
+      "bytes": 465813
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-23-neutral-345.png",
+      "sha256": "26039ac205862c7f433b07067733ed1ffe9afcee2089cd85041be4fc8ebb7287",
+      "bytes": 466090
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-24-blink.png",
+      "sha256": "dbfb1bd579e4bd88facaedaa57d3f50fa2d9a8a595c76229c278a63762d17a4a",
+      "bytes": 465667
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-25-smile.png",
+      "sha256": "9f20141e2210556ece9e2bc037be1b0ef1e6b78fa9cfddbe032bb3f7cbda6254",
+      "bytes": 466178
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-26-speech-aa.png",
+      "sha256": "6ac7013dbb8047423cdb5967256e2e4400389ad5ef8690c8ea92a6f58882a7f6",
+      "bytes": 466217
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-27-speech-o.png",
+      "sha256": "47a0c0140f33681f43657e3c11ce8b6240b6216c676b0a073e38b96d8088d1ac",
+      "bytes": 466290
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-28-speech-u.png",
+      "sha256": "b6110519bba7b957ed6e950781975595b969672a70d1090bd1f7f316b6d31c28",
+      "bytes": 466322
+    },
+    {
+      "path": "docs/avatar-live/geometry-work/view-29-brow-speech.png",
+      "sha256": "b1dcf4d93db8c801fb04a4c562e611131afa475ea8547777a4540a977754b619",
+      "bytes": 466529
+    },
+    {
+      "path": "docs/research/omega/EPSILON-GEOMETRY-HANDOFF.md",
+      "sha256": "0d56ff58c2a63a31c3609bb3227c87ca3ca529cf143d64c24047e4e2a69ac06e",
+      "bytes": 9112
+    },
+    {
+      "path": "tools/avatar-3d/assemble_review.py",
+      "sha256": "d827ee811d5ff0d67d57e460077a368005857b0b736949955fe3dbbd1e8d2e6e",
+      "bytes": 1683
+    },
+    {
+      "path": "tools/avatar-3d/build_bust.py",
+      "sha256": "7c1457d06dc659590172c097e91875a0be2776d658dadf3806aee37170c46e5e",
+      "bytes": 21675
+    },
+    {
+      "path": "tools/avatar-3d/derive-runtime.mjs",
+      "sha256": "eddc8cbcda5d63489d7f0c2266fc5fe2c0b81179e329eeb1d494d6a35fef6598",
+      "bytes": 3334
+    },
+    {
+      "path": "tools/avatar-3d/export_glb.py",
+      "sha256": "f15693ce5b2e398aa989b76308de497d65434f458d8f9143495adc31da056f34",
+      "bytes": 12058
+    },
+    {
+      "path": "tools/avatar-3d/package-lock.json",
+      "sha256": "12021f43defd68e1a1a9c5ea336c4c7b291a14f81d5d34c3bd89f3ace984c2d7",
+      "bytes": 657
+    },
+    {
+      "path": "tools/avatar-3d/package.json",
+      "sha256": "a527cd2a0cfd34b969a9363bf9676ac651c01adedea56f478fa2d5b90c60ac90",
+      "bytes": 283
+    },
+    {
+      "path": "tools/avatar-3d/package_runtime_anchors.py",
+      "sha256": "81842b02c7eb00a5f3d48a29374b4115b3c299aec2c394555621c19a71368a59",
+      "bytes": 3585
+    },
+    {
+      "path": "tools/avatar-3d/render_runtime_anchors.py",
+      "sha256": "500582013be6a5cbd3ec2c8a91ce7e5262b39b101991b97826e80777c21730fc",
+      "bytes": 6783
+    },
+    {
+      "path": "tools/avatar-3d/roundtrip_check.py",
+      "sha256": "14143a9d4d30a3dd4644737efaee6394a3813b707bc2d7016b394b064803b19d",
+      "bytes": 2449
+    },
+    {
+      "path": "tools/avatar-3d/validate-glb.mjs",
+      "sha256": "07eeeef9835c009bf0273829eb67e9ed2c7f397c936a2edd53d059a192047fb5",
+      "bytes": 4314
+    },
+    {
+      "path": "tools/avatar-3d/vendor/makehuman/LICENSE.md",
+      "sha256": "edd99571ca62698f78c943fd4fffb159a413c315fa0d4819d3cec5cadaf8b4f1",
+      "bytes": 3598
+    },
+    {
+      "path": "tools/avatar-3d/vendor/makehuman/LICENSE.ASSETS.md",
+      "sha256": "f6089cba01cb570a24712b41ab8a586ccd3cc5ef53dc266ca50b95c288956d2c",
+      "bytes": 6962
+    },
+    {
+      "path": "tools/avatar-3d/vendor/makehuman/provenance.json",
+      "sha256": "a35571820474793f56a7f3a8175e3b026a78040bb142a5ca4a38a03655ad19e8",
+      "bytes": 30180
+    }
+  ],
+  "runtimeAACompositionReview": {
+    "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+    "AA": 1,
+    "jawOpenSamples": [
+      0,
+      0.5,
+      1
+    ],
+    "innerJawDegrees": "12*q",
+    "result": "No lower dental protrusion in three independently inspected B runtime-family renders",
+    "adverseStressCasePreserved": true,
+    "allPoseCollisionFreeClaim": false
+  }
+}

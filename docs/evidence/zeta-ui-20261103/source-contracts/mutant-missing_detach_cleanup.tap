@@ -1,0 +1,967 @@
+TAP version 13
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 1 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 1.383749
+  type: 'test'
+  ...
+# Subtest: reference start screen reaches all seven real Android feature paths
+ok 2 - reference start screen reaches all seven real Android feature paths
+  ---
+  duration_ms: 0.842222
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 3 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.245461
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 4 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.337249
+  type: 'test'
+  ...
+# Subtest: large text is bounded and propagated into adaptive layout without window shrinking
+ok 5 - large text is bounded and propagated into adaptive layout without window shrinking
+  ---
+  duration_ms: 0.196987
+  type: 'test'
+  ...
+# Subtest: start screen never manufactures ready model or internet state
+ok 6 - start screen never manufactures ready model or internet state
+  ---
+  duration_ms: 0.861701
+  type: 'test'
+  ...
+# Subtest: exactly five owner-visible work areas remain in fixed order
+ok 7 - exactly five owner-visible work areas remain in fixed order
+  ---
+  duration_ms: 1.956694
+  type: 'test'
+  ...
+# Subtest: phone bottom navigation stays outside conversation pane and above system bar
+ok 8 - phone bottom navigation stays outside conversation pane and above system bar
+  ---
+  duration_ms: 0.388837
+  type: 'test'
+  ...
+# Subtest: all navigation taps route to existing trusted screens
+ok 9 - all navigation taps route to existing trusted screens
+  ---
+  duration_ms: 0.252641
+  type: 'test'
+  ...
+# Subtest: home work areas are reachable without expert-only controls
+ok 10 - home work areas are reachable without expert-only controls
+  ---
+  duration_ms: 0.820328
+  type: 'test'
+  ...
+# Subtest: Fold rail offers the five work areas without a second bottom bar
+ok 11 - Fold rail offers the five work areas without a second bottom bar
+  ---
+  duration_ms: 0.261525
+  type: 'test'
+  ...
+# Subtest: existing chat, learning monitoring and owner permission boundaries remain
+ok 12 - existing chat, learning monitoring and owner permission boundaries remain
+  ---
+  duration_ms: 0.37099
+  type: 'test'
+  ...
+# Subtest: Fold rail and start screen reach all actions at short heights
+ok 13 - Fold rail and start screen reach all actions at short heights
+  ---
+  duration_ms: 0.167482
+  type: 'test'
+  ...
+# Subtest: start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+ok 14 - start screen adapts to large fonts, rotated compact screens and the unfolded Fold
+  ---
+  duration_ms: 0.355977
+  type: 'test'
+  ...
+# Subtest: recreated activity preserves chat selection and draft without persistent More selection
+ok 15 - recreated activity preserves chat selection and draft without persistent More selection
+  ---
+  duration_ms: 0.363219
+  type: 'test'
+  ...
+# Subtest: design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+ok 16 - design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics
+  ---
+  duration_ms: 0.450821
+  type: 'test'
+  ...
+# Subtest: living hologram schedules subsequent visible frames and stops callbacks on detach
+not ok 17 - living hologram schedules subsequent visible frames and stops callbacks on detach
+  ---
+  duration_ms: 2.747058
+  type: 'test'
+  location: '/workspace/zeta-ui-node/.github/continuum/continuum-owner-mainapp-quality.test.mjs:19:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /override fun onDetachedFromWindow\(\) \{[\s\S]*?removeCallbacks\(drawFrame\)/. Input:
+    
+    'package at.heinz.deviceai\n' +
+      '\n' +
+      'import android.animation.ValueAnimator\n' +
+      'import android.app.AlertDialog\n' +
+      'import at.heinz.deviceai.avatar.AvatarEvent\n' +
+      'import at.heinz.deviceai.avatar.AvatarSink\n' +
+      'import at.heinz.deviceai.avatar.AvatarPoseReducer\n' +
+      'import at.heinz.deviceai.avatar.ContinuumAvatarRenderer\n' +
+      'import android.content.BroadcastReceiver\n' +
+      'import android.content.Context\n' +
+      'import android.content.Intent\n' +
+      'import android.content.IntentFilter\n' +
+      'import android.database.ContentObserver\n' +
+      'import android.graphics.Canvas\n' +
+      'import android.os.Build\n' +
+      'import android.os.Handler\n' +
+      'import android.os.Looper\n' +
+      'import android.os.PowerManager\n' +
+      'import android.os.SystemClock\n' +
+      'import android.provider.Settings\n' +
+      'import android.util.AttributeSet\n' +
+      'import android.widget.Toast\n' +
+      'import android.view.View\n' +
+      'import android.view.TextureView\n' +
+      'import android.view.Surface\n' +
+      'import android.graphics.SurfaceTexture\n' +
+      'import android.widget.FrameLayout\n' +
+      'import at.heinz.deviceai.avatar3d.AvatarGlbContract\n' +
+      'import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer\n' +
+      'import at.heinz.deviceai.ui.AndroidContinuumPainter\n' +
+      'import at.heinz.deviceai.ui.ContinuumHologramRenderer\n' +
+      'import kotlin.math.exp\n' +
+      'import kotlin.math.sqrt\n' +
+      '\n' +
+      '/**\n' +
+      ' * Hardware accelerated living Continuum core. Drawing is done by [ContinuumHologramRenderer] (shared with the JVM\n' +
+      ' * preview); this view keeps the real state, speech energy, reduced-motion and power-save policies.\n' +
+      ' */\n' +
+      'class ContinuumHologramView @JvmOverloads constructor(\n' +
+      '    context: Context,\n' +
+      '    attrs: AttributeSet? = null\n' +
+      ') : FrameLayout(context, attrs), AvatarSink {\n' +
+      '    enum class State { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }\n' +
+      '\n' +
+      '    private val avatarRenderer = ContinuumAvatarRenderer()\n' +
+      '    private val avatarPose = AvatarPoseReducer()\n' +
+      '    private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)\n' +
+      '    private var headEnabled = appearancePrefs.getBoolean("native-head", false)\n' +
+      '    private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d", false)\n' +
+      '    private var native3d: FilamentAvatarRenderer? = null\n' +
+      '    private var nativeTexture: TextureView? = null\n' +
+      '    private var nativeSurface: Surface? = null\n' +
+      '    private var assetBytes: ByteArray? = null\n' +
+      '    private var assetMetadata: AvatarGlbContract.Metadata? = null\n' +
+      '    private var assetLoading = false\n' +
+      '    private var assetGeneration = 0\n' +
+      '    private var native3dFailed = false\n' +
+      '    private var native3dDrawn = false\n' +
+      '    private var avatarSeconds = 0f\n' +
+      '    private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)\n' +
+      '    private val avatarInvalidation = Runnable {\n' +
+      '        avatarInvalidationPending.set(false)\n' +
+      '        if (isAttachedToWindow && foregroundActive && isShown) invalidate()\n' +
+      '    }\n' +
+      '    private val renderer = ContinuumHologramRenderer()\n' +
+      '    private val painter = AndroidContinuumPainter(context.assets)\n' +
+      '    private val audio = HologramAudioEnvelope()\n' +
+      '    // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).\n' +
+      '    private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }\n' +
+      '    private val frameWeights = FloatArray(State.entries.size)\n' +
+      '    private val renderFrame = ContinuumHologramRenderer.Frame(.4f, .18f, 0f, frameWeights)\n' +
+      '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+      '    private val mainHandler = Handler(Looper.getMainLooper())\n' +
+      '\n' +
+      '    @Volatile private var currentState = State.READY\n' +
+      '    @Volatile private var pendingAudioLevel = 0f\n' +
+      '    @Volatile private var pendingAudioMs = 0L\n' +
+      '    private var consumedAudioMs = 0L\n' +
+      '    private var animationsEnabled = true\n' +
+      '    // A visible window is not proof that its Activity is still foregrounded.\n' +
+      '    // The owner Activity explicitly pauses/resumes this one animation loop.\n' +
+      '    private var foregroundActive = false\n' +
+      '    private var motionAllowed = false\n' +
+      '    private var visibleFrameCount = 0L\n' +
+      '    private var drawnFrameCount = 0L\n' +
+      '    private var framePending = false\n' +
+      '    private var observersRegistered = false\n' +
+      '    private var lastFrameMs = 0L\n' +
+      '    private var phase = .4f\n' +
+      '    private var energy = .18f\n' +
+      '    private var audioEnergy = 0f\n' +
+      '    private var thermalStatus = 0\n' +
+      '    // Stored as Any so API26–28 never resolve the API29 listener class on construction.\n' +
+      '    private var thermalListener: Any? = null\n' +
+      '\n' +
+      '    private fun onThermalStatus(status: Int) {\n' +
+      '        thermalStatus = status\n' +
+      '        updateMotionPolicy()\n' +
+      '    }\n' +
+      '\n' +
+      '    @android.annotation.TargetApi(29)\n' +
+      '    private fun observeThermalPressure() {\n' +
+      '        thermalStatus = powerManager.currentThermalStatus\n' +
+      '        val listener = PowerManager.OnThermalStatusChangedListener { onThermalStatus(it) }\n' +
+      '        powerManager.addThermalStatusListener(context.mainExecutor, listener)\n' +
+      '        thermalListener = listener\n' +
+      '    }\n' +
+      '\n' +
+      '    @android.annotation.TargetApi(29)\n' +
+      '    private fun releaseThermalObserver() {\n' +
+      '        (thermalListener as? PowerManager.OnThermalStatusChangedListener)?.let {\n' +
+      '            powerManager.removeThermalStatusListener(it)\n' +
+      '        }\n' +
+      '        thermalListener = null\n' +
+      '    }\n' +
+      '\n' +
+      '    private val drawFrame = Runnable {\n' +
+      '        framePending = false\n' +
+      '        if (canAnimateFrame()) {\n' +
+      '            visibleFrameCount++\n' +
+      '            // The motion clock advances independently of a completed Canvas draw.\n' +
+      '            // Invalidation requests only rendering, not the next state transition.\n' +
+      '            advanceFrame()\n' +
+      '            postInvalidateOnAnimation()\n' +
+      '            scheduleFrame()\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Owns the single visible-view frame callback, even before the first draw. */\n' +
+      '    private fun scheduleFrame() {\n' +
+      '        if (canAnimateFrame() && !framePending) {\n' +
+      '            framePending = true\n' +
+      '            // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.\n' +
+      '            postOnAnimationDelayed(drawFrame, if (head3dEnabled) { if (thermalStatus >= 2) 65L else 25L } else if (thermalStatus >= 2) 32L else 8L)\n' +
+      '        }\n' +
+      '    }\n' +
+      '    private val motionObserver = object : ContentObserver(mainHandler) {\n' +
+      '        override fun onChange(selfChange: Boolean) = updateMotionPolicy()\n' +
+      '    }\n' +
+      '    private val powerReceiver = object : BroadcastReceiver() {\n' +
+      '        override fun onReceive(context: Context?, intent: Intent?) = updateMotionPolicy()\n' +
+      '    }\n' +
+      '\n' +
+      '    init {\n' +
+      '        setWillNotDraw(false)\n' +
+      '        // State has an accessible text label beside the hero; avoid a duplicate announcement.\n' +
+      '        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO\n' +
+      '        isClickable = false\n' +
+      '        isFocusable = false\n' +
+      '        // A long-press gives the owner a concrete reason when animation looks frozen.\n' +
+      '        setOnLongClickListener {\n' +
+      '            showAppearanceChooser()\n' +
+      '            true\n' +
+      '        }\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */\n' +
+      '    override fun onAvatarEvent(event: AvatarEvent) {\n' +
+      '        synchronized(avatarPose) { avatarPose.apply(event) }\n' +
+      '        // Speech levels are drawn by the existing loop. State/end events also refresh static views.\n' +
+      '        if (event !is AvatarEvent.AudioLevel && event !is AvatarEvent.VisemeCue &&\n' +
+      '            avatarInvalidationPending.compareAndSet(false, true)) mainHandler.post(avatarInvalidation)\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Explicit local appearance preference; the original orb remains the default. */\n' +
+      '    fun setNativeHeadEnabled(enabled: Boolean) {\n' +
+      '        headEnabled = enabled\n' +
+      '        head3dEnabled = false\n' +
+      '        appearancePrefs.edit().putBoolean("native-head", enabled).putBoolean("native-head-3d", false).apply()\n' +
+      '        release3d(clearAsset = true)\n' +
+      '        updateMotionPolicy()\n' +
+      '    }\n' +
+      '\n' +
+      '    fun isNativeHeadEnabled(): Boolean = headEnabled\n' +
+      '\n' +
+      '    /** Appearance only; preserves the Director, brain, TTS, and shared pose reducer. */\n' +
+      '    fun setNative3dEnabled(enabled: Boolean) {\n' +
+      '        head3dEnabled = enabled\n' +
+      '        if (enabled) headEnabled = true\n' +
+      '        native3dFailed = false\n' +
+      '        appearancePrefs.edit().putBoolean("native-head", headEnabled).putBoolean("native-head-3d", enabled).apply()\n' +
+      '        if (!enabled) release3d(clearAsset = true)\n' +
+      '        updateMotionPolicy()\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun canDisplay3d() = head3dEnabled && foregroundActive && isAttachedToWindow && isShown &&\n' +
+      '        windowVisibility == VISIBLE && !powerManager.isPowerSaveMode && thermalStatus < 3\n' +
+      '\n' +
+      '    private fun update3d() {\n' +
+      '        if (!canDisplay3d()) { release3d(clearAsset = !head3dEnabled); return }\n' +
+      '        if (native3dFailed) return\n' +
+      '        if (assetBytes == null) {\n' +
+      '            if (assetLoading) return\n' +
+      '            assetLoading = true\n' +
+      '            val generation = assetGeneration\n' +
+      '            // Packaged local bytes only; no model, owner data, permission or network access.\n' +
+      '            Thread({\n' +
+      '                val candidate = runCatching {\n' +
+      '                    val bytes = context.assets.open(AvatarGlbContract.ASSET_PATH).use { input ->\n' +
+      '                        val out = java.io.ByteArrayOutputStream()\n' +
+      '                        val chunk = ByteArray(8192)\n' +
+      '                        while (true) {\n' +
+      '                            val read = input.read(chunk); if (read < 0) break\n' +
+      '                            require(out.size() + read <= AvatarGlbContract.MAX_BYTES)\n' +
+      '                            out.write(chunk, 0, read)\n' +
+      '                        }\n' +
+      '                        out.toByteArray()\n' +
+      '                    }\n' +
+      '                    val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)\n' +
+      '                        .joinToString("") { "%02x".format(it) }\n' +
+      '                    require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }\n' +
+      '                    bytes to AvatarGlbContract.validate(bytes)\n' +
+      '                }\n' +
+      '                mainHandler.post {\n' +
+      '                    assetLoading = false\n' +
+      '                    if (generation != assetGeneration) { if (canDisplay3d()) update3d(); return@post }\n' +
+      '                    candidate.onSuccess { (bytes, metadata) -> assetBytes = bytes; assetMetadata = metadata; update3d(); invalidate() }\n' +
+      '                        .onFailure { fail3d() }\n' +
+      '                }\n' +
+      '            }, "continuum-avatar'... 12475 more characters
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai
+    
+    import android.animation.ValueAnimator
+    import android.app.AlertDialog
+    import at.heinz.deviceai.avatar.AvatarEvent
+    import at.heinz.deviceai.avatar.AvatarSink
+    import at.heinz.deviceai.avatar.AvatarPoseReducer
+    import at.heinz.deviceai.avatar.ContinuumAvatarRenderer
+    import android.content.BroadcastReceiver
+    import android.content.Context
+    import android.content.Intent
+    import android.content.IntentFilter
+    import android.database.ContentObserver
+    import android.graphics.Canvas
+    import android.os.Build
+    import android.os.Handler
+    import android.os.Looper
+    import android.os.PowerManager
+    import android.os.SystemClock
+    import android.provider.Settings
+    import android.util.AttributeSet
+    import android.widget.Toast
+    import android.view.View
+    import android.view.TextureView
+    import android.view.Surface
+    import android.graphics.SurfaceTexture
+    import android.widget.FrameLayout
+    import at.heinz.deviceai.avatar3d.AvatarGlbContract
+    import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
+    import at.heinz.deviceai.ui.AndroidContinuumPainter
+    import at.heinz.deviceai.ui.ContinuumHologramRenderer
+    import kotlin.math.exp
+    import kotlin.math.sqrt
+    
+    /**
+     * Hardware accelerated living Continuum core. Drawing is done by [ContinuumHologramRenderer] (shared with the JVM
+     * preview); this view keeps the real state, speech energy, reduced-motion and power-save policies.
+     */
+    class ContinuumHologramView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null
+    ) : FrameLayout(context, attrs), AvatarSink {
+        enum class State { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }
+    
+        private val avatarRenderer = ContinuumAvatarRenderer()
+        private val avatarPose = AvatarPoseReducer()
+        private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+        private var headEnabled = appearancePrefs.getBoolean("native-head", false)
+        private var head3dEnabled = appearancePrefs.getBoolean("native-head-3d", false)
+        private var native3d: FilamentAvatarRenderer? = null
+        private var nativeTexture: TextureView? = null
+        private var nativeSurface: Surface? = null
+        private var assetBytes: ByteArray? = null
+        private var assetMetadata: AvatarGlbContract.Metadata? = null
+        private var assetLoading = false
+        private var assetGeneration = 0
+        private var native3dFailed = false
+        private var native3dDrawn = false
+        private var avatarSeconds = 0f
+        private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
+        private val avatarInvalidation = Runnable {
+            avatarInvalidationPending.set(false)
+            if (isAttachedToWindow && foregroundActive && isShown) invalidate()
+        }
+        private val renderer = ContinuumHologramRenderer()
+        private val painter = AndroidContinuumPainter(context.assets)
+        private val audio = HologramAudioEnvelope()
+        // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
+        private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
+        private val frameWeights = FloatArray(State.entries.size)
+        private val renderFrame = ContinuumHologramRenderer.Frame(.4f, .18f, 0f, frameWeights)
+        private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        private val mainHandler = Handler(Looper.getMainLooper())
+    
+        @Volatile private var currentState = State.READY
+        @Volatile private var pendingAudioLevel = 0f
+        @Volatile private var pendingAudioMs = 0L
+        private var consumedAudioMs = 0L
+        private var animationsEnabled = true
+        // A visible window is not proof that its Activity is still foregrounded.
+        // The owner Activity explicitly pauses/resumes this one animation loop.
+        private var foregroundActive = false
+        private var motionAllowed = false
+        private var visibleFrameCount = 0L
+        private var drawnFrameCount = 0L
+        private var framePending = false
+        private var observersRegistered = false
+        private var lastFrameMs = 0L
+        private var phase = .4f
+        private var energy = .18f
+        private var audioEnergy = 0f
+        private var thermalStatus = 0
+        // Stored as Any so API26–28 never resolve the API29 listener class on construction.
+        private var thermalListener: Any? = null
+    
+        private fun onThermalStatus(status: Int) {
+            thermalStatus = status
+            updateMotionPolicy()
+        }
+    
+        @android.annotation.TargetApi(29)
+        private fun observeThermalPressure() {
+            thermalStatus = powerManager.currentThermalStatus
+            val listener = PowerManager.OnThermalStatusChangedListener { onThermalStatus(it) }
+            powerManager.addThermalStatusListener(context.mainExecutor, listener)
+            thermalListener = listener
+        }
+    
+        @android.annotation.TargetApi(29)
+        private fun releaseThermalObserver() {
+            (thermalListener as? PowerManager.OnThermalStatusChangedListener)?.let {
+                powerManager.removeThermalStatusListener(it)
+            }
+            thermalListener = null
+        }
+    
+        private val drawFrame = Runnable {
+            framePending = false
+            if (canAnimateFrame()) {
+                visibleFrameCount++
+                // The motion clock advances independently of a completed Canvas draw.
+                // Invalidation requests only rendering, not the next state transition.
+                advanceFrame()
+                postInvalidateOnAnimation()
+                scheduleFrame()
+            }
+        }
+    
+        /** Owns the single visible-view frame callback, even before the first draw. */
+        private fun scheduleFrame() {
+            if (canAnimateFrame() && !framePending) {
+                framePending = true
+                // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
+                postOnAnimationDelayed(drawFrame, if (head3dEnabled) { if (thermalStatus >= 2) 65L else 25L } else if (thermalStatus >= 2) 32L else 8L)
+            }
+        }
+        private val motionObserver = object : ContentObserver(mainHandler) {
+            override fun onChange(selfChange: Boolean) = updateMotionPolicy()
+        }
+        private val powerReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) = updateMotionPolicy()
+        }
+    
+        init {
+            setWillNotDraw(false)
+            // State has an accessible text label beside the hero; avoid a duplicate announcement.
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+            isClickable = false
+            isFocusable = false
+            // A long-press gives the owner a concrete reason when animation looks frozen.
+            setOnLongClickListener {
+                showAppearanceChooser()
+                true
+            }
+        }
+    
+        /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */
+        override fun onAvatarEvent(event: AvatarEvent) {
+            synchronized(avatarPose) { avatarPose.apply(event) }
+            // Speech levels are drawn by the existing loop. State/end events also refresh static views.
+            if (event !is AvatarEvent.AudioLevel && event !is AvatarEvent.VisemeCue &&
+                avatarInvalidationPending.compareAndSet(false, true)) mainHandler.post(avatarInvalidation)
+        }
+    
+        /** Explicit local appearance preference; the original orb remains the default. */
+        fun setNativeHeadEnabled(enabled: Boolean) {
+            headEnabled = enabled
+            head3dEnabled = false
+            appearancePrefs.edit().putBoolean("native-head", enabled).putBoolean("native-head-3d", false).apply()
+            release3d(clearAsset = true)
+            updateMotionPolicy()
+        }
+    
+        fun isNativeHeadEnabled(): Boolean = headEnabled
+    
+        /** Appearance only; preserves the Director, brain, TTS, and shared pose reducer. */
+        fun setNative3dEnabled(enabled: Boolean) {
+            head3dEnabled = enabled
+            if (enabled) headEnabled = true
+            native3dFailed = false
+            appearancePrefs.edit().putBoolean("native-head", headEnabled).putBoolean("native-head-3d", enabled).apply()
+            if (!enabled) release3d(clearAsset = true)
+            updateMotionPolicy()
+        }
+    
+        private fun canDisplay3d() = head3dEnabled && foregroundActive && isAttachedToWindow && isShown &&
+            windowVisibility == VISIBLE && !powerManager.isPowerSaveMode && thermalStatus < 3
+    
+        private fun update3d() {
+            if (!canDisplay3d()) { release3d(clearAsset = !head3dEnabled); return }
+            if (native3dFailed) return
+            if (assetBytes == null) {
+                if (assetLoading) return
+                assetLoading = true
+                val generation = assetGeneration
+                // Packaged local bytes only; no model, owner data, permission or network access.
+                Thread({
+                    val candidate = runCatching {
+                        val bytes = context.assets.open(AvatarGlbContract.ASSET_PATH).use { input ->
+                            val out = java.io.ByteArrayOutputStream()
+                            val chunk = ByteArray(8192)
+                            while (true) {
+                                val read = input.read(chunk); if (read < 0) break
+                                require(out.size() + read <= AvatarGlbContract.MAX_BYTES)
+                                out.write(chunk, 0, read)
+                            }
+                            out.toByteArray()
+                        }
+                        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                            .joinToString("") { "%02x".format(it) }
+                        require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }
+                        bytes to AvatarGlbContract.validate(bytes)
+                    }
+                    mainHandler.post {
+                        assetLoading = false
+                        if (generation != assetGeneration) { if (canDisplay3d()) update3d(); return@post }
+                        candidate.onSuccess { (bytes, metadata) -> assetBytes = bytes; assetMetadata = metadata; update3d(); invalidate() }
+                            .onFailure { fail3d() }
+                    }
+                }, "continuum-avatar-asset").start()
+                return
+            }
+            if (nativeTexture == null) {
+                val texture = TextureView(context).apply {
+                    isOpaque = false
+                    alpha = 1f
+                    importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+                }
+                nativeTexture = texture
+                texture.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                        nativeSurface = Surface(surface)
+                        ensure3dRenderer(); invalidate()
+                    }
+                    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { invalidate() }
+                    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) = Unit
+                    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+                        native3d?.close(); native3d = null
+                        nativeSurface?.release(); nativeSurface = null
+                        native3dDrawn = false
+                        return true
+                    }
+                }
+                addView(texture, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+            }
+            ensure3dRenderer()
+        }
+    
+        private fun ensure3dRenderer() {
+            if (native3d != null || native3dFailed || !canDisplay3d()) return
+            val surface = nativeSurface ?: return
+            if (!surface.isValid) return
+            val bytes = assetBytes ?: return
+            val metadata = assetMetadata ?: return
+            runCatching { FilamentAvatarRenderer.create(surface, bytes, metadata) }
+                .onSuccess { native3d = it }.onFailure { fail3d() }
+        }
+    
+        private fun fail3d() {
+            native3dFailed = true
+            release3d(clearAsset = true)
+            if (isAttachedToWindow && foregroundActive) Toast.makeText(context,
+                "3D-Kopf derzeit nicht verfügbar · native 2D-Vorschau aktiv", Toast.LENGTH_LONG).show()
+            invalidate()
+        }
+    
+        private fun release3d(clearAsset: Boolean) {
+            native3d?.close(); native3d = null; native3dDrawn = false
+            nativeTexture?.let { texture -> texture.surfaceTextureListener = null; removeView(texture) }
+            nativeTexture = null
+            nativeSurface?.release(); nativeSurface = null
+            if (clearAsset) { assetGeneration++; assetBytes = null; assetMetadata = null }
+        }
+    
+        fun showAppearanceChooser() {
+            AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
+                .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau"), if (head3dEnabled) 2 else if (headEnabled) 1 else 0) { dialog, item ->
+                    if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
+                    dialog.dismiss()
+                }
+                .setNeutralButton("Bewegung prüfen") { _, _ ->
+                    Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+                }
+                .setNegativeButton("Schließen", null).show()
+        }
+    
+        /** Call on the UI thread. State changes crossfade over the existing orb. */
+        fun setState(state: State) {
+            if (state == currentState) return
+            currentState = state
+            pendingAudioLevel = 0f
+            pendingAudioMs = 0L
+            consumedAudioMs = 0L
+            audio.reset()
+            audioEnergy = 0f
+            if (!canAnimateFrame()) settleState()
+            invalidate()
+        }
+    
+        /** Safe from a TTS callback thread. Supply actual PCM RMS in the range 0..1. */
+        fun setAudioLevel(level: Float) {
+            if (currentState != State.SPEAKING) return
+            pendingAudioLevel = if (level.isFinite()) level.coerceIn(0f, 1f) else 0f
+            pendingAudioMs = SystemClock.uptimeMillis()
+        }
+    
+        /** Explicit Activity lifecycle. Keeps phase continuity without background callbacks. */
+        fun setForegroundActive(active: Boolean) {
+            if (foregroundActive == active) return
+            foregroundActive = active
+            if (!active) synchronized(avatarPose) { avatarPose.clearSpeech() }
+            updateMotionPolicy()
+        }
+    
+        /** Explicit reduced motion preference; system animator scale is also respected. */
+        fun setAnimationsEnabled(enabled: Boolean) {
+            animationsEnabled = enabled
+            updateMotionPolicy()
+        }
+    
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+            if (!observersRegistered) {
+                context.contentResolver.registerContentObserver(
+                    Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), false, motionObserver)
+                context.registerReceiver(powerReceiver, IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED))
+                if (Build.VERSION.SDK_INT >= 29) observeThermalPressure()
+                observersRegistered = true
+            }
+            updateMotionPolicy()
+        }
+    
+        override fun onDetachedFromWindow() {
+            release3d(clearAsset = true)
+            mainHandler.removeCallbacks(avatarInvalidation)
+            avatarInvalidationPending.set(false)
+            synchronized(avatarPose) { avatarPose.clearSpeech() }
+            Unit // removed cleanup
+            framePending = false
+            lastFrameMs = 0L
+            audio.reset()
+            if (observersRegistered) {
+                context.contentResolver.unregisterContentObserver(motionObserver)
+                context.unregisterReceiver(powerReceiver)
+                if (Build.VERSION.SDK_INT >= 29) releaseThermalObserver()
+                observersRegistered = false
+            }
+            super.onDetachedFromWindow()
+        }
+    
+        override fun onVisibilityAggregated(isVisible: Boolean) {
+            super.onVisibilityAggregated(isVisible)
+            updateMotionPolicy()
+        }
+    
+        override fun onWindowVisibilityChanged(visibility: Int) {
+            super.onWindowVisibilityChanged(visibility)
+            if (isAttachedToWindow) updateMotionPolicy()
+        }
+    
+        override fun onVisibilityChanged(changedView: View, visibility: Int) {
+            super.onVisibilityChanged(changedView, visibility)
+            if (isAttachedToWindow) updateMotionPolicy()
+        }
+    
+        override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+            super.onWindowFocusChanged(hasWindowFocus)
+            // Re-evaluate scheduling after Samsung Fold window/cover transitions.
+            if (isAttachedToWindow) updateMotionPolicy()
+        }
+    
+        /** Actual View visibility, not a callback-cached flag that can go stale. */
+        private fun canAnimateFrame() =
+            foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
+    
+        /** No private content. Owner can inspect this by long-pressing the hologram. */
+        /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
+        data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
+    
+        fun sampleMotion(): MotionSample = MotionSample(visibleFrameCount, drawnFrameCount, phase, motionDiagnostics())
+    
+        internal fun motionDiagnostics(): String = when {
+            !animationsEnabled -> "Avatar: In-App-Animation ausgeschaltet"
+            !ValueAnimator.areAnimatorsEnabled() -> "Avatar: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
+            powerManager.isPowerSaveMode -> "Avatar: Energiesparmodus blockiert Bewegung."
+            thermalStatus >= 3 -> "Avatar: Temperatur hoch · Bewegung pausiert."
+            !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
+            !isAttachedToWindow -> "Avatar: View nicht am Fenster."
+            !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
+            else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+        }
+    
+        private fun updateMotionPolicy() {
+            motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode && thermalStatus < 3
+            Unit // removed cleanup
+            framePending = false
+            lastFrameMs = 0L
+            if (!canAnimateFrame()) {
+                settleState()
+                audio.reset()
+                audioEnergy = 0f
+                pendingAudioMs = 0L
+                consumedAudioMs = 0L
+            }
+            update3d()
+            invalidate()
+            scheduleFrame()
+        }
+    
+        private fun settleState() {
+            stateWeights.fill(0f)
+            stateWeights[currentState.ordinal] = 1f
+            energy = stateEnergy(currentState)
+        }
+    
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val measuredWidth = resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec)
+            val measuredHeight = resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
+            // 3D occupies the left side; the existing orb remains visible alongside it.
+            nativeTexture?.layoutParams?.width = (measuredWidth * .72f).toInt()
+            super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY))
+        }
+    
+        /** Phone or Fold composition of the reference images (see ContinuumHologramRenderer.Geometry). */
+        fun setGeometry(geometry: ContinuumHologramRenderer.Geometry) {
+            renderer.geometry = geometry
+            invalidate()
+        }
+    
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+            val density = resources.displayMetrics.density
+            if (width <= 0 || height <= 0) return
+            renderer.layout(width / density, height / density)
+            painter.begin(canvas)
+            val saved = canvas.save()
+            canvas.scale(density, density)
+            frameWeights.indices.forEach { frameWeights[it] = stateWeights[it] }
+            renderFrame.phase = phase
+            renderFrame.energy = energy
+            renderFrame.audio = audioEnergy
+            if (headEnabled) {
+                val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
+                if (canDisplay3d() && native3d != null) {
+                    runCatching { native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
+                        .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
+                        .onFailure { fail3d() }
+                }
+                if (!native3dDrawn) avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimateFrame())
+                else {
+                    // Same original orb, same actual app state and speech frame; no second animation loop.
+                    val orbWidth = width / density * .28f
+                    val orbHeight = height / density * .40f
+                    val orbCanvas = canvas.save()
+                    canvas.translate(width / density * .72f, height / density * .30f)
+                    canvas.clipRect(0f, 0f, orbWidth, orbHeight)
+                    renderer.layout(orbWidth, orbHeight)
+                    renderer.draw(painter, renderFrame)
+                    canvas.restoreToCount(orbCanvas)
+                }
+            } else renderer.draw(painter, renderFrame)
+            drawnFrameCount++
+            canvas.restoreToCount(saved)
+        }
+    
+        private fun advanceFrame() {
+            if (!canAnimateFrame()) return
+            val now = SystemClock.uptimeMillis()
+            val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
+            lastFrameMs = now
+            avatarSeconds = (avatarSeconds + delta) % 460f
+            val blend = 1f - exp(-delta * 7f)
+            for (i in stateWeights.indices) {
+                stateWeights[i] += ((if (i == currentState.ordinal) 1f else 0f) - stateWeights[i]) * blend
+            }
+            val sampleTime = pendingAudioMs
+            if (sampleTime > consumedAudioMs) {
+                audio.submit(pendingAudioLevel, sampleTime)
+                consumedAudioMs = sampleTime
+            }
+            audioEnergy = if (currentState == State.SPEAKING) sqrt(audio.valueAt(now)) else 0f
+            val targetEnergy = if (currentState == State.SPEAKING) .12f + audioEnergy * .88f else stateEnergy(currentState)
+            energy += (targetEnergy - energy) * (1f - exp(-delta * 9f))
+            phase = (phase + delta * (.28f + energy * .72f)) % 1000f
+        }
+    
+        private fun stateEnergy(state: State) = when (state) {
+            State.READY -> .18f
+            State.LISTENING -> .42f
+            State.THINKING -> .78f
+            State.SPEAKING -> .12f
+            State.RESEARCH -> .62f
+            State.LEARNING -> .52f
+        }
+    
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/continuum-owner-mainapp-quality.test.mjs:22:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: orbital rings use visible phase movement, not the old near-static factor
+ok 18 - orbital rings use visible phase movement, not the old near-static factor
+  ---
+  duration_ms: 0.236497
+  type: 'test'
+  ...
+# Subtest: header and six live action tiles fit their boxes while legacy orbital controls stay available
+ok 19 - header and six live action tiles fit their boxes while legacy orbital controls stay available
+  ---
+  duration_ms: 0.322717
+  type: 'test'
+  ...
+# Subtest: battery, app CPU, RAM and GPU measurements remain honestly distinguished
+ok 20 - battery, app CPU, RAM and GPU measurements remain honestly distinguished
+  ---
+  duration_ms: 0.14557
+  type: 'test'
+  ...
+# Subtest: CCC1 integrated in same owner-app source without changing private app identity
+ok 21 - CCC1 integrated in same owner-app source without changing private app identity
+  ---
+  duration_ms: 0.137568
+  type: 'test'
+  ...
+# Subtest: existing on-device learning state and protected independent training are never reset by launch
+ok 22 - existing on-device learning state and protected independent training are never reset by launch
+  ---
+  duration_ms: 0.121213
+  type: 'test'
+  ...
+# Subtest: portrait selection keeps actual Fold window threshold and separate landscape rail
+ok 23 - portrait selection keeps actual Fold window threshold and separate landscape rail
+  ---
+  duration_ms: 1.224007
+  type: 'test'
+  ...
+# Subtest: seven live cards reflow in shared columns and remain inside scrolling content
+ok 24 - seven live cards reflow in shared columns and remain inside scrolling content
+  ---
+  duration_ms: 0.492042
+  type: 'test'
+  ...
+# Subtest: six controls stay below the shared hero and all real card data remains connected
+ok 25 - six controls stay below the shared hero and all real card data remains connected
+  ---
+  duration_ms: 0.884946
+  type: 'test'
+  ...
+# Subtest: Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+ok 26 - Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling
+  ---
+  duration_ms: 0.414776
+  type: 'test'
+  ...
+# Subtest: phone and Fold preserve renderer lifecycle through the shared adaptive layout
+ok 27 - phone and Fold preserve renderer lifecycle through the shared adaptive layout
+  ---
+  duration_ms: 0.210778
+  type: 'test'
+  ...
+# Subtest: the five beginner destinations stay reachable from the reference start screen
+ok 28 - the five beginner destinations stay reachable from the reference start screen
+  ---
+  duration_ms: 1.162985
+  type: 'test'
+  ...
+# Subtest: start-screen routes use real existing Android screens, not placeholder success actions
+ok 29 - start-screen routes use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.47722
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available from the start screen, its rail and the More sheet
+ok 30 - advanced routes remain available from the start screen, its rail and the More sheet
+  ---
+  duration_ms: 1.274694
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 31 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.740658
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 32 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.302867
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 33 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.282487
+  type: 'test'
+  ...
+# Subtest: start screen and chat never overlap after leaving or returning from chat
+ok 34 - start screen and chat never overlap after leaving or returning from chat
+  ---
+  duration_ms: 0.542379
+  type: 'test'
+  ...
+# Subtest: phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+ok 35 - phone root fills the viewport, with an explicitly bottom-anchored navigation rail
+  ---
+  duration_ms: 1.386894
+  type: 'test'
+  ...
+# Subtest: home dashboard remains in a scrolling viewport, not hidden behind the navigation
+ok 36 - home dashboard remains in a scrolling viewport, not hidden behind the navigation
+  ---
+  duration_ms: 0.179801
+  type: 'test'
+  ...
+# Subtest: keyboard hides phone navigation and frees the same reserved space
+ok 37 - keyboard hides phone navigation and frees the same reserved space
+  ---
+  duration_ms: 0.224629
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 36
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 149.609759

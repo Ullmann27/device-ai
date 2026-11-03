@@ -84,9 +84,12 @@ if(!isMainThread){
    }));
    let simultaneous=[];
    for(let n=0;n<40;n++){
-    const listed=docker(['ps','--filter','name=continuum-','--format','{{.ID}}']);
-    assert.equal(listed.status,0,listed.stderr);
-    const ids=listed.stdout.trim().split('\n').filter(Boolean);
+    // Other independent suites may start containers concurrently. Observe only these two jobs.
+    const ids=fixtures.flatMap(f=>{
+     const listed=docker(['ps','--filter','label=continuum.workspace-job='+f.job,'--format','{{.ID}}']);
+     assert.equal(listed.status,0,listed.stderr);
+     return listed.stdout.trim().split('\n').filter(Boolean);
+    });
     if(ids.length>=2){simultaneous=ids;break;}
     await new Promise(resolve=>setTimeout(resolve,100));
    }
@@ -103,16 +106,18 @@ if(!isMainThread){
     fs.writeFileSync(path.join(out,fixtures[i].workerId+'-receipt.json'),JSON.stringify(r,null,2)+'\n');
    }
    // A hanging fixed profile is killed at the configured outer deadline and
-   // receives no success receipt; inspect all named containers after cleanup.
-   const beforeTimeout=docker(['ps','-a','--filter','name=continuum-','--format','{{.ID}}']).stdout.trim();
+   // receives no success receipt; inspect only this fixture job after cleanup.
+   const beforeTimeout=docker(['ps','-a','--filter','label=continuum.workspace-job='+f.job,'--format','{{.ID}}']);
+   assert.equal(beforeTimeout.status,0,beforeTimeout.stderr);
+   assert.equal(beforeTimeout.stdout.trim(),'','completed fixture job must already be gone');
    const existingClaim=new BacklogStore(path.join(f.stateDir,'teamleader/development-backlog.json')).read().doc.tasks.find(t=>t.id===jobTaskId(f.job));
    const shortScoped=timeoutBase.forClaim({backlog:path.join(f.stateDir,'teamleader/development-backlog.json'),id:existingClaim.id,token:existingClaim.claim.token});
    const timeoutStart=Date.now();
    assert.throws(()=>shortScoped.execute('node-continuum',f.root,out),/ISOLATION_EXECUTION_FAILED/);
    const timeoutElapsedMs=Date.now()-timeoutStart;
    assert.ok(timeoutElapsedMs<10000,'outer time cap bounded the three-second fixture');
-   const afterTimeout=docker(['ps','-a','--filter','name=continuum-','--format','{{.ID}}']);
-   assert.equal(afterTimeout.status,0,afterTimeout.stderr);assert.equal(afterTimeout.stdout.trim(),beforeTimeout);
+   const afterTimeout=docker(['ps','-a','--filter','label=continuum.workspace-job='+f.job,'--format','{{.ID}}']);
+   assert.equal(afterTimeout.status,0,afterTimeout.stderr);assert.equal(afterTimeout.stdout.trim(),'','timed-out fixture job must leave no container');
    // Recovery authority remains the existing canonical backlog/journal.
    assert.throws(()=>bindCcc1Workspace(input),/RECOVERY_BLOCKED: REQUIRE_OWNER_APPROVAL/);
    fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify({schema:'momega1-workspaces-host-v1',simultaneous,

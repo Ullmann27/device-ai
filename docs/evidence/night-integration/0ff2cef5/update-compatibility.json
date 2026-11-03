@@ -1,0 +1,67 @@
+{
+  "reviewType": "Read-only source comparison and existing synthetic test receipts; no installed owner data examined",
+  "oldDocumentedReleaseSource": "a9709854f48d2fd6589f9ce5ea97f6ec3be0d233",
+  "candidateSource": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+  "updaterSources": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateActivity.kt",
+      "oldSha256": "daba6cf27f382597d3d2dfa34369532401fc53cfb1802017b2f9c65062ec98ea",
+      "candidateSha256": "daba6cf27f382597d3d2dfa34369532401fc53cfb1802017b2f9c65062ec98ea",
+      "byteIdentical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnerUpdateReceiver.kt",
+      "oldSha256": "5acd2c063e797512e299973f0e736b19c4d600b5b5d45d8e9e6bc7b0306cbda8",
+      "candidateSha256": "5acd2c063e797512e299973f0e736b19c4d600b5b5d45d8e9e6bc7b0306cbda8",
+      "byteIdentical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalog.kt",
+      "oldSha256": "d55b36b8bdd0a76a1aac1c034e37c11f5ff1bb3fb6b0d42cbfa226013bd2ccf2",
+      "candidateSha256": "d55b36b8bdd0a76a1aac1c034e37c11f5ff1bb3fb6b0d42cbfa226013bd2ccf2",
+      "byteIdentical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdater.kt",
+      "oldSha256": "4e5d78007d7d8b9811db74209c1ecfd5aa260b5ba242a9c6bb1b9eda03a70e92",
+      "candidateSha256": "4e5d78007d7d8b9811db74209c1ecfd5aa260b5ba242a9c6bb1b9eda03a70e92",
+      "byteIdentical": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumSignedUpdatePolicy.kt",
+      "oldSha256": "9d6ba9700b1f680aa97a6019cccbebe7c8f9613d99dd10d9bcc5b6f4f93ef825",
+      "candidateSha256": "9d6ba9700b1f680aa97a6019cccbebe7c8f9613d99dd10d9bcc5b6f4f93ef825",
+      "byteIdentical": true
+    }
+  ],
+  "catalogUrl": "https://continuum-owner-v23-release-preflight.onrender.com/continuum-local/latest.json",
+  "schema": 1,
+  "channel": "OWNER_RELEASE",
+  "approved": true,
+  "exactCatalogKeys": [
+    "schema",
+    "channel",
+    "packageName",
+    "versionCode",
+    "versionName",
+    "apkUrl",
+    "apkSha256",
+    "byteLength",
+    "sourceCommit",
+    "signerSha256",
+    "approved",
+    "notes"
+  ],
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "candidateVersionCode": 40,
+  "candidateVersionName": "0.3.39",
+  "requiredOriginalSignerSha256": "6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23",
+  "signedPublisherArtifactVerifiedAtThisCheckpoint": false,
+  "migrationTests": "migration-test-cases.json",
+  "behaviorChanges": [
+    "Missing voice_enabled key now defaults to true; persisted false remains false.",
+    "LEX2 protected-record or byte-capacity overflow can migrate the same primary ledger path to LEX3; an old reader cannot consume that manifest.",
+    "Unconfirmable historical owner statements can become OBSERVED while content is retained.",
+    "Receipt capacity retention can evict oldest certain terminal entries; pending or outcome-uncertain entries remain protected."
+  ]
+}

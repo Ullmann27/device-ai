@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/continuum-jarvis3d/tools/avatar-3d/build_bust.py", line 328, in <module>
+    export_avatar(ASSETS/'jarvis-research-v1.glb',OUT/'asset-manifest.json',MORPHS)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/continuum-jarvis3d/tools/avatar-3d/export_glb.py", line 63, in export_avatar
+    attrib={'POSITION':access(pos,target=34962,limits=True),'NORMAL':access(normals,target=34962)}
+                       ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/continuum-jarvis3d/tools/avatar-3d/export_glb.py", line 16, in access
+    blob.extend(struct.pack('<'+fmt*len(flat),*flat))
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+struct.error: required argument is not a float
+Blender 4.3.2
+
+Blender quit

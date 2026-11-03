@@ -1,0 +1,74 @@
+{
+  "schema": "continuum-independent-service-review",
+  "version": 1,
+  "source": "a588d361274af22e4ede602c3bfabcf3b08b8f22",
+  "reviewHarnessCommit": "26c4d7d93892f6f9d0876d8537a54925ae0a5bd5",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.19.0",
+    "kernel": "6.18.57"
+  },
+  "testResult": {
+    "pass": 10,
+    "fail": 0,
+    "skip": 0,
+    "durationMs": 43602.599075
+  },
+  "cliProcesses": 108,
+  "latencyNearestRank": {
+    "init": {
+      "count": 10,
+      "p50Ms": 230.575,
+      "p95Ms": 255.927
+    },
+    "start": {
+      "count": 12,
+      "p50Ms": 1289.597,
+      "p95Ms": 1367.394
+    },
+    "review": {
+      "count": 11,
+      "p50Ms": 697.302,
+      "p95Ms": 932.407
+    },
+    "submit": {
+      "count": 14,
+      "p50Ms": 692.407,
+      "p95Ms": 1280.048
+    },
+    "cancel": {
+      "count": 4,
+      "p50Ms": 134.691,
+      "p95Ms": 153.391
+    },
+    "tasks": {
+      "count": 12,
+      "p50Ms": 130.467,
+      "p95Ms": 186.509
+    },
+    "status": {
+      "count": 30,
+      "p50Ms": 86.96,
+      "p95Ms": 100.502
+    },
+    "stop": {
+      "count": 15,
+      "p50Ms": 89.904,
+      "p95Ms": 117.212
+    }
+  },
+  "activeChildFaults": 2,
+  "nativeCalls": 0,
+  "nativeCallMethod": "Private approved executable removed before task submission; cannot be launched at configured path",
+  "memoryMeasurement": "NOT_RUN",
+  "energyMeasurement": "NOT_RUN",
+  "sourceBlobSha256": {
+    ".github/continuum/coding-service-store.mjs": "ac415f57abec70710b3a01b3064b91ce6e4a21d081c7e26caec77eb7f3c53e09",
+    ".github/continuum/coding-service-reader.mjs": "42a0096e4374e0632112639bda026e763790fd6ef730b7bef0de0274b3fc7dc7",
+    ".github/continuum/coding-service.mjs": "758516adc82ff3bc6adfa557702dad7d4642f59876d264c4b734a55d493632e5",
+    ".github/continuum/coding-service-worker.mjs": "f22a011fa9ac817bcebd8796cbbafc25a6593b2aafd2c56a5332933419e70ee8",
+    "scripts/continuum-coding-service.mjs": "c2231cbf013358da6b193ab8234ca4db85420d989ee0c790cfef3c0ae766487f"
+  },
+  "fold7": "NOT_RUN"
+}

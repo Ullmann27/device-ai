@@ -21,7 +21,7 @@ object ContinuumHomeLayout {
     }
 
     /** [scale] maps reference dp to window dp; [contentHeight] is the scrolling part above a phone navigation bar. */
-    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {
+    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>, val adaptive: Boolean = false) {
         operator fun get(slot: Slot): Box? = boxes[slot]
     }
 
@@ -56,6 +56,13 @@ object ContinuumHomeLayout {
     /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */
     fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =
         isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f
+
+    /** Retain the reviewed composition at ordinary type sizes; enlarged type gets full-size readable cards. */
+    private fun usesAdaptiveLayout(widthDp: Float, fontScale: Float): Boolean {
+        require(fontScale.isFinite() && fontScale > 0f)
+        // Transient sub-240dp windows still use the bounded reference composition during resize.
+        return widthDp >= 240f && (widthDp < 320f || fontScale > 1.3f)
+    }
 
     // Centerline of the hologram is 206 dp. Opposing controls use equal widths and mirrored x-coordinates.
     private val phoneReference = mapOf(
@@ -100,8 +107,10 @@ object ContinuumHomeLayout {
         Slot.SYSTEM_ACTIVITY to Box(504.5f, 485.7f, 829.2f, 642.9f)
     )
 
-    fun phone(widthDp: Float): Layout {
-        require(widthDp > 0f)
+    @JvmOverloads
+    fun phone(widthDp: Float, fontScale: Float = 1f): Layout {
+        require(widthDp.isFinite() && widthDp > 0f)
+        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, 0f, false, fontScale)
         val u = widthDp / PHONE_REFERENCE_WIDTH
         return Layout(false, widthDp, u, 787f * u, phoneReference.mapValues { it.value.scaled(u) })
     }
@@ -120,8 +129,10 @@ object ContinuumHomeLayout {
      * page in a horizontal status strip after the cards, reached by scrolling.
      * No renderer, animations, business actions or source data are replaced.
      */
-    fun portraitFold(widthDp: Float, heightDp: Float): Layout {
+    @JvmOverloads
+    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout {
         require(widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp > 0f)
+        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, heightDp, true, fontScale)
         val scale = widthDp / WIDE_REFERENCE_WIDTH
         val frame = (heightDp / scale).coerceAtLeast(800f)
         val heroExtra = ((frame - 886f).coerceAtLeast(0f) * .12f).coerceAtMost(45f)
@@ -164,9 +175,11 @@ object ContinuumHomeLayout {
      * labels and the system status column move with the hologram's centre. What remains opens the gaps above both card
      * rows equally. Cards keep their reference shape. [heightDp] = 0 keeps the reference proportion.
      */
-    fun wide(widthDp: Float, heightDp: Float = 0f): Layout {
-        require(widthDp > 0f)
-        if (heightDp > 0f && isPortraitFold(widthDp, heightDp)) return portraitFold(widthDp, heightDp)
+    @JvmOverloads
+    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout {
+        require(widthDp.isFinite() && widthDp > 0f && heightDp.isFinite() && heightDp >= 0f)
+        if (usesAdaptiveLayout(widthDp, fontScale)) return ContinuumAdaptiveHomeLayout.create(widthDp, heightDp, true, fontScale)
+        if (heightDp > 0f && isPortraitFold(widthDp, heightDp)) return portraitFold(widthDp, heightDp, fontScale)
         val u = widthDp / WIDE_REFERENCE_WIDTH
         val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
         val hero = wideReference.getValue(Slot.HERO)

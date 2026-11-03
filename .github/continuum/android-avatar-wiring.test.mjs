@@ -12,7 +12,18 @@ test('avatar director is wired to hologram state, TTS start/range/end and the TT
  assert.match(activity,/avatarDirector\.speechStarted\(utteranceId, voiceAvatarText\)/);
  assert.match(activity,/avatarDirector\.wordRange\(utteranceId, start, end\)/);
  assert.match(activity,/avatarDirector\.audioLevel\(it, level\)/);
- assert.match(activity,/avatarDirector\.speechEnded\(id, interrupted\)/);
+ const stopStart=activity.indexOf('private fun stopVoiceAnimation(interrupted: Boolean)');
+ const stopEnd=activity.indexOf('private fun installVoiceProgressListener()',stopStart);
+ assert.ok(stopStart>=0 && stopEnd>stopStart);
+ const stop=activity.slice(stopStart,stopEnd);
+ assert.match(stop,/voiceUtteranceId\?\.let \{ avatarDirector\.speechEnded\(it, interrupted = interrupted\) \}/);
+ assert.match(stop,/voiceUtteranceId = null/);
+ const finishStart=activity.indexOf('private fun finish(id: String?, interrupted: Boolean = false, failed: Boolean = false)');
+ const finishEnd=activity.indexOf('private fun speakBootstrap(',finishStart);
+ assert.ok(finishStart>=0 && finishEnd>finishStart);
+ const finish=activity.slice(finishStart,finishEnd);
+ assert.match(finish,/runOnUiThread\s*\{/);
+ assert.match(finish,/if\s*\(id != null && id == voiceUtteranceId\)\s*\{\s*stopVoiceAnimation\(interrupted \|\| failed\)/);
 });
 
 test('contract stays rendering-free and defaults to the no-op placeholder',()=>{

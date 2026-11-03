@@ -1,0 +1,9 @@
+253c49fa5a062eed636adcdd9640b15b6d268a5f83a92a316a9fc1d30ce26271  app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt
+aafe16f7787ade779b658b63063d723844a10ecdd45f508b5f9eef0ba5162e28  app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt
+9f62e6177716f6d9ba2244ae44656ef951e9ebca5d08b493e4d57b0e51715043  app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt
+e1ddd13e8736a9aa997a321608296a5f479867f6f8059f49bc8129da32a2360e  app/src/main/java/at/heinz/deviceai/chief/ChiefDelegationCoordinator.kt
+60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1  app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
+90bb4d878e933b0ea2658b415eb36a55a6879646374c6f6853b63e40f9e4a5ed  app/src/test/java/at/heinz/deviceai/chief/ChiefBotConversationTest.kt
+28502d132fa32e58eff222e4bafddb2a353b75c4dc84849410d729951ca0c7d3  app/src/test/java/at/heinz/deviceai/chief/ChiefBotProfileStoreTest.kt
+1c753922ba880b806cde36a4363eed65ab62da98834e26386e00c276d9b74153  app/src/test/java/at/heinz/deviceai/chief/ChiefDelegationCoordinatorTest.kt
+b2255b59833a232ce96a2a95f8c2f7ce0d70e190df1ab85cb68cae419a99a9fa  app/src/test/java/at/heinz/deviceai/cognitive/AiContextCompilerTest.kt

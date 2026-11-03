@@ -1,0 +1,11 @@
+{
+  "originalSha256": "50cb34627384432d3f6744b924c250807def02c892d8336645dac7845a029d28",
+  "diagnosticSha256": "fc88957817f1296cc531fa25ed02575ed70ca8357f8cc7f8ff759a3304530b7f",
+  "removedAnimationEntries": [
+    "VisemeSweep",
+    "ExpressionAndSpeech",
+    "IndependentControlDemo"
+  ],
+  "binaryChunkIdentical": true,
+  "status": "DIAGNOSTIC_DERIVATIVE_NOT_ACCEPTED_ORIGINAL"
+}

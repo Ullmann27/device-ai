@@ -1,0 +1,52 @@
+[
+  {
+    "agentId": "bot-atlas",
+    "resourceBudget": {
+      "deadlineMillis": 120000,
+      "maxModelCalls": 1,
+      "maxToolCalls": 4,
+      "workspaceBytes": 16777216
+    },
+    "workspaceId": "workspace-bot-atlas"
+  },
+  {
+    "agentId": "bot-forge",
+    "resourceBudget": {
+      "deadlineMillis": 120000,
+      "maxModelCalls": 1,
+      "maxToolCalls": 4,
+      "workspaceBytes": 16777216
+    },
+    "workspaceId": "workspace-bot-forge"
+  },
+  {
+    "agentId": "bot-lint",
+    "resourceBudget": {
+      "deadlineMillis": 120000,
+      "maxModelCalls": 1,
+      "maxToolCalls": 4,
+      "workspaceBytes": 16777216
+    },
+    "workspaceId": "workspace-bot-lint"
+  },
+  {
+    "agentId": "bot-mnemos",
+    "resourceBudget": {
+      "deadlineMillis": 120000,
+      "maxModelCalls": 1,
+      "maxToolCalls": 4,
+      "workspaceBytes": 16777216
+    },
+    "workspaceId": "workspace-bot-mnemos"
+  },
+  {
+    "agentId": "bot-echo",
+    "resourceBudget": {
+      "deadlineMillis": 120000,
+      "maxModelCalls": 1,
+      "maxToolCalls": 4,
+      "workspaceBytes": 16777216
+    },
+    "workspaceId": "workspace-bot-echo"
+  }
+]

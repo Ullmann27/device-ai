@@ -1,0 +1,20 @@
+{
+  "case": "g02",
+  "command": [
+    "python3",
+    "/workspace/genesis-coding-review/tools/genesis-coding-review/observe-native-resources.py",
+    "/workspace/genesis-a0-experiment/runs/g02/native-resources.json",
+    "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "node",
+    "/workspace/genesis-coding-review/tools/genesis-coding-review/run-real-model-task.mjs",
+    "/workspace/genesis-a0-source",
+    "fd743adce297c0958aadce1576b80580817837f0",
+    "/workspace/genesis-a0-experiment/fixtures/g02",
+    "/workspace/genesis-a0-experiment/runs/g02/evidence"
+  ],
+  "launcherSha256": "ba9391a73ac5bc0b649a314abdf7afd5f015659b1e4e1286dde7debd9f515f44",
+  "runtimeEnvironmentSha256": "68a86ab17da65ae7b1b2cad326b35aacdab6f83eb76ca99b66a5b3e7ecec8a47",
+  "fixture": "/workspace/genesis-a0-experiment/fixtures/g02",
+  "maxReservedCalls": 2,
+  "externalAnswer": false
+}

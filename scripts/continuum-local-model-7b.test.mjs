@@ -3,11 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {isTrustedLocalModelObservation} from '../.github/continuum/coding-provider.mjs';
-import {runPinnedModelJob} from './continuum-local-model-job.mjs';
+import {runPinnedModelJob,LOCAL_MODEL_JOB_IMAGE} from './continuum-local-model-job.mjs';
+import {spawnSync} from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import * as pins from './continuum-local-model-pins.mjs';
 import * as runtime from './continuum-local-model-observation.mjs';
+import {inspectBoundedModelTestHost} from './continuum-model-test-host.mjs';
 import {inspectGgufHeader} from './continuum-gguf.mjs';
 import {readPinnedGgufManifest} from './continuum-gguf-preflight.mjs';
 const p={repository:'Qwen/Qwen2.5-Coder-7B-Instruct-GGUF',revision:'13fb94bfda8c8cf22497dc57b78f391a9acb426a',filename:'qwen2.5-coder-7b-instruct-q4_k_m.gguf',license:'Apache-2.0',sizeBytes:4683073536,sha256:'509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c'};
@@ -32,12 +34,17 @@ test('7B uses the fixed Qwen ChatML serialization, unknown model does not',()=>{
  assert.match(runtime.serializeLocalCodingPrompt(body,{modelSha256:p.sha256}),/^<\|im_start\|>system\n/);
  assert.match(runtime.serializeLocalCodingPrompt(body,{modelSha256:'a'.repeat(64)}),/^SYSTEM:/);
 });
-test('7B total-job memory check is real and cannot accept the shared16GiB host group',()=>{
+test('7B total-job memory check rejects missing or oversized kernel bounds without caller fallback',()=>{
  assert.equal(typeof runtime.assertLocalModelJobMemoryLimit,'function');
  const profile=pins.getLocalModelResourceProfile({provenance:p,runtimeSha256:r});
- const max=fs.readFileSync('/sys/fs/cgroup/memory.max','utf8').trim();
- if(max==='max'||BigInt(max)>8589934592n)assert.throws(()=>runtime.assertLocalModelJobMemoryLimit(profile),/BLOCKED_LOCAL_JOB_MEMORY_LIMIT/);
- else assert.equal(runtime.assertLocalModelJobMemoryLimit(profile).maxJobMemoryBytes<=8589934592,true);
+ const host=inspectBoundedModelTestHost();
+ if(!host.available)assert.throws(()=>runtime.assertLocalModelJobMemoryLimit(profile),/BLOCKED_LOCAL_JOB_MEMORY_LIMIT/);
+ else{
+  const actual=runtime.assertLocalModelJobMemoryLimit(profile);
+  assert.equal(actual.enforcement,'CGROUP_V2');assert.equal(actual.maxJobSwapBytes,0);
+  assert.equal(actual.maxJobMemoryBytes,host.memoryBytes);
+ }
+
 });
 
 test('large header requires exact complete provenance, no caller file-size bypass',()=>{
@@ -50,6 +57,24 @@ test('large header requires exact complete provenance, no caller file-size bypas
 });
 
 test('fixed Docker CLI transport rejects mismatched weights before native launch, with no observation',t=>{
+ const config=fs.mkdtempSync(path.join(os.tmpdir(),'7b-test-docker-'));
+ fs.chmodSync(config,0o700);fs.writeFileSync(path.join(config,'config.json'),'{}',{mode:0o600});
+ let available;
+ try{available=spawnSync('/usr/local/bin/docker',['--host=unix:///var/run/docker.sock','--config='+config,
+  'image','inspect','--format','{{.Id}}',LOCAL_MODEL_JOB_IMAGE],
+  {env:{},encoding:'utf8',timeout:5000,maxBuffer:4096});}
+ finally{fs.rmSync(config,{recursive:true,force:true});}
+ if(available.error?.code==='ENOENT'){
+  t.skip('HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable');return;
+ }
+ if(available.status!==0){
+  const reason=available.stderr??'';
+  if(/Cannot connect to the Docker daemon|permission denied|No such image|no such image|connect: no such file or directory/.test(reason)){
+   t.skip('HOST_DOCKER_PROOF_NOT_RUN: fixed local daemon or pinned image unavailable; no image pulled');return;
+  }
+  assert.equal(available.status,0,reason); // Unexpected tool errors remain genuine failures.
+ }
+ assert.equal(available.stdout.trim(),LOCAL_MODEL_JOB_IMAGE);
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'7b-transport-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  const model=path.join(dir,p.filename),manifest=path.join(dir,'pin.json'),binary=path.join(dir,'runtime');
  fs.writeFileSync(model,'dummy',{mode:0o600});fs.writeFileSync(binary,'dummy',{mode:0o700});fs.writeFileSync(manifest,JSON.stringify({...p,sha256:'a'.repeat(64)}),{mode:0o600});

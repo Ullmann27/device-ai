@@ -1,0 +1,37 @@
+{
+  "source": "853a8ee08359ce41375ddb9334ac8ae9c2e2c59e",
+  "suites": 391,
+  "total": {
+    "tests": 2157,
+    "failures": 5,
+    "errors": 0,
+    "skipped": 12
+  },
+  "failures": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefBrainWiringTest",
+      "name": "routineRunsAsWorkerJobAndReportsOnlyNews",
+      "message": "java.lang.AssertionError: expected:<1> but was:<0>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "name": "allSixControlsHaveEqualAndReflectedBounds",
+      "message": "java.lang.AssertionError: LABEL_CONNECTED / LABEL_THINKING top expected:<708.72> but was:<476.72>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "name": "onlyRightHandCardsReverseElementOrderNotLetters",
+      "message": "java.lang.ClassCastException: class at.heinz.deviceai.ui.CockpitActionTile cannot be cast to class at.heinz.deviceai.ui.CoreLabelElement (at.heinz.deviceai.ui.CockpitActionTile and at.heinz.deviceai.ui.CoreLabelElement are in unnamed module of loader 'app')"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "name": "portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror",
+      "message": "java.lang.AssertionError: expected:<168.68571> but was:<202.66667>"
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "name": "foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows",
+      "message": "java.lang.AssertionError: LABEL_CONNECTED sphere collision"
+    }
+  ]
+}

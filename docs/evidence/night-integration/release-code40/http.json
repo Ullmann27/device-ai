@@ -1,0 +1,39 @@
+{
+  "manifest": {
+    "date": "Tue, 03 Nov 2026 23:54:04 GMT",
+    "content-type": "application/json",
+    "cache-control": "public, max-age=0, s-maxage=300",
+    "cf-cache-status": "MISS",
+    "etag": "W/\"99e99985392fc86e51b7cd8ab803401e\"",
+    "last-modified": "Tue, 03 Nov 2026 23:51:49 UTC",
+    "rndr-id": "8c5bd7ca-6e9d-4e4a",
+    "server": "envoy",
+    "strict-transport-security": "max-age=315360000; includeSubdomains; preload",
+    "vary": "Accept-Encoding,Accept-Encoding",
+    "x-content-type-options": "nosniff",
+    "cf-ray": "a54f4d4ead87c9f2-ORD",
+    "alt-svc": "h3=\":443\"; ma=86400",
+    "x-envoy-upstream-service-time": "253",
+    "connection": "close",
+    "transfer-encoding": "chunked"
+  },
+  "apk": {
+    "date": "Tue, 03 Nov 2026 23:54:14 GMT",
+    "content-type": "application/vnd.android.package-archive",
+    "content-length": "84298233",
+    "cache-control": "public, max-age=0, s-maxage=300",
+    "accept-ranges": "bytes",
+    "etag": "\"309909e0b6e1ebab5823a264c237c6eb-17\"",
+    "last-modified": "Tue, 03 Nov 2026 23:51:49 UTC",
+    "rndr-id": "cf6577c5-ec98-4bb8",
+    "server": "envoy",
+    "strict-transport-security": "max-age=315360000; includeSubdomains; preload",
+    "vary": "Accept-Encoding",
+    "x-content-type-options": "nosniff",
+    "cf-cache-status": "MISS",
+    "cf-ray": "a54f4d91cb0dc9f2-ORD",
+    "alt-svc": "h3=\":443\"; ma=86400",
+    "x-envoy-upstream-service-time": "217",
+    "connection": "close"
+  }
+}

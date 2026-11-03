@@ -1,0 +1,2 @@
+PASS: callback reentrant submit/cancel, two reports, idle
+PASS: callback reentrant shutdown returns and releases slot

@@ -1,0 +1,45 @@
+{
+  "atEpoch": 1793744768.4693747,
+  "barrierRetained": true,
+  "barrier": {
+    "schema": "continuum-host-execution-barrier",
+    "version": 1,
+    "status": "UNRESOLVED",
+    "stateDir": "/workspace/independence-s01-experiment/service",
+    "taskId": "independence-s01",
+    "instanceId": "5051816a817eadd089f1379d60411583",
+    "ownerProcess": {
+      "pid": 381879,
+      "startTicks": "1647601",
+      "bootId": "1c9ade84-8339-4779-bc3f-f20dc2c6259f"
+    },
+    "workerProcess": {
+      "pid": 382047,
+      "startTicks": "1647771",
+      "bootId": "1c9ade84-8339-4779-bc3f-f20dc2c6259f"
+    },
+    "sourceCommit": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+    "at": "2026-11-03T22:22:59.557Z"
+  },
+  "recordedPids": [
+    {
+      "pid": 381879,
+      "state": "Z",
+      "ppid": 1,
+      "startTicks": "1647601"
+    },
+    {
+      "pid": 382047,
+      "state": "ABSENT"
+    },
+    {
+      "pid": 383288,
+      "state": "ABSENT"
+    }
+  ],
+  "nativeProcesses": [],
+  "relatedProcesses": [],
+  "dockerExit": 0,
+  "containers": [],
+  "manualReconciliationPerformed": false
+}

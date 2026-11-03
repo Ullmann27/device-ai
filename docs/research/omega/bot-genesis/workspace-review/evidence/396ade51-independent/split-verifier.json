@@ -1,0 +1,300 @@
+{
+  "evidenceClass": "HOST_SOFTWARE_INTEGRATION",
+  "proposalSource": "SCRIPTED_FIXTURE",
+  "actualModelInference": false,
+  "deviceVerified": false,
+  "task": {
+    "schema": "continuum-coding-task",
+    "version": 1,
+    "id": "genesis-host-fixture",
+    "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+    "kind": "BUGFIX",
+    "goal": "Controlled software fixture only",
+    "allowedPaths": [
+      "lib/offset.mjs"
+    ],
+    "acceptance": [
+      "offset(3,8) equals 5"
+    ],
+    "chain": "node",
+    "limits": {
+      "maxModelCalls": 1,
+      "maxContextChars": 6000
+    }
+  },
+  "assignment": {
+    "schema": "continuum-bot-assignment",
+    "version": 1,
+    "taskId": "genesis-host-fixture",
+    "ccc1TaskId": "t-a8c83da621a50d77",
+    "taskFingerprint": "0c70741b30f64ed1dd07232a1b0d7547b9f95971490f0d0553dbfb9aa3154b54",
+    "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+    "builder": {
+      "agentId": "bot-forge",
+      "persistentWorkspaceId": "workspace-bot-forge",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "verifier": {
+      "agentId": "bot-lint",
+      "persistentWorkspaceId": "workspace-bot-lint",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "expiresAt": 1793740346221,
+    "sha256": "fa57a156a8984b06e61df999975cbb57500d7dc70a44ed5ac631de7ed0e51f15"
+  },
+  "result": {
+    "status": "DONE",
+    "head": "6461b69da62e050938b2f9526cb6c60050df9218",
+    "taskId": "mob-8a3028abb6984ef5",
+    "patchSha256": "e6c6e7b25d1c19e04ec7c8297d704e548ac8c25ca18c23194a4064524be4c568",
+    "patch": "/tmp/genesis-bot-workspace-LpxzOJ/state/reports/mob-8a3028abb6984ef5-6461b69da62e-1793740228729-5e0a2a25/repair.patch",
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "7d68d89f928ca6514eeaa57dcb691dc55f3a45d5e691c8f25f5201b609157b70",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-d741a523e163b0ae86fa8b12",
+          "workspaceBinding": {
+            "workerId": "bot-lint",
+            "taskId": "t-a8c83da621a50d77",
+            "requestMessageId": "cce99463-eae2-4714-a666-9ac2df744d00",
+            "requestHash": "565af1f4cd6ebe3e6b178795432aba923e6b58e07ac223fc002a89f7c3894841",
+            "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+            "jobId": "313b3ff6-73c1-43f6-ab4d-7f92b359f4a2"
+          },
+          "observed": {
+            "containerId": "960f00ed5cf2b2bb2ade63ee7e9f93bbe9ebf11cab2395453283d0a53659c903",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        }
+      }
+    ],
+    "independentReceipt": "/tmp/genesis-bot-workspace-LpxzOJ/state/reports/mob-8a3028abb6984ef5-6461b69da62e-1793740228729-5e0a2a25/independent-check/verification.json",
+    "report": "/tmp/genesis-bot-workspace-LpxzOJ/state/reports/mob-8a3028abb6984ef5-6461b69da62e-1793740228729-5e0a2a25/report.json",
+    "approvedForMerge": false
+  },
+  "buildObservations": [
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "caec74e83eec956c7086be56da587cbbe6b230030bf042223fedb59470687694",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-e88cb422301124181c017c2d",
+      "workspaceBinding": {
+        "workerId": "bot-forge",
+        "taskId": "t-a8c83da621a50d77",
+        "requestMessageId": "cce99463-eae2-4714-a666-9ac2df744d00",
+        "requestHash": "565af1f4cd6ebe3e6b178795432aba923e6b58e07ac223fc002a89f7c3894841",
+        "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+        "jobId": "313b3ff6-73c1-43f6-ab4d-7f92b359f4a2"
+      },
+      "observed": {
+        "containerId": "a4ca0f53eece7dd6a71a288953fcb35bf10a560fb253ce102e6556356138987c",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    }
+  ],
+  "verifierObservations": [
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "caec74e83eec956c7086be56da587cbbe6b230030bf042223fedb59470687694",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-dbe84b39d4bf24bed09693b5",
+      "workspaceBinding": {
+        "workerId": "bot-lint",
+        "taskId": "t-a8c83da621a50d77",
+        "requestMessageId": "cce99463-eae2-4714-a666-9ac2df744d00",
+        "requestHash": "565af1f4cd6ebe3e6b178795432aba923e6b58e07ac223fc002a89f7c3894841",
+        "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+        "jobId": "313b3ff6-73c1-43f6-ab4d-7f92b359f4a2"
+      },
+      "observed": {
+        "containerId": "4d7dad3055e459bd50a40d1f22d9c155ca87cd6dd8dba6946f0fd03f14ca5831",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    },
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "7d68d89f928ca6514eeaa57dcb691dc55f3a45d5e691c8f25f5201b609157b70",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-75fd9cf603a3b56347a02260",
+      "workspaceBinding": {
+        "workerId": "bot-lint",
+        "taskId": "t-a8c83da621a50d77",
+        "requestMessageId": "cce99463-eae2-4714-a666-9ac2df744d00",
+        "requestHash": "565af1f4cd6ebe3e6b178795432aba923e6b58e07ac223fc002a89f7c3894841",
+        "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+        "jobId": "313b3ff6-73c1-43f6-ab4d-7f92b359f4a2"
+      },
+      "observed": {
+        "containerId": "cc8927e1426d7abdfb60680c1b599c9c4d47679a475ea0f00455857edb8ad2b8",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    },
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "7d68d89f928ca6514eeaa57dcb691dc55f3a45d5e691c8f25f5201b609157b70",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-d741a523e163b0ae86fa8b12",
+      "workspaceBinding": {
+        "workerId": "bot-lint",
+        "taskId": "t-a8c83da621a50d77",
+        "requestMessageId": "cce99463-eae2-4714-a666-9ac2df744d00",
+        "requestHash": "565af1f4cd6ebe3e6b178795432aba923e6b58e07ac223fc002a89f7c3894841",
+        "sourceCommit": "6461b69da62e050938b2f9526cb6c60050df9218",
+        "jobId": "313b3ff6-73c1-43f6-ab4d-7f92b359f4a2"
+      },
+      "observed": {
+        "containerId": "960f00ed5cf2b2bb2ade63ee7e9f93bbe9ebf11cab2395453283d0a53659c903",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    }
+  ]
+}

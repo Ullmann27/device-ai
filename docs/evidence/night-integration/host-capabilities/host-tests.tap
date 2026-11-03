@@ -1,0 +1,257 @@
+TAP version 13
+# Subtest: 7B exact owner pin admits a bounded manifest with independently reviewed exact tuple
+ok 1 - 7B exact owner pin admits a bounded manifest with independently reviewed exact tuple
+  ---
+  duration_ms: 23.871447
+  type: 'test'
+  ...
+# Subtest: resource profile is frozen and restricted to every exact pin field plus runtime hash
+ok 2 - resource profile is frozen and restricted to every exact pin field plus runtime hash
+  ---
+  duration_ms: 0.442652
+  type: 'test'
+  ...
+# Subtest: 7B uses the fixed Qwen ChatML serialization, unknown model does not
+ok 3 - 7B uses the fixed Qwen ChatML serialization, unknown model does not
+  ---
+  duration_ms: 0.471695
+  type: 'test'
+  ...
+# Subtest: 7B total-job memory check rejects missing or oversized kernel bounds without caller fallback
+ok 4 - 7B total-job memory check rejects missing or oversized kernel bounds without caller fallback
+  ---
+  duration_ms: 0.884564
+  type: 'test'
+  ...
+# Subtest: large header requires exact complete provenance, no caller file-size bypass
+ok 5 - large header requires exact complete provenance, no caller file-size bypass
+  ---
+  duration_ms: 1.35629
+  type: 'test'
+  ...
+# Subtest: fixed Docker CLI transport rejects mismatched weights before native launch, with no observation
+ok 6 - fixed Docker CLI transport rejects mismatched weights before native launch, with no observation # SKIP HOST_DOCKER_PROOF_NOT_RUN: fixed Docker client unavailable
+  ---
+  duration_ms: 2.706891
+  type: 'test'
+  ...
+# Subtest: reviewed 7B registry never promotes altered binary/weights or caller-forged observations
+ok 7 - reviewed 7B registry never promotes altered binary/weights or caller-forged observations
+  ---
+  duration_ms: 0.272251
+  type: 'test'
+  ...
+# Subtest: real launcher refuses an unavailable private job memory bound before any spawn
+ok 8 - real launcher refuses an unavailable private job memory bound before any spawn
+  ---
+  duration_ms: 2.480076
+  type: 'test'
+  ...
+# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
+ok 9 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second # SKIP HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT
+  ---
+  duration_ms: 0.619423
+  type: 'test'
+  ...
+# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+ok 10 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+  ---
+  duration_ms: 10.784078
+  type: 'test'
+  ...
+# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
+ok 11 - resource profile clone or arbitrary caller budget cannot reach spawn
+  ---
+  duration_ms: 0.532435
+  type: 'test'
+  ...
+# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
+ok 12 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged # SKIP HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT
+  ---
+  duration_ms: 1.540051
+  type: 'test'
+  ...
+# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
+ok 13 - native termination returns bounded signal or numeric-exit code without output or inference receipt
+  ---
+  duration_ms: 3.558546
+  type: 'test'
+  ...
+# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
+ok 14 - fixed container CLI heap is bounded independently of model weights and native address space
+  ---
+  duration_ms: 38.181355
+  type: 'test'
+  ...
+# Subtest: actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit
+ok 15 - actual isolated synthetic ELF observes the new kernel CPU limit and unchanged native AS limit # SKIP HOST_RESOURCE_PROOF_NOT_RUN: kernel prerequisite inaccessible: ENOENT
+  ---
+  duration_ms: 0.696817
+  type: 'test'
+  ...
+# Subtest: normal caller cannot certify a serialized runtime observation
+ok 16 - normal caller cannot certify a serialized runtime observation
+  ---
+  duration_ms: 1.248691
+  type: 'test'
+  ...
+# Subtest: coding CLI blocks endpoint-only configuration before any network/model call
+ok 17 - coding CLI blocks endpoint-only configuration before any network/model call
+  ---
+  duration_ms: 55.513061
+  type: 'test'
+  ...
+# Subtest: unapproved or absent local weights never produce runtime observations
+ok 18 - unapproved or absent local weights never produce runtime observations
+  ---
+  duration_ms: 1.224916
+  type: 'test'
+  ...
+# Subtest: real host isolation admission matches independent capability and refuses without an observation
+ok 19 - real host isolation admission matches independent capability and refuses without an observation
+  ---
+  duration_ms: 63.208471
+  type: 'test'
+  ...
+# HOST_ISOLATION_CAPABILITY: {"tools":[{"file":"/usr/bin/bwrap","present":true,"executable":true,"admitted":false,"uid":65534,"mode":"755"},{"file":"/usr/bin/prlimit","present":true,"executable":true,"admitted":false,"uid":65534,"mode":"755"}],"namespace":{"available":false,"reason":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","probe":{"command":"/usr/bin/bwrap","args":["--unshare-all","--cap-drop","ALL","--die-with-parent","--new-session","--clearenv","--ro-bind","/usr","/usr","--ro-bind","/lib","/lib","--ro-bind","/lib64","/lib64","--proc","/proc","--dev","/dev","--tmpfs","/tmp","--chdir","/tmp","--","/usr/bin/true"],"status":1,"signal":null,"error":null,"stdout":"","stderr":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted\\n"}},"launcher":{"available":false,"reason":"bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","expectedFailure":"LOCAL_RUNTIME_PROCESS_FAILED"},"query":{"available":false,"reason":"/usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted","expectedFailure":"BLOCKED_LOCAL_ISOLATION_UNAVAILABLE"}}
+# Subtest: actual namespace binds admitted descriptors and fixture output; never inference evidence
+ok 20 - actual namespace binds admitted descriptors and fixture output; never inference evidence # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.335465
+  type: 'test'
+  ...
+# Subtest: altered model/runtime, unsafe executable and mismatched request cannot execute
+ok 21 - altered model/runtime, unsafe executable and mismatched request cannot execute
+  ---
+  duration_ms: 43.724541
+  type: 'test'
+  ...
+# Subtest: deadline cancels actual isolated process with bounded return
+ok 22 - deadline cancels actual isolated process with bounded return # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.263458
+  type: 'test'
+  ...
+# Subtest: STOP cancels actual isolated process and leaves no trusted observation
+ok 23 - STOP cancels actual isolated process and leaves no trusted observation # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.18285
+  type: 'test'
+  ...
+# Subtest: malformed/oversized output and missing generation counters are rejected
+ok 24 - malformed/oversized output and missing generation counters are rejected # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.161037
+  type: 'test'
+  ...
+# Subtest: sandbox exposes no checkout, HOME, network, secret or configurable shell
+ok 25 - sandbox exposes no checkout, HOME, network, secret or configurable shell
+  ---
+  duration_ms: 0.863884
+  type: 'test'
+  ...
+# Subtest: actual FD mount retains selected inode across model path replacement
+ok 26 - actual FD mount retains selected inode across model path replacement # SKIP HOST_ISOLATION_PROOF_NOT_RUN: bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.11496
+  type: 'test'
+  ...
+# Subtest: prompt evaluation counter alone cannot masquerade as output generation
+ok 27 - prompt evaluation counter alone cannot masquerade as output generation # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.06793
+  type: 'test'
+  ...
+# Subtest: inference sandbox denies host files, external interfaces, secrets and writable model
+ok 28 - inference sandbox denies host files, external interfaces, secrets and writable model # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.062412
+  type: 'test'
+  ...
+# Subtest: seccomp denies fork and rlimits bound native memory/descriptor budgets
+ok 29 - seccomp denies fork and rlimits bound native memory/descriptor budgets # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.057084
+  type: 'test'
+  ...
+# Subtest: changing model during actual execution invalidates otherwise valid output
+ok 30 - changing model during actual execution invalidates otherwise valid output # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.071365
+  type: 'test'
+  ...
+# Subtest: production provider rejects synthetic fixture receipt even when transport MAC is valid
+ok 31 - production provider rejects synthetic fixture receipt even when transport MAC is valid # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.077775
+  type: 'test'
+  ...
+# Subtest: self-asserted inference flag is rejected instead of upgraded or accepted
+ok 32 - self-asserted inference flag is rejected instead of upgraded or accepted
+  ---
+  duration_ms: 80.434781
+  type: 'test'
+  ...
+# Subtest: native worker threads remain permitted while process creation stays denied
+ok 33 - native worker threads remain permitted while process creation stays denied # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.116301
+  type: 'test'
+  ...
+# Subtest: unavailable isolation launcher fails closed and creates no observation
+ok 34 - unavailable isolation launcher fails closed and creates no observation
+  ---
+  duration_ms: 48.140982
+  type: 'test'
+  ...
+# Subtest: integration strict observation option rejects injected unobserved provider replies
+ok 35 - integration strict observation option rejects injected unobserved provider replies
+  ---
+  duration_ms: 64.369998
+  type: 'test'
+  ...
+# Subtest: integration technical recall enters prompt as bounded untrusted data within context budget
+ok 36 - integration technical recall enters prompt as bounded untrusted data within context budget
+  ---
+  duration_ms: 65.76838
+  type: 'test'
+  ...
+# Subtest: integration malformed recall and strict remote selection fail before transport
+ok 37 - integration malformed recall and strict remote selection fail before transport
+  ---
+  duration_ms: 47.381703
+  type: 'test'
+  ...
+# Subtest: process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind
+ok 38 - process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.369615
+  type: 'test'
+  ...
+# Subtest: genuine admission registry rejects unknown model/runtime tuple and caller assertions
+ok 39 - genuine admission registry rejects unknown model/runtime tuple and caller assertions
+  ---
+  duration_ms: 0.553026
+  type: 'test'
+  ...
+# Subtest: invalid model JSON retains authenticated process observation without a candidate
+ok 40 - invalid model JSON retains authenticated process observation without a candidate # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.107909
+  type: 'test'
+  ...
+# Subtest: provider retains authenticated rejected-response observation and consumed durable budget
+ok 41 - provider retains authenticated rejected-response observation and consumed durable budget # SKIP HOST_ISOLATION_PROOF_NOT_RUN: /usr/bin/bwrap fails root-owned regular non-writable tool policy (uid=65534, mode=755); /usr/bin/prlimit fails root-owned regular non-writable tool policy (uid=65534, mode=755); bwrap: loopback: Failed to create NETLINK_ROUTE socket: Operation not permitted
+  ---
+  duration_ms: 0.245852
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 18
+# todo 0
+# duration_ms 636.969624

@@ -1,0 +1,18 @@
+✔ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (7156.285968ms)
+✔ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (6009.70704ms)
+✔ S01/S15: real idle daemon starts, stops and starts again without creating model work (4277.495573ms)
+✔ S02: concurrent actual starts leave exactly one daemon ownership (1944.137071ms)
+✔ S04/S11: SIGKILL of an idle daemon cannot leave live status and can restart safely (3570.187701ms)
+✔ S03: stale descriptor pointing at an unrelated live process never authorizes killing it (2124.92483ms)
+✔ S05: last-slot admission is atomic across independent CLI processes (6571.570887ms)
+✔ S06/S08: duplicate identity is durable; cancellation prevents resubmission and restart resurrection (7095.680806ms)
+✔ S07/S13: owner acceptance binds the exact task and source, not an arbitrary approve flag (2828.048607ms)
+✔ S14: corrupt delivery state is rejected rather than reset to a fresh accepting queue (1896.044071ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43602.599075

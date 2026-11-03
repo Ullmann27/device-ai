@@ -1,0 +1,33 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tools/independence-mcp-review/transport.test.mjs"
+  ],
+  "environment": "HOST/Linux/x86_64",
+  "node": "v24.19.0",
+  "before": {
+    "head": "3ca1dd9aad4fa0bf07c724274492dc7f9465a41e",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "8c6f9842b1c8b00411ec94471e86f11fe08b57f9596db3d13941048218bc8791",
+      ".github/continuum/coding-mcp.test.mjs": "c5aacd59e44786b5b28617056a253fb9afd25f53b16277fe31968e4a0bca6f93"
+    }
+  },
+  "after": {
+    "head": "3ca1dd9aad4fa0bf07c724274492dc7f9465a41e",
+    "status": "",
+    "files": {
+      ".github/continuum/coding-mcp-reader-worker.mjs": "4f4a3db56f91630377ee39ab85dedb2516068fba8fca6266484a0df1480b8532",
+      ".github/continuum/coding-mcp-reader.mjs": "e124787328b07644faded714221fbdb20f8bf6ef99402ac497f0f68badf3a847",
+      ".github/continuum/coding-mcp-server.mjs": "8c6f9842b1c8b00411ec94471e86f11fe08b57f9596db3d13941048218bc8791",
+      ".github/continuum/coding-mcp.test.mjs": "c5aacd59e44786b5b28617056a253fb9afd25f53b16277fe31968e4a0bca6f93"
+    }
+  },
+  "sourceStable": true,
+  "exitCode": 0,
+  "elapsedSeconds": 0.5059053897857666
+}

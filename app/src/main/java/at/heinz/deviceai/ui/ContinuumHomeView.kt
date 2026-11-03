@@ -20,7 +20,7 @@ import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
 class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :
     ViewGroup(context) {
     private val density = resources.displayMetrics.density
-    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 1.3f)
+    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)
     private var layoutSpec: ContinuumHomeLayout.Layout? = null
     private var offset = 0f
     private val views = linkedMapOf<Slot, ElementView>()
@@ -117,21 +117,17 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      */
     fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
                   windowHeightDp: Float = 0f) {
-        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp) else ContinuumHomeLayout.phone(windowWidthDp)
+        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
         layoutSpec = spec
         offset = railOffset
         // The portrait hero retains its exact layout/3D viewport. Its decorative
         // floor rings may paint behind the later foreground controls, without
         // moving or enlarging their touch targets or introducing another surface.
-        clipChildren = spec[Slot.WORKERS] == null
+        clipChildren = spec.adaptive || spec[Slot.WORKERS] == null
         views.values.forEach { removeView(it) }
         views.clear()
-        hologram.setGeometry(when {
-            spec[Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
-            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
-            else -> ContinuumHologramRenderer.Geometry.PHONE
-        })
+        hologram.setGeometry(intendedGeometry)
         for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {
             if (slot == Slot.NAV && !includeNavigation) continue
             if (slot == Slot.RAIL) continue
@@ -144,6 +140,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
+    /** Geometry belongs to the composition, not to the presence of an adaptive worker card. */
+    val intendedGeometry: ContinuumHologramRenderer.Geometry
+        get() {
+            val spec = layoutSpec ?: return ContinuumHologramRenderer.Geometry.PHONE
+            return when {
+                !spec.adaptive && spec[Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+                spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
+                else -> ContinuumHologramRenderer.Geometry.PHONE
+            }
+        }
     /** Window dp per reference dp of the current composition (null before the first configure). */
     val layoutScale: Float? get() = layoutSpec?.scale
 

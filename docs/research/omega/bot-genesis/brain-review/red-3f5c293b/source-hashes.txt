@@ -1,0 +1,6 @@
+82bdd7215c173c9c3b2e349c81317d8665fc4d25a058ec42d62ea6572e953690  /workspace/genesis-brain/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt
+4f1f330e3140f47a02a519aa3dbf248819f44e5bd6f00d8d05e5774b315a973d  /workspace/genesis-brain/app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt
+60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1  /workspace/genesis-brain/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt
+b2255b59833a232ce96a2a95f8c2f7ce0d70e190df1ab85cb68cae419a99a9fa  /workspace/genesis-brain/app/src/test/java/at/heinz/deviceai/cognitive/AiContextCompilerTest.kt
+cc5d94ff67f9864cd763a8b734487a933103857aaeffabaa58d6b924a70dbdeb  /workspace/genesis-brain-review/tools/genesis-brain-review/ConversationIndependentChecks.kt
+5f310fdb1c5930bfc5dbfabd543c8ac737e5e6b4ad01ab4795b32098cd04a733  /workspace/genesis-brain-review/tools/genesis-brain-review/ConversationStorageChecks.kt

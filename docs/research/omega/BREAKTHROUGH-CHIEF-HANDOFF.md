@@ -1,5 +1,7 @@
 # Continuum Ω — Intelligence Breakthrough, Zyklus 2
 
+**Aktueller Einstieg:** [Dual-Agent-Welle](DUAL-AGENT-WAVE-HANDOFF-20261103.md), gemeinsamer Quellfreeze `7247e99d0b93b62dfb2b5eee22486d22911cb722`. Dieses Dokument bewahrt den vorherigen Meilenstein beziehungsweise die Forschungsentscheidungen. Aktuelle Gesamtprüfung, 3D-/UI-Artefakte und Folgereparaturen stehen im verlinkten Handoff; ältere PASS-Zahlen nicht auf neue Quellen übertragen.
+
 Status: FOUR_BOUNDED_CHANGES_ACCEPTED / COMBINED_HOST_QA_RUNNING. Wochenkontingent NOT_VISIBLE. Ausgangsquelle `64ec06a73f50cae9ee49035c840710d87777d50f`, vollständige frühere Abnahme im `ASTRA-OMEGA-HANDOFF-20261103.md`. Ein früheres PASS gilt nicht für neue Kandidaten.
 
 ## Gemeinsamer Gehirn-Freeze

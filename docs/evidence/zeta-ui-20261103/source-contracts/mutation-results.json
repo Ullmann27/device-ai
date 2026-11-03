@@ -1,0 +1,32 @@
+[
+  {
+    "mutation": "fixed_font",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "shrinking_controls",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "overlapping_actions",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "fake_model_ready",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "missing_backlog_route",
+    "exitCode": 1,
+    "detected": true
+  },
+  {
+    "mutation": "missing_detach_cleanup",
+    "exitCode": 1,
+    "detected": true
+  }
+]
