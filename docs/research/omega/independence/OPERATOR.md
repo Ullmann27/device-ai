@@ -154,6 +154,14 @@ Eine Stoppanforderung und ein bestätigter Prozessstillstand sind unterscheidbar
 Bleibt ein Arbeiter nach der Abbruchanforderung hängen, meldet der Dienst nach
 fünf Sekunden `STOP_BLOCKED_WORKER_ACTIVE`; er behauptet keinen Stillstand und
 startet keinen Ersatzauftrag. Das ist ein gesondert zu prüfender Blocker.
+Bei ungeklärtem Ende eines bereits gestarteten Arbeiters bleibt zusätzlich eine
+dauerhafte hostweite Sperre bestehen: `RESOURCE_RECONCILIATION_REQUIRED`. Sie
+blockiert auch andere Dienstkonfigurationen. Neustart, Abbruch oder eine nicht
+mehr existierende direkte PID lösen sie nicht auf. Diese Version hat bewusst
+keinen automatischen beziehungsweise pauschalen Force-Clear-Befehl. Vor einer
+manuellen Wiederfreigabe müssen die zugehörigen nativen Unterprozesse, Container
+und tatsächlichen Nachzustände unabhängig geprüft werden. Ein sicherer normaler
+Stopp mit vollständig beobachtetem Ende hinterlässt diese Sperre nicht.
 Nach einem Neustart bleiben Profile, Freigaben, Aufgaben und Belege erhalten.
 Unklar unterbrochene Ausführungen bleiben `UNKNOWN`; sie werden nicht automatisch
 wiederholt. Bereits geprüfte Reparaturen bleiben Vorschläge zur Besitzerprüfung.
