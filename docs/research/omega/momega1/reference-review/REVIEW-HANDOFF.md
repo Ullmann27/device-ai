@@ -242,3 +242,16 @@ pass the same geometry cases and actual render comparison. The full 224-frame
 idle sequence, native Filament appearance, real speech synchronization and device
 acceptance remain separate and unproven. No reference video or private frames are
 included in this evidence commit.
+
+The exact packaged follow-up `62122c55077644de5bb1993347b7749c7e53610b` now
+contains that same `6b199c59` rig and updates the production pin and provenance.
+An independent final-source rerun passes **27/27 V2, zero skips**. The compiled
+production preflight accepts the real packaged bytes and its hash pin; all 21
+targets are present. Mapper, reducer and pose sources are byte-identical to the
+tested `9a23e5d6` composition, and the validator's sole change is the pinned hash.
+
+**ACCEPT_PACKAGED_MOUTH_COMPOSITION_AND_NEUTRAL_PRESERVING_RIG_FIX** applies only
+to this anatomy correction. Identical-input geometry is referenced, not relabeled
+as another measurement. The original material is still not the accepted reference
+look. `packaged-rig-62122-acceptance.json` records commands, actual final-source
+output, hashes and the separate visual/device limitations.
