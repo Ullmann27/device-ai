@@ -15,10 +15,10 @@ for(let i=2;i<process.argv.length;i+=2){
 for(const k of ['--source','--classpath-file','--runtime-env','--isolation-config','--output'])assert.ok(opt[k]);
 const root=opt['--source'],self=path.dirname(fileURLToPath(import.meta.url));
 const cli=path.join(root,'scripts/continuum-coding-service.mjs'),mcpCli=path.join(root,'scripts/continuum-coding-mcp.mjs');
-const env={PATH:'/usr/bin:/bin',LANG:'C.UTF-8'};
+const env={PATH:'/workspace/continuum-build-env/jdk17/bin:/usr/bin:/bin',LANG:'C.UTF-8'};
 const run=(exe,args,cwd=root,ok=true)=>{
  const r=spawnSync(exe,args,{cwd,env,encoding:'utf8',timeout:45000,maxBuffer:128*1024,shell:false});
- if(ok)assert.equal(r.status,0,`${path.basename(exe)} failed: ${r.stderr.slice(0,500)}`);
+ if(ok)assert.equal(r.status,0,`${path.basename(exe)} failed: ${String(r.stderr??r.error??'').slice(0,500)}`);
  else assert.notEqual(r.status,0,'Expected rejection');
  return r;
 };
