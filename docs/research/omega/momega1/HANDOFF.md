@@ -1,19 +1,21 @@
 # MΩ-1 / DAN Ω / JARVIS integration handoff
 
-Checkpoint: 2026-11-03 21:50 UTC. **HOST_IMPLEMENTATION_IN_PROGRESS /
+Checkpoint: 2026-11-03, final preservation after owner-reported 5% quota. **HOST_IMPLEMENTATION_IN_PROGRESS /
 LOCAL_MODEL_HOST_OBSERVED / FIRST_10_GOAL_FAILED / FOLD7_NOT_RUN**.
 No FIRST_COGNITIVE_LOOP_VERIFIED, MΩ-1A, MΩ-1B or RELEASE_READY claim.
 The owner confirmed there is no device channel and authorized continued host work.
-The newest instruction prioritizes sustained reference-based face, animation and
-effects work while preserving the existing agreed application design.
+The newest instruction prioritizes committing and pushing the concrete layout, face,
+animation and effects work before the reported limit. No direct quota API exists.
+The agreed application design remains authoritative; visual equivalence is not accepted.
 
 ## Source and authority
 
 Research branch `codex/momega1-chief-20261103`, [draft PR410](https://github.com/Ullmann27/device-ai/pull/410).
-Guide acceptance checkpoint `705a6b7c08dbdb210f590dc939d4e800ef24ba94`.
-Current research candidate `7eefff23` additionally includes the narrowly reviewed
-mouth/rig correction and its independent evidence; the newly observed legacy
-EPSILON geometry gate below is unresolved. This is not full combined acceptance.
+The complete production source freeze is `645b2215022008e2149da81b48683f15077b1fb0`.
+Research preservation checkpoint `1862fd5c` adds only evidence, review tooling and
+full-layout captures. Subsequent narrow layout fixes and checker repairs must be
+retested at their own source freeze; they do not inherit this full-suite result.
+
 Code40 `64ec06a73f50cae9ee49035c840710d87777d50f` remains the unchanged historical
 rollback source. Initial current Chief was `786436f5`; latest fetched foreign
 Chief `efe622dda00e620952483dedad19257efb3284e6` has the same application/runtime
@@ -123,25 +125,24 @@ both later with/without-memory arms are NOT_RUN under that protocol. No learning
 benefit has been demonstrated. Post-GREEN model reflection also remains unrun;
 recorded pre-verification hypotheses are labeled accordingly.
 
-The approved 7B comparison preserves the original twelve tasks, primary first-ten
-score, two calls, 8192 context budget and initial 60-second timeout. Streaming
-hash verification uses a 1 MiB buffer, not a full 4.68 GB allocation. Runtime
-resource/transport changes and independent admission are in progress. The actual
-7B native process and pinned weight inode were observed in independent probes,
-but two canonical 180-second admission calls failed without a normal receipt.
-A preserved diagnostic produced coherent partial JSON and native exit137 near
-95 seconds: aggregate CPU177 with two threads exhausted before the wall limit.
-Source `a135a9ae` therefore gives only this fixed 7B profile twice the remaining
-wall seconds as CPU seconds; the 1.5B profile, wall deadline, two-CPU cgroup,
-7GiB memory/swap-zero and native address-space caps remain. 92 author host and
-7 actual Docker resource tests pass; independent native completion is pending.
-This explicit CPU-budget difference is not silently treated as an equal-budget
-model comparison. CLI heap limits are bounded separately. The observed native
-RSS was about 5.01GiB; a smaller leaf-cgroup charge was not total RSS because
-shared cached weight pages may be charged to an ancestor. No 7B admission,
-unknown-task success or model score is claimed. Shared Android LiteRT IPC,
-actual Termux native compatibility, device cancellation and device resources are
-still separate open prerequisites.
+The approved 7B pair is now independently admitted and integrated. Exact runtime
+source `fb0f8152cfe4e85b778c2f2ef17034b2ef6333be`, review
+`ea3bb013997d8f208c0995a7e440feba0370b450`, certificate SHA256
+`29a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec`.
+A genuine canonical admission call completed 156 tokens in 104.746 seconds,
+exit0; sampled total native/container/host-client RSS was 5.161 GiB, below the
+approved 8 GiB job budget. Actual resident cancellation also passed. Source
+`a135a9ae` fixes the 7B-only aggregate CPU budget to twice remaining wall seconds
+for two threads; wall timeout and fixed confinement remain. This explicit CPU
+profile difference is not an equal-budget model comparison. Independent 89 host
+and 21 actual Docker tests passed. Detailed bounds and sampling limitations are
+in HOST-7B-RUNTIME-HANDOFF.md and the pinned review certificate.
+
+The original twelve unknown tasks, first-ten score, two calls, 8192 context and
+60-second benchmark timeout remain unchanged and **7B benchmark NOT_RUN**.
+A known admission patch is excluded from blind scores. Shared Android LiteRT IPC,
+actual Termux native compatibility, device cancellation and device resources
+remain separate open prerequisites. Neither host model is Android Gemma.
 
 ## Reference face, motion and spoken setup
 
@@ -180,14 +181,23 @@ pin; final independent production-contract/asset validation and 27/27 cases
 passed. Complete correction plus review `0d53e401` was merged into research
 candidate `7eefff23`, with no luminous material or default-mode promotion.
 
-An additional legacy EPSILON Python geometry check subsequently failed: its old
-JawY maximum 0.25m and minimum eye/jaw separation 0.04m conflict with the new hinge
-at 0.267m / 0.0214m. Existing bounds remain unchanged and RED is retained while
-the independent reviewer assesses their anatomical/transform meaning. The narrow
-mouth-correction acceptance does not certify this unresolved legacy contract or
-all geometry checks. Node 5/5 and Python unit 8/8 checks are separate results.
-Portable luminous materials, complete 224-frame idle replay, visual acceptance
-and final combined QA remain pending.
+The legacy EPSILON Python geometry check still records an actual V1 failure:
+old JawY maximum0.25m and eye/jaw separation0.04m conflict with the corrected hinge
+at0.267m /0.0214m. The independent reviewer developed a separate semantic V2
+using unchanged neutral mouth/eye landmarks, actual transformed tooth vertices,
+neutral-preserving rebasing and all seven original bad-bone cases. Its separate
+final evidence is being preserved; V1 is never relabeled PASS.
+
+A complete 224-frame, 9.333-second fixed-camera idle sequence now exists in
+`docs/evidence/momega1-avatar-look/3805ba43/idle-preview.mp4`, with hashed frames,
+contact sheets and logs. Actual production mapper motion drives head/gaze and
+two blinks; synthetic input and host Blender rendering are explicit. Sampling
+noise and remaining face/material differences prevent final visual acceptance.
+The HDR4 material is experimental, not promoted into the app. Native renderer
+`0996b42e` enables bounded postprocessing/bloom and passed actual Filament1.56 API
+compilation and independent source review; native GPU pixels/performance remain
+NOT_RUN. See JARVIS-AVATAR-RESUME.md. Fresh app still uses its existing default orb;
+the unaccepted 3D look has not silently become the default.
 
 PR436 provides an optional local Camera2 face-position adapter and pure readiness
 projection. Native camera metadata, explicit foreground opt-in, permission,
@@ -215,29 +225,43 @@ TikTok require real registrations and reviewed owner-authorized adapters.
 Readiness and spoken-guide source plus independent PR445 evidence are integrated
 at `705a6b7c`; see SPOKEN-GUIDE-HANDOFF.md for exact fixtures and limits.
 
-The actual chat previously hid the dashboard and its head. Candidate `ab55e440`
-moves the same HologramView between home and chat, preserves the Director and
-preference, and prevents hidden home from remeasuring the moved child. Four
-author and five of six independent tests pass; the remaining clock test has a
-known cross-Activity host-window fixture issue (window GONE), still being resolved.
-No speculative production clock change or complete acceptance is claimed.
+The actual chat previously hid the dashboard and avatar. Accepted `ab55e440`
+moves the same HologramView between home/chat and protects its parent geometry.
+Final actual native host tests: 10/10 PASS. Earlier LEGACY graphics fixtures
+reported a GONE window and are retained as fixture failures, not production fixes.
 
-Effect helpers `688b05e3` pass 62/62 host tests, including 17 independent cases,
-after a real three-case stale-event replay failure was fixed. The short static
-AudioTrack write ordering was repaired; its explicitly documented test-only
-Robolectric native-short-write adapter does not prove audible playback. Real
-Canvas frames cover six sizes, including 88dp compact height. Independent visual
-review is pending. Root [PR457](https://github.com/Ullmann27/device-ai/pull/457),
-candidate `b6f4b174`, now connects ToolGate runner entry/exit, actual Chief WorkerJob
-entry/finally, nonempty real web-read dossiers, and existing buttons to these
-helpers. This caller candidate is UNVERIFIED; its baseline positive-arrival
-fixtures share the unresolved host-window issue. A supervisor report never
-substitutes for actual worker exit, and no queued/proposed work gets an arrival.
+Accepted helper source `ca429fd8` provides bounded real-event worker/tool/document
+arrivals and quiet local click/effect PCM, with existing mute, ASR/TTS and lifecycle
+gates. Final63/63 host cases include17 independent cases;36 actual Canvas frames
+cover compact88dp through200dp/wide sizes. Actual caller source `b6f4b174` plus
+fixture `ae221ecc` binds effects to real ToolGate runner and Chief WorkerJob entry/
+finally, and nonempty web-read results. Genuine native baseline13 tests6PASS7FAIL;
+identical candidate tests13/13 PASS, including8 independent. Independent final
+review `8e0db093` retains31 unique cases across visibility/helpers/callers.
+These are host behavior/render checks, not audible speaker or real account proof.
 
-Accepted actual caller wiring, physical worker/document arrivals and sounds, complete reference equivalence,
-actual audible onboarding and physical tracking remain open until their own
-observable paths and review are complete. No decorative animation is used as a
-claim that a worker, PDF operation, Gmail read or successful test occurred.
+Six full native Activity screenshots now cover phone/Fold portrait/landscape,
+home and chat. Full layout fixture3/3 PASS at645b2215; comparison and exact pixels
+are in `docs/evidence/momega1/layout-final/645b2215/comparison.html`.
+The independent visual audit found portrait orb halo clipping and an idle phone
+diagnostic strip, now assigned narrow repairs. Numerical layout PASS does not
+mean visual reference equality. Full head/look, actual audible onboarding and
+physical tracking remain open. Camera tracking currently stops with guide dismissal;
+ordinary-chat tracking is an explicit remaining requirement, not implemented.
+No decorative effect claims a real Gmail/PDF operation or completed test.
+
+## Combined exact-source QA
+
+Frozen production `645b2215022008e2149da81b48683f15077b1fb0` completed real local
+unfiltered Android JUnit:2424 total,2412 PASS,0 FAIL,12 SKIP, including151 external
+independent cases. Configured NewApi lint:0 fatal/error/warning; CRE1 and contrastive
+parity passed. Backend64/64 PASS. Unsigned existing-option APK build is in progress.
+Final Node:2311 total,2292 PASS,15 FAIL,4 SKIP, exit1. Preserve this RED result.
+Six failures are stale Android wiring checks, two are outdated fake-Docker inspect
+fixtures, three are stale missing-model preflight expectations, four require the
+explicit resource-bounded model test environment. Test-only fixes and independent
+negative controls are under review. No blanket green/full-release claim is allowed.
+The QA lane owns complete raw logs, skip identities and final candidate rerun.
 
 ## Full acceptance matrix (required device milestone)
 
@@ -254,7 +278,7 @@ claim that a worker, PDF operation, Gmail read or successful test occurred.
 | Reuse | NOT_RUN | Related parent failed; no measured later-task benefit |
 | Safety | NOT_RUN | Host negative tests; full device acceptance absent |
 | Resources | NOT_RUN | Host samples only; no Fold7 thermal/energy/RAM figures |
-| Integration | NOT_RUN | Final combined unfiltered QA/build awaits source freeze |
+| Integration | FAIL | Exact645 Android/backend/lint pass; Node15 failures under repair; final combined candidate pending |
 
 The same words have separate tiers: CONTRACT_TEST, HOST_INTEGRATION,
 LOCAL_MODEL_HOST, FOLD7_MODEL, FOLD7_END_TO_END, RELEASE_READY. Only the last
@@ -263,11 +287,13 @@ and synthetic runtime tests are not reclassified as unknown native/model results
 
 ## Resume, testing and rollback
 
-Compare actual PR410/lane remote heads and source differences first. Finish
-visibility/caller review, visual iterations and 7B admission; run unchanged
-frozen tasks only through the canonical provider/worker. Preserve failed runs.
-Then freeze combined source and run full Node, backend, unfiltered Android JUnit,
-configured NewApi lint, parity and unsigned build. Historical lane/Code40/foreign
+Compare actual PR410/lane remote heads and source differences first. Secure final
+layout fixes/checker repairs and their independent review, rerun combined exact
+source suites and preserve all failed runs. Continue visible head/material work
+from JARVIS-AVATAR-RESUME.md and only then review first-open default promotion.
+Run unchanged frozen7B tasks only through the canonical provider/worker.
+Required combined QA is full Node, backend, unfiltered Android JUnit, configured
+NewApi lint, parity and unsigned build. Historical lane/Code40/foreign
 counts do not certify that final SHA. List all skips; critical MΩ cases cannot skip.
 
 QA coordinates the shared 4-CPU/16-GiB host. Native inference and heavy compilers
