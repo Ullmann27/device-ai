@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: I01 original synthetic branded failure counts once but replay/JSON clone do not
+ok 1 - I01 original synthetic branded failure counts once but replay/JSON clone do not
+  ---
+  duration_ms: 13.698901
+  type: 'test'
+  ...
+# Subtest: I02 failure denies false-tier
+ok 2 - I02 failure denies false-tier
+  ---
+  duration_ms: 1.333976
+  type: 'test'
+  ...
+# Subtest: I02 failure denies mutable
+ok 3 - I02 failure denies mutable
+  ---
+  duration_ms: 0.848977
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-task
+ok 4 - I02 failure denies wrong-task
+  ---
+  duration_ms: 2.362282
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-source
+ok 5 - I02 failure denies wrong-source
+  ---
+  duration_ms: 2.947172
+  type: 'test'
+  ...
+# Subtest: I02 failure denies wrong-fingerprint
+ok 6 - I02 failure denies wrong-fingerprint
+  ---
+  duration_ms: 0.484108
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent unknown-error
+ok 7 - I03 failure rejects inconsistent unknown-error
+  ---
+  duration_ms: 0.722446
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent invalid-with-hash
+ok 8 - I03 failure rejects inconsistent invalid-with-hash
+  ---
+  duration_ms: 0.589577
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent proposal-null
+ok 9 - I03 failure rejects inconsistent proposal-null
+  ---
+  duration_ms: 2.425557
+  type: 'test'
+  ...
+# Subtest: I03 failure rejects inconsistent unknown-status
+ok 10 - I03 failure rejects inconsistent unknown-status
+  ---
+  duration_ms: 6.049468
+  type: 'test'
+  ...
+# Subtest: I04 failed inference cannot be converted into executable proposal
+ok 11 - I04 failed inference cannot be converted into executable proposal
+  ---
+  duration_ms: 1.59534
+  type: 'test'
+  ...
+# Subtest: I05 exact proposal digest required and rejection does not consume execution ID
+ok 12 - I05 exact proposal digest required and rejection does not consume execution ID
+  ---
+  duration_ms: 4.878546
+  type: 'test'
+  ...
+# Subtest: I06 strict task returns failed real-observation accounting without proposal success
+ok 13 - I06 strict task returns failed real-observation accounting without proposal success
+  ---
+  duration_ms: 16.904242
+  type: 'test'
+  ...
+# Subtest: I07 failed response followed by valid proposal same identity counts separately
+ok 14 - I07 failed response followed by valid proposal same identity counts separately
+  ---
+  duration_ms: 8.316296
+  type: 'test'
+  ...
+# Subtest: I08 modelSha256 switch is terminal across failed and valid attempts
+ok 15 - I08 modelSha256 switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 24.076297
+  type: 'test'
+  ...
+# Subtest: I08 runtimeSha256 switch is terminal across failed and valid attempts
+ok 16 - I08 runtimeSha256 switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 2.415402
+  type: 'test'
+  ...
+# Subtest: I08 reviewedPairId switch is terminal across failed and valid attempts
+ok 17 - I08 reviewedPairId switch is terminal across failed and valid attempts
+  ---
+  duration_ms: 4.224383
+  type: 'test'
+  ...
+# Subtest: I09 repeated original observation does not inflate task accounting
+ok 18 - I09 repeated original observation does not inflate task accounting
+  ---
+  duration_ms: 2.489023
+  type: 'test'
+  ...
+# Subtest: I10 entirely unbranded failures cannot manufacture strict result counts
+ok 19 - I10 entirely unbranded failures cannot manufacture strict result counts
+  ---
+  duration_ms: 1.826186
+  type: 'test'
+  ...
+# Subtest: I11 REPORT_GAP original synthetic branded proposal updates repair inference metadata
+ok 20 - I11 REPORT_GAP original synthetic branded proposal updates repair inference metadata
+  ---
+  duration_ms: 1311.494872
+  type: 'test'
+  ...
+# Subtest: I12 REPORT_GAP original branded rejected output is counted without a candidate
+ok 21 - I12 REPORT_GAP original branded rejected output is counted without a candidate
+  ---
+  duration_ms: 247.852864
+  type: 'test'
+  ...
+# Subtest: I13 REPORT_GAP trusted returned inference counted before nonmatching patch span rejection
+ok 22 - I13 REPORT_GAP trusted returned inference counted before nonmatching patch span rejection
+  ---
+  duration_ms: 240.268089
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote clone observation
+ok 23 - I14 report does not promote clone observation
+  ---
+  duration_ms: 536.896187
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote false-tier observation
+ok 24 - I14 report does not promote false-tier observation
+  ---
+  duration_ms: 656.831766
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote wrong-task observation
+ok 25 - I14 report does not promote wrong-task observation
+  ---
+  duration_ms: 539.832998
+  type: 'test'
+  ...
+# Subtest: I14 report does not promote mutable observation
+ok 26 - I14 report does not promote mutable observation
+  ---
+  duration_ms: 1027.444321
+  type: 'test'
+  ...
+# Subtest: I15 REPORT_GAP duplicate genuine observation counts only once in rejected report
+ok 27 - I15 REPORT_GAP duplicate genuine observation counts only once in rejected report
+  ---
+  duration_ms: 626.903281
+  type: 'test'
+  ...
+# Subtest: I16 actual repair loop treats changed-model error as terminal
+ok 28 - I16 actual repair loop treats changed-model error as terminal
+  ---
+  duration_ms: 215.329187
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5901.351433
