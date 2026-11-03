@@ -1,7 +1,10 @@
 /** Typed owner task adapter for existing CCC1 -> mobile job -> teamleader -> repair -> verifier. */
 import fs from 'node:fs';import path from 'node:path';
-import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
+import {validateCodingTask,validateCodingProposal,taskFingerprint} from './coding-task.mjs';
+import {canonical,sha256Hex} from './development-backlog.mjs';
 import {createCodingCandidateProvider} from './coding-provider.mjs';
+import * as codingRuntime from './coding-provider.mjs';
+import {runtimeKey} from './ccc1-journal.mjs';
 import {createAgentProviderFromEnv} from './coding-agent-loop.mjs';
 import {startTask,runTask} from './ccc1-orchestrator.mjs';
 import {Ccc1Reasoner} from './ccc1-interpreter.mjs';
@@ -53,13 +56,31 @@ export function prepareCodingTask({project,stateDir,task}){
   return {id:spec.id,ccc1TaskId,fingerprint,replayed:false};
  }finally{fs.closeSync(fd);}
 }
+/** Process-private runtime admission plus exact task/proposal binding. JSON flags grant nothing. */
+export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}){
+ const observation=raw?.trace?.modelObservation;
+ if(codingRuntime.isTrustedLocalModelObservation?.(observation)!==true)
+  throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ // A process brand authenticates execution, not inference. No current producer
+ // establishes actual model execution; only independently admitted immutable
+ // observations may ever carry true. A caller flag or JSON clone cannot admit.
+ if(!Object.isFrozen(observation)||observation.verifiedModelExecution!==true)throw Error('BLOCKED_LOCAL_MODEL_UNAVAILABLE');
+ const spec=validateCodingTask(task);
+ const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},spec);
+ if(observation.taskId!==spec.id||observation.taskFingerprint!==taskFingerprint(spec)||
+    observation.sourceCommit!==spec.sourceCommit||observation.proposalSha256!==sha256Hex(canonical(proposal))||
+    seen.has(observation.executionId))throw Error('CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ seen.add(observation.executionId);return observation;
+}
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
- requireIsolation=false,expectedTaskFingerprint=null,
+ requireIsolation=false,requireLocalModelObservation=false,expectedTaskFingerprint=null,
  providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),
  env=process.env}={}){
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
- if(requireIsolation && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
+ const strictMomega=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1';
+ if(strictMomega&&env.CONTINUUM_CODING_AGENT_LOOP==='1')throw Error('CODING_ADMITTED_AGENT_UNAVAILABLE');
+ if((requireIsolation||strictMomega) && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
   throw Error('CODING_ISOLATION_REQUIRED');
  const grant=readGrant(grantFile(project,stateDir,id));
  // The grant file name, embedded task identity and journal identity must agree.
@@ -73,14 +94,32 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
   throw Error('CODING_TASK_BINDING_MISMATCH');
  if(git(project,['rev-parse','HEAD']).stdout.trim()!==grant.task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
  if(git(project,['status','--porcelain']).stdout.trim())throw Error('CODING_TASK_DIRTY_SOURCE');
- const receipts=[];
+ const receipts=[],technicalCandidates=[],seenObservations=new Set();
+ let admittedModelCalls=0,modelAdmissionFailure=null;
+ let technicalRecall={items:[],text:''},technicalExperienceStatus='NOT_RECORDED';
+ let technical=null;
+ try{
+  technical=await import('./ccc1-technical-recall.mjs');
+  technicalRecall=technical.recallTechnicalExperiences({stateDir,task:grant.task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)});
+ }catch{technicalRecall={items:[],text:''};}
  const result=await runTask({project,stateDir,taskId:grant.ccc1TaskId,
   reasoner:new Ccc1Reasoner({candidates:[],repairBudgetMinutes:20}),maxTurns:16,
   runRepairJob:async order=>{
    if(order.chain!==grant.task.chain)throw Error('CODING_CHAIN_BINDING_MISMATCH');
    const task=validateCodingTask({...grant.task,id:jobTaskId(order.job)});
    const evidenceDir=path.join(stateDir,'coding-evidence',grant.task.id,order.job);
-   const candidateProvider=providerFactory({root:project,task,env,evidenceDir});
+   const supplied=providerFactory({root:project,task,env,evidenceDir,executor,executorAbortMode,
+     technicalRecall:technicalRecall.text,requireLocalModelObservation:strictMomega});
+   if(strictMomega&&taskFingerprint(supplied.taskSpec)!==taskFingerprint(task))throw Error('CODING_TASK_BINDING_MISMATCH');
+   const candidateProvider=Object.assign(input=>{
+    const raw=supplied(input);
+    if(strictMomega){
+     try{assertCodingModelObservationBinding({task,raw,seen:seenObservations});admittedModelCalls++;}
+     catch(error){modelAdmissionFailure=error.message;throw error;}
+    }
+    return raw;
+   },{taskSpec:supplied.taskSpec,allowedPaths:supplied.allowedPaths,
+     onVerifiedCandidate:entry=>technicalCandidates.push(entry)});
    const driver=await localTeamleaderDriver({candidateProvider,executor,executorAbortMode});
    const receipt=await runMobileRepairJob({...order,driver});receipts.push(receipt);return receipt;
   }});
@@ -92,10 +131,20 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  const receiptJobs=[...new Set((result.entries??[])
   .filter(entry=>entry.kind==='RECEIPT'&&typeof entry.payload?.job==='string')
   .map(entry=>entry.payload.job))];
+ if(strictMomega&&admittedModelCalls===0)
+  throw Error(modelAdmissionFailure??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ for(const candidate of technicalCandidates){
+  try{
+   if(!technical)continue;
+   const recorded=technical.recordTechnicalExperience({stateDir,taskId:grant.ccc1TaskId,task:grant.task,
+    ...candidate,key:runtimeKey(stateDir)});
+   technicalExperienceStatus=recorded?'RECORDED_TECHNICAL_REVIEW_ONLY':'EXISTING_SUMMARY_NOT_UPGRADED';
+  }catch{technicalExperienceStatus='TECHNICAL_PROOF_UNAVAILABLE';}
+ }
  const experience=experienceOf(grant.ccc1TaskId,result.entries??[],{coreId:'typed-coding-adapter-v1'});
  if(experience)new ExperienceLog(path.join(stateDir,'experience.jsonl')).append(experience);
  return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
   taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
   status:result.outcome==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':result.outcome,
-  receiptJobs,receipts,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
+  receiptJobs,receipts,technicalExperienceStatus,technicalRecallCount:technicalRecall.items.length,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
 }
