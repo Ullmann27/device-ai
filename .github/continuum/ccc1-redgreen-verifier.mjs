@@ -20,6 +20,9 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {createWorktree,removeWorktree,runChain,validateRepairExecutor} from './repair-loop.mjs';
+import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
+import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 
 export const ATTESTATION_SCHEMA='continuum-ccc1-redgreen-attestation';
 export const RECEIPT_SCHEMA='continuum-ccc1-patch-receipt';
@@ -220,6 +223,67 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
  const red=run(repo,baseCommit),green=run(repo,baseCommit,{patchPath});
  compareRuns(receipt,red,green,reasons);
  return attestation(receiptBytes,reasons.length?'REJECTED':'VERIFIED',reasons,red,green,patchSha256);
+}
+
+
+const CODING_VERIFICATIONS=new WeakSet();
+export const isTrustedCodingVerification=value=>CODING_VERIFICATIONS.has(value);
+function freezeEvidence(value){
+ if(value&&typeof value==='object'){for(const child of Object.values(value))freezeEvidence(child);Object.freeze(value);}
+ return value;
+}
+/** Execute the canonical fixed chain twice from immutable source, never a worker boolean.
+ * Both checkouts are fresh; candidate build state and reports are never reused.
+ * Legacy reviewed numeric repairs retain host compatibility; general execution
+ * requires the existing branded OS executor. Missing isolation never falls back.
+ */
+export function verifyCodingCandidate({repo,task,patchPath,patchSha256,proposalSha256,out,deadline,
+ executor=null,executorAbortMode=null,checkpoint=null,abortWatch=null}={}){
+ const spec=validateCodingTask(task);
+ validateRepairExecutor(executor,{abortWatch,executorAbortMode});
+ if(!SHA256.test(proposalSha256??'')||!SHA256.test(patchSha256??'')||!Number.isSafeInteger(deadline)||Date.now()>=deadline)
+  throw Error('CODING_VERIFICATION_REQUEST_INVALID');
+ if(!isCommit(repo,spec.sourceCommit))throw Error('CODING_VERIFICATION_SOURCE_INVALID');
+ const patch=fs.readFileSync(patchPath);
+ if(sha256(patch)!==patchSha256)throw Error('CODING_VERIFICATION_PATCH_HASH');
+ let redTree=null,greenTree=null;
+ try{
+  greenTree=createWorktree(repo,spec.sourceCommit);
+  if(git(greenTree,['apply','--check','--binary',patchPath]).code!==0||
+     git(greenTree,['apply','--binary',patchPath]).code!==0)throw Error('CODING_VERIFICATION_PATCH_INVALID');
+  const files=git(greenTree,['diff','--name-only',spec.sourceCommit]).out.trim().split('\n').filter(Boolean);
+  if(!files.length||files.some(f=>!spec.allowedPaths.includes(f)||isTestFile(f)))throw Error('CODING_VERIFICATION_SCOPE');
+  if(!executor&&!files.every(file=>isLocalNumericPatch({file,
+    oldText:git(repo,['cat-file','blob',spec.sourceCommit+':'+file]).out,
+    newText:fs.readFileSync(path.join(greenTree,file),'utf8')})))throw Error('CODING_ISOLATION_REQUIRED');
+  redTree=createWorktree(repo,spec.sourceCommit);
+  const redOut=path.join(out,'red'),greenOut=path.join(out,'green');
+  fs.mkdirSync(redOut,{recursive:true,mode:0o700});fs.mkdirSync(greenOut,{recursive:true,mode:0o700});
+  const options={deadline,executor,executorAbortMode,checkpoint,abortWatch};
+  const red=runChain(spec.chain,redTree,redOut,options),green=runChain(spec.chain,greenTree,greenOut,options),reasons=[];
+  const redProfiles=red.results.filter(r=>r.testProfile);
+  if(red.passed||!redProfiles.some(r=>r.exitCode!==null&&r.exitCode!==0&&r.tests?.failed>0&&r.tests?.executed>0)||
+     red.results.some(r=>r.error||r.signal||r.timedOut))reasons.push('RED_DID_NOT_FAIL_COHERENTLY');
+  if(!green.passed)reasons.push('GREEN_HAS_FAILURES');
+  for(const before of redProfiles){
+    const after=green.results.find(r=>r.profile===before.profile);
+    if(!after){reasons.push('BASELINE_PROFILE_MISSING');continue;}
+    if(before.tests?.evidenceComplete===false||after.tests?.evidenceComplete===false)reasons.push('INCOMPLETE_TEST_EVIDENCE');
+    const a=before.tests?.caseIdentities,b=after.tests?.caseIdentities;
+    if(!Array.isArray(a)||!a.length||!Array.isArray(b)||!b.length){reasons.push('TEST_IDENTITIES_MISSING');continue;}
+    compareCoverage({cases:new Map(a.map((c,i)=>[i,c]))},{cases:new Map(b.map((c,i)=>[i,c]))},reasons);
+  }
+  if(!green.results.some(r=>r.testProfile&&r.tests?.executed>0))reasons.push('GREEN_NO_EXECUTED_TESTS');
+  const result=freezeEvidence({schema:'momega1-coding-verification',version:1,
+    taskFingerprint:taskFingerprint(spec),sourceCommit:spec.sourceCommit,chain:spec.chain,patchSha256,proposalSha256,
+    verdict:reasons.length?'REJECTED':'VERIFIED',reasons:[...new Set(reasons)],red,green,
+    diagnostics:[...red.diagnostics,...green.diagnostics],evidenceClass:'HOST_INTEGRATION',
+    execution:executor?'OS_ISOLATED':'HOST_REVIEWED_NUMERIC'});
+  CODING_VERIFICATIONS.add(result);return result;
+ }finally{
+  if(redTree)removeWorktree(repo,redTree);
+  if(greenTree)removeWorktree(repo,greenTree);
+ }
 }
 
 function attestation(receiptBytes,verdict,reasons,red=null,green=null,patchSha256=null){

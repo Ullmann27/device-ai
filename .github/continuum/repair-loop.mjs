@@ -14,6 +14,8 @@ import {isIsolatedExecutor,validIsolationEvidence} from './isolated-executor.mjs
 import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 import {validateCodingTask,validateCodingProposal,taskFingerprint} from './coding-task.mjs';
 import {runCandidateVerifier} from './repair-research-verifier.mjs';
+import {parseJunit,isTrustedCodingVerification} from './ccc1-redgreen-verifier.mjs';
+import {canonical} from './development-backlog.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -212,7 +214,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,evidenceComplete:true};
-  const skippedCaseHashes=[],executedCaseHashes=[];
+  const skippedCaseHashes=[],executedCaseHashes=[],caseIdentities=[],junitSha256=[];
   let completeSkipIdentities=true,completeExecutedIdentities=true;
   const addTests=j=>{
     if(j.evidenceComplete===false)tests.evidenceComplete=false;
@@ -235,6 +237,14 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   };
   for(const dir of executor?[]:p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
   for(const file of executor?r.junitFiles:p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(localize(fs.readFileSync(file,'utf8')),wt));
+  // Preserve ordered complete identities from the existing independent parser.
+  const identityFiles=executor?r.junitFiles:[...(p.junitFiles??[]),...(p.junitDirs??[]).flatMap(dir=>fs.existsSync(dir)?fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort().map(n=>path.join(dir,n)):[])];
+  for(const file of identityFiles){
+    if(!fs.existsSync(file))continue;
+    const xml=fs.readFileSync(file,'utf8');junitSha256.push(sha256(xml));
+    for(const c of parseJunit(localize(xml),{root:wt}).values())caseIdentities.push({identity:c.identity,skipped:c.skipped,skipType:c.skipType});
+  }
+  tests.caseIdentities=caseIdentities;tests.junitSha256=junitSha256;
   // Permit pre-existing JUnit skips only with a complete, stable case-identity
   // digest. ANSK independently compares the same identity across all green runs.
   if(tests.skipped>0&&completeSkipIdentities&&
@@ -528,7 +538,7 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 
 /** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
  * Every revision is applied to base, never on top of a failed candidate. */
-function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress}){
+function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,independentVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress}){
   const fingerprint=taskFingerprint(taskSpec);
   // Resume only this exact owner task/source. This is negative diagnostic reuse,
   // never automatic patch replay or a learned success label for model code.
@@ -562,12 +572,12 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       hypothesis:attempt.hypothesis};
     history.push(entry);report.inference.history=structuredClone(history.slice(-3));
   };
-  const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PATCH_NOT_EXACT','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
+  const knownCodes=new Set(['CODING_LOCAL_MODEL_OBSERVATION_REQUIRED','CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PATCH_NOT_EXACT','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
     'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE','CODING_MODEL_TIMEOUT',
     'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
     'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH',
     'CODING_EVIDENCE_INVALID','CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
-  const terminalCodes=new Set(['CODING_MODEL_TIMEOUT','CODING_MODEL_UNAVAILABLE','LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
+  const terminalCodes=new Set(['CODING_LOCAL_MODEL_OBSERVATION_REQUIRED','CODING_MODEL_TIMEOUT','CODING_MODEL_UNAVAILABLE','LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
     'CODING_CONTEXT_DEADLINE','CODING_TASK_BINDING_MISMATCH','CODING_EVIDENCE_INVALID',
     'CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
   const rejectModel=(code,rawFingerprint=null)=>{
@@ -625,7 +635,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
         strategy:'LOCAL_SCOPED_PATCH',diagnostic:diagnostics[0]?.fingerprint??actionable[0].fingerprint,
         diagnosticKind:diagnostics[0]?.kind??actionable[0].kind,prior:0.2,score:0.38,
         description:'Task-scoped local proposal; fixed tests and independent owner review required',
-        hypothesis:proposal.hypothesis,plan:proposal.plan,edits};
+        hypothesis:proposal.hypothesis,plan:proposal.plan,edits,
+        proposalSha256:sha256(canonical(proposal)),modelObservation:raw.trace?.modelObservation??null};
       report.coding.contextSha256=raw.context.contextSha256;
       report.inference.candidateStatus='PROPOSED';
       report.coding.milestones.push('LOCAL_PROPOSAL_RECEIVED');
@@ -654,7 +665,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     beforeStep('candidate:'+c.id);
     const verdict=critique(c);
     const attempt={candidate:c.id,strategy:c.strategy,diagnostic:c.diagnostic,diagnosticKind:c.diagnosticKind,
-      description:c.description,hypothesis:c.hypothesis,plan:c.plan,score:c.score,critic:verdict,edits:c.edits};
+      description:c.description,hypothesis:c.hypothesis,plan:c.plan,score:c.score,critic:verdict,edits:c.edits,
+      proposalSha256:c.proposalSha256,modelObservation:c.modelObservation};
     const record=()=>{report.attempts.push(attempt);remember(attempt);log(c.strategy+' -> '+attempt.outcome);
       progress(attempt.outcome==='VERIFIED'?'PATCH_CHECKS_PASSED':attempt.outcome==='FAILED_TESTS'||attempt.outcome==='FAILED_SYNTAX'?'CHECK_FAILED':'PROPOSAL_REJECTED');};
     if(!verdict.approved){attempt.outcome='REJECTED_BY_CRITIC';record();continue;}
@@ -705,6 +717,24 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
         attempt.remainingDiagnostics=boundedDiagnostics(diagnostics);
       }
     }
+    // The canonical worker supplies this trusted execution callback. A model can
+    // never turn its own report into an independent verdict.
+    if(check.passed&&attempt.evidence.sufficient&&independentVerifier!==null){
+      beforeStep('independent-candidate');progress('CHECKING_INDEPENDENT');
+      const patch=git(wt,['diff','--binary',base]).stdout;
+      const verified=independentVerifier({patch,patchSha256:sha256(patch),proposalSha256:c.proposalSha256});
+      beforeStep('independent-candidate-checked');
+      attempt.independentVerification=verified;
+      if(!isTrustedCodingVerification(verified)||verified.verdict!=='VERIFIED'||
+         verified.taskFingerprint!==fingerprint||verified.sourceCommit!==base||
+         verified.patchSha256!==sha256(patch)||verified.proposalSha256!==c.proposalSha256){
+        attempt.evidence={sufficient:false,reasons:['Independent candidate verification rejected']};
+        diagnostics=[{kind:'INDEPENDENT_CHECK_FAILED',file:c.edits[0].file,line:1,
+          message:((verified?.reasons??[]).join('; ')+' '+(verified?.diagnostics??[]).map(d=>d.message??'').join('; ')).slice(0,1000),
+          fingerprint:sha256(c.id+'\0independent').slice(0,16)}];
+        attempt.remainingDiagnostics=boundedDiagnostics(diagnostics);
+      }
+    }
     attempt.outcome=!check.passed?'FAILED_TESTS':attempt.evidence.sufficient?'VERIFIED':'INSUFFICIENT_EVIDENCE';
     report.coding.milestones.push(attempt.outcome==='VERIFIED'?'CANDIDATE_VERIFIED':'CANDIDATE_TESTS_FAILED');
     record();
@@ -726,7 +756,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
  * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
  * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,independentVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null}){
   if(onProgress!==null&&typeof onProgress!=='function')throw Error('INVALID_PROGRESS_OBSERVER');
   validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
@@ -765,7 +795,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     report.baselineTail=baseline.results.at(-1)?.outputTail;
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
-  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress});
+  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,independentVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress});
   const ctx=context(wt,base,ledger.attempts);
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.
