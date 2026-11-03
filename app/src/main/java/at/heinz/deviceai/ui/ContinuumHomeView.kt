@@ -151,6 +151,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val spec = layoutSpec
         val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()
         for (child in listOf<View>(hologram) + views.values) {
+            if (child.parent !== this) continue
             val box = boxOf(child) ?: continue
             child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
@@ -160,6 +161,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         for (child in listOf<View>(hologram) + views.values) {
+            if (child.parent !== this) continue
             val box = boxOf(child) ?: continue
             child.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
