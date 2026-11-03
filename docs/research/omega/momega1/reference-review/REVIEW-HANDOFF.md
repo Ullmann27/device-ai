@@ -178,5 +178,27 @@ that AA and JawOpen separately contain the same mouth-open basis. Component
 ablation and any justified semantic mapping repair remain separate from the
 neutral-preserving rig hypothesis; no material darkening may conceal geometry.
 
+## Explicit composition V2 RED
+
+Root approved the evidence-based contract version change; original V1 and all
+CCC1 benchmark tests remain immutable. `MOUTH-COMPOSITION-V2-FREEZE.md` and new
+independent tests were frozen at `cd975890` before implementation. V2 replaces the
+obsolete exact double-mapping expectation with two stronger anatomy requirements.
+
+Actual unchanged `26555aa6` result: **27 run, 25 PASS, 2 FAIL, 0 SKIP**, exit 1.
+The only failures are the two new requirements: shared opening is added twice,
+and inner-jaw movement does not follow cue-produced outer opening. Raw output and
+hashes are retained in `gaze-v2-red-2655-receipt.json`. A new candidate must pass
+V2, the original max-pose geometry checks, the frozen additional 112 speech poses
+plus neutral, and actual render review before promotion. No claim of V1 PASS on
+a future changed mapper is allowed without its actual result.
+
+Five component-ablation frames independently show the doubled outer opening.
+The ablation deliberately modifies pose components and is labeled accordingly.
+An independently repeated canonical-to-Blender jaw-matrix comparison differs by
+only `1.8453e-7` per element, consistent with Float32. This rejects a large replay
+angle discrepancy as the cause of the observed artifact. It is not native-render
+or device certification. Receipt: `aa-ablation-transform-review.json`.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
