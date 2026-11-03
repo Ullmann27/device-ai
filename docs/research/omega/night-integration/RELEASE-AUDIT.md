@@ -52,3 +52,13 @@ Exactly four success proofs remain **NOT_RUN** on this host:
 4. Fixed-image Docker CLI transport rejecting mismatched weights before native launch.
 
 Keep their explicit skip reasons and counts in the final QA evidence and release notes. These changes establish **no S01 acceptance or barrier clearance, no native-model/inference acceptance, no bounded-host acceptance and no device acceptance**. This document is an audit record, not a publication receipt.
+
+## Additional namespace proof review after the first combined run
+
+The immutable 09dced7a full Node run remains FAIL: 2267 PASS, 15 FAIL, 23 SKIP. Its original JUnit and summary are preserved under docs/evidence/night-integration/09dced7a. One failure was a stale streaming source assertion: a completed 250ms wait now checks the output budget before leaving the loop. The corrected assertion retains cancellation, deadline and budget checks and passed5/5.
+
+The other14 cases require successful host namespace execution. Independent inspection found that this host's fixed bwrap/prlimit files are uid65534 rather than the required root owner; separately, a fixed model-free bwrap /usr/bin/true probe was denied creation of its NETLINK_ROUTE socket. The test-only helper records those separate capabilities without invoking the production guard or borrowing its sandbox arguments. Unfamiliar errors remain failures.
+
+The14 actual OS-success cases now remain explicitly NOT_RUN when these prerequisites are absent. All11 existing portable/negative cases still execute. A new always-on case exercises the real query and launcher rejection and requires absence of model observations/envelopes; on a capable host it requires actual synthetic success, so an always-reject regression cannot silently skip. This correction received independent source review.
+
+Actual combined observation/CPU/7B verification: **41 total, 23 PASS, 0 FAIL, 18 explicit SKIP**. These18 missing proofs comprise the prior4 resource/Docker cases plus14 namespace/process cases. They are not native-model or host acceptance. Production tools, ownership, isolation policies, model pins, S01 barrier and release gates remain unchanged. The final full-node run must use the next immutable checkpoint.

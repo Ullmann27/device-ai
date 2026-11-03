@@ -40,7 +40,15 @@ test('invocation time consumes the same generation budget and safe profile reach
   const deadline = generate.indexOf('val generationStartedNanos = System.nanoTime()');
   const invoke = generate.indexOf('start(callback)');
   assert.ok(deadline >= 0 && invoke > deadline);
-  assert.match(generate, /if \(completed\.await\(250, TimeUnit\.MILLISECONDS\)\) break/);
+  const waitStart = generate.indexOf('while (true) {');
+  const waitEnd = generate.indexOf('val diagnostic = synchronized(eventLock)', waitStart);
+  assert.ok(waitStart > invoke && waitEnd > waitStart);
+  const wait = generate.slice(waitStart, waitEnd);
+  // Completion now has a block because a bounded bot output must cancel native work before leaving the loop.
+  assert.match(wait, /while \(true\) \{\s*cancellation\?\.throwIfCancelled\(\)\s*if \(completed\.await\(250, TimeUnit\.MILLISECONDS\)\) \{/);
+  assert.match(wait, /if \(completed\.await\(250, TimeUnit\.MILLISECONDS\)\) \{\s*if \(synchronized\(eventLock\) \{ outputBudgetExceeded \}\) localRuntime\.cancel\(\)\s*break\s*\}/);
+  assert.match(wait, /if \(hardDeadlineMillis != null &&\s*System\.nanoTime\(\) - generationStartedNanos >= TimeUnit\.MILLISECONDS\.toNanos\(hardDeadlineMillis\)\) \{\s*synchronized\(eventLock\) \{ terminalEventReceived = true \}\s*localRuntime\.cancel\(\)\s*return LocalGeneration\("", null, emptyList\(\), "BOT_DEADLINE_EXCEEDED"\)/);
+  assert.match(activity, /val remainingMillis = turn\.remainingMillis\(\)[\s\S]*hardDeadlineMillis = remainingMillis/);
   assert.match(generate, /elapsedMillis = \(System\.nanoTime\(\) - generationStartedNanos\)/);
   assert.match(generate, /LocalGenerationDeadlinePolicy\.stalled\(\s*elapsedMillis, lastTextMillis, response\.length\)/);
   assert.doesNotMatch(generate, /generationDeadline = generationStartedNanos/);
