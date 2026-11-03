@@ -1,0 +1,468 @@
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:8:28: error: unresolved reference 'AvatarCameraPolicy'.
+    private fun policy() = AvatarCameraPolicy { now }
+                           ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:9:28: error: unresolved reference 'CameraFrameGeometry'.
+    private val geometry = CameraFrameGeometry(0, 0, 1000, 1000, 0, 0)
+                           ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:11:9: error: unresolved reference 'CameraFaceBox'.
+        CameraFaceBox(x - 50, y - 50, x + 50, y + 50, score)
+        ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:12:26: error: unresolved reference 'AvatarCameraPolicy'.
+    private fun start(p: AvatarCameraPolicy) = p.start(true, true, true, true)!!
+                         ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:12:50: error: unresolved reference 'start'.
+    private fun start(p: AvatarCameraPolicy) = p.start(true, true, true, true)!!
+                                                 ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:20:29: error: unresolved reference 'CameraTrackingState'.
+            assertNotEquals(CameraTrackingState.TRACKING, p.state)
+                            ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:25:43: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val sample = p.acceptFrame(token, listOf(face()), geometry)!!
+                                          ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:26:27: error: unresolved reference 'x'.
+        assertTrue(sample.x in -1f..1f); assertTrue(sample.y in -1f..1f)
+                          ^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:26:60: error: unresolved reference 'y'.
+        assertTrue(sample.x in -1f..1f); assertTrue(sample.y in -1f..1f)
+                                                           ^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:27:27: error: unresolved reference 'x'.
+        assertTrue(sample.x < 0f) // front-camera mirror after sensor rotation
+                          ^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:28:33: error: unresolved reference 'confidence'.
+        assertEquals(90, sample.confidence); assertEquals(now, sample.observedAtElapsedMillis)
+                                ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:28:71: error: unresolved reference 'observedAtElapsedMillis'.
+        assertEquals(90, sample.confidence); assertEquals(now, sample.observedAtElapsedMillis)
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:29:22: error: unresolved reference 'CameraTrackingState'.
+        assertEquals(CameraTrackingState.TRACKING, p.state)
+                     ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:32:23: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (faces in listOf(emptyList(), listOf(face(), face(300)))) {
+                      ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:32:30: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (faces in listOf(emptyList(), listOf(face(), face(300)))) {
+                             ^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:32:43: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (faces in listOf(emptyList(), listOf(face(), face(300)))) {
+                                          ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:34:48: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            assertNotNull(p.acceptFrame(token, listOf(face()), geometry))
+                                               ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:37:29: error: unresolved reference 'CameraTrackingState'.
+            assertNotEquals(CameraTrackingState.TRACKING, p.state)
+                            ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:41:19: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (f in listOf(face(score = 59), face(score = 101), face(-200), CameraFaceBox(500, 500, 400, 600, 90))) {
+                  ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:41:75: error: unresolved reference 'CameraFaceBox'.
+        for (f in listOf(face(score = 59), face(score = 101), face(-200), CameraFaceBox(500, 500, 400, 600, 90))) {
+                                                                          ^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:43:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            assertNull(p.acceptFrame(token, listOf(f), geometry)); assertNull(p.latest())
+                                            ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:48:28: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        p.acceptFrame(old, listOf(face()), geometry); p.stop()
+                           ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:49:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertNull(p.acceptFrame(old, listOf(face()), geometry))
+                                      ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:51:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertNull(p.acceptFrame(old, listOf(face()), geometry)); assertNull(p.latest())
+                                      ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:52:44: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertNotNull(p.acceptFrame(fresh, listOf(face()), geometry))
+                                           ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:57:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            p.acceptFrame(token, listOf(face()), geometry)
+                                 ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:65:30: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        p.acceptFrame(token, listOf(face()), geometry)
+                             ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:67:53: error: unresolved reference 'CameraTrackingState'.
+        now++; assertNull(p.latest()); assertEquals(CameraTrackingState.NO_FACE, p.state)
+                                                    ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:73:22: error: unresolved reference 'CameraTrackingState'.
+        assertEquals(CameraTrackingState.ERROR, p.state)
+                     ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:77:57: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        repeat(10) { now += 1_000; p.acceptFrame(token, emptyList(), geometry); assertFalse(p.expireHeartbeat(token)) }
+                                                        ^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:78:46: error: unresolved reference 'CameraTrackingState'.
+        assertNull(p.latest()); assertEquals(CameraTrackingState.NO_FACE, p.state)
+                                             ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:82:30: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        p.acceptFrame(token, listOf(face()), geometry); now--
+                             ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:83:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertNull(p.acceptFrame(token, listOf(face()), geometry)); assertFalse(p.isCurrent(token))
+                                        ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:84:22: error: unresolved reference 'CameraTrackingState'.
+        assertEquals(CameraTrackingState.ERROR, p.state)
+                     ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:88:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        var previous = p.acceptFrame(token, listOf(face(900)), geometry)!!
+                                            ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:91:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            val next = p.acceptFrame(token, listOf(face(100)), geometry)!!
+                                            ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:92:45: error: unresolved reference 'x'.
+            assertTrue(kotlin.math.abs(next.x - previous.x) <= 0.2001f)
+                                            ^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:92:58: error: unresolved reference 'x'.
+            assertTrue(kotlin.math.abs(next.x - previous.x) <= 0.2001f)
+                                                         ^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:92:61: error: 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+            assertTrue(kotlin.math.abs(next.x - previous.x) <= 0.2001f)
+                                                            ^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:98:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val first = p.acceptFrame(token, listOf(face()), geometry)!!
+                                         ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:99:63: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        repeat(30) { assertEquals(first, p.acceptFrame(token, listOf(face()), geometry)) }
+                                                              ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:103:21: error: unresolved reference 'CameraCoordinateMapping'.
+        val point = CameraCoordinateMapping.normalized(face(750, 500), geometry)!!
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:104:35: error: function invocation 'first()' expected.
+        assertEquals(-0.5f, point.first, 0.0001f); assertEquals(0f, point.second, 0.0001f)
+                                  ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:104:75: error: unresolved reference 'second'.
+        assertEquals(-0.5f, point.first, 0.0001f); assertEquals(0f, point.second, 0.0001f)
+                                                                          ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:105:23: error: unresolved reference 'CameraCoordinateMapping'.
+        val rotated = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(sensorOrientationDegrees = 90))!!
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:105:83: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val rotated = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(sensorOrientationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:105:83: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val rotated = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(sensorOrientationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:105:83: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val rotated = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(sensorOrientationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:106:34: error: function invocation 'first()' expected.
+        assertEquals(0f, rotated.first, 0.0001f); assertEquals(0.5f, rotated.second, 0.0001f)
+                                 ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:106:78: error: unresolved reference 'second'.
+        assertEquals(0f, rotated.first, 0.0001f); assertEquals(0.5f, rotated.second, 0.0001f)
+                                                                             ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:107:23: error: unresolved reference 'CameraCoordinateMapping'.
+        val display = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(displayRotationDegrees = 90))!!
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:107:83: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val display = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(displayRotationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:107:83: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val display = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(displayRotationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:107:83: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val display = CameraCoordinateMapping.normalized(face(750, 500), geometry.copy(displayRotationDegrees = 90))!!
+                                                                                  ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:109:20: error: unresolved reference 'CameraCoordinateMapping'.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(sensorOrientationDegrees = 45)))
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:109:72: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(sensorOrientationDegrees = 45)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:109:72: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(sensorOrientationDegrees = 45)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:109:72: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(sensorOrientationDegrees = 45)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:110:20: error: unresolved reference 'CameraCoordinateMapping'.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(right = 0)))
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:110:72: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(right = 0)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:110:72: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(right = 0)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:110:72: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(right = 0)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:114:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertNull(p.acceptFrame(token, List(9) { face() }, geometry))
+                                        ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:115:20: error: unresolved reference 'CameraCoordinateMapping'.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:115:72: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:115:72: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt:115:72: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
+                                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:7:27: error: unresolved reference 'ContinuumReadinessGuide'.
+    private fun ready() = ContinuumReadinessGuide.Snapshot(
+                          ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:10:82: error: unresolved reference 'CameraTrackingState'.
+        cameraPermissionGranted = true, cameraOwnerEnabled = true, cameraState = CameraTrackingState.TRACKING)
+                                                                                 ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:13:20: error: unresolved reference 'ContinuumReadinessGuide'.
+        val rows = ContinuumReadinessGuide.rows(ContinuumReadinessGuide.Snapshot())
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:13:49: error: unresolved reference 'ContinuumReadinessGuide'.
+        val rows = ContinuumReadinessGuide.rows(ContinuumReadinessGuide.Snapshot())
+                                                ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:14:32: error: unresolved reference 'it'.
+        assertTrue(rows.none { it.status == ContinuumReadinessGuide.Status.AVAILABLE })
+                               ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:14:45: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertTrue(rows.none { it.status == ContinuumReadinessGuide.Status.AVAILABLE })
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:15:57: error: unresolved reference 'it'.
+        assertTrue(rows.none { "erfolgreich geprüft" in it.message })
+                                                        ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:18:20: error: unresolved reference 'ContinuumReadinessGuide'.
+        val rows = ContinuumReadinessGuide.rows(ready())
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:19:34: error: unresolved reference 'it'.
+        assertTrue(rows.filter { it.id != "connectors" }.all { it.status == ContinuumReadinessGuide.Status.AVAILABLE })
+                                 ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:19:64: error: unresolved reference 'it'.
+        assertTrue(rows.filter { it.id != "connectors" }.all { it.status == ContinuumReadinessGuide.Status.AVAILABLE })
+                                                               ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:19:77: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertTrue(rows.filter { it.id != "connectors" }.all { it.status == ContinuumReadinessGuide.Status.AVAILABLE })
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:20:33: error: unresolved reference 'it'.
+        assertTrue(rows.first { it.id == "voice" }.message.contains("Test"))
+                                ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:20:52: error: unresolved reference 'message'.
+        assertTrue(rows.first { it.id == "voice" }.message.contains("Test"))
+                                                   ^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:21:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Status.NOT_IMPLEMENTED, rows.first { it.id == "connectors" }.status)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:21:83: error: unresolved reference 'it'.
+        assertEquals(ContinuumReadinessGuide.Status.NOT_IMPLEMENTED, rows.first { it.id == "connectors" }.status)
+                                                                                  ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:21:107: error: unresolved reference 'status'.
+        assertEquals(ContinuumReadinessGuide.Status.NOT_IMPLEMENTED, rows.first { it.id == "connectors" }.status)
+                                                                                                          ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:24:19: error: unresolved reference 'ContinuumReadinessGuide'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(offlineVoiceAvailable = false)).first { it.id == "voice" }
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:24:56: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(offlineVoiceAvailable = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:24:56: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(offlineVoiceAvailable = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:24:56: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val row = ContinuumReadinessGuide.rows(ready().copy(offlineVoiceAvailable = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:24:101: error: unresolved reference 'it'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(offlineVoiceAvailable = false)).first { it.id == "voice" }
+                                                                                                    ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:25:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Status.UNAVAILABLE, row.status)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:25:70: error: unresolved reference 'status'.
+        assertEquals(ContinuumReadinessGuide.Status.UNAVAILABLE, row.status)
+                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:26:24: error: unresolved reference 'message'.
+        assertTrue(row.message.contains("offline"))
+                       ^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:27:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.SHOW_VOICE_HELP, row.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:27:74: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.SHOW_VOICE_HELP, row.action)
+                                                                         ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:30:19: error: unresolved reference 'ContinuumReadinessGuide'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(voiceEnabled = false)).first { it.id == "voice" }
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:30:56: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(voiceEnabled = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:30:56: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(voiceEnabled = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:30:56: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val row = ContinuumReadinessGuide.rows(ready().copy(voiceEnabled = false)).first { it.id == "voice" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:30:92: error: unresolved reference 'it'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(voiceEnabled = false)).first { it.id == "voice" }
+                                                                                           ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:31:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.ENABLE_VOICE, row.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:31:71: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.ENABLE_VOICE, row.action)
+                                                                      ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:34:20: error: unresolved reference 'ContinuumReadinessGuide'.
+        val rows = ContinuumReadinessGuide.rows(ready().copy(microphoneGranted = false, cameraPermissionGranted = false))
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:34:57: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val rows = ContinuumReadinessGuide.rows(ready().copy(microphoneGranted = false, cameraPermissionGranted = false))
+                                                        ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:34:57: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val rows = ContinuumReadinessGuide.rows(ready().copy(microphoneGranted = false, cameraPermissionGranted = false))
+                                                        ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:34:57: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val rows = ContinuumReadinessGuide.rows(ready().copy(microphoneGranted = false, cameraPermissionGranted = false))
+                                                        ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:35:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_MICROPHONE, rows.first { it.id == "speech" }.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:35:86: error: unresolved reference 'it'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_MICROPHONE, rows.first { it.id == "speech" }.action)
+                                                                                     ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:35:106: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_MICROPHONE, rows.first { it.id == "speech" }.action)
+                                                                                                         ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:36:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_CAMERA, rows.first { it.id == "camera" }.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:36:82: error: unresolved reference 'it'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_CAMERA, rows.first { it.id == "camera" }.action)
+                                                                                 ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:36:102: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.REQUEST_CAMERA, rows.first { it.id == "camera" }.action)
+                                                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:39:19: error: unresolved reference 'ContinuumReadinessGuide'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraHardwareSupported = false, cameraPermissionGranted = false)).first { it.id == "camera" }
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:39:56: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraHardwareSupported = false, cameraPermissionGranted = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:39:56: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraHardwareSupported = false, cameraPermissionGranted = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:39:56: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraHardwareSupported = false, cameraPermissionGranted = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:39:136: error: unresolved reference 'it'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraHardwareSupported = false, cameraPermissionGranted = false)).first { it.id == "camera" }
+                                                                                                                                       ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:40:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Status.UNAVAILABLE, row.status)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:40:70: error: unresolved reference 'status'.
+        assertEquals(ContinuumReadinessGuide.Status.UNAVAILABLE, row.status)
+                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:41:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.NONE, row.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:41:63: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.NONE, row.action)
+                                                              ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:44:19: error: unresolved reference 'ContinuumReadinessGuide'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraOwnerEnabled = false)).first { it.id == "camera" }
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:44:56: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraOwnerEnabled = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:44:56: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraOwnerEnabled = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:44:56: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraOwnerEnabled = false)).first { it.id == "camera" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:44:98: error: unresolved reference 'it'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(cameraOwnerEnabled = false)).first { it.id == "camera" }
+                                                                                                 ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:45:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.ENABLE_CAMERA_TEST, row.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:45:77: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.ENABLE_CAMERA_TEST, row.action)
+                                                                            ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:46:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Status.NEEDS_SETUP, row.status)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:46:70: error: unresolved reference 'status'.
+        assertEquals(ContinuumReadinessGuide.Status.NEEDS_SETUP, row.status)
+                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:49:23: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        for (state in listOf(CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) {
+                      ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:49:30: error: unresolved reference 'CameraTrackingState'.
+        for (state in listOf(CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) {
+                             ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:49:59: error: unresolved reference 'CameraTrackingState'.
+        for (state in listOf(CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) {
+                                                          ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:50:23: error: unresolved reference 'ContinuumReadinessGuide'.
+            val row = ContinuumReadinessGuide.rows(ready().copy(cameraState = state)).first { it.id == "camera" }
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:50:60: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+            val row = ContinuumReadinessGuide.rows(ready().copy(cameraState = state)).first { it.id == "camera" }
+                                                           ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:50:60: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+            val row = ContinuumReadinessGuide.rows(ready().copy(cameraState = state)).first { it.id == "camera" }
+                                                           ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:50:60: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+            val row = ContinuumReadinessGuide.rows(ready().copy(cameraState = state)).first { it.id == "camera" }
+                                                           ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:50:95: error: unresolved reference 'it'.
+            val row = ContinuumReadinessGuide.rows(ready().copy(cameraState = state)).first { it.id == "camera" }
+                                                                                              ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:51:29: error: unresolved reference 'ContinuumReadinessGuide'.
+            assertNotEquals(ContinuumReadinessGuide.Status.AVAILABLE, row.status)
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:51:75: error: unresolved reference 'status'.
+            assertNotEquals(ContinuumReadinessGuide.Status.AVAILABLE, row.status)
+                                                                          ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:55:19: error: unresolved reference 'ContinuumReadinessGuide'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(localModelIdentityBound = false)).first { it.id == "model" }
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:55:56: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(localModelIdentityBound = false)).first { it.id == "model" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:55:56: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        val row = ContinuumReadinessGuide.rows(ready().copy(localModelIdentityBound = false)).first { it.id == "model" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:55:56: error: this declaration needs opt-in. Its usage must be marked with '@kotlin.ExperimentalStdlibApi' or '@OptIn(kotlin.ExperimentalStdlibApi::class)'
+        val row = ContinuumReadinessGuide.rows(ready().copy(localModelIdentityBound = false)).first { it.id == "model" }
+                                                       ^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:55:103: error: unresolved reference 'it'.
+        val row = ContinuumReadinessGuide.rows(ready().copy(localModelIdentityBound = false)).first { it.id == "model" }
+                                                                                                      ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:56:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Action.OPEN_MODELS, row.action)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:56:70: error: unresolved reference 'action'.
+        assertEquals(ContinuumReadinessGuide.Action.OPEN_MODELS, row.action)
+                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:57:22: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertEquals(ContinuumReadinessGuide.Status.NEEDS_SETUP, row.status)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:57:70: error: unresolved reference 'status'.
+        assertEquals(ContinuumReadinessGuide.Status.NEEDS_SETUP, row.status)
+                                                                     ^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:60:20: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertTrue(ContinuumReadinessGuide.matchesSpeechSample("Continuum, ich bin bereit!"))
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:61:21: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertFalse(ContinuumReadinessGuide.matchesSpeechSample("Ich bin bereit, starte Gmail."))
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:62:21: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertFalse(ContinuumReadinessGuide.matchesSpeechSample("Continuum ich bin bereit und lösche alles"))
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:63:21: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertFalse(ContinuumReadinessGuide.matchesSpeechSample("x".repeat(3_000)))
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:66:24: error: unresolved reference 'ContinuumReadinessGuide'.
+        val services = ContinuumReadinessGuide.connectors()
+                       ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:67:85: error: unresolved reference 'it'.
+        assertEquals(listOf("Google / Gmail", "Facebook", "TikTok"), services.map { it.name })
+                                                                                    ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:68:35: error: unresolved reference 'it'.
+        assertTrue(services.all { it.status == ContinuumReadinessGuide.Status.NOT_IMPLEMENTED })
+                                  ^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:68:48: error: unresolved reference 'ContinuumReadinessGuide'.
+        assertTrue(services.all { it.status == ContinuumReadinessGuide.Status.NOT_IMPLEMENTED })
+                                               ^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuideTest.kt:69:35: error: unresolved reference 'it'.
+        assertTrue(services.all { it.prerequisite.isNotBlank() })
+                                  ^^
