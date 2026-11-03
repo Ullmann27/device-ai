@@ -36,3 +36,9 @@ Exact8a686173 independent17 executed14PASS/3FAIL/0errors/0skips, Gradle exit1, s
 Requested narrow repair: keep a monotonic invalidation timestamp at the actual View boundary, reject original event times at/before the last clear/inactive boundary even after scope reapplication, and retain acceptance of strictly newer explicit events. No new clock/scheduler or caller authority. Original17 classes stay unchanged for repair repeat. Raw command/init/Gradle/XML and source identity receipts are under `docs/evidence/momega1/avatar-effects-review/effects-8a686173-independent-red`.
 
 All8 pure correlation/time/finite-geometry cases pass. All5 audio cases pass with the disclosed short-JNI fixture. The fixed-layout nativeCanvas case proves effect pixels draw above an opaque child and return byte-exactly to the baseline after scope end; it passes, distinguishing it from the author's earlier variable-geometry pixel failure. It is a host Canvas check, not a physical TextureView/Filament composition guarantee.
+
+## Visibility initial exact-source result (diagnosis pending)
+
+Exactab55e440 run10 cases:9PASS/1FAIL/0errors/0skips, Gradle1/sourcecmp0. All4 authored tests and5 independent ownership/geometry/TTS cases pass. The remaining independent `movedHeadHasNoHiddenCopyAndBackgroundStopsExistingClock` fails on line126, which originally contained both isShown and callbackCount>0 without labels. This does not yet distinguish a product lifecycle bug from a fixture/window scheduling issue. Original class hash17572793 and raw logs are retained under `visibility-ab55e440-initial`.
+
+Diagnostic-only class hash `0a37769b3d840d80272c7e7bc6293099105b7aeb3b8bddae51cb9eb2d3e03c92` adds state printing and assertion messages, preserving both predicates and the paused-clock assertion exactly. Root has made no repair on this evidence. QA will repeat the failing method on exactab55 before any decision; no hidden test weakening or source acceptance.
