@@ -115,6 +115,10 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,
     token,leaseMs:2*60*60*1000}]);
   if(claimed.results[0]?.ok!==true)throw Error('Claim did not succeed');
+  // Activation receives the existing private claim token only inside the trusted
+  // worker. Never copy it into reports, provider requests or workspace evidence.
+  const activeExecutor=typeof executor?.forClaim==='function'
+    ?executor.forClaim({backlog:backlogPath,id:task.id,token}):executor;
   const reportDir=path.join(outRoot,task.id+'-'+head.slice(0,12)+'-'+
     Date.now()+'-'+crypto.randomBytes(4).toString('hex'));
   let wt=null,independent=null;
@@ -154,12 +158,12 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       fs.mkdirSync(verifyOut,{recursive:true,mode:0o700});
       const patchPath=path.join(verifyOut,'candidate.patch');fs.writeFileSync(patchPath,patch,{mode:0o600,flag:'wx'});
       const verification=verifyCodingCandidate({repo:source,task:taskSpec,patchPath,patchSha256,proposalSha256,
-        out:verifyOut,deadline,executor,executorAbortMode,checkpoint,abortWatch});
+        out:verifyOut,deadline,executor:activeExecutor,executorAbortMode,checkpoint,abortWatch});
       fs.writeFileSync(path.join(verifyOut,'verification.json'),JSON.stringify(verification,null,2)+'\n',{mode:0o600});
       return verification;
     }:null;
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,independentVerifier,checkpoint,abortWatch,executor,executorAbortMode,
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,independentVerifier,checkpoint,abortWatch,executor:activeExecutor,executorAbortMode,
       onProgress:writeReport});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
@@ -185,7 +189,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
       if(report.progress)report.progress.push({phase:'CHECKING_INDEPENDENT',at:new Date().toISOString(),attempt:report.inference.localRequests});
       writeReport(report);
-      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor,executorAbortMode});
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor:activeExecutor,executorAbortMode});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
       let researchVerification=null;
