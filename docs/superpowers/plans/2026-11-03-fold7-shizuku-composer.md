@@ -36,3 +36,17 @@ Spec: owner screenshots and malfunction report, 2026-11-03.
 - [ ] Run real Android compile/JUnit/lint if toolchain can be provisioned, plus affected Node checks.
 - [ ] Review final diff; record exact-source results and remaining device limitations.
 - [ ] Update draft PR and handoff; do not claim an installed fix.
+
+
+## Implementation checkpoint — 2026-11-03
+
+Prepared on this existing draft repair branch:
+- `ShizukuBridge`: one pending user-service bind, one pending permission request, 15-second timeout, per-attempt connection identity, and revoked shell ownership on stop/death/disconnect/null binding. Late callbacks cannot make an old session READY. The last status is available to the UI. Shizuku must still be installed and started by Android; no shell bypass is introduced.
+- `AgentActivity`: a visible status/action dialog with a direct Shizuku manager launcher; persistent system status includes the exact bridge diagnostic instead of only `nicht verbunden`. It never performs an unapproved shell command.
+- `ContinuumControls`: native `EditText` no longer draws a foreground above the caret and scrolled content. The actual composer now supports 7 displayed lines with vertical scroll and native selection.
+- Robolectric lifecycle regressions added for repeated binds, timeout and stale callback (existing), as well as binding death/retry and actionable status (new).
+- Existing Neuron tutor and irrelevant-memory fixes are retained.
+
+**Evidence boundary:** This checkpoint is a source-code change. Full Android SDK/Gradle lint/JUnit and a physical Fold7 Shizuku permission/bind test have NOT been executed within this GitHub-only environment. Do not claim the release/device bug is solved until the device verifies that the manager runs, permission is granted, the shell binder becomes READY, and a consented read-only device command succeeds.
+
+Next: execute full Android QA on this exact commit, run UI tests, check any Robolectric Shizuku shadow behavior, and perform a real device test. Only after GREEN and owner acceptance prepare a separately versioned, originally signed APK through the pinned update channel; leave `main`, current APK 0.3.37, and user data unchanged.

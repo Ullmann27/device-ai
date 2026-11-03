@@ -99,6 +99,40 @@ class ShizukuBridgeLifecycleTest {
         bridge.stop()
     }
 
+
+    @Test fun destroyedBindingDoesNotLetLateShellCallbackResurrectAccess() {
+        val status = mutableListOf<String>()
+        val bridge = bridge(status)
+        bridge.start()
+        val first = Server.connections.single()
+        first.onBindingDied(ComponentName("test", "test.Shell"))
+        assertFalse(bridge.isReady())
+        assertTrue(Server.unbound.contains(first))
+        assertTrue(status.last().contains("erneut verbinden"))
+
+        bridge.requestAccess()
+        assertEquals(2, Server.connections.size)
+        connect(first)
+        assertFalse("dead binding callback cannot resurrect a shell", bridge.isReady())
+        connect(Server.connections.last())
+        assertTrue("current session can connect after a dead binding", bridge.isReady())
+        bridge.stop()
+    }
+
+    @Test fun refreshKeepsAConnectingBindingAndShowsSpecificStatus() {
+        val statuses = mutableListOf<String>()
+        val bridge = bridge(statuses)
+        bridge.start()
+        repeat(6) { bridge.refresh(); bridge.requestAccess() }
+        assertEquals("repeated owner taps must not spawn additional services",
+            1, Server.connections.size)
+        assertTrue(bridge.statusDetail().contains("Verbinde"))
+        connect(Server.connections.single())
+        assertTrue(bridge.statusDetail().startsWith("Bereit"))
+        assertTrue(bridge.isReady())
+        bridge.stop()
+    }
+
     @Test fun pendingPermissionDoesNotOpenRepeatedDialogs() {
         Server.granted = false
         val status = mutableListOf<String>(); val bridge = bridge(status)

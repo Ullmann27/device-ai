@@ -1990,7 +1990,7 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
-            CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
+            CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
@@ -2092,6 +2092,7 @@ class AgentActivity : Activity() {
     private fun systemCenterStatus(): String = buildString {
         append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
         append("Shizuku: ").append(if (bridge.isReady()) "verbunden" else "nicht verbunden").append("\n")
+        append("Shizuku-Diagnose: ").append(bridge.statusDetail()).append("\n")
         append("Internetzugang: ").append(internetConsent.mode.name).append(" · jederzeit unter Internet widerrufbar\n")
         append("Cloud-Backend: ").append(if (runCatching { backend.isConfigured() }.getOrDefault(false)) "eingerichtet" else "nicht eingerichtet").append("\n")
         append("Sprachmodell: ").append(localRuntime.loadedModel?.let { "${it.id} ${it.version} · ${localRuntime.state}" } ?: "keines geladen").append("\n")
@@ -2376,7 +2377,10 @@ class AgentActivity : Activity() {
             setTextColor(TEXT)
             textSize = 14f
             minLines = 1
-            maxLines = 4
+            maxLines = 7
+            gravity = Gravity.TOP or Gravity.START
+            setHorizontallyScrolling(false)
+            isVerticalScrollBarEnabled = true
             background = roundedGradient(Color.rgb(21, 35, 70),
                 Color.rgb(14, 24, 55), 18, Color.rgb(54, 86, 151))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
@@ -7873,6 +7877,38 @@ class AgentActivity : Activity() {
             .setMessage(description)
             .setNegativeButton("Schließen", null)
             .setPositiveButton(next) { _, _ -> action() }
+            .show()
+    }
+
+    private fun showShizukuConnectionDialog() {
+        bridge.refresh()
+        val current = bridge.statusDetail()
+        val hint = if (bridge.isReady()) {
+            "Die Shizuku-Shell ist verbunden. Freigegebene Gerätefunktionen können geprüft werden."
+        } else if (!bridge.isShizukuRunning()) {
+            "Der Shizuku-Dienst läuft nicht. Öffne zuerst Shizuku und starte den Dienst per Wireless-Debugging. Kehre danach hierher zurück."
+        } else {
+            "Shizuku läuft. Falls eine Berechtigungsanfrage erscheint, erlaube Device AI. Eine ausbleibende Shell-Antwort wird nach 15 Sekunden sichtbar beendet."
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Shizuku · Verbindungsdiagnose")
+            .setMessage("Aktueller Status: " + current + "\n\n" + hint +
+                "\n\nDie Android-Speichermessung benötigt Shizuku nicht. Keine Berechtigungsprüfung führt Gerätebefehle aus.")
+            .setNegativeButton("Schließen", null)
+            .setNeutralButton("SHIZUKU ÖFFNEN") { _, _ ->
+                val launch = packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
+                if (launch == null) {
+                    Toast.makeText(this, "Shizuku-App nicht gefunden. Bitte zuerst installieren.", Toast.LENGTH_LONG).show()
+                } else {
+                    runCatching { startActivity(launch) }.onFailure {
+                        Toast.makeText(this, "Shizuku konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            .setPositiveButton("VERBINDEN") { _, _ ->
+                bridge.requestAccess()
+                Toast.makeText(this, bridge.statusDetail(), Toast.LENGTH_LONG).show()
+            }
             .show()
     }
 
