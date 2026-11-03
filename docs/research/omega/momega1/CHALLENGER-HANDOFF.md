@@ -29,3 +29,47 @@ sentinel write fails EROFS and content remains unchanged. No remote connection.
 This is HOST_CAPABILITY_ONLY and does not certify any candidate's sandbox.
 Synthetic C runtime modes freeze subprocess probes before candidate source reads;
 these binaries only print fixed JSON and cannot be counted as actual inference.
+
+## Review handoff / slot release
+
+Status: FREEZE_COMPLETE / CANDIDATE_NOT_INSPECTED. User subsequently confirmed no
+device access; FOLD7_NOT_RUN is final for this wave. Chief will recall this lane
+for independent review after runtime SHA freeze. No candidate production source
+has been inspected; only baseline ca93fb4f and narrow API messages.
+
+Published checkpoints:
+- https://github.com/Ullmann27/device-ai/commit/071ef7f3
+- https://github.com/Ullmann27/device-ai/commit/bc40a8316b1117cd2c7fc4d369d9ca76e89281cf
+- https://github.com/Ullmann27/device-ai/pull/416 (draft to Chief integration).
+
+Reproduction:
+```
+MOMEGA1_TARGET=/absolute/frozen/candidate node --test tools/momega1-challenger/provider-contract.test.mjs
+python3 tools/momega1-challenger/environment-probe.py
+sha256sum -c docs/evidence/momega1/challenger/freeze.sha256
+sha256sum -c docs/evidence/momega1/challenger/supplemental-freeze.sha256
+```
+C fixtures are source only, NOT_RUN. Build disposable executables with
+`cc -DMODE=N tools/momega1-challenger/synthetic-runtime.c -o /tmp/unique-fixture`.
+Modes: 0 fixed proposal; 1 TERM-ignoring hang; 2 output overflow; 3 nonzero exit;
+4 descendant plus TERM-ignoring hang; 5 real network namespace interface check;
+6 finite RLIMIT_AS check; 7 finite RLIMIT_NPROC check; 8 actual GGUF descriptor read.
+No fixture does model inference. Use watchdog and clean up only owned probes.
+
+Narrow runtime contract received (not yet implemented-source-reviewed): helper
+queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,timeoutMs,binding,
+observationKey,env,signal}) in scripts/continuum-local-model-observation.mjs;
+binding keys executionId (64hex), taskId, sourceCommit, taskFingerprint,
+requestIndex, contextSha256, promptSha256. Owner env uses explicit model,
+llama.cpp/GGUF identities, approved alternate-GGUF consent, model path+six-field
+manifest, runtime path+SHA and runtime kind LLAMA_CPP versus CONTRACT_FIXTURE.
+Engineer proposes bwrap descriptor mounts, bounded process group cleanup and
+HMAC transport binding; claims are pending independent tests. A receipt's HMAC
+is not model inference proof. verifiedModelExecution expected to remain false.
+
+Next concrete work: obtain immutable candidate SHA; add public-API adapter while
+preserving frozen tests/criteria; execute each synthetic process mode against real
+launch path and record classification; inspect FD/TOCTOU, cleanup, resource,
+network and revoke implementation; follow up memory proof/recall if assigned.
+Do not interpret baseline strict receipt rejection failures as authority bypass.
+OS namespace capability evidence is independent of candidate isolation.
