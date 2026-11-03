@@ -1,0 +1,12 @@
+Exact candidate ca429fd81007473f1b0c0e66be6112f78f652613
+63 tests; 0 failures/errors/skips; Gradle0; sourcecmp0
+Unchanged original17 independent fixture hashes in harness.sha256
+Full stable source manifests retained at /workspace/momega1-build-env/effects-final-ca429fd8
+source-before/after SHA256 58e6af74f504eec1dfaf2aa0c9c88763b8ab3e15d5b3d0b337e8cc2c854f1663
+ca429fd81007473f1b0c0e66be6112f78f652613
+100644 9ed0b405ae4b416f8dbf44651532eeffca43a223 0	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+100644 88c73b9ea9a1410b63de5fb862b7a648f63d5d1c 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumTaskEffects.kt
+100644 05c104bbbbfab3d1d9d1cd663d336b80d63ef47b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumUiFeedback.kt
+6003b7df403004c803f2936bf3d38e35dbb828eab33da05c74abe9d14a0d0bd3 /workspace/momega1-build-env/effects-final-ca429fd8/ui/synthetic-task-412-88-3-read.png
+713e670997b7ef52d3aa2920dafe97a389e0abaeec65f2687eff17920d6d3a6d /workspace/momega1-build-env/effects-final-ca429fd8/ui/synthetic-task-412-160-3-read.png
+5e5da8d28eaf0cc33e65689913e6ed67709b63d2da22f6153f40564074ca3655 /workspace/momega1-effects/docs/evidence/momega1/effects/worker-read-primary.png
