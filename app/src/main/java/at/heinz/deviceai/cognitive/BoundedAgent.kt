@@ -35,7 +35,10 @@ data class AgentModelOutput(
     val response: String,
     val proposal: ToolProposal? = null
 ) {
-    init { require(modelId.isNotBlank() && response.length <= 8_000) }
+    init {
+        require(modelId.isNotBlank())
+        require(response.length <= 8_000) { "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT" }
+    }
 }
 
 data class AgentToolObservation(

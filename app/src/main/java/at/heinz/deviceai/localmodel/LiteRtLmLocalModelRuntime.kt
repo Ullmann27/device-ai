@@ -113,11 +113,21 @@ class LiteRtLmLocalModelRuntime(
     init { require(systemPrompt.isNotBlank() && systemPrompt.length <= 4_096) }
 
     override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) {
-        synchronized(lock) {
+        val retainedResources = synchronized(lock) {
             check(state == LocalModelState.EMPTY || state == LocalModelState.FAILED) {
                 "A local model is already loaded or loading."
             }
-            state = LocalModelState.LOADING
+            // FAILED can also mean that a conversation could not be released.
+            // Do not replace its engine with another multi-GB allocation. Only a
+            // successful explicit unload establishes that the old handles are gone.
+            val retained = engine != null || conversation != null || inferenceConversation != null ||
+                loadedModel != null || inferenceActive
+            if (!retained) state = LocalModelState.LOADING
+            retained
+        }
+        if (retainedResources) {
+            callback(Result.failure(IllegalStateException("LOCAL_MODEL_UNLOAD_REQUIRED")))
+            return
         }
         background.execute {
             val result = runCatching {
@@ -537,15 +547,9 @@ class LiteRtLmLocalModelRuntime(
 
     private fun closeResources(callback: (Result<Unit>) -> Unit) {
         val resources = synchronized(lock) {
-            val oldConversation = conversation
-            val oldInference = inferenceConversation
-            val oldEngine = engine
-            conversation = null
-            inferenceConversation = null
-            activeInferenceProfile = null
-            engine = null
-            loadedModel = null
-            Triple(oldConversation, oldInference, oldEngine)
+            // Retain ownership until every native close succeeds. A failed close
+            // must leave handles available for a later explicit unload attempt.
+            Triple(conversation, inferenceConversation, engine)
         }
         val result = runCatching {
             val (oldConversation, oldInference, oldEngine) = resources
@@ -557,6 +561,15 @@ class LiteRtLmLocalModelRuntime(
             Unit
         }
         synchronized(lock) {
+            if (result.isSuccess) {
+                conversation = null
+                inferenceConversation = null
+                activeInferenceProfile = null
+                activeCancellation = null
+                activeStart = null
+                engine = null
+                loadedModel = null
+            }
             state = if (result.isSuccess) LocalModelState.EMPTY else LocalModelState.FAILED
         }
         callback(result)

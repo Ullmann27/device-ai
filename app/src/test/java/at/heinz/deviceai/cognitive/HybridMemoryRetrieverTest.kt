@@ -6,6 +6,43 @@ import org.junit.Test
 
 class HybridMemoryRetrieverTest {
     @Test
+    fun functionWordOverlapDoesNotRecallUnrelatedOwnerMemory() {
+        val now = 100L * DAY
+        val unrelated = memory(
+            id = "private-unrelated",
+            content = "Meine Schwester ist Ärztin in Wien.",
+            updatedAt = now
+        ).copy(tags = emptyList())
+
+        for (query in listOf("Was ist Photosynthese?", "Wie ist das Wetter?", "What is photosynthesis?")) {
+            val candidate = if (query.startsWith("What"))
+                unrelated.copy(content = "My sister is a doctor in Vienna.") else unrelated
+            assertTrue(
+                "Unrelated private memory was recalled for: $query",
+                HybridMemoryRetriever.retrieve(query, listOf(candidate), nowMillis = now).isEmpty()
+            )
+        }
+    }
+
+    @Test
+    fun removingFunctionWordsPreservesAUniqueTopicOrEntityMatch() {
+        val now = 100L * DAY
+        val fact = memory(
+            id = "owner-location",
+            content = "Meine Schwester ist Ärztin in Wien.",
+            updatedAt = now
+        ).copy(tags = listOf("Schwester"))
+
+        for (query in listOf("Wien", "Was ist über meine Schwester bekannt?")) {
+            assertEquals(
+                listOf("owner-location"),
+                HybridMemoryRetriever.retrieve(query, listOf(fact), nowMillis = now).map { it.memory.id }
+            )
+        }
+        assertTrue(HybridMemoryRetriever.retrieve("Was ist das?", listOf(fact), nowMillis = now).isEmpty())
+    }
+
+    @Test
     fun verifiedRecentMemoryOutranksContradictedOlderMemory() {
         val now = 100L * DAY
         val recent = memory(
@@ -84,6 +121,38 @@ class HybridMemoryRetrieverTest {
 
         assertEquals("semantic", semantic.single().memory.id)
         assertEquals(0.9, semantic.single().score.semanticSimilarity, 0.0001)
+    }
+
+
+    @Test
+    fun overOnlyOverlapCannotLeakAnUnrelatedPrivateMemory() {
+        val now = 100L * DAY
+        val unrelated = memory(
+            id = "overlap-only",
+            content = "Ich habe mich über das Geschenk gefreut.",
+            updatedAt = now
+        ).copy(tags = emptyList())
+
+        // Before the repair the grammar word "über" alone scored as relevant,
+        // injecting this unrelated private fact into the owner's model prompt.
+        for (query in listOf(
+            "Was weißt du über Photosynthese?",
+            "Was weißt du nicht über Photosynthese?",
+            "Kannst du etwas über Photosynthese sagen?"
+        )) {
+            assertTrue(
+                "Irrelevant private data recalled for: $query",
+                HybridMemoryRetriever.retrieve(query, listOf(unrelated),
+                    nowMillis = now).isEmpty()
+            )
+        }
+
+        // Content-bearing words must remain searchable after stop-word filtering.
+        assertEquals(
+            listOf("overlap-only"),
+            HybridMemoryRetriever.retrieve("Was weißt du über das Geschenk?",
+                listOf(unrelated), nowMillis = now).map { it.memory.id }
+        )
     }
 
     private fun memory(

@@ -168,6 +168,7 @@ class AgentActivity : Activity() {
     }
 
     private lateinit var bridge: ShizukuBridge
+    private var shizukuConnectionDialog: ShizukuConnectionDialog? = null
     private lateinit var executor: DeviceToolExecutor
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
@@ -442,6 +443,7 @@ class AgentActivity : Activity() {
         bridge = ShizukuBridge(this) { message ->
             runOnUiThread {
                 if (::shizukuBadge.isInitialized) updateShizukuBadge(message)
+                shizukuConnectionDialog?.updateStatus(message)
             }
         }
         executor = DeviceToolExecutor(this, bridge)
@@ -631,6 +633,8 @@ class AgentActivity : Activity() {
         devDialog?.dismiss()
         modelCenterDialog?.dismiss()
         centerDialog?.dismiss()
+        shizukuConnectionDialog?.dismiss()
+        shizukuConnectionDialog = null
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -1990,7 +1994,7 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
-            CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
+            CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("OPENROUTER · API-KEY EINGEBEN") { showOpenRouterApiKeyDialog() },
@@ -2092,6 +2096,7 @@ class AgentActivity : Activity() {
     private fun systemCenterStatus(): String = buildString {
         append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
         append("Shizuku: ").append(if (bridge.isReady()) "verbunden" else "nicht verbunden").append("\n")
+        append("Shizuku-Diagnose: ").append(bridge.statusDetail()).append("\n")
         append("Internetzugang: ").append(internetConsent.mode.name).append(" · jederzeit unter Internet widerrufbar\n")
         append("Cloud-Backend: ").append(if (runCatching { backend.isConfigured() }.getOrDefault(false)) "eingerichtet" else "nicht eingerichtet").append("\n")
         append("Sprachmodell: ").append(localRuntime.loadedModel?.let { "${it.id} ${it.version} · ${localRuntime.state}" } ?: "keines geladen").append("\n")
@@ -2376,7 +2381,10 @@ class AgentActivity : Activity() {
             setTextColor(TEXT)
             textSize = 14f
             minLines = 1
-            maxLines = 4
+            maxLines = 7
+            gravity = Gravity.TOP or Gravity.START
+            setHorizontallyScrolling(false)
+            isVerticalScrollBarEnabled = true
             background = roundedGradient(Color.rgb(21, 35, 70),
                 Color.rgb(14, 24, 55), 18, Color.rgb(54, 86, 151))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
@@ -2659,12 +2667,20 @@ class AgentActivity : Activity() {
         // First resolve narrowly recognized owner-local utterances. A greeting,
         // self-capability question or live storage probe is never public research,
         // a random archival hit, or evidence that native Gemma produced a reply.
-        when (at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request)) {
+        val ownerLocalIntent = at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(
+            request, neuralCoach.isActive()
+        )
+        when (ownerLocalIntent) {
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
+                if (localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null) {
+                    input.text.clear()
+                    addUserMessage(request)
+                    runLocal(request)
+                    return
+                }
                 val canonical = if (
-                    at.heinz.deviceai.cognitive.OwnerChatIntentRouter.route(request) ==
-                        at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
+                    ownerLocalIntent == at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
                 ) "Hallo" else "Was kannst du?"
                 input.text.clear()
                 addUserMessage(request)
@@ -4347,6 +4363,20 @@ class AgentActivity : Activity() {
                 showModelImportDialog(useSelectedGemma = true)
             }
         ), 2)
+        // A READY model is not proof that native generation works.
+        // Give the owner one explicit offline, tool-free inference check.
+        box.addView(cockpit.action(this, "3 · GEMMA-DIREKTTEST · OFFLINE", primary = true) {
+            if (busy) {
+                Toast.makeText(this, "Ein anderer Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
+            } else {
+                modelCenterDialog?.dismiss()
+                activeWorkArea = ContinuumWorkArea.CHAT
+                conversationActive = true
+                refreshWorkAreaSelection()
+                refreshConversationLayout()
+                runLocalSmokeTest(direct = true)
+            }
+        }, matchWidth(top = 10))
         box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
@@ -6472,20 +6502,26 @@ class AgentActivity : Activity() {
                 ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
                 // A screen frame is atomic. Never send a clipped negation/source block.
-                screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
+                screenFrames.forEach {
+                    check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
+                        "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET"
+                    }
+                }
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
-                val toolResponses = newObservations.take(4).map {
-                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
-                        it.toolName, it.status.name, it.output
-                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
-                }
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                        if (hasScreen || toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
-                        else localRuntime.respondToTools(toolResponses, callback)
+                        at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
+                            localRuntime, prompt, forceFresh = hasScreen,
+                            responses = {
+                                newObservations.take(4).map {
+                                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
+                                        it.toolName, it.status.name, it.output
+                                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
+                                }
+                            }, callback = callback)
                     }
                 }
                 generation.failure?.let { error(it) }
@@ -6640,6 +6676,8 @@ class AgentActivity : Activity() {
                     val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
                     addAssistantMessage(if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
+                    else if (error.message == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT")
+                        ContinuumUiCopy.modelFailure(error.message)
                     else groundedRecall?.failureAnswer() ?:
                         "Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}", preserveLocalContext = keepFailedOwnerTurn)
                     if (keepFailedOwnerTurn) localConversationContext.recordUnanswered(localSessionId, text)
@@ -7874,6 +7912,13 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    private fun showShizukuConnectionDialog() {
+        val connectionScreen = shizukuConnectionDialog
+            ?: ShizukuConnectionDialog(this, bridge).also { shizukuConnectionDialog = it }
+        connectionScreen.updateStatus(bridge.statusDetail())
+        connectionScreen.show()
+    }
+
     private fun updateShizukuBadge(message: String) {
         val ready = message.startsWith("Bereit")
         shizukuBadge.text = if (ready) "● GERÄT BEREIT" else "● GERÄT AUS"
@@ -8349,6 +8394,8 @@ class AgentActivity : Activity() {
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
         conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addBubble(value, user = true)
@@ -8387,6 +8434,8 @@ class AgentActivity : Activity() {
             requestStartedAt = 0L
         }
         conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addHomeGreeting(value)

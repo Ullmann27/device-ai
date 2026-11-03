@@ -53,6 +53,10 @@ internal object NetworkTurnConstraint {
     fun forbidsExternalResearch(userTurn: String): Boolean {
         // Oversized text cannot become an implicit web authorization.
         if (userTurn.length > 8192) return true
+        // These bounded requests concern this assistant or this device. Keep
+        // their remove-only boundary even if a model rewrites the web query or
+        // the owner has globally allowed research for other public questions.
+        if (OwnerChatIntentRouter.route(userTurn) != null) return true
         val text = userTurn.trim().lowercase(Locale.ROOT)
         return without.containsMatchIn(text) ||
             noCapability.containsMatchIn(text) ||

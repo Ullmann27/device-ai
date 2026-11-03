@@ -64,7 +64,10 @@ object HybridMemoryRetriever {
         require(nowMillis >= 0)
         if (limit == 0) return emptyList()
 
-        val queryTerms = tokens(query).toSet()
+        // Grammar words alone do not establish a topic match. Otherwise an
+        // unrelated private fact containing "ist"/"is" enters almost every
+        // knowledge prompt. This affects scoring only; evidence stays literal.
+        val queryTerms = tokens(query).filterNot { it in QUERY_STOP_WORDS }.toSet()
         if (queryTerms.isEmpty()) return emptyList()
 
         val candidates = records.filter { it.privacyClass in allowedPrivacy }
@@ -231,6 +234,22 @@ object HybridMemoryRetriever {
     private val TEMPORAL_TERMS = setOf(
         "today", "yesterday", "recent", "recently", "latest", "current", "now",
         "heute", "gestern", "kürzlich", "zuletzt", "aktuell", "jetzt"
+    )
+
+    private val QUERY_STOP_WORDS = setOf(
+        "a", "an", "and", "are", "as", "at", "be", "been", "by", "can", "could",
+        "do", "does", "for", "from", "has", "have", "how", "i", "in", "is", "it",
+        "me", "my", "of", "on", "or", "please", "that", "the", "their", "this", "to",
+        "was", "were", "what", "when", "where", "which", "who", "why", "with", "you", "your",
+        "aber", "als", "am", "auf", "aus", "bei", "bin", "bitte", "das", "dass", "dem",
+        "den", "der", "des", "die", "dir", "du", "ein", "eine", "einem", "einen", "einer",
+        "eines", "er", "es", "für", "hat", "haben", "ich", "ihm", "ihn", "ihr", "im", "ist",
+        "kann", "kannst", "mein", "meine", "meiner", "mir", "mit", "oder", "sein", "seine",
+        "sich", "sie", "sind", "und", "vom", "von", "war", "warum", "welche", "welcher",
+        "welches", "wer", "wie", "wir", "wird", "wo", "zu", "zum", "zur",
+        "über", "nicht", "auch", "noch", "wann", "wenn", "so", "man", "uns", "unser",
+        "dein", "deine", "weißt", "weiß", "etwas", "mich", "dich", "nach", "bis", "um",
+        "about", "tell", "know", "not", "any", "some", "there", "would", "will"
     )
 
     private const val K1 = 1.2

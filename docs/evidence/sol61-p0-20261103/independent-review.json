@@ -1,0 +1,16 @@
+{
+  "base": "1824f7adf4f2fe72fd52a7b53920e211b9118c2e",
+  "reviewedCandidate": "8c46e3f129e9a5506d7a5b9461dd9446653619fa",
+  "reviewMode": "INDEPENDENT_READ_ONLY",
+  "criticalFindings": 0,
+  "originalVerdict": "NOT_READY_ONE_IMPORTANT_AND_FRESH_P0_REQUIRED",
+  "repairPass": [
+    {"severity":"Important","finding":"owner-local model requests can propose rewritten web research under ALWAYS_ON","repair":"canonical original-owner-turn network constraint","proof":"real orchestrator/ToolGate fixture RED_TO_GREEN; local requests network delegate count0; public positive control1"},
+    {"severity":"Minor","finding":"late permission denial leaves stale watchdog timeout","repair":"diagnosis follows verified current permission state","proof":"Robolectric late-denial regression RED_TO_GREEN"},
+    {"severity":"Minor","finding":"oversized-answer guidance not used in conversation","repair":"conversation uses existing explicit budget failure guidance","proof":"Node conversation-wiring regression RED_TO_GREEN"}
+  ],
+  "executedFocusedAndroidJvm": {"cases":22,"failed":0,"skipped":0},
+  "executedFocusedNode": {"cases":30,"failed":0,"skipped":0},
+  "fullExactSourceAcceptance": "PENDING_SEPARATE_MATCHING_RECEIPT",
+  "notEstablished": ["Fold7","real_Shizuku_server","native_Gemma_inference","native_cleanup_faults","thermal_endurance","owner_signature_for_new_APK","installation","CCC1_model_autonomy"]
+}
