@@ -29,6 +29,7 @@ import at.heinz.deviceai.avatar3d.AvatarGlbContract
 import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
+import at.heinz.deviceai.ui.ContinuumTaskEffects
 import kotlin.math.exp
 import kotlin.math.sqrt
 
@@ -64,6 +65,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
     private val renderer = ContinuumHologramRenderer()
     private val painter = AndroidContinuumPainter(context.assets)
+    private val taskEffects = ContinuumTaskEffects()
     private val audio = HologramAudioEnvelope()
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
     private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
@@ -324,6 +326,20 @@ class ContinuumHologramView @JvmOverloads constructor(
         updateMotionPolicy()
     }
 
+    /** UI thread, explicit owner-work scope only. Hidden/inactive views cannot queue arrivals. */
+    fun setTaskEffectScope(scope: String?) {
+        if (canAnimateFrame()) taskEffects.setScope(scope) else taskEffects.clear()
+        invalidate()
+    }
+
+    /** Capture uptime at the actual work boundary, before posting to the UI. No default timestamp. */
+    fun onTaskEffect(scope: String, event: ContinuumTaskEffects.Event, occurredAtMillis: Long): Boolean {
+        if (!canAnimateFrame()) { taskEffects.clear(); return false }
+        return taskEffects.accept(scope,event,occurredAtMillis,SystemClock.uptimeMillis()).also {
+            if(it) invalidate()
+        }
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!observersRegistered) {
@@ -337,6 +353,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        taskEffects.clear()
         release3d(clearAsset = true)
         mainHandler.removeCallbacks(avatarInvalidation)
         avatarInvalidationPending.set(false)
@@ -405,6 +422,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
+            taskEffects.clear()
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()
@@ -471,6 +489,19 @@ class ContinuumHologramView @JvmOverloads constructor(
             }
         } else renderer.draw(painter, renderFrame)
         drawnFrameCount++
+        canvas.restoreToCount(saved)
+    }
+
+    /** Above child TextureView composition; driven by the same visible-view invalidation clock. */
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (!canAnimateFrame() || width<=0 || height<=0) return
+        val density=resources.displayMetrics.density
+        val saved=canvas.save()
+        canvas.scale(density,density)
+        canvas.clipRect(0f,0f,width/density,height/density)
+        painter.begin(canvas)
+        taskEffects.draw(painter,width/density,height/density,SystemClock.uptimeMillis())
         canvas.restoreToCount(saved)
     }
 
