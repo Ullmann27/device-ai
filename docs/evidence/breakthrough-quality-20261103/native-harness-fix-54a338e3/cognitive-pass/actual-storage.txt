@@ -1,0 +1,5 @@
+Speicherbeobachtung v1
+Bereich: App-Datenträger
+Gesamt: 9441329152 Byte
+Für die App nutzbar: 9332219904 Byte
+Zeitpunkt: 1793733313830

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:12:53" hostname="5268aff5350a" time="0.001">
+  <properties/>
+  <testcase name="modelOnlyRetractionCannotInvalidateOwnersQuantity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest" time="0.001"/>
+  <testcase name="ownerRetractionReachesPromptWithoutStaleDerivedQuantity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest" time="0.0"/>
+  <testcase name="otherSessionRetractionCannotInvalidateOwnersQuantity" classname="at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
