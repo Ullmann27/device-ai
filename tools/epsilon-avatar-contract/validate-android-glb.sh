@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source /workspace/continuum-build-env/env.sh
+if [[ -n ${EPSILON_BUILD_ENV:-} ]]; then source "$EPSILON_BUILD_ENV"; fi
+: "${CONTINUUM_FABRIC_JVM_DEPS:?Set the local JSON/Kotlin dependency directory}"
 project_root=$(cd "$(dirname "$0")/../.." && pwd)
 artifact=$(mktemp -d)
 trap 'rm -rf "$artifact"' EXIT

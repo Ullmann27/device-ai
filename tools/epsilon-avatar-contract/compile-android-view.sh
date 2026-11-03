@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source /workspace/continuum-build-env/env.sh
+if [[ -n ${EPSILON_BUILD_ENV:-} ]]; then source "$EPSILON_BUILD_ENV"; fi
+: "${ANDROID_HOME:?Set the local Android SDK directory}"
+: "${EPSILON_FILAMENT_DIR:?Set the directory containing verified Filament/gltfio classes JARs}"
 cd "$(dirname "$0")/../.."
-filament_dir=${EPSILON_FILAMENT_DIR:-/workspace/epsilon-filament}
+filament_dir=$EPSILON_FILAMENT_DIR
 artifact=$(mktemp -d)
 trap 'rm -rf "$artifact"' EXIT
 kotlinc app/src/main/java/at/heinz/deviceai/avatar/*.kt app/src/main/java/at/heinz/deviceai/avatar3d/*.kt \

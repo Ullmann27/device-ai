@@ -30,6 +30,10 @@ sealed interface AvatarEvent {
     val atMillis: Long
     data class StateChanged(val state: AvatarState, val expression: AvatarExpression, val gaze: GazeTarget,
                             override val atMillis: Long) : AvatarEvent
+    /** Owner-enabled hardware face-position approximation, not identity or eye tracking.
+     * atMillis is observation time in the Director's existing clock domain. */
+    data class GazeObserved(val gaze: GazeTarget, val confidence: Int, override val atMillis: Long) : AvatarEvent
+    data class GazeCleared(override val atMillis: Long) : AvatarEvent
     data class SpeechStarted(val utteranceId: String, val text: String, override val atMillis: Long) : AvatarEvent
     /** Approximate mouth shape for the word the TTS engine is speaking now (not phoneme-accurate). */
     data class VisemeCue(val utteranceId: String, val viseme: Viseme, val weight: Float, val durationMs: Long,
@@ -60,7 +64,8 @@ object AvatarSinkRegistry { @Volatile var sink: AvatarSink = NoOpAvatarSink }
 
 /** Renderer-facing snapshot (subset of the PR #350 AvatarPose plan). Blink, head motion and idle are renderer-owned. */
 data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, val gazeX: Float, val gazeY: Float,
-                      val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float)
+                      val jawOpen: Float, val viseme: Viseme, val visemeWeight: Float, val speakEnergy: Float,
+                      val gazeObserved: Boolean = false)
 
 /**
  * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
@@ -71,6 +76,9 @@ class AvatarPoseReducer {
     private var state = AvatarState.IDLE
     private var expression = AvatarExpression.NEUTRAL
     private var gaze = GazeTarget.OWNER
+    private var observedGaze: GazeTarget? = null
+    private var observedAtMillis = Long.MIN_VALUE
+    private var gazeClearedAtMillis = Long.MIN_VALUE
     private var energy = 0f
     private var viseme = Viseme.SIL
     private var visemeWeight = 0f
@@ -82,7 +90,17 @@ class AvatarPoseReducer {
     fun apply(event: AvatarEvent) {
         lastEventMillis = event.atMillis
         when (event) {
-            is AvatarEvent.StateChanged -> { state = event.state; expression = event.expression; gaze = event.gaze }
+            is AvatarEvent.StateChanged -> {
+                state = event.state; expression = event.expression; gaze = event.gaze
+                if (!permitsObservedGaze(state)) clearObservedGaze(event.atMillis)
+            }
+            is AvatarEvent.GazeObserved -> {
+                if (permitsObservedGaze(state) && event.confidence in MIN_GAZE_CONFIDENCE..100 &&
+                    event.atMillis > gazeClearedAtMillis && event.atMillis >= observedAtMillis) {
+                    observedGaze = event.gaze; observedAtMillis = event.atMillis
+                }
+            }
+            is AvatarEvent.GazeCleared -> clearObservedGaze(event.atMillis)
             is AvatarEvent.SpeechStarted -> {
                 clearSpeech()
                 utterance = event.utteranceId
@@ -112,6 +130,12 @@ class AvatarPoseReducer {
         cues.clear()
     }
 
+    /** Pause, detach, revoked consent and lost/ambiguous observations clear immediately. */
+    fun clearObservedGaze(atMillis: Long) {
+        observedGaze = null
+        gazeClearedAtMillis = maxOf(gazeClearedAtMillis, atMillis)
+    }
+
     /** Supply the event clock at render time; future word cues must never play immediately. */
     fun pose(atMillis: Long = lastEventMillis): AvatarPose {
         cues.removeAll { atMillis >= it.atMillis && atMillis - it.atMillis >= it.durationMs }
@@ -122,6 +146,17 @@ class AvatarPoseReducer {
         val age = if (lastAudioMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - lastAudioMillis
         val liveEnergy = if (age in 0..250) energy else 0f
         val jaw = if (utterance == null) 0f else ((liveEnergy - 0.025f) * 1.5f).coerceIn(0f, 1f)
-        return AvatarPose(state, expression, gaze.x, gaze.y, jaw, viseme, visemeWeight, liveEnergy)
+        val gazeAge = if (observedAtMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - observedAtMillis
+        if (!permitsObservedGaze(state) || gazeAge !in 0..OBSERVED_GAZE_TTL_MS) observedGaze = null
+        val shownGaze = observedGaze ?: gaze
+        return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
+            gazeObserved = observedGaze != null)
+    }
+
+    companion object {
+        const val OBSERVED_GAZE_TTL_MS = 750L
+        const val MIN_GAZE_CONFIDENCE = 60
+        fun permitsObservedGaze(state: AvatarState) = state == AvatarState.IDLE ||
+            state == AvatarState.LISTENING || state == AvatarState.SPEAKING
     }
 }

@@ -2,8 +2,10 @@ package at.heinz.deviceai.avatar3d
 
 import at.heinz.deviceai.avatar.AvatarExpression
 import at.heinz.deviceai.avatar.AvatarPose
+import at.heinz.deviceai.avatar.AvatarState
 import at.heinz.deviceai.avatar.Viseme
 import kotlin.math.abs
+import kotlin.math.sin
 
 /** Presentation mapping only. No state derivation, speech clock, listener or retained text. */
 class AvatarMorphMapper(targetNames: List<String>) {
@@ -34,6 +36,15 @@ class AvatarMorphMapper(targetNames: List<String>) {
             AvatarExpression.NEUTRAL -> Unit
         }
         if (!motion) return
+        // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
+        // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
+        if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
+            val t = if (seconds.isFinite()) seconds.toDouble() else 0.0
+            headYaw += (1.20 * sin(t * .37) + .35 * sin(t * .89)).toFloat()
+            headPitch += (.62 * sin(t * .47) + .20 * sin(t * .91)).toFloat()
+            eyeYaw += (2.10 * sin(t * .71) + .55 * sin(t * 1.13)).toFloat()
+            eyePitch += (.95 * sin(t * .53) + .30 * sin(t * 1.07)).toFloat()
+        }
         val jaw = finite(pose.jawOpen, 0f, 1f)
         weight("JawOpen", jaw)
         jawPitch = jaw * 12f

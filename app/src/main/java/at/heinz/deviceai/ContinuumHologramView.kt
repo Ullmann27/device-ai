@@ -156,6 +156,9 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */
     override fun onAvatarEvent(event: AvatarEvent) {
+        // Continuous sensor-driven movement obeys the same visibility/reduced-motion policy.
+        // Inactive views must not accept a late camera sample after their clear boundary.
+        if (event is AvatarEvent.GazeObserved && !canAnimateFrame()) return
         synchronized(avatarPose) { avatarPose.apply(event) }
         // Speech levels are drawn by the existing loop. State/end events also refresh static views.
         if (event !is AvatarEvent.AudioLevel && event !is AvatarEvent.VisemeCue &&
@@ -308,7 +311,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive == active) return
         foregroundActive = active
-        if (!active) synchronized(avatarPose) { avatarPose.clearSpeech() }
+        if (!active) synchronized(avatarPose) {
+            avatarPose.clearSpeech()
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
+        }
         updateMotionPolicy()
     }
 
@@ -334,7 +340,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         release3d(clearAsset = true)
         mainHandler.removeCallbacks(avatarInvalidation)
         avatarInvalidationPending.set(false)
-        synchronized(avatarPose) { avatarPose.clearSpeech() }
+        synchronized(avatarPose) {
+            avatarPose.clearSpeech()
+            avatarPose.clearObservedGaze(System.currentTimeMillis())
+        }
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
@@ -396,6 +405,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         framePending = false
         lastFrameMs = 0L
         if (!canAnimateFrame()) {
+            synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()
             audioEnergy = 0f
