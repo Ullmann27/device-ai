@@ -1,0 +1,116 @@
+{
+  "source": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "first10VerifiedRepairs": 3,
+  "first10Total": 10,
+  "all12VerifiedRepairs": 4,
+  "all12Total": 12,
+  "firstFailedCandidateThenSuccessfulSecond": 0,
+  "rawAttemptAndRejectionCounts": {
+    "FAILED_TESTS": 6,
+    "CODING_REPEATED_PATCH": 3,
+    "CODING_PATCH_NOT_EXACT": 4,
+    "VERIFIED": 4,
+    "CODING_MODEL_UNAVAILABLE": 2,
+    "CODING_NOOP_PATCH": 1
+  },
+  "details": [
+    {
+      "task": "u01",
+      "outcomes": [
+        "FAILED_TESTS",
+        "CODING_REPEATED_PATCH"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u02",
+      "outcomes": [
+        "CODING_PATCH_NOT_EXACT",
+        "CODING_PATCH_NOT_EXACT"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u03",
+      "outcomes": [
+        "VERIFIED"
+      ],
+      "requests": 1
+    },
+    {
+      "task": "u04",
+      "outcomes": [
+        "VERIFIED"
+      ],
+      "requests": 1
+    },
+    {
+      "task": "u05",
+      "outcomes": [
+        "VERIFIED"
+      ],
+      "requests": 1
+    },
+    {
+      "task": "u06",
+      "outcomes": [
+        "CODING_PATCH_NOT_EXACT",
+        "CODING_PATCH_NOT_EXACT"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u07",
+      "outcomes": [
+        "FAILED_TESTS",
+        "CODING_MODEL_UNAVAILABLE"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u08",
+      "outcomes": [
+        "CODING_NOOP_PATCH",
+        "CODING_MODEL_UNAVAILABLE"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u09",
+      "outcomes": [
+        "FAILED_TESTS",
+        "CODING_REPEATED_PATCH"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u10",
+      "outcomes": [
+        "FAILED_TESTS",
+        "FAILED_TESTS"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u11",
+      "outcomes": [
+        "FAILED_TESTS",
+        "CODING_REPEATED_PATCH"
+      ],
+      "requests": 2
+    },
+    {
+      "task": "u12",
+      "outcomes": [
+        "VERIFIED"
+      ],
+      "requests": 1
+    }
+  ],
+  "childFailures": {
+    "CHILD_EXIT_NONZERO": 2
+  },
+  "timeoutsObserved": 0,
+  "invalidJsonObserved": 0,
+  "note": "Counts classify existing unchanged gate/report outputs. GenuineNOOP is distinct from unavailable; process failures have no admitted response observation. Four successes all use one call. No fixture-specific solution or schema change supplied."
+}
