@@ -66,6 +66,21 @@ class TaskScopedRingStateProjectorTest {
         ))
     }
 
+    @Test fun secondHypotheticalScenarioNeverInheritsFirstScenarioValues() {
+        val second = "Neues Beispiel: In der roten Kiste 2 Ringe, in der blauen Kiste 3 Ringe."
+        val changed = "Nun hat die rote Kiste 4 Ringe statt 2."
+        val result = TaskScopedRingStateProjector.project(listOf(initial, second), changed)
+        assertNotNull(result)
+        assertEquals(2, result!!.red.original)
+        assertEquals(4, result.red.current)
+        assertEquals(3, result.blue.original)
+        assertEquals(3, result.blue.current)
+
+        assertNull(TaskScopedRingStateProjector.project(
+            listOf(initial), "Neues Beispiel: Nun hat die rote Kiste 9 Ringe."
+        ))
+    }
+
     @Test fun refusesIncompleteOrOversizedOwnerEvidence() {
         assertNull(TaskScopedRingStateProjector.project(listOf(initial + "x".repeat(1000)), correction))
         assertNull(TaskScopedRingStateProjector.project(listOf(initial), correction + "x".repeat(1000)))
