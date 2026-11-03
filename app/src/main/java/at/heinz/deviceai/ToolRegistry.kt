@@ -7,7 +7,20 @@ data class ToolSpec(
     val risk: Risk,
     val required: Set<String> = emptySet(),
     val optional: Set<String> = emptySet()
-)
+) {
+    /** RED stub: typed argument schema. */
+    val schema: Map<String, ArgSchema> get() = emptyMap()
+}
+
+/** Typed argument schema (chief pattern point 3). */
+sealed interface ArgSchema {
+    data class Text(val maxLength: Int) : ArgSchema
+    data class Integer(val min: Long, val max: Long) : ArgSchema
+    object Flag : ArgSchema
+    object SharedPath : ArgSchema
+    object HttpsUrl : ArgSchema
+    object PathList : ArgSchema
+}
 
 object ToolRegistry {
     private val allSpecs = listOf(
