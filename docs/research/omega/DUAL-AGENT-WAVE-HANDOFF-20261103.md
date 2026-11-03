@@ -1,10 +1,10 @@
 # Continuum Ω — Dual-Agent-Welle 03.11.2026
 
-Status: SOURCE_INTEGRATED / FINAL_COMBINED_QA_RUNNING. Wochenkontingent: **NOT_VISIBLE**. Kein Main-Merge, keine Originalsignierung, Veröffentlichung, Installation oder Änderung produktiver Besitzerdaten.
+Status: SOURCE_IMPLEMENTED / HOST_TESTED / INDEPENDENTLY_VERIFIED / ANDROID_BUILD_VERIFIED. Wochenkontingent: **NOT_VISIBLE**. Kein Main-Merge, keine Originalsignierung, Veröffentlichung, Installation oder Änderung produktiver Besitzerdaten.
 
 ## Unmittelbarer Einstieg
 
-Repository `Ullmann27/device-ai`, Chief `codex/team-chief/omega-20261103`, Draft PR392. Aktueller gemeinsamer App-/Harness-Quellfreeze: `7247e99d0b93b62dfb2b5eee22486d22911cb722` (vorheriger gemeinsamer Lauf `853a8ee08359ce41375ddb9334ac8ae9c2e2c59e`). Dieser enthält die geprüften begrenzten Gehirnänderungen plus optionalen 3D-Forschungsrenderer und adaptives Cockpit; **sein gemeinsamer Build ist noch offen**. Die vollständige frühere Code40-Abnahme gehört ausschließlich Quelle `64ec06a73f50cae9ee49035c840710d87777d50f`.
+Repository `Ullmann27/device-ai`, Chief `codex/team-chief/omega-20261103`, Draft PR392. Aktueller gemeinsamer App-/Harness-Quellfreeze: `7247e99d0b93b62dfb2b5eee22486d22911cb722` (vorheriger gemeinsamer Lauf `853a8ee08359ce41375ddb9334ac8ae9c2e2c59e`). Dieser enthält die geprüften begrenzten Gehirnänderungen plus optionalen 3D-Forschungsrenderer und adaptives Cockpit; **dieser gemeinsame Stand ist jetzt vollständig im unten beschriebenen Host-/Android-Buildumfang geprüft**. Die vollständige frühere Code40-Abnahme gehört ausschließlich Quelle `64ec06a73f50cae9ee49035c840710d87777d50f`.
 
 Gehirn-Freeze `c8c0615bc9f5398ad2e47b94669e3117ecf9f32d`: vollständiger erster JVM-Lauf2142 Tests,2129 bestanden,1 fehlgeschlagen,12 vorher bestehende übersprungen. Fehler: unveränderte Zeitgedächtnisgrenze p95<5ms, gemessen21,446ms bei parallelen Java-/Blender-Prozessen. Alle819 Antworten waren korrekt. Dieser Fehler wird nicht gelöscht. Gleiche Quellen ohne konkurrierende Rechenlast: Baseline64 p95=1,213ms, Kandidatc8=1,173ms; anschließender vollständiger unfiltrierter c8-Lauf2142 Tests,2130 bestanden,0 Fehler,12 übersprungen; p95=1,323ms,819/819 korrekt. Keine Grenzänderung. NewApi-konfigurierter Lint, Kompilierung und CRE1/SWB-Parität bestanden. M3 bekannte77/81 unverändert; bekannte LME40:35 richtig,5 Enthaltungen,0 falsch.
 
@@ -46,13 +46,35 @@ Reparaturen vor7247:
 
 Alle neuen Quellcommits sind im Chief-Baum enthalten. Der CLI-Zugang einzelner Sitzungen lief ab; Quality konnte mit ihrem bestehenden autorisierten Git-Zugang regulär ohne Force-Push veröffentlichen. Kein Token wurde übertragen, keine neue Anmeldung erzwungen. Ein testweise über den verbundenen GitHub-Connector gespeicherter Blob stimmt exakt mit seinem lokalen SHA überein; eine abweichende Ersatz-Commit-Historie war nicht erforderlich.
 
-## Nächster Abschluss
+## Abgeschlossene gemeinsame Abnahme
 
-1. Erledigt: beide Harness-Reparaturen unabhängig geprüft und143Tests tatsächlich wiederholt.
-2. Freeze7247e99d enthält alle akzeptierten Gehirn-, UI-, optionalen3D-, Harness- und Worker-Abschlussänderungen plus unabhängige Reparaturnachweise; keine neuen Featureversuche.
-3. Vollständige Node-/Gradle-/UI-/Lint-Prüfung mit ruhiger CPU für Zeitbudgets.
-4. Tatsächliches unsigniertes APK prüfen: Paket/Version, Hash, GLB-Hash, ARM64-ELF und ZIP16KiB-Ausrichtung. Keine Signierung/Veröffentlichung.
-5. 3D-Quellen/Renderpaket, alle Rohlogs und genaue Agenten-HEADs sichern; neue zehn Prioritäten und PR392-Abschluss aktualisieren.
+Exakte Quelle: `7247e99d0b93b62dfb2b5eee22486d22911cb722`. Spätere Chief-Commits enthalten ausschließlich Dokumentation und Prüfartefakte; vor einer Fortsetzung die tatsächliche Differenz erneut kontrollieren.
+
+| Prüfung | Tatsächliches Ergebnis |
+| --- | --- |
+| Node, vollständiger Lauf |2193 insgesamt,2188 bestanden,0 Fehler,5 ausdrücklich übersprungen. Beide reparierten realen JVM-Graph-Prüfungen ausgeführt. |
+| Backend |64/64 bestanden. |
+| Gradle/JRE21, vollständig und unfiltriert |2161 insgesamt,2149 bestanden,0 Fehler,12 bestehende übersprungen,391 Suites. |
+| Android-Kompilierung und konfigurierter NewApi-Lint |Bestanden. Keine Behauptung einer vollständigen Prüfung aller Lint-Regeln. |
+| CRE1/SWB-Parität |Bestanden. Keine produktiven neuen Gewichte. |
+| Zeitgedächtnis |819/819 korrekt; p95=1,724ms, unveränderte Grenze<5ms. Hostmessung. |
+| Bekannte M3 / LearningCore40 |77/81 mit harmful0;35 richtig,5 Enthaltungen,0 falsch und forbidden0. Keine neuen Blindtests. |
+| Gebautes APK |Unsigniertes Code40-Prüfartefakt, Originalpaket, korrektes GLB und16KiB-Ausrichtung. Kein Geräte-/GPU-Nachweis. |
+
+Die fünf Node-Skips betreffen separat konfigurierte Android-Shell-Adapter, Fabric-JVM→Node-Transport, zwei externe Harness-SDK-Prüfungen und einen ausdrücklich aktivierungspflichtigen Docker-Test mit synthetischen Berichten. Die zwölf bisherigen JVM-Skips gehören noch offenen Chief-/Thinking-End-to-End-Spezifikationen. Skips sind keine bestandenen Prüfungen. Sieben alte UI-Testmethoden wurden nach der beauftragten Layoutänderung ausdrücklich durch neue Verträge ersetzt; bei beibehaltenen Identitäten gibt es keine Statusregression.
+
+### Tatsächliches APK und Grenzen
+
+- Datei: `/workspace/continuum-artifacts/breakthrough-7247e99d-code40-unsigned.apk`.
+- SHA256: `e98e8177d069b474f43fdce82701aa2e20a178ee6118d5796f58359edd5a1b1b`.
+- Größe:84.178.957Bytes; gegenüber dem ersten64ec-Prüfbuild54.865.941Bytes sind das29.313.016Bytes mehr. Das ist Paketgröße, keine RAM-Messung.
+- Paket `at.heinz.deviceai.continuumlocal`, versionCode40, versionName0.3.39. Host-SDK36; keine Android17-/Fold7-Abnahme.
+- `zipalign -c -P 16 -v 4` bestanden. Alle zehn eingebetteten nativen Bibliotheken über vier ABIs haben ELF-LOAD-Ausrichtung mindestens0x4000 und passende16KiB-ZIP-Offsets, einschließlich der drei ARM64-Bibliotheken Filament/gltfio/LiteRT.
+- Eingebettetes Runtime-GLB8.690.400Bytes, SHA256 `f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e`; Lizenz-/Herkunftshinweise vorhanden.
+- Signaturprüfung schlägt **erwartet** fehl: dieses APK ist unsigniert, ohne v1-Einträge oder Signaturblock. Kein Originalupdate zum Installieren. Keine Schlüssel oder Publisher verändert.
+- Der erneut gelesene Originalkatalog liefert weiterhin0.3.38/Code39 und dieselbe ursprüngliche APK-Adresse. Die Originalsignatur wurde bereits im ersten Meilenstein tatsächlich geprüft; das neue Artefakt verwendet sie nicht.
+
+Die verbindliche nächste Arbeitsliste steht in [OMEGA-NEXT-TEN-20261103.md](OMEGA-NEXT-TEN-20261103.md). Einstieg für die nächste Sitzung: Remote-HEAD lesen, diesen Quellfreeze und den finalen QA-Receipt vergleichen, nur reine Dokumentationsdifferenzen übernehmen, dann ein isoliertes Folgeinkrement starten. Der parallel aktive MΩ-1-Strang ist vor neuer Runtime-/CCC1-Arbeit auf doppelte Aufgaben zu prüfen.
 
 Folgetests auf Fold7: reale Gemma-Baselines, GPU/Filament, Sprachzeitpunkte/Unterbrechung, Falten/Rotation, Speicherlecks, thermische Last/Energie, echte Bedienung und spätere Kameraeinwilligung. Keine dieser Prüfungen ist durch Hostbilder oder synthetische Daten ersetzt.
 
