@@ -1,0 +1,134 @@
+{
+  "sourceCommit": "645b2215022008e2149da81b48683f15077b1fb0",
+  "fixtureSha256": "95842979381b6f3a4b95764cc11ec7f27128cb745cba360700e2cecf90f40c55",
+  "classification": "HOST_NATIVE_LAYOUT_CAPTURE",
+  "visualApproval": "NOT_ACCEPTED_FINAL_EQUIVALENCE",
+  "fold7": "FOLD7_NOT_RUN",
+  "images": [
+    {
+      "file": "phone-412x915-home-orb-host.png",
+      "width": 412,
+      "height": 915,
+      "sha256": "3b4c03783fea51c804e1856a9c759cee666a00ff0ca6296974076a2b8e49afcf",
+      "viewTreeSha256": "cd8162a3f1877b7bed93434d23bda10ce558ae934acfdea405b22c140a97cd9e",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    },
+    {
+      "file": "phone-412x915-chat-orb-host.png",
+      "width": 412,
+      "height": 915,
+      "sha256": "16e6439010f8be392b2f64ee817fc0f35c39398979dec941e0f10f9de0187f26",
+      "viewTreeSha256": "17ac96028f7244a7883d1be0290b115a3bac7d866bb8f1e3b081988831e09f33",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    },
+    {
+      "file": "fold-landscape-840x649-home-orb-host.png",
+      "width": 840,
+      "height": 649,
+      "sha256": "cdc5d9519e8b1ee0e0faf23381058a059c4a9fcf39a24dab293e7ad8083829a0",
+      "viewTreeSha256": "28ff57d46c1f68e2f2919e38900120e1d841b5780167d06a80f3a859c65508e0",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    },
+    {
+      "file": "fold-landscape-840x649-chat-orb-host.png",
+      "width": 840,
+      "height": 649,
+      "sha256": "cefaefabc27b31d782e29c39d06ab0be312eb5e21c0d47be5232f96360fdc6e9",
+      "viewTreeSha256": "2a9c5aa441abe5a62605f9f7e9c81c30afc833e9070ffb2950c367e4a8aed236",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    },
+    {
+      "file": "fold-portrait-840x1050-home-orb-host.png",
+      "width": 840,
+      "height": 1050,
+      "sha256": "fc0e820a74468a6ecf5f23ec8893e1aba944c31550628c4ef7acdb9e28c8443a",
+      "viewTreeSha256": "80a189faa451a775be39489e82e2ae4b1846f63a719c7a2f4df67861dc6b2960",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    },
+    {
+      "file": "fold-portrait-840x1050-chat-orb-host.png",
+      "width": 840,
+      "height": 1050,
+      "sha256": "2fa44d3a73eeb3139194a4fea0388c193d893b8486e9530eb6d23c05d6292960",
+      "viewTreeSha256": "a82a887299f1af1c71aceedd366f6ebeb0398a61db0bd0beed4ede0e3f2c3a37",
+      "renderer": "Robolectric API28 native Canvas, default orb",
+      "deviceCapture": false,
+      "filamentCapture": false
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/design_targets/continuum-2026-10-22/reference-phone.png",
+      "sha256": "d28787dc1349f30896cd7769dd49f5976fbb320e1d1b67c09905cc6025833e7e"
+    },
+    {
+      "file": "docs/design_targets/continuum-2026-10-22/reference-fold.png",
+      "sha256": "b998b3d42ab8abc39ed0592652450c34267d4dbdfbd5a02ffaa00f63f98a371b"
+    }
+  ],
+  "visualInspection": "ALL_SIX_COMPLETE_VIEWPORTS_REVIEWED",
+  "testResult": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "timeSeconds": "4.987",
+    "identities": [
+      "phoneHomeAndChat",
+      "foldLandscapeHomeAndChat",
+      "foldPortraitHomeAndChat"
+    ]
+  },
+  "findings": [
+    {
+      "id": "L01",
+      "status": "OPEN",
+      "summary": "Portrait hero outer rings visibly clip at x240 and x600 slot boundaries."
+    },
+    {
+      "id": "L02",
+      "status": "OPEN",
+      "summary": "Phone idle work-status band at y787..842 is absent from the visual reference."
+    },
+    {
+      "id": "L03",
+      "status": "NOT_RUN",
+      "summary": "Portrait system-status strip extends below initial viewport; scroll access not exercised by this fixture."
+    },
+    {
+      "id": "L04",
+      "status": "NOT_RUN",
+      "summary": "Filament head, real TTS, on-device speech/camera, real task effects and Android17 insets/IME require separate acceptance."
+    }
+  ],
+  "evidenceSha256": {
+    "comparison.html": "9099e1b2bb447cdfe036f91463b39d57216c1cc5f1ed0babff340136b5f015e9",
+    "final-unfiltered.init.gradle": "fdbbfdc35c675e4bdebdb5a15a7c76cbbf150137697aa6829979887c415db6a5",
+    "fold-landscape-840x649-chat-orb-host.png": "cefaefabc27b31d782e29c39d06ab0be312eb5e21c0d47be5232f96360fdc6e9",
+    "fold-landscape-840x649-chat-orb-host.views.txt": "2a9c5aa441abe5a62605f9f7e9c81c30afc833e9070ffb2950c367e4a8aed236",
+    "fold-landscape-840x649-home-orb-host.png": "cdc5d9519e8b1ee0e0faf23381058a059c4a9fcf39a24dab293e7ad8083829a0",
+    "fold-landscape-840x649-home-orb-host.views.txt": "28ff57d46c1f68e2f2919e38900120e1d841b5780167d06a80f3a859c65508e0",
+    "fold-portrait-840x1050-chat-orb-host.png": "2fa44d3a73eeb3139194a4fea0388c193d893b8486e9530eb6d23c05d6292960",
+    "fold-portrait-840x1050-chat-orb-host.views.txt": "a82a887299f1af1c71aceedd366f6ebeb0398a61db0bd0beed4ede0e3f2c3a37",
+    "fold-portrait-840x1050-home-orb-host.png": "fc0e820a74468a6ecf5f23ec8893e1aba944c31550628c4ef7acdb9e28c8443a",
+    "fold-portrait-840x1050-home-orb-host.views.txt": "80a189faa451a775be39489e82e2ae4b1846f63a719c7a2f4df67861dc6b2960",
+    "gradle-full.txt": "ec418db0bc7fa30a6f2fd47512a3e734911419d6995de2423f553a857dc12b95",
+    "harness-inputs.sha256": "2a8e5920f6927ff596eaf3673bc2a10461c5724c8e3350685218223b324881df",
+    "junit.xml": "383b26f83c04efb1c1c0d0b1f52dc80b1124ecb4a58e17b3239125239b5172ca",
+    "phone-412x915-chat-orb-host.png": "16e6439010f8be392b2f64ee817fc0f35c39398979dec941e0f10f9de0187f26",
+    "phone-412x915-chat-orb-host.views.txt": "17ac96028f7244a7883d1be0290b115a3bac7d866bb8f1e3b081988831e09f33",
+    "phone-412x915-home-orb-host.png": "3b4c03783fea51c804e1856a9c759cee666a00ff0ca6296974076a2b8e49afcf",
+    "phone-412x915-home-orb-host.views.txt": "cd8162a3f1877b7bed93434d23bda10ce558ae934acfdea405b22c140a97cd9e",
+    "source-environment.txt": "cdc0781bec04b88675a5fa3fbe6a99ab09fbaec3f10cd653cb1b2c7daea79602"
+  }
+}

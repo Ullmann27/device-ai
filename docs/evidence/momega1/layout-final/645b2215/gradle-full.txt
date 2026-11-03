@@ -1,0 +1,155 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:extractProguardFiles
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:lintAnalyzeDebug
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/momega1-build-env/effects-caller-independent/IndependentTaskEffectsCallerUiTest.kt:44:95 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/effects-caller-independent/IndependentTaskEffectsCallerUiTest.kt:69:110 No cast needed.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:64:44 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:71:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:72:82 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:78:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:79:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/Ccc1PatchReceiptTest.kt:86:86 Unnecessary non-null assertion (!!) on a non-null receiver of type 'Ccc1TestRun'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/chief/ChiefPatternE2ETest.kt:145:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentOutcomeEvidenceTest.kt:43:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt:131:53 Unnecessary non-null assertion (!!) on a non-null receiver of type 'DevelopmentBacklogStore.Recovery'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:87:39 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:112:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt:163:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:41:100 Expression is unused.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/TurnScopedInternetModeTest.kt:82:50 Expression is unused.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:36:43 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/UnknownOutcomeSafetyTest.kt:37:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AgentTaskEvidence'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:47:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:48:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:49:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:50:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:51:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/intelligence/ContinuumOwnerUpdateCatalogTest.kt:85:47 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Ctx1Experiment.kt:105:115 No cast needed.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:66:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:107:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/ContinuumOpenWebStudyFetchTest.kt:148:35 The corresponding parameter in the supertype 'ResearchProvider' is named 'request'. This may cause problems when calling this function with named arguments.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:237:46 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt:255:36 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:15:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:16:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt:126:66 Redundant call of conversion method.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt:89:33 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/learning/nf/NfStream.kt:91:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NfTrainer'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/test/java/at/heinz/deviceai/ui/ContinuumTaskEffectsTest.kt:14:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:65:61 No cast needed.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:82:61 No cast needed.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt:35:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:33:17 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:49:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:28:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:34:61 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:50:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:60:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:63:63 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:119:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:120:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:128:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:129:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:143:72 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:144:97 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:152:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:153:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:155:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:156:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:162:61 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:163:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:170:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:171:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:179:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:180:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:187:44 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:188:71 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:190:43 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:191:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:29:52 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:34:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:36:68 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:64:52 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:65:81 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:78:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:79:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-green-source-a39b614b/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:82:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessCallerUiTest.kt:84:77 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessCallerUiTest.kt:92:79 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessCallerUiTest.kt:102:92 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessCallerUiTest.kt:119:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessCallerUiTest.kt:121:25 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessVoiceCompletionUiTest.kt:64:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessVoiceCompletionUiTest.kt:78:25 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessVoiceCompletionUiTest.kt:81:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessVoiceCompletionUiTest.kt:91:25 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/momega1-build-env/guide-independent-caller-final/IndependentReadinessVoiceCompletionUiTest.kt:93:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+MOMEGA_FINAL_TEST_EXECUTABLE=/usr/bin/java
+
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/momega1-build-env/guide-green-source-a39b614b/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 5m 23s
+40 actionable tasks: 15 executed, 25 up-to-date
