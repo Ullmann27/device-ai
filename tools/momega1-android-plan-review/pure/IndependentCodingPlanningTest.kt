@@ -102,6 +102,7 @@ class IndependentCodingPlanningTest {
         var thinking=0;var ordinary=0;var tools=0;var cancelled=0
         var emit: (LocalInferenceCallback)->Unit = {}
         override fun load(id:String,version:String,callback:(Result<ImportedLocalModel>)->Unit) { error("No loading in plan") }
+        override fun unload(callback:(Result<Unit>)->Unit) { error("No unloading in planning fixture") }
         override fun stream(prompt:String,callback:LocalInferenceCallback) { ordinary++;error("Ordinary chat stream forbidden in planning") }
         override fun streamThinking(prompt:String,callback:LocalInferenceCallback) { thinking++;emit(callback) }
         override fun respondToTools(responses:List<LocalToolResponse>,callback:LocalInferenceCallback) { tools++;error("No continuation") }
