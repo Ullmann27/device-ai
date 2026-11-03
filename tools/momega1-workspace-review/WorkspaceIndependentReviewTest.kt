@@ -12,7 +12,7 @@ class WorkspaceIndependentReviewTest {
         val scope = scope(); val mailbox = AgentMailbox()
         val statuses = mutableListOf<WorkspaceDeliveryStatus>()
         val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = { statuses += it.status })
-        val report = WorkerReport(scope.workerId, WorkerStatus.DONE, "HOST_PROFILE_REPORTED verification=PENDING", 1)
+        val report = WorkerReport(ChiefWorkspaceWiring.briefId(scope), WorkerStatus.DONE, "HOST_PROFILE_REPORTED verification=PENDING", 1)
         sink(report); sink(report)
         println("independent duplicate deliveries=$statuses queued=${mailbox.pending("chief")}")
         assertEquals("One execution must not create two fresh terminal messages", 1, mailbox.pending("chief"))
@@ -20,10 +20,19 @@ class WorkspaceIndependentReviewTest {
     @Test fun oldSameWorkerTaskMustNotBeRelabelledAsCurrentTask() {
         val scope = scope(); val mailbox = AgentMailbox()
         val sink = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = {})
-        sink(WorkerReport(scope.workerId, WorkerStatus.DONE,
+        val oldScope = scope.copy(taskId = "t-9999999999999999", jobId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc")
+        sink(WorkerReport(ChiefWorkspaceWiring.briefId(oldScope), WorkerStatus.DONE,
             "HOST_PROFILE_REPORTED task=t-9999999999999999 request=cccccccc-cccc-4ccc-8ccc-cccccccccccc verification=PENDING", 1))
         val messages = mailbox.drain("chief")
         println("independent stale messages=${messages.map { it.body }}")
         assertTrue("Old task report must not receive current task/source/request prefix", messages.isEmpty())
+    }
+    @Test fun separatelyConstructedReporterCannotDuplicateSameCanonicalTerminalReport() {
+        val scope = scope(); val mailbox = AgentMailbox()
+        val first = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = {})
+        val second = ChiefWorkspaceWiring.mailboxReporter(mailbox, scope, onDelivery = {})
+        val report = WorkerReport(ChiefWorkspaceWiring.briefId(scope), WorkerStatus.DONE, "verification=PENDING", 1)
+        first(report); second(report)
+        assertEquals("Canonical report identity must survive reporter recreation", 1, mailbox.pending("chief"))
     }
 }
