@@ -1,12 +1,6 @@
 package at.heinz.deviceai.ui
 
-/**
- * Positions of every start-screen element, measured from the owner's reference images.
- *
- * Phone reference: 412 dp wide (reference-phone.png, 713 px screen, 1.7306 px/dp), origin below the status bar.
- * Wide/Fold reference: 840 dp wide (reference-fold.png, 1294 px screen, 1.54 px/dp), origin at the screen top.
- * Other window sizes scale the whole composition uniformly with the width, so proportions never change.
- */
+/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */
 object ContinuumHomeLayout {
     enum class Slot {
         BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,
@@ -20,7 +14,7 @@ object ContinuumHomeLayout {
         fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)
     }
 
-    /** [scale] maps reference dp to window dp; [contentHeight] is the scrolling part above a phone navigation bar. */
+    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */
     data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {
         operator fun get(slot: Slot): Box? = boxes[slot]
     }
@@ -57,152 +51,88 @@ object ContinuumHomeLayout {
     fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =
         isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f
 
-    // Centerline of the hologram is 206 dp. Opposing controls use equal widths and mirrored x-coordinates.
-    private val phoneReference = mapOf(
-        Slot.BRAND to Box(0f, 0f, 276f, 68.8f),
-        Slot.SEARCH to Box(279f, 22f, 311f, 54f),
-        Slot.NOTIFICATIONS to Box(322f, 22f, 354f, 54f),
-        Slot.PROFILE to Box(364f, 22f, 396f, 54f),
-        Slot.HERO to Box(0f, 68.8f, 412f, 375.6f),
-        Slot.LABEL_CONNECTED to Box(10f, 96f, 119f, 136f),
-        Slot.LABEL_LEARNING to Box(10f, 165.4f, 119f, 205.4f),
-        Slot.LABEL_DEVELOPING to Box(10f, 242.2f, 119f, 282.2f),
-        Slot.LABEL_THINKING to Box(293f, 96f, 402f, 136f),
-        Slot.LABEL_ANALYSING to Box(293f, 165.4f, 402f, 205.4f),
-        Slot.LABEL_EVOLVING to Box(293f, 242.2f, 402f, 282.2f),
-        Slot.MODEL to Box(13.3f, 380.3f, 398.8f, 469.4f),
-        Slot.LEARNING to Box(13.3f, 479.6f, 215.5f, 661.6f),
-        Slot.STORAGE to Box(224.8f, 479.6f, 398.8f, 661.6f),
-        Slot.DEVELOPMENT to Box(13.3f, 673.2f, 398.8f, 773.2f),
-        Slot.NAV to Box(0f, 787f, 412f, 787f + PHONE_NAV_HEIGHT)
-    )
-
-    // Wide reference centerline is 417 dp (the center of the existing hero slot).
-    private val wideReference = mapOf(
-        Slot.RAIL to Box(0f, 0f, 76f, 649f),
-        Slot.BRAND to Box(80f, 30f, 420f, 86f),
-        Slot.SEARCH to Box(579.9f, 42.2f, 608.5f, 70.8f),
-        Slot.NOTIFICATIONS to Box(616.9f, 42.2f, 645.5f, 70.8f),
-        Slot.PROFILE to Box(657.7f, 42.2f, 686.3f, 70.8f),
-        Slot.MODEL_PILL to Box(709f, 30.5f, 826f, 72.7f),
-        Slot.HERO to Box(212f, 0f, 622f, 291f),
-        Slot.LABEL_CONNECTED to Box(188f, 97f, 302f, 138f),
-        Slot.LABEL_LEARNING to Box(188f, 148.5f, 302f, 192f),
-        Slot.LABEL_DEVELOPING to Box(188f, 201.3f, 302f, 247f),
-        Slot.LABEL_THINKING to Box(532f, 97f, 646f, 138f),
-        Slot.LABEL_ANALYSING to Box(532f, 148.5f, 646f, 192f),
-        Slot.LABEL_EVOLVING to Box(532f, 201.3f, 646f, 247f),
-        Slot.SYSTEM_STATUS to Box(657.1f, 84.4f, 829.2f, 276f),
-        Slot.MODEL to Box(87.7f, 290.9f, 335.7f, 475.3f),
-        Slot.LEARNING to Box(345.5f, 290.9f, 613f, 475.3f),
-        Slot.STORAGE to Box(624.7f, 290.9f, 829.2f, 475.3f),
-        Slot.DEVELOPMENT to Box(87.7f, 485.7f, 492.9f, 642.9f),
-        Slot.SYSTEM_ACTIVITY to Box(504.5f, 485.7f, 829.2f, 642.9f)
-    )
-
-    fun phone(widthDp: Float): Layout {
-        require(widthDp > 0f)
-        val u = widthDp / PHONE_REFERENCE_WIDTH
-        return Layout(false, widthDp, u, 787f * u, phoneReference.mapValues { it.value.scaled(u) })
-    }
-
     const val WIDE_REFERENCE_HEIGHT = 649f
-    private val TOP_BAR = setOf(Slot.BRAND, Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE, Slot.MODEL_PILL)
-    private val HERO_BAND = setOf(Slot.LABEL_CONNECTED, Slot.LABEL_LEARNING, Slot.LABEL_DEVELOPING, Slot.LABEL_THINKING,
-        Slot.LABEL_ANALYSING, Slot.LABEL_EVOLVING, Slot.SYSTEM_STATUS)
-    private val FIRST_ROW = setOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE)
-    private val SECOND_ROW = setOf(Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
 
-    /**
-     * Unfolded Fold7: equal left/right action columns with an unobstructed
-     * living hologram between them. Six existing live chart cards retain a
-     * 3x2 grid. CPU/network/activity telemetry remains on the same start
-     * page in a horizontal status strip after the cards, reached by scrolling.
-     * No renderer, animations, business actions or source data are replaced.
-     */
-    fun portraitFold(widthDp: Float, heightDp: Float): Layout {
-        require(widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp > 0f)
-        val scale = widthDp / WIDE_REFERENCE_WIDTH
-        val frame = (heightDp / scale).coerceAtLeast(800f)
-        val heroExtra = ((frame - 886f).coerceAtLeast(0f) * .12f).coerceAtMost(45f)
-        val heroBottom = 384f + heroExtra
-        val firstTop = heroBottom + 16f
-        val cardHeight = 216f
+    @JvmOverloads
+    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)
+
+    @JvmOverloads
+    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =
+        adaptive(widthDp, heightDp, true, fontScale)
+
+    @JvmOverloads
+    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =
+        adaptive(widthDp, heightDp, true, fontScale)
+
+    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {
+        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)
+        require(fontScale.isFinite() && fontScale > 0f)
+        val font = fontScale.coerceIn(.85f, 2f)
         val gap = 12f
-        val secondTop = firstTop + cardHeight + gap
-        val statusTop = secondTop + cardHeight + 16f
-        val positions = linkedMapOf(
-            Slot.BRAND to Box(12f, 5f, 353f, 62f),
-            Slot.SEARCH to Box(698f, 16f, 729f, 48f),
-            Slot.NOTIFICATIONS to Box(742f, 16f, 773f, 48f),
-            Slot.PROFILE to Box(786f, 15f, 818f, 49f),
-            Slot.HERO to Box(240f, 60f, 600f, heroBottom),
-            Slot.LABEL_CONNECTED to Box(14f, 81f, 230f, 163f),
-            Slot.LABEL_LEARNING to Box(14f, 177f, 230f, 259f),
-            Slot.LABEL_DEVELOPING to Box(14f, 273f, 230f, 355f),
-            Slot.LABEL_THINKING to Box(610f, 81f, 826f, 163f),
-            Slot.LABEL_ANALYSING to Box(610f, 177f, 826f, 259f),
-            Slot.LABEL_EVOLVING to Box(610f, 273f, 826f, 355f),
-            Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight),
-            Slot.LEARNING to Box(288f, firstTop, 552f, firstTop + cardHeight),
-            Slot.STORAGE to Box(564f, firstTop, 828f, firstTop + cardHeight),
-            Slot.DEVELOPMENT to Box(12f, secondTop, 276f, secondTop + cardHeight),
-            Slot.SYSTEM_ACTIVITY to Box(288f, secondTop, 552f, secondTop + cardHeight),
-            Slot.WORKERS to Box(564f, secondTop, 828f, secondTop + cardHeight),
-            Slot.SYSTEM_STATUS to Box(12f, statusTop, 828f, statusTop + 130f)
-        )
-        val contentHeight = maxOf(frame, statusTop + 142f)
-        return Layout(true, widthDp, scale, contentHeight * scale,
-            positions.mapValues { it.value.scaled(scale) })
-    }
-
-    /**
-     * Wide composition for a [widthDp] x [heightDp] window, scaled uniformly with the width like the reference
-     * (840 x 649 dp, landscape). A window that is taller than that proportion – the Fold7 main display held upright is
-     * almost square – would otherwise end in an empty band. The extra height first enlarges the hero stage: the hologram
-     * box grows in height and, as far as the side columns allow, in width, so the core itself becomes larger; the side
-     * labels and the system status column move with the hologram's centre. What remains opens the gaps above both card
-     * rows equally. Cards keep their reference shape. [heightDp] = 0 keeps the reference proportion.
-     */
-    fun wide(widthDp: Float, heightDp: Float = 0f): Layout {
-        require(widthDp > 0f)
-        if (heightDp > 0f && isPortraitFold(widthDp, heightDp)) return portraitFold(widthDp, heightDp)
-        val u = widthDp / WIDE_REFERENCE_WIDTH
-        val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
-        val hero = wideReference.getValue(Slot.HERO)
-        val heroGrow = minOf(extra, 150f)
-        // The renderer's width/height ratio governs enlargement, capped by the 8dp label clearance below.
-        // Keep the actually rendered glass sphere outside both mirrored control columns.
-        // Tall Fold windows enlarge the hero vertically; its width must not grow past the
-        // inner text edges. The renderer's radius/sphere factors are the source of truth.
-        val foldGeometry = ContinuumHologramRenderer.Geometry.FOLD
-        val heroCenterX = (hero.left + hero.right) / 2f
-        val controlInnerEdge = wideReference.getValue(Slot.LABEL_THINKING).left
-        val sphereClearance = 8f
-        val permittedSphereRadius = (controlInnerEdge - heroCenterX - sphereClearance).coerceAtLeast(0f)
-        val permittedHeroWidth = permittedSphereRadius / (foldGeometry.radiusOfWidth * foldGeometry.sphere)
-        val heroWiden = minOf(
-            heroGrow * (foldGeometry.radiusOfHeight / foldGeometry.radiusOfWidth),
-            140f,
-            (permittedHeroWidth - hero.width).coerceAtLeast(0f)
-        )
-        val rowGap = (extra - heroGrow) / 2f
-        val firstRow = heroGrow + rowGap
-        val secondRow = heroGrow + 2f * rowGap
-        val boxes = wideReference.mapValues { (slot, b) ->
-            when {
-                slot in TOP_BAR -> b
-                slot == Slot.HERO -> Box(b.left - heroWiden / 2f, b.top, b.right + heroWiden / 2f, b.bottom + heroGrow)
-                slot == Slot.RAIL -> b.copy(bottom = b.bottom + extra)
-                slot in HERO_BAND -> {
-                    val shift = heroGrow * ((b.top + b.bottom) / 2f - hero.top) / hero.height
-                    b.copy(top = b.top + shift, bottom = b.bottom + shift)
-                }
-                slot in FIRST_ROW -> b.copy(top = b.top + firstRow, bottom = b.bottom + firstRow)
-                slot in SECOND_ROW -> b.copy(top = b.top + secondRow, bottom = b.bottom + secondRow)
-                else -> b
-            }.scaled(u)
+        val portrait = wide && height > 0f && isPortraitFold(width, height)
+        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.
+        val rail = if (wide && !portrait) railWidthDp(width) else 0f
+        val left = rail + 12f
+        val right = width - 12f
+        val room = right - left
+        val boxes = linkedMapOf<Slot, Box>()
+        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f
+        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f
+        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)
+        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)
+        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->
+            val x = right - 160f + i * 56f
+            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f
+            boxes[slot] = Box(x, y, x + 48f, y + 48f)
         }
-        return Layout(true, widthDp, u, (WIDE_REFERENCE_HEIGHT + extra) * u, boxes)
+        val heroTop = headerBottom + gap
+        val heroHeight = when {
+            !wide -> (room * 1.02f).coerceIn(310f, 390f)
+            else -> (room * .58f).coerceIn(390f, 470f)
+        }
+        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.
+        val sidebar = wide && room >= 1000f && font <= 1.1f
+        val sideWidth = 292f
+        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)
+        if (sidebar) {
+            val middle = heroTop + (heroHeight - gap) / 2f
+            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)
+            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)
+        }
+        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,
+            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)
+        val actionColumns = when {
+            room < 420f && font > 1.3f -> 1
+            room >= 1000f && font <= 1.3f -> 6
+            room >= 530f && font <= 1.6f -> 3
+            else -> 2
+        }
+        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns
+        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f
+        val actionTop = heroTop + heroHeight + gap
+        actions.forEachIndexed { index, slot ->
+            val x = left + (index % actionColumns) * (actionWidth + gap)
+            val y = actionTop + (index / actionColumns) * (actionHeight + gap)
+            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)
+        }
+        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)
+        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)
+        val columns = when {
+            room >= 1000f && font <= 1.3f -> 3
+            room >= 530f && room >= 420f * font -> 2
+            else -> 1
+        }
+        val cardWidth = (room - (columns - 1) * gap) / columns
+        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f
+        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f
+        cards.forEachIndexed { index, slot ->
+            val x = left + (index % columns) * (cardWidth + gap)
+            val y = cardTop + (index / columns) * (cardHeight + gap)
+            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)
+        }
+        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)
+        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)
+        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)
+        return Layout(wide, width, 1f, contentHeight, boxes)
     }
 }

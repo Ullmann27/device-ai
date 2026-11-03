@@ -34,13 +34,12 @@ class ContinuumHomeLayoutTest {
         assertFalse("phone in landscape stays compact", ContinuumHomeLayout.isWide(800f, 360f))
     }
 
-    @Test fun withoutAHeightTheWideLayoutIsTheScaledReference() {
-        val a = ContinuumHomeLayout.wide(840f); val b = ContinuumHomeLayout.wide(756f)
-        for ((slot, box) in a.boxes) {
-            val s = b.boxes.getValue(slot)
-            assertEquals("$slot", box.left * .9f, s.left, 1e-3f); assertEquals("$slot", box.bottom * .9f, s.bottom, 1e-3f)
+    @Test fun widthChangesColumnWidthsButNeverScaleTextOrTouchTargets() {
+        for (width in listOf(320f, 412f, 756f, 840f, 1280f)) {
+            val layout = if (width < 600f) ContinuumHomeLayout.phone(width) else ContinuumHomeLayout.wide(width)
+            assertEquals(1f, layout.scale, 0f)
+            assertEquals(48f, layout.boxes.getValue(Slot.SEARCH).width, 0f)
         }
-        assertEquals(649f * .9f, b.contentHeight, 1e-3f)
     }
 
     @Test fun theRailWidthIsTheRailSlotOfTheScaledReference() {
@@ -50,71 +49,53 @@ class ContinuumHomeLayoutTest {
         assertEquals(76f, ContinuumHomeLayout.railWidthDp(840f), 0f)
     }
 
-    @Test fun unfoldedPortraitKeepsExactThreeByTwoCardAlignment() {
-        for ((w,h) in listOf(750f to 790f, 656f to 690f, 840f to 1010f, 1000f to 1400f)) {
-            assertTrue(ContinuumHomeLayout.isPortraitFold(w,h))
-            val l=ContinuumHomeLayout.wide(w,h)
-            val first=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map { l.boxes.getValue(it) }
-            val second=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map { l.boxes.getValue(it) }
-            val scale=l.scale
-            // All six glass cards have EXACTLY the same size, gap and column boundaries.
-            for(i in 0..2){
-                assertEquals("column $i x",first[i].left,second[i].left,.001f)
-                assertEquals("column $i width",first[i].width,second[i].width,.001f)
-                assertEquals("column $i height",first[i].height,second[i].height,.001f)
-            }
-            for(box in first+second){
-                assertEquals(first[0].width,box.width,.001f)
-                assertEquals(first[0].height,box.height,.001f)
-                assertTrue(box.left>=0f && box.right<=w+.001f)
-                assertTrue(box.bottom<=l.contentHeight+.001f)
-            }
-            assertEquals(12f*scale,first[0].left,.001f)
-            assertEquals(12f*scale,second[0].left,.001f)
-            assertEquals(first[0].bottom+12f*scale,second[0].top,.001f)
-            assertTrue(l.boxes[Slot.RAIL]==null)
-            assertTrue(l.boxes[Slot.MODEL_PILL]==null)
-            assertTrue(l.boxes.getValue(Slot.HERO).bottom<=first[0].top)
-            val hero = l.boxes.getValue(Slot.HERO)
-            val leftActions = listOf(Slot.LABEL_CONNECTED, Slot.LABEL_LEARNING, Slot.LABEL_DEVELOPING)
-            val rightActions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_EVOLVING)
-            for ((leftSlot, rightSlot) in leftActions.zip(rightActions)) {
-                val left = l.boxes.getValue(leftSlot)
-                val right = l.boxes.getValue(rightSlot)
-                assertEquals("equal portrait action widths", left.width, right.width, .001f)
-                assertTrue("no action overlaps hologram", left.right < hero.left && hero.right < right.left)
-                assertEquals("mirrored action margins", left.left, w - right.right, .001f)
-            }
-            val status = l.boxes.getValue(Slot.SYSTEM_STATUS)
-            assertTrue("system chart is below the main dashboard", status.top >= second[0].bottom)
-            assertTrue("all live data is scroll reachable", status.bottom <= l.contentHeight)
-            assertEquals("system strip aligned to grid", first[0].left, status.left, .001f)
-            assertEquals("system strip right edge", first[2].right, status.right, .001f)
-            for ((left,right) in listOf(
-                Slot.LABEL_CONNECTED to Slot.LABEL_THINKING,
-                Slot.LABEL_LEARNING to Slot.LABEL_ANALYSING,
-                Slot.LABEL_DEVELOPING to Slot.LABEL_EVOLVING
-            )) {
-                val a=l.boxes.getValue(left);val b=l.boxes.getValue(right)
-                assertEquals(a.top,b.top,.001f)
-                assertEquals(a.height,b.height,.001f)
-                assertTrue("portrait controls are larger than legacy wide controls",a.height>=75f*scale)
-                assertTrue("left action exceeds 200 reference dp",a.width>=200f*scale)
+    @Test fun portraitFoldReflowsIntoTwoColumnsBelowUnobstructedStage() {
+        for ((w, h) in listOf(600f to 840f, 750f to 790f, 840f to 1010f)) {
+            val layout = ContinuumHomeLayout.wide(w, h)
+            val model = layout.boxes.getValue(Slot.MODEL)
+            val learning = layout.boxes.getValue(Slot.LEARNING)
+            val storage = layout.boxes.getValue(Slot.STORAGE)
+            assertEquals(model.top, learning.top, 0f)
+            assertEquals(model.left, storage.left, 0f)
+            assertEquals(model.bottom + 12f, storage.top, 0f)
+            assertEquals(model.width, learning.width, .001f)
+            assertTrue(layout[Slot.RAIL] == null)
+            val hero = layout.boxes.getValue(Slot.HERO)
+            for (slot in Slot.entries.filter { it.name.startsWith("LABEL_") }) {
+                assertTrue("$slot remains below the head", layout.boxes.getValue(slot).top >= hero.bottom)
             }
         }
     }
 
-    @Test fun landscapeStillKeepsItsExistingRailAndLegacyCards() {
-        for ((w,h) in listOf(832f to 708f,840f to 649f)) {
-            assertFalse(ContinuumHomeLayout.isPortraitFold(w,h))
-            val reference=ContinuumHomeLayout.wide(w)
-            val full=ContinuumHomeLayout.wide(w,h)
-            for(c in cards) {
-                assertEquals(reference.boxes.getValue(c).width,full.boxes.getValue(c).width,.001f)
-                assertEquals(reference.boxes.getValue(c).height,full.boxes.getValue(c).height,.001f)
+    @Test fun landscapeKeepsExistingRailOffsetAndEveryDestination() {
+        for ((w, h) in listOf(832f to 708f, 840f to 649f, 1280f to 800f)) {
+            val layout = ContinuumHomeLayout.wide(w, h)
+            val rail = requireNotNull(layout[Slot.RAIL])
+            assertEquals(ContinuumHomeLayout.railWidthDp(w), rail.width, 0f)
+            for (slot in cards + Slot.WORKERS + Slot.SYSTEM_STATUS) {
+                val box = requireNotNull(layout[slot])
+                assertTrue(box.left >= rail.right)
+                assertTrue(box.bottom <= layout.contentHeight)
             }
-            assertTrue(full.boxes[Slot.RAIL]!=null)
-            assertTrue(full.boxes[Slot.WORKERS]==null)
+        }
+    }
+
+    @Test fun largeFontsReflowInsteadOfShrinkingText() {
+        val normal = ContinuumHomeLayout.wide(600f, 840f, 1f)
+        val large = ContinuumHomeLayout.wide(600f, 840f, 1.6f)
+        assertEquals(normal[Slot.MODEL]!!.top, normal[Slot.LEARNING]!!.top, 0f)
+        assertTrue(large[Slot.LEARNING]!!.top > large[Slot.MODEL]!!.bottom)
+        assertTrue(large[Slot.MODEL]!!.height > normal[Slot.MODEL]!!.height)
+        assertEquals(1f, large.scale, 0f)
+        for ((w, h) in listOf(320f to 720f, 412f to 915f, 600f to 840f, 840f to 960f, 1280f to 800f)) {
+            for (font in listOf(1.3f, 1.6f, 2f)) {
+                val l = if (w < 600f) ContinuumHomeLayout.phone(w, font) else ContinuumHomeLayout.wide(w, h, font)
+                val boxes = l.boxes.filterKeys { it != Slot.NAV && it != Slot.RAIL }.values.toList()
+                for (i in boxes.indices) for (j in i + 1 until boxes.size) {
+                    val a = boxes[i]; val b = boxes[j]
+                    assertFalse("$w/$font intersect", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
+                }
+            }
         }
     }
 }
