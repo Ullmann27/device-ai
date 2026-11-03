@@ -1,8 +1,10 @@
 # Independence Ω — Abschluss und Wiederaufnahme
 
 **Stand: Abschlussprüfung läuft. Kein freigegebener Coding-Agent Release1.**
-Besitzer meldet20% Restkontingent und verlangt Sicherung sowie anschließend Stopp.
-Direkte Kontingentanzeige: `NOT_VISIBLE`. Keine neuen Forschungs-/Modellläufe.
+Besitzer meldete20% Restkontingent; anschließend verlangte er ausdrücklich die
+Fortsetzung bis zum benutzbaren Coding-Dienst. Direkte Kontingentanzeige:
+`NOT_VISIBLE`. Nur die erforderliche Dienstabnahme/S01 wird fortgesetzt, keine
+zusätzlichen Forschungsstränge. Regelmäßige sichere Checkpoints bleiben Pflicht.
 
 Repository: `Ullmann27/device-ai`, Chief-PR456,
 `codex/continuum-independence-chief-20261103`.
@@ -46,7 +48,7 @@ von dieser Arbeit unberührt.
 | Android-Vergleich |App/Gradle/Arbeitsregeln bytegleich zum1595-Stand; damalige2.224 PASS/17 SKIP sind historische Belege; frischer Gesamtbuild noch offen |
 | Unbekannter g04 |FAIL:1 echter Qwen1.5B-Aufruf, korrekte Enthaltung, keine bestätigte Reparatur |
 | Bekannter u03 |PASS:1 echter Qwen1.5B-Aufruf, FORGE/LINT/ECHO, RED→GREEN, unabhängige Ausführung,1 zulässiger Wiederabruf nach Prozessneustart |
-| Neuer Dienstfall S01 |NOT_RUN; vor Kandidatenprüfung eingefroren, kein Grant/Modellaufruf; PR461226c4992 |
+| Neuer Dienstfall S01 |NOT_RUN; vor Kandidatenprüfung eingefroren, kein Grant/Modellaufruf; PR461226c4992. Aufgrund neuer ausdrücklicher Besitzeranweisung nach Softwaregates auszuführen |
 | ChatGPT-Verbindung |NOT_CONNECTED; lokaler Bearer-MCP ist keine erreichbare OAuth-Verbindung zu ChatGPT |
 | ARM64/Fold7/APK |NOT_RUN/BLOCKED; keine angeschlossenen ADB-Geräte, keine Installation/Veröffentlichung |
 
@@ -68,7 +70,7 @@ Neurallauf mit absichtlich verursachtem Absturz wurde nicht durchgeführt.
 |---|---|
 | Chief /456 | Integration, bestehende Registry-Metadatenbrücke, Operator-Anleitung, Sicherung |
 | independence_service_builder /463 | Finaler Code d8468986; Abschluss588a56cc;49 fokussierte Host-Prüfungen PASS |
-| independence_service_challenger /458 | Unabhängige Prozess-/Sperrenprüfung, erhaltener RED→GREEN-Nachweis; letzter Abschlusscommit folgt |
+| independence_service_challenger /458 | Unabhängige Prozess-/Sperrenprüfung, erhaltener RED→GREEN-Nachweis, Abschluss6407f8ea und Harness ef0673ac |
 | independence_mcp_builder /459 | Code5cf463a7, Abschluss2424a35e,16 eigene Protokoll-/Prozessprüfungen PASS |
 | independence_mcp_challenger /460 | Unabhängige32 Gruppen, Abschluss e4c6213f; keine offene erkannte MCP-Gegenprobe |
 | genesis_final_native_verifier /455 und461 | Alte echte Modellresultate0176702a gesichert; neuer S01226c4992 nur vorbereitet |
@@ -117,4 +119,4 @@ Nächste zehn Schritte für eine ausdrücklich gestartete Folgesitzung:
 10. Originalpaket, höhere Version, Signatur und Updateweg im separaten Releasegate
     prüfen; kein Main-Merge oder Release ohne die geltende Abnahme/Freigabe.
 
-**Keine automatische Fortsetzung nach dem vom Besitzer verlangten Abschluss.**
+**Die neu autorisierte Fortsetzung beschränkt sich auf die benutzbare Dienstabnahme. Weitere Forschung bleibt ein Folgeauftrag.**

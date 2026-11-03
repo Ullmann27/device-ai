@@ -125,3 +125,16 @@ FinalQA agent has exact-source Node/Kotlin/MCP/Android runners prepared; runs on
 after the critical fix passes and Chief freezes integrated source. Current branch
 checkpoints are in CLOSEOUT-HEADS.json. Final facts will supersede this checkpoint
 in CLOSEOUT.md; absence of that completed report means no final acceptance claim.
+
+## Latest owner steering — supersedes stop before S01
+
+The owner explicitly requests finishing the usable coding agent rather than
+stopping at the software checkpoint. Resume the already frozen S01 only after
+final software checks; genuine one-call1.5B inference, separate verifier and
+restart evidence are required. No new broader experiment,7B admission, deployment
+or signing. Regular checkpoints continue because the reported budget is low.
+Product source remains8fd58d00. Android full gate is running on that clean detached
+source; final host299 passed. The first13-case service review run hit a stale
+expected ORPHAN_WORKER label instead of the stricter resource-barrier status;
+rawFAIL retained, harness ef0673ac preserves blocking/no-replay checks and adds
+attributable fixture cleanup. This is being rerun, not reported as passed yet.
