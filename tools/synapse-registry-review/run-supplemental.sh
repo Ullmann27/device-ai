@@ -22,7 +22,7 @@ ps -eo pid,pcpu,pmem,etime,args | rg 'GradleDaemon|K2JVMCompiler|blender|gradle.
 cat /sys/fs/cgroup/cpu.max /sys/fs/cgroup/memory.max > "$evidence_dir/host-cgroup-limits.txt"
 java -version > "$evidence_dir/java-version.txt" 2>&1
 set +e
-/usr/bin/time -v -o "$evidence_dir/process-resource-cost.txt" timeout 180s java -Xmx512m -cp "$evidence_dir/classes:$cp" at.heinz.deviceai.chief.RegistryCostProbe > "$evidence_dir/cost.jsonl" 2> "$evidence_dir/cost.stderr"
+python3 "$review_root/tools/synapse-registry-review/measure-process.py" "$evidence_dir/process-resource-cost.json" timeout 180s java -Xmx512m -cp "$evidence_dir/classes:$cp" at.heinz.deviceai.chief.RegistryCostProbe > "$evidence_dir/cost.jsonl" 2> "$evidence_dir/cost.stderr"
 cost_status=$?
 set -e
 printf '%s\n' "$cost_status" > "$evidence_dir/cost.exit"
