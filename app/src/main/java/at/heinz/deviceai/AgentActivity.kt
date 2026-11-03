@@ -2231,13 +2231,24 @@ class AgentActivity : Activity() {
             }
             if (step.id == "voice") {
                 box.addView(textView(readinessVoiceResult, 12f, MUTED), matchWidth(top = 4))
-                if (readinessVoiceSampleStarted) box.addView(actionButton("ICH HÖRE DICH KLAR").apply {
-                    setOnClickListener {
-                        readinessVoiceResult = "Von dir für diesen Hörtest bestätigt: klar hörbar."
-                        readinessVoiceSampleStarted = false
-                        refreshReadinessGuide()
-                    }
-                }, matchWidth(top = 4))
+                if (readinessVoiceSampleStarted) {
+                    val heardDialog = readinessDialog
+                    val heardSample = readinessVoiceSampleId
+                    box.addView(actionButton("ICH HÖRE DICH KLAR").apply {
+                        setOnClickListener {
+                            // A queued click from a removed button cannot confirm a different,
+                            // failed or closed test. Completion may precede the owner's answer.
+                            if (heardSample != null && readinessVoiceSampleId == heardSample &&
+                                readinessVoiceSampleStarted && readinessDialog === heardDialog &&
+                                heardDialog?.isShowing == true && foregroundLearningActive &&
+                                !isFinishing && !isDestroyed) {
+                                readinessVoiceSampleStarted = false
+                                readinessVoiceResult = "Von dir für diesen Hörtest bestätigt: klar hörbar."
+                                refreshReadinessGuide()
+                            }
+                        }
+                    }, matchWidth(top = 4))
+                }
             }
             if (step.id == "speech") box.addView(textView(readinessSpeechResult, 12f, MUTED), matchWidth(top = 4))
         }
