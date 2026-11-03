@@ -100,7 +100,7 @@ data class ExtendedCurriculumReport(
     }
 }
 
-enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
+enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE, HELD_UNCONFIRMED }
 
 data class ContinuumLearningStatus(
     val experiences:LearningExperienceStats,
@@ -577,14 +577,57 @@ class ContinuumLearningCore(
         live.forEach { store.append(it);store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
     }
 
-    private fun ownerFact(content:String)=LearningExperienceFactory.create(
-        LearningExperienceType.USER_FACT,
-        LearningProvenance.USER_CONFIRMED,
-        LearningTrustClass.OWNER_CONFIRMED,
-        LearningStatus.CONFIRMED,
-        content.trim(),
-        now=nowMillis()
-    )
+    /**
+     * M2 hypothetical gate: only an assertion (or a negation, kept as a remove-only barrier) becomes a
+     * CONFIRMED owner fact. A conditional, hedged, planned, questioned or reported statement is kept visibly
+     * as an OBSERVED owner statement with an `unbestaetigt:<MODALITY>` annotation, which no answer path reads
+     * as a fact (all of them filter on CONFIRMED/LEARNED/REPLAY_PENDING). Same enum names, same file format.
+     */
+    private fun ownerFact(content:String):LearningExperience {
+        val held=OwnerStatementModality.heldAnnotation(content)
+        return LearningExperienceFactory.create(
+            LearningExperienceType.USER_FACT,
+            LearningProvenance.USER_CONFIRMED,
+            LearningTrustClass.OWNER_CONFIRMED,
+            if(held==null)LearningStatus.CONFIRMED else LearningStatus.OBSERVED,
+            content.trim(),
+            annotation=held,
+            now=nowMillis()
+        )
+    }
+
+    private fun confirmable(e:LearningExperience)=
+        e.annotation?.startsWith(OwnerStatementModality.HELD_PREFIX)!=true &&
+            OwnerStatementModality.mayBecomeConfirmedFact(OwnerStatementModality.classify(e.content))
+
+    /** Legacy ledgers (before the gate) may hold a CONFIRMED conditional sentence: demote it to OBSERVED. */
+    private fun quarantineUnconfirmableOwnerFacts():Int {
+        val legacy=store.all().filter { it.type==LearningExperienceType.USER_FACT &&
+            it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) &&
+            !confirmable(it) }
+        if(legacy.isNotEmpty())dialogue.clear()
+        legacy.forEach { store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
+        return legacy.size
+    }
+
+    /** Owner statements that are stored but deliberately NOT confirmed facts (hypothetical, uncertain, ...). */
+    fun unconfirmedOwnerStatements():List<LearningExperience> = synchronized(CORE_LOCK) {
+        store.all().filter { it.type==LearningExperienceType.USER_FACT && it.status==LearningStatus.OBSERVED &&
+            it.trust==LearningTrustClass.OWNER_CONFIRMED }
+    }
+
+    /**
+     * Read-only view for the temporal memory specialist: every owner statement of the canonical ledger
+     * including revocation tombstones and held statements, so validity and knowledge time stay reconstructable.
+     * No copy, no second store; [ContinuumTemporalMemory] decides what may answer.
+     */
+    fun temporalMemoryView(working:List<WorkingTurn> = emptyList(),
+                           zone:java.time.ZoneId = ContinuumTemporalMemory.VIENNA):ContinuumTemporalMemory =
+        synchronized(CORE_LOCK) {
+            ContinuumTemporalMemory.fromLedger(store.all().filter { it.type==LearningExperienceType.USER_FACT &&
+                it.trust==LearningTrustClass.OWNER_CONFIRMED && it.provenance==LearningProvenance.USER_CONFIRMED },
+                working,zone)
+        }
 
     /** Adds a missing owner fact; a fact the owner revoked stays revoked (see [confirmOwnerFact]). */
     fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
@@ -597,6 +640,7 @@ class ContinuumLearningCore(
      * revocation is not undone by facts that are still listed elsewhere.
      */
     fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) {
+        quarantineUnconfirmableOwnerFacts()
         store.appendMissing(facts.map(::ownerFact))
     }
 
@@ -607,6 +651,10 @@ class ContinuumLearningCore(
      */
     fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) {
         val item=ownerFact(content)
+        if(item.status==LearningStatus.OBSERVED) {
+            store.append(item)
+            return@synchronized OwnerFactChange.HELD_UNCONFIRMED
+        }
         if(store.append(item))return@synchronized OwnerFactChange.ADDED
         val existing=store.all().first { it.id==item.id }
         if(existing.status!=LearningStatus.REVOKED && existing.status!=LearningStatus.REJECTED)
@@ -619,7 +667,8 @@ class ContinuumLearningCore(
     fun activeOwnerFacts():List<LearningExperience> = synchronized(CORE_LOCK) {
         store.all().filter {
             it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED &&
-                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING)
+                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) &&
+                confirmable(it)
         }
     }
 

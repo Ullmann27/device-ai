@@ -41,7 +41,12 @@ object BootstrapBrain {
     private val storageNegation = Regex(
         """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|kein\p{L}*)(?![\p{L}\p{N}_])"""
     )
-    private val storageClauseBoundary = Regex("""(?iu)\bsondern\b|[.;!?]""")
+    // ", nicht/aber nicht/jedoch kein…" starts an independent contrast clause. A comma
+    // before "dass/welche/…" (subordinate clause) is NOT a boundary: the negation of
+    // the main clause ("Ich will nicht, dass …") must keep covering it.
+    private val storageClauseBoundary = Regex(
+        """(?iu)\bsondern\b|[.;!?]|,(?=\s*(?:(?:aber|jedoch|doch)\s+)?(?:nicht|niemals|kein\p{L}*)(?![\p{L}\p{N}_]))"""
+    )
     private val batteryNoun = Regex(
         """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
     )
@@ -51,7 +56,7 @@ object BootstrapBrain {
     private fun isBatteryReadRequest(input: String): Boolean =
         input.trim().split(storageClauseBoundary).any { untrimmed ->
             val text = untrimmed.trim()
-            !storageNegation.containsMatchIn(text) &&
+            !clauseNegation.containsMatchIn(text) &&
                 (text in setOf("akku", "batterie", "ladezustand", "akkustand") ||
                     (batteryNoun.containsMatchIn(text) && batteryReadCue.containsMatchIn(text)))
         }
@@ -61,12 +66,18 @@ object BootstrapBrain {
     private fun affirmativeClause(input: String, cue: (String) -> Boolean): Boolean =
         input.trim().split(storageClauseBoundary).any { untrimmed ->
             val text = untrimmed.trim()
-            text.isNotBlank() && !storageNegation.containsMatchIn(text) && cue(text)
+            text.isNotBlank() && !clauseNegation.containsMatchIn(text) && cue(text)
         }
     private val appsCue = Regex(
         """(?iu)(?<![\p{L}\p{N}_])(?:installierte[nm]?\s+apps|alle\s+apps|apps\s+installiert)(?![\p{L}\p{N}_])"""
     )
     private val appMutation = Regex("""(?iu)(?<![\p{L}\p{N}_])(?:schließ\p{L}*|schliess\p{L}*|beend\p{L}*|stopp\p{L}*|aktualisier\p{L}*)""")
+    // Clause negation de/en for every read-only device cue. Superset of storageNegation:
+    // adds "nie/weder" and English "not/never/no/without/don't/…n't" (straight or typographic
+    // apostrophe). Fail-closed: a negated clause never starts a tool; the model answers.
+    private val clauseNegation = Regex(
+        """(?iu)(?<![\p{L}\p{N}_])(?:nicht|nie|niemals|ohne|unterlasse|weder|kein\p{L}*|not|never|no|without|dont|\p{L}*n['\u2019]t)(?![\p{L}\p{N}_])"""
+    )
 
     private fun isStorageReadRequest(input: String): Boolean {
         val clauses = input.trim().split(storageClauseBoundary)
@@ -75,7 +86,7 @@ object BootstrapBrain {
             val text = untrimmed.trim()
             when {
                 text.isBlank() || storageSaveImperative.containsMatchIn(text) -> false
-                storageNegation.containsMatchIn(text) -> false
+                clauseNegation.containsMatchIn(text) -> false
                 text in bare -> true
                 else -> storageNoun.containsMatchIn(text) && storageReadCue.containsMatchIn(text)
             }
@@ -187,7 +198,8 @@ object BootstrapBrain {
             return tool("get_app_info", mapOf("packageOrName" to "Lumo"))
         if (affirmativeClause(low) { "downloads" in it || "download-ordner" in it }) return tool("list_files",
             mapOf("path" to "/sdcard/Download"))
-        val wantsStorageInspection = isStorageReadRequest(low) || "große dateien" in low
+        val wantsStorageInspection = isStorageReadRequest(low) ||
+            affirmativeClause(low) { "große dateien" in it }
         val wantsBatteryInspection = isBatteryReadRequest(low)
         // A single read-only bootstrap action must not guess between two tools.
         if (wantsStorageInspection && wantsBatteryInspection) return BootstrapDecision(

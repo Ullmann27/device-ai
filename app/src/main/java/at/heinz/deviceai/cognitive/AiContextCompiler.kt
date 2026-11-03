@@ -7,6 +7,8 @@ data class AiContextPolicy(
     val maxBytes: Int = 16_000,
     val memoryLimit: Int = 8,
     val researchSourceLimit: Int = 6,
+    /** Tool schemas are already registered natively with the LiteRT-LM conversation. */
+    val nativeToolCatalog: Boolean = false,
     val allowedPrivacy: Set<PrivacyClass> = setOf(
         PrivacyClass.PUBLIC,
         PrivacyClass.PRIVATE,
@@ -178,7 +180,12 @@ class AiContextCompiler(
             )
         }
 
-        appendSection(
+        // M2: with natively registered LiteRT-LM tools the schema text is a duplicate;
+        // keep names and risk classes only (authorization stays in ToolGate).
+        if (policy.nativeToolCatalog) appendSection(
+            "REGISTERED TOOLS (Schemas nativ registriert)",
+            ToolRegistry.all().joinToString("\n") { "- " + it.name + " (" + it.risk.name + ")" }
+        ) else appendSection(
             "REGISTERED TOOLS",
             ToolRegistry.all().joinToString("\n") {
                 "- " + it.name + ": risk=" + it.risk.name + "; " + it.description.take(160)
