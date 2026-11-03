@@ -1,0 +1,10 @@
+{
+  "classification": "INDEPENDENT_SYNTHETIC_PATCH_TEST",
+  "baseline": true,
+  "sourceSha256": "f5de430341374c0e2171a01196ae8a281fd6752bc768c7bf1dd6db7ffce5cb68",
+  "status": 1,
+  "signal": null,
+  "error": null,
+  "stdout": "FAIL empty\nFAIL exact multiple\nPASS remainder\nPASS wide\nPASS invalid width 0\nPASS invalid width -2\nPASS invalid width 1.5\nPASS invalid width NaN\n",
+  "stderr": ""
+}
