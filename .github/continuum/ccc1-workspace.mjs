@@ -10,14 +10,16 @@ import {BacklogStore} from './development-backlog.mjs';
 import {jobTaskId} from '../../scripts/continuum-mobile-coding.mjs';
 import {isIsolatedExecutor} from './isolated-executor.mjs';
 
-export function bindCcc1Workspace({executor,project,stateDir,taskId,job,workerId}){
+export function bindCcc1Workspace({executor,project,stateDir,taskId,job,workerId,identityGuard=null}){
  if(!isIsolatedExecutor(executor)||typeof executor.forWorkspace!=='function')throw Error('WORKSPACE_ISOLATION_REQUIRED');
+ if(identityGuard!==null&&typeof identityGuard!=='function')throw Error('WORKSPACE_IDENTITY_GUARD_INVALID');
  if(!/^t-[a-f0-9]{16}$/.test(taskId??''))throw Error('WORKSPACE_TASK_INVALID');
  const state=ensureCcc1StateOutsideSource(project,stateDir);
  const journal=DurableTaskJournal.forTask(state,taskId,runtimeKey(state));
  const backlog=path.join(teamleaderStateOf(state),'development-backlog.json');
  let expected=null;
  function inspect(lease=null,{initial=false}={}){
+  if(identityGuard!==null&&identityGuard()?.agentId!==workerId)throw Error('WORKSPACE_IDENTITY_CHANGED');
   // Never repair/truncate a torn journal here. Every profile reads current MACs,
   // task/revocation, pending request and recovery from the existing authorities.
   const entries=journal.entries(),goal=entries[0],request=pendingRequest(entries),status=taskState(entries);
