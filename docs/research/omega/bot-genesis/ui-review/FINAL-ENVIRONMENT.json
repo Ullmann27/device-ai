@@ -4,7 +4,6 @@
     "os": "Linux",
     "arch": "x86_64"
   },
-  "source": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
   "compilerJava": {
     "command": [
       "/workspace/continuum-build-env/jdk17/bin/java",
@@ -39,5 +38,7 @@
   },
   "quota": "NOT_VISIBLE",
   "evidence": "Host JVM/Robolectric/compile/lint only; no APK assembly/signing/install or real microphone",
-  "gradleVersionFromProvisionedToolchain": "8.11.1 provisioned toolchain (actual Gradle raw logs retained)"
+  "gradleVersionFromProvisionedToolchain": "8.11.1 provisioned toolchain (actual Gradle raw logs retained)",
+  "environmentCapturedAtSource": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
+  "finalTestedSource": "1595389274acb840c4ab544fa699c9eb2a04bd53"
 }

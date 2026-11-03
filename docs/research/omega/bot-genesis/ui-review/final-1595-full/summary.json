@@ -1,0 +1,145 @@
+{
+  "source": "1595389274acb840c4ab544fa699c9eb2a04bd53",
+  "tests": 2241,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 17,
+  "suiteCount": 404,
+  "gradleExit": 0,
+  "gradleWallSeconds": 185,
+  "compilation": "PASS",
+  "lint": {
+    "status": "PASS",
+    "issues": 0,
+    "configuredScope": "NewApi only, abortOnError=true, repository unchanged"
+  },
+  "sourceAndTestsUnchanged": true,
+  "sourceFileCount": 877,
+  "reviewFileCount": 6,
+  "candidateClean": true,
+  "failedAssertions": [],
+  "skippedCases": [
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s7_pending_agentMessagesUrgentWakesInfoWaits"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s4b_pending_profileDiarySharedLayers"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s8d_pending_limitGuardIsWiredBeforeWorkerStart"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s5b_pending_textFileSkillLibraryLoadedOnDemand"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s6_pending_routineReportsOnlyWhenSomethingIsNew"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefPatternE2ETest",
+      "name": "s2b_pending_workerHasOwnBriefOwnToolAllowlistAndReportsBack"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "actualPoolMailboxAndTwoFixedNodeContainersReturnOnlyObservations"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.ChiefWorkspaceWiringHostTest",
+      "name": "cancellationOfRealContainerClosesRunnerAndReportsToChiefMailbox"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4d_handeln_eingeschleusterBefehlInWerkzeugausgabeWirdIgnoriert"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt1b_ziel_turnLifecycleQuittiertGenauEinmal"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt4c_handeln_alsChiefWorkerPoolJobMitWerkzeugScope"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt6b_lernen_hypotheseUndTagebuchEintrag"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt3b_erinnern_geteiltesWissenUeberLayersSharedSearch"
+    },
+    {
+      "class": "at.heinz.deviceai.chief.FirstThinkingRunE2ETest",
+      "name": "schritt7b_naechsterSchritt_wirdStrukturiertGeplantUndAngestossen"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeTrainingParity"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "name": "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "name": "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+    }
+  ],
+  "reviewerSubsetIncludedInTotal": [
+    {
+      "name": "at.heinz.deviceai.IndependentActivitySpeechTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.095
+    },
+    {
+      "name": "at.heinz.deviceai.IndependentBotAddressRouterTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.121
+    },
+    {
+      "name": "at.heinz.deviceai.IndependentBotRosterUiTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.657
+    },
+    {
+      "name": "at.heinz.deviceai.IndependentBotSelectionUiTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.4
+    },
+    {
+      "name": "at.heinz.deviceai.IndependentBotSpeechScopeTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.532
+    }
+  ],
+  "rawJUnitArchiveSha256": "c933ba4164c7bef2f43418ac06133afec247100aaa5444afa866394e502d800a",
+  "filter": "No reviewer test-filter properties supplied",
+  "environmentBlink": "Existing run completed; no retry or duplicate Gradle invocation",
+  "notClaimed": [
+    "APK assembled",
+    "original signing",
+    "device installation",
+    "Fold7/audio/GPU measurement",
+    "local model inference",
+    "release"
+  ],
+  "passed": 2224
+}

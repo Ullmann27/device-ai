@@ -1,6 +1,10 @@
 # Bot Genesis independent UI review
 
-**Current combined acceptance:29/29 scoped checks PASS,0 FAIL,0 SKIP on exact66fce742c89236e7d5b78ceb2ec29ed1f1cd7b44.** Android production/test compilation PASS. This includes the same speech interruption assertion that failed on4b; the caller's UI-thread serialization now passes. Raw evidence is `combined-66f-scoped/`. Whole-app unfiltered final-source acceptance and real Fold7/audio/model behavior remain separate gates.
+**Final unfiltered Android host gate PASS on exact1595389274acb840c4ab544fa699c9eb2a04bd53:**2241 total tests =2224 PASS,0 FAIL,17 SKIP,0 errors across404 suites. The34 independent reviewer tests are included in that total and all pass. Production/test compilation PASS; `lintDebug` PASS with0 issues under the repository's existing NewApi-only configuration. Gradle exit0 in185s. Raw evidence: `final-1595-full/`. No APK assembly, signing, installation, release, local-model inference or Fold7/audio/GPU acceptance is implied.
+
+All877 tracked production/repository-test/build files,6 external reviewer files and the test-JVM init hash are identical before/after; exact candidate checkout remains clean. A temporary environment-status interruption occurred after the unit task; on recovery the existing Gradle log and exit file proved successful completion. No retry or duplicate build was launched. CPU window is RELEASED; no reviewer background build or native model remains running. QuotaNOT_VISIBLE.
+
+The following sections preserve earlier checkpoints and RED evidence; their pending statuses are historical where superseded by the final result above.
 
 **407 roster repair independently HOST_TESTED:15/15 PASS,0 FAIL,0 SKIP.** Actual Android production/test compile PASS, Gradle exit0. Exact tested baseline4b881f81ddfbe38729a551d9e460e818c6b3b715, production equivalentc7ec853e2ffaa488b92826306f015bfaa67f5bb7. Reviewer test freeze7bb1cfd5cf3beab9d5a1caf0d84180c815172bd0; all source/test hashes identical before/after. Review-only branch codex/genesis-ui-review-20261103. PR437 merged into Chief Genesis at38427adc; subsequent tests/evidence continue in draftPR446. No production edits.
 
@@ -71,3 +75,25 @@ On exactc5f9b06b the unchanged34 scoped checks passed with0 failures/skips; actu
 The following unfiltered run included2241 tests in404 suites:2223 PASS,1 FAIL,17 SKIP,0 errors. The only failure was the pre-existing actual-avatar UI test reflecting `AgentActivity.stopVoiceAnimation()` without arguments. Chief's new Boolean default parameter had removed that JVM entry point. Lint did NOT_RUN because the unit task failed. The full raw404-suite JUnit archive, exact failure, skip names, counts and unchanged manifests are retained in `final-c5f-full/`; Gradle87s, exit1. No failure or skipped case was converted to PASS.
 
 Chief supplied source1595389274acb840c4ab544fa699c9eb2a04bd53 with a minimal compatibility repair: the original no-argument private wrapper delegates to the Boolean overload withtrue. Repository/reviewer assertions were not changed. An unfiltered full unit/lint/compile recheck is in progress on this exact source, including the34 reviewer checks as a subset of the total (never added twice). All877 tracked production/repository-test/build files,6 reviewer files and the JVM init hash are frozen for this final run. `SKIPPED-CASES.md/json` lists all17 previous skipped methods and their actual source gates; historical annotation text is distinguished from current architecture findings. `FINAL-ENVIRONMENT.json` records real JDKs, host and available adb with no attached device.
+
+## Final1595 result and continuation
+
+The full command completed with exit0 and all configured targets passed. The original no-argument speech-stop test now passes without changing its assertion. The34-case independent subset also passes unchanged:15 roster,3 actual TTS-listener callback checks,8 selection/edit-order checks,3 actual paginated address checks,5 actual Activity/ASR scope and coding-safe microphone checks. Separate RED baselines remain available:4b speech2/3,66f ASR0/5 andc5f full compatibility2223PASS/1FAIL/17SKIP. These results demonstrate software fixes, not improved intelligence scores or completed native coding work.
+
+The17 skipped identities are unchanged fromc5f and all are listed with source reasons in `SKIPPED-CASES.md/json`:12 historical ignored placeholders,2 explicit real-container host-proof gates and3 generated parity-fixture gates. None is counted as passed. The404-suite raw archive SHA256 is `c933ba4164c7bef2f43418ac06133afec247100aaa5444afa866394e502d800a`. `final-1595-full/` contains that archive, raw Gradle output/exit, exact suite counts, summary, lint XML/text/HTML and before/after manifests. The JDK17 compiler and JRE21 tests used the provisioned Gradle8.11.1/SDK36 host; Robolectric SDK28/35 speech checks use platform shadows. Actual adb is available with no device attached at the recorded check.
+
+Final reproduction, from a clean checkout of1595389274acb840c4ab544fa699c9eb2a04bd53 with this reviewer source present externally:
+
+```sh
+source /workspace/continuum-build-env/env.sh
+gradle --no-daemon --max-workers=2 --console=plain \
+  -I /workspace/continuum-build-env/test-jvm21.init.gradle \
+  -I /workspace/genesis-ui-review/tools/genesis-ui-review/connection.init.gradle \
+  -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true \
+  -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true \
+  -Pkotlin.compiler.execution.strategy=in-process \
+  :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin
+```
+
+All reviewer filter properties are deliberately absent. Do not pass both reviewer init files: connection.init.gradle already includes the original roster source. No guard was disabled and no release task was invoked. Repeat only if production/test/toolchain inputs change or a new unresolved failure warrants it. Next practical acceptance remains real-device bot/ASR/TTS/model-switch/fold behavior; genuine native MΩ results belong to the independent coding lane. The monitor-held-during-store-I/O UI responsiveness concern is a documented unmeasured follow-up, not a claimed failing test.
