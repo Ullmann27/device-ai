@@ -12,6 +12,39 @@ const gate=env=>spawnSync(process.execPath,['scripts/continuum-v22-source-gate.m
  cwd:root,encoding:'utf8',timeout:60000,env:{PATH:process.env.PATH,HOME:process.env.HOME,...env}
 });
 
+// ls-tree -z uses actual NUL separators and preserves tabs/newlines in paths.
+// Reject malformed inventories instead of silently comparing an empty map.
+const parseBlobInventory=output=>{
+ const records=output.split('\0');
+ assert.equal(records.pop(),'','Git inventory must end with NUL');
+ const blobs=new Map();
+ for(const record of records){
+  const match=/^[0-7]{6} (blob|commit) ([a-f0-9]{40})\t([\s\S]+)$/.exec(record);
+  assert.ok(match,'Malformed Git inventory record');
+  if(match[1]!=='blob')continue; // A submodule commit is not a source blob.
+  assert.ok(!blobs.has(match[3]),'Duplicate Git inventory path');
+  blobs.set(match[3],match[2]);
+ }
+ return blobs;
+};
+
+test('source inventory parses real NUL records and literal whitespace in paths',()=>{
+ const sha='1'.repeat(40), other='2'.repeat(40);
+ const records='100644 blob '+sha+'\tapp/build.gradle.kts\0'+
+  '100644 blob '+other+'\tspace and\ttab\nline.kt\0'+
+  '160000 commit '+other+'\tvendor/submodule\0';
+ assert.deepEqual([...parseBlobInventory(records)], [
+  ['app/build.gradle.kts',sha], ['space and\ttab\nline.kt',other]
+ ]);
+});
+
+test('source inventory rejects truncated, malformed and duplicate records',()=>{
+ const valid='100644 blob '+'1'.repeat(40)+'\tapp.kt\0';
+ assert.throws(()=>parseBlobInventory(valid.slice(0,-1)),/end with NUL/);
+ assert.throws(()=>parseBlobInventory('not a Git record\0'),/Malformed/);
+ assert.throws(()=>parseBlobInventory(valid+valid),/Duplicate/);
+});
+
 test('v22 is strictly an owner in-place update and leaves historical releases intact',()=>{
  const d=get('scripts/render-mentor-preview.sh');
  const recipe=get('scripts/render-mentor-owner-update-v22.sh');
@@ -78,9 +111,13 @@ test('exact approved source blob inventory is internally complete (CI simulation
  assert.match(historical.stdout,/OWNER_V22_HISTORICAL_TREE_VERIFIED/);
  const archived=JSON.parse(get('docs/release/continuum-v22-historical-git-tree-20261025.json'));
  const approved=new Map(archived.entries.filter(e=>e.type==='blob').map(e=>[e.path,e.sha]));
- const tree=ref=>new Map(execFileSync('git',['ls-tree','-r','-z',ref],{cwd:root,encoding:'utf8'})
-  .split('\\0').filter(Boolean).map(line=>{const m=/^\\d+ blob ([a-f0-9]{40})\\t(.+)$/.exec(line);return m?[m[2],m[1]]:['',''];}));
+ // Repository evidence now exceeds Node's default 1MiB child-output buffer.
+ // Keep a finite bound; this lists metadata, never blob contents or signer data.
+ const tree=ref=>parseBlobInventory(execFileSync('git',['ls-tree','-r','-z',ref],{
+  cwd:root,encoding:'utf8',maxBuffer:16*1024*1024,timeout:30000
+ }));
  const current=tree('HEAD');
+ assert.ok(current.has('app/build.gradle.kts'),'Current source inventory is populated');
  assert.equal(manifest.files.length,927);
  for(const entry of manifest.files)assert.equal(approved.get(entry.path),entry.blob,entry.path);
  const r=gate({
