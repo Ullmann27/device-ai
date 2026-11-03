@@ -15,13 +15,18 @@ while IFS= read -r jar; do classpath+="$jar:"; done < <(find "$deps" -maxdepth 1
 test -n "$classpath"
 classpath+="$scratch/dependencies"
 production=app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
-if [[ ${1:-} == --baseline ]]; then
+if [[ ${1:-} == --baseline || ${1:-} == --m3-baseline ]]; then
   git show 64ec06a73f50cae9ee49035c840710d87777d50f:"$production" > "$scratch/OwnerStatementTimeline.kt"
   production="$scratch/OwnerStatementTimeline.kt"
 fi
 names=(OwnerStatementTimeline OwnerStatementTimelineContextIntegration LocalConversationFollowUpIntegration
   LocalFollowUpTaskFrame LocalPromptFrame LocalContextRetention LocalConversationFollowUpPolicy
   LocalContextIntegrityProbe LocalConversationPromptFirewall)
+if [[ ${1:-} == --m3-baseline || ${1:-} == --m3-candidate ]]; then
+  names=(ContinuumOfflineEval)
+  classpath+=":$PWD/app/src/test/resources"
+  sha256sum app/src/test/resources/continuum-eval/m3-de.tsv
+fi
 sources=("$production")
 tests=()
 for name in "${names[@]}"; do

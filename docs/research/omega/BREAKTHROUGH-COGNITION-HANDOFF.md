@@ -122,3 +122,29 @@ remain pending. Native Gemma/Fold7 are unavailable. No broad intelligence gain.
 Candidate source is frozen in the commit containing this section, before any
 independent unseen test result is requested. Future unseen failures will be
 reported without tuning this frozen candidate.
+
+Frozen candidate: `107a7bb0ce680ad0c362b4226308942aa0dfaaec`, pushed to PR #398.
+Exact committed replay `frozen-107a7bb0-jvm.txt`: **57/57 passed**, no warnings;
+production SHA-256 `375173118c83a9568610c3ad03742109317dadcdba238461f5a608ff6000dd03`.
+The source hash differs from the earlier green log only because the class comment
+was updated before freezing. QA received the frozen SHA before independent results.
+
+## Unchanged consumed M3 comparison
+
+Runner modes `--m3-baseline` and `--m3-candidate` compile the unchanged actual M3
+scorer against the respective timeline and the same real baseline dependencies.
+Both score **77/81, 0 harmful**. All 81 per-case outputs are byte-identical;
+8/8 MULTI cases remain correct. Baseline and candidate report SHA-256 are both
+`7db43dd5fd837aef24cc22cc233cd2378f6a9895c25004072be5418576b7eef1`.
+`m3-comparison.json` records **0 improvements / 0 regressions**, using the unchanged
+existing comparator. The corpus hash still matches evaluation-v1. This is known
+development-set regression evidence, not an independent or model-quality gain.
+
+All four existing misses remain R06/R07/R10/R17 route NONE. Caller inspection
+confirms this scorer checks `OwnerChatIntentRouter` and `BootstrapBrain` only;
+the actual Activity also has the existing local-model/orchestrator paths.
+`BootstrapBrain` deliberately recognizes colon-form memory commands and exact
+forget-all phrases; Activity feeds REMEMBER into `rememberOwnerFact` and FORGET
+into owner confirmation. Changing those routes merely to match this proxy would
+change authority semantics and is outside this fix. No scorer, corpus, route,
+memory admission, consent or Activity code changed.
