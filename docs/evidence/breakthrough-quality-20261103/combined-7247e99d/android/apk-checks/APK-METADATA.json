@@ -1,0 +1,294 @@
+{
+  "apk": "/workspace/continuum-breakthrough-quality/app/build/outputs/apk/release/app-release-unsigned.apk",
+  "bytes": 84178957,
+  "sha256": "e98e8177d069b474f43fdce82701aa2e20a178ee6118d5796f58359edd5a1b1b",
+  "expected_glb_sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "native": [
+    {
+      "path": "lib/arm64-v8a/libfilament-jni.so",
+      "bytes": 2266408,
+      "sha256": "d75914906f58575b70012edc4848fad5981d57de4a776d6486cdfabbf1c90da4",
+      "zip_compression": 0,
+      "zip_data_offset": 4554752,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x220520",
+          "virtual_address": "0x0000000000224520",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x2288e8",
+          "virtual_address": "0x00000000002308e8",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/arm64-v8a/libgltfio-jni.so",
+      "bytes": 4679472,
+      "sha256": "d0646ee3858dc865bc861529ce817fe4a667806c36a5c1fab67d7e2f1fcd9a2b",
+      "zip_compression": 0,
+      "zip_data_offset": 6832128,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x46f910",
+          "virtual_address": "0x0000000000473910",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x475bc8",
+          "virtual_address": "0x000000000047dbc8",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/arm64-v8a/liblitertlm_jni.so",
+      "bytes": 22155680,
+      "sha256": "4a94a3f955ad7c58cbcdfc5cb4ff566187bb9e8c5bc2c4056b4e226646c7e8fd",
+      "zip_compression": 0,
+      "zip_data_offset": 11517952,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1454000",
+          "virtual_address": "0x0000000001454000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1515760",
+          "virtual_address": "0x0000000001519760",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/armeabi-v7a/libfilament-jni.so",
+      "bytes": 1808980,
+      "sha256": "2fdd5949c0fff4c9e3ba311327845abb2d6b04b2c98dc41a9d1cfca2da6ae856",
+      "zip_compression": 0,
+      "zip_data_offset": 33685504,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x00000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1b4f20",
+          "virtual_address": "0x001b8f20",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1b9188",
+          "virtual_address": "0x001c1188",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/armeabi-v7a/libgltfio-jni.so",
+      "bytes": 4096596,
+      "sha256": "7df7e6f5400795cf349a92c7c236ebc22cb0f635e358358abd2a6b9b45bd4861",
+      "zip_compression": 0,
+      "zip_data_offset": 35504128,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x00000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x3e4650",
+          "virtual_address": "0x003e8650",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x3e79f8",
+          "virtual_address": "0x003ef9f8",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/x86/libfilament-jni.so",
+      "bytes": 2490912,
+      "sha256": "a03fb8b99e7179bef67ed42ace3dd79bf0d94154addbc41b3e69dc6b9f743c1a",
+      "zip_compression": 0,
+      "zip_data_offset": 39616512,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x00000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x25b6f0",
+          "virtual_address": "0x0025f6f0",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x25f97c",
+          "virtual_address": "0x0026797c",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/x86/libgltfio-jni.so",
+      "bytes": 4952552,
+      "sha256": "c595994a86545bf755b2d744f8af6313dc5f87605f29f84f498d4d69382a1a6a",
+      "zip_compression": 0,
+      "zip_data_offset": 42123264,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x00000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x4b55a0",
+          "virtual_address": "0x004b95a0",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x4b89bc",
+          "virtual_address": "0x004c09bc",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/x86_64/libfilament-jni.so",
+      "bytes": 2394920,
+      "sha256": "793bdf047f514d6d942840e08ba3e02e8dcb197f31fe9e0760c7cef1ff46dfa3",
+      "zip_compression": 0,
+      "zip_data_offset": 47087616,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x23fff0",
+          "virtual_address": "0x0000000000243ff0",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x247ee0",
+          "virtual_address": "0x000000000024fee0",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/x86_64/libgltfio-jni.so",
+      "bytes": 4856696,
+      "sha256": "0d1241dd5b3ecaad9eefd5b2c4bd6bb750b2713a9e970355490ede504af77961",
+      "zip_compression": 0,
+      "zip_data_offset": 49496064,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x49adc0",
+          "virtual_address": "0x000000000049edc0",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x4a1010",
+          "virtual_address": "0x00000000004a9010",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    },
+    {
+      "path": "lib/x86_64/liblitertlm_jni.so",
+      "bytes": 26353160,
+      "sha256": "177ed8b6cbea8fec901e705d78aadf8ccbc51004e6d03cc82915a55f313fb667",
+      "zip_compression": 0,
+      "zip_data_offset": 54362112,
+      "zip_16k_aligned": true,
+      "readelf_exit": 0,
+      "loads": [
+        {
+          "offset": "0x000000",
+          "virtual_address": "0x0000000000000000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1850000",
+          "virtual_address": "0x0000000001850000",
+          "alignment": "0x4000"
+        },
+        {
+          "offset": "0x1916340",
+          "virtual_address": "0x000000000191a340",
+          "alignment": "0x4000"
+        }
+      ],
+      "elf_16k": true
+    }
+  ],
+  "badging_exit": 0,
+  "package_line": "package: name='at.heinz.deviceai.continuumlocal' versionCode='40' versionName='0.3.39' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "unsigned-verify_exit": 1,
+  "zipalign-16k_exit": 0,
+  "glb_bytes": 8690400,
+  "glb_sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "glb_match": true,
+  "asset_notices": [
+    "assets/avatar3d/LICENSE.ASSETS.md",
+    "assets/avatar3d/NOTICE.json"
+  ],
+  "v1_signature_entries": [],
+  "apk_signing_block_present": false,
+  "arm64_all_elf_16k": true,
+  "unsigned_expected": true,
+  "package_expected": true
+}
