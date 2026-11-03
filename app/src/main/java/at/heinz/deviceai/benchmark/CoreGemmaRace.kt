@@ -125,7 +125,7 @@ object CoreGemmaRaceEvaluator {
         if (rows.any { (_, ms) ->
             ms.size != 2 || ms.map { it.system }.toSet() != expectedSystems ||
                 ms.any { it.error != null || !it.success || it.latencyMillis <= 0 ||
-                    it.invalidToolProposals != 0 }
+                    it.invalidToolProposals != 0L }
         }) return no(RaceAssessment.INCOMPLETE, "Missing, failed, invalid or zero-latency measurement.")
 
         val byTask = grades.groupBy { it.taskId }
