@@ -76,6 +76,21 @@ actual Kotlin profile store for every lookup. `run-host.sh` compiles the final
 candidate's V2 conversation/compiler sources when present. Earlier V1 compiled
 classes must not be reused as final V2 source evidence.
 
+The combined V2 bridge needs Kotlin module friendship for existing internal
+context helpers. The original focused script omitted that flag and failed before
+any model call. The repaired script uses `-Xfriend-paths`, keeps all production
+visibility unchanged, records dependency class hashes and requires matching clean
+`app/src/main` trees. First build the source, or explicitly provide its verified
+Gradle classes, for example:
+
+```sh
+SYNAPSE_BASE_CLASSES=/workspace/synapse-ui-candidate/app/build/tmp/kotlin-classes/debug \
+  tools/genesis-workspaces/run-host.sh /workspace/new-genesis-host-evidence
+```
+
+The output directory must be new. Matching source trees and class hashes support
+reproduction; they do not replace the recorded Gradle compilation evidence.
+
 Author evidence paths: `workspace-builder/evidence/`; Kotlin source hashes/logs
 are saved separately from compiled class artifacts. Independent findings and
 raw RED/GREEN logs belong to PR441. Next step: Chief exact-source integration,
