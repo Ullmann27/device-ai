@@ -89,13 +89,25 @@ class RoutineDispatcher(
     private fun dispatch(routines: List<Routine>): Int {
         var submitted = 0
         for (routine in routines) {
-            if (!inFlight.add(routine.id)) continue
+            if (!inFlight.add(routine.id)) {
+                // The scheduler claimed this entry, but a previous dispatch still owns it.
+                // Do not leave the RoutineBook permanently in-flight after a failed handoff.
+                book.release(routine.id)
+                continue
+            }
             val brief = runCatching {
                 WorkerBrief(briefId(routine.id), routine.goal, routine.allowedTools)
             }.getOrNull()
-            if (brief == null) { inFlight.remove(routine.id); continue }
+            if (brief == null) {
+                inFlight.remove(routine.id)
+                book.release(routine.id)
+                continue
+            }
             val accepted = runCatching { pool.submit(brief) { report -> onReport(routine, report) } }.getOrDefault(false)
-            if (accepted) submitted++ else inFlight.remove(routine.id)
+            if (accepted) submitted++ else {
+                inFlight.remove(routine.id)
+                book.release(routine.id)
+            }
         }
         return submitted
     }
