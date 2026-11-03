@@ -2,7 +2,7 @@
 
 2026-11-03. Base `19474261c15a3503a9f041244b4b4c3eaed4636f`; accepted source
 `4b98da9362f91ab9930a7f4b279737a9e80f94bd`. Isolated branch
-`codex/momega1-android-20261103`, draft PR [414](https://github.com/Ullmann27/device-ai/pull/414)
+`codex/momega1-android-20261103`, draft PR [442](https://github.com/Ullmann27/device-ai/pull/442)
 targets Chief, not main. EXP-02/05/07/08/11/12. This increment follows the
 [metadata-gap audit](ANDROID-MODEL-DRAFT-GAP.md); the earlier full-task approval
 and revocation fix remains documented in [ANDROID-HANDOFF.md](ANDROID-HANDOFF.md).
