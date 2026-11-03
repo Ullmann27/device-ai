@@ -71,6 +71,11 @@ class LocalConversationContext {
         while (turns.size > 4) turns.removeFirst()
     }
 
+    /** A visible non-model reply (read-only tool, device clock, start-core info).
+     * Stub: not recorded (Code39 cleared the context instead). */
+    @Synchronized fun recordNonModel(sessionId: String, request: String, label: String) {
+    }
+
     /** Research result becomes follow-up context: one short dialogue turn plus the typed research block.
      *  Replaces any earlier research digest; never persists and never becomes an owner fact. */
     @Synchronized fun recordResearch(sessionId: String, digest: ResearchDialogueHandoff.Digest) {
