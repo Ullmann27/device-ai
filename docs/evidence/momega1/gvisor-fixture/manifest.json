@@ -1,0 +1,18 @@
+{
+  "baseCommit": "878393350db82e2b34738b09c20dbf655f1bad9d",
+  "originalFullNodeSource": "645b2215",
+  "originalFullNodeLog": "/workspace/momega1-build-env/final-node-645b2215/node-full.tap",
+  "originalFullNodeSha256": "e08b8cc3b213172ed578e7c1cb7252fe89e18b01b25721a06bdcc739e887f2de",
+  "originalFullNodeBytes": 554339,
+  "originalTestBlob": "41ce0228a5e73c456aa01f6d2e2d2097f612f7f1",
+  "baseTestBlob": "41ce0228a5e73c456aa01f6d2e2d2097f612f7f1",
+  "unchangedProductionBlob": "e1a50061683de286db8edf20ecb1acaa76ba22e1",
+  "patchedTestSha256": "5e0d70715f4359520bf85a883a9d2dfe28c04cd31596b48b507c0c2fc59a5224",
+  "evidenceClass": "SYNTHETIC_ADAPTER_CONTRACT",
+  "realDockerOrRunscExecuted": false,
+  "evidenceHashes": {
+    "focused-green.tap": "04c98683be3791763e2c4b0475cedd2f7ed23714f528f59fc291432802e47d27",
+    "original-two-failures-645b2215.tap": "a7063ea9eae61e543dd69787d2753dcbc2794fa85f9ffc7ed245969c7fcbc19a",
+    "focused-red.tap": "4efdc80d5ffae6d382db39f3f1f15bc5c931b3867cadaa2e734aa73853adea15"
+  }
+}
