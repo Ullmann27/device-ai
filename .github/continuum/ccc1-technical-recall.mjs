@@ -110,8 +110,8 @@ export function recordTechnicalExperience({stateDir,taskId,task,modelTask,modelO
  const spec=validateCodingTask(task);grantOf(stateDir,spec,taskId,key);
  if(runtime.isTrustedLocalModelObservation?.(modelObservation)!==true)fail('TECHNICAL_RUNTIME_OBSERVATION_REQUIRED');
  // A private process brand proves execution identity, not that a pinned binary
- // actually performed neural inference. Current runtime producers never assert
- // this stronger immutable observation; process-only attempts remain unverified.
+ // actually performed neural inference. Only the reviewed runtime producer can
+ // assert the stronger observation; process-only attempts remain unverified.
  if(!Object.isFrozen(modelObservation)||modelObservation.verifiedModelExecution!==true)
   fail('TECHNICAL_MODEL_EXECUTION_PROOF_UNAVAILABLE');
  if(verifier.isTrustedCodingVerification?.(verification)!==true)fail('TECHNICAL_INDEPENDENT_VERIFICATION_REQUIRED');
@@ -124,8 +124,15 @@ export function recordTechnicalExperience({stateDir,taskId,task,modelTask,modelO
   observedAt:now,expiresAt:now+TECHNICAL_RECALL_LIMITS.maxAgeMs,
   resources:{cpuMillis:summary.cpuMillis,rounds:summary.rounds}};
  checkProofBindings(data,entries,spec);
- if(Buffer.byteLength(JSON.stringify(data))>TECHNICAL_RECALL_LIMITS.maxProofBytes)fail('TECHNICAL_PROOF_TOO_LARGE');
- return new ExperienceLog(path.join(stateDir,'experience.jsonl')).append({...summary,technicalProof:sign(data,key)});
+ // The ledger persists JSON, which omits optional undefined object properties
+ // and converts sparse array slots to null. Authenticate that exact snapshot,
+ // after checking the original live producer brands, so restart sees identical
+ // proof bytes. Never repair or re-sign an existing unauthenticated record.
+ let snapshot;
+ try{snapshot=JSON.parse(JSON.stringify(data));}catch{fail('TECHNICAL_PROOF_NOT_SERIALIZABLE');}
+ checkProofBindings(snapshot,entries,spec);
+ if(Buffer.byteLength(JSON.stringify(snapshot))>TECHNICAL_RECALL_LIMITS.maxProofBytes)fail('TECHNICAL_PROOF_TOO_LARGE');
+ return new ExperienceLog(path.join(stateDir,'experience.jsonl')).append({...summary,technicalProof:sign(snapshot,key)});
 }
 
 function durableGrant(file){
