@@ -86,10 +86,10 @@ data class AgentMessage(val id: String, val from: String, val to: String, val pr
 
 class AgentMailbox(
     private val maxPerAgent: Int = 64,
-    private val wake: (AgentMessage) -> Unit = {},
     private val maxRecipients: Int = 32,
     private val maxQueuedMessages: Int = 512,
-    private val maxQueuedBytes: Int = 262_144
+    private val maxQueuedBytes: Int = 262_144,
+    private val wake: (AgentMessage) -> Unit = {}
 ) {
     init {
         require(maxPerAgent in 1..256)
