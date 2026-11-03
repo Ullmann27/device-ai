@@ -81,9 +81,9 @@ class ChiefTaskGraph private constructor(
                     require(verifier.delegation.capability != task.delegation.capability) {
                         "A coder and verifier must request different specialist capabilities."
                     }
-                    require(sharesPath(task.writePaths, verifier.readPaths)) {
-                        "Verifier must cover changed files."
-                    }
+                    require(task.writePaths.all { changed ->
+                        verifier.readPaths.any { inspected -> changed == inspected || changed.startsWith("$inspected/") }
+                    }) { "Verifier must cover every changed path." }
                     dependencies.getValue(verifier.delegation.taskId).add(id)
                 }
             }
