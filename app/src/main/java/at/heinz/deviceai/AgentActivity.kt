@@ -21,6 +21,8 @@ import at.heinz.deviceai.learning.ContinuumLearningCore
 import at.heinz.deviceai.learning.OwnerFactChange
 import android.app.Activity
 import android.app.AlertDialog
+import at.heinz.deviceai.cognitive.ContinuumReadinessGuide
+import at.heinz.deviceai.cognitive.CameraTrackingState
 import android.content.Intent
 import android.content.ActivityNotFoundException
 import android.graphics.Color
@@ -127,6 +129,9 @@ class AgentActivity : Activity() {
         @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
         private const val LOCAL_SPEECH_PERMISSION_REQUEST = 2241
+        private const val READINESS_CAMERA_PERMISSION_REQUEST = 2242
+        private const val READINESS_MIC_PERMISSION_REQUEST = 2243
+        private const val READINESS_SPEECH_REQUEST = 2244
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
@@ -256,8 +261,18 @@ class AgentActivity : Activity() {
     private var activeLocalSpeechRequest: Int? = null
     private var speechScopeGeneration = 0L
     private var voiceReady = false
+    private var voiceInitialized = false
     private var voiceEnabled = false
     private var voiceButton: Button? = null
+    private var readinessDialog: AlertDialog? = null
+    private var readinessRows: LinearLayout? = null
+    private var readinessCamera: AndroidAvatarCameraInput? = null
+    private var readinessCameraEnabled = false
+    private var readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
+    private var readinessVoiceResult = "Hörtest noch nicht bestätigt."
+    private var readinessVoiceSampleId: String? = null
+    private var readinessVoiceSampleStarted = false
+    private var readinessIntroShown = false
     private lateinit var neuralMonitor: TextView
     private lateinit var neuralProgress: ProgressBar
     private var neuralAutoButton: Button? = null
@@ -442,6 +457,7 @@ class AgentActivity : Activity() {
         voiceEnabled = bootstrapMemory.voiceEnabled
         restoreInternetMode()
         voiceEngine = TextToSpeech(this) { status ->
+            voiceInitialized = true
             if (status == TextToSpeech.SUCCESS) {
                 installVoiceProgressListener()
                 val language = voiceEngine?.setLanguage(Locale.GERMAN)
@@ -454,6 +470,7 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
             }
+            refreshReadinessGuide()
         }
         backend = AgentBackendClient(this)
         // process-wide: a recreated activity keeps a loaded model (LocalModelHost)
@@ -573,6 +590,13 @@ class AgentActivity : Activity() {
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
         mainHandler.removeCallbacks(dashboardRefresh)
         mainHandler.post(dashboardRefresh)
+        refreshReadinessGuide()
+        // Setup is visible on first open; microphone and camera still need their own actions.
+        if (!readinessIntroShown && !getSharedPreferences("continuum-readiness", MODE_PRIVATE)
+                .getBoolean("introduced", false)) {
+            readinessIntroShown = true
+            showReadinessGuide()
+        }
     }
 
     override fun onPause() {
@@ -586,6 +610,11 @@ class AgentActivity : Activity() {
         }
         // Ending the full recognition scope also invalidates pending Android permission callbacks.
         cancelSpeechInputScope()
+        stopReadinessCamera()
+        readinessVoiceSampleId = null
+        readinessVoiceSampleStarted = false
+        readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
+        readinessVoiceResult = "Hörtest noch nicht bestätigt."
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
@@ -616,6 +645,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        readinessDialog?.dismiss()
+        stopReadinessCamera()
         avatarDirector.attach(at.heinz.deviceai.avatar.NoOpAvatarSink)
         cancelSpeechInputScope();onDeviceSpeech=null
         at.heinz.deviceai.cognitive.LocalDialogueRetention.retainReply(lastLocalReply?.let {
@@ -672,6 +703,13 @@ class AgentActivity : Activity() {
         voiceEngine = null
         if (::bridge.isInitialized) bridge.stop()
         super.onDestroy()
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        // The sensor/display mapping belongs to the current foreground test only.
+        stopReadinessCamera()
+        super.onConfigurationChanged(newConfig)
+        refreshReadinessGuide()
     }
 
     private fun buildUi(): View {
@@ -2076,11 +2114,207 @@ class AgentActivity : Activity() {
                 startActivity(Intent(this, ContinuumJarvisMissionControlActivity::class.java))
             },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
+            CenterAction("STIMME, BLICK & STARTBEGLEITUNG", accent = true) { showReadinessGuide() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
             CenterAction("AVATAR · KUGEL ODER KOPF") { hologramView?.showAppearanceChooser() },
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    /** Existing local voice/model/speech/camera ports; this screen confers no tool authority. */
+    private fun showReadinessGuide() {
+        if (isFinishing || isDestroyed || readinessDialog?.isShowing == true) return
+        readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
+        readinessVoiceResult = "Hörtest noch nicht bestätigt."
+        val rows = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+            background = rounded(PANEL, 16, BORDER)
+        }
+        readinessRows = rows
+        val dialog = AlertDialog.Builder(this).setTitle("Continuum · Gemeinsam starten")
+            .setView(ScrollView(this).apply { addView(rows) })
+            .setNegativeButton("SCHLIESSEN", null).create()
+        readinessDialog = dialog
+        dialog.setOnDismissListener {
+            if (readinessDialog === dialog) {
+                readinessDialog = null
+                readinessRows = null
+                stopReadinessCamera()
+                if (activeLocalSpeechRequest == READINESS_SPEECH_REQUEST) cancelSpeechInputScope()
+                if (voiceUtteranceId == readinessVoiceSampleId) { voiceEngine?.stop(); stopVoiceAnimation() }
+                readinessVoiceSampleId = null
+                readinessVoiceSampleStarted = false
+                readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
+                getSharedPreferences("continuum-readiness", MODE_PRIVATE).edit().putBoolean("introduced", true).apply()
+            }
+        }
+        dialog.show()
+        // A compact side/bottom panel leaves the existing head visible during the live test.
+        dialog.window?.apply {
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(PANEL))
+            setDimAmount(.12f)
+            setGravity(Gravity.END or Gravity.BOTTOM)
+            setLayout(minOf(dp(400), resources.displayMetrics.widthPixels),
+                (resources.displayMetrics.heightPixels * .60f).toInt())
+        }
+        refreshReadinessGuide()
+    }
+
+    private fun readinessCameraInput(): AndroidAvatarCameraInput = readinessCamera ?:
+        AndroidAvatarCameraInput(this, onObservation = { sample ->
+            if (readinessCameraEnabled && foregroundLearningActive && readinessDialog?.isShowing == true &&
+                !isFinishing && !isDestroyed) {
+                avatarDirector.onObservedGaze(at.heinz.deviceai.avatar.GazeTarget(sample.x, sample.y),
+                    sample.confidence, android.os.SystemClock.elapsedRealtime() - sample.observedAtElapsedMillis)
+            } else avatarDirector.clearObservedGaze()
+        }, onClear = { avatarDirector.clearObservedGaze() }, onState = { state ->
+            if (state !in setOf(CameraTrackingState.STARTING, CameraTrackingState.TRACKING,
+                    CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) readinessCameraEnabled = false
+            refreshReadinessGuide()
+        }).also { readinessCamera = it }
+
+    private fun stopReadinessCamera() {
+        readinessCameraEnabled = false
+        readinessCamera?.stop()
+        avatarDirector.clearObservedGaze()
+    }
+
+    private fun readinessSnapshot(): ContinuumReadinessGuide.Snapshot {
+        val camera = readinessCameraInput()
+        val speech = onDeviceSpeech ?: AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech = it }
+        val loaded = if (::localRuntime.isInitialized) localRuntime.loadedModel else null
+        return ContinuumReadinessGuide.Snapshot(
+            offlineVoiceAvailable = if (voiceInitialized) voiceReady else null,
+            voiceEnabled = voiceEnabled,
+            onDeviceSpeechAvailable = speech.available(), microphoneGranted = speech.microphoneGranted(),
+            localModelIdentityBound = loaded != null && Regex("[a-f0-9]{64}").matches(loaded.sha256) &&
+                localRuntime.state in setOf(LocalModelState.READY, LocalModelState.GENERATING),
+            cameraHardwareSupported = camera.hardwareSupported(), cameraPermissionGranted = camera.permissionGranted(),
+            cameraOwnerEnabled = readinessCameraEnabled, cameraState = camera.state)
+    }
+
+    private fun refreshReadinessGuide() {
+        val box = readinessRows ?: return
+        if (readinessDialog?.isShowing != true || isFinishing || isDestroyed) return
+        val snapshot = readinessSnapshot()
+        box.removeAllViews()
+        box.addView(textView("Wir prüfen gemeinsam Stimme, Verstehen und Blick. Jeder Test zeigt seinen tatsächlichen Stand.", 14f, TEXT), matchWidth())
+        for (step in ContinuumReadinessGuide.rows(snapshot)) {
+            val status = when (step.status) {
+                ContinuumReadinessGuide.Status.UNKNOWN -> "Wird geprüft"
+                ContinuumReadinessGuide.Status.AVAILABLE -> "Verfügbar"
+                ContinuumReadinessGuide.Status.NEEDS_SETUP -> "Einrichten"
+                ContinuumReadinessGuide.Status.UNAVAILABLE -> "Nicht verfügbar"
+                ContinuumReadinessGuide.Status.NOT_IMPLEMENTED -> "Noch nicht verbunden"
+            }
+            box.addView(textView("${step.title} · $status", 16f, CYAN, true), matchWidth(top = 16))
+            box.addView(textView(step.message, 13f, TEXT), matchWidth(top = 4))
+            if (step.action != ContinuumReadinessGuide.Action.NONE) {
+                val label = when (step.action) {
+                    ContinuumReadinessGuide.Action.OPEN_MODELS -> "MODELLE ÖFFNEN"
+                    ContinuumReadinessGuide.Action.ENABLE_VOICE -> "STIMME EINSCHALTEN & TESTEN"
+                    ContinuumReadinessGuide.Action.PLAY_VOICE_SAMPLE -> "STIMME ANHÖREN"
+                    ContinuumReadinessGuide.Action.SHOW_VOICE_HELP -> "HILFE ZUR STIMME"
+                    ContinuumReadinessGuide.Action.REQUEST_MICROPHONE -> "MIKROFON FREIGEBEN"
+                    ContinuumReadinessGuide.Action.START_SPEECH_TEST -> "SPRACHTEST STARTEN"
+                    ContinuumReadinessGuide.Action.SHOW_SPEECH_HELP -> "HILFE ZUM VERSTEHEN"
+                    ContinuumReadinessGuide.Action.REQUEST_CAMERA -> "KAMERA FREIGEBEN"
+                    ContinuumReadinessGuide.Action.ENABLE_CAMERA_TEST -> "BLICKFOLGE TESTEN"
+                    ContinuumReadinessGuide.Action.STOP_CAMERA -> "KAMERA STOPPEN"
+                    ContinuumReadinessGuide.Action.SHOW_CONNECTOR_INFO -> "VERBINDUNGEN ANSEHEN"
+                    ContinuumReadinessGuide.Action.NONE -> ""
+                }
+                box.addView(actionButton(label, accent = step.id == "voice").apply {
+                    setOnClickListener { performReadinessAction(step.action) }
+                }, matchWidth(top = 6))
+            }
+            if (step.id == "voice") {
+                box.addView(textView(readinessVoiceResult, 12f, MUTED), matchWidth(top = 4))
+                if (readinessVoiceSampleStarted) box.addView(actionButton("ICH HÖRE DICH KLAR").apply {
+                    setOnClickListener {
+                        readinessVoiceResult = "Von dir für diesen Hörtest bestätigt: klar hörbar."
+                        readinessVoiceSampleStarted = false
+                        refreshReadinessGuide()
+                    }
+                }, matchWidth(top = 4))
+            }
+            if (step.id == "speech") box.addView(textView(readinessSpeechResult, 12f, MUTED), matchWidth(top = 4))
+        }
+        box.addView(actionButton("ANLEITUNG VORLESEN").apply {
+            isEnabled = voiceReady && voiceEnabled
+            setOnClickListener {
+                speakBootstrap("Wir testen Schritt für Schritt. Höre zuerst meine Stimme an. " +
+                    "Starte dann den Sprachtest und sage: ${ContinuumReadinessGuide.SPEECH_SAMPLE} " +
+                    "Für den Blicktest gibst du die Kamera frei und tippst danach auf Blickfolge testen.")
+            }
+        }, matchWidth(top = 16))
+        box.addView(actionButton("AKTUALISIEREN").apply {
+            setOnClickListener { refreshReadinessGuide() }
+        }, matchWidth(top = 6))
+    }
+
+    private fun performReadinessAction(action: ContinuumReadinessGuide.Action) {
+        if (!foregroundLearningActive || readinessDialog?.isShowing != true || isFinishing || isDestroyed) return
+        when (action) {
+            ContinuumReadinessGuide.Action.ENABLE_VOICE -> {
+                if (!voiceReady) return
+                voiceEnabled = true
+                if (::bootstrapMemory.isInitialized) bootstrapMemory.voiceEnabled = true
+                voiceButton?.text = "TON AN"
+                playReadinessVoiceSample()
+            }
+            ContinuumReadinessGuide.Action.PLAY_VOICE_SAMPLE -> playReadinessVoiceSample()
+            ContinuumReadinessGuide.Action.REQUEST_MICROPHONE ->
+                requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), READINESS_MIC_PERMISSION_REQUEST)
+            ContinuumReadinessGuide.Action.START_SPEECH_TEST -> {
+                if (busy) { Toast.makeText(this, "Bitte die laufende Aufgabe zuerst beenden.", Toast.LENGTH_LONG).show(); return }
+                readinessSpeechResult = "Bitte jetzt sagen: ${ContinuumReadinessGuide.SPEECH_SAMPLE}"
+                startVoiceInput(READINESS_SPEECH_REQUEST)
+            }
+            ContinuumReadinessGuide.Action.REQUEST_CAMERA ->
+                requestPermissions(arrayOf(android.Manifest.permission.CAMERA), READINESS_CAMERA_PERMISSION_REQUEST)
+            ContinuumReadinessGuide.Action.ENABLE_CAMERA_TEST -> {
+                val camera = readinessCameraInput()
+                @Suppress("DEPRECATION") val rotation = windowManager.defaultDisplay.rotation
+                val degrees = when (rotation) { android.view.Surface.ROTATION_90 -> 90
+                    android.view.Surface.ROTATION_180 -> 180; android.view.Surface.ROTATION_270 -> 270; else -> 0 }
+                val started = camera.start(true, foregroundLearningActive, degrees)
+                readinessCameraEnabled = started
+            }
+            ContinuumReadinessGuide.Action.STOP_CAMERA -> stopReadinessCamera()
+            ContinuumReadinessGuide.Action.OPEN_MODELS -> { readinessDialog?.dismiss(); showModelCenter() }
+            ContinuumReadinessGuide.Action.SHOW_CONNECTOR_INFO -> AlertDialog.Builder(this)
+                .setTitle("Deine Verbindungen")
+                .setMessage("Google / Gmail, Facebook und TikTok sind noch nicht verbunden. " +
+                    "Kontozugriff wird später für jeden Dienst getrennt eingerichtet und von dir freigegeben. " +
+                    "Der lokale Assistent funktioniert ohne diese Kontoverbindungen.")
+                .setPositiveButton("VERSTANDEN", null).show()
+            ContinuumReadinessGuide.Action.SHOW_VOICE_HELP -> AlertDialog.Builder(this)
+                .setTitle("Lokale Stimme einrichten")
+                .setMessage("Prüfe in den Android-Einstellungen die Text-in-Sprache-Ausgabe und eine installierte deutsche Offline-Stimme. Kehre danach hierher zurück und tippe auf Aktualisieren.")
+                .setPositiveButton("VERSTANDEN", null).show()
+            ContinuumReadinessGuide.Action.SHOW_SPEECH_HELP -> AlertDialog.Builder(this)
+                .setTitle("Lokales Verstehen einrichten")
+                .setMessage("Dieser Sprachtest braucht die lokale Android-Spracherkennung. Solange sie nicht verfügbar ist, kannst du schreiben. Es wird kein Online-Ersatz gestartet.")
+                .setPositiveButton("VERSTANDEN", null).show()
+            ContinuumReadinessGuide.Action.NONE -> Unit
+        }
+        refreshReadinessGuide()
+    }
+
+    private fun playReadinessVoiceSample() {
+        readinessVoiceSampleStarted = false
+        readinessVoiceSampleId = null
+        if (!voiceEnabled || !voiceReady || !foregroundLearningActive) {
+            readinessVoiceResult = "Die lokale Stimme ist gerade nicht verfügbar."
+            return
+        }
+        readinessVoiceResult = "Hörtest angefordert; warte auf die tatsächliche Sprachausgabe."
+        speakBootstrap(ContinuumReadinessGuide.VOICE_SAMPLE)
+        readinessVoiceSampleId = voiceUtteranceId
+        if (readinessVoiceSampleId == null) readinessVoiceResult = "Die Stimme konnte gerade nicht gestartet werden."
+    }
 
     /**
      * Measures the actual Samsung/Android View animation path, not simulated Canvas frames.
@@ -5482,6 +5716,11 @@ class AgentActivity : Activity() {
                 avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                 runOnUiThread {
                     if(utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
+                    if (utteranceId == readinessVoiceSampleId && readinessDialog?.isShowing == true) {
+                        readinessVoiceSampleStarted = true
+                        readinessVoiceResult = "Die Sprachausgabe läuft. Bestätige selbst, ob du sie klar hörst."
+                        refreshReadinessGuide()
+                    }
                     voiceSpeaking = true
                     refreshHologramState()
                     mainHandler.removeCallbacks(voiceFrame)
@@ -5502,12 +5741,19 @@ class AgentActivity : Activity() {
             }
             override fun onDone(utteranceId: String?) = finish(utteranceId)
             @Deprecated("Required for older TTS engines")
-            override fun onError(utteranceId: String?) = finish(utteranceId)
-            override fun onError(utteranceId: String?, errorCode: Int) = finish(utteranceId)
+            override fun onError(utteranceId: String?) = finish(utteranceId, failed = true)
+            override fun onError(utteranceId: String?, errorCode: Int) = finish(utteranceId, failed = true)
             override fun onStop(utteranceId: String?, interrupted: Boolean) = finish(utteranceId, interrupted)
-            private fun finish(id: String?, interrupted: Boolean = false) {
+            private fun finish(id: String?, interrupted: Boolean = false, failed: Boolean = false) {
                 if (id != null) avatarDirector.speechEnded(id, interrupted)
-                runOnUiThread { if(id != null && id == voiceUtteranceId) stopVoiceAnimation() }
+                runOnUiThread {
+                    if (id != null && id == readinessVoiceSampleId && (interrupted || failed)) {
+                        readinessVoiceSampleStarted = false
+                        readinessVoiceResult = "Hörtest unterbrochen oder fehlgeschlagen. Bitte erneut starten."
+                        refreshReadinessGuide()
+                    }
+                    if(id != null && id == voiceUtteranceId) stopVoiceAnimation()
+                }
             }
         })
     }
@@ -8837,12 +9083,17 @@ class AgentActivity : Activity() {
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
         val scopeDialog=devDialog
+        val readinessScope = if (requestCode == READINESS_SPEECH_REQUEST) readinessDialog else null
         activeLocalSpeechRequest=requestCode
         val speech=onDeviceSpeech?:AndroidOnDeviceSpeechInput(this).also { onDeviceSpeech=it }
         val route=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.route(internetConsent.mode,
             offlineVeto=true,onDeviceAvailable=speech.available(),microphoneGranted=speech.microphoneGranted())
         when(route){
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.REQUEST_MICROPHONE -> {
+                if (requestCode == READINESS_SPEECH_REQUEST) {
+                    requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), READINESS_MIC_PERMISSION_REQUEST)
+                    return
+                }
                 pendingLocalSpeechRequest=requestCode
                 pendingLocalSpeechSession=scopeSession
                 pendingLocalSpeechGeneration=scopeGeneration
@@ -8852,8 +9103,15 @@ class AgentActivity : Activity() {
             at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.Route.ON_DEVICE -> runCatching { speech.start(
                 onState={if(speechScopeGeneration==scopeGeneration){voiceListening=it;refreshHologramState()}},
                 onText={spoken->if(speechScopeGeneration==scopeGeneration&&sessionId==scopeSession&&
-                    (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog))applyLocalSpeechText(requestCode,spoken)},
-                onError={message->Toast.makeText(this,message,Toast.LENGTH_LONG).show()}) }.onFailure {
+                    (requestCode!=DEV_SPEECH_REQUEST||devDialog===scopeDialog) &&
+                    (requestCode!=READINESS_SPEECH_REQUEST||readinessDialog===readinessScope && readinessScope?.isShowing==true))applyLocalSpeechText(requestCode,spoken)},
+                onError={message->
+                    if (requestCode == READINESS_SPEECH_REQUEST && readinessDialog === readinessScope && readinessScope?.isShowing == true) {
+                        readinessSpeechResult = message
+                        refreshReadinessGuide()
+                    }
+                    Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+                }) }.onFailure {
                     speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
                 }
             else -> Toast.makeText(this,"Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
@@ -8862,6 +9120,16 @@ class AgentActivity : Activity() {
 
     private fun applyLocalSpeechText(requestCode:Int,spoken:String){
         if(isFinishing||isDestroyed)return
+        if (requestCode == READINESS_SPEECH_REQUEST) {
+            if (!foregroundLearningActive || readinessDialog?.isShowing != true) return
+            readinessSpeechResult = if (ContinuumReadinessGuide.matchesSpeechSample(spoken))
+                "Testphrase vollständig erkannt: ${ContinuumReadinessGuide.SPEECH_SAMPLE}"
+            else "Erkannter Text: ${spoken.take(2_000)}\nDie Testphrase wurde nicht vollständig erkannt. Bitte erneut versuchen."
+            refreshReadinessGuide()
+            if (ContinuumReadinessGuide.matchesSpeechSample(spoken))
+                speakBootstrap("Ich habe die Testphrase vollständig erkannt. Du kannst jetzt meine Blickfolge testen.")
+            return
+        }
         if(requestCode==DEV_SPEECH_REQUEST){
             if(devDialog?.isShowing==true){
                 val safe=spoken.take(400);devGoalInput?.setText(safe);devController.setGoal(safe);refreshDevelopmentUi()
@@ -8880,6 +9148,11 @@ class AgentActivity : Activity() {
 
     override fun onRequestPermissionsResult(requestCode:Int,permissions:Array<out String>,grantResults:IntArray){
         super.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        if (requestCode == READINESS_CAMERA_PERMISSION_REQUEST || requestCode == READINESS_MIC_PERMISSION_REQUEST) {
+            // Permission is not a new start gesture; a late callback never opens either sensor.
+            refreshReadinessGuide()
+            return
+        }
         if(requestCode==LOCAL_SPEECH_PERMISSION_REQUEST){
             val pending=pendingLocalSpeechRequest
             val originalSession=pendingLocalSpeechSession
