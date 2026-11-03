@@ -90,9 +90,8 @@ class RoutineDispatcher(
         var submitted = 0
         for (routine in routines) {
             if (!inFlight.add(routine.id)) {
-                // The scheduler claimed this entry, but a previous dispatch still owns it.
-                // Do not leave the RoutineBook permanently in-flight after a failed handoff.
-                book.release(routine.id)
+                // The original dispatch still owns this claim: never release it here,
+                // otherwise a second scheduler poll could submit a duplicate worker.
                 continue
             }
             val brief = runCatching {
