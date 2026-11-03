@@ -57,7 +57,7 @@ object RegistryMutationChecks {
     @JvmStatic fun main(args: Array<String>) {
         test("checksum-valid-duplicate-id-and-all-bindings") { root -> invalid(root) { replaceAll(it, "bot-kora", "bot-lint") } }
         test("checksum-valid-foreign-workspace-binding") { root -> invalid(root) { replaceAll(it, "workspace-bot-kora", "workspace-bot-lint") } }
-        test("checksum-valid-traversal-namespace") { root -> invalid(root) { replaceAll(it, "bot-bot-kora", "../outside!") } }
+        test("checksum-valid-traversal-namespace") { root -> invalid(root) { replaceAll(it, "bot-bot-kora", "../../escape") } }
         test("checksum-valid-invalid-profile-version") { root -> invalid(root) { ByteBuffer.wrap(it).putLong(fieldOffset(it, "version"), 0) } }
         test("checksum-valid-invalid-resource-bounds") { root ->
             for ((field, value) in listOf("modelCalls" to 9, "toolCalls" to 17)) {
