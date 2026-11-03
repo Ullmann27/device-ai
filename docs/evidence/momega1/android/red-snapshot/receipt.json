@@ -1,0 +1,12 @@
+{
+  "sourceHead": "d43c043afde46bfb8dab667749f9d1c4da19f72a",
+  "beforeAfterIdentical": true,
+  "beforeSha256": "9cde46a66ba0f59eb43e51437eac15dd341d99e1aa1bf9185af1d70bfe6d853a",
+  "afterSha256": "9cde46a66ba0f59eb43e51437eac15dd341d99e1aa1bf9185af1d70bfe6d853a",
+  "rawSourceReceipt": "/workspace/momega1-qa/docs/evidence/momega1/qa/delta-red-corrected/source.txt",
+  "exit": 1,
+  "tests": 7,
+  "failures": 6,
+  "errors": 0,
+  "skipped": 0
+}
