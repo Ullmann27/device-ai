@@ -66,3 +66,7 @@ test('MΩ model-observation gate rejects self-certified task-bound JSON',async()
  assert.equal(typeof coding.assertCodingModelObservationBinding,'function');
  assert.throws(()=>coding.assertCodingModelObservationBinding({task:{},raw:{trace:{modelObservation:{verified:true,evidenceClass:'LOCAL_MODEL_HOST'}}}}),/CODING_LOCAL_MODEL_OBSERVATION_REQUIRED/);
 });
+test('MΩ recall ablation accepts only a trusted Boolean option before any state access',async()=>{
+ await assert.rejects(runCodingTask({project:'/does-not-exist',stateDir:'/does-not-exist-state',id:'momega-offset',
+  technicalRecallEnabled:'false'}),/CODING_RECALL_OPTION_INVALID/);
+});
