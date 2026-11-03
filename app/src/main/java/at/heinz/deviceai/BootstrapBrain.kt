@@ -41,7 +41,12 @@ object BootstrapBrain {
     private val storageNegation = Regex(
         """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|kein\p{L}*)(?![\p{L}\p{N}_])"""
     )
-    private val storageClauseBoundary = Regex("""(?iu)\bsondern\b|[.;!?]""")
+    // ", nicht/aber nicht/jedoch kein…" starts an independent contrast clause. A comma
+    // before "dass/welche/…" (subordinate clause) is NOT a boundary: the negation of
+    // the main clause ("Ich will nicht, dass …") must keep covering it.
+    private val storageClauseBoundary = Regex(
+        """(?iu)\bsondern\b|[.;!?]|,(?=\s*(?:(?:aber|jedoch|doch)\s+)?(?:nicht|niemals|kein\p{L}*)(?![\p{L}\p{N}_]))"""
+    )
     private val batteryNoun = Regex(
         """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
     )
