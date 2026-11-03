@@ -5,6 +5,7 @@
  * guarantee that llama.cpp can safely load a model. Keep its runtime isolated.
  */
 import {constants} from 'node:fs';
+import {getPinnedGgufFileLimit} from './continuum-local-model-pins.mjs';
 import {open, lstat, realpath} from 'node:fs/promises';
 import {isAbsolute, normalize} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -34,10 +35,10 @@ function integer(value, min, max, code) {
 }
 
 /** Parse only the bounded header buffer; tensor bytes need not be in memory. */
-export function inspectGgufHeader(bytes,{fileSizeBytes=bytes?.byteLength}={}) {
+export function inspectGgufHeader(bytes,{fileSizeBytes=bytes?.byteLength,provenance}={}) {
   if(!(bytes instanceof Uint8Array)) fail('GGUF_BUFFER');
   if(bytes.length<24) fail('GGUF_TRUNCATED');
-  integer(fileSizeBytes,24,GGUF_LIMITS.maxFileBytes,'GGUF_FILE_LIMIT');
+  integer(fileSizeBytes,24,getPinnedGgufFileLimit(provenance),'GGUF_FILE_LIMIT');
   if(bytes.length>GGUF_LIMITS.maxHeaderBytes) fail('GGUF_HEADER_LIMIT');
   if(bytes.length>fileSizeBytes) fail('GGUF_SIZE_MISMATCH');
   const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
@@ -159,7 +160,7 @@ function validateProvenance(p) {
     typeof p.filename!=='string'||!/^[A-Za-z0-9_.-]{1,180}\.gguf$/.test(p.filename)||
     typeof p.license!=='string'||!/^[A-Za-z0-9][A-Za-z0-9.+-]{0,63}$/.test(p.license)||
     typeof p.sha256!=='string'||!SHA.test(p.sha256)||
-    !Number.isSafeInteger(p.sizeBytes)||p.sizeBytes<24||p.sizeBytes>GGUF_LIMITS.maxFileBytes) fail('GGUF_PROVENANCE');
+    !Number.isSafeInteger(p.sizeBytes)||p.sizeBytes<24||p.sizeBytes>getPinnedGgufFileLimit(p)) fail('GGUF_PROVENANCE');
   return Object.freeze({repository:p.repository,revision:p.revision,filename:p.filename,
     license:p.license,sizeBytes:p.sizeBytes,sha256:p.sha256});
 }
@@ -167,11 +168,12 @@ const safeFile=s=>s.isFile()&&s.nlink===1n&&(s.mode&0o022n)===0n;
 const sameFile=(a,b)=>a.dev===b.dev&&a.ino===b.ino&&a.size===b.size&&a.mtimeNs===b.mtimeNs&&a.ctimeNs===b.ctimeNs;
 
 /** Hash and parse through one O_NOFOLLOW descriptor. No runtime is launched. */
-export async function admitGgufFile({path,provenance,maxFileBytes=GGUF_LIMITS.maxFileBytes,
+export async function admitGgufFile({path,provenance,maxFileBytes,
   timeoutMs=30_000,signal}={}) {
   const pin=validateProvenance(provenance);
   if(typeof path!=='string'||!isAbsolute(path)||normalize(path)!==path||!path.endsWith('.gguf'))fail('GGUF_PATH');
-  integer(maxFileBytes,24,GGUF_LIMITS.maxFileBytes,'GGUF_FILE_LIMIT');
+  maxFileBytes??=getPinnedGgufFileLimit(pin);
+  integer(maxFileBytes,24,getPinnedGgufFileLimit(pin),'GGUF_FILE_LIMIT');
   integer(timeoutMs,100,120_000,'GGUF_TIMEOUT');
   const started=performance.now();
   function active(){if(signal?.aborted)fail('GGUF_ABORTED');if(performance.now()-started>timeoutMs)fail('GGUF_TIMEOUT');}
@@ -189,7 +191,7 @@ export async function admitGgufFile({path,provenance,maxFileBytes=GGUF_LIMITS.ma
       active();const {bytesRead}=await handle.read(header,headRead,header.length-headRead,headRead);
       if(!bytesRead)fail('GGUF_TRUNCATED');headRead+=bytesRead;
     }
-    const inspection=inspectGgufHeader(header,{fileSizeBytes:pin.sizeBytes});
+    const inspection=inspectGgufHeader(header,{fileSizeBytes:pin.sizeBytes,provenance:pin});
     const hash=createHash('sha256'),chunk=Buffer.alloc(1_048_576);let position=0;
     while(position<pin.sizeBytes) {
       active();const {bytesRead}=await handle.read(chunk,0,Math.min(chunk.length,pin.sizeBytes-position),position);
