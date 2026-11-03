@@ -1,0 +1,32 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "sourceSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "candidateSha256": "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+  "positionsNormalsIndicesSkinningMorphBytesUnchanged": false,
+  "addedUvVertices": 12980,
+  "addedEmbeddedProceduralTexturePixels": [
+    1024,
+    1024
+  ],
+  "addedTexturePngBytes": 1699576,
+  "surfacePattern": "topology",
+  "frontSurfaceAlphaMode": "OPAQUE",
+  "device": "FOLD7_NOT_RUN",
+  "limitations": [
+    "Transparency sorting and mobile GPU cost require actual runtime testing",
+    "Not accepted appearance",
+    "Not a new humanoid mesh"
+  ],
+  "materialSourceSha256": "f3f697f1929e6e9c543233b9468187a91853160d5ca9d95b01deb1347530cc01",
+  "neutralBlinkFraction": 0.15,
+  "pupilXYScale": 1.3,
+  "changedPositionOrBlinkAccessors": [
+    6,
+    25,
+    26,
+    41,
+    60,
+    61
+  ],
+  "geometryStatus": "EXPERIMENT_NOT_ACCEPTED_REQUIRES_MORPH_ENDPOINT_REVIEW"
+}

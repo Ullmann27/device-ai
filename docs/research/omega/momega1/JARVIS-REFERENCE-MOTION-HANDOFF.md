@@ -105,6 +105,23 @@ not a material-only claim. No experimental derivative replaces the packaged GLB.
 The independent review lane has exported actual reachable production-mapper poses
 for a fixed-camera replay; synthetic inputs are labeled and never called real TTS.
 
+The current unintegrated look candidate is
+`03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e`.
+Density-normalized actual topology edges avoid the white eyelid/lip masks seen in
+the preceding dense variant. The front surface remains opaque so backfaces do
+not show through anatomical features; the intended holographic appearance is
+light and fine topology, not a false claim of physically transparent anatomy.
+Root's visual review finds facial volume and relaxed eyes improved, while cyan
+silhouette/feature illumination and violet midface need further work.
+Five actual production-mapper poses (neutral, full blink, AA+jaw, O+jaw, stop)
+were rendered on both the original and this candidate with the same fixed camera,
+lights and 16-sample Cycles settings. Source-bound comparison/neutral images,
+manifests and raw logs are in `docs/evidence/momega1-avatar-look/03caa24f/`.
+This is not a Filament, real-TTS, camera or device result and the asset is not
+promoted to the app. The independent reviewer is investigating abnormal lateral
+tooth visibility in O+jaw; it also appears in the unchanged original GLB under
+the same replay, so darkening teeth is not used to hide the issue.
+
 Rollback: revert this isolated import/increment or leave the optional 3D choice
 disabled; no persistence migration or owner data is involved. The existing orb
 and 2D selection remain available.
