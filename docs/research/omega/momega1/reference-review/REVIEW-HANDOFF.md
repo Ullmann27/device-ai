@@ -294,3 +294,11 @@ following batch was interrupted when all four CPUs were reserved for final QA.
 Both timeout and resource interruption remain recorded. Uncompleted cases are
 not counted as PASS. Final supplemental outcome is recorded separately after the
 remaining unchanged cases finish.
+
+The remaining cases are now complete: **16 distinct cases PASS**, with exact
+per-case/process accounting in `hinge-v2-final-receipt.json`. The real original
+control passes unchanged V1; the real corrected rig still fails actual V1 with
+CLI exit 1; the explicit actual-hinge/fixed-region V2 passes. This is a disclosed
+semantic resolution, not a relabeled V1 success. `HINGE-V2-RESULT.md` explains the
+actual geometry, preserved protections, reviewer-checker correction, raw timeouts
+and reproducible commands. No native/appearance/device gate is implied.

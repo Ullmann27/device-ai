@@ -1,0 +1,8 @@
+test_14_lower_face_blink_deformation_is_rejected (__main__.HingeV2Challenge.test_14_lower_face_blink_deformation_is_rejected) ... ok
+test_15_original_landmark_cannot_be_reauthored (__main__.HingeV2Challenge.test_15_original_landmark_cannot_be_reauthored) ... ok
+test_16_original_bad_control_family_remains_rejected (__main__.HingeV2Challenge.test_16_original_bad_control_family_remains_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 23.872s
+
+OK
