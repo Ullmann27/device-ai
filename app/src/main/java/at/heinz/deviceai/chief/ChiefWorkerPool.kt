@@ -56,6 +56,12 @@ class ChiefWorkerPool(
         val cancelled = AtomicBoolean()
         @Volatile var work: Future<String>? = null
         @Volatile var job: WorkerJob? = null
+        private val cancelForwarded = AtomicBoolean(false)
+
+        fun forwardCancellation() {
+            val current = job ?: return
+            if (cancelForwarded.compareAndSet(false, true)) runCatching { current.cancel() }
+        }
     }
 
     private val runners: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker").apply { isDaemon = true } }
@@ -75,7 +81,7 @@ class ChiefWorkerPool(
     fun cancel(id: String): Boolean {
         val slot = slots[id] ?: return false
         slot.cancelled.set(true)
-        runCatching { slot.job?.cancel() }
+        slot.forwardCancellation()
         slot.work?.cancel(true)
         return true
     }
@@ -109,13 +115,13 @@ class ChiefWorkerPool(
             val job = factory(slot.brief)
             slot.job = job
             if (slot.cancelled.get()) {
-                runCatching { job.cancel() }
+                slot.forwardCancellation()
                 return report(WorkerStatus.CANCELLED, "Abbruch angefordert, bevor der Worker startete.")
             }
             val future = workers.submit<String> { job.run() }
             slot.work = future
             if (slot.cancelled.get()) {
-                runCatching { job.cancel() }
+                slot.forwardCancellation()
                 future.cancel(true)
             }
             val result = future.get(slot.brief.deadlineMillis, TimeUnit.MILLISECONDS)
@@ -123,15 +129,15 @@ class ChiefWorkerPool(
                 if (slot.cancelled.get()) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else result)
         } catch (_: TimeoutException) {
             slot.cancelled.set(true)
-            runCatching { slot.job?.cancel() }
+            slot.forwardCancellation()
             slot.work?.cancel(true)
             report(WorkerStatus.TIMED_OUT, "Frist überschritten; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: CancellationException) {
-            runCatching { slot.job?.cancel() }
+            slot.forwardCancellation()
             report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: InterruptedException) {
             slot.cancelled.set(true)
-            runCatching { slot.job?.cancel() }
+            slot.forwardCancellation()
             report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (e: Exception) {
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
