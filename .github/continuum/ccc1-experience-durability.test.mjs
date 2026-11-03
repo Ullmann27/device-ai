@@ -32,3 +32,20 @@ test('experience journal refuses symlink storage',t=>{
  assert.throws(()=>new ExperienceLog(file).append({taskId:'a'}),/unsafe|symlink/);
  assert.equal(fs.readFileSync(other,'utf8'),'');
 });
+test('experience journal enforces record and byte hard bounds',t=>{
+ const file=fixture(t),rows=[];let prevHash=null;
+ for(let sequence=0;sequence<4097;sequence++){
+  const data={sequence,prevHash,record:{taskId:'synthetic-'+sequence}};
+  prevHash=sha(data);rows.push(JSON.stringify({...data,hash:prevHash}));
+ }
+ fs.writeFileSync(file,rows.join('\n')+'\n');
+ assert.throws(()=>new ExperienceLog(file).entries(),/record bound/);
+ fs.writeFileSync(file,'x'.repeat(16*1024*1024+1));
+ assert.throws(()=>new ExperienceLog(file).entries(),/byte bound/);
+});
+test('experience journal rejects blank lines and duplicate tasks even with recomputed hashes',t=>{
+ const file=fixture(t),log=new ExperienceLog(file);log.append({taskId:'synthetic'});
+ const first=log.entries()[0],data={sequence:1,prevHash:first.hash,record:{taskId:'synthetic'}};
+ fs.appendFileSync(file,JSON.stringify({...data,hash:sha(data)})+'\n');assert.throws(()=>log.entries(),/damaged/);
+ fs.writeFileSync(file,'\n');assert.throws(()=>log.entries(),/damaged/);
+});
