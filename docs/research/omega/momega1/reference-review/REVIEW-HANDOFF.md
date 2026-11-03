@@ -202,3 +202,43 @@ or device certification. Receipt: `aa-ablation-transform-review.json`.
 
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
+
+## Independent composition V2 GREEN and factorial geometry
+
+Exact source `9a23e5d6a9dc96d15525347c99ff682d632d7277` passes the unchanged
+frozen V2 suite: **27 PASS, 0 FAIL, 0 SKIP**. The unchanged original V1 suite was
+also rerun: **25 PASS, 1 FAIL, 0 SKIP**. Its sole failure is the explicitly
+superseded exact independent-opening arithmetic. V1 has not been silently edited,
+skipped or claimed to pass on this new mapping.
+
+The actual source exporter was rerun, producing 260 poses and the separately
+frozen 113-pose family. The factorial geometry result is decisive:
+
+| Actual mapper | Actual rig | Neutral/AA/PP/O/I/U frontmost crossings | Exit |
+| --- | --- | --- | --- |
+| `26555aa6` | Original `f39a89fc` | 0/16/152/65/36/28 | 1 |
+| `26555aa6` | Neutral-preserving `6b199c59` | 0/36/0/48/0/20 | 1 |
+| `9a23e5d6` | Original `f39a89fc` | 0/159/152/48/102/40 | 1 |
+| `9a23e5d6` | Neutral-preserving `6b199c59` | 0/0/0/0/0/0 | 0 |
+
+Neither isolated change passes. The combination also executes **all 113 frozen
+holdout poses with zero frontmost crossings and exit 0**. Hidden internal contacts
+remain recorded; this is a sampled front-view result, not universal mesh collision
+freedom. All raw JSON is retained losslessly in gzip files with both compressed
+and uncompressed hashes, alongside stdout and exit codes. The receipt is
+`mouth-composition-v2-green-9a23-receipt.json`.
+
+All five actual combined render anchors were independently viewed and their
+hashes and exact pose membership verified. AA/O now show teeth inside the visible
+mouth aperture instead of the previous side rows. Both lids close in the full-blink
+anchor. Neutral and stopped RGB pixels are exactly equal. Canonical-to-Blender
+jaw matrices agree within `1e-6` per element. Details are in
+`mouth-combined-render-9a23-6b199-review.json`.
+
+Decision: **accept the sampled mouth-composition/rig correction as a combination**.
+The source candidate still packages the original rig, so this result is not an
+acceptance of that packaged asset. Before promotion, the final styled asset must
+pass the same geometry cases and actual render comparison. The full 224-frame
+idle sequence, native Filament appearance, real speech synchronization and device
+acceptance remain separate and unproven. No reference video or private frames are
+included in this evidence commit.
