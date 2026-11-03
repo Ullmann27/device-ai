@@ -1,0 +1,1 @@
+{"id":"g02","requirements":["overlaps(a, b) must return whether the half-open intervals [a.start, a.end) and [b.start, b.end) have a nonempty intersection. Endpoints are finite numbers and start is at most end. Empty intervals and intervals that only touch at a boundary do not overlap."]}
