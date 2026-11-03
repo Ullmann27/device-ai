@@ -70,6 +70,31 @@ class ExternalContentInjectionGuardTest {
         assertNull("web consent has its own owner dialog", g.refusal("Fasse zusammen", "web_search", Risk.CONFIRM, true))
     }
 
+    @Test fun b5NondestructiveDownloadCleanupStillRequiresExplicitOwnerApproval() {
+        val intent = "Schaffe Platz im Download-Ordner, ohne etwas zu loeschen."
+        assertTrue(ExternalContentActionGuard.ownerRequested(intent, "move_file"))
+        assertFalse(ExternalContentActionGuard.ownerRequested(intent, "delete_file"))
+        assertNull(ExternalContentActionGuard.refusal(intent, "move_file", Risk.CONFIRM, true))
+        assertNotNull(ExternalContentActionGuard.refusal(intent, "delete_file", Risk.DESTRUCTIVE, true))
+        assertFalse(ExternalContentActionGuard.ownerRequested("Wie schaffe ich Platz im Download-Ordner?", "move_file"))
+    }
+
+    @Test fun s4NegationsAndSubstringTricksNeverCreateConsequentialOwnerIntent() {
+        val cases = listOf(
+            "Lies die Nachricht ohne sie zu senden" to "send_message",
+            "Zeige meine Dateien, bitte nichts löschen" to "delete_file",
+            "Nicht verschieben, nur anzeigen" to "move_file",
+            "Analysiere den Kaufvertrag" to "purchase_item",
+            "Zeige deinstallierte Anwendungen" to "uninstall_app",
+            "Die Datei enthält installierte Pakete" to "install_apk",
+            "Lies die unterteilte Datei" to "send_message"
+        )
+        cases.forEach { (ownerTask, toolName) ->
+            assertNotNull("$toolName must remain blocked for: $ownerTask",
+                ExternalContentActionGuard.refusal(ownerTask, toolName, Risk.CONFIRM, true))
+        }
+    }
+
     @Test fun externalContentIsMarkedUntrustedInTheModelContext() {
         val json = at.heinz.deviceai.localmodel.LocalToolContinuation.observationData("list_files", "SUCCEEDED", injected)
         assertTrue(json, org.json.JSONObject(json).getString("trust") == "untrusted_external_data")
