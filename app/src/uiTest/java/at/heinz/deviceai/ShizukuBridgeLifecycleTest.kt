@@ -27,6 +27,7 @@ class ShizukuBridgeLifecycleTest {
             var running = true
             var granted = true
             var permissionRequests = 0
+            var permissionListener: Shizuku.OnRequestPermissionResultListener? = null
             val connections = mutableListOf<ServiceConnection>()
             val unbound = mutableListOf<ServiceConnection>()
             @Implementation @JvmStatic fun pingBinder() = running
@@ -36,10 +37,10 @@ class ShizukuBridgeLifecycleTest {
             @Implementation @JvmStatic fun requestPermission(code: Int) { permissionRequests++ }
             @Implementation @JvmStatic fun addBinderReceivedListener(listener: Shizuku.OnBinderReceivedListener) {}
             @Implementation @JvmStatic fun addBinderDeadListener(listener: Shizuku.OnBinderDeadListener) {}
-            @Implementation @JvmStatic fun addRequestPermissionResultListener(listener: Shizuku.OnRequestPermissionResultListener) {}
+            @Implementation @JvmStatic fun addRequestPermissionResultListener(listener: Shizuku.OnRequestPermissionResultListener) { permissionListener = listener }
             @Implementation @JvmStatic fun removeBinderReceivedListener(listener: Shizuku.OnBinderReceivedListener) {}
             @Implementation @JvmStatic fun removeBinderDeadListener(listener: Shizuku.OnBinderDeadListener) {}
-            @Implementation @JvmStatic fun removeRequestPermissionResultListener(listener: Shizuku.OnRequestPermissionResultListener) {}
+            @Implementation @JvmStatic fun removeRequestPermissionResultListener(listener: Shizuku.OnRequestPermissionResultListener) { if (permissionListener === listener) permissionListener = null }
             @Implementation @JvmStatic fun bindUserService(args: Shizuku.UserServiceArgs, connection: ServiceConnection) {
                 connections += connection
             }
@@ -52,9 +53,32 @@ class ShizukuBridgeLifecycleTest {
     @Before fun reset() {
         Server.running = true; Server.granted = true; Server.permissionRequests = 0
         Server.connections.clear(); Server.unbound.clear()
+        Server.permissionListener = null
     }
 
     private fun bridge(status: MutableList<String>) = ShizukuBridge(RuntimeEnvironment.getApplication()) { status += it }
+
+    @Test fun permissionGrantedAfterWatchdogTimeoutStillConnectsWhenActuallyGranted() {
+        Server.granted = false
+        val statuses = mutableListOf<String>(); val bridge = bridge(statuses)
+        bridge.start()
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(21))
+        assertTrue(statuses.last().contains("Zeit"))
+        Server.granted = true
+        Server.permissionListener!!.onRequestPermissionResult(ShizukuBridge.REQUEST_CODE, PackageManager.PERMISSION_GRANTED)
+        assertEquals("late verified permission must trigger binding", 1, Server.connections.size)
+        connect(Server.connections.single()); assertTrue(bridge.isReady())
+        bridge.stop()
+    }
+
+    @Test fun permissionCallbackCannotClaimARealPermissionThatIsNotGranted() {
+        Server.granted = false
+        val statuses = mutableListOf<String>(); val bridge = bridge(statuses)
+        bridge.start()
+        Server.permissionListener!!.onRequestPermissionResult(ShizukuBridge.REQUEST_CODE, PackageManager.PERMISSION_GRANTED)
+        assertTrue("callback alone cannot authorize shell access", Server.connections.isEmpty())
+        bridge.stop()
+    }
     private fun connect(connection: ServiceConnection) {
         connection.onServiceConnected(ComponentName("test", "test.Shell"), object : IDeviceShell.Stub() {
             override fun execute(command: String): String = error("No shell execution in lifecycle tests")

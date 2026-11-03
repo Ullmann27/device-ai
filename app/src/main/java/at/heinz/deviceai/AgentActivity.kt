@@ -168,6 +168,7 @@ class AgentActivity : Activity() {
     }
 
     private lateinit var bridge: ShizukuBridge
+    private var shizukuConnectionDialog: ShizukuConnectionDialog? = null
     private lateinit var executor: DeviceToolExecutor
     private lateinit var backend: AgentBackendClient
     private lateinit var modelCatalog: LocalModelCatalog
@@ -442,6 +443,7 @@ class AgentActivity : Activity() {
         bridge = ShizukuBridge(this) { message ->
             runOnUiThread {
                 if (::shizukuBadge.isInitialized) updateShizukuBadge(message)
+                shizukuConnectionDialog?.updateStatus(message)
             }
         }
         executor = DeviceToolExecutor(this, bridge)
@@ -631,6 +633,8 @@ class AgentActivity : Activity() {
         devDialog?.dismiss()
         modelCenterDialog?.dismiss()
         centerDialog?.dismiss()
+        shizukuConnectionDialog?.dismiss()
+        shizukuConnectionDialog = null
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -2669,6 +2673,12 @@ class AgentActivity : Activity() {
         when (ownerLocalIntent) {
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING,
             at.heinz.deviceai.cognitive.OwnerChatLocalIntent.CAPABILITIES -> {
+                if (localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null) {
+                    input.text.clear()
+                    addUserMessage(request)
+                    runLocal(request)
+                    return
+                }
                 val canonical = if (
                     ownerLocalIntent == at.heinz.deviceai.cognitive.OwnerChatLocalIntent.GREETING
                 ) "Hallo" else "Was kannst du?"
@@ -6492,20 +6502,26 @@ class AgentActivity : Activity() {
                 ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
                 // A screen frame is atomic. Never send a clipped negation/source block.
-                screenFrames.forEach { check(prompt.contains(it)) { "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET" } }
+                screenFrames.forEach {
+                    check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
+                        "SCREEN_CONTEXT_EXCEEDS_MODEL_BUDGET"
+                    }
+                }
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
-                val toolResponses = newObservations.take(4).map {
-                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
-                        it.toolName, it.status.name, it.output
-                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
-                }
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 var generation = at.heinz.deviceai.cognitive.TurnScopedInternetMode.withCurrentConsentRevision(
                     internetRevisionAtTurnStart, internetConsent::revision) {
                     generateLocal(cancellation,turnTrace,prompt.length) { callback ->
-                        if (hasScreen || toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
-                        else localRuntime.respondToTools(toolResponses, callback)
+                        at.heinz.deviceai.localmodel.LocalToolContinuation.submit(
+                            localRuntime, prompt, forceFresh = hasScreen,
+                            responses = {
+                                newObservations.take(4).map {
+                                    at.heinz.deviceai.localmodel.LocalToolContinuation.encode(
+                                        it.toolName, it.status.name, it.output
+                                    ) ?: error("LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET")
+                                }
+                            }, callback = callback)
                     }
                 }
                 generation.failure?.let { error(it) }
@@ -7895,35 +7911,10 @@ class AgentActivity : Activity() {
     }
 
     private fun showShizukuConnectionDialog() {
-        bridge.refresh()
-        val current = bridge.statusDetail()
-        val hint = if (bridge.isReady()) {
-            "Die Shizuku-Shell ist verbunden. Freigegebene Gerätefunktionen können geprüft werden."
-        } else if (!bridge.isShizukuRunning()) {
-            "Der Shizuku-Dienst läuft nicht. Öffne zuerst Shizuku und starte den Dienst per Wireless-Debugging. Kehre danach hierher zurück."
-        } else {
-            "Shizuku läuft. Falls eine Berechtigungsanfrage erscheint, erlaube Device AI. Eine ausbleibende Shell-Antwort wird nach 15 Sekunden sichtbar beendet."
-        }
-        AlertDialog.Builder(this)
-            .setTitle("Shizuku · Verbindungsdiagnose")
-            .setMessage("Aktueller Status: " + current + "\n\n" + hint +
-                "\n\nDie Android-Speichermessung benötigt Shizuku nicht. Keine Berechtigungsprüfung führt Gerätebefehle aus.")
-            .setNegativeButton("Schließen", null)
-            .setNeutralButton("SHIZUKU ÖFFNEN") { _, _ ->
-                val launch = packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
-                if (launch == null) {
-                    Toast.makeText(this, "Shizuku-App nicht gefunden. Bitte zuerst installieren.", Toast.LENGTH_LONG).show()
-                } else {
-                    runCatching { startActivity(launch) }.onFailure {
-                        Toast.makeText(this, "Shizuku konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            .setPositiveButton("VERBINDEN") { _, _ ->
-                bridge.requestAccess()
-                Toast.makeText(this, bridge.statusDetail(), Toast.LENGTH_LONG).show()
-            }
-            .show()
+        val connectionScreen = shizukuConnectionDialog
+            ?: ShizukuConnectionDialog(this, bridge).also { shizukuConnectionDialog = it }
+        connectionScreen.updateStatus(bridge.statusDetail())
+        connectionScreen.show()
     }
 
     private fun updateShizukuBadge(message: String) {
@@ -8401,6 +8392,8 @@ class AgentActivity : Activity() {
         }
         requestStartedAt = android.os.SystemClock.elapsedRealtime()
         conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addBubble(value, user = true)
@@ -8439,6 +8432,8 @@ class AgentActivity : Activity() {
             requestStartedAt = 0L
         }
         conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addHomeGreeting(value)

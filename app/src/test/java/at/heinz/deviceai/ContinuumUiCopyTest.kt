@@ -51,6 +51,23 @@ class ContinuumUiCopyTest {
         assertTrue(ContinuumUiCopy.modelFailure(null).contains("Dateiformat"))
     }
 
+    @Test fun retainedModelResourcesRequireExplicitUnloadBeforeRetry() {
+        val message = ContinuumUiCopy.modelFailure("LOCAL_MODEL_UNLOAD_REQUIRED")
+        assertTrue(message.contains("Entlade"))
+        assertTrue(message.contains("Modellverwaltung"))
+        assertTrue(message.contains("erneut"))
+        assertFalse(message.contains("Dateiformat"))
+        assertFalse(message.contains("bereits entladen"))
+    }
+
+    @Test fun oversizedModelResponseExplainsOutputBudgetAndRequestsShorterAnswer() {
+        val message = ContinuumUiCopy.modelFailure("LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT")
+        assertTrue(message.contains("Ausgabelimit"))
+        assertTrue(message.contains("kürzere Antwort"))
+        assertFalse(message.contains("Dateiformat"))
+        assertFalse(message.contains("zu lange gedauert"))
+    }
+
     @Test fun interruptionsAndPermissionsExplainNextAction() {
         assertTrue(ContinuumUiCopy.researchFailure("cancelled").contains("beendet"))
         assertTrue(ContinuumUiCopy.researchFailure(null).contains("erneut"))
