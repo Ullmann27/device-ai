@@ -56,20 +56,20 @@ object RegistryIndependentChecks {
         if (args.firstOrNull() == "restart") {
             val s = store(File(args[1]))
             must(all(s).size == 3, "fresh process identity count changed")
-            val p = s.get("forge") ?: error("forge absent")
-            must(p.displayName == "Neue Schmiede", "renamed display did not persist")
-            must(s.workingContext("forge", "forge") == "PRIVATE-FORGE-REVIEW-NOTE", "private note did not persist")
-            must(s.workingContext("delta", "delta") == null, "private note leaked to DELTA")
+            val p = s.get("kora") ?: error("kora absent")
+            must(p.displayName == "Neue Kora", "renamed display did not persist")
+            must(s.workingContext("kora", "kora") == "PRIVATE-KORA-REVIEW-NOTE", "private note did not persist")
+            must(s.workingContext("lint", "lint") == null, "private note leaked to LINT")
             println("RESTART_OK")
             return
         }
         test("three-identities-and-fresh-process-restart") { root ->
             val s = store(root); s.seedDefaults(3)
             val ids = all(s).map { it.agentId }.toSet()
-            must(ids == setOf("atlas", "forge", "delta"), "three initial identities differ: $ids")
-            val original = s.get("forge")!!
-            val withNote = s.saveWorkingContext("forge", "forge", "PRIVATE-FORGE-REVIEW-NOTE", original.profileVersion)
-            val renamed = s.rename("forge", "Neue Schmiede", withNote.profileVersion)
+            must(ids == setOf("atlas", "kora", "lint"), "three initial identities differ: $ids")
+            val original = s.get("kora")!!
+            val withNote = s.saveWorkingContext("kora", "kora", "PRIVATE-KORA-REVIEW-NOTE", original.profileVersion)
+            val renamed = s.rename("kora", "Neue Kora", withNote.profileVersion)
             must(renamed.agentId == withNote.agentId && renamed.memoryNamespace == withNote.memoryNamespace &&
                 renamed.workspaceId == withNote.workspaceId && renamed.permissionScope == withNote.permissionScope &&
                 renamed.verifiedCapabilities == withNote.verifiedCapabilities && renamed.contextObjectId == withNote.contextObjectId,
@@ -117,8 +117,8 @@ object RegistryIndependentChecks {
             val s = ChiefBotProfileStore(root, maxProfiles = 3); s.seedDefaults(3)
             val snapshot = all(s)
             rejected { create(s, "overflow") }
-            val p = s.get("forge")!!
-            rejected { s.saveWorkingContext("forge", "forge", "x".repeat(20_000), p.profileVersion) }
+            val p = s.get("kora")!!
+            rejected { s.saveWorkingContext("kora", "kora", "x".repeat(20_000), p.profileVersion) }
             must(all(store(root)) == snapshot, "budget rejection damaged existing profiles")
             rejected { s.page(null, 0) }; rejected { s.page(null, Int.MAX_VALUE) }
         }
