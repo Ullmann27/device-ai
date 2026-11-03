@@ -93,7 +93,7 @@ function runtimeConfiguration(value){
  return {...value};
 }
 export function initializeCodingService({configPath,project,profileDirectory,profileClasspath,runtimeEnvPath,isolationConfig,
- maxQueue=8,maxRecords=1000,maxCycles=1000}={}){
+ maxQueue=8,maxRecords=1000,maxCycles=1000,modelTimeoutMs=60000}={}){
  if(typeof configPath!=='string'||!path.isAbsolute(configPath)||path.resolve(configPath)!==configPath)throw Error('SERVICE_CONFIG_PATH_INVALID');
  const stateDir=path.dirname(configPath);
  for(const root of [realDirectory(project),realDirectory(profileDirectory),SERVICE_SOURCE_ROOT])
@@ -104,11 +104,11 @@ export function initializeCodingService({configPath,project,profileDirectory,pro
  const config={schema:'continuum-coding-service',version:1,sourceRoot:SERVICE_SOURCE_ROOT,
   sourceCommit:gitIdentity(SERVICE_SOURCE_ROOT),project,profileDirectory,profileClasspath,profileClasspathSha256:profileClasspathDigest(profileClasspath),runtimeEnv,
   modelManifestSha256:sha256Hex(plainBytes(runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST,65536)),isolationConfig,isolationConfigSha256,
-  limits:{maxQueue,maxRecords,maxCycles},createdAt:new Date().toISOString()};
+  limits:{maxQueue,maxRecords,maxCycles,modelTimeoutMs},createdAt:new Date().toISOString()};
  validateConfig(config,stateDir);writePrivateJson(configPath,config,{exclusive:true});
  for(const name of ['ccc1','sessions','public-evidence'])privateDirectory(path.join(stateDir,name),{create:true});
  writePrivateJson(path.join(stateDir,'deliveries.json'),{schema:'continuum-owner-inbox',version:1,items:[]},{exclusive:true});
- return {configPath,sourceCommit:config.sourceCommit,maxQueue,maxRecords,maxCycles,status:'INITIALIZED',modelLoaded:false};
+ return {configPath,sourceCommit:config.sourceCommit,maxQueue,maxRecords,maxCycles,modelTimeoutMs,status:'INITIALIZED',modelLoaded:false};
 }
 function validateConfig(c,stateDir){
  const keys=['schema','version','sourceRoot','sourceCommit','project','profileDirectory','profileClasspath','profileClasspathSha256','runtimeEnv','modelManifestSha256','isolationConfig','isolationConfigSha256','limits','createdAt'];
@@ -124,10 +124,11 @@ function validateConfig(c,stateDir){
  if(!SHA.test(c.modelManifestSha256??''))throw Error('SERVICE_MANIFEST_PIN_INVALID');
  if(!SHA.test(c.isolationConfigSha256??'')||!path.isAbsolute(c.isolationConfig??'')||
    inside(c.project,c.isolationConfig)||inside(c.sourceRoot,c.isolationConfig))throw Error('SERVICE_ISOLATION_CONFIG_INVALID');
- if(!c.limits||Object.keys(c.limits).sort().join()!=='maxCycles,maxQueue,maxRecords'||
+ if(!c.limits||!['maxCycles,maxQueue,maxRecords','maxCycles,maxQueue,maxRecords,modelTimeoutMs'].includes(Object.keys(c.limits).sort().join())||
    !Number.isSafeInteger(c.limits.maxQueue)||c.limits.maxQueue<1||c.limits.maxQueue>32||
    !Number.isSafeInteger(c.limits.maxRecords)||c.limits.maxRecords<c.limits.maxQueue||c.limits.maxRecords>10000||
-   !Number.isSafeInteger(c.limits.maxCycles)||c.limits.maxCycles<1||c.limits.maxCycles>1000)throw Error('SERVICE_LIMIT_INVALID');
+   !Number.isSafeInteger(c.limits.maxCycles)||c.limits.maxCycles<1||c.limits.maxCycles>1000||
+   c.limits.modelTimeoutMs!==undefined&&(!Number.isSafeInteger(c.limits.modelTimeoutMs)||c.limits.modelTimeoutMs<100||c.limits.modelTimeoutMs>300000))throw Error('SERVICE_LIMIT_INVALID');
 }
 export function loadCodingServiceConfig(configPath){
  if(typeof configPath!=='string'||!path.isAbsolute(configPath)||path.resolve(configPath)!==configPath)throw Error('SERVICE_CONFIG_PATH_INVALID');

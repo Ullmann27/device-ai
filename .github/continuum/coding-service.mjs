@@ -79,7 +79,12 @@ function stateBytes(root){
 const STATE_BYTES_LIMIT=1024*1024*1024,TASK_RESERVE_BYTES=128*1024*1024;
 export function prepareServiceTask({configPath,task}={}){
  const config=loadCodingServiceConfig(configPath),review=reviewServiceTask(config,task);
- requireProfiles(config,review.task);return review;
+ const assignment=requireProfiles(config,review.task);
+ const profileDurationMillis=Math.min(assignment.builder.deadlineMillis,assignment.verifier.deadlineMillis,assignment.reporter.deadlineMillis);
+ const requestedModelTimeoutMs=config.limits.modelTimeoutMs??60000;
+ return {...review,executionBudget:{maxModelCalls:review.task.limits.maxModelCalls,requestedModelTimeoutMs,
+  profileDurationMillis,effectiveModelTimeoutUpperBoundMs:Math.min(requestedModelTimeoutMs,profileDurationMillis-500),
+  note:'Existing canonical task deadline and elapsed profile budget may reduce this upper bound; no deadline renewal'}};
 }
 /** Callable only by the explicit local owner CLI/control socket. The review hash
  * binds a decision; model text and inbox files are not owner decisions. */

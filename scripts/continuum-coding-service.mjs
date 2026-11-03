@@ -7,7 +7,7 @@ import {createCodingServiceReader,readServiceDescriptor} from '../.github/contin
 import {prepareServiceTask,submitOwnerTask,cancelOwnerTask,startCodingService,runCodingService,serviceRequest} from '../.github/continuum/coding-service.mjs';
 import {sameLiveProcess} from '../.github/continuum/coding-service-store.mjs';
 
-const FLAGS={init:['config','project','profiles','classpath','runtime-env','isolation-config','max-queue','max-records','max-cycles'],
+const FLAGS={init:['config','project','profiles','classpath','runtime-env','isolation-config','max-queue','max-records','max-cycles','model-timeout-ms'],
  prepare:['config','task'],review:['config','task'],submit:['config','task','approve'],start:['config'],run:['config'],stop:['config'],
  status:['config'],cancel:['config','task-id'],agents:['config','cursor','limit'],tasks:['config','cursor','limit'],evidence:['config','task-id','evidence-id']};
 function argumentsOf(argv){
@@ -28,7 +28,7 @@ export async function codingServiceCli(argv){
  const {command,options:o}=argumentsOf(argv),configPath=o.config;
  if(command==='init')return initializeCodingService({configPath,project:o.project,profileDirectory:o.profiles,profileClasspath:o.classpath,
   runtimeEnvPath:o['runtime-env'],isolationConfig:o['isolation-config'],maxQueue:number(o['max-queue'],8),
-  maxRecords:number(o['max-records'],1000),maxCycles:number(o['max-cycles'],1000)});
+  maxRecords:number(o['max-records'],1000),maxCycles:number(o['max-cycles'],1000),modelTimeoutMs:number(o['model-timeout-ms'],60000)});
  if(command==='prepare'||command==='review')return prepareServiceTask({configPath,task:taskFile(o.task)});
  if(command==='start')return startCodingService({configPath});
  if(command==='run')return runCodingService({configPath});

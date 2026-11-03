@@ -163,3 +163,55 @@ The initial idle wait now precedes the existing bounded loop, preserving a
 `maxCycles=1` budget until an actual owner task arrives. Final focused 49-case
 regression passed on clean exact source `d8468986`; no Fold7 or real service-model
 acceptance is inferred from these results.
+
+## Immediate 2% budget stop — unfinished follow-up
+
+Owner instructed immediate secure-and-stop at 2% remaining. No tests, model
+runs, service starts, barrier cleanup or further integration were performed after
+that instruction. This section records an **UNVERIFIED WIP**, not acceptance.
+
+The isolated service branch merged the frozen integrated source
+`8fd58d00c53c6c2257a102922243f413afb6bac1` without resetting history; merge commit
+`7fec637677a82235cb8074dab23a4c6a266b934c` was pushed.
+
+Read-only S01 evidence at `/workspace/independence-s01-experiment/run` showed:
+canonical task `t-af864ab6f02c7dec` is ABSTAINED/REFUTED, its receipt reports a
+failed baseline, and the model request ended after 32,520 ms with exit code 1 and
+zero response bytes. `runCodingTask` throws when no local model observation was
+verified, before constructing Echo/result. Consequently the service delivery is
+UNKNOWN with `CODING_MODEL_UNAVAILABLE`, no Echo/public snapshot, and the global
+resource uncertainty barrier correctly remains. Neither this service builder nor
+this checkpoint clears that historical barrier. Native reviewer owns its review.
+
+Proposed narrow follow-up (NOT IMPLEMENTED here): generate a truthful existing
+Echo report plus MAC-bound negative snapshot only for current canonical terminal
+negative results. Zero verified inference must stay zero and must not imply zero
+consumed attempts. Report availability must remain separate from authority to
+clear the resource barrier. Ordinary exit code 1 is insufficient teardown proof.
+Chief/runtime lane plans a process-private
+`isTrustedLocalRuntimeFailureObservation` and propagated
+`error.localRuntimeFailureObservation`; serialized trace flags never authorize
+barrier release. No service consumer or negative-result implementation has been
+added at this stop.
+
+Partial code saved in this checkpoint:
+
+- `init --model-timeout-ms` is parsed and recorded in config (default 60,000 ms,
+  bounds 100..300,000). Existing config without the field remains accepted.
+- `prepare` displays requested timeout, persisted profile duration and an upper
+  bound. The existing 120,000 ms profile cap is not increased.
+- **Still missing:** passing this option into the actual fixed provider, clamping
+  every invocation to the original assignment expiry/canonical deadline, exposing
+  the option in status, tests and independent acceptance. The current worker still
+  uses its old provider timeout. Do not integrate or advertise this WIP as active
+  timeout control. No production profile/model-budget override was introduced.
+
+This checkpoint changes service store/CLI/prepare projection only. It has not been
+compiled or tested after editing. Last accepted test claims earlier in this file
+remain bound to their original source SHAs, not this WIP.
+
+Next session: inspect this checkpoint and independently frozen negative-result
+criteria `038e6b2d57b265cf0e27cd58d8c9fbb05caa66c9`; finish only the bounded failure
+report/closure-proof distinction and timeout wiring, then review/test before
+integration. No unknown S01 action may be replayed. No cloud substitute, model
+change, main merge, signing, install or release was performed.
