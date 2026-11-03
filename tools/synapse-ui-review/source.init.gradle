@@ -1,7 +1,9 @@
 // Adds independent tests to the real Android test source set; excludes nothing.
 gradle.projectsEvaluated {
     def app = gradle.rootProject.project(':app')
-    app.android.sourceSets.getByName('test').java.srcDir('/workspace/synapse-ui-review/tools/synapse-ui-review')
+    def reviewInit = gradle.startParameter.initScripts.find { it.name == 'source.init.gradle' }
+    if (reviewInit == null) throw new GradleException('Independent review init path missing')
+    app.android.sourceSets.getByName('test').java.srcDir(reviewInit.parentFile)
 }
 
 // Only the initial scoped reviewer run opts into this filter. Final QA omits it.

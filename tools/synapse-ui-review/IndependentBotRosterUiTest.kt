@@ -194,12 +194,15 @@ class IndependentBotRosterUiTest {
         roster.show(); val first = current()
         roster.show(); val second = current()
         assertNotSame(first, second)
-        assertEquals(2, io.pending.size)
+        assertEquals(1, io.pending.size)
+        assertTrue(text().contains("nicht eingereiht"))
         io.one()
         assertSame(second, current())
-        assertTrue(text().contains("werden geladen"))
-        io.one()
-        assertSame(second, current())
+        assertTrue(text().contains("nicht eingereiht"))
+        assertTrue(buttons("Profil und Arbeitsbereich öffnen").isEmpty())
+        click("Übersicht erneut öffnen")
+        assertEquals(1, io.pending.size)
+        io.drain()
         assertEquals(8, buttons("Profil und Arbeitsbereich öffnen").size)
         assertEquals(2, io.submissions)
     }
@@ -210,12 +213,38 @@ class IndependentBotRosterUiTest {
         click("Arbeitsnotiz speichern")
         assertFalse(buttons("Arbeitsnotiz speichern").single().isEnabled)
         roster.show(); val newer = current()
+        assertEquals(1, io.pending.size)
+        assertTrue(text().contains("nicht eingereiht"))
         io.one()
-        assertSame(newer, current()); assertTrue(text().contains("werden geladen"))
-        io.drain()
-        assertSame(newer, current())
+        assertSame(newer, current()); assertTrue(text().contains("nicht eingereiht"))
+        assertTrue(buttons("Profil und Arbeitsbereich öffnen").isEmpty())
+        click("Übersicht erneut öffnen"); io.drain()
+        assertEquals(8, buttons("Profil und Arbeitsbereich öffnen").size)
         assertEquals("Nur für die ausgewählte stabile ID", store.workingContext(selected.agentId, selected.agentId))
         assertEquals(1, allProfiles().count { it.contextObjectId != null })
+    }
+
+    @Test fun closeDuringAcceptedWritePreservesOnlyThatIdentityWithoutRevivingPresentation() {
+        open(); val selected = allProfiles().sortedBy { it.agentId }.first(); firstProfile()
+        editor().setText("Akzeptierter Schreibauftrag bleibt erhalten")
+        click("Arbeitsnotiz speichern"); val original = current()
+        assertEquals(1, io.pending.size)
+        roster.close(); Shadows.shadowOf(Looper.getMainLooper()).idle()
+        io.drain()
+        assertFalse(original.isShowing)
+        assertSame(original, current())
+        assertEquals("Akzeptierter Schreibauftrag bleibt erhalten", store.workingContext(selected.agentId, selected.agentId))
+        assertEquals(1, allProfiles().count { it.contextObjectId != null })
+        roster.show(); io.drain()
+        assertEquals(8, buttons("Profil und Arbeitsbereich öffnen").size)
+    }
+
+    @Test fun showingAfterActivityDestructionAdmitsNoStorageWork() {
+        controller.pause().stop().destroy()
+        roster.show()
+        assertEquals(0, io.pending.size)
+        assertEquals(0, io.submissions)
+        assertFalse(File(dir, "bot-profiles-v1.bin").exists())
     }
 
     @Test fun corruptedRegistryShowsFailureAndDoesNotSilentlyReseed() {
