@@ -66,6 +66,7 @@ class ContinuumReadinessGuideUiTest {
         val (a, d) = open()
         field(a, "readinessCameraEnabled", true)
         d.dismiss()
+        shadowOf(android.os.Looper.getMainLooper()).idle() // Android delivers OnDismissListener on its queue.
         assertEquals(false, read(a, "readinessCameraEnabled"))
         assertNull(read(a, "readinessDialog"))
     }
@@ -86,6 +87,7 @@ class ContinuumReadinessGuideUiTest {
         val (a, d) = open()
         val code = AgentActivity::class.java.getDeclaredField("READINESS_SPEECH_REQUEST").apply { isAccessible = true }.getInt(null)
         d.dismiss()
+        shadowOf(android.os.Looper.getMainLooper()).idle()
         val before = read(a, "readinessSpeechResult")
         AgentActivity::class.java.getDeclaredMethod("applyLocalSpeechText", Int::class.javaPrimitiveType, String::class.java)
             .apply { isAccessible = true }.invoke(a, code, "Continuum, ich bin bereit.")
