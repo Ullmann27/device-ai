@@ -1,0 +1,5 @@
+{
+  "cancellation": "CHECKPOINT_BOUNDARY_ONLY",
+  "revokedDuringProfile": true,
+  "profileResultAdmitted": false
+}
