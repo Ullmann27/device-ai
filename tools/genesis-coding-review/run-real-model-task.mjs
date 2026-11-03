@@ -2,6 +2,7 @@
 // Independent acceptance driver. No injected provider, inferred answer or patch.
 // Usage: node run-real-model-task.mjs SOURCE FULL_SHA FIXTURE_REPO NEW_EVIDENCE_DIR [--preflight]
 import './verify-freeze.mjs';
+import {acceptanceClauses} from './task-contract.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
@@ -40,7 +41,7 @@ const task=validateCodingTask(binding.task);
 assert.equal(task.id,'genesis-'+binding.fixture);
 assert.equal(task.kind,'BUGFIX');
 assert.equal(task.goal,frozenMetadata.requirements[0]);
-assert.deepEqual(task.acceptance,frozenMetadata.requirements);
+assert.deepEqual(task.acceptance,acceptanceClauses(frozenMetadata.requirements));
 assert.deepEqual(task.limits,{maxModelCalls:2,maxContextChars:8192});
 assert.deepEqual(task.allowedPaths,['lib/subject.mjs']);
 assert.equal(task.chain,'node');
