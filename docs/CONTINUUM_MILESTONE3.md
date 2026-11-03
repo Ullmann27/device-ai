@@ -91,14 +91,17 @@ Es wirkt nur auf das Scoring, nicht auf gespeicherte Inhalte. Temporale Begriffe
 
 Vertrag für die Grafikseite: `docs/CONTINUUM_AVATAR_CONTRACT.md`. Paket `at.heinz.deviceai.avatar`: Zustände, Ausdruck, Blickziel,
 15 Viseme, Audio-Hüllkurve, `NoOpAvatarSink` als Standard und `AvatarSinkRegistry` als Einsteckpunkt. Die Signale kommen aus den
-bestehenden Hologramm-Flags und TTS-Callbacks. Neue Laufzeitlogik gibt es nicht. `WAITING_FOR_APPROVAL`/`BLOCKED` sind noch nicht verdrahtet.
+bestehenden Hologramm-Flags und TTS-Callbacks. Neue Laufzeitlogik gibt es nicht.
+Koordination (einzige Avatar-Schnittstelle): RED `5a20330d` → GREEN `8c909347`. Übernommen wurden der Wortbereich-Fallback und die Mundabbildung aus dem Avatar-Labor (#338-Branch)
+sowie die Diphthongregeln aus TalkingHead `lipsync-de` (MIT, #350) und die `AvatarPose`-Teilmenge mit `AvatarPoseReducer`. `WAITING_FOR_APPROVAL` und `BLOCKED` sind jetzt
+verdrahtet. Andock-Leitfaden: `8410b33c`.
 
 ## 6. Gesamtprüfung (`HOST_VERIFIED`, JDK 17, SDK 36)
 | Prüfung | SHA | Ergebnis |
 |---|---|---|
-| Android-JVM-JUnit vollständig | `d2a4d355` | **1.790 Tests, 0 FAIL, 5 skip** (M2: 1.772) |
-| `:app:lintDebug` | `d2a4d355` | No issues found |
-| Node, **alle** `.github/continuum/*.test.mjs` | `d2a4d355` | **1.308 Tests, 1.295 pass, 0 fail, 13 skip** |
+| Android-JVM-JUnit vollständig | `8c909347` | **1.793 Tests, 0 FAIL, 5 skip** (M2: 1.772) |
+| `:app:lintDebug` | `8c909347` | No issues found |
+| Node, **alle** `.github/continuum/*.test.mjs` | `8c909347` | **1.309 Tests, 1.296 pass, 0 fail, 13 skip** |
 
 (In M2 liefen nur 58 Android-bezogene Node-Dateien, diesmal die gesamte Suite.)
 Messdefinition (Review #370/4): Alle Zahlen sind deterministische Host-Ergebnisse. Prompt-Gesamtgröße und Gerätelatenz wurden **nicht** gemessen.
