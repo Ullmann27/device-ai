@@ -14,6 +14,8 @@ files changed. These are software contract tests, not model intelligence scores.
 | `396ade51faf0bedc834391c7fcc693628c62d102` | 1/1 Docker integration, zero skips, 12.04 seconds test duration | Actual persisted Forge/Lint identities, builder plus both independent verification sites |
 | `396ade51faf0bedc834391c7fcc693628c62d102` | 6/6 independent canonical boundary tests; 50/50 existing memory regressions | Unknown execution recovery, source binding, copied evidence rejection, current grant and full-store withdrawal |
 | `40508126` | 6/8 independent Echo tests; 2 defects reproduced | Final grant task association and dirty source recheck missing; correction pending at this checkpoint |
+| `ad7747b17651bb1dbf7d00dbbc4f96de7fc4b46f` | Same Echo tests 8/8 plus independent assignment tests 9/9; zero skips | Full grant association and clean source checked initially, before write and before return |
+| `ad7747b17651bb1dbf7d00dbbc4f96de7fc4b46f` | Existing author reporter/assignment regressions 17/17 independently rerun | Real scripted canonical repair receipt, owner abort, receipt loss/tamper, report tamper and no owner-text copy |
 
 The 28 supported cases include the original 22; they are not 50 distinct cases.
 `B25-profile-lifetime-cap` is **NOT_TESTABLE** through the current profile API,
@@ -58,7 +60,12 @@ and symlink controls. A real fixture grant's canonical task ID can change during
 reporting while its fingerprint stays fixed; a real source file can become dirty
 while HEAD stays fixed. Both escaped final revalidation. They are confirmed source
 defects under frozen E02/E03, not failed model reasoning. Corrected source must be
-rerun before accepting reporter integration.
+rerun before accepting reporter integration. The unchanged eight tests were then
+executed against exact `ad7747b17651bb1dbf7d00dbbc4f96de7fc4b46f`: **8/8 PASS**.
+The nine independent assignment tests and seventeen existing author regressions
+also passed there. The narrow reporting seam is accepted for research integration
+subject to final combined-source checks. It remains a deterministic summary of
+canonical evidence, not another independent verifier or model.
 
 ## Evidence and reproducibility
 
