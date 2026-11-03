@@ -81,6 +81,17 @@ class ChiefTaskGraphTest {
         rejects { task("malicious-qa", ChiefTaskKind.VERIFICATION, writes = setOf("app/src/Main.kt")) }
     }
 
+    @Test fun verifierMustCoverEveryChangedPathNotJustOne() {
+        val code = task("code", ChiefTaskKind.CODE_CHANGE,
+            writes = setOf("app/src/One.kt", "app/src/Two.kt"), verifier = "qa")
+        val incomplete = task("qa", ChiefTaskKind.VERIFICATION, "code.verify",
+            reads = setOf("app/src/One.kt"))
+        rejects { ChiefTaskGraph.compile(listOf(code, incomplete)) }
+        val complete = incomplete.copy(readPaths = setOf("app/src"))
+        val graph = ChiefTaskGraph.compile(listOf(code, complete))
+        assertEquals(listOf("code"), graph.ready(emptySet()).map { it.delegation.taskId })
+    }
+
     @Test fun traversalAndAmbiguousRepositoryPathsAreRejected() {
         for (bad in listOf("../other", "/etc/passwd", "src/../test", "src//test",
             "C:/Windows", "src\\win", "src/.hidden/./test", "src/x/")) {
