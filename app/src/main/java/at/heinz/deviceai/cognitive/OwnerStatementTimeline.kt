@@ -43,7 +43,7 @@ internal object OwnerStatementTimeline {
     private const val MAX_TURNS = 4
     private const val MAX_ENTITIES = 8
     private val sentence = Regex("""[^.!?;]+[.!?;]?""")
-    private const val DET = """(?<![\p{L}\p{N}_])(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]em|[Dd]en)"""
+    private const val DET = """(?<![\p{L}\p{N}_])(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]em|[Dd]en|[Ii]m)"""
     private val fullEntity = Regex("""$DET\s+(?:([a-zäöüß]+)\s+)?([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ]+)(?![\p{L}\p{N}_])""")
     private val ellipticEntity = Regex("""$DET\s+([a-zäöüß]+e[nmrs]?)(?=\s+\d)""")
     private val number = Regex("""(?<![\p{L}\p{N}_.,])(\d{1,6})(?![\p{N}.,]\d)(?:\s+(\p{L}+))?""")

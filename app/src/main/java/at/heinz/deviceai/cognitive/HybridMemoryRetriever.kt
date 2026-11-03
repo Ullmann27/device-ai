@@ -67,20 +67,27 @@ object HybridMemoryRetriever {
         // Grammar words alone do not establish a topic match. Otherwise an
         // unrelated private fact containing "ist"/"is" enters almost every
         // knowledge prompt. This affects scoring only; evidence stays literal.
-        val queryTerms = tokens(query).filterNot { it in QUERY_STOP_WORDS }.toSet()
-        if (queryTerms.isEmpty()) return emptyList()
+        val rawQueryTerms = tokens(query).filterNot { it in QUERY_STOP_WORDS }.toSet()
+        if (rawQueryTerms.isEmpty()) return emptyList()
+        // M3: light German normalization (umlaut folding + conservative suffix stripping) so
+        // "Kind"/"Kinder", "Neffe"/"Neffen", "Großeltern"/"Grosseltern" meet. Scoring only.
+        val queryTerms = rawQueryTerms.map(::normalizeTerm).toSet()
 
         val candidates = records.filter { it.privacyClass in allowedPrivacy }
         if (candidates.isEmpty()) return emptyList()
 
         val tokenized = candidates.associateWith { memory ->
-            tokens(memory.content + " " + memory.tags.joinToString(" "))
+            val terms = tokens(memory.content + " " + memory.tags.joinToString(" ")).map(::normalizeTerm)
+            // Compound-aware matching: a long query term that is the head or tail of a
+            // document compound ("termin" in "zahnarzttermin") counts as that term.
+            terms + queryTerms.filter { q -> q.length >= 5 && q !in terms &&
+                terms.any { t -> t.length >= q.length + 3 && (t.startsWith(q) || t.endsWith(q)) } }
         }
         val averageDocumentLength = tokenized.values.map { it.size }.average().coerceAtLeast(1.0)
         val documentFrequency = queryTerms.associateWith { term ->
             tokenized.values.count { term in it }.coerceAtLeast(0)
         }
-        val temporalQuery = queryTerms.any { it in TEMPORAL_TERMS }
+        val temporalQuery = rawQueryTerms.any { it in TEMPORAL_TERMS }
 
         return candidates.asSequence()
             .map { memory ->
@@ -180,7 +187,7 @@ object HybridMemoryRetriever {
 
     private fun entityScore(queryTerms: Set<String>, tags: List<String>): Double {
         if (tags.isEmpty()) return 0.0
-        val tagTerms = tags.flatMap(::tokens).toSet()
+        val tagTerms = tags.flatMap(::tokens).map(::normalizeTerm).toSet()
         if (tagTerms.isEmpty()) return 0.0
         return queryTerms.intersect(tagTerms).size.toDouble() / queryTerms.size.toDouble()
     }
@@ -224,6 +231,17 @@ object HybridMemoryRetriever {
         ProvenanceType.MODEL_GENERATED -> 0.40
         ProvenanceType.UNVERIFIED -> 0.20
     }
+
+    internal fun normalizeTerm(term: String): String {
+        val folded = term.replace("ä", "a").replace("ö", "o").replace("ü", "u").replace("ß", "ss")
+        if (folded.length < 5 || folded.any(Char::isDigit)) return folded
+        for (suffix in GERMAN_SUFFIXES) {
+            if (folded.endsWith(suffix) && folded.length - suffix.length >= 4) return folded.dropLast(suffix.length)
+        }
+        return folded
+    }
+
+    private val GERMAN_SUFFIXES = listOf("ern", "em", "en", "er", "es", "e", "n", "s")
 
     private fun tokens(text: String): List<String> =
         text.lowercase(Locale.ROOT)

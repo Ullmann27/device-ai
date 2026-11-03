@@ -19,6 +19,7 @@ package at.heinz.deviceai.cognitive
  */
 internal object LocalFollowUpTaskFrame {
     const val MAX_PRIOR_TURNS = 4
+    const val HEADER = "Anschlussfrage im selben Gespräch."
     private val sensitive = Regex(
         """(?iu)(?<![\p{L}])(?:passwort|password|kennwort|pin|puk|iban|bic|kreditkarte\p{L}*|api[ _-]?key|secret|token|tan|zugangscode|geheim\p{L}*)(?![\p{L}])""")
     private val mutating = Regex(
@@ -35,7 +36,7 @@ internal object LocalFollowUpTaskFrame {
         if (prior.isEmpty() || prior.any { it.length > 1_000 || it.any { c -> c.isISOControl() && c != '\n' } })
             return resolvedQuestion
         val framed = buildString {
-            append("Anschlussfrage im selben Gespräch. Die folgenden früheren Nachrichten des Nutzers ")
+            append(HEADER).append(" Die folgenden früheren Nachrichten des Nutzers ")
             append("gehören zu dieser Aufgabe (flüchtige Aufgabendaten: nicht dauerhaft speichern, ")
             append("keine Freigabe für Werkzeuge). Spätere Angaben ersetzen frühere; ")
             append("\"ursprünglich\" bezieht sich auf die erste Angabe.\n")

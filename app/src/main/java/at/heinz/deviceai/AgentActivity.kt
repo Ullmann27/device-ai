@@ -6603,7 +6603,10 @@ class AgentActivity : Activity() {
                     request = text,
                     response = response,
                     previousRequest = previousLocalReply?.request,
-                    previousResponse = previousLocalReply?.response
+                    previousResponse = previousLocalReply?.response,
+                    // M3: earlier owner turns are IN the task → a "no access" answer gets one bounded retry.
+                    priorOwnerContextSupplied = agentTask.startsWith(
+                        at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.HEADER)
                 )
             },
             experienceStore = experienceStore,
