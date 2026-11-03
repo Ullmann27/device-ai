@@ -227,15 +227,10 @@ class AgentActivity : Activity() {
     private var voiceListening = false
     @Volatile private var voiceUtteranceId: String? = null
     private val voiceSignal = TtsHologramSignal()
-    // Avatar integration port; no-op until the avatar bots plug in an implementation.
-    private val avatar = at.heinz.deviceai.avatar.AvatarController()
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            val now = android.os.SystemClock.elapsedRealtime()
-            val level = voiceSignal.level(now)
-            hologramView?.setAudioLevel(level)
-            avatar.lipSync(level, now)
+            hologramView?.setAudioLevel(voiceSignal.level(android.os.SystemClock.elapsedRealtime()))
             mainHandler.postDelayed(this, 33L)
         }
     }
@@ -5391,7 +5386,6 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
-        avatar.update(at.heinz.deviceai.avatar.AvatarController.activityOf(state.name), voiceUtteranceId)
     }
 
     private fun stopVoiceAnimation() {
