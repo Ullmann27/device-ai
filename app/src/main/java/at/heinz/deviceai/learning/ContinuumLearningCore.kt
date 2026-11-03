@@ -100,7 +100,7 @@ data class ExtendedCurriculumReport(
     }
 }
 
-enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
+enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE, HELD_UNCONFIRMED }
 
 data class ContinuumLearningStatus(
     val experiences:LearningExperienceStats,
@@ -614,6 +614,9 @@ class ContinuumLearningCore(
         check(store.updateStatus(item.id,LearningStatus.CONFIRMED,nowMillis())) { "Owner fact vanished" }
         OwnerFactChange.REACTIVATED
     }
+
+    /** WIP/UNVERIFIED stub for the RED run. */
+    fun unconfirmedOwnerStatements():List<LearningExperience> = emptyList()
 
     /** Confirmed, not revoked owner facts (the memory the chat may cite), oldest first. */
     fun activeOwnerFacts():List<LearningExperience> = synchronized(CORE_LOCK) {
