@@ -87,13 +87,28 @@ class ChiefTaskGraph private constructor(
                     dependencies.getValue(verifier.delegation.taskId).add(id)
                 }
             }
+            // Follow already declared dependencies before assigning new file-conflict edges.
+            // Otherwise a verifier listed before its coder would create a false cycle.
+            fun dependsOnTransitively(from: String, target: String): Boolean {
+                val pending = ArrayDeque<String>()
+                val visited = HashSet<String>()
+                pending.add(from)
+                while (pending.isNotEmpty()) {
+                    val current = pending.removeLast()
+                    if (current == target) return true
+                    if (visited.add(current)) dependencies.getValue(current).forEach(pending::add)
+                }
+                return false
+            }
             for (i in input.indices) {
                 val early = input[i]
                 for (j in i + 1 until input.size) {
                     val late = input[j]
                     val conflict = sharesPath(early.writePaths, late.readPaths + late.writePaths) ||
                         sharesPath(late.writePaths, early.readPaths)
-                    if (conflict) dependencies.getValue(late.delegation.taskId).add(early.delegation.taskId)
+                    if (conflict && !dependsOnTransitively(early.delegation.taskId, late.delegation.taskId)) {
+                        dependencies.getValue(late.delegation.taskId).add(early.delegation.taskId)
+                    }
                 }
             }
             // Kahn's algorithm: reject explicit cycles, including cycles caused by conflicting path leases.
