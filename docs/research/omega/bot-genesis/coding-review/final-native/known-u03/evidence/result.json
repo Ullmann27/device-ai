@@ -1,0 +1,145 @@
+{
+  "schema": "continuum-coding-task-result",
+  "version": 1,
+  "id": "genesis-known-u03",
+  "ccc1TaskId": "t-101718f341e89f76",
+  "taskFingerprint": "d654600e32812708fd6e65a991abc93eb8ce483107560f51b1779ebbcfa36fff",
+  "sourceCommit": "ad610792fab3960df1a4c8946a895eb833dc7e76",
+  "chain": "node",
+  "status": "PATCH_PENDING_OWNER_REVIEW",
+  "receiptJobs": [
+    "b6c08392-1f45-4614-9191-bdcceb6647ef"
+  ],
+  "receipts": [
+    {
+      "schema": "continuum-mobile-coding-receipt",
+      "version": 1,
+      "job": "b6c08392-1f45-4614-9191-bdcceb6647ef",
+      "operation": "code-repair",
+      "taskId": "mob-ec67bdb041952299",
+      "commit": "ad610792fab3960df1a4c8946a895eb833dc7e76",
+      "toolchain": {
+        "node": "v24.19.0",
+        "platform": "linux",
+        "arch": "x64",
+        "git": "git version 2.52.0"
+      },
+      "order": {
+        "chain": "node"
+      },
+      "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+      "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+      "patch": {
+        "sha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397",
+        "path": "/workspace/genesis-known-u03-experiment/runs/u03/evidence/private-synthetic-state/teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/repair.patch",
+        "bytes": 303
+      },
+      "evidence": {
+        "verificationSha256": "eba73660bb26b00de9bfec12656a9f17d613ebc3d0cd7c97858173d643b57701",
+        "baselineFailed": 1,
+        "baselineExecuted": 1,
+        "candidateExecuted": 1,
+        "independentExecuted": 1,
+        "evidenceSufficient": true
+      },
+      "commands": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "passed": false,
+          "executed": 1,
+          "failed": 1,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "candidate",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 1,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "independent",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 1,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        }
+      ],
+      "failure": null,
+      "backlog": {
+        "state": "DONE",
+        "attempts": 1,
+        "maxAttempts": 3,
+        "error": null
+      },
+      "approvedForMerge": false,
+      "apk": null,
+      "installed": false,
+      "deviceVerified": false,
+      "createdAt": "2026-11-03T21:35:43.704Z",
+      "repair": {
+        "outcome": "VERIFIED",
+        "strategy": "LOCAL_SCOPED_PATCH",
+        "files": [
+          "lib/subject.mjs"
+        ],
+        "diagnostics": 1,
+        "attempts": 1
+      }
+    }
+  ],
+  "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+  "technicalRecallCount": 0,
+  "botAssignment": {
+    "sha256": "d306bcfc2eba945acdb080dd5214c51e4052583431f2cb3082f3e1ca8f3622af",
+    "builder": {
+      "agentId": "bot-forge",
+      "persistentWorkspaceId": "workspace-bot-forge",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "verifier": {
+      "agentId": "bot-lint",
+      "persistentWorkspaceId": "workspace-bot-lint",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "reporter": {
+      "agentId": "bot-echo",
+      "persistentWorkspaceId": "workspace-bot-echo",
+      "maxModelCalls": 1,
+      "deadlineMillis": 120000
+    },
+    "status": "ASSIGNED_IDENTITIES_ONLY",
+    "executionEvidence": "FIXED_PROFILE_OBSERVATIONS"
+  },
+  "modelExecution": {
+    "verifiedCalls": 1,
+    "acceptedProposals": 1,
+    "rejectedResponses": 0,
+    "identity": {
+      "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+    }
+  },
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralTraining": false,
+  "botReport": {
+    "reporterId": "bot-echo",
+    "operation": "DETERMINISTIC_CANONICAL_REPORT",
+    "path": "/workspace/genesis-known-u03-experiment/runs/u03/evidence/private-synthetic-state/coding-evidence/genesis-known-u03/bot-report-d306bcfc2eba945acdb080dd5214c51e4052583431f2cb3082f3e1ca8f3622af.json",
+    "sha256": "68cced472acce12e1c28169dde515c303bc2d6cc5b562e65cd187326f3bc5640",
+    "status": "COMPLETED",
+    "journalHead": "06ff716465df9ffc5a275722a98d6327f7f5b541111d4188ead0206b28ee0242",
+    "modelCalls": 0,
+    "deviceVerified": false
+  }
+}

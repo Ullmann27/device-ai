@@ -1,5 +1,12 @@
 # BOT GENESIS independent coding review — 2026-11-03
 
+Successor checkpoint: [FINAL-NATIVE-RESULTS.md](FINAL-NATIVE-RESULTS.md) records
+completed source1595 g04 (FAIL, one call) and conditional KNOWN u03 (PASS, one
+call), actual FORGE/LINT/ECHO and fresh-process recall on the known case only.
+Both attempts are consumed. The historical A0 report below remains intact,
+including its then-prospective g04 plan; final status is in the successor report
+and FINAL-RESUME.md.
+
 ## Decision
 
 The new prospective A0 is complete and negative: **0/3 verified repairs**, three
