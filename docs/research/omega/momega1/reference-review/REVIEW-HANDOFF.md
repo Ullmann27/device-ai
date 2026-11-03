@@ -42,7 +42,7 @@ Clean unchanged baseline checkout:
 `/workspace/jarvis-reference-3d-baseline` at
 `7caef9b624beebdb78c8c081a17f4978461ae496`.
 
-After the QA lane releases a CPU slot:
+Executed in a QA-authorized single-CPU gap:
 
 ```bash
 bash tools/jarvis-reference-review/run-mapper-challenge.sh \
@@ -63,9 +63,34 @@ Candidate acceptance requires those unchanged tests against an exact clean sourc
 source comparison and actual visual evidence. A passing mapper suite cannot
 promote appearance, work-event effects, audio, onboarding or Fold7 criteria.
 
+Actual unchanged baseline: **12 JUnit cases, 10 PASS, 2 FAIL, 0 SKIP**, exit 1.
+Both failures are the preregistered missing idle head/gaze behavior, not fixture
+or compiler failures. Raw logs and command/source hashes are retained in
+`mapper-baseline-receipt.json`. No compiler ran alongside the benchmark model.
+
+## Additional independent memory proof review
+
+Chief requested a bounded independent review of an observed real-loop persistence
+failure. The source repair is separate from this UI lane: technical proof MACs
+were computed before JSON persistence removed optional undefined fields.
+
+Sixteen cases were frozen at `462e43fd` before candidate results were supplied.
+Unchanged helper at `19474261` (byte-identical to `d8a927dd`) produced **7 PASS,
+9 FAIL**. Exact candidate `6baec1bcd6585d2d04688a7d15651c830b4886d7` produced
+**16/16 PASS**, followed by **51/51** actual canonical technical-recall/durability
+checks; zero skips. Cases include nested undefined, sparse arrays, fresh Node
+restart, original-object preservation, post-serialization binding substitution,
+copied brands, circular/BigInt refusal, and tampering with an outer hash rewrite.
+
+**ACCEPT_DURABLE_PROOF_JSON_SNAPSHOT_FIX**, limited to that exact source. Original
+live producer/verifier brands are checked before serialization; the persisted
+snapshot is revalidated before MAC. Existing unauthenticated records are never
+re-signed. Tests use explicit disposable private-brand fixtures, not real model
+observations. Raw commands, seams and hashes: `memory-roundtrip-receipt.json`.
+
 ## Pending
 
-- Execute unchanged baseline RED and exact candidate GREEN when QA releases CPU.
+- Execute unchanged native tests against the exact new motion candidate when QA releases CPU.
 - Review the narrow imported asset/runtime source and candidate motion changes.
 - Capture/review same-backend design regression and time-sequenced head renders.
 - Evaluate real work-effect event binding separately from cosmetic motion.
