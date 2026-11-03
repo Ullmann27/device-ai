@@ -142,6 +142,53 @@ class ShizukuBridgeLifecycleTest {
         bridge.stop()
     }
 
+
+    @Test fun permissionRequestTimeoutDoesNotLockOutFutureOwnerRetry() {
+        Server.granted = false
+        val status = mutableListOf<String>()
+        val bridge = bridge(status)
+        bridge.start()
+        assertEquals(1, Server.permissionRequests)
+        bridge.refresh(); bridge.requestAccess()
+        assertEquals("only one active permission request", 1, Server.permissionRequests)
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(21))
+        assertTrue(bridge.statusDetail().contains("Zeitüberschreitung"))
+        bridge.requestAccess()
+        assertEquals("owner may retry after missing callback", 2, Server.permissionRequests)
+        bridge.stop()
+    }
+
+    @Test fun permissionGrantedWhileCallbackMissingCanBindOnRefresh() {
+        Server.granted = false
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        assertEquals(1, Server.permissionRequests)
+        Server.granted = true
+        bridge.refresh()
+        assertEquals(1, Server.connections.size)
+        connect(Server.connections.single())
+        assertTrue(bridge.isReady())
+        bridge.stop()
+    }
+
+    @Test fun serverDisappearingWithoutDeadCallbackNeverRemainsReady() {
+        val bridge = bridge(mutableListOf())
+        bridge.start()
+        connect(Server.connections.single())
+        assertTrue(bridge.isReady())
+        Server.running = false
+        assertFalse("server absence invalidates shell readiness", bridge.isReady())
+        bridge.refresh()
+        assertTrue(bridge.statusDetail().contains("nicht gestartet"))
+        assertEquals(1, Server.unbound.size)
+        Server.running = true
+        bridge.requestAccess()
+        assertEquals(2, Server.connections.size)
+        connect(Server.connections.last())
+        assertTrue(bridge.isReady())
+        bridge.stop()
+    }
+
     @Test fun stoppedServerReportsMissingWithoutRequestingPermissionOrBinding() {
         Server.running = false
         val status = mutableListOf<String>(); val bridge = bridge(status)

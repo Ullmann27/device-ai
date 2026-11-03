@@ -28,8 +28,10 @@ class ShizukuBridge(
     private var listenersRegistered = false
 
     private val bindDeadlineMs = 15_000L
+    private val permissionDeadlineMs = 20_000L
     @Volatile private var started = false
     private var permissionPending = false
+    private var permissionTimeout: Runnable? = null
     private var activeConnection: ServiceConnection? = null
     private var bindTimeout: Runnable? = null
     @Volatile private var lastConnectionStatus = "Shizuku-Verbindung noch nicht geprüft"
@@ -39,6 +41,12 @@ class ShizukuBridge(
     private fun reportStatus(value: String) {
         lastConnectionStatus = value
         onStatus(value)
+    }
+
+    private fun clearPermissionPending() {
+        permissionPending = false
+        permissionTimeout?.let(mainHandler::removeCallbacks)
+        permissionTimeout = null
     }
 
     private fun cancelBindTimeout() {
@@ -98,7 +106,7 @@ class ShizukuBridge(
         synchronized(this) {
             if (started) {
                 resetBinding()
-                permissionPending = false
+                clearPermissionPending()
                 reportStatus("Shizuku-Dienst beendet · bitte in Shizuku neu starten")
             }
         }
@@ -107,7 +115,7 @@ class ShizukuBridge(
     private val permissionResult = Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
         synchronized(this) {
             if (requestCode == REQUEST_CODE && started && permissionPending) {
-                permissionPending = false
+                clearPermissionPending()
                 if (grantResult == PackageManager.PERMISSION_GRANTED) {
                     bindShellService()
                 } else {
@@ -147,7 +155,7 @@ class ShizukuBridge(
             reportStatus("Bereit · Shell UID über Shizuku")
         } else if (!isShizukuRunning()) {
             resetBinding()
-            permissionPending = false
+            clearPermissionPending()
             reportStatus("Shizuku ist noch nicht gestartet · Shizuku-App öffnen")
         } else {
             ensurePermissionAndBind()
@@ -156,7 +164,7 @@ class ShizukuBridge(
 
     @Synchronized fun stop() {
         started = false
-        permissionPending = false
+        clearPermissionPending()
         resetBinding()
         if (listenersRegistered) {
             runCatching { Shizuku.removeBinderReceivedListener(binderReceived) }
@@ -181,7 +189,7 @@ class ShizukuBridge(
         runCatching { Shizuku.pingBinder() }.getOrDefault(false)
 
     fun isReady(): Boolean = runCatching {
-        started && shell?.asBinder()?.pingBinder() == true
+        started && isShizukuRunning() && shell?.asBinder()?.pingBinder() == true
     }.getOrDefault(false)
 
     fun execute(command: String, callback: (String) -> Unit) {
@@ -227,24 +235,34 @@ class ShizukuBridge(
         try {
             if (!Shizuku.pingBinder()) {
                 resetBinding()
-                permissionPending = false
+                clearPermissionPending()
                 reportStatus("Shizuku ist noch nicht gestartet · Shizuku-App öffnen")
                 return
             }
             when {
                 isReady() -> reportStatus("Bereit · Shell UID über Shizuku")
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED -> {
-                    permissionPending = false
+                    clearPermissionPending()
                     bindShellService()
                 }
                 permissionPending -> reportStatus("Warte auf Shizuku-Freigabe …")
                 forceRequest || !Shizuku.shouldShowRequestPermissionRationale() -> {
                     permissionPending = true
+                    val timeout = Runnable {
+                        synchronized(this) {
+                            if (started && permissionPending) {
+                                clearPermissionPending()
+                                reportStatus("Zeitüberschreitung bei Shizuku-Freigabe · erneut verbinden")
+                            }
+                        }
+                    }
+                    permissionTimeout = timeout
+                    mainHandler.postDelayed(timeout, permissionDeadlineMs)
                     reportStatus("Warte auf Shizuku-Freigabe …")
                     try {
                         Shizuku.requestPermission(REQUEST_CODE)
                     } catch (t: Throwable) {
-                        permissionPending = false
+                        clearPermissionPending()
                         reportStatus("Shizuku-Freigabe fehlgeschlagen: " +
                             (t.message ?: t.javaClass.simpleName))
                     }
@@ -263,8 +281,13 @@ class ShizukuBridge(
             return
         }
         if (activeConnection != null) {
-            reportStatus("Verbinde Shell-Dienst …")
-            return
+            if (shell == null) {
+                reportStatus("Verbinde Shell-Dienst …")
+                return
+            }
+            // A previously connected shell may die without a service-disconnect
+            // callback. Revoke its session and retry through the normal gate.
+            resetBinding()
         }
 
         val attempted = object : ServiceConnection {

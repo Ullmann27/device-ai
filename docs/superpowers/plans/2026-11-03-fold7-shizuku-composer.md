@@ -54,3 +54,15 @@ Next: execute full Android QA on this exact commit, run UI tests, check any Robo
 ## Model-proof shortcut
 
 The existing `runLocalSmokeTest(direct = true)` is now exposed in the model center as **GEMMA-DIREKTTEST · OFFLINE**. It switches to the chat display and invokes the unchanged tool-free local runtime; it does not reinterpret a READY UI badge as successful inference. An actual nonempty response and elapsed time (or a concrete failure) are shown. The test uses the currently loaded local model only, without Web, memory retriever or an external API. No Fold7 native generation has been executed in this GitHub-only checkpoint.
+
+
+## Additional owner recovery fix (2026-11-03, after 83c1a6d2)
+
+Review of the concrete Shizuku state machine identified two still-open P0 failure modes:
+
+1. If `Shizuku.requestPermission(4107)` never produces a permission callback, `permissionPending` stays true indefinitely. The owner can tap **Verbinden** repeatedly but no further request is sent. The bridge now has a 20-second permission deadline, cancels it on grant/denial/stop/server death and allows a deliberate retry after timeout. An already granted permission discovered by refresh bypasses an old pending callback.
+2. If a previously bound shell's Binder dies without the expected Android service-disconnect callback, `activeConnection` stays non-null after its 15-second bind timer was cancelled. Every future retry reported "Verbinde" without binding. The bridge now invalidates that stale session, unbinds its old connection and tries again. Also, a live old shell proxy cannot claim READY while the Shizuku server is no longer running.
+
+Three additional Robolectric source tests cover silent permission timeout/retry, permission granted despite missing permission callback, and server death without binder-death callback followed by safe rebind. Existing timeout/reentrancy/late callback/permission-dedup cases remain.
+
+**Verification boundary:** This is a source and regression-test patch, not a physical Fold7 test. The reviewed exact Kotlin files must still be compiled and the complete Robolectric suite run with the project's Android SDK36/JDK17/Gradle8.11.1 toolchain; no GitHub Actions run/status was available for the previous commit. Refuse publication or main merge until this exact head has GREEN QA and owner-device evidence. Do not loosen tool authorization, request shell effects or uninstall code38.
