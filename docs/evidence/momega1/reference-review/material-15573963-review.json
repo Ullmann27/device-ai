@@ -1,0 +1,99 @@
+{
+  "schema": "jarvis-independent-material-appearance-review",
+  "version": 1,
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "decision": "NOT_ACCEPTED",
+  "criterion": "H01",
+  "status": "FAIL",
+  "productionAssetReplaced": false,
+  "sourceAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "candidateAssetSha256": "15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5",
+  "binaryChunkByteIdentical": true,
+  "binaryChunkSha256": "cef29d1df3b621cf26dd37a648f40f2433870a5d353bac6e82774dbdb870608c",
+  "gltfSemanticChangesOutsideMaterials": false,
+  "changedMaterials": [
+    "DeepIndigoSkin",
+    "CyanIris",
+    "VioletThreads",
+    "CyanThreads"
+  ],
+  "renderManifest": {
+    "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+    "backend": "Blender 4.3.2, Cycles CPU",
+    "pixels": [
+      384,
+      448
+    ],
+    "samples": 8,
+    "cpuThreads": 1,
+    "sameCameraLightingExposureAndSeed": true,
+    "syntheticInput": "Neutral real GLB; camera moves, no invented model or tool activity",
+    "limitations": [
+      "Not Filament pixel equivalence",
+      "Not reference identity acceptance",
+      "Not camera tracking",
+      "No device FPS or resource claim"
+    ],
+    "frames": [
+      {
+        "file": "baseline-front.png",
+        "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+        "imageSha256": "7553e5050badcb9ca06aae956edac6016edbfaf4b6552f069f2a992db635962f",
+        "cameraYawDegrees": 0,
+        "cameraPitchDegrees": 0
+      },
+      {
+        "file": "baseline-slight-yaw-pitch.png",
+        "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+        "imageSha256": "557d9c34b68ab93c2590438a2f40df47c0a938b74accb821d881c26f3ac67677",
+        "cameraYawDegrees": 18,
+        "cameraPitchDegrees": 8
+      },
+      {
+        "file": "baseline-profile.png",
+        "assetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+        "imageSha256": "c96191ff33fe007be73e61178c55c6cdcdadcfc64ad3ff08a323f7a32dae32b1",
+        "cameraYawDegrees": 90,
+        "cameraPitchDegrees": 0
+      },
+      {
+        "file": "candidate-front.png",
+        "assetSha256": "15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5",
+        "imageSha256": "08c12ecabd150f50f69a47c50a99ecca34e688664b5d8526ab6823118731f714",
+        "cameraYawDegrees": 0,
+        "cameraPitchDegrees": 0
+      },
+      {
+        "file": "candidate-slight-yaw-pitch.png",
+        "assetSha256": "15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5",
+        "imageSha256": "ba5d5fd091bb8651d5d3f25a9086a3949b151ca79df0df4d130a49e05d2f51f8",
+        "cameraYawDegrees": 18,
+        "cameraPitchDegrees": 8
+      },
+      {
+        "file": "candidate-profile.png",
+        "assetSha256": "15573963f9c3f862a73c5c963b00c3a8106f1090c1bc03c8e7ed4b9a271937f5",
+        "imageSha256": "f4327fe6a8ecee1f7a12a7196af5ab824e0f2f819275997ca59f9495a9af9e81",
+        "cameraYawDegrees": 90,
+        "cameraPitchDegrees": 0
+      }
+    ]
+  },
+  "independentObservations": [
+    "Real front, slight-yaw/pitch and profile geometry is coherent and has true anatomical depth.",
+    "Candidate increases face brightness and contour readability relative to baseline.",
+    "Face remains opaque; surface wire paths remain coarse/angular compared with primary reference luminous strands.",
+    "Pale bright irises appear fixed/staring; frame sampling cannot establish natural eye motion.",
+    "Eight-sample Cycles grain limits fine surface assessment; more samples may reduce grain but do not by themselves repair material/eye differences."
+  ],
+  "limits": [
+    "Actual GLB host renders, not Android Filament pixels, live app screenshots or device evidence",
+    "Neutral asset and camera angle changes do not prove mapper-driven natural motion",
+    "No audio listening, lip-sync or voice acceptance",
+    "No user reference media or frames committed"
+  ],
+  "renderToolsSha256": {
+    "tools/epsilon-avatar-contract/derive-material-candidate.py": "c8f04933158609e593ad821dfa7fdec4e9181c28c8c24d344f40939b88a1b840",
+    "tools/epsilon-avatar-contract/render-material-review.py": "37c6bcad9c428b7d00b3dcbe258fd5523848503289c2afe4dbced15559199c14"
+  }
+}

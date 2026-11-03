@@ -126,5 +126,21 @@ this does not accept head appearance, real camera integration, Filament renderin
 first-run guidance, voice identity or Fold7 execution. Raw output and exact source
 hashes: `gaze-motion-fixed-2655-receipt.json`.
 
+## Independent material/appearance comparison
+
+Six actual-GLB A/B frames were inspected: front, slight yaw/pitch and full profile,
+with identical camera/lighting/exposure/seed, Blender 4.3.2 Cycles CPU, 384×448,
+eight samples and one CPU thread. Candidate material asset `15573963f9c3f862...`
+is brighter and easier to read, but **H01 remains FAIL / NOT_ACCEPTED**. The face
+is still opaque, the wire paths coarse/angular and the pale bright irises create
+a fixed stare. Neutral pose/camera-angle frames do not demonstrate natural motion.
+
+The reviewer independently verified all six frame hashes, byte-identical geometry
+BIN chunks and unchanged glTF semantics outside four material objects. The
+production asset remains `f39a89fc...`. `material-15573963-review.json` records
+exact hashes, render parameters, observations and limitations. Eight-sample grain
+limits fine appearance assessment; higher samples alone cannot fix the identified
+material/eye differences. These are host asset renders, not Filament/device pixels.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
