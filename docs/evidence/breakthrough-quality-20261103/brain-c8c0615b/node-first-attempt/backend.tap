@@ -1,0 +1,394 @@
+TAP version 13
+# Subtest: web tools are exact bounded Android function proposals, never hosted browsing
+ok 1 - web tools are exact bounded Android function proposals, never hosted browsing
+  ---
+  duration_ms: 1.685957
+  type: 'test'
+  ...
+# Subtest: disabled discovery advertises no web capability; new calls do not share mutable schemas
+ok 2 - disabled discovery advertises no web capability; new calls do not share mutable schemas
+  ---
+  duration_ms: 0.147061
+  type: 'test'
+  ...
+# Subtest: actual server advertises Android proposals and removes hosted web-search bypass
+ok 3 - actual server advertises Android proposals and removes hosted web-search bypass
+  ---
+  duration_ms: 5.679794
+  type: 'test'
+  ...
+# Subtest: health reports disabled hosted research without exposing credentials
+ok 4 - health reports disabled hosted research without exposing credentials
+  ---
+  duration_ms: 635.0144
+  type: 'test'
+  ...
+# Subtest: continuum status enforces bearer authentication
+ok 5 - continuum status enforces bearer authentication
+  ---
+  duration_ms: 87.876961
+  type: 'test'
+  ...
+# Subtest: unauthorized or invalid agent turns never call upstream
+ok 6 - unauthorized or invalid agent turns never call upstream
+  ---
+  duration_ms: 101.16474
+  type: 'test'
+  ...
+# Subtest: agent turn maps mock Responses API to Android reply contract
+ok 7 - agent turn maps mock Responses API to Android reply contract
+  ---
+  duration_ms: 178.074264
+  type: 'test'
+  ...
+# Subtest: tool-result continuation reuses session and limits the forwarded result count
+ok 8 - tool-result continuation reuses session and limits the forwarded result count
+  ---
+  duration_ms: 65.63591
+  type: 'test'
+  ...
+# Subtest: oversized payload is rejected before upstream forwarding
+ok 9 - oversized payload is rejected before upstream forwarding
+  ---
+  duration_ms: 43.19287
+  type: 'test'
+  ...
+# Subtest: upstream HTTP and JSON failures are bounded and do not leak secrets
+ok 10 - upstream HTTP and JSON failures are bounded and do not leak secrets
+  ---
+  duration_ms: 77.848577
+  type: 'test'
+  ...
+# Subtest: dataset prioritizes gaps, low coverage and uncertain observations
+ok 11 - dataset prioritizes gaps, low coverage and uncertain observations
+  ---
+  duration_ms: 57.710623
+  type: 'test'
+  ...
+# Subtest: dataset includes recent failed cycles as recovery benchmarks
+ok 12 - dataset includes recent failed cycles as recovery benchmarks
+  ---
+  duration_ms: 1.026605
+  type: 'test'
+  ...
+# Subtest: immutable governance cannot be mutated by challenger
+ok 13 - immutable governance cannot be mutated by challenger
+  ---
+  duration_ms: 0.572551
+  type: 'test'
+  ...
+# Subtest: brain registry is checksummed and recovers last-known-good
+ok 14 - brain registry is checksummed and recovers last-known-good
+  ---
+  duration_ms: 7.008323
+  type: 'test'
+  ...
+# Subtest: factory promotes only objectively better grounded safe challenger
+ok 15 - factory promotes only objectively better grounded safe challenger
+  ---
+  duration_ms: 8.737635
+  type: 'test'
+  ...
+# Subtest: factory refuses promotion when safety or grounding regress
+ok 16 - factory refuses promotion when safety or grounding regress
+  ---
+  duration_ms: 5.981027
+  type: 'test'
+  ...
+# Subtest: state persists with integrity and last-known-good recovery
+ok 17 - state persists with integrity and last-known-good recovery
+  ---
+  duration_ms: 12.571211
+  type: 'test'
+  ...
+# Subtest: observation requires citations and creates research gaps without authority
+ok 18 - observation requires citations and creates research gaps without authority
+  ---
+  duration_ms: 0.930599
+  type: 'test'
+  ...
+# Subtest: planner prioritizes unresolved gap and changes query strategy after failures
+ok 19 - planner prioritizes unresolved gap and changes query strategy after failures
+  ---
+  duration_ms: 18.310635
+  type: 'test'
+  ...
+# Subtest: daemon learns cited observation, persists gaps and respects interval budget
+ok 20 - daemon learns cited observation, persists gaps and respects interval budget
+  ---
+  duration_ms: 11.928092
+  type: 'test'
+  ...
+# Subtest: failed research is recorded and alternative strategy becomes available
+ok 21 - failed research is recorded and alternative strategy becomes available
+  ---
+  duration_ms: 7.363126
+  type: 'test'
+  ...
+# Subtest: public memory retrieval respects query, citations and epistemic boundaries
+ok 22 - public memory retrieval respects query, citations and epistemic boundaries
+  ---
+  duration_ms: 34.737014
+  type: 'test'
+  ...
+# Subtest: unverified research is never silently promoted to trusted memory
+ok 23 - unverified research is never silently promoted to trusted memory
+  ---
+  duration_ms: 0.446872
+  type: 'test'
+  ...
+# Subtest: oversized queries and limits are rejected
+ok 24 - oversized queries and limits are rejected
+  ---
+  duration_ms: 0.549717
+  type: 'test'
+  ...
+# Subtest: Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+ok 25 - Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+  ---
+  duration_ms: 1.271773
+  type: 'test'
+  ...
+# Subtest: every real model request requires a new owner checkbox consent
+ok 26 - every real model request requires a new owner checkbox consent
+  ---
+  duration_ms: 0.221023
+  type: 'test'
+  ...
+# Subtest: render only serves local UI assets; mentor POST keeps auth and owner consent
+ok 27 - render only serves local UI assets; mentor POST keeps auth and owner consent
+  ---
+  duration_ms: 0.486182
+  type: 'test'
+  ...
+# Subtest: mentor is opt-in disabled and never invokes external fetch without key
+ok 28 - mentor is opt-in disabled and never invokes external fetch without key
+  ---
+  duration_ms: 5.522557
+  type: 'test'
+  ...
+# Subtest: one authorized message is bounded and contains no tools, memory or device context
+ok 29 - one authorized message is bounded and contains no tools, memory or device context
+  ---
+  duration_ms: 104.420021
+  type: 'test'
+  ...
+# Subtest: input length validation happens before network and before quota consumption
+ok 30 - input length validation happens before network and before quota consumption
+  ---
+  duration_ms: 0.964982
+  type: 'test'
+  ...
+# Subtest: daily quota is isolated by UTC day and refuses concurrent calls
+ok 31 - daily quota is isolated by UTC day and refuses concurrent calls
+  ---
+  duration_ms: 9.883508
+  type: 'test'
+  ...
+# Subtest: upstream errors do not expose API response contents or key
+ok 32 - upstream errors do not expose API response contents or key
+  ---
+  duration_ms: 5.95598
+  type: 'test'
+  ...
+# Subtest: Groq throttling and malformed output are non-tool error responses
+ok 33 - Groq throttling and malformed output are non-tool error responses
+  ---
+  duration_ms: 1.012113
+  type: 'test'
+  ...
+# Subtest: oversized responses are rejected without parsing or logging private contents
+ok 34 - oversized responses are rejected without parsing or logging private contents
+  ---
+  duration_ms: 0.606563
+  type: 'test'
+  ...
+# Subtest: mentor ignores whitespace around environment key and never follows a redirect
+ok 35 - mentor ignores whitespace around environment key and never follows a redirect
+  ---
+  duration_ms: 5.037799
+  type: 'test'
+  ...
+# Subtest: provider rejects unknown models and invalid requests without exposing response bodies
+ok 36 - provider rejects unknown models and invalid requests without exposing response bodies
+  ---
+  duration_ms: 3.805905
+  type: 'test'
+  ...
+# Subtest: exhausted reasoning-only response retries same consented question once
+ok 37 - exhausted reasoning-only response retries same consented question once
+  ---
+  duration_ms: 1.04396
+  type: 'test'
+  ...
+# Subtest: empty response after a bounded retry has a specific reason, no reasoning text leaks
+ok 38 - empty response after a bounded retry has a specific reason, no reasoning text leaks
+  ---
+  duration_ms: 0.603788
+  type: 'test'
+  ...
+# Subtest: other model names do not get unsupported gpt-oss reasoning options
+ok 39 - other model names do not get unsupported gpt-oss reasoning options
+  ---
+  duration_ms: 4.898118
+  type: 'test'
+  ...
+# Subtest: hypotheses are explicitly non-authoritative
+ok 40 - hypotheses are explicitly non-authoritative
+  ---
+  duration_ms: 1.476041
+  type: 'test'
+  ...
+# Subtest: invented evidence references cannot enter a tournament
+ok 41 - invented evidence references cannot enter a tournament
+  ---
+  duration_ms: 11.58666
+  type: 'test'
+  ...
+# Subtest: tournament store is integrity checked with LKG recovery
+ok 42 - tournament store is integrity checked with LKG recovery
+  ---
+  duration_ms: 1.160175
+  type: 'test'
+  ...
+# Subtest: generation reflection Elo tournament evolution and research questions form a closed loop
+ok 43 - generation reflection Elo tournament evolution and research questions form a closed loop
+  ---
+  duration_ms: 10.918614
+  type: 'test'
+  ...
+# Subtest: daily tournament budget prevents runaway agent loops
+ok 44 - daily tournament budget prevents runaway agent loops
+  ---
+  duration_ms: 44.664578
+  type: 'test'
+  ...
+# Subtest: long Groq answers are preserved beyond old 1800 character limit
+ok 45 - long Groq answers are preserved beyond old 1800 character limit
+  ---
+  duration_ms: 106.564853
+  type: 'test'
+  ...
+# Subtest: table markdown becomes plain, legible text without losing values
+ok 46 - table markdown becomes plain, legible text without losing values
+  ---
+  duration_ms: 0.705542
+  type: 'test'
+  ...
+# Subtest: oversized answers end at a boundary and explicitly signal shortening
+ok 47 - oversized answers end at a boundary and explicitly signal shortening
+  ---
+  duration_ms: 0.347252
+  type: 'test'
+  ...
+# Subtest: provider token-limit completion is explicitly marked as incomplete
+ok 48 - provider token-limit completion is explicitly marked as incomplete
+  ---
+  duration_ms: 0.810539
+  type: 'test'
+  ...
+# Subtest: unverified mentor has no current device or repo state
+ok 49 - unverified mentor has no current device or repo state
+  ---
+  duration_ms: 0.591399
+  type: 'test'
+  ...
+# Subtest: unapproved device cannot redeem; no credentials are exposed
+ok 50 - unapproved device cannot redeem; no credentials are exposed
+  ---
+  duration_ms: 17.135256
+  type: 'test'
+  ...
+# Subtest: owner-approved device receives only revocable mentor token
+ok 51 - owner-approved device receives only revocable mentor token
+  ---
+  duration_ms: 15.170071
+  type: 'test'
+  ...
+# Subtest: expired, forged, tampered, and replayable altered challenges are rejected
+ok 52 - expired, forged, tampered, and replayable altered challenges are rejected
+  ---
+  duration_ms: 34.412807
+  type: 'test'
+  ...
+# Subtest: wrong elliptic curve and missing owner token fail closed
+ok 53 - wrong elliptic curve and missing owner token fail closed
+  ---
+  duration_ms: 2.270956
+  type: 'test'
+  ...
+# Subtest: rotated backend token is recovered only by fresh signed owner-approved pairing
+ok 54 - rotated backend token is recovered only by fresh signed owner-approved pairing
+  ---
+  duration_ms: 11.090965
+  type: 'test'
+  ...
+# Subtest: OpenRouter stays off without secret or explicit enablement
+ok 55 - OpenRouter stays off without secret or explicit enablement
+  ---
+  duration_ms: 2.767263
+  type: 'test'
+  ...
+# Subtest: OpenRouter uses its pinned HTTPS endpoint, a bounded one-off prompt and returns no tools
+ok 56 - OpenRouter uses its pinned HTTPS endpoint, a bounded one-off prompt and returns no tools
+  ---
+  duration_ms: 110.755297
+  type: 'test'
+  ...
+# Subtest: OpenRouter errors never expose upstream key or private payload
+ok 57 - OpenRouter errors never expose upstream key or private payload
+  ---
+  duration_ms: 4.957617
+  type: 'test'
+  ...
+# Subtest: OpenRouter rejects too-long prompts without calling provider
+ok 58 - OpenRouter rejects too-long prompts without calling provider
+  ---
+  duration_ms: 0.367643
+  type: 'test'
+  ...
+# Subtest: zero-cost autonomous daemon persists public source observations across restarts
+ok 59 - zero-cost autonomous daemon persists public source observations across restarts
+  ---
+  duration_ms: 117.262131
+  type: 'test'
+  ...
+# Subtest: free research collects deduplicated cited metadata without a paid API
+ok 60 - free research collects deduplicated cited metadata without a paid API
+  ---
+  duration_ms: 127.926046
+  type: 'test'
+  ...
+# Subtest: one unavailable source does not stop other public sources
+ok 61 - one unavailable source does not stop other public sources
+  ---
+  duration_ms: 8.907991
+  type: 'test'
+  ...
+# Subtest: empty results never become made-up observations
+ok 62 - empty results never become made-up observations
+  ---
+  duration_ms: 3.784093
+  type: 'test'
+  ...
+# Subtest: unsafe citation URLs and oversized metadata responses are rejected
+ok 63 - unsafe citation URLs and oversized metadata responses are rejected
+  ---
+  duration_ms: 6.514289
+  type: 'test'
+  ...
+# Subtest: query/output bounds and timeout input validation stay enforced
+ok 64 - query/output bounds and timeout input validation stay enforced
+  ---
+  duration_ms: 34.466057
+  type: 'test'
+  ...
+1..64
+# tests 64
+# suites 0
+# pass 64
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3026.30455
