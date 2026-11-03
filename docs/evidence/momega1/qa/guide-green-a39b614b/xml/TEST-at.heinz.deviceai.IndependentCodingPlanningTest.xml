@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentCodingPlanningTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:08" hostname="b354f2cb821b" time="0.027">
+  <properties/>
+  <testcase name="modelCannotAddAnyAuthorityOrScopeField" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.003"/>
+  <testcase name="missingPartialUppercaseAndMalformedSourceCannotStartPlanning" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.0"/>
+  <testcase name="oneIsolatedGenerationReturnsProposalFreeOutput" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.002"/>
+  <testcase name="rejectLoneSurrogatesControlCharactersAndOversizedWholeResponse" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.002"/>
+  <testcase name="maximumTaskFieldsRemainLossless" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.004"/>
+  <testcase name="rejectFencesProseConcatenationAndDuplicateKeys" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="validProposalRetainsOnlyOwnerSuppliedExecutionScope" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.0"/>
+  <testcase name="mixedLanguageAndInvalidBudgetsCannotStartPlanning" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="failedOrCancelledRuntimeCannotProduceDraftOutput" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="rejectUnknownKindAndWrongFieldTypes" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="missingOrOversizeOwnerGoalCannotStartPlanning" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.0"/>
+  <testcase name="cancellationAfterTextBeforeCompletionRejectsCandidate" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="emptyExcessDuplicateTraversalAndControlPathsCannotStartPlanning" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.0"/>
+  <testcase name="tokenCancelledBeforeGenerationNeverInvokesRuntime" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="modelSwapDuringGenerationRejectsCandidate" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="mutableOwnerCollectionCannotChangePinnedScope" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="toolEventRejectsEvenWhenValidJsonAlsoCompletes" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.002"/>
+  <testcase name="oversizedStreamCannotBeTruncatedIntoAValidCandidate" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="rejectWrongSchemaVersionAndNumericOverflow" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.001"/>
+  <testcase name="rejectMissingFieldsAndOversizeGoalOrCriteria" classname="at.heinz.deviceai.IndependentCodingPlanningTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

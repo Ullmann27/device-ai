@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:09" hostname="b354f2cb821b" time="0.006">
+  <properties/>
+  <testcase name="allFourAdmissionConditionsAreRequired" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.002"/>
+  <testcase name="delayedNativeCallbackCannotRelabelOldCaptureAsCurrent" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="overflowAndUnboundedMetadataAreRejected" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.001"/>
+  <testcase name="clockRollbackFailsClosed" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="futureOrMissingCaptureTimeCannotRenewHeartbeat" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="noFaceOrMultipleFacesClearsPreviouslyObservedGaze" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="emptyButRealFramesKeepHeartbeatWithoutInventingFace" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="oldGenerationCannotRestoreGazeAfterStopOrRestart" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="revocationAndBackgroundClearImmediately" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.001"/>
+  <testcase name="validCaptureKeepsItsActualTimestampAndOriginalExpiry" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="missingFrameHeartbeatTerminatesSession" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="duplicateRapidFramesDoNotAccelerateSmoothing" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="stalePositionExpiresWithoutInventingContinuedTracking" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="frontSensorRotationAndDisplayRotationUseOneBoundedCoordinateContract" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="motionIsRateLimitedRatherThanJumpingBetweenFramePositions" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="lowConfidenceOrInvalidBoundsCannotMasqueradeAsTracking" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.0"/>
+  <testcase name="freshSingleHardwareFaceProducesBoundedPositionOnly" classname="at.heinz.deviceai.cognitive.AvatarCameraPolicyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

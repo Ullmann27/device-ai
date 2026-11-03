@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCodingPlanningTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:04" hostname="b354f2cb821b" time="0.034">
+  <properties/>
+  <testcase name="validCandidateBindsImmutableOwnerScopeAndAppIdentity" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.015"/>
+  <testcase name="rejectsProseDuplicatesTrailingDataWrongTypesAndOverflow" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.003"/>
+  <testcase name="rejectsIncompleteOrInvalidOwnerMetadataBeforeInference" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.001"/>
+  <testcase name="modelSwapDuringGenerationCannotReturnDraft" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.007"/>
+  <testcase name="candidateCannotSupplyAuthoritySourceScopeOrBudgets" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.001"/>
+  <testcase name="modelOutputOverflowAndToolEventsFailClosed" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.002"/>
+  <testcase name="cancellationAfterNativeCompletionCannotReturnDraft" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.001"/>
+  <testcase name="oneModelInvocationUsesOnlySameRuntimeThinkingAndReturnsNoProposal" classname="at.heinz.deviceai.ContinuumCodingPlanningTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

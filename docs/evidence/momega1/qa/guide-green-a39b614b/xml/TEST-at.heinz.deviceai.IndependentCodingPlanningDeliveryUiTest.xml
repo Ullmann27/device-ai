@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:07" hostname="b354f2cb821b" time="0.366">
+  <properties/>
+  <testcase name="pauseAndReturnAfterCompletionCannotReviveOldForegroundEpoch" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.084"/>
+  <testcase name="cancellationAfterWorkerCompletionBeforeUiDeliveryDropsResult" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.026"/>
+  <testcase name="finishingActivityAfterWorkerCompletionDropsResult" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.027"/>
+  <testcase name="modelWeightSwapAfterWorkerCompletionBeforeUiDeliveryDropsResult" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.03"/>
+  <testcase name="replacedTurnTokenAfterWorkerCompletionDropsResult" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.027"/>
+  <testcase name="currentCompletedPlanReachesDraftWithoutAnyDispatch" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.117"/>
+  <testcase name="newSessionAfterWorkerCompletionBeforeUiDeliveryDropsResult" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.025"/>
+  <testcase name="structuredToolEventCannotOpenDraftOrDispatch" classname="at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest" time="0.027"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

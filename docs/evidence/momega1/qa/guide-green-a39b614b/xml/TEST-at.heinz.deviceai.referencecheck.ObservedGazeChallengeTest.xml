@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:10" hostname="b354f2cb821b" time="0.016">
+  <properties/>
+  <testcase name="observedLookOverridesAllCosmeticIdleDrift" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.002"/>
+  <testcase name="malformedGazeCannotBeConstructed" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="clearWatermarkRejectsStaleAndEqualTimestampReplay" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.001"/>
+  <testcase name="observationExpiresExactlyAfterSevenHundredFiftyMilliseconds" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="legacyPoseDoesNotClaimObservedTracking" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="discardedFutureObservationCannotLockOutNewCurrentObservations" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.001"/>
+  <testcase name="speechCallbacksDoNotFabricateOrEraseAValidLook" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="futureObservationIsNeverPresentedAsCurrent" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="invalidDirectorSampleClearsEarlierObservation" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.003"/>
+  <testcase name="viewClockWrapDoesNotJumpHeadOrEyes" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.002"/>
+  <testcase name="directorAllowsOnlyIdleListeningAndSpeaking" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.001"/>
+  <testcase name="directorAcceptsBoundaryConfidenceAndAgeInItsOwnClock" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.005"/>
+  <testcase name="taskStatesRejectTrackingAndCannotReviveAnOldObservation" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <testcase name="outOfOrderOlderObservationCannotReplaceTheLatest" classname="at.heinz.deviceai.referencecheck.ObservedGazeChallengeTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

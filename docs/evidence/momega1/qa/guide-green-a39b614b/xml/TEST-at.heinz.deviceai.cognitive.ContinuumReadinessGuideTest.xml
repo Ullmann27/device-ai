@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:09" hostname="b354f2cb821b" time="0.006">
+  <properties/>
+  <testcase name="recognizerSampleChecksWholeExpectedPhraseOnly" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.001"/>
+  <testcase name="connectorInformationNeverClaimsAccountOrScopeAuthorization" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.001"/>
+  <testcase name="unsupportedCameraDoesNotRequestUselessPermission" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.002"/>
+  <testcase name="mutedVoiceNeedsExplicitEnableBeforeSample" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.001"/>
+  <testcase name="noOfflineVoiceNeverSuggestsCloudFallback" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <testcase name="cameraPermissionAloneDoesNotEnableCapture" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.001"/>
+  <testcase name="unknownOrMissingCapabilitiesNeverClaimSuccessfulChecks" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <testcase name="staleOrUnboundModelNeverBecomesReadyFromVoiceAvailability" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <testcase name="noFaceAndAmbiguityHaveHonestInstructions" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <testcase name="availableHardwareRemainsARequestForOwnerTesting" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <testcase name="microphoneAndCameraPermissionsAreIndependent" classname="at.heinz.deviceai.cognitive.ContinuumReadinessGuideTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

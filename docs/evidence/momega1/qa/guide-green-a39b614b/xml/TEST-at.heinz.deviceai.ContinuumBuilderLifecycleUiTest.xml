@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:04:02" hostname="b354f2cb821b" time="2.128">
+  <properties/>
+  <testcase name="aStaleAbortConfirmationCannotRetargetToANewerCcc1Task" classname="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" time="1.404"/>
+  <testcase name="anOldConfirmationCannotDispatchAfterItsActivityWasDestroyed" classname="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" time="0.165"/>
+  <testcase name="anAbortDispatchPersistsTheExactTargetWithItsSeparateCallbackSlot" classname="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" time="0.184"/>
+  <testcase name="acknowledgingAnOldLostCallbackCannotEraseANewerJobsIdentity" classname="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" time="0.217"/>
+  <testcase name="ccc1ConfirmationDispatchesTheChainShownInItsDialog" classname="at.heinz.deviceai.ContinuumBuilderLifecycleUiTest" time="0.157"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
