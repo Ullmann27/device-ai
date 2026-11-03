@@ -17,6 +17,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -25,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference
 /** Actual Activity adapters and ToolGate. Injected device port, no physical device/model claim. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28], shadows=[Pcm16FeedbackAudioTrackShadow::class])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class ContinuumTaskEffectsCallerUiTest {
     private fun set(a:AgentActivity,n:String,v:Any?)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.set(a,v)
     private fun get(a:AgentActivity,n:String)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.get(a)
@@ -44,6 +46,7 @@ class ContinuumTaskEffectsCallerUiTest {
         host.get().setContentView(h);advance()
         h.measure(View.MeasureSpec.makeMeasureSpec(412,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(307,View.MeasureSpec.EXACTLY))
         h.layout(0,0,412,307);h.setForegroundActive(true);advance()
+        assertEquals("Positive control: the actual host window must be visible",View.VISIBLE,h.windowVisibility)
         try {block(a,h)} finally {
             (get(a,"chiefStatusPool") as? at.heinz.deviceai.chief.ChiefWorkerPool)?.shutdown()
             AgentActivity::class.java.declaredFields.firstOrNull {it.name=="uiFeedback"}?.apply {isAccessible=true}

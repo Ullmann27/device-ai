@@ -45,5 +45,15 @@ Android click sound. Pending voice utterances mute/release it before onStart.
 Pause, cancellation, session replacement and destruction invalidate presentation
 contexts. These fields do not change authorization, worker scheduling or memory.
 
+The independent expanded diagnostic subsequently reproduced GONE even in full
+AgentActivity startup under Robolectric LEGACY graphics, before reparenting.
+NATIVE graphics gives actual window VISIBLE before/after reparent, 21 animation
+callbacks, and correct pause-stop on unchanged `ab55e440`. The caller fixture is
+therefore explicitly NATIVE, matching existing Canvas tests, with an actual
+VISIBLE-window positive assertion. These identical tests must run against both
+unchanged baseline `582dc785` production and the current caller candidate. No
+production visibility checks or private Android flags were bypassed. Earlier
+confounded runs remain preserved; they are not retrospectively genuine RED.
+
 Rollback is this isolated research branch only; main, original signing/package,
 owner facts and Code40 rollback remain unchanged. Raw logs bind exact commits.
