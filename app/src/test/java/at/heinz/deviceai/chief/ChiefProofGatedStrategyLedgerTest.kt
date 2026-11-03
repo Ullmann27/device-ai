@@ -79,6 +79,20 @@ class ChiefProofGatedStrategyLedgerTest {
         assertEquals(1, ledger.recordCount())
     }
 
+    @Test fun contradictoryRedAndGreenCannotTrainTheSameExactStrategy() {
+        val ledger = ChiefProofGatedStrategyLedger(independentVerifier = {
+            if (it.attemptId == "red") receipt(it, ChiefVerifiedStrategyOutcome.RED_CONFIRMED, 2,
+                hash = "a".repeat(64))
+            else receipt(it, ChiefVerifiedStrategyOutcome.GREEN_CONFIRMED, 0,
+                hash = "b".repeat(64))
+        })
+        assertEquals(ChiefStrategyRecordResult.STORED, ledger.record(attempt("red")))
+        assertEquals(ChiefStrategyRecordResult.CONFLICT, ledger.record(attempt("green")))
+        assertEquals(1, ledger.recordCount())
+        assertTrue(ledger.shouldAvoid(sha40, issue, strategy))
+        assertEquals(emptyList<String>(), ledger.successfulStrategyHashes(sha40, issue))
+    }
+
     @Test fun boundedStorageAndVerifierFailureStayFailClosed() {
         val ledger = ChiefProofGatedStrategyLedger(maxEntries = 1, independentVerifier = {
             receipt(it, ChiefVerifiedStrategyOutcome.RED_CONFIRMED, 1,
