@@ -270,11 +270,11 @@ internal object ChiefBotConversationCodec {
     const val MAX_BYTES = 64 * 1024
     fun encode(profile: ChiefBotProfile, history: ChiefBotConversationHistory): ByteArray = ByteArrayOutputStream().also { buffer ->
         DataOutputStream(buffer).use { out ->
-            out.writeUTF("BOT_CONVERSATION_V1"); out.writeUTF(profile.agentId); out.writeUTF(profile.memoryNamespace)
+            out.writeUTF("BOT_CONVERSATION_V2"); out.writeUTF(profile.agentId); out.writeUTF(profile.memoryNamespace)
             out.writeBoolean(profile.contextObjectId != null); profile.contextObjectId?.let(out::writeUTF)
             out.writeLong(history.discardedTurns); out.writeInt(history.turns.size)
             history.turns.forEach { entry ->
-                out.writeUTF(entry.request); out.writeUTF(entry.response); out.writeUTF(entry.modelId)
+                writeText(out, entry.request); writeText(out, entry.response); out.writeUTF(entry.modelId)
                 out.writeUTF(entry.modelVersion); out.writeUTF(entry.modelSha256)
             }
         }
@@ -283,14 +283,32 @@ internal object ChiefBotConversationCodec {
     fun decode(profile: ChiefBotProfile, payload: ByteArray): ChiefBotConversationHistory {
         require(payload.size in 1..MAX_BYTES)
         val input = DataInputStream(ByteArrayInputStream(payload))
-        require(input.readUTF() == "BOT_CONVERSATION_V1" && input.readUTF() == profile.agentId &&
+        val format = input.readUTF()
+        require(format in setOf("BOT_CONVERSATION_V1", "BOT_CONVERSATION_V2") && input.readUTF() == profile.agentId &&
             input.readUTF() == profile.memoryNamespace) { "BOT_CONVERSATION_IDENTITY_MISMATCH" }
         val notes = if (input.readBoolean()) input.readUTF() else null
         require(notes == profile.contextObjectId) { "BOT_CONVERSATION_NOTES_CHANGED" }
         val discarded = input.readLong(); require(discarded >= 0)
         val count = input.readInt(); require(count in 0..ChiefBotConversationHistory.MAX_TURNS)
-        val entries = List(count) { ChiefBotConversationEntry(input.readUTF(), input.readUTF(), input.readUTF(), input.readUTF(), input.readUTF()) }
+        val entries = List(count) {
+            val request = if (format == "BOT_CONVERSATION_V1") input.readUTF() else readText(input, ChiefBotConversationEntry.MAX_REQUEST_BYTES)
+            val response = if (format == "BOT_CONVERSATION_V1") input.readUTF() else readText(input, ChiefBotConversationEntry.MAX_RESPONSE_BYTES)
+            ChiefBotConversationEntry(request, response, input.readUTF(), input.readUTF(), input.readUTF())
+        }
         require(input.available() == 0)
         return ChiefBotConversationHistory(entries, discarded)
+    }
+
+    private fun writeText(out: DataOutputStream, value: String) {
+        val bytes = value.toByteArray(Charsets.UTF_8)
+        out.writeInt(bytes.size); out.write(bytes)
+    }
+
+    private fun readText(input: DataInputStream, maxBytes: Int): String {
+        val size = input.readInt()
+        require(size in 1..maxBytes && size <= input.available())
+        val bytes = ByteArray(size); input.readFully(bytes)
+        return Charsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
+            .onUnmappableCharacter(CodingErrorAction.REPORT).decode(java.nio.ByteBuffer.wrap(bytes)).toString()
     }
 }
