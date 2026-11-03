@@ -88,6 +88,10 @@ Chief-Loop mit einem aktiven Coding-Arbeiter. Das Modell wird bedarfsgerecht je
 Auftrag geladen;20 Profile bedeuten weder20 geladene Modelle noch20 laufende
 Computer. Wartende Aufträge und gespeicherte Historie haben getrennte Grenzen.
 Erreichen von Speicher- oder Zyklusgrenzen ist ein sichtbarer Stopp/Blocker.
+Eine gemeinsame Prozessberechtigung begrenzt den Host konservativ auf einen
+aktiven Dienst pro Betriebssystembenutzer, auch bei verschiedenen Projekten und
+Zustandsverzeichnissen. Ein noch laufender verwaister Arbeiter blockiert einen
+neuen Dienststart. Das ist eine Ressourcenbegrenzung, kein weiterer Scheduler.
 
 ## Eigenen Auftrag prüfen und einreichen
 
@@ -147,9 +151,27 @@ node scripts/continuum-coding-service.mjs status --config /privat/continuum-dien
 ```
 
 Eine Stoppanforderung und ein bestätigter Prozessstillstand sind unterscheidbar.
+Bleibt ein Arbeiter nach der Abbruchanforderung hängen, meldet der Dienst nach
+fünf Sekunden `STOP_BLOCKED_WORKER_ACTIVE`; er behauptet keinen Stillstand und
+startet keinen Ersatzauftrag. Das ist ein gesondert zu prüfender Blocker.
 Nach einem Neustart bleiben Profile, Freigaben, Aufgaben und Belege erhalten.
 Unklar unterbrochene Ausführungen bleiben `UNKNOWN`; sie werden nicht automatisch
 wiederholt. Bereits geprüfte Reparaturen bleiben Vorschläge zur Besitzerprüfung.
+
+Den eigentlichen Patch stellt der vorhandene kanonische CCC1-Statuspfad bereit:
+
+```bash
+node .github/continuum/ccc1-cli.mjs status \
+  --state /privat/continuum-dienst/ccc1 --format json
+```
+
+`review` enthält Pfad, SHA256, eine begrenzte Vorschau und den aktuellen
+Integritätsstatus. Dieser lesende Befehl wurde am erhaltenen bekannten u03-Fall
+mit intaktem303-Byte-Patch überprüft; er startet keine neue Reparatur. Historische
+Patches sind keine aktuelle Abnahme eines inzwischen geänderten Quellstands.
+Die strengere Dienst-/MCP-Evidenzansicht verweigert abgelaufene/widerrufene Grants
+und veränderte Quellen; gespeicherte historische Artefakte werden dabei nicht
+gelöscht. Der Dienst führt den Patch nicht automatisch im Besitzerprojekt ein.
 
 ## Lesender MCP-Zugang
 
