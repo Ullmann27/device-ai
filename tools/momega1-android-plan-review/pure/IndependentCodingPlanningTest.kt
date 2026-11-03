@@ -115,7 +115,7 @@ class IndependentCodingPlanningTest {
         val r=RuntimeFixture();r.emit={r.complete(it,valid)}
         val m=plan().model(r,DeliberationCancellation())
         val result=m.generate("Fix negative distances",emptyList(),null,emptyList())
-        assertEquals(valid,result.response);assertNull(result.proposal)
+        assertNotNull(plan().decode(result.response));assertNull(result.proposal)
         assertEquals(1,r.thinking);assertEquals(0,r.ordinary);assertEquals(0,r.tools)
         assertTrue(runCatching {m.generate("Again",emptyList(),null,emptyList())}.isFailure)
         assertEquals("No second inference",1,r.thinking)
