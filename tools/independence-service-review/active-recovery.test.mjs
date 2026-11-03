@@ -162,3 +162,24 @@ test('S10 supplement: per-UID admission retains a live orphan across different p
     await second.close(); await first.close();
   }
 });
+
+test('S10 critical supplement: unexpected worker death pauses a different queued task', {timeout: 35000}, async () => {
+  const f = await fixture('uncertain-descendants', ['--max-cycles', '5'], {isolatedRuntimeCopy: true});
+  let active;
+  try {
+    ({active} = await dispatchWithoutExecutableRuntime(f, 'uncertain-first-order'));
+    const task = f.task('uncertain-second-order');
+    const review = json(await f.call('review', ['--task', task.file]));
+    json(await f.call('submit', ['--task', task.file, '--approve', review.reviewSha256]));
+    signal(active.workerProcess, 'SIGKILL');
+    await until(() => alive(active.workerProcess), value => !value);
+    await until(() => deliveries(f).find(d => d.id === active.id), d => d.delivery === 'UNKNOWN');
+    await delay(2500);
+    const second = deliveries(f).find(d => d.id === task.data.id);
+    record({kind:'UNKNOWN_WORKER_NEXT_TASK_OBSERVATION', first:deliveries(f).find(d=>d.id===active.id), second,
+      nativeExecutableExists:fs.existsSync(f.runtimeCopy)});
+    assert.equal(second.delivery, 'PENDING', 'unknown descendants prohibit starting another queued job');
+    assert.equal(second.workerProcess, null);
+    assert.equal(second.dispatchedAt, undefined);
+  } finally {signal(active?.workerProcess, 'SIGKILL'); await f.close();}
+});
