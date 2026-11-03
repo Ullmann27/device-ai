@@ -1,0 +1,57 @@
+# Subtest: gVisor run: runsc plus every existing hardening flag, confirmed runtime in the evidence, full teardown
+not ok 789 - gVisor run: runsc plus every existing hardening flag, confirmed runtime in the evidence, full teardown
+  ---
+  duration_ms: 998.316069
+  type: 'test'
+  location: '/workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:56:1'
+  failureType: 'testCodeFailure'
+  error: 'ISOLATION_OBSERVATION_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.execute (file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor.mjs:202:69)
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:61:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: a daemon that silently runs another runtime yields no gVisor evidence, and the container is still removed
+not ok 790 - a daemon that silently runs another runtime yields no gVisor evidence, and the container is still removed
+  ---
+  duration_ms: 953.676289
+  type: 'test'
+  location: '/workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /ISOLATION_RUNTIME_MISMATCH/. Input:
+    
+    'Error: ISOLATION_OBSERVATION_FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'ISOLATION_OBSERVATION_FAILED'
+  stack: |-
+    Object.execute (file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor.mjs:202:69)
+    file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:80:26
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:80:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-build-env/final-source-645b2215/.github/continuum/isolated-executor-gvisor.test.mjs:80:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
