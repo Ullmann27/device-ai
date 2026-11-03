@@ -116,7 +116,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private val drawFrame = Runnable {
         framePending = false
-        if (canAnimate()) {
+        if (canAnimateFrame()) {
             visibleFrameCount++
             // The motion clock advances independently of a completed Canvas draw.
             // Invalidation requests only rendering, not the next state transition.
@@ -128,7 +128,7 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     /** Owns the single visible-view frame callback, even before the first draw. */
     private fun scheduleFrame() {
-        if (canAnimate() && !framePending) {
+        if (canAnimateFrame() && !framePending) {
             framePending = true
             // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
             postOnAnimationDelayed(drawFrame, if (head3dEnabled) { if (thermalStatus >= 2) 65L else 25L } else if (thermalStatus >= 2) 32L else 8L)
@@ -206,6 +206,9 @@ class ContinuumHologramView @JvmOverloads constructor(
                         }
                         out.toByteArray()
                     }
+                    val digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+                        .joinToString("") { "%02x".format(it) }
+                    require(digest == AvatarGlbContract.ASSET_SHA256) { "Packaged avatar revision mismatch" }
                     bytes to AvatarGlbContract.validate(bytes)
                 }
                 mainHandler.post {
@@ -290,7 +293,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         consumedAudioMs = 0L
         audio.reset()
         audioEnergy = 0f
-        if (!canAnimate()) settleState()
+        if (!canAnimateFrame()) settleState()
         invalidate()
     }
 
@@ -367,7 +370,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Actual View visibility, not a callback-cached flag that can go stale. */
-    override fun canAnimate() =
+    private fun canAnimateFrame() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
@@ -392,7 +395,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
-        if (!canAnimate()) {
+        if (!canAnimateFrame()) {
             settleState()
             audio.reset()
             audioEnergy = 0f
@@ -440,11 +443,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
-                runCatching { native3d!!.render(pose, avatarSeconds, canAnimate(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
+                runCatching { native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn) avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimate())
+            if (!native3dDrawn) avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimateFrame())
             else {
                 // Same original orb, same actual app state and speech frame; no second animation loop.
                 val orbWidth = width / density * .28f
@@ -462,7 +465,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun advanceFrame() {
-        if (!canAnimate()) return
+        if (!canAnimateFrame()) return
         val now = SystemClock.uptimeMillis()
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now

@@ -8,10 +8,18 @@ import java.nio.ByteOrder
 object AvatarGlbContract {
     const val MAX_BYTES = 16 * 1024 * 1024
     const val ASSET_PATH = "avatar3d/continuum-avatar.glb"
+    const val ASSET_SHA256 = "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e"
     val TARGETS = listOf("SIL", "PP", "FF", "TH", "DD", "KK", "CH", "SS", "NN", "RR", "AA", "E", "I", "O", "U",
         "BlinkLeft", "BlinkRight", "BrowUp", "BrowDown", "Smile", "JawOpen")
     val NODES = listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")
-    data class Metadata(val targets: List<String>, val morphNodeNames: List<String>)
+    data class Focus(val centerX: Double, val centerY: Double, val centerZ: Double, val halfWidth: Double, val halfHeight: Double) {
+        /** Explicit lower/outer shoulder crop, fitted to actual viewport while preserving skull/ears. */
+        fun verticalHalfSpan(aspect: Double): Double {
+            require(aspect.isFinite() && aspect > 0)
+            return maxOf(halfHeight, halfWidth / aspect) * 1.08
+        }
+    }
+    data class Metadata(val targets: List<String>, val morphNodeNames: List<String>, val focus: Focus)
 
     fun validate(bytes: ByteArray): Metadata {
         require(bytes.size in 28..MAX_BYTES) { "GLB size" }
@@ -102,6 +110,26 @@ object AvatarGlbContract {
         require(descendant(names.indexOf("Neck"), names.indexOf("AvatarRoot")))
         require(descendant(names.indexOf("Head"), names.indexOf("Neck")))
         listOf("EyeLeft", "EyeRight", "Jaw").forEach { require(descendant(names.indexOf(it), names.indexOf("Head"))) }
+        // Rest rotations were checked above. Resolve positive TRS once, not once per frame.
+        val worldFrames = arrayOfNulls<DoubleArray>(nodes.length())
+        fun worldFrame(index: Int): DoubleArray {
+            worldFrames[index]?.let { return it }
+            val n = nodes.getJSONObject(index)
+            val local = DoubleArray(6) { axis -> if (axis < 3) n.optJSONArray("scale")?.getDouble(axis) ?: 1.0
+                else n.optJSONArray("translation")?.getDouble(axis - 3) ?: 0.0 }
+            if (parents[index] >= 0) {
+                val parent = worldFrame(parents[index])
+                for (axis in 0..2) { local[axis + 3] = parent[axis + 3] + parent[axis] * local[axis + 3]; local[axis] *= parent[axis] }
+            }
+            require(local.all { it.isFinite() })
+            worldFrames[index] = local
+            return local
+        }
+        val headY = worldFrame(names.indexOf("Head"))[4]
+        val neckY = worldFrame(names.indexOf("Neck"))[4]
+        var minHeadX = Double.POSITIVE_INFINITY; var maxHeadX = Double.NEGATIVE_INFINITY
+        var minHeadZ = Double.POSITIVE_INFINITY; var maxHeadZ = Double.NEGATIVE_INFINITY
+        var maxHeadY = Double.NEGATIVE_INFINITY
         val skins = root.getJSONArray("skins"); require(skins.length() in 1..8)
         for (i in 0 until skins.length()) {
             val skin = skins.getJSONObject(i); val joints = skin.getJSONArray("joints")
@@ -152,6 +180,15 @@ object AvatarGlbContract {
                     val skinNodes = (0 until nodes.length()).filter { nodes.getJSONObject(it).optInt("mesh", -1) == m }
                     require(skinNodes.isNotEmpty())
                     for (node in skinNodes) {
+                        val world = worldFrame(node)
+                        for (vertex in neutral) {
+                            val y = vertex[1] * world[1] + world[4]
+                            if (y >= headY) {
+                                val x = vertex[0] * world[0] + world[3]; val z = vertex[2] * world[2] + world[5]
+                                minHeadX = minOf(minHeadX, x); maxHeadX = maxOf(maxHeadX, x)
+                                minHeadZ = minOf(minHeadZ, z); maxHeadZ = maxOf(maxHeadZ, z); maxHeadY = maxOf(maxHeadY, y)
+                            }
+                        }
                         val skin = skins.getJSONObject(nodes.getJSONObject(node).getInt("skin"))
                         val jointCount = skin.getJSONArray("joints").length()
                         require(values(attributes.getInt("JOINTS_0")).all { j -> j.all { it >= 0 && it < jointCount } })
@@ -171,6 +208,12 @@ object AvatarGlbContract {
         require(vertices <= 100_000 && triangles <= 200_000)
         val morphNodes = (0 until nodes.length()).filter { nodes.getJSONObject(it).optInt("mesh", -1) in morphMeshes }.map { names[it] }
         require(morphNodes.isNotEmpty() && morphNodes.all { it.isNotBlank() && names.count { n -> n == it } == 1 })
-        return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes)
+        val bottom = neckY + (headY - neckY) * .25
+        val top = maxHeadY + (maxHeadY - bottom) * .05
+        require(listOf(minHeadX, maxHeadX, minHeadZ, maxHeadZ, bottom, top).all { it.isFinite() } &&
+            maxHeadX > minHeadX && maxHeadZ > minHeadZ && top > bottom)
+        val focus = Focus((minHeadX + maxHeadX) / 2, (bottom + top) / 2, (minHeadZ + maxHeadZ) / 2,
+            (maxHeadX - minHeadX) / 2, (top - bottom) / 2)
+        return Metadata(requireNotNull(targets) { "No morph mesh" }, morphNodes, focus)
     }
 }

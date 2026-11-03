@@ -77,6 +77,16 @@ class Avatar3dContractTest {
         assertRejected(editBinary(6) { b,at -> repeat(9) { b.putFloat(at+it*4,0f) } }) // PP must deform.
         assertEquals(21,AvatarGlbContract.validate(editBinary(5) { b,at -> repeat(9) { b.putFloat(at+it*4,0f) } }).targets.size)
     }
+    @Test fun focusPreservesHeadAcrossNarrowPhoneAndWideFold() {
+        val focus=AvatarGlbContract.validate(asset()).focus
+        for (aspect in listOf(213.0/310,279.0/390,415.0/390,587.0/470,602.0/470)) {
+            val vertical=focus.verticalHalfSpan(aspect)
+            assertTrue(vertical >= focus.halfHeight)
+            assertTrue(vertical * aspect >= focus.halfWidth)
+            assertTrue(vertical.isFinite() && focus.centerY.isFinite())
+        }
+        try { focus.verticalHalfSpan(Double.NaN); fail("nonfinite viewport") } catch (_: IllegalArgumentException) { }
+    }
     private fun assertRejected(bytes: ByteArray) {
         try { AvatarGlbContract.validate(bytes); fail("invalid asset accepted") } catch (_: IllegalArgumentException) { } catch (_: org.json.JSONException) { }
     }

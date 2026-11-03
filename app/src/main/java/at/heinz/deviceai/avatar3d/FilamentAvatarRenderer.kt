@@ -26,7 +26,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
     private val joints = mutableMapOf<String, Joint>()
     private val rotation = FloatArray(16)
     private val transformed = FloatArray(16)
-    private var halfHeight = .25
+    private lateinit var focus: AvatarGlbContract.Focus
     private var viewportWidth = 0
     private var viewportHeight = 0
 
@@ -63,12 +63,9 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             val instance = e.transformManager.getInstance(a.getFirstEntityByName(name)); require(instance != 0)
             joints[name] = Joint(instance, e.transformManager.getTransform(instance, FloatArray(16)))
         }
-        val bounds = a.boundingBox
-        val center = bounds.center; val extent = bounds.halfExtent
-        require(center.all { it.isFinite() } && extent.all { it.isFinite() && it > 0f })
-        halfHeight = maxOf(extent[1].toDouble(), extent[0].toDouble()) * 1.18
-        camera!!.lookAt(center[0].toDouble(), center[1].toDouble(), center[2] + 2.0,
-            center[0].toDouble(), center[1].toDouble(), center[2].toDouble(), 0.0, 1.0, 0.0)
+        focus = metadata.focus
+        camera!!.lookAt(focus.centerX, focus.centerY, focus.centerZ + 2.0,
+            focus.centerX, focus.centerY, focus.centerZ, 0.0, 1.0, 0.0)
         lightEntity = EntityManager.get().create()
         LightManager.Builder(LightManager.Type.DIRECTIONAL).color(.72f, .90f, 1f).intensity(90_000f)
             .direction(-.4f, -.5f, -1f).castShadows(false).build(e, lightEntity)
@@ -84,7 +81,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
             viewportWidth = width; viewportHeight = height
             view!!.viewport = Viewport(0, 0, width, height)
             val aspect = width.toDouble() / height
-            val vertical = halfHeight / minOf(aspect, 1.0)
+            val vertical = focus.verticalHalfSpan(aspect)
             camera!!.setProjection(Camera.Projection.ORTHO, -vertical * aspect, vertical * aspect, -vertical, vertical, .05, 10.0)
         }
         mapper.update(pose, seconds, motion)
