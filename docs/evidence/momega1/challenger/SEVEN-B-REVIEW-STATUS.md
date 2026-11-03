@@ -13,3 +13,13 @@ The actual Docker job reports memory.max=7516192768, memory.swap.max=0, cpu.max=
 A smaller independent synthetic midpoint probe is frozen separately before execution. Its purpose is normal decoding/provenance evidence, not a repair-quality benchmark or replacement for the failed first probe. The frozen QA benchmark retains its original 60-second budget. Further native work waits for QA/UI coordination.
 
 FOLD7_NOT_RUN. No Android, accepted repair, learning, loop, signing or release success is claimed.
+
+## Completed second quiet window
+
+The smaller midpoint prompt was frozen in f4a1b846 before execution. Five functional checks were committed in5837512a before its response: baseline1PASS/4FAIL. The actual default-provider run on unchanged e192b9a6 also returned CODING_MODEL_UNAVAILABLE with no model observation or proposal. Outer elapsed100.456s, no cgroup OOM events, no remaining container. Native executable-inode sampling inside the actual container produced83 samples: peak RSS5256960KiB, PSS5255546KiB, three threads. Host provider sampled peak36256KiB. Latest observed native CPU time183.93s corroborates a CPU-budget exhaustion hypothesis, but no raw exit signal was exposed; do not state that hypothesis as proven. No functional post-patch result exists.
+
+The independent actual-native cancellation control PASSes. It waited until the reviewed executable inode was running with RSS>4194304KiB, then aborted at4028ms. The helper rejected CODING_CANCELLED at4045ms, returned no observation/result, and no matching runtime remained. This proves cancellation of a real resident native model process; it is not successful normal generation.
+
+Fifteen additional7B forgery controls PASS: a correctly MACed exact-tuple/process receipt from an injected transport is untrusted; mutated model/runtime/request/prompt/schema/proposal and7B memory-profile fields are rejected even when re-MACed. Independent totals:62 host regression/resource checks,12 real-container checks,15 additional7B forgery checks, plus the real cancellation control. These counts are separate from author tests.
+
+**Verdict: resource/isolation and fail-closed controls accepted for frozen source e192b9a6; genuine7B inference admission NOT APPROVED.** No security blocker was demonstrated, but both normal-response attempts failed. Preserve candidate registry status and null independent review certificate. Do not start the primary12-task model benchmark as if7B were admitted. Next useful diagnostic is reviewer-only raw native stdout/stderr/signal capture on the exact frozen small prompt inside the unchanged hard memory cap. Do not silently increase production or QA60-second budgets. UI/QA quiet window was released after cancellation; no further native run launched.
