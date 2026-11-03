@@ -48,6 +48,9 @@ class IndependentCodingPlanningDeliveryUiTest {
     private fun withRun(mutate:(AgentActivity,RuntimeFixture)->Unit, expectDialog:Boolean, malicious:Boolean=false) {
         val a=Robolectric.buildActivity(AgentActivity::class.java).get()
         val r=RuntimeFixture()
+        val receiptDir=java.nio.file.Files.createTempDirectory("independent-plan-receipts").toFile()
+        val receipts=FileToolExecutionReceiptStore(receiptDir)
+        set(a,"receiptStore",receipts)
         r.emit={cb->
             if(malicious)cb.onEvent(LocalInferenceEvent.ToolProposalRejected("install_apk","fixture attempt"))
             r.complete(cb,output)
@@ -80,11 +83,13 @@ class IndependentCodingPlanningDeliveryUiTest {
             } else assertSame("Stale or failed completion must not open a proposal dialog",before,after)
             assertEquals(0,r.ordinary);assertEquals(0,r.tools)
             assertNull(shadowOf(a).nextStartedService);assertNull(shadowOf(a).nextStartedActivity)
+            assertTrue("Planning cannot propose or write a tool receipt",receipts.all().isEmpty())
         } finally {
             val latest=ShadowAlertDialog.getLatestAlertDialog()
             if(latest!==before) latest?.dismiss()
             for(name in listOf("localAgentExecutor","learningIoExecutor","backlogExecutor"))
                 runCatching {(get(a,name) as ExecutorService).shutdownNow()}
+            receiptDir.deleteRecursively()
         }
     }
     @Test fun currentCompletedPlanReachesDraftWithoutAnyDispatch() = withRun({_,_->},true)
