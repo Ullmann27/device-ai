@@ -61,7 +61,7 @@ record = {"status": "EXPERIMENT_NOT_ACCEPTED", "sourceSha256": source_sha,
     "raiseMetres": args.raise_metres, "rebasedChildren": children,
     "unchangedBinaryChunkSha256": hashlib.sha256(binary_chunk).hexdigest(),
     "meshMorphMaterialBytesUnchanged": True, "maximumNeutralRestTransformErrorMetres": maximum_neutral_error,
-    "poseSource": "Actual production mapper 26555aa6; unchanged mouth weights and jaw angle",
+    "poseSource": "No pose encoded in this rig-only derivative; replay manifest identifies the actual mapper",
     "limitations": ["Hypothesis pending independent intersection and visual checks", "Not a device result"]}
 args.output.with_suffix(".json").write_text(json.dumps(record, indent=2) + "\n")
 print(json.dumps(record, indent=2))

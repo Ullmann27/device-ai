@@ -6,19 +6,30 @@ from pathlib import Path
 import sys
 from PIL import Image, ImageDraw, ImageFont
 
-original, candidate, output = map(Path, sys.argv[1:])
+original, candidate, output = map(Path, sys.argv[1:4])
+comparison = sys.argv[4] if len(sys.argv) == 5 else "asset"
+assert comparison in ["asset", "mapper"]
 records = [json.loads((path / "replay-manifest.json").read_text()) for path in [original, candidate]]
 assert records[0]["fixedCamera"] == records[1]["fixedCamera"]
 assert records[0]["pixels"] == records[1]["pixels"]
 assert records[0]["samples"] == records[1]["samples"]
-assert [r["pose"] for r in records[0]["frames"]] == [r["pose"] for r in records[1]["frames"]]
+if comparison == "asset":
+    assert records[0]["productionMapperSource"] == records[1]["productionMapperSource"]
+    assert [r["pose"] for r in records[0]["frames"]] == [r["pose"] for r in records[1]["frames"]]
+else:
+    assert records[0]["assetSha256"] == records[1]["assetSha256"]
+    assert records[0]["inputOrigin"] == records[1]["inputOrigin"]
+    for old, new in zip(records[0]["frames"], records[1]["frames"]):
+        for key in ["sequence", "frame", "seconds", "state", "motion", "gazeObserved"]:
+            assert old["pose"][key] == new["pose"][key]
 width, height = 200, 234
 sheet = Image.new("RGB", (width * 5, 650), (0, 10, 29))
 draw = ImageDraw.Draw(sheet)
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 13)
 small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 11)
 draw.text((12, 10), "HOST_RENDER_NOT_DEVICE | Blender/Cycles | Fixed camera | Synthetic inputs", font=font, fill="white")
-draw.text((12, 32), "Actual production mapper 26555aa6; no real TTS, camera or Filament/device claim", font=small, fill=(125, 219, 255))
+sources = " -> ".join(record["productionMapperSource"][:8] for record in records)
+draw.text((12, 32), "Mapper " + sources + "; no real TTS, camera or Filament/device claim", font=small, fill=(125, 219, 255))
 labels = ["Neutral idle", "Actual full blink", "Reachable AA + jaw", "Reachable O + jaw", "Speech stopped"]
 for row, (path, manifest) in enumerate(zip([original, candidate], records)):
     y = 64 + row * 290
@@ -34,6 +45,7 @@ output.parent.mkdir(parents=True, exist_ok=True)
 sheet.save(output)
 output.with_suffix(".json").write_text(json.dumps({
     "evidenceClass": "HOST_RENDER_NOT_DEVICE", "method": "Equal scale only; no color/contrast retouching",
+    "comparison": comparison, "productionMapperSource": [record["productionMapperSource"] for record in records],
     "sourceManifests": [str(path / "replay-manifest.json") for path in [original, candidate]],
     "assetSha256": [record["assetSha256"] for record in records],
     "sheetSha256": hashlib.sha256(output.read_bytes()).hexdigest(),

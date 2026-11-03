@@ -1,0 +1,12 @@
+{
+  "evidenceClass": "CONTRACT_TEST",
+  "productionSourceSha": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "testFreezeSha": "b687e0c50a4690cfe513eec23e46fb59b83b543e",
+  "tests": 4,
+  "pass": 1,
+  "fail": 3,
+  "skip": 0,
+  "exitCode": 1,
+  "contractCorrection": "Preserve independently encoded pursing/protrusion residual; original 10-percent total-deformation RED is retained separately",
+  "device": "FOLD7_NOT_RUN"
+}

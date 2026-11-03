@@ -1,0 +1,23 @@
+{
+  "evidenceClass": "CONTRACT_TEST_AND_HOST_RENDER",
+  "productionSourceSha": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "baselineSourceSha": "26555aa6c59fdd4dd2e190defcdf49b983305555",
+  "authorTests": {
+    "run": 38,
+    "pass": 38,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "independentReview": "Separate reviewer PR434 owns V2 27-case and unchanged canonical geometry receipts; author does not self-accept",
+  "packagedAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+  "experimentalRigSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "assetPromoted": false,
+  "render": "Real fixed-camera replay of actual mapper outputs, synthetic inputs, original materials unchanged",
+  "limitations": [
+    "HOST_RENDER_NOT_DEVICE",
+    "Not actual TTS/audio/camera",
+    "Final combined look asset requires independent geometry and appearance review",
+    "FOLD7_NOT_RUN"
+  ]
+}

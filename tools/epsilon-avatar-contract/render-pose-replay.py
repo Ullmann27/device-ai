@@ -16,8 +16,11 @@ asset, pose_file, out = map(Path, sys.argv[sys.argv.index("--") + 1:-1])
 mode = sys.argv[-1]
 assert mode in ["anchors", "idle", "ablation"]
 poses = json.loads(pose_file.read_text())
-assert poses["sourceSha"] == "26555aa6c59fdd4dd2e190defcdf49b983305555"
-assert hashlib.sha256(pose_file.read_bytes()).hexdigest() == "6c6ad2a59f881a0855cf19a5c6a8966e48b6ecdcb06bed13049bd3da466a6496"
+expected_source = os.environ.get("AVATAR_POSE_SOURCE_SHA", "26555aa6c59fdd4dd2e190defcdf49b983305555")
+expected_pose = os.environ.get("AVATAR_POSE_FILE_SHA256", "6c6ad2a59f881a0855cf19a5c6a8966e48b6ecdcb06bed13049bd3da466a6496")
+assert len(expected_source) == 40 and len(expected_pose) == 64
+assert poses["sourceSha"] == expected_source
+assert hashlib.sha256(pose_file.read_bytes()).hexdigest() == expected_pose
 frames = poses["frames"]
 if mode == "anchors":
     selected = [frames[index] for index in [224, 228, 249, 253, 254]]
@@ -26,10 +29,11 @@ elif mode == "ablation":
     for label, aa, jaw, bone in [("AA_ONLY", 1, 0, 0), ("JAW_MORPH_ONLY", 0, 1, 0),
         ("JAW_BONE_ONLY", 0, 0, 12), ("AA_PLUS_JAW_MORPHS", 1, 1, 0), ("FULL_PRODUCTION_AA", 1, 1, 12)]:
         frame = json.loads(json.dumps(frames[249]))
-        frame["weights"] = {name: 0 for name in frame["weights"]}
-        frame["weights"]["AA"] = aa
-        frame["weights"]["JawOpen"] = jaw
-        frame["jawPitch"] = bone
+        if label != "FULL_PRODUCTION_AA":
+            frame["weights"] = {name: 0 for name in frame["weights"]}
+            frame["weights"]["AA"] = aa
+            frame["weights"]["JawOpen"] = jaw
+            frame["jawPitch"] = bone
         frame["diagnosticComponent"] = label
         frame["isUnmodifiedProductionOutput"] = label == "FULL_PRODUCTION_AA"
         selected.append(frame)
