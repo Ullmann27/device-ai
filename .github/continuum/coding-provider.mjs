@@ -17,12 +17,27 @@ function rejectedModelOutput(code,responseSha256=null) {
  return error;
 }
 
-export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null,remoteTeacher=null,modelTimeoutMs=60_000}={}){
+export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null,remoteTeacher=null,modelTimeoutMs=60_000,technicalRecall='',requireLocalModelObservation=false}={}){
  // Trusted caller budget, never an instruction supplied by a model. The task's
  // remaining overall deadline and durable call count still take precedence.
  if(!Number.isSafeInteger(modelTimeoutMs)||modelTimeoutMs<100||modelTimeoutMs>300_000)
   throw Error('CODING_MODEL_TIME_BUDGET_INVALID');
+ if(typeof requireLocalModelObservation!=='boolean')throw Error('CODING_MODEL_OBSERVATION_OPTION_INVALID');
+ const strictObservation=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1';
+ if(strictObservation&&remoteTeacher!==null)throw Error('CODING_LOCAL_MODEL_REQUIRED');
+ if(typeof technicalRecall!=='string'||technicalRecall.length>4096||/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(technicalRecall))
+  throw Error('CODING_TECHNICAL_RECALL_INVALID');
  const spec=validateCodingTask(task),fingerprint=taskFingerprint(spec);
+ // Retrieval contributes historical hints only. Reserve its serialized bytes
+ // inside the existing context budget and preserve >=2048 source-context chars.
+ let recallText=technicalRecall,recallData=null;
+ const recallBudget=Math.max(0,spec.limits.maxContextChars-2048);
+ while(recallText){
+  const candidate={trusted:false,kind:'HISTORICAL_TECHNICAL_HINTS',text:recallText};
+  if(JSON.stringify(candidate).length<=recallBudget){recallData=Object.freeze(candidate);break;}
+  recallText=recallText.slice(0,Math.max(0,recallText.length-128));
+ }
+ const recallChars=recallData?JSON.stringify(recallData).length:0;
  // Remote use is an explicit trusted-caller choice, never an environment-only fallback.
  if(remoteTeacher!==null){
   if(!remoteTeacher||remoteTeacher.enabled!==true||typeof remoteTeacher.endpoint!=='string'||
@@ -99,8 +114,8 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   if(calls>=spec.limits.maxModelCalls)throw Error('CODING_MODEL_BUDGET_EXHAUSTED');
   if(!Number.isSafeInteger(deadline)||deadline-Date.now()<600)throw Error('CODING_DEADLINE_EXHAUSTED');
   const context=buildRepositoryContext({root:source,commit:base,allowedPaths:spec.allowedPaths,
-   maxChars:spec.limits.maxContextChars,diagnostics,query:spec.goal,deadline});
-  const userPrompt=JSON.stringify({task:{id:spec.id,fingerprint,kind:spec.kind,goal:spec.goal,acceptance:spec.acceptance},
+   maxChars:spec.limits.maxContextChars-recallChars,diagnostics,query:spec.goal,deadline});
+  const userPrompt=JSON.stringify({...(recallData?{technicalRecall:recallData}:{}),task:{id:spec.id,fingerprint,kind:spec.kind,goal:spec.goal,acceptance:spec.acceptance},
    diagnostics:diagnostics.slice(0,8).map(d=>({file:String(d.file??'').slice(0,180),line:Number.isSafeInteger(d.line)?d.line:null,
     kind:String(d.kind??'').slice(0,80),message:String(d.message??'').slice(0,500)})),
    history:history.slice(-3).map(h=>({candidate:String(h.candidate??'').slice(0,64),outcome:String(h.outcome??'').slice(0,48),
@@ -158,6 +173,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    request:number,startedAt:new Date(started).toISOString(),elapsedMs:0,
    configuredModel:model,verifiedModelExecution:false,contextSha256:context.contextSha256,
    promptSha256:sha256Hex(userPrompt),modelTimeoutMs:timeoutMs,exitCode:null};
+  if(recallData)Object.assign(trace,{technicalRecallSha256:sha256Hex(recallData.text),technicalRecallChars:recallData.text.length});
   if(remoteDisclosure)Object.assign(trace,{transport:'AUTHENTICATED_HTTPS_TEACHER',modelRevision:PINNED_REVISION,
    consentRequestSha256:remoteDisclosure.requestSha256,maxCostMicrousd:0});
   if(evidence)writeTrace(number,{...trace,status:'RESERVED',rawContentStored:false},{reserve:true});
@@ -229,7 +245,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   }
   if(!remoteTeacher){
    const observation=result.modelObservation;
-   if(observation!==undefined||run===spawnSync||env.CONTINUUM_MOMEGA1==='1'){
+   if(observation!==undefined||run===spawnSync||strictObservation){
     const {body}=buildCodingRequest({userPrompt,allowedTrackedPaths:spec.allowedPaths,model});
     const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body)),
      modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,

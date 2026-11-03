@@ -66,7 +66,7 @@ Native decoding counters are required separately from prompt-evaluation counters
 RED at 253cfe03 (unchanged baseline production): 0/3 pass, exit 1, committed
 93f11336. Raw docs/evidence/momega1/runtime/red.tap. Baseline CLI attempted endpoint
 without file identity; missing gate/helper were reproduced before implementation.
-Focused current run: 65/65 PASS, exit 0, zero skips (18 new runtime tests plus
+Initial frozen df45a926 exact-source run: 127/127 PASS, exit 0, zero skips (18 new runtime tests plus
 existing provider/remote/local-brain/GGUF/preflight suites). Real compiled C ELF
 fixtures exercise actual bubblewrap namespaces and FD mounts, modified bytes,
 host-file/network denial, fork denial, native thread compatibility, memory/FD
@@ -76,6 +76,19 @@ Real approved model/runtime absent; no inference attempted. LOCAL_MODEL_HOST
 acceptance, native llama.cpp invocation, Android/Termux, ARM64 and Fold7 NOT_RUN.
 Bubblewrap support on this Linux host is not evidence of Android support; Termux
 without these kernel/tools is BLOCKED_LOCAL_ISOLATION_UNAVAILABLE.
+
+## Active-path integration follow-up
+
+BETA now passes technicalRecall:string and requireLocalModelObservation:boolean.
+Their missing behavior reproduced 3/3 RED against df45a926, committed7974b30e
+before repair. Provider now validates <=4096-character recall, reserves its actual
+serialized size within maxContextChars while retaining at least2048 source-context
+characters, and labels it trusted:false / HISTORICAL_TECHNICAL_HINTS. Optional
+hints exceeding the remaining budget are bounded/omitted; source budget and full
+prompt deadline remain unchanged. Trace stores only recall hash and length.
+Strict observation rejects remote choice at construction and rejects unobserved
+injected replies. Production native path already always requires observation.
+Final source and raw exact-source validation are recorded alongside this handoff.
 
 ## Remaining boundaries and review
 
