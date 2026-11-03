@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentVisibleAvatarUiTest" tests="6" skipped="0" failures="1" errors="0" timestamp="2026-11-03T21:45:25" hostname="b354f2cb821b" time="2.172">
+  <properties/>
+  <testcase name="foreignHomeLayoutCannotClobberChatHeadButRestoresOnReturn" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="1.057"/>
+  <testcase name="compactActualComposerRetainsUsableHeightBelowVisibleHead" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="0.148"/>
+  <testcase name="actualPaneHasOneHeadAndOneDirectorAcrossRepeatedNavigation" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="0.276"/>
+  <testcase name="actualTtsListenerAndDirectorKeepCurrentUtteranceOnMovedHead" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="0.175"/>
+  <testcase name="phoneAndBothFoldCompositionsRestoreOriginalBoundsAndGeometry" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="0.345"/>
+  <testcase name="movedHeadHasNoHiddenCopyAndBackgroundStopsExistingClock" classname="at.heinz.deviceai.IndependentVisibleAvatarUiTest" time="0.169">
+    <failure message="java.lang.AssertionError: Visible clock must advance: shown=true attached=true window=8 motion=MotionSample(callbackCount=0, drawCount=0, phase=0.4, reason=Avatar: View derzeit unsichtbar.) pending=false foreground=true allowed=true" type="java.lang.AssertionError">java.lang.AssertionError: Visible clock must advance: shown=true attached=true window=8 motion=MotionSample(callbackCount=0, drawCount=0, phase=0.4, reason=Avatar: View derzeit unsichtbar.) pending=false foreground=true allowed=true
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.IndependentVisibleAvatarUiTest.movedHeadHasNoHiddenCopyAndBackgroundStopsExistingClock(IndependentVisibleAvatarUiTest.kt:128)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <system-out><![CDATA[VISIBILITY_DIAGNOSTIC shown=true attached=true window=8 motion=MotionSample(callbackCount=0, drawCount=0, phase=0.4, reason=Avatar: View derzeit unsichtbar.) pending=false foreground=true allowed=true
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
