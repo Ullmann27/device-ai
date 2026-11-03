@@ -45,7 +45,11 @@ class OwnerStatementTimelineTest {
         assertNull(p(listOf("Die rote Kiste hat nicht 4 sondern 5 Ringe."), t3))
         assertNull(p(listOf("Die rote Kiste hat vielleicht 4 Ringe."), t3))
         assertNull(p(listOf("Die rote Kiste hat 4 oder 5 Ringe."), t3))
-        assertNull(p(listOf("Wenn die rote Kiste 9 Ringe hätte, was dann?", "Die blaue Kiste hat 7 Ringe."), t3))
+        assertNull(p(listOf("Wenn die rote Kiste 9 Ringe hat, hat die blaue Kiste 7 Ringe."), t3))
+        // A conditional QUESTION asserts nothing; only the plain statement becomes state.
+        assertEquals(listOf("Kiste (blau)"), p(listOf("Wenn die rote Kiste 9 Ringe hätte, was dann?",
+            "Die blaue Kiste hat 7 Ringe."), t3)!!.entries.map { it.display })
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), "Die rote Kiste wiegt 9 Kilo statt 4."))
         assertNull(p(listOf("Gestern hatte die rote Kiste 3 Ringe.", "Die rote Kiste hat 4 Ringe."), t3))
     }
 
