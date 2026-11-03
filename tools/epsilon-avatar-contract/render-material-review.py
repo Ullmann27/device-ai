@@ -6,6 +6,7 @@ No source mesh, private image, video, stand-in head or generative model is used.
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import bpy
@@ -19,6 +20,10 @@ candidate_record = json.loads(candidate.with_suffix(".json").read_text())
 assert hashlib.sha256(source.read_bytes()).hexdigest() == candidate_record["sourceSha256"]
 assert hashlib.sha256(candidate.read_bytes()).hexdigest() == candidate_record["candidateSha256"]
 records = []
+samples = int(os.environ.get("AVATAR_REVIEW_SAMPLES", "8"))
+assert 1 <= samples <= 64
+selected_views = os.environ.get("AVATAR_REVIEW_VIEWS", "front,slight-yaw-pitch,profile").split(",")
+assert selected_views and set(selected_views) <= {"front", "slight-yaw-pitch", "profile"}
 
 
 def point(x, y, z):
@@ -31,7 +36,7 @@ for label, asset in [("baseline", source), ("candidate", candidate)]:
     scene = bpy.context.scene
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
-    scene.cycles.samples = 8
+    scene.cycles.samples = samples
     scene.cycles.use_denoising = False
     scene.cycles.seed = 11
     scene.render.threads_mode = "FIXED"
@@ -69,6 +74,8 @@ for label, asset in [("baseline", source), ("candidate", candidate)]:
     scene.collection.objects.link(camera)
     scene.camera = camera
     for view, yaw, pitch in [("front", 0, 0), ("slight-yaw-pitch", 18, 8), ("profile", 90, 0)]:
+        if view not in selected_views:
+            continue
         azimuth, elevation = map(math.radians, (yaw, pitch))
         camera.location = target + Vector((math.sin(azimuth) * math.cos(elevation),
             -math.cos(azimuth) * math.cos(elevation), math.sin(elevation))) * .9
@@ -85,7 +92,7 @@ for label, asset in [("baseline", source), ("candidate", candidate)]:
 (out / "render-manifest.json").write_text(json.dumps({
     "evidenceClass": "HOST_RENDER_NOT_DEVICE",
     "backend": f"Blender {bpy.app.version_string}, Cycles CPU",
-    "pixels": [384, 448], "samples": 8, "cpuThreads": 1,
+    "pixels": [384, 448], "samples": samples, "cpuThreads": 1,
     "sameCameraLightingExposureAndSeed": True,
     "syntheticInput": "Neutral real GLB; camera moves, no invented model or tool activity",
     "limitations": ["Not Filament pixel equivalence", "Not reference identity acceptance",

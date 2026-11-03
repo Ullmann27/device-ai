@@ -16,7 +16,10 @@ class Avatar3dContractTest {
         for (v in Viseme.entries) {
             map.update(pose(v, .4f), 0f, true)
             for (other in Viseme.entries) assertEquals(if (other == v && v != Viseme.SIL) 1f else 0f, map.weights[names.indexOf(other.name)], 0f)
-            assertEquals(.4f, map.weights[names.indexOf("JawOpen")], 0f)
+            // Preserve name-based lookup under the independently reviewed shared-opening contract.
+            // Exact old .4 would require reproducing the demonstrated double-open defect.
+            val canonical = AvatarMorphMapper(AvatarGlbContract.TARGETS).also { it.update(pose(v, .4f), 0f, true) }
+            assertEquals(canonical.weights[AvatarGlbContract.TARGETS.indexOf("JawOpen")], map.weights[names.indexOf("JawOpen")], 0f)
         }
     }
     @Test fun gazeIsViewerRightAndUpAndNeverNaN() {

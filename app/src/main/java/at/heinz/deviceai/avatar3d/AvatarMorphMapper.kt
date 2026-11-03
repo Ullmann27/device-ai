@@ -49,14 +49,35 @@ class AvatarMorphMapper(targetNames: List<String>) {
             eyePitch += (.95 * sin(phase * 39) + .30 * sin(phase * 78)).toFloat()
         }
         val jaw = finite(pose.jawOpen, 0f, 1f)
-        weight("JawOpen", jaw)
-        jawPitch = jaw * 12f
+        val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
+        val cueOpening = sharedOpeningRatio(pose.viseme) * cueWeight
+        // The pinned CC0 recipes already include mouth-open inside each vowel target.
+        // Compose that common basis once; retain the independent lip shape unchanged.
+        weight("JawOpen", (jaw - cueOpening).coerceAtLeast(0f))
+        jawPitch = maxOf(jaw, cueOpening) * 12f
         // The existing reducer expires stale cues/audio and resets interrupted utterances.
-        if (pose.viseme != Viseme.SIL) weight(pose.viseme.name, pose.visemeWeight)
+        if (pose.viseme != Viseme.SIL) weight(pose.viseme.name, cueWeight)
         val t = if (seconds.isFinite()) ((seconds % 4.6f) + 4.6f) % 4.6f else 0f
         val blink = if (t > 4.42f) (1f - abs(t - 4.51f) / .09f).coerceIn(0f, 1f) else 0f
         weight("BlinkLeft", blink); weight("BlinkRight", blink)
     }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f
+
+    /** PR404 build_bust.py at 0862cfc8: authored mouth-open coefficient / JawOpen's .8.
+     * Bound to the packaged asset family; a different morph recipe requires a new review. */
+    private fun sharedOpeningRatio(viseme: Viseme): Float = when (viseme) {
+        Viseme.SIL, Viseme.PP, Viseme.SS -> 0f
+        Viseme.FF -> .06f / .8f
+        Viseme.TH -> .18f / .8f
+        Viseme.DD -> .20f / .8f
+        Viseme.KK -> .30f / .8f
+        Viseme.CH -> .15f / .8f
+        Viseme.NN -> .11f / .8f
+        Viseme.RR -> .22f / .8f
+        Viseme.AA -> .65f / .8f
+        Viseme.E -> .23f / .8f
+        Viseme.I, Viseme.U -> .10f / .8f
+        Viseme.O -> .36f / .8f
+    }
 }

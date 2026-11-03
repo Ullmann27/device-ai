@@ -1,0 +1,5 @@
+Picked up JAVA_TOOL_OPTIONS: -XX:ActiveProcessorCount=1
+app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt:492:86: warning: no cast needed.
+                glow(p, px.sx[i], px.sy[i], 3.6f * sphereScale, Argb.withAlpha((fill as Fill.Solid).argb, .6f), intensity)
+                                                                                     ^^^^^^^^^^^^^
+PASS: actual Android SDK36 + pinned Filament/gltfio AAR API compile; GPU/device not executed.
