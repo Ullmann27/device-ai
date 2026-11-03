@@ -39,6 +39,55 @@ class ChiefWorkerPoolTest {
         pool.shutdown()
     }
 
+    @Test fun awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns() {
+        val callbackEntered = CountDownLatch(1)
+        val releaseCallback = CountDownLatch(1)
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+        try {
+            assertTrue(pool.submit(brief("delivery")) { report ->
+                callbackEntered.countDown()
+                releaseCallback.await()
+                reports += report
+            })
+            assertTrue("report callback entered", callbackEntered.await(2, TimeUnit.SECONDS))
+            assertFalse("delivery is incomplete while its callback is blocked", pool.awaitIdle(0))
+            assertTrue("report delivery still owns its slot", "delivery" in pool.active())
+            assertTrue(reports.isEmpty())
+            releaseCallback.countDown()
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(1, reports.size)
+            assertEquals(WorkerStatus.DONE, reports.single().status)
+        } finally {
+            releaseCallback.countDown()
+            pool.shutdown()
+        }
+    }
+
+    @Test fun aThrowingReportCallbackReleasesItsSlotAndDoesNotReportTwice() {
+        val callbacks = AtomicInteger()
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "finished" } }
+        try {
+            assertTrue(pool.submit(brief("reusable")) {
+                callbacks.incrementAndGet()
+                error("report consumer failed")
+            })
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(1, callbacks.get())
+            assertTrue(pool.active().isEmpty())
+            assertTrue(pool.submit(brief("reusable")) {
+                callbacks.incrementAndGet()
+                reports += it
+            })
+            assertTrue(pool.awaitIdle(2_000))
+            assertEquals(2, callbacks.get())
+            assertEquals(WorkerStatus.DONE, reports.single().status)
+        } finally {
+            pool.shutdown()
+        }
+    }
+
     @Test fun deadlineCancelAndFailureBecomeHonestReports() {
         val reports = ConcurrentLinkedQueue<WorkerReport>()
         val pool = ChiefWorkerPool(maxConcurrent = 2, maxQueued = 2) { b ->
