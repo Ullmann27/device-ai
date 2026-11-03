@@ -1,0 +1,1923 @@
+{
+  "schema": "CDX2_BLIND_SCORE_V1",
+  "cases": 55,
+  "splits": {
+    "PRIMARY": {
+      "RAW": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "VERIFIED": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      },
+      "RULE": {
+        "supported": 20,
+        "exactSupported": 20,
+        "missing": 5,
+        "correctAbstentions": 5,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ],
+        "abstainWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "primaryGate": true
+      }
+    },
+    "ADVERSARIAL": {
+      "RAW": {
+        "supported": 5,
+        "exactSupported": 5,
+        "missing": 25,
+        "correctAbstentions": 24,
+        "unsupportedPositive": 1,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "abstainWilson95": [
+          0.8045593626380687,
+          0.9929037664980125
+        ],
+        "primaryGate": false
+      },
+      "VERIFIED": {
+        "supported": 5,
+        "exactSupported": 5,
+        "missing": 25,
+        "correctAbstentions": 25,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "abstainWilson95": [
+          0.8668077490609579,
+          1
+        ],
+        "primaryGate": false
+      },
+      "RULE": {
+        "supported": 5,
+        "exactSupported": 5,
+        "missing": 25,
+        "correctAbstentions": 25,
+        "unsupportedPositive": 0,
+        "falseSourceAssignments": 0,
+        "falseAbstentions": 0,
+        "malformed": 0,
+        "supportedWilson95": [
+          0.5655175352168389,
+          1
+        ],
+        "abstainWilson95": [
+          0.8668077490609579,
+          1
+        ],
+        "primaryGate": false
+      }
+    }
+  },
+  "records": [
+    {
+      "id": "C001",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 24,
+        "revision": 1,
+        "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+        "sourceId": "bc:C001:s1",
+        "start": 16,
+        "text": "Uvgegenu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C001:s1",
+          "decision": "SPAN",
+          "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgegenu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C001:s1",
+          "decision": "SPAN",
+          "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgegenu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C001:s1",
+          "decision": "SPAN",
+          "sha256": "4ae999a2d5f4394b67bfc41dee95fedfd2b8670e73eae28827b0c1b537cc1eb4",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgegenu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C002",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 2,
+        "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+        "sourceId": "bc:C002:s1",
+        "start": 64,
+        "text": "Uvlafeci Uvvaputi"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C002:s1",
+          "decision": "SPAN",
+          "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvlafeci Uvvaputi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C002:s1",
+          "decision": "SPAN",
+          "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvlafeci Uvvaputi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C002:s1",
+          "decision": "SPAN",
+          "sha256": "b08b2f3621d17b76ce3a9dee3193cfdd881d03282b7a824184335c8c2132e5c3",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvlafeci Uvvaputi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C003",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 43,
+        "revision": 4,
+        "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+        "sourceId": "bc:C003:s2",
+        "start": 17,
+        "text": "Uvdakezu Uvjerazo Uvjujuce"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C003:s2",
+          "decision": "SPAN",
+          "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+          "endExclusive": 43,
+          "start": 17,
+          "text": "Uvdakezu Uvjerazo Uvjujuce",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C003:s2",
+          "decision": "SPAN",
+          "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+          "endExclusive": 43,
+          "start": 17,
+          "text": "Uvdakezu Uvjerazo Uvjujuce",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C003:s2",
+          "decision": "SPAN",
+          "sha256": "95cd8adf136b8c3a05ea0374341514e2620ac48237233a79eedc4bf73a4641c0",
+          "endExclusive": 43,
+          "start": 17,
+          "text": "Uvdakezu Uvjerazo Uvjujuce",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C004",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 63,
+        "revision": 6,
+        "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+        "sourceId": "bc:C004:s3",
+        "start": 55,
+        "text": "Uvvagaja"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C004:s3",
+          "decision": "SPAN",
+          "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvvagaja",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C004:s3",
+          "decision": "SPAN",
+          "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvvagaja",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C004:s3",
+          "decision": "SPAN",
+          "sha256": "ee900245090806659aba9bf25e639da2980ffe6684a84e16cee099bf8b90ff48",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvvagaja",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C005",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 77,
+        "revision": 5,
+        "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+        "sourceId": "bc:C005:s1",
+        "start": 60,
+        "text": "Uvvevohi Uvfokeza"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C005:s1",
+          "decision": "SPAN",
+          "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+          "endExclusive": 77,
+          "start": 60,
+          "text": "Uvvevohi Uvfokeza",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C005:s1",
+          "decision": "SPAN",
+          "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+          "endExclusive": 77,
+          "start": 60,
+          "text": "Uvvevohi Uvfokeza",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C005:s1",
+          "decision": "SPAN",
+          "sha256": "e8680d24585d418bccf235e8e6783f2be5b2f3dcc9756abb7bf6cdf5eb2ffa14",
+          "endExclusive": 77,
+          "start": 60,
+          "text": "Uvvevohi Uvfokeza",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C006",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 6,
+        "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+        "sourceId": "bc:C006:s1",
+        "start": 18,
+        "text": "Uvbuguba Uvriledu Uvpafoha"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C006:s1",
+          "decision": "SPAN",
+          "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvbuguba Uvriledu Uvpafoha",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C006:s1",
+          "decision": "SPAN",
+          "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvbuguba Uvriledu Uvpafoha",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C006:s1",
+          "decision": "SPAN",
+          "sha256": "9a78620c1d5be63ce0d206c58f612e59886923a23d195e9e2ce137e3f55f9ca7",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvbuguba Uvriledu Uvpafoha",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C007",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 61,
+        "revision": 1,
+        "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+        "sourceId": "bc:C007:s2",
+        "start": 53,
+        "text": "Uvtolasa"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C007:s2",
+          "decision": "SPAN",
+          "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvtolasa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C007:s2",
+          "decision": "SPAN",
+          "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvtolasa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C007:s2",
+          "decision": "SPAN",
+          "sha256": "8ebf4cab494068d9ec4ae20e1e0bad9b33d59c47ea03a7218fb706feab0d4c57",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvtolasa",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C008",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 35,
+        "revision": 3,
+        "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+        "sourceId": "bc:C008:s3",
+        "start": 18,
+        "text": "Uvhiloza Uvjogeka"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C008:s3",
+          "decision": "SPAN",
+          "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvhiloza Uvjogeka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C008:s3",
+          "decision": "SPAN",
+          "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvhiloza Uvjogeka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C008:s3",
+          "decision": "SPAN",
+          "sha256": "7a941aa8a0fb5b070651bc6cc46d0a572f97a4c629bdad6d0a1311f2f2b94d7f",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvhiloza Uvjogeka",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C009",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 68,
+        "revision": 2,
+        "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+        "sourceId": "bc:C009:s1",
+        "start": 42,
+        "text": "Uvtobani Uvcomovu Uvzozima"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C009:s1",
+          "decision": "SPAN",
+          "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+          "endExclusive": 68,
+          "start": 42,
+          "text": "Uvtobani Uvcomovu Uvzozima",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C009:s1",
+          "decision": "SPAN",
+          "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+          "endExclusive": 68,
+          "start": 42,
+          "text": "Uvtobani Uvcomovu Uvzozima",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C009:s1",
+          "decision": "SPAN",
+          "sha256": "15c2af6eedf7206550a5514405bee4240fb1f151ba6522a87195fa5cb0fc3240",
+          "endExclusive": 68,
+          "start": 42,
+          "text": "Uvtobani Uvcomovu Uvzozima",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C010",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 63,
+        "revision": 3,
+        "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+        "sourceId": "bc:C010:s1",
+        "start": 55,
+        "text": "Uvgemeta"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C010:s1",
+          "decision": "SPAN",
+          "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvgemeta",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C010:s1",
+          "decision": "SPAN",
+          "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvgemeta",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C010:s1",
+          "decision": "SPAN",
+          "sha256": "a354fab8ccfe5edfbb6daa2060bd07c4637805473269143ed062bcaf1e545f13",
+          "endExclusive": 63,
+          "start": 55,
+          "text": "Uvgemeta",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C011",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 34,
+        "revision": 5,
+        "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+        "sourceId": "bc:C011:s2",
+        "start": 17,
+        "text": "Uvkunoji Uvrataba"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C011:s2",
+          "decision": "SPAN",
+          "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+          "endExclusive": 34,
+          "start": 17,
+          "text": "Uvkunoji Uvrataba",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C011:s2",
+          "decision": "SPAN",
+          "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+          "endExclusive": 34,
+          "start": 17,
+          "text": "Uvkunoji Uvrataba",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C011:s2",
+          "decision": "SPAN",
+          "sha256": "d712d1fd1bd91753b83ee12310ea7b852ed108229203fe5a9ca39322934d28e0",
+          "endExclusive": 34,
+          "start": 17,
+          "text": "Uvkunoji Uvrataba",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C012",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 72,
+        "revision": 7,
+        "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+        "sourceId": "bc:C012:s3",
+        "start": 46,
+        "text": "Uvnebaka Uvjibile Uvlogase"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C012:s3",
+          "decision": "SPAN",
+          "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+          "endExclusive": 72,
+          "start": 46,
+          "text": "Uvnebaka Uvjibile Uvlogase",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C012:s3",
+          "decision": "SPAN",
+          "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+          "endExclusive": 72,
+          "start": 46,
+          "text": "Uvnebaka Uvjibile Uvlogase",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C012:s3",
+          "decision": "SPAN",
+          "sha256": "fb0d4af730ec5fe1e03503123222467cccf945e8494c859a70d4083382172c72",
+          "endExclusive": 72,
+          "start": 46,
+          "text": "Uvnebaka Uvjibile Uvlogase",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C013",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 24,
+        "revision": 6,
+        "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+        "sourceId": "bc:C013:s1",
+        "start": 16,
+        "text": "Uvgedozu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C013:s1",
+          "decision": "SPAN",
+          "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgedozu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C013:s1",
+          "decision": "SPAN",
+          "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgedozu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C013:s1",
+          "decision": "SPAN",
+          "sha256": "d9aa2e013b1a50b26ce5ae43ca7f312876b99957b53c20f25eb1684a4e44045e",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Uvgedozu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C014",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 7,
+        "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+        "sourceId": "bc:C014:s1",
+        "start": 64,
+        "text": "Uvpubuca Uvcomite"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C014:s1",
+          "decision": "SPAN",
+          "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvpubuca Uvcomite",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C014:s1",
+          "decision": "SPAN",
+          "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvpubuca Uvcomite",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C014:s1",
+          "decision": "SPAN",
+          "sha256": "4fd8dfb23664fe37d0b2762be7e505c52740c85e8178346bb806e7c49ebe6cdd",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvpubuca Uvcomite",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C015",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 70,
+        "revision": 2,
+        "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+        "sourceId": "bc:C015:s2",
+        "start": 44,
+        "text": "Uvzisimu Uvnamuju Uvnanazi"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C015:s2",
+          "decision": "SPAN",
+          "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+          "endExclusive": 70,
+          "start": 44,
+          "text": "Uvzisimu Uvnamuju Uvnanazi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C015:s2",
+          "decision": "SPAN",
+          "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+          "endExclusive": 70,
+          "start": 44,
+          "text": "Uvzisimu Uvnamuju Uvnanazi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C015:s2",
+          "decision": "SPAN",
+          "sha256": "e53e8cc6019beaf9cedd7888369200a8e65f5f5dcaa7bdf93b75206afb185a36",
+          "endExclusive": 70,
+          "start": 44,
+          "text": "Uvzisimu Uvnamuju Uvnanazi",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C016",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 26,
+        "revision": 4,
+        "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+        "sourceId": "bc:C016:s3",
+        "start": 18,
+        "text": "Uvpatema"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C016:s3",
+          "decision": "SPAN",
+          "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Uvpatema",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C016:s3",
+          "decision": "SPAN",
+          "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Uvpatema",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C016:s3",
+          "decision": "SPAN",
+          "sha256": "0bf40d4f2faa0356487d454eed493a88a833bd5b6c605211594b70e02be379b6",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Uvpatema",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C017",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 88,
+        "revision": 3,
+        "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+        "sourceId": "bc:C017:s1",
+        "start": 71,
+        "text": "Uvpetado Uvradeba"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C017:s1",
+          "decision": "SPAN",
+          "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+          "endExclusive": 88,
+          "start": 71,
+          "text": "Uvpetado Uvradeba",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C017:s1",
+          "decision": "SPAN",
+          "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+          "endExclusive": 88,
+          "start": 71,
+          "text": "Uvpetado Uvradeba",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C017:s1",
+          "decision": "SPAN",
+          "sha256": "eec6cac106a271a680d05409eb9855265dce088d017cef7109f1e349f1e1989f",
+          "endExclusive": 88,
+          "start": 71,
+          "text": "Uvpetado Uvradeba",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C018",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 4,
+        "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+        "sourceId": "bc:C018:s1",
+        "start": 18,
+        "text": "Uvrosabo Uvsogosu Uvpaveza"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C018:s1",
+          "decision": "SPAN",
+          "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvrosabo Uvsogosu Uvpaveza",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C018:s1",
+          "decision": "SPAN",
+          "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvrosabo Uvsogosu Uvpaveza",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C018:s1",
+          "decision": "SPAN",
+          "sha256": "5cb20fa184ff5bd36feaba6aa19673860b39f2dc759e56b97b06e4bce2dd8817",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvrosabo Uvsogosu Uvpaveza",
+          "offsetEncoding": "UTF-16",
+          "revision": 4
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C019",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 61,
+        "revision": 6,
+        "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+        "sourceId": "bc:C019:s2",
+        "start": 53,
+        "text": "Uvdaniti"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C019:s2",
+          "decision": "SPAN",
+          "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvdaniti",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C019:s2",
+          "decision": "SPAN",
+          "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvdaniti",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C019:s2",
+          "decision": "SPAN",
+          "sha256": "a8a4fac7d3968f4b75f364a5c48d8bba54ddffdc8768fc640e68bef42aabad7c",
+          "endExclusive": 61,
+          "start": 53,
+          "text": "Uvdaniti",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C020",
+      "split": "PRIMARY",
+      "expected": {
+        "endExclusive": 81,
+        "revision": 1,
+        "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+        "sourceId": "bc:C020:s3",
+        "start": 64,
+        "text": "Uvhileta Uvjesucu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C020:s3",
+          "decision": "SPAN",
+          "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvhileta Uvjesucu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C020:s3",
+          "decision": "SPAN",
+          "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvhileta Uvjesucu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C020:s3",
+          "decision": "SPAN",
+          "sha256": "db1f8b57b202fe06cc062be50d9f683419ec00b02e684f45074f7b639d051db6",
+          "endExclusive": 81,
+          "start": 64,
+          "text": "Uvhileta Uvjesucu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C021",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C022",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C023",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C024",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C025",
+      "split": "PRIMARY",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C026",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C027",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C028",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C029",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C030",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C031",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C032",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C033",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C034",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C035",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C036",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C037",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C038",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C039",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C040",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C041",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "endExclusive": 59,
+        "revision": 6,
+        "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+        "sourceId": "bc:C041:s1",
+        "start": 42,
+        "text": "Uvpovelu Uvjaluzu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C041:s1",
+          "decision": "SPAN",
+          "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+          "endExclusive": 59,
+          "start": 42,
+          "text": "Uvpovelu Uvjaluzu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C041:s1",
+          "decision": "SPAN",
+          "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+          "endExclusive": 59,
+          "start": 42,
+          "text": "Uvpovelu Uvjaluzu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C041:s1",
+          "decision": "SPAN",
+          "sha256": "5cd5a52f0afb31f680e9f41ed6718fa0974585ce236ff5284dd9a5d26c0af702",
+          "endExclusive": 59,
+          "start": 42,
+          "text": "Uvpovelu Uvjaluzu",
+          "offsetEncoding": "UTF-16",
+          "revision": 6
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C042",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "endExclusive": 44,
+        "revision": 7,
+        "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+        "sourceId": "bc:C042:s1",
+        "start": 18,
+        "text": "Uvjogiju Uvmukedo Uvcudumu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C042:s1",
+          "decision": "SPAN",
+          "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvjogiju Uvmukedo Uvcudumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C042:s1",
+          "decision": "SPAN",
+          "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvjogiju Uvmukedo Uvcudumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C042:s1",
+          "decision": "SPAN",
+          "sha256": "d846092ae51fd69c85cd2156df6bbb8b3832043bf7af75ab8284e2e491ef11bc",
+          "endExclusive": 44,
+          "start": 18,
+          "text": "Uvjogiju Uvmukedo Uvcudumu",
+          "offsetEncoding": "UTF-16",
+          "revision": 7
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C043",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "endExclusive": 25,
+        "revision": 2,
+        "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+        "sourceId": "bc:C043:s2",
+        "start": 17,
+        "text": "Uvvomeki"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C043:s2",
+          "decision": "SPAN",
+          "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Uvvomeki",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C043:s2",
+          "decision": "SPAN",
+          "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Uvvomeki",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C043:s2",
+          "decision": "SPAN",
+          "sha256": "30b8b2c9298a09756034958604c615449f549e3e0fcf18f87e26198d832e889f",
+          "endExclusive": 25,
+          "start": 17,
+          "text": "Uvvomeki",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C044",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "endExclusive": 35,
+        "revision": 2,
+        "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+        "sourceId": "bc:C044:s1",
+        "start": 18,
+        "text": "Uvfafoli Uvzimapu"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C044:s1",
+          "decision": "SPAN",
+          "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvfafoli Uvzimapu",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C044:s1",
+          "decision": "SPAN",
+          "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvfafoli Uvzimapu",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C044:s1",
+          "decision": "SPAN",
+          "sha256": "e16d4dc54cda3edecf7cdcb2d6b8c0908f43c764aeb670d47992caaaf518a695",
+          "endExclusive": 35,
+          "start": 18,
+          "text": "Uvfafoli Uvzimapu",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C045",
+      "split": "ADVERSARIAL",
+      "expected": {
+        "endExclusive": 90,
+        "revision": 3,
+        "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+        "sourceId": "bc:C045:s1",
+        "start": 64,
+        "text": "Uvjalicu Uvhetilu Uvhugoma"
+      },
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C045:s1",
+          "decision": "SPAN",
+          "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+          "endExclusive": 90,
+          "start": 64,
+          "text": "Uvjalicu Uvhetilu Uvhugoma",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": {
+          "sourceId": "bc:C045:s1",
+          "decision": "SPAN",
+          "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+          "endExclusive": 90,
+          "start": 64,
+          "text": "Uvjalicu Uvhetilu Uvhugoma",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      },
+      "RULE": {
+        "prediction": {
+          "sourceId": "bc:C045:s1",
+          "decision": "SPAN",
+          "sha256": "8c67efc3a68614e0197cc74436161fc91cc45d18ce3f9b5d085bfebd5b5d10d8",
+          "endExclusive": 90,
+          "start": 64,
+          "text": "Uvjalicu Uvhetilu Uvhugoma",
+          "offsetEncoding": "UTF-16",
+          "revision": 3
+        },
+        "exact": true
+      }
+    },
+    {
+      "id": "C046",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C047",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C048",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C049",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C050",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C051",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C052",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C053",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C054",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": {
+          "sourceId": "bc:C054:s1",
+          "decision": "SPAN",
+          "sha256": "569cbae563d12bb5a54a358746c4d30fec03c5d0d8243b257a4a5bf7b21b9627",
+          "endExclusive": 26,
+          "start": 18,
+          "text": "Uvgigene",
+          "offsetEncoding": "UTF-16",
+          "revision": 5
+        },
+        "exact": false
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    },
+    {
+      "id": "C055",
+      "split": "ADVERSARIAL",
+      "expected": null,
+      "RAW": {
+        "prediction": null,
+        "exact": true
+      },
+      "VERIFIED": {
+        "prediction": null,
+        "exact": true
+      },
+      "RULE": {
+        "prediction": null,
+        "exact": true
+      }
+    }
+  ],
+  "corpusSha256": "3bd5bddb76a50d020c9216db9eebf7ba9b717967a7b0947b3415f3a2c0fd5a1c",
+  "predictionsSha256": "34ace04f72c69ce04a80151bcd0a8e59c949bacc70849d5388efce889f499dd2",
+  "promotion": "FORBIDDEN_RESEARCH_ONLY"
+}

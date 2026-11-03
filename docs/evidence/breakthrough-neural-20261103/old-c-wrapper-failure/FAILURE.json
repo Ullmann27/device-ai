@@ -1,0 +1,7 @@
+{
+  "status": "FAILED_HARNESS_WRAPPER",
+  "stage": "pre_score_input_binding",
+  "error": "AssertionError: top-level inputs contained legacy schema metadata",
+  "caseArrayIdentity": "EXACT_EQUAL",
+  "recovery": "Remove only top-level schema key; preserve all 55 cases and independently pinned corpus; no predictor or scorer change"
+}
