@@ -34,6 +34,6 @@ Der Continuum-Kern (deterministische Regeln, SWB1/CRE1, EWM2, bestätigtes Gedä
 
 ## Grenzen der heutigen Prüfung
 
-CoreGemmaRace.kt wurde in einem isolierten Linux-Host-Smoke mit Kotlin 1.9 gegen kompatible Typ-Stubs kompiliert und auf fünf typische Vergleichssituationen geprüft. Ein zunächst gefundener Long/Int-Vergleichsfehler wurde korrigiert. **Das ist keine vollständige Gradle-/JUnit-, LiteRT-LM-, Android- oder Fold7-Abnahme.** Die JUnit-Datei ist im PR, aber nicht mit Android SDK ausgeführt.
+CoreGemmaRace.kt wurde in einem isolierten Linux-Host-Smoke mit Kotlin 1.9 gegen kompatible Typ-Stubs kompiliert. Ein zunächst gefundener Long/Int-Vergleichsfehler wurde korrigiert. Die neun neu angelegten Testmethoden wurden mit einer separaten kleinen JUnit-kompatiblen Host-Testhülle ausgeführt: **9 bestanden, 0 fehlgeschlagen**. Die Host-Hülle verwendet Typ-Stubs statt der vollständigen Android-Gradle-Abhängigkeiten. **Das ist keine vollständige Gradle-/JUnit-, LiteRT-LM-, Android- oder Fold7-Abnahme.** Die Testfälle verwenden absichtlich synthetische Antwortzeiten und simulierte Systeme.
 
 Damit darf sich keine APK als schneller als Gemma 4 ausgeben. Der Benchmark ist ein Baustein des Code40-Kandidaten, nicht dessen Releasefreigabe.
