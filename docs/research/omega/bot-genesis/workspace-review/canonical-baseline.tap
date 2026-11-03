@@ -1,0 +1,14 @@
+✔ B01 workspace strings are correlation, not persisted identity admission (0.876548ms)
+✔ B02 lookalike executor cannot acquire canonical workspace authority (0.441534ms)
+✔ B03 claimed unfinished work requires owner recovery and never becomes executable pending (41.280511ms)
+✔ B04 changed checkout source blocks old authorized pending work (35.445727ms)
+✔ B05 a valid prepared grant cannot turn copied model prose into admitted experience (31.431471ms)
+✔ B06 recall without a current authorized grant remains blocked for a named bot (2.317845ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 217.853774

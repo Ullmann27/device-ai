@@ -1,0 +1,1 @@
+First harness invocation used relative mkdir in candidate checkout but absolute output path in reviewer checkout; no Gradle process started. Corrected output directory before this run. This setup error is not product RED.

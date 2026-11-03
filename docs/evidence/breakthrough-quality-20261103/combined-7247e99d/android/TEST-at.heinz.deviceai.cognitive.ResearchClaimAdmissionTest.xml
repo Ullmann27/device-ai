@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:45:37" hostname="5268aff5350a" time="0.054">
+  <properties/>
+  <testcase name="realMatchingExcerptsRetainExistingCrossDomainCorroboration" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.007"/>
+  <testcase name="literalExcerptKeepsTextButCannotClaimOwnerAuthorityOrForeignAttribution" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.005"/>
+  <testcase name="unrelatedFetchedPagesCannotVerifyAnInventedClaim" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.024"/>
+  <testcase name="identicalMirrorsDoNotCreateIndependentCorroboration" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.003"/>
+  <testcase name="oneSupplyingPageCannotBorrowCorroborationFromAnUnrelatedPage" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.003"/>
+  <testcase name="twoPagesOnOneDomainCountAsOneSourceGroup" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.003"/>
+  <testcase name="baselineExtractorPreservesOrdinaryUnicodeAndNegativeStatements" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.006"/>
+  <testcase name="nonliteralParaphrasesAndCaseChangesAreNotExtractiveEvidence" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.002"/>
+  <testcase name="hashMismatchedSourceNeverReachesClaimAdmission" classname="at.heinz.deviceai.cognitive.ResearchClaimAdmissionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

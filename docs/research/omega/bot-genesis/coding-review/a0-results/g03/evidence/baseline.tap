@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: frozen path component boundary 0
+ok 1 - frozen path component boundary 0
+  ---
+  duration_ms: 0.876958
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 1
+ok 2 - frozen path component boundary 1
+  ---
+  duration_ms: 0.140421
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 2
+ok 3 - frozen path component boundary 2
+  ---
+  duration_ms: 0.072049
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 3
+not ok 4 - frozen path component boundary 3
+  ---
+  duration_ms: 4.539122
+  type: 'test'
+  location: '/workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:10:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:12:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: frozen path component boundary 4
+not ok 5 - frozen path component boundary 4
+  ---
+  duration_ms: 0.33244
+  type: 'test'
+  location: '/workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:10:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:12:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: frozen path component boundary 5
+ok 6 - frozen path component boundary 5
+  ---
+  duration_ms: 0.090726
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 6
+ok 7 - frozen path component boundary 6
+  ---
+  duration_ms: 0.089144
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 7
+not ok 8 - frozen path component boundary 7
+  ---
+  duration_ms: 0.123646
+  type: 'test'
+  location: '/workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:10:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/genesis-a0-experiment/fixtures-v2/g03/.github/continuum/frozen.test.mjs:12:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: frozen path component boundary 8
+ok 9 - frozen path component boundary 8
+  ---
+  duration_ms: 0.131318
+  type: 'test'
+  ...
+# Subtest: frozen path component boundary 9
+ok 10 - frozen path component boundary 9
+  ---
+  duration_ms: 0.181864
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 7
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 95.563761

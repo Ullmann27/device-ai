@@ -1,0 +1,24 @@
+JUnit version 4.13.2
+.NATIVE 287 x 611 font=2.0 LABEL_CONNECTED bounds=12,1184,275,1352 spoken=Verbindung: Offline
+NATIVE 287 x 611 font=2.0 LABEL_LEARNING bounds=12,824,275,992 spoken=Lernen: Bereit
+NATIVE 287 x 611 font=2.0 LABEL_DEVELOPING bounds=12,1004,275,1172 spoken=Entwicklung: Bereit
+NATIVE 287 x 611 font=2.0 LABEL_THINKING bounds=12,464,275,632 spoken=Chat: ZETA-NATIVE-THINK
+NATIVE 287 x 611 font=2.0 LABEL_ANALYSING bounds=12,644,275,812 spoken=Forschung: Bereit
+NATIVE 287 x 611 font=2.0 LABEL_EVOLVING bounds=12,1364,275,1532 spoken=Lernstatus: Aus
+NATIVE 713 x 897 font=1.0 LABEL_CONNECTED bounds=245,603,467,707 spoken=Verbindung: Offline
+NATIVE 713 x 897 font=1.0 LABEL_LEARNING bounds=479,487,701,591 spoken=Lernen: Bereit
+NATIVE 713 x 897 font=1.0 LABEL_DEVELOPING bounds=12,603,233,707 spoken=Entwicklung: Bereit
+NATIVE 713 x 897 font=1.0 LABEL_THINKING bounds=12,487,233,591 spoken=Chat: ZETA-NATIVE-THINK
+NATIVE 713 x 897 font=1.0 LABEL_ANALYSING bounds=245,487,467,591 spoken=Forschung: Bereit
+NATIVE 713 x 897 font=1.0 LABEL_EVOLVING bounds=479,603,701,707 spoken=Lernstatus: Aus
+NATIVE 521 x 333 font=1.0 LABEL_CONNECTED bounds=12,710,254,814 spoken=Verbindung: Offline
+NATIVE 521 x 333 font=1.0 LABEL_LEARNING bounds=12,594,254,698 spoken=Lernen: Bereit
+NATIVE 521 x 333 font=1.0 LABEL_DEVELOPING bounds=266,594,509,698 spoken=Entwicklung: Bereit
+NATIVE 521 x 333 font=1.0 LABEL_THINKING bounds=12,478,254,582 spoken=Chat: ZETA-NATIVE-THINK
+NATIVE 521 x 333 font=1.0 LABEL_ANALYSING bounds=266,478,509,582 spoken=Forschung: Bereit
+NATIVE 521 x 333 font=1.0 LABEL_EVOLVING bounds=266,710,509,814 spoken=Lernstatus: Aus
+
+Time: 27.151
+
+OK (1 test)
+

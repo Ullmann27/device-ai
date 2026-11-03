@@ -1,0 +1,34 @@
+Blender 4.3.2
+Fra:1 Mem:19.42M (Peak 19.90M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Face
+Fra:1 Mem:19.88M (Peak 19.90M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | MouthInterior
+Fra:1 Mem:21.21M (Peak 21.21M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilRight
+Fra:1 Mem:21.28M (Peak 21.28M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisRight
+Fra:1 Mem:21.35M (Peak 21.35M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballRight
+Fra:1 Mem:21.43M (Peak 21.43M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | PupilLeft
+Fra:1 Mem:21.73M (Peak 21.73M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | IrisLeft
+Fra:1 Mem:21.88M (Peak 21.88M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | EyeballLeft
+Fra:1 Mem:22.94M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing
+Fra:1 Mem:17.85M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start
+Failed to denoise, build has no OpenImageDenoise support
+Fra:1 Mem:17.85M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)
+Fra:1 Mem:17.85M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene
+Fra:1 Mem:17.85M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders
+Fra:1 Mem:17.94M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)
+Fra:1 Mem:17.94M (Peak 23.24M) | Time:00:00.03 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Failed to denoise, build has no OpenImageDenoise support
+Traceback (most recent call last):
+  File "/workspace/continuum-jarvis3d/tools/avatar-3d/build_bust.py", line 205, in <module>
+    for name,angle,weights in [('anatomy-front',0,{}),('anatomy-profile',90,{}),('anatomy-blink',0,{'BlinkLeft':1,'BlinkRight':1}),('anatomy-aa',0,{'AA':1})]:render(name,angle,weights)
+                                                                                                                                                              ~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/continuum-jarvis3d/tools/avatar-3d/build_bust.py", line 200, in render
+    camera(angle);scene.render.filepath=str(OUT/(name+'.png'));bpy.ops.render.render(write_still=True)
+                                                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/usr/share/blender/scripts/modules/bpy/ops.py", line 109, in __call__
+    ret = _op_call(self.idname_py(), kw)
+RuntimeError: Error: Failed to denoise, build has no OpenImageDenoise support
+Error: Failed to denoise, build has no OpenImageDenoise support
+
+Info: Saved "jarvis-research-v1.blend"
+Error: Failed to denoise, build has no OpenImageDenoise support
+Error: Failed to denoise, build has no OpenImageDenoise support
+
+Blender quit

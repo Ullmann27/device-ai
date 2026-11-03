@@ -1,0 +1,4 @@
+PASS actual-v1-fixture-migrates-without-losing-identities-or-notes
+PASS validly-hashed-foreign-conversation-object-cannot-be-rebound
+PASS missing-conversation-object-does-not-silently-reset
+RESULT passed=3 failed=0; persistence software tests; actual model NOT_RUN

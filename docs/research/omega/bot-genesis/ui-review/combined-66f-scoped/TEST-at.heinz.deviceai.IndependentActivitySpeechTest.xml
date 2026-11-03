@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.IndependentActivitySpeechTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T21:10:37" hostname="5268aff5350a" time="2.254">
+  <properties/>
+  <testcase name="oldCompletionCannotEndNewSpeechOrChangeItsBoundText" classname="at.heinz.deviceai.IndependentActivitySpeechTest" time="2.178"/>
+  <testcase name="startInterruptedAfterInitialIdentityCheckCannotReviveAvatarOrReplayOnAttach" classname="at.heinz.deviceai.IndependentActivitySpeechTest" time="0.042"/>
+  <testcase name="normalStopRejectsLateStartRangeAudioAndDone" classname="at.heinz.deviceai.IndependentActivitySpeechTest" time="0.034"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

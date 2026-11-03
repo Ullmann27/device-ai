@@ -89,13 +89,16 @@ test('start screen adapts to large fonts, rotated compact screens and the unfold
   assert.match(activity, /windowHeightDp = renderedWindowHeightDp \?: resources\.configuration\.screenHeightDp\.toFloat\(\)/);
   assert.match(activity, /renderedWindowWidthDp = actualWidthDp/);
   assert.match(activity, /root\.addOnLayoutChangeListener/);
-  // drawn elements scale with their slot, otherwise content overflows every window that is not exactly 412/840 dp
+  // Density transforms still match slot drawing; adaptive geometry keeps layout scale1 instead of shrinking controls.
   const home = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
   assert.match(home, /val k = density \* \(layoutSpec\?\.scale \?: 1f\)\n\s+canvas\.scale\(k, k\)/);
   assert.match(home, /element\.draw\(painter, width \/ k, height \/ k, state\)/);
   assert.match(activity, /val wide = at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isWide\(/);
   assert.match(activity, /home\.configure\(windowWidth, wide, railOffset = /);
-  assert.match(read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt'), /fontScale\.coerceIn\(\.85f, 1\.3f\)/);
+  assert.match(read('app/src/main/java/at/heinz/deviceai/ui/ContinuumAdaptiveHomeLayout.kt'), /return Layout\(wide, width, 1f, contentHeight, boxes, adaptive = true\)/);
+  assert.match(home, /ContinuumHomeLayout\.wide\(windowWidthDp, windowHeightDp, textScale\)/);
+  assert.match(home, /ContinuumHomeLayout\.phone\(windowWidthDp, textScale\)/);
+  assert.match(read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt'), /fontScale\.coerceIn\(\.85f, 2f\)/);
 });
 
 test('recreated activity preserves chat selection and draft without persistent More selection', () => {

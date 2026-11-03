@@ -1,0 +1,43 @@
+{
+  "configureCommand": [
+    "/workspace/synapse-local-model/build-tools/cmake-wheel/cmake/data/bin/cmake",
+    "-S",
+    "/workspace/synapse-local-model/llama.cpp",
+    "-B",
+    "/workspace/synapse-local-model/build-cpu",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DBUILD_SHARED_LIBS=OFF",
+    "-DGGML_BACKEND_DL=OFF",
+    "-DGGML_NATIVE=OFF",
+    "-DGGML_OPENMP=OFF",
+    "-DGGML_BLAS=OFF",
+    "-DGGML_CUDA=OFF",
+    "-DGGML_VULKAN=OFF",
+    "-DLLAMA_BUILD_TESTS=OFF",
+    "-DLLAMA_BUILD_EXAMPLES=OFF",
+    "-DLLAMA_BUILD_SERVER=OFF",
+    "-DLLAMA_BUILD_APP=OFF",
+    "-DLLAMA_BUILD_TOOLS=ON",
+    "-DLLAMA_OPENSSL=OFF",
+    "-DLLAMA_SUBPROCESS=OFF",
+    "-DLLAMA_CONNECT=OFF",
+    "-DLLAMA_LLGUIDANCE=OFF",
+    "-DCMAKE_C_FLAGS=-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp",
+    "-DCMAKE_CXX_FLAGS=-ffile-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp -fdebug-prefix-map=/workspace/synapse-local-model/llama.cpp=/llama.cpp"
+  ],
+  "buildCommand": [
+    "/workspace/synapse-local-model/build-tools/cmake-wheel/cmake/data/bin/cmake",
+    "--build",
+    "/workspace/synapse-local-model/build-cpu",
+    "--target",
+    "llama-completion",
+    "--parallel",
+    "2"
+  ],
+  "expectedRuntimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+  "expectedRuntimeBytes": 12476968,
+  "sourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+  "sourceTree": "42065e172024f95eb242763caa06812c09d363e7",
+  "maxCompileJobs": 2,
+  "executionStatus": "NOT_RUN_WAITING_CHIEF_RESOURCE_GATE"
+}

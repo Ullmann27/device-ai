@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+.E.E
+Time: 0.045
+There were 2 failures:
+1) everyHeaderAndActionHasUnscaledFortyEightDpTouchArea(at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest)
+java.lang.AssertionError: Readable content must not shrink with the window expected:<1.0> but was:<0.776699>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest.everyHeaderAndActionHasUnscaledFortyEightDpTouchArea(ContinuumAdaptiveCockpitLayoutTest.kt:14)
+2) heroAndClickableCardsNeverIntersectAndAllRemainReachable(at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest)
+java.lang.AssertionError: 320.0 overlap HERO/LABEL_CONNECTED
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.ui.ContinuumAdaptiveCockpitLayoutTest.heroAndClickableCardsNeverIntersectAndAllRemainReachable(ContinuumAdaptiveCockpitLayoutTest.kt:34)
+
+FAILURES!!!
+Tests run: 2,  Failures: 2
+

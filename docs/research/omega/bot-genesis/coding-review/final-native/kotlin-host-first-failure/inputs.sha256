@@ -1,0 +1,10 @@
+6ed5c34165be92a1d050cdfd4a40b0834726f3f682f63641485130d3175277d2  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/chief/ChiefBotHandoff.kt
+aafe16f7787ade779b658b63063d723844a10ecdd45f508b5f9eef0ba5162e28  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt
+2634eccce83eecf296004336b7b4a24b21e8554cfd9afada81daf60ecfed209c  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt
+9f62e6177716f6d9ba2244ae44656ef951e9ebca5d08b493e4d57b0e51715043  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt
+aa2c194385182021b1831f3b78b18584d70776e9ea640cebb7f450d3f8c004cf  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/routines/ContinuumRoutines.kt
+6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt
+567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt
+2568f0931b58d7733457a8602f5db61d804fb6f6fb7461894a31ecd0de54a3d0  /workspace/genesis-g04-source/tools/genesis-workspaces/HandoffHostChecks.kt
+253c49fa5a062eed636adcdd9640b15b6d268a5f83a92a316a9fc1d30ce26271  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt
+60437408f411e7435825930a400b012f16decb79898d9d6743e4adfb651693c1  /workspace/genesis-g04-source/app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt

@@ -1,0 +1,107 @@
+[
+  {
+    "path": "builder/coding-jobs/b6c08392-1f45-4614-9191-bdcceb6647ef.json",
+    "bytes": 2379,
+    "sha256": "7e35519d40bb8a4141f3fb001518b962cd65eff468192a2dd70e7d70b159b9d4"
+  },
+  {
+    "path": "coding-evidence/genesis-known-u03/b6c08392-1f45-4614-9191-bdcceb6647ef/request-1.json",
+    "bytes": 2920,
+    "sha256": "888d7746d67312337240bdcb8681e1e85fc57044780fafeaad04e535f1a33b7a"
+  },
+  {
+    "path": "coding-evidence/genesis-known-u03/bot-report-d306bcfc2eba945acdb080dd5214c51e4052583431f2cb3082f3e1ca8f3622af.json",
+    "bytes": 1194,
+    "sha256": "68cced472acce12e1c28169dde515c303bc2d6cc5b562e65cd187326f3bc5640"
+  },
+  {
+    "path": "coding-grants/genesis-known-u03.json",
+    "bytes": 580,
+    "sha256": "2053369ead27f74d1dcd6a2f164fe4385071ee383468b39103f02b1f367fd8a5"
+  },
+  {
+    "path": "experience.jsonl",
+    "bytes": 11409,
+    "sha256": "3734024eae12191da0968cf1afe40fd9e06e9ed4b631d82d8e47ad4612a6bdad"
+  },
+  {
+    "path": "tasks/t-101718f341e89f76.jsonl",
+    "bytes": 6935,
+    "sha256": "a5bf852676120cda35c24bd769973fd28d2ec74cf7533900b2c0abe9fb610602"
+  },
+  {
+    "path": "teamleader/development-backlog.json",
+    "bytes": 3179,
+    "sha256": "31238940c7cb991d12deb15d03d3dda8fe1621336899c13d1b1e10c3079e8180"
+  },
+  {
+    "path": "teamleader/development-backlog.json.bak",
+    "bytes": 1189,
+    "sha256": "cba34243527c6b1592d5e5dd894f17879265cb5c70f72764291c0a23345a0d70"
+  },
+  {
+    "path": "teamleader/repair-ledger.json",
+    "bytes": 1396,
+    "sha256": "b1d27e0d829740d08be3091ce26942c0b2544f991f4b7f36a0a64f1990636af4"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/candidate-independent-1/candidate.patch",
+    "bytes": 303,
+    "sha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/candidate-independent-1/green/isolated-f169e38bae2537f162c7/TEST-0.xml",
+    "bytes": 350,
+    "sha256": "9c435d5c87f3a15ecac5c862200edf7d4caac13f7cee31aa26865456a90d0622"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/candidate-independent-1/red/isolated-8f6af0c404d497d820a8/TEST-0.xml",
+    "bytes": 1268,
+    "sha256": "d069a94d654cc00ce495d6758f820050e819adc6023077340f30e2b735a77abb"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/candidate-independent-1/verification.json",
+    "bytes": 9171,
+    "sha256": "497bcd6b1e1cbd9c1dd0af3748708a7baf166c55a089140006c334a33c230b8e"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/independent-check/isolated-d54ac690eb10eefe7c1f/TEST-0.xml",
+    "bytes": 350,
+    "sha256": "32d71cdf4b1ef2c17ea5b6d6d95b65ad5b68c0ca6b49fc609178eeeb74fd9f0e"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/independent-check/verification.json",
+    "bytes": 2303,
+    "sha256": "eba73660bb26b00de9bfec12656a9f17d613ebc3d0cd7c97858173d643b57701"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/isolated-451ed33b57a916f79326/TEST-0.xml",
+    "bytes": 350,
+    "sha256": "e4ecdaa49cd67be83e758ed8d2be1e587ef9de965e25b7daca1ba8921b50cd70"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/isolated-9ae504eda00ce276e5a8/TEST-0.xml",
+    "bytes": 1268,
+    "sha256": "1f71d378b3bb26faad4c5937c39f0d555ded4fd73fa558b0b90ddc20837e0a98"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/repair.patch",
+    "bytes": 303,
+    "sha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/report.json",
+    "bytes": 30301,
+    "sha256": "f706fbc6f4b48e548e6047aaa921f669a118628b34912f23fb33e828c18d908b"
+  },
+  {
+    "path": "teamleader/reports/owner-repair/mob-ec67bdb041952299-ad610792fab3-1793741744514-ee205c4a/task-result.json",
+    "bytes": 2734,
+    "sha256": "ffc30a0e4df13d6f960583754de00d68ad1d6cea1189efa068c89c3146148004"
+  },
+  {
+    "path": "teamleader/teamleader-state.json",
+    "bytes": 649,
+    "sha256": "908a51b23876871d1d0ec4d548e0657dba62c3620a929dcca59a95a74ece3d6d"
+  }
+]

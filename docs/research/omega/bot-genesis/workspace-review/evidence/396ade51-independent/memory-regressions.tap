@@ -1,0 +1,62 @@
+✔ experience journal refuses complete JSON without newline as uncertain torn append (3.436635ms)
+✔ experience journal validates sequence independently of rehashed bytes (1.118124ms)
+✔ experience journal rejects an oversized record before publication (1.645778ms)
+✔ experience journal refuses a held cross-process writer lease (2001.119633ms)
+✔ experience journal refuses symlink storage (2.553435ms)
+✔ experience journal enforces record and byte hard bounds (63.63483ms)
+✔ experience journal rejects blank lines and duplicate tasks even with recomputed hashes (1.70658ms)
+✔ CONTRACT_TEST signed fixture survives a genuine fresh Node process restart (108.404694ms)
+✔ unbranded observations and copied success flags cannot be admitted (5.113705ms)
+✔ legacy successful terminal records do not become technical proof (4.546405ms)
+✔ CONTRACT_TEST replay rejects substituted source SHA (5.13327ms)
+✔ CONTRACT_TEST replay rejects substituted model/source (9.70588ms)
+✔ CONTRACT_TEST replay rejects substituted model/task (8.913333ms)
+✔ CONTRACT_TEST replay rejects substituted model/request (14.864733ms)
+✔ CONTRACT_TEST replay rejects substituted model/output (5.743228ms)
+✔ CONTRACT_TEST replay rejects substituted model/identity (4.44291ms)
+✔ CONTRACT_TEST replay rejects substituted model/proposal (4.314537ms)
+✔ CONTRACT_TEST replay rejects substituted verifier/patch (4.886828ms)
+✔ CONTRACT_TEST replay rejects substituted verifier/task (4.732015ms)
+✔ CONTRACT_TEST replay rejects substituted missing verification (5.074532ms)
+✔ CONTRACT_TEST replay rejects substituted missing diagnostics (3.842947ms)
+✔ CONTRACT_TEST replay rejects substituted missing RED (3.684348ms)
+✔ CONTRACT_TEST replay rejects substituted receipt (4.573907ms)
+✔ CONTRACT_TEST replay rejects substituted journal head (3.508023ms)
+✔ CONTRACT_TEST replay rejects substituted permission promotion (4.050189ms)
+✔ CONTRACT_TEST replay rejects substituted evidence class (3.563316ms)
+✔ CONTRACT_TEST replay rejects substituted future time (2.872505ms)
+✔ CONTRACT_TEST replay rejects substituted unbounded age (3.681143ms)
+✔ hash-chain recomputation does not replace the runtime proof MAC (3.204415ms)
+✔ wrong runtime key cannot authenticate persisted proof or canonical journal (2.936933ms)
+✔ revocation persists and is consulted by the next fresh recall (4.168517ms)
+✔ forged revocations block recall instead of being silently ignored (4.933018ms)
+✔ deleted current canonical grant fails closed even with valid historical proof (2.607757ms)
+✔ canonical journal corruption and torn experience tail fail closed (3.179287ms)
+✔ freshness and exact repository/source/file scope are enforced (5.332159ms)
+✔ no partial historical proof is emitted when it exceeds context budget (10.933233ms)
+(node:292951) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:292951) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+(node:292951) [TECHNICAL_REVOCATION_MIRROR_UNAVAILABLE] Warning: Technical experience withdrawal committed; experience ledger mirror unavailable.
+✔ real concurrent child writers preserve every task exactly once (163.501458ms)
+✔ a terminated process leaves an uncertain writer lease, never automatic stale recovery (2033.141314ms)
+✔ requesting task needs its own current canonical grant and authenticated owner GOAL (7.460001ms)
+✔ a full 4096-record ledger cannot block durable withdrawal (92.05229ms)
+✔ a full byte-budget ledger cannot block withdrawal or exceed the bound (322.907165ms)
+✔ canonical withdrawal survives ledger-tail truncation and rehashed tombstone stripping (7.78495ms)
+✔ withdrawal reaches canonical grant even if experience ledger is already damaged (5.332475ms)
+✔ process-only or mutable observations cannot enter model-derived technical strategy tier (8.813367ms)
+✔ signed process-only historical proof remains ineligible for technical strategy recall (4.619929ms)
+✔ withdrawal refuses to overwrite a concurrently changed canonical grant (3.584271ms)
+✔ uncertain post-rename fsync error stays withdrawn and idempotent retry reasserts durability (5.589412ms)
+✔ real concurrent withdrawing processes keep one canonical anchor and one mirror (273.724067ms)
+✔ a real killed withdrawal leaves its lease blocking recall rather than recovering stale eligibility (114.398688ms)
+✔ historical canonical withdrawal is checked independently of a different authorized requesting grant (14.744337ms)
+ℹ tests 50
+ℹ suites 0
+ℹ pass 50
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3455.071295

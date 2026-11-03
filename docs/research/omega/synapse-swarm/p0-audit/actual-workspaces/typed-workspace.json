@@ -1,0 +1,202 @@
+{
+  "evidenceClass": "HOST_INTEGRATION",
+  "proposalSource": "SCRIPTED_CONTRACT_FIXTURE",
+  "actualModelInference": false,
+  "sourceCommit": "4b6d019bab96bff029471fc1bfb3260575023309",
+  "result": {
+    "schema": "continuum-coding-task-result",
+    "version": 1,
+    "id": "owner-workspace",
+    "ccc1TaskId": "t-1bae8fd6d07ab09b",
+    "taskFingerprint": "01ba88599c312e68d120e8646cfa715da5421c5500b46a37d22b88465d7c2ccb",
+    "sourceCommit": "4b6d019bab96bff029471fc1bfb3260575023309",
+    "chain": "node",
+    "status": "PATCH_PENDING_OWNER_REVIEW",
+    "receiptJobs": [
+      "04445dda-55f2-4e5b-a48e-b78e60605c78"
+    ],
+    "receipts": [
+      {
+        "schema": "continuum-mobile-coding-receipt",
+        "version": 1,
+        "job": "04445dda-55f2-4e5b-a48e-b78e60605c78",
+        "operation": "code-repair",
+        "taskId": "mob-fd59d700b47b61a9",
+        "commit": "4b6d019bab96bff029471fc1bfb3260575023309",
+        "toolchain": {
+          "node": "v24.19.0",
+          "platform": "linux",
+          "arch": "x64",
+          "git": "git version 2.52.0"
+        },
+        "order": {
+          "chain": "node"
+        },
+        "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+        "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+        "patch": {
+          "sha256": "e6c6e7b25d1c19e04ec7c8297d704e548ac8c25ca18c23194a4064524be4c568",
+          "path": "/tmp/momega1-typed-workspace-InGAOn/state/teamleader/reports/owner-repair/mob-fd59d700b47b61a9-4b6d019bab96-1793736560567-22106aa3/repair.patch",
+          "bytes": 221
+        },
+        "evidence": {
+          "verificationSha256": "6cc22af7666d6f54a033d8cf9ce99a119e0b1020794b4cb1917d0ef95aa46097",
+          "baselineFailed": 1,
+          "baselineExecuted": 1,
+          "candidateExecuted": 1,
+          "independentExecuted": 1,
+          "evidenceSufficient": true
+        },
+        "commands": [
+          {
+            "phase": "baseline",
+            "exitCode": 1,
+            "passed": false,
+            "executed": 1,
+            "failed": 1,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          },
+          {
+            "phase": "candidate",
+            "exitCode": 0,
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          },
+          {
+            "phase": "independent",
+            "exitCode": 0,
+            "passed": true,
+            "executed": 1,
+            "failed": 0,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          }
+        ],
+        "failure": null,
+        "backlog": {
+          "state": "DONE",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "error": null
+        },
+        "approvedForMerge": false,
+        "apk": null,
+        "installed": false,
+        "deviceVerified": false,
+        "createdAt": "2026-11-03T20:09:20.532Z",
+        "repair": {
+          "outcome": "VERIFIED",
+          "strategy": "LOCAL_SCOPED_PATCH",
+          "files": [
+            "lib/offset.mjs"
+          ],
+          "diagnostics": 1,
+          "attempts": 1
+        }
+      }
+    ],
+    "technicalExperienceStatus": "TECHNICAL_PROOF_UNAVAILABLE",
+    "technicalRecallCount": 0,
+    "approvedForMerge": false,
+    "deviceVerified": false,
+    "neuralTraining": false
+  },
+  "observations": [
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "caec74e83eec956c7086be56da587cbbe6b230030bf042223fedb59470687694",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-68ddde3a8e98c2b6c6997573",
+      "workspaceBinding": {
+        "workerId": "typed-coding-worker",
+        "taskId": "t-1bae8fd6d07ab09b",
+        "requestMessageId": "7bdd5542-f1cf-478e-8c0d-2b2bf52e7981",
+        "requestHash": "bef255ce1124aa52028576242a3b6657c8ec668a0b8de498be0429a8d6138d00",
+        "sourceCommit": "4b6d019bab96bff029471fc1bfb3260575023309",
+        "jobId": "04445dda-55f2-4e5b-a48e-b78e60605c78"
+      },
+      "observed": {
+        "containerId": "d020cd430ff6b591f848772f042c174908b204346e667fd67368cb11e7a4e12a",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    },
+    {
+      "schema": "continuum-isolation-v1",
+      "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+      "network": "none",
+      "user": "1000:1000",
+      "readOnly": true,
+      "noNewPrivileges": true,
+      "capabilities": [],
+      "memoryMb": 256,
+      "pids": 64,
+      "cpus": 1,
+      "timeoutMs": 10000,
+      "runtime": "runc",
+      "sourceSha256": "7d68d89f928ca6514eeaa57dcb691dc55f3a45d5e691c8f25f5201b609157b70",
+      "profile": "node-continuum",
+      "untrustedReports": true,
+      "workspaceId": "continuum-eb1723ade0a31ec2969461a5",
+      "workspaceBinding": {
+        "workerId": "typed-coding-worker",
+        "taskId": "t-1bae8fd6d07ab09b",
+        "requestMessageId": "7bdd5542-f1cf-478e-8c0d-2b2bf52e7981",
+        "requestHash": "bef255ce1124aa52028576242a3b6657c8ec668a0b8de498be0429a8d6138d00",
+        "sourceCommit": "4b6d019bab96bff029471fc1bfb3260575023309",
+        "jobId": "04445dda-55f2-4e5b-a48e-b78e60605c78"
+      },
+      "observed": {
+        "containerId": "811064c5067e30d58b914b4e9cfb78a221656265ec9ce9004166cbc07d282f1d",
+        "runtime": "runc",
+        "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+        "user": "1000:1000",
+        "network": "none",
+        "readOnly": true,
+        "memoryBytes": 268435456,
+        "memorySwapBytes": 268435456,
+        "nanoCpus": 1000000000,
+        "pids": 64,
+        "capDrop": [
+          "ALL"
+        ],
+        "securityOpt": [
+          "no-new-privileges:true"
+        ],
+        "writableHostMounts": 0
+      },
+      "teardownConfirmed": true
+    }
+  ]
+}

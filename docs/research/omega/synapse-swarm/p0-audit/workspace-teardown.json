@@ -1,0 +1,15 @@
+{
+  "command": [
+    "docker",
+    "--host=unix:///var/run/docker.sock",
+    "ps",
+    "-a",
+    "--filter",
+    "label=continuum.workspace-job",
+    "--format",
+    "{{.ID}} {{.Names}}"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

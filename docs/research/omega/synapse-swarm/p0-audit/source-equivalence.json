@@ -1,0 +1,61 @@
+{
+  "workspaceReview8abaTo713": {
+    "command": [
+      "git",
+      "diff",
+      "--name-only",
+      "8aba17c6",
+      "713949a",
+      "--",
+      ".github/continuum/ccc1-workspace.mjs",
+      ".github/continuum/isolated-executor.mjs",
+      ".github/continuum/backlog-repair-worker.mjs",
+      "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkspaceWiring.kt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "androidReview037To713": {
+    "command": [
+      "git",
+      "diff",
+      "--name-only",
+      "037370f0",
+      "713949a",
+      "--",
+      "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "poolChiefTo713": {
+    "command": [
+      "git",
+      "diff",
+      "--name-only",
+      "efe622dd",
+      "713949a",
+      "--",
+      "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "prospectiveMerge": {
+    "command": [
+      "git",
+      "merge-tree",
+      "--write-tree",
+      "efe622dd",
+      "713949a"
+    ],
+    "exit": 0,
+    "stdout": "ecc41a7831df668107243d23ebf46c543768dedd",
+    "stderr": ""
+  }
+}

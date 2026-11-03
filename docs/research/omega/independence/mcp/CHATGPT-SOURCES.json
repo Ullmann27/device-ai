@@ -1,0 +1,26 @@
+{
+  "retrievedDateUTC": "2026-11-03",
+  "purpose": "Public documentation verification only; no connector/tunnel created and no credentials supplied",
+  "sources": [
+    {
+      "url": "https://developers.openai.com/plugins/deploy/connect-chatgpt.md",
+      "sha256": "979f47ad47e83757f8bd9fca5cbd898d7e9a1fb0d534b6021e3031f6207a224a",
+      "bytes": 6610
+    },
+    {
+      "url": "https://developers.openai.com/plugins/build/auth.md",
+      "sha256": "c2e577b84eb0b1eb6ce404f4b5a2d3d0c052f2a4bac836c2feee0af86b7d47b0",
+      "bytes": 40182
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/secure-mcp-tunnels.md",
+      "sha256": "f36128c6166b7129e9d5dbb1046b5598b18c4dc23c346c3e683450d3df5cb2cb",
+      "bytes": 21777
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/mcp.md",
+      "sha256": "26abbf8bbc561d1ac80d290b6aa6ac3c121591587e136a3bde91a0e7bc437ca3",
+      "bytes": 30880
+    }
+  ]
+}

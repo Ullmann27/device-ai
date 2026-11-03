@@ -28,3 +28,26 @@ Fresh working checkout is being acquired. GitHub connector and public git read s
 
 ## Continuation
 Read the latest version of this document and both upstream handoffs before acting. Preserve exact failing runs. Never infer successful device execution from a synthetic test, a UI effect, a saved receipt or an earlier source's result.
+
+## Integration checkpoint (2026-11-03, overnight continuation)
+
+The two exact owner-provided heads have been merged locally. The newer PR410 avatar rig, mouth mapping, head/eye motion, bloom and lifecycle checks are retained byte-for-byte. PR456 supplies persistent bot profiles, private conversations, delegation, the independent coding service and its read-only MCP surface. The consumed S01 fixture is not replayed; the unresolved execution barrier is not changed or cleared.
+
+Normal phone/Fold layouts retain the PR410 reference composition. PR456's adaptive cards are connected only for enlarged fonts above 1.3 or narrow windows from 240 to below 320 dp. A single HomeView geometry selection is shared with the Activity so chat/home transitions cannot switch adaptive views into the reference portrait renderer. The same hologram/director remains in use.
+
+Verification so far is preliminary and is not the final combined-source acceptance:
+
+- Toolchain archives were SHA256-verified; SDK36, build-tools35, JDK17, Kotlin2.4 and Gradle8.11.1 are available.
+- Actual reference geometry probe failed against the automatic layout merge and passes after reconciliation.
+- 13 pure reference/adaptive geometry and element tests passed.
+- 37 focused layout/navigation source-wiring tests passed.
+- Independent integration reviewer reports 43 focused wiring checks passed; this scope overlaps some layout wiring checks and is not added into a unique aggregate count.
+- Initial native Android product compilation and 39 targeted native UI/lifecycle tests passed with 0 failures and 0 skips. Subsequent geometry/status/large-font regression additions still require the final combined-source run.
+- Resource suite: 15 cases, 11 PASS, 4 explicit SKIP, 0 FAIL on this host. The independent test-only capability probe verifies real kernel prerequisites; production memory/CPU/isolation enforcement is unchanged. Missing success-path kernel/Docker proofs are not model or host acceptance.
+- The existing Docker workspace integration probe now scopes its observations to its own canonical workspace-job labels, avoiding unrelated parallel containers. Actual Docker execution is unavailable here and remains NOT_RUN.
+
+The existing original release endpoint still serves code39 / 0.3.38 from a9709854f48d2fd6589f9ce5ea97f6ec3be0d233. The configured publisher branch is an ancestor of this integration, so a tested commit can be fast-forwarded with an exact expected-head lease. Auto-deploy is off. No service settings, signing keys, installed data or main branch have been changed. Code40 is the next candidate, subject to a fresh live-catalog check immediately before release.
+
+Final acceptance must bind the combined immutable source: full Node/backend checks, Android JUnit including independent UI fixtures, lint, original-package unsigned build, existing original-signer release pipeline, and downloaded-byte/package/version/certificate verification. Physical Fold7, exact video likeness and the failed S01 operating proof remain separate unverified items.
+
+The independent review additionally found a status-routing bug during active bot work. The existing read-only Chief/JARVIS status branch now runs before bot conversation routing and can answer without changing the selected bot, cancellation binding or occupied model lane. Four real Activity/worker regression cases were added. Five real avatar navigation cases cover adaptive phone, wide and portrait layouts, narrow windows and the reference portrait. The adaptive action label now reserves a measured gap below its icon at the largest font size. These additions remain pending native execution at this checkpoint.

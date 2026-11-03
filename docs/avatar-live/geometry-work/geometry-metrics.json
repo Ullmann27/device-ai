@@ -1,0 +1,27 @@
+{
+  "faceVertexCount": 12980,
+  "faceTriangleCount": 25924,
+  "headTriangleCountAboveY019": 19060,
+  "headHeightMetresAboveY019": 0.20267638325691223,
+  "neutralMirrorMaxDistanceMetres": 0.0,
+  "neutralHeadMirrorMaxDistanceMetres": 0.0,
+  "neutralHeadMirrorNormalizedMaxError": 0.0,
+  "neutralHeadMirrorMeanDistanceMetres": 0.0,
+  "openBoundaryEdges": 0,
+  "nonManifoldEdgesOverTwoFaces": 0,
+  "degenerateTriangles": 0,
+  "boundsMetres": {
+    "min": [
+      -0.25803142786026,
+      -2.887162224851636e-07,
+      -0.058718241751194
+    ],
+    "max": [
+      0.25803142786026,
+      0.39267638325691223,
+      0.16772781312465668
+    ]
+  },
+  "method": "Nearest mirrored neutral vertex in canonical coordinates, head subset Y>0.19m, error normalized by that subset height. Includes a complete vertex mirror map.",
+  "collisionStatus": "No exhaustive collision proof; neutral/blink/speech visual inspection and independent challenger remain required."
+}

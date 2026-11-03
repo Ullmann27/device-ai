@@ -1,0 +1,62 @@
+{
+  "integratedSource": "fd743adce297c0958aadce1576b80580817837f0",
+  "integratedTree": "3817f035020ce7746cb45f29ee461d56c8dd97c4",
+  "qaRunnerSha256": "34f345939d3492063b8efe68d621a6142399573da739437f18de7fb27dd243ea",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "genesis-g03",
+      "sourceCommit": "d5b2d2c3d62f07cda18b531f2532da0bdb634121",
+      "kind": "BUGFIX",
+      "goal": "isWithinPath(candidate, root) must return true exactly when candidate is root itself or a descendant by complete path components. Inputs are normalized nonempty relative POSIX paths without dot or empty components and without trailing slashes. Comparison is case-sensitive; a sibling whose name merely begins with root is not a descendant.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "isWithinPath(candidate, root) must return true exactly when candidate is root itself or a descendant by complete path components. Inputs are normalized nonempty relative POSIX paths without dot or empty components and without trailing slashes. Comparison is case-sensitive; a sibling whose name",
+        "merely begins with root is not a descendant."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 2,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "g03",
+    "sourceSha256": "6019ac4267d2a64bbfebb657235a69980756662099bda126fc015f9f8b184d71",
+    "frozenTestSha256": "3c6bb0f186843a878d1235c3c642d2cf62f42ab302acfa0c84dfabce4e2b0ea2",
+    "materializedTestSha256": "3c6bb0f186843a878d1235c3c642d2cf62f42ab302acfa0c84dfabce4e2b0ea2",
+    "transformation": "File paths materialized only; assertions, imports and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "d0a8dbed514f8f08fe3775972fd519290d86ee26f5aa8427c66fd3bea2e2bd2c",
+  "fixtureTree": "d4a2787cb0b88baaae1f33c3df24fbe98c73ab07",
+  "freezeManifestSha256": "de03def3edee6d3a86228b587fb0dcc45e5d80047a9f17000ed31b605ee0988e",
+  "configuration": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME": "llama.cpp",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT": "gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_SHA256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL": "OWNER_APPROVED_ALTERNATE_GGUF",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "/workspace/synapse-local-model/model-pin.json",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND": "LLAMA_CPP",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "/workspace/genesis-a0-experiment/isolation.json"
+  },
+  "fileHashes": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+    "CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b",
+    "CONTINUUM_CODING_ISOLATION_CONFIG": "5f97ba4c52712414d4fcf7588c62b80de2b10fb34d98a65d92fde0c52e920594"
+  },
+  "technicalRecallEnabled": false,
+  "inheritedState": null,
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T21:00:55.826Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}

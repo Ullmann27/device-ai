@@ -23,7 +23,7 @@ object ContinuumPreviewMain {
         layout[ContinuumHomeLayout.Slot.HERO]?.let { box ->
             val renderer = ContinuumHologramRenderer()
             renderer.geometry = when {
-                layout[ContinuumHomeLayout.Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+                !layout.adaptive && layout[ContinuumHomeLayout.Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
                 layout.wide -> ContinuumHologramRenderer.Geometry.FOLD
                 else -> ContinuumHologramRenderer.Geometry.PHONE
             }

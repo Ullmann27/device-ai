@@ -1,0 +1,14 @@
+{
+  "schema": "independence-s01-materialization-v1",
+  "repository": "/workspace/independence-s01-experiment/fixture",
+  "commit": "866678a7ac757b734276d8cf857c5b4d6d4afb41",
+  "tree": "cf49e839c1534c938ff43814161d92a751845016",
+  "status": "",
+  "freezeManifestSha256": "0b20c64e441b40d50a659c7dd231f9215138b5e1451a4b4dfce581b5abb0fd27",
+  "sourceSha256": "6a7234f12a390636bca6ef61a981ffb78f6e1ea4d909472a1a3d2c079cb5333b",
+  "ownerTestSha256": "c7add227a67e4ff0a638397780180aa123d1caa425af65a479d12e63cef1c965",
+  "independentTestSha256": "87d59c6ba8fbea1e6becd1106fb3f12997d03671a1ed3c573848155915f71432",
+  "testTransformation": "Only relative import from ./subject.mjs to ../../lib/subject.mjs",
+  "independentTestsInOwnerRepository": false,
+  "modelCalls": 0
+}

@@ -1,0 +1,13 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "scripts/continuum-local-model-observation.test.mjs"
+  ],
+  "exit": 0,
+  "elapsedSeconds": 2.1917593479156494,
+  "evidenceClass": "HOST_INTEGRATION; fixed-output ELF, no neural inference"
+}
