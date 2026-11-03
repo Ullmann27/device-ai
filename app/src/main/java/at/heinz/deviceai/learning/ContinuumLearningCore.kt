@@ -616,6 +616,13 @@ class ContinuumLearningCore(
     }
 
     /** Owner statements that are stored but deliberately NOT confirmed facts (hypothetical, uncertain, ...). */
+    /** Read-only: every owner statement (confirmed, held, revoked) with its confirmability, oldest first. */
+    internal fun ownerStatementHistory():List<Pair<LearningExperience,Boolean>> = synchronized(CORE_LOCK) {
+        store.all().filter { it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED }
+            .sortedWith(compareBy<LearningExperience> { it.createdAt }.thenBy { it.id })
+            .map { it to (it.status!=LearningStatus.OBSERVED && confirmable(it)) }
+    }
+
     fun unconfirmedOwnerStatements():List<LearningExperience> = synchronized(CORE_LOCK) {
         store.all().filter { it.type==LearningExperienceType.USER_FACT && it.status==LearningStatus.OBSERVED &&
             it.trust==LearningTrustClass.OWNER_CONFIRMED }
