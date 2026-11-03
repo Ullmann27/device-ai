@@ -150,7 +150,6 @@ class FirstThinkingRunE2ETest {
     }
 
     // ------------------------------------------------------------ 3 Erinnern
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt3_erinnern_relevantesGedaechtnisErreichtJedenModellschritt() {
         assertTrue(yes.modelSawMemoryIds.isNotEmpty())
@@ -166,7 +165,6 @@ class FirstThinkingRunE2ETest {
     }
 
     // ------------------------------------------------------------ 4 Handeln
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt4a_handeln_nein_riskanteAktionLaeuftNie() {
         assertEquals(listOf("move_file" to Risk.CONFIRM), no.approvalsAsked)       // nur die riskante Aktion fragt
@@ -178,7 +176,6 @@ class FirstThinkingRunE2ETest {
         assertTrue(CognitiveWorkState.WAITING_FOR_APPROVAL in states)
     }
 
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt4b_handeln_ja_genauEineAusfuehrungNachFreigabe() {
         assertEquals(listOf("move_file" to Risk.CONFIRM), yes.approvalsAsked)
@@ -208,7 +205,6 @@ class FirstThinkingRunE2ETest {
     }
 
     // ------------------------------------------------------------ 5 Pruefen
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt5_pruefen_nurFrischeBeobachtungGiltAlsVerifiziert() {
         assertTrue(yes.result.taskEvidence!!.evaluatorSucceeded)
@@ -222,7 +218,6 @@ class FirstThinkingRunE2ETest {
     }
 
     // ------------------------------------------------------------ 6 Lernen
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt6_lernen_erfahrungWirdGespeichertAberNieAlsFaktImGedaechtnis() {
         val learned = yes.experiences.all().single()
@@ -257,7 +252,6 @@ class FirstThinkingRunE2ETest {
     }
 
     // ------------------------------------------------------------ 7 Naechster Schritt
-    @Ignore("S4 zu streng, B5")
     @Test
     fun schritt7_naechsterSchritt_rundeEndetSauberUndDerNaechsteDurchlaufIstSofortMoeglich() {
         assertEquals(AgentState.RESPOND, yes.result.state)
@@ -274,7 +268,6 @@ class FirstThinkingRunE2ETest {
 
     // ------------------------------------------------------------ Gesamte Kette
     /** Die ganze Kette in einem Durchlauf (Ja-Fall) – das Sprint-Ziel, soweit heute echt pruefbar. */
-    @Ignore("S4 zu streng, B5")
     @Test
     fun ersterDenkDurchlauf_ganzeKette_jaFall() {
         val s = yes.events.map { it.state }
