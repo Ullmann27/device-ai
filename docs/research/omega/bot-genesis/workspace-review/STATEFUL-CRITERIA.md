@@ -66,3 +66,14 @@ fixtures, then use controlled latches/process restarts and actual canonical host
 integration where available. No heavy build/container/model run during Chief's
 reserved local-inference window. Preserve all failures and exact source hashes.
 No expected success claim from the Builder is an independent test result.
+
+## Explicit fixture schema adjustment after first static review
+
+At source b66534f0 the implementation lacked canonical stage-sender mapping and
+profile-cap checks. The builder accepted these findings before executable review.
+The 22 original fixture outcomes/mutations remain unchanged. Their positive fixture
+now carries an explicit fixed trusted `stageSenders` mapping and per-profile budget,
+so the stricter API can be tested without inventing authority from the message.
+`B22`–`B27` supplement these with registered-but-unassigned sender, separate profile
+caps, missing sender authority and message-provided authority spoofing. These are
+independent admission counterexamples, not a new unknown intelligence benchmark.
