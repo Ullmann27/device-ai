@@ -18,7 +18,7 @@ const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const navigation=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
 const preview=read('tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/ContinuumPreviewMain.kt');
 
-// The owner-approved ZETA redesign supersedes the former scaled840dp 3×2 rectangles.
+// The owner-requested adaptive redesign supersedes the former scaled840dp 3×2 rectangles.
 // These are source-wiring contracts; Kotlin geometry and native widget/ink tests provide pixel evidence.
 test('portrait selection keeps actual Fold window threshold and separate landscape rail',()=>{
  assert.match(layout,/fun isPortraitFold\(widthDp: Float, heightDp: Float\)/);
