@@ -1461,9 +1461,25 @@ class AgentActivity : Activity() {
     private fun showBotRoster() {
         val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             botProfiles, backlogExecutor,
-            onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus
+            onSelect = { selectBot(it.agentId) }, runtimeStatus = ::botRuntimeStatus,
+            onContextChanging = ::botContextChanging
         ).also { botRosterDialog = it }
         roster.show()
+    }
+
+    private fun botContextChanging(agentId: String) {
+        if (selectedBot?.agentId != agentId) return
+        // Invalidate synchronously before an owner edit is queued, not after its disk write.
+        // This closes the gap between a worker's strict read and the UI's display callback.
+        botConversation.invalidate()
+        voiceEngine?.stop(); stopVoiceAnimation()
+        if (activeBotId == agentId) {
+            activeChatCancellation?.cancel()
+            activeLocalStreamToken?.let { clearLocalStreamPreview(it) }
+            localRuntime.cancel()
+        }
+        chatContainer.removeAllViews()
+        addBubble("Bot-Kontext wird geändert. Bitte den Bot danach erneut auswählen.", false)
     }
 
     private fun botRuntimeStatus(profile: at.heinz.deviceai.chief.ChiefBotProfile): String {
@@ -1613,6 +1629,7 @@ class AgentActivity : Activity() {
                 check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) { "BOT_TOOL_NOT_AUTHORIZED" }
                 check(generated.response.isNotBlank()) { "BOT_EMPTY_RESPONSE" }
                 check(botConversation.complete(turn, generated.response, localRuntime.loadedModel, sessionId)) { "BOT_STALE_TURN" }
+                check(botConversation.isCurrent(turn, localRuntime.loadedModel, sessionId)) { "BOT_STALE_PRESENTATION" }
                 generated.response
             }
             runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result) }
@@ -1632,7 +1649,7 @@ class AgentActivity : Activity() {
         }
         val uncancelled = runCatching { cancellation.throwIfCancelled() }.isSuccess
         val current = uncancelled && selectedBot?.agentId == profile.agentId && sessionId == turnSession &&
-            (activeBotTurn?.let { botConversation.isCurrent(it, localRuntime.loadedModel, sessionId) } ?: result.isFailure)
+            (activeBotTurn?.let { botConversation.isPresentationBound(it, localRuntime.loadedModel, sessionId) } ?: result.isFailure)
         activeBotTurn?.let(botConversation::cancel)
         activeBotTurn = null; activeBotId = null
         activeChatCancellation = null; activeLocalRequest = false
@@ -8795,6 +8812,7 @@ class AgentActivity : Activity() {
         }
         selectedBot?.let { profile ->
             if (botLookupPending || backlogExecutor.isShutdown) return
+            botContextChanging(profile.agentId)
             botLookupPending = true
             val revision = ++botLookupRevision
             try { backlogExecutor.execute {

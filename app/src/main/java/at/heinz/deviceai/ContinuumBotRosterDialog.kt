@@ -25,7 +25,8 @@ class ContinuumBotRosterDialog(
     private val store: ChiefBotProfileStore,
     private val io: Executor,
     private val onSelect: ((ChiefBotProfile) -> Unit)? = null,
-    private val runtimeStatus: ((ChiefBotProfile) -> String)? = null
+    private val runtimeStatus: ((ChiefBotProfile) -> String)? = null,
+    private val onContextChanging: ((String) -> Unit)? = null
 ) {
     private var dialog: AlertDialog? = null
     private var revision = 0L
@@ -180,7 +181,9 @@ class ContinuumBotRosterDialog(
             body.addView(editor)
             val save = action("Arbeitsnotiz speichern") {}
             save.setOnClickListener {
+                if (!live(token)) return@setOnClickListener
                 save.isEnabled = false
+                onContextChanging?.invoke(profile.agentId)
                 val text = editor.text.toString()
                 load(token, body, {
                     // Principal is selected by this trusted owner UI, never parsed from model text.
@@ -210,8 +213,10 @@ class ContinuumBotRosterDialog(
         val token = open("${profile.displayName} · Name", body)
         val save = action("Name speichern") {}
         save.setOnClickListener {
+            if (!live(token)) return@setOnClickListener
             if (name.text.isBlank()) { name.error = "Bitte einen Namen eingeben"; return@setOnClickListener }
             save.isEnabled = false
+            onContextChanging?.invoke(profile.agentId)
             val value = name.text.toString()
             load(token, body, { store.rename(profile.agentId, value, profile.profileVersion) }) {
                 showProfile(it.agentId)
@@ -250,10 +255,12 @@ class ContinuumBotRosterDialog(
         val token = open("${profile.displayName} · Rollenprofil", body)
         val save = action("Rollenprofil speichern") {}
         save.setOnClickListener {
+            if (!live(token)) return@setOnClickListener
             if (role.text.isBlank() || style.text.isBlank()) {
                 role.error = "Bitte Fachgebiet und Arbeitsstil ausfüllen"; return@setOnClickListener
             }
             save.isEnabled = false
+            onContextChanging?.invoke(profile.agentId)
             val roleText = role.text.toString()
             val styleText = style.text.toString()
             load(token, body, {
