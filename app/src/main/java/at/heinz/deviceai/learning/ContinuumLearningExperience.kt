@@ -103,6 +103,14 @@ class FileLearningExperienceStore(private val directory:File) {
     private val primary=File(directory,"experiences-v2.bin")
     private val backup=File(directory,"experiences-v2.lkg")
     private val lex3=Lex3LearningExperienceStore(directory)
+    private data class ReplaySelection(
+        val fingerprint:String,
+        val type:LearningExperienceType,
+        val records:List<LearningExperience>
+    )
+    // Derived, instance-local and accessed only under FILE_LOCK. Retain at most 128 records,
+    // not a decoded ledger. Every reuse still validates the primary and every LEX3 segment.
+    private var replaySelection:ReplaySelection?=null
 
     fun all():List<LearningExperience> = transaction() { loadValidated() }
 
@@ -110,17 +118,20 @@ class FileLearningExperienceStore(private val directory:File) {
      * fingerprint differs from [knownFingerprint]. Content-keyed (not mtime/length), so a rewrite that keeps
      * mtime and size is still detected. Same integrity validation as [all]; LEX3 also checks every referenced segment. */
     internal fun snapshotIfChanged(knownFingerprint:String?):Pair<String, List<LearningExperience>?> =
-        transaction() {
-            if(!primary.exists()) {
-                check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
-                return@transaction ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
-            }
-            val bytes=readPrimary()
-            if(Lex3LearningExperienceStore.isManifest(bytes)) return@transaction lex3.snapshot(bytes,knownFingerprint)
-            val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
-                .joinToString("") { "%02x".format(it) }
-            fingerprint to (if(fingerprint==knownFingerprint) null else LearningExperienceCodec.decode(bytes))
+        transaction() { snapshotUnderLease(knownFingerprint) }
+
+    /** Caller holds the existing transaction; never acquire a nested OS file lock. */
+    private fun snapshotUnderLease(knownFingerprint:String?):Pair<String,List<LearningExperience>?> {
+        if(!primary.exists()) {
+            check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
+            return ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
         }
+        val bytes=readPrimary()
+        if(Lex3LearningExperienceStore.isManifest(bytes)) return lex3.snapshot(bytes,knownFingerprint)
+        val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
+            .joinToString("") { "%02x".format(it) }
+        return fingerprint to (if(fingerprint==knownFingerprint) null else LearningExperienceCodec.decode(bytes))
+    }
 
     fun append(experience:LearningExperience):Boolean = transaction(write=true) {
         val current=loadValidated()
@@ -218,13 +229,21 @@ class FileLearningExperienceStore(private val directory:File) {
     fun replay(type:LearningExperienceType,limit:Int=64):List<LearningExperience> =
         transaction() {
             require(limit in 1..128)
-            loadValidated().sortedWith(compareBy<LearningExperience> { it.updatedAt }
+            val cached=replaySelection?.takeIf { it.type==type }
+            // Drop the prior selection before reading: any integrity failure leaves no reusable entry.
+            replaySelection=null
+            val (fingerprint,changed)=snapshotUnderLease(cached?.fingerprint)
+            val records=if(changed==null) checkNotNull(cached).records else
+                changed.sortedWith(compareBy<LearningExperience> { it.updatedAt }
                 .thenBy { it.createdAt }.thenBy { it.id }).asReversed().asSequence()
                 .filter { it.type==type && it.status in setOf(
                     LearningStatus.OBSERVED,LearningStatus.CONFIRMED,
                     LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING
                 ) }
-                .take(limit).toList().asReversed()
+                .take(128).toList().asReversed()
+            replaySelection=ReplaySelection(fingerprint,type,records)
+            // Never expose the cached list (including when the requested limit is its full size).
+            records.takeLast(limit)
         }
 
     fun stats():LearningExperienceStats {
@@ -311,6 +330,7 @@ class FileLearningExperienceStore(private val directory:File) {
      * Read-only probes of a nonexistent store do not create it. Parent directories remain app-private.
      */
     private fun <T> transaction(write:Boolean=false,block:()->T):T = synchronized(FILE_LOCK) {
+        if(write)replaySelection=null
         if(!directory.exists()) {
             if(!write)return@synchronized block()
             check(directory.mkdirs() || directory.isDirectory) { "Cannot create learning-core directory" }

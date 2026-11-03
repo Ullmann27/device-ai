@@ -1,0 +1,35 @@
+{
+  "source_sha": "a6007442768b24f5aa700c61dae7c46049c1911a",
+  "tracked_status": "",
+  "source_hashes": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt": "fa48bd2ef74caa41efee6cc64f3f3de58b25f7aa6e27d4dca24ee6ff94346665",
+    "app/src/main/java/at/heinz/deviceai/learning/Lex3LearningExperienceStore.kt": "54f0ccaffa01f27541c0542004b32f846d96ece339f0616114d77f6e21884ffa",
+    "app/src/main/java/at/heinz/deviceai/learning/PersonalLearningTransfer.kt": "f1e59e100cace3815b019acceb4b1acc7b8b01abd74ae21ecdb2fd4dc4fa9296",
+    "app/src/test/java/at/heinz/deviceai/learning/LearningExperienceStoreTest.kt": "37c4a31a67ba4a30d107e353077a8d706ecf9811e8b2683e6e2a1ba919dfcc42",
+    "app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt": "f5532c054908370c25f9b827bafca0ac6a2c9243d1fdc03c4c45a3131007bb90",
+    "app/src/test/java/at/heinz/deviceai/learning/PersonalLearningTransferTest.kt": "ce2a7c2cf9cd98e92170a520d68157af8c8adc1575c6d1b20e067bb3063b135f",
+    "app/src/test/java/at/heinz/deviceai/learning/HistoricalLearningLedgerTest.kt": "7c6583fa747dd9716517aa22ec4f4e98ea2bb34467842d6adf30cb7924d7fe70",
+    "app/src/test/java/at/heinz/deviceai/learning/LearningExperienceReplayCacheTest.kt": "a18a97611612eda7c1c5c1812054ebb95aab3ae6b8843124cfb5ef33f181227d",
+    "docs/evidence/breakthrough-memory-20261103/ReplayBenchmark.kt": "75c0ce3abbd0eedd9328d56b8032f95976aabef22f58ba710a865579c4d7a228"
+  },
+  "runs": [
+    {
+      "name": "compile",
+      "exit": 0,
+      "seconds": 18.2342366769999,
+      "peak_child_rss_kib": 545308
+    },
+    {
+      "name": "focused",
+      "exit": 0,
+      "seconds": 11.247516610000275,
+      "peak_child_rss_kib": 373924
+    },
+    {
+      "name": "benchmark",
+      "exit": 0,
+      "seconds": 10.489195138000014,
+      "peak_child_rss_kib": 187952
+    }
+  ]
+}

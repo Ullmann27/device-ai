@@ -1,0 +1,33 @@
+95516 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+95534 +++ exited with 0 +++
+95516 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_ACCERR, si_addr=0x7faa0d449000} ---
+95516 fsync(18)                         = 0
+95516 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-matching/experiences-v3/lex3-17058696829419012213.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-matching/experiences-v3/2edf8f78646cc1f626537a8c7c277cbcc08a7e7db8367cc1a07e83e729be22d4.seg") = 0
+95516 fsync(18)                         = 0
+95516 fsync(18)                         = 0
+95516 rename("/tmp/breakthrough-memory-durability-a6007442/fixture-matching/lex3-841842603176294391.tmp", "/tmp/breakthrough-memory-durability-a6007442/fixture-matching/experiences-v2.bin") = 0
+95516 fsync(18)                         = -1 EIO (Input/output error) (INJECTED)
+95516 fsync(18)                         = 0
+95516 fsync(18)                         = 0
+95532 +++ exited with 0 +++
+95520 +++ exited with 0 +++
+95521 +++ exited with 0 +++
+95518 +++ exited with 0 +++
+95525 +++ exited with 0 +++
+95522 +++ exited with 0 +++
+95516 +++ exited with 0 +++
+95557 +++ exited with 0 +++
+95535 +++ exited with 0 +++
+95529 +++ exited with 0 +++
+95527 +++ exited with 0 +++
+95526 +++ exited with 0 +++
+95530 +++ exited with 0 +++
+95524 +++ exited with 0 +++
+95523 +++ exited with 0 +++
+95519 +++ exited with 0 +++
+95528 +++ exited with 0 +++
+95558 +++ exited with 0 +++
+95531 +++ exited with 0 +++
+95533 +++ exited with 0 +++
+95517 +++ exited with 0 +++
+95515 +++ exited with 0 +++
