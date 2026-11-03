@@ -1,0 +1,45 @@
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:6:36: error: cannot access 'object BoundedResearchTextSanitizer : Any': it is internal in file.
+import at.heinz.deviceai.cognitive.BoundedResearchTextSanitizer
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:8:36: error: cannot access 'object LocalChatPromptBudget : Any': it is internal in file.
+import at.heinz.deviceai.cognitive.LocalChatPromptBudget
+                                   ^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:9:36: error: cannot access 'object LocalConversationFollowUpPolicy : Any': it is internal in file.
+import at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:10:36: error: cannot access 'object LocalPromptFrame : Any': it is internal in file.
+import at.heinz.deviceai.cognitive.LocalPromptFrame
+                                   ^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:175:21: error: cannot access 'object LocalPromptFrame : Any': it is internal in file.
+                if (LocalPromptFrame.assemble(requiredBody, rendered, null, tail, MAX_PROMPT_BYTES, true) == null) break
+                    ^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:175:38: error: cannot access 'object LocalPromptFrame : Any': it is internal in file.
+                if (LocalPromptFrame.assemble(requiredBody, rendered, null, tail, MAX_PROMPT_BYTES, true) == null) break
+                                     ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:179:17: error: cannot access 'object LocalConversationFollowUpPolicy : Any': it is internal in file.
+                LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(request)) error("BOT_FOLLOWUP_CONTEXT_EXCEEDS_BUDGET")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:179:49: error: cannot access 'object LocalConversationFollowUpPolicy : Any': it is internal in file.
+                LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(request)) error("BOT_FOLLOWUP_CONTEXT_EXCEEDS_BUDGET")
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:182:26: error: cannot access 'object LocalPromptFrame : Any': it is internal in file.
+            val prompt = LocalPromptFrame.assemble(requiredBody, history, null, tail, MAX_PROMPT_BYTES, true)
+                         ^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:182:43: error: cannot access 'object LocalPromptFrame : Any': it is internal in file.
+            val prompt = LocalPromptFrame.assemble(requiredBody, history, null, tail, MAX_PROMPT_BYTES, true)
+                                          ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:264:49: error: cannot access 'object BoundedResearchTextSanitizer : Any': it is internal in file.
+    private fun quoted(value: String): String = BoundedResearchTextSanitizer.sanitize(value, value.length * 20 + 64)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:264:78: error: cannot access 'object BoundedResearchTextSanitizer : Any': it is internal in file.
+    private fun quoted(value: String): String = BoundedResearchTextSanitizer.sanitize(value, value.length * 20 + 64)
+                                                                             ^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:266:53: error: cannot access 'object LocalChatPromptBudget : Any': it is internal in file.
+    companion object { const val MAX_PROMPT_BYTES = LocalChatPromptBudget.FULL_CHARACTERS }
+                                                    ^^^^^^^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/chief/ChiefBotConversation.kt:266:75: error: cannot access 'object LocalChatPromptBudget : Any': it is internal in file.
+    companion object { const val MAX_PROMPT_BYTES = LocalChatPromptBudget.FULL_CHARACTERS }
+                                                                          ^^^^^^^^^^^^^^^
+app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt:98:13: error: cannot access 'fun sanitizeUntrustedResearchText(text: String, maxCharacters: Int): String': it is internal in file.
+            sanitizeUntrustedResearchText(text, text.length * 20)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

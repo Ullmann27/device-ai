@@ -1,0 +1,3 @@
+Verified known u03 regression bytes; not an unknown task or model execution.
+{"status":"OBSERVED_RESULT","resultStatus":"PATCH_PENDING_OWNER_REVIEW","technicalExperienceStatus":"RECORDED_TECHNICAL_REVIEW_ONLY","technicalRecallCount":0,"solved":"REQUIRES_INDEPENDENT_EVIDENCE_REVIEW","modelCallsReserved":1,"sourceIdentityStable":true,"fixture":"u03","out":"/workspace/genesis-known-u03-experiment/runs/u03/evidence"}
+{"resourceReport": "/workspace/genesis-known-u03-experiment/runs/u03/native-resources.json", "exit": 0, "nativeProcesses": 1, "samples": 77}
