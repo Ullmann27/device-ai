@@ -1,0 +1,515 @@
+{
+  "fixtureSha256": "006d9eab5ce46efca382b421d1289f6ae045ebb8a81acd8ec78160b2254711e1",
+  "frozenCandidate": "4d2e825f2caf783085dcb85c005960cd01347b14",
+  "arms": {
+    "base11": {
+      "RAW": {
+        "total": 64,
+        "exact": 46,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 0
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "RULE": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "VERIFIED": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      }
+    },
+    "current13": {
+      "RAW": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "RULE": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "VERIFIED": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      }
+    },
+    "amendedZero": {
+      "RAW": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "RULE": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "VERIFIED": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      }
+    },
+    "trained15": {
+      "RAW": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "RULE": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      },
+      "VERIFIED": {
+        "total": 64,
+        "exact": 52,
+        "categories": {
+          "EXPLICIT_CORRECTION": {
+            "total": 5,
+            "exact": 0
+          },
+          "MISSING": {
+            "total": 5,
+            "exact": 5
+          },
+          "NEGATED": {
+            "total": 6,
+            "exact": 6
+          },
+          "RELATION_CONFLICT": {
+            "total": 6,
+            "exact": 6
+          },
+          "REVOKED": {
+            "total": 5,
+            "exact": 5
+          },
+          "ROLE_SWAP": {
+            "total": 10,
+            "exact": 10
+          },
+          "STATIC": {
+            "total": 20,
+            "exact": 20
+          },
+          "UNICODE_AND_DISTRACTOR": {
+            "total": 7,
+            "exact": 0
+          }
+        }
+      }
+    }
+  },
+  "transport": {
+    "base11": {
+      "cases": 12,
+      "allModesAbstained": true
+    },
+    "current13": {
+      "cases": 12,
+      "allModesAbstained": true
+    },
+    "amendedZero": {
+      "cases": 12,
+      "allModesAbstained": true
+    },
+    "trained15": {
+      "cases": 12,
+      "allModesAbstained": true
+    }
+  },
+  "decision": "NO_INDEPENDENT_GAIN_FOR_TRAINED15; no production promotion",
+  "paired": {
+    "current13-RAW": {
+      "wins": 0,
+      "losses": 0
+    },
+    "amendedZero-RAW": {
+      "wins": 0,
+      "losses": 0
+    },
+    "current13-RULE": {
+      "wins": 0,
+      "losses": 0
+    },
+    "amendedZero-RULE": {
+      "wins": 0,
+      "losses": 0
+    },
+    "current13-VERIFIED": {
+      "wins": 0,
+      "losses": 0
+    },
+    "amendedZero-VERIFIED": {
+      "wins": 0,
+      "losses": 0
+    }
+  }
+}

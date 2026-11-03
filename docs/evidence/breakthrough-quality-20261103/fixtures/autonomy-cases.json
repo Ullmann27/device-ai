@@ -1,0 +1,125 @@
+{
+  "schema": "OMEGA_QA_EXECUTOR_PROGRAMS_V1",
+  "cases": [
+    {
+      "id": "QB-A-001",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_FILES",
+      "syntheticNames": [
+        "Quvuropi",
+        "Qusenabo",
+        "Qusuruga"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-002",
+      "scenario": "DUPLICATE_NAME_DIFFERENT_SUITES",
+      "syntheticNames": [
+        "Quwukobo",
+        "Qufamiwa",
+        "Qugufawu"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-003",
+      "scenario": "DUPLICATE_OCCURRENCES",
+      "syntheticNames": [
+        "Qukirusa",
+        "Qugabera",
+        "Qukafule"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-004",
+      "scenario": "NON_TARGET_REMOVED",
+      "syntheticNames": [
+        "Quweromo",
+        "Qusedewa",
+        "Qurodafe"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-005",
+      "scenario": "NON_TARGET_RENAMED",
+      "syntheticNames": [
+        "Qurusiki",
+        "Qunabove",
+        "Quwosawu"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-006",
+      "scenario": "PASS_BECOMES_SKIPPED",
+      "syntheticNames": [
+        "Qurevasu",
+        "Quwecefu",
+        "Qupedifu"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-007",
+      "scenario": "SKIP_BECOMES_TODO",
+      "syntheticNames": [
+        "Qupisato",
+        "Qumufefu",
+        "Qunamofo"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-008",
+      "scenario": "CHILD_SUITE_MOVED",
+      "syntheticNames": [
+        "Qutikumi",
+        "Qumowado",
+        "Qusamogi"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-009",
+      "scenario": "FOREIGN_COMMIT",
+      "syntheticNames": [
+        "Quturime",
+        "Quvegenu",
+        "Qutawumu"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-010",
+      "scenario": "PATCH_PATH_MISMATCH",
+      "syntheticNames": [
+        "Qubilewa",
+        "Quwademo",
+        "Quwitage"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-011",
+      "scenario": "INTERRUPTED_BASELINE",
+      "syntheticNames": [
+        "Qukefama",
+        "Quwirato",
+        "Qubafosa"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    },
+    {
+      "id": "QB-A-012",
+      "scenario": "UNCHANGED_POSITIVE",
+      "syntheticNames": [
+        "Qubecala",
+        "Qubifulu",
+        "Qunikadi"
+      ],
+      "expected": "Retain every non-target executed identity and disposition, reject ambiguity; unchanged genuinely fixed target can verify"
+    }
+  ]
+}

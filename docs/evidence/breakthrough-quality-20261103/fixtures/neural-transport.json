@@ -1,0 +1,197 @@
+{
+  "schema": "OMEGA_QA_TRANSPORT_V1",
+  "controls": [
+    {
+      "category": "WRONG_HASH",
+      "input": {
+        "id": "QB-NT-001",
+        "question": "Wo ist Quducuso?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-001-source-1",
+            "revision": 3,
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "text": "Quducuso ist in Qukamube. Qukelaco ist in Qumumugu."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "WRONG_HASH",
+      "input": {
+        "id": "QB-NT-002",
+        "question": "Wo wohnt Qupodogo?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-002-source-1",
+            "revision": 3,
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "text": "Qupodogo wohnt in Qumesalu. Qubobole wohnt in Qufeveto."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "WRONG_HASH",
+      "input": {
+        "id": "QB-NT-003",
+        "question": "Wo lebt Quputipo?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-003-source-1",
+            "revision": 3,
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "text": "Quputipo lebt in Qucibete. Qucategi lebt in Qubuvosu."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "WRONG_HASH",
+      "input": {
+        "id": "QB-NT-004",
+        "question": "Wo steht Quticedu?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-004-source-1",
+            "revision": 3,
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "text": "Quticedu steht in Qufoniva. Qulovesu steht in Qugulobu."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "TEXT_CHANGED_WITH_OLD_HASH",
+      "input": {
+        "id": "QB-NT-005",
+        "question": "Wo ist Qusudopu?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-005-source-1",
+            "revision": 3,
+            "sha256": "9981c416b3e99483c83bf6f7d4c89a9416341a055ccb09b1fcc643100b8c13e2",
+            "text": "Qusudopu ist in Qurenage. Qugabowu ist in Qupanaba. Nachträglich verändert."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "TEXT_CHANGED_WITH_OLD_HASH",
+      "input": {
+        "id": "QB-NT-006",
+        "question": "Wo wohnt Qulatise?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-006-source-1",
+            "revision": 3,
+            "sha256": "992c977eb3a40a97920a46f12f4a227068d3b46247fd81e5e251980152c2f18b",
+            "text": "Qulatise wohnt in Qupenima. Qudadebe wohnt in Qurofilo. Nachträglich verändert."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "TEXT_CHANGED_WITH_OLD_HASH",
+      "input": {
+        "id": "QB-NT-007",
+        "question": "Wo lebt Qumicire?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-007-source-1",
+            "revision": 3,
+            "sha256": "22cbbf2d6ed4c497e48d7bdf91f1d6e2ec8aece8fe020ddb139d40192e4b114b",
+            "text": "Qumicire lebt in Quwopebe. Qulavobe lebt in Qupogede. Nachträglich verändert."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "TEXT_CHANGED_WITH_OLD_HASH",
+      "input": {
+        "id": "QB-NT-008",
+        "question": "Wo steht Quruseba?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-008-source-1",
+            "revision": 3,
+            "sha256": "50572f4294331dc8343fe34bbff1b9632e5c172728e062c1ddc95492dcc4d606",
+            "text": "Quruseba steht in Qufiliti. Qururocu steht in Qubelapu. Nachträglich verändert."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "OTHER_SOURCE_HASH",
+      "input": {
+        "id": "QB-NT-009",
+        "question": "Wo ist Qufecoki?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-009-source-1",
+            "revision": 3,
+            "sha256": "e7e01502538de3b750adf2749449c3c48f542cfeadf4d6a8fa23480932c8872e",
+            "text": "Qufecoki ist in Qunudebi. Quvucenu ist in Qupulodo."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "OTHER_SOURCE_HASH",
+      "input": {
+        "id": "QB-NT-010",
+        "question": "Wo wohnt Qurilaro?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-010-source-1",
+            "revision": 3,
+            "sha256": "773057da71509c2b1f3ce3ec6fa93633ba3f9ec77ceaa556d3fc191a49d34746",
+            "text": "Qurilaro wohnt in Quceboci. Qurolunu wohnt in Qukevoda."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "OTHER_SOURCE_HASH",
+      "input": {
+        "id": "QB-NT-011",
+        "question": "Wo lebt Qubidogi?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-011-source-1",
+            "revision": 3,
+            "sha256": "5b2bf5123db229d6f9157e72e3c309d4389edd2dda868cbae1ad4d2789cec239",
+            "text": "Qubidogi lebt in Quwosuka. Qulumopa lebt in Qusadiba."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    },
+    {
+      "category": "OTHER_SOURCE_HASH",
+      "input": {
+        "id": "QB-NT-012",
+        "question": "Wo steht Qusitima?",
+        "sources": [
+          {
+            "sourceId": "qa-neural-012-source-1",
+            "revision": 3,
+            "sha256": "e73a00e22d41ea87227b61b9ca76dd9388d7c5e5428c45dc57b0d1b9efd4aba5",
+            "text": "Qusitima steht in Qucedica. Qufokeru steht in Qupadago."
+          }
+        ]
+      },
+      "expected": "REJECT_OR_ABSTAIN_NO_SUPPORTED_SPAN"
+    }
+  ]
+}
