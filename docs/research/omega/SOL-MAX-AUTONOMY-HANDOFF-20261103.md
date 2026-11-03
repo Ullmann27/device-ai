@@ -46,7 +46,8 @@ konfigurierten TCP-Geräteziele. Unter `/workspace` wurden keine `.litertlm`-,
 `.gguf`-, `.safetensors`- oder `.tflite`-Gewichte gefunden. Das sagt nichts über
 die privaten Dateien des unerreichbaren Fold7 aus. Der alte Besitzerbefund vom
 31.10.2026 (Code 30, Gemma READY) bleibt historisch, kein aktueller Laufbeleg.
-Eine einzige Anschlussfrage ist gestellt; kein neuer Fernzugriff wird erfunden.
+Der Besitzer hat die Anschlussfrage beantwortet: **derzeit kein Fernzugriff;
+Fold7-Prüfungen vorbereiten**. Keine neue Einrichtung oder Freigabe erforderlich.
 
 ## Abnahmestatus zum Startcheckpoint
 
@@ -68,6 +69,30 @@ Zuerst Live-Katalog und Branch-HEAD erneut prüfen. Danach den tatsächlichen
 auf noch gültige Reviewfehler untersuchen. Insbesondere PR #361 / Kommentar
 4447058551: ungenutzte Toolantwort-Kodierung kann Bildschirm-Turns abbrechen.
 Nur mit reproduzierbarem RED und minimaler GREEN-Reparatur übernehmen.
+
+## Erster geprüfter Fortschritt
+
+Commit `cf0f3c0d52d821ba024f3acb17f1f67d533bcd61` repariert den bestätigten
+Bildschirm-Turn-Fehler. AgentActivity ruft jetzt den bestehenden
+LocalToolContinuation-Helfer `submit` auf. Ein bereits vollständig geprüfter
+frischer Bildschirm-Prompt startet ohne ungenutztes natives Tool-Encoding.
+Echte Toolfortsetzungen bleiben unverändert begrenzt und im nativen Toolkanal.
+
+Fokussierter echter SDK-/Gradle-JVM-Nachweis: **RED 12 ausgeführt / 1 Fehler →
+GREEN 12 PASS / 0 Fehler / 0 Skips**. Der positive Test durchläuft gültigen
+Bildschirmsnapshot, SHA/Grant/Ablaufprüfung und vollständiges Promptbudget;
+die Enginegrenze ist ausdrücklich ein Hostadapter ohne Gewichte. Rohbelege,
+Reproduktionsdiff, genaue Befehle und XML unter
+`docs/evidence/sol-max-autonomy-20261103/screen-turn/`.
+Vollständige Gesamtsuiten und frischer unabhängiger Review stehen am Zeitpunkt
+dieses Checkpoints noch aus; kein DEVICE_VERIFIED-Anspruch.
+
+Vorbereitetes Besitzer-/KI-Protokoll:
+[SOL-MAX-FOLD7-AUTONOMY-ACCEPTANCE-20261103.md](SOL-MAX-FOLD7-AUTONOMY-ACCEPTANCE-20261103.md).
+Es trennt die tatsächliche App-LiteRT-Inferenz, den optionalen GGUF-CLI-Pfad,
+deterministische CCC1-Reparatur und modellgesteuerte typisierte Coding-Aufgaben.
+Der aktuelle Android-ToolRegistry hat kein allgemeines `read_file`; nur wirklich
+registrierte/erteilte Fähigkeiten testen. Keine erfundenen Dateizugriffe.
 
 Relevante Register: EXP-05 (lokale Inferenz), EXP-08 (bestehender
 Android/Termux-Kanal), EXP-11 (kanonische Orchestrierung), EXP-12 (Kontinuität);
