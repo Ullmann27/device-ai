@@ -1,6 +1,9 @@
 allprojects {
  afterEvaluate { p ->
-  if (p.name == 'app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-final')
+  if (p.name == 'app') {
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/workspace-independent-final')
+  }
  }
  tasks.withType(Test).configureEach {
   executable = '/usr/bin/java'
