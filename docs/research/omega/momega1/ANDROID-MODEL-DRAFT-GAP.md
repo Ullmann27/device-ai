@@ -4,6 +4,11 @@ Audit: 2026-11-03, Chief source `9aa499ff943d0df38ff4e79f5dbb0516aabfc107`.
 Scope: EXP-02/05/07/08/11/12, existing MΩ-1 typed coding route. No production
 source changed and no new runtime, scheduler, service, IPC or tool proposed.
 
+Follow-up: the subsequently allocated owner-supplied-metadata adapter is accepted
+at source `4b98da93`, with exact host evidence and remaining device/automatic
+metadata gaps in [ANDROID-PLANNING-HANDOFF.md](ANDROID-PLANNING-HANDOFF.md).
+The audit below describes the earlier `9aa499ff` baseline, not that new source.
+
 **OPEN:** the main `AgentActivity.runLocal` model response does not currently
 become a typed coding draft. The accepted full-task review/cancellation changes
 do not close this transition. MΩ-2 completion or real-device inference is not
