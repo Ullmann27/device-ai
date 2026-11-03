@@ -78,6 +78,7 @@ class AvatarPoseReducer {
     private var gaze = GazeTarget.OWNER
     private var observedGaze: GazeTarget? = null
     private var observedAtMillis = Long.MIN_VALUE
+    private var newestFreshGazeAtMillis = Long.MIN_VALUE
     private var gazeClearedAtMillis = Long.MIN_VALUE
     private var energy = 0f
     private var viseme = Viseme.SIL
@@ -133,6 +134,7 @@ class AvatarPoseReducer {
     /** Pause, detach, revoked consent and lost/ambiguous observations clear immediately. */
     fun clearObservedGaze(atMillis: Long) {
         observedGaze = null
+        if (observedAtMillis > atMillis) observedAtMillis = newestFreshGazeAtMillis
         gazeClearedAtMillis = maxOf(gazeClearedAtMillis, atMillis)
     }
 
@@ -147,7 +149,16 @@ class AvatarPoseReducer {
         val liveEnergy = if (age in 0..250) energy else 0f
         val jaw = if (utterance == null) 0f else ((liveEnergy - 0.025f) * 1.5f).coerceIn(0f, 1f)
         val gazeAge = if (observedAtMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - observedAtMillis
-        if (!permitsObservedGaze(state) || gazeAge !in 0..OBSERVED_GAZE_TTL_MS) observedGaze = null
+        if (observedAtMillis > atMillis) {
+            // A rejected future sample must not poison ordering for later valid observations.
+            // Keep the last actually fresh watermark, not the invalid future timestamp.
+            observedGaze = null
+            observedAtMillis = newestFreshGazeAtMillis
+        } else if (!permitsObservedGaze(state) || gazeAge !in 0..OBSERVED_GAZE_TTL_MS) {
+            observedGaze = null
+        } else if (observedGaze != null) {
+            newestFreshGazeAtMillis = maxOf(newestFreshGazeAtMillis, observedAtMillis)
+        }
         val shownGaze = observedGaze ?: gaze
         return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = observedGaze != null)

@@ -140,4 +140,19 @@ class AvatarObservedGazeTest {
         val after = angles()
         before.zip(after).forEach { (a, b) -> assertTrue(kotlin.math.abs(a - b) < .1f) }
     }
+
+    @Test fun rejectedFutureTimestampCannotPoisonNewSamplesOrUndoPreviousOrdering() {
+        reducer.apply(AvatarEvent.GazeObserved(gaze, 80, now))
+        assertTrue(reducer.pose(now).gazeObserved)
+        reducer.apply(AvatarEvent.GazeObserved(GazeTarget.OWNER, 80, Long.MAX_VALUE))
+        assertFalse(reducer.pose(now + 1).gazeObserved)
+        reducer.apply(AvatarEvent.GazeObserved(GazeTarget.OWNER, 80, now - 1))
+        assertFalse(reducer.pose(now + 1).gazeObserved)
+        reducer.apply(AvatarEvent.GazeObserved(gaze, 80, now + 2))
+        assertTrue(reducer.pose(now + 2).gazeObserved)
+        reducer.apply(AvatarEvent.GazeObserved(GazeTarget.OWNER, 80, Long.MAX_VALUE))
+        reducer.clearObservedGaze(now + 3)
+        reducer.apply(AvatarEvent.GazeObserved(gaze, 80, now + 4))
+        assertTrue(reducer.pose(now + 4).gazeObserved)
+    }
 }
