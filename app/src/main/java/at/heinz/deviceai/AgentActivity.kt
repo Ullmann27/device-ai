@@ -5403,7 +5403,8 @@ class AgentActivity : Activity() {
 
     private fun speakBootstrap(message: String) {
         if (!voiceEnabled || !voiceReady || !foregroundLearningActive ||
-            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)) return
+            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
+                microphoneActive = voiceListening)) return
         stopVoiceAnimation()
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
@@ -8625,7 +8626,9 @@ class AgentActivity : Activity() {
             if(activeLocalRequest)cancelLocalRequest()
             else { Toast.makeText(this,"Bitte die laufende Aufgabe zuerst über Stopp beenden.",Toast.LENGTH_LONG).show();return }
         }
+        // Barge-in: silence voice AND avatar mouth now; the TTS onStop callback is asynchronous.
         voiceEngine?.stop()
+        stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
         val scopeDialog=devDialog

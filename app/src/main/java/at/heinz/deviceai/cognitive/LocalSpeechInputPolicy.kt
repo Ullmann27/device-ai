@@ -11,9 +11,12 @@ internal object LocalSpeechInputPolicy {
         mode!=InternetAccessMode.OFF&&!offlineVeto&&externalAudioGrant -> Route.EXTERNAL_WITH_EXPLICIT_GRANT
         else -> Route.UNAVAILABLE
     }
+    /** Half-duplex: never start TTS into an active on-device microphone turn, otherwise the
+     * recognizer transcribes the assistant's own voice into the owner's composer (Argon 4, 7.1). */
     fun maySpeak(networkVoiceRequired:Boolean?,externalAudioGrant:Boolean=false,
-                 mode:InternetAccessMode=InternetAccessMode.OFF,offlineVeto:Boolean=false):Boolean =
-        networkVoiceRequired==false || networkVoiceRequired==true&&externalAudioGrant&&mode!=InternetAccessMode.OFF&&!offlineVeto
+                 mode:InternetAccessMode=InternetAccessMode.OFF,offlineVeto:Boolean=false,
+                 microphoneActive:Boolean=false):Boolean = !microphoneActive && (
+        networkVoiceRequired==false || networkVoiceRequired==true&&externalAudioGrant&&mode!=InternetAccessMode.OFF&&!offlineVeto)
 }
 
 /** Only token/time state is retained, never microphone audio or a transcript. */
