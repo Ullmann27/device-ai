@@ -1,5 +1,23 @@
 # MΩ-1 independent runtime / reliability challenger
 
+## CURRENT — actual native review complete
+
+Final source9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96 APPROVED for exact reviewed
+pair LOCAL_MODEL_HOST. Independent duplicate CPU build byte-identical; actual
+DEFAULT provider142tokens/26.562s, genuine frozen privatebrand, clone refused,
+durable repeat/restart budget refused.50/50 independent controlsPASS. Real weights
+cancel and disposable-copy swap reject without accepting output. FOLD7_NOT_RUN.
+
+Actual inference is now observed, superseding historical model-unavailable status
+below. **Generated repair still fails2 of8 independent boundary tests; no accepted
+repair, cognitive-loop, learning or release claim.** Detailed final assessment:
+docs/evidence/momega1/challenger/ACTUAL-MODEL-FINAL-ASSESSMENT.md.
+
+Immutable approved-pair review JSON SHA
+88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe is pinned in runtime
+registry. Preserve its exact bytes. QA receives actual executable-inode resource
+sampler; no QA holdout prompt was read. No further model inference pending.
+
 Baseline ca93fb4f; branch codex/momega1-challenger-20261103.
 Exclusive writes: tools/momega1-challenger, docs/evidence/momega1/challenger,
 this handoff. No feature code. Frozen criteria and initial executable provider
