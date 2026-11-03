@@ -2354,7 +2354,8 @@ class AgentActivity : Activity() {
         if (!voiceInitialized) return
         voiceReady = runCatching {
             val engine = voiceEngine ?: return@runCatching false
-            val offline = engine.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language == "de" }
+            val offline = engine.voices?.filter { !it.isNetworkConnectionRequired && it.locale.language == "de" &&
+                it.features?.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) != true }
                 ?.maxByOrNull { it.quality } ?: return@runCatching false
             engine.setVoice(offline) == TextToSpeech.SUCCESS &&
                 at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(engine.voice?.isNetworkConnectionRequired)
