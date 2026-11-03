@@ -2,7 +2,8 @@
 
 Date: 2026-11-03. Branch: `codex/synapse-lifecycle-20261103`, draft PR425.
 Baseline: `efe622dda00e620952483dedad19257efb3284e6`.
-Candidate source: `7e94529e7d327658643ccc51c715b871ae3d8e1e`.
+First shutdown source: `7e94529e7d327658643ccc51c715b871ae3d8e1e`.
+Final production source: `8eddcdb5b307cbab9c1e3bbcfdf37bbac8637cd7`.
 Status: SOURCE_IMPLEMENTED / HOST_TESTED. Independent challenger pending.
 MΩ-1 local inference, Android SDK combined acceptance and Fold7: NOT_RUN here.
 
@@ -18,6 +19,12 @@ preserves existing reentrant callbacks during ordinary operation. A closed pool
 rejects reentrant/new admission with the existing RejectedExecutionException contract.
 Cancellation and terminal report selection are serialized on the slot so a cancellation
 that wins that boundary cannot be changed into a late DONE report.
+
+The independent follow-up also reproduced retained cancelled FutureTasks behind an
+uncooperative native call. Workers now use a bounded ArrayBlockingQueue with at most
+`maxConcurrent + maxQueued` pending entries, fixed `maxConcurrent` threads and rejection
+on physical queue saturation. Every cancellation/timeout removes its cancelled queued
+FutureTask. No replacement thread is created to bypass a still-running native call.
 
 No registry, mailbox, tools, permissions, models, persistence or alternate scheduler
 was introduced. A queued cancellation consumer is called synchronously by shutdown;
@@ -51,11 +58,30 @@ Android dependency graph acceptance belongs to Chief's final combined build.
   while its native work may still be running. Releasing that work later produces
   no second report or success. This is an explicit limitation, not termination proof.
 
+Separate resource follow-up (not counted as original blind acceptance):
+
+* Independent original diagnostic `e3f77ef1`: 25 accepted jobs, 24 retained queue
+  entries, one physical native call. Reproduced on the first shutdown candidate.
+* Author regression frozen at `fa91e3d9` before resource repair: 14 tests run against
+  source7e94529e,13 passed,1 failed;12 cancelled entries retained after13 submissions.
+* Source8eddcdb5: same14 author tests pass,0 fail,0 skip; cancelled queue size0 and
+  physical calls1. Logs: `red-retention-7e94529e/`, `green-bounded-queue/`.
+* Reviewer strengthened follow-up criteria froze separately at `73e6f1ef` before
+  seeing the resource repair; independent results pending at this document revision.
+
+Reproduce the latest author comparison:
+
+```
+python3 tools/synapse-lifecycle/run-focused.py 7e94529e7d327658643ccc51c715b871ae3d8e1e /tmp/synapse-retention-red
+python3 tools/synapse-lifecycle/run-focused.py 8eddcdb5b307cbab9c1e3bbcfdf37bbac8637cd7 /tmp/synapse-retention-green
+```
+
 ## Limits and next action
 
 `awaitIdle` measures completed report delivery, not termination of uncooperative
-native calls or process isolation. Thread count stays fixed; this increment does
-not certify per-process CPU/RAM limits or every executor queue retention behavior.
+native calls or process isolation. Thread count and worker queue are bounded; this
+increment does not certify per-process CPU/RAM limits or general cancellation of
+external/native effects. Cooperative cancel/report callbacks must remain bounded.
 No persistence/restart or model-based task was exercised by these lifecycle tests.
 No timing speedup, learning benefit or Fold7 claim is made.
 
