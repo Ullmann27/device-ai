@@ -144,5 +144,48 @@ Revert der Commits dieses Branches. Bereits als `OBSERVED` quarantänierte Altda
 Build behandelt sie als unbestätigt (alle Leser filtern auf CONFIRMED/LEARNED/REPLAY_PENDING). Wiederherstellen per
 „Merke dir: <feste Aussage>“.
 
+## 10. Nachtrag 03.11.2026 nachmittags (M2.1–M2.3, Chief-Muster Punkte 4–5)
+
+| Schritt | Commit | RED → GREEN | Ergebnis |
+|---|---|---|---|
+| M2.1 Sicht-Cache (SHA-256 des Ledger-Inhalts, nicht mtime) | 8928031e | 2 rot → 9/9 grün | warm p95 30,1 ms → 0,6–3,4 ms (3 Läufe), 819/819 richtig |
+| M2.2 Blinder deutscher LongMemEval-Holdout (40 Fälle, vor dem Lauf eingefroren: 0cccf5f6) | 6d50631d | einmal gewertet, **nicht getunt** | 34 richtig, 5 enthalten, 1 falsch, 0 verbotene Werte |
+| M2.3 Signierte Korrekturen (ProofCarryingMemory-Sidecar `owner-corrections-pcm-v1.log`) | 005162e7 | 5 rot → 6/6 grün | LEX2-Ledger byteidentisch mit/ohne Signatur |
+| Punkt 4 Gedächtnisschichten (`ContinuumMemoryLayers`) | 5f87d1e8 | 5 rot → 5/5 grün | Profil / Tagebuch / geteiltes Wissen (read-only) / Suche (enthält sich) |
+| Punkt 5 Fähigkeiten-Bibliothek (`ContinuumSkillLibrary`) | 09e17de3 | 4 rot → 6/6 grün | nur ExperienceCompiler-Kandidaten, aktiv erst nach Freigabe mit Namen |
+
+Holdout-Fehler (bewusst NICHT nachgebessert): A8 „Ich habe gekündigt.“ beendet den Job nicht (veraltete Antwort);
+T3/T7/C2/C3/M8 enthalten sich. Fixes nur über ein separates Dev-Set und einen neuen Holdout.
+
+### Hook-Punkte (nicht von mir verdrahtet)
+- **Continuum HAUPT (Orchestrator/Werkzeug-Register, docs/CHIEF-PATTERN.md):** Arbeiter/Spezialisten erhalten
+  `ContinuumMemoryLayers(core).shared()` (`SharedOwnerKnowledge`: nur `facts()`/`answer()`, keine Schreibmethode).
+  Ältere Einträge: `layers.search(query, now)` → `abstained=true` heißt „nichts gefunden, nichts erfinden“.
+  Skills: `ContinuumSkillLibrary(File(appDir,"skills")).match(request)` liefert nur Name + Anwendungsfall; die
+  Anleitung erst per `load(name)`. Vorschläge kommen aus `VerifiedSkillReview.candidates(...)` → `propose(...)`;
+  `approve(name, OwnerSkillApproval(utterance, at))` NUR nach ausdrücklichem Ja des Owners mit Skill-Namen.
+  Nichts wird automatisch aktiviert; Skills führen nichts selbst aus (Werkzeuge laufen weiter über HAUPTs Register).
+- **Continuum 1 (Integration, AgentActivity/BootstrapBrain):** signierte Korrekturen einschalten mit
+  `ContinuumLearningCore(dir, AndroidKeystoreIdentitySigner()) { System.currentTimeMillis() }`;
+  `core.correctionAudit()` in Diagnose/Status anzeigen (`UNSIGNED_LEDGER_CHANGE` = Ledger außerhalb des signierten
+  Pfads geändert; Altbestände vor dem Einschalten erscheinen dort ebenfalls).
+- **Avatar (Vertrag bei Continuum HAUPT, PR #373, Paket `avatar`):** ich sende KEINE Avatar-Events und lege
+  nichts im Avatar-Paket an. Abbildung vorhandener Gedächtnis-Ergebnisfelder für AgentActivity/AvatarDirector:
+  - *erinnert sich* = `ContinuumBrainStatus.ON_MEMORY` bzw. `TemporalAnswerKind.ANSWER`
+  - *fragt nach* = `ContinuumBrainStatus.ON_CLARIFY` bzw. `TemporalAnswerKind.CLARIFY`
+  - *hält unbestätigt / enthält sich* = `ON_ABSTAIN`, `TemporalAnswerKind.UNCONFIRMED_ONLY`/`NO_EVIDENCE`,
+    `OwnerFactChange.HELD_UNCONFIRMED`
+  - *korrigiert* = Journal-Eintrag `MemoryMutationReason.USER_CORRECTION` bzw. `FALLBACK_REVOKED`
+  Braucht der Avatar dafür einen neuen Zustand, muss das über `AvatarRuntimeSignals` + Prioritätsliste mit Test
+  laufen — Eigentum von Continuum HAUPT.
+
+### Risiken
+- Latenz-Budget (<5 ms) ist ein Host-JVM-Timing; auf langsamer CI kann es schwanken (p95 0,6–3,4 ms gemessen).
+- Der Cache ist prozessweit (max. 8 Verzeichnisse); jeder Abruf hasht die Ledger-Datei (~46 KB) erneut.
+- Journal-Verifikation liest bei jedem Schreiben die ganze Kette (O(n)); bei sehr vielen Korrekturen später
+  eine geprüfte Kopfmarke cachen.
+- Skill-Integrität ist nur Hash-basiert (lokale Datei); Signatur über IdentitySigner ist Folgearbeit.
+- Kapazitätsgrenze 256 Owner-Datensätze unverändert (Entscheidung Heinz), Test dokumentiert sie weiterhin.
+
 ## 9. Nächster Einstieg
 Siehe `docs/research/omega/M2-NEUROSYMBOLIC-SPARSE-LOCAL-INFERENCE-20261103.md`, Abschnitt „Nächste Inkremente“.
