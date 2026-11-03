@@ -89,3 +89,16 @@ Relevant existing experiments: EXP-01/02/05/07/08/11/12. Official Issue41 read;
 Android-first remains the product goal. This release increment is a tested local
 host route until ARM64 isolation, approved native artifacts and device access are
 available; it does not enable an unsafe phone shell or replace the original APK.
+
+Runtime bridge follow-up `aa52e7e6`: removes the empty classpath element and emits
+`runtime-classpath.txt` with only3 runtime JARs plus actual compiled classes.
+Compiler/Android-test JARs are not runtime dependencies. Exact maintained script
+compiled and10 checks PASS; evidence in `profile-runtime/`. This fixes the real
+service init capacity mismatch without widening its trusted-artifact limits.
+
+Operator contract/runbook: `OPERATOR.md` (final combined execution acceptance
+pending). ARM64/device limits and next checks: `ARM64-FOLD7-GATE.md`.
+MCP official docs require authenticated reachable transport (OAuth and HTTPS or
+an owner-configured Secure MCP Tunnel); localBearer alone is not a ChatGPT link.
+No custom-MCP registration or tunnel-management tool exists in this session.
+No endpoint/tunnel/key registration was performed.
