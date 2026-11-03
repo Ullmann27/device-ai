@@ -9,6 +9,12 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL,fileURLToPath} from 'node:url';
 
 const digest=b=>createHash('sha256').update(b).digest('hex');
+function digestFile(file){
+ const hash=createHash('sha256'),buffer=Buffer.alloc(1024*1024),fd=fs.openSync(file,'r');
+ try{for(;;){const n=fs.readSync(fd,buffer,0,buffer.length,null);if(n===0)break;hash.update(buffer.subarray(0,n));}}
+ finally{fs.closeSync(fd);}
+ return hash.digest('hex');
+}
 const [sourceArg,expectedSha,projectArg,outArg,mode]=process.argv.slice(2);
 assert.match(expectedSha??'',/^[a-f0-9]{40}$/,'Full immutable source SHA required');
 for(const p of [sourceArg,projectArg,outArg])assert.ok(path.isAbsolute(p??''),'Absolute paths required');
@@ -77,7 +83,7 @@ const configKeys=['CONTINUUM_LOCAL_BRAIN_MODEL','CONTINUUM_LOCAL_BRAIN_RUNTIME',
 const configuration=Object.fromEntries(configKeys.filter(k=>process.env[k]!==undefined).map(k=>[k,process.env[k]]));
 const fileHashes={};
 for(const key of ['CONTINUUM_LOCAL_BRAIN_MODEL_PATH','CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH','CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST','CONTINUUM_CODING_ISOLATION_CONFIG']){
- if(configuration[key])fileHashes[key]=digest(fs.readFileSync(configuration[key]));
+ if(configuration[key])fileHashes[key]=digestFile(configuration[key]);
 }
 const before={integratedSource:expectedSha,integratedTree:git(source,'rev-parse','HEAD^{tree}'),
  qaRunnerSha256:digest(fs.readFileSync(fileURLToPath(import.meta.url))),fixture:binding,

@@ -1,0 +1,20 @@
+{
+  "schema":"momega1-seven-billion-host-comparison-v1",
+  "status":"PREREGISTERED_BEFORE_7B_ADMISSION_OR_INFERENCE",
+  "authorization":"Explicit owner 7B-Hostversuch freigeben, recorded by Chief5feb1a93; max8GiB model job, no cloud inference/new paid resources.",
+  "model":{"repository":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","revision":"13fb94bfda8c8cf22497dc57b78f391a9acb426a","file":"qwen2.5-coder-7b-instruct-q4_k_m.gguf","bytes":4683073536,"sha256":"509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c"},
+  "runtime":{"sourceCommit":"6cb3e672e8d10fd4feab1a048bf2967c40623133","sha256":"c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a","requiresIndependentExactPairAdmission":true},
+  "frozenManifestSha256":"1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "tasks":["u01","u02","u03","u04","u05","u06","u07","u08","u09","u10","u11","u12"],
+  "sourceRepositories":"Original materialized source SHAs/test bytes unchanged; each run uses fresh synthetic state and canonical grant/workspace/provider, no injection.",
+  "firstTask":"u01",
+  "primaryScore":"First10 original tasks; compare against preserved1.5B3/10.",
+  "secondaryScore":"All12 original tasks; compare against preserved1.5B4/12.",
+  "perTask":{"maxModelCalls":2,"maxContextChars":8192,"modelTimeoutMs":60000,"sourceFiles":1,"chain":"node"},
+  "runtimeConditions":{"cpuThreads":2,"temperature":0,"seed":1,"nPredict":1800,"contextSize":8192,"maximumModelJobBytes":8589934592},
+  "preconditions":["Independent actual exact model/runtime admission and resource-specific limit review","Immutable combined source SHA supplied by Chief","Provider prompt/template and frozen task criteria/source/test identities unchanged","No competing inference/compiler/render during native measurements"],
+  "controls":["No teacher answers, scripted patches, fixture-specific tuning or omitted failures","Fresh independent state for each task; no inherited technical hints","Record exact context/prompt/response/proposal/test hashes and canonical nonce differences","All successful repairs require actual unchanged-test independent GREEN","State/reset/diagnostic repeats never count as original trial successes"],
+  "timeoutRule":"Preserve every initial timeout/failure. If this model cannot fit60seconds, report the observed limitation; any changed timeout requires a separately declared protocol and cannot silently replace this comparison.",
+  "claimLimits":"These tasks are frozen independently before either model, but1.5B results have now been observed. Report the7B trial as a separate model comparison, never retroactively improve the original score. Canonical random job IDs are unavoidable prompt nuisances. Persistence success is distinct from repair quality, related-task reuse, neural learning and device readiness.",
+  "deviceStatus":"FOLD7_NOT_RUN"
+}
