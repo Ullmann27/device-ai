@@ -142,5 +142,116 @@ exact hashes, render parameters, observations and limitations. Eight-sample grai
 limits fine appearance assessment; higher samples alone cannot fix the identified
 material/eye differences. These are host asset renders, not Filament/device pixels.
 
+## Second visual iteration and actual reachable-mouth finding
+
+`VISUAL-ITERATION-CONSTRAINTS.md` records actionable eye, contour-flow, volume,
+silhouette and mouth constraints. Private reviewer contact sheets retain original
+color/aspect ratio and disclose manual alignment. The first chin crop was corrected
+explicitly in receipt version 2; its earlier width estimate must not guide geometry.
+
+An actual Kotlin exporter at source `26555aa6` supplies 260 reachable mapper poses,
+including a complete 224-frame idle sequence, exact full-blink anchors, task/look
+states and utterance-bound AA/PP/O/I/U followed by stop. The 26 accepted contracts
+remain unchanged. These are synthetic inputs, not actual audio or camera evidence.
+
+Surface `fe76e85d` retains original geometry but looks like a cylindrical cage.
+Topology/eye variant `bee53236` follows anatomy more closely but saturates eye and
+mouth regions. Its neutral and speech-stopped renders are pixel-identical, a useful
+actual reset check. Density-adjusted `03caa24f` restores readable facial volume and
+relaxed closed lids; it still needs contour-light/style and full-motion review.
+
+Actual reachable O replay showed teeth outside the displayed opening, including
+the unchanged original asset. The separately frozen canonical glTF intersection
+check `d0c2ca85` reproduces **exit 1** on the original. Frontmost tooth-edge/face
+crossings for neutral/AA/PP/O/I/U are **0/16/152/65/36/28**. Hidden internal contacts
+and ordinary teeth visible within the aperture are explicitly separated.
+
+Isolated Jaw+40 mm candidate `6b199c59` preserves all BIN bytes, materials and
+neutral rigid-child positions, but remains **REJECTED / exit 1** with counts
+**0/36/0/48/0/20**. It fixes sampled PP/I crossings and leaves AA/O/U unresolved.
+Counts are not a severity scale. Full raw geometry witnesses, exact commands and
+source hashes are in `mouth-geometry-red-first-candidate-receipt.json`.
+
+The original Face skin binds only Root/Neck/Head. Jaw rotates inner mouth/teeth;
+it does not add another outer-skin deformation. Original builder recipes confirm
+that AA and JawOpen separately contain the same mouth-open basis. Component
+ablation and any justified semantic mapping repair remain separate from the
+neutral-preserving rig hypothesis; no material darkening may conceal geometry.
+
+## Explicit composition V2 RED
+
+Root approved the evidence-based contract version change; original V1 and all
+CCC1 benchmark tests remain immutable. `MOUTH-COMPOSITION-V2-FREEZE.md` and new
+independent tests were frozen at `cd975890` before implementation. V2 replaces the
+obsolete exact double-mapping expectation with two stronger anatomy requirements.
+
+Actual unchanged `26555aa6` result: **27 run, 25 PASS, 2 FAIL, 0 SKIP**, exit 1.
+The only failures are the two new requirements: shared opening is added twice,
+and inner-jaw movement does not follow cue-produced outer opening. Raw output and
+hashes are retained in `gaze-v2-red-2655-receipt.json`. A new candidate must pass
+V2, the original max-pose geometry checks, the frozen additional 112 speech poses
+plus neutral, and actual render review before promotion. No claim of V1 PASS on
+a future changed mapper is allowed without its actual result.
+
+Five component-ablation frames independently show the doubled outer opening.
+The ablation deliberately modifies pose components and is labeled accordingly.
+An independently repeated canonical-to-Blender jaw-matrix comparison differs by
+only `1.8453e-7` per element, consistent with Float32. This rejects a large replay
+angle discrepancy as the cause of the observed artifact. It is not native-render
+or device certification. Receipt: `aa-ablation-transform-review.json`.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
+
+## Independent composition V2 GREEN and factorial geometry
+
+Exact source `9a23e5d6a9dc96d15525347c99ff682d632d7277` passes the unchanged
+frozen V2 suite: **27 PASS, 0 FAIL, 0 SKIP**. The unchanged original V1 suite was
+also rerun: **25 PASS, 1 FAIL, 0 SKIP**. Its sole failure is the explicitly
+superseded exact independent-opening arithmetic. V1 has not been silently edited,
+skipped or claimed to pass on this new mapping.
+
+The actual source exporter was rerun, producing 260 poses and the separately
+frozen 113-pose family. The factorial geometry result is decisive:
+
+| Actual mapper | Actual rig | Neutral/AA/PP/O/I/U frontmost crossings | Exit |
+| --- | --- | --- | --- |
+| `26555aa6` | Original `f39a89fc` | 0/16/152/65/36/28 | 1 |
+| `26555aa6` | Neutral-preserving `6b199c59` | 0/36/0/48/0/20 | 1 |
+| `9a23e5d6` | Original `f39a89fc` | 0/159/152/48/102/40 | 1 |
+| `9a23e5d6` | Neutral-preserving `6b199c59` | 0/0/0/0/0/0 | 0 |
+
+Neither isolated change passes. The combination also executes **all 113 frozen
+holdout poses with zero frontmost crossings and exit 0**. Hidden internal contacts
+remain recorded; this is a sampled front-view result, not universal mesh collision
+freedom. All raw JSON is retained losslessly in gzip files with both compressed
+and uncompressed hashes, alongside stdout and exit codes. The receipt is
+`mouth-composition-v2-green-9a23-receipt.json`.
+
+All five actual combined render anchors were independently viewed and their
+hashes and exact pose membership verified. AA/O now show teeth inside the visible
+mouth aperture instead of the previous side rows. Both lids close in the full-blink
+anchor. Neutral and stopped RGB pixels are exactly equal. Canonical-to-Blender
+jaw matrices agree within `1e-6` per element. Details are in
+`mouth-combined-render-9a23-6b199-review.json`.
+
+Decision: **accept the sampled mouth-composition/rig correction as a combination**.
+The source candidate still packages the original rig, so this result is not an
+acceptance of that packaged asset. Before promotion, the final styled asset must
+pass the same geometry cases and actual render comparison. The full 224-frame
+idle sequence, native Filament appearance, real speech synchronization and device
+acceptance remain separate and unproven. No reference video or private frames are
+included in this evidence commit.
+
+The exact packaged follow-up `62122c55077644de5bb1993347b7749c7e53610b` now
+contains that same `6b199c59` rig and updates the production pin and provenance.
+An independent final-source rerun passes **27/27 V2, zero skips**. The compiled
+production preflight accepts the real packaged bytes and its hash pin; all 21
+targets are present. Mapper, reducer and pose sources are byte-identical to the
+tested `9a23e5d6` composition, and the validator's sole change is the pinned hash.
+
+**ACCEPT_PACKAGED_MOUTH_COMPOSITION_AND_NEUTRAL_PRESERVING_RIG_FIX** applies only
+to this anatomy correction. Identical-input geometry is referenced, not relabeled
+as another measurement. The original material is still not the accepted reference
+look. `packaged-rig-62122-acceptance.json` records commands, actual final-source
+output, hashes and the separate visual/device limitations.
