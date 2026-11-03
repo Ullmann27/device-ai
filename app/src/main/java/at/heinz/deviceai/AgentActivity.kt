@@ -1478,12 +1478,43 @@ class AgentActivity : Activity() {
         val chat = conversationActive || keyboardCompact
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
+        syncConversationAvatar(chat)
         modeSection?.visibility = if (chat) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
         if (::chatScroll.isInitialized) chatScroll.visibility = if (chat) View.VISIBLE else View.GONE
         val training = learningVisualActive || activeNeuralCancellation != null
         if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
         if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+    }
+
+    /** Move the existing live surface; there is still only one renderer, clock and Director. */
+    private fun syncConversationAvatar(chat: Boolean) {
+        val head = hologramView ?: return
+        val home = homeView ?: return
+        val column = chatColumn ?: return
+        val target: android.view.ViewGroup = if (chat) column else home
+        val height = dp(if (keyboardCompact) 88 else if (resources.configuration.screenHeightDp < 520) 120
+            else if (home.wide) 200 else 160)
+        if (head.parent !== target) {
+            (head.parent as? android.view.ViewGroup)?.removeView(head)
+            if (chat) column.addView(head, minOf(1, column.childCount),
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height))
+            else home.addView(head, 0, android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
+            // Detach clears transient speech geometry; reattach the same current utterance.
+            avatarDirector.attach(head)
+        }
+        if (chat && head.layoutParams.height != height) {
+            head.layoutParams = head.layoutParams.apply { this.height = height }
+        }
+        head.setGeometry(when {
+            chat -> at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
+            home.slotHeightDp(at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS) > 0f ->
+                at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+            home.wide -> at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.FOLD
+            else -> at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
+        })
+        head.setForegroundActive(foregroundLearningActive)
     }
 
     private fun showHomeDashboard() {
