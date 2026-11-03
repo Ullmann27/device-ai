@@ -340,6 +340,8 @@ class ContinuumMobileBuilderActivity : Activity() {
     private fun preparedTypedCcc1Task(): String? =
         preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_CCC1_TASK,null)
             ?.takeIf { it.matches(Regex("t-[a-f0-9]{16}")) }
+            ?.takeUnless { preferences.contains(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID) &&
+                preferences.getString(ContinuumMobileBuildResultReceiver.ABORT_TASK,null)==it }
 
     private fun refreshReceipt() {
         val last = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
@@ -571,6 +573,16 @@ class ContinuumMobileBuilderActivity : Activity() {
         if (slot == ResultSlot.PROJECT_STATUS) pendingEdit.remove(ContinuumMobileBuildResultReceiver.STATUS_MESSAGE)
         if (slot == ResultSlot.CCC1_ABORT) pendingEdit.remove(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE)
             .putString(ContinuumMobileBuildResultReceiver.ABORT_TASK, abortTask)
+        if (slot == ResultSlot.CCC1_ABORT && abortTask != null &&
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_CCC1_TASK,null)==abortTask) {
+            // Owner cancellation consumes local execution consent even when
+            // Termux cannot start or has not confirmed remote cancellation.
+            pendingEdit.remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_JSON)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_CCC1_TASK)
+        }
         if (!pendingEdit.commit()) {
             callback.cancel()
             status.text = "Der lokale Auftragsstatus konnte nicht gesichert werden. Nichts gestartet."

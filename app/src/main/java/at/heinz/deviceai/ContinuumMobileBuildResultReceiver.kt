@@ -114,6 +114,13 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
                     (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)
                 ) editor.remove(CCC1_TASK)
             }
+            // Local execution consent is revoked independently of remote stop
+            // completion. A delayed abort(A) must preserve prepared task B.
+            if (abortSlot && abortTargetMatches && result.outcome == ContinuumCcc1Bridge.Outcome.OK &&
+                expectedAbortTask != null && prefs.getString(TYPED_PREPARED_CCC1_TASK, null) == expectedAbortTask) {
+                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA)
+                    .remove(TYPED_PREPARED_COMMIT).remove(TYPED_PREPARED_JSON).remove(TYPED_PREPARED_CCC1_TASK)
+            }
             editor.commit()
             return
         }
