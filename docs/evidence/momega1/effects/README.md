@@ -2,6 +2,8 @@
 
 Transient compiled JAR/class files are excluded from Git; their hashes remain in
 the manifest. Original raw commands, source blobs and dependency pins are kept.
+Raw tool logs retain their byte-exact original whitespace; source checks exclude
+those historical log-format warnings rather than altering execution evidence.
 
 Candidate `ca429fd81007473f1b0c0e66be6112f78f652613`, based on
 `ebefd45ab7eef88a47cf8f66872885da6ab20382`. See

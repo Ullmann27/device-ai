@@ -22,7 +22,7 @@
     "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt": "69e27569068f854f02c0d572546022e0df7ffbcfb337d00cfbc733f720f03366"
   },
   "evidenceSha256": {
-    "README.md": "37d777f0ece6f0a249a34d20c989f55efe932f5b0a2b4ac071f681755ea2d831",
+    "README.md": "a1223d87b211e5effc0d7f0e32a6a4dbb3e8a11e2781fc1504a2951ca98baa87",
     "before-read-transition-688b05e3/contact-manifest.json": "5b791971e12cd8f25a275cae5d44fb419ea2b45b0aabccf8e05630db3160d111",
     "before-read-transition-688b05e3/worker-read-primary.png": "a83d8664e5c32f217eba82ee566768ecd65dc15b6e0511702466c09031854bd1",
     "before-read-transition-688b05e3/worker-read-small-wide.png": "27373a4a137ab479cc881c2b0b1a63d3e52d901d4cfe0f3339580d73dbb8d48d",
@@ -269,6 +269,7 @@
     "raw/effects-transition-green-ca429fd8/compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "raw/effects-transition-green-ca429fd8/junit.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
     "raw/effects-transition-green-ca429fd8/junit.txt": "b9982b23ca22d28f4d7a81a2a754d7ae9a06a0d35808d98f3e2d1240bfcd664c",
+    "raw/effects-transition-green-ca429fd8/manifest.json": "85b9f682baefc5868eb6288d3afd4204adc8f1ce53b1c713c5743a51b319d4e7",
     "raw/effects-transition-green-ca429fd8/source/ContinuumPainter.kt": "976136b814b208de8e88cf9f5055b293a91be93c10b5373a1cbb6952af334169",
     "raw/effects-transition-green-ca429fd8/source/ContinuumTaskEffects.kt": "99f524b13d5c0c73e20949c1115e2c9d16f682f9a39cf2959084ede1beae0874",
     "raw/effects-transition-green-ca429fd8/source/ContinuumTaskEffectsTest.kt": "6638817416f244349b015b06c8fd6388318ba164e4c4db182746e4e932f3ec62",
@@ -277,6 +278,7 @@
     "raw/effects-transition-red-8bb8de49/compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "raw/effects-transition-red-8bb8de49/junit.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
     "raw/effects-transition-red-8bb8de49/junit.txt": "96ab2ee5526b60a7c603069c91ce732f356129f09d4deaa464dca697dec69e96",
+    "raw/effects-transition-red-8bb8de49/manifest.json": "6148e83f97f40cf77d66a86999d725adce9af5e18d4bfa83d4d1bd8be9ff72e3",
     "raw/effects-transition-red-8bb8de49/source/ContinuumPainter.kt": "976136b814b208de8e88cf9f5055b293a91be93c10b5373a1cbb6952af334169",
     "raw/effects-transition-red-8bb8de49/source/ContinuumTaskEffects.kt": "77abac48d9be72ca24ac5a37630da7e1a563e435f00702df0367e05fcd36e9de",
     "raw/effects-transition-red-8bb8de49/source/ContinuumTaskEffectsTest.kt": "6638817416f244349b015b06c8fd6388318ba164e4c4db182746e4e932f3ec62",
