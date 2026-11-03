@@ -14,7 +14,7 @@ for path in app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt app/
  sha256sum "$snapshot/$(basename "$path")" >> "$output/source.txt"
 done
 cp tools/momega1-readiness-review/*.kt tools/momega1-readiness-review/ReviewJUnit.java "$snapshot/"
-sha256sum tools/momega1-readiness-review/* > "$output/harness.sha256"
+sha256sum tools/momega1-readiness-review/*.kt tools/momega1-readiness-review/*.java tools/momega1-readiness-review/*.sh > "$output/harness.sha256"
 printf '%s\n' "$readiness_cp" > "$output/test-classpath.txt"
 set +e
 /workspace/momega1-build-env/jdk17/bin/java -XX:ActiveProcessorCount=1 -Xmx512m -cp '/workspace/momega1-build-env/jvm-deps/*' org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -no-reflect -jvm-target 17 -classpath "$readiness_cp" -d "$snapshot/tests.jar" "$snapshot"/*.kt > "$output/compile.txt" 2>&1
