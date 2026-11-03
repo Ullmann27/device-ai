@@ -1,6 +1,12 @@
 # Independent breakthrough quality handoff — 2026-11-03
 
-Baseline source: `64ec06a73f50cae9ee49035c840710d87777d50f`. This is a new research/acceptance cycle; the previous unsigned Code40 artifact remains bound to that baseline and is not an artifact of these candidates. No Actions, release, signing, main merge or device action was performed.
+## Final acceptance at 7247e99d
+
+All configured host gates passed on exact source `7247e99d0b93b62dfb2b5eee22486d22911cb722`: Node 2,188 passed/0 failed/5 skipped (2,193 total), backend64/64, JVM 2,149 passed/0 failed/12 existing skips (2,161 total, 391 suites), compilation, configured NewApi lint, and CRE1/SWB parity. Known M3 remains77/81 with harmful0 and no per-case regression; known LearningCore40 remains35/5/0 with forbidden0. Quiet host temporal p95=1.724ms passes the unchanged 5ms limit. Seven explicit responsive UI test replacements are enumerated; no retained identity regressed.
+
+The unsigned APK was actually built: `/workspace/continuum-artifacts/breakthrough-7247e99d-code40-unsigned.apk`, 84,178,957 bytes, SHA256 `e98e8177d069b474f43fdce82701aa2e20a178ee6118d5796f58359edd5a1b1b`, package `at.heinz.deviceai.continuumlocal`, code40/name0.3.39. Packaged GLB hash and license are verified. All ten native ELF libraries and their ZIP payload offsets pass 16KiB checks; apksigner rejects the unsigned artifact as expected. APK storage grew 29,313,016 bytes from original64; no runtime RAM claim follows.
+
+No device/GPU/Gemma/visual-identity certification, signing, publishing, or installation occurred. The original64 artifact is preserved. Full raw logs, XML, native Canvas images, parity, ELF/ZIP evidence, and reproduction scripts: `docs/evidence/breakthrough-quality-20261103/combined-7247e99d/RESULT.md`. Earlier failed runs below remain historical checkpoints.
 
 ## Freeze and independence
 
