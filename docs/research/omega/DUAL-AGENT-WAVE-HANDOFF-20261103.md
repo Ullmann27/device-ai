@@ -1,14 +1,14 @@
 # Continuum Ω — Dual-Agent-Welle 03.11.2026
 
-Status: SOURCE_INTEGRATED / FINAL_COMBINED_QA_PENDING. Wochenkontingent: **NOT_VISIBLE**. Kein Main-Merge, keine Originalsignierung, Veröffentlichung, Installation oder Änderung produktiver Besitzerdaten.
+Status: SOURCE_INTEGRATED / FINAL_COMBINED_QA_RUNNING. Wochenkontingent: **NOT_VISIBLE**. Kein Main-Merge, keine Originalsignierung, Veröffentlichung, Installation oder Änderung produktiver Besitzerdaten.
 
 ## Unmittelbarer Einstieg
 
-Repository `Ullmann27/device-ai`, Chief `codex/team-chief/omega-20261103`, Draft PR392. Letzter gemeinsamer App-Quellfreeze vor Harness-Reparatur: `d14bcc7c69becbf6fd84c3d28c62f33c58a44962`. Dieser enthält die geprüften begrenzten Gehirnänderungen plus optionalen 3D-Forschungsrenderer und adaptives Cockpit; **sein gemeinsamer Build ist noch offen**. Die vollständige frühere Code40-Abnahme gehört ausschließlich Quelle `64ec06a73f50cae9ee49035c840710d87777d50f`.
+Repository `Ullmann27/device-ai`, Chief `codex/team-chief/omega-20261103`, Draft PR392. Aktueller gemeinsamer App-/Harness-Quellfreeze: `853a8ee08359ce41375ddb9334ac8ae9c2e2c59e` (vorheriger UI-/3D-Merge `d14bcc7c69becbf6fd84c3d28c62f33c58a44962`). Dieser enthält die geprüften begrenzten Gehirnänderungen plus optionalen 3D-Forschungsrenderer und adaptives Cockpit; **sein gemeinsamer Build ist noch offen**. Die vollständige frühere Code40-Abnahme gehört ausschließlich Quelle `64ec06a73f50cae9ee49035c840710d87777d50f`.
 
 Gehirn-Freeze `c8c0615bc9f5398ad2e47b94669e3117ecf9f32d`: vollständiger erster JVM-Lauf2142 Tests,2129 bestanden,1 fehlgeschlagen,12 vorher bestehende übersprungen. Fehler: unveränderte Zeitgedächtnisgrenze p95<5ms, gemessen21,446ms bei parallelen Java-/Blender-Prozessen. Alle819 Antworten waren korrekt. Dieser Fehler wird nicht gelöscht. Gleiche Quellen ohne konkurrierende Rechenlast: Baseline64 p95=1,213ms, Kandidatc8=1,173ms; anschließender vollständiger unfiltrierter c8-Lauf2142 Tests,2130 bestanden,0 Fehler,12 übersprungen; p95=1,323ms,819/819 korrekt. Keine Grenzänderung. NewApi-konfigurierter Lint, Kompilierung und CRE1/SWB-Parität bestanden. M3 bekannte77/81 unverändert; bekannte LME40:35 richtig,5 Enthaltungen,0 falsch.
 
-Node erster c8-Lauf2191:2184 bestanden,2 Fehler,5 übersprungen. Die zwei erstmals aktivierten JVM-Graph-Prüfungen besitzen unvollständige Quelllisten in `scripts/continuum-cognitive-action-jvm.sh` und `scripts/continuum-dialogue-jvm.sh`. Quality repariert ausschließlich diese Testharnesses; echte Android-/OkHttp-/Okio-Abhängigkeiten, keine Attrappen und keine erneute Deaktivierung. Chief prüft die Reparatur unabhängig. Backend64/64 bestanden. Finale gemeinsame Node-/Gradle-/APK-Abnahme folgt auf neuem exakten Freeze.
+Node erster c8-Lauf2191:2184 bestanden,2 Fehler,5 übersprungen. Die zwei erstmals aktivierten JVM-Graph-Prüfungen besitzen unvollständige Quelllisten in `scripts/continuum-cognitive-action-jvm.sh` und `scripts/continuum-dialogue-jvm.sh`. Reparatur `54a338e3ee5bb961622ca21c325119d860219b72` ergänzt die tatsächlichen transitiven Quellen und offiziellen Android-/OkHttp-/Okio-Abhängigkeiten; keine Attrappen oder deaktivierten Testwurzeln. Ein ohnehin nicht getesteter Scheduler-Helfer wurde aus der Lern-Wildcard entfernt, bleibt im vollständigen Gradle-Lauf. Chief hat beide Skripte auf exakt54 unabhängig ausgeführt:84/84 und59/59, beide Exit0. Rohlogs unter `chief-harness-54a338e3`, zur finalen QA-Sicherung vorgesehen. Backend64/64 bestanden. Finale gemeinsame Node-/Gradle-/APK-Abnahme folgt auf neuem exakten Freeze.
 
 ## Tatsächliche Paare und Ergebnisse
 
@@ -33,8 +33,8 @@ Das verpflichtende Referenzdesign bleibt offen. Der echte lokale Blender-/CC0-Pr
 
 ## Nächster Abschluss
 
-1. Zwei Harness-Reparaturen unabhängig prüfen und gezielte Tests tatsächlich wiederholen.
-2. Exakten gemeinsamen App-/Harness-Freeze festhalten; keine neuen Featureversuche.
+1. Erledigt: beide Harness-Reparaturen unabhängig geprüft und143Tests tatsächlich wiederholt.
+2. Freeze853a8ee0 enthält die akzeptierten Gehirn-, UI-, optionalen3D- und Harness-Änderungen; keine neuen Featureversuche.
 3. Vollständige Node-/Gradle-/UI-/Lint-Prüfung mit ruhiger CPU für Zeitbudgets.
 4. Tatsächliches unsigniertes APK prüfen: Paket/Version, Hash, GLB-Hash, ARM64-ELF und ZIP16KiB-Ausrichtung. Keine Signierung/Veröffentlichung.
 5. 3D-Quellen/Renderpaket, alle Rohlogs und genaue Agenten-HEADs sichern; neue zehn Prioritäten und PR392-Abschluss aktualisieren.
