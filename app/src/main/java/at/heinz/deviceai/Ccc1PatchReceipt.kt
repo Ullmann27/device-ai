@@ -4,7 +4,10 @@ import at.heinz.deviceai.learning.StrictJson
 
 /**
  * CCC1 RED→GREEN patch receipt (Argon-4-Dossier 9.1, Punkt 6) as a checkable
- * data object. A receipt is only GREEN_VERIFIED_PENDING_REVIEW when:
+ * data object. evaluate() alone yields at most SELF_CONSISTENT_UNATTESTED: it cannot see git.
+ * evaluateAttested() yields GREEN_ATTESTED_PENDING_REVIEW only with an attestation of
+ * .github/continuum/ccc1-redgreen-verifier.mjs (real git objects, patch digest, re-executed
+ * tests) bound to sha256 of exactly this canonical JSON. Self-consistency requires:
  *  - every commit id is a full 40-hex SHA, the patch hash is 64-hex SHA-256,
  *    base, RED and GREEN commits are pairwise different;
  *  - the RED run belongs to the RED commit, exited non-zero and really failed
@@ -27,7 +30,9 @@ data class Ccc1PatchReceipt(
     val red: Ccc1TestRun?, val green: Ccc1TestRun?,
     val approvedForMerge: Boolean = false, val installed: Boolean = false, val deviceVerified: Boolean = false
 ) {
-    enum class Verdict { GREEN_VERIFIED_PENDING_REVIEW, RED_ONLY, UNKNOWN, INVALID }
+    /** SELF_CONSISTENT_UNATTESTED = fields agree with each other only (M2 level, review #370/2);
+     *  GREEN_ATTESTED_PENDING_REVIEW additionally needs a matching host verifier attestation. */
+    enum class Verdict { GREEN_ATTESTED_PENDING_REVIEW, SELF_CONSISTENT_UNATTESTED, RED_ONLY, UNKNOWN, INVALID }
     data class Evaluation(val verdict: Verdict, val reasons: List<String>)
 
     fun evaluate(): Evaluation {
@@ -50,8 +55,34 @@ data class Ccc1PatchReceipt(
         if (g.sha != greenSha) invalid += "GREEN_SHA"
         if (g.exitCode != 0L || g.failed != 0L || g.failingTests.isNotEmpty() || g.executed < targetTests.size ||
             !g.passedTargets.containsAll(targetTests)) invalid += "GREEN_NOT_PASSING_ALL_TARGETS"
-        return if (invalid.isEmpty()) Evaluation(Verdict.GREEN_VERIFIED_PENDING_REVIEW, emptyList())
+        return if (invalid.isEmpty()) Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, listOf("NO_ATTESTATION"))
         else Evaluation(Verdict.INVALID, invalid)
+    }
+
+    /**
+     * GREEN only if this receipt is self-consistent AND the host verifier attested exactly these bytes:
+     * receiptSha256 == sha256(toJson()), verdict VERIFIED without reasons, same patch digest, its OWN
+     * re-run saw RED fail as claimed and GREEN with zero failures, and both JUnit artifacts are hashed.
+     */
+    fun evaluateAttested(attestationJson: String): Evaluation {
+        val self = evaluate()
+        if (self.verdict != Verdict.SELF_CONSISTENT_UNATTESTED) return self
+        val a = try { StrictJson.parseObject(attestationJson) } catch (_: IllegalArgumentException) { null }
+            ?: return Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, listOf("ATTESTATION_UNREADABLE"))
+        val why = mutableListOf<String>()
+        if (a["schema"] != ATTESTATION_SCHEMA || a["version"] != 1L) why += "ATTESTATION_SCHEMA"
+        if (a["receiptSha256"] != sha256(toJson())) why += "ATTESTATION_FOR_OTHER_RECEIPT"
+        if (a["verdict"] != "VERIFIED" || (a["reasons"] as? List<*>)?.isEmpty() != true) why += "VERIFIER_REJECTED"
+        if (a["patchSha256"] != patchSha256) why += "PATCH_HASH_MISMATCH"
+        val r = a["red"] as? Map<*, *>; val g = a["green"] as? Map<*, *>
+        if (r == null || g == null || listOf(r, g).any { (it["xmlSha256"] as? String)?.let(SHA256::matches) != true })
+            why += "ARTIFACTS_MISSING"
+        else {
+            if (r["failed"] != red?.failed || r["executed"] != red?.executed || r["exitCode"] == 0L) why += "RED_RUN_DIFFERS"
+            if (g["failed"] != 0L || g["exitCode"] != 0L || g["executed"] != green?.executed) why += "GREEN_RUN_DIFFERS"
+        }
+        return if (why.isEmpty()) Evaluation(Verdict.GREEN_ATTESTED_PENDING_REVIEW, emptyList())
+        else Evaluation(Verdict.SELF_CONSISTENT_UNATTESTED, why)
     }
 
     private fun incomplete(run: Ccc1TestRun) = run.exitCode == null || run.timedOut || run.cancelled
@@ -72,6 +103,9 @@ data class Ccc1PatchReceipt(
 
     companion object {
         const val SCHEMA = "continuum-ccc1-patch-receipt"
+        const val ATTESTATION_SCHEMA = "continuum-ccc1-redgreen-attestation"
+        private fun sha256(s: String) = java.security.MessageDigest.getInstance("SHA-256")
+            .digest(s.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
         private const val MAX_TESTS = 512
         private val SHA1 = Regex("[0-9a-f]{40}")
         private val SHA256 = Regex("[0-9a-f]{64}")

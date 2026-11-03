@@ -14,6 +14,14 @@ object LocalDialogueQualityGate {
     private val sentenceBoundary = Regex("(?<=[.!?])\\s+")
     private val separators = Regex("[^\\p{L}\\p{N}]+")
     private val whitespace = Regex("\\s+")
+    /** Matched on the normalized (lowercase, punctuation-free) answer. */
+    private val contextDenial = listOf(
+        Regex("""\bkeinen zugriff auf (?:\S+ ){0,2}(?:frühere|vorherige|bisherige|vergangene|ältere|unsere|deine)"""),
+        Regex("""\b(?:kann|könnte) mich (?:\S+ ){0,3}nicht (?:\S+ ){0,4}erinnern"""),
+        Regex("""\bkein (?:gedächtnis|erinnerungsvermögen)\b"""),
+        Regex("""\b(?:keine|nicht) (?:\S+ ){0,2}(?:angaben|informationen|daten|zahlen)(?: \S+){0,5} (?:gemacht|gegeben|genannt|mitgeteilt|erwähnt)\b"""),
+        Regex("""\b(?:sehe|habe|kenne) (?:\S+ ){0,2}(?:keine|nicht) (?:\S+ ){0,2}(?:früheren|vorherigen|bisherigen) (?:nachrichten|aussagen|angaben)""")
+    )
     /** Canary strings of internal prompt frames; the model reproducing one means template completion, not an answer. */
     internal val INTERNAL_FRAMES = listOf(
         "UNTRUSTED EVIDENCE DATA", "<<<UNTRUSTED>>>", "CLAIM GRAPH:",
@@ -24,7 +32,8 @@ object LocalDialogueQualityGate {
         request: String,
         response: String,
         previousRequest: String? = null,
-        previousResponse: String? = null
+        previousResponse: String? = null,
+        priorOwnerContextSupplied: Boolean = false
     ): Evaluation {
         val candidate = response.trim()
         if (candidate.isEmpty()) {
@@ -47,6 +56,15 @@ object LocalDialogueQualityGate {
         val question = normalized(request)
         if (question.length >= 24 && current == question) {
             return Evaluation(false, 0.1, "Eingabe nur wiederholt. Beantworte sie stattdessen.")
+        }
+
+        // M3: the owner's earlier turns were placed IN the task. Claiming no access/memory or that
+        // nothing was said contradicts the prompt and triggers one bounded self-correction.
+        val contextSupplied = priorOwnerContextSupplied || request.startsWith(LocalFollowUpTaskFrame.HEADER)
+        if (contextSupplied && contextDenial.any { it.containsMatchIn(current) }) {
+            return Evaluation(false, 0.1,
+                "Antwort behauptet fehlenden Gesprächskontext, obwohl die früheren Nachrichten des Nutzers " +
+                    "im Auftrag stehen. Nutze diese Angaben und beantworte die neue Nachricht direkt.")
         }
 
         // Explicit uncertainty is valid. Never pressure a model to invent facts.

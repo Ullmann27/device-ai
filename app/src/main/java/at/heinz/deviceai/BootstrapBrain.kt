@@ -31,7 +31,7 @@ object BootstrapBrain {
         """(?iu)(?<![\p{L}\p{N}_])(?:speicher|speicherplatz|speicherstatus|speicherkapazität)(?![\p{L}\p{N}_])"""
     )
     private val storageReadCue = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|anzeigen|kontrolliere|wie viel|wieviel|frei|freien|freier|verfügbar|status|kapazität|auslastung)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|anzeigen|kontrolliere|wie viel|wieviel|wie voll|belegt|frei|freien|freier|verfügbar|status|kapazität|auslastung)(?![\p{L}\p{N}_])"""
     )
     private val storageSaveImperative = Regex(
         """(?iu)^\s*(?:bitte\s+)?speicher\s+(?:(?:mir|dir)\s+)?(?:das|dies|diese|dieses|diesen|die|den|dem|meine|unsere|folgende|angaben|daten|zahlen|text|texte|bild|bilder|datei|dateien|notiz|notizen|nicht|nichts)(?![\p{L}\p{N}_])"""
@@ -39,7 +39,7 @@ object BootstrapBrain {
     // Contrasting clauses have independent intent: "nicht Web, sondern prüfe Speicher"
     // may still inspect local storage, while "prüfe nicht den Speicher" never does.
     private val storageNegation = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|kein\p{L}*)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:nicht|niemals|ohne|unterlasse|weder|kein\p{L}*)(?![\p{L}\p{N}_])"""
     )
     // ", nicht/aber nicht/jedoch kein…" starts an independent contrast clause. A comma
     // before "dass/welche/…" (subordinate clause) is NOT a boundary: the negation of
@@ -51,7 +51,7 @@ object BootstrapBrain {
         """(?iu)(?<![\p{L}\p{N}_])(?:akku|batterie|ladezustand|akkustand)(?![\p{L}\p{N}_])"""
     )
     private val batteryReadCue = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|wie viel|wieviel|wie voll|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:prüfe|prüfen|prüf|überprüfe|zeige|zeigen|zeig|wie viel|wieviel|wie voll|wie ist|wie steht|wie hoch|lade|ladung|ladestand|status|stand|zustand)(?![\p{L}\p{N}_])"""
     )
     private fun isBatteryReadRequest(input: String): Boolean =
         input.trim().split(storageClauseBoundary).any { untrimmed ->
@@ -69,8 +69,13 @@ object BootstrapBrain {
             text.isNotBlank() && !storageNegation.containsMatchIn(text) && cue(text)
         }
     private val appsCue = Regex(
-        """(?iu)(?<![\p{L}\p{N}_])(?:installierte[nm]?\s+apps|alle\s+apps|apps\s+installiert)(?![\p{L}\p{N}_])"""
+        """(?iu)(?<![\p{L}\p{N}_])(?:installierte[nm]?\s+apps|alle\s+apps|apps\s+(?:sind\s+)?installiert)(?![\p{L}\p{N}_])"""
     )
+    private val wlanReadCue = Regex("""(?iu)(?<![\p{L}])(?:verbunden|verbindung|status|zeig\p{L}*|prüf\p{L}*|signal)(?![\p{L}])""")
+    // "Prüf nicht X, sondern Y": the read verb of the negated clause applies to the contrast clause.
+    private val contrastVerb = Regex("""(?iu)^(\s*(?:bitte\s+)?(?:prüfe?|überprüfe|zeige?|kontrolliere)\b)(.*?\bnicht\b[^.;!?]*?)\bsondern\b""")
+    private fun carryContrastVerb(low: String): String =
+        contrastVerb.find(low)?.let { m -> low.replaceRange(m.range, m.value + " " + m.groupValues[1].trim()) } ?: low
     private val appMutation = Regex("""(?iu)(?<![\p{L}\p{N}_])(?:schließ\p{L}*|schliess\p{L}*|beend\p{L}*|stopp\p{L}*|aktualisier\p{L}*)""")
 
     private fun isStorageReadRequest(input: String): Boolean {
@@ -92,7 +97,7 @@ object BootstrapBrain {
         if (utterance.length > 2_048) return BootstrapDecision(BootstrapKind.REPLY,
             "Eingabe zu lang; bitte höchstens 2048 Zeichen. Es wurde nichts ausgeführt.")
         val text = utterance.trim()
-        val low = text.lowercase(Locale.ROOT)
+        val low = carryContrastVerb(text.lowercase(Locale.ROOT))
         // Explicit memory deletion stays available, but always requires an Android confirmation.
         if (low == "lösche meine erinnerungen" || low == "lernspeicher löschen")
             return BootstrapDecision(BootstrapKind.FORGET)
@@ -213,7 +218,8 @@ object BootstrapBrain {
                 "Ich beantworte diese Anfrage nur aus lokal verfügbaren Informationen. " +
                     "Falls dafür keine ausreichenden Belege vorliegen, sage ich das ausdrücklich.",
                 allowNeuralRecall = true)
-        if (affirmativeClause(low) { "netzwerk" in it || "internetverbindung" in it }) return tool("get_network_summary")
+        if (affirmativeClause(low) { "netzwerk" in it || "internetverbindung" in it ||
+                ("wlan" in it && wlanReadCue.containsMatchIn(it)) }) return tool("get_network_summary")
         if ("internet" in low || "recherch" in low) return BootstrapDecision(
             BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +
                 "Tippe WEB RECHERCHE und nenne eine direkte HTTPS-Quelle. " +
