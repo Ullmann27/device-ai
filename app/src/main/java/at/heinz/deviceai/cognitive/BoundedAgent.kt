@@ -404,7 +404,11 @@ class BoundedAgentOrchestrator(
                             if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
                                 // Do not let a model reissue an unresolved effect under
                                 // a new call id or turn a replay into fresh experience.
-                                val blocked = if(lastRecord.outcomeUncertain)
+                                val blocked = if(lastRecord.outcomeUncertain && execution.journalUnavailableBeforeDispatch)
+                                    "Werkzeugjournal nicht lesbar: In diesem Durchlauf wurde nichts ausgeführt. " +
+                                        "Ob diese Aufruf-ID früher bereits ausgeführt wurde, ist unbekannt. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else if(lastRecord.outcomeUncertain)
                                     "Werkzeugausgang UNKNOWN: Eine bereits ausgelöste Wirkung kann fortbestehen. " +
                                         "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
                                 else "Gespeicherte Quittung: keine neue Ausführung oder frische Beobachtung. " +

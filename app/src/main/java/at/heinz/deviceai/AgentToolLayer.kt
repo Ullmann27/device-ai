@@ -91,7 +91,9 @@ data class ToolExecutionRecord(
 )
 
 data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord,
-                               val replayed: Boolean = false)
+                               val replayed: Boolean = false,
+                               /** Journal unreadable before this call dispatched: nothing ran here, prior state unknown. */
+                               val journalUnavailableBeforeDispatch: Boolean = false)
 
 /** A trusted backend can narrow an outcome to failure, never assert success. */
 class ToolBackendFailure(val status: ToolExecutionStatus, message: String) : RuntimeException(message) {
@@ -198,6 +200,7 @@ class ToolGate(
         } catch (_: Exception) {
             return result(ToolExecutionStatus.REJECTED,
                 "Durable journal unavailable; prior outcome UNKNOWN, operator review required.",uncertain=true)
+                .copy(journalUnavailableBeforeDispatch = true)
         }
         when (receipt?.state) {
             ToolReceiptState.SUCCEEDED -> return result(
