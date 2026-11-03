@@ -1,0 +1,32 @@
+✖ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (852.15647ms)
+✖ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (904.668611ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1820.489732
+
+✖ failing tests:
+
+test at tools/independence-service-review/active-recovery.test.mjs:54:1
+✖ S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success (852.15647ms)
+  Error: CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\"status\":\"BLOCKED\",\"code\":\"SERVICE_SOURCE_DIRTY\"}\n","timedOut":false,"limited":false,"pid":331290,"elapsedMs":291.61}
+      at json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+      at dispatchWithoutExecutableRuntime (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:30:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:58:17)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tools/independence-service-review/active-recovery.test.mjs:83:1
+✖ S10: actual daemon crash after dispatch preserves UNKNOWN and never restarts the claimed work (904.668611ms)
+  Error: CLI failed: {"code":1,"signal":null,"stdout":"","stderr":"{\"status\":\"BLOCKED\",\"code\":\"SERVICE_SOURCE_DIRTY\"}\n","timedOut":false,"limited":false,"pid":331374,"elapsedMs":301.965}
+      at json (file:///workspace/independence-service-review/tools/independence-service-review/process-fixture.mjs:62:11)
+      at dispatchWithoutExecutableRuntime (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:30:3)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///workspace/independence-service-review/tools/independence-service-review/active-recovery.test.mjs:87:21)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
