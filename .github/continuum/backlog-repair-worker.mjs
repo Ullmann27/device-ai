@@ -79,9 +79,13 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
  */
-export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,candidateVerifier=null,executor=null,executorAbortMode=null}={}){
+export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,candidateVerifier=null,executor=null,verifierExecutor=null,executorAbortMode=null}={}){
   // Validate execution authority before reading/mutating backlog claims or starting checks.
   validateRepairExecutor(executor,{abortWatch:{},executorAbortMode});
+  if(verifierExecutor!==null){
+    if(executor===null||verifierExecutor===executor)throw Error('INDEPENDENT_EXECUTOR_REQUIRED');
+    validateRepairExecutor(verifierExecutor,{abortWatch:{},executorAbortMode});
+  }
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
   if(candidateVerifier!==null&&!taskSpec)throw Error('RESEARCH_VERIFIER_REQUIRES_SCOPED_TASK');
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
@@ -119,6 +123,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   // worker. Never copy it into reports, provider requests or workspace evidence.
   const activeExecutor=typeof executor?.forClaim==='function'
     ?executor.forClaim({backlog:backlogPath,id:task.id,token}):executor;
+  const activeVerifierExecutor=verifierExecutor===null?activeExecutor:
+    typeof verifierExecutor.forClaim==='function'?verifierExecutor.forClaim({backlog:backlogPath,id:task.id,token}):verifierExecutor;
   const reportDir=path.join(outRoot,task.id+'-'+head.slice(0,12)+'-'+
     Date.now()+'-'+crypto.randomBytes(4).toString('hex'));
   let wt=null,independent=null;
@@ -158,7 +164,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       fs.mkdirSync(verifyOut,{recursive:true,mode:0o700});
       const patchPath=path.join(verifyOut,'candidate.patch');fs.writeFileSync(patchPath,patch,{mode:0o600,flag:'wx'});
       const verification=verifyCodingCandidate({repo:source,task:taskSpec,patchPath,patchSha256,proposalSha256,
-        out:verifyOut,deadline,executor:activeExecutor,executorAbortMode,checkpoint,abortWatch});
+        out:verifyOut,deadline,executor:activeVerifierExecutor,executorAbortMode,checkpoint,abortWatch});
       fs.writeFileSync(path.join(verifyOut,'verification.json'),JSON.stringify(verification,null,2)+'\n',{mode:0o600});
       return verification;
     }:null;
@@ -189,7 +195,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
       if(report.progress)report.progress.push({phase:'CHECKING_INDEPENDENT',at:new Date().toISOString(),attempt:report.inference.localRequests});
       writeReport(report);
-      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor:activeExecutor,executorAbortMode});
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor:activeVerifierExecutor,executorAbortMode});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
       let researchVerification=null;

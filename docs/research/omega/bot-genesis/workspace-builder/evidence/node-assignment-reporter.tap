@@ -1,0 +1,16 @@
+✔ existing profile port selects distinct immutable identities without changing task budget (5.996612ms)
+✔ copied JSON and unregistered identities cannot acquire assignment origin (0.836408ms)
+✔ same builder/verifier and unsupported stage are rejected (0.610899ms)
+✔ prepared task fingerprint and canonical task cannot be exchanged (0.954126ms)
+✔ rename retains identity; removal and workspace change invalidate current association (1.062258ms)
+✔ replacing the external store method cannot substitute the admitted reader (0.477028ms)
+✔ profile model cap restricts task and a later budget reduction revokes the association (0.720404ms)
+✔ bot execution requires actual admitted isolation before reading journals or invoking provider (1.512645ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.419032
