@@ -111,8 +111,26 @@ text, and revoked resignation. Actual baseline RED: 19 JUnit tests / 2 failures
 (ledger and working-memory resignation both incorrectly ANSWER); 17 pass. Log
 `temporal-red-jvm.txt`, command `bash docs/evidence/omega-intelligence-20261103/run-temporal-jvm.sh`.
 The compile reports four pre-existing unnecessary-`!!` warnings; no Android/stubs.
-Next: exact bare owner resignation adds only an UNCLEAR barrier, never a guessed
-employer or unemployment fact. Source remains untouched at this RED checkpoint.
+GREEN: the exact bare owner resignation now adds only an UNCLEAR barrier, never a
+guessed employer or unemployment fact. Same 19/19 tests pass, followed by 32/32
+with existing modality and temporal-ledger controls. The unchanged 20-case
+temporal set reports 18 correct / 2 abstained / 0 wrong; this is a known-set rerun,
+not fresh blind evidence. Logs: `temporal-green-jvm.txt` and
+`temporal-controls-jvm.txt`; controls command adds `--controls` to the runner.
+Production SHA-256 `952fe9a19caa125d1317c2f8df1da8dcd63c544309b16535fd5382fce2590ea0`.
+The existing lexical statement admission, timing, revocation and caching stay
+unchanged. Scope is deliberately only the bare `Ich habe gekündigt[.!]?` sentence;
+broader paraphrases, named-person resignations and notice periods remain unknown.
+
+Actual integration: `AgentActivity`'s existing specialist chain calls
+`ContinuumTemporalMemorySpecialist.decide` →
+`ContinuumLearningCore.temporalMemoryView` → `ContinuumTemporalMemory`; the
+specialist's OFF/SHADOW/ON, revocation recheck and original baseline contracts are
+unchanged. This lane does not edit that caller or write memory records.
+
+Full Gradle/project suite and unchanged 40-case German LME rerun through real
+LearningCore are pending with Quality. The latter is consumed known-set scoring;
+future generalization claims need a newly frozen independent set.
 
 First fix exact replay: `5346e76910bb19e2da859556852724c2c2fe3c59`, 22/22 PASS,
 `verified-5346e769.txt` (source/test files clean; only the output log untracked).

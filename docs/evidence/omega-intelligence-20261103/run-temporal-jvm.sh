@@ -15,6 +15,15 @@ sources=(
   app/src/main/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedger.kt
   app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt
 )
+tests=(at.heinz.deviceai.learning.ContinuumTemporalMemoryTest)
+if [[ ${1:-} == --controls ]]; then
+  sources+=(app/src/test/java/at/heinz/deviceai/learning/OwnerStatementModalityTest.kt
+    app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryHoldoutTest.kt
+    app/src/test/java/at/heinz/deviceai/cognitive/TemporalRoleEvidenceLedgerTest.kt)
+  tests+=(at.heinz.deviceai.learning.OwnerStatementModalityTest
+    at.heinz.deviceai.learning.ContinuumTemporalMemoryHoldoutTest
+    at.heinz.deviceai.cognitive.TemporalRoleEvidenceLedgerTest)
+fi
 printf 'source_commit=%s\n' "$(git rev-parse HEAD)"
 printf 'source_status:\n'
 git status --short
@@ -24,4 +33,4 @@ java -Xmx512m -cp "$classpath" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
   -no-stdlib -no-reflect -classpath "$classpath" -jvm-target 17 \
   -d "$classes" "${sources[@]}"
 java -Xmx256m -cp "$classes:$classpath" org.junit.runner.JUnitCore \
-  at.heinz.deviceai.learning.ContinuumTemporalMemoryTest
+  "${tests[@]}"

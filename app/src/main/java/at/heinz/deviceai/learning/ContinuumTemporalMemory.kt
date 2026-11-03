@@ -177,7 +177,11 @@ class ContinuumTemporalMemory private constructor(
         }
         val what = when (predicate) {
             RESIDENCE -> rx("wohn|leb|zieh|gezogen|umzug").containsMatchIn(low)
-            WORK -> low.contains("arbeit")
+            // A bare owner resignation makes the old employer uncertain; it does
+            // not supply a new job or assert unemployment. Keep object-qualified
+            // cancellations (contract, insurance, etc.) and denied resignations out.
+            WORK -> low.contains("arbeit") || subject == OWNER &&
+                rx("\\s*ich\\s+habe\\s+gekündigt[.!]?\\s*").matches(low)
             AGE -> low.contains("alt") || rx("\\b\\d{1,3}\\b").containsMatchIn(low)
             NAME -> low.contains("heiß")
             else -> false
