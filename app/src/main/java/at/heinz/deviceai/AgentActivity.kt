@@ -5244,6 +5244,13 @@ class AgentActivity : Activity() {
     /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
     private fun rememberOwnerFact(fact: String) {
         onLearningIo(work@{
+            // H2: a hypothetical/uncertain/planned/questioned/reported statement never enters the
+            // app fact list as owner-confirmed; the learning core keeps it as an unconfirmed statement.
+            if (at.heinz.deviceai.cognitive.OwnerFactAdmission.classify(fact) ==
+                at.heinz.deviceai.cognitive.OwnerFactAdmission.Kind.HELD_UNCONFIRMED) {
+                runCatching { ContinuumLearningCore(filesDir).confirmOwnerFact(fact) }
+                return@work at.heinz.deviceai.cognitive.OwnerFactAdmission.HELD_MESSAGE
+            }
             val known = fact in bootstrapMemory.facts()
             if (!known && !bootstrapMemory.addFact(fact)) {
                 return@work if (bootstrapMemory.facts().size >= BootstrapMemoryStore.MAX_FACTS)
@@ -5253,6 +5260,8 @@ class AgentActivity : Activity() {
             }
             val core=ContinuumLearningCore(filesDir)
             runCatching { core.confirmOwnerFact(fact) }.fold({ change ->
+                if (change == OwnerFactChange.HELD_UNCONFIRMED)
+                    return@fold at.heinz.deviceai.cognitive.OwnerFactAdmission.HELD_MESSAGE
                 val storedMessage=when {
                     known && change == OwnerFactChange.ALREADY_ACTIVE -> "Das ist bereits gemerkt."
                     change == OwnerFactChange.REACTIVATED -> "Gemerkt. Diese früher widerrufene Information gilt " +
