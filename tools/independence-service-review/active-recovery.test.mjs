@@ -112,3 +112,53 @@ test('S10: actual daemon crash after dispatch preserves UNKNOWN and never restar
     await f.close();
   }
 });
+
+test('S02 supplement: per-UID admission excludes a second different project and state directory until verified stop', {timeout: 45000}, async () => {
+  const first = await fixture('global-first');
+  const second = await fixture('global-second');
+  try {
+    assert.notEqual(first.project, second.project);
+    assert.notEqual(first.config, second.config);
+    json(await first.call('start'));
+    const owner = descriptor(first);
+    assert.equal(alive(owner.process), true);
+    const rejected = await second.call('start');
+    assert.notEqual(rejected.code, 0, 'another state directory cannot multiply active local admission');
+    assert.equal(json(await second.call('status')).processVerified, false);
+    assert.equal(alive(owner.process), true, 'losing contender cannot stop the active service');
+    json(await first.call('stop'));
+    await until(() => alive(owner.process), value => !value);
+    json(await second.call('start'));
+    assert.equal(json(await second.call('status')).processVerified, true);
+    record({kind: 'CROSS_CONFIG_SINGLE_ADMISSION', firstState: state(first), secondState: state(second),
+      secondRejectedWhileFirstAlive: true, secondStartedAfterVerifiedStop: true});
+  } finally {await second.close(); await first.close();}
+});
+
+test('S10 supplement: per-UID admission retains a live orphan across different project and state directories', {timeout: 45000}, async () => {
+  const first = await fixture('global-orphan', ['--max-cycles', '4'], {isolatedRuntimeCopy: true});
+  const second = await fixture('global-orphan-contender');
+  let active;
+  try {
+    const running = await dispatchWithoutExecutableRuntime(first, 'global-orphan-order');
+    active = running.active;
+    signal(running.daemon.process, 'SIGKILL');
+    await until(() => alive(running.daemon.process), value => !value);
+    assert.equal(json(await first.call('status')).state, 'ORPHAN_WORKER');
+    const rejected = await second.call('start');
+    assert.notEqual(rejected.code, 0, 'dead parent does not free admission while its worker remains alive');
+    assert.equal(alive(active.workerProcess), true, 'contender must not kill an orphan to claim success');
+    assert.equal(observe(active.workerProcess.pid).state, 'T');
+    assert.equal(json(await second.call('status')).processVerified, false);
+    signal(active.workerProcess, 'SIGKILL');
+    await until(() => alive(active.workerProcess), value => !value);
+    json(await second.call('start'));
+    assert.equal(json(await second.call('status')).processVerified, true);
+    assert.equal(fs.readdirSync(publicResult(first)).length, 0);
+    record({kind: 'CROSS_CONFIG_ORPHAN_ADMISSION', orphan: active.workerProcess,
+      secondRejectedWhileOrphanAlive: true, secondStartedAfterVerifiedChildTeardown: true});
+  } finally {
+    signal(active?.workerProcess, 'SIGKILL');
+    await second.close(); await first.close();
+  }
+});
