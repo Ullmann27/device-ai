@@ -1,6 +1,6 @@
 # Breakthrough autonomy handoff — 2026-11-03
 
-Status: focused host GREEN; candidate source freeze for independent Quality.
+Status: bounded DELTA follow-up host GREEN; new source freeze for separate Quality.
 Base `64ec06a73f50cae9ee49035c840710d87777d50f`.
 Branch `codex/breakthrough-autonomy-20261103`, intended Draft PR base
 `codex/team-chief/omega-20261103`, Draft https://github.com/Ullmann27/device-ai/pull/400.
@@ -50,13 +50,42 @@ Full CCC1 regression: 154/154 pass, zero skips, including actual existing
 SIGKILL/journal recovery and interrupted-job owner-approval guards.
 Independent Quality: PENDING.
 
-Known review nuance: exact duplicate target strings and ambiguous aliases that
+Historical review nuance at first freeze: exact duplicate target strings and ambiguous aliases that
 match multiple observed cases are rejected. Two distinct labels resolving to
 the same single case (for example `sum.adds_two` and `test.adds_two`) are not yet
 deduplicated by resolved identity. Quality and Chief were notified before final
 handoff; no follow-up implementation is included in frozen `799dd763`. This does
 not bypass baseline identity retention, but it limits claims about target-list
-normalization. Await independent judgment before any additional scoped repair.
+normalization. The authorized follow-up below now rejects these duplicate resolved identities.
+
+## DELTA follow-up, consumed public cases
+
+Independent challenge `b1bca66f54f80ef627ab17201e29335ee3210f86` / PR407
+confirmed every coverage-loss case and valid repair passed the frozen contract,
+then identified 17 ignored receipt contradictions. These are now public
+development cases, not a second blind evaluation. Own RED committed/pushed at
+`621d8a5d6a3fda1ad4392ef6a2f03d1533407dcf`: 17 failing subcases plus parent,
+one passing legacy-omission/unique-alias positive.
+
+The same verifier now enforces schema/version and denied authority claims in
+both modes; requires distinct resolved target identities; and compares supplied
+command, exit, skipped, timeout/cancelled and passed-target metadata with actual
+observations. Canonical `Ccc1PatchReceipt.toJson()` was inspected. Ancillary run
+metadata omitted by legacy direct JavaScript callers remains optional; supplied
+contradictions fail closed. Explicit commands must name `node-redgreen` or the
+verifier's fixed `NODE_PROFILE`, never a new receipt-selected runner.
+
+Focused suite after follow-up: 36/36 pass, zero skips. Source SHA-256:
+`c2d2b16a36f3c43179c589d94ed514a677aa6d23d56bc234f871531c8048c78c`.
+Raw per-case receipts/verdicts: `delta-red/`, `delta-green/`; commands and exits:
+`delta-red.tap`, `delta-green.tap`. Actual executions were genuine even before
+repair; the rejected defect is contradictory reported metadata, not fabricated
+execution or cryptographic authentication. Parser-only malformed XML diagnostics
+were not treated as exploits and remain outside this bounded follow-up.
+
+New freeze: the implementation commit containing this section. Full CCC1 run,
+DELTA-B consumed-case rerun and independent Quality reserve/acceptance follow
+that freeze. No source changes are planned during assessment.
 
 Commands and complete exits are in `coverage-red.tap`, `coverage-green.tap` and
 `ccc1-regression.tap`. Runs began on the RED parent with repaired working-tree

@@ -106,6 +106,28 @@ const matching=(cases,id)=>[...cases].filter(([key,c])=>key===id||c.legacyId===i
 const lookup=(cases,id)=>{const matches=matching(cases,id);return matches.length===1?matches[0]:null;};
 const sameSet=(a,b)=>a.length===b.length&&[...a].sort().every((x,i)=>x===[...b].sort()[i]);
 const validTargets=targets=>Array.isArray(targets)&&targets.length>0&&targets.every(t=>typeof t==='string'&&t.length>0)&&new Set(targets).size===targets.length;
+function envelopeReasons(receipt){
+ if(!receipt||receipt.schema!==RECEIPT_SCHEMA||receipt.version!==1)return ['RECEIPT_SCHEMA'];
+ return ['approvedForMerge','installed','deviceVerified'].some(k=>Object.hasOwn(receipt,k)&&receipt[k]!==false)?['FORBIDDEN_CLAIM']:[];
+}
+
+/** Legacy direct callers may omit ancillary metadata; supplied claims must match our own run. */
+function compareClaimedRun(claim,observed,targets,side,reasons){
+ const expected={exitCode:observed.exitCode,skipped:[...observed.cases.values()].filter(c=>c.skipped).length,
+  timedOut:false,cancelled:false};
+ for(const [field,value] of Object.entries(expected)){
+  if(Object.hasOwn(claim,field)&&claim[field]!==value)reasons.push(`CLAIMED_${side}_${field.toUpperCase()}_DIFFERS`);
+ }
+ if(Object.hasOwn(claim,'command')&&!['node-redgreen',NODE_PROFILE].includes(claim.command))
+  reasons.push(`CLAIMED_${side}_COMMAND_DIFFERS`);
+ if(Object.hasOwn(claim,'passedTargets')){
+  const expectedIds=targets.map(t=>lookup(observed.cases,t)).filter(c=>c&&!c.failed&&!c.skipped).map(c=>c.identity);
+  const claims=Array.isArray(claim.passedTargets)?claim.passedTargets.map(t=>lookup(observed.cases,t)):[];
+  const ids=claims.map(c=>c?.identity);
+  if(!Array.isArray(claim.passedTargets)||claims.some(c=>!c||c.failed||c.skipped)||
+     new Set(ids).size!==ids.length||!sameSet(ids,expectedIds))reasons.push(`CLAIMED_${side}_TARGETS_DIFFER`);
+ }
+}
 
 function compareCoverage(red,green,reasons){
  const candidate=[...green.cases.values()];let cursor=0;
@@ -132,6 +154,10 @@ function compareRuns(receipt,red,green,reasons){
  if(redFailing.some(id=>!targets.includes(id)&&!targets.includes(red.cases.get(id)?.alias)))reasons.push('RED_FAILS_OUTSIDE_TARGETS');
  if(targets.some(t=>!lookup(red.cases,t)))reasons.push('TARGET_MISSING_IN_RED');
  if(targets.some(t=>matching(red.cases,t).length>1||matching(green.cases,t).length>1))reasons.push('TARGET_IDENTITY_AMBIGUOUS');
+ for(const observed of [red,green]){
+  const ids=targets.map(t=>lookup(observed.cases,t)?.identity).filter(Boolean);
+  if(new Set(ids).size!==ids.length)reasons.push('TARGET_IDENTITY_DUPLICATE');
+ }
  for(const t of targets){const c=lookup(green.cases,t);if(!c||c.failed||c.skipped)reasons.push('TARGET_NOT_PASSING_IN_GREEN');}
  if(green.exitCode!==0||green.failed!==0)reasons.push('GREEN_HAS_FAILURES');
  const r=receipt.red,g=receipt.green;
@@ -141,7 +167,8 @@ function compareRuns(receipt,red,green,reasons){
  if(!sameSet(r.failingTests,redFailing))reasons.push('CLAIMED_RED_FAILURES_DIFFER');
  if(r.executed!==red.executed||r.failed!==red.failed)reasons.push('CLAIMED_RED_COUNTS_DIFFER');
  if(g.executed!==green.executed||g.failed!==green.failed||g.failingTests.length)reasons.push('CLAIMED_GREEN_COUNTS_DIFFER');
- if(!targets.every(t=>g.passedTargets.includes(t)))reasons.push('CLAIMED_GREEN_TARGETS_DIFFER');
+ compareClaimedRun(r,red,targets,'RED',reasons);
+ compareClaimedRun(g,green,targets,'GREEN',reasons);
 }
 
 /** Commit mode: receipt fields baseSha/redSha/greenSha/patchSha256/targetTests/red/green (Kotlin canonical JSON). */
@@ -149,12 +176,12 @@ export function verifyCommitReceipt({repo,receiptBytes,run=runNodeProfile}){
  const reasons=[];
  let receipt;
  try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{receipt=null;}
- if(!receipt||receipt.schema!==RECEIPT_SCHEMA||receipt.version!==1)return attestation(receiptBytes,'REJECTED',['RECEIPT_SCHEMA']);
+ const envelope=envelopeReasons(receipt);
+ if(envelope.length)return attestation(receiptBytes,'REJECTED',envelope);
  const {baseSha,redSha,greenSha,patchSha256,targetTests}=receipt;
  if(!validTargets(targetTests))reasons.push('TARGET_TESTS');
  if(![baseSha,redSha,greenSha].every(s=>isCommit(repo,s)))reasons.push('COMMIT_NOT_IN_REPOSITORY');
  if(new Set([baseSha,redSha,greenSha]).size!==3)reasons.push('COMMITS_NOT_DISTINCT');
- if(receipt.approvedForMerge||receipt.installed||receipt.deviceVerified)reasons.push('FORBIDDEN_CLAIM');
  if(reasons.length)return attestation(receiptBytes,'REJECTED',reasons);
  if(!ancestor(repo,baseSha,redSha)||!ancestor(repo,redSha,greenSha))reasons.push('NOT_A_LINEAR_BASE_RED_GREEN_CHAIN');
  const diff=git(repo,['diff','--binary','--full-index',redSha,greenSha],{binary:true});
@@ -173,6 +200,8 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
  const reasons=[];
  let receipt=null;
  try{receipt=JSON.parse(Buffer.from(receiptBytes).toString('utf8'));}catch{}
+ const envelope=envelopeReasons(receipt);
+ if(envelope.length)return attestation(receiptBytes,'REJECTED',envelope);
  if(!receipt||!validTargets(receipt.targetTests))reasons.push('TARGET_TESTS');
  if(!isCommit(repo,baseCommit))reasons.push('COMMIT_NOT_IN_REPOSITORY');
  let bytes=null;try{bytes=fs.readFileSync(patchPath);}catch{reasons.push('PATCH_MISSING');}
