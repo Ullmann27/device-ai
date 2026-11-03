@@ -7,7 +7,10 @@ const module=async name=>import(pathToFileURL(path.join(target,'.github/continuu
 const {createIsolatedExecutor,validWorkspaceEvidence}=await module('isolated-executor.mjs');
 const {bindCcc1Workspace}=await module('ccc1-workspace.mjs');
 const {workspaceFixture}=await module('ccc1-workspace-fixture.mjs');
-const {ownerAction}=await module('ccc1-orchestrator.mjs');
+const {ownerAction,startTask}=await module('ccc1-orchestrator.mjs');
+const {DurableTaskJournal,runtimeKey}=await module('ccc1-journal.mjs');
+const {envelope}=await module('ccc1-envelope.mjs');
+const {jobIdFor}=await module('ccc1-recovery.mjs');
 const {BacklogStore}=await module('development-backlog.mjs');
 const {jobTaskId}=await import(pathToFileURL(path.join(target,'scripts/continuum-mobile-coding.mjs')));
 const config={image:'sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1',nodeHome:'/opt/codex/runtimes/codex-primary-runtime/dependencies/node',memoryMb:256,pids:64,cpus:1,timeoutMs:5000};
@@ -33,4 +36,24 @@ test('corrupted MAC journal after binding must prevent execution',()=>fixture((f
  const raw=fs.readFileSync(f.journal.file,'utf8');fs.writeFileSync(f.journal.file,raw.replace('synthetic isolation','tampered isolation'));
  assert.throws(()=>bindCcc1Workspace(input),/modified/);
  assert.throws(()=>evidence('CORRUPT_JOURNAL_EXECUTED',scoped.execute('node-continuum',f.root,out)),/WORKSPACE_|modified|CORRUPT/);
+}));
+
+test('source mutation after binding cannot replace admitted snapshot',()=>fixture((f,scoped,out,input)=>{
+ fs.writeFileSync(path.join(f.root,'.github/continuum/isolation.test.mjs'),source+"\n// changed after admission\n");
+ assert.throws(()=>bindCcc1Workspace(input),/WORKSPACE_RECOVERY_BLOCKED/);
+ assert.throws(()=>evidence('DIRTY_SOURCE_EXECUTED',scoped.execute('node-continuum',f.root,out)),/WORKSPACE_|SOURCE|DIRTY/);
+}));
+test('controlled-clock expired goal cannot be extended by executor policy',()=>fixture((f,unused,out,input)=>{
+ fs.rmSync(f.stateDir,{recursive:true,force:true});
+ const taskId=startTask({project:f.root,stateDir:f.stateDir,repoFullName:'local/workspace-fixture',goal:{text:'short canonical deadline',repair:{chain:'node'}},permissions:['node-repair:node'],deadlineMinutes:2,now:Date.now()-59000});
+ const journal=DurableTaskJournal.forTask(f.stateDir,taskId,runtimeKey(f.stateDir)),goal=journal.entries()[0];
+ const hypothesis=journal.append(envelope({binding:goal,sender:'REASONER',kind:'HYPOTHESIS',payload:{claim:'deadline probe',repair:{chain:'node'},basis:'fixture'},sequence:1})).entry;
+ const request=journal.append(envelope({binding:goal,sender:'REASONER',kind:'TEST_REQUEST',payload:{hypothesis:hypothesis.messageId,repair:{chain:'node'},budgetMinutes:1},sequence:2})).entry;
+ const boundInput={...input,taskId,job:jobIdFor(taskId,request.messageId)},scoped=bindCcc1Workspace(boundInput);
+ const realNow=Date.now;Date.now=()=>goal.deadline+1;
+ try {
+ assert.ok(Date.now()>=goal.deadline);
+ assert.throws(()=>bindCcc1Workspace(boundInput),/WORKSPACE_RECOVERY_BLOCKED/);
+ assert.throws(()=>evidence('EXPIRED_GOAL_EXECUTED',scoped.execute('node-continuum',f.root,out)),/WORKSPACE_|DEADLINE|EXPIRED/);
+ }finally{Date.now=realNow;}
 }));

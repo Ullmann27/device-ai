@@ -15,3 +15,7 @@ Acceptance criteria:
 P0: authorization/host isolation escape. P1: execution replay, wrong task accepted, false success, missing resource/cleanup barrier. P2: bounded availability or evidence/documentation defect. Record raw logs and exact commands/exits; distinguish test harness/setup errors from product defects. Independent findings request changes before integration when P0/P1 remain.
 
 Review currently NOT_RUN. Rollback: omit these review-only files; no productive state changes.
+
+## Repair review supplement, frozen before repair inspection
+
+The author proposes requiring an existing canonical owner REPAIR claim. Independently test: no direct/unclaimed execution; wrong backlog path/id/token/source/chain fail; valid current lease permits required fixed profiles; stale/expired/replaced claims fail; OWNER abort/MAC corruption/terminal journal after claim fail; expired goal bounds every profile; no task replay after terminal completion; fresh view never itself grants execution. Repeated profiles under the same current claim are necessary for canonical RED/GREEN/independent verification and are not a replay by themselves. Require actual canonical repair positive regression, not only mocks. Mailbox delivery must bind typed generation identity and cannot derive authority from summary prose.
