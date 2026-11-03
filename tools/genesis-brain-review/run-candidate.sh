@@ -23,6 +23,7 @@ sources=(
  "$candidate/app/src/test/java/at/heinz/deviceai/cognitive/AiContextCompilerTest.kt"
  "$review_root/tools/genesis-brain-review/ConversationIndependentChecks.kt"
  "$review_root/tools/genesis-brain-review/ConversationStorageChecks.kt"
+ "$review_root/tools/genesis-brain-review/ConversationPressureChecks.kt"
 )
 sha256sum "${sources[@]}" > "$out/source-hashes.txt"
 for package in cognitive chief localmodel; do find "$base_classes/at/heinz/deviceai/$package" -type f -name '*.class' -exec sha256sum {} +; done > "$out/base-dependency-class-hashes.txt"
@@ -34,9 +35,12 @@ timeout 60s java -Xmx512m -Dgenesis.review.v1fixtureClasspath="$out/legacy-class
 storage_status=$?
 timeout 30s java -Xmx512m -cp "$out/classes:$cp" org.junit.runner.JUnitCore at.heinz.deviceai.cognitive.AiContextCompilerTest > "$out/compiler-regressions.log" 2>&1
 compiler_status=$?
+timeout 60s java -Xmx512m -cp "$out/classes:$cp" at.heinz.deviceai.chief.ConversationPressureChecks > "$out/pressure.log" 2>&1
+pressure_status=$?
 set -e
 printf '%s\n' "$conversation_status" > "$out/conversation.exit"
 printf '%s\n' "$storage_status" > "$out/storage.exit"
 printf '%s\n' "$compiler_status" > "$out/compiler-regressions.exit"
-cat "$out/conversation.log" "$out/storage.log" "$out/compiler-regressions.log"
-[[ "$conversation_status" == 0 && "$storage_status" == 0 && "$compiler_status" == 0 ]]
+printf '%s\n' "$pressure_status" > "$out/pressure.exit"
+cat "$out/conversation.log" "$out/storage.log" "$out/compiler-regressions.log" "$out/pressure.log"
+[[ "$conversation_status" == 0 && "$storage_status" == 0 && "$compiler_status" == 0 && "$pressure_status" == 0 ]]
