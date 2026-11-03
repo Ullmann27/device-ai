@@ -48,7 +48,10 @@ function bodyOf(source,signature) {
 test('Qwen chat validates replies without unconditional 0.8 success', () => {
   const runtime = bodyOf(activity,'runLocal');
   assert.ok(runtime,'runLocal body exists');
-  assert.match(runtime, /evaluator = AgentEvaluator \{ response, _ ->\s*if\(codingPlanning != null\) Evaluation\(codingPlanning\.decode\(response\) != null,0\.0,[\s\S]*?\)\s*else LocalDialogueQualityGate\.evaluate\(/);
+  const marker=/evaluator\s*=\s*AgentEvaluator\s*\{/.exec(codeOnly(runtime));
+  assert.ok(marker,'the bounded turn has its own evaluator');
+  const evaluator=codeOnly(bracedBody(runtime,marker.index+marker[0].lastIndexOf('{')));
+  assert.match(evaluator,/^\{\s*response,\s*_\s*->\s*if\(codingPlanning != null\) Evaluation\(codingPlanning\.decode\(response\) != null,0\.0,\s*\)\s*else LocalDialogueQualityGate\.evaluate\(/);
   assert.doesNotMatch(runtime, /Evaluation\(response\.isNotBlank\(\), if \(response\.isNotBlank\(\)\) 0\.8/);
   assert.match(runtime, /previousRequest = previousLocalReply\?\.request/);
   assert.match(runtime, /previousResponse = previousLocalReply\?\.response/);
