@@ -1,4 +1,4 @@
-package at.heinz.deviceai.agentloop
+package at.heinz.deviceai.chief
 
 import at.heinz.deviceai.ToolBackendFailure
 import at.heinz.deviceai.ToolCallRequest
@@ -8,9 +8,10 @@ import org.json.JSONObject
 /**
  * Device/screen control tools for the multi-step task loop (Lumo, 03.11.2026).
  *
- * Every tool listed here is registered in [at.heinz.deviceai.ToolRegistry] with at least
- * Risk.CONFIRM, so it can only run through the existing ToolGate (receipts, budget,
- * cancellation, owner confirmation). This file contains no approval logic of its own.
+ * These tools are deliberately NOT in the global [at.heinz.deviceai.ToolRegistry] (HAUPT,
+ * 03.11.2026): the chat model never sees them. They exist only in the scope of a
+ * [TaskLoopJob] (see [JobScopedTools]) and every risky call is approved per step by the
+ * loop's [TaskApprovalGate]. This file contains no approval logic of its own.
  *
  * Opening apps, reading the screen and screenshots deliberately reuse the existing tools
  * `launch_app`, `read_app_screen` and `take_screenshot`; they are not duplicated here.
@@ -56,6 +57,9 @@ data class DeviceControlCapabilities(
         val NONE = DeviceControlCapabilities(false, false, false, false)
     }
 }
+
+/** The input may already have reached the screen; callers must not retry or fall back. */
+class DeviceDispatchUncertain(message: String) : RuntimeException(message)
 
 enum class ControlPath { SHIZUKU_INPUT, ACCESSIBILITY_GLOBAL_ACTION, ACCESSIBILITY_GESTURE, ACCESSIBILITY_SET_TEXT, VERIFIED_NODE_CLICK }
 
@@ -142,20 +146,32 @@ class DeviceControlRouter(
         when (route) {
             is Route.Report -> callback(Result.success(route.json.toString()))
             is Route.Shell -> runShizuku(route.command) { result ->
-                callback(result.map { receipt(call.name, ControlPath.SHIZUKU_INPUT, it.trim().take(200)) })
+                // Once the command was handed to Shizuku, a failure no longer proves that
+                // nothing happened on screen: report it as UNCERTAIN, never as retryable.
+                callback(result.fold(
+                    { Result.success(receipt(call.name, ControlPath.SHIZUKU_INPUT, it.trim().take(200))) },
+                    { Result.failure(DeviceDispatchUncertain("SHIZUKU_INPUT_FAILED_AFTER_DISPATCH: ${it.message?.take(160)}")) }
+                ))
             }
-            is Route.Accessibility -> callback(runCatching {
-                val port = accessibility ?: error("ACCESSIBILITY_CONTROL_UNAVAILABLE")
-                if (route.path == ControlPath.VERIFIED_NODE_CLICK) {
-                    port.tapElement(
-                        DeviceControlArguments.label(call, "packageOrName"),
-                        DeviceControlArguments.label(call, "label"),
-                        DeviceControlArguments.label(call, "expectedLabel"), cancelled)
-                } else {
-                    check(route.action(port)) { "ACCESSIBILITY_ACTION_NOT_ACCEPTED" }
-                    receipt(call.name, route.path, "")
+            is Route.Accessibility -> {
+                val port = accessibility
+                if (port == null) { callback(Result.failure(IllegalStateException("ACCESSIBILITY_CONTROL_UNAVAILABLE"))); return }
+                val accepted = try {
+                    if (route.path == ControlPath.VERIFIED_NODE_CLICK) {
+                        callback(Result.success(port.tapElement(
+                            DeviceControlArguments.label(call, "packageOrName"),
+                            DeviceControlArguments.label(call, "label"),
+                            DeviceControlArguments.label(call, "expectedLabel"), cancelled)))
+                        return
+                    }
+                    route.action(port)
+                } catch (e: Exception) {
+                    callback(Result.failure(DeviceDispatchUncertain("ACCESSIBILITY_ACTION_FAILED: ${e.message?.take(160)}"))); return
                 }
-            })
+                // false = Android refused the action before dispatch; nothing reached the screen.
+                callback(if (accepted) Result.success(receipt(call.name, route.path, ""))
+                    else Result.failure(ToolBackendFailure(ToolExecutionStatus.FAILED, "ACCESSIBILITY_ACTION_NOT_ACCEPTED")))
+            }
         }
     }
 
