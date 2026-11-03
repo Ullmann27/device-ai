@@ -3,3 +3,12 @@ gradle.projectsEvaluated {
     def app = gradle.rootProject.project(':app')
     app.android.sourceSets.getByName('test').java.srcDir('/workspace/synapse-ui-review/tools/synapse-ui-review')
 }
+
+// Only the initial scoped reviewer run opts into this filter. Final QA omits it.
+allprojects {
+    tasks.withType(Test).configureEach {
+        if (providers.gradleProperty('synapseUiReviewOnly').orNull == 'true') {
+            filter { includeTestsMatching 'at.heinz.deviceai.IndependentBotRosterUiTest' }
+        }
+    }
+}

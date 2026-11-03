@@ -108,6 +108,11 @@ class IndependentBotRosterUiTest {
         assertTrue(allProfiles().all { it.verifiedCapabilities.isEmpty() && it.permissionScope.isEmpty() && it.currentTaskId == null })
     }
 
+    @Test fun repeatedOpeningHonorsOneInFlightStorageBudget() {
+        repeat(16) { roster.show() }
+        assertEquals("Repeated openings must not queue unbounded registry work", 1, io.pending.size)
+    }
+
     @Test fun storageAndSeedingWaitForBackgroundExecutorWhileMainLooperRemainsResponsive() {
         roster.show()
         assertEquals(1, io.pending.size)
