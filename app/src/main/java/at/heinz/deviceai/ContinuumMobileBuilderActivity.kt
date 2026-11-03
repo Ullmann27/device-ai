@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
@@ -27,6 +28,9 @@ class ContinuumMobileBuilderActivity : Activity() {
     private var selectedProject = ContinuumOwnedProject.NOTES
     private val preferences by lazy {
         getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
+    }
+    private val receiptListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+        if (::status.isInitialized && ::typedRunButton.isInitialized) refreshReceipt()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,19 +115,22 @@ class ContinuumMobileBuilderActivity : Activity() {
             isAllCaps = false
             isEnabled = false
             setOnClickListener {
-                val id = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)
-                val hash = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)
-                val commit = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)
-                if(id == null || hash == null || commit == null || preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)){
+                val authorization = preparedTypedAuthorization()
+                val review = authorization?.let(ContinuumTypedCodingBridge::executionReview)
+                if(authorization == null || review == null || preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)){
                     status.text="Kein bestätigter Coding-Auftrag bereit. Nichts gestartet."
                 } else AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
                     .setTitle("Lokales Coding-Modell jetzt ausführen?")
-                    .setMessage("Nur der zuvor gebundene Auftrag ${id.take(40)} / ${hash.take(16)}… " +
-                        "mit Quell-Commit ${commit.take(12)} wird gestartet. " +
-                        "CCC1, Testketten, Reparatur und unabhängige Prüfung bleiben unverändert. " +
-                        "Dies kann längere Zeit dauern; kein Patch wird übernommen, keine APK installiert.")
+                    .setView(ScrollView(this@ContinuumMobileBuilderActivity).apply {
+                        addView(TextView(this@ContinuumMobileBuilderActivity).apply {
+                            text = review
+                            textSize = 16f
+                            setTextIsSelectable(true)
+                            setPadding(px(20), px(8), px(20), px(16))
+                        })
+                    })
                     .setNegativeButton("Nicht starten",null)
-                    .setPositiveButton("Jetzt ausführen") { _, _ -> dispatchTypedRun(id,hash) }
+                    .setPositiveButton("Jetzt ausführen") { _, _ -> dispatchTypedRun(authorization) }
                     .show()
             }
         }
@@ -312,8 +319,21 @@ class ContinuumMobileBuilderActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        preferences.registerOnSharedPreferenceChangeListener(receiptListener)
         if (::status.isInitialized) refreshReceipt()
     }
+
+    override fun onPause() {
+        preferences.unregisterOnSharedPreferenceChangeListener(receiptListener)
+        super.onPause()
+    }
+
+    private fun preparedTypedAuthorization(): ContinuumCodingTask.Authorization? =
+        ContinuumTypedCodingBridge.parseBoundAuthorization(
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_JSON,null),
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null),
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null),
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null))
 
     private fun refreshReceipt() {
         val last = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
@@ -331,17 +351,18 @@ class ContinuumMobileBuilderActivity : Activity() {
             ccc1Task?.let { "Offener CCC1-Auftrag: $it" },
             if (abortPending) "Ein CCC1-Abbruch ist unterwegs; kein Ergebnis bestätigt." else abortMessage
         ).joinToString("\n").let { if (it.isEmpty()) "" else "\n$it" }
-        typedRunButton.isEnabled = pending == null &&
-            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)!=null &&
-            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=null &&
-            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)?.matches(Regex("[a-f0-9]{40}"))==true
+        val prepared = preparedTypedAuthorization()
+        typedRunButton.isEnabled = pending == null && prepared != null
         status.text = when {
             pending != null ->
                 "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt." +
                     (if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else "")
             last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
             else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
-        } + ccc1 + (recovery?.let { "\n$it" } ?: "")
+        } + ccc1 + (recovery?.let { "\n$it" } ?: "") +
+            if (prepared == null && preferences.contains(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID))
+                "\nGespeicherter Coding-Auftrag unvollständig oder verändert. Vollständig neu prüfen und vorbereiten."
+            else ""
     }
 
     private fun dispatch(operation: ContinuumMobileBuildPlan.Operation, project: ContinuumOwnedProject) {
@@ -370,24 +391,24 @@ class ContinuumMobileBuilderActivity : Activity() {
         dispatchApprovedCommand(ContinuumTypedCodingBridge.Operation.PREPARE.callback,
             UUID.randomUUID().toString(),plan,
             typedId=authorization.task.id,typedHash=authorization.taskSha256,
-            typedCommit=authorization.task.sourceCommit)
+            typedCommit=authorization.task.sourceCommit,typedJson=authorization.task.canonicalJson())
     }
 
-    private fun dispatchTypedRun(id:String,hash:String) {
-        val commit=preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)
-        if(preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)!=id ||
-           preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=hash ||
-           commit==null || !commit.matches(Regex("[a-f0-9]{40}"))) {
+    private fun dispatchTypedRun(authorization:ContinuumCodingTask.Authorization) {
+        val current=preparedTypedAuthorization()
+        if(current==null || current.taskSha256!=authorization.taskSha256 ||
+           current.task.canonicalJson()!=authorization.task.canonicalJson()) {
             status.text="Vorbereiteter Coding-Auftrag wurde geändert. Nichts ausgeführt."
             return
         }
-        val plan=runCatching { ContinuumTypedCodingBridge.commandRun(id,hash) }.getOrNull()
+        val plan=runCatching { ContinuumTypedCodingBridge.commandRun(authorization.task.id,authorization.taskSha256) }.getOrNull()
         if(plan == null) {
             status.text="Ungültige Coding-Freigabe. Nichts ausgeführt."
             return
         }
         dispatchApprovedCommand(ContinuumTypedCodingBridge.Operation.RUN.callback,
-            UUID.randomUUID().toString(),plan,typedId=id,typedHash=hash,typedCommit=commit)
+            UUID.randomUUID().toString(),plan,typedId=authorization.task.id,typedHash=authorization.taskSha256,
+            typedCommit=authorization.task.sourceCommit,typedJson=authorization.task.canonicalJson())
     }
 
     /** CCC1 step: fixed operation, chain from the selector, this request id as idempotent order id. */
@@ -428,7 +449,8 @@ class ContinuumMobileBuilderActivity : Activity() {
         abortTask: String? = null,
         typedId: String? = null,
         typedHash: String? = null,
-        typedCommit: String? = null
+        typedCommit: String? = null,
+        typedJson: String? = null
     ) {
         // A confirmation belongs to its live Activity, never to an instance replaced by recreation.
         if (isFinishing || isDestroyed) return
@@ -465,6 +487,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                             edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
                                 .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
                                 .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)
+                                .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_JSON)
                         }
                         slot.operationKey?.let { edit.remove(it) }
                         slot.projectKey?.let { edit.remove(it) }
@@ -507,8 +530,7 @@ class ContinuumMobileBuilderActivity : Activity() {
             .putString(slot.idKey, requestId)
             .putLong(slot.startKey, System.currentTimeMillis())
         if(ContinuumTypedCodingBridge.Operation.ofCallback(operationName)!=null) {
-            if(typedId==null||typedHash==null||typedCommit==null||
-               !typedCommit.matches(Regex("[a-f0-9]{40}"))) {
+            if(ContinuumTypedCodingBridge.parseBoundAuthorization(typedJson,typedHash,typedId,typedCommit)==null) {
                 callback.cancel()
                 status.text="Coding-Auftragsbindung fehlt. Nichts gestartet."
                 return
@@ -516,10 +538,13 @@ class ContinuumMobileBuilderActivity : Activity() {
             pendingEdit.putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID,typedId)
                 .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA,typedHash)
                 .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT,typedCommit)
-            if(operationName==ContinuumTypedCodingBridge.Operation.PREPARE.callback)
-                pendingEdit.remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID)
-                    .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA)
-                    .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT)
+                .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_JSON,typedJson)
+            // Consume preparation in the same durable pending commit as RUN.
+            // Failed/uncertain launches require fresh review, never automatic replay.
+            pendingEdit.remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT)
+                .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_JSON)
         }
         slot.operationKey?.let { pendingEdit.putString(it, operationName) }
         slot.projectKey?.let {
@@ -560,6 +585,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                 edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)
+                    .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_JSON)
             }
             slot.operationKey?.let { edit.remove(it) }
             slot.projectKey?.let { edit.remove(it) }

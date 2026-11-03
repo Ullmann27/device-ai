@@ -26,9 +26,11 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"
         const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"
         const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"
+        const val TYPED_EXPECTED_JSON = "typed_coding_expected_json_v1"
         const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"
         const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"
         const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"
+        const val TYPED_PREPARED_JSON = "typed_coding_prepared_json_v1"
         /** CCC1 task the owner can cancel next (validated id only). */
         const val CCC1_TASK = "ccc1_task"
         /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */
@@ -119,7 +121,10 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)
             val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)
             val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)
-            val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)
+            val expectedJson=prefs.getString(TYPED_EXPECTED_JSON,null)
+            val authorization=ContinuumTypedCodingBridge.parseBoundAuthorization(
+                expectedJson,expectedHash,expectedId,expectedCommit)
+            val result=if(authorization!=null && expectedId!=null && expectedHash!=null && expectedCommit!=null)
                 ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,
                     exitCode,errorCode,if(truncated)null else stdout,expectedCommit)
                 else null
@@ -128,13 +133,16 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)
                 .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)
                 .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)
+                .remove(TYPED_EXPECTED_JSON)
                 .putString(LAST_MESSAGE,message)
             if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {
                 editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)
-                if(result?.prepared==true && expectedCommit!=null)
+                    .remove(TYPED_PREPARED_JSON)
+                if(result?.prepared==true && expectedCommit!=null && authorization!=null)
                     editor.putString(TYPED_PREPARED_ID,result.id)
                         .putString(TYPED_PREPARED_SHA,result.hash)
                         .putString(TYPED_PREPARED_COMMIT,expectedCommit)
+                        .putString(TYPED_PREPARED_JSON,authorization.task.canonicalJson())
             }
             if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)
             editor.commit()

@@ -56,11 +56,19 @@ internal object ContinuumTypedCodingBridge {
         }.getOrNull()
     }
 
+    /** All saved fields must describe the same complete reviewed snapshot. */
+    fun parseBoundAuthorization(json:String?,hash:String?,id:String?,sourceCommit:String?):ContinuumCodingTask.Authorization? =
+        parseAuthorization(json,hash)?.takeIf { it.task.id==id && it.task.sourceCommit==sourceCommit }
+
     /**
      * Human-readable, lossless review of exactly the task bound to the typed bridge.
      * This remains presentation only; a task hash cannot authenticate its author.
      */
-    fun preparationReview(authorization:ContinuumCodingTask.Authorization):String? = runCatching {
+    fun preparationReview(authorization:ContinuumCodingTask.Authorization):String? = taskReview(authorization,false)
+
+    fun executionReview(authorization:ContinuumCodingTask.Authorization):String? = taskReview(authorization,true)
+
+    private fun taskReview(authorization:ContinuumCodingTask.Authorization,execute:Boolean):String? = runCatching {
         val task=authorization.task
         require(task.problems().isEmpty() && task.fingerprint()==authorization.taskSha256)
         require(task.canonicalJson().length in 2..MAX_JSON)
@@ -83,8 +91,14 @@ internal object ContinuumTypedCodingBridge {
             append("Maximale Modellaufrufe: ").append(task.limits.maxModelCalls).append('\n')
             append("Maximale Kontextzeichen: ").append(task.limits.maxContextChars).append("\n\n")
             append("Vollständiger Task-SHA-256:\n").append(authorization.taskSha256).append("\n\n")
-            append("VORBEREITUNG: Nur den an den Fingerabdruck gebundenen CCC1-Auftrag anlegen. ")
-            append("Kein KI-Modell ausführen, keinen Patch übernehmen, keine APK installieren. ")
+            if(execute) {
+                append("AUSFÜHRUNG: Nur diesen vollständig geprüften Auftrag mit den angegebenen Grenzen starten. ")
+                append("CCC1, feste Testkette, Reparatur und unabhängige Prüfung bleiben erforderlich. ")
+                append("Keinen Patch automatisch übernehmen, keine APK installieren. ")
+            } else {
+                append("VORBEREITUNG: Nur den an den Fingerabdruck gebundenen CCC1-Auftrag anlegen. ")
+                append("Kein KI-Modell ausführen, keinen Patch übernehmen, keine APK installieren. ")
+            }
             append("Ein passender SHA-256-Fingerabdruck ist keine kryptografische Besitzeridentität.")
         }
     }.getOrNull()

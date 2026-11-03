@@ -114,14 +114,14 @@ class ContinuumTypedExecutionReviewUiTest {
         } finally { controller.pause().stop().destroy() }
     }
 
-    private fun deliverPreparedReceipt() {
+    private fun deliverPreparedReceipt(ccc1TaskId: String = "t-aaaaaaaaaaaaaaaa"): Intent {
         prefs.edit().putString("job_id", "prepare-request")
             .putString("job_operation", "TYPED_CODING_PREPARE")
             .putString("typed_coding_expected_id_v1", task.id)
             .putString("typed_coding_expected_sha_v1", task.fingerprint())
             .putString("typed_coding_expected_commit_v1", task.sourceCommit)
             .putString(expectedJson, task.canonicalJson()).commit()
-        val stdout = """{"schema":"continuum-typed-coding-bridge","version":1,"operation":"prepare","id":"${task.id}","status":"PREPARED_NOT_EXECUTED","taskSha256":"${task.fingerprint()}","sourceCommit":"${task.sourceCommit}","ccc1TaskId":"t-aaaaaaaaaaaaaaaa","replayed":false,"approvedForMerge":false,"installed":false,"deviceVerified":false}"""
+        val stdout = """{"schema":"continuum-typed-coding-bridge","version":1,"operation":"prepare","id":"${task.id}","status":"PREPARED_NOT_EXECUTED","taskSha256":"${task.fingerprint()}","sourceCommit":"${task.sourceCommit}","ccc1TaskId":"$ccc1TaskId","replayed":false,"approvedForMerge":false,"installed":false,"deviceVerified":false}"""
         val callback = Intent().setData(android.net.Uri.parse("continuum://termux-callback/TYPED_CODING_PREPARE/prepare-request"))
             .putExtra("job_id", "prepare-request").putExtra("job_operation", "TYPED_CODING_PREPARE")
             .putExtra("result", Bundle().apply {
@@ -129,6 +129,7 @@ class ContinuumTypedExecutionReviewUiTest {
                 putString("stdout_original_length", stdout.length.toString())
             })
         ContinuumMobileBuildResultReceiver().onReceive(app, callback)
+        return callback
     }
 
     @Test fun receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState() {
@@ -157,5 +158,47 @@ class ContinuumTypedExecutionReviewUiTest {
             assertTrue(runButton(controller.get()).isEnabled)
             assertNull(shadowOf(app).nextStartedService)
         } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun typedPreparationBindsTheExistingExplicitAbortTargetDuringRun() {
+        deliverPreparedReceipt()
+        val target = "t-aaaaaaaaaaaaaaaa"
+        assertEquals("Fresh typed preparation must expose its actual CCC1 cancel target", target,
+            prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            clickRun(controller.get()).getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertNotNull(shadowOf(app).nextStartedService)
+            val running = prefs.getString("job_id", null)
+            assertNotNull(running)
+            views(controller.get().findViewById(android.R.id.content)).filterIsInstance<Button>()
+                .single { it.text == "CCC1-Auftrag abbrechen" }.performClick()
+            val dialog = ShadowAlertDialog.getLatestAlertDialog()
+            assertTrue(dialog.findViewById<TextView>(android.R.id.message).text.contains(target))
+            assertNull("Abort is an explicit owner action", shadowOf(app).nextStartedService)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            val abort = shadowOf(app).nextStartedService
+            assertNotNull(abort)
+            val args = abort.getStringArrayExtra("com.termux.RUN_COMMAND_ARGUMENTS")!!.toList()
+            assertTrue(args.contains("ccc1-abort"))
+            assertEquals(target, args[args.indexOf("--task") + 1])
+            assertEquals(running, prefs.getString("job_id", null))
+            assertEquals(target, prefs.getString(ContinuumMobileBuildResultReceiver.ABORT_TASK, null))
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun invalidOrReplayedPrepareCallbackCannotReplaceTheCurrentAbortTarget() {
+        val current = "t-bbbbbbbbbbbbbbbb"
+        prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, current).commit()
+        deliverPreparedReceipt("arbitrary-model-task")
+        assertEquals(current, prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+        assertNull(prefs.getString(preparedJson, null))
+        val oldCallback = deliverPreparedReceipt()
+        prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, current).commit()
+        ContinuumMobileBuildResultReceiver().onReceive(app, oldCallback)
+        assertEquals("Consumed callback cannot retarget a newer task", current,
+            prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
     }
 }
