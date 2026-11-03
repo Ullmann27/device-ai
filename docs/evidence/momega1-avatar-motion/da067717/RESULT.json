@@ -10,5 +10,6 @@
     "No Android GPU execution",
     "No actual camera observation",
     "No voice listening or reference appearance acceptance"
-  ]
+  ],
+  "rawLogFile": "android-api.log"
 }
