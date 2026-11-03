@@ -73,7 +73,7 @@ class LearningExperienceStoreTest {
         } finally { dir.deleteRecursively() }
     }
 
-    @Test fun fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords() {
+    @Test fun fullLegacyLedgerRefusesLowTrustChurnThenMigratesProtectedOverflow() {
         val dir=Files.createTempDirectory("device-ai-protected-experience-bound").toFile()
         try {
             val store=FileLearningExperienceStore(dir)
@@ -89,10 +89,11 @@ class LearningExperienceStoreTest {
                 LearningStatus.LEARNED,"new audit",now=1000L)
             assertFalse("a declined observation must not claim persistence",store.append(audit))
             assertEquals(0,store.appendMissing(listOf(audit)))
-            assertThrows(IllegalStateException::class.java) { store.append(fact(500)) }
-            assertArrayEquals("capacity failures must leave the ledger intact",before,
+            assertArrayEquals("declined churn must leave the ledger intact",before,
                 File(dir,"experiences-v2.bin").readBytes())
-            assertEquals(FileLearningExperienceStore.MAX_RECORDS,FileLearningExperienceStore(dir).all().size)
+            assertTrue(store.append(fact(500)))
+            assertArrayEquals(before,File(dir,"experiences-v3/legacy-v2.bin").readBytes())
+            assertEquals(FileLearningExperienceStore.MAX_RECORDS+1,FileLearningExperienceStore(dir).all().size)
         } finally { dir.deleteRecursively() }
     }
 }

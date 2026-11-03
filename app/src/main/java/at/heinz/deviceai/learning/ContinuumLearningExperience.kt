@@ -102,39 +102,42 @@ data class LearningExperienceStats(
 class FileLearningExperienceStore(private val directory:File) {
     private val primary=File(directory,"experiences-v2.bin")
     private val backup=File(directory,"experiences-v2.lkg")
+    private val lex3=Lex3LearningExperienceStore(directory)
 
-    fun all():List<LearningExperience> = synchronized(FILE_LOCK) { loadValidated() }
+    fun all():List<LearningExperience> = transaction() { loadValidated() }
 
     /** One locked read of the ledger: its SHA-256 content fingerprint, plus the decoded records only when the
      * fingerprint differs from [knownFingerprint]. Content-keyed (not mtime/length), so a rewrite that keeps
-     * mtime and size is still detected. Same validation as [all]; the on-disk format is untouched. */
+     * mtime and size is still detected. Same integrity validation as [all]; LEX3 also checks every referenced segment. */
     internal fun snapshotIfChanged(knownFingerprint:String?):Pair<String, List<LearningExperience>?> =
-        synchronized(FILE_LOCK) {
+        transaction() {
             if(!primary.exists()) {
-                check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
-                return@synchronized ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
+                check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
+                return@transaction ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
             }
-            val bytes=primary.readBytes()
+            val bytes=readPrimary()
+            if(Lex3LearningExperienceStore.isManifest(bytes)) return@transaction lex3.snapshot(bytes,knownFingerprint)
             val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
                 .joinToString("") { "%02x".format(it) }
             fingerprint to (if(fingerprint==knownFingerprint) null else LearningExperienceCodec.decode(bytes))
         }
 
-    fun append(experience:LearningExperience):Boolean = synchronized(FILE_LOCK) {
+    fun append(experience:LearningExperience):Boolean = transaction(write=true) {
         val current=loadValidated()
         val existing=current.firstOrNull { it.id==experience.id }
         if(existing!=null) {
             require(existing.contentHash==experience.contentHash) { "Conflicting learning experience identity" }
-            return@synchronized false
+            return@transaction false
         }
         val next=bounded(current+experience)
-        if(next.none { it.id==experience.id })return@synchronized false
+        if(next.none { it.id==experience.id })return@transaction false
         save(next)
         true
     }
 
     /** One read and at most one write for a batch; ids already present (any status) are skipped. */
-    fun appendMissing(items:List<LearningExperience>):Int = synchronized(FILE_LOCK) {
+    fun appendMissing(items:List<LearningExperience>):Int = transaction(write=true) {
+        require(items.size<=MAX_DURABLE_RECORDS) { "Learning ledger batch exceeds bounded limit" }
         val current=loadValidated()
         val known=current.associateBy { it.id }
         val added=LinkedHashMap<String,LearningExperience>()
@@ -146,7 +149,7 @@ class FileLearningExperienceStore(private val directory:File) {
             }
             added[item.id]=item
         }
-        if(added.isEmpty())return@synchronized 0
+        if(added.isEmpty())return@transaction 0
         val next=bounded(current+added.values)
         val admitted=next.count { it.id in added }
         if(admitted>0)save(next)
@@ -157,7 +160,7 @@ class FileLearningExperienceStore(private val directory:File) {
      * never replay contradictory versions of the same encoder input together.
      * Reconfirmation also refreshes an old content-addressed lesson's recency.
      */
-    internal fun confirmIntentLabel(experience:LearningExperience) = synchronized(FILE_LOCK) {
+    internal fun confirmIntentLabel(experience:LearningExperience) = transaction(write=true) {
         require(experience.type==LearningExperienceType.INTENT_LABEL &&
             experience.provenance==LearningProvenance.USER_CONFIRMED &&
             experience.trust==LearningTrustClass.OWNER_CONFIRMED &&
@@ -180,13 +183,13 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     fun updateStatus(id:String,status:LearningStatus,now:Long=System.currentTimeMillis()):Boolean =
-        synchronized(FILE_LOCK) {
+        transaction(write=true) {
             require(now>=0)
             val current=loadValidated()
             val index=current.indexOfFirst { it.id==id }
-            if(index<0)return@synchronized false
+            if(index<0)return@transaction false
             val old=current[index]
-            if(old.status==status)return@synchronized true
+            if(old.status==status)return@transaction true
             val next=current.toMutableList()
             next[index]=old.copy(status=status,updatedAt=maxOf(now,old.updatedAt))
             save(next)
@@ -198,7 +201,7 @@ class FileLearningExperienceStore(private val directory:File) {
         content:String?=null,
         status:LearningStatus,
         now:Long=System.currentTimeMillis()
-    ):Int = synchronized(FILE_LOCK) {
+    ):Int = transaction(write=true) {
         require(now>=0)
         val current=loadValidated()
         var changed=0
@@ -213,7 +216,7 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     fun replay(type:LearningExperienceType,limit:Int=64):List<LearningExperience> =
-        synchronized(FILE_LOCK) {
+        transaction() {
             require(limit in 1..128)
             loadValidated().sortedWith(compareBy<LearningExperience> { it.updatedAt }
                 .thenBy { it.createdAt }.thenBy { it.id }).asReversed().asSequence()
@@ -242,12 +245,14 @@ class FileLearningExperienceStore(private val directory:File) {
 
     private fun loadValidated():List<LearningExperience> {
         if(!primary.exists()) {
-            check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
+            check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
             return emptyList()
         }
         // The previous generation can predate an owner revocation/correction.
         // Preserve it for diagnosis, but never restore stale consent silently.
-        return LearningExperienceCodec.decode(primary.readBytes())
+        val bytes=readPrimary()
+        return if(Lex3LearningExperienceStore.isManifest(bytes)) lex3.snapshot(bytes).second!!
+            else LearningExperienceCodec.decode(bytes)
     }
 
     /** Observations and audits cannot evict owner instructions or revocations.
@@ -258,22 +263,34 @@ class FileLearningExperienceStore(private val directory:File) {
             item.trust==LearningTrustClass.OWNER_CONFIRMED || item.status==LearningStatus.REVOKED
         val order=compareBy<LearningExperience> { it.createdAt }.thenBy { it.id }
         val preserved=items.filter(::protected)
-        check(preserved.size<=MAX_RECORDS) { "Learning ledger capacity reached; owner records cannot be evicted" }
+        val capacity=if(preserved.size>MAX_RECORDS ||
+            (primary.exists() && Lex3LearningExperienceStore.isManifest(readPrimary()))) MAX_DURABLE_RECORDS else MAX_RECORDS
+        check(preserved.size<=capacity) { "Learning ledger capacity reached; owner records cannot be evicted" }
         return (preserved+items.filterNot(::protected).sortedWith(order)
-            .takeLast(MAX_RECORDS-preserved.size)).sortedWith(order)
+            .takeLast(capacity-preserved.size)).sortedWith(order)
     }
 
     private fun intentKey(text:String)=text.lowercase(Locale.ROOT)
         .replace(Regex("[^\\p{L}\\p{N}]+")," ").trim()
 
     private fun save(items:List<LearningExperience>) {
-        require(items.size<=MAX_RECORDS && items.map { it.id }.distinct().size==items.size)
+        require(items.size<=MAX_DURABLE_RECORDS && items.map { it.id }.distinct().size==items.size)
+        val previous=if(primary.exists())readPrimary() else null
+        if(items.size>MAX_RECORDS || (previous!=null && Lex3LearningExperienceStore.isManifest(previous))) {
+            lex3.save(items,previous)
+            return
+        }
+        // Oversized legacy payloads also need segments; do not overwrite a valid small ledger on failure.
+        val encoded=try { LearningExperienceCodec.encode(items) } catch(_:IllegalArgumentException) {
+            lex3.save(items,previous)
+            return
+        }
         if(!directory.exists() && !directory.mkdirs())throw IOException("Cannot create learning-core directory")
         if(primary.exists()) {
             runCatching { LearningExperienceCodec.decode(primary.readBytes()) }
                 .onSuccess { writeAtomically(backup,primary.readBytes()) }
         }
-        writeAtomically(primary,LearningExperienceCodec.encode(items))
+        writeAtomically(primary,encoded)
     }
 
     private fun writeAtomically(target:File,bytes:ByteArray) {
@@ -288,8 +305,42 @@ class FileLearningExperienceStore(private val directory:File) {
         } finally { temp.delete() }
     }
 
+    private fun readPrimary()=Lex3LearningExperienceStore.readBounded(primary,LearningExperienceCodec.MAX_BYTES)
+
+    /** One OS lease for the complete read/modify/commit, including separate JVM instances.
+     * Read-only probes of a nonexistent store do not create it. Parent directories remain app-private.
+     */
+    private fun <T> transaction(write:Boolean=false,block:()->T):T = synchronized(FILE_LOCK) {
+        if(!directory.exists()) {
+            if(!write)return@synchronized block()
+            check(directory.mkdirs() || directory.isDirectory) { "Cannot create learning-core directory" }
+        }
+        Lex3LearningExperienceStore.requireDirectory(directory)
+        for(file in listOf(primary,backup)) {
+            if(Files.exists(file.toPath(),java.nio.file.LinkOption.NOFOLLOW_LINKS))
+                Lex3LearningExperienceStore.requireRegular(file)
+        }
+        val lock=File(directory,"experiences.lock")
+        if(Files.exists(lock.toPath(),java.nio.file.LinkOption.NOFOLLOW_LINKS))
+            Lex3LearningExperienceStore.requireRegular(lock)
+        java.nio.channels.FileChannel.open(lock.toPath(),java.nio.file.StandardOpenOption.CREATE,
+            java.nio.file.StandardOpenOption.WRITE,java.nio.file.LinkOption.NOFOLLOW_LINKS).use { channel ->
+            channel.lock().use {
+                val result=block()
+                // A no-op retry may follow a failed post-rename fsync. Content equality alone
+                // must not acknowledge a mutation until the committed directories are durable.
+                if(write && primary.exists() && Lex3LearningExperienceStore.isManifest(readPrimary()))
+                    lex3.forceCommittedDirectories()
+                result
+            }
+        }
+    }
+
     companion object {
+        /** Legacy LEX2 and its ordinary observation ring retain their historical bound. */
         const val MAX_RECORDS=256
+        /** First segmented milestone; consumers still materialize all records, so this is intentionally bounded. */
+        const val MAX_DURABLE_RECORDS=Lex3LearningExperienceStore.MAX_RECORDS
 
         /** Validate a separately backed-up original LEX2 file without opening or
          * writing a ledger. This is integrity checking, never consent recovery.
@@ -303,11 +354,12 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 }
 
-private object LearningExperienceCodec {
+internal object LearningExperienceCodec {
     private const val MAGIC=0x4c455832
-    private const val MAX_BYTES=512*1024
+    const val MAX_BYTES=512*1024
 
     fun encode(items:List<LearningExperience>):ByteArray {
+        require(items.size<=FileLearningExperienceStore.MAX_RECORDS)
         val payload=ByteArrayOutputStream().also { buffer ->
             DataOutputStream(buffer).use { out ->
                 out.writeInt(MAGIC);out.writeInt(items.size)

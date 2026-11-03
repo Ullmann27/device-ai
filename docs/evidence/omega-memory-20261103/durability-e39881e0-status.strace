@@ -1,0 +1,30 @@
+51202 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+51202 fsync(17)                         = 0
+51202 rename("/workspace/continuum-build-env/memory-durability-e39881e0/fixture-status/experiences-v3/lex3-8527687006439098836.tmp", "/workspace/continuum-build-env/memory-durability-e39881e0/fixture-status/experiences-v3/2edf8f78646cc1f626537a8c7c277cbcc08a7e7db8367cc1a07e83e729be22d4.seg") = 0
+51202 fsync(17)                         = 0
+51202 fsync(17)                         = 0
+51202 rename("/workspace/continuum-build-env/memory-durability-e39881e0/fixture-status/lex3-14036694123493227253.tmp", "/workspace/continuum-build-env/memory-durability-e39881e0/fixture-status/experiences-v2.bin") = 0
+51202 fsync(17)                         = -1 EIO (Input/output error) (INJECTED)
+51202 fsync(17)                         = 0
+51202 fsync(17)                         = 0
+51206 +++ exited with 0 +++
+51208 +++ exited with 0 +++
+51207 +++ exited with 0 +++
+51204 +++ exited with 0 +++
+51209 +++ exited with 0 +++
+51202 +++ exited with 0 +++
+51219 +++ exited with 0 +++
+51218 +++ exited with 0 +++
+51212 +++ exited with 0 +++
+51210 +++ exited with 0 +++
+51215 +++ exited with 0 +++
+51220 +++ exited with 0 +++
+51221 +++ exited with 0 +++
+51217 +++ exited with 0 +++
+51216 +++ exited with 0 +++
+51214 +++ exited with 0 +++
+51213 +++ exited with 0 +++
+51211 +++ exited with 0 +++
+51205 +++ exited with 0 +++
+51203 +++ exited with 0 +++
+51201 +++ exited with 0 +++

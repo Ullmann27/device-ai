@@ -1,6 +1,7 @@
 package at.heinz.deviceai.learning
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -196,7 +197,7 @@ class ContinuumTemporalMemoryBenchmarkTest {
         } finally { dir.deleteRecursively() }
     }
 
-    @Test fun ledgerCapacityIsAMeasuredHardLimit() {
+    @Test fun protectedLedgerMigratesPastTheMeasuredLegacyLimit() {
         val dir = Files.createTempDirectory("continuum-m2-capacity").toFile()
         try {
             var clock = 1L
@@ -206,7 +207,9 @@ class ContinuumTemporalMemoryBenchmarkTest {
                 for (k in 1..300) { core.confirmOwnerFact("Mein Notizbuch $k ist grün."); stored++ }
             }.exceptionOrNull()
             println("M2-METRIC owner_fact_capacity=$stored failure=${failure?.javaClass?.simpleName}")
-            assertEquals(FileLearningExperienceStore.MAX_RECORDS, stored)
+            assertNull("protected overflow must migrate rather than forget",failure)
+            assertEquals(300, stored)
+            assertEquals(300,ContinuumLearningCore(dir).status().experiences.total)
         } finally { dir.deleteRecursively() }
     }
 }
