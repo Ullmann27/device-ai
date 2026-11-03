@@ -19,7 +19,7 @@ import org.robolectric.annotation.Implements
 import org.robolectric.shadows.ShadowTextToSpeech
 import java.util.Locale
 
-/** Actual onResume and compiled onCreate TTS callback body, without unrelated full onCreate startup. */
+/** Actual onResume and named onCreate TTS callback body, without unrelated full onCreate startup. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28],shadows=[IndependentFirstWelcomeUiTest.ControlledTts::class])
 class IndependentFirstWelcomeUiTest {
@@ -30,31 +30,30 @@ class IndependentFirstWelcomeUiTest {
         }
         companion object {val spoken=mutableListOf<String>()}
     }
+    private val regularGreetingAllowed=java.util.IdentityHashMap<AgentActivity,Boolean>()
     @Before fun reset() {ControlledTts.spoken.clear()}
     private fun set(a:AgentActivity,name:String,value:Any?)=AgentActivity::class.java.getDeclaredField(name).apply {isAccessible=true}.set(a,value)
     private fun get(a:AgentActivity,name:String)=AgentActivity::class.java.getDeclaredField(name).apply {isAccessible=true}.get(a)
     private fun invoke(a:AgentActivity,name:String)=AgentActivity::class.java.getDeclaredMethod(name).apply {isAccessible=true}.invoke(a)
-    private fun fixture(muted:Boolean=false,network:Boolean=false):Pair<AgentActivity,TextToSpeech> {
+    private fun fixture(muted:Boolean=false,network:Boolean=false,notInstalled:Boolean=false):Pair<AgentActivity,TextToSpeech> {
         val a=Robolectric.buildActivity(AgentActivity::class.java).get()
         val memory=BootstrapMemoryStore(a)
         if(muted)memory.voiceEnabled=false
         set(a,"bootstrapMemory",memory);set(a,"voiceEnabled",memory.voiceEnabled)
         ShadowTextToSpeech.addLanguageAvailability(Locale.GERMAN)
-        val v=Voice("independent-${if(network)"network" else "offline"}",Locale.GERMAN,Voice.QUALITY_NORMAL,Voice.LATENCY_NORMAL,network,emptySet())
+        val v=Voice("independent-${if(network)"network" else "offline"}",Locale.GERMAN,Voice.QUALITY_NORMAL,Voice.LATENCY_NORMAL,network,if(notInstalled)setOf(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED) else emptySet())
         ShadowTextToSpeech.addVoice(v)
+        // Same immutable allow flag captured by the real constructor before first onResume.
+        regularGreetingAllowed[a]=a.getSharedPreferences("continuum-readiness",Context.MODE_PRIVATE).getBoolean("introduced",false)
         val tts=TextToSpeech(a){};tts.voice=v;set(a,"voiceEngine",tts)
         return a to tts
     }
     private fun initialized(a:AgentActivity,recreated:Boolean=false) {
-        // Invoke precisely the generated body wired to TextToSpeech.OnInitListener in onCreate.
-        val method=AgentActivity::class.java.declaredMethods.single {m ->
-            m.name.startsWith("onCreate\$lambda\$") && m.parameterTypes.firstOrNull()==AgentActivity::class.java &&
-                m.parameterTypes.lastOrNull()==Int::class.javaPrimitiveType &&
-                (m.parameterTypes.size==2 || (m.parameterTypes.size==3 && m.parameterTypes[1]==Bundle::class.java))
-        }.apply {isAccessible=true}
-        if(method.parameterTypes.size==2)method.invoke(null,a,TextToSpeech.SUCCESS)
-        else method.invoke(null,a,if(recreated)Bundle() else null,TextToSpeech.SUCCESS)
+        // Actual named target of the onCreate TTS callback, with its immutable pre-resume allow flag.
+        AgentActivity::class.java.getDeclaredMethod("onLocalVoiceInitialized",Int::class.javaPrimitiveType,Boolean::class.javaPrimitiveType)
+            .apply {isAccessible=true}.invoke(a,TextToSpeech.SUCCESS,!recreated && regularGreetingAllowed[a]==true)
     }
+
     private fun close(a:AgentActivity,tts:TextToSpeech) {
         invoke(a,"onPause");(get(a,"readinessDialog") as? AlertDialog)?.dismiss()
         shadowOf(Looper.getMainLooper()).idle();tts.shutdown()
@@ -127,6 +126,15 @@ class IndependentFirstWelcomeUiTest {
             invoke(a,"onResume");initialized(a)
             assertTrue(ControlledTts.spoken.isEmpty());assertEquals(false,get(a,"voiceReady"))
             assertEquals(false,get(a,"readinessVoiceSampleStarted"))
+        }finally {close(a,tts)}
+    }
+    @Test fun uninstalledOfflineFlagCannotProduceWelcomeOrTriggerDownload() {
+        val(a,tts)=fixture(notInstalled=true)
+        try {
+            invoke(a,"onResume");initialized(a)
+            assertTrue(ControlledTts.spoken.isEmpty());assertEquals(false,get(a,"voiceReady"))
+            assertNull(shadowOf(a.application).nextStartedService)
+            assertNull(shadowOf(a).nextStartedActivity)
         }finally {close(a,tts)}
     }
 }
