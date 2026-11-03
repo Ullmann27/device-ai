@@ -7,3 +7,9 @@ Frozen before author implementation. Reviewed baseline cf0f6a4276bfb9b4f61ab599f
 Expected sourceLineage item: {kind:'GIT_ANCESTOR'|'EXACT_SOURCE',historicalSourceCommit,currentSourceCommit,ancestor:true}; existing sourceCommit stays historical, currentSourceCommit added, sourceFiles remain scoped. None of these labels grants execution authority or claims semantic transfer success. Real model/usefulness experiment remains QA-owned.
 
 Author is holding implementation until notification of this freeze. Requirements and fixture API were coordinated before candidate inspection. Tests contain no dependency on the future implementation. Raw baseline RED and later candidate GREEN will be recorded separately, preserving any fixture failures and corrections.
+
+Baseline executed on exact cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb:27 tests16PASS11FAIL0SKIP, exit1. Positive ancestry/lineage-label cases fail as expected; old supplied-project dirty same-source case also fails because baseline ignores project. L01 exact-source legacy positive passes. No fixture setup error observed. Raw command:
+
+MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-cf0f6a42 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/git-lineage.test.mjs
+
+Raw output lineage-baseline-red.tap; exit in lineage-baseline-red.exit. Candidate-independent tests remain unchanged.
