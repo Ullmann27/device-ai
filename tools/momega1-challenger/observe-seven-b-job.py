@@ -9,13 +9,21 @@ def call(args):
 before=set((call(['ps','-q','--filter','name=continuum-model-']) or '').split())
 p=subprocess.Popen(command);start=time.monotonic();samples=[];configs={};peakHost=0;peakHostTree=0
 def host_tree_rss(pid):
+ # This host's task/children view omits real descendants. Build PPid links from
+ # proc stat instead; never read another process environment or command line.
+ parents={}
+ for entry in pathlib.Path('/proc').iterdir():
+  if not entry.name.isdigit():continue
+  try:
+   line=(entry/'stat').read_text();parent=int(line[line.rfind(')')+2:].split()[1]);parents.setdefault(parent,[]).append(int(entry.name))
+  except (OSError,ValueError,IndexError):pass
  queue=[pid];seen=set();rows=[]
  while queue:
   q=queue.pop()
   if q in seen:continue
-  seen.add(q)
+  seen.add(q);queue.extend(parents.get(q,[]))
   try:
-   status=pathlib.Path('/proc/%d/status'%q).read_text();rss=int(next(x.split()[1] for x in status.splitlines() if x.startswith('VmRSS:')));rows.append({'pid':q,'rssKiB':rss});queue.extend(int(x) for x in pathlib.Path('/proc/%d/task/%d/children'%(q,q)).read_text().split())
+   status=pathlib.Path('/proc/%d/status'%q).read_text();rss=int(next(x.split()[1] for x in status.splitlines() if x.startswith('VmRSS:')));rows.append({'pid':q,'rssKiB':rss})
   except (OSError,StopIteration):pass
  return rows
 while p.poll() is None:
