@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "sourceCommit": "525fb04b9f5c4a768f900407a8d7d8602b578d09",
+  "sourceTree": "71149ca91ba0106a841af13d37d41d56904108e4",
+  "branch": "repair/continuum-shizuku-composer-20261103",
+  "status": "HOST_VERIFIED",
+  "profiles": {
+    "jdk17": {
+      "tests": 1799,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 5,
+      "suites": 328
+    },
+    "jdk21": {
+      "tests": 1799,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "suites": 328
+    },
+    "jdk21-parity": {
+      "tests": 1799,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 328
+    }
+  },
+  "nodeFull": {
+    "executed": 1975,
+    "failed": 0,
+    "skipped": 13,
+    "total": 1988
+  },
+  "nodeCritical": {
+    "executed": 135,
+    "failed": 0,
+    "skipped": 0
+  },
+  "nodeAdditional": {
+    "executed": 119,
+    "failed": 0,
+    "skipped": 0
+  },
+  "lintScope": "Configured Android NewApi issue only; not an unrestricted security audit",
+  "device": "NOT_RUN; owner will perform Fold7 acceptance; no adb or vpn access",
+  "nativeGemmaTextGeneration": "NOT_RUN; host lifecycle and synthetic parity are not native model inference",
+  "signing": "NOT_RUN; original P12 remains on trusted Render publisher",
+  "apk": "0.3.38/code39 original package built UNSIGNED; not installable as owner update",
+  "optionalHostRunners": "Additional explicit compiler source manifests subsequently reproduced RED with real dependencies; being repaired in next commit. The 13 original Node skips are not all environmental. See next milestone.",
+  "artifacts": [
+    {
+      "path": "adb-device-list.txt",
+      "sha256": "36f15c2fe32964a6fbe902e914a47739d4e6304b0d3e812bf08096ff0419b7ae",
+      "bytes": 26
+    },
+    {
+      "path": "code39-artifact.json",
+      "sha256": "43b2247a99568b84e5bbab4f7770583d938739faabe79dc7187589773f7eaafc",
+      "bytes": 515
+    },
+    {
+      "path": "code39-badging.txt",
+      "sha256": "837fcb997739e5cecf7619171881438905277da8f7e257345b90edea30ad7a0a",
+      "bytes": 1607
+    },
+    {
+      "path": "code39-build.log",
+      "sha256": "7ed342449a039b8ac158b72a5c82c336843e85631c7961a15f9778cf6697b23e",
+      "bytes": 14230
+    },
+    {
+      "path": "jdk17-gradle.log",
+      "sha256": "e980709d34b376e160eff72e4804aea281d698674676ded6c286eb4636cc9832",
+      "bytes": 24212
+    },
+    {
+      "path": "jdk17-junit.xml",
+      "sha256": "6f8aaaed2641f381fa73ee6bd53fa6fb46871338134f2b0a6ca85dcb28bd6906",
+      "bytes": 358901
+    },
+    {
+      "path": "jdk17-required-junit.json",
+      "sha256": "6ee9d2e0e300f91109d080843b589522eff31548afe150afe62e2e98e3b113a3",
+      "bytes": 674
+    },
+    {
+      "path": "jdk21-gradle.log",
+      "sha256": "a987dc5d1d931c0543c69d25de6af31608b687dc2b14fadac65b35d1eecea949",
+      "bytes": 2649
+    },
+    {
+      "path": "jdk21-junit.xml",
+      "sha256": "dd398701c985ed8de04baf803198101ce9d686d38d309ef1b270b53d4b86509a",
+      "bytes": 358768
+    },
+    {
+      "path": "jdk21-parity-gradle.log",
+      "sha256": "8b9a7a5b65fe95db3c7cf66e792a776d8697d453348d417e5b1b7d130472d744",
+      "bytes": 2649
+    },
+    {
+      "path": "jdk21-parity-junit.xml",
+      "sha256": "a366da97e4133ca6c528b8995cc6fe9ea6eb549b99a6f87d1e1e61b81f7527ef",
+      "bytes": 358577
+    },
+    {
+      "path": "lint-NewApi.xml",
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+      "bytes": 87
+    },
+    {
+      "path": "live-code38-badging.txt",
+      "sha256": "bf26f7acb8c6adb6c68a59111ade9c15f23be2b7056d6e68111c3c745c99ba55",
+      "bytes": 1607
+    },
+    {
+      "path": "live-code38-catalog.json",
+      "sha256": "a59b891e8fb1ffd688e0755017c860f6cb6089eef076539b0b94f2fd34a86824",
+      "bytes": 681
+    },
+    {
+      "path": "live-code38-signature.txt",
+      "sha256": "d7c5cdd0ea514c2bb5b4ccc78f11772ef39507532c1ca590e4ce77e5c38b6f95",
+      "bytes": 965
+    },
+    {
+      "path": "node-critical-report.json",
+      "sha256": "8da7f70659c2a009959c670b9a6e14c86f2fd7cd35c961273fbf54c08a9a691a",
+      "bytes": 868246
+    },
+    {
+      "path": "node-extra-junit.xml",
+      "sha256": "f5714a0ee0b0445fd46357e4b30da76e58db21d00eec15b88b47d24a661ec4b5",
+      "bytes": 22332
+    },
+    {
+      "path": "node-full-junit.xml",
+      "sha256": "985ee5978ef1d69c30d817624b77f5be58e6b32cf29bb6a4b3b1e7bb2a78c5fb",
+      "bytes": 397876
+    },
+    {
+      "path": "node-full-report.json",
+      "sha256": "a4b77b87ff8444b69b9b42ecbe83b1a0cfc0865d082d7c2f5a2a3b0052da611d",
+      "bytes": 1025830
+    },
+    {
+      "path": "parity-prepare.log",
+      "sha256": "57772f4a65ecbc88656231d46f41203d2ddbbdf7cb2e2c170877a125756731c5",
+      "bytes": 117
+    },
+    {
+      "path": "parity-verify.log",
+      "sha256": "b06bfc2aac890819fda996f283fe4d9feda2a7e8a261cef213a0e92a35fd6e01",
+      "bytes": 309
+    },
+    {
+      "path": "source-proof.json",
+      "sha256": "0bdc1beae2f1e8b03625a600adce9684d25833591e56bf3b92e17f6cba0491ca",
+      "bytes": 306
+    }
+  ]
+}

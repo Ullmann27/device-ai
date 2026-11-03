@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "525fb04b9f5c4a768f900407a8d7d8602b578d09",
+  "packageName": "at.heinz.deviceai.continuumlocal",
+  "versionCode": 39,
+  "versionName": "0.3.38",
+  "byteLength": 54669275,
+  "sha256": "66d1ec16da60224986d65b8f1a3a7cdec5aa3c1ad0a55715a2341c373296f477",
+  "zipIntegrity": true,
+  "ownerSigned": false,
+  "signatureBlocksAbsent": true,
+  "published": false,
+  "installed": false,
+  "deviceVerified": false,
+  "artifactPath": "/workspace/repair-evidence/continuum-local-0.3.38-code39-UNSIGNED.apk"
+}

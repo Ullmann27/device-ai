@@ -1,0 +1,18 @@
+{
+  "jdk21_litert_reload_tests": "NOT_VERIFIED_UNDER_JDK17",
+  "junit_reports": 328,
+  "mandatory_executed": {
+    "at.heinz.deviceai.ShizukuBridgeLifecycleTest": 14,
+    "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest": 6,
+    "at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest": 5,
+    "at.heinz.deviceai.ui.ContinuumControlsTest": 7
+  },
+  "mandatory_skipped": {
+    "at.heinz.deviceai.ShizukuBridgeLifecycleTest": 0,
+    "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest": 0,
+    "at.heinz.deviceai.cognitive.OwnerChatIntentRouterTest": 0,
+    "at.heinz.deviceai.ui.ContinuumControlsTest": 0
+  },
+  "other_skipped_cases": 5,
+  "total_test_cases": 1799
+}

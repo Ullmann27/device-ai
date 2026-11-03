@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="web tools are exact bounded Android function proposals, never hosted browsing" time="0.005824" classname="test" file="/workspace/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="disabled discovery advertises no web capability; new calls do not share mutable schemas" time="0.000291" classname="test" file="/workspace/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="actual server advertises Android proposals and removes hosted web-search bypass" time="0.006204" classname="test" file="/workspace/device-ai/backend/test/android-web-tools.test.js"/>
+	<testcase name="health reports disabled hosted research without exposing credentials" time="0.849980" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="continuum status enforces bearer authentication" time="0.063226" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="unauthorized or invalid agent turns never call upstream" time="0.100729" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="agent turn maps mock Responses API to Android reply contract" time="0.298333" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="tool-result continuation reuses session and limits the forwarded result count" time="0.024989" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="oversized payload is rejected before upstream forwarding" time="0.013693" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="upstream HTTP and JSON failures are bounded and do not leak secrets" time="0.142536" classname="test" file="/workspace/device-ai/backend/test/api-integration.test.js"/>
+	<testcase name="dataset prioritizes gaps, low coverage and uncertain observations" time="0.041850" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="dataset includes recent failed cycles as recovery benchmarks" time="0.001298" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="immutable governance cannot be mutated by challenger" time="0.000651" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="brain registry is checksummed and recovers last-known-good" time="0.007991" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="factory promotes only objectively better grounded safe challenger" time="0.058706" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="factory refuses promotion when safety or grounding regress" time="0.001569" classname="test" file="/workspace/device-ai/backend/test/brain-factory.test.js"/>
+	<testcase name="state persists with integrity and last-known-good recovery" time="0.009294" classname="test" file="/workspace/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="observation requires citations and creates research gaps without authority" time="0.001846" classname="test" file="/workspace/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="planner prioritizes unresolved gap and changes query strategy after failures" time="0.027413" classname="test" file="/workspace/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="daemon learns cited observation, persists gaps and respects interval budget" time="0.052715" classname="test" file="/workspace/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="failed research is recorded and alternative strategy becomes available" time="0.011154" classname="test" file="/workspace/device-ai/backend/test/continuum-daemon.test.js"/>
+	<testcase name="public memory retrieval respects query, citations and epistemic boundaries" time="0.060082" classname="test" file="/workspace/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="unverified research is never silently promoted to trusted memory" time="0.004981" classname="test" file="/workspace/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="oversized queries and limits are rejected" time="0.000610" classname="test" file="/workspace/device-ai/backend/test/continuum-knowledge.test.js"/>
+	<testcase name="Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts" time="0.010885" classname="test" file="/workspace/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="every real model request requires a new owner checkbox consent" time="0.000179" classname="test" file="/workspace/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="render only serves local UI assets; mentor POST keeps auth and owner consent" time="0.000305" classname="test" file="/workspace/device-ai/backend/test/groq-mentor-browser.test.js"/>
+	<testcase name="mentor is opt-in disabled and never invokes external fetch without key" time="0.005182" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="one authorized message is bounded and contains no tools, memory or device context" time="0.108633" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="input length validation happens before network and before quota consumption" time="0.000662" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="daily quota is isolated by UTC day and refuses concurrent calls" time="0.009009" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="upstream errors do not expose API response contents or key" time="0.000393" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="Groq throttling and malformed output are non-tool error responses" time="0.003338" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="oversized responses are rejected without parsing or logging private contents" time="0.000447" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="mentor ignores whitespace around environment key and never follows a redirect" time="0.000519" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="provider rejects unknown models and invalid requests without exposing response bodies" time="0.006853" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="exhausted reasoning-only response retries same consented question once" time="0.001933" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="empty response after a bounded retry has a specific reason, no reasoning text leaks" time="0.000383" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="other model names do not get unsupported gpt-oss reasoning options" time="0.000544" classname="test" file="/workspace/device-ai/backend/test/groq-mentor.test.js"/>
+	<testcase name="hypotheses are explicitly non-authoritative" time="0.001420" classname="test" file="/workspace/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="invented evidence references cannot enter a tournament" time="0.011491" classname="test" file="/workspace/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="tournament store is integrity checked with LKG recovery" time="0.001591" classname="test" file="/workspace/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="generation reflection Elo tournament evolution and research questions form a closed loop" time="0.005983" classname="test" file="/workspace/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="daily tournament budget prevents runaway agent loops" time="0.054622" classname="test" file="/workspace/device-ai/backend/test/hypothesis-tournament.test.js"/>
+	<testcase name="long Groq answers are preserved beyond old 1800 character limit" time="0.116766" classname="test" file="/workspace/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="table markdown becomes plain, legible text without losing values" time="0.000703" classname="test" file="/workspace/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="oversized answers end at a boundary and explicitly signal shortening" time="0.000492" classname="test" file="/workspace/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="provider token-limit completion is explicitly marked as incomplete" time="0.000733" classname="test" file="/workspace/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="unverified mentor has no current device or repo state" time="0.000615" classname="test" file="/workspace/device-ai/backend/test/mentor-answer-format.test.js"/>
+	<testcase name="unapproved device cannot redeem; no credentials are exposed" time="0.009010" classname="test" file="/workspace/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="owner-approved device receives only revocable mentor token" time="0.006228" classname="test" file="/workspace/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="expired, forged, tampered, and replayable altered challenges are rejected" time="0.001714" classname="test" file="/workspace/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="wrong elliptic curve and missing owner token fail closed" time="0.005617" classname="test" file="/workspace/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="rotated backend token is recovered only by fresh signed owner-approved pairing" time="0.006818" classname="test" file="/workspace/device-ai/backend/test/mentor-pairing.test.js"/>
+	<testcase name="OpenRouter stays off without secret or explicit enablement" time="0.002020" classname="test" file="/workspace/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter uses its pinned HTTPS endpoint, a bounded one-off prompt and returns no tools" time="0.097590" classname="test" file="/workspace/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter errors never expose upstream key or private payload" time="0.000558" classname="test" file="/workspace/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="OpenRouter rejects too-long prompts without calling provider" time="0.000255" classname="test" file="/workspace/device-ai/backend/test/openrouter-mentor.test.js"/>
+	<testcase name="zero-cost autonomous daemon persists public source observations across restarts" time="0.221864" classname="test" file="/workspace/device-ai/backend/test/public-research-daemon.test.js"/>
+	<testcase name="free research collects deduplicated cited metadata without a paid API" time="0.114138" classname="test" file="/workspace/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="one unavailable source does not stop other public sources" time="0.003819" classname="test" file="/workspace/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="empty results never become made-up observations" time="0.007732" classname="test" file="/workspace/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="unsafe citation URLs and oversized metadata responses are rejected" time="0.011890" classname="test" file="/workspace/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="query/output bounds and timeout input validation stay enforced" time="0.040648" classname="test" file="/workspace/device-ai/backend/test/public-research.test.js"/>
+	<testcase name="controlled replay measures actual accepted patch in separate scoring worktree" time="7.812439" classname="test" file="/workspace/device-ai/experimental/omega/benchmarks/controlled-repair.test.mjs"/>
+	<testcase name="benchmark repetition count is bounded" time="0.004861" classname="test" file="/workspace/device-ai/experimental/omega/benchmarks/controlled-repair.test.mjs"/>
+	<testcase name="independent examples and metamorphic relations reject constant pseudo-repairs" time="0.223902" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="a bounded exact distance passes all four frozen checks reproducibly" time="0.419603" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="maximum frozen suite completes all 384 checks within the existing subprocess budget" time="0.781137" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="metamorphic failure supplies the distinguishing pair" time="0.280559" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="non-finite values, foreign exports and capability-bearing code never pass" time="0.820473" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="suite mutation, malformed cases, unbounded inputs and empty verification are rejected" time="0.312176" classname="test" file="/workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs"/>
+	<testcase name="100 deterministic CPU tasks execute on one actual reserved slot" time="0.194262" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/cpu-smoke.test.mjs"/>
+	<testcase name="50 logical experts execute 50 real bounded CPU calculations" time="0.019168" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/cpu-smoke.test.mjs"/>
+	<testcase name="a deterministic matrix hash is stable" time="0.000508" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/cpu-smoke.test.mjs"/>
+	<testcase name="invalid computation size is rejected" time="0.000431" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/cpu-smoke.test.mjs"/>
+	<testcase name="50 model instances comprise five equal logical roles" time="0.040038" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="100 expert declarations do not manufacture computation" time="0.004161" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="coding-agent can reserve existing CPU capacity" time="0.002342" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="local agent and memory roles share bounded capacity" time="0.000582" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="training model must have actual authorized GPU and VRAM" time="0.023517" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="unknown components cannot submit" time="0.001543" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="owner resource node can revoke work" time="0.002208" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="duplicate job IDs cannot be reused by alternate components" time="0.000489" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="1000, 2000 and 3000 specialists are registered with five balanced roles" time="0.019570" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="3000 registrations do not create phantom GPU or CPU throughput" time="0.044927" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/expert-mesh.test.mjs"/>
+	<testcase name="100 logical instances cannot create extra physical GPU throughput" time="0.049100" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="memory is not oversold" time="0.000388" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="tenant concurrency quota is enforced" time="0.047219" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="commercial workload is blocked on unlicensed nodes" time="0.000534" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="short lease cannot admit a long job" time="0.000322" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="cancel and complete release resources exactly once" time="0.000596" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="revoked physical host cancels reservations" time="0.000321" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="invalid IDs and duplicate jobs fail closed" time="0.000308" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="lease validity covers the entire requested runtime" time="0.000220" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="snapshots are defensive copies" time="0.000259" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="timed-out job does not produce a false success" time="0.000435" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/fabric.test.mjs"/>
+	<testcase name="3000 logical requests collapse to 30 actual distinct computations" time="0.175299" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="tenant isolation prevents cross-user reuse" time="0.000300" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="changed model revision prevents reuse" time="0.000182" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="changed memory epoch prevents stale computation reuse" time="0.000208" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="changed policy revision prevents context reuse" time="0.000136" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="changed generation parameters prevent reuse" time="0.000110" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="generative or non-deterministic work never coalesces" time="0.000156" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="default-deny receipt checker prevents cached unproven results" time="0.015703" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="verification failure does not discard existing leader" time="0.000266" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="cache TTL expires and forces new computation" time="0.000486" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="LRU evicts old result when full" time="0.000233" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="leader cancellation releases joined tasks for retry" time="0.000836" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="maximum waiter quota blocks unbounded fanout" time="0.000230" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="active request limit prevents memory exhaustion" time="0.000309" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="invalid input digest or repeated job id is rejected" time="0.000221" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-broker.test.mjs"/>
+	<testcase name="3000 recurring tasks are reduced to 30 real matrix computations" time="0.641297" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-experiment.test.mjs"/>
+	<testcase name="counterexample: 3000 distinct tasks require 3000 real computations" time="1.264302" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-experiment.test.mjs"/>
+	<testcase name="matrix kernel repeatability" time="0.000373" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-experiment.test.mjs"/>
+	<testcase name="invalid workload requests rejected" time="0.000596" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/reuse-experiment.test.mjs"/>
+	<testcase name="3000 unique tasks reuse 30 shared heavy computation stages" time="0.583146" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/shared-stage-experiment.test.mjs"/>
+	<testcase name="counterexample: distinct source versions require all heavy computations" time="1.040942" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/shared-stage-experiment.test.mjs"/>
+	<testcase name="bad stage parameter bounds are rejected" time="0.036620" classname="test" file="/workspace/device-ai/tools/continuum-virtual-fabric/shared-stage-experiment.test.mjs"/>
+	<!-- tests 119 -->
+	<!-- suites 0 -->
+	<!-- pass 119 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 12666.704051 -->
+</testsuites>
