@@ -13,6 +13,15 @@ const CONTROL=fileURLToPath(new URL('./isolated-profile-runner.mjs',import.meta.
 const KOTLIN_HARNESS=fileURLToPath(new URL('../../scripts/continuum-isolation-kotlin-fixture.sh',import.meta.url));
 const INSTANCES=new WeakSet();
 export function isIsolatedExecutor(value){return INSTANCES.has(value);}
+const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+export function validWorkspaceBinding(value){
+  const keys=['workerId','taskId','requestMessageId','requestHash','sourceCommit','jobId'];
+  return value!==null&&typeof value==='object'&&!Array.isArray(value)&&
+    Object.keys(value).length===keys.length&&Object.keys(value).every(k=>keys.includes(k))&&
+    /^[a-z][a-z0-9-]{2,63}$/.test(value.workerId??'')&&/^t-[a-f0-9]{16}$/.test(value.taskId??'')&&
+    UUID.test(value.requestMessageId??'')&&UUID.test(value.jobId??'')&&
+    /^[a-f0-9]{64}$/.test(value.requestHash??'')&&/^[a-f0-9]{40}$/.test(value.sourceCommit??'');
+}
 /** A consistency check for receipts, not remote attestation or a test oracle. */
 export function validIsolationEvidence(value,profile){
   return value?.schema==='continuum-isolation-v1'&&IMAGE.test(value.image??'')&&value.network==='none'&&
@@ -24,6 +33,19 @@ export function validIsolationEvidence(value,profile){
     Number.isSafeInteger(value.cpus)&&value.cpus>=1&&value.cpus<=4&&
     Number.isSafeInteger(value.timeoutMs)&&value.timeoutMs>=1000&&value.timeoutMs<=300_000&&
     (value.runtime===undefined||RUNTIMES.has(value.runtime));
+}
+function observedPolicyMatches(value,policy){
+  return value!==null&&typeof value==='object'&&/^[a-f0-9]{64}$/.test(value.containerId??'')&&
+    value.image===policy.image&&value.user===policy.user&&value.runtime===policy.runtime&&
+    value.network==='none'&&value.readOnly===true&&value.memoryBytes===policy.memoryMb*1024*1024&&
+    value.memorySwapBytes===policy.memoryMb*1024*1024&&value.nanoCpus===policy.cpus*1e9&&value.pids===policy.pids&&
+    value.writableHostMounts===0&&Array.isArray(value.capDrop)&&value.capDrop.includes('ALL')&&
+    Array.isArray(value.securityOpt)&&value.securityOpt.some(x=>x==='no-new-privileges:true'||x==='no-new-privileges');
+}
+/** Consistency only: consumers still need the trusted runner and CCC1 job authority. */
+export function validWorkspaceEvidence(value,profile){
+  return validIsolationEvidence(value,profile)&&/^continuum-[a-f0-9]{24}$/.test(value.workspaceId??'')&&
+    validWorkspaceBinding(value.workspaceBinding)&&value.teardownConfirmed===true&&observedPolicyMatches(value.observed,value);
 }
 /** Evidence that the profile ran under gVisor (runtime confirmed by docker inspect after the run). */
 export function isGvisorEvidence(value,profile){return validIsolationEvidence(value,profile)&&value.runtime==='runsc';}
@@ -107,12 +129,38 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
   const executor={
     policy:Object.freeze({schema:'continuum-isolation-v1',image,network:'none',user:uid+':'+gid,
       readOnly:true,noNewPrivileges:true,capabilities:[],memoryMb,pids,cpus,timeoutMs,runtime}),
-    execute(profile,root,out,{deadline=null}={}){
+    // This view adds correlation only. It inherits the existing capability and
+    // cannot supply a command, image, resources or additional authorization.
+    forWorkspace(binding,profiles=null,admission=null){
+      if(!validWorkspaceBinding(binding))throw Error('ISOLATION_INVALID_WORKSPACE_BINDING');
+      if(profiles!==null&&(!(profiles instanceof Set)||!profiles.size||[...profiles].some(p=>!PROFILES.has(p))))
+        throw Error('ISOLATION_UNKNOWN_PROFILE');
+      const allowed=profiles===null?null:new Set(profiles);
+      const frozen=Object.freeze({...binding});
+      const scoped={policy:executor.policy,forClaim:claim=>{
+        if(typeof admission?.forClaim!=='function')throw Error('WORKSPACE_CLAIM_UNAVAILABLE');
+        return executor.forWorkspace(frozen,allowed,admission.forClaim(claim));
+      },execute:(profile,root,out,options={})=>{
+        if(allowed!==null&&!allowed.has(profile))throw Error('ISOLATION_WORKSPACE_PROFILE_DENIED');
+        const admitted=admission===null?{}:admission.before(options);
+        const result=executor.execute(profile,root,out,{...options,...admitted,workspaceBinding:frozen,
+          beforeLaunch:admission===null?null:()=>admission.before(options)});
+        if(admission!==null)admission.after();
+        return result;
+      }};
+      INSTANCES.add(scoped);return Object.freeze(scoped);
+    },
+    execute(profile,root,out,{deadline=null,workspaceBinding=null,beforeLaunch=null}={}){
       if(!PROFILES.has(profile))throw Error('ISOLATION_UNKNOWN_PROFILE');
       const source=ordinaryDirectory(root);
+      if(workspaceBinding!==null){
+        if(!validWorkspaceBinding(workspaceBinding))throw Error('ISOLATION_INVALID_WORKSPACE_BINDING');
+        const head=spawnSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8',shell:false});
+        if(head.status!==0||head.stdout.trim()!==workspaceBinding.sourceCommit)throw Error('ISOLATION_WORKSPACE_STALE_SOURCE');
+      }
       if(profile.startsWith('android-')&&(!tools.jdk||!tools.gradle||!tools.android||!dependencies))throw Error('ISOLATION_ANDROID_TOOLCHAIN_UNAVAILABLE');
       if(profile==='kotlin-fixture'&&(!tools.jdk||!tools.kotlin))throw Error('ISOLATION_KOTLIN_TOOLCHAIN_UNAVAILABLE');
-      const remaining=Math.min(timeoutMs,deadline===null?timeoutMs:deadline-Date.now());
+      let remaining=Math.min(timeoutMs,deadline===null?timeoutMs:deadline-Date.now());
       if(remaining<1)throw Error('ISOLATION_DEADLINE_EXHAUSTED');
       // Container output never has a writable host bind. tmpfs dies with this generation.
       const stage=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-os-sandbox-'));
@@ -133,29 +181,46 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
         ...bind(tree,'/work'),...bind('/usr/bin','/usr/bin'),...bind('/usr/bin','/bin'),
         ...bind('/usr/lib','/usr/lib'),...bind('/lib','/lib'),...bind('/lib64','/lib64'),
         ...bind(CONTROL,'/control/runner.mjs'),...bind(KOTLIN_HARNESS,'/control/kotlin-fixture.sh')];
+      if(workspaceBinding!==null)args.push('--label=continuum.workspace-job='+workspaceBinding.jobId);
       for(const [key,value] of Object.entries(tools))args.push(...bind(value,'/tools/'+key));
       if(dependencies)args.push(...bind(dependencies,'/deps/modules-2'));
       args.push(image,'-i','HOME=/scratch','PATH=/tools/node/bin:/usr/bin:/bin',
         '/tools/node/bin/node','/control/runner.mjs',profile);
-      let result,observedRuntime=null;
+      let result,observed=null,teardownConfirmed=false;
       try{
+        if(beforeLaunch!==null){
+          const current=beforeLaunch();remaining=Math.min(remaining,current.deadline-Date.now());
+          if(remaining<1)throw Error('WORKSPACE_DEADLINE_EXHAUSTED');
+        }
         result=docker(args,{timeout:remaining,maxBuffer:8*1024*1024});
       }finally{
         try{
           const exists=docker(['container','inspect',name]);
           if(exists.status===0){
-            observedRuntime=String(docker(['container','inspect','--format','{{.HostConfig.Runtime}}',name]).stdout??'').trim();
+            try{
+            let inspected;
+            try{inspected=JSON.parse(exists.stdout)[0];}catch{throw Error('ISOLATION_OBSERVATION_FAILED');}
+            const hc=inspected.HostConfig;
+            observed={containerId:inspected.Id,runtime:hc.Runtime,image:inspected.Image,user:inspected.Config.User,
+              network:hc.NetworkMode,readOnly:hc.ReadonlyRootfs,memoryBytes:hc.Memory,memorySwapBytes:hc.MemorySwap,
+              nanoCpus:hc.NanoCpus,pids:hc.PidsLimit,capDrop:hc.CapDrop,securityOpt:hc.SecurityOpt,
+              writableHostMounts:inspected.Mounts.filter(m=>m.Type==='bind'&&m.RW).length};
+            }finally{
             docker(['container','kill',name]);
             const removed=docker(['container','rm',name]);
             if(removed.status!==0)throw Error('ISOLATION_TEARDOWN_FAILED');
+            const gone=docker(['container','inspect',name]);
+            teardownConfirmed=gone.status!==0&&!gone.error&&!gone.signal&&
+              (String(gone.stderr).includes('No such container: '+name)||String(gone.stderr).includes('No such object: '+name));
+            if(!teardownConfirmed)throw Error('ISOLATION_TEARDOWN_UNCONFIRMED');
+            }
           }else if(exists.error||exists.signal||!String(exists.stderr).includes('No such container: '+name)&&
                    !String(exists.stderr).includes('No such object: '+name)){
             throw Error('ISOLATION_TEARDOWN_UNCONFIRMED');
           }
         }finally{fs.rmSync(stage,{recursive:true,force:true});}
       }
-      // The daemon must confirm the runtime that actually ran; a silently substituted runtime is no gVisor evidence.
-      if(runtime==='runsc'&&observedRuntime!=='runsc')throw Error('ISOLATION_RUNTIME_MISMATCH');
+      if(!teardownConfirmed||!observedPolicyMatches(observed,executor.policy))throw Error('ISOLATION_OBSERVED_POLICY_MISMATCH');
       let payload;
       try{payload=JSON.parse(result.stdout);}catch{throw Error('ISOLATION_EXECUTION_FAILED: '+String(result.stderr).slice(-350));}
       if(result.status!==0||result.error||result.signal||payload.schema!=='continuum-isolated-profile-v1'||
@@ -171,7 +236,8 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
         const file=path.join(evidence,'TEST-'+i+'.xml');fs.writeFileSync(file,xml,{flag:'wx',mode:0o600});return file;
       });
       return {status:payload.exitCode,error:payload.error,signal:payload.signal,stdout:payload.logs,stderr:'',
-        ms:0,junitFiles,isolation:{...executor.policy,sourceSha256,profile,untrustedReports:true}};
+        ms:0,junitFiles,isolation:{...executor.policy,sourceSha256,profile,untrustedReports:true,
+          workspaceId:name,workspaceBinding:workspaceBinding===null?null:{...workspaceBinding},observed,teardownConfirmed}};
     }
   };
   INSTANCES.add(executor);return Object.freeze(executor);

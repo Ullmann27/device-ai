@@ -1,0 +1,15 @@
+allprojects {
+ afterEvaluate { p -> if(p.name=='app') p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-final') }
+ tasks.withType(Test).configureEach {
+ executable = '/usr/bin/java'
+ filter {
+  includeTestsMatching 'at.heinz.deviceai.IndependentTypedAuthorizationUiTest'
+  includeTestsMatching 'at.heinz.deviceai.IndependentTypedCancellationUiTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumTypedSnapshotBindingTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumTypedCodingBridgeTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumBuilderLifecycleUiTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest'
+  includeTestsMatching 'at.heinz.deviceai.ContinuumOwnedBuilderUiTest'
+ }
+} }

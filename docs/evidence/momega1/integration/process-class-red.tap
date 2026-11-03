@@ -1,0 +1,32 @@
+✖ process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind (154.967784ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 249.568481
+
+✖ failing tests:
+
+test at scripts/continuum-local-model-observation.test.mjs:206:1
+✖ process evidence classification cannot claim LOCAL_MODEL_HOST from a configured kind (154.967784ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'LOCAL_MODEL_HOST'
+  - 'HOST_INTEGRATION'
+  
+      at TestContext.<anonymous> (file:///workspace/momega1-chief/scripts/continuum-local-model-observation.test.mjs:210:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'LOCAL_MODEL_HOST',
+    expected: 'HOST_INTEGRATION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

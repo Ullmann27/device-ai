@@ -1,0 +1,324 @@
+TAP version 13
+# Subtest: protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+ok 1 - protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not
+  ---
+  duration_ms: 3.688199
+  type: 'test'
+  ...
+# Subtest: the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+ok 2 - the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget
+  ---
+  duration_ms: 0.661018
+  type: 'test'
+  ...
+# Subtest: the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+ok 3 - the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run
+  ---
+  duration_ms: 2.215566
+  type: 'test'
+  ...
+# Subtest: repair receipt proof binds coverage to command details without losing independent tests
+    # Subtest: candidate command lost tests behind an unchanged summary
+    ok 1 - candidate command lost tests behind an unchanged summary
+      ---
+      duration_ms: 0.212762
+      type: 'test'
+      ...
+    # Subtest: independent command lost tests behind an unchanged summary
+    ok 2 - independent command lost tests behind an unchanged summary
+      ---
+      duration_ms: 0.296047
+      type: 'test'
+      ...
+    # Subtest: baseline summary understates the real failing suite
+    ok 3 - baseline summary understates the real failing suite
+      ---
+      duration_ms: 0.191619
+      type: 'test'
+      ...
+    # Subtest: summary claims a different failing-test count
+    ok 4 - summary claims a different failing-test count
+      ---
+      duration_ms: 0.156236
+      type: 'test'
+      ...
+    # Subtest: candidate summary differs from command
+    ok 5 - candidate summary differs from command
+      ---
+      duration_ms: 0.445012
+      type: 'test'
+      ...
+    # Subtest: independent summary differs from command
+    ok 6 - independent summary differs from command
+      ---
+      duration_ms: 0.283919
+      type: 'test'
+      ...
+    # Subtest: independent rerun drops tests introduced by candidate
+    ok 7 - independent rerun drops tests introduced by candidate
+      ---
+      duration_ms: 0.207283
+      type: 'test'
+      ...
+    # Subtest: count strings are not executed-test counts
+    ok 8 - count strings are not executed-test counts
+      ---
+      duration_ms: 0.298821
+      type: 'test'
+      ...
+    # Subtest: fractional counts are not executed-test counts
+    ok 9 - fractional counts are not executed-test counts
+      ---
+      duration_ms: 0.160121
+      type: 'test'
+      ...
+    # Subtest: unsafe integer counts are not executed-test counts
+    ok 10 - unsafe integer counts are not executed-test counts
+      ---
+      duration_ms: 0.769391
+      type: 'test'
+      ...
+    # Subtest: baseline cannot have more failures than executed tests
+    ok 11 - baseline cannot have more failures than executed tests
+      ---
+      duration_ms: 0.173963
+      type: 'test'
+      ...
+    # Subtest: baseline exit zero contradicts a claimed failure
+    ok 12 - baseline exit zero contradicts a claimed failure
+      ---
+      duration_ms: 0.151969
+      type: 'test'
+      ...
+    # Subtest: timed-out baseline is not a completed RED run
+    ok 13 - timed-out baseline is not a completed RED run
+      ---
+      duration_ms: 0.11903
+      type: 'test'
+      ...
+    # Subtest: signal termination is not a completed RED run
+    ok 14 - signal termination is not a completed RED run
+      ---
+      duration_ms: 0.140472
+      type: 'test'
+      ...
+    # Subtest: unknown chain is not an implicit undefined allowlist
+    ok 15 - unknown chain is not an implicit undefined allowlist
+      ---
+      duration_ms: 0.408116
+      type: 'test'
+      ...
+    # Subtest: extra test phases cannot supplement the three fixed phases
+    ok 16 - extra test phases cannot supplement the three fixed phases
+      ---
+      duration_ms: 1.325311
+      type: 'test'
+      ...
+    # Subtest: missing command details cannot be verified
+    ok 17 - missing command details cannot be verified
+      ---
+      duration_ms: 0.115504
+      type: 'test'
+      ...
+    # Subtest: equal coverage
+    ok 18 - equal coverage
+      ---
+      duration_ms: 0.187633
+      type: 'test'
+      ...
+    # Subtest: increased coverage
+    ok 19 - increased coverage
+      ---
+      duration_ms: 0.139171
+      type: 'test'
+      ...
+    1..19
+ok 4 - repair receipt proof binds coverage to command details without losing independent tests
+  ---
+  duration_ms: 9.320983
+  type: 'test'
+  ...
+# Subtest: non-success repair verdicts require completed baseline evidence
+    # Subtest: NO_FAILURE_FOUND valid completed baseline
+    ok 1 - NO_FAILURE_FOUND valid completed baseline
+      ---
+      duration_ms: 0.089766
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND timeout
+    ok 2 - NO_FAILURE_FOUND timeout
+      ---
+      duration_ms: 0.091248
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND signal exit
+    ok 3 - NO_FAILURE_FOUND signal exit
+      ---
+      duration_ms: 0.069204
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND contradicting exit
+    ok 4 - NO_FAILURE_FOUND contradicting exit
+      ---
+      duration_ms: 0.070326
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND zero executed tests
+    ok 5 - NO_FAILURE_FOUND zero executed tests
+      ---
+      duration_ms: 0.08652
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND string executed count
+    ok 6 - NO_FAILURE_FOUND string executed count
+      ---
+      duration_ms: 0.09284
+      type: 'test'
+      ...
+    # Subtest: NO_FAILURE_FOUND extra run record
+    ok 7 - NO_FAILURE_FOUND extra run record
+      ---
+      duration_ms: 0.187073
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR valid completed baseline
+    ok 8 - FAILED_REPAIR valid completed baseline
+      ---
+      duration_ms: 0.042884
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR timeout
+    ok 9 - FAILED_REPAIR timeout
+      ---
+      duration_ms: 0.047121
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR signal exit
+    ok 10 - FAILED_REPAIR signal exit
+      ---
+      duration_ms: 0.042554
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR contradicting exit
+    ok 11 - FAILED_REPAIR contradicting exit
+      ---
+      duration_ms: 0.043196
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR zero executed tests
+    ok 12 - FAILED_REPAIR zero executed tests
+      ---
+      duration_ms: 0.197068
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR string executed count
+    ok 13 - FAILED_REPAIR string executed count
+      ---
+      duration_ms: 0.064247
+      type: 'test'
+      ...
+    # Subtest: FAILED_REPAIR extra run record
+    ok 14 - FAILED_REPAIR extra run record
+      ---
+      duration_ms: 0.04662
+      type: 'test'
+      ...
+    1..14
+ok 5 - non-success repair verdicts require completed baseline evidence
+  ---
+  duration_ms: 2.562539
+  type: 'test'
+  ...
+# Subtest: CCC1 repairs a real regression end to end and records it once for the owner to review
+ok 6 - CCC1 repairs a real regression end to end and records it once for the owner to review
+  ---
+  duration_ms: 1755.550358
+  type: 'test'
+  ...
+# Subtest: a passing chain is reported as nothing to repair, never as a repair
+ok 7 - a passing chain is reported as nothing to repair, never as a repair
+  ---
+  duration_ms: 543.51042
+  type: 'test'
+  ...
+# Subtest: repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+ok 8 - repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again
+  ---
+  duration_ms: 439.418916
+  type: 'test'
+  ...
+# Subtest: an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+ok 9 - an interrupted repair is never repeated without the owner; recovery classifies it like any coding job
+  ---
+  duration_ms: 82.344162
+  type: 'test'
+  ...
+# Subtest: every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+ok 10 - every orchestrator outcome maps to a known loop outcome; only real progress is not a failure
+  ---
+  duration_ms: 1.565213
+  type: 'test'
+  ...
+# Subtest: a submitted goal is confirmed by the real job, reported for review and recorded once
+ok 11 - a submitted goal is confirmed by the real job, reported for review and recorded once
+  ---
+  duration_ms: 1347.241871
+  type: 'test'
+  ...
+# Subtest: an ambiguous goal becomes an owner question without a job, recorded as an investigation
+ok 12 - an ambiguous goal becomes an owner question without a job, recorded as an investigation
+  ---
+  duration_ms: 371.627214
+  type: 'test'
+  ...
+# Subtest: the existing local loop drives CCC1 cycles with its durable checkpoint
+ok 13 - the existing local loop drives CCC1 cycles with its durable checkpoint
+  ---
+  duration_ms: 1406.929577
+  type: 'test'
+  ...
+# Subtest: damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+ok 14 - damaged journals are reported, never repaired, and stop the worker; the experience log detects edits
+  ---
+  duration_ms: 26.791773
+  type: 'test'
+  ...
+# Subtest: the CLI keeps its state outside the repository and lists tasks
+ok 15 - the CLI keeps its state outside the repository and lists tasks
+  ---
+  duration_ms: 40.090206
+  type: 'test'
+  ...
+# Subtest: an idle cycle refreshes the code index only when asked, and probes again only what changed
+ok 16 - an idle cycle refreshes the code index only when asked, and probes again only what changed
+  ---
+  duration_ms: 174.505307
+  type: 'test'
+  ...
+# Subtest: the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+ok 17 - the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner
+  ---
+  duration_ms: 681.735387
+  type: 'test'
+  ...
+# Subtest: tasks are bound to the real repository, never to a placeholder
+ok 18 - tasks are bound to the real repository, never to a placeholder
+  ---
+  duration_ms: 43.622617
+  type: 'test'
+  ...
+# Subtest: submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+ok 19 - submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime
+  ---
+  duration_ms: 111.0432
+  type: 'test'
+  ...
+1..19
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4384.27465

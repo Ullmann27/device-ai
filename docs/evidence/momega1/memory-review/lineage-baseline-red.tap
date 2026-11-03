@@ -1,0 +1,411 @@
+TAP version 13
+# Subtest: L01 no project retains legacy exact-source positive behavior
+ok 1 - L01 no project retains legacy exact-source positive behavior
+  ---
+  duration_ms: 395.275374
+  type: 'test'
+  ...
+# Subtest: L02 no project retains exact-source restriction for changed code
+ok 2 - L02 no project retains exact-source restriction for changed code
+  ---
+  duration_ms: 343.138557
+  type: 'test'
+  ...
+# Subtest: L03 direct Git ancestor after restart carries old/current source and lineage labels
+not ok 3 - L03 direct Git ancestor after restart carries old/current source and lineage labels
+  ---
+  duration_ms: 379.969491
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:52:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:52:143)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L04 more distant actual ancestor is eligible but never grants permission
+not ok 4 - L04 more distant actual ancestor is eligible but never grants permission
+  ---
+  duration_ms: 384.318293
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:53:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:53:102)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L05 supplied clean same-source project emits exact lineage labels
+not ok 5 - L05 supplied clean same-source project emits exact lineage labels
+  ---
+  duration_ms: 437.023556
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + undefined
+    - {
+    -   ancestor: true,
+    -   currentSourceCommit: '3f622ff5c3b98eb603e089f73727e2d57e1ed971',
+    -   historicalSourceCommit: '3f622ff5c3b98eb603e089f73727e2d57e1ed971',
+    -   kind: 'EXACT_SOURCE'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'EXACT_SOURCE'
+    historicalSourceCommit: '3f622ff5c3b98eb603e089f73727e2d57e1ed971'
+    currentSourceCommit: '3f622ff5c3b98eb603e089f73727e2d57e1ed971'
+    ancestor: true
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:54:144)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L06 project current HEAD must equal currently approved commit
+ok 6 - L06 project current HEAD must equal currently approved commit
+  ---
+  duration_ms: 459.253213
+  type: 'test'
+  ...
+# Subtest: L07 unstaged dirty project refuses ancestor reuse
+ok 7 - L07 unstaged dirty project refuses ancestor reuse
+  ---
+  duration_ms: 469.080877
+  type: 'test'
+  ...
+# Subtest: L07 staged dirty project refuses ancestor reuse
+ok 8 - L07 staged dirty project refuses ancestor reuse
+  ---
+  duration_ms: 546.065093
+  type: 'test'
+  ...
+# Subtest: L07 untracked dirty project refuses ancestor reuse
+ok 9 - L07 untracked dirty project refuses ancestor reuse
+  ---
+  duration_ms: 617.458922
+  type: 'test'
+  ...
+# Subtest: L08 supplied same-source project must still reject dirt
+not ok 10 - L08 supplied same-source project must still reject dirt
+  ---
+  duration_ms: 276.783202
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:57:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    empty (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:49:35)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:57:177)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L09 same commit objects with changed origin identity are refused
+ok 11 - L09 same commit objects with changed origin identity are refused
+  ---
+  duration_ms: 593.504905
+  type: 'test'
+  ...
+# Subtest: L10 invalid project/non-repository cannot establish ancestry
+ok 12 - L10 invalid project/non-repository cannot establish ancestry
+  ---
+  duration_ms: 467.902636
+  type: 'test'
+  ...
+# Subtest: L11 nested directory is not the canonical project root
+ok 13 - L11 nested directory is not the canonical project root
+  ---
+  duration_ms: 487.907594
+  type: 'test'
+  ...
+# Subtest: L12 historical descendant cannot be reused by an earlier current task
+ok 14 - L12 historical descendant cannot be reused by an earlier current task
+  ---
+  duration_ms: 459.034356
+  type: 'test'
+  ...
+# Subtest: L13 unrelated real history cannot be admitted from matching remote/path
+ok 15 - L13 unrelated real history cannot be admitted from matching remote/path
+  ---
+  duration_ms: 450.54719
+  type: 'test'
+  ...
+# Subtest: L14 missing historical commit object refuses reuse
+ok 16 - L14 missing historical commit object refuses reuse
+  ---
+  duration_ms: 568.05091
+  type: 'test'
+  ...
+# Subtest: L15 Git replace refs cannot supply or alter trusted ancestry
+ok 17 - L15 Git replace refs cannot supply or alter trusted ancestry
+  ---
+  duration_ms: 505.360738
+  type: 'test'
+  ...
+# Subtest: L16 legacy graft file cannot supply trusted ancestry
+ok 18 - L16 legacy graft file cannot supply trusted ancestry
+  ---
+  duration_ms: 572.417968
+  type: 'test'
+  ...
+# Subtest: L17 incomplete shallow ancestry does not silently generalize
+ok 19 - L17 incomplete shallow ancestry does not silently generalize
+  ---
+  duration_ms: 554.298519
+  type: 'test'
+  ...
+# Subtest: L18 canonical local basename identity permits same repository ancestry
+not ok 20 - L18 canonical local basename identity permits same repository ancestry
+  ---
+  duration_ms: 589.869394
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:67:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:67:126)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L19 descendant commits never widen allowed path overlap
+ok 21 - L19 descendant commits never widen allowed path overlap
+  ---
+  duration_ms: 560.082399
+  type: 'test'
+  ...
+# Subtest: L20 removed current grant blocks previously eligible ancestor context
+not ok 22 - L20 removed current grant blocks previously eligible ancestor context
+  ---
+  duration_ms: 501.451174
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:69:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:69:99)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L21 expired current journal deadline blocks previously eligible ancestor context
+not ok 23 - L21 expired current journal deadline blocks previously eligible ancestor context
+  ---
+  duration_ms: 341.424123
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:70:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:70:110)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L22 canonical historical revocation remains authoritative over ancestor recall
+not ok 24 - L22 canonical historical revocation remains authoritative over ancestor recall
+  ---
+  duration_ms: 556.911477
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:71:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:71:108)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L23 MAC substitution on ancestor proof remains rejected
+not ok 25 - L23 MAC substitution on ancestor proof remains rejected
+  ---
+  duration_ms: 577.254695
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:72:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:72:85)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L24 canonical current ABORT blocks previously eligible ancestor context
+not ok 26 - L24 canonical current ABORT blocks previously eligible ancestor context
+  ---
+  duration_ms: 513.871829
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:73:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    eligible synthetic ancestor fixture must be recalled
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    positive (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:48:77)
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:73:101)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: L25 linked clean worktree uses common real Git objects and exact same origin
+not ok 27 - L25 linked clean worktree uses common real Git objects and exact same origin
+  ---
+  duration_ms: 615.598373
+  type: 'test'
+  location: '/workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:74:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-memory-review/tools/momega1-memory-review/tests/git-lineage.test.mjs:74:292)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 16
+# fail 11
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13673.792906

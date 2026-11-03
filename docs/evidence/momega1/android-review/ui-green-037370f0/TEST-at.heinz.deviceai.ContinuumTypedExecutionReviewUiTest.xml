@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-03T19:35:55" hostname="b354f2cb821b" time="1.561">
+  <properties/>
+  <testcase name="foregroundPrepareCallbackEnablesRunWithoutStartingIt" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.136"/>
+  <testcase name="typedRunRestoresItsOwnCancelTargetAfterAnInterveningStatus" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.132"/>
+  <testcase name="pausedBuilderRefreshesOnlyWhenResumed" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.086"/>
+  <testcase name="alteredCommitWhileExecutionDialogIsOpenCannotDispatch" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.224"/>
+  <testcase name="receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.027"/>
+  <testcase name="legacyPreparedTupleCannotEnableExecution" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.088"/>
+  <testcase name="changedPreparedJournalIdWhileRunDialogIsOpenCannotDispatch" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.128"/>
+  <testcase name="executionAfterRecreationDisplaysTheCompleteTaskBeforeDispatch" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.173"/>
+  <testcase name="dispatchedRunConsumesThePreparedTaskAndCannotRearmAfterCallback" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.184"/>
+  <testcase name="changedFullTaskCannotBecomePreparedOrEnableRunWithTheOldDigest" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.166"/>
+  <testcase name="invalidOrReplayedPrepareCallbackCannotReplaceTheCurrentAbortTarget" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.039"/>
+  <testcase name="typedPreparationBindsTheExistingExplicitAbortTargetDuringRun" classname="at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest" time="0.176"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

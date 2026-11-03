@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
+  ---
+  duration_ms: 384.996192
+  type: 'test'
+  ...
+# Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
+ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
+  ---
+  duration_ms: 376.373964
+  type: 'test'
+  ...
+# Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
+ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+  ---
+  duration_ms: 2909.221648
+  type: 'test'
+  ...
+# Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
+ok 4 - MΩ strict execution blocks before provider or missing journal when isolation is absent
+  ---
+  duration_ms: 0.552784
+  type: 'test'
+  ...
+# Subtest: MΩ model-observation gate rejects self-certified task-bound JSON
+ok 5 - MΩ model-observation gate rejects self-certified task-bound JSON
+  ---
+  duration_ms: 0.356258
+  type: 'test'
+  ...
+# Subtest: MΩ recall ablation accepts only a trusted Boolean option before any state access
+ok 6 - MΩ recall ablation accepts only a trusted Boolean option before any state access
+  ---
+  duration_ms: 0.147172
+  type: 'test'
+  ...
+# Subtest: HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay
+ok 7 - HOST_INTEGRATION: typed dispatch binds actual canonical repair containers and refuses replay
+  ---
+  duration_ms: 3543.995288
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3805.3273
