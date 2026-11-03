@@ -1,6 +1,7 @@
 # Operation Continuum Ω — Intelligence lane, 2026-11-03
 
-Status: WIP / UNVERIFIED. No device/model-quality claim.
+Status: SOURCE_INTEGRATED / focused host JVM verified; full Android gate pending.
+Draft PR: https://github.com/Ullmann27/device-ai/pull/394. No device/model-quality claim.
 
 ## Source and authority
 
@@ -26,9 +27,11 @@ Status: WIP / UNVERIFIED. No device/model-quality claim.
 - Trace actual context/authority flow, freeze a meaningful negative regression,
   observe RED, minimally repair the same projection, run focused and available
   integration tests, record exact source and logs, push each meaningful checkpoint.
-- Candidate root cause under investigation: entity segments are clipped to 80
-  characters and only pre-number negation/hedging is checked. A negated quantity
-  after the selected number can become an affirmative current count.
+- Confirmed root cause: entity segments are clipped to 80 characters and only
+  pre-number negation/hedging was checked. Denial before the entity or after the
+  selected number became an affirmative current count. Existing qualifiers now
+  inspect the complete quantity sentence before a value is admitted. Parsing
+  limits remain unchanged; a separate no-save instruction does not assert facts.
 
 ## Actual call graph and limits
 
@@ -61,8 +64,30 @@ Gemma inference, Android device or performance experiment runs in this lane.
 ## Verification / continuation
 
 - Baseline source inspection: completed at the SHA above.
-- Focused new regression: NOT_RUN; test harness coordinated with Quality lane.
+- RED: 12 actual JUnit tests, 4 assertion failures against baseline production;
+  suffix denial, late denial beyond 80 characters, suffix uncertainty, prefix
+  denial each wrongly produced original=4/current=9. Eight controls passed.
+- GREEN: same 12 tests passed after the minimal fix; broader pure context subset
+  22/22 passed. Compiler 2.4.0, JUnit 4.13.2, actual OpenJDK 21.0.12.1, JVM target
+  17, no stubs or mock Kotlin classes. Commands:
+  `bash docs/evidence/omega-intelligence-20261103/run-timeline-jvm.sh`
+  and the same command with `--context`.
+- Raw logs: `red-jvm.txt`, `green-jvm.txt`, `context-jvm.txt` in that evidence
+  directory. Logs bind base SHA plus exact source/test SHA-256 where the tree was
+  dirty. Production GREEN SHA-256:
+  `cacf4f226e9b13555a7e49bf9a6fc36b41f56a58a8a20608111de9dda3b884d1`;
+  test SHA-256 `8491828e0068bc9354559df8ffffabc8b86fd1900aa5e3506c74be9a5ab2adfc`.
+- One wider isolated compilation attempt was UNAVAILABLE because its manually
+  selected source set omitted ContinuumTaskClassifier/ChatReasoningRouter. Raw
+  failure retained in `context-incomplete-source-set.txt`; no test ran in that
+  attempt. The passing 22-test subset does not include the dependent frame/budget
+  classes. Full graph verification belongs to the Gradle gate below.
 - Android/Gradle/full suite: NOT_RUN; SDK readiness owned by Quality lane.
-- Next: freeze and run the smallest suffix-negation/correction reproduction.
+- Limits: conservative whole-sentence abstention can reject a true number with
+  an unrelated negated clause. General pronoun corrections, number-free
+  retractions, multi-number ambiguity and model response quality remain open.
+- Next: pin verification to the committed fix, get Quality full-graph results,
+  inspect the already-consumed A8 employer-retraction miss as a separate possible
+  regression (never report it as new blind evaluation gain).
 - Rollback: revert only this lane's source/test commit; no migration or data
   rollback required. Preserve all logs and negative results in this branch.

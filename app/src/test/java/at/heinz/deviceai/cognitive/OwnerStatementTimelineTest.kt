@@ -64,13 +64,12 @@ class OwnerStatementTimelineTest {
         assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), correction))
     }
 
-    @Test fun suffixUncertaintyAndPrefixNegationCannotBecomeCurrentState() {
-        for (correction in listOf(
-            "Die rote Kiste hat 9 Ringe, vielleicht.",
-            "Nicht die rote Kiste hat 9 Ringe."
-        )) {
-            assertNull(correction, p(listOf("Die rote Kiste hat 4 Ringe."), correction))
-        }
+    @Test fun suffixUncertaintyCannotBecomeCurrentState() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), "Die rote Kiste hat 9 Ringe, vielleicht."))
+    }
+
+    @Test fun negationBeforeEntityCannotBecomeCurrentState() {
+        assertNull(p(listOf("Die rote Kiste hat 4 Ringe."), "Nicht die rote Kiste hat 9 Ringe."))
     }
 
     @Test fun separateNoSaveInstructionDoesNotInvalidatePlainCorrection() {
