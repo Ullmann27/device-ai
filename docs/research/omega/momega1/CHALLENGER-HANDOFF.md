@@ -73,3 +73,21 @@ launch path and record classification; inspect FD/TOCTOU, cleanup, resource,
 network and revoke implementation; follow up memory proof/recall if assigned.
 Do not interpret baseline strict receipt rejection failures as authority bypass.
 OS namespace capability evidence is independent of candidate isolation.
+
+## Frozen candidate reviewed — 37e16cef
+
+Independent review complete: exact candidate37e16cefac4ee3b794d79540214a69f1c6181b82,
+detached checkout remains clean. Full base-to-candidate diff and raw TAP committed.
+35/35 PASS, zero skip/fail; all initial criteria/C/provider freeze hashes unchanged.
+See docs/evidence/momega1/challenger/RUNTIME-ASSESSMENT.md and
+runtime-review-manifest.json for exact scope, SHA hashes, command and open gates.
+
+Verdict: tested process boundary HOST_VERIFIED, conditional source acceptance;
+real model BLOCKED_LOCAL_MODEL_UNAVAILABLE, FOLD7_NOT_RUN. No loop/learning claim.
+A/B native counterexample: identical scripted ELF+dummy GGUF becomes private-
+branded process observation when only trusted runtime kind changes from
+CONTRACT_FIXTURE to LLAMA_CPP. verifiedModelExecution remains false. Downstream
+BETA/GAMMA MUST NOT equate this brand with actual inference. Chief notified.
+Helper replay/revoke/capacity are upstream responsibilities; direct repeated nonce
+and simultaneous requests both execute. UI/provider STOP and combined chat/coding
+resource/lifecycle not certified. Return for integration changes only if assigned.
