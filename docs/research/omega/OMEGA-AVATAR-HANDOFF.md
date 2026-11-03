@@ -1,7 +1,7 @@
 # Operation Continuum Ω — native avatar lane
 
 Status 2026-11-03: WIP / UNVERIFIED. Base PR #390: `b4f61ae9765e26dd401db928b76fa9f233c0742a`.
-Branch: `codex/team-04-android/omega-20261103`; target `fix/continuum-code40-router-race-review-20261103`.
+Branch: `codex/team-04-android-omega-20261103`; target `fix/continuum-code40-router-race-review-20261103`.
 
 ## Scope and existing sources
 
@@ -16,3 +16,5 @@ Smallest milestone: original procedural cyan/violet head drawn natively through 
 Checkpoint only: JUnit/Gradle/UI screenshots/Fold7: NOT_RUN. Quality lane owns SDK setup. Implement and test reducer event timing, utterance interruption/staleness, native renderer and lifecycle. Then run existing native/UI harness if available. Device performance/TTS precision remain unverified until Fold7 testing.
 
 Rollback: revert this lane's commits or retain orb selection. No persistence migration, permission, manifest or release configuration changes.
+
+Remote namespace: initial push of codex/team-04-android/omega-20261103 was rejected with directory/file conflict; preserved existing remote ref and renamed only this local lane.
