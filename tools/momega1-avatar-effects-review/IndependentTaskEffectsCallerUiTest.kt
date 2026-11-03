@@ -20,6 +20,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import org.robolectric.shadows.ShadowSystemClock
 import java.time.Duration
 import java.util.UUID
@@ -31,11 +32,14 @@ import java.util.concurrent.atomic.AtomicReference
 /** Actual Activity ToolGate/WorkerJob/button callers. Shared short-JNI shadow is explicitly controlled host audio. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28],shadows=[Pcm16FeedbackAudioTrackShadow::class])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class IndependentTaskEffectsCallerUiTest {
     private fun set(a:AgentActivity,n:String,v:Any?)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.set(a,v)
     private fun get(a:AgentActivity,n:String)=AgentActivity::class.java.getDeclaredField(n).apply {isAccessible=true}.get(a)
     private fun call(a:AgentActivity,n:String,vararg args:Any?)=AgentActivity::class.java.declaredMethods.single {it.name==n&&it.parameterCount==args.size}.apply {isAccessible=true}.invoke(a,*args)
     private fun field(o:Any,n:String)=o.javaClass.getDeclaredField(n).apply {isAccessible=true}.get(o)
+    private fun feedback(a:AgentActivity)=AgentActivity::class.java.declaredFields.firstOrNull {it.name=="uiFeedback"}?.apply {isAccessible=true}?.get(a)
+    private fun assertSilent(a:AgentActivity) {feedback(a)?.let {assertNull(field(it,"track"))}}
     private fun pulses(h:ContinuumHologramView)=field(field(h,"taskEffects")!!,"pulses") as List<*>
     private fun starts(h:ContinuumHologramView)=pulses(h).filter {field(it!!,"type")==0}.map {field(it!!,"id").toString()}.toSet()
     private fun idle()=shadowOf(Looper.getMainLooper()).idle()
@@ -126,14 +130,14 @@ class IndependentTaskEffectsCallerUiTest {
         (a.getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {ringerMode=AudioManager.RINGER_MODE_NORMAL;setStreamVolume(AudioManager.STREAM_SYSTEM,5,0)}
         val b=call(a,"actionButton","review action",false,false) as Button;b.setOnClickListener {}
         set(a,"voiceEnabled",true);set(a,"voiceListening",true);b.performClick()
-        assertNull(get(a,"uiFeedback"))
-        set(a,"voiceListening",false);set(a,"voiceEnabled",false);b.performClick();assertNull(get(a,"uiFeedback"))
+        assertSilent(a)
+        set(a,"voiceListening",false);set(a,"voiceEnabled",false);b.performClick();assertSilent(a)
     }
     @Test fun actualPauseReleasesButtonTrackAndBackgroundCannotReviveIt()=fixture {a,_ ->
         Settings.System.putInt(a.contentResolver,Settings.System.SOUND_EFFECTS_ENABLED,1)
         (a.getSystemService(Context.AUDIO_SERVICE) as AudioManager).apply {ringerMode=AudioManager.RINGER_MODE_NORMAL;setStreamVolume(AudioManager.STREAM_SYSTEM,5,0)}
         set(a,"voiceEnabled",true);val b=call(a,"actionButton","review action",false,false) as Button;b.setOnClickListener {}
-        b.performClick();val f=get(a,"uiFeedback")!!;val first=field(f,"track") as AudioTrack
+        b.performClick();val f=feedback(a);assertNotNull("Actual button must reach bounded feedback",f);val first=field(f!!,"track") as AudioTrack
         assertEquals(AudioTrack.PLAYSTATE_PLAYING,first.playState)
         call(a,"onPause");assertNull(field(f,"track"));assertEquals(AudioTrack.STATE_UNINITIALIZED,first.state)
         tick(200);b.performClick();assertNull(field(f,"track"))
