@@ -1,0 +1,50 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "method": "Original render pixels pasted without rescaling or color adjustment",
+  "frameCount": 224,
+  "selectedFrames": [
+    0,
+    24,
+    48,
+    72,
+    96,
+    108,
+    120,
+    144,
+    168,
+    192,
+    219,
+    223
+  ],
+  "poseFileSha256": "8d2af24cb1e0bb22a8e35a456f9be41de91d322980d7f46c63159be6628b7677",
+  "productionMapperSource": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+  "assetSha256": "3805ba43261784993d3f4c65bb24df2a0ee306b89962167d81763c12c9d81deb",
+  "observedAngularRangesDegrees": {
+    "headYaw": [
+      -0.014567674,
+      1.2443461
+    ],
+    "headPitch": [
+      -0.41242695,
+      0.719429
+    ],
+    "eyeYaw": [
+      -1.6274731,
+      2.5077648
+    ],
+    "eyePitch": [
+      -1.0604806,
+      1.0907727
+    ],
+    "jawPitch": [
+      0.0,
+      0.0
+    ]
+  },
+  "sheetSha256": "72fdf4c3e0957675622b520c3c502be478a905e27a4ed1dffeb6594a51e62e31",
+  "limitations": [
+    "2-sample low-resolution host motion preview",
+    "Synthetic inputs",
+    "No naturalness or reference-match self-acceptance"
+  ]
+}

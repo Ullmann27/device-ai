@@ -1,0 +1,23 @@
+{
+  "status": "EXPERIMENT_NOT_ACCEPTED",
+  "sourceSha256": "03caa24f5c7b8db40a91f42a53538f2b6f43c1db02147b091ea6cb0685e2759e",
+  "derivationScriptSha256": "a8008efcc5c87cc0501e12489ae739b618bbcac5cd79e675ba3fbd88627eabfe",
+  "candidateSha256": "5868216818120c2911ca8f6ff14861dbff2c33ac8ef8c578ee4af08d77b8f4f2",
+  "originalBinaryPrefixSha256": "0ce513d0a47df89186e9fe5cdcba28a8965d9a809937390fe5769790fe73ee3c",
+  "geometryMorphRigAndToothMaterialsUnchanged": true,
+  "frontSurfaceAlphaMode": "OPAQUE",
+  "texturePixels": [
+    1024,
+    1024
+  ],
+  "variant": "narrow",
+  "emissiveStrength": 4.0,
+  "addedEmbeddedPngBytes": 227865,
+  "coveredTexels": 1026546,
+  "runtimeRequirement": "glTF emissiveTexture and optional KHR_materials_emissive_strength; no custom shader or external resources",
+  "limitations": [
+    "Fixed object-space front-oriented contour light pattern, not view-dependent Fresnel",
+    "Actual Filament appearance and cost NOT_RUN",
+    "FOLD7_NOT_RUN"
+  ]
+}
