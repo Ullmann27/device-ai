@@ -127,6 +127,21 @@ object ConversationIndependentChecks {
             val a = f.turn(c); check(!c.complete(a, "unloaded model", null, "review-session"))
             check(f.store.loadConversation("bot-kora", "bot-kora").turns.isEmpty())
         }
+        test("rejected-terminal-releases-only-its-own-pending-correlation") { f ->
+            val c = f.controller(); c.select("bot-kora"); val old = f.turn(c)
+            val changed = model.copy(version = "v2")
+            check(!c.complete(old, "wrong old output", changed, "review-session"))
+            val fresh = c.prepare("bot-kora", "new model task", f.state, changed, "review-session")
+            check(!c.complete(old, "late duplicate old output", changed, "review-session"))
+            check(c.isCurrent(fresh, changed, "review-session"))
+            check(c.complete(fresh, "new model reply", changed, "review-session"))
+        }
+        test("unselected-identity-cannot-be-requested-by-parameter") { f ->
+            val c = f.controller(); c.select("bot-kora")
+            rejected { f.turn(c, "bot-lint") }
+            val permitted = f.turn(c)
+            check(c.cancel(permitted))
+        }
         test("controller-restart-does-not-reuse-old-ticket") { f ->
             val first = f.controller(); first.select("bot-kora"); val old = f.turn(first)
             val restarted = f.controller(); restarted.select("bot-kora"); val fresh = f.turn(restarted)
