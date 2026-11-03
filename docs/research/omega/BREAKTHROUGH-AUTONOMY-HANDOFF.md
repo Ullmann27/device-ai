@@ -45,10 +45,15 @@ Both commit and patch modes execute actual fixed-profile tests. Existing forged
 self-report cases remain rejected. A real 100ms execution timeout is rejected;
 fresh retry succeeds and no additional worktree is retained. Caller HEAD/status
 and registered worktree list are preserved around the fault experiments.
-Full CCC1 regression: RUNNING at candidate freeze; independent Quality: PENDING.
+Frozen candidate commit `799dd763e5a20de29d78fdd1dd26f7a5a5f0b0b0`.
+Full CCC1 regression: 154/154 pass, zero skips, including actual existing
+SIGKILL/journal recovery and interrupted-job owner-approval guards.
+Independent Quality: PENDING.
 
 Commands and complete exits are in `coverage-red.tap`, `coverage-green.tap` and
-the forthcoming `ccc1-regression.tap`. Fixture test sources are synthetic and
+`ccc1-regression.tap`. Runs began on the RED parent with repaired working-tree
+bytes; `manifest.json` binds those source hashes to the frozen candidate commit.
+Fixture test sources are synthetic and
 reviewed; detached worktrees are source isolation, not an OS security sandbox.
 The verifier's own execution authenticates neither arbitrary untrusted test
 semantics nor a remote worker. Existing journal/runtime authority remains separate.
