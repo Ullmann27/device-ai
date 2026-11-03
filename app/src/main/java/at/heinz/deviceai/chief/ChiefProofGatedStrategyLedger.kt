@@ -48,7 +48,7 @@ data class ChiefStrategyAttestation(
 }
 
 enum class ChiefStrategyRecordResult {
-    STORED, UNVERIFIED, INVALID_BINDING, DUPLICATE, FULL
+    STORED, UNVERIFIED, INVALID_BINDING, DUPLICATE, CONFLICT, FULL
 }
 
 /**
@@ -92,6 +92,12 @@ class ChiefProofGatedStrategyLedger(
             when {
                 attempt.attemptId in entries || attestation.receiptSha256 in usedReceipts ->
                     ChiefStrategyRecordResult.DUPLICATE
+                entries.values.any { (prior, proof) ->
+                    prior.sourceCommit == attempt.sourceCommit &&
+                        prior.failureSignatureSha256 == attempt.failureSignatureSha256 &&
+                        prior.strategySha256 == attempt.strategySha256 &&
+                        proof.outcome != attestation.outcome
+                } -> ChiefStrategyRecordResult.CONFLICT
                 entries.size >= maxEntries -> ChiefStrategyRecordResult.FULL
                 else -> {
                     entries[attempt.attemptId] = attempt to attestation
