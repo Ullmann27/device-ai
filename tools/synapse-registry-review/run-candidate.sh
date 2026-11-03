@@ -14,6 +14,7 @@ sources=(
  "$candidate/app/src/main/java/at/heinz/deviceai/chief/ChiefDelegationCoordinator.kt"
  "$candidate/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt"
  "$candidate/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt"
+ "$candidate/app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt"
  "$review_root/tools/synapse-registry-review/RegistryIndependentChecks.kt"
  "$review_root/tools/synapse-registry-review/CoordinatorIndependentChecks.kt"
 )
