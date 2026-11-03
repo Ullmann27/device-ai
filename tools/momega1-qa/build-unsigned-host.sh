@@ -10,7 +10,9 @@ mkdir -p "$qa_out"
 qa_out=$(realpath "$qa_out")
 [[ "$qa_out" != "$PWD" && "$qa_out" != "$PWD/"* ]] || exit 69
 { git rev-parse HEAD; git status --porcelain; } > "$qa_out/apk-source-before.txt"
-gradle --no-daemon --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true -PcontinuumStandaloneVersionCode=40 -Pkotlin.compiler.execution.strategy=in-process :app:assembleRelease > "$qa_out/gradle-unsigned-apk.txt" 2>&1
+qa_cpus=$(python3 -c 'import os; print(",".join(map(str, sorted(os.sched_getaffinity(0))[:2])))')
+printf '%s\n' "$qa_cpus" > "$qa_out/apk-cpu-affinity.txt"
+taskset -c "$qa_cpus" gradle --no-daemon --max-workers=2 --console=plain -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m -XX:ActiveProcessorCount=2' -PdeviceAiMentorPreview=true -PcontinuumLocalRenderUnsigned=true -PcontinuumStandaloneVersionCode=40 -Pkotlin.compiler.execution.strategy=in-process :app:assembleRelease > "$qa_out/gradle-unsigned-apk.txt" 2>&1
 qa_build=$?
 printf '%s\n' "$qa_build" > "$qa_out/gradle-unsigned-apk.exit"
 [[ "$qa_build" == 0 ]] || exit "$qa_build"

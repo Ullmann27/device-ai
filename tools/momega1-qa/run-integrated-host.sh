@@ -19,7 +19,9 @@ node .github/continuum/cre-parity.mjs prepare "$CONTINUUM_CRE1_PARITY_DIR" > "$q
 qa_cre=$?
 node .github/continuum/contrastive-parity.mjs prepare "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$qa_out/parity-prepare.txt" 2>&1
 printf 'cre1=%s\ncontrastive=%s\n' "$qa_cre" "$?" > "$qa_out/parity-prepare.exit"
-gradle --no-daemon --max-workers=2 --console=plain -I "$qa_init" -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$qa_out/ui" -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin > "$qa_out/gradle-full.txt" 2>&1
+qa_cpus=$(python3 -c 'import os; print(",".join(map(str, sorted(os.sched_getaffinity(0))[:2])))')
+printf '%s\n' "$qa_cpus" > "$qa_out/gradle-cpu-affinity.txt"
+taskset -c "$qa_cpus" gradle --no-daemon --max-workers=2 --console=plain -I "$qa_init" -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m -XX:ActiveProcessorCount=2' -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir="$qa_out/ui" -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin > "$qa_out/gradle-full.txt" 2>&1
 qa_gradle=$?
 printf '%s\n' "$qa_gradle" > "$qa_out/gradle-full.exit"
 node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" > "$qa_out/parity-verify.txt" 2>&1
