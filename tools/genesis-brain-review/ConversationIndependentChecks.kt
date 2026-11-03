@@ -67,6 +67,23 @@ object ConversationIndependentChecks {
             check(f.store.loadConversation("bot-lint", "bot-lint").turns.isEmpty())
             rejected { f.store.loadConversation("bot-lint", "bot-kora") }
         }
+        test("owner-seed-genome-and-model-metadata-canaries-stay-out-of-bot-prompt") { f ->
+            val genome = f.state.archive.genome.copy(
+                operatorAuthorityPolicy = "OWNER_POLICY_PRIVATE_573",
+                memoryPolicy = "OWNER_MEMORY_POLICY_819", toolPolicy = "OWNER_TOOL_POLICY_382")
+            val identity = f.state.archive.identityState.evolve {
+                it.copy(cognitiveGenomeHash = genome.hash(), chosenName = "OWNER_NAME_PRIVATE_446")
+            }
+            val privateState = f.runtime.checkpoint(f.state, identityState = identity, genome = genome)
+            val c = f.controller(); c.select("bot-kora")
+            val a = c.prepare("bot-kora", "public generic question", privateState, model, "review-session")
+            for (canary in listOf("OWNER_POLICY_PRIVATE_573", "OWNER_MEMORY_POLICY_819", "OWNER_TOOL_POLICY_382",
+                "OWNER_NAME_PRIVATE_446", privateState.seed.instanceId.value, privateState.seed.currentStateRoot.value,
+                privateState.seed.ownerIdentityReference, model.id, model.sha256)) {
+                check(canary !in a.prompt) { "private governance/model canary leaked: $canary" }
+            }
+            check("bot-kora" in a.prompt)
+        }
         test("rename-keeps-stable-history-without-new-authority") { f ->
             val c = f.controller(); c.select("bot-kora"); val a = f.turn(c)
             check(c.complete(a, "PERSISTENT_KORA_REPLY", model, "review-session"))
