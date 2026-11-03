@@ -6438,6 +6438,12 @@ class AgentActivity : Activity() {
                     localConversationContext.render(localSessionId, internetMode = boundedInternetMode,
                         ownerForbidsExternalNetwork = ownerForbidsExternalNetwork,
                         onlineApprovalActive = modelWebSessions.any { it.isAuthorized() }))
+                val requiresPriorDialogue = at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy
+                    .requiresPreviousOwnerTurn(text)
+                if (requiresPriorDialogue && (localConversationContext.sessionEvidence(localSessionId).isNullOrEmpty() ||
+                        conversationContext.isBlank())) {
+                    error("LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE")
+                }
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
                     "Internetmodus: ${boundedInternetMode.name}. " + when(boundedInternetMode) {
                         at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> "Kein Webzugriff; antworte offline und benenne fehlende aktuelle Belege."
@@ -6498,9 +6504,18 @@ class AgentActivity : Activity() {
                 val prompt = at.heinz.deviceai.cognitive.LocalPromptFrame.assemble(
                     requiredBody=promptBody, optionalHistory=conversationContext,
                     advisory=advisory, requiredTail=promptTail + briefInstruction,
-                    maxCharacters=promptCap
-                ) ?: error("LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
+                    maxCharacters=promptCap, requireHistory=requiresPriorDialogue
+                ) ?: error(if (requiresPriorDialogue) "LOCAL_FOLLOWUP_HISTORY_EXCEEDS_BUDGET"
+                    else "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET")
                 compiledContext?.requireCompleteIn(prompt)
+                if (requiresPriorDialogue) {
+                    check(prompt.contains(conversationContext)) { "LOCAL_FOLLOWUP_HISTORY_DROPPED" }
+                    val preservedTurns = localConversationContext.sessionEvidence(localSessionId)?.size ?: 0
+                    runOnUiThread {
+                        if (sessionId == localSessionId && activeChatCancellation === cancellation)
+                            addToolActivity("KONTEXT · $preservedTurns frühere Nutzerangaben im lokalen Prompt enthalten · keine dauerhafte Speicherung")
+                    }
+                }
                 // A screen frame is atomic. Never send a clipped negation/source block.
                 screenFrames.forEach {
                     check(at.heinz.deviceai.localmodel.LocalToolContinuation.containsCompleteOutput(prompt, it)) {
@@ -6662,7 +6677,9 @@ class AgentActivity : Activity() {
                         "MANDATORY_CONTEXT_EXCEEDS_BUDGET",
                         "LOCAL_MANDATORY_PROMPT_EXCEEDS_BUDGET",
                         "LOCAL_TOOL_CONTEXT_EXCEEDS_BUDGET",
-                        "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL"
+                        "LOCAL_MODEL_CONTEXT_UNVERIFIED_OR_FULL",
+                        "LOCAL_FOLLOWUP_HISTORY_EXCEEDS_BUDGET",
+                        "LOCAL_FOLLOWUP_HISTORY_DROPPED"
                     )
                     publishCognitiveTrace(turnTrace,
                         if (requiredContextOverflow) TraceOutcome.CLARIFY else TraceOutcome.FAILED)
@@ -6676,6 +6693,10 @@ class AgentActivity : Activity() {
                     val keepFailedOwnerTurn = !ephemeralScreenRun.get() && sessionId == localSessionId
                     addAssistantMessage(if (requiredContextOverflow)
                         "Für diesen Auftrag passen wichtige Korrekturen oder Belege nicht vollständig in das lokale Kontextfenster. Bitte teile die Aufgabe in kleinere Schritte auf; ich verwende keine abgeschnittenen Informationen."
+                    else if (error.message == "LOCAL_FOLLOWUP_HISTORY_UNAVAILABLE")
+                        "Der frühere Gesprächskontext ist für diese Anschlussfrage nicht verfügbar. " +
+                            "Ich rate nicht über die alten Angaben. Bitte wiederhole die Ausgangsdaten " +
+                            "in derselben Nachricht oder beginne einen neuen zusammenhängenden Test."
                     else if (error.message == "LOCAL_MODEL_RESPONSE_EXCEEDS_AGENT_LIMIT")
                         ContinuumUiCopy.modelFailure(error.message)
                     else groundedRecall?.failureAnswer() ?:
