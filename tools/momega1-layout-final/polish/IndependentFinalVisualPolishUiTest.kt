@@ -32,7 +32,7 @@ class IndependentFinalVisualPolishUiTest {
     }
     @Test fun actualActiveAndBlockedWorkStatusRemainVisible() {
         val a = Robolectric.buildActivity(AgentActivity::class.java).get()
-        val label = TextView(a).apply { visibility = View.GONE }
+        val label = TextView(a)
         field(a, "workStatusView", label)
         field(a, "busy", true); refresh(a)
         assertEquals(View.VISIBLE, label.visibility)
@@ -40,6 +40,9 @@ class IndependentFinalVisualPolishUiTest {
         field(a, "busy", false); field(a, "workOutcome", "BLOCKED"); refresh(a)
         assertEquals(View.VISIBLE, label.visibility)
         assertTrue(label.text.toString().contains("blockiert"))
+        field(a, "workOutcome", null); refresh(a)
+        field(a, "busy", true); refresh(a)
+        assertEquals("Activity returns from idle to a visible real work state", View.VISIBLE, label.visibility)
     }
     @Test fun portraitPaintsOuterRingsWithoutMovingHeroOrControls() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup().visible()
