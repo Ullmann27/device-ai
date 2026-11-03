@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.os.Looper
 import android.os.SystemClock
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,17 +36,27 @@ class ContinuumTaskEffectsUiTest {
             else c.getConstructor(String::class.java).newInstance(id)
         return v.javaClass.methods.single { it.name=="onTaskEffect" }.invoke(v,"turn-1",e,at) as Boolean
     }
-    private fun frame(v:ContinuumHologramView,w:Int=412,h:Int=307)=Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888).also { v.draw(Canvas(it)) }
+    private fun frame(v:ContinuumHologramView,w:Int=412,h:Int=307)=Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888).also {
+        assertEquals("Every captured frame uses its labeled width",w,v.width)
+        assertEquals("Every captured frame uses its labeled height",h,v.height)
+        v.draw(Canvas(it))
+    }
     private fun prepare(v:ContinuumHologramView,w:Int=412,h:Int=307) {
+        // Initial decor traversal must not resize the fixture between before/after frames.
+        v.layoutParams=v.layoutParams.apply { width=w;height=h }
+        shadowOf(Looper.getMainLooper()).idleFor(40,TimeUnit.MILLISECONDS)
         v.measure(View.MeasureSpec.makeMeasureSpec(w,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(h,View.MeasureSpec.EXACTLY))
         v.layout(0,0,w,h);v.setForegroundActive(true);scope(v)
     }
     @Test fun actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock() {
         val c=Robolectric.buildActivity(Activity::class.java).setup();val v=ContinuumHologramView(c.get())
         try {
-            v.addView(object:View(c.get()) { override fun onDraw(canvas:Canvas) { canvas.drawColor(Color.rgb(20,30,50)) } }.apply { setWillNotDraw(false) })
+            val child=object:View(c.get()) { override fun onDraw(canvas:Canvas) { canvas.drawColor(Color.rgb(20,30,50)) } }.apply { setWillNotDraw(false) }
+            v.addView(child,FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT))
             c.get().setContentView(v);prepare(v)
+            assertEquals(412,child.width);assertEquals(307,child.height)
             val before=frame(v)
+            assertEquals("Opaque child must actually cover the animated background",Color.rgb(20,30,50),before.getPixel(206,117))
             assertTrue(event(v))
             shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS)
             val after=frame(v)

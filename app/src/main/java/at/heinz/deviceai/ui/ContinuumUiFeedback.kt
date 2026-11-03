@@ -48,7 +48,8 @@ class ContinuumUiFeedback(context:Context):AutoCloseable {
                     .setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build())
                 .setTransferMode(AudioTrack.MODE_STATIC).setBufferSizeInBytes(pcm.size*2).build()
             track=created
-            check(created.state==AudioTrack.STATE_INITIALIZED && created.write(pcm,0,pcm.size)==pcm.size)
+            // MODE_STATIC begins NO_STATIC_DATA; the first successful write initializes it.
+            check(created.write(pcm,0,pcm.size)==pcm.size && created.state==AudioTrack.STATE_INITIALIZED)
             created.play();lastPlay=now;true
         }.getOrElse { release();false }
     }
