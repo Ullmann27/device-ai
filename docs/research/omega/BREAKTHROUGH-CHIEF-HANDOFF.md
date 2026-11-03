@@ -1,6 +1,20 @@
 # Continuum Ω — Intelligence Breakthrough, Zyklus 2
 
-Status: RUNNING / CANDIDATES_NOT_ACCEPTED. Wochenkontingent NOT_VISIBLE. Ausgangsquelle `64ec06a73f50cae9ee49035c840710d87777d50f`, vollständige Abnahme im `ASTRA-OMEGA-HANDOFF-20261103.md`. Ein früheres PASS gilt nicht für neue Kandidaten.
+Status: FOUR_BOUNDED_CHANGES_ACCEPTED / COMBINED_HOST_QA_RUNNING. Wochenkontingent NOT_VISIBLE. Ausgangsquelle `64ec06a73f50cae9ee49035c840710d87777d50f`, vollständige frühere Abnahme im `ASTRA-OMEGA-HANDOFF-20261103.md`. Ein früheres PASS gilt nicht für neue Kandidaten.
+
+## Gemeinsamer Gehirn-Freeze
+
+`c8c0615bc9f5398ad2e47b94669e3117ecf9f32d`: akzeptierte Memory-/Research-/Autonomy-/Cognition-Quellen und unabhängige Nachweise integriert, kein3D/UI-Feature dieses Folgezyklus. QA führt den vollständigen unfiltrierten JVM21-/Node-/Backend-/NewApi-Lint-/Parity-Lauf aus. Zwei zuvor übersprungene optionale JVM-Graph-Node-Prüfungen wurden diesmal aktiviert und scheiterten an bestehenden unvollständigen Quelllisten in `continuum-cognitive-action-jvm.sh` und `continuum-dialogue-jvm.sh`. QA besitzt ausschließlich deren Harness-Reparatur; Fehler bleiben archiviert, Abhängigkeiten werden nicht zum Verstecken wieder abgeschaltet. Neuer exakter Testfreeze folgt bei Änderung.
+
+Endgültige begrenzte Lane-Entscheidungen:
+
+- Cognition410320c6: ursprüngliche57 plus6 Tests bestanden; erster unbekannter24-Satz8→8, nach Reparatur verbraucht8→24. Neu zurückgehaltene Reserve20 erstmals8→9, ein Gewinn/keine Regression,11 Rücknahmen weiter unerkannt. Kleine Sprachmustererweiterung, kein allgemeiner Reasoning-Durchbruch; kein weiteres Tuning dieser Runde.
+- Memorya6007442: unabhängige QA16/16 und GAMMA10/10; neue reale Prozess-/Lease-/Widerrufsprüfungen. GAMMA4096 warm p50=49,085→4,925ms, Source→Intent-Paar ohne Vorteil. Kein App-Gesamtgeschwindigkeitsversprechen.
+- Research78b9691a: ursprünglicher unabhängiger Satz6→15/16; nach exponierter Tokenkorrektur derselbe nun verbrauchte Satz16/16, unabhängiger erneuter Lauf plus56 Regressionen bestanden. Wortwörtliche Herkunftsbindung ist weder Wahrheit noch Entailment.
+- Autonomy8ab7b681: eigener173/173-Lauf, QA12/12 in beiden Modi; DELTA unverändert42/42 tatsächliche Beobachtungen,44/46 insgesamt wegen zwei weiter offenen reinen XML-Parser-Diagnosen.17 echte zusätzliche Receipt-Widersprüche geschlossen. **Aufrufergrenze:** Dieser RED/GREEN-Verifier und `Ccc1PatchReceipt.evaluateAttested` haben hier nur CLI-/Test-/Definitionsnachweise, keinen identifizierten aktiven Android-/Job-Aufruf. StandaloneJS ignoriert weiterhin bestimmte eingebettete Quellen-SHAs/Hashangaben, wenn separate Argumente die richtigen Quellen benennen. Die tatsächliche Ausführung bleibt richtig; keine vollständige Receipt-Authentifizierung behaupten. Kotlin-Typprüfungen würden diese Widersprüche ablehnen, ihre produktive Verwendung ist jedoch unbewiesen.
+- Neural15 bleibt verworfen und außerhalb des Runtime-Baums; QA64 zeigt keinen Gewinn gegen aktuelles13/RULE/VERIFIED, alterC enthält neue falsche Antwort. Reproduzierbare Forschung bleibt auf PR402.
+
+EPSILON A/B und ZETA A/B arbeiten separat weiter. Tatsächliche3D-Artefakte sind auf404 gesichert, noch nicht vollständig visuell/technisch angenommen;405 implementiert optionales Filament über dieselbe Pose,408 adaptive native Oberflächen. Originalkugel bleibt sichtbar. Alle Fold7-/Gemma-/Energie-/Kamera-Nachweise bleiben separat offen; kein Release.
 
 ## Zwischenstand und Dual-Agent-Erweiterung
 
