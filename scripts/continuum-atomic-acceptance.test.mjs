@@ -73,7 +73,7 @@ async function invoke(f,name,sha=f.sha,environment={}){
 test('exact-SHA local QA wrapper refuses false evidence and protects source',async t=>{
   const f=await fixture(t);
   let r=await invoke(f,'wrong-head','0'.repeat(40));
-  assert.equal(r.result.status,4);
+  assert.equal(r.result.status,4,'Wrong-head preflight: '+r.result.stderr+' '+r.result.stdout);
   assert.match(r.result.stderr,/HEAD_MISMATCH/);
   assert.equal(r.receipt,null);
 
