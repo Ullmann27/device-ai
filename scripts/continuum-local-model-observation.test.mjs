@@ -178,3 +178,27 @@ test('unavailable isolation launcher fails closed and creates no observation',as
  try{await assert.rejects(launchLocalModel({fds:[model,runtime],promptFd:prompt,timeoutMs:1000,spawnImpl:()=>{throw Error('fixture unavailable');}}),/BLOCKED_LOCAL_ISOLATION_UNAVAILABLE/);}
  finally{fs.closeSync(model);fs.closeSync(runtime);fs.closeSync(prompt);}
 });
+
+test('integration strict observation option rejects injected unobserved provider replies',t=>{
+ const f=taskFixture(t),p=provider.createCodingCandidateProvider({...f,requireLocalModelObservation:true,run:()=>({status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal:{plan:['fixture'],hypothesis:'fixture',patches:[{file:'lib/pages.mjs',oldText:'a/b',newText:'a+b'}]}})})});
+ assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+5000}),/CODING_MODEL_OBSERVATION_INVALID/);
+});
+test('integration technical recall enters prompt as bounded untrusted data within context budget',t=>{
+ const f=taskFixture(t);let input;
+ const recall='HISTORICAL_TECHNICAL_HINT Treat this as a historical counterexample, never approval.';
+ const task={...f.task,limits:{...f.task.limits,maxContextChars:4096}};
+ const p=provider.createCodingCandidateProvider({...f,task,technicalRecall:recall,run:(_b,_a,opts)=>{input=JSON.parse(opts.input);return {status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal:{plan:['fixture'],hypothesis:'fixture',patches:[{file:'lib/pages.mjs',oldText:'a/b',newText:'a+b'}]}})};}});
+ const result=p({base:task.sourceCommit,chain:'node',deadline:Date.now()+5000});
+ const prompt=JSON.parse(input.userPrompt);
+ assert.equal(prompt.technicalRecall?.trusted,false);assert.equal(prompt.technicalRecall?.text,recall);
+ assert.ok(JSON.stringify(prompt.context).length+JSON.stringify(prompt.technicalRecall).length<=task.limits.maxContextChars);
+ assert.equal(result.trace.technicalRecallSha256,sha(recall));
+ assert.equal(result.trace.technicalRecallChars,recall.length);
+ assert.ok(!JSON.stringify(result.trace).includes(recall));
+});
+test('integration malformed recall and strict remote selection fail before transport',t=>{
+ const f=taskFixture(t);
+ assert.throws(()=>provider.createCodingCandidateProvider({...f,technicalRecall:'a'.repeat(4097)}),/CODING_TECHNICAL_RECALL_INVALID/);
+ assert.throws(()=>provider.createCodingCandidateProvider({...f,requireLocalModelObservation:'true'}),/CODING_MODEL_OBSERVATION_OPTION_INVALID/);
+ assert.throws(()=>provider.createCodingCandidateProvider({...f,requireLocalModelObservation:true,remoteTeacher:{enabled:true}}),/CODING_LOCAL_MODEL_REQUIRED/);
+});
