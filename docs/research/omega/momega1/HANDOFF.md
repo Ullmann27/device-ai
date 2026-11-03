@@ -1,6 +1,6 @@
 # MΩ-1 / DAN Ω / JARVIS integration handoff
 
-Checkpoint: 2026-11-03, final preservation after owner-reported 5% quota. **HOST_IMPLEMENTATION_IN_PROGRESS /
+Checkpoint: 2026-11-03, final preservation after owner-reported 2% quota; immediate preservation requested. **HOST_IMPLEMENTATION_IN_PROGRESS /
 LOCAL_MODEL_HOST_OBSERVED / FIRST_10_GOAL_FAILED / FOLD7_NOT_RUN**.
 No FIRST_COGNITIVE_LOOP_VERIFIED, MΩ-1A, MΩ-1B or RELEASE_READY claim.
 The owner confirmed there is no device channel and authorized continued host work.
@@ -11,10 +11,24 @@ The agreed application design remains authoritative; visual equivalence is not a
 ## Source and authority
 
 Research branch `codex/momega1-chief-20261103`, [draft PR410](https://github.com/Ullmann27/device-ai/pull/410).
-The complete production source freeze is `645b2215022008e2149da81b48683f15077b1fb0`.
-Research preservation checkpoint `1862fd5c` adds only evidence, review tooling and
-full-layout captures. Subsequent narrow layout fixes and checker repairs must be
-retested at their own source freeze; they do not inherit this full-suite result.
+**FINAL CANDIDATE FREEZE: `1bf0af5f0b80aa08b9163bb684dc493ca475f935`.**
+It includes the independently reviewed wiring/CLI/gVisor test repairs and the
+narrow layout fixes: idle diagnostic band hidden while genuine work/outcomes stay
+visible, and portrait halo/rings can paint beyond the unchanged hero bounds.
+The application tree is identical to focused candidate `0a933373`.
+Actual unchanged visual cases: baseline645 1 PASS /2 FAIL, then0a 6/6 PASS
+(3 polish +3 full-layout cases), zero skips. Six new native full-Activity images
+were independently inspected; outside-slot glow pixels increased0→27,339 without
+moving hero/controls. Existing bootstrap technical wording remains a presentation
+gap. Neither these images nor tests approve final face/reference equivalence.
+
+Final combined1bf QA was running when the owner requested immediate preservation
+at2%. Initial full Node has a recorded global Docker-container assertion failure
+while Android Docker tests ran concurrently; that confound needs independent
+confirmation and a quiet rerun. Do not claim full final source GREEN. No additional
+runs should start in this closing session. Check QA PR413 and the newest raw
+checkpoint before resuming. Fully completed earlier combined source is645b2215
+with the PASS/FAIL/skip results below, not an acceptance of1bf.
 
 Code40 `64ec06a73f50cae9ee49035c840710d87777d50f` remains the unchanged historical
 rollback source. Initial current Chief was `786436f5`; latest fetched foreign
@@ -185,8 +199,8 @@ The legacy EPSILON Python geometry check still records an actual V1 failure:
 old JawY maximum0.25m and eye/jaw separation0.04m conflict with the corrected hinge
 at0.267m /0.0214m. The independent reviewer developed a separate semantic V2
 using unchanged neutral mouth/eye landmarks, actual transformed tooth vertices,
-neutral-preserving rebasing and all seven original bad-bone cases. Its separate
-final evidence is being preserved; V1 is never relabeled PASS.
+neutral-preserving rebasing and all seven original bad-bone cases. Its final independent16/16 evidence is integrated from review4cb7cfea; see
+reference-review/HINGE-V2-RESULT.md. V1 is never relabeled PASS.
 
 A complete 224-frame, 9.333-second fixed-camera idle sequence now exists in
 `docs/evidence/momega1-avatar-look/3805ba43/idle-preview.mp4`, with hashed frames,
@@ -244,7 +258,7 @@ Six full native Activity screenshots now cover phone/Fold portrait/landscape,
 home and chat. Full layout fixture3/3 PASS at645b2215; comparison and exact pixels
 are in `docs/evidence/momega1/layout-final/645b2215/comparison.html`.
 The independent visual audit found portrait orb halo clipping and an idle phone
-diagnostic strip, now assigned narrow repairs. Numerical layout PASS does not
+diagnostic strip, repaired and checked in the final candidate described above. Numerical layout PASS does not
 mean visual reference equality. Full head/look, actual audible onboarding and
 physical tracking remain open. Camera tracking currently stops with guide dismissal;
 ordinary-chat tracking is an explicit remaining requirement, not implemented.
@@ -255,12 +269,17 @@ No decorative effect claims a real Gmail/PDF operation or completed test.
 Frozen production `645b2215022008e2149da81b48683f15077b1fb0` completed real local
 unfiltered Android JUnit:2424 total,2412 PASS,0 FAIL,12 SKIP, including151 external
 independent cases. Configured NewApi lint:0 fatal/error/warning; CRE1 and contrastive
-parity passed. Backend64/64 PASS. Unsigned existing-option APK build is in progress.
+parity passed. Backend64/64 PASS. Unsigned existing-option APK built successfully (zipalign0), SHA256
+`f9a65b84df7062dceb13707bfbd360d9e4d011a2ba048feefede6f5309af40d4`.
+It has no signing certificate; apksigner correctly reports DOES NOT VERIFY.
+This is not an owner release or installation artifact.
 Final Node:2311 total,2292 PASS,15 FAIL,4 SKIP, exit1. Preserve this RED result.
 Six failures are stale Android wiring checks, two are outdated fake-Docker inspect
 fixtures, three are stale missing-model preflight expectations, four require the
-explicit resource-bounded model test environment. Test-only fixes and independent
-negative controls are under review. No blanket green/full-release claim is allowed.
+explicit resource-bounded model test environment. The test-only fixes are independently reviewed/integrated: wiring65/65 plus
+seven rejected guard-removal mutants; gVisor fixture5/5; CLI32/32. Exact645 CPU
+contracts7/7 passed in the required7GiB/swap0/twoCPU container with bounded Node
+heap. The original complete Node failure log remains preserved. No blanket green/full-release claim is allowed.
 The QA lane owns complete raw logs, skip identities and final candidate rerun.
 
 ## Full acceptance matrix (required device milestone)
@@ -278,7 +297,7 @@ The QA lane owns complete raw logs, skip identities and final candidate rerun.
 | Reuse | NOT_RUN | Related parent failed; no measured later-task benefit |
 | Safety | NOT_RUN | Host negative tests; full device acceptance absent |
 | Resources | NOT_RUN | Host samples only; no Fold7 thermal/energy/RAM figures |
-| Integration | FAIL | Exact645 Android/backend/lint pass; Node15 failures under repair; final combined candidate pending |
+| Integration | BLOCKED | Exact645 results retained; final1bf combined QA incomplete with concurrent-container failure awaiting confirmation |
 
 The same words have separate tiers: CONTRACT_TEST, HOST_INTEGRATION,
 LOCAL_MODEL_HOST, FOLD7_MODEL, FOLD7_END_TO_END, RELEASE_READY. Only the last
