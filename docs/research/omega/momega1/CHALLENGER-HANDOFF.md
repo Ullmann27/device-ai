@@ -16,3 +16,16 @@ pids.max=max. These are shared host limits, not per-model containment.
 Next: run frozen baseline, push checkpoint/draft, then adapt only to narrow public
 runtime API and independently assess frozen candidate. Preserve failing evidence.
 Rollback: omit this tests/evidence-only branch. No owner data touched.
+
+Freeze checkpoint: 071ef7f3, pushed. Draft PR #416.
+Frozen provider baseline: 9 tests, 6 PASS / 3 FAIL, exit 1. Failures are explicit
+forged verifiedModelExecution=true claims accepted as shadow proposals; baseline
+still returns verifiedModelExecution=false. This is strict malformed-receipt
+handling, NOT demonstrated promotion to trusted execution.
+
+Independent namespace capability: environment-probe.py exit 0. Real bwrap child
+net namespace differs, socket interface enumeration returns only lo, synthetic
+sentinel write fails EROFS and content remains unchanged. No remote connection.
+This is HOST_CAPABILITY_ONLY and does not certify any candidate's sandbox.
+Synthetic C runtime modes freeze subprocess probes before candidate source reads;
+these binaries only print fixed JSON and cannot be counted as actual inference.
