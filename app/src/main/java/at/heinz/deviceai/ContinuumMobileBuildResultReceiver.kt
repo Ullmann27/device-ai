@@ -31,6 +31,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"
         const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"
         const val TYPED_PREPARED_JSON = "typed_coding_prepared_json_v1"
+        const val TYPED_PREPARED_CCC1_TASK = "typed_coding_prepared_ccc1_task_v1"
         /** CCC1 task the owner can cancel next (validated id only). */
         const val CCC1_TASK = "ccc1_task"
         /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */
@@ -138,11 +139,13 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {
                 editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)
                     .remove(TYPED_PREPARED_JSON)
+                    .remove(TYPED_PREPARED_CCC1_TASK)
                 if(result?.prepared==true && expectedCommit!=null && authorization!=null && result.ccc1TaskId!=null)
                     editor.putString(TYPED_PREPARED_ID,result.id)
                         .putString(TYPED_PREPARED_SHA,result.hash)
                         .putString(TYPED_PREPARED_COMMIT,expectedCommit)
                         .putString(TYPED_PREPARED_JSON,authorization.task.canonicalJson())
+                        .putString(TYPED_PREPARED_CCC1_TASK,result.ccc1TaskId)
                         .putString(CCC1_TASK,result.ccc1TaskId)
             }
             if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)

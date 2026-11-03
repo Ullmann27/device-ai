@@ -15,7 +15,7 @@ test('Android confirmed task is passed only to the existing in-app Termux Builde
  assert.match(agent,/Intent\(this, ContinuumMobileBuilderActivity::class\.java\)/);
  assert.match(builder,/ContinuumTypedCodingBridge\.parseAuthorization\(/);
  assert.match(builder,/setPositiveButton\("Vorbereiten"\).*dispatchTypedPrepare\(incoming\)/s);
- assert.match(builder,/setPositiveButton\("Jetzt ausführen"\).*dispatchTypedRun\(authorization\)/s);
+ assert.match(builder,/setPositiveButton\("Jetzt ausführen"\).*dispatchTypedRun\(authorization,ccc1Task\)/s);
  assert.doesNotMatch(agent,/CONTINUUM_OWNER_V22_APPROVED_SHA/);
 });
 test('existing protected Android Termux receiver binds both callback identity and reviewed task digest',()=>{
