@@ -8483,10 +8483,10 @@ class AgentActivity : Activity() {
      * owner turn (no tool output, no model text). Memory changes still clear. */
     private fun addNonModelReply(request: String, value: String,
                                  kind: at.heinz.deviceai.cognitive.NonModelReplyKind) {
-        val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.keepsSessionContext(kind)
+        // Context bookkeeping first; addAssistantMessage must then not clear it again.
+        val keep = at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.apply(
+            localConversationContext, sessionId, request, kind)
         addAssistantMessage(value, preserveLocalContext = keep)
-        if (keep && request.isNotBlank()) localConversationContext.recordNonModel(sessionId, request,
-            at.heinz.deviceai.cognitive.LocalContextRetentionPolicy.turnLabel(kind))
     }
 
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) {

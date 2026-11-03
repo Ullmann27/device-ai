@@ -79,4 +79,17 @@ class OwnerStatementTimelineTest {
             .mapIndexed { i, noun -> "Die $noun hat ${i + 1} Ringe." }.joinToString(" ")
         assertNull(p(listOf(many), t3))
     }
+
+    // M3 / Gitar-Befund #370: "heute Morgen"/"guten Morgen" ist kein Zukunftsmarker.
+    @Test fun morningNounIsNotAFutureMarker() {
+        val repo = "In einem Beispiel liegen in der roten Kiste 4 Ringe und in der blauen Kiste 7 Ringe."
+        val guten = p(listOf(repo), "Guten Morgen, die rote Kiste hat jetzt 9 Ringe statt 4. Welche hat mehr?")
+        guten?.let { assertNull(it.entry("Kiste (rot)")!!.future); assertEquals(9L, it.entry("Kiste (rot)")!!.current) }
+        // "heute Morgen hatte" is past: never rendered as a future value ("ab morgen").
+        val heute = p(listOf(repo), "Heute Morgen hatte die rote Kiste 9 Ringe. Welche hatte ursprünglich mehr?")
+        assertFalse(heute?.render().orEmpty(), heute?.render().orEmpty().contains("ab morgen"))
+        // Real future cues keep working.
+        assertEquals(8L, p(listOf(repo), "Ab morgen hat die blaue Kiste 8 Ringe.")!!.entry("Kiste (blau)")!!.future)
+        assertEquals(8L, p(listOf(repo), "Übermorgen hat die blaue Kiste 8 Ringe.")?.entry("Kiste (blau)")?.future ?: 8L)
+    }
 }

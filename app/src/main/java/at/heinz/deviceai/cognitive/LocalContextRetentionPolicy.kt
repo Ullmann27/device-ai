@@ -16,6 +16,14 @@ enum class NonModelReplyKind { READ_ONLY_TOOL, DEVICE_CLOCK, STARTKERN_INFO, SAF
 internal object LocalContextRetentionPolicy {
     fun keepsSessionContext(kind: NonModelReplyKind): Boolean = kind != NonModelReplyKind.MEMORY_CHANGE
 
+    /** The single AgentActivity rule for a non-model reply; returns whether the context was kept. */
+    fun apply(context: LocalConversationContext, sessionId: String, request: String, kind: NonModelReplyKind): Boolean {
+        val keep = keepsSessionContext(kind)
+        if (!keep) context.clear()
+        else if (request.isNotBlank()) context.recordNonModel(sessionId, request, turnLabel(kind))
+        return keep
+    }
+
     fun turnLabel(kind: NonModelReplyKind): String = when (kind) {
         NonModelReplyKind.READ_ONLY_TOOL -> "(lokale Geräteprüfung beantwortet; Messwerte nicht im Verlauf)"
         NonModelReplyKind.DEVICE_CLOCK -> "(Uhrzeit aus der Geräteuhr beantwortet)"
