@@ -16,6 +16,7 @@ import {builderStateOf} from './ccc1-recovery.mjs';
 import {localTeamleaderDriver} from './autonomous-teamleader.mjs';
 import {git} from './repair-loop.mjs';
 import {isIsolatedExecutor} from './isolated-executor.mjs';
+import {bindCcc1Workspace} from './ccc1-workspace.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 
 const ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -108,7 +109,9 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
    if(order.chain!==grant.task.chain)throw Error('CODING_CHAIN_BINDING_MISMATCH');
    const task=validateCodingTask({...grant.task,id:jobTaskId(order.job)});
    const evidenceDir=path.join(stateDir,'coding-evidence',grant.task.id,order.job);
-   const supplied=providerFactory({root:project,task,env,evidenceDir,executor,executorAbortMode,
+   const jobExecutor=executor===null?null:bindCcc1Workspace({executor,project,stateDir,
+    taskId:grant.ccc1TaskId,job:order.job,workerId:'typed-coding-worker'});
+   const supplied=providerFactory({root:project,task,env,evidenceDir,executor:jobExecutor,executorAbortMode,
      technicalRecall:technicalRecall.text,requireLocalModelObservation:strictMomega});
    if(strictMomega&&taskFingerprint(supplied.taskSpec)!==taskFingerprint(task))throw Error('CODING_TASK_BINDING_MISMATCH');
    const candidateProvider=Object.assign(input=>{
@@ -120,7 +123,7 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
     return raw;
    },{taskSpec:supplied.taskSpec,allowedPaths:supplied.allowedPaths,
      onVerifiedCandidate:entry=>technicalCandidates.push(entry)});
-   const driver=await localTeamleaderDriver({candidateProvider,executor,executorAbortMode});
+   const driver=await localTeamleaderDriver({candidateProvider,executor:jobExecutor,executorAbortMode});
    const receipt=await runMobileRepairJob({...order,driver});receipts.push(receipt);return receipt;
   }});
  for(const entry of result.entries??[]){
