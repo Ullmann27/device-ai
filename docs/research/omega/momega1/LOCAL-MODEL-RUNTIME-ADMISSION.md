@@ -1,6 +1,6 @@
 # MΩ-1 explicitly approved local host model/runtime candidate
 
-Status: model bytes/hash/GGUF structure verified; runtime build pending; not admitted.
+Status: exact pair independently reviewed and admitted for LOCAL_MODEL_HOST; no repair/device/release acceptance.
 Chief authorization source: [MODEL-ADMISSION.md](MODEL-ADMISSION.md).
 
 Owner explicitly approved the following local download and HOST execution on
@@ -68,3 +68,18 @@ blind response rerun and final independent artifact approval remain pending.
 Registry remains CANDIDATE_INDEPENDENT_REVIEW_REQUIRED; current observations stay
 HOST_INTEGRATION with verifiedModelExecution=false until that review completes.
 No model weights or native executables committed; Fold7 NOT_RUN.
+
+
+## Final decision and source freeze
+
+Independent reviewer explicitly approved the exact pair in certificateSHA256
+88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe.
+Only then did registry status advance; final production source is
+9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96. Later challenger final acceptance exercised
+the actual DEFAULT provider:142tokens26.562s; nested/traceverifiedtrue, immutable
+private brand true, clone false, repeat/restart budgets rejected.50/50 independent
+controls PASS. Own final exact-source137/137regressions PASS, zero skips.
+Review admits conventional actual CPU inference provenance only. The independent
+blind proposal passed6/8checks, so no repair success, loop success, learning gain,
+model quality, Android/Fold7 or release acceptance follows. Registry true cannot
+be gained by an arbitrary configured ELF or caller-supplied flag.

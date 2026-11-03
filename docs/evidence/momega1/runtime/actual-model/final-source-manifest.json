@@ -1,0 +1,48 @@
+{
+  "source": "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/coding-agent-loop.test.mjs",
+    ".github/continuum/coding-agent-risk-tools.test.mjs",
+    ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    ".github/continuum/coding-context.test.mjs",
+    ".github/continuum/coding-orchestrator.test.mjs",
+    ".github/continuum/coding-outcome-journal.test.mjs",
+    ".github/continuum/coding-provider-remote.test.mjs",
+    ".github/continuum/coding-provider.test.mjs",
+    ".github/continuum/coding-rejection-feedback.test.mjs",
+    ".github/continuum/coding-task-android-extensions.test.mjs",
+    ".github/continuum/coding-task.test.mjs",
+    ".github/continuum/coding-time-budget.test.mjs",
+    "scripts/continuum-local-model-observation.test.mjs",
+    "scripts/continuum-local-model-native.test.mjs",
+    "scripts/continuum-local-brain.test.mjs",
+    "scripts/continuum-gguf.test.mjs",
+    "scripts/continuum-gguf-preflight.test.mjs",
+    "scripts/continuum-gguf-preflight.integration.test.mjs"
+  ],
+  "exit": 0,
+  "sourceSha256": {
+    ".github/continuum/coding-provider.mjs": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a",
+    "scripts/continuum-local-brain-cli.mjs": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e",
+    "scripts/continuum-local-model-observation.mjs": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5",
+    "scripts/continuum-local-model-pins.mjs": "55c6889ea5a15517bc1759425e546f1dc135d0add328cb86b6766fef422791dd"
+  },
+  "registryPairStatus": "REVIEWED_LOCAL_MODEL_HOST",
+  "actualDefaultProviderReview": "INDEPENDENTLY_ACCEPTED_SOURCE_9e28d24b",
+  "fold7": "NOT_RUN",
+  "independentControls": {
+    "pass": 50,
+    "fail": 0,
+    "skip": 0
+  },
+  "independentDefaultProvider": {
+    "outputTokens": 142,
+    "elapsedMs": 26562,
+    "privateBrand": true,
+    "verifiedModelExecution": true,
+    "jsonCloneTrusted": false
+  }
+}
