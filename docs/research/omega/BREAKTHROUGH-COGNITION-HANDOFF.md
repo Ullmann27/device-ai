@@ -148,3 +148,39 @@ forget-all phrases; Activity feeds REMEMBER into `rememberOwnerFact` and FORGET
 into owner confirmation. Changing those routes merely to match this proxy would
 change authority semantics and is outside this fix. No scorer, corpus, route,
 memory admission, consent or Activity code changed.
+
+## Authorized bounded follow-up — pre-registration, 2026-11-03 18:46 UTC
+
+The initial independent 24-case QA result is **8/24 baseline, 8/24 candidate**,
+not a broad gain. Its 16 withdrawal/uncertainty cases failed both implementations;
+all 8 unrelated retention controls passed. The exact published fixture and QA
+harness were rerun without modification against Chief64ec and frozen107a,
+reproducing that result. Logs are under `followup-development24-red/`.
+These 24 cases are now consumed development material, never fresh evidence again.
+
+Chief explicitly authorized one follow-up on the same paths. QA froze a separate
+20-case reserve before this work; its hash is
+`9c94f5ee88c4bcb42a60efa1e5eab6d2afb8d54129ac971700eba27364d77947`.
+The reserve contents have not been inspected. Only the published 24-case fixture,
+runner and results were read. Earlier candidate107a remains preserved unchanged.
+
+Single hypothesis: the missing layer is a bounded *quantity-assertion reference*.
+Owners withdraw the count's claim (Angabe/Anzahl/Zahl/Menge), rather than repeat
+a possession predicate and counted unit. Add recognition for complete owner
+withdrawal/uncertainty clauses that resolve their quantity reference to a known
+entity or counted unit. Keep the same null-projection fallback, no inferred zero,
+new fact or competing reasoner. Support explicit old-count mentions as uncertain
+evidence; never promote the denied count into a current assertion.
+
+Plan before source changes: preserve a new authored RED for entity/unit-referenced
+withdrawal, uncertainty and old-count context; then add one bounded parser change.
+Reject quoted/reported/hypothetical clauses, nested negation, no-save instructions,
+unrelated properties/units/entities. The complete sentence must match the grammar;
+a keyword appearing elsewhere is insufficient. Original owner history stays intact.
+
+Success/stop rules: original57 and unchanged M3 must not regress; all observed
+development failures/limitations remain visible. Freeze the new production/tests
+before the private20 result is requested. Fresh evaluation must improve over its
+same-source baseline without any previously passing case regressing; otherwise
+report no supported unseen benefit. No tuning after the reserve result in this
+bounded follow-up. Combined Gradle remains Chief/QA-owned; no model/device claim.
