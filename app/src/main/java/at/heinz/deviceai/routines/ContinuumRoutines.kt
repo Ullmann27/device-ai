@@ -22,7 +22,12 @@ sealed interface RoutineOutcome {
 }
 
 class RoutineBook(private val maxRoutines: Int = 32) {
-    private data class Entry(val routine: Routine, var nextAtMillis: Long, var lastDigest: String? = null)
+    private data class Entry(
+        val routine: Routine,
+        var nextAtMillis: Long,
+        var lastDigest: String? = null,
+        var inFlight: Boolean = false
+    )
     private val entries = LinkedHashMap<String, Entry>()
 
     @Synchronized fun add(routine: Routine): Boolean {
@@ -38,16 +43,31 @@ class RoutineBook(private val maxRoutines: Int = 32) {
 
     @Synchronized fun remove(id: String): Boolean = entries.remove(id) != null
 
-    /** Scheduled routines whose time has come; each is due at most once until it reports. */
+    /** Atomically claims due routines: repeated scheduler polls cannot dispatch the same run twice. */
     @Synchronized fun due(nowMillis: Long): List<Routine> =
-        entries.values.filter { it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis }.map { it.routine }
+        entries.values.filter {
+            !it.inFlight && it.routine.trigger is RoutineTrigger.Every && nowMillis >= it.nextAtMillis
+        }.onEach { it.inFlight = true }.map { it.routine }
 
+    /** Claim event-triggered routines once; the caller must report() or release() the claim. */
     @Synchronized fun triggered(event: String): List<Routine> =
-        entries.values.filter { (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event }.map { it.routine }
+        entries.values.filter {
+            !it.inFlight && (it.routine.trigger as? RoutineTrigger.OnEvent)?.name == event
+        }.onEach { it.inFlight = true }.map { it.routine }
+
+    /** Explicit retry gate after a failed/cancelled run; never auto-redeliver an unfinished job. */
+    @Synchronized fun release(id: String): Boolean {
+        val entry = entries[id] ?: return false
+        if (!entry.inFlight) return false
+        entry.inFlight = false
+        return true
+    }
 
     /** Records a run; returns News only if the normalized result differs from the last one. */
     @Synchronized fun report(id: String, result: String, nowMillis: Long): RoutineOutcome {
         val e = entries[id] ?: return RoutineOutcome.Unchanged(id)
+        if (!e.inFlight) return RoutineOutcome.Unchanged(id)
+        e.inFlight = false
         (e.routine.trigger as? RoutineTrigger.Every)?.let { e.nextAtMillis = nowMillis + it.periodMillis }
         val digest = result.trim().replace(Regex("\\s+"), " ")
         if (digest.isEmpty() || digest == e.lastDigest) return RoutineOutcome.Unchanged(id)
@@ -64,20 +84,42 @@ class RoutineBook(private val maxRoutines: Int = 32) {
 enum class AgentPriority { URGENT, INFO }
 data class AgentMessage(val id: String, val from: String, val to: String, val priority: AgentPriority, val body: String)
 
-class AgentMailbox(private val maxPerAgent: Int = 64, private val wake: (AgentMessage) -> Unit = {}) {
+class AgentMailbox(
+    private val maxPerAgent: Int = 64,
+    private val maxRecipients: Int = 32,
+    private val maxQueuedMessages: Int = 512,
+    private val maxQueuedBytes: Int = 262_144,
+    private val wake: (AgentMessage) -> Unit = {}
+) {
+    init {
+        require(maxPerAgent in 1..256)
+        require(maxRecipients in 1..128)
+        require(maxQueuedMessages in 1..4_096)
+        require(maxQueuedBytes in 4_096..2_097_152)
+    }
+
     private val queues = HashMap<String, ArrayDeque<AgentMessage>>()
     private val seen = LinkedHashSet<String>()
+    private var totalMessages = 0
+    private var totalBytes = 0
 
     fun send(message: AgentMessage): Boolean {
         synchronized(this) {
-            if (message.id.isBlank() || message.to.isBlank() || message.body.isBlank() || message.body.length > 4_000) return false
+            if (message.id.length !in 1..128 || message.from.length !in 1..64 ||
+                message.to.length !in 1..64 || message.body.isBlank() || message.body.length > 4_000) return false
             if (message.id in seen) return false
+            if (message.to !in queues && queues.size >= maxRecipients) return false
+            val size = message.body.toByteArray(Charsets.UTF_8).size
+            if (totalMessages >= maxQueuedMessages || size > maxQueuedBytes - totalBytes) return false
             val q = queues.getOrPut(message.to) { ArrayDeque() }
             if (q.size >= maxPerAgent) return false
-            q.addLast(message); seen += message.id
+            q.addLast(message)
+            totalMessages++
+            totalBytes += size
+            seen += message.id
             while (seen.size > 4_096) seen.remove(seen.first())
         }
-        // Outside the lock; a failing wake hook never loses the queued message.
+        // Outside the lock; the message remains in the queue even if the wake callback fails.
         if (message.priority == AgentPriority.URGENT) runCatching { wake(message) }
         return true
     }
@@ -85,6 +127,8 @@ class AgentMailbox(private val maxPerAgent: Int = 64, private val wake: (AgentMe
     /** Urgent first, then arrival order. */
     @Synchronized fun drain(agent: String): List<AgentMessage> {
         val q = queues.remove(agent) ?: return emptyList()
+        totalMessages -= q.size
+        totalBytes -= q.sumOf { it.body.toByteArray(Charsets.UTF_8).size }
         return q.sortedBy { if (it.priority == AgentPriority.URGENT) 0 else 1 }
     }
 
