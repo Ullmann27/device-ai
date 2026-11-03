@@ -1,0 +1,12 @@
+[
+  {
+    "name": "canonical-and-modules",
+    "exit": 0,
+    "elapsedSeconds": 38.2691643800008
+  },
+  {
+    "name": "service-independent",
+    "exit": 1,
+    "elapsedSeconds": 125.38577850000001
+  }
+]
