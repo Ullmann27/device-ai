@@ -51,6 +51,26 @@ class BootstrapBrainTest {
             "Meine ausdrücklich gespeicherten Fakten:\n• Ich mag Blau\n• Ich mag Tee", recall.message)
         assertEquals(BootstrapKind.FORGET, BootstrapBrain.decide("Vergiss alles", emptyList()).kind)
     }
+    @Test fun savingProhibitionIsConversationNotStorageInspection() {
+        val utterances = listOf(
+            "Für diese Testaufgabe gilt: In der roten Kiste liegen 4 Kupferringe und in der blauen Kiste 7 Kupferringe. Welche Kiste enthält mehr? Antworte kurz. Speichere diese Angaben nicht dauerhaft.",
+            "Speichere diese Angaben nicht dauerhaft.",
+            "Ich möchte die Zahlen nicht speichern, sondern vergleichen.",
+            "Bitte speichere die Kistenzahlen nicht."
+        )
+        utterances.forEach { utterance ->
+            val decision = BootstrapBrain.decide(utterance, emptyList())
+            assertEquals(utterance, BootstrapKind.REPLY, decision.kind)
+            assertNull(utterance, decision.tool)
+            assertTrue(utterance, decision.allowNeuralRecall)
+        }
+        listOf("Speicher", "Prüfe Speicher", "Zeige Speicherplatz", "Speicherkapazität").forEach { request ->
+            val decision = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.DEVICE_TOOL, decision.kind)
+            assertEquals(request, "get_storage_info", decision.tool)
+        }
+    }
+
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {
         val phrases = listOf(
             "Prüfe Akku", "Speicher", "Zeig meine Downloads",
