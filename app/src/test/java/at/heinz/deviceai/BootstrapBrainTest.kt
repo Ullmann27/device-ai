@@ -105,6 +105,29 @@ class BootstrapBrainTest {
         }
     }
 
+    @Test fun batteryAndStorageContrastNeverExecutesNegatedOrAmbiguousTool() {
+        val negatives = listOf(
+            "Prüfe nicht den Akku.",
+            "Bitte die Batterie nicht prüfen!",
+            "Zeige keinesfalls den Ladezustand."
+        )
+        negatives.forEach { request ->
+            val decision = BootstrapBrain.decide(request, emptyList())
+            assertEquals(request, BootstrapKind.REPLY, decision.kind)
+            assertNull(request, decision.tool)
+        }
+        val storage = BootstrapBrain.decide(
+            "Prüfe nicht den Akku, sondern zeige den Speicherplatz.", emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, storage.kind)
+        assertEquals("get_storage_info", storage.tool)
+        val battery = BootstrapBrain.decide("Prüfe nicht den Speicher, sondern prüfe Akku.", emptyList())
+        assertEquals(BootstrapKind.DEVICE_TOOL, battery.kind)
+        assertEquals("get_battery_info", battery.tool)
+        val ambiguous = BootstrapBrain.decide("Prüfe Akku und Speicher.", emptyList())
+        assertEquals(BootstrapKind.REPLY, ambiguous.kind)
+        assertNull(ambiguous.tool)
+    }
+
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {
         val phrases = listOf(
             "Prüfe Akku", "Speicher", "Zeig meine Downloads",
