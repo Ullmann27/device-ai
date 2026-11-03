@@ -1,0 +1,6 @@
+49e95a121e272fbbe6a2e867c0c958f376c543aff8dcd1120b401075ec602fea  /workspace/momega1-build-env/effects-independent-8a686173/source-before.txt
+8a6861730440bdfa046d1a4e24950757643411b4
+100644 55b1187354b1b2fe7f4f8eae9f2816e2a64a2f73 0	app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+100644 3f9829e131e672eb8b8124d60618a919962eac5b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumTaskEffects.kt
+100644 05c104bbbbfab3d1d9d1cd663d336b80d63ef47b 0	app/src/main/java/at/heinz/deviceai/ui/ContinuumUiFeedback.kt
+49e95a121e272fbbe6a2e867c0c958f376c543aff8dcd1120b401075ec602fea  /workspace/momega1-build-env/effects-independent-8a686173/source-after.txt
