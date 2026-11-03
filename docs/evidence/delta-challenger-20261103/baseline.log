@@ -1,0 +1,42 @@
+D01 commit expected=VERIFIED actual=VERIFIED PASS 
+D01 patch expected=VERIFIED actual=VERIFIED PASS 
+D02 commit expected=VERIFIED actual=VERIFIED PASS 
+D02 patch expected=VERIFIED actual=VERIFIED PASS 
+D03 commit expected=REJECTED actual=VERIFIED FAIL 
+D03 patch expected=REJECTED actual=VERIFIED FAIL 
+D04 commit expected=REJECTED actual=VERIFIED FAIL 
+D05 commit expected=REJECTED actual=VERIFIED FAIL 
+D06 commit expected=REJECTED actual=VERIFIED FAIL 
+D07 commit expected=REJECTED actual=VERIFIED FAIL 
+D08 commit expected=REJECTED actual=VERIFIED FAIL 
+D09 commit expected=VERIFIED actual=VERIFIED PASS 
+D10 commit expected=REJECTED actual=VERIFIED FAIL 
+D11 commit expected=REJECTED actual=VERIFIED FAIL 
+D12 commit expected=VERIFIED actual=VERIFIED PASS 
+D13 commit expected=REJECTED actual=VERIFIED FAIL 
+D14 commit expected=VERIFIED actual=VERIFIED PASS 
+D15 commit expected=VERIFIED actual=VERIFIED PASS 
+D16-red-exitCode commit expected=REJECTED actual=VERIFIED FAIL 
+D16-red-command commit expected=REJECTED actual=VERIFIED FAIL 
+D16-red-timedOut commit expected=REJECTED actual=VERIFIED FAIL 
+D16-red-cancelled commit expected=REJECTED actual=VERIFIED FAIL 
+D16-red-skipped commit expected=REJECTED actual=VERIFIED FAIL 
+D16-red-passedTargets commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-exitCode commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-command commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-timedOut commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-cancelled commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-skipped commit expected=REJECTED actual=VERIFIED FAIL 
+D16-green-passedTargets commit expected=REJECTED actual=REJECTED PASS CLAIMED_GREEN_TARGETS_DIFFER
+D16-malformed-red-failingTests commit expected=REJECTED actual=THREW FAIL Cannot read properties of null (reading 'length')
+D16-malformed-green-failingTests commit expected=REJECTED actual=THREW FAIL Cannot read properties of null (reading 'length')
+D16-malformed-green-passedTargets commit expected=REJECTED actual=THREW FAIL Cannot read properties of null (reading 'includes')
+D17-approvedForMerge patch expected=REJECTED actual=VERIFIED FAIL 
+D17-installed patch expected=REJECTED actual=VERIFIED FAIL 
+D17-deviceVerified patch expected=REJECTED actual=VERIFIED FAIL 
+D17-schema patch expected=REJECTED actual=VERIFIED FAIL 
+D17-version patch expected=REJECTED actual=VERIFIED FAIL 
+D20-wrong-patch-hash patch expected=REJECTED actual=REJECTED PASS PATCH_HASH_MISMATCH
+D20-missing-target commit expected=REJECTED actual=REJECTED PASS RED_FAILS_OUTSIDE_TARGETS,TARGET_MISSING_IN_RED,TARGET_NOT_PASSING_IN_GREEN
+D20-test-edit patch expected=REJECTED actual=REJECTED PASS FIX_MODIFIES_TESTS
+{"total":46,"pass":15,"fail":31}
