@@ -41,3 +41,11 @@ Signer-SHA-256 von APK **und** installierter App = `6354e91d…ee23`, APK-SHA-25
   („Wenn es regnet, nehme ich den Bus“, „Ich gehe immer joggen, wenn ich Zeit habe“) werden HYPOTHETICAL – betrifft vorhandene Nutzerdaten.
 - #373 erweitert `storageNegation` (+weder) und neue WLAN-Cues; GROK1 nutzt `clauseNegation` (de/en) – neue #373-Pfade ohne englische Verneinung.
 - Neuere, ungetestete Köpfe nicht enthalten: `continuum/m2-cognitive-memory` `6d50631d`.
+
+## Branch continuum/grok1-routines-a2a-20261103 (auf diesem Integrationsstand)
+| Prüfung | Ergebnis |
+|---|---|
+| RED `fde4f294` ContinuumRoutinesTest | 5 Tests, 5 FAIL (Stub) |
+| GREEN ContinuumRoutinesTest | 5/5 |
+| JUnit voll | **1861 Tests, 0 FAIL, 5 skip** |
+Andockpunkt: Ausführung fälliger Routinen über HAUPTs `ChiefWorkerPool`/`WorkerBrief` (Branch `continuum/haupt-chief-pattern-20261103`, derzeit RED-Stub) und das bestehende ToolGate; noch nicht in AgentActivity/JobScheduler verdrahtet.
