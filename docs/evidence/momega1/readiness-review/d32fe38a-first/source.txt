@@ -1,0 +1,4 @@
+candidate=d32fe38ad2f6464bfaefa8001bfed1f2469165e7
+692e9951cd475d730e1928e14d2578acb1958d3dd5bde38937da7a25b041226b  /tmp/tmp.yRERoixu2k/AndroidAvatarCameraInput.kt
+9775304d2b5312515286850e9b557655950b62b7fc0df70b4792b9ee39233dff  /tmp/tmp.yRERoixu2k/AvatarCameraPolicy.kt
+dfd47d33a47f116c58ad6f928b43206a9f64f1eec4e3343db19a62ed2481f2fb  /tmp/tmp.yRERoixu2k/ContinuumReadinessGuide.kt

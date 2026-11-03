@@ -1,0 +1,13 @@
+Executed HEAD 070d2c6488bd619bac7c973e196d387e0ec3047c.
+a0b8f0662fd81d56169ffd76ee9c8d47055424e3cbbc3262ab3b59814a4eed47  /workspace/momega1-build-env/guide-caller-final-070d2c64/source-before.txt
+100644 75f89e741e3f300a80234c98a1e4fae04237744c 0	app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+100644 df47adf71817d9c22290f957f5aa95b5201ad3ea 0	app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt
+100644 20f37fb59b60f9c00aa414c02df4fec782854492 0	app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt
+100644 0a63d5f3ce899cc02002b1bdc85107c9b56a1a03 0	app/src/main/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuide.kt
+100644 9f6b5c10aac75278ea93c7306e06800b4b2883fc 0	app/src/uiTest/java/at/heinz/deviceai/ContinuumReadinessGuideUiTest.kt
+a0b8f0662fd81d56169ffd76ee9c8d47055424e3cbbc3262ab3b59814a4eed47  /workspace/momega1-build-env/guide-caller-final-070d2c64/source-after.txt
+
+Readiness policy/native/guide source equivalence from 24-test candidate6a354bec to final070d2c64:
+692e9951cd475d730e1928e14d2578acb1958d3dd5bde38937da7a25b041226b  app/src/main/java/at/heinz/deviceai/AndroidAvatarCameraInput.kt
+d7174f72709901a7f3976ed8fc925c457d3e7d9a42b5dcaa505c3522c7484993  app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt
+dfd47d33a47f116c58ad6f928b43206a9f64f1eec4e3343db19a62ed2481f2fb  app/src/main/java/at/heinz/deviceai/cognitive/ContinuumReadinessGuide.kt
