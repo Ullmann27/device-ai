@@ -78,9 +78,10 @@ class IndependentBotHandoffTest {
             }
             override fun cancel(scope: WorkspaceTaskScope) { cancels.incrementAndGet() }
         }
-        fun worker(h: ChiefBotHandoff = handoff(), profile: String = "node-continuum"): WorkerJob {
+        fun worker(h: ChiefBotHandoff = handoff(), profile: String = "node-continuum",
+                   allowedTools: Set<String> = setOf("fixed-node-test")): WorkerJob {
             val s = scope(profile)
-            return adapter.workspaceJob(WorkerBrief(ChiefWorkspaceWiring.briefId(s), "review", emptySet(), 2_000), h, s, port)
+            return adapter.workspaceJob(WorkerBrief(ChiefWorkspaceWiring.briefId(s), "review", allowedTools, 2_000), h, s, port)
         }
         override fun close() { root.deleteRecursively() }
     }
@@ -101,6 +102,10 @@ class IndependentBotHandoffTest {
     @Test fun undeclaredProfileCannotHideBehindEmptyToolRequest() = Fixture().use { f ->
         assertThrows(RuntimeException::class.java) { f.worker(handoff(tools = emptySet()), "kotlin-fixture") }
         assertEquals(0, f.effects.get())
+    }
+    @Test fun existingWorkerBriefMustAlsoPermitTheRequestedTool() = Fixture().use { f ->
+        assertThrows(RuntimeException::class.java) { f.worker(allowedTools = emptySet()) }
+        assertEquals(0, f.effects.get()); assertEquals(0, f.authority.claims.get())
     }
     @Test fun expiryAndSourceChangesAfterSendAreRecheckedOnConsumption() = Fixture().use { f ->
         assertEquals(ChiefBotHandoffDecision.ADMIT, f.adapter.send(handoff()))

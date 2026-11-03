@@ -16,6 +16,7 @@ files changed. These are software contract tests, not model intelligence scores.
 | `40508126` | 6/8 independent Echo tests; 2 defects reproduced | Final grant task association and dirty source recheck missing; correction pending at this checkpoint |
 | `ad7747b17651bb1dbf7d00dbbc4f96de7fc4b46f` | Same Echo tests 8/8 plus independent assignment tests 9/9; zero skips | Full grant association and clean source checked initially, before write and before return |
 | `ad7747b17651bb1dbf7d00dbbc4f96de7fc4b46f` | Existing author reporter/assignment regressions 17/17 independently rerun | Real scripted canonical repair receipt, owner abort, receipt loss/tamper, report tamper and no owner-text copy |
+| `34693a840e96ab4016b5874c3d50f88b0500e252` | Final Kotlin suite 12/12 | Existing WorkerBrief tool grants must also cover the handoff; adds a negative empty-brief test |
 
 The 28 supported cases include the original 22; they are not 50 distinct cases.
 `B25-profile-lifetime-cap` is **NOT_TESTABLE** through the current profile API,
@@ -66,6 +67,14 @@ The nine independent assignment tests and seventeen existing author regressions
 also passed there. The narrow reporting seam is accepted for research integration
 subject to final combined-source checks. It remains a deterministic summary of
 canonical evidence, not another independent verifier or model.
+
+Final builder checkpoint `34693a840e96ab4016b5874c3d50f88b0500e252` changes no
+Node production source after `ad7747b1`. Its extra Kotlin guard checks the existing
+WorkerBrief tool allowance as well as the handoff capability. The independent
+fixture now grants its positive-control brief the requested fixed test tool;
+an additional negative test passes an empty brief. Exact final source compiles
+and passes **12/12**. This extra builder-added restriction is not counted among
+the five earlier independently discovered defects.
 
 ## Evidence and reproducibility
 
