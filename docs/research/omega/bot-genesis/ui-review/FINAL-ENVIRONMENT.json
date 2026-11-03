@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-11-03T21:20:06.247801+00:00",
+  "host": {
+    "os": "Linux",
+    "arch": "x86_64"
+  },
+  "source": "c5f9b06b02fbe8b80f9472a17784fb000812398c",
+  "compilerJava": {
+    "command": [
+      "/workspace/continuum-build-env/jdk17/bin/java",
+      "-version"
+    ],
+    "exit": 0,
+    "output": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)"
+  },
+  "testJava": {
+    "command": [
+      "/usr/bin/java",
+      "-version"
+    ],
+    "exit": 0,
+    "output": "openjdk version \"21.0.12.1\" 2026-08-18\nOpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)"
+  },
+  "adb": {
+    "command": [
+      "/workspace/continuum-build-env/android-sdk/platform-tools/adb",
+      "devices",
+      "-l"
+    ],
+    "exit": 0,
+    "output": "List of devices attached"
+  },
+  "androidSdkPlatform": "android-36",
+  "limits": {
+    "gradleWorkers": 2,
+    "heapGiB": 2,
+    "metaspaceMiB": 768,
+    "nativeInferenceConcurrent": false
+  },
+  "quota": "NOT_VISIBLE",
+  "evidence": "Host JVM/Robolectric/compile/lint only; no APK assembly/signing/install or real microphone",
+  "gradleVersionFromProvisionedToolchain": "8.11.1 provisioned toolchain (actual Gradle raw logs retained)"
+}
