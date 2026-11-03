@@ -1,0 +1,71 @@
+[
+  {
+    "name": "compile",
+    "command": [
+      "kotlinc",
+      "-cp",
+      "/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/breakthrough-neural-20261103/GeneralizationProbe.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2PointerCandidate.kt",
+      "/workspace/breakthrough-neural/tools/continuum-span-research/Cdx2CounterfactualShadow.kt",
+      "/workspace/breakthrough-neural/app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt",
+      "-d",
+      "/workspace/neural-dev-run1/classes"
+    ],
+    "exitCode": 0,
+    "wallMillis": 10263.206179999997,
+    "userCpuSeconds": 16.157043,
+    "systemCpuSeconds": 0.629856,
+    "cumulativeChildPeakRssKiB": 607876
+  },
+  {
+    "name": "predict",
+    "command": [
+      "java",
+      "-cp",
+      "/workspace/neural-dev-run1/classes:/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/kotlin-official/kotlinc/lib/kotlin-stdlib.jar",
+      "at.heinz.deviceai.learning.span.GeneralizationProbe",
+      "/workspace/breakthrough-neural/docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json",
+      "/workspace/breakthrough-neural/docs/evidence/synapse-iii-20261102/m2-adapter/candidate/checkpoint-17.json",
+      "docs/evidence/breakthrough-neural-20261103/development/inputs.json",
+      "/workspace/neural-dev-run1/predictions"
+    ],
+    "exitCode": 0,
+    "wallMillis": 766.095992999908,
+    "userCpuSeconds": 1.291122999999999,
+    "systemCpuSeconds": 0.10414400000000001,
+    "cumulativeChildPeakRssKiB": 607876
+  },
+  {
+    "name": "score-base11",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/breakthrough-neural-20261103/development/corpus.json",
+      "/workspace/neural-dev-run1/predictions/base11-predictions.json",
+      "/workspace/neural-dev-run1/base11-score.json",
+      "8b7ce98c02ca3713d85f7e6e7b201a24768419f547c98c7454664b1bdc4e25a3"
+    ],
+    "exitCode": 0,
+    "wallMillis": 41.6608560003624,
+    "userCpuSeconds": 0.02435299999999785,
+    "systemCpuSeconds": 0.018329999999999957,
+    "cumulativeChildPeakRssKiB": 607876
+  },
+  {
+    "name": "score-current13",
+    "command": [
+      "node",
+      "/workspace/breakthrough-neural/scripts/cdx2-blind-score.mjs",
+      "docs/evidence/breakthrough-neural-20261103/development/corpus.json",
+      "/workspace/neural-dev-run1/predictions/current13-predictions.json",
+      "/workspace/neural-dev-run1/current13-score.json",
+      "8b7ce98c02ca3713d85f7e6e7b201a24768419f547c98c7454664b1bdc4e25a3"
+    ],
+    "exitCode": 0,
+    "wallMillis": 47.71823100008987,
+    "userCpuSeconds": 0.030533999999999395,
+    "systemCpuSeconds": 0.014977000000000018,
+    "cumulativeChildPeakRssKiB": 607876
+  }
+]

@@ -1,0 +1,4922 @@
+{"cases": [
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017758099499345097
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV001-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1657711549842579E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV001-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9982230242789105
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV001-s0",
+      "decision": "SPAN",
+      "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV001-s0",
+      "decision": "SPAN",
+      "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV001",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV001-s0",
+      "decision": "SPAN",
+      "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001774600817781599
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.164977392461146E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 6.797255384847004E-4
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 29,
+          "start": 23,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.164977392461146E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV002-s0",
+          "decision": "SPAN",
+          "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+          "endExclusive": 45,
+          "start": 39,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9975433436889488
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV002-s0",
+      "decision": "SPAN",
+      "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+      "endExclusive": 45,
+      "start": 39,
+      "text": "Bréval",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV002-s0",
+      "decision": "SPAN",
+      "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+      "endExclusive": 45,
+      "start": 39,
+      "text": "Bréval",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV002",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV002-s0",
+      "decision": "SPAN",
+      "sha256": "17c6e63d27d1e22342644571715fec07e7f6af05ff699f4de8492c8573a9e023",
+      "endExclusive": 45,
+      "start": 39,
+      "text": "Bréval",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9976865288689389
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV003-s0",
+          "decision": "SPAN",
+          "sha256": "7969ead3bb0767be891c148f06558b35ed22276054fd9446e9575c8df5eb1d3d",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.958259812630398E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV003-s0",
+          "decision": "SPAN",
+          "sha256": "7969ead3bb0767be891c148f06558b35ed22276054fd9446e9575c8df5eb1d3d",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0023095128712485122
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV003",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9976865288689389
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV004-s0",
+          "decision": "SPAN",
+          "sha256": "16b6df51ec60901dd069fea1c80f6dc1dd8ff8bf1707b733672e193bd02e598a",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.958259812630398E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV004-s0",
+          "decision": "SPAN",
+          "sha256": "16b6df51ec60901dd069fea1c80f6dc1dd8ff8bf1707b733672e193bd02e598a",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0023095128712485122
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV004",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9913127295091285
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV005-s0",
+          "decision": "SPAN",
+          "sha256": "2dba737bcddee6d9204145b712aeff1e60a7fdee0da44718bb14f5a785d72297",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.93297215650828E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV005-s0",
+          "decision": "SPAN",
+          "sha256": "2dba737bcddee6d9204145b712aeff1e60a7fdee0da44718bb14f5a785d72297",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.006384646181093382
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV005-s0",
+          "decision": "SPAN",
+          "sha256": "2dba737bcddee6d9204145b712aeff1e60a7fdee0da44718bb14f5a785d72297",
+          "endExclusive": 28,
+          "start": 23,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.93297215650828E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV005-s0",
+          "decision": "SPAN",
+          "sha256": "2dba737bcddee6d9204145b712aeff1e60a7fdee0da44718bb14f5a785d72297",
+          "endExclusive": 44,
+          "start": 38,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.002294758365465092
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV005",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.993569625421582
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV006-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.7548404827213716E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV006-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0032151835343683967
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV006-s1",
+          "decision": "SPAN",
+          "sha256": "66ac283bc1e25ad4c1bdaa76b5fbd02ee5c93b47dfbcdfd5664bf3684b250060",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.7548404827213716E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV006-s1",
+          "decision": "SPAN",
+          "sha256": "66ac283bc1e25ad4c1bdaa76b5fbd02ee5c93b47dfbcdfd5664bf3684b250060",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0032151835343683967
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV006",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536946243661
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV007-s0",
+          "decision": "SPAN",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV007-s0",
+          "decision": "SPAN",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001946296283733569
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV007-s0",
+          "decision": "SPAN",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+          "endExclusive": 33,
+          "start": 24,
+          "text": "Korrektur",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV007-s0",
+          "decision": "SPAN",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+          "endExclusive": 41,
+          "start": 35,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV007-s0",
+          "decision": "SPAN",
+          "sha256": "64cc76707bb65a7d85a1cd1296f242763aba13289d1f02c7977517e4d92bd9df",
+          "endExclusive": 57,
+          "start": 51,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV007",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536946243661
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV008-s0",
+          "decision": "SPAN",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV008-s0",
+          "decision": "SPAN",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001946296283733569
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV008-s0",
+          "decision": "SPAN",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b",
+          "endExclusive": 29,
+          "start": 24,
+          "text": "Diese",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV008-s0",
+          "decision": "SPAN",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b",
+          "endExclusive": 37,
+          "start": 24,
+          "text": "Diese Aussage",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV008-s0",
+          "decision": "SPAN",
+          "sha256": "017d76f8d9a3fc425579487685a20a03039bfe52f8d07bbf479d6bfafdc9794b",
+          "endExclusive": 37,
+          "start": 30,
+          "text": "Aussage",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV008",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999724727
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV009-s0",
+          "decision": "SPAN",
+          "sha256": "1e2ca0b90b09ddbf2ceb325ceb951998fed5e16af0619e0ca4be1d988f4ec7c7",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV009-s0",
+          "decision": "SPAN",
+          "sha256": "1e2ca0b90b09ddbf2ceb325ceb951998fed5e16af0619e0ca4be1d988f4ec7c7",
+          "endExclusive": 28,
+          "start": 22,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV009",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536968929173
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV010-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV010-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962881574518
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV010-s1",
+          "decision": "SPAN",
+          "sha256": "6504639fe916e4b209c26ef66ee0ee97b8127a999cc270727ca035f6b22e40c3",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV010-s1",
+          "decision": "SPAN",
+          "sha256": "6504639fe916e4b209c26ef66ee0ee97b8127a999cc270727ca035f6b22e40c3",
+          "endExclusive": 27,
+          "start": 21,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV010-s0",
+      "decision": "SPAN",
+      "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV010",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536968929173
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV011-s0",
+          "decision": "SPAN",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV011-s0",
+          "decision": "SPAN",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962881574518
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV011-s0",
+          "decision": "SPAN",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+          "endExclusive": 29,
+          "start": 24,
+          "text": "Qerim",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV011-s0",
+          "decision": "SPAN",
+          "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+          "endExclusive": 51,
+          "start": 45,
+          "text": "Bréval",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV011-s0",
+      "decision": "SPAN",
+      "sha256": "645f86b7e04afe110ab6d8560bb56ef2f91b990e16d0b120676e5d1c154cdca3",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV011",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980537014300197
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV012-s0",
+          "decision": "SPAN",
+          "sha256": "48286401129835e5a07d522649a4021082b9c8b81ed5a2fb9cbf02543876d22d",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.2729751036752286E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV012-s0",
+          "decision": "SPAN",
+          "sha256": "48286401129835e5a07d522649a4021082b9c8b81ed5a2fb9cbf02543876d22d",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962970052176
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV012",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999724727
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV013-s0",
+          "decision": "SPAN",
+          "sha256": "d238c373f6413b96d381edf61dbf4f33e0c86a8b6700962481f7456098070d21",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV013-s0",
+          "decision": "SPAN",
+          "sha256": "d238c373f6413b96d381edf61dbf4f33e0c86a8b6700962481f7456098070d21",
+          "endExclusive": 30,
+          "start": 24,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV013",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017550553816726086
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1521463428162845E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.005843690723398099
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9865564110251882
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV014-s0",
+          "decision": "SPAN",
+          "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+          "endExclusive": 27,
+          "start": 23,
+          "text": "Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.005843690723398099
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV014-s0",
+      "decision": "SPAN",
+      "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Sølvik Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV014-s0",
+      "decision": "SPAN",
+      "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Sølvik Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV014",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV014-s0",
+      "decision": "SPAN",
+      "sha256": "1545c815d68da22d398ef995cd95f8a1d207a7437ce02b150ca1bf5c39d31775",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Sølvik Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999449454
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV015-s0",
+          "decision": "SPAN",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+          "endExclusive": 2,
+          "start": 0,
+          "text": "In",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV015-s0",
+          "decision": "SPAN",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+          "endExclusive": 9,
+          "start": 0,
+          "text": "In Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV015-s0",
+          "decision": "SPAN",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+          "endExclusive": 9,
+          "start": 3,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV015-s0",
+          "decision": "SPAN",
+          "sha256": "b5832c30b8041c6d58c734458857b6565bfbbef1c6a7d30244e1c782394420dd",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV015",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        "probability": 0.9996139035770583
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV016-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.27350650318003E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV016-s0",
+          "decision": "SPAN",
+          "sha256": "748aa216eaffe8ae565f5b624903d2bd83a4bf05b4cb95fd88eed0b955b4c91f",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.8382291643857696E-4
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNSUPPORTED_QUESTION",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV016",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9999884468357857
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV017-s0",
+          "decision": "SPAN",
+          "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.277381307602888E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV017-s0",
+          "decision": "SPAN",
+          "sha256": "a9060e519a91ca29ff5c3740bffb48206feb81dcdc22fbafacdbfa22b7978e2c",
+          "endExclusive": 24,
+          "start": 18,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550886832959645E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV017",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.999976896215822
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV018-s0",
+          "decision": "SPAN",
+          "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.27735500213298E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV018-s0",
+          "decision": "SPAN",
+          "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550753411514153E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV018-s0",
+          "decision": "SPAN",
+          "sha256": "cc842d3325bd7ac2de499e5a7a2d0a967fc497c9b9aa74e0b396dff6cfcefd29",
+          "endExclusive": 29,
+          "start": 26,
+          "text": "See",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550753411514153E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV018",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9998960493468996
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.2771708808577347E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 19,
+          "start": 16,
+          "text": "Neu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Neu Groß",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 31,
+          "start": 16,
+          "text": "Neu Groß Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 24,
+          "start": 20,
+          "text": "Groß",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 31,
+          "start": 20,
+          "text": "Groß Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 36,
+          "start": 20,
+          "text": "Groß Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 31,
+          "start": 25,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 36,
+          "start": 25,
+          "text": "Sølvik Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV019-s0",
+          "decision": "SPAN",
+          "sha256": "87402ec73207403f667b876e793dd0bdc5123ac353743b59309beeb5a4834338",
+          "endExclusive": 36,
+          "start": 32,
+          "text": "Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV019",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017758099499345097
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV020-s0",
+          "decision": "SPAN",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+          "endExclusive": 10,
+          "start": 4,
+          "text": "Névara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1657711549842579E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV020-s0",
+          "decision": "SPAN",
+          "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Sølvik",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9982230242789105
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV020-s0",
+      "decision": "SPAN",
+      "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV020-s0",
+      "decision": "SPAN",
+      "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV020",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV020-s0",
+      "decision": "SPAN",
+      "sha256": "25b09d574d207c717aceaf936a09b00ce07eddd42158140f03b89492eb315716",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Sølvik",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017758099499345097
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV021-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1657711549842579E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV021-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9982230242789105
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV021-s0",
+      "decision": "SPAN",
+      "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV021-s0",
+      "decision": "SPAN",
+      "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV021",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV021-s0",
+      "decision": "SPAN",
+      "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001774600817781599
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.164977392461146E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 6.797255384847004E-4
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 29,
+          "start": 23,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.164977392461146E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV022-s0",
+          "decision": "SPAN",
+          "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+          "endExclusive": 47,
+          "start": 39,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9975433436889488
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV022-s0",
+      "decision": "SPAN",
+      "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+      "endExclusive": 47,
+      "start": 39,
+      "text": "Dun-Mara",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV022-s0",
+      "decision": "SPAN",
+      "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+      "endExclusive": 47,
+      "start": 39,
+      "text": "Dun-Mara",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV022",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV022-s0",
+      "decision": "SPAN",
+      "sha256": "57fd2bd701c43f7d7e4bcf8fab99ebf201e7c913adf8b7d8e7e21908d6a52462",
+      "endExclusive": 47,
+      "start": 39,
+      "text": "Dun-Mara",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9976865288689389
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV023-s0",
+          "decision": "SPAN",
+          "sha256": "3439d57ab5f78bf6ad681eb7eeec42863c45caab006889c817fe19050ef60722",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.958259812630398E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV023-s0",
+          "decision": "SPAN",
+          "sha256": "3439d57ab5f78bf6ad681eb7eeec42863c45caab006889c817fe19050ef60722",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0023095128712485122
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV023",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9976865288689389
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV024-s0",
+          "decision": "SPAN",
+          "sha256": "d659a05aed95150a6667190e4ce3a4ebe51768af9b7e8cd2632c516444729521",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.958259812630398E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV024-s0",
+          "decision": "SPAN",
+          "sha256": "d659a05aed95150a6667190e4ce3a4ebe51768af9b7e8cd2632c516444729521",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0023095128712485122
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV024",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        "probability": 0.9913127295091285
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV025-s0",
+          "decision": "SPAN",
+          "sha256": "6f143f716a62998afd9200f1afc08eef537d4fdaf63f30dd4f9a9221b9ea1178",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.93297215650828E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV025-s0",
+          "decision": "SPAN",
+          "sha256": "6f143f716a62998afd9200f1afc08eef537d4fdaf63f30dd4f9a9221b9ea1178",
+          "endExclusive": 21,
+          "start": 15,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.006384646181093382
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV025-s0",
+          "decision": "SPAN",
+          "sha256": "6f143f716a62998afd9200f1afc08eef537d4fdaf63f30dd4f9a9221b9ea1178",
+          "endExclusive": 28,
+          "start": 23,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.93297215650828E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV025-s0",
+          "decision": "SPAN",
+          "sha256": "6f143f716a62998afd9200f1afc08eef537d4fdaf63f30dd4f9a9221b9ea1178",
+          "endExclusive": 46,
+          "start": 38,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.002294758365465092
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV025",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.993569625421582
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV026-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.7548404827213716E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV026-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0032151835343683967
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV026-s1",
+          "decision": "SPAN",
+          "sha256": "e8324ee19326e453294094b54bb8e3edd752a55d6bd183bc32b29ff16e4cbccc",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.7548404827213716E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV026-s1",
+          "decision": "SPAN",
+          "sha256": "e8324ee19326e453294094b54bb8e3edd752a55d6bd183bc32b29ff16e4cbccc",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0032151835343683967
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV026",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536946243661
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV027-s0",
+          "decision": "SPAN",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV027-s0",
+          "decision": "SPAN",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001946296283733569
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV027-s0",
+          "decision": "SPAN",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+          "endExclusive": 33,
+          "start": 24,
+          "text": "Korrektur",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV027-s0",
+          "decision": "SPAN",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+          "endExclusive": 41,
+          "start": 35,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV027-s0",
+          "decision": "SPAN",
+          "sha256": "f03a4fb54c776d6e1226e0a4c0a6fbe82ddec23916a572a01d08a64ba5789bc3",
+          "endExclusive": 59,
+          "start": 51,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV027",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536946243661
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV028-s0",
+          "decision": "SPAN",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV028-s0",
+          "decision": "SPAN",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.001946296283733569
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV028-s0",
+          "decision": "SPAN",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6",
+          "endExclusive": 29,
+          "start": 24,
+          "text": "Diese",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV028-s0",
+          "decision": "SPAN",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6",
+          "endExclusive": 37,
+          "start": 24,
+          "text": "Diese Aussage",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV028-s0",
+          "decision": "SPAN",
+          "sha256": "638c9e3592cb9b2c9e2b059bf67f983bfccd82a2f78ac7f3760e11b62f1054e6",
+          "endExclusive": 37,
+          "start": 30,
+          "text": "Aussage",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975088175981E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV028",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999724727
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV029-s0",
+          "decision": "SPAN",
+          "sha256": "7d5a8939b1db066d76f3e199db5e9b8c328f486641a7bf4b1c8410081e5662c8",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV029-s0",
+          "decision": "SPAN",
+          "sha256": "7d5a8939b1db066d76f3e199db5e9b8c328f486641a7bf4b1c8410081e5662c8",
+          "endExclusive": 28,
+          "start": 22,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV029",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536968929173
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV030-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV030-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962881574518
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV030-s1",
+          "decision": "SPAN",
+          "sha256": "dd914b76b0cfc1785f496060694ea4639b030b8b9ccce272310dcb004fceffac",
+          "endExclusive": 5,
+          "start": 0,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV030-s1",
+          "decision": "SPAN",
+          "sha256": "dd914b76b0cfc1785f496060694ea4639b030b8b9ccce272310dcb004fceffac",
+          "endExclusive": 29,
+          "start": 21,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 2
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV030-s0",
+      "decision": "SPAN",
+      "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV030",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980536968929173
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV031-s0",
+          "decision": "SPAN",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV031-s0",
+          "decision": "SPAN",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962881574518
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV031-s0",
+          "decision": "SPAN",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+          "endExclusive": 29,
+          "start": 24,
+          "text": "Þórin",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV031-s0",
+          "decision": "SPAN",
+          "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+          "endExclusive": 53,
+          "start": 45,
+          "text": "Dun-Mara",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.272975093342397E-9
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV031-s0",
+      "decision": "SPAN",
+      "sha256": "5d187c88d181503c9cf9e122c02761aec0316b740840da76da807cec12ec2905",
+      "endExclusive": 22,
+      "start": 16,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV031",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9980537014300197
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV032-s0",
+          "decision": "SPAN",
+          "sha256": "5969556fe923c6d2835a2bbd846037c0447247213f81182841ddca3af7680eed",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.2729751036752286E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV032-s0",
+          "decision": "SPAN",
+          "sha256": "5969556fe923c6d2835a2bbd846037c0447247213f81182841ddca3af7680eed",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0019462962970052176
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV032",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999724727
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV033-s0",
+          "decision": "SPAN",
+          "sha256": "94d8996abd7e7a13786441bd13f2348c005a4d6e291b7b9b8d6a19e56cfcc791",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV033-s0",
+          "decision": "SPAN",
+          "sha256": "94d8996abd7e7a13786441bd13f2348c005a4d6e291b7b9b8d6a19e56cfcc791",
+          "endExclusive": 30,
+          "start": 24,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666401107045E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV033",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017550553816726086
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1521463428162845E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.005843690723398099
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 27,
+          "start": 16,
+          "text": "Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9865564110251882
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV034-s0",
+          "decision": "SPAN",
+          "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+          "endExclusive": 27,
+          "start": 23,
+          "text": "Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.005843690723398099
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV034-s0",
+      "decision": "SPAN",
+      "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Łomira Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV034-s0",
+      "decision": "SPAN",
+      "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Łomira Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV034",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV034-s0",
+      "decision": "SPAN",
+      "sha256": "720b918f7552620a180804fb5be1e9d73f382f8acea39a5858b75e9676de6acf",
+      "endExclusive": 27,
+      "start": 16,
+      "text": "Łomira Nord",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        "probability": 0.9999999999449454
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV035-s0",
+          "decision": "SPAN",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+          "endExclusive": 2,
+          "start": 0,
+          "text": "In",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV035-s0",
+          "decision": "SPAN",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+          "endExclusive": 9,
+          "start": 0,
+          "text": "In Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV035-s0",
+          "decision": "SPAN",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+          "endExclusive": 9,
+          "start": 3,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV035-s0",
+          "decision": "SPAN",
+          "sha256": "901036ca47b8ce10039f393ba97894190fd5482e4512413b33a429588c69b732",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.3763666400728167E-11
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV035",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        "probability": 0.9996139035770583
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV036-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.27350650318003E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV036-s0",
+          "decision": "SPAN",
+          "sha256": "3271f10de257d5e913cb4fbce10bc1c19e8a928d03d2e89028d97b7c1192a2c5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 3.8382291643857696E-4
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "UNSUPPORTED_QUESTION",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV036",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9999884468357857
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV037-s0",
+          "decision": "SPAN",
+          "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.277381307602888E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV037-s0",
+          "decision": "SPAN",
+          "sha256": "88b78cccb7efd363392a0f33198ce7b7f254b6e03bfcc2278a022cafd563532f",
+          "endExclusive": 24,
+          "start": 18,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550886832959645E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV037",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.999976896215822
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV038-s0",
+          "decision": "SPAN",
+          "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.27735500213298E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV038-s0",
+          "decision": "SPAN",
+          "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+          "endExclusive": 22,
+          "start": 16,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550753411514153E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV038-s0",
+          "decision": "SPAN",
+          "sha256": "4fa28a2b00a34da0994d3e8175db8f1ea7f1f370b723491b55a7c1c647cb01f5",
+          "endExclusive": 29,
+          "start": 26,
+          "text": "See",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1550753411514153E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "VERIFICATION_REJECTED",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV038",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "probability": 0.9998960493468996
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 6,
+          "start": 0,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 2.2771708808577347E-9
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 19,
+          "start": 16,
+          "text": "Neu",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 24,
+          "start": 16,
+          "text": "Neu Groß",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 31,
+          "start": 16,
+          "text": "Neu Groß Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 24,
+          "start": 20,
+          "text": "Groß",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 31,
+          "start": 20,
+          "text": "Groß Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 36,
+          "start": 20,
+          "text": "Groß Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 31,
+          "start": 25,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 36,
+          "start": 25,
+          "text": "Łomira Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV039-s0",
+          "decision": "SPAN",
+          "sha256": "098e62500cfde79afe9e9e058d51b43080023dde0e0ce90ef5f5e603a146ba0a",
+          "endExclusive": 36,
+          "start": 32,
+          "text": "Nord",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.154981954769135E-5
+      }
+    ],
+    "RAW": {"decision": "NOANSWER"},
+    "ruleReason": "NO_SUPPORTED_SPAN",
+    "RULE": {"decision": "NOANSWER"},
+    "id": "NEURALDEV039",
+    "inputValid": true,
+    "VERIFIED": {"decision": "NOANSWER"}
+  },
+  {
+    "options": [
+      {
+        "tuple": {"decision": "NOANSWER"},
+        "features": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.0017758099499345097
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV040-s0",
+          "decision": "SPAN",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+          "endExclusive": 10,
+          "start": 4,
+          "text": "Želina",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 1.1657711549842579E-6
+      },
+      {
+        "tuple": {
+          "sourceId": "NEURALDEV040-s0",
+          "decision": "SPAN",
+          "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+          "endExclusive": 26,
+          "start": 20,
+          "text": "Łomira",
+          "offsetEncoding": "UTF-16",
+          "revision": 1
+        },
+        "features": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "probability": 0.9982230242789105
+      }
+    ],
+    "RAW": {
+      "sourceId": "NEURALDEV040-s0",
+      "decision": "SPAN",
+      "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "ruleReason": "FOUND",
+    "RULE": {
+      "sourceId": "NEURALDEV040-s0",
+      "decision": "SPAN",
+      "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    },
+    "id": "NEURALDEV040",
+    "inputValid": true,
+    "VERIFIED": {
+      "sourceId": "NEURALDEV040-s0",
+      "decision": "SPAN",
+      "sha256": "0644dbb963b1a2b2190153ec19f8bc389b3b55afa4e4e2a3802afd49242b3ae3",
+      "endExclusive": 26,
+      "start": 20,
+      "text": "Łomira",
+      "offsetEncoding": "UTF-16",
+      "revision": 1
+    }
+  }
+]}

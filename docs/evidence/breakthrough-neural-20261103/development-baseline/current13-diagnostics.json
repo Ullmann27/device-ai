@@ -1,0 +1,362 @@
+[
+  {
+    "id": "NEURALDEV001",
+    "category": "unknown_names",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0017785564152938554,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV002",
+    "category": "role_swap",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0024596788423950455,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV003",
+    "category": "unknown_entity",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0023161513399199913,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV004",
+    "category": "entity_as_location",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0023161513399199913,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV005",
+    "category": "mixed_relation",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.008725224797922647,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV006",
+    "category": "conflicting_sources",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 5.0289870533451286e-08,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "NEURALDEV007",
+    "category": "explicit_correction",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 3,
+    "classifierNll": 31.66541885281039,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV008",
+    "category": "explicit_revocation",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019482018891373261,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV009",
+    "category": "negative",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "NEURALDEV010",
+    "category": "unrelated_negative_source",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.241827051845215,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV011",
+    "category": "unrelated_negative_clause",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.241827051845215,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV012",
+    "category": "question_as_evidence",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019481950702120421,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV013",
+    "category": "past_only",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "NEURALDEV014",
+    "category": "unicode_city",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.013534772158722985,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV015",
+    "category": "natural_word_order",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 3,
+    "classifierNll": 25.0089888653745,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV016",
+    "category": "natural_question",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 7.865329266849138,
+    "ruleReason": "UNSUPPORTED_QUESTION"
+  },
+  {
+    "id": "NEURALDEV017",
+    "category": "apostrophe_city",
+    "candidateCount": 3,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV018",
+    "category": "lowercase_place_connector",
+    "candidateCount": 4,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV019",
+    "category": "four_word_place",
+    "candidateCount": 11,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV020",
+    "category": "unicode_offset_prefix",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0017785564152938554,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV021",
+    "category": "unknown_names",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0017785564152938554,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV022",
+    "category": "role_swap",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0024596788423950455,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV023",
+    "category": "unknown_entity",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0023161513399199913,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV024",
+    "category": "entity_as_location",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0023161513399199913,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV025",
+    "category": "mixed_relation",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.008725224797922647,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV026",
+    "category": "conflicting_sources",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 5.0289870533451286e-08,
+    "ruleReason": "AMBIGUOUS_OR_CONTRADICTORY"
+  },
+  {
+    "id": "NEURALDEV027",
+    "category": "explicit_correction",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 3,
+    "classifierNll": 31.66541885281039,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV028",
+    "category": "explicit_revocation",
+    "candidateCount": 6,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019482018891373261,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV029",
+    "category": "negative",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "NEGATED_OR_CONTRASTIVE_EVIDENCE"
+  },
+  {
+    "id": "NEURALDEV030",
+    "category": "unrelated_negative_source",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.241827051845215,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV031",
+    "category": "unrelated_negative_clause",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 6.241827051845215,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV032",
+    "category": "question_as_evidence",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0019481950702120421,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV033",
+    "category": "past_only",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 2.752731376214486e-11,
+    "ruleReason": "AMBIGUOUS_TIME_SCOPE"
+  },
+  {
+    "id": "NEURALDEV034",
+    "category": "unicode_city",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.013534772158722985,
+    "ruleReason": "FOUND"
+  },
+  {
+    "id": "NEURALDEV035",
+    "category": "natural_word_order",
+    "candidateCount": 5,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 3,
+    "classifierNll": 25.0089888653745,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV036",
+    "category": "natural_question",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 7.865329266849138,
+    "ruleReason": "UNSUPPORTED_QUESTION"
+  },
+  {
+    "id": "NEURALDEV037",
+    "category": "apostrophe_city",
+    "candidateCount": 3,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV038",
+    "category": "lowercase_place_connector",
+    "candidateCount": 4,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "VERIFICATION_REJECTED"
+  },
+  {
+    "id": "NEURALDEV039",
+    "category": "four_word_place",
+    "candidateCount": 11,
+    "goldAvailable": false,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": null,
+    "ruleReason": "NO_SUPPORTED_SPAN"
+  },
+  {
+    "id": "NEURALDEV040",
+    "category": "unicode_offset_prefix",
+    "candidateCount": 3,
+    "goldAvailable": true,
+    "identicalFeatureCompetitors": 0,
+    "classifierNll": 0.0017785564152938554,
+    "ruleReason": "FOUND"
+  }
+]
