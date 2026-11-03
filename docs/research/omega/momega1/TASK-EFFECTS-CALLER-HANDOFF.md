@@ -28,5 +28,22 @@ The minimal fixture also supplies the existing chat container for the real
 worker report. Assertions and production source are unchanged. Preserve the
 pre-amendment run separately; it cannot establish a positive-arrival defect.
 
+The first corrected `582dc785` run reported 2 PASS / 3 assertion FAIL, no errors
+or skips, and unchanged source. QA subsequently found that `visible()` alone
+still left a cross-Activity fixture's window GONE in the independent visibility
+test. Therefore the positive-arrival failures remain PROVISIONAL until an actual
+VISIBLE-window positive control and an unchanged-source RED repeat resolve that
+fixture. The button's actual default system-sound assertion failed independently.
+The implementation checkpoint is explicitly UNVERIFIED, not a claimed GREEN.
+
+Current implementation connects real ToolRunner execution after inner screen
+and network constraints, and actual Chief WorkerJob.run/its finally exit. A
+supervisor timeout report cannot produce a false worker departure. Web document
+effects require a nonempty actual completed dossier; no account/PDF claim.
+The existing actionButton factory uses bounded feedback without duplicate
+Android click sound. Pending voice utterances mute/release it before onStart.
+Pause, cancellation, session replacement and destruction invalidate presentation
+contexts. These fields do not change authorization, worker scheduling or memory.
+
 Rollback is this isolated research branch only; main, original signing/package,
 owner facts and Code40 rollback remain unchanged. Raw logs bind exact commits.

@@ -211,6 +211,11 @@ class AgentActivity : Activity() {
     @Volatile private var activeBootstrapGate: ToolGate? = null
     @Volatile private var activeNeuralCancellation: java.util.concurrent.atomic.AtomicBoolean? = null
     private var hologramView: ContinuumHologramView? = null
+    // Presentation references only; they confer no tool/worker authorization.
+    private data class TaskEffectContext(val session: String, val scope: String)
+    @Volatile private var currentTaskEffectContext: TaskEffectContext? = null
+    private val chiefTaskEffectContexts = java.util.concurrent.ConcurrentHashMap<String, TaskEffectContext>()
+    private var uiFeedback: at.heinz.deviceai.ui.ContinuumUiFeedback? = null
     private data class LocalPromptSession(val id:String,val groundedTopic:String?)
     // This Activity owns the short-lived context; no profile-global conversation file
     // or neural weights gain new permissions. Never persist this across session changes.
@@ -594,6 +599,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        clearTaskEffects()
         codingPlanningEpoch++
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
@@ -611,6 +617,7 @@ class AgentActivity : Activity() {
         readinessSpeechResult = "Noch kein Sprachtest durchgeführt."
         readinessVoiceResult = "Hörtest noch nicht bestätigt."
         foregroundLearningActive = false
+        updateUiFeedbackPolicy()
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
         liveHardwareGauges?.setForegroundActive(false)
@@ -640,6 +647,9 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        clearTaskEffects()
+        uiFeedback?.close()
+        uiFeedback = null
         readinessDialog?.dismiss()
         stopReadinessCamera()
         avatarDirector.attach(at.heinz.deviceai.avatar.NoOpAvatarSink)
@@ -1515,6 +1525,8 @@ class AgentActivity : Activity() {
             else -> at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
         })
         head.setForegroundActive(foregroundLearningActive)
+        currentTaskEffectContext?.takeIf { it.session == sessionId && foregroundLearningActive }
+            ?.let { head.setTaskEffectScope(it.scope) }
     }
 
     private fun showHomeDashboard() {
@@ -1947,11 +1959,27 @@ class AgentActivity : Activity() {
      * external Grok bot as running and never starts arbitrary code or tools.
      */
     private fun showChiefWorkerStatus() {
-        val pool = chiefStatusPool ?: at.heinz.deviceai.chief.ChiefWorkerPool(1, 2) { _ ->
+        // Put the existing live surface in its result pane before actual work begins.
+        conversationActive = true
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
+        refreshConversationLayout()
+        val effectContext = if (busy) currentTaskEffectContext else beginTaskEffects()
+        val pool = chiefStatusPool ?: at.heinz.deviceai.chief.ChiefWorkerPool(1, 2) { brief ->
+            val workerContext = chiefTaskEffectContexts.remove(brief.id)
             at.heinz.deviceai.chief.WorkerJob {
-                at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
-                    ?: "Auf diesem Gerät liegt noch kein abgeschlossener lokaler Teamleiterlauf vor. " +
-                        "Externe Coding-Bots und PC-Worker werden hier nicht automatisch gestartet."
+                postTaskEffect(workerContext,
+                    at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(brief.id,
+                        at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.WORKER), android.os.SystemClock.uptimeMillis())
+                try {
+                    at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
+                        ?: "Auf diesem Gerät liegt noch kein abgeschlossener lokaler Teamleiterlauf vor. " +
+                            "Externe Coding-Bots und PC-Worker werden hier nicht automatisch gestartet."
+                } finally {
+                    // A timeout report can precede the real exit; only this boundary is a departure.
+                    postTaskEffect(workerContext, at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(brief.id),
+                        android.os.SystemClock.uptimeMillis())
+                }
             }
         }.also { chiefStatusPool = it }
         val ownerSession = sessionId
@@ -1959,7 +1987,9 @@ class AgentActivity : Activity() {
             "status-" + UUID.randomUUID().toString().replace("-", "").take(20),
             "Lokalen Teamleiterstatus ausschließlich lesen", emptySet(), 15_000
         )
+        effectContext?.let { chiefTaskEffectContexts[brief.id] = it }
         val accepted = pool.submit(brief) { report ->
+            chiefTaskEffectContexts.remove(brief.id)
             runOnUiThread {
                 if (isFinishing || isDestroyed || sessionId != ownerSession) return@runOnUiThread
                 val result = if (report.status == at.heinz.deviceai.chief.WorkerStatus.DONE)
@@ -1970,10 +2000,13 @@ class AgentActivity : Activity() {
                 addToolActivity("CHIEF · echter WorkerReport: " + report.id + " · " + report.status.name)
             }
         }
-        if (!accepted) addAssistantMessage(
-            "JARVIS · Die lokale Statusprüfung ist ausgelastet. " +
-                "Der laufende Sprachmodell- oder Coding-Auftrag wurde nicht abgebrochen."
-        )
+        if (!accepted) {
+            chiefTaskEffectContexts.remove(brief.id)
+            addAssistantMessage(
+                "JARVIS · Die lokale Statusprüfung ist ausgelastet. " +
+                    "Der laufende Sprachmodell- oder Coding-Auftrag wurde nicht abgebrochen."
+            )
+        }
     }
 
     /** Device and desktop share one development backlog and agent identity.
@@ -5762,6 +5795,7 @@ class AgentActivity : Activity() {
     }
 
     private fun refreshHologramState() {
+        updateUiFeedbackPolicy()
         refreshWorkPresentation()
         val state = when {
             voiceListening -> ContinuumHologramView.State.LISTENING
@@ -5846,6 +5880,7 @@ class AgentActivity : Activity() {
         stopVoiceAnimation()
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
+        updateUiFeedbackPolicy() // Pending synthesis already owns the voice channel.
         voiceSignal.activate(id)
         val spoken = at.heinz.deviceai.cognitive.JarvisVoiceProfile.speakable(message)
         voiceAvatarText = spoken.orEmpty()
@@ -6568,9 +6603,19 @@ class AgentActivity : Activity() {
     }
 
     private fun createToolGate(ownerTurn: String? = null, consentRevisionAtTurnStart: Long? = null,
-                               ephemeralScreenContext:()->Boolean = {false}) = ToolGate(
+                               ephemeralScreenContext:()->Boolean = {false}): ToolGate {
+        // Capture at gate creation: a late old runner cannot borrow a subsequent turn's scope.
+        val effectContext = currentTaskEffectContext
+        return ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
+            var effectStarted = false
+            fun actualStart() {
+                effectStarted = true
+                postTaskEffect(effectContext,
+                    at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
+                        at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
+            }
             val presentationSession = sessionId
             val presentationStart = workStarted
             runOnUiThread {
@@ -6598,11 +6643,22 @@ class AgentActivity : Activity() {
                         HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
                             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
                     runOnUiThread { modelWebActive = true; refreshHologramState() }
-                    try { runner.execute(request).also { session.checkAuthorized() } }
+                    actualStart()
+                    try { runner.execute(request).also {
+                        session.checkAuthorized()
+                        if (request.name == "web_read" && runner.dossier?.sources?.isNotEmpty() == true)
+                            postTaskEffect(effectContext, at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Read(request.callId),
+                                android.os.SystemClock.uptimeMillis())
+                    } }
                     finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
-                } else DeviceToolExecutorRunner(executor).execute(request)
+                } else {
+                    actualStart()
+                    DeviceToolExecutorRunner(executor).execute(request)
+                }
             }
             } finally {
+                if (effectStarted) postTaskEffect(effectContext,
+                    at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
                 runOnUiThread {
                     if(workToolCall == request.callId) {
                         workTool=null; workToolCall=null; refreshWorkPresentation()
@@ -6610,7 +6666,8 @@ class AgentActivity : Activity() {
                 }
             }
         },receiptStore=receiptStore
-    )
+        )
+    }
 
     private fun showPendingReceiptReview() {
         onLearningIo({ receiptStore.all() }) { result -> showPendingReceiptReview(result) }
@@ -7775,6 +7832,7 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        clearTaskEffects()
         appLookupGeneration++
         if (appLookupActive) {
             appLookupActive = false
@@ -8927,6 +8985,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        clearTaskEffects()
         val closingSession = sessionId
         setBusy(true)
         onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) { sessionResetLifetime.get() } }) { result ->
@@ -8936,6 +8995,7 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            clearTaskEffects()
             workOutcome = null; workTool = null; workToolCall = null
             workStarted = null; workElapsed = 0L
             refreshWorkPresentation()
@@ -9101,6 +9161,7 @@ class AgentActivity : Activity() {
     }
 
     private fun setBusy(value: Boolean) {
+        val starting = value && !busy
         if(value && !busy) {
             workStarted = android.os.SystemClock.elapsedRealtime()
             workElapsed = 0L; workOutcome = null; workTool = null
@@ -9112,6 +9173,7 @@ class AgentActivity : Activity() {
         busy = value
         if(!value) learningVisualActive = false
         refreshConversationLayout()
+        if (starting) beginTaskEffects()
         refreshHologramState()
         if (::sendButton.isInitialized) {
             sendButton.isEnabled = true
@@ -9121,6 +9183,49 @@ class AgentActivity : Activity() {
             sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
         }
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
+    }
+
+    /** UI thread. One bounded visual scope for existing owner work, never a scheduler. */
+    private fun beginTaskEffects(): TaskEffectContext? {
+        if (!foregroundLearningActive || isFinishing || isDestroyed) return null
+        return TaskEffectContext(sessionId, "work-" + UUID.randomUUID()).also {
+            currentTaskEffectContext = it
+            hologramView?.setTaskEffectScope(it.scope)
+        }
+    }
+
+    private fun clearTaskEffects() {
+        currentTaskEffectContext = null
+        chiefTaskEffectContexts.clear()
+        hologramView?.setTaskEffectScope(null)
+    }
+
+    private fun postTaskEffect(context: TaskEffectContext?, event: at.heinz.deviceai.ui.ContinuumTaskEffects.Event,
+                               occurredAtUptime: Long) {
+        if (context == null) return
+        runOnUiThread {
+            if (context != currentTaskEffectContext || context.session != sessionId ||
+                !foregroundLearningActive || isFinishing || isDestroyed) return@runOnUiThread
+            val accepted = hologramView?.onTaskEffect(context.scope, event, occurredAtUptime) == true
+            if (accepted && event is at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started)
+                playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.TASK_STARTED)
+        }
+    }
+
+    private fun updateUiFeedbackPolicy() {
+        uiFeedback?.updatePolicy(voiceEnabled, foregroundLearningActive,
+            voiceSpeaking || voiceListening || voiceUtteranceId != null)
+    }
+
+    private fun playUiFeedback(cue: at.heinz.deviceai.ui.ContinuumUiFeedback.Cue) {
+        if (!voiceEnabled || !foregroundLearningActive || voiceSpeaking || voiceListening ||
+            voiceUtteranceId != null || isFinishing || isDestroyed) {
+            updateUiFeedbackPolicy()
+            return
+        }
+        val feedback = uiFeedback ?: at.heinz.deviceai.ui.ContinuumUiFeedback(this).also { uiFeedback = it }
+        updateUiFeedbackPolicy()
+        feedback.play(cue)
     }
 
     private fun isChatNearBottom(): Boolean {
@@ -9621,7 +9726,14 @@ class AgentActivity : Activity() {
         accent: Boolean = false,
         compact: Boolean = false
     ): Button =
-        Button(this).apply {
+        object : Button(this) {
+            override fun performClick(): Boolean {
+                if (isEnabled && hasOnClickListeners())
+                    playUiFeedback(at.heinz.deviceai.ui.ContinuumUiFeedback.Cue.BUTTON)
+                return super.performClick()
+            }
+        }.apply {
+            isSoundEffectsEnabled = false
             text = label
             textSize = if (compact) 12f else 13.2f
             isAllCaps = false
