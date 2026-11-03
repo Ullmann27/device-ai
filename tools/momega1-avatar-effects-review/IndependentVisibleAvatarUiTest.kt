@@ -122,7 +122,12 @@ class IndependentVisibleAvatarUiTest {
     @Test fun movedHeadHasNoHiddenCopyAndBackgroundStopsExistingClock() {
         val f=fixture()
         try {
-            chat(f,true);shadowOf(Looper.getMainLooper()).idleFor(100,TimeUnit.MILLISECONDS)
+            fun snapshot(label:String) {
+                fun describe(v:View)="${v.javaClass.simpleName}: shown=${v.isShown} attached=${v.isAttachedToWindow} window=${v.windowVisibility} visibility=${v.visibility}"
+                println("HOST_DIAGNOSTIC $label hostFinishing=${f.host.get().isFinishing} hostFocus=${f.host.get().hasWindowFocus()} host=${describe(f.host.get().window.decorView)} pane=${describe(f.pane)} home=${describe(f.home)} chat=${describe(f.chat)} head=${describe(f.head)}")
+            }
+            snapshot("before-chat");chat(f,true);snapshot("after-reparent")
+            shadowOf(Looper.getMainLooper()).idleFor(100,TimeUnit.MILLISECONDS);snapshot("after-idle")
             val state="shown=${f.head.isShown} attached=${f.head.isAttachedToWindow} window=${f.head.windowVisibility} motion=${f.head.sampleMotion()} pending=${field(f.head,"framePending")} foreground=${field(f.head,"foregroundActive")} allowed=${field(f.head,"motionAllowed") }"
             println("VISIBILITY_DIAGNOSTIC $state")
             assertTrue("Head must be shown: $state",f.head.isShown);assertTrue("Visible clock must advance: $state",f.head.sampleMotion().callbackCount>0)
