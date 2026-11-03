@@ -1,0 +1,155 @@
+[
+  {
+    "id": "Q1",
+    "requested_url": "https://docs.x.ai/grok-bot/computer-and-apps",
+    "retrieved_at": "2026-11-03T20:07:20.069239+00:00",
+    "status": 200,
+    "final_url": "https://docs.x.ai/grok-bot/computer-and-apps",
+    "bytes": 270327,
+    "sha256": "f187c4e7e4ce72c5e6d3097b9e670a7fdac7fdbfe24129b85e412c79fd38f9d3"
+  },
+  {
+    "id": "Q2",
+    "requested_url": "https://arxiv.org/abs/2304.03442",
+    "retrieved_at": "2026-11-03T20:07:20.070242+00:00",
+    "status": 200,
+    "final_url": "https://arxiv.org/abs/2304.03442",
+    "bytes": 43492,
+    "sha256": "6c61d75e7ea43f6cc13bb9584a1c48d2b8e08f4ef8edc07b77301255b63593e4"
+  },
+  {
+    "id": "Q3",
+    "requested_url": "https://arxiv.org/abs/2310.08560",
+    "retrieved_at": "2026-11-03T20:07:20.071054+00:00",
+    "status": 200,
+    "final_url": "https://arxiv.org/abs/2310.08560",
+    "bytes": 42540,
+    "sha256": "fa7328c6c6b801fa1b9b6a5dd76fb1d2a8afddfc6e33bb2dd58978462bc6906f"
+  },
+  {
+    "id": "Q4",
+    "requested_url": "https://arxiv.org/abs/2303.11366",
+    "retrieved_at": "2026-11-03T20:07:20.071714+00:00",
+    "status": 200,
+    "final_url": "https://arxiv.org/abs/2303.11366",
+    "bytes": 43770,
+    "sha256": "3e603a9b007a656c3a0f28f1b618cf972c186d7ac7d2e0c5be3dcb11c565bf1a"
+  },
+  {
+    "id": "Q5",
+    "requested_url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+    "retrieved_at": "2026-11-03T20:07:20.247708+00:00",
+    "status": 200,
+    "final_url": "https://www.anthropic.com/research/multi-agent-research-system",
+    "bytes": 210284,
+    "sha256": "a4f4ccb133e6570cec0cdeb45c6f650e509aa88036d028d29ff1c12707d00d80"
+  },
+  {
+    "id": "Q6",
+    "requested_url": "https://www.anthropic.com/research/multiagent-systems",
+    "retrieved_at": "2026-11-03T20:07:20.286075+00:00",
+    "status": 200,
+    "final_url": "https://www.anthropic.com/research/multiagent-systems",
+    "bytes": 216335,
+    "sha256": "40af9fd0904ec6e8f43910d4b247c820f820915b62192ef13bee28853eea3109"
+  },
+  {
+    "id": "Q7",
+    "requested_url": "https://www.nature.com/articles/s42256-022-00556-7",
+    "retrieved_at": "2026-11-03T20:07:20.328331+00:00",
+    "status": 200,
+    "final_url": "https://www.nature.com/articles/s42256-022-00556-7?error=cookies_not_supported&code=9e9e749f-2790-4d46-af24-0f48b1331ae7",
+    "bytes": 479800,
+    "sha256": "7ab8fdbcee19cc6a4936c709aa422ad656642c919193244401cf4d728fc5eb84"
+  },
+  {
+    "id": "BUDGET-2512",
+    "requested_url": "https://arxiv.org/abs/2512.08296",
+    "retrieved_at": "2026-11-03T20:09:16.017103+00:00",
+    "status": 200,
+    "final_url": "https://arxiv.org/abs/2512.08296",
+    "bytes": 45377,
+    "sha256": "449c4050f6d7207c5e7e8b5e7091409ab8d27ee2bd6c62ac5d38233495edc194"
+  },
+  {
+    "id": "BUDGET-2604",
+    "requested_url": "https://arxiv.org/abs/2604.02460",
+    "retrieved_at": "2026-11-03T20:09:16.017996+00:00",
+    "status": 200,
+    "final_url": "https://arxiv.org/abs/2604.02460",
+    "bytes": 43206,
+    "sha256": "3c878d29b7a924b541d35aa29115d4a38ec5540ee1088b597cb11468d306e1cc"
+  },
+  {
+    "id": "ANDROID-SERVICE",
+    "requested_url": "https://developer.android.com/guide/topics/manifest/service-element",
+    "retrieved_at": "2026-11-03T20:09:16.018426+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/guide/topics/manifest/service-element",
+    "bytes": 320595,
+    "sha256": "506fc8b8486d7659b128676ded2524881dfbc208ccb041efe5912d55ba1c642a"
+  },
+  {
+    "id": "ANDROID-AVF",
+    "requested_url": "https://source.android.com/docs/core/virtualization",
+    "retrieved_at": "2026-11-03T20:09:16.018766+00:00",
+    "status": 200,
+    "final_url": "https://source.android.com/docs/core/virtualization",
+    "bytes": 151884,
+    "sha256": "710b8a931760e92243680e73b90523872ebdf01a65e2b2b4f7a4f9444b66191a"
+  },
+  {
+    "id": "ANDROID-EXEC",
+    "requested_url": "https://developer.android.com/about/versions/10/behavior-changes-10",
+    "retrieved_at": "2026-11-03T20:09:16.150930+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/about/versions/10/behavior-changes-10",
+    "bytes": 269816,
+    "sha256": "b259244b022c879aff068e005e9763d1128a6b3ee8635d9e168089de1bd1e24b"
+  },
+  {
+    "id": "ANDROID-TTS",
+    "requested_url": "https://developer.android.com/reference/android/speech/tts/UtteranceProgressListener",
+    "retrieved_at": "2026-11-03T20:09:16.247434+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/reference/android/speech/tts/UtteranceProgressListener",
+    "bytes": 2250031,
+    "sha256": "5f322f428518a742c300a97de908ef419c00fe208b6cc50da69a9144d82468d5"
+  },
+  {
+    "id": "ANDROID-THERMAL",
+    "requested_url": "https://developer.android.com/games/optimize/adpf/thermal",
+    "retrieved_at": "2026-11-03T20:09:16.711793+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/games/optimize/adpf/thermal",
+    "bytes": 384042,
+    "sha256": "112bae9b23f0e7eb4da99e54b3cbdca52bc3faf5a9b0f346852c704509ba4a91"
+  },
+  {
+    "id": "ANDROID-LIFECYCLE",
+    "requested_url": "https://developer.android.com/reference/androidx/lifecycle/ProcessLifecycleOwner",
+    "retrieved_at": "2026-11-03T20:09:16.906340+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/reference/androidx/lifecycle/ProcessLifecycleOwner",
+    "bytes": 3065145,
+    "sha256": "0543a72c6e3cdb673deca5554542b456c0cff402645ec370d16a733ee57015f7"
+  },
+  {
+    "id": "ANDROID-AVF-APP",
+    "requested_url": "https://source.android.com/docs/core/virtualization/virtualization-service",
+    "retrieved_at": "2026-11-03T20:09:52.879463+00:00",
+    "status": 200,
+    "final_url": "https://source.android.com/docs/core/virtualization/virtualization-service",
+    "bytes": 152910,
+    "sha256": "47647a295d5d0a9cef1019588a6113e7825f3ae13eda96603517a4a24763f6db"
+  },
+  {
+    "id": "ANDROID-LICENSE",
+    "requested_url": "https://developer.android.com/license",
+    "retrieved_at": "2026-11-03T20:09:54.333172+00:00",
+    "status": 200,
+    "final_url": "https://developer.android.com/license",
+    "bytes": 253122,
+    "sha256": "bfb050681820794000a2db0ac56293aa4855d115c376b886e0e87afeb9d7b60d"
+  }
+]
