@@ -19,12 +19,19 @@ package at.heinz.deviceai.cognitive
  */
 internal object LocalFollowUpTaskFrame {
     const val MAX_PRIOR_TURNS = 4
+    private val sensitive = Regex(
+        """(?iu)(?<![\p{L}])(?:passwort|password|kennwort|pin|puk|iban|bic|kreditkarte\p{L}*|api[ _-]?key|secret|token|tan|zugangscode|geheim\p{L}*)(?![\p{L}])""")
+    private val mutating = Regex(
+        """(?iu)(?<![\p{L}])(?:lösch(?:e|en|t)?|deinstallier(?:e|en|t)?|entfern(?:e|en|t)?|formatier(?:e|en|t)?|überweis(?:e|en|t)?|bezahl(?:e|en|t)?|kauf(?:e|en|t)?|bestell(?:e|en|t)?|send(?:e|en|et)?|schick(?:e|en|t)?|stopp(?:e|en)?|beende(?:n)?|installier(?:e|en)?|öffne|starte|zurücksetzen|ruf(?:e)?\s+\S+(?:\s+\S+)?\s+an)(?![\p{L}])""")
 
     fun compose(currentRequest: String, resolvedQuestion: String, priorOwnerTurns: List<String>?): String {
         if (priorOwnerTurns.isNullOrEmpty() || priorOwnerTurns.size > MAX_PRIOR_TURNS) return resolvedQuestion
         if (!LocalConversationFollowUpPolicy.requiresPreviousOwnerTurn(currentRequest)) return resolvedQuestion
         val prior = priorOwnerTurns.map(String::trim)
             .filter { it.isNotEmpty() && it != currentRequest.trim() && it != resolvedQuestion.trim() }
+            // M3 (Review #370/1): secrets and device/account-changing instructions are never
+            // re-sent as task content; harmless statements of the same session stay.
+            .filterNot { sensitive.containsMatchIn(it) || mutating.containsMatchIn(it) }
         if (prior.isEmpty() || prior.any { it.length > 1_000 || it.any { c -> c.isISOControl() && c != '\n' } })
             return resolvedQuestion
         val framed = buildString {

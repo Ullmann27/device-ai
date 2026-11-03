@@ -20,8 +20,15 @@ internal object LocalContextRetentionPolicy {
     fun apply(context: LocalConversationContext, sessionId: String, request: String, kind: NonModelReplyKind): Boolean {
         val keep = keepsSessionContext(kind)
         if (!keep) context.clear()
-        else if (request.isNotBlank()) context.recordNonModel(sessionId, request, turnLabel(kind))
+        // M3 (Review #370/1): a refused request keeps the harmless earlier context but is itself
+        // never recorded, so it cannot return later as owner task data in a follow-up frame.
+        else if (request.isNotBlank() && recordsRequest(kind)) context.recordNonModel(sessionId, request, turnLabel(kind))
         return keep
+    }
+
+    fun recordsRequest(kind: NonModelReplyKind): Boolean = when (kind) {
+        NonModelReplyKind.READ_ONLY_TOOL, NonModelReplyKind.DEVICE_CLOCK, NonModelReplyKind.STARTKERN_INFO -> true
+        NonModelReplyKind.SAFETY_REFUSAL, NonModelReplyKind.MEMORY_CHANGE -> false
     }
 
     fun turnLabel(kind: NonModelReplyKind): String = when (kind) {

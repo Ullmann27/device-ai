@@ -52,7 +52,9 @@ internal object OwnerStatementTimeline {
     private val hedge = Regex("""(?iu)(?<![\p{L}])(?:vielleicht|eventuell|ungefähr|etwa|circa|ca|angeblich|wahrscheinlich|oder)(?![\p{L}])""")
     private val conditional = Regex("""(?iu)(?<![\p{L}])(?:wenn|falls|angenommen|hätte\p{L}*|wäre\p{L}*)(?![\p{L}])""")
     private val pastMarker = Regex("""(?iu)(?<![\p{L}])(?:gestern|früher|damals|vorgestern|letzte\p{L}*)(?![\p{L}])""")
-    private val futureMarker = Regex("""(?iu)(?<![\p{L}])(?:ab\s+morgen|morgen|übermorgen)(?![\p{L}])""")
+    // "morgen" is future only as adverb; "heute/guten/jeden/am Morgen" is the noun (Gitar #370).
+    private val futureMarker = Regex("""(?iu)(?<![\p{L}])(?:ab\s+morgen|übermorgen|(?<!heute\s)(?<!guten\s)(?<!jeden\s)(?<!am\s)(?<!diesen\s)morgen)(?![\p{L}])""")
+    private val morningNoun = Regex("""(?iu)(?<![\p{L}])(?:heute|jeden|am|diesen)\s+morgen(?![\p{L}])""")
     private val newScenario = Regex(
         """(?iu)(?<![\p{L}])(?:neues?|andere\p{L}*|zweites?|weitere\p{L}*|nächste\p{L}*)\s+(?:beispiel|testaufgabe|denkaufgabe|aufgabe)(?![\p{L}])""")
     private val unitStopwords = setOf("und", "statt", "anstatt", "sondern", "nun", "jetzt", "mehr", "weniger",
@@ -107,7 +109,8 @@ internal object OwnerStatementTimeline {
                 lastNoun = noun; if (unit != null) lastUnit = unit
             }
             if (sentenceFacts.isEmpty()) continue
-            if (conditional.containsMatchIn(body) || pastMarker.containsMatchIn(body)) throw Poisoned()
+            if (conditional.containsMatchIn(body) || pastMarker.containsMatchIn(body) ||
+                morningNoun.containsMatchIn(body)) throw Poisoned()
             if (sentenceFacts.any { it.future } && sentenceFacts.size > 1) throw Poisoned()
             out += sentenceFacts
         }
