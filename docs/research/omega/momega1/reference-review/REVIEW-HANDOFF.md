@@ -142,5 +142,41 @@ exact hashes, render parameters, observations and limitations. Eight-sample grai
 limits fine appearance assessment; higher samples alone cannot fix the identified
 material/eye differences. These are host asset renders, not Filament/device pixels.
 
+## Second visual iteration and actual reachable-mouth finding
+
+`VISUAL-ITERATION-CONSTRAINTS.md` records actionable eye, contour-flow, volume,
+silhouette and mouth constraints. Private reviewer contact sheets retain original
+color/aspect ratio and disclose manual alignment. The first chin crop was corrected
+explicitly in receipt version 2; its earlier width estimate must not guide geometry.
+
+An actual Kotlin exporter at source `26555aa6` supplies 260 reachable mapper poses,
+including a complete 224-frame idle sequence, exact full-blink anchors, task/look
+states and utterance-bound AA/PP/O/I/U followed by stop. The 26 accepted contracts
+remain unchanged. These are synthetic inputs, not actual audio or camera evidence.
+
+Surface `fe76e85d` retains original geometry but looks like a cylindrical cage.
+Topology/eye variant `bee53236` follows anatomy more closely but saturates eye and
+mouth regions. Its neutral and speech-stopped renders are pixel-identical, a useful
+actual reset check. Density-adjusted `03caa24f` restores readable facial volume and
+relaxed closed lids; it still needs contour-light/style and full-motion review.
+
+Actual reachable O replay showed teeth outside the displayed opening, including
+the unchanged original asset. The separately frozen canonical glTF intersection
+check `d0c2ca85` reproduces **exit 1** on the original. Frontmost tooth-edge/face
+crossings for neutral/AA/PP/O/I/U are **0/16/152/65/36/28**. Hidden internal contacts
+and ordinary teeth visible within the aperture are explicitly separated.
+
+Isolated Jaw+40 mm candidate `6b199c59` preserves all BIN bytes, materials and
+neutral rigid-child positions, but remains **REJECTED / exit 1** with counts
+**0/36/0/48/0/20**. It fixes sampled PP/I crossings and leaves AA/O/U unresolved.
+Counts are not a severity scale. Full raw geometry witnesses, exact commands and
+source hashes are in `mouth-geometry-red-first-candidate-receipt.json`.
+
+The original Face skin binds only Root/Neck/Head. Jaw rotates inner mouth/teeth;
+it does not add another outer-skin deformation. Original builder recipes confirm
+that AA and JawOpen separately contain the same mouth-open basis. Component
+ablation and any justified semantic mapping repair remain separate from the
+neutral-preserving rig hypothesis; no material darkening may conceal geometry.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
