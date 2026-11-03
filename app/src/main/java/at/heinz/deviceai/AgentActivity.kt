@@ -328,6 +328,7 @@ class AgentActivity : Activity() {
     private val dashboardRefresh = object : Runnable {
         override fun run() {
             refreshDashboard()
+            botRosterDialog?.refreshRuntimeStatus()
             mainHandler.postDelayed(this, 5_000L)
         }
     }
@@ -1469,6 +1470,7 @@ class AgentActivity : Activity() {
 
     private fun botContextChanging(agentId: String) {
         if (selectedBot?.agentId != agentId) return
+        cancelSpeechInputScope()
         // Invalidate synchronously before an owner edit is queued, not after its disk write.
         // This closes the gap between a worker's strict read and the UI's display callback.
         botConversation.invalidate()
@@ -1522,6 +1524,7 @@ class AgentActivity : Activity() {
     }
 
     private fun enterBotConversation(profile: at.heinz.deviceai.chief.ChiefBotProfile) {
+        cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(profile.agentId)
         selectedBot = profile
@@ -1535,6 +1538,7 @@ class AgentActivity : Activity() {
     }
 
     private fun returnToJarvis() {
+        cancelSpeechInputScope()
         voiceEngine?.stop(); stopVoiceAnimation()
         botConversation.select(null)
         selectedBot = null
@@ -8086,6 +8090,7 @@ class AgentActivity : Activity() {
 
     private fun loadModel(model: ImportedLocalModel) {
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
+        botConversation.invalidate()
         resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
@@ -8127,6 +8132,8 @@ class AgentActivity : Activity() {
     }
 
     private fun unloadModel() {
+        botConversation.invalidate()
+        if (activeBotId != null) activeChatCancellation?.cancel()
         // The owner explicitly chose to unload. Do not silently re-enable
         // Gemma on the next launch until a new successful manual load.
         gemmaRestorePreferences().edit()
@@ -8167,6 +8174,7 @@ class AgentActivity : Activity() {
             return
         }
         pendingModelImport = null
+        botConversation.invalidate()
         resetM2NativeProof()
         modelImportActive = true
         latestModelImportSnapshot = null
@@ -9037,6 +9045,7 @@ class AgentActivity : Activity() {
             workTool = null
         }
         busy = value
+        botRosterDialog?.refreshRuntimeStatus()
         if(!value) learningVisualActive = false
         refreshConversationLayout()
         refreshHologramState()

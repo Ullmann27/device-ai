@@ -31,6 +31,7 @@ class ContinuumBotRosterDialog(
     private var dialog: AlertDialog? = null
     private var revision = 0L
     private val storagePending = AtomicBoolean()
+    private val statusViews = mutableListOf<Pair<ChiefBotProfile, TextView>>()
     private val cyan = Color.rgb(79, 224, 255)
     private val violet = Color.rgb(159, 120, 255)
     private val surfaceColor = Color.rgb(5, 13, 29)
@@ -44,7 +45,18 @@ class ContinuumBotRosterDialog(
         revision++
         dialog?.dismiss()
         dialog = null
+        statusViews.clear()
     }
+
+    /** Reuses the Activity's existing state/tick callbacks; no per-bot timers or render loops. */
+    fun refreshRuntimeStatus() {
+        val status = runtimeStatus ?: return
+        if (activity.isFinishing || activity.isDestroyed || dialog?.isShowing != true) return
+        statusViews.forEach { (profile, view) -> view.text = status(profile) }
+    }
+
+    private fun statusLabel(profile: ChiefBotProfile, fallback: String): TextView =
+        label(runtimeStatus?.invoke(profile) ?: fallback).also { statusViews += profile to it }
 
     private fun column() = LinearLayout(activity).apply {
         orientation = LinearLayout.VERTICAL
@@ -70,6 +82,7 @@ class ContinuumBotRosterDialog(
 
     private fun open(title: String, content: LinearLayout): Long {
         dialog?.dismiss()
+        statusViews.clear()
         val token = ++revision
         dialog = AlertDialog.Builder(activity).setTitle(title)
             .setView(ScrollView(activity).apply { addView(content) })
@@ -137,7 +150,7 @@ class ContinuumBotRosterDialog(
                 }
                 card.addView(label(profile.displayName + " · " + profile.role, 18f))
                 card.addView(label(profile.communicationStyle))
-                card.addView(label(runtimeStatus?.invoke(profile) ?:
+                card.addView(statusLabel(profile,
                     "REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
                 onSelect?.let { select -> card.addView(action("Mit ${profile.displayName} sprechen") {
                     if (live(token)) { close(); select(profile) }
@@ -162,9 +175,8 @@ class ContinuumBotRosterDialog(
             body.removeAllViews()
             body.addView(label(profile.displayName + " · " + profile.role, 21f))
             body.addView(label(profile.communicationStyle))
-            body.addView(label(runtimeStatus?.invoke(profile) ?: ("REGISTRIERT · Kein aktueller Auftrag\n" +
+            body.addView(statusLabel(profile, "REGISTRIERT · Kein aktueller Auftrag\n" +
                 "Geprüfte Fähigkeiten: noch keine\nLetztes bestätigtes Arbeitsergebnis: noch keines"))
-            )
             onSelect?.let { select -> body.addView(action("Mit ${profile.displayName} sprechen") {
                 if (live(token)) { close(); select(profile) }
             }) }
