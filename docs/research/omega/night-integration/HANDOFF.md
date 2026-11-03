@@ -1,8 +1,8 @@
 # Overnight owner APK integration — 2026-11-03
 
-**Current status: LOCAL_GATES_PASS / PUBLISHER_BUILD_RUNNING.**
+**Current status: ORIGINAL_SIGNED_CODE40_PUBLISHED_AND_READBACK_VERIFIED.**
 
-Exact tested application source: `0ff2cef550db8fc84c32690793921edf3a7830e9`, branch `release/continuum-night-integration-20261103`. Original publisher service `srv-dbf1tr2vcj2c73ehpfog`, deployment `dep-dbl70arm8hqs73ch40pg`, is building that source. The guard-environment update started this existing deployment; no second deploy is needed. This checkpoint does not claim a verified live code40 release, original signature on newly downloaded bytes, or a device installation. Root preserves publisher/readback evidence separately after the deployment completes.
+Exact tested and published application source: `0ff2cef550db8fc84c32690793921edf3a7830e9`. Original publisher service `srv-dbf1tr2vcj2c73ehpfog`, deployment `dep-dbl70arm8hqs73ch40pg`, became LIVE at2026-11-03 23:51:49 UTC. Independent downloaded-byte verification passed at23:54:19 UTC: package `at.heinz.deviceai.continuumlocal`, version0.3.39/code40, original certificate, 84,298,233 bytes, SHA256 `416ff0a388df82532bea73dfb938a8985169d85688743527133be04ca8683d19`. [Publication and actual signed readback](../../../evidence/night-integration/release-code40/README.md). The existing Download catalog now offers code40. No duplicate deployment or device installation was performed. Subsequent commits on the integration branch preserve documentation/evidence only; the publisher remains on0ff2cef5.
 
 ## Current exact-source evidence
 
@@ -26,7 +26,7 @@ The backlog verifier consumes/mutates its fixture. An inadvertent second call ag
 
 PR410 reference geometry, avatar/chat/readiness/camera/effects/planning and lifecycle guards remain integrated with PR456 persistent bot selection/personality/private conversation/delegation and roster access. Normal layouts retain the PR410 composition; enlarged fonts/narrow windows use the adaptive layout. A single HomeView intendedGeometry drives home/chat transitions. Chief/JARVIS status remains available during active bot work without switching the selected bot or submitting another model task. The new geometry, large-font and busy-status UI regressions are part of the passing full Android run.
 
-The read-only code39→candidate review is recorded in [update compatibility](../../../evidence/night-integration/0ff2cef5/update-compatibility.json). The five updater source files remain byte-identical to documented code39 source a9709854f48d2fd6589f9ce5ea97f6ec3be0d233. The old Download catalog URL, exact schema, package and required original signer remain unchanged. Candidate code40/name0.3.39 is higher; final live catalog and signed bytes still require publisher verification.
+The read-only code39→candidate review is recorded in [update compatibility](../../../evidence/night-integration/0ff2cef5/update-compatibility.json). The five updater source files remain byte-identical to documented code39 source a9709854f48d2fd6589f9ce5ea97f6ec3be0d233. The old Download catalog URL, exact schema, package and required original signer remain unchanged. Published code40/name0.3.39 is higher; the final live catalog and signed bytes passed independent publisher/readback verification.
 
 Existing preferences/models/runtime/backlog paths remain in use; bot/readiness/avatar data is additive. An absent voice preference now defaults on, while a saved mute choice is retained. LEX2 overflow can later migrate the learning store to a segmented LEX3 manifest with original legacy bytes retained; an old APK cannot read that new manifest, so no blanket lossless downgrade promise is made. Existing hypothetical/uncertain owner statements can become OBSERVED rather than confirmed facts without deleting their content. At receipt capacity, oldest certainly terminal receipts can be removed while pending/uncertain records remain protected. No owner files were inspected or changed by this source review or evidence assembly.
 
@@ -36,7 +36,7 @@ The full Android result includes all35 existing learning migration/transfer test
 
 Physical Fold7, GPU/avatar likeness, voice/acoustics, thermals, actual device upgrade, native ARM64 autonomous build/isolation and real-model success remain unverified by these host receipts. The consumed failed S01 real-model case was not rerun; its unresolved crash/resource barrier is unchanged. No main merge, key replacement or installation was performed. The host coding service/read-only MCP surface is not proof of an established ChatGPT connection or a completed on-device coding milestone.
 
-Continue with the existing publisher deployment only. Preserve its exact-source result and verify the downloaded APK's package, higher versionCode, original certificate, hash/length and strict old-button catalog. Keep publisher outcome separate from the completed local gates and retain any failure literally. Evidence-only documentation commits after 0ff2cef5 do not retroactively change the tested application-source identity.
+The overnight publication task is complete to the documented host/release boundary. The old Download button and direct immutable APK link provide the verified code40 update. Next operating acceptance requires the real owner device and separately authorized resolution of the S01 execution barrier; do not replay S01 or clear it merely because this APK was published. Preserve the proven code40 source and signature, use isolated review branches for later changes, and account for the LEX3 downgrade boundary. Evidence-only documentation commits after0ff2cef5 do not retroactively change the tested application-source identity.
 
 ---
 

@@ -1,0 +1,14 @@
+{
+  "commit": {
+    "createdAt": "2026-11-03T23:30:08Z",
+    "id": "0ff2cef550db8fc84c32690793921edf3a7830e9",
+    "message": "test: distinguish unavailable Linux proofs from portable integration checks\n\nPreserve the original full-node RED evidence, exercise portable refusal and resource guards, and identify unsupported host execution proofs explicitly. Include Android and backend evidence; final clean-source rerun follows."
+  },
+  "createdAt": "2026-11-03T23:37:15.565554Z",
+  "finishedAt": "2026-11-03T23:51:49.880689Z",
+  "id": "dep-dbl70arm8hqs73ch40pg",
+  "startedAt": "2026-11-03T23:37:15.563442Z",
+  "status": "live",
+  "trigger": "api",
+  "updatedAt": "2026-11-03T23:51:49.880869Z"
+}
