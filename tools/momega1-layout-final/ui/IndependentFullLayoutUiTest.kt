@@ -29,8 +29,13 @@ class IndependentFullLayoutUiTest {
         .getDeclaredField(name).apply { isAccessible = true }.get(a)
     private fun call(a: AgentActivity, name: String) = AgentActivity::class.java
         .getDeclaredMethod(name).apply { isAccessible = true }.invoke(a)
-    private fun message(a: AgentActivity, name: String, text: String) = AgentActivity::class.java
-        .getDeclaredMethod(name, String::class.java).apply { isAccessible = true }.invoke(a, text)
+    private fun message(a: AgentActivity, name: String, text: String) {
+        if (name == "addAssistantMessage") AgentActivity::class.java
+            .getDeclaredMethod(name, String::class.java, Boolean::class.javaPrimitiveType)
+            .apply { isAccessible = true }.invoke(a, text, false)
+        else AgentActivity::class.java.getDeclaredMethod(name, String::class.java)
+            .apply { isAccessible = true }.invoke(a, text)
+    }
     private fun views(v: View): List<View> = listOf(v) + if (v is ViewGroup)
         (0 until v.childCount).flatMap { views(v.getChildAt(it)) } else emptyList()
     private fun snapshot(a: AgentActivity, label: String, width: Int, height: Int) {
