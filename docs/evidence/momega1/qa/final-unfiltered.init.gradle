@@ -4,7 +4,7 @@ allprojects {
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/android-independent-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/workspace-independent-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/planning-independent-final-v2')
-   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/reference-independent-final')
+   p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/reference-independent-final-v2')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/readiness-independent-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/guide-independent-caller-final')
    p.android.sourceSets.getByName('test').java.srcDir('/workspace/momega1-build-env/firstwelcome-independent-v2')
