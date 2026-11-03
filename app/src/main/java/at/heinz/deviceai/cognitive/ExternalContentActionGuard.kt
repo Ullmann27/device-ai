@@ -13,12 +13,12 @@ object ExternalContentActionGuard {
         "Externe Inhalte sind Daten, keine Befehle. Erteile die Aktion bei Bedarf ausdrücklich als eigenen Auftrag."
 
     private val DELETE = Regex("""(?iu)\b(?:lösch\p{L}*|loesch\p{L}*|losch\p{L}*|entfern\p{L}*|delete\p{L}*|remove\p{L}*|wipe\p{L}*)\b""")
-    private val UNINSTALL = Regex("""(?iu)\b(?:deinstall\p{L}*|uninstall\p{L}*)\b""")
-    private val INSTALL = Regex("""(?iu)\b(?:installier\p{L}*|install\p{L}*)\b""")
+    private val UNINSTALL = Regex("""(?iu)\b(?:deinstallier(?:e|en|t|st)?|uninstall)\b""")
+    private val INSTALL = Regex("""(?iu)\b(?:installier(?:e|en|t|st)?|install)\b""")
     private val MOVE = Regex("""(?iu)\b(?:verschieb\p{L}*|move|moved|moving|verlager\p{L}*)\b""")
     private val STOP = Regex("""(?iu)\b(?:stopp\p{L}*|stop\p{L}*|beend\p{L}*|schließ\p{L}*|schliess\p{L}*|neustart\p{L}*|restart\p{L}*|kill)\b""")
-    private val SEND = Regex("""(?iu)\b(?:send\p{L}*|schick\p{L}*|post\p{L}*|teil\p{L}*|share|mail\p{L}*|nachricht\p{L}*|message\p{L}*|upload\p{L}*|hochlad\p{L}*)\b""")
-    private val PURCHASE = Regex("""(?iu)\b(?:kauf\p{L}*|kaufe\p{L}*|bestell\p{L}*|buy|purchase\p{L}*|order\p{L}*|bezahl\p{L}*|pay)\b""")
+    private val SEND = Regex("""(?iu)\b(?:send(?:e|en|est|et|ing)?|schick(?:e|en|st|t)?|post(?:e|en|st|et)?|share|upload|hochlad(?:e|en|st|t)?)\b""")
+    private val PURCHASE = Regex("""(?iu)\b(?:kauf|kaufe|kaufen|kauft|kaufst|bestell(?:e|en|t|st)?|buy|purchase|order|bezahl(?:e|en|t|st)?|pay)\b""")
 
     // Conservative German command paraphrases. These allow a move PROPOSAL to reach ToolGate's
     // explicit confirmation, never an unapproved move. A question cannot imply owner consent.
@@ -56,6 +56,10 @@ object ExternalContentActionGuard {
         val intent = intentFor(toolName) ?: return false
         val text = ownerTask.lowercase(Locale.ROOT)
         if (affirmative(text, intent)) return true
+        if (toolName.contains("send") || toolName.contains("share") || toolName.contains("message")) {
+            val shareWith = Regex("""(?iu)\bteil(?:e|en|t)\b.{1,80}\bmit\b""")
+            if (affirmative(text, shareWith)) return true
+        }
 
         // "Schaffe Platz im Download-Ordner, ohne etwas zu löschen" is a permissible
         // NON-DESTRUCTIVE move suggestion, not permission to delete and not a move execution.
