@@ -6,12 +6,14 @@ import at.heinz.deviceai.ToolRunner
 import at.heinz.deviceai.cognitive.AgentModel
 import at.heinz.deviceai.cognitive.AgentModelOutput
 import java.util.concurrent.CancellationException
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -56,6 +58,9 @@ class ChiefWorkerPool(
     private class Slot(val brief: WorkerBrief, val onReport: (WorkerReport) -> Unit) {
         val reported = AtomicBoolean()
         val cancelled = AtomicBoolean()
+        // Either the executor supervises this slot or shutdown accounts for a discarded runner.
+        val supervisorClaimed = AtomicBoolean()
+        @Volatile var startedNanos: Long = 0
         @Volatile var work: Future<String>? = null
         @Volatile var job: WorkerJob? = null
         private val cancelForwarded = AtomicBoolean(false)
@@ -67,14 +72,20 @@ class ChiefWorkerPool(
     }
 
     private val runners: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker").apply { isDaemon = true } }
-    // Never spawn unbounded job threads if a native model ignores an interrupt.
-    private val workers: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } }
+    // Neither threads nor queued closures may grow when a native call ignores stop.
+    private val workers = ThreadPoolExecutor(maxConcurrent, maxConcurrent, 0L, TimeUnit.MILLISECONDS,
+        ArrayBlockingQueue<Runnable>(maxConcurrent + maxQueued),
+        { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } },
+        ThreadPoolExecutor.AbortPolicy())
     private val slots = ConcurrentHashMap<String, Slot>()
     // Capacity is released before reporting so callbacks may submit again; completion includes delivery.
     private val unfinishedAssignments = AtomicInteger()
+    // Guarded by this pool's monitor, shared with admission. Never reopened.
+    private var closed = false
 
     @Synchronized
     fun submit(brief: WorkerBrief, onReport: (WorkerReport) -> Unit): Boolean {
+        if (closed) throw RejectedExecutionException("Chief worker pool is closed")
         if (slots.containsKey(brief.id) || slots.size >= maxConcurrent + maxQueued) return false
         val slot = Slot(brief, onReport)
         unfinishedAssignments.incrementAndGet()
@@ -91,15 +102,31 @@ class ChiefWorkerPool(
 
     fun cancel(id: String): Boolean {
         val slot = slots[id] ?: return false
-        slot.cancelled.set(true)
+        return cancel(slot)
+    }
+
+    private fun cancel(slot: Slot): Boolean {
+        synchronized(slot) {
+            if (slot.reported.get()) return false
+            slot.cancelled.set(true)
+        }
         slot.forwardCancellation()
-        slot.work?.cancel(true)
+        cancelWork(slot)
         return true
+    }
+
+    private fun cancelWork(slot: Slot) {
+        val future = slot.work ?: return
+        future.cancel(true)
+        // FutureTask cancellation alone leaves it in ThreadPoolExecutor's work queue.
+        // The task has already been submitted before slot.work can refer to it.
+        if (future is Runnable) workers.remove(future)
     }
 
     fun active(): Set<String> = slots.keys.toSet()
 
-    /** Idle includes completion of synchronous report callbacks, even when they submit another job. */
+    /** Idle includes report delivery, even when callbacks submit another job. It does not certify
+     * termination of a native call that ignores cancellation; inspect its execution receipt. */
     fun awaitIdle(timeoutMillis: Long): Boolean {
         val end = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMillis)
         while (unfinishedAssignments.get() != 0) {
@@ -110,22 +137,42 @@ class ChiefWorkerPool(
     }
 
     fun shutdown() {
-        slots.keys.forEach { cancel(it) }
+        val pending = synchronized(this) {
+            if (closed) return
+            closed = true
+            slots.values.toList()
+        }
+        // Close admission before callbacks can submit again; do not invoke client code under
+        // the admission monitor. Cancellation remains cooperative for already running work.
+        pending.forEach { cancel(it) }
         runners.shutdownNow(); workers.shutdownNow()
+        pending.forEach { slot ->
+            if (slot.supervisorClaimed.compareAndSet(false, true)) {
+                report(slot, WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
+            }
+        }
+    }
+
+    private fun report(slot: Slot, status: WorkerStatus, summary: String) {
+        val terminal = synchronized(slot) {
+            if (!slot.reported.compareAndSet(false, true)) return
+            if (slot.cancelled.get() && status != WorkerStatus.TIMED_OUT) WorkerStatus.CANCELLED else status
+        }
+        val ms = if (slot.startedNanos == 0L) 0L
+            else TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - slot.startedNanos)
+        val message = if (terminal != status) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else summary
+        slots.remove(slot.brief.id, slot)
+        try {
+            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, message.take(4_000), ms)) }
+        } finally {
+            unfinishedAssignments.decrementAndGet()
+        }
     }
 
     private fun supervise(slot: Slot) {
-        val started = System.nanoTime()
-        fun report(status: WorkerStatus, summary: String) {
-            if (!slot.reported.compareAndSet(false, true)) return
-            val ms = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
-            slots.remove(slot.brief.id)
-            try {
-                runCatching { slot.onReport(WorkerReport(slot.brief.id, status, summary.take(4_000), ms)) }
-            } finally {
-                unfinishedAssignments.decrementAndGet()
-            }
-        }
+        if (!slot.supervisorClaimed.compareAndSet(false, true)) return
+        slot.startedNanos = System.nanoTime()
+        fun report(status: WorkerStatus, summary: String) = report(slot, status, summary)
         if (slot.cancelled.get()) return report(WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
         try {
             val job = factory(slot.brief)
@@ -138,7 +185,7 @@ class ChiefWorkerPool(
             slot.work = future
             if (slot.cancelled.get()) {
                 slot.forwardCancellation()
-                future.cancel(true)
+                cancelWork(slot)
             }
             val result = future.get(slot.brief.deadlineMillis, TimeUnit.MILLISECONDS)
             report(if (slot.cancelled.get()) WorkerStatus.CANCELLED else WorkerStatus.DONE,
@@ -146,7 +193,7 @@ class ChiefWorkerPool(
         } catch (_: TimeoutException) {
             slot.cancelled.set(true)
             slot.forwardCancellation()
-            slot.work?.cancel(true)
+            cancelWork(slot)
             report(WorkerStatus.TIMED_OUT, "Frist überschritten; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: CancellationException) {
             slot.forwardCancellation()
@@ -154,6 +201,7 @@ class ChiefWorkerPool(
         } catch (_: InterruptedException) {
             slot.cancelled.set(true)
             slot.forwardCancellation()
+            cancelWork(slot)
             report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (e: Exception) {
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
