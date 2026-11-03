@@ -182,6 +182,7 @@ test('activity request codes are unique and every one has a result handler',()=>
     ensure(c.name+' uses the local recognizer', source.includes('AndroidOnDeviceSpeechInput(this)') &&
       source.includes('private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST)') &&
       source.includes('startVoiceInput(DEV_SPEECH_REQUEST)') &&
+      (c.name!=='READINESS_SPEECH_REQUEST' || source.includes('startVoiceInput(READINESS_SPEECH_REQUEST)')) &&
       source.includes('applyLocalSpeechText(requestCode,spoken)'));
     ensure(c.name+' never launches an Activity result', !source.includes('startActivityForResult(intent, requestCode)'));
     continue;
@@ -191,7 +192,7 @@ test('activity request codes are unique and every one has a result handler',()=>
     const marker=/if\s*\(requestCode\s*==\s*READINESS_CAMERA_PERMISSION_REQUEST\s*\|\|\s*requestCode\s*==\s*READINESS_MIC_PERMISSION_REQUEST\s*\)\s*\{/.exec(codeOnly(permission));
     assert.ok(marker,'readiness permissions must have their own callback branch');
     const refreshOnly=bracedBody(permission,marker.index+marker[0].lastIndexOf('{'));
-    assert.match(codeOnly(refreshOnly),/refreshReadinessGuide\(\)\s*return/);
+    assert.match(codeOnly(refreshOnly),/^\{\s*refreshReadinessGuide\(\)\s*return\s*\}$/);
     assert.doesNotMatch(codeOnly(refreshOnly),/\b(?:startVoiceInput|startReadinessCamera|start|openCamera|requestPermissions)\s*\(/,
       'readiness permission callback refreshes only; an explicit later gesture starts sensors');
     continue;
