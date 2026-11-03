@@ -34,3 +34,15 @@ Draft PR: https://github.com/Ullmann27/device-ai/pull/396. The requested nested 
 Official Kotlin2.4.0/JUnit4.13.2 harness, pinned JDK17.0.20.1+1, SDK36/build-tools35, Gradle8.11.1 are provisioned. Full Node baseline: 2061 pass / 13 skip / 0 fail (2074 total); backend: 64/64 pass; unchanged timeline/store Kotlin: 11/11 pass. Gradle with real SDK, widget tests and Code40 QA flags is RUNNING. Real Kotlin CLI skipped tests are being rerun after setup.
 
 Chief granted exclusive lease for `scripts/continuum-omega-quality-acceptance.test.mjs`. It holds independent repair-receipt adversarial checks, RED on #390 and 24/24 GREEN on c9e52a64. Original CCC1 repair suite independently passes 27/27 including real isolated repair/replay. No synthetic consistency test establishes receipt authenticity or Android behavior. See `docs/evidence/omega-quality-20261103/COMMANDS.md`.
+
+## Independent lane checkpoint
+
+- CCC1 final source `7bd39ef3`: full CCC1 suite 142/142 and independent holdouts 26/26 pass, zero skips. No blocking source finding; Chief notified.
+- Chief evaluation gate `d2c12c6e`: 11/11 unit cases plus 10 independent CLI cases pass, covering regressions despite aggregate gain, harmful statuses and malformed coverage. This judges submitted reports only.
+- Intelligence `5346e769`: independent frozen timeline suite 12/12 pass. Later temporal-barrier commit `5cafd09b` reviewed as a narrow owner bare-resignation uncertainty barrier; combined regression pending.
+- Memory `28c77782`: independent 27 cases, 1 failure in a newly added oracle expecting no-op status timestamps to refresh. All records matched except that timestamp. The failure is preserved. New frozen `04f9db6b`: independent 39/39 pass, including historical reader tests; separately, two real JVM halts before commit preserve the old ledger/revocation and retry to 258 records. These are Linux process/filesystem results, not Android power-loss evidence.
+- Avatar `29ff3a5a`: source review includes synchronous stop/end notification, existing event sink and default-orb opt-in. Native UI checks still await combined Gradle run.
+
+The first Kotlin CLI adapter attempted `-include-runtime` through the embeddable compiler and failed to locate its runtime. Those 4 harness failures are retained separately. Provisioned the official JetBrains Kotlin 2.4.0 CLI zip, published SHA256 `ba1b9e6eb6ddc3275079224f2e9ea4a2b02eef7d59ce2d38404f04b22613c20a`; unchanged real Kotlin delegate/owner-preview tests then pass 11/11, no skips. The pure compiler/JUnit harness was unaffected.
+
+Full baseline Gradle compilation has succeeded; lint/unit tasks are still running. Do not infer total acceptance from partial task output. Source files for per-lane memory acceptance are extracted from the exact frozen commit, to avoid another lane's concurrent edits.

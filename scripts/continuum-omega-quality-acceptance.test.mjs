@@ -9,7 +9,7 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 
 const root=path.resolve(process.env.CONTINUUM_OMEGA_REVIEW_ROOT || path.join(import.meta.dirname,'..'));
-const {verifyRepairReceipt}=await import(pathToFileURL(path.join(root,'.github/continuum/ccc1-verifier.mjs')));
+const {verifyRepairReceipt,verifyJobReceipt,ALLOWED_PROFILE}=await import(pathToFileURL(path.join(root,'.github/continuum/ccc1-verifier.mjs')));
 const {REPAIR_PROFILE_COMMAND}=await import(pathToFileURL(path.join(root,'scripts/continuum-mobile-coding.mjs')));
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 
@@ -72,5 +72,36 @@ test('quality rejects unrecognized chain without looking up inherited profile pr
     const changed=structuredClone(receipt);
     changed.order.chain=chain;
     assert.equal(verifyRepairReceipt(changed,{...bind,chain}).verdict,'INCONCLUSIVE');
+  }
+});
+
+test('quality requires completed execution before refuting a repair hypothesis',t=>{
+  const {receipt,bind}=fixture(t);
+  receipt.status='NO_FAILURE_FOUND';receipt.patch=null;receipt.evidence=null;
+  receipt.commands=[{...receipt.commands[1],phase:'baseline'}];
+  assert.equal(verifyRepairReceipt(receipt,bind).verdict,'REFUTED');
+  for(const mutate of [r=>{r.commands[0].timedOut=true;},r=>{r.commands[0].exitCode=1;},
+    r=>{r.commands[0].exitCode=null;},r=>{r.commands[0].executed='7';},
+    r=>{r.commands.push({...r.commands[0]});}]) {
+    const changed=structuredClone(receipt);mutate(changed);
+    assert.equal(verifyRepairReceipt(changed,bind).verdict,'INCONCLUSIVE');
+  }
+});
+
+test('quality binds coding test retention to the owner case list and command details',t=>{
+  const {receipt}=fixture(t);
+  const casesJson=JSON.stringify([{args:[2],expected:6},{args:[3],expected:9}]);
+  receipt.operation='code-test';receipt.status='CODING_PATCH_VERIFIED_PENDING_REVIEW';
+  receipt.order={module:'.github/continuum/math-utils.mjs',export:'triple',casesSha256:digest(casesJson)};
+  receipt.commands=receipt.commands.map(x=>({...x,passed:true,failed:0,exitCode:0,command:ALLOWED_PROFILE}));
+  receipt.evidence.expectedNewTests=2;
+  const bind={job:receipt.job,commit:receipt.commit,module:receipt.order.module,exportName:receipt.order.export,casesJson};
+  assert.equal(verifyJobReceipt(receipt,bind).verdict,'CONFIRMED');
+  for(const mutate of [r=>{r.evidence.expectedNewTests=0;},r=>{r.commands[1].executed=6;r.evidence.candidateExecuted=6;},
+    r=>{r.commands[2].executed=6;r.evidence.independentExecuted=6;},r=>{r.commands[0].executed=8;},
+    r=>{r.commands[1]=null;},r=>{r.commands={};},r=>{r.commands[1].timedOut=null;},
+    r=>{r.commands[2].executed=7.1;r.evidence.independentExecuted=7.1;}]) {
+    const changed=structuredClone(receipt);mutate(changed);
+    assert.equal(verifyJobReceipt(changed,bind).verdict,'INCONCLUSIVE');
   }
 });
