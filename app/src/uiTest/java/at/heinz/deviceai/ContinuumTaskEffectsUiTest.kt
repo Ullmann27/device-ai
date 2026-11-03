@@ -28,11 +28,11 @@ class ContinuumTaskEffectsUiTest {
         assertNotNull("The actual visible View has no work-event route",method)
         method!!.invoke(v,s)
     }
-    private fun event(v:ContinuumHologramView,name:String="Started",at:Long=SystemClock.uptimeMillis(),id:String="actual-call"):Boolean {
+    private fun event(v:ContinuumHologramView,name:String="Started",at:Long=SystemClock.uptimeMillis(),id:String="synthetic-read",worker:Boolean=false):Boolean {
         val base="at.heinz.deviceai.ui.ContinuumTaskEffects"
         val c=Class.forName("$base\$Event\$$name")
         val e=if(name=="Started") c.constructors.single().newInstance(id,
-            Class.forName("$base\$Kind").enumConstants.first { (it as Enum<*>).name=="TOOL" })
+            Class.forName("$base\$Kind").enumConstants.first { (it as Enum<*>).name==if(worker) "WORKER" else "TOOL" })
             else c.getConstructor(String::class.java).newInstance(id)
         return v.javaClass.methods.single { it.name=="onTaskEffect" }.invoke(v,"turn-1",e,at) as Boolean
     }
@@ -83,7 +83,7 @@ class ContinuumTaskEffectsUiTest {
         } finally { c.pause().stop().destroy() }
     }
     @Test fun productionCanvasSequenceUsesExplicitSyntheticEventsOnly() {
-        for((w,h) in listOf(412 to 307,410 to 291)) {
+        for((w,h) in listOf(412 to 307,410 to 291,412 to 88,412 to 120,412 to 160,720 to 200)) {
             val c=Robolectric.buildActivity(Activity::class.java).setup();val v=ContinuumHologramView(c.get())
             try {
                 c.get().setContentView(v);prepare(v,w,h)
@@ -95,10 +95,15 @@ class ContinuumTaskEffectsUiTest {
                         java.io.File(out,"synthetic-task-$w-$h-$label.png").outputStream().use { b.compress(Bitmap.CompressFormat.PNG,100,it) }
                     };b.recycle()
                 }
-                capture("0-idle");assertTrue(event(v));shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS);capture("1-start")
-                assertTrue(event(v,"Read"));shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS);capture("2-read")
-                assertTrue(event(v,"Finished"));shadowOf(Looper.getMainLooper()).idleFor(250,TimeUnit.MILLISECONDS);capture("3-terminal")
-                shadowOf(Looper.getMainLooper()).idleFor(2,TimeUnit.SECONDS);capture("4-expired")
+                capture("0-idle")
+                assertTrue(event(v,id="synthetic-worker",worker=true))
+                shadowOf(Looper.getMainLooper()).idleFor(300,TimeUnit.MILLISECONDS);capture("1-worker")
+                assertTrue(event(v))
+                shadowOf(Looper.getMainLooper()).idleFor(200,TimeUnit.MILLISECONDS);capture("2-tool")
+                assertTrue(event(v,"Read"));shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS);capture("3-read")
+                assertTrue(event(v,"Finished"));assertTrue(event(v,"Finished",id="synthetic-worker"))
+                shadowOf(Looper.getMainLooper()).idleFor(250,TimeUnit.MILLISECONDS);capture("4-terminal")
+                shadowOf(Looper.getMainLooper()).idleFor(2,TimeUnit.SECONDS);capture("5-expired")
             } finally { c.pause().stop().destroy() }
         }
     }
