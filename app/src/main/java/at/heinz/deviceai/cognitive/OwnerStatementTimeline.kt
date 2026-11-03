@@ -69,6 +69,18 @@ internal object OwnerStatementTimeline {
         """(?iu)^\s+(?:hat|haben|enthält|enthalten|liegen|sind)\s+([\p{L}\s,]+)[.!;]?$""")
     private val quantityRetractionModifiers = setOf("kein", "keine", "keinen", "keinem", "keiner", "keines",
         "nicht", "mehr", "noch", "vielleicht", "eventuell", "wahrscheinlich", "angeblich")
+    private const val QUANTITY_CLAIM_HEAD = """(?:die|der|meine|meiner|diese|dieser)\s+(?:(?:alte[nr]?|frühere[nr]?|vorherige[nr]?|bisherige[nr]?|ursprüngliche[nr]?)\s+)?(angabe|mengenangabe|anzahl|zahl|menge|zählung)"""
+    private val quantityClaimHead = Regex("""(?iu)^$QUANTITY_CLAIM_HEAD(?:\s+(.*))?$""")
+    private val quantityClaimStatus = Regex(
+        """(?iu)^(.+?)\s+(?:(?:ist|war)\s+(?:(?:vielleicht|eventuell|vermutlich|möglicherweise|wahrscheinlich)\s+)?(?:falsch|unklar|unsicher|unbekannt|ungültig|unbestätigt|ein\s+irrtum|nicht\s+(?:korrekt|richtig|bestätigt|gesichert|sicher)|(?:nur\s+)?geschätzt|(?:ungefähr|etwa)\s+richtig)|stimmt\s+nicht(?:\s+mehr)?|gilt\s+nicht(?:\s+mehr)?)$""")
+    private val quantityClaimWithdrawal = Regex("""(?iu)^ich\s+(?:widerrufe|verwerfe|korrigiere)\s+(.+)$""")
+    private val quantityClaimTakeBack = Regex("""(?iu)^ich\s+nehme\s+(.+?)\s+zurück$""")
+    private val quantityClaimUncertainty = Regex("""(?iu)^bei\s+(.+?)\s+bin\s+ich\s+(?:unsicher|nicht\s+sicher)$""")
+    private val quantityClaimCorrection = Regex("""(?iu)^(?:korrektur|berichtigung|richtigstellung)\s*:\s*""")
+    private val quantityClaimCount = Regex("""(?iu)^(?:von\s+)?\d{1,6}(?:\s+(?!in\b|für\b|zur\b|zum\b)(\p{L}+))?(?:\s+|$)""")
+    private val quantityClaimUnitScope = Regex("""(?iu)^(?:der|die|den|von)\s+(\p{L}+)\s+((?:in|für|zur|zum)\s+.+)$""")
+    private val quantityClaimReferent = Regex(
+        """(?iu)^(?:zur|zum|zu\s+(?:der|dem)|für\s+(?:die|den|das)|in\s+(?:der|dem)|der|die|den|dem|des)\s+(?:(\p{L}+)\s+)?(\p{L}+)$""")
 
     private class Fact(val key: String, val display: String, val unit: String?, val value: Long, val future: Boolean)
 
@@ -97,6 +109,47 @@ internal object OwnerStatementTimeline {
         }
     }
 
+    /** A statement about the reliability of a known quantity is not a new count.
+     * Match the complete assertion, then resolve its reference; never let a
+     * retraction keyword in a quote, condition or unrelated sentence poison state.
+     * Ambiguous references to a known unit invalidate the all-or-null projection
+     * without choosing an entity or inventing a replacement quantity. */
+    private fun retractsQuantityClaim(body: String, knownUnits: Map<String, String?>): Boolean {
+        if (knownUnits.isEmpty()) return false
+        val clause = body.trimEnd('.', '!', ';').replace(quantityClaimCorrection, "")
+        val claim = sequenceOf(quantityClaimStatus, quantityClaimWithdrawal, quantityClaimTakeBack,
+            quantityClaimUncertainty).mapNotNull { it.matchEntire(clause)?.groupValues?.get(1) }
+            .firstOrNull() ?: return false
+        val head = quantityClaimHead.matchEntire(claim) ?: return false
+        var reference = head.groupValues[2].trim()
+        // A quantity noun alone does not bind the claim to this task's counts.
+        if (reference.isEmpty()) return false
+        var mentionedUnit: String? = null
+        quantityClaimCount.find(reference)?.let {
+            mentionedUnit = it.groupValues[1].ifEmpty { null }
+            reference = reference.substring(it.range.last + 1).trim()
+        }
+        quantityClaimUnitScope.matchEntire(reference)?.let {
+            val scopedUnit = it.groupValues[1]
+            if (mentionedUnit != null && !compatibleUnits(mentionedUnit, scopedUnit)) return false
+            mentionedUnit = scopedUnit
+            reference = it.groupValues[2]
+        }
+        if (reference.isEmpty()) return mentionedUnit?.let { unit ->
+            knownUnits.values.filterNotNull().any { compatibleUnits(unit, it) }
+        } ?: false
+        val referent = quantityClaimReferent.matchEntire(reference) ?: return false
+        val adjective = referent.groupValues[1].takeIf { it.isNotEmpty() }?.let(::stem)
+        val noun = referent.groupValues[2].lowercase()
+        return knownUnits.any { (key, unit) ->
+            val entity = key.substringBefore('|') == noun &&
+                (adjective == null || key.substringAfter('|') == adjective)
+            val countedUnit = adjective == null && unit != null && compatibleUnits(noun, unit)
+            (entity || countedUnit) && (mentionedUnit == null ||
+                unit != null && compatibleUnits(mentionedUnit, unit))
+        }
+    }
+
     /** Facts of one owner message, in order; throws Poisoned on any unsafe statement. */
     private fun facts(text: String, priorUnits: Map<String, String?>): List<Fact> {
         val out = mutableListOf<Fact>()
@@ -104,6 +157,7 @@ internal object OwnerStatementTimeline {
         for (s in sentence.findAll(text).map { it.value }) {
             val body = s.trim()
             if (body.isEmpty() || body.endsWith("?")) continue
+            if (retractsQuantityClaim(body, knownUnits)) throw Poisoned()
             data class Hit(val start: Int, val end: Int, val adj: String?, val noun: String?)
             val hits = (fullEntity.findAll(body).map { Hit(it.range.first, it.range.last + 1,
                     it.groupValues[1].ifEmpty { null }, it.groupValues[2]) } +

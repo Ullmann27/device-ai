@@ -127,6 +127,65 @@ class OwnerStatementTimelineTest {
         }
     }
 
+    @Test fun withdrawalOfKnownQuantityClaimCannotRetainItsCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Mengenangabe für die grüne Dose gilt nicht mehr.",
+            "Ich widerrufe meine Angabe zur grünen Dose.",
+            "Ich nehme die Zahl der Perlen zurück.",
+            "Die Zahl in der grünen Dose war ein Irrtum."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun uncertainQuantityClaimCannotRetainItsCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Bei der Menge in der grünen Dose bin ich unsicher.",
+            "Die Anzahl der Perlen ist nicht gesichert.",
+            "Meine Mengenangabe zur grünen Dose ist nur geschätzt.",
+            "Die Zahl der Perlen ist möglicherweise falsch."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun withdrawnOldCountIsNotPromotedToANewEntityOrCurrentFact() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Angabe von 12 Perlen für die grüne Dose war falsch.",
+            "Die alte Zahl 12 in der grünen Dose stimmt nicht.",
+            "Ich widerrufe die Mengenangabe von 12 Perlen."
+        )) assertNull(correction, p(prior, correction))
+    }
+
+    @Test fun quantityClaimAboutUnknownEntityOrUnitKeepsKnownCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Die Mengenangabe für die blaue Dose ist falsch.",
+            "Die Anzahl der Knöpfe ist unklar.",
+            "Die Angabe von 12 Knöpfen für die grüne Dose ist falsch.",
+            "Die Farbangabe für die grüne Dose ist falsch."
+        )) assertEquals(correction, 12L, p(prior, correction)?.entry("Dose (grün)")?.current)
+    }
+
+    @Test fun nonAssertionsAboutQuantityClaimsKeepKnownCount() {
+        val prior = listOf("In der grünen Dose liegen 12 Perlen.")
+        for (correction in listOf(
+            "Stimmt die Mengenangabe für die grüne Dose nicht?",
+            "Wenn die Mengenangabe für die grüne Dose falsch ist, zähle ich nach.",
+            "Angenommen, die Zahl der Perlen ist falsch.",
+            "\"Die Anzahl der Perlen ist falsch\", sagte Max.",
+            "Max sagt: Die Zahl der Perlen ist unklar.",
+            "Die Anzahl der Perlen ist nicht falsch.",
+            "Ich widerrufe die Mengenangabe für die grüne Dose nicht.",
+            "Bitte speichere die Mengenangabe für die grüne Dose nicht.",
+            "Die Angabe zur Farbe der grünen Dose stimmt nicht."
+        )) assertEquals(correction, 12L, p(prior, correction)?.entry("Dose (grün)")?.current)
+    }
+
+    @Test fun withdrawnAmbiguousQuantityReferenceAbstainsWithoutChoosingAnEntity() {
+        assertNull(p(listOf("Die grüne Dose hat 12 Perlen und die blaue Dose hat 7 Perlen."),
+            "Die Anzahl der Perlen ist unklar."))
+    }
+
     @Test fun futureIsSeparatedAndMixedFutureFailsClosed() {
         val f = p(listOf(repoT1), "Ab morgen hat die blaue Kiste 8 Ringe. Welche hat dann ursprünglich mehr?")!!
         assertEquals(7L, f.entry("Kiste (blau)")!!.current)

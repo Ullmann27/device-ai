@@ -184,3 +184,19 @@ before the private20 result is requested. Fresh evaluation must improve over its
 same-source baseline without any previously passing case regressing; otherwise
 report no supported unseen benefit. No tuning after the reserve result in this
 bounded follow-up. Combined Gradle remains Chief/QA-owned; no model/device claim.
+
+Follow-up development checkpoint: six authored methods added without changing
+the original57 methods. Real RED: **63 tests / 4 failures / 59 pass** against the
+unchanged107a source, preserved in `followup-authored-red.txt`. The single grammar
+change then passes **63/63**; initial compile warnings are retained in
+`followup-authored-green.txt`, and `followup-final-green.txt` records the clean
+rerun after removing unnecessary non-null assertions and requiring a concrete
+entity/unit reference. No private-reserve result has been requested yet.
+
+The grammar recognizes a complete quantity-claim withdrawal, unreliable status
+or first-person uncertainty, then resolves its reference through existing entity
+keys/adjective stems and counted units. A mentioned old count is reference data,
+never a newly asserted value. Unknown entities/units, no reference, quoted or
+conditional text and unrelated properties do not match. The same all-or-null
+fallback preserves raw chronological owner text. Unrecognized natural-language
+forms remain possible; no general semantic completeness claim is made.
