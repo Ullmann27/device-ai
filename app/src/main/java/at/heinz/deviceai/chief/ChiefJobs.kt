@@ -86,7 +86,6 @@ object ChiefJobs {
                 // Cancel the shared token first, then the live model generation AND ToolGate.
                 cancellation.cancel()
                 active.get()?.cancel()
-                if (active.get() == null) model.cancelGeneration()
             }
         }
     }
