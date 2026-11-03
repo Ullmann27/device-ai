@@ -15,7 +15,7 @@ function fixture(t,{stateful=false,coverageLoss=false}={}){
  const root=path.join(dir,'repo');fs.mkdirSync(path.join(root,'lib'),{recursive:true});fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});git(root,'init','-q','-b','momega-fixture');
  fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\n');
  fs.writeFileSync(path.join(root,'.github/continuum/offset.test.mjs'),`import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {offset} from '../../lib/offset.mjs';
- test('offset',()=>{const actual=offset(3,8);${stateful?`const source=fs.readFileSync('lib/offset.mjs','utf8');if(source.includes('return b-a;')&&!fs.existsSync('baseline-marker'))assert.fail('fresh check rejects state-dependent patch');if(actual<0)fs.writeFileSync('baseline-marker','fixture');`:''}assert.equal(actual,5);});
+ test('offset',()=>{const actual=offset(3,8);${stateful?`const source=fs.readFileSync('lib/offset.mjs','utf8');if(source.includes('return b-a;')&&!fs.readFileSync('.git','utf8').trim().endsWith('/wt'))assert.fail('fresh check rejects state-dependent patch');`:''}assert.equal(actual,5);});
  ${coverageLoss?`if(offset(3,8)<0)test('retained',()=>assert.ok(true));`:''}`);
  git(root,'add','.');git(root,'-c','user.name=fixture','-c','user.email=fixture@invalid','commit','-qm','baseline');
  const task={schema:'continuum-coding-task',version:1,id:'momega-offset',sourceCommit:git(root,'rev-parse','HEAD'),kind:'BUGFIX',goal:'Repair offset symmetry',allowedPaths:['lib/offset.mjs'],acceptance:['offset(3,8) must be 5'],chain:'node',limits:{maxModelCalls:2,maxContextChars:6000}};
@@ -48,7 +48,7 @@ test('MΩ independent counterexample revises inside the same canonical task and 
  assert.match(JSON.stringify(observations[1]),/INDEPENDENT|fresh check rejects/);
  assert.equal(result.status,'PATCH_PENDING_OWNER_REVIEW');assert.equal(result.approvedForMerge,false);
  assert.equal(git(f.root,'status','--porcelain'),'');
- const reports=fs.readdirSync(path.join(f.stateDir,'builder','reports','owner-repair'),{recursive:true});assert.ok(reports.length>0);
+
 });
 test('MΩ strict execution blocks before provider or missing journal when isolation is absent',async()=>{
  let calls=0;

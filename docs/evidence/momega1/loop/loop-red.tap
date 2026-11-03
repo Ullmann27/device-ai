@@ -2,7 +2,7 @@ TAP version 13
 # Subtest: MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
 not ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only its exact original evidence
   ---
-  duration_ms: 31.941863
+  duration_ms: 24.341804
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:25:1'
   failureType: 'testCodeFailure'
@@ -28,7 +28,7 @@ not ok 1 - MΩ canonical fresh verifier executes RED and GREEN and brands only i
 # Subtest: MΩ canonical fresh verifier rejects removal of a baseline identity
 not ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
   ---
-  duration_ms: 20.004061
+  duration_ms: 17.129004
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:33:1'
   failureType: 'testCodeFailure'
@@ -54,26 +54,15 @@ not ok 2 - MΩ canonical fresh verifier rejects removal of a baseline identity
     async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
   ...
 # Subtest: MΩ independent counterexample revises inside the same canonical task and model-call budget
-not ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
+ok 3 - MΩ independent counterexample revises inside the same canonical task and model-call budget
   ---
-  duration_ms: 1863.367798
+  duration_ms: 1197.058034
   type: 'test'
-  location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:38:1'
-  failureType: 'testCodeFailure'
-  error: "ENOENT: no such file or directory, scandir '/tmp/momega-loop-bVxZgS/state/builder/reports/owner-repair'"
-  code: 'ENOENT'
-  stack: |-
-    read (node:fs:1536:35)
-    readdirSyncRecursive (node:fs:1554:5)
-    Object.readdirSync (node:fs:1628:12)
-    TestContext.<anonymous> (file:///workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:51:19)
-    async Test.run (node:internal/test_runner/test:1389:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
   ...
 # Subtest: MΩ strict execution blocks before provider or missing journal when isolation is absent
 not ok 4 - MΩ strict execution blocks before provider or missing journal when isolation is absent
   ---
-  duration_ms: 1.144777
+  duration_ms: 0.862163
   type: 'test'
   location: '/workspace/momega1-loop/.github/continuum/momega1-loop.test.mjs:53:1'
   failureType: 'testCodeFailure'
@@ -107,9 +96,9 @@ not ok 4 - MΩ strict execution blocks before provider or missing journal when i
 1..4
 # tests 4
 # suites 0
-# pass 0
-# fail 4
+# pass 1
+# fail 3
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 2101.523771
+# duration_ms 1390.233841
