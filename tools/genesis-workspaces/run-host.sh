@@ -16,7 +16,7 @@ base_root=$(git -C "$base" rev-parse --show-toplevel)
  echo 'Production source must be clean for the focused host check.' >&2; exit 2;
 }
 cp=$(find "$deps" -maxdepth 1 -type f -name '*.jar' -printf '%p:')
-cp="$base:$cp"
+cp="$base:${cp%:}"
 sources=(
  "$root/app/src/main/java/at/heinz/deviceai/chief/ChiefBotHandoff.kt"
  "$root/app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt"
@@ -48,7 +48,17 @@ compiled=$?
 printf '%s\n' "$compiled" > "$out/compile.exit"
 [[ "$compiled" == 0 ]] || exit "$compiled"
 printf '%s' "$out/classes:$cp" > "$out/classpath.txt"
-java -Xmx256m -cp "$out/classes:$cp" at.heinz.deviceai.chief.HandoffHostChecks > "$out/checks.log" 2>&1
+# The owner service does not need the compiler, JUnit or Android emulator JAR.
+# Emit and test its actual smaller runtime dependency closure, with no empty
+# classpath entry that could accidentally make the working directory executable.
+runtime_cp="$out/classes:$base"
+for pattern in 'json-*.jar' 'kotlin-stdlib-*.jar' 'kotlinx-coroutines-core-jvm-*.jar'; do
+ jars=("$deps"/$pattern)
+ [[ ${#jars[@]} == 1 && -f "${jars[0]}" ]] || { echo "Expected one runtime dependency: $pattern" >&2; exit 2; }
+ runtime_cp="$runtime_cp:${jars[0]}"
+done
+printf '%s' "$runtime_cp" > "$out/runtime-classpath.txt"
+java -Xmx256m -cp "$runtime_cp" at.heinz.deviceai.chief.HandoffHostChecks > "$out/checks.log" 2>&1
 status=$?
 set -e
 printf '%s\n' "$status" > "$out/checks.exit"
