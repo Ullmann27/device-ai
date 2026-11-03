@@ -1,6 +1,6 @@
 # Continuum Coding MCP — bounded read-only local access
 
-Status: WIP / NOT_RUN. Date: 2026-11-03. Base: `527d43f93f6b1837bd8da38cfefcfc84a84fd464`.
+Status: SOURCE_IMPLEMENTED / HOST_TESTED; independent counterchecks running. Date: 2026-11-03. Base: `527d43f93f6b1837bd8da38cfefcfc84a84fd464`.
 Production ancestor: `1595389274acb840c4ab544fa699c9eb2a04bd53`.
 Branch: `codex/independence-mcp-20261103`.
 Quota: `NOT_VISIBLE`; use frequent Git checkpoints.
@@ -33,4 +33,32 @@ No public listener, proxy, tunnel, deployment, paid service or installed ChatGPT
 
 MCP builder owns new `coding-mcp*.mjs`, its tests, `scripts/continuum-coding-mcp.mjs` and this evidence folder. Service builder owns canonical read API and service lifecycle. Reviewer: `/root/independence_mcp_challenger`; Chief performs integration. No app, model, CCC1 or existing scheduler code changes in this slice.
 
-Next: implement the transport and isolated read bridge; run adversarial HTTP tests; integrate the actual service reader; secure raw logs and exact source SHAs. Android/Fold7, local inference and coding success are separate gates, not results of the MCP transport.
+## Implemented and measured
+
+Implementation: `83b805cb`; independent B02 schema repair: `3ca1dd9a`; real process tests: `af26cb09`; canonical integration driver: `60074b69`. Draft [PR #459](https://github.com/Ullmann27/device-ai/pull/459). Existing Git MCP files remain unchanged.
+
+- Authenticated loopback-only Streamable HTTP and exact four-tool allowlist; token outside source/project/profile/service roots, owner-only file/parent permissions, no symlinks/hardlinks, immediate credential rotation/removal revocation, bounded random sessions.
+- Session/tool-bound opaque pagination, strict JSON schemas, Host/Origin defenses, no query authentication, fixed read-only child entrypoint, cleared child environment, 9-second process-group timeout, no arbitrary module/command/path input.
+- Service builder's canonical reader checks actual profile metadata, current task grant/source/journal/receipt, evidence ID and projected content hashes. The transport recomputes returned JSON hashes and does not invent terminal results.
+- First independent finding B02: `limit:null` incorrectly selected the default via null coalescing. Corrected by distinguishing an absent property; explicit `arguments:null` is rejected too. The original failure and fix remain documented rather than reporting an uninterrupted green history.
+
+On clean combined source **`1aae431d08e01342ed509b57513e73e118fdd877`** (service `fd51d648` + MCP `60074b69`), 15 own transport/process tests passed, 0 failed/0 skipped. Raw integrated log: `integrated-tests.log`.
+
+The separate real CLI/HTTP integration used the actual Kotlin registry, fresh temporary profiles and canonical owner task intake. Five checks passed: authenticated separate process, all 20 persisted profiles, actual owner-reviewed pending task without execution claims, fresh-process persistence, and canonical owner cancellation with evidence denial. Byte digests confirmed reads left service/profile files unchanged. No neural model or isolated repair was run by this check. The test task was canceled and all temporary state/processes were removed.
+
+Actual 12 service reads: p50 **139.03 ms**, p95 **257.13 ms**; total **3.96 s**. These are host observations from one check, not Fold7/performance guarantees. Controller-only maxRSS 65,108 KiB excludes Java/Node children; it is not total RAM or energy. Full source/limits/counts in `canonical-first.json`.
+
+```sh
+node --test .github/continuum/coding-mcp.test.mjs .github/continuum/coding-mcp-process.test.mjs
+node .github/continuum/coding-mcp-canonical-check.mjs \
+  --classpath-file /workspace/independence-profile-773fbc94/runtime-classpath.txt \
+  --runtime-env /workspace/synapse-local-model/runtime-env.json \
+  --isolation-config /workspace/genesis-g04-experiment/isolation.json \
+  --output /outside/source/canonical-check.json
+```
+
+The canonical driver is an explicit opt-in check, not an automatic Node test glob or a service startup side effect. Its source must be clean; paths point to the actually available approved host artifacts, never downloaded alternatives. The integration check branch is `codex/independence-mcp-integration-check-20261103`; it is a test combination, not independent service acceptance.
+
+Defaults: 16 KiB request, 64 KiB projected result, 16 sessions, 2 concurrent reads globally/1 per session, 100 calls per session, 120 requests/minute globally, 32 cursors/session, 5-minute idle/15-minute absolute session lifetime, 10-second transport/9-second reader timeout. Ordinary read failure emits a fixed error without private exception text. These limits do not alter the coding task budget.
+
+Next: finish independent socket negatives, rerun against the Chief's exact hardened combined SHA, and preserve separate service/general QA acceptance. Actual MCP observation of a completed independently verified repair is still an integration gate; this pending-task check does not satisfy it. Android/Fold7, local inference, coding success, full OAuth and real ChatGPT connection remain separate open gates. See [owner access instructions](OWNER-ACCESS.md) for real startup and the verified ChatGPT transport/authentication gap.
