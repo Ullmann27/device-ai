@@ -94,7 +94,7 @@ assert.equal(fileHashes.CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH,configuration.CONTINU
 assert.ok(fileHashes.CONTINUUM_CODING_ISOLATION_CONFIG,'Owner isolation configuration required');
 // Reviewer-only experiment guard: reserve one call before any grant, once for frozen g04.
 // This guards this finite test experiment, not production scheduling or authorization.
-assert.equal(expectedSha,'c5f9b06b02fbe8b80f9472a17784fb000812398c');
+assert.equal(expectedSha,'1595389274acb840c4ab544fa699c9eb2a04bd53');
 const ledger='/workspace/genesis-g04-experiment/reservations';
 fs.mkdirSync(ledger,{recursive:true,mode:0o700});
 const reserved=fs.readdirSync(ledger).filter(x=>/^g04\.json$/.test(x));

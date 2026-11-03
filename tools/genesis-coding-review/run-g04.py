@@ -10,9 +10,9 @@ env.update(CONTINUUM_CODING_ISOLATION_CONFIG=str(base/'isolation.json'),CONTINUU
 assert not env.get('MOMEGA_QA_INHERITED_STATE')
 env['GENESIS_PROFILE_STORE']=str(base/'profile-store')
 env['GENESIS_HANDOFF_CLASSPATH']=(base/'kotlin-host/classpath.txt').read_text()
-assert (base/'kotlin-host/source-sha.txt').read_text().strip()=='c5f9b06b02fbe8b80f9472a17784fb000812398c'
+assert (base/'kotlin-host/source-sha.txt').read_text().strip()=='1595389274acb840c4ab544fa699c9eb2a04bd53'
 fixture=base/'fixtures'/case
-cmd=['python3',str(here/'observe-native-resources.py'),str(run/'native-resources.json'),conf['CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH'],'node',str(here/'run-g04-task.mjs'),'/workspace/genesis-g04-source','c5f9b06b02fbe8b80f9472a17784fb000812398c',str(fixture),str(run/'evidence')]
+cmd=['python3',str(here/'observe-native-resources.py'),str(run/'native-resources.json'),conf['CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH'],'node',str(here/'run-g04-task.mjs'),'/workspace/genesis-g04-source','1595389274acb840c4ab544fa699c9eb2a04bd53',str(fixture),str(run/'evidence')]
 (run/'launch.json').write_text(json.dumps({'case':case,'command':cmd,'launcherSha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'runtimeEnvironmentSha256':hashlib.sha256(confpath.read_bytes()).hexdigest(),'fixture':str(fixture),'maxReservedCalls':1,'externalAnswer':False},indent=2)+'\n')
 with (run/'driver.log').open('w') as log: p=subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT)
 (run/'driver.exit').write_text(str(p.returncode)+'\n')

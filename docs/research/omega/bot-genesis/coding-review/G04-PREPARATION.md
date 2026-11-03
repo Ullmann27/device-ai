@@ -34,3 +34,13 @@ calls and no independent-test claim. Verify the actual report artifact/hash,
 current journal/grant and role-specific Docker receipts. New-process technical
 recall runs only after a verified successful repair was actually recorded.
 No three-role/learning/Fold7 success follows from assignment alone.
+
+## Pre-inference source amendment
+
+Chief moved the final production freeze to `1595389274acb840c4ab544fa699c9eb2a04bd53`
+after full Android QA exposed a missing no-argument Activity reflection method.
+Only the Activity wrapper changed; Node/workspace/profile sources remain unchanged.
+No g04 inference, grant or V2 class build occurred before this amendment. Driver,
+launcher and independent audit now require15953892. The earlier c5f preflight
+remains retained as setup evidence. Execution still waits for a successful final
+Android gate and explicit CPU release; no automatic inference starts.

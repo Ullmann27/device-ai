@@ -13,7 +13,7 @@ const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n),'utf8'));
 const before=read('before.json'),after=read('after.json'),grant=read('grant.json'),assignment=read('assignment.json'),requests=read('model-requests.json');
 const result=fs.existsSync(path.join(dir,'result.json'))?read('result.json'):null;
 const state=path.join(dir,'private-synthetic-state'),entries=DurableTaskJournal.forTask(state,grant.ccc1TaskId,runtimeKey(state)).entries();
-assert.equal(before.integratedSource,'c5f9b06b02fbe8b80f9472a17784fb000812398c');assert.equal(after.integratedSource,before.integratedSource);assert.equal(after.integratedStatus,'');assert.equal(after.fixtureStatus,'');assert.equal(after.testSha256,before.fixture.materializedTestSha256);
+assert.equal(before.integratedSource,'1595389274acb840c4ab544fa699c9eb2a04bd53');assert.equal(after.integratedSource,before.integratedSource);assert.equal(after.integratedStatus,'');assert.equal(after.fixtureStatus,'');assert.equal(after.testSha256,before.fixture.materializedTestSha256);
 assert.equal(before.fixture.task.limits.maxModelCalls,1);assert.ok(requests.length<=1);assert.equal(before.technicalRecallEnabled,false);assert.equal(before.inheritedState,null);
 const {sha256,...binding}=assignment;assert.equal(sha256,sha256Hex(canonical(binding)));assert.equal(binding.sourceCommit,before.fixture.task.sourceCommit);assert.equal(binding.taskId,before.fixture.task.id);assert.equal(binding.ccc1TaskId,grant.ccc1TaskId);assert.equal(binding.taskFingerprint,before.taskFingerprint);
 assert.equal(binding.builder.agentId,'bot-forge');assert.equal(binding.verifier.agentId,'bot-lint');assert.equal(binding.reporter.agentId,'bot-echo');assert.equal(binding.builder.maxModelCalls,1);
