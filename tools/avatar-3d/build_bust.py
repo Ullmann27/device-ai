@@ -231,6 +231,14 @@ def reduce_face(obj,baked):
     mirror.use_mirror_merge=True;mirror.merge_threshold=.000001
     bpy.context.view_layer.update()
     reduced=bpy.data.meshes.new_from_object(obj.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    # Remove coplanar faces created exactly on the mirror cut and weld numerical
+    # seam duplicates. They are internal mirror artifacts, not exterior anatomy.
+    import bmesh
+    bm=bmesh.new();bm.from_mesh(reduced)
+    bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=.0000001)
+    seam_faces=[f for f in bm.faces if all(abs(v.co.x)<.0000001 for v in f.verts)]
+    bmesh.ops.delete(bm,geom=seam_faces,context='FACES_ONLY')
+    bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(reduced);bm.free()
     result={'Basis':[canonical_vec(v.co) for v in reduced.vertices]}
     polygons=[list(p.vertices) for p in reduced.polygons]
     bindings=[];max_distance=0
