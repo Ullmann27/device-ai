@@ -43,7 +43,7 @@ class IndependentBotAddressRouterTest {
         } finally { root.deleteRecursively() }
     }
 
-    @Test funDisplayNameCannotSilentlyImpersonateAnotherStableId() {
+    @Test fun displayNameCannotSilentlyImpersonateAnotherStableId() {
         val root = Files.createTempDirectory("independent-bot-router-id-").toFile()
         try {
             val store = ChiefBotProfileStore(root)
