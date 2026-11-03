@@ -16,8 +16,21 @@ export CONTINUUM_TEST_ISOLATION_CONFIG=/workspace/momega1-build-env/isolation.js
 export CONTINUUM_WORKSPACE_HOST_PROOF=1
 export CONTINUUM_WORKSPACE_EVIDENCE_DIR="$qa_out/workspace-host"
 node --version > "$qa_out/node-version.txt"
-taskset -c "$qa_cpus" node --test --test-reporter=tap --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs tools/continuum-virtual-fabric/*.test.mjs > "$qa_out/node-full.tap" 2>&1
+# The seven CPU contracts explicitly require the real capped container and bounded
+# Node heap. Execute every discovered file once, with that file in its real profile.
+qa_host_files=()
+for qa_file in .github/continuum/*.test.mjs scripts/*.test.mjs tools/continuum-virtual-fabric/*.test.mjs; do
+ [[ "$qa_file" == scripts/continuum-local-model-cpu.test.mjs ]] || qa_host_files+=("$qa_file")
+done
+printf '%s\n' "${qa_host_files[@]}" > "$qa_out/host-test-files.txt"
+printf '%s\n' scripts/continuum-local-model-cpu.test.mjs > "$qa_out/container-test-files.txt"
+taskset -c "$qa_cpus" node --test --test-reporter=tap --test-concurrency=2 "${qa_host_files[@]}" > "$qa_out/node-full.tap" 2>&1
 qa_node=$?; printf '%s\n' "$qa_node" > "$qa_out/node-full.exit"
+# Same already-reviewed local image, 7GiB charge cap, zero swap, two CPUs,
+# no network, fixed heap; exec tmpfs is only for the synthetic ELF limit probe.
+docker run --rm --pull=never --init --network=none --memory=7g --memory-swap=7g --cpus=2 --pids-limit=64 --cap-drop=ALL --security-opt=no-new-privileges:true --security-opt=systempaths=unconfined --security-opt="seccomp=$qa_repo/scripts/continuum-local-model-outer-seccomp.json" --user=1000:1000 --read-only --tmpfs /tmp:rw,nosuid,nodev,exec,size=128m --mount type=bind,src=/usr,dst=/usr,readonly --mount type=bind,src=/lib,dst=/lib,readonly --mount type=bind,src=/lib64,dst=/lib64,readonly --mount type=bind,src=/opt/codex/runtimes/codex-primary-runtime/dependencies/node,dst=/node,readonly --mount "type=bind,src=$qa_repo/scripts,dst=/source/scripts,readonly" --mount "type=bind,src=$qa_repo/.github/continuum,dst=/source/.github/continuum,readonly" --workdir /source sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1 /node/bin/node --max-old-space-size=256 --max-semi-space-size=16 --test --test-reporter=tap scripts/continuum-local-model-cpu.test.mjs > "$qa_out/node-cpu-container.tap" 2>&1
+qa_cpu=$?; printf '%s\n' "$qa_cpu" > "$qa_out/node-cpu-container.exit"
+
 cd backend || exit 69
 taskset -c "$qa_cpus" npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org > "$qa_out/backend-install.txt" 2>&1
 qa_install=$?; printf '%s\n' "$qa_install" > "$qa_out/backend-install.exit"
@@ -34,4 +47,4 @@ cd .. || exit 69
 { git rev-parse HEAD; git status --porcelain; git ls-files -s app scripts .github tools backend; } > "$qa_out/source-after.txt"
 cmp "$qa_out/source-before.txt" "$qa_out/source-after.txt" > "$qa_out/source-cmp.txt" 2>&1
 qa_cmp=$?; printf '%s\n' "$qa_cmp" > "$qa_out/source-cmp.exit"
-[[ "$qa_node" == 0 && "$qa_install" == 0 && "$qa_check" == 0 && "$qa_backend" == 0 && "$qa_cmp" == 0 ]] || exit 1
+[[ "$qa_node" == 0 && "$qa_cpu" == 0 && "$qa_install" == 0 && "$qa_check" == 0 && "$qa_backend" == 0 && "$qa_cmp" == 0 ]] || exit 1
