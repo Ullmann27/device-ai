@@ -50,6 +50,14 @@ Full CCC1 regression: 154/154 pass, zero skips, including actual existing
 SIGKILL/journal recovery and interrupted-job owner-approval guards.
 Independent Quality: PENDING.
 
+Known review nuance: exact duplicate target strings and ambiguous aliases that
+match multiple observed cases are rejected. Two distinct labels resolving to
+the same single case (for example `sum.adds_two` and `test.adds_two`) are not yet
+deduplicated by resolved identity. Quality and Chief were notified before final
+handoff; no follow-up implementation is included in frozen `799dd763`. This does
+not bypass baseline identity retention, but it limits claims about target-list
+normalization. Await independent judgment before any additional scoped repair.
+
 Commands and complete exits are in `coverage-red.tap`, `coverage-green.tap` and
 `ccc1-regression.tap`. Runs began on the RED parent with repaired working-tree
 bytes; `manifest.json` binds those source hashes to the frozen candidate commit.
