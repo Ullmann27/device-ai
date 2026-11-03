@@ -137,6 +137,7 @@ class FileLearningExperienceStore(private val directory:File) {
 
     /** One read and at most one write for a batch; ids already present (any status) are skipped. */
     fun appendMissing(items:List<LearningExperience>):Int = transaction(write=true) {
+        require(items.size<=MAX_DURABLE_RECORDS) { "Learning ledger batch exceeds bounded limit" }
         val current=loadValidated()
         val known=current.associateBy { it.id }
         val added=LinkedHashMap<String,LearningExperience>()

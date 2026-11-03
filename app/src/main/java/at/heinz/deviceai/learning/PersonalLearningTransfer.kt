@@ -41,6 +41,7 @@ data class PersonalLearningMergePlan(
 
 object PersonalLearningTransfer {
     const val SCHEMA_VERSION = 1
+    /** Bounded complete export of a LEX3 ledger; older readers reject larger documents safely. */
     const val MAX_BYTES = 32 * 1024 * 1024
     private const val MAGIC = 0x434c5054 // CLPT
     private const val DIGEST_BYTES = 32
@@ -69,7 +70,16 @@ object PersonalLearningTransfer {
         requirePackage(sourcePackage)
         require(records.size <= FileLearningExperienceStore.MAX_DURABLE_RECORDS)
         require(records.map { it.id }.distinct().size == records.size) { "Duplicate learning identity" }
-        val payload = ByteArrayOutputStream().also { buffer ->
+        val payload = object : ByteArrayOutputStream() {
+            override fun write(value:Int) {
+                require(size()<MAX_BYTES-DIGEST_BYTES) { "Personal learning backup exceeds limit" }
+                super.write(value)
+            }
+            override fun write(bytes:ByteArray,offset:Int,length:Int) {
+                require(size().toLong()+length<=MAX_BYTES-DIGEST_BYTES) { "Personal learning backup exceeds limit" }
+                super.write(bytes,offset,length)
+            }
+        }.also { buffer ->
             DataOutputStream(buffer).use { out ->
                 out.writeInt(MAGIC)
                 out.writeInt(SCHEMA_VERSION)

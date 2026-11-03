@@ -51,7 +51,7 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
     /** Caller holds the store's JVM + OS lock and has validated the current complete ledger.
      * [beforeCommit] is an internal fault-injection seam, never used by runtime callers.
      */
-    fun save(items: List<LearningExperience>, previous: ByteArray?, beforeCommit: () -> Unit = {}) {
+    fun save(items: List<LearningExperience>, previous: ByteArray?, beforeCommit: () -> Unit = {}, afterCommit: () -> Unit = {}) {
         require(items.size <= MAX_RECORDS && items.map { it.id }.distinct().size == items.size)
         val encoded = items.sortedWith(RECORD_ORDER).chunked(SEGMENT_RECORDS).map(LearningExperienceCodec::encode)
         require(encoded.sumOf { it.size.toLong() } <= MAX_TOTAL_BYTES) { "LEX3 byte capacity reached" }
@@ -79,6 +79,8 @@ internal class Lex3LearningExperienceStore(private val directory: File) {
         syncDirectory(root)
         beforeCommit()
         writeAtomic(primary,manifest)
+        afterCommit()
+        // A failure here reports an uncertain commit. Retry through the store is idempotent; never roll back.
         syncDirectory(directory)
         // Cleanup is advisory after the commit point; its failure cannot change the committed result.
         runCatching { cleanup(descriptors.map { it.hash }.toSet()); syncDirectory(root) }

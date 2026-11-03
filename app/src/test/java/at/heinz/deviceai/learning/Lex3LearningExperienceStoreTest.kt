@@ -10,7 +10,7 @@ class Lex3LearningExperienceStoreTest {
     private fun record(index: Int) = LearningExperienceFactory.create(
         LearningExperienceType.USER_FACT, LearningProvenance.SYNTHETIC_FIXTURE,
         LearningTrustClass.OWNER_CONFIRMED, LearningStatus.CONFIRMED,
-        "Synthetic history record $index", now = index * 86_400_000L)
+        "Synthetic history record $index", now = index * 21_600_000L)
 
     private fun inDirectory(block: (File) -> Unit) {
         val dir = Files.createTempDirectory("lex3-fixture-").toFile()
@@ -34,7 +34,9 @@ class Lex3LearningExperienceStoreTest {
 
     @Test fun thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation() = inDirectory { dir ->
         val history = (0 until 4000).map(::record)
+        val started=System.nanoTime()
         assertEquals(4000, FileLearningExperienceStore(dir).appendMissing(history))
+        val appendNanos=System.nanoTime()-started
         val store = FileLearningExperienceStore(dir)
         assertTrue(store.updateStatus(history[100].id, LearningStatus.REVOKED, 4000L * 86_400_000L))
         val reopened = FileLearningExperienceStore(dir)
@@ -44,6 +46,12 @@ class Lex3LearningExperienceStoreTest {
         assertEquals(history.last().id, reopened.all().last().id)
         assertEquals(128, reopened.replay(LearningExperienceType.USER_FACT,128).size)
         assertEquals(history.first(), reopened.all().first())
+        val reads=(0 until 7).map {
+            val start=System.nanoTime();assertEquals(4000,reopened.all().size);System.nanoTime()-start
+        }.sorted()
+        val bytes=dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+        println("LEX3_METRIC synthetic_days=1000 records=4000 append_ms=${appendNanos/1e6} " +
+            "read_p50_ms=${reads[3]/1e6} read_max_ms=${reads.last()/1e6} disk_bytes=$bytes replay_limit=128")
     }
 
     @Test fun missingOrCorruptCommittedSegmentsNeverFallBackToLegacy() = inDirectory { dir ->
@@ -92,9 +100,9 @@ class Lex3LearningExperienceStoreTest {
         store.appendMissing((0..255).map(::record))
         val original=dir.resolve("experiences-v2.bin").readBytes()
         assertThrows(java.io.IOException::class.java) {
-            Lex3LearningExperienceStore(dir).save((0..256).map(::record),original) {
+            Lex3LearningExperienceStore(dir).save((0..256).map(::record),original,beforeCommit = {
                 throw java.io.IOException("Injected process interruption before commit")
-            }
+            })
         }
         assertArrayEquals(original,dir.resolve("experiences-v2.bin").readBytes())
         assertEquals(256,FileLearningExperienceStore(dir).all().size)
@@ -109,9 +117,9 @@ class Lex3LearningExperienceStoreTest {
         store.updateStatus(record(0).id,LearningStatus.REVOKED,30_000_000_000L)
         val manifest=dir.resolve("experiences-v2.bin").readBytes()
         assertThrows(java.io.IOException::class.java) {
-            Lex3LearningExperienceStore(dir).save((0..257).map(::record),manifest) {
+            Lex3LearningExperienceStore(dir).save((0..257).map(::record),manifest,beforeCommit = {
                 throw java.io.IOException("Injected pre-commit interruption")
-            }
+            })
         }
         val restored=FileLearningExperienceStore(dir)
         assertEquals(257,restored.all().size)
@@ -120,6 +128,40 @@ class Lex3LearningExperienceStoreTest {
         assertTrue(restored.append(record(258)))
         assertEquals(258,restored.all().size)
         assertEquals(9,dir.resolve("experiences-v3").listFiles()!!.count { it.extension=="seg" })
+    }
+
+    @Test fun uncertainFailureAfterCommitLeavesCompleteNewStateAndIdempotentRetry() = inDirectory { dir ->
+        val store=FileLearningExperienceStore(dir)
+        store.appendMissing((0..255).map(::record))
+        val previous=dir.resolve("experiences-v2.bin").readBytes()
+        assertThrows(java.io.IOException::class.java) {
+            Lex3LearningExperienceStore(dir).save((0..256).map(::record),previous,afterCommit = {
+                throw java.io.IOException("Injected directory sync failure after atomic commit")
+            })
+        }
+        val reopened=FileLearningExperienceStore(dir)
+        assertEquals((0..256).map(::record),reopened.all())
+        assertFalse(reopened.append(record(256)))
+    }
+
+    @Test fun invalidLegacyPrimaryCannotMigrateOrOverwriteBackup() = inDirectory { dir ->
+        val store=FileLearningExperienceStore(dir)
+        store.append(record(0));store.appendMissing((1..255).map(::record))
+        val backup=dir.resolve("experiences-v2.lkg").readBytes()
+        val file=dir.resolve("experiences-v2.bin")
+        file.writeBytes(file.readBytes().also { it[30]=(it[30].toInt() xor 1).toByte() })
+        assertThrows(Exception::class.java) { store.append(record(256)) }
+        assertArrayEquals(backup,dir.resolve("experiences-v2.lkg").readBytes())
+        assertFalse(dir.resolve("experiences-v3").exists())
+    }
+
+    @Test fun unknownManifestVersionWithValidChecksumIsRejected() = inDirectory { dir ->
+        FileLearningExperienceStore(dir).appendMissing((0..256).map(::record))
+        val file=dir.resolve("experiences-v2.bin")
+        val bytes=file.readBytes();val payload=bytes.copyOfRange(0,bytes.size-32)
+        payload[7]=2
+        file.writeBytes(payload+java.security.MessageDigest.getInstance("SHA-256").digest(payload))
+        assertThrows(Exception::class.java) { FileLearningExperienceStore(dir).all() }
     }
 
     @Test fun hardCapacityRefusesOverflowWithoutChangingAnyCommittedRecord() = inDirectory { dir ->
@@ -141,6 +183,35 @@ class Lex3LearningExperienceStoreTest {
         assertEquals(200,store.appendMissing(records))
         assertTrue(Lex3LearningExperienceStore.isManifest(dir.resolve("experiences-v2.bin").readBytes()))
         assertEquals(records,FileLearningExperienceStore(dir).all())
+    }
+
+    @Test fun byteAndBatchLimitsRefuseBeforeChangingCommittedState() = inDirectory { dir ->
+        val store=FileLearningExperienceStore(dir)
+        store.append(record(0))
+        val before=dir.resolve("experiences-v2.bin").readBytes()
+        assertThrows(IllegalArgumentException::class.java) { store.appendMissing(List(4097) { record(0) }) }
+        val large=(1..4096).map { index ->
+            LearningExperienceFactory.create(LearningExperienceType.USER_FACT,
+                LearningProvenance.SYNTHETIC_FIXTURE,LearningTrustClass.OWNER_CONFIRMED,
+                LearningStatus.CONFIRMED,"界".repeat(2040)+index,"界".repeat(160),"界".repeat(500),index.toLong())
+        }
+        // Direct backend isolates byte bound from the independent 4096 protected-record bound.
+        assertThrows(IllegalArgumentException::class.java) { Lex3LearningExperienceStore(dir).save(large,before) }
+        assertArrayEquals(before,dir.resolve("experiences-v2.bin").readBytes())
+        assertEquals(listOf(record(0)),FileLearningExperienceStore(dir).all())
+    }
+
+    @Test fun oversizedPrimaryIsRejectedBeforeWholeFileAllocation() = inDirectory { dir ->
+        java.io.RandomAccessFile(dir.resolve("experiences-v2.bin"),"rw").use { it.setLength(512L*1024+1) }
+        assertThrows(IllegalArgumentException::class.java) { FileLearningExperienceStore(dir).all() }
+    }
+
+    @Test fun rootDirectorySymlinkIsRejected() = inDirectory { dir ->
+        val actual=dir.resolve("actual").apply { mkdir() }
+        val link=dir.resolve("link")
+        Files.createSymbolicLink(link.toPath(),actual.toPath())
+        assertThrows(IllegalArgumentException::class.java) { FileLearningExperienceStore(link).append(record(0)) }
+        assertTrue(actual.listFiles()!!.isEmpty())
     }
 
     @Test fun symlinksForSegmentDirectoryFilesAndLockAreRejected() = inDirectory { dir ->
@@ -176,6 +247,24 @@ class Lex3LearningExperienceStoreTest {
         assertEquals(1,store.stats().revoked)
     }
 
+    @Test fun terminatedWriterBeforeManifestCommitLeavesOldCompleteState() = inDirectory { dir ->
+        val store=FileLearningExperienceStore(dir)
+        store.appendMissing((0..256).map(::record))
+        store.updateStatus(record(0).id,LearningStatus.REVOKED,40_000_000_000L)
+        val previous=dir.resolve("experiences-v2.bin").readBytes()
+        val process=ProcessBuilder(System.getProperty("java.home")+"/bin/java","-Xmx128m",
+            "-cp",System.getProperty("java.class.path"),"at.heinz.deviceai.learning.Lex3ProcessProbe",
+            dir.absolutePath,"crash").redirectErrorStream(true).start()
+        assertTrue(process.waitFor(30,java.util.concurrent.TimeUnit.SECONDS))
+        assertEquals(process.inputStream.bufferedReader().readText(),23,process.exitValue())
+        assertArrayEquals(previous,dir.resolve("experiences-v2.bin").readBytes())
+        val reopened=FileLearningExperienceStore(dir)
+        assertEquals(257,reopened.all().size)
+        assertEquals(1,reopened.stats().revoked)
+        assertTrue(reopened.append(record(258)))
+        assertEquals(258,FileLearningExperienceStore(dir).all().size)
+    }
+
     @Test fun seededHoldoutInterleavesRestartDuplicateStatusAndReplay() = inDirectory { dir ->
         val random=java.util.Random(617L)
         val expected=(0..256).map(::record).associateBy { it.id }.toMutableMap()
@@ -188,10 +277,13 @@ class Lex3LearningExperienceStoreTest {
             val status=if(step%2==0)LearningStatus.REVOKED else LearningStatus.REJECTED
             val time=40_000_000_000L+step
             assertTrue(store.updateStatus(old.id,status,time))
-            expected[old.id]=expected.getValue(old.id).copy(status=status,updatedAt=time)
+            val prior=expected.getValue(old.id)
+            if(prior.status!=status)expected[old.id]=prior.copy(status=status,updatedAt=time)
             assertFalse(store.append(old))
             val restored=FileLearningExperienceStore(dir)
-            assertEquals(expected,restored.all().associateBy { it.id })
+            val actual=restored.all().associateBy { it.id }
+            assertEquals(expected.keys,actual.keys)
+            expected.forEach { (id,value) -> assertEquals("seeded holdout record $id",value,actual[id]) }
             assertTrue(restored.replay(LearningExperienceType.USER_FACT,128).none {
                 it.status in setOf(LearningStatus.REVOKED,LearningStatus.REJECTED)
             })
@@ -213,10 +305,15 @@ class Lex3LearningExperienceStoreTest {
 internal object Lex3ProcessProbe {
     @JvmStatic fun main(args:Array<String>) {
         val store=FileLearningExperienceStore(File(args[0]))
-        val start=args[1].toInt()
         fun record(index:Int)=LearningExperienceFactory.create(LearningExperienceType.USER_FACT,
             LearningProvenance.SYNTHETIC_FIXTURE,LearningTrustClass.OWNER_CONFIRMED,
-            LearningStatus.CONFIRMED,"Synthetic history record $index",now=index*86_400_000L)
+            LearningStatus.CONFIRMED,"Synthetic history record $index",now=index*21_600_000L)
+        if(args[1]=="crash") {
+            Lex3LearningExperienceStore(File(args[0])).save(store.all()+record(258),
+                File(args[0],"experiences-v2.bin").readBytes(),beforeCommit={ Runtime.getRuntime().halt(23) })
+            error("Crash injection did not stop the process")
+        }
+        val start=args[1].toInt()
         store.appendMissing((start until start+100).map(::record))
         check(store.updateStatus(record(0).id,LearningStatus.REVOKED,50_000_000_000L))
     }
