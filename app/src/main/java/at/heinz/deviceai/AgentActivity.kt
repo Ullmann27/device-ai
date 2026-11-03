@@ -1513,11 +1513,7 @@ class AgentActivity : Activity() {
                 if (busy) return@runOnUiThread
                 loaded.fold({ (profile, history) ->
                     enterBotConversation(profile)
-                    history.turns.forEach { turn ->
-                        addBubble(turn.request, true)
-                        addBubble("${profile.displayName} · ${turn.response}", false)
-                    }
-                    if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
+                    showBotHistory(profile, history)
                 }, { Toast.makeText(this, "Bot-Kontext nicht sicher lesbar; keine Daten ersetzt.", Toast.LENGTH_LONG).show() })
             }
         } } catch (_: java.util.concurrent.RejectedExecutionException) { botLookupPending = false }
@@ -1535,6 +1531,15 @@ class AgentActivity : Activity() {
         input.hint = "Nachricht an ${profile.displayName} · JARVIS zum Wechseln"
         addBubble("${profile.displayName} · ${profile.role}\n${profile.communicationStyle}\n" +
             "Privater lokaler Dialog. Werkzeugaufträge benötigen eine getrennt geprüfte Verbindung.", false)
+    }
+
+    private fun showBotHistory(profile: at.heinz.deviceai.chief.ChiefBotProfile,
+                               history: at.heinz.deviceai.chief.ChiefBotConversationHistory) {
+        history.turns.forEach { turn ->
+            addBubble(turn.request, true)
+            addBubble("${profile.displayName} · ${turn.response}", false)
+        }
+        if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
     }
 
     private fun returnToJarvis() {
@@ -1563,13 +1568,16 @@ class AgentActivity : Activity() {
         try { backlogExecutor.execute {
             val found = runCatching {
                 botProfiles.seedDefaults(20)
-                when (address) {
+                val profile = when (address) {
                     is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select ->
                         at.heinz.deviceai.chief.ChiefBotAddressRouter.resolve(botProfiles, address.name)
                     is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message ->
                         at.heinz.deviceai.chief.ChiefBotAddressRouter.resolve(botProfiles, address.name)
                     else -> selectedBot?.agentId?.let(botProfiles::get)
                 }
+                profile to if (profile != null && selectedBot?.agentId != profile.agentId &&
+                    address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message)
+                    botProfiles.loadConversation(profile.agentId, profile.agentId) else null
             }
             runOnUiThread {
                 botLookupPending = false
@@ -1579,7 +1587,7 @@ class AgentActivity : Activity() {
                     Toast.makeText(this, "Bot-Zuordnung unklar oder nicht lesbar. Bitte über Team auswählen.", Toast.LENGTH_LONG).show()
                     return@runOnUiThread
                 }
-                val profile = found.getOrNull()
+                val (profile, history) = found.getOrThrow()
                 if (profile == null) {
                     if (address is at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Select) {
                         Toast.makeText(this, "Kein eindeutiger Bot dieses Namens gefunden.", Toast.LENGTH_LONG).show()
@@ -1593,7 +1601,10 @@ class AgentActivity : Activity() {
                     selectBot(profile.agentId)
                     return@runOnUiThread
                 }
-                if (selectedBot?.agentId != profile.agentId) enterBotConversation(profile)
+                if (selectedBot?.agentId != profile.agentId) {
+                    enterBotConversation(profile)
+                    history?.let { showBotHistory(profile, it) }
+                }
                 else selectedBot = profile
                 val text = (address as? at.heinz.deviceai.chief.ChiefBotAddressRouter.Address.Message)?.text ?: request
                 runBotDialogue(profile, text)
@@ -9090,9 +9101,11 @@ class AgentActivity : Activity() {
     }
 
     private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
-        if (busy) {
-            if(activeLocalRequest)cancelLocalRequest()
-            else { Toast.makeText(this,"Bitte die laufende Aufgabe zuerst über Stopp beenden.",Toast.LENGTH_LONG).show();return }
+        // Dictation is a new composer draft, not authorization to abort a coding/tool job.
+        // A running job can still be stopped with its explicit action, independently of TTS.
+        if (busy && requestCode == DEV_SPEECH_REQUEST) {
+            Toast.makeText(this,"Der Entwicklungsauftrag läuft. Eine neue Frage kannst du im Chat diktieren.",Toast.LENGTH_LONG).show()
+            return
         }
         // Barge-in: silence voice AND avatar mouth now; the TTS onStop callback is asynchronous.
         voiceEngine?.stop()
