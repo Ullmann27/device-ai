@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Serialize existing host checks; consumes no neural holdout and downloads nothing."""
 import argparse, hashlib, json, os, pathlib, subprocess, time
-p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--output',required=True);p.add_argument('--classpath-file',required=True);p.add_argument('--runtime-env',required=True);p.add_argument('--isolation-config',required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--output',required=True);p.add_argument('--classpath-file',required=True);p.add_argument('--runtime-env',required=True);p.add_argument('--isolation-config',required=True);p.add_argument('--start-at',choices=['canonical-and-modules','service-independent','mcp-independent','integrated-actual'],default='canonical-and-modules');a=p.parse_args()
 root=pathlib.Path(a.source).resolve();out=pathlib.Path(a.output).resolve();out.mkdir(parents=True,exist_ok=False)
 own=pathlib.Path(__file__).resolve().parent
 def git(*args):return subprocess.check_output(['git',*args],cwd=root,text=True).strip()
@@ -22,6 +22,7 @@ commands=[('canonical-and-modules',['node','--test','--test-concurrency=1','--te
  ('service-independent',['node','--test','--test-concurrency=1','--test-reporter=tap',*[f'/workspace/independence-service-review/tools/independence-service-review/{f}.test.mjs' for f in ['lifecycle','active-recovery']]]),
  ('mcp-independent',['node','--test','--test-concurrency=1','--test-reporter=tap',*[f'/workspace/independence-mcp-review/tools/independence-mcp-review/{f}.test.mjs' for f in ['transport','profile-bridge','canonical-reader','canonical-http']]]),
  ('integrated-actual',['node',str(own/'integrated-check.mjs'),'--source',str(root),'--classpath-file',a.classpath_file,'--runtime-env',a.runtime_env,'--isolation-config',a.isolation_config,'--output',str(out/'integrated-actual.json')])]
+commands=commands[next(i for i,(name,_) in enumerate(commands) if name==a.start_at):]
 results=[]
 for name,command in commands:
  (out/f'{name}.command.json').write_text(json.dumps(command,indent=2)+'\n');start=time.monotonic()
