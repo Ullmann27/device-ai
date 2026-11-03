@@ -165,6 +165,16 @@ test('MCP version negotiation and JSON content negotiation follow pinned protoco
   assert.equal((await fetch(f.url, { headers: { authorization: `Bearer ${f.token}` } })).status, 405);
 });
 
+test('unknown session is 404 for GET too, before optional stream rejection', async t => {
+  const f = await fixture(t);
+  const headers = { authorization: `Bearer ${f.token}`, 'mcp-session-id': 'not-a-current-session', 'mcp-protocol-version': MCP_PROTOCOL_VERSION, accept: 'text/event-stream' };
+  assert.equal((await fetch(f.url, { headers })).status, 404);
+  const session = await f.init(); headers['mcp-session-id'] = session;
+  assert.equal((await fetch(f.url, { headers })).status, 405);
+  assert.equal((await fetch(f.url, { method: 'DELETE', headers })).status, 204);
+  assert.equal((await fetch(f.url, { headers })).status, 404);
+});
+
 test('credential files reject symlinks, permissive access, hard links and bot writable placement', async t => {
   const f = await fixture(t);
   for (const mutate of [() => fs.chmodSync(f.tokenFile, 0o644), () => { fs.chmodSync(f.tokenFile, 0o600); fs.linkSync(f.tokenFile, path.join(f.dir, 'linked')); }]) {

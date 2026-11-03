@@ -175,12 +175,12 @@ export async function startCodingMcpServer({ reader, tokenFile, protectedRoots =
       if (!expected || !bearer || !timingSafeEqual(hash(bearer[1]), expected)) return reject(401, 'MCP_AUTH_REQUIRED', { 'www-authenticate': 'Bearer realm="continuum-local-owner"' });
       metrics.authenticatedRequests++; prune();
       if (req.headers['mcp-protocol-version'] !== undefined && req.headers['mcp-protocol-version'] !== MCP_PROTOCOL_VERSION) return reject(400, 'MCP_PROTOCOL_UNSUPPORTED');
-      if (req.method === 'GET') return reject(405, 'MCP_SSE_NOT_SUPPORTED', { allow: 'POST, DELETE' });
-      if (!['POST', 'DELETE'].includes(req.method)) return reject(405, 'MCP_METHOD_REJECTED', { allow: 'POST, DELETE' });
+      if (!['POST', 'GET', 'DELETE'].includes(req.method)) return reject(405, 'MCP_METHOD_REJECTED', { allow: 'POST, DELETE' });
       const sessionId = req.headers['mcp-session-id'];
       let session = sessionId ? sessions.get(sessionId) : null;
       if (sessionId && !session) return reject(404, 'MCP_SESSION_UNKNOWN');
       if (session && req.headers['mcp-protocol-version'] !== MCP_PROTOCOL_VERSION) return reject(400, 'MCP_PROTOCOL_REQUIRED');
+      if (req.method === 'GET') return reject(405, 'MCP_SSE_NOT_SUPPORTED', { allow: 'POST, DELETE' });
       if (req.method === 'DELETE') {
         if (!session) return reject(400, 'MCP_SESSION_REQUIRED');
         invalidate(session); sessions.delete(sessionId); return send(204);
