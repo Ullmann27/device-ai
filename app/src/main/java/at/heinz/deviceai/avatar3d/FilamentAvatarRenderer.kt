@@ -42,7 +42,23 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         view = e.createView().also {
             it.scene = scene; it.camera = camera
             it.blendMode = com.google.android.filament.View.BlendMode.TRANSLUCENT
-            it.isPostProcessingEnabled = false
+            // Filament's post pipeline supplies color grading and gamma encoding.
+            // Disabling it also disables color correctness (pinned View.java 1.56).
+            // The existing View owns these bounded buffers; its normal destroyView
+            // path releases them, with no added frame callback or native entity.
+            it.isPostProcessingEnabled = true
+            it.bloomOptions = com.google.android.filament.View.BloomOptions().apply {
+                enabled = true
+                strength = .06f
+                resolution = 128
+                levels = 4
+                quality = com.google.android.filament.View.QualityLevel.LOW
+                threshold = true
+                highlight = 64f
+                lensFlare = false
+                starburst = false
+                chromaticAberration = 0f
+            }
         }
         swapChain = e.createSwapChain(surface, SwapChainFlags.CONFIG_TRANSPARENT)
         provider = UbershaderProvider(e)

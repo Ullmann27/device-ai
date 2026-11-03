@@ -132,6 +132,7 @@ for number, frame in enumerate(selected):
 manifest_name = "replay-manifest.json" if mode != "idle" else f"replay-idle-{idle_start:04d}-{idle_start + idle_count - 1:04d}.json"
 (out / manifest_name).write_text(json.dumps({
     "evidenceClass": "HOST_RENDER_NOT_DEVICE", "backend": f"Blender {bpy.app.version_string}, Cycles CPU",
+    "renderScriptSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
     "assetSha256": hashlib.sha256(asset.read_bytes()).hexdigest(),
     "poseFileSha256": hashlib.sha256(pose_file.read_bytes()).hexdigest(),
     "productionMapperSource": poses["sourceSha"], "inputOrigin": poses["inputOrigin"],
