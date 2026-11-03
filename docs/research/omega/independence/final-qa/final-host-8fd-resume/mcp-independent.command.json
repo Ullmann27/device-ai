@@ -1,0 +1,10 @@
+[
+  "node",
+  "--test",
+  "--test-concurrency=1",
+  "--test-reporter=tap",
+  "/workspace/independence-mcp-review/tools/independence-mcp-review/transport.test.mjs",
+  "/workspace/independence-mcp-review/tools/independence-mcp-review/profile-bridge.test.mjs",
+  "/workspace/independence-mcp-review/tools/independence-mcp-review/canonical-reader.test.mjs",
+  "/workspace/independence-mcp-review/tools/independence-mcp-review/canonical-http.test.mjs"
+]
