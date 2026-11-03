@@ -1,0 +1,20 @@
+[
+  {
+    "url": "https://github.com/princeton-nlp/ALCE/blob/main/LICENSE",
+    "fetchedAt": "2026-11-03T18:28:47.160384+00:00",
+    "sha256": "8872dbf8660b00890b5e07ce1ea1f7a44fa7ae4e1857da56caba172b51dab3cb",
+    "bytes": 1094,
+    "license": "MIT",
+    "retrieval": "GitHub connector text response",
+    "copiedIntoProduct": false
+  },
+  {
+    "url": "https://github.com/princeton-nlp/ALCE/blob/main/eval.py",
+    "fetchedAt": "2026-11-03T18:28:47.160410+00:00",
+    "sha256": "e0f63bf865cacc64d7390fc62669c82b2653b1628f40051de0efdf5518064091",
+    "bytes": 18961,
+    "license": "MIT",
+    "retrieval": "GitHub connector text response",
+    "copiedIntoProduct": false
+  }
+]

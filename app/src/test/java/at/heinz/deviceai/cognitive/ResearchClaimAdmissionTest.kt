@@ -17,7 +17,7 @@ class ResearchClaimAdmissionTest {
 
     @Test fun literalExcerptKeepsTextButCannotClaimOwnerAuthorityOrForeignAttribution() {
         val a = doc("https://manual.example.org/lumen", "Preface. $sentence Appendix.")
-        val result = run(listOf(a), ClaimExtractor { candidate("  $sentence  ", listOf("https://forged.example.org/proof")) })
+        val result = run(listOf(a), ClaimExtractor { listOf(candidate("  $sentence  ", listOf("https://forged.example.org/proof"))) })
         val claim = result.graph.claims.single()
         assertEquals(sentence, claim.text)
         assertEquals(listOf(a.url), claim.sourceReferences)
@@ -31,7 +31,7 @@ class ResearchClaimAdmissionTest {
     @Test fun unrelatedFetchedPagesCannotVerifyAnInventedClaim() {
         val a = doc("https://manual.example.org/lumen", "The Lumen manual describes sensor charging procedures.")
         val b = doc("https://review.example.net/weather", "Weather stations report temperature in several cities.")
-        val result = run(listOf(a,b), ClaimExtractor { candidate(sentence, listOf(a.url,b.url)) })
+        val result = run(listOf(a,b), ClaimExtractor { listOf(candidate(sentence, listOf(a.url,b.url))) })
         assertTrue(result.graph.claims.isEmpty())
         assertTrue(result.graph.independentSourceCounts.isEmpty())
     }
