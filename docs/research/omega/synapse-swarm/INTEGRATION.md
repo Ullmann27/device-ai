@@ -48,6 +48,20 @@ Only trusted app callers use the context API. A persistent workspace identifier
 does not establish a container, terminal or desktop stream. No new network grant,
 microphone listener, production weight update or owner-information sharing occurs.
 
+### Remote refresh during this wave
+
+The initial assertion that no model was approved was too broad. The already
+committed `MODEL-ADMISSION.md` records explicit approval of the pinned official
+Qwen2.5-Coder-1.5B Q4_K_M and llama.cpp. A newer runtime branch (PR427,
+`c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d`, production `9e28d24b`) now records
+independent acceptance of that exact model/binary pair and actual host decoding.
+The independent blind reply passed 6/8 checks, with two regressions; it is not a
+successful repair. The earlier PR410 description and initial handoff were stale.
+Chief PR410 also advanced to `5684efb1` with separately reviewed Git-lineage recall.
+These newer slices are under fresh source review before selective integration.
+This execution workspace still lacks the actual weights/binary; reproducing their
+approved artifacts is a separate task, not an inherited local inference result.
+
 M0/S0 can be accepted after exact integration tests. M1/MΩ-1 remains blocked until
 genuine approved local model inference produces an unknown-task patch through the
 canonical executor and independent verification. Twenty persisted profiles alone
