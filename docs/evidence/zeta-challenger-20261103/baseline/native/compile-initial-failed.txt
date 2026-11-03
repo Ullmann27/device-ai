@@ -1,0 +1,6 @@
+docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeView.kt:241:21: error: cannot access 'motionPhase': it is internal in 'at.heinz.deviceai.ui.ContinuumElement'.
+            element.motionPhase = if (active && waveAnimationEnabled()) {
+                    ^^^^^^^^^^^
+docs/evidence/zeta-challenger-20261103/baseline/source/ContinuumHomeView.kt:285:17: error: cannot access 'motionPhase': it is internal in 'at.heinz.deviceai.ui.ContinuumElement'.
+        element.motionPhase = null // Navigation selection is stable; real workload animates in its own card.
+                ^^^^^^^^^^^
