@@ -1,6 +1,6 @@
 # MΩ-1 / DAN Ω / JARVIS integration handoff
 
-Checkpoint: 2026-11-03 21:05 UTC. **HOST_IMPLEMENTATION_IN_PROGRESS /
+Checkpoint: 2026-11-03 21:50 UTC. **HOST_IMPLEMENTATION_IN_PROGRESS /
 LOCAL_MODEL_HOST_OBSERVED / FIRST_10_GOAL_FAILED / FOLD7_NOT_RUN**.
 No FIRST_COGNITIVE_LOOP_VERIFIED, MΩ-1A, MΩ-1B or RELEASE_READY claim.
 The owner confirmed there is no device channel and authorized continued host work.
@@ -10,7 +10,7 @@ effects work while preserving the existing agreed application design.
 ## Source and authority
 
 Research branch `codex/momega1-chief-20261103`, [draft PR410](https://github.com/Ullmann27/device-ai/pull/410).
-Combined accepted-source checkpoint `3b0d07cf929d1759fd5f294dfdc19d7545546b21`.
+Combined accepted-source checkpoint `705a6b7c08dbdb210f590dc939d4e800ef24ba94`.
 Code40 `64ec06a73f50cae9ee49035c840710d87777d50f` remains the unchanged historical
 rollback source. Initial current Chief was `786436f5`; latest fetched foreign
 Chief `efe622dda00e620952483dedad19257efb3284e6` has the same application/runtime
@@ -123,8 +123,20 @@ recorded pre-verification hypotheses are labeled accordingly.
 The approved 7B comparison preserves the original twelve tasks, primary first-ten
 score, two calls, 8192 context budget and initial 60-second timeout. Streaming
 hash verification uses a 1 MiB buffer, not a full 4.68 GB allocation. Runtime
-resource/transport changes and independent admission are in progress. No 7B
-inference or success is claimed at this checkpoint. Shared Android LiteRT IPC,
+resource/transport changes and independent admission are in progress. The actual
+7B native process and pinned weight inode were observed in independent probes,
+but two canonical 180-second admission calls failed without a normal receipt.
+A preserved diagnostic produced coherent partial JSON and native exit137 near
+95 seconds: aggregate CPU177 with two threads exhausted before the wall limit.
+Source `a135a9ae` therefore gives only this fixed 7B profile twice the remaining
+wall seconds as CPU seconds; the 1.5B profile, wall deadline, two-CPU cgroup,
+7GiB memory/swap-zero and native address-space caps remain. 92 author host and
+7 actual Docker resource tests pass; independent native completion is pending.
+This explicit CPU-budget difference is not silently treated as an equal-budget
+model comparison. CLI heap limits are bounded separately. The observed native
+RSS was about 5.01GiB; a smaller leaf-cgroup charge was not total RSS because
+shared cached weight pages may be charged to an ancestor. No 7B admission,
+unknown-task success or model score is claimed. Shared Android LiteRT IPC,
 actual Termux native compatibility, device cancellation and device resources are
 still separate open prerequisites.
 
@@ -153,6 +165,16 @@ Experimental assets remain outside the shipped asset until reviewed. Host
 Blender renders are not Android Filament/Fold7 captures. Naturalness needs the
 full fixed-camera motion sequence; numeric pose tests alone do not satisfy it.
 
+The latest narrow mouth candidate combines mapper `9a23e5d6` with a neutral-
+preserving jaw-rig correction (asset prefix `6b199c59`); neither correction alone
+solves the geometry defect. The independently frozen semantic V2 contract is
+27/27 PASS after 25/27 baseline PASS; the old literal double-opening expectation
+is explicitly superseded, not reported green. All 112 independently frozen
+speech combinations plus neutral have zero visible tooth/face intersections in
+the combined candidate. Six original maximum poses and fixed-camera AA/O/blink/
+stopped images were also examined. Final asset/hash integration, portable luminous
+materials, complete 224-frame idle replay and visual acceptance remain pending.
+
 PR436 provides an optional local Camera2 face-position adapter and pure readiness
 projection. Native camera metadata, explicit foreground opt-in, permission,
 comparable actual sensor timestamps and bounded frame freshness are required.
@@ -160,19 +182,45 @@ No face identity, eye tracking, stored pixels, cloud detector or downloaded mode
 The independent reviewer found missing policy timestamps incorrectly defaulted to
 now; source `6a354bec` rejects them, while actual native caller already supplied
 an invalid sentinel. Original independent 22 cases pass after that correction;
-additional camera and caller review is in progress.
+additional camera cases bring that independent camera set to 24/24 PASS.
 
-[PR447](https://github.com/Ullmann27/device-ai/pull/447), source `a39b614b`, connects
+[PR447](https://github.com/Ullmann27/device-ai/pull/447), accepted production source
+`6c2a30955fee800d6ddeffde9206158ea43537e9`, connects
 first-open guidance, actual offline TTS callbacks, a dedicated on-device speech
 test and explicit camera-to-Director observations. Six actual baseline UI tests
-failed before implementation; candidate combined host checks are running. The
+failed before implementation. Actual TTS lifecycle/caller checks found and fixed
+stale heard-confirmation buttons; first-open voice defaults on only when no saved
+choice exists, while stored mute wins. Actual first-welcome RED was 1/2 PASS;
+final combined welcome/caller checks are 28/28 PASS, including nine new independent
+cases and 17 prior cases. They are genuine host callback tests, not audible device
+tests or full Activity startup proof. The
 compact test panel leaves the head visible. Permission callbacks do not start
 sensors; pause, dismissal and display change clear camera consent. Existing mute
 choice is respected. No account API is connected: Google/Gmail, Meta/Facebook and
 TikTok require real registrations and reviewed owner-authorized adapters.
-Readiness and spoken-guide source are not yet integrated into PR410 acceptance.
+Readiness and spoken-guide source plus independent PR445 evidence are integrated
+at `705a6b7c`; see SPOKEN-GUIDE-HANDOFF.md for exact fixtures and limits.
 
-Real worker/document arrivals, their sounds, complete reference equivalence,
+The actual chat previously hid the dashboard and its head. Candidate `ab55e440`
+moves the same HologramView between home and chat, preserves the Director and
+preference, and prevents hidden home from remeasuring the moved child. Four
+author and five of six independent tests pass; the remaining clock test has a
+known cross-Activity host-window fixture issue (window GONE), still being resolved.
+No speculative production clock change or complete acceptance is claimed.
+
+Effect helpers `688b05e3` pass 62/62 host tests, including 17 independent cases,
+after a real three-case stale-event replay failure was fixed. The short static
+AudioTrack write ordering was repaired; its explicitly documented test-only
+Robolectric native-short-write adapter does not prove audible playback. Real
+Canvas frames cover six sizes, including 88dp compact height. Independent visual
+review is pending. Root [PR457](https://github.com/Ullmann27/device-ai/pull/457),
+candidate `b6f4b174`, now connects ToolGate runner entry/exit, actual Chief WorkerJob
+entry/finally, nonempty real web-read dossiers, and existing buttons to these
+helpers. This caller candidate is UNVERIFIED; its baseline positive-arrival
+fixtures share the unresolved host-window issue. A supervisor report never
+substitutes for actual worker exit, and no queued/proposed work gets an arrival.
+
+Accepted actual caller wiring, physical worker/document arrivals and sounds, complete reference equivalence,
 actual audible onboarding and physical tracking remain open until their own
 observable paths and review are complete. No decorative animation is used as a
 claim that a worker, PDF operation, Gmail read or successful test occurred.
@@ -202,7 +250,7 @@ and synthetic runtime tests are not reclassified as unknown native/model results
 ## Resume, testing and rollback
 
 Compare actual PR410/lane remote heads and source differences first. Finish
-independent camera/guide review, visual iterations and 7B admission; run unchanged
+visibility/caller review, visual iterations and 7B admission; run unchanged
 frozen tasks only through the canonical provider/worker. Preserve failed runs.
 Then freeze combined source and run full Node, backend, unfiltered Android JUnit,
 configured NewApi lint, parity and unsigned build. Historical lane/Code40/foreign
