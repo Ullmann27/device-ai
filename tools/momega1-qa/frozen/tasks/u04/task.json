@@ -1,0 +1,16 @@
+{
+  "id": "u04",
+  "title": "Numeric order",
+  "requirements": [
+    "Return numbers ascending without changing the supplied array."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

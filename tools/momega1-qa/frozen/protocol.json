@@ -1,0 +1,104 @@
+{
+  "schema": "momega1-independent-suite-v1",
+  "sourceBase": "ca93fb4f7a17ff7a2a13debd93197ba485594f06",
+  "frozenBeforeCandidateInspection": true,
+  "tasks": [
+    {
+      "id": "u01",
+      "title": "Unicode prefix",
+      "requirements": [
+        "Return at most n Unicode code points, preserving complete supplementary characters."
+      ]
+    },
+    {
+      "id": "u02",
+      "title": "Deadline boundary",
+      "requirements": [
+        "A lease is active only while now is strictly less than its deadline."
+      ]
+    },
+    {
+      "id": "u03",
+      "title": "Explicit zero setting",
+      "requirements": [
+        "Use default only when setting is null or undefined; preserve zero, false and empty string."
+      ]
+    },
+    {
+      "id": "u04",
+      "title": "Numeric order",
+      "requirements": [
+        "Return numbers ascending without changing the supplied array."
+      ]
+    },
+    {
+      "id": "u05",
+      "title": "First occurrence deduplication",
+      "requirements": [
+        "Return distinct values in the order of their first occurrence."
+      ]
+    },
+    {
+      "id": "u06",
+      "title": "Weighted measurement",
+      "requirements": [
+        "Return sum(value*weight)/sum(weight), null if total weight is zero; inputs use nonnegative finite weights."
+      ]
+    },
+    {
+      "id": "u07",
+      "title": "Path membership",
+      "requirements": [
+        "For normalized absolute POSIX paths, allow the root itself and descendants, but reject names merely sharing a prefix."
+      ]
+    },
+    {
+      "id": "u08",
+      "title": "UTC month",
+      "requirements": [
+        "Return a UTC calendar date string YYYY-MM-DD from an epoch millisecond timestamp."
+      ]
+    },
+    {
+      "id": "u09",
+      "title": "Immutable queue",
+      "requirements": [
+        "Return queue items sorted by priority ascending, preserving caller queue order and object identity."
+      ]
+    },
+    {
+      "id": "u10",
+      "title": "Integer cents rounding",
+      "requirements": [
+        "Round integer millicents to integer cents, nearest with ties away from zero; inputs are safe small integers."
+      ]
+    },
+    {
+      "id": "u11",
+      "title": "Half-open overlap",
+      "requirements": [
+        "Two half-open intervals overlap only if they share positive length; touching or empty intervals do not overlap."
+      ]
+    },
+    {
+      "id": "u12",
+      "title": "Cache freshness",
+      "requirements": [
+        "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired."
+      ]
+    }
+  ],
+  "relatedPair": {
+    "earlier": "u02",
+    "later": "u12",
+    "measurement": "Run u12 with fresh empty memory and separately after verified u02 reflection, same runtime/model/seed/budget; compare actual inference outcomes and calls. No memory benefit inferred from fixture success."
+  },
+  "inferenceStatus": "BLOCKED_LOCAL_MODEL_UNAVAILABLE",
+  "acceptanceRules": [
+    "Each unchanged source must produce actual assertion RED before any model attempt.",
+    "Only actual admitted local inference may propose changes; no oracle patches or predetermined model answers.",
+    "Acceptance tests and task requirements remain fixed.",
+    "Run candidate in approved OS isolation, preserve diagnostics and raw transcript hashes.",
+    "A contract fixture never counts as an unknown task solved by a model."
+  ]
+}

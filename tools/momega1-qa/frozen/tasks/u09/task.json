@@ -1,0 +1,16 @@
+{
+  "id": "u09",
+  "title": "Immutable queue",
+  "requirements": [
+    "Return queue items sorted by priority ascending, preserving caller queue order and object identity."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

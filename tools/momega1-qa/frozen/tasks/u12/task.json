@@ -1,0 +1,16 @@
+{
+  "id": "u12",
+  "title": "Cache freshness",
+  "requirements": [
+    "A cached entry is fresh only before insertedAt+ttl; equality is expired, and ttl zero is immediately expired."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

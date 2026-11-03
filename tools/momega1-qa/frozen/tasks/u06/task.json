@@ -1,0 +1,16 @@
+{
+  "id": "u06",
+  "title": "Weighted measurement",
+  "requirements": [
+    "Return sum(value*weight)/sum(weight), null if total weight is zero; inputs use nonnegative finite weights."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

@@ -1,0 +1,16 @@
+{
+  "id": "u08",
+  "title": "UTC month",
+  "requirements": [
+    "Return a UTC calendar date string YYYY-MM-DD from an epoch millisecond timestamp."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}
