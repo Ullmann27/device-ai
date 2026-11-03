@@ -23,9 +23,7 @@ for i,path in enumerate(paths):
     draw.text((x+8,y+320),label,font=font,fill=(175,194,218))
     records.append({'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'bytes':path.stat().st_size,'pixels':[512,512]})
 canvas.save(OUT/'contact-sheet-30.png')
-report={'researchAssetSha256':manifest['sha256'],'runtimeAssetSha256':hashlib.sha256((ROOT/'assets/avatar/jarvis-runtime-v1.glb').read_bytes()).hexdigest(),
-        'geometrySourceCommit':'9633d4e9aab997580bc0be31f20e7e10479f1433','rebuildSourceCommit':manifest['buildSourceCommit'],'count':30,
-        'renderer':'Blender4.3.2 Cycles CPU2, nice10,512x512,16samples, no denoiser','frames':records,
-        'referenceImageProcessed':False,'scope':'All frames are renders of the same frozen mesh and target data; no separately generated faces. No phone FPS claim.'}
+report=json.loads((OUT/'render-manifest.json').read_text())
+report.update(contactSheet='contact-sheet-30.png',frames=records,referenceImageProcessed=False)
 (OUT/'render-manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 print('CONTACT_SHEET_COMPLETE',len(records))
