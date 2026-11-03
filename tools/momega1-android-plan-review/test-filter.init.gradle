@@ -1,0 +1,19 @@
+// Run from exact candidate checkout; point to the review worktree containing these files.
+allprojects {
+ afterEvaluate { p ->
+  if (p.name == 'app') {
+   def reviewRoot = System.getProperty('momega1ReviewRoot')
+   if (!reviewRoot) throw new GradleException('Set -Dmomega1ReviewRoot to the independent review checkout')
+   p.android.sourceSets.getByName('test').java.srcDir(reviewRoot + '/tools/momega1-android-plan-review/pure')
+   p.android.sourceSets.getByName('test').java.srcDir(reviewRoot + '/tools/momega1-android-plan-review/ui')
+  }
+ }
+ tasks.withType(Test).configureEach {
+  executable = '/usr/bin/java'
+  filter {
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningIntakeUiTest'
+   includeTestsMatching 'at.heinz.deviceai.IndependentCodingPlanningDeliveryUiTest'
+  }
+ }
+}

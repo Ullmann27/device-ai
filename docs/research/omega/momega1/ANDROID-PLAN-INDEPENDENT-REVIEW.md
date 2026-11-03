@@ -1,6 +1,6 @@
 # Independent Android planning-path review
 
-Status: WIP / UNVERIFIED. Baseline19474261c15a3503a9f041244b4b4c3eaed4636f. Frozen before candidate implementation/inspection. Reviewer owns tests/evidence/docs only; author owns AgentActivity plus narrowly scoped helper. Existing ToolGate/runtime/manifest/IPC/scheduler remain outside feature scope. No device access: FOLD7_NOT_RUN.
+Status: **ACCEPT scoped source/host planning path at4b98da9362f91ab9930a7f4b279737a9e80f94bd**. No remaining blocking finding within the reviewed scope. Real Android inference and device acceptance remain NOT_RUN. Baseline19474261c15a3503a9f041244b4b4c3eaed4636f. Frozen before candidate implementation/inspection. Reviewer owns tests/evidence/docs only; author owns AgentActivity plus narrowly scoped helper. Existing ToolGate/runtime/manifest/IPC/scheduler remain outside feature scope. No device access: FOLD7_NOT_RUN.
 
 ## Frozen adversarial cases
 
@@ -42,3 +42,34 @@ Inspected4b98da9362f91ab9930a7f4b279737a9e80f94bd only after all30 independent m
 The new button validates owner metadata, refuses busy/background/shutdown entry, and passes an immutable planning object to the existing runLocal. Within the same BoundedAgentOrchestrator, planning chooses a CancellableAgentModel using existing LocalModelReasoningAdapter.streamThinking; no second runtime is created. The helper permits one invocation, bounds output to8000 characters/UTF-8 bytes, rejects every model-supplied scope/approval key, and validates the eventual Draft with existing ContinuumCodingTask validation. Source/path/chain/limits/app-generated ID are pinned outside model output. Memory retrieval is empty, experience is in-memory only, checkpoint persistence is null, maxToolCalls/maxRetries are0, and the model adapter rejects tool events before producing any proposal. Normal-chat AgentModel body and default policy remain intact behind the null planning branch.
 
 The UI completion gate is in the actual runLocal callback, before consumption of active cancellation ownership: same session, foreground flag, unchanged pause epoch, uncancelled token and exact imported model identity are required. The existing token identity check rejects superseded completion; clearing the token prevents duplicate delivery. A valid result only opens the existing draft dialog with initial fields, then exits before normal chat persistence. Existing draft validation and prepare/RUN owner approvals remain downstream. This is source review; executed30-case evidence is pending QA and no acceptance is claimed yet.
+
+
+## Final independent acceptance
+
+Exact candidate4b98da9362f91ab9930a7f4b279737a9e80f94bd passed **30/30 independent methods**:20 parser/runtime contract checks,2 actual intake UI checks, and8 actual runLocal delayed-delivery UI checks. Total focused run:102/102 across17 classes,0 failures,0 errors,0 skips, Gradleexit0. Reviewer independently parsed every retained XML and compared the before/after source manifests byte-for-byte. The baseline intake2 genuine failures now pass on the feature source. No new blocking security defect was found in this candidate; the baseline RED established absent integration rather than a preexisting authorization exploit.
+
+Actual call-path evidence uses the real Activity→runLocal→BoundedAgentOrchestrator→existing LocalModelReasoningAdapter with an injected runtime, then the real existing draft dialog. Native completion is deliberately queued before cancellation/session/turn/model/foreground-epoch changes in the adversarial cases. Positive delivery retains owner full SHA/path/budgets and proposed criteria, with zero started services/activities and an empty real tool-receipt store. Owner preparation and execution remain separate explicit approvals; the model creates only draft data.
+
+The first candidate test compilation failed because the independent RuntimeFixture omitted abstract LocalModelRuntime.unload(callback). No tests executed in that attempt; stale XML copied by the QA wrapper is excluded. Reviewer added only the required method in both fake implementations, with no assertion changes. Compile-failure log/exit/harness hashes/QA ATTEMPT-STATUS are preserved. Final class hashes are pure `be19e5189c6b4c559cc97981484916a1be73adc4f18d8bfab552e6a30a57dc9f`, intake unchanged `c229de166f49f588d85a57046a388873bb6fc28fff33bd4718bdbc7832e1f33f`, delivery `681c1c3c137e22b8924586ecea3be8b4b2337bc07f5345e6db71a9e07c30ab28`.
+
+## Reproduction and handoff
+
+All raw accepted evidence and command/init script are in `docs/evidence/momega1/android-plan-review/green-4b98da93`; the original baseline evidence and rejected harness compilation remain alongside it. `SHA256SUMS.json` hashes every retained evidence artifact. QA alone executed Gradle; no simultaneous reviewer Gradle job was started. Kotlin/JVM contract tests ran as part of this exact-source Gradle suite; no separate standalone-native test result is claimed.
+
+The actual command, from the author's frozen candidate worktree, was:
+
+```sh
+source /workspace/momega1-build-env/env.sh
+gradle --no-daemon --max-workers=2 --console=plain \
+  -I /workspace/momega1-build-env/planning-final-v2.init.gradle \
+  -Dorg.gradle.jvmargs='-Xmx2g -XX:MaxMetaspaceSize=768m' \
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true \
+  -PcontinuumStandaloneVersionCode=40 -PcontinuumUiWidgetTests=true \
+  -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest
+```
+
+For independent-only replay, check out exact4b98da93 in a separate worktree; replace the init argument with this review checkout's `tools/momega1-android-plan-review/test-filter.init.gradle` and add `-Dmomega1ReviewRoot=/absolute/path/to/review-checkout`. This portable helper selects only the3 independent classes; it was added for reproducibility after the accepted QA run and is not a separately tested run. The retained original QA init is the acceptance artifact and selects17 classes.
+
+Normal-chat preservation is supported by unchanged existing AgentModel body/default policies and the adjacent BoundedAgent/LocalModelReasoningAdapter/LocalTurnModelBinding regression classes (16 cases). An entire ordinary-chat UI flow was not separately exercised by this reviewer. Actual Android process death, native LiteRT inference quality, physical-device resource use, and Fold7 end-to-end coding execution are not established by injected-runtime Robolectric tests. **FOLD7_NOT_RUN; no real model benchmark or release acceptance from this lane.** No ToolGate/runtime/manifest/IPC/scheduler, productive model, signing, installation or owner-data changes were made by the reviewer.
+
+Chief may integrate this exact reviewed feature source (or prove equivalent reviewed production bytes) and the review artifacts, then perform combined exact-source QA. Review-only rollback is omission of this branch; feature rollback is the author's isolated planning commit. Existing canonical CCC1/approval boundaries remain authoritative. No main merge or release is authorized by this review.
