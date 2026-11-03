@@ -1,3 +1,52 @@
+# MΩ-1 independent memory review — corrected candidate
+
+**Verdict: ACCEPT_RESEARCH_CONTRACT_SLICE on `cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb`.** The four original failing expectations are resolved. This accepts the bounded memory/revocation research implementation for Chief integration, **not** end-to-end MΩ1, actual inference, learned capability, changed-code transfer or mobile acceptance. Independent reviewer authored no production changes. [Draft PR #418](https://github.com/Ullmann27/device-ai/pull/418).
+
+| Fresh independent run on corrected source | Result |
+| --- | --- |
+| Original 31 frozen cases plus 15 new canonical-anchor cases | **46 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Author focused durability/recall suite | **50 PASS / 0 FAIL / 0 SKIP; exit 0** |
+| Canonical worker/repair regressions | **52 PASS / 0 FAIL / 0 SKIP; exit 0** |
+
+All are Node host CONTRACT_TEST evidence. Do not sum them into a real-model acceptance score. Candidate production source is byte-exact `git archive` output. Original `challenge.test.mjs` and `fixture.mjs` hashes still match the first freeze `90ff6ed2`. New cases and compatibility loader were frozen at `ef17f793`; one supplemental fixture correction was frozen at `c746ff0a` before rerun. Final checksum verification and `git diff --check` passed.
+
+## Corrected contract and independent findings
+
+- Withdrawal now authenticates and atomically persists `technicalExperienceRevocation` inside the **existing original canonical grant**, before trying the optional experience-ledger mirror. Original C17 and supplemental R02 confirm withdrawal at 4096 records; ledger size stays 4096 and a fresh process returns no historical item. An explicitly different, valid current task remains authorized, ruling out a vacuous result from withdrawing the requesting task itself.
+- Original C14/C15 and R03/R04 confirm that deleting the ledger tombstone tail or stripping/re-hashing its body no longer resurrects the proof while the canonical grant anchor survives. R05/R06 reject a modified-MAC or null canonical anchor even when the ledger mirror is absent. R07 checks task fingerprint/journal-head binding, unrelated grant-field preservation and idempotent withdrawal.
+- Current requester authorization is enforced. Original C11 blocks a task with no grant. R01 positively recalls synthetic history for a distinct task with a valid current grant and authenticated GOAL. R12/R13 remove that current grant or append a valid OWNER ABORT and observe `BLOCKED_REQUEST_NOT_AUTHORIZED`.
+- R08 executes four concurrent Node withdrawal processes: exactly one returns true, three return false, and the grant remains valid. R09 changes the canonical grant during the temporary-file fsync: the operation refuses instead of overwriting the newer field. R10 injects post-rename EIO: no success acknowledgment, the committed anchor still blocks, and retry reasserts durability. R11 SIGKILLs a real process during temporary-file fsync: unchanged original grant plus an uncertain lease block historical recall. These are host software fault injections, not physical power-loss/Android guarantees.
+- The corrected provenance requirement is conservative: original private runtime brand **and** frozen observation **and** `verifiedModelExecution === true` are required for production admission; the persisted reader also requires the true tier. R15 signs a false tier with a disposable fixture key and confirms it stays ineligible. Exact source still lacks the ALPHA/BETA exports (C03), and the current actual runtime producer does not establish true model execution. Production strategy admission remains blocked, as intended. No reviewer result demonstrates real positive model admission.
+
+## Synthetic compatibility and retained failed run
+
+The new `fixture-tier-compat.mjs` Node loader transforms only the exact review fixture URL and inserts `verifiedModelExecution:true` into its synthetic observation. It checks an exact single-occurrence fixture anchor, does not transform any candidate module, does not modify the original frozen files, and does not change any expected assertion. The fixture already signs its manually constructed proof with a disposable key; this true flag is test data, not model provenance. C01/C27/C28 therefore exercise real eligible reader paths again instead of being disabled by the stronger tier.
+
+The first supplemental run was **45 PASS / 1 FAIL, exit 1**: R13 omitted the mandatory `ABORT.code` fixture field, so canonical journal construction failed before reaching the tested recall assertion. Added only `code:'OWNER'`; expected denial unchanged. Original raw output remains in `corrected-challenge-initial-fixture-failure.tap` and its `.exit`. The successful complete rerun is `corrected-challenge.tap`. No candidate bug was reclassified as passing and no original failed expectation was weakened.
+
+## Remaining boundaries
+
+- R14 constructs a **valid current grant and journal on a different source SHA** and observes status OK with zero items. Exact source/path matching is an accepted narrow interim restriction, **not fulfillment** of the user's changed-code related-task recall requirement. Any future extension needs explicit current authorization/provenance policy and independent review; no silent rights widening.
+- Canonical grants and runtime key remain trusted. Joint rollback/removal of the grant anchor **and** ledger tombstone can defeat historical revocation, even if task journals remain unchanged. Whole trusted-state rollback is outside scope; there is no hardware or monotonic antirollback protection. Existing current-protocol grant mutators must share the withdrawal lease; malicious or old writers ignoring it are outside the supported concurrency contract.
+- Full-byte capacity withdrawal was exercised by the freshly rerun author suite; independent supplemental R02 specifically covers the 4096-record bound. The independent original suite also checks oversized-byte refusal. No real ENOSPC filesystem or physical disk-loss test was performed.
+- No source integration into current ALPHA/BETA callers was performed in this reviewer branch. Combined caller shapes, provider prompt consumption and final exact combined SHA still require Chief/QA validation. Real inference, learning benefit/ablation, new-source transfer success, Gradle/Android/Fold7, release/sign/install are NOT_RUN here.
+
+## Reproduction and evidence
+
+From the review checkout:
+
+```sh
+mkdir -p /tmp/momega1-memory-candidate-cf0f6a42
+git archive cf0f6a4276bfb9b4f61ab599f4ddbdf63e9f63bb .github/continuum scripts | tar -x -C /tmp/momega1-memory-candidate-cf0f6a42
+MOMEGA1_CANDIDATE_ROOT=/tmp/momega1-memory-candidate-cf0f6a42 node --import ./tools/momega1-memory-review/tests/fixture-tier-compat.mjs --test --test-reporter=tap tools/momega1-memory-review/tests/challenge.test.mjs tools/momega1-memory-review/tests/canonical-anchor.test.mjs
+```
+
+From the extracted candidate, run the two original focused/regression commands preserved below. All actual commands, directories, exact source/test/log hashes and exit codes are in [`corrected-receipt.json`](../../../evidence/momega1/memory-review/corrected-receipt.json). New production diff is [`corrected-candidate.diff`](../../../evidence/momega1/memory-review/corrected-candidate.diff). Author updated handoff/API were read and reconciled with source before final verdict. Chief and author received the final acceptance boundaries.
+
+Rollback: omit this tests/docs-only review branch. No production, owner state, models, main, signing, installation or deployment were modified. EXP-02/05/07/08/11/12. Original review below is retained as historical evidence and is superseded only for the corrected exact candidate.
+
+---
+
 # MΩ-1 independent memory review
 
 **Verdict: REQUEST_CHANGES for end-to-end memory acceptance on candidate `78d94a3959f655cd512025824ca92d78e698a5a1`.** Independent reviewer, not feature author. Review [draft PR #418](https://github.com/Ullmann27/device-ai/pull/418) targets Chief. No production edits were made.
