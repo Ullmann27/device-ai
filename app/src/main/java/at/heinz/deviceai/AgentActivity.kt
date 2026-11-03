@@ -179,7 +179,7 @@ class AgentActivity : Activity() {
     @Volatile private var continuumState: ContinuumRuntimeState? = null
     @Volatile private var continuumStartupNote: String? = null
     private val contextCompiler = AiContextCompiler(
-        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)
+        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4, nativeToolCatalog = true)
     )
 
     private lateinit var shizukuBadge: TextView

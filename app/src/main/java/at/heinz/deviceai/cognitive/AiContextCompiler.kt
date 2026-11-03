@@ -7,6 +7,8 @@ data class AiContextPolicy(
     val maxBytes: Int = 16_000,
     val memoryLimit: Int = 8,
     val researchSourceLimit: Int = 6,
+    /** Tool schemas are already registered natively with the LiteRT-LM conversation. */
+    val nativeToolCatalog: Boolean = false,
     val allowedPrivacy: Set<PrivacyClass> = setOf(
         PrivacyClass.PUBLIC,
         PrivacyClass.PRIVATE,
