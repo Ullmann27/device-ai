@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 BASE = ROOT/'docs/evidence/issue340-20261101/m2/frozen-dev/checkpoint.json'
 CURRENT = ROOT/'docs/evidence/synapse-iii-20261102/m2-adapter/candidate/checkpoint-17.json'
-SOURCES = [HERE/'GeneralizationProbe.kt', ROOT/'tools/continuum-span-research/Cdx2PointerCandidate.kt',
+SOURCES = [HERE/'GeneralizationProbe.kt', HERE/'GroundedSlotResidual.kt', ROOT/'tools/continuum-span-research/Cdx2PointerCandidate.kt',
            ROOT/'tools/continuum-span-research/Cdx2CounterfactualShadow.kt',
            ROOT/'app/src/main/java/at/heinz/deviceai/learning/span/EvidenceBoundNaturalLocationProbe.kt']
 
@@ -32,11 +32,18 @@ def main():
     parser.add_argument('--corpus', type=Path)
     parser.add_argument('--corpus-sha256')
     parser.add_argument('--corruption-controls', action='store_true')
+    parser.add_argument('--train', type=Path)
+    parser.add_argument('--candidate', type=Path)
+    parser.add_argument('--freeze-manifest', type=Path)
     args = parser.parse_args()
     assert args.inputs.exists() and not args.out.exists()
     if args.corpus:
         assert args.corpus_sha256 and sha(args.corpus) == args.corpus_sha256
     assert not (args.corpus and args.corruption_controls)
+    assert not (args.train and args.candidate)
+    if args.freeze_manifest:
+        for path, expected in read(args.freeze_manifest)['hashes'].items():
+            assert sha(ROOT/path) == expected, f'frozen file changed: {path}'
     inputs = read(args.inputs)
     assert all(set(c) == {'id','question','sources'} for c in inputs['cases'])
     assert len({c['id'] for c in inputs['cases']}) == len(inputs['cases'])
@@ -60,18 +67,24 @@ def main():
         write(args.out/'commands.json', records)
         if process.returncode: raise RuntimeError(f'{name} failed: {process.stderr[-1500:]}')
     run(['kotlinc','-cp',cp,*SOURCES,'-d',args.out/'classes'], 'compile')
-    run(['java','-cp',str(args.out/'classes')+':'+cp,'at.heinz.deviceai.learning.span.GeneralizationProbe',
-         BASE,CURRENT,args.inputs,args.out/'predictions'], 'predict')
+    classpath=str(args.out/'classes')+':'+cp
+    if args.train:
+        args.candidate=args.out/'residual-checkpoint.json'
+        run(['java','-cp',classpath,'at.heinz.deviceai.learning.span.GroundedSlotResidual',CURRENT,args.train,args.candidate], 'train')
+    run(['java','-cp',classpath,'at.heinz.deviceai.learning.span.GeneralizationProbe',
+         BASE,CURRENT,args.inputs,args.out/'predictions']+([args.candidate] if args.candidate else []), 'predict')
+    arms=['base11','current13']+(['amendedZero','trained15'] if args.candidate else [])
     # No labels reach the model process. Scoring begins only once both predictions exist.
     result = dict(schema='BREAKTHROUGH_NEURAL_PROBE_V1',sourceCommit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                   sourceHashes={str(p.relative_to(ROOT)):sha(p) for p in SOURCES+[HERE/'run.py', ROOT/'scripts/cdx2-blind-score.mjs']},
                   checkpointHashes={'base11':sha(BASE),'current13':sha(CURRENT)},inputsSha256=sha(args.inputs),
                   cpuAffinity=affinity,heapLimitBytes=1073741824,device='NOT_RUN',promotion='FORBIDDEN_RESEARCH_ONLY',arms={})
+    if args.candidate: result['checkpointHashes']['trained15']=sha(args.candidate)
     if args.corpus:
         corpus=read(args.corpus); original={c['id']:c for c in corpus['cases']}
         assert inputs == {'cases':[{k:c[k] for k in ['id','question','sources']} for c in corpus['cases']]}
         result['corpusSha256']=sha(args.corpus)
-        for arm in ['base11','current13']:
+        for arm in arms:
             prediction=args.out/'predictions'/f'{arm}-predictions.json'
             run(['node',ROOT/'scripts/cdx2-blind-score.mjs',args.corpus,prediction,args.out/f'{arm}-score.json',args.corpus_sha256],f'score-{arm}')
             scores=read(args.out/f'{arm}-score.json')
@@ -93,8 +106,25 @@ def main():
         a=read(args.out/'base11-score.json')['records'];b=read(args.out/'current13-score.json')['records']
         result['pairedCurrentVsBase']={mode:dict(improvements=sum(not x[mode]['exact'] and y[mode]['exact'] for x,y in zip(a,b)),
                                                   regressions=sum(x[mode]['exact'] and not y[mode]['exact'] for x,y in zip(a,b))) for mode in ['RAW','RULE','VERIFIED']}
+        if args.candidate:
+            trained=read(args.out/'trained15-score.json')['records']
+            paired={}
+            for comparator in ['current13','amendedZero']:
+                control=read(args.out/f'{comparator}-score.json')['records']
+                for mode in ['RAW','VERIFIED','RULE']:
+                    wins=sum(not x[mode]['exact'] and y[mode]['exact'] for x,y in zip(control,trained))
+                    losses=sum(x[mode]['exact'] and not y[mode]['exact'] for x,y in zip(control,trained))
+                    n=wins+losses
+                    p=min(1.0,2*sum(math.comb(n,k) for k in range(min(wins,losses)+1))/2**n) if n else 1.0
+                    paired[f'trained15-{comparator}-{mode}']=dict(improvements=wins,regressions=losses,exactPairedP=p)
+            rule_wins=sum(not x['RULE']['exact'] and y['VERIFIED']['exact'] for x,y in zip(b,trained))
+            rule_losses=sum(x['RULE']['exact'] and not y['VERIFIED']['exact'] for x,y in zip(b,trained))
+            n=rule_wins+rule_losses
+            paired['trained15-VERIFIED-vs-RULE']=dict(improvements=rule_wins,regressions=rule_losses,
+                exactPairedP=min(1.0,2*sum(math.comb(n,k) for k in range(min(rule_wins,rule_losses)+1))/2**n) if n else 1.0)
+            result['pairedCandidateComparisons']=paired
     if args.corruption_controls:
-        for arm in ['base11','current13']:
+        for arm in arms:
             rows=read(args.out/'predictions'/f'{arm}-predictions.json')['cases']
             ok=all(row[mode]=={'decision':'NOANSWER'} for row in rows for mode in ['RAW','RULE','VERIFIED'])
             result['arms'][arm]=dict(cases=len(rows),allModesAbstained=ok)

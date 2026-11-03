@@ -11,10 +11,16 @@ object GeneralizationProbe {
         require(request.keySet() == setOf("id", "question", "sources")) { "label-free request required" }
         val q = request.getString("question")
         val sources = Cdx2PointerCandidate.sources(request.getJSONArray("sources"))
-        val options = if (weights.size == 11) Cdx2PointerCandidate.options(q, sources)
-            else Cdx2CounterfactualShadow.options(q, sources)
-        val probabilities = if (weights.size == 11) Cdx2PointerCandidate.probabilities(weights, options)
-            else Cdx2CounterfactualShadow.probabilities(weights, options)
+        val options = when (weights.size) {
+            11 -> Cdx2PointerCandidate.options(q, sources)
+            13 -> Cdx2CounterfactualShadow.options(q, sources)
+            else -> GroundedSlotResidual.options(q, sources)
+        }
+        val probabilities = when (weights.size) {
+            11 -> Cdx2PointerCandidate.probabilities(weights, options)
+            13 -> Cdx2CounterfactualShadow.probabilities(weights, options)
+            else -> GroundedSlotResidual.probabilities(weights, options)
+        }
         val found = options[probabilities.indices.maxBy { probabilities[it] }].found
         val accepted = Cdx2PointerCandidate.verified(q, sources, found)
         val rule = EvidenceBoundNaturalLocationProbe.answer(q, sources)
@@ -32,7 +38,7 @@ object GeneralizationProbe {
     }
 
     @JvmStatic fun main(args: Array<String>) {
-        require(args.size == 4) { "BASE_CHECKPOINT CURRENT_CHECKPOINT LABEL_FREE_REQUESTS FRESH_OUTDIR" }
+        require(args.size in 4..5) { "BASE_CHECKPOINT CURRENT_CHECKPOINT LABEL_FREE_REQUESTS FRESH_OUTDIR [RESIDUAL_CHECKPOINT]" }
         val base = Cdx2PointerCandidate.load(args[0])
         val currentJson = JSONObject(File(args[1]).readText())
         require(currentJson.getString("schema") == "CDX2_FROZEN_BASE_ADAPTER_V1")
@@ -45,7 +51,16 @@ object GeneralizationProbe {
         val requests = JSONObject(File(args[2]).readText()).getJSONArray("cases")
         require(requests.length() in 1..256)
         val out = File(args[3]); require(!out.exists() && out.mkdirs())
-        val arms = listOf("base11" to base, "current13" to current)
+        val arms = mutableListOf("base11" to base, "current13" to current)
+        if (args.size == 5) {
+            val candidate = JSONObject(File(args[4]).readText())
+            require(candidate.getString("schema") == "BREAKTHROUGH_GROUNDED_SLOT_RESIDUAL_V1")
+            val candidateWeights = candidate.getJSONArray("weights"); require(candidateWeights.length() == 15)
+            val trained = DoubleArray(15) { candidateWeights.getDouble(it) }
+            require((0..12).all { trained[it].toBits() == current[it].toBits() })
+            arms += "amendedZero" to current.copyOf(15)
+            arms += "trained15" to trained
+        }
         // Equal warmup workload; reverse arm order on alternating repetitions.
         repeat(5) { repeat ->
             for ((_, weights) in if (repeat % 2 == 0) arms else arms.reversed())
@@ -76,6 +91,6 @@ object GeneralizationProbe {
         File(out, "timings.json").writeText(JSONObject().put("warmupPasses", 5).put("measuredPasses", 5)
             .put("scope", "host JVM; full instrumented pipeline including trace allocation; not Android or model-only inference")
             .put("measurements", measurements).toString(2) + "\n")
-        println("CDX2_GENERALIZATION_COMPLETE cases=${requests.length()} arms=2 predictionRepeats=5")
+        println("CDX2_GENERALIZATION_COMPLETE cases=${requests.length()} arms=${arms.size} predictionRepeats=5")
     }
 }

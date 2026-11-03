@@ -1,0 +1,844 @@
+{
+  "cases": [
+    {
+      "id": "NEURALTRAIN001",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Alvori?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN001-source",
+          "revision": 1,
+          "text": "In Belvane wohnt Alvori.",
+          "sha256": "eaa985cdaf97f9b1f296ab99762d3324e8a476ccf5a732aeef5a1d54358bdf80"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN001-source",
+        "revision": 1,
+        "sha256": "eaa985cdaf97f9b1f296ab99762d3324e8a476ccf5a732aeef5a1d54358bdf80",
+        "text": "Belvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN002",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN002-source",
+          "revision": 1,
+          "text": "In Belvane wohnt Alvori.",
+          "sha256": "eaa985cdaf97f9b1f296ab99762d3324e8a476ccf5a732aeef5a1d54358bdf80"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN003",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Alvori?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN003-source",
+          "revision": 1,
+          "text": "Alvori wohnt in L’Belvane.",
+          "sha256": "9483f23973257a392c1cda1aaa3bd90e42edfb24155d0cc5d821f733c0226a33"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN003-source",
+        "revision": 1,
+        "sha256": "9483f23973257a392c1cda1aaa3bd90e42edfb24155d0cc5d821f733c0226a33",
+        "text": "L’Belvane",
+        "start": 16,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "NEURALTRAIN004",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN004-source",
+          "revision": 1,
+          "text": "Alvori wohnt in L’Belvane.",
+          "sha256": "9483f23973257a392c1cda1aaa3bd90e42edfb24155d0cc5d821f733c0226a33"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN005",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Alvori?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN005-source",
+          "revision": 1,
+          "text": "Alvori wohnt in Belvane am See.",
+          "sha256": "f7e94175b6fcab4f96b2da5b3e64bb2506399a0d73d5a45603f5a2df3c8c4c0d"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN005-source",
+        "revision": 1,
+        "sha256": "f7e94175b6fcab4f96b2da5b3e64bb2506399a0d73d5a45603f5a2df3c8c4c0d",
+        "text": "Belvane am See",
+        "start": 16,
+        "endExclusive": 30
+      }
+    },
+    {
+      "id": "NEURALTRAIN006",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN006-source",
+          "revision": 1,
+          "text": "Alvori wohnt in Belvane am See.",
+          "sha256": "f7e94175b6fcab4f96b2da5b3e64bb2506399a0d73d5a45603f5a2df3c8c4c0d"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN007",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Alvori?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN007-source",
+          "revision": 1,
+          "text": "Alvori wohnt in Neu Groß Belvane Nord.",
+          "sha256": "f5830c68927c1cbc9238c48c28aa42365e70f702237a38533133aebb9bc928a7"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN007-source",
+        "revision": 1,
+        "sha256": "f5830c68927c1cbc9238c48c28aa42365e70f702237a38533133aebb9bc928a7",
+        "text": "Neu Groß Belvane Nord",
+        "start": 16,
+        "endExclusive": 37
+      }
+    },
+    {
+      "id": "NEURALTRAIN008",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN008-source",
+          "revision": 1,
+          "text": "Alvori wohnt in Neu Groß Belvane Nord.",
+          "sha256": "f5830c68927c1cbc9238c48c28aa42365e70f702237a38533133aebb9bc928a7"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN009",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Cevrila?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN009-source",
+          "revision": 1,
+          "text": "In Dorvane wohnt Cevrila.",
+          "sha256": "d6853faa9b0f8f57de924530992831bc10f3acb8316df4ed1069dd148215ad32"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN009-source",
+        "revision": 1,
+        "sha256": "d6853faa9b0f8f57de924530992831bc10f3acb8316df4ed1069dd148215ad32",
+        "text": "Dorvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN010",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN010-source",
+          "revision": 1,
+          "text": "In Dorvane wohnt Cevrila.",
+          "sha256": "d6853faa9b0f8f57de924530992831bc10f3acb8316df4ed1069dd148215ad32"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN011",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Cevrila?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN011-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in L’Dorvane.",
+          "sha256": "d26014f1162be1d27163bea560ae8d717849b3e18c263789504b43c59033e1a0"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN011-source",
+        "revision": 1,
+        "sha256": "d26014f1162be1d27163bea560ae8d717849b3e18c263789504b43c59033e1a0",
+        "text": "L’Dorvane",
+        "start": 17,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "NEURALTRAIN012",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN012-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in L’Dorvane.",
+          "sha256": "d26014f1162be1d27163bea560ae8d717849b3e18c263789504b43c59033e1a0"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN013",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Cevrila?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN013-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in Dorvane am See.",
+          "sha256": "74b93e84218aa30f674278a923bbb3d336579ac42bc03c729fa7b6e0fb1319ca"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN013-source",
+        "revision": 1,
+        "sha256": "74b93e84218aa30f674278a923bbb3d336579ac42bc03c729fa7b6e0fb1319ca",
+        "text": "Dorvane am See",
+        "start": 17,
+        "endExclusive": 31
+      }
+    },
+    {
+      "id": "NEURALTRAIN014",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN014-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in Dorvane am See.",
+          "sha256": "74b93e84218aa30f674278a923bbb3d336579ac42bc03c729fa7b6e0fb1319ca"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN015",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Cevrila?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN015-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in Neu Groß Dorvane Nord.",
+          "sha256": "40536e4cfdd1236bd0275256afdad8d96268ff25727537039b946b7afad4ab96"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN015-source",
+        "revision": 1,
+        "sha256": "40536e4cfdd1236bd0275256afdad8d96268ff25727537039b946b7afad4ab96",
+        "text": "Neu Groß Dorvane Nord",
+        "start": 17,
+        "endExclusive": 38
+      }
+    },
+    {
+      "id": "NEURALTRAIN016",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN016-source",
+          "revision": 1,
+          "text": "Cevrila wohnt in Neu Groß Dorvane Nord.",
+          "sha256": "40536e4cfdd1236bd0275256afdad8d96268ff25727537039b946b7afad4ab96"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN017",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Efroni?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN017-source",
+          "revision": 1,
+          "text": "In Felvane wohnt Efroni.",
+          "sha256": "a6f2336030acb26f48d511f94ee372d026a090ea3345725faf9f5c28a632d610"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN017-source",
+        "revision": 1,
+        "sha256": "a6f2336030acb26f48d511f94ee372d026a090ea3345725faf9f5c28a632d610",
+        "text": "Felvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN018",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN018-source",
+          "revision": 1,
+          "text": "In Felvane wohnt Efroni.",
+          "sha256": "a6f2336030acb26f48d511f94ee372d026a090ea3345725faf9f5c28a632d610"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN019",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Efroni?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN019-source",
+          "revision": 1,
+          "text": "Efroni wohnt in L’Felvane.",
+          "sha256": "9a64f170c29045df46f8247f613f6db3db256c45e34bbf85c9b7950905ab7674"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN019-source",
+        "revision": 1,
+        "sha256": "9a64f170c29045df46f8247f613f6db3db256c45e34bbf85c9b7950905ab7674",
+        "text": "L’Felvane",
+        "start": 16,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "NEURALTRAIN020",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN020-source",
+          "revision": 1,
+          "text": "Efroni wohnt in L’Felvane.",
+          "sha256": "9a64f170c29045df46f8247f613f6db3db256c45e34bbf85c9b7950905ab7674"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN021",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Efroni?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN021-source",
+          "revision": 1,
+          "text": "Efroni wohnt in Felvane am See.",
+          "sha256": "acd0b3cca7f26d76d585f6f79c419c4383322dd0be04a372e99259325ae6cab6"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN021-source",
+        "revision": 1,
+        "sha256": "acd0b3cca7f26d76d585f6f79c419c4383322dd0be04a372e99259325ae6cab6",
+        "text": "Felvane am See",
+        "start": 16,
+        "endExclusive": 30
+      }
+    },
+    {
+      "id": "NEURALTRAIN022",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN022-source",
+          "revision": 1,
+          "text": "Efroni wohnt in Felvane am See.",
+          "sha256": "acd0b3cca7f26d76d585f6f79c419c4383322dd0be04a372e99259325ae6cab6"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN023",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Efroni?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN023-source",
+          "revision": 1,
+          "text": "Efroni wohnt in Neu Groß Felvane Nord.",
+          "sha256": "fa06c7f9b4bbe789219bdff33ffe906cbe7370ce880ed2c8ef668209d8cd333e"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN023-source",
+        "revision": 1,
+        "sha256": "fa06c7f9b4bbe789219bdff33ffe906cbe7370ce880ed2c8ef668209d8cd333e",
+        "text": "Neu Groß Felvane Nord",
+        "start": 16,
+        "endExclusive": 37
+      }
+    },
+    {
+      "id": "NEURALTRAIN024",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN024-source",
+          "revision": 1,
+          "text": "Efroni wohnt in Neu Groß Felvane Nord.",
+          "sha256": "fa06c7f9b4bbe789219bdff33ffe906cbe7370ce880ed2c8ef668209d8cd333e"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN025",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Gavrika?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN025-source",
+          "revision": 1,
+          "text": "In Helvane wohnt Gavrika.",
+          "sha256": "7504cea9eaaa2aee5efba3e153bb65e78a55243cb8f532032baa3b31a5d37391"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN025-source",
+        "revision": 1,
+        "sha256": "7504cea9eaaa2aee5efba3e153bb65e78a55243cb8f532032baa3b31a5d37391",
+        "text": "Helvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN026",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN026-source",
+          "revision": 1,
+          "text": "In Helvane wohnt Gavrika.",
+          "sha256": "7504cea9eaaa2aee5efba3e153bb65e78a55243cb8f532032baa3b31a5d37391"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN027",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Gavrika?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN027-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in L’Helvane.",
+          "sha256": "9db9740c42ecc27e82d46b85b03b4470559abfcbb1cf271df4892c15c17cc2c7"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN027-source",
+        "revision": 1,
+        "sha256": "9db9740c42ecc27e82d46b85b03b4470559abfcbb1cf271df4892c15c17cc2c7",
+        "text": "L’Helvane",
+        "start": 17,
+        "endExclusive": 26
+      }
+    },
+    {
+      "id": "NEURALTRAIN028",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN028-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in L’Helvane.",
+          "sha256": "9db9740c42ecc27e82d46b85b03b4470559abfcbb1cf271df4892c15c17cc2c7"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN029",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Gavrika?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN029-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in Helvane am See.",
+          "sha256": "6534d59d1b094cbf369c61ca9c976b2ac087c74ff907719c8163dc21a224c3ed"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN029-source",
+        "revision": 1,
+        "sha256": "6534d59d1b094cbf369c61ca9c976b2ac087c74ff907719c8163dc21a224c3ed",
+        "text": "Helvane am See",
+        "start": 17,
+        "endExclusive": 31
+      }
+    },
+    {
+      "id": "NEURALTRAIN030",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN030-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in Helvane am See.",
+          "sha256": "6534d59d1b094cbf369c61ca9c976b2ac087c74ff907719c8163dc21a224c3ed"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN031",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Gavrika?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN031-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in Neu Groß Helvane Nord.",
+          "sha256": "a6497496285472d36b09b9584955faa945bda900533acbfc90314ef63c30949c"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN031-source",
+        "revision": 1,
+        "sha256": "a6497496285472d36b09b9584955faa945bda900533acbfc90314ef63c30949c",
+        "text": "Neu Groß Helvane Nord",
+        "start": 17,
+        "endExclusive": 38
+      }
+    },
+    {
+      "id": "NEURALTRAIN032",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN032-source",
+          "revision": 1,
+          "text": "Gavrika wohnt in Neu Groß Helvane Nord.",
+          "sha256": "a6497496285472d36b09b9584955faa945bda900533acbfc90314ef63c30949c"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN033",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Ivrani?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN033-source",
+          "revision": 1,
+          "text": "In Jelvane wohnt Ivrani.",
+          "sha256": "6eb3fe0f58726d0a83e9eada161f931205810b1a148e7bc93575447f90d79937"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN033-source",
+        "revision": 1,
+        "sha256": "6eb3fe0f58726d0a83e9eada161f931205810b1a148e7bc93575447f90d79937",
+        "text": "Jelvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN034",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN034-source",
+          "revision": 1,
+          "text": "In Jelvane wohnt Ivrani.",
+          "sha256": "6eb3fe0f58726d0a83e9eada161f931205810b1a148e7bc93575447f90d79937"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN035",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Ivrani?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN035-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in L’Jelvane.",
+          "sha256": "4b70f04b4ef7ae903ad3eaa550a4fbf287aa7b6bebf5912f4acb173bed9f3ce0"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN035-source",
+        "revision": 1,
+        "sha256": "4b70f04b4ef7ae903ad3eaa550a4fbf287aa7b6bebf5912f4acb173bed9f3ce0",
+        "text": "L’Jelvane",
+        "start": 16,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "NEURALTRAIN036",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN036-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in L’Jelvane.",
+          "sha256": "4b70f04b4ef7ae903ad3eaa550a4fbf287aa7b6bebf5912f4acb173bed9f3ce0"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN037",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Ivrani?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN037-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in Jelvane am See.",
+          "sha256": "370ac16cc890153e70f92ef2975e926c12435b1173a91ac873b80967a5db0771"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN037-source",
+        "revision": 1,
+        "sha256": "370ac16cc890153e70f92ef2975e926c12435b1173a91ac873b80967a5db0771",
+        "text": "Jelvane am See",
+        "start": 16,
+        "endExclusive": 30
+      }
+    },
+    {
+      "id": "NEURALTRAIN038",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN038-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in Jelvane am See.",
+          "sha256": "370ac16cc890153e70f92ef2975e926c12435b1173a91ac873b80967a5db0771"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN039",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Ivrani?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN039-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in Neu Groß Jelvane Nord.",
+          "sha256": "39dc12718ff197ecb816cdc220e42a4f248a6664528185e215dee6211f43ac38"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN039-source",
+        "revision": 1,
+        "sha256": "39dc12718ff197ecb816cdc220e42a4f248a6664528185e215dee6211f43ac38",
+        "text": "Neu Groß Jelvane Nord",
+        "start": 16,
+        "endExclusive": 37
+      }
+    },
+    {
+      "id": "NEURALTRAIN040",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN040-source",
+          "revision": 1,
+          "text": "Ivrani wohnt in Neu Groß Jelvane Nord.",
+          "sha256": "39dc12718ff197ecb816cdc220e42a4f248a6664528185e215dee6211f43ac38"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN041",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Kavren?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN041-source",
+          "revision": 1,
+          "text": "In Lelvane wohnt Kavren.",
+          "sha256": "86324eb7912bdc41a4441ce607c4a40051fc6b3cd780786089fabc8eedf91f9c"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN041-source",
+        "revision": 1,
+        "sha256": "86324eb7912bdc41a4441ce607c4a40051fc6b3cd780786089fabc8eedf91f9c",
+        "text": "Lelvane",
+        "start": 3,
+        "endExclusive": 10
+      }
+    },
+    {
+      "id": "NEURALTRAIN042",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN042-source",
+          "revision": 1,
+          "text": "In Lelvane wohnt Kavren.",
+          "sha256": "86324eb7912bdc41a4441ce607c4a40051fc6b3cd780786089fabc8eedf91f9c"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN043",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Kavren?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN043-source",
+          "revision": 1,
+          "text": "Kavren wohnt in L’Lelvane.",
+          "sha256": "df48ff0e37e4fff3b24e345749748f27d3c611b2eac7def3b515c48bf13cee7e"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN043-source",
+        "revision": 1,
+        "sha256": "df48ff0e37e4fff3b24e345749748f27d3c611b2eac7def3b515c48bf13cee7e",
+        "text": "L’Lelvane",
+        "start": 16,
+        "endExclusive": 25
+      }
+    },
+    {
+      "id": "NEURALTRAIN044",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN044-source",
+          "revision": 1,
+          "text": "Kavren wohnt in L’Lelvane.",
+          "sha256": "df48ff0e37e4fff3b24e345749748f27d3c611b2eac7def3b515c48bf13cee7e"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN045",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Kavren?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN045-source",
+          "revision": 1,
+          "text": "Kavren wohnt in Lelvane am See.",
+          "sha256": "9f7168ee9c6b357fd4fcb1bfe5a81e0d0a4183d97ce28937506ef012de008ad4"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN045-source",
+        "revision": 1,
+        "sha256": "9f7168ee9c6b357fd4fcb1bfe5a81e0d0a4183d97ce28937506ef012de008ad4",
+        "text": "Lelvane am See",
+        "start": 16,
+        "endExclusive": 30
+      }
+    },
+    {
+      "id": "NEURALTRAIN046",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN046-source",
+          "revision": 1,
+          "text": "Kavren wohnt in Lelvane am See.",
+          "sha256": "9f7168ee9c6b357fd4fcb1bfe5a81e0d0a4183d97ce28937506ef012de008ad4"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "id": "NEURALTRAIN047",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Kavren?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN047-source",
+          "revision": 1,
+          "text": "Kavren wohnt in Neu Groß Lelvane Nord.",
+          "sha256": "5597f06d41b0230307ea9ea994148703b0e1de2bfdd45e69725b7a50c16cfdd6"
+        }
+      ],
+      "expected": {
+        "sourceId": "NEURALTRAIN047-source",
+        "revision": 1,
+        "sha256": "5597f06d41b0230307ea9ea994148703b0e1de2bfdd45e69725b7a50c16cfdd6",
+        "text": "Neu Groß Lelvane Nord",
+        "start": 16,
+        "endExclusive": 37
+      }
+    },
+    {
+      "id": "NEURALTRAIN048",
+      "split": "ADVERSARIAL",
+      "question": "Wo wohnt Mivora?",
+      "sources": [
+        {
+          "sourceId": "NEURALTRAIN048-source",
+          "revision": 1,
+          "text": "Kavren wohnt in Neu Groß Lelvane Nord.",
+          "sha256": "5597f06d41b0230307ea9ea994148703b0e1de2bfdd45e69725b7a50c16cfdd6"
+        }
+      ],
+      "expected": null
+    }
+  ]
+}
