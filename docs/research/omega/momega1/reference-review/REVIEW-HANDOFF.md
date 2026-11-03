@@ -118,5 +118,13 @@ orb/2D fallback and shared frame/pose state. The narrow runtime/asset import add
 no brain scheduler, TTS implementation, camera permission or Activity change.
 Source comparison does not replace a native-render/visual/lifecycle check.
 
+Follow-up exact source `26555aa6c59fdd4dd2e190defcdf49b983305555` passes the
+**same unchanged 26 cases, 26 PASS, 0 FAIL, 0 SKIP**, exit 0. The fix restores the
+last actually fresh timestamp after discarding a future sample, while preserving
+the separate clear watermark. **ACCEPT_MOTION_GAZE_CONTRACT** for that exact source;
+this does not accept head appearance, real camera integration, Filament rendering,
+first-run guidance, voice identity or Fold7 execution. Raw output and exact source
+hashes: `gaze-motion-fixed-2655-receipt.json`.
+
 No raw reference media, private owner data, credentials or generated likeness is
 committed. Main, signing, installed app and productive publishing remain untouched.
