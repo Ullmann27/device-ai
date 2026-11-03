@@ -22,7 +22,7 @@ class AvatarCameraPolicyTest {
     }
     @Test fun freshSingleHardwareFaceProducesBoundedPositionOnly() {
         val p = policy(); val token = start(p)
-        val sample = p.acceptFrame(token, listOf(face()), geometry)!!
+        val sample = p.acceptFrame(token, listOf(face()), geometry, now)!!
         assertTrue(sample.x in -1f..1f); assertTrue(sample.y in -1f..1f)
         assertTrue(sample.x < 0f) // front-camera mirror after sensor rotation
         assertEquals(90, sample.confidence); assertEquals(now, sample.observedAtElapsedMillis)
@@ -31,30 +31,30 @@ class AvatarCameraPolicyTest {
     @Test fun noFaceOrMultipleFacesClearsPreviouslyObservedGaze() {
         for (faces in listOf(emptyList(), listOf(face(), face(300)))) {
             val p = policy(); val token = start(p)
-            assertNotNull(p.acceptFrame(token, listOf(face()), geometry))
+            assertNotNull(p.acceptFrame(token, listOf(face()), geometry, now))
             now += 100
-            assertNull(p.acceptFrame(token, faces, geometry)); assertNull(p.latest())
+            assertNull(p.acceptFrame(token, faces, geometry, now)); assertNull(p.latest())
             assertNotEquals(CameraTrackingState.TRACKING, p.state)
         }
     }
     @Test fun lowConfidenceOrInvalidBoundsCannotMasqueradeAsTracking() {
         for (f in listOf(face(score = 59), face(score = 101), face(-200), CameraFaceBox(500, 500, 400, 600, 90))) {
             val p = policy(); val token = start(p)
-            assertNull(p.acceptFrame(token, listOf(f), geometry)); assertNull(p.latest())
+            assertNull(p.acceptFrame(token, listOf(f), geometry, now)); assertNull(p.latest())
         }
     }
     @Test fun oldGenerationCannotRestoreGazeAfterStopOrRestart() {
         val p = policy(); val old = start(p)
-        p.acceptFrame(old, listOf(face()), geometry); p.stop()
-        assertNull(p.acceptFrame(old, listOf(face()), geometry))
+        p.acceptFrame(old, listOf(face()), geometry, now); p.stop()
+        assertNull(p.acceptFrame(old, listOf(face()), geometry, now))
         val fresh = start(p); assertNotEquals(old, fresh)
-        assertNull(p.acceptFrame(old, listOf(face()), geometry)); assertNull(p.latest())
-        assertNotNull(p.acceptFrame(fresh, listOf(face()), geometry))
+        assertNull(p.acceptFrame(old, listOf(face()), geometry, now)); assertNull(p.latest())
+        assertNotNull(p.acceptFrame(fresh, listOf(face()), geometry, now))
     }
     @Test fun revocationAndBackgroundClearImmediately() {
         for (gate in 0..2) {
             val p = policy(); val token = start(p)
-            p.acceptFrame(token, listOf(face()), geometry)
+            p.acceptFrame(token, listOf(face()), geometry, now)
             val gates = MutableList(3) { true }; gates[gate] = false
             assertFalse(p.updateGate(token, gates[0], gates[1], gates[2]))
             assertNull(p.latest()); assertFalse(p.isCurrent(token))
@@ -62,7 +62,7 @@ class AvatarCameraPolicyTest {
     }
     @Test fun stalePositionExpiresWithoutInventingContinuedTracking() {
         val p = policy(); val token = start(p)
-        p.acceptFrame(token, listOf(face()), geometry)
+        p.acceptFrame(token, listOf(face()), geometry, now)
         now += 750; assertNotNull(p.latest())
         now++; assertNull(p.latest()); assertEquals(CameraTrackingState.NO_FACE, p.state)
     }
@@ -74,29 +74,29 @@ class AvatarCameraPolicyTest {
     }
     @Test fun emptyButRealFramesKeepHeartbeatWithoutInventingFace() {
         val p = policy(); val token = start(p)
-        repeat(10) { now += 1_000; p.acceptFrame(token, emptyList(), geometry); assertFalse(p.expireHeartbeat(token)) }
+        repeat(10) { now += 1_000; p.acceptFrame(token, emptyList(), geometry, now); assertFalse(p.expireHeartbeat(token)) }
         assertNull(p.latest()); assertEquals(CameraTrackingState.NO_FACE, p.state)
     }
     @Test fun clockRollbackFailsClosed() {
         val p = policy(); val token = start(p)
-        p.acceptFrame(token, listOf(face()), geometry); now--
-        assertNull(p.acceptFrame(token, listOf(face()), geometry)); assertFalse(p.isCurrent(token))
+        p.acceptFrame(token, listOf(face()), geometry, now); now--
+        assertNull(p.acceptFrame(token, listOf(face()), geometry, now)); assertFalse(p.isCurrent(token))
         assertEquals(CameraTrackingState.ERROR, p.state)
     }
     @Test fun motionIsRateLimitedRatherThanJumpingBetweenFramePositions() {
         val p = policy(); val token = start(p)
-        var previous = p.acceptFrame(token, listOf(face(900)), geometry)!!
+        var previous = p.acceptFrame(token, listOf(face(900)), geometry, now)!!
         repeat(8) {
             now += 100
-            val next = p.acceptFrame(token, listOf(face(100)), geometry)!!
+            val next = p.acceptFrame(token, listOf(face(100)), geometry, now)!!
             assertTrue(kotlin.math.abs(next.x - previous.x) <= 0.2001f)
             previous = next
         }
     }
     @Test fun duplicateRapidFramesDoNotAccelerateSmoothing() {
         val p = policy(); val token = start(p)
-        val first = p.acceptFrame(token, listOf(face()), geometry)!!
-        repeat(30) { assertEquals(first, p.acceptFrame(token, listOf(face()), geometry)) }
+        val first = p.acceptFrame(token, listOf(face()), geometry, now)!!
+        repeat(30) { assertEquals(first, p.acceptFrame(token, listOf(face()), geometry, now)) }
         assertEquals(first, p.latest())
     }
     @Test fun frontSensorRotationAndDisplayRotationUseOneBoundedCoordinateContract() {
@@ -111,7 +111,7 @@ class AvatarCameraPolicyTest {
     }
     @Test fun overflowAndUnboundedMetadataAreRejected() {
         val p = policy(); val token = start(p)
-        assertNull(p.acceptFrame(token, List(9) { face() }, geometry))
+        assertNull(p.acceptFrame(token, List(9) { face() }, geometry, now))
         assertNull(CameraCoordinateMapping.normalized(face(), geometry.copy(left = Int.MIN_VALUE, right = Int.MAX_VALUE)))
     }
     @Test fun delayedNativeCallbackCannotRelabelOldCaptureAsCurrent() {
@@ -123,7 +123,7 @@ class AvatarCameraPolicyTest {
         assertEquals(CameraTrackingState.NO_FACE, p.state)
     }
     @Test fun futureOrMissingCaptureTimeCannotRenewHeartbeat() {
-        for (invalid in listOf(-1L, Long.MAX_VALUE)) {
+        for (invalid in listOf(null, -1L, Long.MAX_VALUE)) {
             val p = policy(); val token = start(p)
             repeat(5) {
                 now += 1_000

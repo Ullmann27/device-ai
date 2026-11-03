@@ -94,7 +94,7 @@ internal class AvatarCameraPolicy(private val elapsedMillis: () -> Long) {
         if (!isCurrent(token)) return null
         val now = elapsedMillis()
         if (now < lastFrameAt) { stop(CameraTrackingState.ERROR); return null }
-        val observedAt = observedAtElapsedMillis ?: now
+        val observedAt = observedAtElapsedMillis ?: -1L
         // A delayed native callback must not relabel an old capture as fresh.
         // Invalid observations also cannot keep a stalled camera alive.
         if (observedAt < 0 || observedAt > now || now - observedAt > GAZE_FRESHNESS_MS) {
