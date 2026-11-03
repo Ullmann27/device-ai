@@ -42,9 +42,12 @@ code requires the owner's separate send gesture. It nevertheless fails the
 private conversation boundary and delayed callback criterion. TTS callback
 correlation already uses utterance identity; that does not invalidate ASR.
 
-Suggested narrow repair: invalidate/cancel the existing speech scope whenever the
-selected bot context changes, including return to JARVIS and owner profile/context
-mutations. Preserve the existing recognizer and explicit-send contract. The UI
+Suggested narrow repair: invalidate/cancel the existing speech scope at an accepted
+selection request, before queued history I/O, and whenever the selected bot context
+changes, including return to JARVIS and owner profile/context mutations. Waiting
+until history I/O finishes leaves an interval in which the old result can populate
+the composer and then be carried into the new bot. Preserve the existing recognizer
+and explicit-send contract. The UI
 reviewer can add delayed-result and delayed-permission regressions to its existing
 suite; do not count this source counterexample as an executed RED test.
 
@@ -96,5 +99,12 @@ These are source observations, not end-to-end or Fold7 acceptance.
 5. Registry persistence, tool-free private model dialogue, independently verified
    tool execution and local-model repair success remain distinct milestones.
    This review establishes none of the latter two and no device performance claim.
+6. `loadModel`/`unloadModel` do not explicitly invalidate the private controller.
+   The normal model action button disables while busy, but model binding compares
+   id/version/weight SHA rather than an engine generation. The controller handoff
+   requires invalidation on lifecycle changes, including reload of identical
+   weights. No executable same-weights reload race was demonstrated here; an
+   explicit lifecycle hook and a caller regression would close that integration
+   assumption without changing the controller contract.
 
 Release, original signing, installation, main merge and owner data are untouched.
