@@ -1,0 +1,15 @@
+# Independent 7B review — admission remains blocked
+
+Reviewed production source: e192b9a6af55f599de5d33725265ac348e84a12e. No production changes by challenger. Frozen criteria/public contracts precede implementation inspection. The exact approved 7B bytes were independently streamed and checked against official revision metadata; the runtime is the previously independently rebuilt byte-identical official executable.
+
+Independent host controls: 62/62 PASS. Actual capped-container resource controls: 12/12 PASS. Actual AF_INET and AF_INET6 socket creation returns EPERM; writing root returns EROFS; no HOME or Docker socket is exposed. A separate 64 MiB synthetic allocation control proves kernel OOM enforcement, not model inference.
+
+First actual default-provider 7B attempt used the previously consumed synthetic batches task, declared 180000 ms model budget and unchanged production resource limits. It failed with CODING_MODEL_UNAVAILABLE after 98.334 s (outer observer 99.071 s), CHILD_EXIT_NONZERO, zero response bytes and no model observation. There is no normal generation receipt and no 7B genuine-admission certificate. CPU limit exhaustion is a hypothesis: the native hard CPU limit was 177 seconds, and the enclosing job consumed approximately 191 CPU seconds including bootstrap/hashing. The actual terminating native signal is not exposed by the normal API, so it is not asserted as proven.
+
+Live independent capture matches the native executable inode to the reviewed runtime. Its private /model.gguf and /runtime mounts match the exact host file device/inode and sizes. Native arguments show 2 worker threads, context 8192, 1800 token cap, fixed seed/temperature, read-only schema input, and --no-repack. Native status has three threads, no capabilities, NoNewPrivs=1 and two seccomp filters. Native AS hard limit is 7516192768 bytes; live sampled RSS reached 5257460 KiB (~5.01 GiB). Sampling covers a 45-second portion of the run and can miss transients.
+
+The actual Docker job reports memory.max=7516192768, memory.swap.max=0, cpu.max='200000 100000', pids.max=64, no OOM events. Its sampled memory.peak is 779948032 bytes. **Cgroup charged memory is not the model's total resident footprint:** already cached file-backed weight pages can remain charged to an ancestor group. Report native RSS separately. Host provider sampled RSS was 36388 KiB. Container cleanup completed; no model container remained. This is not a performance benchmark and does not prove a single aggregate host+container hard cap; production reserves 1 GiB for the bounded host controller outside the 7 GiB job.
+
+A smaller independent synthetic midpoint probe is frozen separately before execution. Its purpose is normal decoding/provenance evidence, not a repair-quality benchmark or replacement for the failed first probe. The frozen QA benchmark retains its original 60-second budget. Further native work waits for QA/UI coordination.
+
+FOLD7_NOT_RUN. No Android, accepted repair, learning, loop, signing or release success is claimed.

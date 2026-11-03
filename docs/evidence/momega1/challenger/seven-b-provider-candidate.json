@@ -1,0 +1,32 @@
+{
+  "status": "ERROR",
+  "name": "Error",
+  "message": "CODING_MODEL_UNAVAILABLE",
+  "stack": "Error: CODING_MODEL_UNAVAILABLE\n    at rejectedModelOutput (file:///workspace/momega1-challenger-7b-candidate/.github/continuum/coding-provider.mjs:17:14)\n    at provider (file:///workspace/momega1-challenger-7b-candidate/.github/continuum/coding-provider.mjs:271:10)\n    at file:///workspace/momega1-challenger/tools/momega1-challenger/actual-seven-b-provider.mjs:12:61",
+  "evidence": [
+    {
+      "name": "request-1.json",
+      "data": {
+        "schema": "continuum-coding-model-request",
+        "version": 1,
+        "taskId": "independent-real-batches",
+        "taskFingerprint": "8c0cf08460a5d60af9cfe6a26c0e5bff472826bf6563a77d81520ece9d083079",
+        "sourceCommit": "d93ec4096b80ce636913c7f761cc7d350d7a36b2",
+        "request": 1,
+        "startedAt": "2026-11-03T21:13:18.483Z",
+        "elapsedMs": 98334,
+        "configuredModel": "qwen2.5-coder-7b-instruct-q4_k_m",
+        "verifiedModelExecution": false,
+        "contextSha256": "eb56e18e304bac5b6a6ec6a0f70837d639294eb15571491eeb3940144d9861f6",
+        "promptSha256": "d2f8ebd20bf2d2b59acb9173051673c06e8cc5a652d90469e3998195353a3364",
+        "modelTimeoutMs": 180000,
+        "exitCode": 1,
+        "status": "FAILED",
+        "failureKind": "CHILD_EXIT_NONZERO",
+        "responseSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "responseBytes": 0,
+        "rawContentStored": false
+      }
+    }
+  ]
+}

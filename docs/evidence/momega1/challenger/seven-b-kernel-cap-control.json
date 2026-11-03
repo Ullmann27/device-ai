@@ -1,0 +1,18 @@
+{
+  "classification": "INDEPENDENT_SYNTHETIC_KERNEL_CAP_CONTROL",
+  "imageId": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+  "configuredMemoryBytes": 67108864,
+  "configuredMemorySwapBytes": 67108864,
+  "stdout": "{\"memoryMax\": \"67108864\", \"swapMax\": \"0\"}\n",
+  "stderr": "",
+  "commandExit": 137,
+  "containerExit": 137,
+  "oomKilled": true,
+  "networkMode": "none",
+  "readOnlyRootfs": true,
+  "capDrop": [
+    "ALL"
+  ],
+  "allocationRequestedBytes": 134217728,
+  "note": "64MiB synthetic control validates kernel enforcement mechanism; not7B inference or an8GiB memory benchmark."
+}

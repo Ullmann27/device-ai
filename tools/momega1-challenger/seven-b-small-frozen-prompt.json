@@ -1,0 +1,11 @@
+{
+  "classification": "SECOND_INDEPENDENT_PROVENANCE_PROBE_NOT_QA_BENCHMARK",
+  "source": "export const midpoint = (left, right) => left + right;\n",
+  "allowedTrackedPaths": [
+    "lib/batches.mjs"
+  ],
+  "acceptance": [
+    "Compute the arithmetic midpoint of two finite numbers, including negative and fractional inputs."
+  ],
+  "userPrompt": "Repair the exported midpoint function so it computes the arithmetic midpoint of its two finite-number inputs. Keep one expression and the export. Return the required coding JSON with a concise plan and hypothesis.\nSource:\nexport const midpoint = (left, right) => left + right;\n"
+}
