@@ -81,7 +81,7 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   activity.includes('val agentTask = resolvedQuestion') &&
+   activity.includes('val agentTask = at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(\n            text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))') &&
    !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
    bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
    bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <
