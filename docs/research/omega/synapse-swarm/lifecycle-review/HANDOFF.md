@@ -10,6 +10,7 @@ Only reviewer harnesses, criteria and evidence are changed in this branch.
 | --- | --- | --- | --- |
 | efe622dda00e620952483dedad19257efb3284e6 | 6/8, two real failures | 9/9 | FAIL: 24 retained cancelled tasks |
 | 7e94529e7d327658643ccc51c715b871ae3d8e1e | 8/8 | 9/9 | FAIL: same preexisting retention |
+| 8eddcdb5b307cbab9c1e3bbcfdf37bbac8637cd7 | 8/8 | 9/9 | PASS: 0 retained; recovery/no replay pass |
 
 All listed cases actually ran with zero skips. No local model, Android device or
 OS-isolated tool execution was performed by these tests. `awaitIdle` reports
@@ -20,8 +21,18 @@ single owner of each supervisor/report prevent the executor from silently losing
 queued assignments. Original independent RED logs are retained. The subsequent
 queue retention finding is preexisting and **not** introduced by that fix.
 
-The Chief authorized a focused resource follow-up. Its candidate is still pending
-at this checkpoint. No full resource-bound acceptance is asserted yet.
+Decision: **ACCEPT_HOST_LIFECYCLE_RESOURCE_SLICE** for exact production source
+`8eddcdb5b307cbab9c1e3bbcfdf37bbac8637cd7`. Builder evidence-only HEAD
+`bc5ae9950771c9d99f2c5e19ad9413db1b1836f2` has byte-identical pool source.
+Final combined integration testing remains Chief/QA-owned.
+
+The same revised follow-up probe observes 25 attempts, 25 accepted assignments,
+one actual physical worker and zero logical unfinished slots in both versions.
+Baseline retains 24 cancelled tasks; candidate retains zero. After release, the
+candidate executes exactly one fresh job successfully and no cancelled queued
+work. The bounded queue and cancellation/removal logic were inspected after the
+independent tests ran. This is a queue-integrity/resource-accounting gain, not
+an inference throughput, energy or autonomous problem-solving benchmark.
 
 ## Freeze and executable evidence
 
