@@ -1,0 +1,18 @@
+{
+  "source": "0c54a7bc33bc3979f59a1b4d1bcd9e5b4e39a115",
+  "command": [
+    "node",
+    "--test",
+    ".github/continuum/coding-service.test.mjs",
+    ".github/continuum/local-teamleader-loop.test.mjs",
+    ".github/continuum/ccc1-bot-assignment.test.mjs",
+    ".github/continuum/ccc1-bot-report.test.mjs",
+    ".github/continuum/coding-orchestrator.test.mjs"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 2.281,
+  "logSha256": "6002639f8c2111a0d6707f82c35d6b0cae879461f38e006ab86d1562b7e7a4ba",
+  "environment": "HOST_CONTRACT_TESTS",
+  "neuralInference": false,
+  "fold7": "NOT_RUN"
+}
