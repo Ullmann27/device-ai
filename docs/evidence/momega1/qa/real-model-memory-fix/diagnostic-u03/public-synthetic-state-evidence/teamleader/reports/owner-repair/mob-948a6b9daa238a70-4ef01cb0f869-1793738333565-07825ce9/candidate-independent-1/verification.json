@@ -1,0 +1,222 @@
+{
+  "schema": "momega1-coding-verification",
+  "version": 1,
+  "taskFingerprint": "e44d74f5dfa4a9e8b52c3e819c7ee9531718c93892040eccebd727c78223137f",
+  "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+  "chain": "node",
+  "patchSha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397",
+  "proposalSha256": "3d9aaeca5e6892f258b59924695b7dbfa9eb0beea2acf5a79bc509d465db5c18",
+  "verdict": "VERIFIED",
+  "reasons": [],
+  "red": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "221b43d1a6548bb05fa7b13edcdb7d41ee54ac12abd10b92769866418ceab702",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-86ed0095983f3601aea36eae",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-db3a63717dd2931a",
+            "requestMessageId": "9eaab907-b8d2-41c4-a584-1c4cbdf5703b",
+            "requestHash": "4454a97134f35ba7fe1e1aa8452b5069b31092fd4c51f88112f29762f6aa1059",
+            "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+            "jobId": "cdbd5dbb-de5c-48bb-8c45-93905c20b126"
+          },
+          "observed": {
+            "containerId": "310cf7befe30cbf71f6172f5651441aa2b41612d6fd58a58c946c7920e1dae6f",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Explicit zero setting\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "282d873ea8c36d63808643f62cef085169719fc9bc18611c7281341a822408e7"
+          ],
+          "executedCaseHashes": [
+            "4874aef2c4a1d050edfbc119285a7e3ce5b34124d93b027169a7ac75b6ab604c"
+          ]
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.Explicit zero setting",
+            "file": ".github/continuum/frozen.test.mjs",
+            "line": 5,
+            "col": 37,
+            "message": "Expected values to be strictly equal:\n\n9 !== 0",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b0849554d3625641"
+          }
+        ],
+        "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"Explicit zero setting\" time=\"0.001455\" classname=\"test\" file=\"/tmp/continuum-repair-wt-uhRmG8/.github/continuum/frozen.test.mjs\" failure=\"Expected values to be strictly equal:&#10;&#10;9 !== 0&#10;\">\n\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;9 !== 0\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n9 !== 0\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  9 !== 0\n  \n      at TestContext.&lt;anonymous> (file:///tmp/continuum-repair-wt-uhRmG8/.github/continuum/frozen.test.mjs:5:37)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 9,\n    expected: 0,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t</failure>\n\t</testcase>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 0 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 54.557417 -->\n</testsuites>\n\n\n"
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Explicit zero setting",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 37,
+        "message": "Expected values to be strictly equal:\n\n9 !== 0",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "b0849554d3625641"
+      }
+    ]
+  },
+  "green": {
+    "passed": true,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-cbadb35d36c3a56695390641",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-db3a63717dd2931a",
+            "requestMessageId": "9eaab907-b8d2-41c4-a584-1c4cbdf5703b",
+            "requestHash": "4454a97134f35ba7fe1e1aa8452b5069b31092fd4c51f88112f29762f6aa1059",
+            "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+            "jobId": "cdbd5dbb-de5c-48bb-8c45-93905c20b126"
+          },
+          "observed": {
+            "containerId": "83675b87ff87b7f15ba50d355ea8979b27ea03e84d0275def0534414c7fa0379",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 1,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Explicit zero setting\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "a912fa37ba15617427a7894d611492ae88043526bda5e9425219f016ee7e24f1"
+          ],
+          "executedCaseHashes": [
+            "4874aef2c4a1d050edfbc119285a7e3ce5b34124d93b027169a7ac75b6ab604c"
+          ]
+        },
+        "diagnostics": [],
+        "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"Explicit zero setting\" time=\"0.008905\" classname=\"test\" file=\"/tmp/continuum-repair-wt-vY05FC/.github/continuum/frozen.test.mjs\"/>\n\t<!-- tests 1 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 64.737965 -->\n</testsuites>\n\n\n"
+      }
+    ],
+    "diagnostics": []
+  },
+  "diagnostics": [
+    {
+      "tool": "junit",
+      "severity": "error",
+      "test": "test.Explicit zero setting",
+      "file": ".github/continuum/frozen.test.mjs",
+      "line": 5,
+      "col": 37,
+      "message": "Expected values to be strictly equal:\n\n9 !== 0",
+      "kind": "TEST_FAILURE",
+      "fingerprint": "b0849554d3625641"
+    }
+  ],
+  "evidenceClass": "HOST_INTEGRATION",
+  "execution": "OS_ISOLATED"
+}

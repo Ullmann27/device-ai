@@ -1,0 +1,74 @@
+{
+  "schema": "momega1-memory-fix-separate-experiment-v1",
+  "source": "6baec1bcd6585d2d04688a7d15651c830b4886d7",
+  "unchangedProviderRuntimeContextWorkspaceHashes": {
+    ".github/continuum/coding-provider.mjs": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a",
+    ".github/continuum/coding-orchestrator.mjs": "d3d91266fe8cc987e6db39fcb019e0f28765f87266d7c3b991284f8f3d48eabc",
+    ".github/continuum/coding-context.mjs": "16ea2092c7022800824a32cc2bab8a91066fcf6353b2d9426430522d294ad282",
+    ".github/continuum/repair-loop.mjs": "82c85fc68ed5fbdf21daa78c0bad448906d6d7a8407d0f906ba9011ba1e4184a",
+    ".github/continuum/ccc1-workspace.mjs": "2a10e1284720a96d15ae7e5248826ee06bd6c9b0bd483c06882d0e891808e4db",
+    ".github/continuum/isolated-executor.mjs": "7dda3445ade45c8a484a312e3a30f5e6c5200f80f9333a96970c52eefcce3594",
+    "scripts/continuum-local-model-observation.mjs": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5",
+    "scripts/continuum-local-brain-cli.mjs": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e"
+  },
+  "originalFirst10Score": "3/10",
+  "original12Score": "4/12",
+  "diagnostic": {
+    "fixture": "u03",
+    "knownPreviouslyExposedTask": true,
+    "independentRepairVerified": true,
+    "calls": {
+      "verifiedCalls": 1,
+      "acceptedProposals": 1,
+      "rejectedResponses": 0,
+      "identity": {
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+      }
+    },
+    "elapsedMs": 29052,
+    "recorded": "RECORDED_TECHNICAL_REVIEW_ONLY",
+    "freshProcessRecallStatus": "OK",
+    "freshProcessRecalledItems": 1,
+    "lineage": {
+      "kind": "EXACT_SOURCE",
+      "historicalSourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+      "currentSourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+      "ancestor": true
+    },
+    "blindScoreCredit": false
+  },
+  "paired": {
+    "operationalManifestSha256": "76a756ff24ae52f08d32fe4d62d7c7445eba182f0b30d0e6ad2ad40db6858960",
+    "parent": {
+      "fixture": "u02",
+      "status": "ABSTAINED",
+      "calls": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "elapsedMs": 49996,
+      "reason": "Both real proposals rejected CODING_PATCH_NOT_EXACT",
+      "technicalExperienceStatus": "NOT_RECORDED"
+    },
+    "memoryOff": {
+      "status": "NOT_RUN",
+      "reason": "PREREQUISITE_NO_GENUINE_VERIFIED_EXPERIENCE",
+      "modelCalls": 0
+    },
+    "memoryOn": {
+      "status": "NOT_RUN",
+      "reason": "PREREQUISITE_NO_GENUINE_VERIFIED_EXPERIENCE",
+      "modelCalls": 0
+    },
+    "learningBenefit": "NOT_DEMONSTRATED"
+  },
+  "scope": "No old proof rewritten, no substitute experience, no scripted solution, no fixture tuning or extra retries. Reflection is pre-verification hypothesis only. No neural weight update. FOLD7_NOT_RUN."
+}

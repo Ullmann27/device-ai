@@ -1,0 +1,16 @@
+{
+  "id": "u07",
+  "title": "Path membership",
+  "requirements": [
+    "For normalized absolute POSIX paths, allow the root itself and descendants, but reject names merely sharing a prefix."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

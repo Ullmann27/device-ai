@@ -1,0 +1,16 @@
+{
+  "id": "u01",
+  "title": "Unicode prefix",
+  "requirements": [
+    "Return at most n Unicode code points, preserving complete supplementary characters."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

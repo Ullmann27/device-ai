@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T20:45:13" hostname="b354f2cb821b" time="0.043">
+  <properties/>
+  <testcase name="deniedToolCannotBecomeSuccessfulSkillThroughPermissiveEvaluator" classname="at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest" time="0.024"/>
+  <testcase name="replayedSucceededReceiptDoesNotCreateFreshPositiveEvidence" classname="at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,16 @@
+{
+  "id": "u05",
+  "title": "First occurrence deduplication",
+  "requirements": [
+    "Return distinct values in the order of their first occurrence."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

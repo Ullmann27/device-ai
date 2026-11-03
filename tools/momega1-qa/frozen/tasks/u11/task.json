@@ -1,0 +1,16 @@
+{
+  "id": "u11",
+  "title": "Half-open overlap",
+  "requirements": [
+    "Two half-open intervals overlap only if they share positive length; touching or empty intervals do not overlap."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

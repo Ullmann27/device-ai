@@ -1,0 +1,16 @@
+{
+  "id": "u02",
+  "title": "Deadline boundary",
+  "requirements": [
+    "A lease is active only while now is strictly less than its deadline."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

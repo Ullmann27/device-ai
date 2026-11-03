@@ -1,0 +1,197 @@
+{
+  "candidateSha": "92f1026c444cd4d6735be0cea73e71f87b23fa91",
+  "harnessSha256": "5584654e07a9915fff0c8c5aee85ea9c5785d08045a10edbbd1baac4841f2c64",
+  "evidenceClass": "HOST_INTEGRATION",
+  "results": [
+    {
+      "id": "positive",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "5dab1b0c313470b6784940d71265023e34992ae5155eb8512537155af09906d0",
+        "sourceCommit": "ce655c93fe63fda74c49537716539092f8a45fe7",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "isolation": {
+                "schema": "continuum-isolation-v1",
+                "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+                "network": "none",
+                "user": "1000:1000",
+                "readOnly": true,
+                "noNewPrivileges": true,
+                "capabilities": [],
+                "memoryMb": 256,
+                "pids": 64,
+                "cpus": 1,
+                "timeoutMs": 15000,
+                "runtime": "runc",
+                "sourceSha256": "0e07d5a0dc1932d8475507efd09e598d1462437fbe91d6411600af0f5e712cf2",
+                "profile": "node-continuum",
+                "untrustedReports": true
+              },
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 0,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "4ae2efc876649efa65d429ab4e9ad7058d7fc3134a408c746b513c889312512d"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"sum\" time=\"0.001999\" classname=\"test\" file=\"/workspace/momega1-build-env/tmp-alias/continuum-repair-wt-RD9q2Q/.github/continuum/add.test.mjs\" failure=\"Expected values to be strictly equal:&#10;&#10;-1 !== 5&#10;\">\n\t\t<failure type=\"testCodeFailure\" message=\"Expected values to be strictly equal:&#10;&#10;-1 !== 5\">\n[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n-1 !== 5\n] {\n  code: 'ERR_TEST_FAILURE',\n  failureType: 'testCodeFailure',\n  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  -1 !== 5\n  \n      at TestContext.&lt;anonymous> (file:///workspace/momega1-build-env/tmp-alias/continuum-repair-wt-RD9q2Q/.github/continuum/add.test.mjs:2:23)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: -1,\n    expected: 5,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n}\n\t\t</failure>\n\t</testcase>\n\t<testcase name=\"retained\" time=\"0.000226\" classname=\"test\" file=\"/workspace/momega1-build-env/tmp-alias/continuum-repair-wt-RD9q2Q/.github/continuum/add.test.mjs\"/>\n\t<!-- tests 2 -->\n\t<!-- suites 0 -->\n\t<!-- pass 1 -->\n\t<!-- fail 1 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 88.845568 -->\n</testsuites>\n\n\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": true,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": true,
+              "testProfile": true,
+              "isolation": {
+                "schema": "continuum-isolation-v1",
+                "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+                "network": "none",
+                "user": "1000:1000",
+                "readOnly": true,
+                "noNewPrivileges": true,
+                "capabilities": [],
+                "memoryMb": 256,
+                "pids": 64,
+                "cpus": 1,
+                "timeoutMs": 15000,
+                "runtime": "runc",
+                "sourceSha256": "e98c66255fb7ac22bd54b9216669eef7c56d2fe525c7fd8ef36359a4f8e4a70e",
+                "profile": "node-continuum",
+                "untrustedReports": true
+              },
+              "exitCode": 0,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 0,
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 2,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "2591df8da2a7e23c12bde4f2bc83b4010d7e006be792ccf920fc332b55eb9270"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [],
+              "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"sum\" time=\"0.000756\" classname=\"test\" file=\"/workspace/momega1-build-env/tmp-alias/continuum-repair-wt-Em2pkP/.github/continuum/add.test.mjs\"/>\n\t<testcase name=\"retained\" time=\"0.000114\" classname=\"test\" file=\"/workspace/momega1-build-env/tmp-alias/continuum-repair-wt-Em2pkP/.github/continuum/add.test.mjs\"/>\n\t<!-- tests 2 -->\n\t<!-- suites 0 -->\n\t<!-- pass 2 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 58.565538 -->\n</testsuites>\n\n\n"
+            }
+          ],
+          "diagnostics": []
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "OS_ISOLATED"
+      }
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "pass": 1,
+    "fail": 0
+  }
+}

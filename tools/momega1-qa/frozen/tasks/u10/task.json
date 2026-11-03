@@ -1,0 +1,16 @@
+{
+  "id": "u10",
+  "title": "Integer cents rounding",
+  "requirements": [
+    "Round integer millicents to integer cents, nearest with ties away from zero; inputs are safe small integers."
+  ],
+  "allowedSourceFiles": [
+    "subject.mjs"
+  ],
+  "acceptanceCommand": [
+    "node",
+    "--test",
+    "acceptance.test.mjs"
+  ],
+  "modelSolution": null
+}

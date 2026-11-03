@@ -1,0 +1,871 @@
+{
+  "candidateSha": "e8f5e218d06d7eb05446b399106119146030143b",
+  "harnessSha256": "5584654e07a9915fff0c8c5aee85ea9c5785d08045a10edbbd1baac4841f2c64",
+  "evidenceClass": "HOST_INTEGRATION",
+  "results": [
+    {
+      "id": "positive",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "ccad65f4e48cf327005a768e24e6025a7a3989d62ea6011fde9c9862f5682e54",
+        "sourceCommit": "9436e8b292d672b76bb4346eb46853d6b9e26f88",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "VERIFIED",
+        "reasons": [],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 103,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "1171effacb5f7b5521b9e36647fe13ba678e302acb33f2ceece41056a15bbce7"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": true,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": true,
+              "testProfile": true,
+              "exitCode": 0,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 111,
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 2,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "5f015abb46f6d9809a7e9255e91d8919704779c8330f3f3dd58a655af1e78bcf"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": []
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "HOST_REVIEWED_NUMERIC"
+      }
+    },
+    {
+      "id": "skip-conversion",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "d976a47c700a900fc651bdcedc1b9c1af2b7d4fc5d31e0ef2921ef4236b7d89d",
+        "sourceCommit": "7992bc2ccc42ce691e3f5976e4d46155360e84ec",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_EXECUTION_CHANGED"
+        ],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 132,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "d2d8b4dc652f44ddbca6abeec34c5179cd2077b93cc1eccfb55b179a993843fc"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": true,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": true,
+              "testProfile": true,
+              "exitCode": 0,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 131,
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 1,
+                "placeholders": 0,
+                "executed": 1,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": true,
+                    "skipType": "skipped"
+                  }
+                ],
+                "junitSha256": [
+                  "76b76b3cda1873061f884fef8189680bd1e8ceff75c28e547b8df1f7e503f777"
+                ],
+                "skippedCaseDigest": "b3185d2ca0ce2130b9f31232cfa37ad9254e1b222ec64e5e11ddb4d33349972b",
+                "executedCaseHashes": [
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": []
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "HOST_REVIEWED_NUMERIC"
+      }
+    },
+    {
+      "id": "rename",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "c28eb004dd7cb9ab6f7536bd323ff273920ed7a142e2a6be4258f999875d24a8",
+        "sourceCommit": "e050cd49f1132afc54bf37820a8791527993a295",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "REJECTED",
+        "reasons": [
+          "BASELINE_TEST_IDENTITY_MISSING"
+        ],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 119,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "037b14a5d3cdd052026e637a18211df65016c0fc6f527568084a6ef7d7c5efcc"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": true,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": true,
+              "testProfile": true,
+              "exitCode": 0,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 125,
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 2,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"replacement\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "e9ea5ad9410e353532e2c00db932939ae81837ce29484f40f5f2cd5119d8cf6b"
+                ],
+                "executedCaseHashes": [
+                  "46ad3ccf969eb21e533280cdd87fd98d80285045d2a2ad03d668ceb137794df5",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": []
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "HOST_REVIEWED_NUMERIC"
+      }
+    },
+    {
+      "id": "new-nontarget-failure",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "89c08069d48c8aa93cc3aba5e9cdddc4204fb6ec46fe70cf3e604a79c50a5dfc",
+        "sourceCommit": "06c93c0125d42f910da77b1f490a4c5bd959e716",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "REJECTED",
+        "reasons": [
+          "GREEN_HAS_FAILURES"
+        ],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 136,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "910ea382be2f5966c1080b2f8bbdd6eb132d0b761cfa67cb2639269a3aa504b8"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 140,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"retained\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "a52992c50d130bfec8c8e3a843e9bc9cfadfdd55b0d9081dde5b9b5d3b3cd555"
+                ],
+                "executedCaseHashes": [
+                  "6f755e1f5eca01095290384a428551788c26d7a9786fdd88aa5f2ad74ba1970b",
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.retained",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 3,
+                  "col": 28,
+                  "message": "The expression evaluated to a falsy value:\n\n  assert.ok(add(2,3)<0)",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "103d21b169ab377a"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.retained",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 3,
+              "col": 28,
+              "message": "The expression evaluated to a falsy value:\n\n  assert.ok(add(2,3)<0)",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "103d21b169ab377a"
+            }
+          ]
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          },
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.retained",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 3,
+            "col": 28,
+            "message": "The expression evaluated to a falsy value:\n\n  assert.ok(add(2,3)<0)",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "103d21b169ab377a"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "HOST_REVIEWED_NUMERIC"
+      }
+    },
+    {
+      "id": "process-nonzero",
+      "expected": "REJECTED",
+      "actual": "REJECTED",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": null,
+      "evidence": {
+        "schema": "momega1-coding-verification",
+        "version": 1,
+        "taskFingerprint": "4b7ceec8a98c5f7d449d510d6916c66ce7357e2215550776b47aae3263135aea",
+        "sourceCommit": "90b0b2f211729f2334b938069699d17fae02d3ef",
+        "chain": "node",
+        "patchSha256": "41d3af6ac7191adc7c81d6f41e353c1bd844bce599f7d0df080200bac44de79a",
+        "proposalSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "verdict": "REJECTED",
+        "reasons": [
+          "GREEN_HAS_FAILURES"
+        ],
+        "red": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 140,
+              "tests": {
+                "total": 1,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 1,
+                "passed": 0,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "21ac101ca45d8b99fe1b9fcef8ea873b3aeca4024510101e9f6565918a1ff3ff"
+                ],
+                "executedCaseHashes": [
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test.sum",
+                  "file": ".github/continuum/add.test.mjs",
+                  "line": 2,
+                  "col": 23,
+                  "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+                  "kind": "TEST_FAILURE",
+                  "fingerprint": "b59f7ff0e54953ee"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.sum",
+              "file": ".github/continuum/add.test.mjs",
+              "line": 2,
+              "col": 23,
+              "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+              "kind": "TEST_FAILURE",
+              "fingerprint": "b59f7ff0e54953ee"
+            }
+          ]
+        },
+        "green": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 111,
+              "tests": {
+                "total": 2,
+                "failed": 1,
+                "skipped": 0,
+                "placeholders": 1,
+                "executed": 1,
+                "passed": 1,
+                "evidenceComplete": true,
+                "caseIdentities": [
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\"sum\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  },
+                  {
+                    "identity": "[\".github/continuum/add.test.mjs\",[],\".github/continuum/add.test.mjs\",1]",
+                    "skipped": false,
+                    "skipType": null
+                  }
+                ],
+                "junitSha256": [
+                  "21dfd7d9dcdaede625f351ce267d8ca161304fac9aecf19098f6e5dd2af9fc89"
+                ],
+                "executedCaseHashes": [
+                  "f703797e2f9e5e2e943cebf14bb741700a7f7026a88f27e2fa2613ec7abd8442"
+                ]
+              },
+              "diagnostics": [
+                {
+                  "tool": "junit",
+                  "severity": "error",
+                  "test": "test..github/continuum/add.test.mjs",
+                  "file": null,
+                  "line": null,
+                  "col": null,
+                  "message": "test failed",
+                  "kind": "TEST_FAILURE",
+                  "testFile": ".github/continuum/add.test.mjs",
+                  "fingerprint": "3d00ef29e934af11"
+                }
+              ],
+              "outputTail": "\n"
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test..github/continuum/add.test.mjs",
+              "file": null,
+              "line": null,
+              "col": null,
+              "message": "test failed",
+              "kind": "TEST_FAILURE",
+              "testFile": ".github/continuum/add.test.mjs",
+              "fingerprint": "3d00ef29e934af11"
+            }
+          ]
+        },
+        "diagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.sum",
+            "file": ".github/continuum/add.test.mjs",
+            "line": 2,
+            "col": 23,
+            "message": "Expected values to be strictly equal:\n\n-1 !== 5",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "b59f7ff0e54953ee"
+          },
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test..github/continuum/add.test.mjs",
+            "file": null,
+            "line": null,
+            "col": null,
+            "message": "test failed",
+            "kind": "TEST_FAILURE",
+            "testFile": ".github/continuum/add.test.mjs",
+            "fingerprint": "3d00ef29e934af11"
+          }
+        ],
+        "evidenceClass": "HOST_INTEGRATION",
+        "execution": "HOST_REVIEWED_NUMERIC"
+      }
+    },
+    {
+      "id": "expired",
+      "expected": "THREW",
+      "actual": "THREW",
+      "error": "CODING_VERIFICATION_REQUEST_INVALID",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": "CODING_VERIFICATION_REQUEST_INVALID"
+    },
+    {
+      "id": "fake-executor",
+      "expected": "THREW",
+      "actual": "THREW",
+      "error": "UNTRUSTED_ISOLATION_EXECUTOR",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": "UNTRUSTED_ISOLATION_EXECUTOR"
+    },
+    {
+      "id": "invalid-proposal-hash",
+      "expected": "THREW",
+      "actual": "THREW",
+      "error": "CODING_VERIFICATION_REQUEST_INVALID",
+      "preserved": true,
+      "branded": true,
+      "pass": true,
+      "expectedError": "CODING_VERIFICATION_REQUEST_INVALID"
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "pass": 8,
+    "fail": 0
+  }
+}

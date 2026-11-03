@@ -1,0 +1,7 @@
+allprojects {
+    tasks.withType(Test).configureEach {
+        executable = '/usr/bin/java'
+        filter { includeTestsMatching 'at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest' }
+        doFirst { logger.lifecycle('MOMEGA_TEST_EXECUTABLE=' + executable) }
+    }
+}

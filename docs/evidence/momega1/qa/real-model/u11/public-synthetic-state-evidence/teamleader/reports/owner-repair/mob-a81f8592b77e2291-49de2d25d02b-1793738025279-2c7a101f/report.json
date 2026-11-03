@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 1,
+  "base": "49de2d25d02bb3434c25321783228d7a406e09ff",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:33:45.294Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 2,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "REPEATED_PATCH_REJECTED",
+    "repeatedCandidates": 1,
+    "history": [
+      {
+        "candidate": "c674c15599404794",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\nfalse !== true",
+        "hypothesis": "The overlapping intervals do not share positive length"
+      },
+      {
+        "candidate": "172aafb5114e1629",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_REPEATED_PATCH",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_REPEATED_PATCH",
+        "repeated": false,
+        "responseSha256": "172aafb5114e16291a35870fd0a21756b8712f42888c3e60dcd03f0c3bfa6ff6"
+      }
+    ],
+    "reason": "Original local inference observations; candidate correctness requires separate verification",
+    "lastRejectCode": "CODING_REPEATED_PATCH"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 15000,
+          "runtime": "runc",
+          "sourceSha256": "6d675875331b8551b36e16922db3044a8ad4aa0421827614016f33f4c80cc546",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-63a7329e86d9fb78f05ad070",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-c90fdad18e7102ab",
+            "requestMessageId": "c3f274e3-020c-4c09-8106-1837c6be9e09",
+            "requestHash": "d6ff0441c1f9f83837ba3804540be99a1ccfb6d1a8d9fa2ee703c9fe6670a180",
+            "sourceCommit": "49de2d25d02bb3434c25321783228d7a406e09ff",
+            "jobId": "d454c187-6cef-4f83-b1d9-a783f822e949"
+          },
+          "observed": {
+            "containerId": "fdda74425e676f03b230c4a83881397ae0d42cc400839a5a08cc51c8c5ec1c51",
+            "runtime": "runc",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 1,
+          "failed": 1,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 1,
+          "passed": 0,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Half-open overlap\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "ab3857ea82af2ed985aff6e72ddc48f1760c717c591892013e697d0bb87b0e0f"
+          ],
+          "executedCaseHashes": [
+            "31f796b10a900d40a2376533066eba828556cde3004157603d22d69f46206d8a"
+          ]
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Half-open overlap",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 5,
+        "col": 8,
+        "message": "Expected values to be strictly equal:\n\ntrue !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5fb89a0dca238555"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "c674c15599404794",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "5fb89a0dca238555",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The overlapping intervals do not share positive length",
+      "plan": [
+        "Identify the overlapping intervals",
+        "Check if the intervals share positive length",
+        "If not, return false",
+        "If yes, return true"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export const run = (a,b) => a[0]<=b[1] && b[0]<=a[1];\n",
+          "newText": "export const run = (a,b) => a[0]<=b[1] && b[1]<=a[0];\n"
+        }
+      ],
+      "proposalSha256": "0081a0db96dcf651cedeced4a41ce69f5a43bc63862862c496d3658bf6f9ca73",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "68f20848ac2154cac6c9f853478c24fd38f32c2dd300ec303511fc300ba6a348",
+        "taskId": "mob-a81f8592b77e2291",
+        "sourceCommit": "49de2d25d02bb3434c25321783228d7a406e09ff",
+        "taskFingerprint": "f9fd2548b9e12c2ae8a371a077815f23a9fc7ed9dff129efe6dea174c67100c4",
+        "requestIndex": 1,
+        "contextSha256": "f06d98c858706a114e6d65d52fac22b6eb53ed2c5f57384909f2c73f4e517e41",
+        "promptSha256": "cc65ff665b3e1d9ce942d74c35c71f9e3f259cacd7f874108e3febb9dc69ce83",
+        "requestSha256": "0bc25f8d155a51f9721331620cd889bbffa1ad05ff2ce4b1910663b3c65f50b1",
+        "runtimePromptSha256": "d256767223ed3fe085afc17c0d392ca09c9b87bb74a9208ce0a77b2921236afd",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "9965c7155d10ee03169d7dae18ddefc77af7e486859a58b2b4613efd21c69dd6",
+        "proposalSha256": "0081a0db96dcf651cedeced4a41ce69f5a43bc63862862c496d3658bf6f9ca73",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 147,
+        "pid": 215737,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 25264
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 1,
+            "failed": 1,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 1,
+            "passed": 0,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"Half-open overlap\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "1dcc788aa270d83b74c7e08615a4029ee8dbe553c1b98f37d72944737cfc45b2"
+            ],
+            "executedCaseHashes": [
+              "31f796b10a900d40a2376533066eba828556cde3004157603d22d69f46206d8a"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 15000,
+            "runtime": "runc",
+            "sourceSha256": "80ccff4703042b2d510cba2aeaa94efd410a06417274b94aaf3d717f459592b4",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-41ca1f316aaf927dc3cc9072",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-c90fdad18e7102ab",
+              "requestMessageId": "c3f274e3-020c-4c09-8106-1837c6be9e09",
+              "requestHash": "d6ff0441c1f9f83837ba3804540be99a1ccfb6d1a8d9fa2ee703c9fe6670a180",
+              "sourceCommit": "49de2d25d02bb3434c25321783228d7a406e09ff",
+              "jobId": "d454c187-6cef-4f83-b1d9-a783f822e949"
+            },
+            "observed": {
+              "containerId": "d5a5cbca226410ed6ed2ee5f4a0ef91e65d0fff16c5aaa34e68b3a6eea0bdf1e",
+              "runtime": "runc",
+              "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.Half-open overlap",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 5,
+          "col": 46,
+          "message": "Expected values to be strictly equal:\n\nfalse !== true",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "3724da393b31d236"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:33:45.294Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:33:45.746Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:33:45.756Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:34:11.113Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:34:11.114Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T20:34:11.150Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T20:34:11.556Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T20:34:11.565Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:34:11.567Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:34:43.083Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:34:43.100Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-a81f8592b77e2291",
+    "taskFingerprint": "f9fd2548b9e12c2ae8a371a077815f23a9fc7ed9dff129efe6dea174c67100c4",
+    "sourceCommit": "49de2d25d02bb3434c25321783228d7a406e09ff",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "f06d98c858706a114e6d65d52fac22b6eb53ed2c5f57384909f2c73f4e517e41",
+    "plan": [
+      "Identify the overlapping intervals in the given code.",
+      "Check if the intervals share positive length.",
+      "If they do not, return the original code."
+    ]
+  },
+  "finishedAt": "2026-11-03T20:34:43.142Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "49de2d25d02bb3434c25321783228d7a406e09ff",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "a969405ea9dd86ef",
+        "approved": true,
+        "proof": "cc92530556ff74f48c4933a0e757fe6bd5d8b714d05c1d6c0da3311ff5948c79"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "a969405ea9dd86ef",
+        "editedFiles": 1,
+        "proof": "8179b6f48c0d8a9d3e827b563ea6e5387fa8baaa6ac2a60d4651861f692aa9f8"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "a969405ea9dd86ef",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "63bfd8999f55717586162aa17a94adb45b2db4c364fc1315067f21abeeb0e19f"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "fa1123dd58cac840bc6d48c454bf53432d15ca18211c6565c7019248ac28f9d1"
+  }
+}
