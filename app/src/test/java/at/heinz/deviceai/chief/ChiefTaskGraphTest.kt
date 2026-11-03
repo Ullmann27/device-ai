@@ -30,6 +30,28 @@ class ChiefTaskGraphTest {
         assertTrue(graph.releaseReady(setOf("read-a", "read-b")))
     }
 
+    @Test fun verifierListedBeforeCoderStillRunsAfterCoder() {
+        val qa = task("qa", ChiefTaskKind.VERIFICATION, "code.verify",
+            reads = setOf("app/src/Main.kt"))
+        val coder = task("coder", ChiefTaskKind.CODE_CHANGE,
+            writes = setOf("app/src/Main.kt"), verifier = "qa")
+        val graph = ChiefTaskGraph.compile(listOf(qa, coder))
+        assertEquals(listOf("coder"), graph.ready(emptySet()).map { it.delegation.taskId })
+        assertEquals(listOf("qa"), graph.ready(setOf("coder")).map { it.delegation.taskId })
+    }
+
+    @Test fun readerExplicitlyWaitingForLaterWriterDoesNotProduceFalseCycle() {
+        val reader = task("reader", ChiefTaskKind.READ_ONLY,
+            reads = setOf("app/src/Main.kt"), dependsOn = setOf("coder"))
+        val coder = task("coder", ChiefTaskKind.CODE_CHANGE,
+            writes = setOf("app/src/Main.kt"), verifier = "qa")
+        val qa = task("qa", ChiefTaskKind.VERIFICATION, "code.verify",
+            reads = setOf("app/src/Main.kt"))
+        val graph = ChiefTaskGraph.compile(listOf(reader, coder, qa))
+        assertEquals(listOf("coder"), graph.ready(emptySet()).map { it.delegation.taskId })
+        assertEquals(setOf("reader", "qa"), graph.ready(setOf("coder")).map { it.delegation.taskId }.toSet())
+    }
+
     @Test fun sourceWriteRequiresSeparateVerificationBeforePlanCompletion() {
         val code = task("code", ChiefTaskKind.CODE_CHANGE,
             writes = setOf("app/src/Main.kt"), verifier = "qa")
