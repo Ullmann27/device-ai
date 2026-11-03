@@ -57,6 +57,21 @@ volle Regression → unabhängige Prüfung (frischer Clone, `clean`). Alle Zahle
   Vertrag angepasst (Sinn – nur Vorschau, keine Ausführung – unverändert geprüft).
 - **GREEN:** `SpeechDictationDraftTest` 5/5, `LocalSpeechInputPolicyTest` 6/6, `VoiceDuplexBargeInTest` 2/2, Node (3 Dateien) 28/28.
 
+## Meilenstein 4 – Modell-Ladepfad ↔ ConstrainedResourceFabric: kein RAM-/Thermik-Gate vor mehreren GB nativer Last
+
+- **Fehler:** `AgentActivity.loadModel` (einziger nativer Ladepfad; auch automatische Gemma-Wiederherstellung beim App-Start)
+  rief `localRuntime.load` ohne jede RAM- oder Thermikprüfung auf. `ConstrainedResourceFabric` existierte nur in Tests.
+- **RED** (`9b0b129b`): Node-Vertrag „model load path is gated…“ **1 FAIL** (direkter `localRuntime.load`-Aufruf);
+  JUnit `LocalModelLoadAdmissionTest` (6 Tests): Kompilierfehler (keine Admission vorhanden).
+- **Fix** (`e915129b`): neues `localmodel/LocalModelLoadAdmission.kt` nutzt die vorhandenen Fabric-Regeln mit echten Android-Messwerten
+  (`ActivityManager.MemoryInfo`, `PowerManager.currentThermalStatus`): Thermik ≥ SEVERE (3) → Ablehnung; Android-`lowMemory` → Ablehnung;
+  Gewichte > ¾ des physischen RAM → Ablehnung; fehlende Messung → fail-closed. Bewusst **kein** Vergleich Dateigröße ↔ momentanes `availMem`
+  (LiteRT-LM mappt Gewichte per mmap; das würde das funktionierende Fold7-Gemma fälschlich sperren – Testfall
+  `healthyFold7ClassDeviceStillLoadsTheOriginalGemma`). Eine Ablehnung ruft `runtime.load` nicht auf, startet keinen Lifecycle-Timeout und
+  deaktiviert die Gemma-Wiederherstellung **nicht** (vorübergehender Zustand); Besitzer erhält deutsche Meldung.
+- **GREEN:** `LocalModelLoadAdmissionTest` 6/6, Node-Vertrag 4/4.
+- Grenze: Schwellen sind die bestehenden Fabric-Regeln, nicht auf dem Fold7 gemessen (`NOT_RUN`: Gerät).
+
 ## Regression (`HOST_VERIFIED`)
 
 | Prüfung | Stand | Ergebnis |
@@ -66,7 +81,9 @@ volle Regression → unabhängige Prüfung (frischer Clone, `clean`). Alle Zahle
 | JUnit voll | nach M2 (`28adbc72`) | 1758, 0 FAIL, 5 skip |
 | JUnit voll | nach M3 (`eb4c5536`) | 1763, 0 FAIL, 5 skip |
 | Node, 58 Android-bezogene Testdateien (+ neue M5-Datei) | M1 / M2 / M3 | 362/359 pass · 364/361 pass · 365/362 pass, je 0 FAIL, 3 skip |
-| `:app:lintDebug` | `eb4c5536` | „No issues found“ |
+| JUnit voll | nach M4 (`e915129b`) | 1769, 0 FAIL, 5 skip |
+| Node | nach M4 | 366 Tests, 363 pass, 0 FAIL, 3 skip |
+| `:app:lintDebug` | `eb4c5536`, `e915129b` | „No issues found“ |
 | Merge-Probe (`git merge-tree`) | gegen grok1-integration, m2-grok-context-state, m2-cognitive-memory, #360, #361, #362 | konfliktfrei |
 | Merge-Probe | gegen #363, #364 | je 2 Konflikt-Hunks in `AgentActivity.kt` – **identisch schon auf der Basis #369**, durch M5 keine neuen |
 
@@ -75,8 +92,8 @@ Nicht ausgeführt / nicht möglich: Fold7-Gerätetest, APK-Build/Signatur, nativ
 ## Gefundene, bewusst NICHT geänderte Befunde (für Folgearbeit)
 - `cognitive/ContinuumLocalAgentModel.kt` (Gemma → BoundedAgent-Adapter) ist **nirgends im Laufzeitpfad** verdrahtet;
   `AgentActivity.runLocal` baut einen eigenen Inline-`AgentModel` – widersprüchliche Doppelimplementierung.
-- `ConstrainedResourceFabric` (RAM/Thermik-Gate) und `ComputeResultVerifier`/`ComputeScheduler` werden nur in Tests verwendet;
-  das Laden eines mehrere GB großen Modells hat kein gemessenes RAM-/Thermik-Gate (Gerätemessung nötig, sonst Risiko falscher Ablehnung).
+- ~~`ConstrainedResourceFabric` nur in Tests~~ → **behoben in M4**. `ComputeScheduler`/`ComputeResultVerifier` betreffen entfernte signierte
+  Rechenknoten, nicht den lokalen Ladepfad, und bleiben unverdrahtet.
 - ToolGate meldet bei unlesbarem Journal `uncertain=true`; BoundedAgent sagt dem Besitzer dann „eine bereits ausgelöste Wirkung kann
   fortbestehen“, obwohl für eine frische Call-ID nichts dispatcht wurde.
 - (`SOURCE_ONLY`, nicht per Test belegt) Ein großes, gültiges Werkzeugergebnis (≈ 7,9–8 k Zeichen mit vielen Zeilenumbrüchen) überschreitet nach JSON-Escaping das
