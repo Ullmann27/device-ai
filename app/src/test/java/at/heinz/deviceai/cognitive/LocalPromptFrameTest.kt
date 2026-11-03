@@ -5,9 +5,9 @@ import org.junit.Test
 
 class LocalPromptFrameTest {
     @Test fun fold7DependentTurnRequiresCompleteHistoryInsteadOfSilentlyDroppingIt() {
-        val body = "## USER REQUEST\\nNun hat die rote Kiste 9 Ringe statt 4. Welche Kiste enthält jetzt mehr?"
-        val history = "\\nGESPRÄCHSDATEN — UNBESTÄTIGT:\\nNutzer: In der roten Kiste 4, in der blauen 7 Ringe.\\n"
-        val tail = "\\nToolGate bleibt verbindlich."
+        val body = "## USER REQUEST\nNun hat die rote Kiste 9 Ringe statt 4. Welche Kiste enthält jetzt mehr?"
+        val history = "\nGESPRÄCHSDATEN — UNBESTÄTIGT:\nNutzer: In der roten Kiste 4, in der blauen 7 Ringe.\n"
+        val tail = "\nToolGate bleibt verbindlich."
         val noRoom = (body + tail).toByteArray(Charsets.UTF_8).size + 5
 
         val ordinary = LocalPromptFrame.assemble(body, history, null, tail, noRoom)
