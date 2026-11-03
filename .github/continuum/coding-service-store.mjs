@@ -48,8 +48,10 @@ export function writePrivateJson(file,value,{exclusive=false}={}){
  const fd=fs.openSync(target,'wx',0o600);
  try{fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
  if(!exclusive){
-  if(fs.existsSync(file))plainBytes(file,4*1024*1024,{privateFile:true});
-  fs.renameSync(target,file);
+  try{
+   if(fs.existsSync(file))plainBytes(file,4*1024*1024,{privateFile:true});
+   fs.renameSync(target,file);
+  }finally{fs.rmSync(target,{force:true});}
  }
  const directory=fs.openSync(path.dirname(file),'r');try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
 }
@@ -98,7 +100,8 @@ export function initializeCodingService({configPath,project,profileDirectory,pro
  const runtimeEnv=runtimeConfiguration(JSON.parse(plainBytes(runtimeEnvPath,16384)));
  const isolationConfigSha256=sha256Hex(plainBytes(isolationConfig,4096));
  const config={schema:'continuum-coding-service',version:1,sourceRoot:SERVICE_SOURCE_ROOT,
-  sourceCommit:gitIdentity(SERVICE_SOURCE_ROOT),project,profileDirectory,profileClasspath,profileClasspathSha256:profileClasspathDigest(profileClasspath),runtimeEnv,isolationConfig,isolationConfigSha256,
+  sourceCommit:gitIdentity(SERVICE_SOURCE_ROOT),project,profileDirectory,profileClasspath,profileClasspathSha256:profileClasspathDigest(profileClasspath),runtimeEnv,
+  modelManifestSha256:sha256Hex(plainBytes(runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST,65536)),isolationConfig,isolationConfigSha256,
   limits:{maxQueue,maxRecords,maxCycles},createdAt:new Date().toISOString()};
  validateConfig(config,stateDir);writePrivateJson(configPath,config,{exclusive:true});
  for(const name of ['ccc1','sessions','public-evidence'])privateDirectory(path.join(stateDir,name),{create:true});
@@ -106,14 +109,17 @@ export function initializeCodingService({configPath,project,profileDirectory,pro
  return {configPath,sourceCommit:config.sourceCommit,maxQueue,maxRecords,maxCycles,status:'INITIALIZED',modelLoaded:false};
 }
 function validateConfig(c,stateDir){
- const keys=['schema','version','sourceRoot','sourceCommit','project','profileDirectory','profileClasspath','profileClasspathSha256','runtimeEnv','isolationConfig','isolationConfigSha256','limits','createdAt'];
+ const keys=['schema','version','sourceRoot','sourceCommit','project','profileDirectory','profileClasspath','profileClasspathSha256','runtimeEnv','modelManifestSha256','isolationConfig','isolationConfigSha256','limits','createdAt'];
  if(!c||Object.keys(c).sort().join()!==keys.sort().join()||c.schema!=='continuum-coding-service'||c.version!==1||
    c.sourceRoot!==SERVICE_SOURCE_ROOT||!/^[a-f0-9]{40}$/.test(c.sourceCommit??''))throw Error('SERVICE_CONFIG_INVALID');
  for(const root of [realDirectory(c.sourceRoot),realDirectory(c.project),realDirectory(c.profileDirectory)])
   if(inside(root,stateDir)||inside(stateDir,root))throw Error('SERVICE_STATE_OVERLAPS_SOURCE_OR_PROFILES');
  if(!SHA.test(c.profileClasspathSha256??'')||typeof c.profileClasspath!=='string'||c.profileClasspath.length<1||c.profileClasspath.length>16000||
    c.profileClasspath.split(path.delimiter).some(p=>!path.isAbsolute(p)||p.includes('*')||p.includes('\0')))throw Error('SERVICE_PROFILE_CLASSPATH_INVALID');
+ for(const entry of c.profileClasspath.split(path.delimiter))
+  if([c.project,c.profileDirectory,stateDir].some(root=>inside(root,entry)||inside(entry,root)))throw Error('SERVICE_PROFILE_CLASSPATH_OVERLAPS_DATA');
  runtimeConfiguration(c.runtimeEnv);
+ if(!SHA.test(c.modelManifestSha256??''))throw Error('SERVICE_MANIFEST_PIN_INVALID');
  if(!SHA.test(c.isolationConfigSha256??'')||!path.isAbsolute(c.isolationConfig??'')||
    inside(c.project,c.isolationConfig)||inside(c.sourceRoot,c.isolationConfig))throw Error('SERVICE_ISOLATION_CONFIG_INVALID');
  if(!c.limits||Object.keys(c.limits).sort().join()!=='maxCycles,maxQueue,maxRecords'||
@@ -131,9 +137,14 @@ export function assertServiceSource(config){
  if(gitIdentity(config.sourceRoot,{clean:true})!==config.sourceCommit)throw Error('SERVICE_SOURCE_CHANGED');
  if(sha256Hex(plainBytes(config.isolationConfig,4096))!==config.isolationConfigSha256)throw Error('SERVICE_ISOLATION_CONFIG_CHANGED');
 }
+export function assertProfileBridge(config){
+ if(profileClasspathDigest(config.profileClasspath)!==config.profileClasspathSha256)throw Error('SERVICE_PROFILE_CLASSPATH_CHANGED');
+}
 export function assertServiceArtifacts(config){
  assertServiceSource(config);
- if(profileClasspathDigest(config.profileClasspath)!==config.profileClasspathSha256)throw Error('SERVICE_PROFILE_CLASSPATH_CHANGED');
+ assertProfileBridge(config);
+ if(sha256Hex(plainBytes(config.runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL_MANIFEST,65536))!==config.modelManifestSha256)
+  throw Error('SERVICE_MODEL_MANIFEST_CHANGED');
  for(const [fileKey,shaKey] of [['CONTINUUM_LOCAL_BRAIN_MODEL_PATH','CONTINUUM_LOCAL_BRAIN_MODEL_SHA256'],['CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH','CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256']]){
   const file=config.runtimeEnv[fileKey],s=fs.lstatSync(file);
   if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1||fs.realpathSync(file)!==file)throw Error('SERVICE_RUNTIME_FILE_UNSAFE');

@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHmac,timingSafeEqual} from 'node:crypto';
-import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID} from './coding-service-store.mjs';
+import {loadCodingServiceConfig,readDeliveries,privateJson,plainBytes,realDirectory,sameLiveProcess,gitIdentity,SERVICE_ID,assertProfileBridge} from './coding-service-store.mjs';
 import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {taskState} from './ccc1-orchestrator.mjs';
 import {taskFingerprint,validateCodingTask} from './coding-task.mjs';
@@ -74,6 +74,7 @@ function evidence(config,delivery,evidenceId){
    patchSha256:receipt.patch?.sha256??null});
  }
  if(current.status.state==='COMPLETED'&&!receipts.some(r=>r.verdict==='CONFIRMED'))throw Error('SERVICE_NO_CONFIRMED_RECEIPT');
+ assertProfileBridge(config);
  const store=profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath});
  for(const id of ['bot-forge','bot-lint','bot-echo'])if(store.get(id)?.workspaceId!=='workspace-'+id)throw Error('SERVICE_PROFILE_UNAVAILABLE');
  let content;
@@ -118,11 +119,14 @@ export function createCodingServiceReader({configPath}={}){
   getStatus(){
    const c=config(),d=readServiceDescriptor(c),items=readDeliveries(c),alive=d!==null&&sameLiveProcess(d.process);
    const orphan=items.some(item=>item.workerProcess&&sameLiveProcess(item.workerProcess)&&!alive);
+   const active=Boolean(alive&&d.activeTaskId||orphan);
    return {schema:'continuum-coding-service-status',version:1,state:alive?d.state:orphan?'ORPHAN_WORKER':'STOPPED',
     processVerified:alive,sourceCommit:c.sourceCommit,executionEnvironment:'HOST',deviceVerified:false,
     activeTaskId:alive?d.activeTaskId??null:null,queued:items.filter(i=>i.delivery==='PENDING').length,
     unknown:items.filter(i=>['UNKNOWN','RESERVING','DISPATCHED','CANCEL_REQUESTED'].includes(i.delivery)&&(!alive||i.delivery==='UNKNOWN')).length,
-    capacity:c.limits.maxQueue,maxConcurrentInference:1,modelLoaded:false,modelLoading:'ON_DEMAND_PER_TASK',
+    capacity:c.limits.maxQueue,maxConcurrentInference:1,maxConcurrentInferenceScope:'ONE_SERVICE_PER_OS_USER',
+    residentModelLoaded:false,modelLoaded:active?null:false,modelLoading:'ON_DEMAND_PER_TASK',
+    inferenceObservation:active?'NATIVE_PHASE_NOT_OBSERVED_FROM_CONTROL_PROCESS':'NO_ACTIVE_TASK_IN_THIS_SERVICE',
     reviewedModel:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL,modelSha256:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,
     runtimeSha256:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,cloudModelCallsAllowed:false,
     cycles:alive?d.cycles??0:null,sessionLimit:c.limits.maxCycles,control:'LOCAL_OWNER_UNIX_SOCKET'};
@@ -141,7 +145,8 @@ export function createCodingServiceReader({configPath}={}){
    return {items,nextCursor:hasMore?items.at(-1).taskId:null};
   },
   listAgents(args={}){
-   const {cursor,limit}=pageArgs(args),c=config(),store=profileStoreReader(c.profileDirectory,{classpath:c.profileClasspath});
+   const {cursor,limit}=pageArgs(args),c=config();assertProfileBridge(c);
+   const store=profileStoreReader(c.profileDirectory,{classpath:c.profileClasspath});
    if(typeof store.page!=='function')throw Error('SERVICE_PROFILE_PAGE_BRIDGE_UNAVAILABLE');
    const page=store.page({afterAgentId:cursor,limit});
    const d=readServiceDescriptor(c),active=d&&sameLiveProcess(d.process)?d.activeTaskId:null;
@@ -149,7 +154,8 @@ export function createCodingServiceReader({configPath}={}){
     communicationStyle:p.communicationStyle,workspaceId:p.workspaceId,modelPolicy:p.modelPolicy,verifiedCapabilities:p.verifiedCapabilities??[],
     permissionScope:p.permissionScope??[],state:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?'ASSIGNED_TO_ACTIVE_TASK':'REGISTERED',
     currentTaskId:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?active:null,executionEnvironment:'HOST',
-    modelActive:false,activityDetail:'Canonical task records determine actual stage; a profile is not an active model'})),nextCursor:page.nextAfterId??null};
+    modelActive:active&&['bot-forge','bot-lint','bot-echo'].includes(p.agentId)?null:false,
+    activityDetail:'Canonical task records determine actual stage; a profile is not an active model'})),nextCursor:page.nextAfterId??null};
   },
   getEvidence({taskId,evidenceId}={}){
    if(!SERVICE_ID.test(taskId??''))throw Error('SERVICE_TASK_ID_INVALID');
