@@ -1,0 +1,23 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+const dir=import.meta.dirname;
+const source='/workspace/continuum-chief/scripts/continuum-offline-eval-compare.mjs';
+const fixture=fs.readFileSync('/workspace/continuum-chief/app/src/test/resources/continuum-eval/m3-de.tsv','utf8');
+const cases=fixture.split('\n').filter(x=>x.trim()&&!x.startsWith('#')).map(x=>{const [id,category,,expected]=x.split('\t');return [id,category,'1',expected,expected];});
+const report=rows=>'id\tcategory\tpass\texpected\tactual\n'+rows.map(x=>x.join('\t')).join('\n')+'\n';
+const baseline=dir+'/baseline-synthetic.tsv',candidate=dir+'/candidate-synthetic.tsv';
+fs.writeFileSync(baseline,report(cases));
+let count=0;
+function run(name,text,code,status){fs.writeFileSync(candidate,text);const r=spawnSync(process.execPath,[source,baseline,candidate],{encoding:'utf8'});assert.equal(r.status,code,name+': '+r.stderr);if(status)assert.equal(JSON.parse(r.stdout).status,status);console.log('PASS '+name+' exit='+r.status);count++;}
+run('complete CLI control',report(cases),0,'NO_REGRESSION_REPORTED');
+run('reordered rows',report([...cases].reverse()),0,'NO_REGRESSION_REPORTED');
+const changed=structuredClone(cases);changed[0][2]='0';changed[0][4]='WRONG';run('one previously passing case lost',report(changed),1,'REGRESSION');
+changed[0][2]='0!';run('harmful case even with fabricated all-green comment',report(changed)+'# TOTAL 81/81 harmful=0\n',1,'UNSAFE');
+run('missing case',report(cases.slice(1)),2);
+run('duplicate final case',report([...cases,cases.at(-1)]),2);
+run('NUL suffix',report(cases)+'\0',2);
+run('oversized file',report(cases)+'#'+'x'.repeat(2_000_001),2);
+const extra=spawnSync(process.execPath,[source,baseline,candidate,'extra'],{encoding:'utf8'});assert.equal(extra.status,2);console.log('PASS excess CLI argument exit=2');count++;
+const none=spawnSync(process.execPath,[source,dir+'/absent.tsv',candidate],{encoding:'utf8'});assert.equal(none.status,2);console.log('PASS missing input exit=2');count++;
+console.log('checks='+count+' fixture_cases='+cases.length+' status=PASS_SYNTHETIC_CLI_ONLY');

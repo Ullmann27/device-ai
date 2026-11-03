@@ -1,0 +1,11 @@
+source_sha=b4f61ae9765e26dd401db928b76fa9f233c0742a
+source_pr=390
+baseline_status=NOT_RUN
+node=v24.19.0
+java_runtime=OpenJDK 21.0.12.1
+javac=UNAVAILABLE
+android_sdk=UNAVAILABLE
+gradle=UNAVAILABLE
+apk=NOT_BUILT
+signing=NOT_RUN
+device=NOT_RUN
