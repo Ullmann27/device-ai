@@ -126,6 +126,20 @@ class IndependentCameraCallbacksUiTest {
         assertEquals(CameraTrackingState.IN_USE,second.state)
         assertEquals(CameraTrackingState.STARTING,first.state);assertTrue(observations.isEmpty())
     }
+    @Test fun unknownSensorClockCannotBeAdmittedAsRealtimeEvidence() {
+        val manager=app.getSystemService(CameraManager::class.java)
+        Shadow.extract<ShadowCameraCharacteristics>(manager.getCameraCharacteristics("front"))
+            .set(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE,CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN)
+        val c=camera();assertFalse(c.hardwareSupported());assertFalse(c.start(true,true,0))
+        assertEquals(CameraTrackingState.UNSUPPORTED,c.state);assertEquals(0,opens)
+    }
+    @Test fun returnToForegroundCannotResumeAnOldExplicitSession() {
+        val c=camera();val old=start(c)
+        c.setForeground(false);c.setForeground(true)
+        old.onOpened(device());shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(CameraTrackingState.NOT_FOREGROUND,c.state)
+        assertEquals(1,opens);assertEquals(1,deviceCloses);assertTrue(observations.isEmpty())
+    }
     @Test fun selectedCapturePlanUsesBoundedAdvertisedBufferAndRate() {
         val c=camera()
         val plan=AndroidAvatarCameraInput::class.java.getDeclaredMethod("plan",Int::class.javaPrimitiveType).apply {isAccessible=true}.invoke(c,0)!!

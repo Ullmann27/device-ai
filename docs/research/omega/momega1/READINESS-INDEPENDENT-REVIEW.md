@@ -16,3 +16,11 @@ Status: WIP / UNVERIFIED. Review base5feb1a93ffe5db29163e33e4a0ea002ff25252fe; c
 10. No app-account connector is inferred from ChatGPT connections, installed apps or OS permissions. Actions remain presentation requests, not grants. Existing model/ToolGate/owner data and native avatar rendering are outside reviewer changes.
 
 Execution: coordinate one bounded compiler/test task with QA; inspect true call paths and source, then write independent adversarial tests against exact candidate. Report original compile-only author RED accurately, not as executed failures. Root's later Activity hooks require an independent caller review before end-to-end source acceptance. FOLD7_NOT_RUN; camera hardware, audible voice and on-device speech remain NOT_RUN unless actually observed.
+
+## Independent execution on d32fe38a
+
+Bounded exact-source compilation and JUnit/Robolectric execution ran with QA's explicit scheduler allocation:1 CPU,512MiB heap,cached dependencies only. The first22 independent methods executed:21PASS/1FAIL/0ignored/0assumption skips; compile exit0, test exit1. All6 actual-adapter controlled Camera2 callback/close/lease tests passed. Raw identities/logs/source hashes are in `docs/evidence/momega1/readiness-review/d32fe38a-first`.
+
+**CR-1 — P2 / REQUEST_CHANGES at policy API boundary:** `AvatarCameraPolicy.acceptFrame` replaces an absent/null capture timestamp with callback `now`. The independent case returned a TRACKING sample at elapsed1000 despite unknown capture time. This contradicts the missing-capture-time fail-closed contract. The native Camera2 adapter currently passes-1 for missing SENSOR_TIMESTAMP, so this is not a demonstrated native missing-timestamp bypass. Requested fix: reject missing capture time in the policy while preserving explicitly captured timestamps. Reviewer made no feature edits.
+
+Additional native-boundary cases were subsequently added for unsupported sensor clock and foreground return after a pending open. They extend the original frozen challenge groups and do not replace the retained22-case RED result. Controlled Camera2 shadows prove calls to close and generation/lease behavior in actual adapter code, not physical resource release, vendor correctness or live capture quality.
