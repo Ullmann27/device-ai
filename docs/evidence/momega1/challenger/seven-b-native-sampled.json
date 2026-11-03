@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "-c",
+    "import time; time.sleep(45)"
+  ],
+  "runtimePath": "/workspace/momega1-local-model/build-cpu/bin/llama-completion",
+  "runtimeDevice": 27,
+  "runtimeInode": 1619360,
+  "exit": 0,
+  "elapsedSeconds": 45.023,
+  "matchedRuntimeProcesses": 1,
+  "samples": 179,
+  "peakObservedRssKiB": 5257460,
+  "peakObservedVmHwmKiB": 5257460,
+  "peakObservedThreads": 3,
+  "procAccessMisses": 805796,
+  "measurement": "Executable-inode-matched /proc status samples; sampled peak may miss transients; not a standalone benchmark"
+}

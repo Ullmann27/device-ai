@@ -1,0 +1,29 @@
+✔ original exact profile alone grants fixed2CPU policy (1.252551ms)
+✔ cloned or increased profile rejected before runtime invocation (1.05338ms)
+✔ fixed CLI heap arguments cannot be mutated (0.872106ms)
+✔ legacy1.5B aggregate CPU formula is unchanged (2.941151ms)
+✔ 7B exact remainingwall 1 yields bounded CPU 2 (1.27124ms)
+✔ 7B exact remainingwall 1000 yields bounded CPU 2 (0.745095ms)
+✔ 7B exact remainingwall 1001 yields bounded CPU 4 (0.712937ms)
+✔ 7B exact remainingwall 176123 yields bounded CPU 354 (0.802973ms)
+✔ 7B exact remainingwall 300000 yields bounded CPU 600 (0.795231ms)
+✔ public resource API exists without configuring a generic memory override (0.922412ms)
+✔ only exact approved7B provenance yields immutable bounded resource profile (0.425492ms)
+✔ wrong7B repository cannot raise legacy resource limits (0.104057ms)
+✔ wrong7B revision cannot raise legacy resource limits (0.077487ms)
+✔ wrong7B filename cannot raise legacy resource limits (0.067602ms)
+✔ wrong7B sizeBytes cannot raise legacy resource limits (0.086501ms)
+✔ wrong7B sha256 cannot raise legacy resource limits (0.067742ms)
+✔ wrong7B license cannot raise legacy resource limits (0.051177ms)
+✔ unknown runtime and1.5B identity cannot borrow7B profile (0.135975ms)
+✔ environment memory claims cannot register a new profile (0.265801ms)
+✔ 7B candidate cannot become reviewed through resource-profile admission (0.328296ms)
+✔ actual kernel cgroup is required; host16GiB and env claims cannot pass (0.578884ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 216.824798

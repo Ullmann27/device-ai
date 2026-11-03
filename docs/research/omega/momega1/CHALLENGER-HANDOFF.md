@@ -123,3 +123,41 @@ before reviewing pair-registry implementation. Runtime author must not inspect
 challenger blind prompt until run evidence is published. QA holdouts remain unseen.
 Status ACTUAL_MODEL_REVIEW_PENDING. Original fixed-ELF counterexample still applies;
 config runtime kind cannot mint genuine inference. FOLD7_NOT_RUN remains final.
+
+## Separate7B review authorized — pending
+
+Chief5feb1a93 records explicit owner approval of official Qwen7B Q4_K_M exact
+509287f7...894d3c /4683073536bytes, existing runtime c2c13a2a...cbf5a, at most8GiB
+for model job. Independent criteria frozen in SEVEN-B-FROZEN-CRITERIA.md before
+candidate inspection. Preserve all prior1.5B evidence. No7B inference started;
+UI rendering has priority. Host cgroup root is read-only with16GiB shared limit,
+so per-job8GiB enforcement must be examined rather than inferred from host quota.
+Original consumed reviewer task and tests are reused unchanged; QA holdouts unseen.
+
+## 7B frozen candidate e192b9a6 — independent checkpoint
+
+Evidence PR452 / commit f4a1b846 records 62/62 independent host controls and 12/12 actual capped-container controls. The first actual default-provider attempt on the consumed batches probe failed after98.334s with zero response bytes. No reviewed7B tuple/certificate is authorized. See `docs/evidence/momega1/challenger/SEVEN-B-REVIEW-STATUS.md` for exact native executable/mount identity,7GiB address/cgroup limits, network denial,5.01GiB sampled native RSS, and the important distinction between resident model pages and cgroup cache charges. Docker cleanup completed. Post-run streaming rehashes preserve exact approved model/runtime identities.
+
+A smaller midpoint provenance probe was separately frozen in f4a1b846 before execution. It is not the original QA holdout and does not replace its failed result. Native cancellation control will abort only after independently observing the exact runtime inode. Awaiting UI/QA quiet window; no actual7B success or admission yet. FOLD7_NOT_RUN remains unchanged.
+
+## 7B review result — two normal-response failures, cancellation PASS
+
+Second quiet window is complete; no native process remains. The pre-frozen small midpoint prompt also failed normal default-provider response after100.456s observer time. No model observation, no proposal, no genuine tuple approval. Native RSS/PSS ~5.01GiB; no cgroupOOM. CPU exhaustion remains a supported hypothesis, not a proven raw signal diagnosis. Model job memory counters undercount ancestor-charged cached pages and must be read with native RSS/PSS.
+
+Independent actual-native cancellation PASS: pinned runtime inode plus>4GiB RSS observed, abort4028ms, CODING_CANCELLED4045ms, no remaining runtime. Additional7B forgery controls15/15PASS, including re-MACed memory limits and candidate claims. Source e192b9a6 resource/isolation/fail-closed behavior accepted; genuine7B inference NOT APPROVED. Registry must remain candidate/null certificate. No security blocker demonstrated. Raw evidence and exact scopes are in SEVEN-B-REVIEW-STATUS.md and adjacent seven-b-* receipts, PR452. Next reviewer work should capture raw native output and signal for the frozen small prompt without weakening caps or altering primaryQA60s protocol. UI/QA have the compute slot again. FOLD7_NOT_RUN.
+
+## Requested exact-prompt raw diagnosis complete
+
+One reviewer-only passive raw capture used the byte-identical failed tiny provider prompt SHA044749f43ab5b7e17682fa5ec3278dd1ace1fdb49089bfd37f34fac83d1e9fc3, unchanged helper/source and limits. Real native output598bytes contains coherent plan/hypothesis and partial patch, truncated at newText. Exit137 after94.726s native time, --cpu=177 across2workerthreads; latest sampled native CPU180.65s, noOOM/walltimeout. Strong evidence of CPU-limit termination during decoding, with no kernel signal-origin trace. No load failure/repetition observed. No normal counters/trailer or provider receipt; genuine7B remains NOT APPROVED. Raw mode600 artifacts outsideGit `/workspace/momega1-local-model/challenger-7b-diagnostic`; published receipt records hashes, exactpublicargv and diagnostic limits. No keys/MAC persisted. Full diagnostic in SEVEN-B-REVIEW-STATUS.md. No further task probes or limits changed. UI/QA released after diagnostic. Source e192b9a6 still candidate; no independent7B approval certificate exists.
+
+## Exact7B pair approved after narrow CPU correction — immutable certificate
+
+Reviewed frozen source a135a9ae72e1494676d709ae496cf74048310537. Independent84hostPASS+21real-containerPASS; oldsourceCPU-specific4RED retained. Same tiny sourcecommit/prompt and180s wall review budget now produce normal canonical default-provider result:156tokens,104746ms, exit0, candidateverifiedfalse, original privatebrand/frozen true, clonefalse, repeat/restartbudgetrejected. Actual kernel CPU352s matches175800ms remainingwall*2;1.5B unchanged. Actual resident-native cancellation4235→4258ms PASS; no leftoverprocess/container. Synthetic patch5/5PASS, not unknown benchmark.
+
+Summed contemporaneous all-container+hostCaller/Dockerclient RSS5412020KiB (5.161GiB),2.839GiB headroombelow8GiB. Native RSS/PSS ~5.01GiB; leaf cgroup charge0.724GiB separately caveated because cached weights can be charged to ancestor. Parent-PID scan calibrated after child-list omission was caught. Normal canonical helper discards stderr, so prompt-eval/decode timings unavailable; no throughput inferred. QA60s protocol unchanged.
+
+Immutable `docs/evidence/momega1/challenger/APPROVED-7B-PAIR-REVIEW.json`, SHA25629a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec, decisionAPPROVE_EXACT_PAIR_FOR_LOCAL_MODEL_HOST. Exact official model509287…894d3c/runtimec2c13a…0cbf5a only. Author may promote this exact tuple with this certificate after its commit is pushed; final status-only registry/source review remains required. No production files edited by challenger. FOLD7_NOT_RUN; no broad correctness/loop/learning/release claims. All old failures and private raw diagnostic hashes remain preserved. UI/QA compute window released.
+
+## Final7B promoted source ACCEPTED — fb0f8152
+
+Final independent source check accepted fb0f8152cfe4e85b778c2f2ef17034b2ef6333be; docs-only author head5333a10d changes evidence/handoff only. Production delta vs actual-witness sourcea135 is exactly7B registry status and approved certificateSHA29a14463a22b722eb948bb1afaa4ba8683d40b929955b725fa8fe3837a5b60ec. All20certificate references verified,1.5B tuple/native helper/provider/resource code unchanged.89independenthostPASS (5cgroup-only cases skipped there),21actualDockerPASS; exacttuple wrongpins, injectedcorrectMAC, forgedtrue/JSONclone and CPU/resource field mutations rejected. No extra inference or production edits. Final receipt `docs/evidence/momega1/challenger/seven-b-final-source-acceptance.json`; logs seven-b-final-*. Chief may integrate exact runtime and independent docs. Actual witness remains canonicala135 candidatefalse156tokens104746ms/5.161GiB; final status-only promotion reviewed independently. OriginalQA60s/unknownscore and merged-Chief fullintegration remain separate; FOLD7_NOT_RUN. No model/Gradle/render work active from challenger; slot handed back.

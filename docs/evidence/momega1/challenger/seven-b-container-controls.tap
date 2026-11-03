@@ -1,0 +1,20 @@
+✔ public resource API exists without configuring a generic memory override (0.789042ms)
+✔ only exact approved7B provenance yields immutable bounded resource profile (0.397951ms)
+✔ wrong7B repository cannot raise legacy resource limits (0.104458ms)
+✔ wrong7B revision cannot raise legacy resource limits (0.086892ms)
+✔ wrong7B filename cannot raise legacy resource limits (0.068784ms)
+✔ wrong7B sizeBytes cannot raise legacy resource limits (0.062675ms)
+✔ wrong7B sha256 cannot raise legacy resource limits (0.056635ms)
+✔ wrong7B license cannot raise legacy resource limits (0.049626ms)
+✔ unknown runtime and1.5B identity cannot borrow7B profile (0.123046ms)
+✔ environment memory claims cannot register a new profile (0.239292ms)
+✔ 7B candidate cannot become reviewed through resource-profile admission (0.309347ms)
+✔ actual kernel cgroup is required; host16GiB and env claims cannot pass (0.719007ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77.094146
