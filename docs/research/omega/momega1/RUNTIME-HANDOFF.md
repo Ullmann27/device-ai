@@ -180,3 +180,12 @@ review evidence and MODEL-ADMISSION.md. Actual runtime env remains outside Git i
 paths. Route real synthetic unknown tasks through existing strict CCC1 orchestration,
 not a direct ungranted worker. Rollback: remove/revert exact registry admission and
 isolated runtime commits; keep rejected/cancelled journals and owner gates intact.
+
+
+Final independent source evidence is pushed at
+https://github.com/Ullmann27/device-ai/commit/88a6e2fb1ce52ab090a8c6b13de7cd9bad4a7aaf:
+docs/evidence/momega1/challenger/actual-native-compatible/final-provider-result.json,
+actual-model-final-manifest.json and ACTUAL-MODEL-FINAL-ASSESSMENT.md. Original
+pair certificate remains88e886df...09fe. Final-source manifest records the final
+reviewer receipt hash. QA received the approved nonsecret runtime-env.json path;
+ALPHA performs no further native inference during its unknown-task benchmark.

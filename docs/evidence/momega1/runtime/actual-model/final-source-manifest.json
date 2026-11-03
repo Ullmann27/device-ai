@@ -44,5 +44,8 @@
     "privateBrand": true,
     "verifiedModelExecution": true,
     "jsonCloneTrusted": false
-  }
+  },
+  "reviewerFinalCommit": "88a6e2fb1ce52ab090a8c6b13de7cd9bad4a7aaf",
+  "reviewerReceiptPath": "docs/evidence/momega1/challenger/actual-native-compatible/final-provider-result.json",
+  "reviewerReceiptSha256": "f0d0b9aa337a336483370e47a8bb143b62cd502c4884a3033d10dd3d2bda72eb"
 }
