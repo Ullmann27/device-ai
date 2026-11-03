@@ -1,0 +1,28 @@
+{
+  "schema": "momega1-real-local-model-benchmark-v1",
+  "phase": "PREPARED_NOT_EXECUTED",
+  "frozenManifestSha256": "1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "authorization": "Owner subsequently authorized pinned official local host weights/runtime download and real host inference; no Fold7 or release authorization inferred.",
+  "firstTask": "u01",
+  "taskOrder": ["u01","u02","u03","u04","u05","u06","u07","u08","u09","u10","u11","u12"],
+  "distinctTasks": 12,
+  "limitsPerTask": {"maxModelCalls":2,"maxContextChars":8192,"allowedSourceFiles":1,"acceptanceCriteria":1,"chain":"node"},
+  "mandatoryPreconditions": [
+    "Chief supplies immutable integrated source SHA containing independently accepted genuine inference producer and canonical claimed workspace caller.",
+    "Official model and runtime provenance are verified independently; model kind or process brand alone cannot establish inference.",
+    "Frozen manifest verifies; existing materialized source/test hashes match; actual baseline fails an assertion.",
+    "Each task uses canonical prepareCodingTask grant and runCodingTask with requireIsolation and requireLocalModelObservation, expected task fingerprint, and existing owner-configured executor.",
+    "No providerFactory, fake run, scripted patch, teacher answer or solution is supplied by QA."
+  ],
+  "recordPerTask": ["integrated source SHA","source repository commit and tree","frozen source/test hashes","model and runtime identities","canonical grant/task fingerprint","real inference observations","actual model calls and revisions","proposal and patch identities","RED and GREEN raw execution evidence","independent verification","reflection and experience status","restart recall result","wall time/resource evidence","all failures and unexecuted checks"],
+  "successRule": "A task is solved only after genuine admitted local inference proposes its source patch and unchanged real acceptance tests pass independent verification. Review-ready patch does not grant merge/install/release authority.",
+  "memoryPair": {
+    "earlier":"u02",
+    "later":"u12",
+    "policy":"Current recall requires exact sourceCommit. These frozen tasks have different source SHAs; never weaken policy to make a positive ablation.",
+    "execution":"Use shared synthetic state only if canonical checkout/grant boundaries allow it. Record exact recall outcome and bindings. If cross-source recall is denied, report BLOCKED_CROSS_SOURCE_POLICY; do not invent a learning gain or run a redundant claimed-memory arm.",
+    "restart":"Same-source persisted recall may be checked through the existing read-only recall helper with canonical grants; no resubmission or owner approval inferred."
+  },
+  "modelWeightsModified":false,
+  "deviceStatus":"FOLD7_NOT_RUN"
+}
