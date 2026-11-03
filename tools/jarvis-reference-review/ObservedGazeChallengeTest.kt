@@ -69,6 +69,17 @@ class ObservedGazeChallengeTest {
         val p = r.pose(1_000); assertFalse(isObserved(p)); assertEquals(0f, p.gazeX, 0f)
     }
 
+    /** Added after source inspection, before execution: not part of the original 25-case freeze. */
+    @Test fun discardedFutureObservationCannotLockOutNewCurrentObservations() {
+        for (future in listOf(2_000L, Long.MAX_VALUE)) {
+            val r = AvatarPoseReducer(); r.apply(observed(.8f, -.7f, 80, future))
+            assertFalse(isObserved(r.pose(1_000)))
+            r.apply(observed(.2f, .1f, 90, 1_001))
+            assertTrue("Discarded future timestamp locked out current observations: $future", isObserved(r.pose(1_002)))
+            assertEquals(.2f, r.pose(1_002).gazeX, 0f)
+        }
+    }
+
     @Test fun outOfOrderOlderObservationCannotReplaceTheLatest() {
         val r = AvatarPoseReducer(); r.apply(observed(.4f, .2f, 70, 1_100))
         r.apply(observed(-.8f, -.7f, 100, 1_050))

@@ -66,3 +66,9 @@ the real unmodified production sources. These are host contract tests, not camer
 tracking, gaze accuracy, audio/visual synchronization, visual appearance or device
 acceptance. Lifecycle UI hooks and any real camera adapter still require separate
 source and runtime checks. Existing twelve mapper tests remain unchanged.
+
+After inspecting candidate `1649a043`, the reviewer added one separately labeled
+adversarial case before executing it: a discarded future observation must not
+prevent a later valid current-time observation. This addresses wall-clock rollback
+or malformed upstream timestamps. It is a source-review discovery, not one of the
+thirteen preregistered gaze cases. No result is claimed before execution.
