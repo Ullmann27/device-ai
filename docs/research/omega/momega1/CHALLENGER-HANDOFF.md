@@ -133,3 +133,9 @@ candidate inspection. Preserve all prior1.5B evidence. No7B inference started;
 UI rendering has priority. Host cgroup root is read-only with16GiB shared limit,
 so per-job8GiB enforcement must be examined rather than inferred from host quota.
 Original consumed reviewer task and tests are reused unchanged; QA holdouts unseen.
+
+## 7B frozen candidate e192b9a6 — independent checkpoint
+
+Evidence PR452 / commit f4a1b846 records 62/62 independent host controls and 12/12 actual capped-container controls. The first actual default-provider attempt on the consumed batches probe failed after98.334s with zero response bytes. No reviewed7B tuple/certificate is authorized. See `docs/evidence/momega1/challenger/SEVEN-B-REVIEW-STATUS.md` for exact native executable/mount identity,7GiB address/cgroup limits, network denial,5.01GiB sampled native RSS, and the important distinction between resident model pages and cgroup cache charges. Docker cleanup completed. Post-run streaming rehashes preserve exact approved model/runtime identities.
+
+A smaller midpoint provenance probe was separately frozen in f4a1b846 before execution. It is not the original QA holdout and does not replace its failed result. Native cancellation control will abort only after independently observing the exact runtime inode. Awaiting UI/QA quiet window; no actual7B success or admission yet. FOLD7_NOT_RUN remains unchanged.
