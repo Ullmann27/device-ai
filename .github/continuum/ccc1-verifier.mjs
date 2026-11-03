@@ -12,6 +12,12 @@ export {verifyOwnedProjectReceipt} from './owned-project-evidence.mjs';
 /** The only test command a coding receipt may report (fixed profile of the existing job). */
 export const ALLOWED_PROFILE='node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)';
 
+const validCounts=x=>Number.isSafeInteger(x?.executed)&&x.executed>0&&
+ Number.isSafeInteger(x.failed)&&x.failed>=0&&x.failed<=x.executed;
+const completedPass=x=>validCounts(x)&&x.exitCode===0&&x.passed===true&&x.failed===0&&x.timedOut===false;
+const completedFailure=x=>validCounts(x)&&x.passed===false&&x.failed>0&&
+ Number.isSafeInteger(x.exitCode)&&x.exitCode>0&&x.timedOut===false;
+
 export function verifyJobReceipt(receipt,{job,commit,module,exportName,casesJson}){
  const reasons=[];const r=receipt??{};
  if(r.schema!==RECEIPT_SCHEMA||r.version!==1)reasons.push('not a coding receipt');
@@ -26,16 +32,24 @@ export function verifyJobReceipt(receipt,{job,commit,module,exportName,casesJson
    const bytes=fs.readFileSync(r.patch.path);
    if(sha256(bytes)!==r.patch.sha256||bytes.length!==r.patch.bytes)reasons.push('patch bytes do not match the receipt');
   }catch{reasons.push('patch file missing');}
-  const runs=r.commands??[];
+  const runs=Array.isArray(r.commands)?r.commands:[];
+  const run=phase=>runs.find(x=>x?.phase===phase);
   if(runs.length!==3)reasons.push('expected exactly three runs');
   for(const phase of ['baseline','candidate','independent']){
-   const run=runs.find(x=>x.phase===phase);
-   if(!run||run.exitCode!==0||run.passed!==true||!(run.executed>0)||run.failed!==0||run.timedOut)reasons.push(phase+' run did not pass with executed tests');
-   else if(run.command!==ALLOWED_PROFILE)reasons.push(phase+' run used a command outside the allowlist');
+   const x=run(phase);
+   if(!completedPass(x))reasons.push(phase+' run did not pass with executed tests');
+   else if(x.command!==ALLOWED_PROFILE)reasons.push(phase+' run used a command outside the allowlist');
   }
   const ex=r.evidence??{};
   if(!/^[0-9a-f]{64}$/.test(ex.verificationSha256??''))reasons.push('no verification evidence hash');
-  if(!(ex.independentExecuted>=ex.candidateExecuted&&ex.candidateExecuted>=ex.baselineExecuted+ex.expectedNewTests))reasons.push('independent run executed fewer tests than required');
+  // The ordered cases determine the required added tests, never a worker-supplied summary.
+  let expectedNewTests=null;
+  try{const cases=JSON.parse(casesJson);if(Array.isArray(cases)&&cases.length>0)expectedNewTests=cases.length;}catch{}
+  if(expectedNewTests===null||ex.expectedNewTests!==expectedNewTests)reasons.push('expected new tests disagree with the ordered cases');
+  for(const phase of ['baseline','candidate','independent'])
+   if(ex[phase+'Executed']!==run(phase)?.executed)reasons.push(phase+' summary disagrees with executed command tests');
+  if(!(run('candidate')?.executed>=run('baseline')?.executed+expectedNewTests&&
+       run('independent')?.executed>=run('candidate')?.executed))reasons.push('independent run executed fewer tests than required');
   return reasons.length?{verdict:'INCONCLUSIVE',reasons}:{verdict:'CONFIRMED',reasons:['contract test passed in candidate and independent worktree']};
  }
  if(r.status==='FAILED_CODING_CHECKS'&&/GENERATED_TESTS_FAILED/.test(r.failure?.message??''))
@@ -57,11 +71,12 @@ export function verifyRepairReceipt(receipt,{job,commit,chain}){
  if(r.commit!==commit)reasons.push('receipt is bound to another commit');
  if(r.approvedForMerge!==false||r.installed!==false||r.apk!==null||r.deviceVerified!==false)reasons.push('receipt claims merge, install or device verification');
  if(r.order?.chain!==chain)reasons.push('receipt answers a different order');
+ const command=Object.hasOwn(REPAIR_PROFILE_COMMAND,chain)?REPAIR_PROFILE_COMMAND[chain]:null;
+ if(!command)reasons.push('unknown repair test chain');
  if(typeof r.toolchain?.node!=='string'||!/^v\d+/.test(r.toolchain.node))reasons.push('toolchain not reported');
  if(reasons.length)return {verdict:'INCONCLUSIVE',reasons};
- const runs=r.commands??[];
- const run=phase=>runs.find(x=>x.phase===phase);
- const command=REPAIR_PROFILE_COMMAND[chain];
+ const runs=Array.isArray(r.commands)?r.commands:[];
+ const run=phase=>runs.find(x=>x?.phase===phase);
  const baseline=run('baseline');
  if(r.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'){
   try{
@@ -69,27 +84,32 @@ export function verifyRepairReceipt(receipt,{job,commit,chain}){
    if(sha256(bytes)!==r.patch.sha256||bytes.length!==r.patch.bytes||!bytes.length)reasons.push('patch bytes do not match the receipt');
   }catch{reasons.push('patch file missing');}
   if(runs.length!==3)reasons.push('expected exactly three runs');
-  if(!baseline||baseline.passed!==false||!(baseline.failed>0))reasons.push('baseline did not show a real test failure');
+  if(!completedFailure(baseline))
+   reasons.push('baseline did not show a completed real test failure');
   for(const phase of ['candidate','independent']){
    const x=run(phase);
-   if(!x||x.exitCode!==0||x.passed!==true||!(x.executed>0)||x.failed!==0||x.timedOut)reasons.push(phase+' run did not pass with executed tests');
+   if(!completedPass(x))reasons.push(phase+' run did not pass with executed tests');
   }
-  for(const x of runs)if(x.command!==command)reasons.push(x.phase+' run used a command outside the allowlist');
+  for(const x of runs)if(x?.command!==command)reasons.push((x?.phase??'unknown')+' run used a command outside the allowlist');
   const ex=r.evidence??{};
   if(!/^[0-9a-f]{64}$/.test(ex.verificationSha256??''))reasons.push('no verification evidence hash');
   if(ex.evidenceSufficient!==true)reasons.push('the worker did not find the evidence sufficient');
-  if(!(ex.baselineFailed>0))reasons.push('no failing test recorded at the baseline');
-  if(!(ex.independentExecuted>=ex.baselineExecuted&&ex.candidateExecuted>=ex.baselineExecuted&&ex.independentExecuted>0))
-   reasons.push('the repaired chain executed fewer tests than the failing baseline');
+  // Summary fields cannot substitute for the execution details. This is consistency checking,
+  // not authentication of the worker or its test artifacts; independent execution remains required.
+  for(const phase of ['baseline','candidate','independent'])
+   if(ex[phase+'Executed']!==run(phase)?.executed)reasons.push(phase+' summary disagrees with executed command tests');
+  if(ex.baselineFailed!==baseline?.failed)reasons.push('baseline summary disagrees with failing command tests');
+  if(!(run('candidate')?.executed>=baseline?.executed&&run('independent')?.executed>=run('candidate')?.executed))
+   reasons.push('the repaired chain lost tests between baseline, candidate and independent execution');
   return reasons.length?{verdict:'INCONCLUSIVE',reasons}:
    {verdict:'CONFIRMED',reasons:['a failing '+chain+' chain was repaired; the patch passed in the repair worktree and in an independent second worktree']};
  }
  if(r.status==='NO_FAILURE_FOUND'){
-  if(baseline&&baseline.passed===true&&baseline.executed>0&&baseline.failed===0&&baseline.command===command)
+  if(runs.length===1&&completedPass(baseline)&&baseline.command===command)
    return {verdict:'REFUTED',reasons:['the '+chain+' chain passed at the bound commit ('+baseline.executed+' tests): nothing to repair']};
   return {verdict:'INCONCLUSIVE',reasons:['no passing baseline run behind NO_FAILURE_FOUND']};
  }
- if(r.status==='FAILED_REPAIR'&&baseline&&baseline.passed===false&&baseline.command===command)
+ if(r.status==='FAILED_REPAIR'&&runs.length===1&&completedFailure(baseline)&&baseline.command===command)
   return {verdict:'REFUTED',reasons:['no repair candidate passed independently ('+String(r.failure?.code??'NO_VERIFIED_REPAIR')+')']};
  return {verdict:'INCONCLUSIVE',reasons:['job ended '+r.status+(r.failure?.message?': '+String(r.failure.message).slice(0,200):'')]};
 }
