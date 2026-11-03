@@ -1,6 +1,7 @@
 {
   "FROZEN-ACCEPTANCE.md": "ca30b34c45f2296634af000077fff98762364d62d57cc8550dc2abcde8fe0507",
-  "HANDOFF.md": "bb5286825ce1ab121bee1a189a67d8b0fb3261897db4dfd202c840227d95566b",
+  "HANDOFF.md": "b47e500da638c17c6a61d3c7f5c4aa93a6d9b7f2ec98ab40c9c1bb681853c4fb",
+  "STATUS-REFRESH.md": "684c4318c2b199cb3bbfac138adef09e4789e26a1ccdb7be1c90bd8f4764117e",
   "actual-workspaces/canonical-repair-receipt.json": "f2168364bf859f8a9a2fadb42a1fc43656f971038ca49b7918e297684fb492d0",
   "actual-workspaces/canonical-repair-report.json": "ae231607f9094c688b72e363a53077db0caacc75795609b9d4425feed347852f",
   "actual-workspaces/inflight-revocation.json": "09a95ebf9707b30e06bab05e5f860faf2a50c35dbdd0abc2ca90db082c2692ee",
