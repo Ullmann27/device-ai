@@ -1,6 +1,11 @@
 package at.heinz.deviceai
 
 import android.animation.ValueAnimator
+import android.app.AlertDialog
+import at.heinz.deviceai.avatar.AvatarEvent
+import at.heinz.deviceai.avatar.AvatarSink
+import at.heinz.deviceai.avatar.AvatarPoseReducer
+import at.heinz.deviceai.avatar.ContinuumAvatarRenderer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -28,9 +33,19 @@ import kotlin.math.sqrt
 class ContinuumHologramView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : View(context, attrs) {
+) : View(context, attrs), AvatarSink {
     enum class State { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }
 
+    private val avatarRenderer = ContinuumAvatarRenderer()
+    private val avatarPose = AvatarPoseReducer()
+    private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+    private var headEnabled = appearancePrefs.getBoolean("native-head", false)
+    private var avatarSeconds = 0f
+    private val avatarInvalidationPending = java.util.concurrent.atomic.AtomicBoolean(false)
+    private val avatarInvalidation = Runnable {
+        avatarInvalidationPending.set(false)
+        if (isAttachedToWindow && foregroundActive && isShown) invalidate()
+    }
     private val renderer = ContinuumHologramRenderer()
     private val painter = AndroidContinuumPainter(context.assets)
     private val audio = HologramAudioEnvelope()
@@ -117,9 +132,38 @@ class ContinuumHologramView @JvmOverloads constructor(
         isFocusable = false
         // A long-press gives the owner a concrete reason when animation looks frozen.
         setOnLongClickListener {
-            Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            showAppearanceChooser()
             true
         }
+    }
+
+    /** Existing Director calls from TTS or UI; bounded reducer retains no spoken text. */
+    override fun onAvatarEvent(event: AvatarEvent) {
+        synchronized(avatarPose) { avatarPose.apply(event) }
+        // Speech levels are drawn by the existing loop. State/end events also refresh static views.
+        if (event !is AvatarEvent.AudioLevel && event !is AvatarEvent.VisemeCue &&
+            avatarInvalidationPending.compareAndSet(false, true)) mainHandler.post(avatarInvalidation)
+    }
+
+    /** Explicit local appearance preference; the original orb remains the default. */
+    fun setNativeHeadEnabled(enabled: Boolean) {
+        headEnabled = enabled
+        appearancePrefs.edit().putBoolean("native-head", enabled).apply()
+        invalidate()
+    }
+
+    fun isNativeHeadEnabled(): Boolean = headEnabled
+
+    fun showAppearanceChooser() {
+        AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native Vorschau"), if (headEnabled) 1 else 0) { dialog, item ->
+                setNativeHeadEnabled(item == 1)
+                dialog.dismiss()
+            }
+            .setNeutralButton("Bewegung prüfen") { _, _ ->
+                Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton("Schließen", null).show()
     }
 
     /** Call on the UI thread. State changes crossfade over the existing orb. */
@@ -146,6 +190,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setForegroundActive(active: Boolean) {
         if (foregroundActive == active) return
         foregroundActive = active
+        if (!active) synchronized(avatarPose) { avatarPose.clearSpeech() }
         updateMotionPolicy()
     }
 
@@ -168,6 +213,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        mainHandler.removeCallbacks(avatarInvalidation)
+        avatarInvalidationPending.set(false)
+        synchronized(avatarPose) { avatarPose.clearSpeech() }
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
@@ -213,14 +261,14 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun sampleMotion(): MotionSample = MotionSample(visibleFrameCount, drawnFrameCount, phase, motionDiagnostics())
 
     internal fun motionDiagnostics(): String = when {
-        !animationsEnabled -> "Kugel: In-App-Animation ausgeschaltet"
-        !ValueAnimator.areAnimatorsEnabled() -> "Kugel: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
-        powerManager.isPowerSaveMode -> "Kugel: Energiesparmodus blockiert Bewegung."
-        thermalStatus >= 3 -> "Kugel: Temperatur hoch · Bewegung pausiert."
-        !foregroundActive -> "Kugel: Activity nicht im Vordergrund."
-        !isAttachedToWindow -> "Kugel: View nicht am Fenster."
-        !isShown || windowVisibility != VISIBLE -> "Kugel: View derzeit unsichtbar."
-        else -> "Kugel: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+        !animationsEnabled -> "Avatar: In-App-Animation ausgeschaltet"
+        !ValueAnimator.areAnimatorsEnabled() -> "Avatar: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
+        powerManager.isPowerSaveMode -> "Avatar: Energiesparmodus blockiert Bewegung."
+        thermalStatus >= 3 -> "Avatar: Temperatur hoch · Bewegung pausiert."
+        !foregroundActive -> "Avatar: Activity nicht im Vordergrund."
+        !isAttachedToWindow -> "Avatar: View nicht am Fenster."
+        !isShown || windowVisibility != VISIBLE -> "Avatar: View derzeit unsichtbar."
+        else -> "Avatar: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
     }
 
     private fun updateMotionPolicy() {
@@ -270,7 +318,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.phase = phase
         renderFrame.energy = energy
         renderFrame.audio = audioEnergy
-        renderer.draw(painter, renderFrame)
+        if (headEnabled) {
+            val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
+            avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimate())
+        } else renderer.draw(painter, renderFrame)
         drawnFrameCount++
         canvas.restoreToCount(saved)
     }
@@ -280,6 +331,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         val now = SystemClock.uptimeMillis()
         val delta = if (lastFrameMs == 0L) 0f else ((now - lastFrameMs) / 1000f).coerceIn(0f, .1f)
         lastFrameMs = now
+        avatarSeconds = (avatarSeconds + delta) % 460f
         val blend = 1f - exp(-delta * 7f)
         for (i in stateWeights.indices) {
             stateWeights[i] += ((if (i == currentState.ordinal) 1f else 0f) - stateWeights[i]) * blend

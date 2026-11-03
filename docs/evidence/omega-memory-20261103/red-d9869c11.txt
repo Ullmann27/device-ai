@@ -1,0 +1,32 @@
+SOURCE_SHA=d9869c114a8bf7c51655e63d798151ac3f04253c
+COMMAND=['java', '-Xmx512m', '-cp', '/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar', 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect', '-classpath', '/workspace/continuum-build-env/jvm-deps/json-20240303.jar:/workspace/continuum-build-env/jvm-deps/kotlin-script-runtime-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-stdlib-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-compiler-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-build-tools-api-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/junit-4.13.2.jar:/workspace/continuum-build-env/jvm-deps/kotlin-reflect-1.6.10.jar:/workspace/continuum-build-env/jvm-deps/annotations-13.0.jar:/workspace/continuum-build-env/jvm-deps/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/continuum-build-env/jvm-deps/kotlin-daemon-embeddable-2.4.0.jar:/workspace/continuum-build-env/jvm-deps/hamcrest-core-1.3.jar', '-jvm-target', '17', '-d', '/workspace/continuum-build-env/memory-red', 'app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt', 'app/src/test/java/at/heinz/deviceai/learning/Lex3LearningExperienceStoreTest.kt']
+JUnit version 4.13.2
+.E.E.E
+Time: 1.804
+There were 3 failures:
+1) migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended(at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest)
+java.lang.IllegalStateException: Learning ledger capacity reached; owner records cannot be evicted
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.bounded(ContinuumLearningExperience.kt:261)
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.append(ContinuumLearningExperience.kt:130)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended$lambda$0(Lex3LearningExperienceStoreTest.kt:54)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.inDirectory(Lex3LearningExperienceStoreTest.kt:17)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended(Lex3LearningExperienceStoreTest.kt:49)
+2) protected257thRecordSurvivesRestartWithoutLosingLegacyBytes(at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest)
+java.lang.IllegalStateException: Learning ledger capacity reached; owner records cannot be evicted
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.bounded(ContinuumLearningExperience.kt:261)
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.append(ContinuumLearningExperience.kt:130)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.protected257thRecordSurvivesRestartWithoutLosingLegacyBytes$lambda$0(Lex3LearningExperienceStoreTest.kt:26)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.inDirectory(Lex3LearningExperienceStoreTest.kt:17)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.protected257thRecordSurvivesRestartWithoutLosingLegacyBytes(Lex3LearningExperienceStoreTest.kt:20)
+3) thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation(at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest)
+java.lang.IllegalStateException: Learning ledger capacity reached; owner records cannot be evicted
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.bounded(ContinuumLearningExperience.kt:261)
+	at at.heinz.deviceai.learning.FileLearningExperienceStore.appendMissing(ContinuumLearningExperience.kt:150)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation$lambda$0(Lex3LearningExperienceStoreTest.kt:37)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.inDirectory(Lex3LearningExperienceStoreTest.kt:17)
+	at at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest.thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation(Lex3LearningExperienceStoreTest.kt:35)
+
+FAILURES!!!
+Tests run: 3,  Failures: 3
+
+EXIT=1

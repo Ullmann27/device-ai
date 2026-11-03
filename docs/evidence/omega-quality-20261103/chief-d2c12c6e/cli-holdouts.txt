@@ -1,0 +1,11 @@
+PASS complete CLI control exit=0
+PASS reordered rows exit=0
+PASS one previously passing case lost exit=1
+PASS harmful case even with fabricated all-green comment exit=1
+PASS missing case exit=2
+PASS duplicate final case exit=2
+PASS NUL suffix exit=2
+PASS oversized file exit=2
+PASS excess CLI argument exit=2
+PASS missing input exit=2
+checks=10 fixture_cases=81 status=PASS_SYNTHETIC_CLI_ONLY

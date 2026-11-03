@@ -1,0 +1,31 @@
+51387 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+51387 fsync(11)                         = 0
+51387 rename("/workspace/scratch/review/memory-sync/persistent-fixture/experiences-v3/lex3-6730728443758603222.tmp", "/workspace/scratch/review/memory-sync/persistent-fixture/experiences-v3/56132510e2dc9da1f1a1d54fb99efb6c740e974497910391a75d6ea72c5c6ae4.seg") = 0
+51387 fsync(11)                         = 0
+51387 fsync(11)                         = 0
+51387 rename("/workspace/scratch/review/memory-sync/persistent-fixture/lex3-15358384850499821160.tmp", "/workspace/scratch/review/memory-sync/persistent-fixture/experiences-v2.bin") = 0
+51387 fsync(11)                         = -1 EIO (Input/output error) (INJECTED)
+51387 fsync(11)                         = 0
+51387 fsync(11)                         = -1 EIO (Input/output error) (INJECTED)
+51403 +++ exited with 0 +++
+51391 +++ exited with 0 +++
+51392 +++ exited with 0 +++
+51389 +++ exited with 0 +++
+51393 +++ exited with 0 +++
+51387 +++ exited with 0 +++
+51395 +++ exited with 1 +++
+51404 +++ exited with 1 +++
+51401 +++ exited with 1 +++
+51400 +++ exited with 1 +++
+51399 +++ exited with 1 +++
+51398 +++ exited with 1 +++
+51390 +++ exited with 1 +++
+51405 +++ exited with 1 +++
+51407 +++ exited with 1 +++
+51406 +++ exited with 1 +++
+51402 +++ exited with 1 +++
+51396 +++ exited with 1 +++
+51394 +++ exited with 1 +++
+51388 +++ exited with 1 +++
+51397 +++ exited with 1 +++
+51386 +++ exited with 1 +++

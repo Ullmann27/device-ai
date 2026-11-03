@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: strict Kotlin integer acceptance cases reject untrusted code-shaped JSON
+ok 1 - strict Kotlin integer acceptance cases reject untrusted code-shaped JSON
+  ---
+  duration_ms: 2.000179
+  type: 'test'
+  ...
+# Subtest: generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs
+not ok 2 - generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs
+  ---
+  duration_ms: 7487.564629
+  type: 'test'
+  location: '/workspace/continuum-quality/.github/continuum/kotlin-delegate-acceptance.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: 'the accepted owner proposal must survive both gates'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/.github/continuum/kotlin-delegate-acceptance.test.mjs:45:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: wrong independent expected output rejects a compiling patch
+not ok 3 - wrong independent expected output rejects a compiling patch
+  ---
+  duration_ms: 6590.293334
+  type: 'test'
+  location: '/workspace/continuum-quality/.github/continuum/kotlin-delegate-acceptance.test.mjs:57:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'CANDIDATE_KOTLIN_COMPILE_FAILED'
+    - 'CANDIDATE_BEHAVIOR_FAILED'
+                 ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CANDIDATE_BEHAVIOR_FAILED'
+  actual: 'CANDIDATE_KOTLIN_COMPILE_FAILED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/.github/continuum/kotlin-delegate-acceptance.test.mjs:68:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: an arbitrary red baseline is never accepted as proof of the requested missing method
+ok 4 - an arbitrary red baseline is never accepted as proof of the requested missing method
+  ---
+  duration_ms: 2789.809049
+  type: 'test'
+  ...
+# Subtest: owner specification yields a critic-approved production-only Kotlin patch
+ok 5 - owner specification yields a critic-approved production-only Kotlin patch
+  ---
+  duration_ms: 6.785663
+  type: 'test'
+  ...
+# Subtest: unaccepted, foreign, forged and unsupported tasks do not generate patches
+ok 6 - unaccepted, foreign, forged and unsupported tasks do not generate patches
+  ---
+  duration_ms: 0.65805
+  type: 'test'
+  ...
+# Subtest: existing methods, overloaded delegates, unsupported headers and test paths fail closed
+ok 7 - existing methods, overloaded delegates, unsupported headers and test paths fail closed
+  ---
+  duration_ms: 0.60517
+  type: 'test'
+  ...
+# Subtest: new method compiles and computes a nontrivial result with real kotlinc
+not ok 8 - new method compiles and computes a nontrivial result with real kotlinc
+  ---
+  duration_ms: 6262.439443
+  type: 'test'
+  location: '/workspace/continuum-quality/.github/continuum/kotlin-delegate-synthesizer.test.mjs:67:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    exception: org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentException: Couldn't find kotlin-stdlib at <no_path>/lib/kotlin-stdlib.jar
+    	at org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentUtil.writeRuntimeToJar(CompileEnvironmentUtil.java:140)
+    	at org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentUtil.doWriteToJar(CompileEnvironmentUtil.java:95)
+    	at org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentUtil.writeToJar(CompileEnvironmentUtil.java:123)
+    	at org.jetbrains.kotlin.cli.jvm.compiler.CliCompilerUtilsKt.writeOutput(cliCompilerUtils.kt:81)
+    	at org.jetbrains.kotlin.cli.jvm.compiler.CliCompilerUtilsKt.writeOutputsIfNeeded(cliCompilerUtils.kt:127)
+    	at org.jetbrains.kotlin.cli.pipeline.jvm.JvmWriteOutputsPhase.executePhase(JvmWriteOutputsPhase.kt:18)
+    	at org.jetbrains.kotlin.cli.pipeline.jvm.JvmWriteOutputsPhase.executePhase(JvmWriteOutputsPhase.kt:13)
+    	at org.jetbrains.kotlin.cli.pipeline.PipelinePhase.phaseBody(PipelinePhase.kt:63)
+    	at org.jetbrains.kotlin.cli.pipeline.PipelinePhase.phaseBody(PipelinePhase.kt:53)
+    	at org.jetbrains.kotlin.config.phaser.NamedCompilerPhase.invoke(CompilerPhase.kt:102)
+    	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:22)
+    	at org.jetbrains.kotlin.config.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:53)
+    	at org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline.runPhasedPipeline(AbstractCliPipeline.kt:135)
+    	at org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline.executeAndReturnPipeLineArtifact(AbstractCliPipeline.kt:89)
+    	at org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline.executeAndReturnPipeLineArtifact$default(AbstractCliPipeline.kt:49)
+    	at org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline.execute(AbstractCliPipeline.kt:40)
+    	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecutePhased(K2JVMCompiler.kt:54)
+    	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecutePhased(K2JVMCompiler.kt:45)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:94)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler.exec(CLICompiler.kt:366)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler.exec(CLICompiler.kt:344)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler.exec(CLICompiler.kt:306)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler$Companion.doMainNoExit(CLICompiler.kt:445)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler$Companion.doMainNoExit$default(CLICompiler.kt:440)
+    	at org.jetbrains.kotlin.cli.common.CLICompiler$Companion.doMain(CLICompiler.kt:432)
+    	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler$Companion.main(K2JVMCompiler.kt:237)
+    	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.main(K2JVMCompiler.kt)
+    
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/.github/continuum/kotlin-delegate-synthesizer.test.mjs:94:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles
+not ok 9 - owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles
+  ---
+  duration_ms: 11966.086421
+  type: 'test'
+  location: '/workspace/continuum-quality/.github/continuum/owner-kotlin-preview.test.mjs:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'REJECTED'
+    - 'VERIFIED_KOTLIN_PREVIEW'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'VERIFIED_KOTLIN_PREVIEW'
+  actual: 'REJECTED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/continuum-quality/.github/continuum/owner-kotlin-preview.test.mjs:55:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: false owner output cannot create a verified Kotlin preview
+ok 10 - false owner output cannot create a verified Kotlin preview
+  ---
+  duration_ms: 18220.700041
+  type: 'test'
+  ...
+# Subtest: output symlink back into checkout is rejected before Kotlin compilation
+ok 11 - output symlink back into checkout is rejected before Kotlin compilation
+  ---
+  duration_ms: 36.877538
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 7
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 57323.409068

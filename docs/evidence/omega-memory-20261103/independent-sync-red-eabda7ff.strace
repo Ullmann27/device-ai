@@ -1,0 +1,29 @@
+49994 --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=NULL} ---
+49994 fsync(11)                         = 0
+49994 rename("/workspace/scratch/review/memory-sync/fixture/experiences-v3/lex3-12652256633063327363.tmp", "/workspace/scratch/review/memory-sync/fixture/experiences-v3/56132510e2dc9da1f1a1d54fb99efb6c740e974497910391a75d6ea72c5c6ae4.seg") = 0
+49994 fsync(11)                         = 0
+49994 fsync(11)                         = 0
+49994 rename("/workspace/scratch/review/memory-sync/fixture/lex3-5917928235780841010.tmp", "/workspace/scratch/review/memory-sync/fixture/experiences-v2.bin") = 0
+49994 fsync(11)                         = -1 EIO (Input/output error) (INJECTED)
+50010 +++ exited with 0 +++
+49998 +++ exited with 0 +++
+49999 +++ exited with 0 +++
+49996 +++ exited with 0 +++
+50003 +++ exited with 0 +++
+50000 +++ exited with 0 +++
+49994 +++ exited with 0 +++
+50015 +++ exited with 0 +++
+50011 +++ exited with 0 +++
+50009 +++ exited with 0 +++
+50008 +++ exited with 0 +++
+50005 +++ exited with 0 +++
+50007 +++ exited with 0 +++
+50002 +++ exited with 0 +++
+50004 +++ exited with 0 +++
+50001 +++ exited with 0 +++
+49995 +++ exited with 0 +++
+50012 +++ exited with 0 +++
+50006 +++ exited with 0 +++
+50016 +++ exited with 0 +++
+49997 +++ exited with 0 +++
+49993 +++ exited with 0 +++

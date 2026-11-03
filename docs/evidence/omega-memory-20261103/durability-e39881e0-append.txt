@@ -1,0 +1,2 @@
+first=IOException
+mode=append retry=false revoked=1 records=257

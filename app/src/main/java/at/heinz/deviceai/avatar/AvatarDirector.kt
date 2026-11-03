@@ -14,6 +14,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
         emit(stateEvent(state))
+        // A Fold/layout rebuild may replace the sink while the same TTS utterance is active.
+        utterance?.let { emit(AvatarEvent.SpeechStarted(it, text, clock())) }
     }
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {

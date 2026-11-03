@@ -75,20 +75,53 @@ class AvatarPoseReducer {
     private var viseme = Viseme.SIL
     private var visemeWeight = 0f
     private var utterance: String? = null
+    private var lastEventMillis = 0L
+    private var lastAudioMillis = Long.MIN_VALUE
+    private val cues = ArrayList<AvatarEvent.VisemeCue>()
 
     fun apply(event: AvatarEvent) {
+        lastEventMillis = event.atMillis
         when (event) {
             is AvatarEvent.StateChanged -> { state = event.state; expression = event.expression; gaze = event.gaze }
-            is AvatarEvent.SpeechStarted -> { utterance = event.utteranceId; energy = 0f }
-            is AvatarEvent.AudioLevel -> if (event.utteranceId == utterance) energy += (event.level.coerceIn(0f, 1f) - energy) * 0.4f
-            is AvatarEvent.VisemeCue -> if (event.utteranceId == utterance) { viseme = event.viseme; visemeWeight = event.weight.coerceIn(0f, 1f) }
-            is AvatarEvent.SpeechEnded -> if (event.utteranceId == utterance) {
-                utterance = null; energy = 0f; viseme = Viseme.SIL; visemeWeight = 0f }
+            is AvatarEvent.SpeechStarted -> {
+                clearSpeech()
+                utterance = event.utteranceId
+            }
+            is AvatarEvent.AudioLevel -> if (event.utteranceId == utterance && event.level.isFinite()) {
+                energy += (event.level.coerceIn(0f, 1f) - energy) * 0.4f
+                lastAudioMillis = event.atMillis
+            }
+            is AvatarEvent.VisemeCue -> if (event.utteranceId == utterance && event.weight.isFinite() && event.durationMs > 0) {
+                // A new word starts with SIL; discard the previous word's unplayed approximation.
+                if (event.viseme == Viseme.SIL) cues.removeAll { it.atMillis >= event.atMillis }
+                cues.add(event.copy(weight = event.weight.coerceIn(0f, 1f), durationMs = event.durationMs.coerceAtMost(1_000)))
+                cues.sortBy { it.atMillis }
+                while (cues.size > 64) cues.removeAt(0)
+            }
+            is AvatarEvent.SpeechEnded -> if (event.utteranceId == utterance) clearSpeech()
         }
     }
 
-    fun pose(): AvatarPose {
-        val jaw = if (utterance == null) 0f else ((energy - 0.025f) * 1.5f).coerceIn(0f, 1f)
-        return AvatarPose(state, expression, gaze.x, gaze.y, jaw, viseme, visemeWeight, energy)
+    /** Drop transient mouth state on pause/detach; never retain spoken text in a renderer. */
+    fun clearSpeech() {
+        utterance = null
+        energy = 0f
+        lastAudioMillis = Long.MIN_VALUE
+        viseme = Viseme.SIL
+        visemeWeight = 0f
+        cues.clear()
+    }
+
+    /** Supply the event clock at render time; future word cues must never play immediately. */
+    fun pose(atMillis: Long = lastEventMillis): AvatarPose {
+        cues.removeAll { atMillis >= it.atMillis && atMillis - it.atMillis >= it.durationMs }
+        val cue = cues.lastOrNull { it.atMillis <= atMillis }
+        viseme = cue?.viseme ?: Viseme.SIL
+        visemeWeight = cue?.weight ?: 0f
+        // Missing/paused TTS callbacks cannot leave a mouth stuck open indefinitely.
+        val age = if (lastAudioMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - lastAudioMillis
+        val liveEnergy = if (age in 0..250) energy else 0f
+        val jaw = if (utterance == null) 0f else ((liveEnergy - 0.025f) * 1.5f).coerceIn(0f, 1f)
+        return AvatarPose(state, expression, gaze.x, gaze.y, jaw, viseme, visemeWeight, liveEnergy)
     }
 }

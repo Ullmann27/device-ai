@@ -1,0 +1,285 @@
+{
+  "baseline_sha": "b4f61ae9765e26dd401db928b76fa9f233c0742a",
+  "candidate_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "baseline_cases": 2058,
+  "candidate_cases": 2101,
+  "removed": [
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+      "ledgerCapacityIsAMeasuredHardLimit"
+    ],
+    [
+      "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+      "fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords"
+    ]
+  ],
+  "added": [
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "resignationBarrierPreservesPastAndEarlierKnowledge"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "invalidLegacyPrimaryCannotMigrateOrOverwriteBackup"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "optionalHeadPersistsAndSharesOnePausedReducedMotionClock"
+    ],
+    [
+      "at.heinz.deviceai.learning.PersonalLearningTransferTest",
+      "segmentedLedgerExportRoundTripsRevocationAndLargeTargetPreview"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "invalidAudioCannotPoisonPoseAndMissingCallbacksCloseMouth"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "independentProcessesCannotLoseConcurrentAppendsOrRevocation"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "phoneAndFoldNativeHeadFollowsSpeechAndStopsOnInterruption"
+    ],
+    [
+      "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+      "fullLegacyLedgerRefusesLowTrustChurnThenMigratesProtectedOverflow"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "hardCapacityRefusesOverflowWithoutChangingAnyCommittedRecord"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+      "protectedLedgerMigratesPastTheMeasuredLegacyLimit"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "uncertainFailureAfterCommitLeavesCompleteNewStateAndIdempotentRetry"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "missingOrDamagedManifestCannotReopenOriginalSnapshot"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "interruptedLaterWriteCannotUndoCommittedRevocation"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "replacementUtteranceStartsWithClosedNeutralMouth"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "replacementAndInterruptionDiscardOldMouthAndFutureCues"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "futureVisemesFollowTheirTimestampAndExpire"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "revokedResignationDoesNotInvalidateCurrentEmployer"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "hypotheticalAndUncertainResignationNeverEndConfirmedEmployment"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "oversizedPrimaryIsRejectedBeforeWholeFileAllocation"
+    ],
+    [
+      "at.heinz.deviceai.learning.PersonalLearningTransferTest",
+      "nearMaximumLex3BytesExportCompletelyWithMaximumPackageLength"
+    ],
+    [
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "separateNoSaveInstructionDoesNotInvalidatePlainCorrection"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "missingOrCorruptCommittedSegmentsNeverFallBackToLegacy"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "seededHoldoutInterleavesRestartDuplicateStatusAndReplay"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "restartAfterInterruptedMigrationKeepsOriginalThenSafelyRetries"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "bareOwnerResignationRequiresClarificationForCurrentEmployer"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "protected257thRecordSurvivesRestartWithoutLosingLegacyBytes"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "rootDirectorySymlinkIsRejected"
+    ],
+    [
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "negationBeforeEntityCannotBecomeCurrentState"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "symlinksForSegmentDirectoryFilesAndLockAreRejected"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "workingResignationIsSessionScopedAndNeverRewritesLedger"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "largeUnicodeRecordsMigrateBeforeLegacyByteLimitWithoutTruncation"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "migrationDoesNotResurrectRevokedRecordWhenOldInputIsReappended"
+    ],
+    [
+      "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "thousandDaysAtFourRecordsPerDayRetainEveryRecordAndRevocation"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "replacingSinkDuringSpeechContinuesTheCurrentUtterance"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "terminatedWriterBeforeManifestCommitLeavesOldCompleteState"
+    ],
+    [
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "suffixUncertaintyCannotBecomeCurrentState"
+    ],
+    [
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "lateQualifierBeyondExtractionWindowCannotBecomeAffirmativeState"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "byteAndBatchLimitsRefuseBeforeChangingCommittedState"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "unknownManifestVersionWithValidChecksumIsRejected"
+    ],
+    [
+      "at.heinz.deviceai.learning.ContinuumTemporalMemoryTest",
+      "unrelatedCancellationsAndDeniedResignationKeepCurrentEmployer"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "malformedAudioMustNotProduceNaNJaw"
+    ],
+    [
+      "at.heinz.deviceai.learning.Lex3LearningExperienceStoreTest",
+      "cachedFingerprintStillDetectsSameLengthSegmentTampering"
+    ],
+    [
+      "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "rebuiltSinkReceivesCurrentSpeechAndStaleCallbacksStayRejected"
+    ],
+    [
+      "at.heinz.deviceai.cognitive.OwnerStatementTimelineTest",
+      "suffixNegationCannotReplaceEarlierQuantityWithDeniedValue"
+    ]
+  ],
+  "regressions": [
+    {
+      "case": [
+        "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+        "fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords"
+      ],
+      "before": "PASS",
+      "after": null
+    },
+    {
+      "case": [
+        "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+        "ledgerCapacityIsAMeasuredHardLimit"
+      ],
+      "before": "PASS",
+      "after": null
+    }
+  ],
+  "newly_executed": [
+    {
+      "case": [
+        "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+        "actualNodeKotlinNodeTrainingParity"
+      ],
+      "after": "PASS"
+    },
+    {
+      "case": [
+        "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+        "actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds"
+      ],
+      "after": "PASS"
+    },
+    {
+      "case": [
+        "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+        "failureBeforeAnyModelWasLoadedCanRetryWithoutUnload"
+      ],
+      "after": "PASS"
+    },
+    {
+      "case": [
+        "at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest",
+        "failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload"
+      ],
+      "after": "PASS"
+    },
+    {
+      "case": [
+        "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+        "trainedNodeCheckpointMatchesKotlinFeaturesAndScores"
+      ],
+      "after": "PASS"
+    }
+  ],
+  "repaired": [
+    [
+      "at.heinz.deviceai.benchmark.CoreGemmaRaceTest",
+      "refusesUnpairedSkippedNegativeLatencyAndFailedMeasurements"
+    ]
+  ],
+  "reviewed_replacements": [
+    {
+      "old": [
+        "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+        "fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords"
+      ],
+      "new": [
+        "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+        "fullLegacyLedgerRefusesLowTrustChurnThenMigratesProtectedOverflow"
+      ],
+      "reason": "Authorized protected-record capacity extension; preserves low-trust refusal and original legacy bytes; new Lex3 hardCapacityRefusesOverflowWithoutChangingAnyCommittedRecord tests 4096 fail-closed bound."
+    },
+    {
+      "old": [
+        "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+        "ledgerCapacityIsAMeasuredHardLimit"
+      ],
+      "new": [
+        "at.heinz.deviceai.learning.ContinuumTemporalMemoryBenchmarkTest",
+        "protectedLedgerMigratesPastTheMeasuredLegacyLimit"
+      ],
+      "reason": "Authorized 256-limit removal: real core writes and reloads all 300 protected records; assertions strengthened to require no exception and full restart retention."
+    }
+  ],
+  "unexplained_removals": [],
+  "same_named_pass_regressions": []
+}

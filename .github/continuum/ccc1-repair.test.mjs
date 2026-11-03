@@ -124,6 +124,64 @@ test('the verifier confirms a repair only from real artifacts: failing baseline,
  assert.equal(verifyRepairReceipt({...clone(),status:'BLOCKED_UNCLEAN_SOURCE'},bind).verdict,'INCONCLUSIVE');
 });
 
+test('repair receipt proof binds coverage to command details without losing independent tests',async t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-repair-proof-'));
+ t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const ok=verifiedReceipt(dir);
+ const bind={job:ok.job,commit:ok.commit,chain:'node'};
+ const cases=[
+  ['candidate command lost tests behind an unchanged summary',r=>{r.commands[1].executed=1;}],
+  ['independent command lost tests behind an unchanged summary',r=>{r.commands[2].executed=1;}],
+  ['baseline summary understates the real failing suite',r=>{r.evidence.baselineExecuted=1;r.evidence.candidateExecuted=2;r.evidence.independentExecuted=2;r.commands[1].executed=2;r.commands[2].executed=2;}],
+  ['summary claims a different failing-test count',r=>{r.evidence.baselineFailed=2;}],
+  ['candidate summary differs from command',r=>{r.evidence.candidateExecuted=4;r.evidence.independentExecuted=4;r.commands[2].executed=4;}],
+  ['independent summary differs from command',r=>{r.evidence.independentExecuted=4;}],
+  ['independent rerun drops tests introduced by candidate',r=>{r.commands[1].executed=6;r.evidence.candidateExecuted=6;}],
+  ['count strings are not executed-test counts',r=>{for(const x of r.commands)x.executed='3';for(const k of ['baselineExecuted','candidateExecuted','independentExecuted'])r.evidence[k]='3';}],
+  ['fractional counts are not executed-test counts',r=>{for(const x of r.commands)x.executed=3.5;for(const k of ['baselineExecuted','candidateExecuted','independentExecuted'])r.evidence[k]=3.5;}],
+  ['unsafe integer counts are not executed-test counts',r=>{for(const x of r.commands)x.executed=Number.MAX_SAFE_INTEGER+1;for(const k of ['baselineExecuted','candidateExecuted','independentExecuted'])r.evidence[k]=Number.MAX_SAFE_INTEGER+1;}],
+  ['baseline cannot have more failures than executed tests',r=>{r.commands[0].failed=4;r.evidence.baselineFailed=4;}],
+  ['baseline exit zero contradicts a claimed failure',r=>{r.commands[0].exitCode=0;}],
+  ['timed-out baseline is not a completed RED run',r=>{r.commands[0].timedOut=true;}],
+  ['signal termination is not a completed RED run',r=>{r.commands[0].exitCode=null;}],
+  ['unknown chain is not an implicit undefined allowlist',r=>{r.order.chain='unknown';for(const x of r.commands)delete x.command;}],
+  ['extra test phases cannot supplement the three fixed phases',r=>{r.commands.push({...r.commands[2],phase:'extra'});}],
+  ['missing command details cannot be verified',r=>{r.commands[1]=null;}],
+ ];
+ for(const [what,change] of cases)await t.test(what,()=>{
+  const r=structuredClone(ok);change(r);
+  assert.equal(verifyRepairReceipt(r,{...bind,chain:r.order.chain}).verdict,'INCONCLUSIVE');
+ });
+ for(const [what,counts] of [['equal coverage',[3,3,3]],['increased coverage',[3,6,7]]])await t.test(what,()=>{
+  const r=structuredClone(ok);
+  ['baseline','candidate','independent'].forEach((phase,i)=>{r.commands[i].executed=counts[i];r.evidence[phase+'Executed']=counts[i];});
+  assert.equal(verifyRepairReceipt(r,bind).verdict,'CONFIRMED');
+ });
+});
+
+test('non-success repair verdicts require completed baseline evidence',async t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-repair-refutation-'));
+ t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const good=verifiedReceipt(dir),bind={job:good.job,commit:good.commit,chain:'node'};
+ for(const status of ['NO_FAILURE_FOUND','FAILED_REPAIR']){
+  const r={...structuredClone(good),status,patch:null,evidence:null,commands:[{...good.commands[0]}]};
+  if(status==='NO_FAILURE_FOUND')Object.assign(r.commands[0],{passed:true,exitCode:0,failed:0});
+  await t.test(status+' valid completed baseline',()=>assert.equal(verifyRepairReceipt(r,bind).verdict,'REFUTED'));
+  const changes=[
+   ['timeout',x=>{x.commands[0].timedOut=true;}],
+   ['signal exit',x=>{x.commands[0].exitCode=null;}],
+   ['contradicting exit',x=>{x.commands[0].exitCode=status==='NO_FAILURE_FOUND'?1:0;}],
+   ['zero executed tests',x=>{x.commands[0].executed=0;}],
+   ['string executed count',x=>{x.commands[0].executed='3';}],
+   ['extra run record',x=>{x.commands.push({...x.commands[0],phase:'extra'});}],
+  ];
+  for(const [what,mutate] of changes)await t.test(status+' '+what,()=>{
+   const x=structuredClone(r);mutate(x);
+   assert.equal(verifyRepairReceipt(x,bind).verdict,'INCONCLUSIVE');
+  });
+ }
+});
+
 test('CCC1 repairs a real regression end to end and records it once for the owner to review',{skip:nested,timeout:300000},async()=>{
  const f=fixture();
  assert.equal(compileRepair({project:f.root,stateDir:f.state,chain:'node'}).status,'BLOCKED','the fixture lacks the CCC1 runtime files the preflight requires');

@@ -139,8 +139,9 @@ test('the gate allows only owner-granted, critic-approved requests within deadli
  assert.ok(!effectivePermissions([g,ar]).has(permissionFor(other.module)));
 });
 
-test('the verifier checks a receipt against the real patch bytes, runs, profile and the exact order',()=>{
+test('the verifier checks a receipt against the real patch bytes, runs, profile and the exact order',async t=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-receipt-'));
+ t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  const patch=path.join(dir,'candidate.patch');fs.writeFileSync(patch,'diff --git a/x b/x\nnew file mode 100644\n');
  const casesJson=JSON.stringify([{args:[5],expected:15}]);
  const order={job:'j',commit:'c',module:MODULE,exportName:'triple',casesJson};
@@ -162,6 +163,30 @@ test('the verifier checks a receipt against the real patch bytes, runs, profile 
   ['no toolchain',{...good,toolchain:null}],
  ];
  for(const [what,r] of bad)assert.equal(verifyJobReceipt(r,order).verdict,'INCONCLUSIVE',what);
+ const mutations=[
+  ['baseline execution exceeds its summary',r=>{r.commands[0].executed=2;}],
+  ['candidate execution is below its summary',r=>{r.commands[1].executed=1;}],
+  ['independent execution is below its summary',r=>{r.commands[2].executed=1;}],
+  ['summary changes candidate count without command evidence',r=>{r.evidence.candidateExecuted=3;r.evidence.independentExecuted=3;r.commands[2].executed=3;}],
+  ['independent command drops candidate tests',r=>{r.commands[1].executed=3;}],
+  ['string command counts',r=>{for(const x of r.commands)x.executed=String(x.executed);}],
+  ['fractional command counts',r=>{for(const x of r.commands)x.executed+=0.5;}],
+  ['unsafe command counts',r=>{for(const x of r.commands)x.executed=Number.MAX_SAFE_INTEGER+1;}],
+  ['expected tests cannot be zero',r=>{r.evidence.expectedNewTests=0;r.evidence.candidateExecuted=1;r.evidence.independentExecuted=1;r.commands[1].executed=1;r.commands[2].executed=1;}],
+  ['expected tests must match the ordered cases',r=>{r.evidence.expectedNewTests=2;r.evidence.candidateExecuted=3;r.evidence.independentExecuted=3;r.commands[1].executed=3;r.commands[2].executed=3;}],
+  ['null command entry',r=>{r.commands[1]=null;}],
+  ['commands are not an array',r=>{r.commands={};}],
+  ['missing timeout completion evidence',r=>{delete r.commands[1].timedOut;}],
+ ];
+ for(const [what,mutate] of mutations)await t.test(what,()=>{
+  const r=structuredClone(good);mutate(r);
+  assert.equal(verifyJobReceipt(r,order).verdict,'INCONCLUSIVE');
+ });
+ await t.test('additional candidate and independent coverage is accepted',()=>{
+  const r=structuredClone(good);r.commands[1].executed=3;r.commands[2].executed=4;
+  r.evidence.candidateExecuted=3;r.evidence.independentExecuted=4;
+  assert.equal(verifyJobReceipt(r,order).verdict,'CONFIRMED');
+ });
  assert.equal(verifyJobReceipt(good,{...order,exportName:'double'}).verdict,'INCONCLUSIVE','answers another order');
  const failed={...good,status:'FAILED_CODING_CHECKS',patch:null,failure:{message:'GENERATED_TESTS_FAILED'}};
  assert.equal(verifyJobReceipt(failed,order).verdict,'REFUTED');

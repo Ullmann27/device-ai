@@ -92,6 +92,62 @@ class ContinuumTemporalMemoryTest {
         assertTrue(ask(m, "Wo wohnte ich 2020?").text.contains("Wien"))
     }
 
+    @Test fun bareOwnerResignationRequiresClarificationForCurrentEmployer() {
+        val employer = fact("Ich arbeite bei Red Bull.", t(2024, 6, 1))
+        val resignation = fact("Ich habe gekündigt.", t(2025, 6, 1))
+        val answer = ask(memory(employer, resignation), "Wo arbeite ich?")
+        assertEquals(TemporalAnswerKind.CLARIFY, answer.kind)
+        assertEquals(listOf(resignation.id), answer.citedIds)
+        assertFalse(answer.text, answer.text.contains("Du arbeitest bei Red Bull"))
+    }
+
+    @Test fun resignationBarrierPreservesPastAndEarlierKnowledge() {
+        val m = memory(fact("Ich arbeite bei Red Bull.", t(2024, 6, 1)),
+            fact("Ich habe gekündigt.", t(2025, 6, 1)))
+        val past = ask(m, "Wo arbeitete ich 2024?")
+        assertEquals(TemporalAnswerKind.ANSWER, past.kind)
+        assertTrue(past.text, past.text.contains("Red Bull"))
+        val knownBeforeResignation = m.valueAt("ich", "arbeit", now, t(2025, 5, 1))
+        assertEquals("Red Bull", (knownBeforeResignation as TemporalResolution.Found).values.single().value)
+    }
+
+    @Test fun workingResignationIsSessionScopedAndNeverRewritesLedger() {
+        val ledger = memory(fact("Ich arbeite bei Red Bull.", t(2024, 6, 1)))
+        val working = ledger.withWorking(listOf(WorkingTurn("Ich habe gekündigt.", now - 1_000)))
+        val answer = ask(working, "Wo arbeite ich?")
+        assertEquals(TemporalAnswerKind.CLARIFY, answer.kind)
+        assertEquals(setOf(MemoryTier.WORKING), answer.tiers)
+        assertEquals(TemporalAnswerKind.ANSWER, ask(ledger, "Wo arbeite ich?").kind)
+    }
+
+    @Test fun unrelatedCancellationsAndDeniedResignationKeepCurrentEmployer() {
+        for (text in listOf("Ich habe meinen Handyvertrag gekündigt.",
+            "Ich habe meine Autoversicherung gekündigt.", "Ich habe einen Vertrag gekündigt.",
+            "Ich habe nicht gekündigt.", "Anna hat gekündigt.")) {
+            val answer = ask(memory(fact("Ich arbeite bei Red Bull.", t(2024, 6, 1)),
+                fact(text, t(2025, 6, 1))), "Wo arbeite ich?")
+            assertEquals(text, TemporalAnswerKind.ANSWER, answer.kind)
+            assertTrue(text, answer.text.contains("Red Bull"))
+        }
+    }
+
+    @Test fun hypotheticalAndUncertainResignationNeverEndConfirmedEmployment() {
+        for (text in listOf("Wenn ich gekündigt hätte.", "Vielleicht habe ich gekündigt.",
+            "Ich will kündigen.", "Habe ich gekündigt?")) {
+            val answer = ask(memory(fact("Ich arbeite bei Red Bull.", t(2024, 6, 1)),
+                fact(text, t(2025, 6, 1))), "Wo arbeite ich?")
+            assertEquals(text, TemporalAnswerKind.ANSWER, answer.kind)
+            assertTrue(text, answer.text.contains("Red Bull"))
+        }
+    }
+
+    @Test fun revokedResignationDoesNotInvalidateCurrentEmployer() {
+        val m = memory(fact("Ich arbeite bei Red Bull.", t(2024, 6, 1)),
+            fact("Ich habe gekündigt.", t(2025, 6, 1), LearningStatus.REVOKED, t(2025, 7, 1)))
+        assertEquals(TemporalAnswerKind.ANSWER, ask(m, "Wo arbeite ich?").kind)
+        assertTrue(ask(m, "Wo arbeite ich?").text.contains("Red Bull"))
+    }
+
     @Test fun hypotheticalStatementsNeverAnswerAsFacts() {
         val held = fact("Vielleicht ziehe ich nach Linz.", t(2025), LearningStatus.OBSERVED,
             annotation = "unbestaetigt:UNCERTAIN")

@@ -12,7 +12,7 @@ package at.heinz.deviceai.cognitive
  * inherits noun and unit from the preceding statement of the same sentence.
  *
  * Fail-closed rules (the whole projection is dropped, nothing is guessed):
- * negation or hedge before a value, "4 oder 5", conditional ("wenn/falls"),
+ * negation or hedge anywhere in a quantity sentence, "4 oder 5", conditional ("wenn/falls"),
  * explicit past ("gestern/früher/damals"), mixed future in one sentence,
  * two values for the same entity in one message, unit conflicts, >8 entities,
  * oversized/too many turns. Questions ("…?") never assert values.
@@ -96,10 +96,7 @@ internal object OwnerStatementTimeline {
                 val chosen = number.findAll(segment).firstOrNull { m ->
                     !replacedMarker.containsMatchIn(segment.substring(0, m.range.first))
                 } ?: run { if (hit.noun != null) lastNoun = hit.noun; null } ?: continue
-                val before = segment.substring(0, chosen.range.first)
                 val rawUnit = chosen.groupValues[2].ifEmpty { null }
-                if (negation.containsMatchIn(before) || hedge.containsMatchIn(before) ||
-                    rawUnit?.lowercase() == "oder") throw Poisoned()
                 val noun = hit.noun ?: lastNoun ?: continue
                 val unit = rawUnit?.takeIf { it.lowercase() !in unitStopwords } ?: lastUnit.takeIf { hit.noun == null }
                 val adj = hit.adj?.let(::stem)?.takeIf { it.isNotEmpty() }
@@ -109,7 +106,11 @@ internal object OwnerStatementTimeline {
                 lastNoun = noun; if (unit != null) lastUnit = unit
             }
             if (sentenceFacts.isEmpty()) continue
-            if (conditional.containsMatchIn(body) || pastMarker.containsMatchIn(body) ||
+            // Qualifiers can precede the entity or follow the number, even beyond
+            // the extraction window. Validate the complete sentence before admitting
+            // a value; a separate no-save instruction has no facts and is skipped above.
+            if (negation.containsMatchIn(body) || hedge.containsMatchIn(body) ||
+                conditional.containsMatchIn(body) || pastMarker.containsMatchIn(body) ||
                 morningNoun.containsMatchIn(body)) throw Poisoned()
             if (sentenceFacts.any { it.future } && sentenceFacts.size > 1) throw Poisoned()
             out += sentenceFacts
