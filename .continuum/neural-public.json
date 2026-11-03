@@ -3,10 +3,10 @@
   "version": 1,
   "modelHash": "458ef19fc1e2e0d45b408ab095c0c548bd75774b1996884a8a5f6becc4ce35fd",
   "updates": 14000,
-  "rounds": 26,
+  "rounds": 27,
   "accepted": 3,
   "paused": false,
-  "replay": 58,
+  "replay": 61,
   "audit": {
     "intent": {
       "loss": 0.08170274660790525,
