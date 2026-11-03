@@ -14,6 +14,9 @@ internal object TaskScopedRingStateProjector {
     private val hypothesisCue = Regex("""(?iu)\b(?:beispiel|testaufgabe|denkaufgabe)\b""")
     private val ambiguousQualifier = Regex("""(?iu)\b(?:vielleicht|eventuell|oder|ungefähr)\b""")
     private val deniedTomorrow = Regex("""(?iu)\b(?:nicht|kein\p{L}*)\b[^.!?]{0,25}\bmorgen\b""")
+    private val newScenario = Regex(
+        """(?iu)\b(?:neues?|andere\p{L}*|zweites?|weitere\p{L}*|nächste\p{L}*)\s+(?:beispiel|testaufgabe|denkaufgabe)\b"""
+    )
 
     data class Slot(val original: Int, val current: Int, val future: Int? = null)
     data class Projection(val red: Slot, val blue: Slot) {
@@ -39,7 +42,12 @@ internal object TaskScopedRingStateProjector {
         var blueNow: Int? = null
         var redFuture: Int? = null
         var blueFuture: Int? = null
-        for (text in previousOwnerTurns + currentTurn) {
+        for ((turnIndex, text) in (previousOwnerTurns + currentTurn).withIndex()) {
+            // A new hypothetical problem must not inherit earlier box values.
+            if (turnIndex > 0 && newScenario.containsMatchIn(text)) {
+                redOriginal = null; blueOriginal = null; redNow = null; blueNow = null
+                redFuture = null; blueFuture = null
+            }
             val candidates = box.findAll(text).toList()
             // Mixed same-sentence current/future updates need a real temporal parser.
             if (deniedTomorrow.containsMatchIn(text) ||
