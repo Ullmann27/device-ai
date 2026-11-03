@@ -49,6 +49,7 @@ class ContinuumTaskEffects {
             is Event.Read -> {
                 if(!fresh || current==null || current.kind!=Kind.TOOL || current.read)return false
                 current.read=true;current.last=occurredAtMillis
+                pulses.removeAll { it.id==event.id && it.type==0 }
                 pulse(Pulse(event.id,1,current.kind,occurredAtMillis,current.slot,1400))
             }
             is Event.Finished -> {
