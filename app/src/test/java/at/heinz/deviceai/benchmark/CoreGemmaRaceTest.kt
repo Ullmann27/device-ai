@@ -2,6 +2,7 @@ package at.heinz.deviceai.benchmark
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -55,11 +56,11 @@ class CoreGemmaRaceTest {
             CoreGemmaRaceEvaluator.evaluate(missing, grades()).assessment)
         assertEquals(RaceAssessment.INCOMPLETE,
             CoreGemmaRaceEvaluator.evaluate(run.copy(skippedTasks = 1), grades()).assessment)
-        val negative = run.copy(measurements = run.measurements.mapIndexed { index, m ->
-            if (index == 0) m.copy(latencyMillis = -1) else m
-        })
-        assertEquals(RaceAssessment.INCOMPLETE,
-            CoreGemmaRaceEvaluator.evaluate(negative, grades()).assessment)
+        // Invalid latency is rejected by TaskMeasurement before an evaluator can
+        // receive it. Keep the constructor guard; never relax it to build a fixture.
+        assertThrows(IllegalArgumentException::class.java) {
+            run.measurements.first().copy(latencyMillis = -1)
+        }
         val failed = run.copy(measurements = run.measurements.mapIndexed { index, m ->
             if (index == 0) m.copy(error = "timeout") else m
         })
