@@ -1,0 +1,346 @@
+TAP version 13
+# Subtest: Unicode prefix
+not ok 1 - Unicode prefix
+  ---
+  duration_ms: 2.165529
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u01/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'A\ud83d' !== 'A😀'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'A😀'
+  actual: 'A\ud83d'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u01/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Deadline boundary
+not ok 2 - Deadline boundary
+  ---
+  duration_ms: 1.79533
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u02/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u02/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Explicit zero setting
+not ok 3 - Explicit zero setting
+  ---
+  duration_ms: 1.696161
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u03/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    9 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 9
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u03/acceptance.test.mjs:5:37)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Numeric order
+not ok 4 - Numeric order
+  ---
+  duration_ms: 2.975281
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u04/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        -1,
+    +   10,
+        2,
+        2,
+    -   10
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: -1
+    1: 2
+    2: 2
+    3: 10
+  actual:
+    0: -1
+    1: 10
+    2: 2
+    3: 2
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u04/acceptance.test.mjs:5:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: First occurrence deduplication
+not ok 5 - First occurrence deduplication
+  ---
+  duration_ms: 3.058728
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u05/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'b',
+    +   'c',
+        'a',
+    -   'c'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'b'
+    1: 'a'
+    2: 'c'
+  actual:
+    0: 'b'
+    1: 'c'
+    2: 'a'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u05/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Weighted measurement
+not ok 6 - Weighted measurement
+  ---
+  duration_ms: 1.224499
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u06/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    11 !== 5.5
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 5.5
+  actual: 11
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u06/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Path membership
+not ok 7 - Path membership
+  ---
+  duration_ms: 1.717242
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u07/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u07/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: UTC month
+not ok 8 - UTC month
+  ---
+  duration_ms: 2.208053
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u08/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '2024-01-29'
+    - '2024-02-29'
+             ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '2024-02-29'
+  actual: '2024-01-29'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u08/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Immutable queue
+not ok 9 - Immutable queue
+  ---
+  duration_ms: 2.629609
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u09/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+    +     priority: 1
+    -     priority: 2
+        },
+        {
+    +     priority: 2
+    -     priority: 1
+        }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      priority: 2
+    1:
+      priority: 1
+  actual:
+    0:
+      priority: 1
+    1:
+      priority: 2
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u09/acceptance.test.mjs:5:106)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Integer cents rounding
+not ok 10 - Integer cents rounding
+  ---
+  duration_ms: 1.544401
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u10/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    -1 !== -2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: -2
+  actual: -1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u10/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Half-open overlap
+not ok 11 - Half-open overlap
+  ---
+  duration_ms: 1.7888
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u11/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u11/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Cache freshness
+not ok 12 - Cache freshness
+  ---
+  duration_ms: 1.894669
+  type: 'test'
+  location: '/workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u12/acceptance.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/momega1-qa/tools/momega1-qa/frozen/tasks/u12/acceptance.test.mjs:5:8)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 0
+# fail 12
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 275.942257

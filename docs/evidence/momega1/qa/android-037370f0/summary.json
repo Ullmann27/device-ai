@@ -1,0 +1,357 @@
+{
+  "total": 45,
+  "pass": 45,
+  "fail": 0,
+  "skip": 0,
+  "files": [
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml",
+      "sha256": "db2389bcdb9be57c270e322c18305ce5feceab722faefdf5faf201a016b8cc0a"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml",
+      "sha256": "b61b66e9f2f9b33322c7efd7a590976083e77673f5e08b6a636b6f6c46391129"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml",
+      "sha256": "3374f169d93d0a23d49cfc235b20c4d52a0ce27b8e4680e66287ef3c1666a930"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml",
+      "sha256": "34ce650c4862369c966aa74c0c05f7b36b59b1e2edecf99dc692f3f5ce0c02cd"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml",
+      "sha256": "133e0afbf99260bb6acc0a21df6a85d495ac334599ff4edf323b407bd9c87623"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml",
+      "sha256": "887811eac69298c77d908d806750e4115d1c718759d35f40f55392cfd8958978"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml",
+      "sha256": "750ee0ee9547c0333ab99e2ba37a2ab27e4c7eb6b05ebaf731b8eb09a6bd02c6"
+    },
+    {
+      "path": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml",
+      "sha256": "10d402bc4d43f27e0c6024025da6f3372ff42ec2c295e5dc8cd910fc545c4c61"
+    }
+  ],
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "name": "aStaleAbortConfirmationCannotRetargetToANewerCcc1Task",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "name": "anOldConfirmationCannotDispatchAfterItsActivityWasDestroyed",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "name": "anAbortDispatchPersistsTheExactTargetWithItsSeparateCallbackSlot",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "name": "acknowledgingAnOldLostCallbackCannotEraseANewerJobsIdentity",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumBuilderLifecycleUiTest",
+      "name": "ccc1ConfirmationDispatchesTheChainShownInItsDialog",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumBuilderLifecycleUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest",
+      "name": "aWrongTargetReceiptCannotConfirmOrClearTheExpectedTask",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest",
+      "name": "aMatchingAbortStillClosesOnlyItsOwnTaskAndSlot",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest",
+      "name": "aLateAbortReceiptCannotEraseANewerTasksCancelIdentity",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest",
+      "name": "anOlderPendingSlotWithoutATargetCannotClearTaskState",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumCcc1AbortReceiptUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOwnedBuilderUiTest",
+      "name": "anM5HandoffSelectsItsProjectOnceAndARecreationKeepsTheOwnersLaterSwitch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOwnedBuilderUiTest",
+      "name": "counterSelectionRequiresItsOwnConfirmationAndUnavailableTermuxNeverGetsAJob",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumOwnedBuilderUiTest",
+      "name": "recoveryQueryKeepsTheOriginalPendingBuildAndItsCallbackIdentity",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumOwnedBuilderUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "foreignGitCommitCannotBecomeApprovedCodingEvidence",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "runReceiptIsNotInstallationAndNeverPromotesUnverifiedEvidence",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "approvedCommandCannotBecomeShellTextOrSecondApp",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "canonicalTaskIsRequiredAndCanNeverBeReboundToChangedFields",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "preparationRequiresUntruncatedCommittedTermuxCallbackAndOriginalHash",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "name": "blockedFailureIsNotAConfirmedPatch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "foregroundPrepareCallbackEnablesRunWithoutStartingIt",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "typedRunRestoresItsOwnCancelTargetAfterAnInterveningStatus",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "pausedBuilderRefreshesOnlyWhenResumed",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "alteredCommitWhileExecutionDialogIsOpenCannotDispatch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "legacyPreparedTupleCannotEnableExecution",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "changedPreparedJournalIdWhileRunDialogIsOpenCannotDispatch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "executionAfterRecreationDisplaysTheCompleteTaskBeforeDispatch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "dispatchedRunConsumesThePreparedTaskAndCannotRearmAfterCallback",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "changedFullTaskCannotBecomePreparedOrEnableRunWithTheOldDigest",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "invalidOrReplayedPrepareCallbackCannotReplaceTheCurrentAbortTarget",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest",
+      "name": "typedPreparationBindsTheExistingExplicitAbortTargetDuringRun",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedExecutionReviewUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedSnapshotBindingTest",
+      "name": "completeSavedSnapshotMustMatchEveryBindingAndRejectsLegacyState",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTypedSnapshotBindingTest",
+      "name": "runReviewContainsTheCompleteScopeAndOnlyExecutionConsentLanguage",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedSnapshotBindingTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "fullyValidReplacementWhileDialogOpenNeedsFreshApproval",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "everyPreparedTupleFieldFailsClosedWhenMissingOrChanged",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "duplicatePositiveClickDispatchesAtMostOnce",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "terminalCancellationWhileApprovalDialogOpenCannotDispatch",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "oldCallbackCannotConsumeTheReplacementPendingSlot",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "canceledPreparedTaskCannotBeOfferedForExecution",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "destroyedActivityCannotConsumeOrDispatchItsOldDialog",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "matchingExtrasWithWrongImmutableUriCannotPrepare",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedAuthorizationUiTest",
+      "name": "duplicatePreparationCallbackCannotResurrectConsumedPreparation",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedAuthorizationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedCancellationUiTest",
+      "name": "legacyPendingAbortBlocksAnAlreadyOpenRunApproval",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedCancellationUiTest",
+      "name": "wrongTargetAbortReceiptCannotRevokePreparedAuthorization",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedCancellationUiTest",
+      "name": "explicitAbortRevokesMatchingPreparationBeforeWorkerReceipt",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml"
+    },
+    {
+      "class": "at.heinz.deviceai.IndependentTypedCancellationUiTest",
+      "name": "confirmedAbortOfADifferentTaskPreservesPreparedTask",
+      "status": "PASS",
+      "detail": null,
+      "file": "TEST-at.heinz.deviceai.IndependentTypedCancellationUiTest.xml"
+    }
+  ]
+}

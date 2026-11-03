@@ -1,0 +1,1 @@
+8e9441e3ce63eb7ebcfa74e3cc8d60cb6503aca226bbc56e609fdb7ebfe8cd0e  /workspace/momega1-build-env/beta-e8f5e218/ccc1-redgreen-verifier.mjs

@@ -1,0 +1,42 @@
+{
+  "integratedSource": "9ed11151b64fa85685e0f8b7c2358281af4694a8",
+  "integratedTree": "4abe406968b694b541151cd15ee8a5a81e395f5e",
+  "qaRunnerSha256": "f3402096d6fb7ee067a6bf29093c80afa72b5dafe92fba38271c34a4113c91ec",
+  "fixture": {
+    "task": {
+      "schema": "continuum-coding-task",
+      "version": 1,
+      "id": "momega1-u01",
+      "sourceCommit": "fb31a28fa2253974632a7561d6f6a8386c9ad712",
+      "kind": "BUGFIX",
+      "goal": "Return at most n Unicode code points, preserving complete supplementary characters.",
+      "allowedPaths": [
+        "lib/subject.mjs"
+      ],
+      "acceptance": [
+        "Return at most n Unicode code points, preserving complete supplementary characters."
+      ],
+      "chain": "node",
+      "limits": {
+        "maxModelCalls": 2,
+        "maxContextChars": 8192
+      }
+    },
+    "fixture": "u01",
+    "sourceSha256": "28f42cb50ea1a4a75ca45cb828bf8615aaca9c23dc88ecb7ae7b808aa20a4151",
+    "frozenTestSha256": "82d092f05da3c5bc3cf1620de31b8a8a82cc83d901cfe413ba9608b10346683c",
+    "materializedTestSha256": "78f1c5c417c91b2210585b356956ef6d35cc3f09035a32f4d1a9a1d8ac96b03c",
+    "transformation": "Only fixed relative import path changed; assertions and source bytes unchanged.",
+    "inferenceStatus": "NOT_RUN",
+    "ownerApproval": "NOT_GRANTED_BY_MATERIALIZER"
+  },
+  "taskFingerprint": "04a122ae6b9a59769dfa5c491d2e828ed7e9416c6149fd6c8277916efd0bf0cd",
+  "fixtureTree": "f77ee0e85453abf2cab4fd3a0972d779027302c1",
+  "freezeManifestSha256": "1055d66300b0f4664978f103d1e5adb73a9619a337539ad41e898b7217a92407",
+  "configuration": {},
+  "fileHashes": {},
+  "nodeVersion": "v24.19.0",
+  "startedAt": "2026-11-03T19:53:52.830Z",
+  "deviceStatus": "FOLD7_NOT_RUN",
+  "modelAnswersSupplied": false
+}

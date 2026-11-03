@@ -1,0 +1,653 @@
+{
+  "schema": "momega1-original-real-model-acceptance-summary-v1",
+  "source": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "tasks": [
+    {
+      "task": "u01",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "fb31a28fa2253974632a7561d6f6a8386c9ad712",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 25457,
+          "outputTokens": 169,
+          "promptSha256": "c814d7984421cfa355a76f323770ceafb26b73626c5368c4f4b06455a36cd255",
+          "responseSha256": "df6cb6b65d9ddd6081976afe09f0e6cea99bb03651baf2e493e7c6d348d4a5ca"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 27337,
+          "outputTokens": 201,
+          "promptSha256": "39c92bdbde2a2db99d51146540fbbb5e2276a1ea1ed30736393feafb914dfb29",
+          "responseSha256": "bd94e40243ce5024dbf600afcba60bff5c6519a4588a82a1f97179e0bb7e7238"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [
+        {
+          "code": "CODING_REPEATED_PATCH",
+          "repeated": false,
+          "responseSha256": "f9f6446548d85597a7fa6e07aca2e3219ae2627621911922d22864f8a96dae1d"
+        }
+      ],
+      "taskElapsedMs": 54189,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2079192,
+      "peakObservedNativePssKiB": 2077855,
+      "observedNativeCpuSeconds": 95.53999999999999
+    },
+    {
+      "task": "u02",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "0ecb3e83c3e0d27d544fc3eb6ea76d1524d41368",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 28341,
+          "outputTokens": 169,
+          "promptSha256": "f9bc178b545811bf21193639a4703eb1b92a9db6c2151f9f9733cdd64ca91155",
+          "responseSha256": "dd66282fc252f4219396d30107ffd54d1d63a5d77c4cf61178159e0a3df67217"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 24045,
+          "outputTokens": 124,
+          "promptSha256": "c9a15c61b557d13e92d792222a2ad68bea1db3c9abcf5bc90c003acfdd886852",
+          "responseSha256": "1b3313658d52d5b1620e0fc594a52e24ac71a19ed58802f6120e2cbd1ed85ee1"
+        }
+      ],
+      "testedCandidates": 0,
+      "rejections": [
+        {
+          "code": "CODING_PATCH_NOT_EXACT",
+          "repeated": false,
+          "responseSha256": "712af8373f7169734b82a1badc183326b5afaf2f3330d491c7b857113ae4e8cb"
+        },
+        {
+          "code": "CODING_PATCH_NOT_EXACT",
+          "repeated": false,
+          "responseSha256": "39918cea58ae5aeaaef12a0a18395650d490630efc5d6d8bd2da23dac1970f75"
+        }
+      ],
+      "taskElapsedMs": 53407,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078520,
+      "peakObservedNativePssKiB": 2077183,
+      "observedNativeCpuSeconds": 94.63
+    },
+    {
+      "task": "u03",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "independentRepairVerified": true,
+      "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+      "modelCallsReserved": 1,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 1,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 33274,
+          "outputTokens": 150,
+          "promptSha256": "cfc99fd89d51ed1a3731322baec88abad0449da0c862321c191975a351201fef",
+          "responseSha256": "963e7b85a1082f65e37af93370567f9d30e17e017e957df0bac3e774d971423c"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [],
+      "taskElapsedMs": 37055,
+      "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [
+        {
+          "path": "teamleader/reports/owner-repair/mob-096fa5af43ac07bc-4ef01cb0f869-1793737485918-473375c2/candidate-independent-1/verification.json",
+          "sha256": "286e35fe2c212955c150587cf462a7567079f4337d406978c3bba8ac31c12ec2"
+        },
+        {
+          "path": "teamleader/reports/owner-repair/mob-096fa5af43ac07bc-4ef01cb0f869-1793737485918-473375c2/independent-check/verification.json",
+          "sha256": "31f8db9d8f8dd437172ca950a0f02d3894a3930c5c7b49febedfc23d4ecafb8c"
+        }
+      ],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 1,
+      "peakObservedNativeRssKiB": 2078580,
+      "peakObservedNativePssKiB": 2077222,
+      "observedNativeCpuSeconds": 59.92
+    },
+    {
+      "task": "u04",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "independentRepairVerified": true,
+      "sourceCommit": "d41ba561c841420b3d5cf8a7f036b2039d23e5d9",
+      "modelCallsReserved": 1,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 1,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 26410,
+          "outputTokens": 157,
+          "promptSha256": "87eea2d596454b513a35b4c7758dd1086c6f005a6ab7f2b9558c9915c947635b",
+          "responseSha256": "fbf37cfb8b48afd3ea7c0e80c5f3527ac5c67f50f6a33bc11d567514ead7efc2"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [],
+      "taskElapsedMs": 29091,
+      "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [
+        {
+          "path": "teamleader/reports/owner-repair/mob-6d6f61c722f0deb9-d41ba561c841-1793737526108-e582cc82/candidate-independent-1/verification.json",
+          "sha256": "00774922e9977c88baa5f3ca0e73f4d9450329c18bd7be0331b3889e7d3efb54"
+        },
+        {
+          "path": "teamleader/reports/owner-repair/mob-6d6f61c722f0deb9-d41ba561c841-1793737526108-e582cc82/independent-check/verification.json",
+          "sha256": "580afebc31c06fb3ceefe8e634a6ba476a3938a369b58b052bea9d0c3221f049"
+        }
+      ],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 1,
+      "peakObservedNativeRssKiB": 2078720,
+      "peakObservedNativePssKiB": 2077362,
+      "observedNativeCpuSeconds": 47.61
+    },
+    {
+      "task": "u05",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "independentRepairVerified": true,
+      "sourceCommit": "83a29810a169e9b77aaec20858ae7becc1560288",
+      "modelCallsReserved": 1,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 1,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 24574,
+          "outputTokens": 147,
+          "promptSha256": "528321a9b61c2936a214d56cd288690938c5331730cbf5fb13ab72cb1621dbbf",
+          "responseSha256": "2bf5196539f84443b71ee480708ae2e1eaebcc11eb90d26d33a86d390a0c36d5"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [],
+      "taskElapsedMs": 27508,
+      "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [
+        {
+          "path": "teamleader/reports/owner-repair/mob-a595ffe70a512f92-83a29810a169-1793737556827-89641c51/candidate-independent-1/verification.json",
+          "sha256": "fecfd3c1a37788f85948142d274078183640a14560d38e5062dd00f0e29b6da7"
+        },
+        {
+          "path": "teamleader/reports/owner-repair/mob-a595ffe70a512f92-83a29810a169-1793737556827-89641c51/independent-check/verification.json",
+          "sha256": "81acddc24decb297ca3072ab3d88b8bc30f73b334d4d8c5729257ed85ced7c8b"
+        }
+      ],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 1,
+      "peakObservedNativeRssKiB": 2078748,
+      "peakObservedNativePssKiB": 2077390,
+      "observedNativeCpuSeconds": 44.23
+    },
+    {
+      "task": "u06",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "ec189a9568aebee527f2e76c2aac5d4c50a6e3d4",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 22734,
+          "outputTokens": 135,
+          "promptSha256": "64ffd4073cbb2df27a88811d3add4a4a80ed07fc832a643f1f0717384c887b22",
+          "responseSha256": "824ed5bf0e6a14eef5b3a87a19a7f66240924ac61d9454ad3c28ed3f0cdadfdb"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 22806,
+          "outputTokens": 127,
+          "promptSha256": "8d389e4bde5738fc5e986382a76381d99eae6d8bf2489ae752b6e1b97c89297e",
+          "responseSha256": "9986418a5343a63cf5279362827f6c78ba7079c85c822193699b4a60a7750cc5"
+        }
+      ],
+      "testedCandidates": 0,
+      "rejections": [
+        {
+          "code": "CODING_PATCH_NOT_EXACT",
+          "repeated": false,
+          "responseSha256": "3ee187185c5ad92529e09f0b92a2526a20fe35b2746c27da5bbadf87a2b8221f"
+        },
+        {
+          "code": "CODING_PATCH_NOT_EXACT",
+          "repeated": false,
+          "responseSha256": "2b4505aabce0ca5d8a76f44ec49e6036b76fb4fe1728cd783f47fe06d6082ffb"
+        }
+      ],
+      "taskElapsedMs": 46475,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078740,
+      "peakObservedNativePssKiB": 2077382,
+      "observedNativeCpuSeconds": 80.6
+    },
+    {
+      "task": "u07",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "7ce74f80040efb29420cd7effd81ba877cca4389",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 1,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 27452,
+          "outputTokens": 145,
+          "promptSha256": "cf446241ddbc47e76dec661af7908f97ace22f55c47d98045be024deaf39fa42",
+          "responseSha256": "2dead1c14607b690ba93ace6d515b6fd0be557914ebff4a0924218832ed27a39"
+        },
+        {
+          "request": 2,
+          "status": "FAILED",
+          "failureKind": "CHILD_EXIT_NONZERO",
+          "elapsedMs": 32245,
+          "outputTokens": null,
+          "promptSha256": "e2903f1ad8eade7ed5f5cdeb8e96eeb4ab51bbb2e810573ee89bf32de525d72e",
+          "responseSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [
+        {
+          "code": "CODING_MODEL_UNAVAILABLE",
+          "repeated": false
+        }
+      ],
+      "taskElapsedMs": 61330,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078764,
+      "peakObservedNativePssKiB": 2077406,
+      "observedNativeCpuSeconds": 109.78
+    },
+    {
+      "task": "u08",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "2872f613728bc44cd21acda48256296e74ee1753",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 0,
+        "rejectedResponses": 1,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "INVALID_MODEL_RESPONSE",
+          "failureKind": "CODING_NOOP_PATCH",
+          "elapsedMs": 28496,
+          "outputTokens": 173,
+          "promptSha256": "59824e9f6944c9c3b36db1f01ac279b8cc8665ba30778976446fca4262a7219a",
+          "responseSha256": "33ea8e0e50dc6d0d37bb85c6e7a51b158e92baa23aaea9e508546b6b5483d527"
+        },
+        {
+          "request": 2,
+          "status": "FAILED",
+          "failureKind": "CHILD_EXIT_NONZERO",
+          "elapsedMs": 32581,
+          "outputTokens": null,
+          "promptSha256": "8d5f49777ff04ec0859ecf07853c819ce0e6768fe631310e83ccb5d15dc5b2c1",
+          "responseSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "testedCandidates": 0,
+      "rejections": [
+        {
+          "code": "CODING_NOOP_PATCH",
+          "repeated": false,
+          "responseSha256": "375d4770f415953dfe2415d7cadd81bd5381858be69eeec107d5392ea503a190"
+        },
+        {
+          "code": "CODING_MODEL_UNAVAILABLE",
+          "repeated": false
+        }
+      ],
+      "taskElapsedMs": 62062,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2079300,
+      "peakObservedNativePssKiB": 2077918,
+      "observedNativeCpuSeconds": 111.77000000000001
+    },
+    {
+      "task": "u09",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "39a3bccc0b19800dd3b973ea4f150367d8602ad2",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 28179,
+          "outputTokens": 177,
+          "promptSha256": "3a266ce91603d774eacec7c8d0f7bef37c32007eedee464898d42156ef4d3a00",
+          "responseSha256": "11bfe493ff76cd100bf48da6bc6d07a2ea17176fe08336302d0690f9b5bb8576"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 29139,
+          "outputTokens": 156,
+          "promptSha256": "fed3e96ee75cba17906dfff24340fab020f136f281fe4f26f67ce8dda0dbf435",
+          "responseSha256": "fa80bb9ad6eb8e874cb00968d807b1207084d593282fd8bb0543c99e2f76b228"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [
+        {
+          "code": "CODING_REPEATED_PATCH",
+          "repeated": false,
+          "responseSha256": "822cbd44c7a250618055de759feb860033812d1ef3864d33a3ff059bf1e77c0d"
+        }
+      ],
+      "taskElapsedMs": 58718,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078784,
+      "peakObservedNativePssKiB": 2077426,
+      "observedNativeCpuSeconds": 103.28
+    },
+    {
+      "task": "u10",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "c29ba814dd769cfe3f6231a34c4f6d36bedc4933",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 24716,
+          "outputTokens": 180,
+          "promptSha256": "626063e5a2c436f81f312d531c5349a828f5e3f1b5ef8f8e21d67ef4f6651851",
+          "responseSha256": "896fbad7a206197ed5a7f0d25f0c3b6cbae07123b6704bb3c6351289503291bc"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 27431,
+          "outputTokens": 165,
+          "promptSha256": "ad6c0249f8bbcbb0086c0ef318898b545713d20459524042bb5c15f91589e473",
+          "responseSha256": "6dbd6b3634ac2fa3e95aaf306a942daa6a2e55df6ee7ed2f2445e49455471ef6"
+        }
+      ],
+      "testedCandidates": 2,
+      "rejections": [],
+      "taskElapsedMs": 54077,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078892,
+      "peakObservedNativePssKiB": 2077534,
+      "observedNativeCpuSeconds": 93.84
+    },
+    {
+      "task": "u11",
+      "status": "ABSTAINED",
+      "independentRepairVerified": false,
+      "sourceCommit": "49de2d25d02bb3434c25321783228d7a406e09ff",
+      "modelCallsReserved": 2,
+      "modelExecution": {
+        "verifiedCalls": 2,
+        "acceptedProposals": 2,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 25333,
+          "outputTokens": 147,
+          "promptSha256": "cc65ff665b3e1d9ce942d74c35c71f9e3f259cacd7f874108e3febb9dc69ce83",
+          "responseSha256": "4f9fbba4fa5788dd3673a58834c2fef84fd576a5576117b306889e874ed9a567"
+        },
+        {
+          "request": 2,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 31478,
+          "outputTokens": 147,
+          "promptSha256": "e284878a109cc29cbf04911f854ff0588e5e18f2841104a46afb2cbeb0c140a4",
+          "responseSha256": "37b5f4eb72d4e2f6f7e9de1b5e27f3fd97771925187878ac7f7e5fa4c2e4a53e"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [
+        {
+          "code": "CODING_REPEATED_PATCH",
+          "repeated": false,
+          "responseSha256": "172aafb5114e16291a35870fd0a21756b8712f42888c3e60dcd03f0c3bfa6ff6"
+        }
+      ],
+      "taskElapsedMs": 58417,
+      "technicalExperienceStatus": "NOT_RECORDED",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 2,
+      "peakObservedNativeRssKiB": 2078604,
+      "peakObservedNativePssKiB": 2077246,
+      "observedNativeCpuSeconds": 102.33000000000001
+    },
+    {
+      "task": "u12",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "independentRepairVerified": true,
+      "sourceCommit": "56efdcb5ed4cda4cc10c6ba705bb5254bc1c9c4a",
+      "modelCallsReserved": 1,
+      "modelExecution": {
+        "verifiedCalls": 1,
+        "acceptedProposals": 1,
+        "rejectedResponses": 0,
+        "identity": {
+          "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+          "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+          "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64"
+        }
+      },
+      "modelRequests": [
+        {
+          "request": 1,
+          "status": "RESPONDED",
+          "failureKind": null,
+          "elapsedMs": 25352,
+          "outputTokens": 152,
+          "promptSha256": "88d63930066bd069383cb4dc23bbd122ac804a03744f9315ff3511b826b9e44b",
+          "responseSha256": "f5f21c8ceef7fd268fbff279d0ad5113276e56bb31615e33ef1eafaf72dc2e2c"
+        }
+      ],
+      "testedCandidates": 1,
+      "rejections": [],
+      "taskElapsedMs": 28213,
+      "technicalExperienceStatus": "RECORDED_TECHNICAL_REVIEW_ONLY",
+      "restartRecallStatus": "OK",
+      "restartRecallItems": 0,
+      "independentProofs": [
+        {
+          "path": "teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/candidate-independent-1/verification.json",
+          "sha256": "d5339f8c793aaeb7596458cf301cd64f071ce5d0b3d2548c762d59f9974c6f25"
+        },
+        {
+          "path": "teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/independent-check/verification.json",
+          "sha256": "de34b4d6350c530c06bf1d6e81b563759205bcc2428d7966e3934786be2a0cd5"
+        }
+      ],
+      "sourceAndTestIdentityStable": true,
+      "nativeProcesses": 1,
+      "peakObservedNativeRssKiB": 2078436,
+      "peakObservedNativePssKiB": 2077078,
+      "observedNativeCpuSeconds": 45.4
+    }
+  ],
+  "completed": 12,
+  "independentlyVerifiedRepairs": 4,
+  "successfulRestartRecalls": 0,
+  "scope": "Original twelve frozen tasks only. Later diagnostic reruns or paired experiment are excluded. No merge/device/install/weight learning claim."
+}

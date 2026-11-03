@@ -1,0 +1,65 @@
+{
+  "status": "DONE",
+  "head": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+  "taskId": "mob-948a6b9daa238a70",
+  "patchSha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397",
+  "patch": "/workspace/momega1-build-env/real-model-memory-fix/diagnostic-u03/task/private-synthetic-state/teamleader/reports/owner-repair/mob-948a6b9daa238a70-4ef01cb0f869-1793738333565-07825ce9/repair.patch",
+  "profiles": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "executed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 256,
+        "pids": 64,
+        "cpus": 1,
+        "timeoutMs": 15000,
+        "runtime": "runc",
+        "sourceSha256": "008a1eb157ca06d204af04300ebf4455dca135c2d3dce53cdef59918f4b0e59f",
+        "profile": "node-continuum",
+        "untrustedReports": true,
+        "workspaceId": "continuum-9670373c87a11e3c92da646f",
+        "workspaceBinding": {
+          "workerId": "typed-coding-worker",
+          "taskId": "t-db3a63717dd2931a",
+          "requestMessageId": "9eaab907-b8d2-41c4-a584-1c4cbdf5703b",
+          "requestHash": "4454a97134f35ba7fe1e1aa8452b5069b31092fd4c51f88112f29762f6aa1059",
+          "sourceCommit": "4ef01cb0f8690d8482d13a645bdf523a6e5e3163",
+          "jobId": "cdbd5dbb-de5c-48bb-8c45-93905c20b126"
+        },
+        "observed": {
+          "containerId": "2b39a379939f0e882e961016fe9650775ff07d7ea13ddf1beb204db6ed481d4f",
+          "runtime": "runc",
+          "image": "sha256:3f44842e8a052beda7e358b9fb8d8acc3e180a7f58aaceff7e1b49ad7f3d46e1",
+          "user": "1000:1000",
+          "network": "none",
+          "readOnly": true,
+          "memoryBytes": 268435456,
+          "memorySwapBytes": 268435456,
+          "nanoCpus": 1000000000,
+          "pids": 64,
+          "capDrop": [
+            "ALL"
+          ],
+          "securityOpt": [
+            "no-new-privileges:true"
+          ],
+          "writableHostMounts": 0
+        },
+        "teardownConfirmed": true
+      }
+    }
+  ],
+  "independentReceipt": "/workspace/momega1-build-env/real-model-memory-fix/diagnostic-u03/task/private-synthetic-state/teamleader/reports/owner-repair/mob-948a6b9daa238a70-4ef01cb0f869-1793738333565-07825ce9/independent-check/verification.json",
+  "report": "/workspace/momega1-build-env/real-model-memory-fix/diagnostic-u03/task/private-synthetic-state/teamleader/reports/owner-repair/mob-948a6b9daa238a70-4ef01cb0f869-1793738333565-07825ce9/report.json",
+  "approvedForMerge": false
+}

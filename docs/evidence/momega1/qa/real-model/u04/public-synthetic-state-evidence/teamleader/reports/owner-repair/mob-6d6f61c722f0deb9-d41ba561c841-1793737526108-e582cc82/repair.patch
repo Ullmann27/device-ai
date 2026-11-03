@@ -1,0 +1,7 @@
+diff --git a/lib/subject.mjs b/lib/subject.mjs
+index ab4072d..2f7edf4 100644
+--- a/lib/subject.mjs
++++ b/lib/subject.mjs
+@@ -1 +1 @@
+-export const run = values => [...values].sort();
++export const run = values => [...values].sort((a, b) => a - b);

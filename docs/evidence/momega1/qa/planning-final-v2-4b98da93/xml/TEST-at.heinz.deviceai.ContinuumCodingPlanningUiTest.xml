@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCodingPlanningUiTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-03T20:45:02" hostname="b354f2cb821b" time="3.466">
+  <properties/>
+  <testcase name="incompleteOwnerScopeCannotStartPlanningOrDispatch" classname="at.heinz.deviceai.ContinuumCodingPlanningUiTest" time="3.129"/>
+  <testcase name="modelDraftPrefillRequiresFreshOwnerReviewAndNeverDispatches" classname="at.heinz.deviceai.ContinuumCodingPlanningUiTest" time="0.21"/>
+  <testcase name="existingDraftFormOffersExplicitLocalModelPlanningEntry" classname="at.heinz.deviceai.ContinuumCodingPlanningUiTest" time="0.127"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
