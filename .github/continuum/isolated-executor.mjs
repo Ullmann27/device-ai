@@ -174,6 +174,7 @@ export function createIsolatedExecutor({image,nodeHome,jdkHome=null,gradleHome=n
         ...bind(tree,'/work'),...bind('/usr/bin','/usr/bin'),...bind('/usr/bin','/bin'),
         ...bind('/usr/lib','/usr/lib'),...bind('/lib','/lib'),...bind('/lib64','/lib64'),
         ...bind(CONTROL,'/control/runner.mjs'),...bind(KOTLIN_HARNESS,'/control/kotlin-fixture.sh')];
+      if(workspaceBinding!==null)args.push('--label=continuum.workspace-job='+workspaceBinding.jobId);
       for(const [key,value] of Object.entries(tools))args.push(...bind(value,'/tools/'+key));
       if(dependencies)args.push(...bind(dependencies,'/deps/modules-2'));
       args.push(image,'-i','HOME=/scratch','PATH=/tools/node/bin:/usr/bin:/bin',

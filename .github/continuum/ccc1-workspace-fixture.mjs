@@ -4,10 +4,11 @@ import {startTask} from './ccc1-orchestrator.mjs';
 import {DurableTaskJournal,runtimeKey} from './ccc1-journal.mjs';
 import {envelope} from './ccc1-envelope.mjs';
 import {jobIdFor} from './ccc1-recovery.mjs';
-export function workspaceFixture(home,worker){
+export function workspaceFixture(home,worker,{testSource=null}={}){
  const root=path.join(home,worker),stateDir=path.join(home,worker+'-state');
  fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});
  fs.writeFileSync(path.join(root,worker+'.txt'),worker);
+ if(testSource!==null)fs.writeFileSync(path.join(root,'.github/continuum/isolation.test.mjs'),testSource);
  const git=(...args)=>{const r=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout.trim();};
  git('init','-q','-b','workspace-fixture');git('add','.');
  git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','workspace fixture');
