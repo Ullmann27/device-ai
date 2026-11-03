@@ -1,6 +1,7 @@
 # Local coding service builder handoff
 
-Production source tested: `0c54a7bc33bc3979f59a1b4d1bcd9e5b4e39a115`.
+Final production source tested: `d84689868631466640893c9ee9a0374db857a8b8`.
+Closing mode: owner reported 20% remaining; no new model runs or experiments were started.
 Base: `527d43f93f6b1837bd8da38cfefcfc84a84fd464`; existing profile bridge
 `773fbc94` is included as equivalent cherry-pick `1ec115d4`.
 Branch: `codex/independence-service-20261103`; draft PR: [463](https://github.com/Ullmann27/device-ai/pull/463).
@@ -92,9 +93,9 @@ is applied, merged, signed or installed by this service.
 ## Evidence
 
 Builder final-source focused run: `focused.tap`, `run.json` beside this file.
-`49 PASS / 0 FAIL / 0 SKIP`, 2.281 s, including service controls and existing
+`49 PASS / 0 FAIL / 0 SKIP`, 1.805 s, including service controls and existing
 loop/assignment/report/orchestrator contracts. TAP SHA256:
-`6002639f8c2111a0d6707f82c35d6b0cae879461f38e006ab86d1562b7e7a4ba`.
+`07b0ca303399d0ba2d7a5889eb144c88e4ed96cdfc7ad36931496ae8e512b350`.
 These are HOST software contracts; fixture data is explicitly synthetic.
 
 Independent paired reviewer (PR458) reported:
@@ -111,14 +112,54 @@ Final integrated source checks, genuine local-model service run and independent
 receipt validation are owned by Chief and the separate final reviewers. At this
 builder handoff they are **NOT_RUN / pending**, not claimed passed. Android build,
 ARM64 runtime admission, Fold7, install and release are outside this host evidence.
-Weekly quota: `NOT_VISIBLE`; work is committed and pushed at each checkpoint.
+Direct weekly quota display: `NOT_VISIBLE`; owner-reported 20% triggered orderly closure. Work is committed and pushed at each checkpoint.
 
 ## Next executable work
 
-1. Integrate service commits `fd51d648`, `a588d361`, `0c54a7bc` with reviewed MCP.
+1. Integrate service commits `fd51d648`, `a588d361`, `0c54a7bc`, `07ed91e5`, `3b3f51d8`, `d8468986` with reviewed MCP; preserve the documentation checkpoints separately.
 2. Freeze the combined source, rerun paired lifecycle/reader/combined tests there.
 3. Under one host CPU/service window, execute the independently frozen genuine
    model task through this CLI; retain both success and failed/abstained results.
 4. Verify canonical patch/report and fresh-process experience retrieval; separate
    unknown-task generalization from known regression success.
 5. Continue ARM64/Fold7 preparation without reusing host proof as device evidence.
+
+## Closure repair: unexpected descendants are quarantined
+
+The independent reviewer reproduced an actual defect on `0c54a7bc`: after a
+worker SIGKILL the next queued task was dispatched, although nested processes
+could survive. A harmless C-sleep specimen through the actual native launcher
+confirmed the process topology: outer worker death did not terminate the
+intermediate CLI/bwrap sandbox. This was a CONTRACT_TEST, not neural inference.
+
+Commits `07ed91e5`, `3b3f51d8`, `d8468986` write a private per-UID barrier before
+worker GO. Unexpected exit leaves UNKNOWN and the next task PENDING, stops the
+scheduler and blocks every service configuration on that host account. The
+barrier persists after process death/restart/cancellation. It is never cleared
+simply because a PID disappeared. Status reports
+`RESOURCE_RECONCILIATION_REQUIRED` and unknown model presence.
+
+Barrier location: `/tmp/continuum-coding-owner-<uid>/unresolved-execution.json`.
+The record binds task, state directory, service instance, exact process identity
+and source SHA. A trusted normal worker completion may clear it; a confirmed
+preflight refusal before canonical execution may also clear it. No `--force`
+or unproved reconciliation command exists.
+
+This is intentionally conservative: after uncertain execution the owner must
+verify actual native descendants and containers are stopped before a separate
+explicit operator cleanup of the exact attributable barrier. Cancellation, a
+claimed success, elapsed time and a process restart do not establish teardown.
+A host reboot also does not automatically erase this record in the application.
+The service remains blocked until this operational reconciliation; this is an
+open usability/recovery limitation, not a finished autonomous recovery feature.
+
+Independent targeted final-source regression: `d8468986`, **1 PASS / 0 FAIL**,
+9.314 s. It proved no next dispatch, persistent barrier and refused restart even
+after restoring the runtime binary. The reviewer verified its synthetic worker
+and daemon dead, no second dispatch, and no possible native call before removing
+only that fixture's barrier. No test processes/barriers were left behind.
+
+The initial idle wait now precedes the existing bounded loop, preserving a
+`maxCycles=1` budget until an actual owner task arrives. Final focused 49-case
+regression passed on clean exact source `d8468986`; no Fold7 or real service-model
+acceptance is inferred from these results.
