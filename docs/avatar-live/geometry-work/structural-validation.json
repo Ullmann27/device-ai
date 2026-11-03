@@ -1,0 +1,876 @@
+{
+  "asset": "/workspace/continuum-jarvis3d/assets/avatar/jarvis-research-v1.glb",
+  "sha256": "50cb34627384432d3f6744b924c250807def02c892d8336645dac7845a029d28",
+  "validatorVersion": "2.0.0-dev.3.10",
+  "checks": [
+    {
+      "name": "glb-header-size",
+      "pass": true
+    },
+    {
+      "name": "khronos-zero-errors",
+      "pass": true,
+      "details": {
+        "numErrors": 0,
+        "numWarnings": 0,
+        "numInfos": 0,
+        "numHints": 0,
+        "messages": [],
+        "truncated": false
+      }
+    },
+    {
+      "name": "node-AvatarRoot",
+      "pass": true
+    },
+    {
+      "name": "node-Neck",
+      "pass": true
+    },
+    {
+      "name": "node-Head",
+      "pass": true
+    },
+    {
+      "name": "node-EyeLeft",
+      "pass": true
+    },
+    {
+      "name": "node-EyeRight",
+      "pass": true
+    },
+    {
+      "name": "node-Jaw",
+      "pass": true
+    },
+    {
+      "name": "node-Face",
+      "pass": true
+    },
+    {
+      "name": "node-NeuralThreads",
+      "pass": true
+    },
+    {
+      "name": "Face-morph-names",
+      "pass": true
+    },
+    {
+      "name": "Face-all-primitives-morphed",
+      "pass": true
+    },
+    {
+      "name": "Face-normalized-skin",
+      "pass": true
+    },
+    {
+      "name": "Face-SIL-nonzero",
+      "pass": true,
+      "details": {
+        "name": "SIL",
+        "changedVertices": 1805,
+        "maxDeltaMetres": 0.00027493122428361876,
+        "positiveX": 877,
+        "negativeX": 877
+      }
+    },
+    {
+      "name": "Face-PP-nonzero",
+      "pass": true,
+      "details": {
+        "name": "PP",
+        "changedVertices": 2141,
+        "maxDeltaMetres": 0.004825197318544966,
+        "positiveX": 1036,
+        "negativeX": 1036
+      }
+    },
+    {
+      "name": "Face-FF-nonzero",
+      "pass": true,
+      "details": {
+        "name": "FF",
+        "changedVertices": 3607,
+        "maxDeltaMetres": 0.00263675990347871,
+        "positiveX": 1745,
+        "negativeX": 1746
+      }
+    },
+    {
+      "name": "Face-TH-nonzero",
+      "pass": true,
+      "details": {
+        "name": "TH",
+        "changedVertices": 3538,
+        "maxDeltaMetres": 0.007138033488030183,
+        "positiveX": 1715,
+        "negativeX": 1714
+      }
+    },
+    {
+      "name": "Face-DD-nonzero",
+      "pass": true,
+      "details": {
+        "name": "DD",
+        "changedVertices": 3602,
+        "maxDeltaMetres": 0.009695727818228932,
+        "positiveX": 1748,
+        "negativeX": 1747
+      }
+    },
+    {
+      "name": "Face-KK-nonzero",
+      "pass": true,
+      "details": {
+        "name": "KK",
+        "changedVertices": 3546,
+        "maxDeltaMetres": 0.011687099370357367,
+        "positiveX": 1721,
+        "negativeX": 1720
+      }
+    },
+    {
+      "name": "Face-CH-nonzero",
+      "pass": true,
+      "details": {
+        "name": "CH",
+        "changedVertices": 3539,
+        "maxDeltaMetres": 0.006106210808680488,
+        "positiveX": 1717,
+        "negativeX": 1717
+      }
+    },
+    {
+      "name": "Face-SS-nonzero",
+      "pass": true,
+      "details": {
+        "name": "SS",
+        "changedVertices": 2509,
+        "maxDeltaMetres": 0.0034104084359681815,
+        "positiveX": 1210,
+        "negativeX": 1210
+      }
+    },
+    {
+      "name": "Face-NN-nonzero",
+      "pass": true,
+      "details": {
+        "name": "NN",
+        "changedVertices": 3642,
+        "maxDeltaMetres": 0.004254902892666682,
+        "positiveX": 1763,
+        "negativeX": 1763
+      }
+    },
+    {
+      "name": "Face-RR-nonzero",
+      "pass": true,
+      "details": {
+        "name": "RR",
+        "changedVertices": 3563,
+        "maxDeltaMetres": 0.009185790095349266,
+        "positiveX": 1727,
+        "negativeX": 1727
+      }
+    },
+    {
+      "name": "Face-AA-nonzero",
+      "pass": true,
+      "details": {
+        "name": "AA",
+        "changedVertices": 3619,
+        "maxDeltaMetres": 0.026442508723877333,
+        "positiveX": 1756,
+        "negativeX": 1756
+      }
+    },
+    {
+      "name": "Face-E-nonzero",
+      "pass": true,
+      "details": {
+        "name": "E",
+        "changedVertices": 3605,
+        "maxDeltaMetres": 0.013804460783870048,
+        "positiveX": 1749,
+        "negativeX": 1749
+      }
+    },
+    {
+      "name": "Face-I-nonzero",
+      "pass": true,
+      "details": {
+        "name": "I",
+        "changedVertices": 3594,
+        "maxDeltaMetres": 0.010927173460432602,
+        "positiveX": 1744,
+        "negativeX": 1743
+      }
+    },
+    {
+      "name": "Face-O-nonzero",
+      "pass": true,
+      "details": {
+        "name": "O",
+        "changedVertices": 3582,
+        "maxDeltaMetres": 0.016432515343079428,
+        "positiveX": 1737,
+        "negativeX": 1736
+      }
+    },
+    {
+      "name": "Face-U-nonzero",
+      "pass": true,
+      "details": {
+        "name": "U",
+        "changedVertices": 3554,
+        "maxDeltaMetres": 0.014510764989640707,
+        "positiveX": 1722,
+        "negativeX": 1723
+      }
+    },
+    {
+      "name": "Face-BlinkLeft-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BlinkLeft",
+        "changedVertices": 309,
+        "maxDeltaMetres": 0.010678027923057328,
+        "positiveX": 309,
+        "negativeX": 0
+      }
+    },
+    {
+      "name": "Face-BlinkRight-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BlinkRight",
+        "changedVertices": 309,
+        "maxDeltaMetres": 0.010678027923057328,
+        "positiveX": 0,
+        "negativeX": 309
+      }
+    },
+    {
+      "name": "Face-BrowUp-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BrowUp",
+        "changedVertices": 491,
+        "maxDeltaMetres": 0.002528554651879787,
+        "positiveX": 244,
+        "negativeX": 244
+      }
+    },
+    {
+      "name": "Face-BrowDown-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BrowDown",
+        "changedVertices": 420,
+        "maxDeltaMetres": 0.0029180925133202467,
+        "positiveX": 202,
+        "negativeX": 202
+      }
+    },
+    {
+      "name": "Face-Smile-nonzero",
+      "pass": true,
+      "details": {
+        "name": "Smile",
+        "changedVertices": 2437,
+        "maxDeltaMetres": 0.00989384874183141,
+        "positiveX": 1180,
+        "negativeX": 1180
+      }
+    },
+    {
+      "name": "Face-JawOpen-nonzero",
+      "pass": true,
+      "details": {
+        "name": "JawOpen",
+        "changedVertices": 3560,
+        "maxDeltaMetres": 0.03094476793591258,
+        "positiveX": 1727,
+        "negativeX": 1728
+      }
+    },
+    {
+      "name": "Face-unique-target-deltas",
+      "pass": true
+    },
+    {
+      "name": "NeuralThreads-morph-names",
+      "pass": true
+    },
+    {
+      "name": "NeuralThreads-all-primitives-morphed",
+      "pass": true
+    },
+    {
+      "name": "NeuralThreads-normalized-skin",
+      "pass": true
+    },
+    {
+      "name": "NeuralThreads-SIL-nonzero",
+      "pass": true,
+      "details": {
+        "name": "SIL",
+        "changedVertices": 777,
+        "maxDeltaMetres": 0.00024683609534153475,
+        "positiveX": 376,
+        "negativeX": 401
+      }
+    },
+    {
+      "name": "NeuralThreads-PP-nonzero",
+      "pass": true,
+      "details": {
+        "name": "PP",
+        "changedVertices": 996,
+        "maxDeltaMetres": 0.004623579832114917,
+        "positiveX": 500,
+        "negativeX": 496
+      }
+    },
+    {
+      "name": "NeuralThreads-FF-nonzero",
+      "pass": true,
+      "details": {
+        "name": "FF",
+        "changedVertices": 2274,
+        "maxDeltaMetres": 0.0025969828472001927,
+        "positiveX": 1159,
+        "negativeX": 1115
+      }
+    },
+    {
+      "name": "NeuralThreads-TH-nonzero",
+      "pass": true,
+      "details": {
+        "name": "TH",
+        "changedVertices": 2271,
+        "maxDeltaMetres": 0.007077525431509242,
+        "positiveX": 1159,
+        "negativeX": 1112
+      }
+    },
+    {
+      "name": "NeuralThreads-DD-nonzero",
+      "pass": true,
+      "details": {
+        "name": "DD",
+        "changedVertices": 2301,
+        "maxDeltaMetres": 0.009667652703311127,
+        "positiveX": 1177,
+        "negativeX": 1124
+      }
+    },
+    {
+      "name": "NeuralThreads-KK-nonzero",
+      "pass": true,
+      "details": {
+        "name": "KK",
+        "changedVertices": 2295,
+        "maxDeltaMetres": 0.011570720556697835,
+        "positiveX": 1171,
+        "negativeX": 1124
+      }
+    },
+    {
+      "name": "NeuralThreads-CH-nonzero",
+      "pass": true,
+      "details": {
+        "name": "CH",
+        "changedVertices": 2286,
+        "maxDeltaMetres": 0.005948283910982984,
+        "positiveX": 1168,
+        "negativeX": 1118
+      }
+    },
+    {
+      "name": "NeuralThreads-SS-nonzero",
+      "pass": true,
+      "details": {
+        "name": "SS",
+        "changedVertices": 1152,
+        "maxDeltaMetres": 0.003399368214696948,
+        "positiveX": 595,
+        "negativeX": 557
+      }
+    },
+    {
+      "name": "NeuralThreads-NN-nonzero",
+      "pass": true,
+      "details": {
+        "name": "NN",
+        "changedVertices": 2292,
+        "maxDeltaMetres": 0.0042416374607588845,
+        "positiveX": 1168,
+        "negativeX": 1124
+      }
+    },
+    {
+      "name": "NeuralThreads-RR-nonzero",
+      "pass": true,
+      "details": {
+        "name": "RR",
+        "changedVertices": 2295,
+        "maxDeltaMetres": 0.009060207654087018,
+        "positiveX": 1168,
+        "negativeX": 1127
+      }
+    },
+    {
+      "name": "NeuralThreads-AA-nonzero",
+      "pass": true,
+      "details": {
+        "name": "AA",
+        "changedVertices": 2328,
+        "maxDeltaMetres": 0.026255750523004946,
+        "positiveX": 1195,
+        "negativeX": 1133
+      }
+    },
+    {
+      "name": "NeuralThreads-E-nonzero",
+      "pass": true,
+      "details": {
+        "name": "E",
+        "changedVertices": 2319,
+        "maxDeltaMetres": 0.013756141058057846,
+        "positiveX": 1180,
+        "negativeX": 1139
+      }
+    },
+    {
+      "name": "NeuralThreads-I-nonzero",
+      "pass": true,
+      "details": {
+        "name": "I",
+        "changedVertices": 2292,
+        "maxDeltaMetres": 0.0108281557593891,
+        "positiveX": 1174,
+        "negativeX": 1118
+      }
+    },
+    {
+      "name": "NeuralThreads-O-nonzero",
+      "pass": true,
+      "details": {
+        "name": "O",
+        "changedVertices": 2310,
+        "maxDeltaMetres": 0.01617658743969937,
+        "positiveX": 1183,
+        "negativeX": 1127
+      }
+    },
+    {
+      "name": "NeuralThreads-U-nonzero",
+      "pass": true,
+      "details": {
+        "name": "U",
+        "changedVertices": 2271,
+        "maxDeltaMetres": 0.013620531155457723,
+        "positiveX": 1165,
+        "negativeX": 1106
+      }
+    },
+    {
+      "name": "NeuralThreads-BlinkLeft-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BlinkLeft",
+        "changedVertices": 54,
+        "maxDeltaMetres": 0.010605655768425351,
+        "positiveX": 54,
+        "negativeX": 0
+      }
+    },
+    {
+      "name": "NeuralThreads-BlinkRight-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BlinkRight",
+        "changedVertices": 39,
+        "maxDeltaMetres": 0.0007978778371720865,
+        "positiveX": 0,
+        "negativeX": 39
+      }
+    },
+    {
+      "name": "NeuralThreads-BrowUp-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BrowUp",
+        "changedVertices": 222,
+        "maxDeltaMetres": 0.002490995078593802,
+        "positiveX": 117,
+        "negativeX": 105
+      }
+    },
+    {
+      "name": "NeuralThreads-BrowDown-nonzero",
+      "pass": true,
+      "details": {
+        "name": "BrowDown",
+        "changedVertices": 168,
+        "maxDeltaMetres": 0.0026390267685977927,
+        "positiveX": 87,
+        "negativeX": 81
+      }
+    },
+    {
+      "name": "NeuralThreads-Smile-nonzero",
+      "pass": true,
+      "details": {
+        "name": "Smile",
+        "changedVertices": 1296,
+        "maxDeltaMetres": 0.009422289685658848,
+        "positiveX": 650,
+        "negativeX": 646
+      }
+    },
+    {
+      "name": "NeuralThreads-JawOpen-nonzero",
+      "pass": true,
+      "details": {
+        "name": "JawOpen",
+        "changedVertices": 2307,
+        "maxDeltaMetres": 0.030848345363755473,
+        "positiveX": 1183,
+        "negativeX": 1124
+      }
+    },
+    {
+      "name": "NeuralThreads-unique-target-deltas",
+      "pass": true
+    },
+    {
+      "name": "independent-node-animation",
+      "pass": true
+    },
+    {
+      "name": "real-skin",
+      "pass": true
+    }
+  ],
+  "passed": 62,
+  "failed": 0,
+  "morphStats": {
+    "Face": [
+      {
+        "name": "SIL",
+        "changedVertices": 1805,
+        "maxDeltaMetres": 0.00027493122428361876,
+        "positiveX": 877,
+        "negativeX": 877
+      },
+      {
+        "name": "PP",
+        "changedVertices": 2141,
+        "maxDeltaMetres": 0.004825197318544966,
+        "positiveX": 1036,
+        "negativeX": 1036
+      },
+      {
+        "name": "FF",
+        "changedVertices": 3607,
+        "maxDeltaMetres": 0.00263675990347871,
+        "positiveX": 1745,
+        "negativeX": 1746
+      },
+      {
+        "name": "TH",
+        "changedVertices": 3538,
+        "maxDeltaMetres": 0.007138033488030183,
+        "positiveX": 1715,
+        "negativeX": 1714
+      },
+      {
+        "name": "DD",
+        "changedVertices": 3602,
+        "maxDeltaMetres": 0.009695727818228932,
+        "positiveX": 1748,
+        "negativeX": 1747
+      },
+      {
+        "name": "KK",
+        "changedVertices": 3546,
+        "maxDeltaMetres": 0.011687099370357367,
+        "positiveX": 1721,
+        "negativeX": 1720
+      },
+      {
+        "name": "CH",
+        "changedVertices": 3539,
+        "maxDeltaMetres": 0.006106210808680488,
+        "positiveX": 1717,
+        "negativeX": 1717
+      },
+      {
+        "name": "SS",
+        "changedVertices": 2509,
+        "maxDeltaMetres": 0.0034104084359681815,
+        "positiveX": 1210,
+        "negativeX": 1210
+      },
+      {
+        "name": "NN",
+        "changedVertices": 3642,
+        "maxDeltaMetres": 0.004254902892666682,
+        "positiveX": 1763,
+        "negativeX": 1763
+      },
+      {
+        "name": "RR",
+        "changedVertices": 3563,
+        "maxDeltaMetres": 0.009185790095349266,
+        "positiveX": 1727,
+        "negativeX": 1727
+      },
+      {
+        "name": "AA",
+        "changedVertices": 3619,
+        "maxDeltaMetres": 0.026442508723877333,
+        "positiveX": 1756,
+        "negativeX": 1756
+      },
+      {
+        "name": "E",
+        "changedVertices": 3605,
+        "maxDeltaMetres": 0.013804460783870048,
+        "positiveX": 1749,
+        "negativeX": 1749
+      },
+      {
+        "name": "I",
+        "changedVertices": 3594,
+        "maxDeltaMetres": 0.010927173460432602,
+        "positiveX": 1744,
+        "negativeX": 1743
+      },
+      {
+        "name": "O",
+        "changedVertices": 3582,
+        "maxDeltaMetres": 0.016432515343079428,
+        "positiveX": 1737,
+        "negativeX": 1736
+      },
+      {
+        "name": "U",
+        "changedVertices": 3554,
+        "maxDeltaMetres": 0.014510764989640707,
+        "positiveX": 1722,
+        "negativeX": 1723
+      },
+      {
+        "name": "BlinkLeft",
+        "changedVertices": 309,
+        "maxDeltaMetres": 0.010678027923057328,
+        "positiveX": 309,
+        "negativeX": 0
+      },
+      {
+        "name": "BlinkRight",
+        "changedVertices": 309,
+        "maxDeltaMetres": 0.010678027923057328,
+        "positiveX": 0,
+        "negativeX": 309
+      },
+      {
+        "name": "BrowUp",
+        "changedVertices": 491,
+        "maxDeltaMetres": 0.002528554651879787,
+        "positiveX": 244,
+        "negativeX": 244
+      },
+      {
+        "name": "BrowDown",
+        "changedVertices": 420,
+        "maxDeltaMetres": 0.0029180925133202467,
+        "positiveX": 202,
+        "negativeX": 202
+      },
+      {
+        "name": "Smile",
+        "changedVertices": 2437,
+        "maxDeltaMetres": 0.00989384874183141,
+        "positiveX": 1180,
+        "negativeX": 1180
+      },
+      {
+        "name": "JawOpen",
+        "changedVertices": 3560,
+        "maxDeltaMetres": 0.03094476793591258,
+        "positiveX": 1727,
+        "negativeX": 1728
+      }
+    ],
+    "NeuralThreads": [
+      {
+        "name": "SIL",
+        "changedVertices": 777,
+        "maxDeltaMetres": 0.00024683609534153475,
+        "positiveX": 376,
+        "negativeX": 401
+      },
+      {
+        "name": "PP",
+        "changedVertices": 996,
+        "maxDeltaMetres": 0.004623579832114917,
+        "positiveX": 500,
+        "negativeX": 496
+      },
+      {
+        "name": "FF",
+        "changedVertices": 2274,
+        "maxDeltaMetres": 0.0025969828472001927,
+        "positiveX": 1159,
+        "negativeX": 1115
+      },
+      {
+        "name": "TH",
+        "changedVertices": 2271,
+        "maxDeltaMetres": 0.007077525431509242,
+        "positiveX": 1159,
+        "negativeX": 1112
+      },
+      {
+        "name": "DD",
+        "changedVertices": 2301,
+        "maxDeltaMetres": 0.009667652703311127,
+        "positiveX": 1177,
+        "negativeX": 1124
+      },
+      {
+        "name": "KK",
+        "changedVertices": 2295,
+        "maxDeltaMetres": 0.011570720556697835,
+        "positiveX": 1171,
+        "negativeX": 1124
+      },
+      {
+        "name": "CH",
+        "changedVertices": 2286,
+        "maxDeltaMetres": 0.005948283910982984,
+        "positiveX": 1168,
+        "negativeX": 1118
+      },
+      {
+        "name": "SS",
+        "changedVertices": 1152,
+        "maxDeltaMetres": 0.003399368214696948,
+        "positiveX": 595,
+        "negativeX": 557
+      },
+      {
+        "name": "NN",
+        "changedVertices": 2292,
+        "maxDeltaMetres": 0.0042416374607588845,
+        "positiveX": 1168,
+        "negativeX": 1124
+      },
+      {
+        "name": "RR",
+        "changedVertices": 2295,
+        "maxDeltaMetres": 0.009060207654087018,
+        "positiveX": 1168,
+        "negativeX": 1127
+      },
+      {
+        "name": "AA",
+        "changedVertices": 2328,
+        "maxDeltaMetres": 0.026255750523004946,
+        "positiveX": 1195,
+        "negativeX": 1133
+      },
+      {
+        "name": "E",
+        "changedVertices": 2319,
+        "maxDeltaMetres": 0.013756141058057846,
+        "positiveX": 1180,
+        "negativeX": 1139
+      },
+      {
+        "name": "I",
+        "changedVertices": 2292,
+        "maxDeltaMetres": 0.0108281557593891,
+        "positiveX": 1174,
+        "negativeX": 1118
+      },
+      {
+        "name": "O",
+        "changedVertices": 2310,
+        "maxDeltaMetres": 0.01617658743969937,
+        "positiveX": 1183,
+        "negativeX": 1127
+      },
+      {
+        "name": "U",
+        "changedVertices": 2271,
+        "maxDeltaMetres": 0.013620531155457723,
+        "positiveX": 1165,
+        "negativeX": 1106
+      },
+      {
+        "name": "BlinkLeft",
+        "changedVertices": 54,
+        "maxDeltaMetres": 0.010605655768425351,
+        "positiveX": 54,
+        "negativeX": 0
+      },
+      {
+        "name": "BlinkRight",
+        "changedVertices": 39,
+        "maxDeltaMetres": 0.0007978778371720865,
+        "positiveX": 0,
+        "negativeX": 39
+      },
+      {
+        "name": "BrowUp",
+        "changedVertices": 222,
+        "maxDeltaMetres": 0.002490995078593802,
+        "positiveX": 117,
+        "negativeX": 105
+      },
+      {
+        "name": "BrowDown",
+        "changedVertices": 168,
+        "maxDeltaMetres": 0.0026390267685977927,
+        "positiveX": 87,
+        "negativeX": 81
+      },
+      {
+        "name": "Smile",
+        "changedVertices": 1296,
+        "maxDeltaMetres": 0.009422289685658848,
+        "positiveX": 650,
+        "negativeX": 646
+      },
+      {
+        "name": "JawOpen",
+        "changedVertices": 2307,
+        "maxDeltaMetres": 0.030848345363755473,
+        "positiveX": 1183,
+        "negativeX": 1124
+      }
+    ]
+  },
+  "animations": [
+    {
+      "name": "VisemeSweep",
+      "channels": 2
+    },
+    {
+      "name": "ExpressionAndSpeech",
+      "channels": 2
+    },
+    {
+      "name": "IndependentControlDemo",
+      "channels": 5
+    }
+  ],
+  "limits": [
+    "Structural validity and nonzero targets do not certify phonetic accuracy, visual identity, collision-free blending or phone performance."
+  ]
+}
