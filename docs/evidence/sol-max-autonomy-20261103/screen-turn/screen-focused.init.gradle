@@ -1,0 +1,6 @@
+allprojects {
+    tasks.withType(org.gradle.api.tasks.testing.Test).configureEach {
+        outputs.upToDateWhen { false }
+        filter { includeTestsMatching 'at.heinz.deviceai.localmodel.LocalToolContinuationTest' }
+    }
+}

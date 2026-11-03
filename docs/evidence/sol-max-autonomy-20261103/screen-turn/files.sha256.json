@@ -1,0 +1,12 @@
+{
+  "README.md": "5bd91025108408481735d73a41c0dd5c3d88fdb475b343421887e99c3110a953",
+  "run-focused-gradle.sh": "018b6b4986afc7d79c9f8df253e4bb7e2d544e06229fc80fe26fe55e9d77daed",
+  "screen-command-rejected.log": "d3f9b48869222a21109b1b39f4c75fb7830f0b079cb3c4da7eca82cd8133cd9a",
+  "screen-focused.init.gradle": "0623f08c631513da6ad5b92f7f2bcfca70eafbd89349ef41d990bedc519ddb56",
+  "screen-green.log": "1b166e475b17141c654d104143861925226e28f57c2c62ee063516660fc38aa2",
+  "screen-green.xml": "fbbdbfd838740303ccde28140027f0694791c18699086bdc34d9572397afc1b2",
+  "screen-red-base.sha": "ec36803cc9c0e6f9d4bc185ba533f5ad239cef6caffbdbf115d239382784df3e",
+  "screen-red.log": "18c286fdfa82193df4a7ab38be2ccb05d2ba26c7fec668910597b797e1f5b4f8",
+  "screen-red.patch": "2aa86f563f7b9e89b439e52fc78b52beb084c9f3bd2288eb84d568ba33c615f1",
+  "screen-red.xml": "f0a2dd6e5c3a30bd92fb1790da587d1367e6140f691a85d419c99453aa8ab1ae"
+}
