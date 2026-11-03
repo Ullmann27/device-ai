@@ -1,0 +1,28 @@
+{
+  ppid: 1,
+  type: 1667723888,
+  self: '0::/\n',
+  parent: '0::/\n',
+  max: Stats {
+    dev: 24,
+    mode: 33188,
+    nlink: 1,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    blksize: 4096,
+    ino: 11037,
+    size: 0,
+    blocks: 0,
+    atimeMs: 1793739411020.6926,
+    mtimeMs: 1793739411020.6926,
+    ctimeMs: 1793739411020.6926,
+    birthtimeMs: 0
+  }
+}
+{
+  maxJobMemoryBytes: 8589934592,
+  maxJobSwapBytes: 0,
+  enforcement: 'CGROUP_V2'
+}
+{ status: 0, stderr: '' }

@@ -6,7 +6,7 @@ import {createHash,createHmac} from 'node:crypto';
 import {readPinnedGgufManifest} from './continuum-gguf-preflight.mjs';
 import {admitGgufFile} from './continuum-gguf.mjs';
 import {buildCodingRequest,parseCodingResponse} from './continuum-local-brain.mjs';
-import {getReviewedLocalModelPair,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
+import {getReviewedLocalModelPair,getLocalModelResourceProfile,isPinnedLocalModelResourceProfile,LOCAL_MODEL_RUNTIME_CANDIDATES} from './continuum-local-model-pins.mjs';
 import {canonical} from '../.github/continuum/development-backlog.mjs';
 import {requireCodingModelPreflight} from './continuum-m2-model-preflight.mjs';
 const BWRAP='/usr/bin/bwrap',PRLIMIT='/usr/bin/prlimit';
@@ -15,7 +15,7 @@ const hash=x=>createHash('sha256').update(x).digest('hex');
 const same=(a,b)=>a.dev===b.dev&&a.ino===b.ino&&a.size===b.size&&a.mtimeNs===b.mtimeNs&&a.ctimeNs===b.ctimeNs;
 export function serializeLocalCodingPrompt(body,{modelSha256}={}){
  const schema='\nRequired output JSON schema:\n'+JSON.stringify(body.response_format.json_schema.schema);
- if(modelSha256==='cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046')
+ if(LOCAL_MODEL_RUNTIME_CANDIDATES.some(pin=>pin.modelSha256===modelSha256&&pin.modelRepository.startsWith('Qwen/Qwen2.5-Coder-')))
   return '<|im_start|>system\n'+body.messages[0].content+schema+'<|im_end|>\n<|im_start|>user\n'+body.messages[1].content+'<|im_end|>\n<|im_start|>assistant\n';
  return body.messages.map(m=>m.role.toUpperCase()+':\n'+m.content).join('\n\n')+schema+'\n\nASSISTANT:\n';
 }
@@ -63,7 +63,7 @@ function validateBinding(binding){
 }
 
 /** Fixed namespace policy. Never mount the checkout, HOME, credentials or host network. */
-export function localModelSandboxArgs({modelFd=3,runtimeFd=4,promptFd=5,seccompFd=6,schemaFd=null}={}){
+export function localModelSandboxArgs({modelFd=3,runtimeFd=4,promptFd=5,seccompFd=6,schemaFd=null,noRepack=false}={}){
  const args=['--unshare-all','--cap-drop','ALL','--seccomp',String(seccompFd),'--die-with-parent','--new-session','--clearenv',
   '--ro-bind-fd',String(modelFd),'/model.gguf',
   '--ro-bind-fd',String(runtimeFd),'/runtime',
@@ -77,6 +77,7 @@ export function localModelSandboxArgs({modelFd=3,runtimeFd=4,promptFd=5,seccompF
   '--ctx-size','8192','--threads','2','--n-gpu-layers','0','--temp','0','--seed','1',
   '--no-display-prompt','--no-conversation','--no-warmup','--no-context-shift');
  if(schemaFd!==null)args.push('--json-schema-file','/schema.json');
+ if(noRepack)args.push('--no-repack');
  return args;
 }
 
@@ -108,10 +109,32 @@ export function parseNativeGenerationCount(stderr){
  return Number.isSafeInteger(count)&&count>=1&&count<=1800?count:null;
 }
 
+/** Check the actual kernel group, never a caller-provided memory claim. The entire
+ * provider/CLI/native job must share the private cgroup namespace root. Docker
+ * must cap that job with --memory=8g --memory-swap=8g, without mounting its socket. */
+export function assertLocalModelJobMemoryLimit(profile){
+ if(!profile?.requiresJobMemoryLimit)return null;
+ try{
+  const group=fs.readFileSync('/proc/self/cgroup','utf8');
+  if(group.trim()!=='0::/'||fs.readFileSync(`/proc/${process.ppid}/cgroup`,'utf8')!==group)throw Error();
+  const root='/sys/fs/cgroup';
+  if(fs.statfsSync(root).type!==0x63677270)throw Error();
+  const read=name=>{const file=root+'/'+name,s=fs.lstatSync(file);
+   if(!s.isFile()||s.uid!==0||(s.mode&0o022)!==0||fs.realpathSync(file)!==file)throw Error();
+   return fs.readFileSync(file,'utf8').trim();};
+  const max=read('memory.max'),swap=read('memory.swap.max');
+  if(!/^[0-9]+$/.test(max)||BigInt(max)<=0n||BigInt(max)>BigInt(profile.maxJobMemoryBytes)||swap!=='0')throw Error();
+  return Object.freeze({maxJobMemoryBytes:Number(max),maxJobSwapBytes:0,enforcement:'CGROUP_V2'});
+ }catch{fail('BLOCKED_LOCAL_JOB_MEMORY_LIMIT');}
+}
 /** Bounded launcher; injection is explicitly CONTRACT_TEST and never branded. */
-export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,signal,spawnImpl=spawn,bwrap=BWRAP}={}){
+export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,signal,resourceProfile=null,spawnImpl=spawn,bwrap=BWRAP}={}){
  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>300000)fail('INVALID_CODING_BOUNDS');
  if(signal?.aborted)fail('CODING_CANCELLED');
+ if(resourceProfile!==null&&!isPinnedLocalModelResourceProfile(resourceProfile))fail('INVALID_LOCAL_RESOURCE_PROFILE');
+ const nativeCpuThreads=resourceProfile?.nativeCpuThreads??1;
+ const nativeCpuSeconds=nativeCpuThreads*Math.ceil(timeoutMs/1000);
+ assertLocalModelJobMemoryLimit(resourceProfile);
  let filterDir,filterFd;
  try{
   filterDir=fs.mkdtempSync('/tmp/continuum-seccomp-');fs.chmodSync(filterDir,0o700);
@@ -125,7 +148,7 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
   let refusal=null;
   const cancel=()=>{refusal='CODING_CANCELLED';kill();};
   const finish=(error,value)=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve(value);};
-  try{child=spawnImpl(PRLIMIT,['--as=4294967296','--cpu='+Math.ceil(timeoutMs/1000),'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7})],{shell:false,detached:true,
+  try{child=spawnImpl(PRLIMIT,['--as='+(resourceProfile?.nativeAddressSpaceBytes??4294967296),'--cpu='+nativeCpuSeconds,'--nofile=64','--fsize=1048576','--',bwrap,...localModelSandboxArgs({schemaFd:jsonSchemaFd===undefined?null:7,noRepack:resourceProfile?.disableWeightRepacking===true})],{shell:false,detached:true,
    cwd:'/',env:{},stdio:['ignore','pipe','pipe',fds[0],fds[1],promptFd,filterFd,...(jsonSchemaFd===undefined?[]:[jsonSchemaFd])]});}
   catch{finish(Error('BLOCKED_LOCAL_ISOLATION_UNAVAILABLE'));return;}
   timer=setTimeout(()=>{refusal='CODING_TIMEOUT';kill();},timeoutMs);
@@ -136,12 +159,16 @@ export async function launchLocalModel({fds,promptFd,jsonSchemaFd,timeoutMs,sign
   child.once('close',(code,term)=>{
    // A successful runtime must terminate normally and emit actual decoding stats.
    if(refusal){finish(Error(refusal));return;}
-   if(code!==0||term){finish(Error('LOCAL_RUNTIME_PROCESS_FAILED'));return;}
+   if(code!==0||term){
+    const failure=term==='SIGXCPU'?'LOCAL_RUNTIME_SIGNAL_SIGXCPU':term==='SIGKILL'?'LOCAL_RUNTIME_SIGNAL_SIGKILL':
+     code===137?'LOCAL_RUNTIME_EXIT_137':code===152?'LOCAL_RUNTIME_EXIT_152':'LOCAL_RUNTIME_PROCESS_FAILED';
+    finish(Error(failure));return;
+   }
    const stderr=Buffer.concat(err).toString('utf8');
    const outputTokens=parseNativeGenerationCount(stderr);
    if(outputTokens===null){finish(Error('LOCAL_RUNTIME_GENERATION_UNOBSERVED'));return;}
    let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(out));}catch{finish(Error('LOCAL_RUNTIME_OUTPUT_INVALID'));return;}
-   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,
+   finish(null,{text,outputTokens,pid:child.pid,exitCode:code,nativeCpuThreads,nativeCpuSeconds,nativeWallTimeoutMs:timeoutMs,
     evidenceClass:spawnImpl===spawn&&bwrap===BWRAP?'HOST_INTEGRATION':'CONTRACT_TEST'});
   });
  });
@@ -169,7 +196,9 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
  try{
   active();const pin=await readPinnedGgufManifest(manifestPath);
   if(pin.sha256!==env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256||path.basename(modelPath)!==pin.filename)fail('LOCAL_RUNTIME_MODEL_PIN_MISMATCH');
-  model=openPinned(modelPath,2147483648);runtime=openPinned(runtimePath,268435456);
+  const resourceProfile=getLocalModelResourceProfile({provenance:pin,runtimeSha256:runtimeHash});
+  const jobMemoryLimit=assertLocalModelJobMemoryLimit(resourceProfile);
+  model=openPinned(modelPath,resourceProfile?.maxFileBytes??2147483648);runtime=openPinned(runtimePath,268435456);
   const magic=Buffer.alloc(4);fs.readSync(runtime.fd,magic,0,4,0);
   if(!magic.equals(Buffer.from([127,69,76,70]))||(runtime.stat.mode&0o111n)===0n)fail('LOCAL_RUNTIME_EXECUTABLE_INVALID');
   const actualRuntimeHash=await digestFile(runtime,active);
@@ -194,7 +223,7 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
   fs.writeFileSync(schemaFile,schemaText,{mode:0o600,flag:'wx'});
   jsonSchemaFd=fs.openSync(schemaFile,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);fs.unlinkSync(schemaFile);
   const execution=await launchLocalModel({fds:[model.fd,runtime.fd],promptFd,jsonSchemaFd,
-   timeoutMs:Math.max(1,timeoutMs-(Date.now()-started)),signal:controller.signal});active();
+   timeoutMs:Math.max(1,timeoutMs-(Date.now()-started)),signal:controller.signal,resourceProfile});active();
   if(await digestFile(model,active)!==pin.sha256||await digestFile(runtime,active)!==runtimeHash)fail('LOCAL_RUNTIME_FILE_CHANGED');
   let parsed,responseError=null;
   try{parsed=parseCodingResponse({choices:[{message:{content:normalizeNativeCodingOutput(execution.text,{runtimeSha256:runtimeHash})}}]},paths);}
@@ -216,7 +245,7 @@ export async function queryPinnedLocalCoding({userPrompt,allowedTrackedPaths,tim
    outputSha256:hash(execution.text),proposalSha256:parsed?hash(canonical(parsed.proposal)):null,
    responseStatus:responseError?'INVALID_MODEL_RESPONSE':'PROPOSAL',
    outputTokens:execution.outputTokens,pid:execution.pid,exitCode:execution.exitCode,
-   isolation:'BWRAP_UNSHARE_ALL',elapsedMs:Date.now()-started};
+   isolation:'BWRAP_UNSHARE_ALL',...(jobMemoryLimit?{jobMemoryLimit,resourceProfileId:resourceProfile.id,nativeAddressSpaceBytes:resourceProfile.nativeAddressSpaceBytes,disableWeightRepacking:resourceProfile.disableWeightRepacking,nativeCpuThreads:execution.nativeCpuThreads,nativeCpuSeconds:execution.nativeCpuSeconds,nativeWallTimeoutMs:execution.nativeWallTimeoutMs}:{}),elapsedMs:Date.now()-started};
   const observationMac=createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
   if(responseError){
    const errorCode=String(responseError.message).split(':')[0];

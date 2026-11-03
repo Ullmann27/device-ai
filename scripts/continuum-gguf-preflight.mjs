@@ -4,6 +4,7 @@
  * llama-server eventually loaded the same inode. No network, launch, or writes.
  */
 import {constants} from 'node:fs';
+import {getPinnedGgufFileLimit} from './continuum-local-model-pins.mjs';
 import {open, lstat, realpath} from 'node:fs/promises';
 import {basename, isAbsolute, normalize, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -32,7 +33,7 @@ function validatePinShape(value) {
       !REPO_PATTERN.test(value.repository) || !REVISION_PATTERN.test(value.revision) ||
       !FILE_PATTERN.test(value.filename) || !LICENSE_PATTERN.test(value.license) ||
       !SHA256_PATTERN.test(value.sha256) ||
-      !Number.isSafeInteger(value.sizeBytes) || value.sizeBytes < 24 || value.sizeBytes > 2_147_483_648) {
+      !Number.isSafeInteger(value.sizeBytes) || value.sizeBytes < 24 || value.sizeBytes > getPinnedGgufFileLimit(value)) {
     fail('GGUF_PIN_SCHEMA');
   }
   return Object.freeze({...value});

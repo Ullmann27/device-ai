@@ -1,0 +1,63 @@
+TAP version 13
+# Subtest: actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
+ok 1 - actual launcher gives exact private 7B profile two CPU seconds per remaining wall second
+  ---
+  duration_ms: 5.805477
+  type: 'test'
+  ...
+# Subtest: legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+ok 2 - legacy launcher CPU budget remains one CPU second per wall second and ignores env override
+  ---
+  duration_ms: 19.311372
+  type: 'test'
+  ...
+# Subtest: resource profile clone or arbitrary caller budget cannot reach spawn
+ok 3 - resource profile clone or arbitrary caller budget cannot reach spawn
+  ---
+  duration_ms: 0.873028
+  type: 'test'
+  ...
+# Subtest: two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
+ok 4 - two-thread CPU allowance leaves the existing wall cancellation deadline unchanged
+  ---
+  duration_ms: 42.625114
+  type: 'test'
+  ...
+# Subtest: native termination returns bounded signal or numeric-exit code without output or inference receipt
+ok 5 - native termination returns bounded signal or numeric-exit code without output or inference receipt
+  ---
+  duration_ms: 4.964902
+  type: 'test'
+  ...
+# Subtest: fixed container CLI heap is bounded independently of model weights and native address space
+not ok 6 - fixed container CLI heap is bounded independently of model weights and native address space
+  ---
+  duration_ms: 10.841733
+  type: 'test'
+  location: '/source/scripts/continuum-local-model-cpu.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(getHeapStatistics().heap_size_limit<=384*1024*1024)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///source/scripts/continuum-local-model-cpu.test.mjs:42:9)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 211.554941
