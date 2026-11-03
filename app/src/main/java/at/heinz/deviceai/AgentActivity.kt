@@ -107,6 +107,7 @@ import at.heinz.deviceai.localmodel.LocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalModelLoadAdmission
 import at.heinz.deviceai.localmodel.localModelResourceSnapshot
 import at.heinz.deviceai.localmodel.LocalModelState
+import at.heinz.deviceai.localmodel.LocalTurnModelBinding
 import at.heinz.deviceai.localmodel.LocalToolResponse
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -6406,6 +6407,8 @@ class AgentActivity : Activity() {
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
+                // M6: every step runs on the model this turn started with (owner may swap it during an approval dialog).
+                check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 val hasScreen=rawObservations.any { it.toolName=="read_app_screen" }
                 if(hasScreen)ephemeralScreenRun.set(true)
@@ -6587,6 +6590,7 @@ class AgentActivity : Activity() {
                     }
                     generation.failure?.let { error(it) }
                 }
+                check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 AgentModelOutput(
                     "litertlm:${imported.id}@${imported.version}",
                     generation.response,
