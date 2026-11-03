@@ -19,6 +19,12 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * Blocking contract: invoke the orchestrator on a worker thread, never the
  * Android main/UI thread. No network / cloud fallback is added.
+ *
+ * Status (M5/M6, 2026-11-03): research adapter, NOT the production path. The live
+ * Gemma chat uses the inline AgentModel in AgentActivity.runLocal, which adds
+ * respondToTools continuation, screen frames, turn-scoped internet consent and
+ * follow-up history this adapter lacks. Its model-identity invariant is shared
+ * with the live path via LocalTurnModelBinding.
  */
 class ContinuumLocalAgentModel(
     private val runtime: LocalModelRuntime,
