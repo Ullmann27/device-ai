@@ -48,3 +48,16 @@ test('model load path is gated by measured RAM/thermal admission before the nati
   assert.doesNotMatch(load.replace(/LocalModelLoadAdmission\.loadIfAdmitted\(localRuntime/g,''),/localRuntime\.load\(/,
     'no direct localRuntime.load bypass');
 });
+
+// M5 milestone 6: live local AgentModel re-checks model identity before and after every generation.
+test('live runLocal model binds every step to the model captured at turn start',()=>{
+  const run=body('private fun runLocal(');
+  const start=run.indexOf('model = AgentModel {');
+  const end=run.indexOf('memories = { memoryStore.all()',start);
+  assert.ok(start>=0&&end>start);
+  const lambda=run.slice(start,end);
+  const checks=[...lambda.matchAll(/LocalTurnModelBinding\.stillBound\(imported, localRuntime\.loadedModel\)/g)].map(m=>m.index);
+  assert.equal(checks.length,2,'identity check before generation and after generation');
+  const output=lambda.lastIndexOf('AgentModelOutput(');
+  assert.ok(checks[1]<output&&checks[1]>lambda.indexOf('generation.failure?.let'),'post-generation check precedes attribution');
+});
