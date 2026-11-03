@@ -1,3 +1,6 @@
+> **Letzter Zustand: Besitzer meldet 2 %, sofort gesichert und STOPPED.**
+> Verbindlicher Abschluss: [CLOSEOUT.md](CLOSEOUT.md). Gemeinsame Softwaregates auf 8fd PASS; echter S01 FAIL, keine Reparatur, keine Wiederholung, globale UNRESOLVED-Sperre bleibt. Cleanup-Scan übersprang Zugriffsfehler und genügt nicht zur Freigabe. Neue Fehler-/Timeout-Reparatur nur isoliert WIP bzw. noch nicht implementiert; S02/KNOWN-dev-u03 NOT_RUN. Die folgenden älteren Checkpoints sind chronologische Belege, keine neuere Freigabe.
+
 # Continuum Independence — Coding Agent Release 1
 
 Date: 2026-11-03. Quota: NOT_VISIBLE. Chief branch:

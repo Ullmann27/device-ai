@@ -1,16 +1,29 @@
 {
-  "capturedAt": "2026-11-03T22:11:24.456013+00:00",
-  "phase": "CLOSING_CRITICAL_REPAIR_REVIEW_PENDING",
+  "capturedAt": "2026-11-03T22:34:33.857122+00:00",
+  "phase": "STOPPED_OWNER_2_PERCENT",
   "quotaApi": "NOT_VISIBLE",
-  "ownerReportedRemainingPercent": 20,
+  "ownerReportedRemainingPercent": 2,
+  "productSource": "8fd58d00c53c6c2257a102922243f413afb6bac1",
+  "chiefBeforeCloseoutCommit": "62a52a8a5c28731cbec71649670534065597f59c",
   "heads": {
-    "codex/continuum-independence-chief-20261103": "243d3a16e8468afa1d48a2ed0fc589a3d7fbffc4",
-    "codex/bot-genesis-chief-20261103": "527d43f93f6b1837bd8da38cfefcfc84a84fd464",
-    "codex/independence-service-20261103": "d84689868631466640893c9ee9a0374db857a8b8",
-    "codex/independence-service-review-20261103": "23d141027dc8e878ca3abd7cd069a7c47ccbaf90",
+    "codex/continuum-independence-chief-20261103": "d2ae042fb95298ccb849a4ba05c9410f74675006",
+    "codex/independence-failure-review-20261103": "beefdf456b3cb92f56aff7ec7a649eec7e81ced6",
+    "codex/independence-final-qa-20261103": "0ecb42c8fbc613385131ca2a920b0988d7fb03b5",
     "codex/independence-mcp-20261103": "2424a35e2b6a3ed7198d6938c8e5b1b6303a7fc7",
+    "codex/independence-mcp-integration-check-20261103": "c900dfa8ec022cb0db31f5f74a172000e6d6ca3d",
     "codex/independence-mcp-review-20261103": "e4c6213fbf31e33e929d1a4bf685a5c26b6a1424",
-    "codex/independence-native-review-20261103": "226c49926ee5dbeda60d5f9cda362e809c682c2c",
-    "codex/independence-final-qa-20261103": "996c5d95beb12203b5ffe5c72b38bc0076fda640"
-  }
+    "codex/independence-native-closure-20261103": "a4b7b30f0cc938cbbdd988fb82c0d4459e0f0246",
+    "codex/independence-native-failure-review-20261103": "8a9ab1f4b2d98173b7aeaa031c8a4dcc99c3bd75",
+    "codex/independence-native-review-20261103": "3af0d308d5362ca0ff3dddd17717ebefb9c9eb6a",
+    "codex/independence-service-20261103": "ea1bffe86179e86354425de712b8f9d0aa5a705f",
+    "codex/independence-service-review-20261103": "6407f8eafe1240cef9b55913c7a31d260e4a4d9b",
+    "main": "2949893a7c65bdc6a875bdcb28b7a550fd9d7c3a"
+  },
+  "note": "Remote snapshot precedes final documentation commit; final head is the containing commit/PR456. No product changes after8fd. WIP kept isolated.",
+  "S01": "FAIL_NO_CANDIDATE_UNKNOWN_DELIVERY",
+  "S02": "NOT_RUN",
+  "devU03": "NOT_RUN",
+  "resourceReconciliation": "BLOCKED_INCOMPLETE_PROCESS_SCAN",
+  "barrierExists": true,
+  "barrierSha256": "270a3bc84c635bc049b5db47f326f218fcfb860d08e5daa35c7da493999e9ee5"
 }

@@ -1,7 +1,9 @@
 # Lokaler Continuum-Coding-Dienst: Bedienung
 
-Diese Anleitung beschreibt die implementierten CLI-Verträge. Die gemeinsame
-Abnahme des endgültigen Quellstands steht noch aus; maßgeblich ist `HANDOFF.md`.
+Diese Anleitung beschreibt die implementierten CLI-Verträge. Die gemeinsamen
+Softwareprüfungen auf 8fd58d00 bestanden; der echte Dienstfall S01 scheiterte.
+Eine durchgängige Freigabe steht aus. Die S01-Konfiguration bleibt gesperrt.
+Maßgeblich ist [CLOSEOUT.md](CLOSEOUT.md); neue Timeout-WIP ist nicht integriert.
 Nach Einrichtung und Start braucht der Dienst keine Codex-, Opus- oder
 Cloud-Modellaufrufe. Die bisherigen Ausführungsnachweise stammen von Linux x64.
 Eine laufende Cloud-Entwicklungsumgebung ist kein zugesagter Dauerhost. Für den
