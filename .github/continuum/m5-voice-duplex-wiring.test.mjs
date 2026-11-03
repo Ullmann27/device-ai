@@ -5,12 +5,43 @@ import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 const root=resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const activity=readFileSync(resolve(root,'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'),'utf8');
-const body=(signature)=>{
-  const start=activity.indexOf(signature);
-  assert.ok(start>=0,`missing ${signature}`);
-  const next=activity.indexOf('\n    private fun ',start+signature.length);
-  return activity.slice(start,next<0?undefined:next);
-};
+// Match real function bodies, not the next declaration or braces in strings/comments.
+function codeOnly(source) {
+ const out=source.split('');
+ for(let i=0;i<source.length;) {
+  const start=i;
+  if(source.startsWith('//',i)) { i=source.indexOf('\n',i);if(i<0)i=source.length; }
+  else if(source.startsWith('/*',i)) {
+   i+=2;let depth=1;
+   while(i<source.length&&depth) { if(source.startsWith('/*',i)){depth++;i+=2;}else if(source.startsWith('*/',i)){depth--;i+=2;}else i++; }
+  } else if(source.startsWith('"""',i)) { const end=source.indexOf('"""',i+3);i=end<0?source.length:end+3; }
+  else if('"\'`'.includes(source[i])) {
+   const quote=source[i++];while(i<source.length) { if(source[i]==='\\'){i+=2;continue;}if(source[i++]===quote)break; }
+  } else { i++;continue; }
+  for(let j=start;j<i;j++)if(source[j]!=='\n')out[j]=' ';
+ }
+ return out.join('');
+}
+function bracedBody(source,open) {
+ const code=codeOnly(source);assert.equal(code[open],'{','missing body opening');let depth=0;
+ for(let i=open;i<code.length;i++){if(code[i]==='{')depth++;else if(code[i]==='}'&&--depth===0)return source.slice(open,i+1);}
+ assert.fail('unbalanced function body');
+}
+function bodyOf(source,signature) {
+ const name=signature.match(/\b(?:fun|function)\s+(\w+)\s*\(/)?.[1]??signature;
+ assert.match(name,/^[A-Za-z_]\w*$/);
+ const code=codeOnly(source),match=new RegExp('\\b(?:fun|function)\\s+'+name+'\\s*\\(').exec(code);
+ if(!match)return null;
+ let i=code.indexOf('(',match.index),depth=0;
+ for(;i<code.length;i++){if(code[i]==='(')depth++;else if(code[i]===')'&&--depth===0){i++;break;}}
+ const open=code.indexOf('{',i),equals=code.indexOf('=',i);
+ if(equals>=0&&(open<0||equals<open)) {
+  // The expression-bodied motion predicate ends before the next blank line/declaration.
+  const end=code.indexOf('\n\n',equals);return source.slice(equals,end<0?source.length:end);
+ }
+ return open<0?null:bracedBody(source,open);
+}
+const body=signature=>{const result=bodyOf(activity,signature);assert.ok(result,`missing ${signature}`);return result;};
 
 // M5 milestone 2 (Argon 4, 7.1): STT start stops TTS and avatar mouth synchronously.
 test('voice input barge-in silences TTS engine and avatar mouth before the recognizer starts',()=>{
@@ -52,10 +83,9 @@ test('model load path is gated by measured RAM/thermal admission before the nati
 // M5 milestone 6: live local AgentModel re-checks model identity before and after every generation.
 test('live runLocal model binds every step to the model captured at turn start',()=>{
   const run=body('private fun runLocal(');
-  const start=run.indexOf('model = AgentModel {');
-  const end=run.indexOf('memories = { memoryStore.all()',start);
-  assert.ok(start>=0&&end>start);
-  const lambda=run.slice(start,end);
+  const marker=/model\s*=\s*codingPlanning\?\.model\(localRuntime,cancellation\)\s*\?:\s*AgentModel\s*\{/.exec(codeOnly(run));
+  assert.ok(marker,'normal chat remains the existing AgentModel fallback');
+  const lambda=codeOnly(bracedBody(run,marker.index+marker[0].lastIndexOf('{')));
   const checks=[...lambda.matchAll(/LocalTurnModelBinding\.stillBound\(imported, localRuntime\.loadedModel\)/g)].map(m=>m.index);
   assert.equal(checks.length,2,'identity check before generation and after generation');
   const output=lambda.lastIndexOf('AgentModelOutput(');
