@@ -1078,7 +1078,7 @@
     "description": "Stepped12-angle turntable plus static blink/smile/mouth pose sequence; no smooth live-animation or phone FPS claim",
     "encoderCommand": "nice -n 10 ffmpeg -threads 2 -filter_threads 2 -f concat -safe 0 -i proof-sequence.ffconcat -r 24 -c:v libx264 -threads 2 -pix_fmt yuv420p -crf 22 -movflags +faststart runtime-proof.mp4"
   },
-  "rendererSourceCommit": "81b22f54",
+  "rendererSourceCommit": "81b22f545d059e49a1c62fd06f407bf50486e1c0",
   "anchor24StressScope": {
     "AA": 1,
     "JawOpen": 0,
@@ -1095,6 +1095,6 @@
       0
     ],
     "finding": "Lower dental geometry protrudes underlip in this independentlycomposedstresspose",
-    "runtimeReachability": "NOT_ASSERTED; actualmapper combinesAAwithJawOpenqandJaw12qdegrees. IndependentBdiagnosis pending; preserveadverseframe."
+    "runtimeReachability": "Not produced by actual runtime mapper. Independent B inspected exact f39 AA1+JawOpenq+Jaw12q for q0,0.5,1 and observed no lower dental protrusion; no all-pose collision-free claim."
   }
 }
