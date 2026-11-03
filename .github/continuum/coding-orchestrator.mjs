@@ -75,8 +75,10 @@ export function assertCodingModelObservationBinding({task,raw,seen=new Set()}={}
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
  requireIsolation=false,requireLocalModelObservation=false,expectedTaskFingerprint=null,
+ technicalRecallEnabled=true,
  providerFactory=options=>(options.env?.CONTINUUM_CODING_AGENT_LOOP==='1'?createAgentProviderFromEnv:createCodingCandidateProvider)(options),
  env=process.env}={}){
+ if(typeof technicalRecallEnabled!=='boolean')throw Error('CODING_RECALL_OPTION_INVALID');
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
  const strictMomega=requireLocalModelObservation||env.CONTINUUM_MOMEGA1==='1';
@@ -101,7 +103,8 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  let technical=null;
  try{
   technical=await import('./ccc1-technical-recall.mjs');
-  technicalRecall=technical.recallTechnicalExperiences({stateDir,task:grant.task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)});
+  if(technicalRecallEnabled)technicalRecall=technical.recallTechnicalExperiences({stateDir,project,
+   task:grant.task,repoFullName:repositoryOf(project),key:runtimeKey(stateDir)});
  }catch{technicalRecall={items:[],text:''};}
  const result=await runTask({project,stateDir,taskId:grant.ccc1TaskId,
   reasoner:new Ccc1Reasoner({candidates:[],repairBudgetMinutes:20}),maxTurns:16,
