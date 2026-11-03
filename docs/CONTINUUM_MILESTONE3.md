@@ -83,12 +83,40 @@ Das Retrieval faltet Umlaute (ä→a, ß→ss), kürzt konservativ deutsche Suff
 („termin“ ⊂ „zahnarzttermin“). Das ist ein öffentlich dokumentierter IR-Ansatz für das Deutsche (leichtes Stemming und Dekompositum-Abgleich).
 Es wirkt nur auf das Scoring, nicht auf gespeicherte Inhalte. Temporale Begriffe und Stoppwörter werden weiter auf den Rohformen geprüft.
 
-## 5. Gesamtprüfung (`HOST_VERIFIED`, JDK 17, SDK 36)
+## 5. Avatar-Vorbereitung (kein Rendering)
+| Schritt | SHA | Evidenz |
+|---|---|---|
+| RED: Vertrag + Stub-Director, 4/4 Tests rot | `a3577df5` | `HOST_VERIFIED` |
+| GREEN: `AvatarDirector`, `GermanVisemeApproximation`, Verdrahtung in `AgentActivity` | `d2a4d355` | `HOST_VERIFIED` (Logik + Quellverdrahtung), `DEVICE_REQUIRED` (TTS-Timing) |
+
+Vertrag für die Grafikseite: `docs/CONTINUUM_AVATAR_CONTRACT.md`. Paket `at.heinz.deviceai.avatar`: Zustände, Ausdruck, Blickziel,
+15 Viseme, Audio-Hüllkurve, `NoOpAvatarSink` als Standard und `AvatarSinkRegistry` als Einsteckpunkt. Die Signale kommen aus den
+bestehenden Hologramm-Flags und TTS-Callbacks. Neue Laufzeitlogik gibt es nicht. `WAITING_FOR_APPROVAL`/`BLOCKED` sind noch nicht verdrahtet.
+
+## 6. Gesamtprüfung (`HOST_VERIFIED`, JDK 17, SDK 36)
 | Prüfung | SHA | Ergebnis |
 |---|---|---|
-| Android-JVM-JUnit vollständig | `b1c0ae45` | 1.786 Tests, 0 FAIL, 5 skip |
-| `:app:lintDebug` | `b1c0ae45` | No issues found |
-| Node, **alle** `.github/continuum/*.test.mjs` | `b1c0ae45` | 1.306 Tests, 1.293 pass, 0 fail, 13 skip |
+| Android-JVM-JUnit vollständig | `d2a4d355` | **1.790 Tests, 0 FAIL, 5 skip** (M2: 1.772) |
+| `:app:lintDebug` | `d2a4d355` | No issues found |
+| Node, **alle** `.github/continuum/*.test.mjs` | `d2a4d355` | **1.308 Tests, 1.295 pass, 0 fail, 13 skip** |
 
-(In M2 standen dort nur 58 Android-bezogene Node-Dateien. Diesmal lief die gesamte Suite.)
-Messdefinition (Review #370/4): Alle Zahlen hier sind deterministische Host-Ergebnisse. Weder Prompt-Gesamtgröße noch Gerätelatenz wurden gemessen.
+(In M2 liefen nur 58 Android-bezogene Node-Dateien, diesmal die gesamte Suite.)
+Messdefinition (Review #370/4): Alle Zahlen sind deterministische Host-Ergebnisse. Prompt-Gesamtgröße und Gerätelatenz wurden **nicht** gemessen.
+
+## 7. Grenzen und offene Punkte
+- CCC1: Der Verifier hat nur ein Node-Profil, es gibt keinen JVM/Gradle-Rerun. `ccc1-worker`/`status` rufen ihn noch nicht automatisch auf (`SOURCE_ONLY` für diese Integration).
+- Natürliche Gedächtnisbefehle ohne „Merke dir:“ schreiben bewusst nichts (Eval R07/R10/R17).
+- Die Filter für sensible und verändernde Turns sind lexikalisch-deutsch. Umschreibungen ohne Schlüsselwort werden nicht erkannt. Dann greift weiter die
+  ToolGate-/Freigabe-Grenze, denn Rahmentext ist nie eine Werkzeugfreigabe.
+- „heute Morgen“ in einer Aussage verwirft die ganze Zeitachsen-Projektion (fail-closed, keine falsche Zukunft).
+- `TaskScopedRingStateProjector` ist weiter toter Code. Entfernen erst nach Besitzerentscheidung.
+
+## 8. Fold7-Prüfungen (nicht hier möglich)
+1. Feldtest T1→T2→T3 mit Gemma 4 E4B. Beantwortet die Selbstkorrektur eine „kein Zugriff“-Antwort im zweiten Versuch richtig (rot 9 / blau 7)?
+2. T1 → abgelehnte Aktion (z. B. „Lösche alle Fotos“) → T3. Die Antwort muss T1 nutzen und darf die Löschung nicht erneut ansprechen.
+3. Neue Routings auf dem Gerät: „Wie ist mein Akkustand?“, „Bin ich mit dem WLAN verbunden?“, „Prüf nicht das WLAN, sondern den Akku“, „Zeig mir weder Downloads noch Apps“ (darf nichts ausführen).
+4. „Den wievielten haben wir heute?“ und „Sag mir bitte die Uhrzeit“ müssen aus der Geräteuhr beantwortet werden.
+5. Avatar: `onRangeStart`-Zeitpunkte und Callback-Threads der installierten TTS-Engine. Mit `NoOpAvatarSink` dürfen Sprache und Hologramm sich nicht verändern.
+6. Latenz: Zusatzzeit durch den einen Selbstkorrektur-Retry (nur wenn der Gate auslöst).
+
+Kein Release: kein versionCode 40, keine Signatur-, Render- oder Paketänderung (Besitzerentscheidung nach M2-Review).
