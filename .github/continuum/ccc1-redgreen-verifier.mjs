@@ -51,7 +51,7 @@ export function parseJunit(xml,{root=null}={}){
  let m;
  while((m=re.exec(xml))){
   if(m[0].startsWith('</testsuite')){suites.pop();continue;}
-  if(m[1]!==undefined){suites.push(attr(m[1],'name')??'');continue;}
+  if(m[1]!==undefined){if(!/\/\s*$/.test(m[1]))suites.push(attr(m[1],'name')??'');continue;}
   const a=m[2],name=attr(a,'name'),cls=attr(a,'classname'),file=attr(a,'file');
   if(!name)continue;
   const body=m[4]??'';
@@ -59,7 +59,7 @@ export function parseJunit(xml,{root=null}={}){
   const skipped=/<skipped\b/.test(body);
   const skipType=skipped?(attr(body.match(/<skipped\b([^>]*)>/)?.[1]??'','type')??'skipped'):null;
   const stem=file?path.basename(file).replace(/\.test\.[cm]?js$/,'').replace(/\.[cm]?js$/,''):cls;
-  const source=file&&root?path.relative(root,file).split(path.sep).join('/'):file??cls??'';
+  const source=file&&root?path.relative(fs.realpathSync(root),file).split(path.sep).join('/'):file??cls??'';
   const tuple=JSON.stringify([source,suites,name]),occurrence=(occurrences.get(tuple)??0)+1;
   occurrences.set(tuple,occurrence);
   const legacyId=`${stem}.${name}`;let id=legacyId;
@@ -204,6 +204,11 @@ export function verifyRepairPatch({repo,baseCommit,patchPath,patchSha256,receipt
  if(envelope.length)return attestation(receiptBytes,'REJECTED',envelope);
  if(!receipt||!validTargets(receipt.targetTests))reasons.push('TARGET_TESTS');
  if(!isCommit(repo,baseCommit))reasons.push('COMMIT_NOT_IN_REPOSITORY');
+ // Optional legacy fields remain optional; supplied source/hash claims must agree.
+ if(Object.hasOwn(receipt,'patchSha256')&&receipt.patchSha256!==patchSha256)reasons.push('RECEIPT_PATCH_HASH_MISMATCH');
+ if(Object.hasOwn(receipt,'redSha')&&receipt.redSha!==baseCommit||
+    Object.hasOwn(receipt.red??{},'sha')&&receipt.red.sha!==baseCommit||
+    Object.hasOwn(receipt.green??{},'sha')&&receipt.green.sha!==receipt.greenSha)reasons.push('RUN_SHA_MISMATCH');
  let bytes=null;try{bytes=fs.readFileSync(patchPath);}catch{reasons.push('PATCH_MISSING');}
  if(bytes&&(!SHA256.test(patchSha256)||sha256(bytes)!==patchSha256))reasons.push('PATCH_HASH_MISMATCH');
  if(bytes){
