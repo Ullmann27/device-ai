@@ -8,7 +8,7 @@ import java.nio.ByteOrder
 object AvatarGlbContract {
     const val MAX_BYTES = 16 * 1024 * 1024
     const val ASSET_PATH = "avatar3d/continuum-avatar.glb"
-    const val ASSET_SHA256 = "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e"
+    const val ASSET_SHA256 = "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e"
     val TARGETS = listOf("SIL", "PP", "FF", "TH", "DD", "KK", "CH", "SS", "NN", "RR", "AA", "E", "I", "O", "U",
         "BlinkLeft", "BlinkRight", "BrowUp", "BrowDown", "Smile", "JawOpen")
     val NODES = listOf("AvatarRoot", "Neck", "Head", "EyeLeft", "EyeRight", "Jaw")

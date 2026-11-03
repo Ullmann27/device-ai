@@ -1,7 +1,7 @@
 {
   "asset": "continuum-avatar.glb",
-  "sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
-  "bytes": 8690400,
+  "sha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+  "bytes": 8690616,
   "license": "CC0-1.0 graphical assets",
   "upstream": "https://github.com/makehumancommunity/makehuman/tree/a8bc2d54ff0ac92e78ff71431b1023eda42bf482",
   "adaptationRepository": "https://github.com/Ullmann27/device-ai/pull/404",
@@ -9,5 +9,14 @@
   "derivedRuntimeSourceSha256": "63b42c7786edadd86de22bc2afbae8638e1c61b46da887838cdaa19a34b439ca",
   "identityStatus": "PARTIAL_REFERENCE_ADAPTATION_REQUIRES_OWNER_REVIEW",
   "runtime": "No authored animation clips. Existing AvatarPose only.",
-  "limits": "Geometry and host rendering reviewed; Android GPU, performance, phonetic accuracy and reference identity remain unverified."
+  "limits": "Geometry and host rendering reviewed; Android GPU, performance, phonetic accuracy and reference identity remain unverified.",
+  "rigAdaptation": {
+    "originalAssetSha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+    "tool": "tools/epsilon-avatar-contract/derive-jaw-pivot-candidate.py",
+    "hingeTranslationMetres": 0.04,
+    "neutralRigidChildTransformsPreserved": true,
+    "meshMorphMaterialsUnchanged": true,
+    "requiresMapperSharedOpeningFix": "9a23e5d6a9dc96d15525347c99ff682d632d7277",
+    "independentReview": "PR #434: six original maximum poses and 113 reducer holdouts, zero front-surface tooth intersections; final source-pin regression pending"
+  }
 }

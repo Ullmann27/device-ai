@@ -149,8 +149,11 @@ combination passes the independent six maximum poses and all 113 additional
 actual-reducer poses with zero front-surface tooth-edge intersections. The
 reviewer owns those receipts in PR #434. Five actual fixed-camera replay images
 use the original materials, so this result does not conceal geometry with color.
-The complete source/rig fix is prepared for a separate final-pin regression;
-it does not accept the avatar's reference appearance.
+The complete source/rig fix now updates the packaged asset and its runtime hash
+pin together, retaining the original materials and all existing avatar choices.
+Final-pin source/asset regressions are pending on this checkpoint; earlier
+mapper results are not relabeled as that new source result. This correction
+does not accept the avatar's reference appearance.
 
 Separate material derivative
 `c016237ab6d7be99dc0c0c0cc49a4de1b11f03896e8a03a4a8efaa20f6ff08f8`
