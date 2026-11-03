@@ -183,6 +183,13 @@ class ChiefBotConversation(
         }
     }
 
+    /** Cheap UI correlation only. This does NOT recheck persisted context or authorize data access.
+     * Use after an off-UI isCurrent check; accepted UI mutations must call invalidate before refresh.
+     * Cross-process writes are detected by strict checks, not instantly broadcast to this adapter. */
+    fun isPresentationBound(turn: ChiefBotConversationTurn, currentModel: ImportedLocalModel?, sessionId: String): Boolean = synchronized(lock) {
+        (pending === turn || committed === turn) && bound(turn, currentModel, sessionId)
+    }
+
     /** Display correlation only, with a bounded persistent revision check (not for every render frame).
      * True after accepted completion is not an active-inference claim. */
     fun isCurrent(turn: ChiefBotConversationTurn, currentModel: ImportedLocalModel?, sessionId: String): Boolean = synchronized(lock) {
