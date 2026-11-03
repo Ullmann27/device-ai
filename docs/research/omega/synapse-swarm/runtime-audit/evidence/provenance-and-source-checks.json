@@ -1,0 +1,208 @@
+{
+  "chief": "5684efb1a2804fe28bbb0b52dc3904e1745afef1",
+  "runtime": "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d",
+  "testedRuntimeProduction": "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96",
+  "independentReview": "88a6e2fb1ce52ab090a8c6b13de7cd9bad4a7aaf",
+  "composedTree": "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315",
+  "artifactDirectoryExists": false,
+  "hashChecks": [
+    {
+      "path": "runtime certificate",
+      "actual": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+      "expected": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe"
+    },
+    {
+      "path": "reviewer certificate",
+      "actual": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+      "expected": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe"
+    },
+    {
+      "path": "runtime build provenance",
+      "actual": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+      "expected": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-model-hash.json",
+      "actual": "6b00d6ab15017681db15908e315fd578c8e9e5f38db267e75aa295c8b3167764",
+      "expected": "6b00d6ab15017681db15908e315fd578c8e9e5f38db267e75aa295c8b3167764"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/official-model-metadata.json",
+      "actual": "d15402d134545bfefea1694200ab4d685b2280832390d6c3f091d5f4801b2fb7",
+      "expected": "d15402d134545bfefea1694200ab4d685b2280832390d6c3f091d5f4801b2fb7"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/official-runtime-metadata.json",
+      "actual": "b16ba7265cc6ca5cb7436d65cf5acdf413ca99093c5b5bd46929a6036052328e",
+      "expected": "b16ba7265cc6ca5cb7436d65cf5acdf413ca99093c5b5bd46929a6036052328e"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-source-provenance.json",
+      "actual": "e20a921d4e977648f3814a02b4baaa1380de7cfa4224a16c2af8788392638bc1",
+      "expected": "e20a921d4e977648f3814a02b4baaa1380de7cfa4224a16c2af8788392638bc1"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-build-tools.json",
+      "actual": "e5275135f14932dc55f459ac34ff4a27c02ad068fc7047fbbfd0897aa38a7268",
+      "expected": "e5275135f14932dc55f459ac34ff4a27c02ad068fc7047fbbfd0897aa38a7268"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-rebuild.json",
+      "actual": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7",
+      "expected": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-author-binary.json",
+      "actual": "1eb3b42d1d51b82e087f04bbce4806ca7e26a9b5b55802c8931e8f24d61955b9",
+      "expected": "1eb3b42d1d51b82e087f04bbce4806ca7e26a9b5b55802c8931e8f24d61955b9"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-runtime-dependencies.json",
+      "actual": "82d58af7bce7c6f0d5b4981db23296ae1ee615282f892bd49e8e3b115cad65de",
+      "expected": "82d58af7bce7c6f0d5b4981db23296ae1ee615282f892bd49e8e3b115cad65de"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-admission-candidate-tests.tap",
+      "actual": "d99a03bbc37e12c3e3ccd173970796209899b2fd7d269a5f6ddec98c9a10135c",
+      "expected": "d99a03bbc37e12c3e3ccd173970796209899b2fd7d269a5f6ddec98c9a10135c"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/native-receipt.json",
+      "actual": "a21fdc0daa45060a86dde502d6acdab5eb5a386b7bea449bbbbaf592fb47cd8a",
+      "expected": "a21fdc0daa45060a86dde502d6acdab5eb5a386b7bea449bbbbaf592fb47cd8a"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/native-stdout.txt",
+      "actual": "3f2d6dfcd0b83f26db3d8e64c3bca7ece477aed6a7a375d9cabbf256f70e85c1",
+      "expected": "3f2d6dfcd0b83f26db3d8e64c3bca7ece477aed6a7a375d9cabbf256f70e85c1"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/native-stderr.txt",
+      "actual": "57e19b67d9978d184e34fedf0c17914b9c1477c908fdf20b548dcc20086b2bee",
+      "expected": "57e19b67d9978d184e34fedf0c17914b9c1477c908fdf20b548dcc20086b2bee"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/native-resources.json",
+      "actual": "98b6106f88b89a488934e3a7deeb6adb9e9eb136464c2ab982474736eb20c44f",
+      "expected": "98b6106f88b89a488934e3a7deeb6adb9e9eb136464c2ab982474736eb20c44f"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/independent-boundary-result.json",
+      "actual": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0",
+      "expected": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/negative-results.json",
+      "actual": "6cdaea45a66eff563834691ce91ad7f43a870f443173493fd44496b4e28b8052",
+      "expected": "6cdaea45a66eff563834691ce91ad7f43a870f443173493fd44496b4e28b8052"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/ACTUAL-MODEL-FINAL-ASSESSMENT.md",
+      "actual": "4db5982b458aa8d6cd8e536273678b08ebbe82483667197b9d07b27f03803864",
+      "expected": "4db5982b458aa8d6cd8e536273678b08ebbe82483667197b9d07b27f03803864"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/APPROVED-PAIR-REVIEW.json",
+      "actual": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+      "expected": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/final-genuine-controls.tap",
+      "actual": "0379d8c4bc24dfa99fb26cb759f80e28350682d2f429a2675db14edf9c666e76",
+      "expected": "0379d8c4bc24dfa99fb26cb759f80e28350682d2f429a2675db14edf9c666e76"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/registry-review-promotion.diff",
+      "actual": "4bc109f0315a8ed6a01d85a453f621b51f2307f6d0ceafb367ecbf87371d848f",
+      "expected": "4bc109f0315a8ed6a01d85a453f621b51f2307f6d0ceafb367ecbf87371d848f"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/independent-rebuild.json",
+      "actual": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7",
+      "expected": "444ae21a6ab5408d92aa3d83b4e2ca03a1c985fc0f362aa810947a57e5d156f7"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/final-provider-result.json",
+      "actual": "f0d0b9aa337a336483370e47a8bb143b62cd502c4884a3033d10dd3d2bda72eb",
+      "expected": "f0d0b9aa337a336483370e47a8bb143b62cd502c4884a3033d10dd3d2bda72eb"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/final-provider-resources.json",
+      "actual": "8b4e8e11af987b7ce5639a01f98cbd3782fcfd7c49ff21982b238ef1348938c3",
+      "expected": "8b4e8e11af987b7ce5639a01f98cbd3782fcfd7c49ff21982b238ef1348938c3"
+    },
+    {
+      "path": "docs/evidence/momega1/challenger/actual-native-compatible/final-provider-boundary-result.json",
+      "actual": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0",
+      "expected": "750a238e335b65a5eb415d73d49f151a413666cd5a0af51cf2b7973eea9807f0"
+    }
+  ],
+  "sourceEquivalence": [
+    {
+      "path": ".github/continuum/coding-provider.mjs",
+      "expected": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a",
+      "values": {
+        "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a",
+        "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "c1163ef74d3515e7dd92e0d5658b85d6837e3abf8eb3e367dc068cd9438e090a"
+      },
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-local-brain-cli.mjs",
+      "expected": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e",
+      "values": {
+        "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e",
+        "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "8234e942136d12d1197ce272d6b6f254cda565ff7b627f674008e8158b86614e"
+      },
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-local-model-observation.mjs",
+      "expected": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5",
+      "values": {
+        "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5",
+        "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "6b3188d01e1e8559d8ff1f626028277a866a230d44389f52ee76dd848dc028d5"
+      },
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-local-model-pins.mjs",
+      "expected": "55c6889ea5a15517bc1759425e546f1dc135d0add328cb86b6766fef422791dd",
+      "values": {
+        "9e28d24bcf9ef11d9b19f5fec1be60efe2c6ab96": "55c6889ea5a15517bc1759425e546f1dc135d0add328cb86b6766fef422791dd",
+        "c78cf8a551a4d12f5dbb27ec3641fd4ae9e6f76d": "55c6889ea5a15517bc1759425e546f1dc135d0add328cb86b6766fef422791dd",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "55c6889ea5a15517bc1759425e546f1dc135d0add328cb86b6766fef422791dd"
+      },
+      "matches": true
+    },
+    {
+      "path": ".github/continuum/ccc1-technical-recall.mjs",
+      "values": {
+        "5684efb1a2804fe28bbb0b52dc3904e1745afef1": "aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "aab07d4c04fc069186b62e1c6a5d8e442624e6753b7f1cc0f64c77aaaef4c7f7"
+      },
+      "matches": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "values": {
+        "5684efb1a2804fe28bbb0b52dc3904e1745afef1": "d3d91266fe8cc987e6db39fcb019e0f28765f87266d7c3b991284f8f3d48eabc",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "d3d91266fe8cc987e6db39fcb019e0f28765f87266d7c3b991284f8f3d48eabc"
+      },
+      "matches": true
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "values": {
+        "5684efb1a2804fe28bbb0b52dc3904e1745afef1": "20b56f84584fe338805f02f8935ad89800d6b225c83e32bac2b590514c83b7c7",
+        "5d7c6bb534ea01b0f9ab87ee3afea4c5204ec315": "20b56f84584fe338805f02f8935ad89800d6b225c83e32bac2b590514c83b7c7"
+      },
+      "matches": true
+    }
+  ],
+  "hiddenQaTaskContentsOpened": false,
+  "newInferencePerformed": false
+}
