@@ -28,14 +28,14 @@ class ContinuumBotRosterDialog(
     private var revision = 0L
     private val cyan = Color.rgb(79, 224, 255)
     private val violet = Color.rgb(159, 120, 255)
-    private val background = Color.rgb(5, 13, 29)
+    private val surfaceColor = Color.rgb(5, 13, 29)
 
     fun show() = showPage(null)
 
     private fun column() = LinearLayout(activity).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(16), dp(10), dp(16), dp(16))
-        setBackgroundColor(background)
+        setBackgroundColor(surfaceColor)
     }
 
     private fun label(text: String, size: Float = 15f) = TextView(activity).apply {
@@ -64,7 +64,7 @@ class ContinuumBotRosterDialog(
                 current.show()
                 current.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 current.window?.setBackgroundDrawable(GradientDrawable().apply {
-                    setColor(background); cornerRadius = dp(18).toFloat(); setStroke(dp(1), violet)
+                    setColor(surfaceColor); cornerRadius = dp(18).toFloat(); setStroke(dp(1), violet)
                 })
             }
         return token
