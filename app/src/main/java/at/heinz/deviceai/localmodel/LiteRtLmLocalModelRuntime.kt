@@ -103,6 +103,9 @@ class LiteRtLmLocalModelRuntime(
 
     private var engine: Engine? = null
     private var conversation: Conversation? = null
+    // Only the freshly initialized, never-dispatched chat conversation is reusable.
+    // Consumed exactly once; subsequent full prompts always start fresh.
+    private var startupConversationUnused = false
     private var inferenceConversation: Conversation? = null
     private var inferenceActive = false
     private var activeInferenceProfile: LocalInferenceProfileRecorder? = null
@@ -164,6 +167,7 @@ class LiteRtLmLocalModelRuntime(
                     synchronized(lock) {
                         engine = newEngine
                         conversation = newConversation
+                        startupConversationUnused = true
                         loadedModel = model
                         state = LocalModelState.READY
                     }
@@ -248,6 +252,15 @@ class LiteRtLmLocalModelRuntime(
                 }
             } else {
                 try {
+                    // The initial conversation was created during load and has no
+                    // native messages. Reusing it ONCE avoids closing and creating
+                    // an identical Conversation for the first full chat prompt.
+                    // Do not change the per-turn fresh history isolation policy.
+                    if (!freshPrompt && startupConversationUnused)
+                        error("No active tool conversation to continue.")
+                    val reusePristine = freshPrompt && startupConversationUnused &&
+                        conversation?.isAlive == true
+                    startupConversationUnused = false
                     selectLocalConversation(conversation, freshPrompt, create = {
                         profile.measure(LocalInferenceStage.CONVERSATION_CREATE_ENTER,
                             LocalInferenceStage.CONVERSATION_CREATE_EXIT) {
@@ -263,7 +276,7 @@ class LiteRtLmLocalModelRuntime(
                             LocalInferenceStage.PREVIOUS_CONVERSATION_RELEASE_EXIT) {
                             if (it.isAlive) it.close()
                         }
-                    }).also { conversation = it }
+                    }, reusePristineOnFirstPrompt = reusePristine).also { conversation = it }
                 } catch (failure: Exception) {
                     profile.mark(LocalInferenceStage.INVOCATION_THROW)
                     state = LocalModelState.FAILED
@@ -563,6 +576,7 @@ class LiteRtLmLocalModelRuntime(
         synchronized(lock) {
             if (result.isSuccess) {
                 conversation = null
+                startupConversationUnused = false
                 inferenceConversation = null
                 activeInferenceProfile = null
                 activeCancellation = null
