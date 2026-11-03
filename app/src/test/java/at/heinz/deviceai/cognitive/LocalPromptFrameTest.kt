@@ -4,6 +4,26 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class LocalPromptFrameTest {
+    @Test fun fold7DependentTurnRequiresCompleteHistoryInsteadOfSilentlyDroppingIt() {
+        val body = "## USER REQUEST\\nNun hat die rote Kiste 9 Ringe statt 4. Welche Kiste enthält jetzt mehr?"
+        val history = "\\nGESPRÄCHSDATEN — UNBESTÄTIGT:\\nNutzer: In der roten Kiste 4, in der blauen 7 Ringe.\\n"
+        val tail = "\\nToolGate bleibt verbindlich."
+        val noRoom = (body + tail).toByteArray(Charsets.UTF_8).size + 5
+
+        val ordinary = LocalPromptFrame.assemble(body, history, null, tail, noRoom)
+        assertNotNull(ordinary)
+        assertFalse(ordinary!!.contains("GESPRÄCHSDATEN"))
+
+        assertNull(LocalPromptFrame.assemble(body, history, null, tail, noRoom, requireHistory = true))
+        assertNull(LocalPromptFrame.assemble(body, "", null, tail, 15_500, requireHistory = true))
+
+        val complete = LocalPromptFrame.assemble(body, history, null, tail, 15_500, requireHistory = true)
+        assertNotNull(complete)
+        assertTrue(complete!!.contains(history))
+        assertTrue(complete.endsWith(tail))
+        assertTrue(complete.indexOf("GESPRÄCHSDATEN") < complete.indexOf("ToolGate"))
+    }
+
     @Test fun ownerCorrectionAndRequiredTailSurviveTheFullBoundary() {
         val correction="WICHTIG: Das ist NICHT Graz, sondern Bad Ischl."
         val task="Bitte vergleiche die Orte. "+("Zeitlicher Kontext. ".repeat(240))+correction
