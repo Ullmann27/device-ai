@@ -1,0 +1,5 @@
+// Adds independent tests to the real Android test source set; excludes nothing.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.project(':app')
+    app.android.sourceSets.getByName('test').java.srcDir('/workspace/synapse-ui-review/tools/synapse-ui-review')
+}

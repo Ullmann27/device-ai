@@ -24,3 +24,5 @@ Unknown device behavior remains FOLD7_NOT_RUN. MΩ-1 local model evidence remain
 ## Later owner steering supplied by Chief before execution
 
 The parent received a newer owner roster instruction that was not present in this child's inherited transcript: Atlas, Mira (conversation), Echo (context), Mnemos, Prisma, Nova, Sigma (experiments), Kora, Forge (build), Lint, Argus, Pulse, Link, Chronos (tasks), Vox, Iris, Orbit, Archiv, Scout, Helix. Initial three: Atlas/Kora/Lint. This supersedes the older NOA/DELTA/etc. names without altering the independent behavioral criteria above. Root records the steering in its integration handoff. Test API inspected at registry2c5cd84a and roster f48c9d48; no candidate test has run yet.
+
+Before first execution, root candidate a4798506d2bac25e9212d6ebdf6c14595b6d0931 added role/style editing, renamed the name-edit action from “Profil bearbeiten” to “Namen ändern”, labelled the working-note input and reduced its character limit. Test button lookup follows the renamed public action; assertions unchanged. No runtime failure is claimed for the earlier static accessibility finding.

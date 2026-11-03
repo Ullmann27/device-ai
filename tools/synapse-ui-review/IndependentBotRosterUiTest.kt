@@ -150,7 +150,7 @@ class IndependentBotRosterUiTest {
         firstProfile()
         editor().setText("Private Arbeitsnotiz: überprüfte Frage bleibt offen.")
         click("Arbeitsnotiz speichern"); io.drain()
-        click("Profil bearbeiten"); editor().setText("Neuer sichtbarer Name")
+        click("Namen ändern"); editor().setText("Neuer sichtbarer Name")
         click("Name speichern"); io.drain()
         val fresh = ChiefBotProfileStore(dir)
         val renamed = requireNotNull(fresh.get(selected.agentId))
@@ -227,7 +227,7 @@ class IndependentBotRosterUiTest {
 
     @Test fun staleProfileSaveShowsFailureWithoutOverwritingNewerName() {
         open(); val selected = allProfiles().sortedBy { it.agentId }.first(); firstProfile()
-        click("Profil bearbeiten"); editor().setText("Veraltete Änderung")
+        click("Namen ändern"); editor().setText("Veraltete Änderung")
         store.rename(selected.agentId, "Neuere bestätigte Änderung", selected.profileVersion)
         click("Name speichern"); io.drain()
         assertTrue(text().contains("nicht sicher gelesen oder gespeichert"))
@@ -251,7 +251,7 @@ class IndependentBotRosterUiTest {
         val decor = dialog.window!!.decorView
         decor.measure(View.MeasureSpec.makeMeasureSpec(320, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(640, View.MeasureSpec.EXACTLY))
         decor.layout(0, 0, 320, 640)
-        val scroll = views().filterIsInstance<ScrollView>().first { candidate -> views(candidate).filterIsInstance<Button>().any { it.text == "Arbeitsnotiz speichern" } }
+        val scroll = views().filterIsInstance<ScrollView>().first { candidate -> views(candidate).filterIsInstance<Button>().any { it.text.toString() == "Arbeitsnotiz speichern" } }
         assertTrue(scroll.getChildAt(0).measuredHeight > scroll.measuredHeight)
         for (button in views(scroll).filterIsInstance<Button>()) {
             assertTrue("${button.text} touch height ${button.measuredHeight}", button.measuredHeight >= 48)
