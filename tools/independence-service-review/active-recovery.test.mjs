@@ -51,6 +51,25 @@ function restoreRuntime(f) {
   fs.chmodSync(f.runtimeCopy, 0o500);
 }
 
+async function reconcileZeroExecutionFixture(f,daemon,active) {
+  // Test-operator action, never a product recovery API. This fixture removed
+  // only its own executable before submission, making native work impossible.
+  const barrier=path.join('/tmp','continuum-coding-owner-'+process.getuid(),'unresolved-execution.json');
+  await until(()=>alive(daemon.process),value=>!value);
+  await until(()=>alive(active.workerProcess),value=>!value);
+  const bytes=fs.readFileSync(barrier),value=JSON.parse(bytes);
+  assert.equal(value.stateDir,state(f));assert.equal(value.taskId,active.id);
+  assert.equal(value.instanceId,daemon.instanceId);
+  assert.equal(value.workerProcess.pid,active.workerProcess.pid);
+  assert.equal(value.workerProcess.startTicks,active.workerProcess.startTicks);
+  assert.equal(deliveries(f).some(d=>d.id!==active.id&&d.workerProcess),false);
+  assert.equal(fs.readFileSync(barrier).equals(bytes),true);
+  fs.unlinkSync(barrier);
+  record({kind:'TEST_OPERATOR_RECONCILED_ZERO_EXECUTION_FIXTURE',stateDir:state(f),taskId:active.id,
+    instanceId:daemon.instanceId,workerConfirmedDead:true,daemonConfirmedDead:true,
+    nativeImpossibleBeforeSubmission:true,secondTaskNeverDispatched:true,productionAutomaticRecovery:false});
+}
+
 test('S09: cancellation of a real dispatched child reaches the canonical task and cannot become late success', {timeout: 45000}, async () => {
   const f = await fixture('active-cancel', ['--max-cycles', '4'], {isolatedRuntimeCopy: true});
   let active;
@@ -97,6 +116,10 @@ test('S10: actual daemon crash after dispatch preserves UNKNOWN and never restar
     signal(active.workerProcess, 'SIGKILL');
     await until(() => alive(active.workerProcess), value => !value);
     restoreRuntime(f);
+    const blockedRestart=await f.call('start');
+    assert.notEqual(blockedRestart.code,0,'child death alone cannot establish descendant teardown');
+    assert.match(blockedRestart.stderr,/RECONCILIATION_REQUIRED|UNRESOLVED/);
+    await reconcileZeroExecutionFixture(f,running.daemon,active);
     json(await f.call('start'));
     await delay(200);
     const after = json(await f.call('tasks')).items[0];
@@ -152,6 +175,10 @@ test('S10 supplement: per-UID admission retains a live orphan across different p
     assert.equal(json(await second.call('status')).processVerified, false);
     signal(active.workerProcess, 'SIGKILL');
     await until(() => alive(active.workerProcess), value => !value);
+    const stillBlocked=await second.call('start');
+    assert.notEqual(stillBlocked.code,0,'a different state directory cannot bypass unresolved teardown');
+    assert.match(stillBlocked.stderr,/RECONCILIATION_REQUIRED|UNRESOLVED/);
+    await reconcileZeroExecutionFixture(first,running.daemon,active);
     json(await second.call('start'));
     assert.equal(json(await second.call('status')).processVerified, true);
     assert.equal(fs.readdirSync(publicResult(first)).length, 0);
@@ -189,27 +216,8 @@ test('S10 critical supplement: unexpected worker death pauses a different queued
     assert.equal(deliveries(f).find(d=>d.id===task.data.id).delivery,'PENDING');
   } finally {
     signal(active?.workerProcess, 'SIGKILL');
-    // Explicit test-operator reconciliation, NOT a product recovery path. The
-    // only executed child could not open its removed PRIVATE runtime executable
-    // and never entered CCC1. Do not clear any other task/service's barrier.
     const barrier=path.join('/tmp','continuum-coding-owner-'+process.getuid(),'unresolved-execution.json');
-    if(active&&firstDaemon&&fs.existsSync(barrier)){
-      await until(()=>alive(firstDaemon.process),value=>!value);
-      await until(()=>alive(active.workerProcess),value=>!value);
-      const bytes=fs.readFileSync(barrier),value=JSON.parse(bytes);
-      assert.equal(value.stateDir,state(f));assert.equal(value.taskId,active.id);
-      assert.equal(value.instanceId,firstDaemon.instanceId);
-      assert.equal(value.workerProcess.pid,active.workerProcess.pid);
-      assert.equal(value.workerProcess.startTicks,active.workerProcess.startTicks);
-      assert.equal(deliveries(f).some(d=>d.id!==active.id&&d.workerProcess),false,
-        'cannot reconcile an unexpected second fixture execution');
-      assert.equal(fs.readFileSync(barrier).equals(bytes),true);
-      fs.unlinkSync(barrier);
-      record({kind:'TEST_OPERATOR_RECONCILED_ZERO_EXECUTION_FIXTURE',stateDir:state(f),taskId:active.id,
-        instanceId:firstDaemon.instanceId,workerConfirmedDead:true,daemonConfirmedDead:true,
-        nativeImpossibleBeforeSubmission:true,secondTaskNeverDispatched:true,
-        productionAutomaticRecovery:false});
-    }
+    if(active&&firstDaemon&&fs.existsSync(barrier))await reconcileZeroExecutionFixture(f,firstDaemon,active);
     await f.close();
   }
 });
