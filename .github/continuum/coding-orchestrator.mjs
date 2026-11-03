@@ -187,12 +187,20 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  }
  const experience=experienceOf(grant.ccc1TaskId,result.entries??[],{coreId:'typed-coding-adapter-v1'});
  if(experience)new ExperienceLog(path.join(stateDir,'experience.jsonl')).append(experience);
- return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
+ const publicResult={schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
   taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
   status:result.outcome==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':result.outcome,
   receiptJobs,receipts,technicalExperienceStatus,technicalRecallCount:technicalRecall.items.length,
   ...(botAssignment===null?{}:{botAssignment:{sha256:botAssignment.sha256,builder:botAssignment.builder,
-   verifier:botAssignment.verifier,status:'ASSIGNED_IDENTITIES_ONLY',executionEvidence:'FIXED_PROFILE_OBSERVATIONS'}}),
+   verifier:botAssignment.verifier,reporter:botAssignment.reporter,status:'ASSIGNED_IDENTITIES_ONLY',executionEvidence:'FIXED_PROFILE_OBSERVATIONS'}}),
   ...(strictMomega?{modelExecution:{verifiedCalls:verifiedInferenceCalls,acceptedProposals:admittedModelCalls,
    rejectedResponses:rejectedModelResponses,identity:modelIdentity}}:{}),approvedForMerge:false,deviceVerified:false,neuralTraining:false};
+ if(botAssignment?.reporter){
+  try{
+   const {writeCcc1BotReport}=await import('./ccc1-bot-report.mjs');
+   publicResult.botReport=writeCcc1BotReport({assignment:botAssignment,task:grant.task,ccc1TaskId:grant.ccc1TaskId,
+    project,stateDir,readPreparedGrant:()=>readGrant(grantFile(project,stateDir,id))});
+  }catch(error){publicResult.botReport={status:'BLOCKED',reason:String(error?.message??error).slice(0,160),modelCalls:0};}
+ }
+ return publicResult;
 }

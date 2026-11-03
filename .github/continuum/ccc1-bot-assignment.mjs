@@ -22,18 +22,20 @@ function profile(store,id){
 
 /** Called by trusted application composition after owner task preparation, never
  * exposed as a model tool. get() must read the authoritative existing store. */
-export function createCcc1BotAssignment({task,ccc1TaskId,builderId,verifierId,profileStore}={}){
+export function createCcc1BotAssignment({task,ccc1TaskId,builderId,verifierId,reporterId=null,profileStore}={}){
  const spec=validateCodingTask(task);
  if(!/^t-[a-f0-9]{16}$/.test(ccc1TaskId??'')||!profileStore||typeof profileStore.get!=='function')
   throw Error('BOT_ASSIGNMENT_AUTHORITY_UNAVAILABLE');
  if(builderId===verifierId)throw Error('BOT_ASSIGNMENT_INDEPENDENT_PRINCIPAL_REQUIRED');
+ if(reporterId!==null&&[builderId,verifierId].includes(reporterId))throw Error('BOT_ASSIGNMENT_REPORTER_DISTINCT_REQUIRED');
  // Capture the trusted reader; replacing profileStore.get later cannot change the port.
  const store=Object.freeze({get:profileStore.get.bind(profileStore)});
  const builder=profile(store,builderId),verifier=profile(store,verifierId);
+ const reporter=reporterId===null?null:profile(store,reporterId);
  if(spec.limits.maxModelCalls>builder.maxModelCalls)throw Error('BOT_ASSIGNMENT_MODEL_BUDGET_EXCEEDED');
  const binding=Object.freeze({schema:'continuum-bot-assignment',version:1,
   taskId:spec.id,ccc1TaskId,taskFingerprint:taskFingerprint(spec),sourceCommit:spec.sourceCommit,
-  builder,verifier,expiresAt:Date.now()+Math.min(builder.deadlineMillis,verifier.deadlineMillis)});
+  builder,verifier,reporter,expiresAt:Date.now()+Math.min(builder.deadlineMillis,verifier.deadlineMillis,reporter?.deadlineMillis??Infinity)});
  const assignment=Object.freeze({...binding,sha256:sha256Hex(canonical(binding))});
  ADMISSIONS.set(assignment,{store,binding});
  return assignment;
@@ -48,14 +50,14 @@ export function assertCcc1BotAssignment(assignment,{task,ccc1TaskId,stage}={}){
     binding.taskFingerprint!==taskFingerprint(spec)||binding.sourceCommit!==spec.sourceCommit)
   throw Error('BOT_ASSIGNMENT_TASK_MISMATCH');
  if(Date.now()>=binding.expiresAt)throw Error('BOT_ASSIGNMENT_EXPIRED');
- if(!['BUILD','VERIFY'].includes(stage))throw Error('BOT_ASSIGNMENT_STAGE_INVALID');
+ if(!['BUILD','VERIFY','REPORT'].includes(stage)||stage==='REPORT'&&binding.reporter===null)throw Error('BOT_ASSIGNMENT_STAGE_INVALID');
  // Re-resolve BOTH principals at every canonical checkpoint. Rename is harmless;
  // deletion or workspace reassignment invalidates this execution association.
- for(const value of [binding.builder,binding.verifier]){
+ for(const value of [binding.builder,binding.verifier,binding.reporter].filter(Boolean)){
   const current=profile(admission.store,value.agentId);
   if(current.persistentWorkspaceId!==value.persistentWorkspaceId)throw Error('BOT_ASSIGNMENT_WORKSPACE_CHANGED');
   if(current.maxModelCalls<value.maxModelCalls||current.deadlineMillis<value.deadlineMillis)
    throw Error('BOT_ASSIGNMENT_PROFILE_BUDGET_CHANGED');
  }
- return Object.freeze({...stage==='BUILD'?binding.builder:binding.verifier,expiresAt:binding.expiresAt});
+ return Object.freeze({...stage==='BUILD'?binding.builder:stage==='VERIFY'?binding.verifier:binding.reporter,expiresAt:binding.expiresAt});
 }
