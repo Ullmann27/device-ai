@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.PersonalLearningTransferTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-03T18:20:08" hostname="5268aff5350a" time="2.397">
+  <properties/>
+  <testcase name="realLedgerExportPreservesFactsAndRevocationsWithoutChangingSource" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.001"/>
+  <testcase name="nearMaximumLex3BytesExportCompletelyWithMaximumPackageLength" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="2.065"/>
+  <testcase name="sourceClaimsTrainingAndCommandsNeverBecomeAutomaticallyConfirmedFacts" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.001"/>
+  <testcase name="incomingRevocationsAndMissingTombstonesArePreservedForExplicitReview" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.0"/>
+  <testcase name="previewIsIdempotentAndDoesNotMutateActualTargetLedger" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.002"/>
+  <testcase name="targetRevocationCannotBeUndoneEvenByNewerLookingBackup" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.001"/>
+  <testcase name="boundedCountsDuplicateIdsAndInvalidSourceAreRejected" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.001"/>
+  <testcase name="malformedChecksumTrailingDataUnknownSchemaAndHugeInputAreRejected" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.006"/>
+  <testcase name="capacityPressureIsExplicitAndDoesNotEvictExistingProtectedRecords" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.119"/>
+  <testcase name="documentReaderBoundsEmptyReadsSizeAndInterruption" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.023"/>
+  <testcase name="segmentedLedgerExportRoundTripsRevocationAndLargeTargetPreview" classname="at.heinz.deviceai.learning.PersonalLearningTransferTest" time="0.177"/>
+  <system-out><![CDATA[LEX3_TRANSFER_METRIC records=4096 segment_bytes=33553407 export_bytes=33597743 source_package_chars=256 complete=true
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,65 @@
+{
+  "android_tested_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+  "node_tested_sha": "67f437e35bfe32a343c1b89b7c60e49090a2f59a",
+  "node_main_sources_identical_between_tested_shas": true,
+  "junit": {
+    "total": 2101,
+    "pass": 2089,
+    "fail": 0,
+    "skip": 12,
+    "skip_reason": "Existing authored Chief integration placeholders"
+  },
+  "node": {
+    "total": 2160,
+    "pass": 2153,
+    "fail": 0,
+    "skip": 7
+  },
+  "backend": {
+    "pass": 64,
+    "fail": 0,
+    "skip": 0
+  },
+  "lint": "PASS; existing NewApi checkOnly configuration",
+  "m3": {
+    "baseline_correct": 77,
+    "candidate_correct": 77,
+    "total": 81,
+    "harmful": 0,
+    "per_case_regressions": 0
+  },
+  "exposed_memory40": {
+    "baseline": {
+      "correct": 34,
+      "abstain": 5,
+      "wrong": 1
+    },
+    "candidate": {
+      "correct": 35,
+      "abstain": 5,
+      "wrong": 0
+    },
+    "forbidden_value_answered": 0,
+    "blind_holdout": false
+  },
+  "apk": {
+    "status": "UNSIGNED_LOCAL_HOST_ARTIFACT",
+    "source_sha": "64ec06a73f50cae9ee49035c840710d87777d50f",
+    "path": "/workspace/continuum-artifacts/omega-64ec06a7-code40-unsigned.apk",
+    "sha256": "dc201d6b674b458fd13bbf1404b74b87fd94fcfb4b289cab670dd3f707f1ba57",
+    "bytes": 54865941,
+    "package": "at.heinz.deviceai.continuumlocal",
+    "versionCode": 40,
+    "versionName": "0.3.39",
+    "minSdk": 26,
+    "targetSdk": 36,
+    "signature_verification": "EXPECTED_FAILURE_UNSIGNED",
+    "zipalign": "PASS",
+    "signed": false,
+    "published": false,
+    "installed": false
+  },
+  "gemma_inference": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "next_phase_3d_avatar": "NOT_IMPLEMENTED_IN_THIS_MILESTONE; current head is procedural2D"
+}
