@@ -90,7 +90,8 @@ object ContinuumHomeLayout {
             !wide -> (room * 1.02f).coerceIn(310f, 390f)
             else -> (room * .58f).coerceIn(390f, 470f)
         }
-        val sidebar = wide && room >= 1000f && font <= 1.3f
+        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.
+        val sidebar = wide && room >= 1000f && font <= 1.1f
         val sideWidth = 292f
         boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)
         if (sidebar) {

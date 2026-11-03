@@ -1,19 +1,44 @@
 # ZETA — responsive native cockpit
 
-Status: WIP / UNVERIFIED. Baseline Chief `04b4292d796bc151c40ab18405226cd9faef01cf`. Branch `codex/zeta-ui-20261103`. Quota `NOT_VISIBLE`; checkpoint every meaningful increment. No main merge, release, signing, install, permissions or owner-data changes.
+Source checkpoint: `d8340ff10c9efec5cfdfe8baa63bcf58bdfbe3d4`. Baseline Chief: `04b4292d796bc151c40ab18405226cd9faef01cf`. Branch: `codex/zeta-ui-20261103`. Draft PR: https://github.com/Ullmann27/device-ai/pull/408. Quota: `NOT_VISIBLE`; work is checkpointed regularly.
+
+Status at this checkpoint: SOURCE_IMPLEMENTED. Focused host checks are running on the frozen source; independent Challenger owns a separate, pre-frozen holdout. No full Android/physical Fold7/release claim. No main merge, release, signing, install, permissions or owner-data changes.
 
 ## Contract frozen before edits
 
-The current layout scales all coordinates and text with window width. At320dp header controls shrink below48dp and the portrait Fold uses three card columns even at600dp. The new owner reference instead calls for an unobscured central avatar/orb, readable glass cards, clear navigation and real adaptive phone/Fold/tablet composition.
+The former layout scales all coordinates and text with window width. At320dp header controls shrink below48dp and portrait Fold uses three card columns even at600dp. The new owner reference requires an unobscured central avatar/orb, readable glass cards, clear navigation and adaptive phone/Fold/tablet composition.
 
-Hypothesis: fixed-dp controls/text with reflowed1/2/3-column cards and actions below the hero will keep all existing functions reachable without shrinking the whole desktop. Same `ContinuumDashboardState` and `openHomeSlot` callbacks remain; no fabricated model, memory or worker statistics. Unknown values stay unknown. The original speech input remains Activity-owned and pinned; this lane does not replace it.
+Hypothesis: fixed-dp controls/text with reflowed1/2/3-column cards and actions below the hero keep all existing functions reachable without shrinking the desktop. Same `ContinuumDashboardState` and `openHomeSlot` callbacks; no fabricated model, memory or worker statistics. Unknown values remain unknown. Original speech input stays Activity-owned and pinned.
 
-Owned files: `ui/ContinuumHomeLayout.kt`, `ContinuumHomeScreen.kt`, `ContinuumHomeElements.kt`, optionally `ContinuumHomeView.kt`; one new `ContinuumCockpitElements.kt`; focused geometry/widget tests and this lane's evidence. No `ContinuumHologramView`, Gradle, AvatarDirector, Activity, model, tool or persistence edits. EPSILON owns actual3D and keeps original orb inside the hero.
+Acceptance frozen at `07c855b1`, before implementation:320/412dp phone,600/840dp Fold,1280dp tablet; no intersecting clickable slots; header/action targets at least48dp; free hero; all real cards scroll-reachable; same callback-slot mapping; no example values in empty state; font1.3+ checks. Baseline geometry/render evidence remains in `docs/evidence/zeta-ui-20261103/baseline`.
 
-Acceptance:320/412dp phone,600/840dp Fold,1280dp tablet; no intersecting clickable slots; header/action targets at least48dp; hero unobscured; all real cards present/scroll reachable; same callback-slot mapping; no sample values in empty state; font-scale1.3 and larger smoke checks. Freeze baseline render/geometry before implementation, retain failures. Actual Robolectric images are host Android Canvas screenshots, not Fold7 evidence. Java2D previews are labelled separately. Full Gradle/Android gate is owned by Quality and runs after brain gates.
+The previous exact scaled-position and three-column portrait assertions are explicitly superseded by the owner's new adaptive design. Original test sources and six-pass result remain archived. Fold-width reflow and IME/no-restart classification checks remain in the active suite. No safety or owner-data assertions are relaxed.
 
-Existing tests assert old exact scaled positions and three-column portrait geometry. Those expectations are intentionally superseded by the latest owner design; preserve baseline report and replace with stronger new accessibility/no-overlap/content invariants. Fold-width reflow and IME/no-restart assertions remain.
+## Implemented connections
 
-## Entry and rollback
+`ContinuumHomeLayout` now emits dp coordinates with scale1. Header buttons remain48dp. Free hero above action tiles; phone one card column, Fold two, broad tablet three with status cards beside the stage. Larger type reflows columns and increases row height instead of shrinking everything. Font support now reaches2.0 within Home.
 
-Read exact branch HEAD and evidence first. Existing renderer and UI event contracts remain. Revert this isolated layout/rendering change to restore previous composition; no data migration. Current visual/render/test results NOT_RUN at this initial checkpoint.
+`ContinuumHomeScreen` uses new native `CockpitActionTile`/`CockpitMetricCard` elements driven by the existing state. Actions: Chat, Forschung, Lernen, Entwicklung, Verbindung, Lernstatus. Cards: Gehirn & Modell, Lernen, Gedächtnis, Entwicklung, Aufträge, System & Gerät, Diagnose. All slots keep existing Activity callbacks. Existing speech input, owner/developer navigation, ToolGate and account permissions are unchanged.
+
+Home keeps the same hologram instance. Wide free stages use existing FOLD geometry to avoid the legacy portrait halo clipping; phone uses existing PHONE geometry. No renderer implementation, state machine, avatar sink or model inference is added. EPSILON owns actual3D and shares exact hero dimensions (see evidence README).
+
+## Scope and verification
+
+Owned production: HomeLayout, HomeScreen, HomeElements, HomeView and new CockpitElements. No Activity, HologramView, build configuration, avatar mesh, TTS, camera, model, tool or persistence edit.
+
+Robolectric images are actual native Home widget Canvas, not full APK or Fold7 evidence. Preserve all source SHA, commands and raw logs under `docs/evidence/zeta-ui-20261103`. Full Gradle/Android verification belongs to Quality and runs after brain integration gates. Independent challenger `/root/zeta_challenger` freezes its own unknown cases before inspecting this implementation.
+
+## Remaining work and resume
+
+1. Read final exact branch HEAD and final raw evidence; do not infer success from this checkpoint.
+2. Resolve any independent holdout failure before integrating.
+3. Run final Quality build/tests on the actual combined Chief source.
+4. Combine EPSILON actual3D within the agreed free stage; preserve current orb and fallback.
+5. Capture actual full Activity screenshots, including existing navigation/composer and keyboard at320/412/600/840/1280dp.
+6. Verify TalkBack, display zoom, fold/unfold/rotation and foreground lifecycle on Android; no physical device is attached here.
+7. Evaluate readable Activity-owned navigation and responsive pinned input in a separately leased increment if needed.
+8. Complete user/developer screen organization without treating hidden navigation as authorization.
+9. Compare approved reference with actual3D integrated screenshots, explicitly separating visual identity from widget layout.
+10. Measure real Fold7 frame time, RAM, power and Gemma coexistence before any release proposal.
+
+Rollback: revert this isolated UI composition and elements; no data migration or memory/model state change is involved.
