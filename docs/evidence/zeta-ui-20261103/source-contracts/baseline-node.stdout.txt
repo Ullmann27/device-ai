@@ -1,0 +1,1470 @@
+✔ transparent native 3D hero has no network, model execution or fake status (1.896732ms)
+✔ reference start screen reaches all seven real Android feature paths (1.246093ms)
+✔ responsive dashboard retains chat composer, updates and keyboard visibility (0.205309ms)
+✔ reference-style composer keeps real model/web/file actions and truthful idle state (0.622516ms)
+✖ large text scales the drawn start screen in a bounded range instead of cropping (2.111034ms)
+✔ start screen never manufactures ready model or internet state (5.701114ms)
+✔ exactly five owner-visible work areas remain in fixed order (10.709024ms)
+✔ phone bottom navigation stays outside conversation pane and above system bar (0.566632ms)
+✔ all navigation taps route to existing trusted screens (0.414022ms)
+✔ home work areas are reachable without expert-only controls (0.937189ms)
+✔ Fold rail offers the five work areas without a second bottom bar (4.733718ms)
+✔ existing chat, learning monitoring and owner permission boundaries remain (0.493833ms)
+✔ Fold rail and start screen reach all actions at short heights (0.296045ms)
+✖ start screen adapts to large fonts, rotated compact screens and the unfolded Fold (7.540039ms)
+✔ recreated activity preserves chat selection and draft without persistent More selection (0.628926ms)
+✔ design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics (5.768394ms)
+✔ living hologram schedules subsequent visible frames and stops callbacks on detach (1.684774ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.263786ms)
+✖ header and the six orbital text labels are fitted to their real drawing boxes (14.901169ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.335474ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.367272ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.302435ms)
+✖ portrait selection keeps actual Fold window threshold and separate landscape rail (10.082862ms)
+✖ six equal live cards and the separate status strip are aligned without clipping (0.402165ms)
+✖ mirrored controls do not cover the hologram; real renderer and all diagrams survive (0.395094ms)
+✔ Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling (0.514765ms)
+✖ phone / Fold landscape and hologram lifecycle are unchanged (0.609477ms)
+✔ the five beginner destinations stay reachable from the reference start screen (5.239719ms)
+✔ start-screen routes use real existing Android screens, not placeholder success actions (1.087426ms)
+✔ advanced routes remain available from the start screen, its rail and the More sheet (3.492442ms)
+✔ Nexus keeps real hologram and voice entry tied to Android speech and system state (0.568876ms)
+✖ fold, small display and enlarged-font behaviour are expressed by a pure policy (2.970437ms)
+✔ personalisation is a real choice and cannot silently train models or install apps (0.304498ms)
+✔ start screen and chat never overlap after leaving or returning from chat (0.446311ms)
+✔ phone root fills the viewport, with an explicitly bottom-anchored navigation rail (1.294747ms)
+✖ home dashboard remains in a scrolling viewport, not hidden behind the navigation (19.891704ms)
+✔ keyboard hides phone navigation and frees the same reserved space (0.169475ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 28
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 594.615342
+
+✖ failing tests:
+
+test at .github/continuum/android-holographic-home.test.mjs:98:1
+✖ large text scales the drawn start screen in a bounded range instead of cropping (2.111034ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /fontScale\.coerceIn\(\.85f, 1\.3f\)/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    'import android.annotation.SuppressLint\n' +
+    'import android.content.Context\n' +
+    'import android.graphics.Canvas\n' +
+    'import android.os.PowerManager\n' +
+    'import android.view.MotionEvent\n' +
+    'import android.view.View\n' +
+    'import android.view.ViewGroup\n' +
+    'import at.heinz.deviceai.ContinuumHologramView\n' +
+    'import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n' +
+    '\n' +
+    '/**\n' +
+    ' * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n' +
+    ' * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n' +
+    ' * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n' +
+    ' * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n' +
+    ' */\n' +
+    '@SuppressLint("ViewConstructor")\n' +
+    'class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n' +
+    '    ViewGroup(context) {\n' +
+    '    private val density = resources.displayMetrics.density\n' +
+    '    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n' +
+    '    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n' +
+    '    private var offset = 0f\n' +
+    '    private val views = linkedMapOf<Slot, ElementView>()\n' +
+    '    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n' +
+    '    private val sciFiEffects = ContinuumSciFiEffects(density)\n' +
+    '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+    '    private var learningMotionUntil = 0L\n' +
+    '    private var modelMotionUntil = 0L\n' +
+    '    private var systemMotionUntil = 0L\n' +
+    '    private fun now() = android.os.SystemClock.uptimeMillis()\n' +
+    '    private var foregroundActive = false\n' +
+    '    fun setForegroundActive(active: Boolean) {\n' +
+    '        foregroundActive = active\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    private var waveFramePending = false\n' +
+    '    private val waveFrame = object : Runnable {\n' +
+    '        override fun run() {\n' +
+    '            waveFramePending = false\n' +
+    '            if (!waveAnimationEnabled()) {\n' +
+    '                views[Slot.LEARNING]?.invalidate()\n' +
+    '                views[Slot.MODEL]?.invalidate()\n' +
+    '                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '                return\n' +
+    '            }\n' +
+    '            // Moving light follows authentic measurements; data points never change here.\n' +
+    '            // One brief highlight per new measurement; no endless activity on unchanged history.\n' +
+    '            // No running light on an idle quality score or historical learning curve.\n' +
+    '            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n' +
+    '            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n' +
+    '            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '            scheduleWaveFrame()\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n' +
+    '        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n' +
+    '        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n' +
+    '\n' +
+    '    private fun scheduleWaveFrame() {\n' +
+    '        if (!waveFramePending && waveAnimationEnabled()) {\n' +
+    '            waveFramePending = true\n' +
+    '            postOnAnimationDelayed(waveFrame, 66L)\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun updateWaveAnimation() {\n' +
+    '        if (waveAnimationEnabled()) scheduleWaveFrame()\n' +
+    '        else {\n' +
+    '            removeCallbacks(waveFrame)\n' +
+    '            waveFramePending = false\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onAttachedToWindow() {\n' +
+    '        super.onAttachedToWindow()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDetachedFromWindow() {\n' +
+    '        removeCallbacks(waveFrame)\n' +
+    '        waveFramePending = false\n' +
+    '        super.onDetachedFromWindow()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onWindowVisibilityChanged(visibility: Int) {\n' +
+    '        super.onWindowVisibilityChanged(visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n' +
+    '        super.onVisibilityChanged(changedView, visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    var state: ContinuumDashboardState = ContinuumDashboardState()\n' +
+    '        set(value) {\n' +
+    '            val until = now() + 900L\n' +
+    '            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n' +
+    '            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n' +
+    '            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n' +
+    '            field = value\n' +
+    '            views.values.forEach { it.refresh() }\n' +
+    '            updateWaveAnimation()\n' +
+    '        }\n' +
+    '\n' +
+    '    init {\n' +
+    '        setWillNotDraw(false)\n' +
+    '        addView(hologram)\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n' +
+    '     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n' +
+    '     */\n' +
+    '    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n' +
+    '                  windowHeightDp: Float = 0f) {\n' +
+    '        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n' +
+    '        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n' +
+    '        layoutSpec = spec\n' +
+    '        offset = railOffset\n' +
+    '        views.values.forEach { removeView(it) }\n' +
+    '        views.clear()\n' +
+    '        hologram.setGeometry(when {\n' +
+    '            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n' +
+    '            else -> ContinuumHologramRenderer.Geometry.PHONE\n' +
+    '        })\n' +
+    '        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n' +
+    '            if (slot == Slot.NAV && !includeNavigation) continue\n' +
+    '            if (slot == Slot.RAIL) continue\n' +
+    '            val view = ElementView(context, element, slot)\n' +
+    '            views[slot] = view\n' +
+    '            addView(view)\n' +
+    '        }\n' +
+    '        requestLayout()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    val wide: Boolean get() = layoutSpec?.wide == true\n' +
+    '    /** Window dp per reference dp of the current composition (null before the first configure). */\n' +
+    '    val layoutScale: Float? get() = layoutSpec?.scale\n' +
+    '\n' +
+    '    /** Height of a slot in dp (for tap zones inside an element). */\n' +
+    '    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n' +
+    '\n' +
+    '    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n' +
+    '        val width = MeasureSpec.getSize(widthMeasureSpec)\n' +
+    '        val spec = layoutSpec\n' +
+    '        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n' +
+    '                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n' +
+    '        }\n' +
+    '        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n' +
+    '                (box.right * density).toInt(), (box.bottom * density).toInt())\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n' +
+    '        val spec = layoutSpec ?: return null\n' +
+    '        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n' +
+    '        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDraw(canvas: Canvas) {\n' +
+    '        val spec = layoutSpec ?: return\n' +
+    '        backgroundPainter.begin(canvas)\n' +
+    '        val saved = canvas.save()\n' +
+    '        canvas.scale(density, density)\n' +
+    '        canvas.translate(-offset, 0f)\n' +
+    '        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n' +
+    '        canvas.restoreToCount(saved)\n' +
+    '        // Ambient radiance sits behind child cards and their real measurements.\n' +
+    '        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun dispatchDraw(canvas: Canvas) {\n' +
+    '        super.dispatchDraw(canvas)\n' +
+    '        // No intercepting overlay and no full-screen blur over foreground text.\n' +
+    '        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n' +
+    '    fun selectNavigation(index: Int) {\n' +
+    '        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n' +
+    '        views[Slot.NAV]?.refresh()\n' +
+    '    }\n' +
+    '\n' +
+    '    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n' +
+    '    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n' +
+    '        private val painter = AndroidContinuumPainter(context.assets)\n' +
+    '        private var downX = 0f\n' +
+    '        private var downY = 0f\n' +
+    '\n' +
+    '        init {\n' +
+    '            isClickable = true\n' +
+    '            isFocusable = true\n' +
+    '            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n' +
+    '            ContinuumControls.feedback(this)\n' +
+    '            refresh()\n' +
+    '            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n' +
+    '        }\n' +
+    '\n' +
+    '        fun refresh() {\n' +
+    '            contentDescription = element.describe(state)\n' +
+    '            invalidate()\n' +
+    '        }\n' +
+    '\n' +
+    '        @SuppressLint("ClickableViewAccessibility")\n' +
+    '        override fun onTouchEvent(event: MotionEvent): Boolean {\n' +
+    '            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n' +
+    '                downX = event.x; downY = event.y\n' +
+    '            }\n' +
+    '            return super.'... 2984 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/android-holographic-home.test.mjs:99:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\nimport android.annotation.SuppressLint\nimport android.content.Context\nimport android.graphics.Canvas\nimport android.os.PowerManager\nimport android.view.MotionEvent\nimport android.view.View\nimport android.view.ViewGroup\nimport at.heinz.deviceai.ContinuumHologramView\nimport at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n\n/**\n * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n */\n@SuppressLint("ViewConstructor")\nclass ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n    ViewGroup(context) {\n    private val density = resources.displayMetrics.density\n    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n    private var offset = 0f\n    private val views = linkedMapOf<Slot, ElementView>()\n    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n    private val sciFiEffects = ContinuumSciFiEffects(density)\n    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n    private var learningMotionUntil = 0L\n    private var modelMotionUntil = 0L\n    private var systemMotionUntil = 0L\n    private fun now() = android.os.SystemClock.uptimeMillis()\n    private var foregroundActive = false\n    fun setForegroundActive(active: Boolean) {\n        foregroundActive = active\n        updateWaveAnimation()\n    }\n    private var waveFramePending = false\n    private val waveFrame = object : Runnable {\n        override fun run() {\n            waveFramePending = false\n            if (!waveAnimationEnabled()) {\n                views[Slot.LEARNING]?.invalidate()\n                views[Slot.MODEL]?.invalidate()\n                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n                return\n            }\n            // Moving light follows authentic measurements; data points never change here.\n            // One brief highlight per new measurement; no endless activity on unchanged history.\n            // No running light on an idle quality score or historical learning curve.\n            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n            scheduleWaveFrame()\n        }\n    }\n\n    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n\n    private fun scheduleWaveFrame() {\n        if (!waveFramePending && waveAnimationEnabled()) {\n            waveFramePending = true\n            postOnAnimationDelayed(waveFrame, 66L)\n        }\n    }\n\n    private fun updateWaveAnimation() {\n        if (waveAnimationEnabled()) scheduleWaveFrame()\n        else {\n            removeCallbacks(waveFrame)\n            waveFramePending = false\n        }\n    }\n\n    override fun onAttachedToWindow() {\n        super.onAttachedToWindow()\n        updateWaveAnimation()\n    }\n\n    override fun onDetachedFromWindow() {\n        removeCallbacks(waveFrame)\n        waveFramePending = false\n        super.onDetachedFromWindow()\n    }\n\n    override fun onWindowVisibilityChanged(visibility: Int) {\n        super.onWindowVisibilityChanged(visibility)\n        updateWaveAnimation()\n    }\n\n    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n        super.onVisibilityChanged(changedView, visibility)\n        updateWaveAnimation()\n    }\n    var state: ContinuumDashboardState = ContinuumDashboardState()\n        set(value) {\n            val until = now() + 900L\n            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n            field = value\n            views.values.forEach { it.refresh() }\n            updateWaveAnimation()\n        }\n\n    init {\n        setWillNotDraw(false)\n        addView(hologram)\n    }\n\n    /**\n     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n     */\n    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n                  windowHeightDp: Float = 0f) {\n        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n        layoutSpec = spec\n        offset = railOffset\n        views.values.forEach { removeView(it) }\n        views.clear()\n        hologram.setGeometry(when {\n            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n            else -> ContinuumHologramRenderer.Geometry.PHONE\n        })\n        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n            if (slot == Slot.NAV && !includeNavigation) continue\n            if (slot == Slot.RAIL) continue\n            val view = ElementView(context, element, slot)\n            views[slot] = view\n            addView(view)\n        }\n        requestLayout()\n        updateWaveAnimation()\n    }\n\n    val wide: Boolean get() = layoutSpec?.wide == true\n    /** Window dp per reference dp of the current composition (null before the first configure). */\n    val layoutScale: Float? get() = layoutSpec?.scale\n\n    /** Height of a slot in dp (for tap zones inside an element). */\n    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n\n    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n        val width = MeasureSpec.getSize(widthMeasureSpec)\n        val spec = layoutSpec\n        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n        }\n        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n    }\n\n    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n                (box.right * density).toInt(), (box.bottom * density).toInt())\n        }\n    }\n\n    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n        val spec = layoutSpec ?: return null\n        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n    }\n\n    override fun onDraw(canvas: Canvas) {\n        val spec = layoutSpec ?: return\n        backgroundPainter.begin(canvas)\n        val saved = canvas.save()\n        canvas.scale(density, density)\n        canvas.translate(-offset, 0f)\n        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n        canvas.restoreToCount(saved)\n        // Ambient radiance sits behind child cards and their real measurements.\n        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n    }\n\n    override fun dispatchDraw(canvas: Canvas) {\n        super.dispatchDraw(canvas)\n        // No intercepting overlay and no full-screen blur over foreground text.\n        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n    }\n\n    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n    fun selectNavigation(index: Int) {\n        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n        views[Slot.NAV]?.refresh()\n    }\n\n    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n        private val painter = AndroidContinuumPainter(context.assets)\n        private var downX = 0f\n        private var downY = 0f\n\n        init {\n            isClickable = true\n            isFocusable = true\n            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n            ContinuumControls.feedback(this)\n            refresh()\n            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n        }\n\n        fun refresh() {\n            contentDescription = element.describe(state)\n            invalidate()\n        }\n\n        @SuppressLint("ClickableViewAccessibility")\n        override fun onTouchEvent(event: MotionEvent): Boolean {\n            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n                downX = event.x; downY = event.y\n            }\n            return super.'... 2984 more characters,
+    expected: /fontScale\.coerceIn\(\.85f, 1\.3f\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/app-navigation-wiring.test.mjs:85:1
+✖ start screen adapts to large fonts, rotated compact screens and the unfolded Fold (7.540039ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /fontScale\.coerceIn\(\.85f, 1\.3f\)/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    'import android.annotation.SuppressLint\n' +
+    'import android.content.Context\n' +
+    'import android.graphics.Canvas\n' +
+    'import android.os.PowerManager\n' +
+    'import android.view.MotionEvent\n' +
+    'import android.view.View\n' +
+    'import android.view.ViewGroup\n' +
+    'import at.heinz.deviceai.ContinuumHologramView\n' +
+    'import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n' +
+    '\n' +
+    '/**\n' +
+    ' * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n' +
+    ' * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n' +
+    ' * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n' +
+    ' * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n' +
+    ' */\n' +
+    '@SuppressLint("ViewConstructor")\n' +
+    'class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n' +
+    '    ViewGroup(context) {\n' +
+    '    private val density = resources.displayMetrics.density\n' +
+    '    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n' +
+    '    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n' +
+    '    private var offset = 0f\n' +
+    '    private val views = linkedMapOf<Slot, ElementView>()\n' +
+    '    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n' +
+    '    private val sciFiEffects = ContinuumSciFiEffects(density)\n' +
+    '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+    '    private var learningMotionUntil = 0L\n' +
+    '    private var modelMotionUntil = 0L\n' +
+    '    private var systemMotionUntil = 0L\n' +
+    '    private fun now() = android.os.SystemClock.uptimeMillis()\n' +
+    '    private var foregroundActive = false\n' +
+    '    fun setForegroundActive(active: Boolean) {\n' +
+    '        foregroundActive = active\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    private var waveFramePending = false\n' +
+    '    private val waveFrame = object : Runnable {\n' +
+    '        override fun run() {\n' +
+    '            waveFramePending = false\n' +
+    '            if (!waveAnimationEnabled()) {\n' +
+    '                views[Slot.LEARNING]?.invalidate()\n' +
+    '                views[Slot.MODEL]?.invalidate()\n' +
+    '                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '                return\n' +
+    '            }\n' +
+    '            // Moving light follows authentic measurements; data points never change here.\n' +
+    '            // One brief highlight per new measurement; no endless activity on unchanged history.\n' +
+    '            // No running light on an idle quality score or historical learning curve.\n' +
+    '            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n' +
+    '            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n' +
+    '            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '            scheduleWaveFrame()\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n' +
+    '        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n' +
+    '        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n' +
+    '\n' +
+    '    private fun scheduleWaveFrame() {\n' +
+    '        if (!waveFramePending && waveAnimationEnabled()) {\n' +
+    '            waveFramePending = true\n' +
+    '            postOnAnimationDelayed(waveFrame, 66L)\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun updateWaveAnimation() {\n' +
+    '        if (waveAnimationEnabled()) scheduleWaveFrame()\n' +
+    '        else {\n' +
+    '            removeCallbacks(waveFrame)\n' +
+    '            waveFramePending = false\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onAttachedToWindow() {\n' +
+    '        super.onAttachedToWindow()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDetachedFromWindow() {\n' +
+    '        removeCallbacks(waveFrame)\n' +
+    '        waveFramePending = false\n' +
+    '        super.onDetachedFromWindow()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onWindowVisibilityChanged(visibility: Int) {\n' +
+    '        super.onWindowVisibilityChanged(visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n' +
+    '        super.onVisibilityChanged(changedView, visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    var state: ContinuumDashboardState = ContinuumDashboardState()\n' +
+    '        set(value) {\n' +
+    '            val until = now() + 900L\n' +
+    '            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n' +
+    '            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n' +
+    '            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n' +
+    '            field = value\n' +
+    '            views.values.forEach { it.refresh() }\n' +
+    '            updateWaveAnimation()\n' +
+    '        }\n' +
+    '\n' +
+    '    init {\n' +
+    '        setWillNotDraw(false)\n' +
+    '        addView(hologram)\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n' +
+    '     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n' +
+    '     */\n' +
+    '    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n' +
+    '                  windowHeightDp: Float = 0f) {\n' +
+    '        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n' +
+    '        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n' +
+    '        layoutSpec = spec\n' +
+    '        offset = railOffset\n' +
+    '        views.values.forEach { removeView(it) }\n' +
+    '        views.clear()\n' +
+    '        hologram.setGeometry(when {\n' +
+    '            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n' +
+    '            else -> ContinuumHologramRenderer.Geometry.PHONE\n' +
+    '        })\n' +
+    '        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n' +
+    '            if (slot == Slot.NAV && !includeNavigation) continue\n' +
+    '            if (slot == Slot.RAIL) continue\n' +
+    '            val view = ElementView(context, element, slot)\n' +
+    '            views[slot] = view\n' +
+    '            addView(view)\n' +
+    '        }\n' +
+    '        requestLayout()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    val wide: Boolean get() = layoutSpec?.wide == true\n' +
+    '    /** Window dp per reference dp of the current composition (null before the first configure). */\n' +
+    '    val layoutScale: Float? get() = layoutSpec?.scale\n' +
+    '\n' +
+    '    /** Height of a slot in dp (for tap zones inside an element). */\n' +
+    '    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n' +
+    '\n' +
+    '    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n' +
+    '        val width = MeasureSpec.getSize(widthMeasureSpec)\n' +
+    '        val spec = layoutSpec\n' +
+    '        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n' +
+    '                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n' +
+    '        }\n' +
+    '        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n' +
+    '                (box.right * density).toInt(), (box.bottom * density).toInt())\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n' +
+    '        val spec = layoutSpec ?: return null\n' +
+    '        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n' +
+    '        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDraw(canvas: Canvas) {\n' +
+    '        val spec = layoutSpec ?: return\n' +
+    '        backgroundPainter.begin(canvas)\n' +
+    '        val saved = canvas.save()\n' +
+    '        canvas.scale(density, density)\n' +
+    '        canvas.translate(-offset, 0f)\n' +
+    '        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n' +
+    '        canvas.restoreToCount(saved)\n' +
+    '        // Ambient radiance sits behind child cards and their real measurements.\n' +
+    '        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun dispatchDraw(canvas: Canvas) {\n' +
+    '        super.dispatchDraw(canvas)\n' +
+    '        // No intercepting overlay and no full-screen blur over foreground text.\n' +
+    '        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n' +
+    '    fun selectNavigation(index: Int) {\n' +
+    '        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n' +
+    '        views[Slot.NAV]?.refresh()\n' +
+    '    }\n' +
+    '\n' +
+    '    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n' +
+    '    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n' +
+    '        private val painter = AndroidContinuumPainter(context.assets)\n' +
+    '        private var downX = 0f\n' +
+    '        private var downY = 0f\n' +
+    '\n' +
+    '        init {\n' +
+    '            isClickable = true\n' +
+    '            isFocusable = true\n' +
+    '            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n' +
+    '            ContinuumControls.feedback(this)\n' +
+    '            refresh()\n' +
+    '            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n' +
+    '        }\n' +
+    '\n' +
+    '        fun refresh() {\n' +
+    '            contentDescription = element.describe(state)\n' +
+    '            invalidate()\n' +
+    '        }\n' +
+    '\n' +
+    '        @SuppressLint("ClickableViewAccessibility")\n' +
+    '        override fun onTouchEvent(event: MotionEvent): Boolean {\n' +
+    '            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n' +
+    '                downX = event.x; downY = event.y\n' +
+    '            }\n' +
+    '            return super.'... 2984 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/app-navigation-wiring.test.mjs:98:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\nimport android.annotation.SuppressLint\nimport android.content.Context\nimport android.graphics.Canvas\nimport android.os.PowerManager\nimport android.view.MotionEvent\nimport android.view.View\nimport android.view.ViewGroup\nimport at.heinz.deviceai.ContinuumHologramView\nimport at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n\n/**\n * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n */\n@SuppressLint("ViewConstructor")\nclass ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n    ViewGroup(context) {\n    private val density = resources.displayMetrics.density\n    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n    private var offset = 0f\n    private val views = linkedMapOf<Slot, ElementView>()\n    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n    private val sciFiEffects = ContinuumSciFiEffects(density)\n    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n    private var learningMotionUntil = 0L\n    private var modelMotionUntil = 0L\n    private var systemMotionUntil = 0L\n    private fun now() = android.os.SystemClock.uptimeMillis()\n    private var foregroundActive = false\n    fun setForegroundActive(active: Boolean) {\n        foregroundActive = active\n        updateWaveAnimation()\n    }\n    private var waveFramePending = false\n    private val waveFrame = object : Runnable {\n        override fun run() {\n            waveFramePending = false\n            if (!waveAnimationEnabled()) {\n                views[Slot.LEARNING]?.invalidate()\n                views[Slot.MODEL]?.invalidate()\n                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n                return\n            }\n            // Moving light follows authentic measurements; data points never change here.\n            // One brief highlight per new measurement; no endless activity on unchanged history.\n            // No running light on an idle quality score or historical learning curve.\n            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n            scheduleWaveFrame()\n        }\n    }\n\n    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n\n    private fun scheduleWaveFrame() {\n        if (!waveFramePending && waveAnimationEnabled()) {\n            waveFramePending = true\n            postOnAnimationDelayed(waveFrame, 66L)\n        }\n    }\n\n    private fun updateWaveAnimation() {\n        if (waveAnimationEnabled()) scheduleWaveFrame()\n        else {\n            removeCallbacks(waveFrame)\n            waveFramePending = false\n        }\n    }\n\n    override fun onAttachedToWindow() {\n        super.onAttachedToWindow()\n        updateWaveAnimation()\n    }\n\n    override fun onDetachedFromWindow() {\n        removeCallbacks(waveFrame)\n        waveFramePending = false\n        super.onDetachedFromWindow()\n    }\n\n    override fun onWindowVisibilityChanged(visibility: Int) {\n        super.onWindowVisibilityChanged(visibility)\n        updateWaveAnimation()\n    }\n\n    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n        super.onVisibilityChanged(changedView, visibility)\n        updateWaveAnimation()\n    }\n    var state: ContinuumDashboardState = ContinuumDashboardState()\n        set(value) {\n            val until = now() + 900L\n            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n            field = value\n            views.values.forEach { it.refresh() }\n            updateWaveAnimation()\n        }\n\n    init {\n        setWillNotDraw(false)\n        addView(hologram)\n    }\n\n    /**\n     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n     */\n    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n                  windowHeightDp: Float = 0f) {\n        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n        layoutSpec = spec\n        offset = railOffset\n        views.values.forEach { removeView(it) }\n        views.clear()\n        hologram.setGeometry(when {\n            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n            else -> ContinuumHologramRenderer.Geometry.PHONE\n        })\n        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n            if (slot == Slot.NAV && !includeNavigation) continue\n            if (slot == Slot.RAIL) continue\n            val view = ElementView(context, element, slot)\n            views[slot] = view\n            addView(view)\n        }\n        requestLayout()\n        updateWaveAnimation()\n    }\n\n    val wide: Boolean get() = layoutSpec?.wide == true\n    /** Window dp per reference dp of the current composition (null before the first configure). */\n    val layoutScale: Float? get() = layoutSpec?.scale\n\n    /** Height of a slot in dp (for tap zones inside an element). */\n    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n\n    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n        val width = MeasureSpec.getSize(widthMeasureSpec)\n        val spec = layoutSpec\n        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n        }\n        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n    }\n\n    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n                (box.right * density).toInt(), (box.bottom * density).toInt())\n        }\n    }\n\n    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n        val spec = layoutSpec ?: return null\n        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n    }\n\n    override fun onDraw(canvas: Canvas) {\n        val spec = layoutSpec ?: return\n        backgroundPainter.begin(canvas)\n        val saved = canvas.save()\n        canvas.scale(density, density)\n        canvas.translate(-offset, 0f)\n        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n        canvas.restoreToCount(saved)\n        // Ambient radiance sits behind child cards and their real measurements.\n        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n    }\n\n    override fun dispatchDraw(canvas: Canvas) {\n        super.dispatchDraw(canvas)\n        // No intercepting overlay and no full-screen blur over foreground text.\n        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n    }\n\n    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n    fun selectNavigation(index: Int) {\n        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n        views[Slot.NAV]?.refresh()\n    }\n\n    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n        private val painter = AndroidContinuumPainter(context.assets)\n        private var downX = 0f\n        private var downY = 0f\n\n        init {\n            isClickable = true\n            isFocusable = true\n            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n            ContinuumControls.feedback(this)\n            refresh()\n            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n        }\n\n        fun refresh() {\n            contentDescription = element.describe(state)\n            invalidate()\n        }\n\n        @SuppressLint("ClickableViewAccessibility")\n        override fun onTouchEvent(event: MotionEvent): Boolean {\n            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n                downX = event.x; downY = event.y\n            }\n            return super.'... 2984 more characters,
+    expected: /fontScale\.coerceIn\(\.85f, 1\.3f\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/continuum-owner-mainapp-quality.test.mjs:30:1
+✖ header and the six orbital text labels are fitted to their real drawing boxes (14.901169ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /ContinuumSurfaces\.fit\(p, subtitle, style, w - 91f\)/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    'import at.heinz.deviceai.ui.ContinuumDashboardState.Companion.UNKNOWN\n' +
+    'import at.heinz.deviceai.ui.ContinuumIcons.Icon\n' +
+    'import at.heinz.deviceai.ui.ContinuumTheme.text\n' +
+    'import kotlin.math.max\n' +
+    'import kotlin.math.min\n' +
+    '\n' +
+    '/**\n' +
+    ' * One drawable piece of the Continuum start screen. [draw] works in a box of w x h dp; all positions are measured\n' +
+    ' * from the reference images at their reference size, so the elements reproduce the reference composition exactly.\n' +
+    ' * [textScale] is the system font scale (clamped), applied to every text size.\n' +
+    ' */\n' +
+    'abstract class ContinuumElement(protected val textScale: Float = 1f) {\n' +
+    '    /** Decorative motion only; does not change measured learning counts, samples or quality. */\n' +
+    '    var motionPhase: Float? = null\n' +
+    '        internal set\n' +
+    '    abstract fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState)\n' +
+    '    /** Spoken by TalkBack; contains the same real values that are drawn. */\n' +
+    '    abstract fun describe(s: ContinuumDashboardState): String\n' +
+    '    protected fun t(weight: Int, size: Float, spacing: Float = 0f) = text(weight, size * textScale, spacing * textScale)\n' +
+    '    protected fun d(weight: Int, size: Float, spacing: Float = 0f) = ContinuumTheme.display(weight, size * textScale, spacing * textScale)\n' +
+    '    protected fun solid(color: Int) = Fill.Solid(color)\n' +
+    '\n' +
+    '    /** Keep compact labels completely inside their actual Android View, even at larger font scales. */\n' +
+    '    protected fun fittedTitle(p: ContinuumPainter, value: String, weight: Int, baseSize: Float,\n' +
+    '                              availableWidth: Float): TextStyle {\n' +
+    '        val preferred = t(weight, baseSize)\n' +
+    '        val measured = p.measureText(value, preferred)\n' +
+    '        val ratio = if (measured > availableWidth && measured > 0f) {\n' +
+    '            (availableWidth / measured).coerceIn(.55f, 1f)\n' +
+    '        } else 1f\n' +
+    '        return t(weight, baseSize * ratio)\n' +
+    '    }\n' +
+    '}\n' +
+    '\n' +
+    '/** Logo, "Continuum" and the subtitle (phone reference: 64 dp tall header). */\n' +
+    'class HeaderBrandElement(textScale: Float = 1f, private val large: Boolean = false) : ContinuumElement(textScale) {\n' +
+    '    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n' +
+    '        val logoWidth = 44f\n' +
+    '        ContinuumIcons.logo(p, 24f, h / 2f, logoWidth, 24f)\n' +
+    '        val x = 56f\n' +
+    '        val title = t(600, 19f)\n' +
+    '        p.drawText(ContinuumSurfaces.fit(p, "CONTINUUM", title, w - x - 4f), x,\n' +
+    '            h / 2f + 1f, title, solid(ContinuumTheme.TEXT))\n' +
+    '        val subtitle = t(400, 10f)\n' +
+    '        p.drawText(ContinuumSurfaces.fit(p, "Dein lokaler KI-Assistent", subtitle, w - x - 4f), x,\n' +
+    '            h - 7f, subtitle, solid(ContinuumTheme.TEXT_SECONDARY))\n' +
+    '    }\n' +
+    '    override fun describe(s: ContinuumDashboardState) = "Continuum. Dein lokaler KI-Assistent. Cockpit öffnen."\n' +
+    '\n' +
+    '}\n' +
+    '\n' +
+    '/** Round header button: search, notifications (red badge only for real pending items) and the profile orb. */\n' +
+    'class HeaderButtonElement(val kind: Kind, textScale: Float = 1f) : ContinuumElement(textScale) {\n' +
+    '    enum class Kind { SEARCH, NOTIFICATIONS, PROFILE }\n' +
+    '\n' +
+    '    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n' +
+    '        val cx = w / 2f; val cy = h / 2f; val rr = min(w, h) / 2f - .5f\n' +
+    '        if (kind == Kind.PROFILE) {\n' +
+    '            p.fillCircle(cx, cy, rr * 1.15f, Fill.Radial(cx, cy, rr * 1.15f, intArrayOf(Argb.of(120, 120, 80, 255), 0)))\n' +
+    '            p.fillCircle(cx, cy, rr, Fill.Radial(cx, cy, rr, intArrayOf(Argb.rgb(250, 220, 255), Argb.rgb(200, 90, 255),\n' +
+    '                Argb.rgb(70, 40, 170), Argb.rgb(20, 40, 120), Argb.rgb(60, 140, 255)), floatArrayOf(0f, .12f, .4f, .8f, 1f)))\n' +
+    '            for (i in 0 until 8) {\n' +
+    '                val a = i * 45f\n' +
+    '                p.save(); p.rotate(a, cx, cy)\n' +
+    '                p.drawLine(cx + rr * .18f, cy, cx + rr * .82f, cy, .6f, solid(Argb.rgb(200, 170, 255)), .5f)\n' +
+    '                p.restore()\n' +
+    '            }\n' +
+    '            p.strokeCircle(cx, cy, rr * .62f, .6f, solid(Argb.rgb(120, 200, 255)), .55f)\n' +
+    '            p.strokeCircle(cx, cy, rr, 1.2f, Fill.Sweep(cx, cy, intArrayOf(Argb.rgb(90, 220, 255), Argb.rgb(190, 110, 255),\n' +
+    '                Argb.rgb(90, 220, 255))), .95f)\n' +
+    '            p.fillCircle(cx, cy, rr * .16f, solid(Argb.rgb(255, 240, 255)))\n' +
+    '            return\n' +
+    '        }\n' +
+    '        p.fillCircle(cx, cy, rr, Fill.Radial(cx, cy - rr * .4f, rr * 1.4f, intArrayOf(Argb.rgb(20, 36, 70), Argb.rgb(8, 16, 36))))\n' +
+    '        p.strokeCircle(cx, cy, rr, 1f, Fill.Linear(cx, cy - rr, cx, cy + rr, intArrayOf(Argb.rgb(60, 86, 140), Argb.rgb(28, 44, 86))), .9f)\n' +
+    '        val icon = if (kind == Kind.SEARCH) Icon.SEARCH else Icon.BELL\n' +
+    '        ContinuumIcons.draw(p, icon, cx, cy, rr * .98f, solid(Argb.rgb(222, 230, 245)), rr * .085f)\n' +
+    '        if (kind == Kind.NOTIFICATIONS && s.pendingNotifications > 0) {\n' +
+    '            val bx = cx + rr * .66f; val by = cy - rr * .68f\n' +
+    '            p.fillCircle(bx, by, 5.4f, Fill.Radial(bx, by, 5.4f, intArrayOf(Argb.of(170, 255, 50, 80), 0)))\n' +
+    '            p.fillCircle(bx, by, 3.4f, solid(Argb.rgb(255, 46, 76)))\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun describe(s: ContinuumDashboardState) = when (kind) {\n' +
+    '        Kind.SEARCH -> "Wissensarchiv durchsuchen"\n' +
+    '        Kind.NOTIFICATIONS -> if (s.pendingNotifications > 0) "${s.pendingNotifications} offene Hinweise" else "Keine offenen Hinweise"\n' +
+    '        Kind.PROFILE -> "Persönliche Einstellungen"\n' +
+    '    }\n' +
+    '}\n' +
+    '\n' +
+    '/** Raised, symmetrical controls around the hologram.\n' +
+    ' * Left controls: outer-left icon and inward title. Right controls: inward title and outer-right icon.\n' +
+    " * Only the card's internal arrangement is mirrored: text glyphs and icons are never reflected.\n" +
+    ' */\n' +
+    'class CoreLabelElement(\n' +
+    '    val icon: Icon,\n' +
+    '    val title: String,\n' +
+    '    private val status: (ContinuumDashboardState) -> String,\n' +
+    '    textScale: Float = 1f,\n' +
+    '    private val boxed: Boolean = false,\n' +
+    '    val mirrored: Boolean = false,\n' +
+    '    /** Fold7 portrait reference has significantly larger tiles and icons on BOTH sides. */\n' +
+    '    private val portrait: Boolean = false\n' +
+    ') : ContinuumElement(textScale) {\n' +
+    '    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n' +
+    '        val cy = h / 2f\n' +
+    '        if (portrait) {\n' +
+    '            // In the portrait reference the icon precedes text on both sides;\n' +
+    '            // the right-hand cards must not mirror their glyphs or captions.\n' +
+    '            val discX = 35f\n' +
+    '            val textX = 70f\n' +
+    '            val room = (w - textX - 14f).coerceAtLeast(1f)\n' +
+    '            ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, 14f)\n' +
+    '            ContinuumSurfaces.iconDisc(p, icon, discX, cy, 56f, 29f)\n' +
+    '            val titleStyle = fittedTitle(p, title, 700, 15.5f, room)\n' +
+    '            val statusStyle = t(400, 9f)\n' +
+    '            p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, room),\n' +
+    '                textX, cy - 5.4f, titleStyle, solid(ContinuumTheme.LABEL_CYAN))\n' +
+    '            p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, room),\n' +
+    '                textX, cy + 15f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY))\n' +
+    '            ContinuumSurfaces.chevron(p, w - 8.8f, cy, 10f)\n' +
+    '            return\n' +
+    '        }\n' +
+    '        val discCenter = if (mirrored) w - 18f else 18f\n' +
+    '        val textAnchor = if (mirrored) w - 40f else 40f\n' +
+    '        val available = (w - 46f).coerceAtLeast(1f)\n' +
+    '        val alignment = if (mirrored) TextAlign.RIGHT else TextAlign.LEFT\n' +
+    '        ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, if (boxed) 12f else 11f)\n' +
+    '        ContinuumSurfaces.iconDisc(p, icon, discCenter, cy, if (boxed) 33f else 30f,\n' +
+    '            if (boxed) 18.5f else 16f)\n' +
+    '        val titleStyle = fittedTitle(p, title, 700, if (boxed) 9f else 8.25f, available)\n' +
+    '        val statusStyle = t(400, if (boxed) 8f else 7f)\n' +
+    '        p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, available),\n' +
+    '            textAnchor, cy - 1.9f, titleStyle, solid(ContinuumTheme.LABEL_CYAN), alignment)\n' +
+    '        p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, available),\n' +
+    '            textAnchor, cy + 10.4f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY), alignment)\n' +
+    '    }\n' +
+    '    override fun describe(s: ContinuumDashboardState) = "$title: ${status(s)}"\n' +
+    '}\n' +
+    '\n' +
+    '/** Phone "Modellstatus" card (reference 385.5 x 89 dp). */\n' +
+    'class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {\n' +
+    '    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n' +
+    '        val m = s.model\n' +
+    '        ContinuumSurfaces.glassCard(p, 0f, 0f, w, h)\n' +
+    '        ContinuumSurfaces.iconDisc(p, Icon.BRAIN, 31.8f, 30f, 36f, 21f)\n' +
+    '        p.drawText("Modellstatus", 63f, 29.5f, t(500, 13.43f), solid(ContinuumTheme.TEXT))\n' +
+    '        p.drawText(ContinuumSurfaces.fit(p, m.name, t(400, 10.11f), 126f), 63f, 44.5f, t(400, 10.11f), solid(ContinuumTheme.TEXT_SECONDARY))\n' +
+    '        val pillColor = if (m.online) ContinuumTheme.GREEN else ContinuumTheme.AMBER\n' +
+    '        ContinuumSurfaces.pill(p, 63f, 55.5f, 20.5f, m.stateLabel, t(500, 9.73f), pillColor, minWidth = 58f)\n' +
+    '        val divider = w * .5f\n' +
+    '        p.drawLine(divider, 16f, divider, 76f, .8f, solid(ContinuumTheme.CARD_DIVIDER))\n' +
+    '        val x0 = divider + 16f\n' +
+    '        // Holdout check questions of the learning core: a narrow test score, deliberately not labelled as performance.\n' +
+    '        p.drawText(QUALITY_LABEL, x0, 24f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))\n' +
+    '        // 24-hour change of the measured quality (owner request); declines are shown just as clearly as gains.\n' +
+    '        val delta = m.qualityDelta24h\n' +
+    '        val deltaX = x0 + p.measureText(QUALITY_LABEL, t(400, 8.27f)) + 5f\n' +
+    '        p.drawText(ContinuumDashboardState.delta24h(delta), deltaX, 24f, t(500, 7.4f), solid(when {\n' +
+    '            delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))\n' +
+    '        drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent, phase = motionPhase)\n' +
+    '        p.drawText(ContinuumDashboardState.percent(m.qualityPercent), x0 + 113f, 43.9f, t(500, 12.36f), solid(ContinuumTheme.CYAN_SOFT))\n' +
+    '        p.drawText("Reaktionszeit", x0, 61f,'... 23120 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/continuum-owner-mainapp-quality.test.mjs:35:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\nimport at.heinz.deviceai.ui.ContinuumDashboardState.Companion.UNKNOWN\nimport at.heinz.deviceai.ui.ContinuumIcons.Icon\nimport at.heinz.deviceai.ui.ContinuumTheme.text\nimport kotlin.math.max\nimport kotlin.math.min\n\n/**\n * One drawable piece of the Continuum start screen. [draw] works in a box of w x h dp; all positions are measured\n * from the reference images at their reference size, so the elements reproduce the reference composition exactly.\n * [textScale] is the system font scale (clamped), applied to every text size.\n */\nabstract class ContinuumElement(protected val textScale: Float = 1f) {\n    /** Decorative motion only; does not change measured learning counts, samples or quality. */\n    var motionPhase: Float? = null\n        internal set\n    abstract fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState)\n    /** Spoken by TalkBack; contains the same real values that are drawn. */\n    abstract fun describe(s: ContinuumDashboardState): String\n    protected fun t(weight: Int, size: Float, spacing: Float = 0f) = text(weight, size * textScale, spacing * textScale)\n    protected fun d(weight: Int, size: Float, spacing: Float = 0f) = ContinuumTheme.display(weight, size * textScale, spacing * textScale)\n    protected fun solid(color: Int) = Fill.Solid(color)\n\n    /** Keep compact labels completely inside their actual Android View, even at larger font scales. */\n    protected fun fittedTitle(p: ContinuumPainter, value: String, weight: Int, baseSize: Float,\n                              availableWidth: Float): TextStyle {\n        val preferred = t(weight, baseSize)\n        val measured = p.measureText(value, preferred)\n        val ratio = if (measured > availableWidth && measured > 0f) {\n            (availableWidth / measured).coerceIn(.55f, 1f)\n        } else 1f\n        return t(weight, baseSize * ratio)\n    }\n}\n\n/** Logo, "Continuum" and the subtitle (phone reference: 64 dp tall header). */\nclass HeaderBrandElement(textScale: Float = 1f, private val large: Boolean = false) : ContinuumElement(textScale) {\n    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n        val logoWidth = 44f\n        ContinuumIcons.logo(p, 24f, h / 2f, logoWidth, 24f)\n        val x = 56f\n        val title = t(600, 19f)\n        p.drawText(ContinuumSurfaces.fit(p, "CONTINUUM", title, w - x - 4f), x,\n            h / 2f + 1f, title, solid(ContinuumTheme.TEXT))\n        val subtitle = t(400, 10f)\n        p.drawText(ContinuumSurfaces.fit(p, "Dein lokaler KI-Assistent", subtitle, w - x - 4f), x,\n            h - 7f, subtitle, solid(ContinuumTheme.TEXT_SECONDARY))\n    }\n    override fun describe(s: ContinuumDashboardState) = "Continuum. Dein lokaler KI-Assistent. Cockpit öffnen."\n\n}\n\n/** Round header button: search, notifications (red badge only for real pending items) and the profile orb. */\nclass HeaderButtonElement(val kind: Kind, textScale: Float = 1f) : ContinuumElement(textScale) {\n    enum class Kind { SEARCH, NOTIFICATIONS, PROFILE }\n\n    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n        val cx = w / 2f; val cy = h / 2f; val rr = min(w, h) / 2f - .5f\n        if (kind == Kind.PROFILE) {\n            p.fillCircle(cx, cy, rr * 1.15f, Fill.Radial(cx, cy, rr * 1.15f, intArrayOf(Argb.of(120, 120, 80, 255), 0)))\n            p.fillCircle(cx, cy, rr, Fill.Radial(cx, cy, rr, intArrayOf(Argb.rgb(250, 220, 255), Argb.rgb(200, 90, 255),\n                Argb.rgb(70, 40, 170), Argb.rgb(20, 40, 120), Argb.rgb(60, 140, 255)), floatArrayOf(0f, .12f, .4f, .8f, 1f)))\n            for (i in 0 until 8) {\n                val a = i * 45f\n                p.save(); p.rotate(a, cx, cy)\n                p.drawLine(cx + rr * .18f, cy, cx + rr * .82f, cy, .6f, solid(Argb.rgb(200, 170, 255)), .5f)\n                p.restore()\n            }\n            p.strokeCircle(cx, cy, rr * .62f, .6f, solid(Argb.rgb(120, 200, 255)), .55f)\n            p.strokeCircle(cx, cy, rr, 1.2f, Fill.Sweep(cx, cy, intArrayOf(Argb.rgb(90, 220, 255), Argb.rgb(190, 110, 255),\n                Argb.rgb(90, 220, 255))), .95f)\n            p.fillCircle(cx, cy, rr * .16f, solid(Argb.rgb(255, 240, 255)))\n            return\n        }\n        p.fillCircle(cx, cy, rr, Fill.Radial(cx, cy - rr * .4f, rr * 1.4f, intArrayOf(Argb.rgb(20, 36, 70), Argb.rgb(8, 16, 36))))\n        p.strokeCircle(cx, cy, rr, 1f, Fill.Linear(cx, cy - rr, cx, cy + rr, intArrayOf(Argb.rgb(60, 86, 140), Argb.rgb(28, 44, 86))), .9f)\n        val icon = if (kind == Kind.SEARCH) Icon.SEARCH else Icon.BELL\n        ContinuumIcons.draw(p, icon, cx, cy, rr * .98f, solid(Argb.rgb(222, 230, 245)), rr * .085f)\n        if (kind == Kind.NOTIFICATIONS && s.pendingNotifications > 0) {\n            val bx = cx + rr * .66f; val by = cy - rr * .68f\n            p.fillCircle(bx, by, 5.4f, Fill.Radial(bx, by, 5.4f, intArrayOf(Argb.of(170, 255, 50, 80), 0)))\n            p.fillCircle(bx, by, 3.4f, solid(Argb.rgb(255, 46, 76)))\n        }\n    }\n\n    override fun describe(s: ContinuumDashboardState) = when (kind) {\n        Kind.SEARCH -> "Wissensarchiv durchsuchen"\n        Kind.NOTIFICATIONS -> if (s.pendingNotifications > 0) "${s.pendingNotifications} offene Hinweise" else "Keine offenen Hinweise"\n        Kind.PROFILE -> "Persönliche Einstellungen"\n    }\n}\n\n/** Raised, symmetrical controls around the hologram.\n * Left controls: outer-left icon and inward title. Right controls: inward title and outer-right icon.\n * Only the card\'s internal arrangement is mirrored: text glyphs and icons are never reflected.\n */\nclass CoreLabelElement(\n    val icon: Icon,\n    val title: String,\n    private val status: (ContinuumDashboardState) -> String,\n    textScale: Float = 1f,\n    private val boxed: Boolean = false,\n    val mirrored: Boolean = false,\n    /** Fold7 portrait reference has significantly larger tiles and icons on BOTH sides. */\n    private val portrait: Boolean = false\n) : ContinuumElement(textScale) {\n    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n        val cy = h / 2f\n        if (portrait) {\n            // In the portrait reference the icon precedes text on both sides;\n            // the right-hand cards must not mirror their glyphs or captions.\n            val discX = 35f\n            val textX = 70f\n            val room = (w - textX - 14f).coerceAtLeast(1f)\n            ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, 14f)\n            ContinuumSurfaces.iconDisc(p, icon, discX, cy, 56f, 29f)\n            val titleStyle = fittedTitle(p, title, 700, 15.5f, room)\n            val statusStyle = t(400, 9f)\n            p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, room),\n                textX, cy - 5.4f, titleStyle, solid(ContinuumTheme.LABEL_CYAN))\n            p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, room),\n                textX, cy + 15f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY))\n            ContinuumSurfaces.chevron(p, w - 8.8f, cy, 10f)\n            return\n        }\n        val discCenter = if (mirrored) w - 18f else 18f\n        val textAnchor = if (mirrored) w - 40f else 40f\n        val available = (w - 46f).coerceAtLeast(1f)\n        val alignment = if (mirrored) TextAlign.RIGHT else TextAlign.LEFT\n        ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, if (boxed) 12f else 11f)\n        ContinuumSurfaces.iconDisc(p, icon, discCenter, cy, if (boxed) 33f else 30f,\n            if (boxed) 18.5f else 16f)\n        val titleStyle = fittedTitle(p, title, 700, if (boxed) 9f else 8.25f, available)\n        val statusStyle = t(400, if (boxed) 8f else 7f)\n        p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, available),\n            textAnchor, cy - 1.9f, titleStyle, solid(ContinuumTheme.LABEL_CYAN), alignment)\n        p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, available),\n            textAnchor, cy + 10.4f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY), alignment)\n    }\n    override fun describe(s: ContinuumDashboardState) = "$title: ${status(s)}"\n}\n\n/** Phone "Modellstatus" card (reference 385.5 x 89 dp). */\nclass ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {\n    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {\n        val m = s.model\n        ContinuumSurfaces.glassCard(p, 0f, 0f, w, h)\n        ContinuumSurfaces.iconDisc(p, Icon.BRAIN, 31.8f, 30f, 36f, 21f)\n        p.drawText("Modellstatus", 63f, 29.5f, t(500, 13.43f), solid(ContinuumTheme.TEXT))\n        p.drawText(ContinuumSurfaces.fit(p, m.name, t(400, 10.11f), 126f), 63f, 44.5f, t(400, 10.11f), solid(ContinuumTheme.TEXT_SECONDARY))\n        val pillColor = if (m.online) ContinuumTheme.GREEN else ContinuumTheme.AMBER\n        ContinuumSurfaces.pill(p, 63f, 55.5f, 20.5f, m.stateLabel, t(500, 9.73f), pillColor, minWidth = 58f)\n        val divider = w * .5f\n        p.drawLine(divider, 16f, divider, 76f, .8f, solid(ContinuumTheme.CARD_DIVIDER))\n        val x0 = divider + 16f\n        // Holdout check questions of the learning core: a narrow test score, deliberately not labelled as performance.\n        p.drawText(QUALITY_LABEL, x0, 24f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))\n        // 24-hour change of the measured quality (owner request); declines are shown just as clearly as gains.\n        val delta = m.qualityDelta24h\n        val deltaX = x0 + p.measureText(QUALITY_LABEL, t(400, 8.27f)) + 5f\n        p.drawText(ContinuumDashboardState.delta24h(delta), deltaX, 24f, t(500, 7.4f), solid(when {\n            delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))\n        drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent, phase = motionPhase)\n        p.drawText(ContinuumDashboardState.percent(m.qualityPercent), x0 + 113f, 43.9f, t(500, 12.36f), solid(ContinuumTheme.CYAN_SOFT))\n        p.drawText("Reaktionszeit", x0, 61f,'... 23120 more characters,
+    expected: /ContinuumSurfaces\.fit\(p, subtitle, style, w - 91f\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/fold7-portrait-reference.test.mjs:20:1
+✖ portrait selection keeps actual Fold window threshold and separate landscape rail (10.082862ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /if \(heightDp > 0f && isPortraitFold\(widthDp, heightDp\)\) return portraitFold/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    '/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\n' +
+    'object ContinuumHomeLayout {\n' +
+    '    enum class Slot {\n' +
+    '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n' +
+    '        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n' +
+    '        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n' +
+    '    }\n' +
+    '\n' +
+    '    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n' +
+    '        val width: Float get() = right - left\n' +
+    '        val height: Float get() = bottom - top\n' +
+    '        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n' +
+    '    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n' +
+    '        operator fun get(slot: Slot): Box? = boxes[slot]\n' +
+    '    }\n' +
+    '\n' +
+    '    const val PHONE_REFERENCE_WIDTH = 412f\n' +
+    '    const val WIDE_REFERENCE_WIDTH = 840f\n' +
+    '    const val PHONE_NAV_HEIGHT = 74f\n' +
+    '\n' +
+    '    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n' +
+    '    fun railWidthDp(windowWidthDp: Float): Float {\n' +
+    '        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n' +
+    '        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * The Activity may keep the cover-display configuration while its real window has\n' +
+    '     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n' +
+    '     * change; height-only changes (IME / system bars) must never reset the screen.\n' +
+    '     */\n' +
+    '    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n' +
+    '        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n' +
+    '            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n' +
+    '        ) return false\n' +
+    '        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n' +
+    '     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n' +
+    '     */\n' +
+    '    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n' +
+    '\n' +
+    '    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n' +
+    '    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n' +
+    '        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n' +
+    '\n' +
+    '    const val WIDE_REFERENCE_HEIGHT = 649f\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n' +
+    '        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n' +
+    '        require(fontScale.isFinite() && fontScale > 0f)\n' +
+    '        val font = fontScale.coerceIn(.85f, 2f)\n' +
+    '        val gap = 12f\n' +
+    '        val portrait = wide && height > 0f && isPortraitFold(width, height)\n' +
+    '        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n' +
+    '        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n' +
+    '        val left = rail + 12f\n' +
+    '        val right = width - 12f\n' +
+    '        val room = right - left\n' +
+    '        val boxes = linkedMapOf<Slot, Box>()\n' +
+    '        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n' +
+    '        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n' +
+    '        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n' +
+    '        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n' +
+    '        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n' +
+    '            val x = right - 160f + i * 56f\n' +
+    '            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n' +
+    '            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n' +
+    '        }\n' +
+    '        val heroTop = headerBottom + gap\n' +
+    '        val heroHeight = when {\n' +
+    '            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n' +
+    '            else -> (room * .58f).coerceIn(390f, 470f)\n' +
+    '        }\n' +
+    '        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n' +
+    '        val sidebar = wide && room >= 1000f && font <= 1.1f\n' +
+    '        val sideWidth = 292f\n' +
+    '        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n' +
+    '        if (sidebar) {\n' +
+    '            val middle = heroTop + (heroHeight - gap) / 2f\n' +
+    '            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n' +
+    '            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n' +
+    '        }\n' +
+    '        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n' +
+    '            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n' +
+    '        val actionColumns = when {\n' +
+    '            room < 420f && font > 1.3f -> 1\n' +
+    '            room >= 1000f && font <= 1.3f -> 6\n' +
+    '            room >= 530f && font <= 1.6f -> 3\n' +
+    '            else -> 2\n' +
+    '        }\n' +
+    '        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n' +
+    '        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n' +
+    '        val actionTop = heroTop + heroHeight + gap\n' +
+    '        actions.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % actionColumns) * (actionWidth + gap)\n' +
+    '            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n' +
+    '        }\n' +
+    '        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n' +
+    '        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n' +
+    '        val columns = when {\n' +
+    '            room >= 1000f && font <= 1.3f -> 3\n' +
+    '            room >= 530f && room >= 420f * font -> 2\n' +
+    '            else -> 1\n' +
+    '        }\n' +
+    '        val cardWidth = (room - (columns - 1) * gap) / columns\n' +
+    '        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n' +
+    '        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n' +
+    '        cards.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % columns) * (cardWidth + gap)\n' +
+    '            val y = cardTop + (index / columns) * (cardHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n' +
+    '        }\n' +
+    '        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n' +
+    '        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n' +
+    '        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n' +
+    '        return Layout(wide, width, 1f, contentHeight, boxes)\n' +
+    '    }\n' +
+    '}\n'
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:23:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\n/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\nobject ContinuumHomeLayout {\n    enum class Slot {\n        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n    }\n\n    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n        val width: Float get() = right - left\n        val height: Float get() = bottom - top\n        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n    }\n\n    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n        operator fun get(slot: Slot): Box? = boxes[slot]\n    }\n\n    const val PHONE_REFERENCE_WIDTH = 412f\n    const val WIDE_REFERENCE_WIDTH = 840f\n    const val PHONE_NAV_HEIGHT = 74f\n\n    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n    fun railWidthDp(windowWidthDp: Float): Float {\n        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n    }\n\n    /**\n     * The Activity may keep the cover-display configuration while its real window has\n     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n     * change; height-only changes (IME / system bars) must never reset the screen.\n     */\n    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n        ) return false\n        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n    }\n\n    /**\n     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n     */\n    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n\n    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n\n    const val WIDE_REFERENCE_HEIGHT = 649f\n\n    @JvmOverloads\n    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n\n    @JvmOverloads\n    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    @JvmOverloads\n    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n        require(fontScale.isFinite() && fontScale > 0f)\n        val font = fontScale.coerceIn(.85f, 2f)\n        val gap = 12f\n        val portrait = wide && height > 0f && isPortraitFold(width, height)\n        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n        val left = rail + 12f\n        val right = width - 12f\n        val room = right - left\n        val boxes = linkedMapOf<Slot, Box>()\n        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n            val x = right - 160f + i * 56f\n            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n        }\n        val heroTop = headerBottom + gap\n        val heroHeight = when {\n            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n            else -> (room * .58f).coerceIn(390f, 470f)\n        }\n        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n        val sidebar = wide && room >= 1000f && font <= 1.1f\n        val sideWidth = 292f\n        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n        if (sidebar) {\n            val middle = heroTop + (heroHeight - gap) / 2f\n            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n        }\n        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n        val actionColumns = when {\n            room < 420f && font > 1.3f -> 1\n            room >= 1000f && font <= 1.3f -> 6\n            room >= 530f && font <= 1.6f -> 3\n            else -> 2\n        }\n        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n        val actionTop = heroTop + heroHeight + gap\n        actions.forEachIndexed { index, slot ->\n            val x = left + (index % actionColumns) * (actionWidth + gap)\n            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n        }\n        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n        val columns = when {\n            room >= 1000f && font <= 1.3f -> 3\n            room >= 530f && room >= 420f * font -> 2\n            else -> 1\n        }\n        val cardWidth = (room - (columns - 1) * gap) / columns\n        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n        cards.forEachIndexed { index, slot ->\n            val x = left + (index % columns) * (cardWidth + gap)\n            val y = cardTop + (index / columns) * (cardHeight + gap)\n            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n        }\n        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n        return Layout(wide, width, 1f, contentHeight, boxes)\n    }\n}\n',
+    expected: /if \(heightDp > 0f && isPortraitFold\(widthDp, heightDp\)\) return portraitFold/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/fold7-portrait-reference.test.mjs:32:1
+✖ six equal live cards and the separate status strip are aligned without clipping (0.402165ms)
+  AssertionError [ERR_ASSERTION]: missing aligned rectangle Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight)
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:42:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/fold7-portrait-reference.test.mjs:55:1
+✖ mirrored controls do not cover the hologram; real renderer and all diagrams survive (0.395094ms)
+  AssertionError [ERR_ASSERTION]: missing left action: LABEL_CONNECTED
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:62:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/fold7-portrait-reference.test.mjs:98:1
+✖ phone / Fold landscape and hologram lifecycle are unchanged (0.609477ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /private val phoneReference = mapOf\(/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    '/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\n' +
+    'object ContinuumHomeLayout {\n' +
+    '    enum class Slot {\n' +
+    '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n' +
+    '        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n' +
+    '        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n' +
+    '    }\n' +
+    '\n' +
+    '    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n' +
+    '        val width: Float get() = right - left\n' +
+    '        val height: Float get() = bottom - top\n' +
+    '        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n' +
+    '    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n' +
+    '        operator fun get(slot: Slot): Box? = boxes[slot]\n' +
+    '    }\n' +
+    '\n' +
+    '    const val PHONE_REFERENCE_WIDTH = 412f\n' +
+    '    const val WIDE_REFERENCE_WIDTH = 840f\n' +
+    '    const val PHONE_NAV_HEIGHT = 74f\n' +
+    '\n' +
+    '    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n' +
+    '    fun railWidthDp(windowWidthDp: Float): Float {\n' +
+    '        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n' +
+    '        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * The Activity may keep the cover-display configuration while its real window has\n' +
+    '     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n' +
+    '     * change; height-only changes (IME / system bars) must never reset the screen.\n' +
+    '     */\n' +
+    '    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n' +
+    '        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n' +
+    '            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n' +
+    '        ) return false\n' +
+    '        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n' +
+    '     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n' +
+    '     */\n' +
+    '    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n' +
+    '\n' +
+    '    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n' +
+    '    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n' +
+    '        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n' +
+    '\n' +
+    '    const val WIDE_REFERENCE_HEIGHT = 649f\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n' +
+    '        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n' +
+    '        require(fontScale.isFinite() && fontScale > 0f)\n' +
+    '        val font = fontScale.coerceIn(.85f, 2f)\n' +
+    '        val gap = 12f\n' +
+    '        val portrait = wide && height > 0f && isPortraitFold(width, height)\n' +
+    '        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n' +
+    '        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n' +
+    '        val left = rail + 12f\n' +
+    '        val right = width - 12f\n' +
+    '        val room = right - left\n' +
+    '        val boxes = linkedMapOf<Slot, Box>()\n' +
+    '        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n' +
+    '        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n' +
+    '        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n' +
+    '        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n' +
+    '        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n' +
+    '            val x = right - 160f + i * 56f\n' +
+    '            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n' +
+    '            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n' +
+    '        }\n' +
+    '        val heroTop = headerBottom + gap\n' +
+    '        val heroHeight = when {\n' +
+    '            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n' +
+    '            else -> (room * .58f).coerceIn(390f, 470f)\n' +
+    '        }\n' +
+    '        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n' +
+    '        val sidebar = wide && room >= 1000f && font <= 1.1f\n' +
+    '        val sideWidth = 292f\n' +
+    '        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n' +
+    '        if (sidebar) {\n' +
+    '            val middle = heroTop + (heroHeight - gap) / 2f\n' +
+    '            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n' +
+    '            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n' +
+    '        }\n' +
+    '        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n' +
+    '            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n' +
+    '        val actionColumns = when {\n' +
+    '            room < 420f && font > 1.3f -> 1\n' +
+    '            room >= 1000f && font <= 1.3f -> 6\n' +
+    '            room >= 530f && font <= 1.6f -> 3\n' +
+    '            else -> 2\n' +
+    '        }\n' +
+    '        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n' +
+    '        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n' +
+    '        val actionTop = heroTop + heroHeight + gap\n' +
+    '        actions.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % actionColumns) * (actionWidth + gap)\n' +
+    '            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n' +
+    '        }\n' +
+    '        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n' +
+    '        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n' +
+    '        val columns = when {\n' +
+    '            room >= 1000f && font <= 1.3f -> 3\n' +
+    '            room >= 530f && room >= 420f * font -> 2\n' +
+    '            else -> 1\n' +
+    '        }\n' +
+    '        val cardWidth = (room - (columns - 1) * gap) / columns\n' +
+    '        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n' +
+    '        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n' +
+    '        cards.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % columns) * (cardWidth + gap)\n' +
+    '            val y = cardTop + (index / columns) * (cardHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n' +
+    '        }\n' +
+    '        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n' +
+    '        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n' +
+    '        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n' +
+    '        return Layout(wide, width, 1f, contentHeight, boxes)\n' +
+    '    }\n' +
+    '}\n'
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/fold7-portrait-reference.test.mjs:99:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\n/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\nobject ContinuumHomeLayout {\n    enum class Slot {\n        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n    }\n\n    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n        val width: Float get() = right - left\n        val height: Float get() = bottom - top\n        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n    }\n\n    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n        operator fun get(slot: Slot): Box? = boxes[slot]\n    }\n\n    const val PHONE_REFERENCE_WIDTH = 412f\n    const val WIDE_REFERENCE_WIDTH = 840f\n    const val PHONE_NAV_HEIGHT = 74f\n\n    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n    fun railWidthDp(windowWidthDp: Float): Float {\n        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n    }\n\n    /**\n     * The Activity may keep the cover-display configuration while its real window has\n     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n     * change; height-only changes (IME / system bars) must never reset the screen.\n     */\n    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n        ) return false\n        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n    }\n\n    /**\n     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n     */\n    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n\n    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n\n    const val WIDE_REFERENCE_HEIGHT = 649f\n\n    @JvmOverloads\n    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n\n    @JvmOverloads\n    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    @JvmOverloads\n    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n        require(fontScale.isFinite() && fontScale > 0f)\n        val font = fontScale.coerceIn(.85f, 2f)\n        val gap = 12f\n        val portrait = wide && height > 0f && isPortraitFold(width, height)\n        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n        val left = rail + 12f\n        val right = width - 12f\n        val room = right - left\n        val boxes = linkedMapOf<Slot, Box>()\n        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n            val x = right - 160f + i * 56f\n            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n        }\n        val heroTop = headerBottom + gap\n        val heroHeight = when {\n            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n            else -> (room * .58f).coerceIn(390f, 470f)\n        }\n        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n        val sidebar = wide && room >= 1000f && font <= 1.1f\n        val sideWidth = 292f\n        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n        if (sidebar) {\n            val middle = heroTop + (heroHeight - gap) / 2f\n            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n        }\n        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n        val actionColumns = when {\n            room < 420f && font > 1.3f -> 1\n            room >= 1000f && font <= 1.3f -> 6\n            room >= 530f && font <= 1.6f -> 3\n            else -> 2\n        }\n        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n        val actionTop = heroTop + heroHeight + gap\n        actions.forEachIndexed { index, slot ->\n            val x = left + (index % actionColumns) * (actionWidth + gap)\n            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n        }\n        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n        val columns = when {\n            room >= 1000f && font <= 1.3f -> 3\n            room >= 530f && room >= 420f * font -> 2\n            else -> 1\n        }\n        val cardWidth = (room - (columns - 1) * gap) / columns\n        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n        cards.forEachIndexed { index, slot ->\n            val x = left + (index % columns) * (cardWidth + gap)\n            val y = cardTop + (index / columns) * (cardHeight + gap)\n            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n        }\n        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n        return Layout(wide, width, 1f, contentHeight, boxes)\n    }\n}\n',
+    expected: /private val phoneReference = mapOf\(/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/nexus-beginner-ui.test.mjs:58:1
+✖ fold, small display and enlarged-font behaviour are expressed by a pure policy (2.970437ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    'import android.annotation.SuppressLint\n' +
+    'import android.content.Context\n' +
+    'import android.graphics.Canvas\n' +
+    'import android.os.PowerManager\n' +
+    'import android.view.MotionEvent\n' +
+    'import android.view.View\n' +
+    'import android.view.ViewGroup\n' +
+    'import at.heinz.deviceai.ContinuumHologramView\n' +
+    'import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n' +
+    '\n' +
+    '/**\n' +
+    ' * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n' +
+    ' * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n' +
+    ' * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n' +
+    ' * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n' +
+    ' */\n' +
+    '@SuppressLint("ViewConstructor")\n' +
+    'class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n' +
+    '    ViewGroup(context) {\n' +
+    '    private val density = resources.displayMetrics.density\n' +
+    '    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n' +
+    '    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n' +
+    '    private var offset = 0f\n' +
+    '    private val views = linkedMapOf<Slot, ElementView>()\n' +
+    '    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n' +
+    '    private val sciFiEffects = ContinuumSciFiEffects(density)\n' +
+    '    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n' +
+    '    private var learningMotionUntil = 0L\n' +
+    '    private var modelMotionUntil = 0L\n' +
+    '    private var systemMotionUntil = 0L\n' +
+    '    private fun now() = android.os.SystemClock.uptimeMillis()\n' +
+    '    private var foregroundActive = false\n' +
+    '    fun setForegroundActive(active: Boolean) {\n' +
+    '        foregroundActive = active\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    private var waveFramePending = false\n' +
+    '    private val waveFrame = object : Runnable {\n' +
+    '        override fun run() {\n' +
+    '            waveFramePending = false\n' +
+    '            if (!waveAnimationEnabled()) {\n' +
+    '                views[Slot.LEARNING]?.invalidate()\n' +
+    '                views[Slot.MODEL]?.invalidate()\n' +
+    '                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '                return\n' +
+    '            }\n' +
+    '            // Moving light follows authentic measurements; data points never change here.\n' +
+    '            // One brief highlight per new measurement; no endless activity on unchanged history.\n' +
+    '            // No running light on an idle quality score or historical learning curve.\n' +
+    '            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n' +
+    '            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n' +
+    '            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n' +
+    '            scheduleWaveFrame()\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n' +
+    '        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n' +
+    '        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n' +
+    '\n' +
+    '    private fun scheduleWaveFrame() {\n' +
+    '        if (!waveFramePending && waveAnimationEnabled()) {\n' +
+    '            waveFramePending = true\n' +
+    '            postOnAnimationDelayed(waveFrame, 66L)\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun updateWaveAnimation() {\n' +
+    '        if (waveAnimationEnabled()) scheduleWaveFrame()\n' +
+    '        else {\n' +
+    '            removeCallbacks(waveFrame)\n' +
+    '            waveFramePending = false\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onAttachedToWindow() {\n' +
+    '        super.onAttachedToWindow()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDetachedFromWindow() {\n' +
+    '        removeCallbacks(waveFrame)\n' +
+    '        waveFramePending = false\n' +
+    '        super.onDetachedFromWindow()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onWindowVisibilityChanged(visibility: Int) {\n' +
+    '        super.onWindowVisibilityChanged(visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n' +
+    '        super.onVisibilityChanged(changedView, visibility)\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '    var state: ContinuumDashboardState = ContinuumDashboardState()\n' +
+    '        set(value) {\n' +
+    '            val until = now() + 900L\n' +
+    '            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n' +
+    '            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n' +
+    '            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n' +
+    '            field = value\n' +
+    '            views.values.forEach { it.refresh() }\n' +
+    '            updateWaveAnimation()\n' +
+    '        }\n' +
+    '\n' +
+    '    init {\n' +
+    '        setWillNotDraw(false)\n' +
+    '        addView(hologram)\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n' +
+    '     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n' +
+    '     */\n' +
+    '    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n' +
+    '                  windowHeightDp: Float = 0f) {\n' +
+    '        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n' +
+    '        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n' +
+    '        layoutSpec = spec\n' +
+    '        offset = railOffset\n' +
+    '        views.values.forEach { removeView(it) }\n' +
+    '        views.clear()\n' +
+    '        hologram.setGeometry(when {\n' +
+    '            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n' +
+    '            else -> ContinuumHologramRenderer.Geometry.PHONE\n' +
+    '        })\n' +
+    '        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n' +
+    '            if (slot == Slot.NAV && !includeNavigation) continue\n' +
+    '            if (slot == Slot.RAIL) continue\n' +
+    '            val view = ElementView(context, element, slot)\n' +
+    '            views[slot] = view\n' +
+    '            addView(view)\n' +
+    '        }\n' +
+    '        requestLayout()\n' +
+    '        updateWaveAnimation()\n' +
+    '    }\n' +
+    '\n' +
+    '    val wide: Boolean get() = layoutSpec?.wide == true\n' +
+    '    /** Window dp per reference dp of the current composition (null before the first configure). */\n' +
+    '    val layoutScale: Float? get() = layoutSpec?.scale\n' +
+    '\n' +
+    '    /** Height of a slot in dp (for tap zones inside an element). */\n' +
+    '    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n' +
+    '\n' +
+    '    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n' +
+    '        val width = MeasureSpec.getSize(widthMeasureSpec)\n' +
+    '        val spec = layoutSpec\n' +
+    '        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n' +
+    '                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n' +
+    '        }\n' +
+    '        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n' +
+    '        for (child in listOf<View>(hologram) + views.values) {\n' +
+    '            val box = boxOf(child) ?: continue\n' +
+    '            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n' +
+    '                (box.right * density).toInt(), (box.bottom * density).toInt())\n' +
+    '        }\n' +
+    '    }\n' +
+    '\n' +
+    '    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n' +
+    '        val spec = layoutSpec ?: return null\n' +
+    '        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n' +
+    '        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onDraw(canvas: Canvas) {\n' +
+    '        val spec = layoutSpec ?: return\n' +
+    '        backgroundPainter.begin(canvas)\n' +
+    '        val saved = canvas.save()\n' +
+    '        canvas.scale(density, density)\n' +
+    '        canvas.translate(-offset, 0f)\n' +
+    '        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n' +
+    '        canvas.restoreToCount(saved)\n' +
+    '        // Ambient radiance sits behind child cards and their real measurements.\n' +
+    '        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun dispatchDraw(canvas: Canvas) {\n' +
+    '        super.dispatchDraw(canvas)\n' +
+    '        // No intercepting overlay and no full-screen blur over foreground text.\n' +
+    '        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n' +
+    '    fun selectNavigation(index: Int) {\n' +
+    '        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n' +
+    '        views[Slot.NAV]?.refresh()\n' +
+    '    }\n' +
+    '\n' +
+    '    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n' +
+    '    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n' +
+    '        private val painter = AndroidContinuumPainter(context.assets)\n' +
+    '        private var downX = 0f\n' +
+    '        private var downY = 0f\n' +
+    '\n' +
+    '        init {\n' +
+    '            isClickable = true\n' +
+    '            isFocusable = true\n' +
+    '            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n' +
+    '            ContinuumControls.feedback(this)\n' +
+    '            refresh()\n' +
+    '            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n' +
+    '        }\n' +
+    '\n' +
+    '        fun refresh() {\n' +
+    '            contentDescription = element.describe(state)\n' +
+    '            invalidate()\n' +
+    '        }\n' +
+    '\n' +
+    '        @SuppressLint("ClickableViewAccessibility")\n' +
+    '        override fun onTouchEvent(event: MotionEvent): Boolean {\n' +
+    '            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n' +
+    '                downX = event.x; downY = event.y\n' +
+    '            }\n' +
+    '            return super.'... 2984 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/nexus-beginner-ui.test.mjs:60:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\nimport android.annotation.SuppressLint\nimport android.content.Context\nimport android.graphics.Canvas\nimport android.os.PowerManager\nimport android.view.MotionEvent\nimport android.view.View\nimport android.view.ViewGroup\nimport at.heinz.deviceai.ContinuumHologramView\nimport at.heinz.deviceai.ui.ContinuumHomeLayout.Slot\n\n/**\n * The Continuum start screen as real Android views: one [ElementView] per layout slot plus the living core\n * ([ContinuumHologramView]) in the hero slot. Positions come from [ContinuumHomeLayout] (measured from the reference\n * images); every element is a focusable, clickable view with a TalkBack description of its real values.\n * The phone navigation is not part of this view: the activity pins it to the bottom edge.\n */\n@SuppressLint("ViewConstructor")\nclass ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, private val onSlot: (Slot, Float, Float) -> Unit) :\n    ViewGroup(context) {\n    private val density = resources.displayMetrics.density\n    private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)\n    private var layoutSpec: ContinuumHomeLayout.Layout? = null\n    private var offset = 0f\n    private val views = linkedMapOf<Slot, ElementView>()\n    private val backgroundPainter = AndroidContinuumPainter(context.assets)\n    private val sciFiEffects = ContinuumSciFiEffects(density)\n    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager\n    private var learningMotionUntil = 0L\n    private var modelMotionUntil = 0L\n    private var systemMotionUntil = 0L\n    private fun now() = android.os.SystemClock.uptimeMillis()\n    private var foregroundActive = false\n    fun setForegroundActive(active: Boolean) {\n        foregroundActive = active\n        updateWaveAnimation()\n    }\n    private var waveFramePending = false\n    private val waveFrame = object : Runnable {\n        override fun run() {\n            waveFramePending = false\n            if (!waveAnimationEnabled()) {\n                views[Slot.LEARNING]?.invalidate()\n                views[Slot.MODEL]?.invalidate()\n                views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n                return\n            }\n            // Moving light follows authentic measurements; data points never change here.\n            // One brief highlight per new measurement; no endless activity on unchanged history.\n            // No running light on an idle quality score or historical learning curve.\n            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()\n            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()\n            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()\n            scheduleWaveFrame()\n        }\n    }\n\n    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&\n        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&\n        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)\n\n    private fun scheduleWaveFrame() {\n        if (!waveFramePending && waveAnimationEnabled()) {\n            waveFramePending = true\n            postOnAnimationDelayed(waveFrame, 66L)\n        }\n    }\n\n    private fun updateWaveAnimation() {\n        if (waveAnimationEnabled()) scheduleWaveFrame()\n        else {\n            removeCallbacks(waveFrame)\n            waveFramePending = false\n        }\n    }\n\n    override fun onAttachedToWindow() {\n        super.onAttachedToWindow()\n        updateWaveAnimation()\n    }\n\n    override fun onDetachedFromWindow() {\n        removeCallbacks(waveFrame)\n        waveFramePending = false\n        super.onDetachedFromWindow()\n    }\n\n    override fun onWindowVisibilityChanged(visibility: Int) {\n        super.onWindowVisibilityChanged(visibility)\n        updateWaveAnimation()\n    }\n\n    override fun onVisibilityChanged(changedView: View, visibility: Int) {\n        super.onVisibilityChanged(changedView, visibility)\n        updateWaveAnimation()\n    }\n    var state: ContinuumDashboardState = ContinuumDashboardState()\n        set(value) {\n            val until = now() + 900L\n            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until\n            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until\n            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until\n            field = value\n            views.values.forEach { it.refresh() }\n            updateWaveAnimation()\n        }\n\n    init {\n        setWillNotDraw(false)\n        addView(hologram)\n    }\n\n    /**\n     * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a\n     * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.\n     */\n    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,\n                  windowHeightDp: Float = 0f) {\n        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)\n        if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return\n        layoutSpec = spec\n        offset = railOffset\n        views.values.forEach { removeView(it) }\n        views.clear()\n        hologram.setGeometry(when {\n            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD\n            else -> ContinuumHologramRenderer.Geometry.PHONE\n        })\n        for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {\n            if (slot == Slot.NAV && !includeNavigation) continue\n            if (slot == Slot.RAIL) continue\n            val view = ElementView(context, element, slot)\n            views[slot] = view\n            addView(view)\n        }\n        requestLayout()\n        updateWaveAnimation()\n    }\n\n    val wide: Boolean get() = layoutSpec?.wide == true\n    /** Window dp per reference dp of the current composition (null before the first configure). */\n    val layoutScale: Float? get() = layoutSpec?.scale\n\n    /** Height of a slot in dp (for tap zones inside an element). */\n    fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f\n\n    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {\n        val width = MeasureSpec.getSize(widthMeasureSpec)\n        val spec = layoutSpec\n        val contentHeight = ((spec?.contentHeight ?: 0f) * density).toInt()\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),\n                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))\n        }\n        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))\n    }\n\n    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {\n        for (child in listOf<View>(hologram) + views.values) {\n            val box = boxOf(child) ?: continue\n            child.layout((box.left * density).toInt(), (box.top * density).toInt(),\n                (box.right * density).toInt(), (box.bottom * density).toInt())\n        }\n    }\n\n    private fun boxOf(child: View): ContinuumHomeLayout.Box? {\n        val spec = layoutSpec ?: return null\n        val box = if (child === hologram) spec[Slot.HERO] else (child as? ElementView)?.slot?.let { spec[it] }\n        return box?.let { ContinuumHomeLayout.Box(it.left - offset, it.top, it.right - offset, it.bottom) }\n    }\n\n    override fun onDraw(canvas: Canvas) {\n        val spec = layoutSpec ?: return\n        backgroundPainter.begin(canvas)\n        val saved = canvas.save()\n        canvas.scale(density, density)\n        canvas.translate(-offset, 0f)\n        ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)\n        canvas.restoreToCount(saved)\n        // Ambient radiance sits behind child cards and their real measurements.\n        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())\n    }\n\n    override fun dispatchDraw(canvas: Canvas) {\n        super.dispatchDraw(canvas)\n        // No intercepting overlay and no full-screen blur over foreground text.\n        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())\n    }\n\n    /** Selected navigation index (phone bar / rail); redraws the navigation element. */\n    fun selectNavigation(index: Int) {\n        (views[Slot.NAV]?.element as? BottomNavElement)?.selected = index\n        views[Slot.NAV]?.refresh()\n    }\n\n    /** A single drawn element; reports taps with the touch position in element dp coordinates. */\n    inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\n        private val painter = AndroidContinuumPainter(context.assets)\n        private var downX = 0f\n        private var downY = 0f\n\n        init {\n            isClickable = true\n            isFocusable = true\n            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES\n            ContinuumControls.feedback(this)\n            refresh()\n            setOnClickListener { onSlot(slot, downX / density, downY / density) }\n        }\n\n        fun refresh() {\n            contentDescription = element.describe(state)\n            invalidate()\n        }\n\n        @SuppressLint("ClickableViewAccessibility")\n        override fun onTouchEvent(event: MotionEvent): Boolean {\n            if (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP) {\n                downX = event.x; downY = event.y\n            }\n            return super.'... 2984 more characters,
+    expected: /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/premium-phone-viewport-wiring.test.mjs:24:1
+✖ home dashboard remains in a scrolling viewport, not hidden behind the navigation (19.891704ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /fun phone\(widthDp: Float\): Layout/. Input:
+  
+  'package at.heinz.deviceai.ui\n' +
+    '\n' +
+    '/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\n' +
+    'object ContinuumHomeLayout {\n' +
+    '    enum class Slot {\n' +
+    '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n' +
+    '        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n' +
+    '        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n' +
+    '    }\n' +
+    '\n' +
+    '    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n' +
+    '        val width: Float get() = right - left\n' +
+    '        val height: Float get() = bottom - top\n' +
+    '        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n' +
+    '    }\n' +
+    '\n' +
+    '    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n' +
+    '    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n' +
+    '        operator fun get(slot: Slot): Box? = boxes[slot]\n' +
+    '    }\n' +
+    '\n' +
+    '    const val PHONE_REFERENCE_WIDTH = 412f\n' +
+    '    const val WIDE_REFERENCE_WIDTH = 840f\n' +
+    '    const val PHONE_NAV_HEIGHT = 74f\n' +
+    '\n' +
+    '    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n' +
+    '    fun railWidthDp(windowWidthDp: Float): Float {\n' +
+    '        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n' +
+    '        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * The Activity may keep the cover-display configuration while its real window has\n' +
+    '     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n' +
+    '     * change; height-only changes (IME / system bars) must never reset the screen.\n' +
+    '     */\n' +
+    '    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n' +
+    '        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n' +
+    '            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n' +
+    '        ) return false\n' +
+    '        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n' +
+    '    }\n' +
+    '\n' +
+    '    /**\n' +
+    '     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n' +
+    '     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n' +
+    '     */\n' +
+    '    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n' +
+    '\n' +
+    '    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n' +
+    '    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n' +
+    '        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n' +
+    '\n' +
+    '    const val WIDE_REFERENCE_HEIGHT = 649f\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    @JvmOverloads\n' +
+    '    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n' +
+    '        adaptive(widthDp, heightDp, true, fontScale)\n' +
+    '\n' +
+    '    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n' +
+    '        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n' +
+    '        require(fontScale.isFinite() && fontScale > 0f)\n' +
+    '        val font = fontScale.coerceIn(.85f, 2f)\n' +
+    '        val gap = 12f\n' +
+    '        val portrait = wide && height > 0f && isPortraitFold(width, height)\n' +
+    '        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n' +
+    '        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n' +
+    '        val left = rail + 12f\n' +
+    '        val right = width - 12f\n' +
+    '        val room = right - left\n' +
+    '        val boxes = linkedMapOf<Slot, Box>()\n' +
+    '        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n' +
+    '        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n' +
+    '        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n' +
+    '        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n' +
+    '        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n' +
+    '            val x = right - 160f + i * 56f\n' +
+    '            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n' +
+    '            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n' +
+    '        }\n' +
+    '        val heroTop = headerBottom + gap\n' +
+    '        val heroHeight = when {\n' +
+    '            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n' +
+    '            else -> (room * .58f).coerceIn(390f, 470f)\n' +
+    '        }\n' +
+    '        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n' +
+    '        val sidebar = wide && room >= 1000f && font <= 1.1f\n' +
+    '        val sideWidth = 292f\n' +
+    '        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n' +
+    '        if (sidebar) {\n' +
+    '            val middle = heroTop + (heroHeight - gap) / 2f\n' +
+    '            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n' +
+    '            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n' +
+    '        }\n' +
+    '        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n' +
+    '            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n' +
+    '        val actionColumns = when {\n' +
+    '            room < 420f && font > 1.3f -> 1\n' +
+    '            room >= 1000f && font <= 1.3f -> 6\n' +
+    '            room >= 530f && font <= 1.6f -> 3\n' +
+    '            else -> 2\n' +
+    '        }\n' +
+    '        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n' +
+    '        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n' +
+    '        val actionTop = heroTop + heroHeight + gap\n' +
+    '        actions.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % actionColumns) * (actionWidth + gap)\n' +
+    '            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n' +
+    '        }\n' +
+    '        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n' +
+    '        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n' +
+    '        val columns = when {\n' +
+    '            room >= 1000f && font <= 1.3f -> 3\n' +
+    '            room >= 530f && room >= 420f * font -> 2\n' +
+    '            else -> 1\n' +
+    '        }\n' +
+    '        val cardWidth = (room - (columns - 1) * gap) / columns\n' +
+    '        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n' +
+    '        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n' +
+    '        cards.forEachIndexed { index, slot ->\n' +
+    '            val x = left + (index % columns) * (cardWidth + gap)\n' +
+    '            val y = cardTop + (index / columns) * (cardHeight + gap)\n' +
+    '            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n' +
+    '        }\n' +
+    '        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n' +
+    '        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n' +
+    '        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n' +
+    '        return Layout(wide, width, 1f, contentHeight, boxes)\n' +
+    '    }\n' +
+    '}\n'
+  
+      at TestContext.<anonymous> (file:///workspace/zeta-ui-node/.github/continuum/premium-phone-viewport-wiring.test.mjs:30:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'package at.heinz.deviceai.ui\n\n/** Adaptive native cockpit geometry. Controls remain usable as the window changes size. */\nobject ContinuumHomeLayout {\n    enum class Slot {\n        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\n        LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,\n        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL\n    }\n\n    data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {\n        val width: Float get() = right - left\n        val height: Float get() = bottom - top\n        fun scaled(u: Float) = Box(left * u, top * u, right * u, bottom * u)\n    }\n\n    /** Coordinates are real dp. [scale] remains 1; font size never follows window width. */\n    data class Layout(val wide: Boolean, val width: Float, val scale: Float, val contentHeight: Float, val boxes: Map<Slot, Box>) {\n        operator fun get(slot: Slot): Box? = boxes[slot]\n    }\n\n    const val PHONE_REFERENCE_WIDTH = 412f\n    const val WIDE_REFERENCE_WIDTH = 840f\n    const val PHONE_NAV_HEIGHT = 74f\n\n    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */\n    fun railWidthDp(windowWidthDp: Float): Float {\n        require(windowWidthDp.isFinite() && windowWidthDp > 0f)\n        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH\n    }\n\n    /**\n     * The Activity may keep the cover-display configuration while its real window has\n     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH\n     * change; height-only changes (IME / system bars) must never reset the screen.\n     */\n    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {\n        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||\n            configuredWidthDp <= 0f || measuredWidthDp <= 0f\n        ) return false\n        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f\n    }\n\n    /**\n     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display\n     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).\n     */\n    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f\n\n    /** Unfolded Fold7 held upright: balanced core, six cards, persistent work-area navigation. */\n    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =\n        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f\n\n    const val WIDE_REFERENCE_HEIGHT = 649f\n\n    @JvmOverloads\n    fun phone(widthDp: Float, fontScale: Float = 1f): Layout = adaptive(widthDp, 0f, false, fontScale)\n\n    @JvmOverloads\n    fun portraitFold(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    @JvmOverloads\n    fun wide(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f): Layout =\n        adaptive(widthDp, heightDp, true, fontScale)\n\n    private fun adaptive(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {\n        require(width.isFinite() && width >= 240f && height.isFinite() && height >= 0f)\n        require(fontScale.isFinite() && fontScale > 0f)\n        val font = fontScale.coerceIn(.85f, 2f)\n        val gap = 12f\n        val portrait = wide && height > 0f && isPortraitFold(width, height)\n        // Activity owns the existing navigation rail and its callbacks. Keep its exact offset.\n        val rail = if (wide && !portrait) railWidthDp(width) else 0f\n        val left = rail + 12f\n        val right = width - 12f\n        val room = right - left\n        val boxes = linkedMapOf<Slot, Box>()\n        val separateHeaderRows = room < 420f || font > 1.3f && room < 650f\n        val brandHeight = 54f + (font - 1f).coerceAtLeast(0f) * 20f\n        val headerBottom = if (separateHeaderRows) brandHeight + 56f else maxOf(64f, brandHeight)\n        boxes[Slot.BRAND] = Box(left, 4f, if (separateHeaderRows) right else right - 168f, brandHeight)\n        listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { i, slot ->\n            val x = right - 160f + i * 56f\n            val y = if (separateHeaderRows) brandHeight + 4f else (headerBottom - 48f) / 2f\n            boxes[slot] = Box(x, y, x + 48f, y + 48f)\n        }\n        val heroTop = headerBottom + gap\n        val heroHeight = when {\n            !wide -> (room * 1.02f).coerceIn(310f, 390f)\n            else -> (room * .58f).coerceIn(390f, 470f)\n        }\n        // The half-height status stack is reserved for ordinary type; enlarged type joins the full-height grid.\n        val sidebar = wide && room >= 1000f && font <= 1.1f\n        val sideWidth = 292f\n        boxes[Slot.HERO] = Box(left, heroTop, if (sidebar) right - sideWidth - gap else right, heroTop + heroHeight)\n        if (sidebar) {\n            val middle = heroTop + (heroHeight - gap) / 2f\n            boxes[Slot.SYSTEM_STATUS] = Box(right - sideWidth, heroTop, right, middle)\n            boxes[Slot.SYSTEM_ACTIVITY] = Box(right - sideWidth, middle + gap, right, heroTop + heroHeight)\n        }\n        val actions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_LEARNING,\n            Slot.LABEL_DEVELOPING, Slot.LABEL_CONNECTED, Slot.LABEL_EVOLVING)\n        val actionColumns = when {\n            room < 420f && font > 1.3f -> 1\n            room >= 1000f && font <= 1.3f -> 6\n            room >= 530f && font <= 1.6f -> 3\n            else -> 2\n        }\n        val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns\n        val actionHeight = 104f + (font - 1f).coerceAtLeast(0f) * 64f\n        val actionTop = heroTop + heroHeight + gap\n        actions.forEachIndexed { index, slot ->\n            val x = left + (index % actionColumns) * (actionWidth + gap)\n            val y = actionTop + (index / actionColumns) * (actionHeight + gap)\n            boxes[slot] = Box(x, y, x + actionWidth, y + actionHeight)\n        }\n        val cards = mutableListOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.WORKERS)\n        if (!sidebar) cards += listOf(Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)\n        val columns = when {\n            room >= 1000f && font <= 1.3f -> 3\n            room >= 530f && room >= 420f * font -> 2\n            else -> 1\n        }\n        val cardWidth = (room - (columns - 1) * gap) / columns\n        val cardHeight = 232f + (font - 1f).coerceAtLeast(0f) * 160f\n        val cardTop = actionTop + ((actions.size + actionColumns - 1) / actionColumns) * (actionHeight + gap) + 4f\n        cards.forEachIndexed { index, slot ->\n            val x = left + (index % columns) * (cardWidth + gap)\n            val y = cardTop + (index / columns) * (cardHeight + gap)\n            boxes[slot] = Box(x, y, x + cardWidth, y + cardHeight)\n        }\n        val contentHeight = cardTop + ((cards.size + columns - 1) / columns) * (cardHeight + gap)\n        if (rail > 0f) boxes[Slot.RAIL] = Box(0f, 0f, rail, contentHeight)\n        if (!wide) boxes[Slot.NAV] = Box(0f, contentHeight, width, contentHeight + PHONE_NAV_HEIGHT)\n        return Layout(wide, width, 1f, contentHeight, boxes)\n    }\n}\n',
+    expected: /fun phone\(widthDp: Float\): Layout/,
+    operator: 'match',
+    diff: 'simple'
+  }

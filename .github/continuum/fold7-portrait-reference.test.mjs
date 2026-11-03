@@ -11,74 +11,73 @@ const layout=read(ui+'ContinuumHomeLayout.kt');
 const home=read(ui+'ContinuumHomeScreen.kt');
 const elements=read(ui+'ContinuumPortraitElements.kt');
 const core=read(ui+'ContinuumHomeElements.kt');
+const cockpit=read(ui+'ContinuumCockpitElements.kt');
 const orb=read(ui+'ContinuumHologramRenderer.kt');
 const view=read(ui+'ContinuumHomeView.kt');
 const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const navigation=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
 const preview=read('tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/ContinuumPreviewMain.kt');
 
+// The owner-approved ZETA redesign supersedes the former scaled840dp 3×2 rectangles.
+// These are source-wiring contracts; Kotlin geometry and native widget/ink tests provide pixel evidence.
 test('portrait selection keeps actual Fold window threshold and separate landscape rail',()=>{
  assert.match(layout,/fun isPortraitFold\(widthDp: Float, heightDp: Float\)/);
  assert.match(layout,/isWide\(widthDp, heightDp\) && heightDp >= widthDp \* 1\.02f/);
- assert.match(layout,/if \(heightDp > 0f && isPortraitFold\(widthDp, heightDp\)\) return portraitFold/);
+ assert.match(layout,/val portrait = wide && height > 0f && isPortraitFold\(width, height\)/);
+ assert.match(layout,/val rail = if \(wide && !portrait\) railWidthDp\(width\) else 0f/);
+ assert.match(layout,/if \(rail > 0f\) boxes\[Slot\.RAIL\] = Box/);
  assert.match(activity,/val portraitFold = wide &&/);
  assert.match(activity,/if \(!portraitFold\) \{/);
  assert.match(activity,/val sideRail = wide && !at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isPortraitFold/);
  assert.match(activity,/if \(sideRail\) railWidthPx\(\)/);
- assert.match(home,/val portrait = wide && layout\[Slot\.WORKERS\] != null/);
- assert.doesNotMatch(layout.split('fun portraitFold(')[1].split('fun wide(')[0],/Slot\.RAIL to Box/);
+ assert.match(home,/if \(layout\[Slot\.RAIL\] != null\) map\[Slot\.RAIL\] = RailElement/);
+ // WORKERS is now a real backlog card on every size, not a portrait-layout discriminator.
+ assert.doesNotMatch(home,/val portrait = wide && layout\[Slot\.WORKERS\] != null/);
 });
 
-test('six equal live cards and the separate status strip are aligned without clipping',()=>{
- const portrait=layout.split('fun portraitFold(')[1].split('fun wide(')[0];
- for(const rect of [
-  'Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight)',
-  'Slot.LEARNING to Box(288f, firstTop, 552f, firstTop + cardHeight)',
-  'Slot.STORAGE to Box(564f, firstTop, 828f, firstTop + cardHeight)',
-  'Slot.DEVELOPMENT to Box(12f, secondTop, 276f, secondTop + cardHeight)',
-  'Slot.SYSTEM_ACTIVITY to Box(288f, secondTop, 552f, secondTop + cardHeight)',
-  'Slot.WORKERS to Box(564f, secondTop, 828f, secondTop + cardHeight)',
-  'Slot.SYSTEM_STATUS to Box(12f, statusTop, 828f, statusTop + 130f)'
- ])assert.ok(portrait.includes(rect),'missing aligned rectangle '+rect);
- assert.match(portrait,/val secondTop = firstTop \+ cardHeight \+ gap/);
- assert.match(portrait,/val statusTop = secondTop \+ cardHeight \+ 16f/);
- for(const [w,h] of [[750,790],[656,690],[840,1010],[1000,1400]]){
-  const u=w/840,frame=Math.max(800,h/u),heroExtra=Math.min(Math.max(0,frame-886)*.12,45);
-  const bottom=384+heroExtra,top=bottom+16,card=216,second=top+card+12;
-  const status=second+card+16,content=Math.max(frame,status+142);
-  assert.ok(status+130<=content, 'status reachable with scrollbar');
-  assert.ok(828*u<w, 'right aligned card fits available viewport');
-  assert.ok(bottom<top, 'unobstructed hero / chart clearance');
+test('seven live cards reflow in shared columns and remain inside scrolling content',()=>{
+ for(const slot of ['MODEL','LEARNING','STORAGE','DEVELOPMENT','WORKERS','SYSTEM_STATUS','SYSTEM_ACTIVITY']) {
+  assert.match(layout,new RegExp('Slot\\.'+slot+'\\b'));
+  assert.match(home,new RegExp('Slot\\.'+slot+'\\b'));
  }
+ assert.match(home,/if \(layout\[slot\] != null\) map\[slot\] = CockpitMetricCard\(slot, textScale, layout\.wide\)/);
+ assert.match(layout,/if \(!sidebar\) cards \+= listOf\(Slot\.SYSTEM_STATUS, Slot\.SYSTEM_ACTIVITY\)/);
+ // The half-height sidebar only applies on broad windows at ordinary font size.
+ assert.match(layout,/val sidebar = wide && room >= 1000f && font <= 1\.1f/);
+ assert.match(layout,/val columns = when \{[\s\S]*?-> 3[\s\S]*?-> 2[\s\S]*?else -> 1/);
+ assert.match(layout,/val cardWidth = \(room - \(columns - 1\) \* gap\) \/ columns/);
+ assert.match(layout,/val x = left \+ \(index % columns\) \* \(cardWidth \+ gap\)/);
+ assert.match(layout,/val y = cardTop \+ \(index \/ columns\) \* \(cardHeight \+ gap\)/);
+ assert.match(layout,/boxes\[slot\] = Box\(x, y, x \+ cardWidth, y \+ cardHeight\)/);
+ assert.match(layout,/val contentHeight = cardTop \+ \(\(cards\.size \+ columns - 1\) \/ columns\) \* \(cardHeight \+ gap\)/);
+ assert.match(layout,/return Layout\(wide, width, 1f, contentHeight, boxes\)/);
 });
 
-test('mirrored controls do not cover the hologram; real renderer and all diagrams survive',()=>{
- const portrait=layout.split('fun portraitFold(')[1].split('fun wide(')[0];
- for(const [left,right,top,bottom] of [
-  ['LABEL_CONNECTED','LABEL_THINKING',81,163],
-  ['LABEL_LEARNING','LABEL_ANALYSING',177,259],
-  ['LABEL_DEVELOPING','LABEL_EVOLVING',273,355]
- ]){
-  assert.ok(portrait.includes('Slot.'+left+' to Box(14f, '+top+'f, 230f, '+bottom+'f)'),
-    'missing left action: '+left);
-  assert.ok(portrait.includes('Slot.'+right+' to Box(610f, '+top+'f, 826f, '+bottom+'f)'),
-    'missing mirrored right action: '+right);
+test('six controls stay below the shared hero and all real card data remains connected',()=>{
+ for(const slot of ['LABEL_CONNECTED','LABEL_THINKING','LABEL_LEARNING','LABEL_ANALYSING','LABEL_DEVELOPING','LABEL_EVOLVING']) {
+  assert.match(layout,new RegExp('Slot\\.'+slot+'\\b'));
+  assert.match(home,new RegExp('Slot\\.'+slot+' to CockpitActionTile\\('));
  }
- assert.match(portrait,/Slot\.HERO to Box\(240f, 60f, 600f, heroBottom\)/);
+ assert.match(layout,/boxes\[Slot\.HERO\] = Box\(left, heroTop,[\s\S]*?heroTop \+ heroHeight\)/);
+ assert.match(layout,/val actionTop = heroTop \+ heroHeight \+ gap/);
+ assert.match(layout,/val y = actionTop \+ \(index \/ actionColumns\) \* \(actionHeight \+ gap\)/);
+ assert.match(layout,/boxes\[slot\] = Box\(x, y, x \+ actionWidth, y \+ actionHeight\)/);
+ // Existing chart components remain available; adaptive Home now binds concise live-state cards.
  for(const name of ['PortraitModelCard','PortraitLearningCard','PortraitStorageCard',
-  'PortraitDevelopmentCard','PortraitActivityCard','PortraitWorkersCard','PortraitSystemStatusStrip']){
+  'PortraitDevelopmentCard','PortraitActivityCard','PortraitWorkersCard','PortraitSystemStatusStrip'])
   assert.match(elements,new RegExp('class '+name+'\\b'));
-  assert.match(home,new RegExp(name+'\\(textScale\\)'));
- }
  assert.match(elements,/class PortraitSystemStatusStrip[\s\S]*Donut\.draw/);
  assert.match(elements,/class PortraitSystemStatusStrip[\s\S]*WaveChart\.draw/);
- assert.match(elements,/s\.system\.appCpuPercent/);
+ for(const field of ['model.name','model.qualityPercent','learning.today','storage.activeSources',
+  'development.runningTasks','system.appCpuPercent','system.memoryPercent','system.batteryPercent'])
+  assert.ok(cockpit.includes('s.'+field),'live card field disconnected: '+field);
  assert.match(core,/ContinuumSurfaces\.iconDisc\(p, icon, discX, cy, 56f, 29f\)/);
  assert.match(orb,/val FOLD_PORTRAIT = Geometry\(centerY = \.42f, radiusOfWidth = \.375f/);
- assert.match(view,/Geometry\.FOLD_PORTRAIT/);
+ assert.match(view,/spec\.wide -> ContinuumHologramRenderer\.Geometry\.FOLD/);
+ assert.match(view,/else -> ContinuumHologramRenderer\.Geometry\.PHONE/);
  assert.match(preview,/Geometry\.FOLD_PORTRAIT/);
  assert.match(activity,/Slot\.WORKERS -> showDevelopmentBacklog\(\)/);
- assert.doesNotMatch(elements,/\b(435 gespeicherte|129 Lernereignisse|aktive Worker.{0,5}3)\b/);
+ assert.doesNotMatch(elements+cockpit,/\b(435 gespeicherte|129 Lernereignisse|aktive Worker.{0,5}3)\b/);
 });
 
 test('Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling',()=>{
@@ -95,12 +94,13 @@ test('Fold portrait exposes a fixed navigable Chat tab and discoverable scrollin
  assert.match(navigation,/\(!wide \|\| portraitFold\) && !keyboardVisible/);
 });
 
-test('phone / Fold landscape and hologram lifecycle are unchanged',()=>{
- assert.match(layout,/private val phoneReference = mapOf\(/);
- assert.match(layout,/private val wideReference = mapOf\(/);
+test('phone and Fold preserve renderer lifecycle through the shared adaptive layout',()=>{
+ assert.match(layout,/fun phone\(widthDp: Float, fontScale: Float = 1f\): Layout = adaptive\(widthDp, 0f, false, fontScale\)/);
+ assert.match(layout,/fun wide\(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f\): Layout =\s*adaptive\(widthDp, heightDp, true, fontScale\)/);
  assert.match(orb,/val PHONE = Geometry\(/);
  assert.match(orb,/val FOLD = Geometry\(/);
- assert.match(home,/else if \(wide\) \{/);
+ assert.match(home,/if \(layout\[Slot\.NAV\] != null\) map\[Slot\.NAV\] = BottomNavElement/);
+ assert.match(home,/if \(layout\[Slot\.RAIL\] != null\) map\[Slot\.RAIL\] = RailElement/);
  assert.match(activity,/wideContent\.addView\(buildRail\(\), LinearLayout\.LayoutParams/);
  assert.match(activity,/it\.setForegroundActive\(foregroundLearningActive\)/);
  assert.match(view,/sciFiEffects\.drawScanlines/);
