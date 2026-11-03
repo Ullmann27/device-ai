@@ -113,7 +113,8 @@ class ChiefWorkerPool(
             report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
         } catch (e: Exception) {
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
-            if (slot.cancelled.get()) report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
+            if (cause is WorkerBlocked && !slot.cancelled.get()) report(WorkerStatus.BLOCKED, cause.message ?: "Blockiert.")
+            else if (slot.cancelled.get()) report(WorkerStatus.CANCELLED, "Vom Chef abgebrochen.")
             else report(WorkerStatus.FAILED, "Fehlgeschlagen: ${cause.javaClass.simpleName}")
         }
     }
