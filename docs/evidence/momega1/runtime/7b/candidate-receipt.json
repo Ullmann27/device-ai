@@ -45,5 +45,10 @@
     "transport-contract-first.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
     "docker-restricted-fixtures-green.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
     "docker-restricted-green.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
-  }
+  },
+  "testedSourceCommitSha": "e192b9a6af55f599de5d33725265ac348e84a12e",
+  "exactSourceRegressionExit": 0,
+  "exactSourceRegressionSha256": "e87a4a204767f5b98d324d6fb2ff4c38b3b072516b7ec541d92f49570a8fc344",
+  "draftPr": "https://github.com/Ullmann27/device-ai/pull/449",
+  "exactSourceHashesMatch": true
 }
