@@ -363,6 +363,15 @@ class BoundedAgentOrchestrator(
                             transition(AgentState.GATED_EXECUTION, "Tool policy gate evaluated.")
                             usedTools += proposal.toolName
                             val risk = ToolRegistry.get(proposal.toolName)!!.risk
+                            // S4: tool results are untrusted data; they cannot create owner intent.
+                            ExternalContentActionGuard.refusal(task, proposal.toolName, risk,
+                                untrustedObservationsSeen = toolObservations.isNotEmpty())?.let { refused ->
+                                lastRecord = ToolExecutionRecord("$callIdPrefix-$calls", proposal.toolName, risk, emptyMap(),
+                                    refused, ToolExecutionStatus.REJECTED, 0)
+                                transition(AgentState.OBSERVE_RESULT, "Tool proposal derived from external content refused.")
+                                emit(CognitiveWorkState.BLOCKED)
+                                return AgentRunResult(refused, AgentState.OBSERVE_RESULT, audit.toList(), null, refused, proof())
+                            }
                             val invocation = proposal.invocation("$callIdPrefix-$calls")
                             val priorReceipt = toolGate.recordProposal(invocation)
                             val requiresReview = priorReceipt != null &&
