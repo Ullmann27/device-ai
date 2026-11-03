@@ -5,6 +5,7 @@ import at.heinz.deviceai.cognitive.AiContextInput
 import at.heinz.deviceai.cognitive.AiContextPolicy
 import at.heinz.deviceai.cognitive.BoundedResearchTextSanitizer
 import at.heinz.deviceai.cognitive.ContinuumRuntimeState
+import at.heinz.deviceai.cognitive.LocalChatPromptBudget
 import at.heinz.deviceai.cognitive.LocalConversationFollowUpPolicy
 import at.heinz.deviceai.cognitive.LocalPromptFrame
 import at.heinz.deviceai.localmodel.ImportedLocalModel
@@ -100,6 +101,7 @@ class ChiefBotConversation(
     private var epoch = 0L
     private var pending: Any? = null
     private var committed: ChiefBotConversationTurn? = null
+    private var committedProfile: ChiefBotProfile? = null
 
     fun select(agentId: String?) {
         require(agentId == null || ChiefBotProfile.ID.matches(agentId))
@@ -111,7 +113,7 @@ class ChiefBotConversation(
     fun invalidate() = synchronized(lock) { invalidateLocked() }
 
     private fun invalidateLocked() {
-        epoch = Math.addExact(epoch, 1); pending = null; committed = null
+        epoch = Math.addExact(epoch, 1); pending = null; committed = null; committedProfile = null
     }
 
     fun prepare(agentId: String, request: String, state: ContinuumRuntimeState,
@@ -123,7 +125,7 @@ class ChiefBotConversation(
         val generation = synchronized(lock) {
             check(selected == agentId) { "BOT_SELECTION_CHANGED" }
             check(pending == null) { "BOT_CONVERSATION_BUSY" }
-            pending = marker; committed = null; epoch
+            pending = marker; committed = null; committedProfile = null; epoch
         }
         try {
             val snapshot = store.conversationSnapshot(agentId)
@@ -181,9 +183,16 @@ class ChiefBotConversation(
         }
     }
 
-    /** Display correlation only; true after accepted completion is not an active-inference claim. */
+    /** Display correlation only, with a bounded persistent revision check (not for every render frame).
+     * True after accepted completion is not an active-inference claim. */
     fun isCurrent(turn: ChiefBotConversationTurn, currentModel: ImportedLocalModel?, sessionId: String): Boolean = synchronized(lock) {
-        (pending === turn || committed === turn) && bound(turn, currentModel, sessionId)
+        val expected = when {
+            pending === turn -> turn.snapshot.profile
+            committed === turn -> committedProfile
+            else -> null
+        }
+        expected != null && bound(turn, currentModel, sessionId) &&
+            runCatching { store.get(turn.agentId) == expected }.getOrDefault(false)
     }
 
     private fun bound(turn: ChiefBotConversationTurn, currentModel: ImportedLocalModel?, sessionId: String) =
@@ -199,7 +208,7 @@ class ChiefBotConversation(
             if (current != turn.snapshot.profile) return@synchronized false
             val entry = ChiefBotConversationEntry(turn.request, response, turn.model.id, turn.model.version, turn.model.sha256)
             try {
-                store.saveConversation(turn.snapshot.profile, turn.snapshot.history.append(entry))
+                committedProfile = store.saveConversation(turn.snapshot.profile, turn.snapshot.history.append(entry))
             } catch (failure: IllegalArgumentException) {
                 if (failure.message == "BOT_PROFILE_VERSION_CONFLICT" || failure.message == "BOT_CONVERSATION_SNAPSHOT_CHANGED") return@synchronized false
                 throw failure
@@ -230,7 +239,7 @@ class ChiefBotConversation(
 
     private fun quoted(value: String): String = BoundedResearchTextSanitizer.sanitize(value, value.length * 20 + 64)
 
-    companion object { const val MAX_PROMPT_BYTES = 16_000 }
+    companion object { const val MAX_PROMPT_BYTES = LocalChatPromptBudget.FULL_CHARACTERS }
 }
 
 internal object ChiefBotConversationCodec {
