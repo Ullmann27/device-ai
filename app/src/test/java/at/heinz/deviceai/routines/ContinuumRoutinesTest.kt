@@ -19,9 +19,12 @@ class ContinuumRoutinesTest {
 
     @Test fun reportsOnlyWhenSomethingIsNew() {
         val book = RoutineBook(); book.add(Routine("r", "x", RoutineTrigger.Every(900_000, 0)))
+        assertEquals(listOf("r"), book.due(0).map { it.id })
         assertTrue(book.report("r", "Neu: 2 Downloads", 0) is RoutineOutcome.News)
-        assertTrue(book.report("r", "  Neu: 2 Downloads ", 10) is RoutineOutcome.Unchanged)
-        assertTrue(book.report("r", "Neu: 3 Downloads", 20) is RoutineOutcome.News)
+        assertEquals(listOf("r"), book.due(900_000).map { it.id })
+        assertTrue(book.report("r", "  Neu: 2 Downloads ", 900_000) is RoutineOutcome.Unchanged)
+        assertEquals(listOf("r"), book.due(1_800_000).map { it.id })
+        assertTrue(book.report("r", "Neu: 3 Downloads", 1_800_000) is RoutineOutcome.News)
     }
 
     @Test fun eventTriggerAndBoundsAndInvalidRoutines() {
@@ -56,4 +59,53 @@ class ContinuumRoutinesTest {
         assertEquals(1, box.pending("b"))
         assertFalse(box.send(AgentMessage("2", "a", "b", AgentPriority.INFO, "")))
     }
+    @Test fun pollingAgainDoesNotDuplicateAnInFlightScheduledRun() {
+        val book = RoutineBook()
+        assertTrue(book.add(Routine("safe", "Akku lesen", RoutineTrigger.Every(900_000, 0))))
+        assertEquals(listOf("safe"), book.due(0).map { it.id })
+        assertEquals(emptyList<String>(), book.due(1).map { it.id })
+        assertEquals(emptyList<String>(), book.due(900_000).map { it.id })
+        assertTrue(book.release("safe"))
+        assertFalse(book.release("safe"))
+        assertEquals(listOf("safe"), book.due(900_001).map { it.id })
+        assertTrue(book.report("safe", "neu", 900_001) is RoutineOutcome.News)
+        assertEquals(emptyList<String>(), book.due(900_002).map { it.id })
+        assertEquals(listOf("safe"), book.due(1_800_001).map { it.id })
+    }
+
+    @Test fun eventRoutineCannotBeDispatchedAgainBeforeReportOrExplicitRelease() {
+        val book = RoutineBook()
+        assertTrue(book.add(Routine("app", "App Status", RoutineTrigger.OnEvent("change"))))
+        assertEquals(listOf("app"), book.triggered("change").map { it.id })
+        assertEquals(emptyList<String>(), book.triggered("change").map { it.id })
+        assertTrue(book.report("app", "Status neu", 10) is RoutineOutcome.News)
+        assertEquals(listOf("app"), book.triggered("change").map { it.id })
+    }
+
+    @Test fun mailboxBoundsRecipientCountTotalMessageCountAndUtf8Bytes() {
+        val box = AgentMailbox(maxPerAgent = 2, maxRecipients = 2, maxQueuedMessages = 3,
+            maxQueuedBytes = 4_096)
+        fun msg(id: String, to: String, body: String = "x") =
+            AgentMessage(id, "worker", to, AgentPriority.INFO, body)
+
+        assertTrue(box.send(msg("1", "chief")))
+        assertTrue(box.send(msg("2", "memory")))
+        assertFalse("third recipient cannot create unbounded queues", box.send(msg("3", "random")))
+        assertTrue(box.send(msg("3", "chief")))
+        assertFalse("global message bound must hold even when another queue has room",
+            box.send(msg("4", "memory")))
+        assertEquals(2, box.drain("chief").size)
+        assertTrue("drain frees global capacity", box.send(msg("4", "memory")))
+        assertTrue("drain also frees recipient slots", box.send(msg("5", "new-recipient")))
+        assertFalse("byte budget must be enforced", box.send(msg("6", "new-recipient", "ö".repeat(3_000))))
+        assertEquals(1, box.pending("new-recipient"))
+    }
+
+    @Test fun routineReportWithoutClaimCannotBeMistakenForCompletedWork() {
+        val book = RoutineBook()
+        assertTrue(book.add(Routine("guard", "safe", RoutineTrigger.Every(900_000, 0))))
+        assertTrue(book.report("guard", "gefälschtes Ergebnis", 0) is RoutineOutcome.Unchanged)
+        assertEquals(listOf("guard"), book.due(0).map { it.id })
+    }
+
 }
