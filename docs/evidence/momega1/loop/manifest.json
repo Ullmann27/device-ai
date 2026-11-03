@@ -1,0 +1,175 @@
+{
+  "schema": "momega1-loop-evidence",
+  "version": 1,
+  "createdAt": "2026-11-03T19:30:09.060142+00:00",
+  "sourceFreeze": "9ed11151b64fa85685e0f8b7c2358281af4694a8",
+  "base": "ca93fb4f",
+  "remoteLastSuccessfulSource": "034b60bb",
+  "pushStatus": "LATEST_LOCAL_ONLY_CREDENTIAL_REJECTED",
+  "evidenceClasses": [
+    "CONTRACT_TEST",
+    "HOST_INTEGRATION"
+  ],
+  "actualModelInference": "NOT_RUN_NO_GENUINE_INFERENCE_PRODUCER",
+  "firstCognitiveLoop": "NOT_VERIFIED",
+  "node": "v24.19.0",
+  "git": "git version 2.52.0",
+  "sources": {
+    ".github/continuum/coding-orchestrator.mjs": "2fe8359f1205688df0a679501f27f03c43491f50cd4c05aa0a79394d027fc2c9",
+    ".github/continuum/repair-loop.mjs": "0d7435be88336bd4f64b25a77a57f1f4ec2736fd7b69ad8948eceb568241e08a",
+    ".github/continuum/backlog-repair-worker.mjs": "230b69c9c4fc719c3dbb771a6b53c61c214a5b4f67644d5b39028846d36c54a6",
+    ".github/continuum/ccc1-redgreen-verifier.mjs": "527c3a72d6cc803e0690ec2cb0f9f47ea59201a18ce3131221a2f864d8a476eb",
+    "scripts/continuum-typed-coding-bridge.mjs": "adbe3bb5560dfb1004fc9ba7406a9260f92e43a1a8922d93051768802cae6ce2",
+    ".github/continuum/momega1-loop.test.mjs": "bf7007080e347896feed279f373ffc1500fdca4fc8c98359ce83575b2c2d2457",
+    ".github/continuum/momega1-verifier-regressions.test.mjs": "eaf757cc8d8ba583078fba899bb91deea18f3678c8031a39fec583089f8be2aa",
+    "scripts/continuum-momega1-bridge.test.mjs": "6b6fd09bbae44ce93b3b3174c68985c716248810c5c4e44bb1181ee1019214f4"
+  },
+  "dependencyMaterializedOnly": {
+    "path": ".github/continuum/ccc1-technical-recall.mjs",
+    "sourceCommit": "78d94a39",
+    "sha256": "56bb9bdb41f1aa88343395ca6b5d4d775394d9147d0e117371b0f5a05ea95ee6",
+    "committedByBeta": false
+  },
+  "runs": [
+    {
+      "name": "verifier-review-red",
+      "source": "ca93fb4f",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-verifier-regressions.test.mjs",
+      "exit": 1,
+      "tests": 5,
+      "passed": 0,
+      "failed": 5,
+      "log": "verifier-red.tap"
+    },
+    {
+      "name": "verifier-review-green",
+      "source": "1f7cda73",
+      "exit": 0,
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "log": "verifier-green.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-verifier-regressions.test.mjs .github/continuum/ccc1-redgreen-verifier.test.mjs .github/continuum/momega1-loop.test.mjs scripts/continuum-momega1-bridge.test.mjs"
+    },
+    {
+      "name": "canonical-loop-red",
+      "source": "b450b69a^",
+      "exit": 1,
+      "tests": 4,
+      "passed": 0,
+      "failed": 4,
+      "log": "loop-red.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-loop.test.mjs"
+    },
+    {
+      "name": "bridge-red",
+      "source": "0903104c^",
+      "exit": 1,
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "log": "bridge-red.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-loop.test.mjs"
+    },
+    {
+      "name": "isolated-alias-red",
+      "source": "a3880a0a",
+      "exit": 1,
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "log": "alias-red.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-loop.test.mjs"
+    },
+    {
+      "name": "isolated-alias-green",
+      "source": "92f1026c",
+      "exit": 0,
+      "tests": 48,
+      "passed": 48,
+      "failed": 0,
+      "log": "alias-green.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-verifier-regressions.test.mjs .github/continuum/ccc1-redgreen-verifier.test.mjs .github/continuum/momega1-loop.test.mjs scripts/continuum-momega1-bridge.test.mjs"
+    },
+    {
+      "name": "correlated-source-red",
+      "source": "fa5bac7f",
+      "exit": 1,
+      "tests": 2,
+      "passed": 0,
+      "failed": 2,
+      "log": "correlated-red.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-loop.test.mjs"
+    },
+    {
+      "name": "correlated-source-green",
+      "source": "034b60bb",
+      "exit": 0,
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "log": "correlated-green.tap",
+      "command": "node --test --test-reporter=tap .github/continuum/momega1-verifier-regressions.test.mjs .github/continuum/ccc1-redgreen-verifier.test.mjs .github/continuum/momega1-loop.test.mjs scripts/continuum-momega1-bridge.test.mjs"
+    },
+    {
+      "name": "final-relevant-regression",
+      "source": "9ed11151",
+      "command": "node --test --test-reporter=tap .github/continuum/ccc1*.test.mjs .github/continuum/coding-*.test.mjs .github/continuum/backlog-repair-worker.test.mjs .github/continuum/repair-loop.test.mjs .github/continuum/momega1*.test.mjs scripts/continuum-typed-coding-bridge.test.mjs scripts/continuum-momega1-bridge.test.mjs",
+      "exit": 0,
+      "tests": 311,
+      "passed": 311,
+      "failed": 0,
+      "skipped": 0,
+      "log": "regression-current.tap"
+    },
+    {
+      "name": "full-project-node-initial-freeze",
+      "source": "e8f5e218",
+      "command": "node --test --test-reporter=tap .github/continuum/*.test.mjs scripts/*.test.mjs",
+      "exit": 0,
+      "tests": 2155,
+      "passed": 2142,
+      "failed": 0,
+      "skipped": 13,
+      "log": "full-node.tap"
+    },
+    {
+      "name": "consumed-original-delta",
+      "source": "e8f5e218",
+      "command": "node tools/delta-challenger/challenge.mjs .github/continuum/ccc1-redgreen-verifier.mjs docs/evidence/momega1/loop/delta-consumed.json",
+      "exit": 1,
+      "observations": 46,
+      "passed": 44,
+      "failed": 2,
+      "executionBackedPassed": 42,
+      "knownParserDiagnostics": [
+        "D18-truncated",
+        "D18-unclosed"
+      ],
+      "log": "delta-consumed.log"
+    }
+  ],
+  "artifacts": {
+    "actual/canonical-feedback.json": "e27bd930a5b266c089cad80a02da31ac655be075d5cb451b75c31976c7e88863",
+    "actual/fresh-verifier.json": "92759b2ac026753a7891f4945cb8ea8de6f2a8ad4ff985bb8f3a16835df9b94b",
+    "actual/identity-loss.json": "a66c087724b95ba525975616c617fd7c42f0c3d3f39da87a3c003729e1d52aaa",
+    "alias-green.tap": "9d0bc1754d542d0c5935d37322c4eb61afcbce512e3894d1e993353dcc87a1f3",
+    "alias-red.tap": "b4efe7233cc1b190030207b17f6dc725d78ae9b388d71409f6c2627a9239de8a",
+    "bridge-red.tap": "9a8d674078cc574cb1cb233233dbccaa723959d40ff7f6e7b2a26c314763d3a9",
+    "correlated-green.tap": "8d22e9391f9d40044c5924073d008ef1236cc5de4d41d08e2336ea2dac841a53",
+    "correlated-red.tap": "2bdc49be3ba73b1c70589a99667640c273b1c7d7771b436a437cfda263d23270",
+    "delta-consumed.json": "25eec9585d294fe4a070bd12969c0b1984beeebd4486a2b1d501d4f47d7a8373",
+    "delta-consumed.log": "46b53e7ab2c9dc1fd075d3702580f7a6f4d86ce319c4d355e9b536cb068f78b9",
+    "dependency-green.tap": "21d80d53defb8be153eb626804265841c53d46d4763d9d60d52b8feb73e9c9fd",
+    "full-node.tap": "0dcbc86bea985e7595ba491c264b2b1d236e9207735bda122d27eadf9fb2e5c2",
+    "loop-green.tap": "5b8bbd1c8ede58a3bc6d59785a679fae7497e39dac12e6bc273389b91ae00f43",
+    "loop-red.tap": "0131c27d83106ab7b8bff3bd657ecbaac5f58f5d22a43f22bbcbd916a4cb0c39",
+    "model-gate-green.tap": "f21e58ed58846d22ec96d21268db0d44dedd1624b4df1d5491a52f35c5ef82e5",
+    "model-gate-red.tap": "8f5de6fdbacbd09f525723a0499c670079d4aa0c8344736f1c98d7a82a8f1627",
+    "regression-current.tap": "90ea6d6a61d1eed38255680ed0d456467f4d0d53191ab0ef3c62a59f58dcf72b",
+    "regression-final.tap": "2d5bd116c8a746f3761eb71c1ad1802a161efdbd8761b107151cd8df447c0469",
+    "regression.tap": "7c28ef50a5d88adf4360e1d32ee6507e0925a69eee773a144254dd054a217692",
+    "verifier-green.tap": "bcf1a6e5ec450b34bd503642a2362bf75c55c9bf9271e9b0b82cdba619a4db98",
+    "verifier-red.tap": "433e047d3c7cf334a0eab80fc600fa296bdeb47d2558c0e62f416d2c38172217"
+  }
+}
