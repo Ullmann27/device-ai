@@ -88,7 +88,7 @@ hints exceeding the remaining budget are bounded/omitted; source budget and full
 prompt deadline remain unchanged. Trace stores only recall hash and length.
 Strict observation rejects remote choice at construction and rejects unobserved
 injected replies. Production native path already always requires observation.
-Final source and raw exact-source validation are recorded alongside this handoff.
+Final source37e16cefac4ee3b794d79540214a69f1c6181b82:130/130 PASS, zero fail/skip, exit0. Raw final-exact-source-green.tap and manifest record full command and source. This remains CONTRACT_TEST; actual-model inference and Fold7 are NOT_RUN.
 
 ## Remaining boundaries and review
 
