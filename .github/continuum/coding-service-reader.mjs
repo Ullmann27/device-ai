@@ -132,8 +132,8 @@ export function createCodingServiceReader({configPath}={}){
     activeTaskId:alive?d.activeTaskId??null:null,queued:items.filter(i=>i.delivery==='PENDING').length,
     unknown:items.filter(i=>['UNKNOWN','RESERVING','DISPATCHED','CANCEL_REQUESTED'].includes(i.delivery)&&(!alive||i.delivery==='UNKNOWN')).length,
     capacity:c.limits.maxQueue,maxConcurrentInference:1,maxConcurrentInferenceScope:'ONE_SERVICE_PER_OS_USER',
-    residentModelLoaded:false,modelLoaded:active?null:false,modelLoading:'ON_DEMAND_PER_TASK',
-    inferenceObservation:active?'NATIVE_PHASE_NOT_OBSERVED_FROM_CONTROL_PROCESS':'NO_ACTIVE_TASK_IN_THIS_SERVICE',
+    residentModelLoaded:false,modelLoaded:active||resourceReconciliationRequired?null:false,modelLoading:'ON_DEMAND_PER_TASK',
+    inferenceObservation:resourceReconciliationRequired?'RESOURCE_TEARDOWN_UNCONFIRMED':active?'NATIVE_PHASE_NOT_OBSERVED_FROM_CONTROL_PROCESS':'NO_ACTIVE_TASK_IN_THIS_SERVICE',
     reviewedModel:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL,modelSha256:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,
     runtimeSha256:c.runtimeEnv.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,cloudModelCallsAllowed:false,
     cycles:alive?d.cycles??0:null,sessionLimit:c.limits.maxCycles,control:'LOCAL_OWNER_UNIX_SOCKET'};
