@@ -52,7 +52,7 @@ class IndependentFullLayoutUiTest {
         File(out, "$label.views.txt").writeText(views(root).joinToString("\n") { view ->
             val at = IntArray(2); view.getLocationOnScreen(at)
             "${view.javaClass.simpleName} shown=${view.isShown} visibility=${view.visibility} x=${at[0]} y=${at[1]} w=${view.width} h=${view.height} text=" +
-                (if (view is TextView) view.text.toString().replace('\n', ' ').take(160) else view.contentDescription.orEmpty())
+                (if (view is TextView) view.text.toString().replace('\n', ' ').take(160) else view.contentDescription?.toString().orEmpty())
         })
         println("LAYOUT_CAPTURE $label ${width}x$height nativeCanvas window=${root.windowVisibility}")
     }
