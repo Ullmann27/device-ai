@@ -134,3 +134,8 @@ future generalization claims need a newly frozen independent set.
 
 First fix exact replay: `5346e76910bb19e2da859556852724c2c2fe3c59`, 22/22 PASS,
 `verified-5346e769.txt` (source/test files clean; only the output log untracked).
+
+Second fix exact replay: `5cafd09bec8840955117512c06c8285a17848d75`, 32/32 PASS,
+`verified-5cafd09b.txt` (source/test files clean; only the output log untracked).
+The first fix's files are unchanged by the second fix. All source changes are
+contained in these two approved source files and their tests.
