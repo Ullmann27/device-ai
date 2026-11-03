@@ -13,6 +13,11 @@ Rechner liegen. ARM64/Fold7 ist eine getrennte, offene Abnahme.
 - Sauberer Checkout des genau abgenommenen Quellcommits; während des Betriebs
   weder diesen Checkout noch das beauftragte Projekt ändern.
 - Node, Git und Java; geprüft wurden Node24.19 und der vorhandene JVM-Buildpfad.
+  Für die Profilbrücke werden außerdem die zum Projekt gehörenden Kotlin-
+  Compiler-/Runtime-Abhängigkeiten benötigt. Auf einem anderen Rechner muss
+  `CONTINUUM_FABRIC_JVM_DEPS` auf deren tatsächlich vorhandenes Verzeichnis zeigen;
+  der Standardpfad `/workspace/continuum-build-env/native-graph-deps` gehört nur
+  zu dieser Entwicklungsumgebung.
 - Bereits zugelassene Qwen2.5-Coder-1.5B-Q4_K_M-GGUF und llama.cpp-Binärdatei.
   Modell-SHA: `cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046`.
   Runtime-SHA: `c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a`.
@@ -37,6 +42,7 @@ ein frisches absolutes Verzeichnis außerhalb des Quellcheckouts sein.
 
 ```bash
 SYNAPSE_BASE_CLASSES=/absoluter/checkout/app/build/tmp/kotlin-classes/debug \
+  CONTINUUM_FABRIC_JVM_DEPS=/absoluter/pfad/zu/jvm-abhaengigkeiten \
   bash tools/genesis-workspaces/run-host.sh /privat/profil-bruecke
 ```
 
@@ -151,6 +157,7 @@ Der separate Beobachter verwendet dieselben validierten Daten. Er hat genau vier
 Werkzeuge: `get_status`, `list_agents`, `list_tasks`, `get_evidence`.
 
 ```bash
+install -d -m 700 /privat/mcp-lesezugang
 node scripts/continuum-coding-mcp.mjs init-token --token-file /privat/mcp-lesezugang/token
 node scripts/continuum-coding-mcp.mjs serve \
   --config /privat/continuum-dienst/config.json \
