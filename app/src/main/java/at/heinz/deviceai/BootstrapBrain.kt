@@ -26,7 +26,7 @@ object BootstrapBrain {
     )
     // Match actual storage nouns, not verbs such as "speichere" or "speichern".
     // A conversation request that forbids saving is never a storage probe.
-    private val storageNoun = Regex("""(?iu)\b(?:speicher|speicherplatz|speicherkapazität)\b""")
+    private val storageNoun = Regex("""(?iu)\b(?:speicher|speicherplatz|speicherstatus|speicherkapazität)\b""")
 
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
