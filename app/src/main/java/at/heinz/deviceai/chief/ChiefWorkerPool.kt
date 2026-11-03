@@ -6,12 +6,14 @@ import at.heinz.deviceai.ToolRunner
 import at.heinz.deviceai.cognitive.AgentModel
 import at.heinz.deviceai.cognitive.AgentModelOutput
 import java.util.concurrent.CancellationException
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -70,8 +72,11 @@ class ChiefWorkerPool(
     }
 
     private val runners: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker").apply { isDaemon = true } }
-    // Never spawn unbounded job threads if a native model ignores an interrupt.
-    private val workers: ExecutorService = Executors.newFixedThreadPool(maxConcurrent) { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } }
+    // Neither threads nor queued closures may grow when a native call ignores stop.
+    private val workers = ThreadPoolExecutor(maxConcurrent, maxConcurrent, 0L, TimeUnit.MILLISECONDS,
+        ArrayBlockingQueue<Runnable>(maxConcurrent + maxQueued),
+        { r -> Thread(r, "chief-worker-job").apply { isDaemon = true } },
+        ThreadPoolExecutor.AbortPolicy())
     private val slots = ConcurrentHashMap<String, Slot>()
     // Capacity is released before reporting so callbacks may submit again; completion includes delivery.
     private val unfinishedAssignments = AtomicInteger()
@@ -106,8 +111,16 @@ class ChiefWorkerPool(
             slot.cancelled.set(true)
         }
         slot.forwardCancellation()
-        slot.work?.cancel(true)
+        cancelWork(slot)
         return true
+    }
+
+    private fun cancelWork(slot: Slot) {
+        val future = slot.work ?: return
+        future.cancel(true)
+        // FutureTask cancellation alone leaves it in ThreadPoolExecutor's work queue.
+        // The task has already been submitted before slot.work can refer to it.
+        if (future is Runnable) workers.remove(future)
     }
 
     fun active(): Set<String> = slots.keys.toSet()
@@ -172,7 +185,7 @@ class ChiefWorkerPool(
             slot.work = future
             if (slot.cancelled.get()) {
                 slot.forwardCancellation()
-                future.cancel(true)
+                cancelWork(slot)
             }
             val result = future.get(slot.brief.deadlineMillis, TimeUnit.MILLISECONDS)
             report(if (slot.cancelled.get()) WorkerStatus.CANCELLED else WorkerStatus.DONE,
@@ -180,7 +193,7 @@ class ChiefWorkerPool(
         } catch (_: TimeoutException) {
             slot.cancelled.set(true)
             slot.forwardCancellation()
-            slot.work?.cancel(true)
+            cancelWork(slot)
             report(WorkerStatus.TIMED_OUT, "Frist überschritten; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (_: CancellationException) {
             slot.forwardCancellation()
@@ -188,6 +201,7 @@ class ChiefWorkerPool(
         } catch (_: InterruptedException) {
             slot.cancelled.set(true)
             slot.forwardCancellation()
+            cancelWork(slot)
             report(WorkerStatus.CANCELLED, "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen.")
         } catch (e: Exception) {
             val cause = (e as? java.util.concurrent.ExecutionException)?.cause ?: e
