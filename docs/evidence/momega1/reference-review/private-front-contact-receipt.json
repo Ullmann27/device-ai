@@ -1,6 +1,6 @@
 {
   "schema": "private-reference-pose-contact",
-  "version": 1,
+  "version": 2,
   "privateReferenceMediaCommitted": false,
   "sameHeadHeightPixels": 380,
   "manualAlignmentNotGroundTruth": true,
@@ -38,10 +38,10 @@
         52,
         56,
         334,
-        365
+        392
       ],
       "resizedPixels": [
-        347,
+        319,
         380
       ],
       "label": "Actual baseline GLB f39a89fc",
@@ -58,15 +58,17 @@
         52,
         56,
         334,
-        365
+        392
       ],
       "resizedPixels": [
-        347,
+        319,
         380
       ],
       "label": "Surface variant fe76e85d",
       "pose": "Neutral front / Blender 32 samples"
     }
   ],
-  "contactSha256": "3b97707bf787e643f806b9964d52a429c1db9b80883cf410fe395d62cdbc90da"
+  "contactSha256": "fb6dc10aff76cf4abd3bb0c7caf44fc10458d14653038d518d56a8f9162d240f",
+  "supersedesContactSha256": "3b97707bf787e643f806b9964d52a429c1db9b80883cf410fe395d62cdbc90da",
+  "correction": "First asset crop ended above the full chin. Coordinate inspection extended its lower bound from365 to392; estimated ear-width/head-height is approximately0.84 instead of0.91. Manual diagnostic alignment, not geometric ground truth."
 }

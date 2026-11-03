@@ -16,9 +16,14 @@ not proof of audio timing. Exact extraction hashes are recorded separately.
 A reviewer-owned front contact aligns the reference, baseline `f39a89fc` and
 surface candidate `fe76e85d` to the same crown-to-chin height, with uniform scaling
 and no color, exposure or contrast adjustment. Manual crops are disclosed. The
-rough ear-width/head-height ratio is about 0.76 in this reference versus 0.91 in
+rough ear-width/head-height ratio is about 0.76 in this reference versus 0.84 in
 the asset. This is a manual projected-image observation, not recovered 3D anatomy
 or an exact acceptance threshold; perspective, glow and pose differ.
+
+The first diagnostic contact used an asset crop ending above the full chin and
+overestimated this difference (about 0.91). Coordinate inspection corrected its
+lower boundary from y365 to y392. Receipt version 2 records the replacement and
+the superseded contact hash. No mesh change is justified by the earlier ratio.
 
 Actionable differences, in priority order:
 
