@@ -129,4 +129,15 @@ class AvatarObservedGazeTest {
         director.clearObservedGaze()
         assertFalse(replacement.pose(now).gazeObserved)
     }
+
+    @Test fun idleMotionIsContinuousAcrossTheExistingViewClockWrap() {
+        val pose = reducer.pose(now)
+        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        fun angles() = listOf(mapper.headYaw, mapper.headPitch, mapper.eyeYaw, mapper.eyePitch)
+        mapper.update(pose, 460f - 1f / 60f, true)
+        val before = angles()
+        mapper.update(pose, 0f, true)
+        val after = angles()
+        before.zip(after).forEach { (a, b) -> assertTrue(kotlin.math.abs(a - b) < .1f) }
+    }
 }
