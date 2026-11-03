@@ -1,0 +1,20 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "author-native-smoke",
+  "sourceCommit": "e27941330ca8c5477c80aec9ff2d91d804e89295",
+  "kind": "BUGFIX",
+  "goal": "Correct twice so it returns twice its integer argument.",
+  "allowedPaths": [
+    "lib/twice.mjs"
+  ],
+  "acceptance": [
+    "twice(2) equals4",
+    "twice(-3) equals-6"
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 1,
+    "maxContextChars": 4096
+  }
+}

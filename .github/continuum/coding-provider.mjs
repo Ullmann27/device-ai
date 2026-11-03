@@ -206,10 +206,13 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    const pair=getReviewedLocalModelPair({modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,
     runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256});
    const verified=!!pair&&env.CONTINUUM_LOCAL_BRAIN_RUNTIME_KIND==='LLAMA_CPP';
-   const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body)),
+   const expected={...binding,requestSha256:sha256Hex(JSON.stringify(body)),runtimePromptSha256:sha256Hex(serializeLocalCodingPrompt(body,{modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256})),
+    runtimeSchemaSha256:sha256Hex(JSON.stringify(body.response_format.json_schema.schema)),
     modelSha256:env.CONTINUUM_LOCAL_BRAIN_MODEL_SHA256,runtimeSha256:env.CONTINUUM_LOCAL_BRAIN_RUNTIME_SHA256,
     proposalSha256:responseStatus==='PROPOSAL'&&wire.proposal?sha256Hex(canonical(wire.proposal)):null,
-    responseStatus,verifiedModelExecution:verified,reviewedPairId:verified?pair.id:null,reviewedModelId:verified?pair.modelRepository:null};
+    responseStatus,verifiedModelExecution:verified,reviewedPairId:verified?pair.id:null,reviewedModelId:verified?pair.modelRepository:null,
+    reviewedRuntimeSourceCommit:verified?pair.runtimeSourceCommit:null,reviewedModelRevision:verified?pair.modelRevision:null,
+    reviewedBuildEvidenceSha256:verified?pair.buildEvidenceSha256:null,independentReviewEvidenceSha256:verified?pair.independentReviewEvidenceSha256:null};
    const expectedMac=observation&&createHmac('sha256',Buffer.from(observationKey,'hex')).update(JSON.stringify(observation)).digest('hex');
    if(!observation||observation.schema!=='momega1-local-process-observation-v1'||
     observation.evidenceClass!==(verified?'LOCAL_MODEL_HOST':'HOST_INTEGRATION')||observation.isolation!=='BWRAP_UNSHARE_ALL'||
