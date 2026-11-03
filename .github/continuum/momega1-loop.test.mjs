@@ -70,3 +70,10 @@ test('MΩ recall ablation accepts only a trusted Boolean option before any state
  await assert.rejects(runCodingTask({project:'/does-not-exist',stateDir:'/does-not-exist-state',id:'momega-offset',
   technicalRecallEnabled:'false'}),/CODING_RECALL_OPTION_INVALID/);
 });
+test('MΩ rejected response cannot self-certify a genuine inference or manufacture call counts',async()=>{
+ const coding=await import('./coding-orchestrator.mjs');
+ assert.equal(typeof coding.assertCodingInferenceFailureBinding,'function');
+ assert.throws(()=>coding.assertCodingInferenceFailureBinding({task:{},error:{code:'CODING_RESPONSE_INVALID',
+  modelObservation:Object.freeze({verifiedModelExecution:true,responseStatus:'INVALID_MODEL_RESPONSE',proposalSha256:null})}}),
+ /CODING_LOCAL_MODEL_OBSERVATION_REQUIRED/);
+});
