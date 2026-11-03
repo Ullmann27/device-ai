@@ -1,6 +1,6 @@
 # MΩ-1 implementation plan
 
-Status: WIP / no model or device acceptance. User master order of 2026-11-03 authorizes isolated implementation, real agent teams, testing, commits, pushes and research PRs. No further design approval is required. This plan uses the worktree, parallel-agent, planning and independent-review skills under that authorization.
+Status: WIP / genuine 1.5B host inference and original 3/10 measured; no device acceptance. Current results and remaining work: HANDOFF.md. User master order of 2026-11-03 authorizes isolated implementation, real agent teams, testing, commits, pushes and research PRs. No further design approval is required. This plan uses the worktree, parallel-agent, planning and independent-review skills under that authorization.
 
 Goal: connect the existing local model, typed coding task, canonical CCC1 worker/verifier and durable experience path; demonstrate the loop only with real local inference and separately authorized real Fold7 execution.
 
@@ -11,7 +11,7 @@ Baseline: branch created at verified Code40 source 64ec06a73f50cae9ee49035c84071
 ## Global constraints
 
 - Original package at.heinz.deviceai.continuumlocal, main, original signer, release publisher, owner data and productive model weights unchanged.
-- No installation, model download, paid action, production deployment or GitHub Actions.
+- No installation, unapproved model download, paid action, production deployment or GitHub Actions. Explicit owner-approved 1.5B and 7B host weights are recorded separately in the admission documents.
 - Model text is never authorization; complete task is approved with full source SHA, 1–3 source files, 1–8 acceptance criteria, fixed chain and bounded calls/context.
 - Missing OS isolation or local model proof blocks execution; worktrees alone are not a sandbox.
 - Genuine inference, RED, GREEN, reflection, independent verification, persistence and recall must all be observed before FIRST_COGNITIVE_LOOP_VERIFIED.
