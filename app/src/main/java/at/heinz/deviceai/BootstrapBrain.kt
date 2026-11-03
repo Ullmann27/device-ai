@@ -24,6 +24,9 @@ object BootstrapBrain {
     private val unsafe = Regex(
         "(?i)\\b(passwort|password|kennwort|pin|iban|bic|kreditkarte|api[ _-]?key|secret|token|tanf?nummer|zugangscode)\\b"
     )
+    // Match actual storage nouns, not verbs such as "speichere" or "speichern".
+    // A conversation request that forbids saving is never a storage probe.
+    private val storageNoun = Regex("""(?iu)\b(?:speicher|speicherplatz|speicherkapazität)\b""")
 
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
@@ -132,7 +135,7 @@ object BootstrapBrain {
             mapOf("path" to "/sdcard/Download"))
         if ("akku" in low || "batterie" in low || "ladezustand" in low)
             return tool("get_battery_info")
-        if ("speicher" in low || "große dateien" in low) return tool("get_storage_info")
+        if (storageNoun.containsMatchIn(low) || "große dateien" in low) return tool("get_storage_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
         // An explicit offline instruction is neither a web-search request nor
