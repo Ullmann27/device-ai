@@ -370,6 +370,7 @@ class AgentActivity : Activity() {
     // First real ChiefWorkerPool entry in the owner chat: diagnostics are read-only,
     // use a dedicated worker thread, and never touch the shared native Gemma session.
     private var chiefStatusPool: at.heinz.deviceai.chief.ChiefWorkerPool? = null
+    private var botRosterDialog: ContinuumBotRosterDialog? = null
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
@@ -654,6 +655,8 @@ class AgentActivity : Activity() {
         activeBootstrapGate?.cancel()
         chiefStatusPool?.shutdown()
         chiefStatusPool = null
+        botRosterDialog?.close()
+        botRosterDialog = null
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
@@ -1440,9 +1443,10 @@ class AgentActivity : Activity() {
     }
 
     private fun showBotRoster() {
-        ContinuumBotRosterDialog(this,
+        val roster = botRosterDialog ?: ContinuumBotRosterDialog(this,
             at.heinz.deviceai.chief.ChiefBotProfileStore(java.io.File(filesDir, "chief-bots")),
-            backlogExecutor).show()
+            backlogExecutor).also { botRosterDialog = it }
+        roster.show()
     }
 
     private fun refreshConversationLayout() {

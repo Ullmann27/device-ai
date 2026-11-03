@@ -15,9 +15,10 @@ import at.heinz.deviceai.chief.ChiefBotProfile
 import at.heinz.deviceai.chief.ChiefBotProfileStore
 import java.util.UUID
 import java.util.concurrent.Executor
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Owner-facing catalogue. Profiles never grant tools, start models or create an OS sandbox.
- * All storage calls use the Activity's existing bounded I/O executor. No avatar/render loop,
+ * At most one storage operation uses the Activity's existing I/O executor. No avatar/render loop,
  * microphone listener or second conversation runtime is created for catalogue cards. */
 class ContinuumBotRosterDialog(
     private val activity: Activity,
@@ -26,11 +27,21 @@ class ContinuumBotRosterDialog(
 ) {
     private var dialog: AlertDialog? = null
     private var revision = 0L
+    private val storagePending = AtomicBoolean()
     private val cyan = Color.rgb(79, 224, 255)
     private val violet = Color.rgb(159, 120, 255)
     private val surfaceColor = Color.rgb(5, 13, 29)
 
-    fun show() = showPage(null)
+    fun show() {
+        if (!activity.isFinishing && !activity.isDestroyed) showPage(null)
+    }
+
+    /** Invalidates presentation only. Accepted storage writes and independent coding jobs continue. */
+    fun close() {
+        revision++
+        dialog?.dismiss()
+        dialog = null
+    }
 
     private fun column() = LinearLayout(activity).apply {
         orientation = LinearLayout.VERTICAL
@@ -74,9 +85,17 @@ class ContinuumBotRosterDialog(
         token == revision && dialog?.isShowing == true
 
     private fun <T> load(token: Long, body: LinearLayout, task: () -> T, done: (T) -> Unit) {
+        if (!storagePending.compareAndSet(false, true)) {
+            if (live(token)) {
+                body.removeAllViews()
+                body.addView(label("Ein Speicherzugriff läuft noch. Diese neue Anfrage wurde nicht eingereiht."))
+                body.addView(action("Übersicht erneut öffnen") { show() })
+            }
+            return
+        }
         try {
             io.execute {
-                val result = runCatching(task)
+                val result = try { runCatching(task) } finally { storagePending.set(false) }
                 activity.runOnUiThread {
                     if (!live(token)) return@runOnUiThread
                     result.fold(done) {
@@ -88,6 +107,7 @@ class ContinuumBotRosterDialog(
                 }
             }
         } catch (_: java.util.concurrent.RejectedExecutionException) {
+            storagePending.set(false)
             if (live(token)) {
                 body.removeAllViews()
                 body.addView(label("Die Sitzung wird beendet. Bitte die Bot-Übersicht erneut öffnen."))
