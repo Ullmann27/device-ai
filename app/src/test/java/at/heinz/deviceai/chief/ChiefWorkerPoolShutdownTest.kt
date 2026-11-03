@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -142,5 +143,39 @@ class ChiefWorkerPoolShutdownTest {
             assertEquals(2, delivered.get())
             assertTrue(pool.active().isEmpty())
         } finally { release.countDown(); pool.shutdown() }
+    }
+
+    @Test fun cancelledWorkerQueueDoesNotAccumulateBehindAnUncooperativeCall() {
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val exited = CountDownLatch(1)
+        val calls = AtomicInteger()
+        val reports = ConcurrentLinkedQueue<WorkerReport>()
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob {
+            calls.incrementAndGet()
+            entered.countDown()
+            awaitIgnoringInterrupts(release)
+            exited.countDown()
+            "late result"
+        } }
+        try {
+            assertTrue(pool.submit(WorkerBrief("native", "bounded", emptySet(), 300)) { reports += it })
+            assertTrue(entered.await(2, TimeUnit.SECONDS))
+            assertTrue(pool.awaitIdle(2_000))
+            repeat(12) { i ->
+                assertTrue(pool.submit(WorkerBrief("pending-$i", "bounded", emptySet(), 10)) { reports += it })
+                assertTrue(pool.awaitIdle(2_000))
+            }
+            val field = ChiefWorkerPool::class.java.getDeclaredField("workers").apply { isAccessible = true }
+            val executor = field.get(pool) as ThreadPoolExecutor
+            assertEquals("cancelled queued work must release its retained closure", 0, executor.queue.size)
+            assertEquals("no replacement threads to bypass the native call", 1, calls.get())
+            assertEquals(13, reports.size)
+            assertTrue(reports.all { it.status == WorkerStatus.TIMED_OUT })
+            assertTrue(pool.active().isEmpty())
+        } finally {
+            pool.shutdown(); release.countDown()
+            assertTrue(exited.await(2, TimeUnit.SECONDS))
+        }
     }
 }

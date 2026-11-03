@@ -31,3 +31,14 @@ challenger reviews the candidate and Chief owns combined-source acceptance.
 
 Status at freeze: SOURCE_UNCHANGED, TESTS_NOT_RUN, FOLD7_NOT_RUN.
 No package, signatory, original sphere, avatar, ToolGate, memory or owner data change.
+
+## Resource follow-up frozen before its repair
+
+Independent probe `e3f77ef1` demonstrated 24 cancelled FutureTasks retained after
+25 accepted sequential timeouts behind one uncooperative native call (pool1/0).
+This was preexisting and outside the first shutdown tests. Chief authorized a
+same-file follow-up: hard bounded worker queue plus cancellation removal; no new
+thread to replace an uncooperative worker. Freeze the author 13-task variant before
+changing that implementation; retain first shutdown acceptance and this RED
+separately. Success requires no retained cancelled closures and physical calls1,
+while existing cancellation delivery and callback tests remain unchanged.
