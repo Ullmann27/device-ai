@@ -139,7 +139,7 @@ class ContinuumBotRosterDialog(
                 card.addView(label(runtimeStatus?.invoke(profile) ?:
                     "REGISTRIERT · Kein laufender Auftrag\nGeprüfte Fähigkeiten: noch keine"))
                 onSelect?.let { select -> card.addView(action("Mit ${profile.displayName} sprechen") {
-                    close(); select(profile)
+                    if (live(token)) { close(); select(profile) }
                 }) }
                 card.addView(action("Profil und Arbeitsbereich öffnen") { showProfile(profile.agentId) })
                 body.addView(card, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) })
@@ -165,7 +165,7 @@ class ContinuumBotRosterDialog(
                 "Geprüfte Fähigkeiten: noch keine\nLetztes bestätigtes Arbeitsergebnis: noch keines"))
             )
             onSelect?.let { select -> body.addView(action("Mit ${profile.displayName} sprechen") {
-                close(); select(profile)
+                if (live(token)) { close(); select(profile) }
             }) }
             body.addView(label("Arbeitsplatz: ${profile.workspaceId}\n" +
                 "Speicherort: private App-Daten auf diesem Gerät\n" +

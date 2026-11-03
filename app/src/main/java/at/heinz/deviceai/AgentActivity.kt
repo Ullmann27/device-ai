@@ -588,7 +588,6 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         botLookupRevision++
-        botLookupPending = false
         // A delayed read-only lookup must not render into a background/other app state.
         appLookupGeneration++
         if (appLookupActive) {
@@ -1491,8 +1490,8 @@ class AgentActivity : Activity() {
                 profile to botProfiles.loadConversation(agentId, agentId)
             }
             runOnUiThread {
-                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 botLookupPending = false
+                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 if (busy) return@runOnUiThread
                 loaded.fold({ (profile, history) ->
                     enterBotConversation(profile)
@@ -1553,8 +1552,8 @@ class AgentActivity : Activity() {
                 }
             }
             runOnUiThread {
-                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 botLookupPending = false
+                if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                 if (busy || input.text.toString().trim() != request) return@runOnUiThread
                 if (found.isFailure) {
                     Toast.makeText(this, "Bot-Zuordnung unklar oder nicht lesbar. Bitte über Team auswählen.", Toast.LENGTH_LONG).show()
@@ -1631,8 +1630,9 @@ class AgentActivity : Activity() {
             mainHandler.postDelayed({ finishBotDialogue(cancellation, profile, turnSession, result) }, 250L)
             return
         }
-        val current = selectedBot?.agentId == profile.agentId && sessionId == turnSession &&
-            activeBotTurn?.let { botConversation.isCurrent(it, localRuntime.loadedModel, sessionId) } == true
+        val uncancelled = runCatching { cancellation.throwIfCancelled() }.isSuccess
+        val current = uncancelled && selectedBot?.agentId == profile.agentId && sessionId == turnSession &&
+            (activeBotTurn?.let { botConversation.isCurrent(it, localRuntime.loadedModel, sessionId) } ?: result.isFailure)
         activeBotTurn?.let(botConversation::cancel)
         activeBotTurn = null; activeBotId = null
         activeChatCancellation = null; activeLocalRequest = false
@@ -5686,8 +5686,8 @@ class AgentActivity : Activity() {
             awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
-    private fun stopVoiceAnimation() {
-        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = true) }
+    private fun stopVoiceAnimation(interrupted: Boolean = true) {
+        voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = interrupted) }
         voiceUtteranceId = null
         voiceSpeaking = false
         voiceSignal.stop()
@@ -5730,8 +5730,7 @@ class AgentActivity : Activity() {
             private fun finish(id: String?, interrupted: Boolean = false) {
                 runOnUiThread {
                     if(id != null && id == voiceUtteranceId) {
-                        avatarDirector.speechEnded(id, interrupted)
-                        stopVoiceAnimation()
+                        stopVoiceAnimation(interrupted)
                     }
                 }
             }
@@ -8801,8 +8800,8 @@ class AgentActivity : Activity() {
             try { backlogExecutor.execute {
                 val reset = runCatching { botConversation.reset(profile.agentId) }
                 runOnUiThread {
-                    if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                     botLookupPending = false
+                    if (revision != botLookupRevision || isFinishing || isDestroyed) return@runOnUiThread
                     reset.fold({ enterBotConversation(it) }, {
                         Toast.makeText(this, "Bot-Dialog konnte nicht zurückgesetzt werden.", Toast.LENGTH_LONG).show()
                     })
