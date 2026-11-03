@@ -1,0 +1,18 @@
+{
+  "id": "independence-dev-u03",
+  "classification": "KNOWN_DEVELOPMENT_DIAGNOSTIC_NOT_HOLDOUT",
+  "requirements": [
+    "Use default only when setting is null or undefined; preserve zero, false and empty string."
+  ],
+  "allowedPaths": [
+    "lib/subject.mjs"
+  ],
+  "maxModelCalls": 1,
+  "requestedModelTimeoutMs": 120000,
+  "unchangedProfileDeadlineMillis": 120000,
+  "fixedOutputTokenCeiling": 1800,
+  "effectiveTimeoutRule": "min(requested120000, remainingAssignmentMs, remainingCanonicalDeadlineMs) minus500ms",
+  "nativeCpuSecondsCeiling": 120,
+  "externalAnswer": false,
+  "provenance": "Previously consumed u03 from original QA12; known successful repair in review0176702a. No expected patch supplied."
+}
