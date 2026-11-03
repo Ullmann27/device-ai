@@ -1,0 +1,126 @@
+✖ positive shift moves the last element to the front (2.894244ms)
+✖ large shifts wrap around the array length (0.392661ms)
+✖ a negative right shift rotates left (0.288785ms)
+✔ zero and full rotations return a new array (0.945002ms)
+✔ empty and one-element arrays are supported (0.12659ms)
+✖ input and element references are preserved (0.939414ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 2
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 80.466265
+
+✖ failing tests:
+
+test at tools/independence-native-review/frozen/s01/owner.test.mjs:5:1
+✖ positive shift moves the last element to the front (2.894244ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'b',
+  +   'c',
+      'd',
+      'a',
+  -   'b',
+  -   'c'
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s01/owner.test.mjs:6:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'b', 'c', 'd', 'a' ],
+    expected: [ 'd', 'a', 'b', 'c' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s01/owner.test.mjs:8:1
+✖ large shifts wrap around the array length (0.392661ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   30,
+      40,
+      50,
+      10,
+      20,
+  -   30
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s01/owner.test.mjs:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 30, 40, 50, 10, 20 ],
+    expected: [ 40, 50, 10, 20, 30 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s01/owner.test.mjs:11:1
+✖ a negative right shift rotates left (0.288785ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   4,
+  +   1,
+      2,
+      3,
+  -   4,
+  -   1
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s01/owner.test.mjs:12:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 4, 1, 2, 3 ],
+    expected: [ 2, 3, 4, 1 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/independence-native-review/frozen/s01/owner.test.mjs:26:1
+✖ input and element references are preserved (0.939414ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  
+    {
+  +   id: 'b'
+  -   id: 'c'
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/independence-native-review/tools/independence-native-review/frozen/s01/owner.test.mjs:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 'b' },
+    expected: { id: 'c' },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
