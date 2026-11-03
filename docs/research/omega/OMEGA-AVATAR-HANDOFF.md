@@ -35,3 +35,16 @@ Android lifecycle/Canvas tests added in `ContinuumAvatarNativeUiTest`; Gradle/UI
 Chief review checked pause/resume: existing `AgentActivity.onPause()` already stops the TTS engine, so the renderer must not resume background speech. Additional real gap repaired: `stopVoiceAnimation()` now calls existing Director.speechEnded before clearing the utterance ID, making pause/barge-in/failed-speak closure synchronous instead of waiting for onStop. The UI regression invokes this actual Activity method without onCreate/model bootstrap. This test remains NOT_RUN until the shared Gradle acceptance slot completes. No new TTS listener or state source was introduced.
 
 Preview source and six rendered PNGs are now versioned at `docs/evidence/omega-avatar-20261103/`; original idle fixture inspected visually. Node existing avatar wiring tests: 3 PASS. Renderer paths/gradients are allocated once; drawing uses the shared painter caches. Only bounded pose/cue handling allocates at frame/event boundaries; no full-screen bitmap or blur is used in production. Fold7 FPS/thermal/battery measurement remains NOT_RUN.
+
+## Frozen handoff to Chief / Quality
+
+- Draft PR: https://github.com/Ullmann27/device-ai/pull/395
+- Final production/test source: `29ff3a5ac7500a2f26d058795de826eb84b810b5`; https://github.com/Ullmann27/device-ai/commit/29ff3a5ac7500a2f26d058795de826eb84b810b5
+- All source and evidence pushed to `codex/team-04-android-omega-20261103`; working tree clean before this documentation checkpoint.
+- Quality independently reviewed this exact source and accepted isolated integration, conditional on actual combined UI tests. Chief is integrating; Quality will execute the full combined Android suite once baseline finishes. No separate competing Gradle build launched by this lane.
+- Baseline full main/unit compilation reported successful by Quality; that is **baseline**, not avatar/final integration success. Avatar Android/native Canvas/lifecycle tests remain **PENDING**, not PASS.
+- Committed Java2D preview harness compiled and re-executed after package/object relocation; all six PNGs reproduced byte-for-byte.
+- Production scope: 4 inserted AgentActivity lines, existing HologramView optional renderer/lifecycle, existing Director/reducer fixes, new procedural renderer. No release/config/permission/manifest alterations. Existing camera behavior unchanged; new avatar has no camera access.
+- Functional limits: native procedural **2D**, synthetic host visual fixtures, approximate word/viseme timing, no measured device TTS synchronization, no Fold7 performance/battery/thermal/device installation test. No inference, intelligence or learning improvement claimed.
+
+Next gate: run `ContinuumAvatarNativeUiTest` (3 tests), `ContinuumHologramMotionUiTest`, and all `avatar.*` tests on the exact integrated tree with `-PcontinuumUiWidgetTests=true -PcontinuumUiEvidenceDir=<external-output>`. Any source changes after acceptance require new source-bound results. Preserve original orb selection as immediate owner fallback.
