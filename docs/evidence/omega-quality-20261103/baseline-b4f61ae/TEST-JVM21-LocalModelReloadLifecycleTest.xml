@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-03T18:09:59" hostname="5268aff5350a" time="0.048">
+  <properties/>
+  <testcase name="failureBeforeAnyModelWasLoadedCanRetryWithoutUnload" classname="at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest" time="0.04"/>
+  <testcase name="failedRuntimeWithRetainedModelRefusesReloadUntilExplicitUnload" classname="at.heinz.deviceai.localmodel.LocalModelReloadLifecycleTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
