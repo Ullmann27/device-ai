@@ -105,3 +105,11 @@ Independent reviewer must challenge frozen candidate; ALPHA does not self-certif
 
 Read current branch SHA and raw logs in docs/evidence/momega1/runtime on resume.
 Rollback: omit isolated runtime commits; preserve existing CCC1 and owner gates.
+
+## Approved genuine-model phase
+
+Chief explicitly relayed owner approval for the exact Qwen1.5B Q4_K_M file and
+pinned official llama.cpp CPU build. Baseline95b6cb1f merged before work; prior
+reviewed process-only HOST_INTEGRATION semantics preserved. See
+LOCAL-MODEL-RUNTIME-ADMISSION.md. Download/build artifacts outside Git; independent
+challenger must approve reviewed tuple before true-inference admission is enabled.
