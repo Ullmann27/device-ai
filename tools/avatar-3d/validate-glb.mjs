@@ -5,6 +5,8 @@ import validator from 'gltf-validator';
 
 const filename = path.resolve(process.argv[2] ?? '../../assets/avatar/jarvis-research-v1.glb');
 const output = path.resolve(process.argv[3] ?? '../../docs/avatar-live/geometry-work');
+fs.mkdirSync(output,{recursive:true});
+const runtimeMode=process.argv.includes('--runtime');
 const bytes = fs.readFileSync(filename);
 const result = await validator.validateBytes(new Uint8Array(bytes), {uri: path.basename(filename), maxIssues: 1000});
 fs.writeFileSync(path.join(output, 'khronos-validator.json'), JSON.stringify(result, null, 2) + '\n');
@@ -42,9 +44,10 @@ for (const name of ['Face','NeuralThreads']) {
   const signatures=primitive.targets.map(t=>crypto.createHash('sha256').update(JSON.stringify(read(t.POSITION))).digest('hex'));
   assert(name+'-unique-target-deltas', new Set(signatures).size===21);
 }
-assert('independent-node-animation', ['Neck','Head','EyeLeft','EyeRight','Jaw'].every(name=>gltf.animations.some(a=>a.channels.some(c=>gltf.nodes[c.target.node].name===name&&c.target.path==='rotation'))));
+if(runtimeMode)assert('event-driven-no-authored-animation',!gltf.animations?.length);
+else assert('independent-node-animation', ['Neck','Head','EyeLeft','EyeRight','Jaw'].every(name=>gltf.animations.some(a=>a.channels.some(c=>gltf.nodes[c.target.node].name===name&&c.target.path==='rotation'))));
 assert('real-skin',gltf.skins.length>0&&gltf.skins[0].joints.length===3);
-const report={asset:filename,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),validatorVersion:validator.version(),checks,passed:checks.filter(c=>c.pass).length,failed:checks.filter(c=>!c.pass).length,morphStats,animations:gltf.animations.map(a=>({name:a.name,channels:a.channels.length})),limits:['Structural validity and nonzero targets do not certify phonetic accuracy, visual identity, collision-free blending or phone performance.']};
+const report={asset:filename,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),validatorVersion:validator.version(),runtimeMode,checks,passed:checks.filter(c=>c.pass).length,failed:checks.filter(c=>!c.pass).length,morphStats,animations:(gltf.animations??[]).map(a=>({name:a.name,channels:a.channels.length})),limits:['Structural validity and nonzero targets do not certify phonetic accuracy, visual identity, collision-free blending or phone performance.']};
 fs.writeFileSync(path.join(output,'structural-validation.json'),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({sha256:report.sha256,passed:report.passed,failed:report.failed,khronosErrors:result.issues.numErrors,khronosWarnings:result.issues.numWarnings}));
 if(report.failed)process.exitCode=1;

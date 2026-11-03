@@ -1,0 +1,20 @@
+{
+  "source": "jarvis-research-v1.glb",
+  "sourceSha256": "50cb34627384432d3f6744b924c250807def02c892d8336645dac7845a029d28",
+  "runtime": "jarvis-runtime-v1.glb",
+  "runtimeSha256": "5278f398f784c8c6129d87fe447ab85e0c3e74618469fc9b8d3f73b748df4c31",
+  "runtimeBytes": 8690392,
+  "geometryBinaryPrefixSha256": "649556af9583282e927f59baf55946bd14bb3903f082e49cc7bad898167b4a9b",
+  "geometryBinaryPrefixBytes": 8655708,
+  "meshesIdentical": true,
+  "skinsIdentical": true,
+  "nodesIdentical": true,
+  "materialsIdentical": true,
+  "sourceAnimations": [
+    "VisemeSweep",
+    "ExpressionAndSpeech",
+    "IndependentControlDemo"
+  ],
+  "runtimeAnimationCount": 0,
+  "method": "Removed animation metadata and only trailing animation accessors, bufferViews and buffer bytes; retained contiguous geometry prefix byte-for-byte."
+}
