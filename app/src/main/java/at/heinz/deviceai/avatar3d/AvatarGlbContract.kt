@@ -62,6 +62,22 @@ object AvatarGlbContract {
                 for (n in 0 until count) for (c in 0 until width) require(buf.getFloat(start + n * stride + c * 4).isFinite()) { "Nonfinite accessor" }
             }
         }
+        fun values(index: Int): List<DoubleArray> {
+            val a = accessor(index); val v = views.getJSONObject(a.getInt("bufferView"))
+            val component = a.getInt("componentType"); val scalar = sizes.getValue(component)
+            val width = widths.getValue(a.getString("type")); val stride = v.optInt("byteStride", scalar * width)
+            val start = binStart + v.optInt("byteOffset", 0) + a.optInt("byteOffset", 0)
+            return List(a.getInt("count")) { n -> DoubleArray(width) { c ->
+                val at = start + n * stride + c * scalar
+                when (component) {
+                    5121 -> (buf.get(at).toInt() and 255).toDouble()
+                    5123 -> (buf.getShort(at).toInt() and 65535).toDouble()
+                    5125 -> (buf.getInt(at).toLong() and 0xffffffffL).toDouble()
+                    5126 -> buf.getFloat(at).toDouble()
+                    else -> throw IllegalArgumentException("Unsupported geometry component")
+                }
+            } }
+        }
         val nodes = root.getJSONArray("nodes"); require(nodes.length() in 6..64)
         val names = (0 until nodes.length()).map { nodes.getJSONObject(it).optString("name", "") }
         NODES.forEach { name -> require(names.count { it == name } == 1) { "Required unique node $name" } }
@@ -86,7 +102,21 @@ object AvatarGlbContract {
         require(descendant(names.indexOf("Neck"), names.indexOf("AvatarRoot")))
         require(descendant(names.indexOf("Head"), names.indexOf("Neck")))
         listOf("EyeLeft", "EyeRight", "Jaw").forEach { require(descendant(names.indexOf(it), names.indexOf("Head"))) }
+        val skins = root.getJSONArray("skins"); require(skins.length() in 1..8)
+        for (i in 0 until skins.length()) {
+            val skin = skins.getJSONObject(i); val joints = skin.getJSONArray("joints")
+            require(joints.length() in 1..64)
+            val jointIndices = (0 until joints.length()).map { joints.getInt(it) }
+            require(jointIndices.toSet().size == jointIndices.size && jointIndices.all { it in parents.indices })
+            val inverse = accessor(skin.getInt("inverseBindMatrices"))
+            require(inverse.getInt("count") == joints.length() && inverse.getString("type") == "MAT4" && inverse.getInt("componentType") == 5126)
+        }
         val meshes = root.getJSONArray("meshes"); require(meshes.length() in 1..32)
+        for (i in 0 until nodes.length()) {
+            val n = nodes.getJSONObject(i)
+            if (n.has("mesh")) require(n.getInt("mesh") in 0 until meshes.length())
+            if (n.has("skin")) require(n.has("mesh") && n.getInt("skin") in 0 until skins.length())
+        }
         var targets: List<String>? = null
         val morphMeshes = mutableSetOf<Int>(); var vertices = 0; var triangles = 0
         for (m in 0 until meshes.length()) {
@@ -101,14 +131,38 @@ object AvatarGlbContract {
                 require(position.getInt("componentType") == 5126 && position.getString("type") == "VEC3")
                 vertices += count
                 val idx = accessor(primitive.getInt("indices")); require(idx.getString("type") == "SCALAR" && idx.getInt("componentType") in listOf(5121,5123,5125) && idx.getInt("count") % 3 == 0)
+                require(values(primitive.getInt("indices")).all { it[0] >= 0 && it[0] < count }) { "Vertex index bounds" }
                 triangles += idx.getInt("count") / 3
                 primitive.optJSONArray("targets")?.let { ts ->
                     require(targetNames != null && targetNames.size == TARGETS.size && targetNames.toSet() == TARGETS.toSet()) { "Morph names" }
                     require(ts.length() == targetNames.size && (targets == null || targets == targetNames)) { "Morph ordering" }
                     targets = targetNames; morphMeshes += m
+                    val morphAccessors = (0 until ts.length()).map { ts.getJSONObject(it).getInt("POSITION") }
+                    require(morphAccessors.toSet().size == morphAccessors.size) { "Repeated morph accessor" }
+                    val neutral = values(attributes.getInt("POSITION"))
+                    val spans = DoubleArray(3) { axis -> neutral.maxOf { it[axis] } - neutral.minOf { it[axis] } }
+                    val diagonal = kotlin.math.sqrt(spans.sumOf { it * it })
+                    require(diagonal in 0.02..2.0) { "Invalid metre-scale face bounds" }
+                    require(attributes.has("JOINTS_0") && attributes.has("WEIGHTS_0")) { "Skinned face required" }
+                    val jointAccessor = accessor(attributes.getInt("JOINTS_0"))
+                    val weightAccessor = accessor(attributes.getInt("WEIGHTS_0"))
+                    require(jointAccessor.getInt("componentType") in listOf(5121, 5123) && weightAccessor.getInt("componentType") == 5126)
+                    require(jointAccessor.getString("type") == "VEC4" && weightAccessor.getString("type") == "VEC4")
+                    require(jointAccessor.getInt("count") == count && weightAccessor.getInt("count") == count)
+                    val skinNodes = (0 until nodes.length()).filter { nodes.getJSONObject(it).optInt("mesh", -1) == m }
+                    require(skinNodes.isNotEmpty())
+                    for (node in skinNodes) {
+                        val skin = skins.getJSONObject(nodes.getJSONObject(node).getInt("skin"))
+                        val jointCount = skin.getJSONArray("joints").length()
+                        require(values(attributes.getInt("JOINTS_0")).all { j -> j.all { it >= 0 && it < jointCount } })
+                    }
+                    require(values(attributes.getInt("WEIGHTS_0")).all { w -> w.all { it in 0.0..1.0 } && kotlin.math.abs(w.sum() - 1.0) < 0.005 })
                     for (t in 0 until ts.length()) {
                         val a = accessor(ts.getJSONObject(t).getInt("POSITION"))
                         require(a.getInt("count") == count && a.getInt("componentType") == 5126 && a.getString("type") == "VEC3")
+                        val deltas = values(ts.getJSONObject(t).getInt("POSITION"))
+                        val maxDelta = deltas.maxOf { kotlin.math.sqrt(it.sumOf { value -> value * value }) }
+                        require((targetNames[t] == "SIL" || maxDelta > 0.0000001) && maxDelta <= diagonal * .2) { "Empty or excessive morph" }
                     }
                 }
             }

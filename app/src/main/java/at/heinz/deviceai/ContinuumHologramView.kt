@@ -220,7 +220,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (nativeTexture == null) {
             val texture = TextureView(context).apply {
                 isOpaque = false
-                alpha = 0f
+                alpha = 1f
                 importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
             }
             nativeTexture = texture
@@ -367,7 +367,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     /** Actual View visibility, not a callback-cached flag that can go stale. */
-    private fun canAnimate() =
+    override fun canAnimate() =
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
@@ -413,6 +413,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val measuredWidth = resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec)
         val measuredHeight = resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
+        // 3D occupies the left side; the existing orb remains visible alongside it.
+        nativeTexture?.layoutParams?.width = (measuredWidth * .72f).toInt()
         super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY))
     }
@@ -438,11 +440,22 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
-                runCatching { native3d!!.render(pose, avatarSeconds, canAnimate(), width, height) }
+                runCatching { native3d!!.render(pose, avatarSeconds, canAnimate(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0) }
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
             if (!native3dDrawn) avatarRenderer.draw(painter, width / density, height / density, pose, avatarSeconds, canAnimate())
+            else {
+                // Same original orb, same actual app state and speech frame; no second animation loop.
+                val orbWidth = width / density * .28f
+                val orbHeight = height / density * .40f
+                val orbCanvas = canvas.save()
+                canvas.translate(width / density * .72f, height / density * .30f)
+                canvas.clipRect(0f, 0f, orbWidth, orbHeight)
+                renderer.layout(orbWidth, orbHeight)
+                renderer.draw(painter, renderFrame)
+                canvas.restoreToCount(orbCanvas)
+            }
         } else renderer.draw(painter, renderFrame)
         drawnFrameCount++
         canvas.restoreToCount(saved)

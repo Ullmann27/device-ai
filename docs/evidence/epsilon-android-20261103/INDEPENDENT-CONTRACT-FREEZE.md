@@ -14,3 +14,5 @@ Frozen rejection criteria:
 Budgets: GLB <= 16MiB, <= 100k vertices, <= 200k triangles, <= 64 nodes, <= 32 targets, no remote texture/extension requirement. Runtime rejects unsupported sparse/accessor encoding rather than guessing.
 
 Independent visual review after source/test freeze: neutral + each viseme + asymmetric blink + +/- gaze + head yaw/pitch, then speech combinations. Lip seal/teeth clipping, eyelid coverage and face identity remain explicit human/device review gates even when numerical checks pass.
+
+Pre-inspection amendment (Chief instruction, 2026-11-03): SIL may be a zero displacement neutral target. This overrides the initial schema-only exchange requesting a small lip-seal deformation; all other declared channels must remain nonzero. B has not inspected A geometry/renders/results. Runtime never drives SIL above zero, consistent with no speech at rest.

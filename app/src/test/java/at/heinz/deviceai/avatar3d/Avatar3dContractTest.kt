@@ -59,22 +59,58 @@ class Avatar3dContractTest {
         assertRejected(asset(nonFinite = true))
         assertRejected(asset { it.getJSONArray("nodes").getJSONObject(2).put("scale",JSONArray(listOf(1,-1,1))) })
     }
+    @Test fun malformedSkinIndicesMorphAliasingAndEmptyShapeAreRejected() {
+        assertRejected(asset { it.getJSONArray("skins").getJSONObject(0).put("joints",JSONArray(listOf(1,99))) })
+        assertRejected(asset { it.getJSONArray("meshes").getJSONObject(0).getJSONArray("primitives").getJSONObject(0)
+            .getJSONArray("targets").put(1,JSONObject().put("POSITION",5)) })
+        fun editBinary(accessorIndex: Int, edit: (ByteBuffer,Int)->Unit): ByteArray {
+            val bytes=asset(); val b=ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+            val length=b.getInt(12); val doc=JSONObject(String(bytes,20,length,Charsets.UTF_8))
+            val a=doc.getJSONArray("accessors").getJSONObject(accessorIndex)
+            val view=doc.getJSONArray("bufferViews").getJSONObject(a.getInt("bufferView"))
+            edit(b,28+length+view.optInt("byteOffset",0)+a.optInt("byteOffset",0))
+            return bytes
+        }
+        assertRejected(editBinary(1) { b,at -> b.putShort(at,99) }) // Actual triangle index, not metadata.
+        assertRejected(editBinary(2) { b,at -> b.putShort(at,99) }) // Actual joint influence.
+        assertRejected(editBinary(3) { b,at -> b.putFloat(at,0f) }) // Weight sum zero.
+        assertRejected(editBinary(6) { b,at -> repeat(9) { b.putFloat(at+it*4,0f) } }) // PP must deform.
+        assertEquals(21,AvatarGlbContract.validate(editBinary(5) { b,at -> repeat(9) { b.putFloat(at+it*4,0f) } }).targets.size)
+    }
     private fun assertRejected(bytes: ByteArray) {
         try { AvatarGlbContract.validate(bytes); fail("invalid asset accepted") } catch (_: IllegalArgumentException) { } catch (_: org.json.JSONException) { }
     }
     private fun asset(nonFinite: Boolean = false, mutate: (JSONObject)->Unit = {}): ByteArray {
-        val root = JSONObject("""{"asset":{"version":"2.0"},"buffers":[{"byteLength":80}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":36},{"buffer":0,"byteOffset":72,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"type":"VEC3","count":3},{"bufferView":1,"componentType":5126,"type":"VEC3","count":3},{"bufferView":2,"componentType":5123,"type":"SCALAR","count":3}],"nodes":[{"name":"AvatarRoot","children":[1,6]},{"name":"Neck","children":[2]},{"name":"Head","children":[3,4,5]},{"name":"EyeLeft","translation":[0.03,0.1,0]},{"name":"EyeRight","translation":[-0.03,0.1,0]},{"name":"Jaw"},{"name":"Face","mesh":0}],"meshes":[{"extras":{},"primitives":[{"attributes":{"POSITION":0},"indices":2}]}]}""")
-        val mesh=root.getJSONArray("meshes").getJSONObject(0)
+        val root = JSONObject("""{"asset":{"version":"2.0"},"buffers":[{}],"bufferViews":[],"accessors":[],"nodes":[{"name":"AvatarRoot","children":[1,6]},{"name":"Neck","children":[2]},{"name":"Head","children":[3,4,5]},{"name":"EyeLeft","translation":[0.03,0.1,0]},{"name":"EyeRight","translation":[-0.03,0.1,0]},{"name":"Jaw"},{"name":"Face","mesh":0,"skin":0}],"meshes":[{"extras":{},"primitives":[{"attributes":{}}]}],"skins":[{"joints":[1,2]}]}""")
+        val data = java.io.ByteArrayOutputStream()
+        fun accessor(values: List<Number>, type: String, component: Int = 5126): Int {
+            val width = mapOf("SCALAR" to 1,"VEC3" to 3,"VEC4" to 4,"MAT4" to 16).getValue(type)
+            val scalar = if(component==5123) 2 else 4
+            val bytes=ByteBuffer.allocate(values.size*scalar).order(ByteOrder.LITTLE_ENDIAN)
+            values.forEach { if(component==5123) bytes.putShort(it.toShort()) else bytes.putFloat(it.toFloat()) }
+            val views=root.getJSONArray("bufferViews"); val accessors=root.getJSONArray("accessors")
+            val index=accessors.length()
+            views.put(JSONObject().put("buffer",0).put("byteOffset",data.size()).put("byteLength",bytes.capacity()))
+            accessors.put(JSONObject().put("bufferView",views.length()-1).put("componentType",component).put("type",type).put("count",values.size/width))
+            data.write(bytes.array()); while(data.size()%4!=0) data.write(0)
+            return index
+        }
+        val mesh=root.getJSONArray("meshes").getJSONObject(0); val primitive=mesh.getJSONArray("primitives").getJSONObject(0)
+        val attrs=primitive.getJSONObject("attributes")
+        attrs.put("POSITION",accessor(listOf(if(nonFinite) Float.NaN else .03f,.1f,0f,-.03f,.1f,0f,0f,0f,.04f),"VEC3"))
+        primitive.put("indices",accessor(listOf(0,1,2),"SCALAR",5123))
+        attrs.put("JOINTS_0",accessor(List(12){0},"VEC4",5123))
+        attrs.put("WEIGHTS_0",accessor(List(12){if(it%4==0) 1f else 0f},"VEC4"))
+        root.getJSONArray("skins").getJSONObject(0).put("inverseBindMatrices",accessor(List(32){if(it%16 in listOf(0,5,10,15)) 1f else 0f},"MAT4"))
         mesh.getJSONObject("extras").put("targetNames",JSONArray(AvatarGlbContract.TARGETS))
-        mesh.getJSONArray("primitives").getJSONObject(0).put("targets",JSONArray(List(21){JSONObject().put("POSITION",1)}))
+        primitive.put("targets",JSONArray(List(21){JSONObject().put("POSITION",accessor(List(9){.001f},"VEC3"))}))
+        root.getJSONArray("buffers").getJSONObject(0).put("byteLength",data.size())
         mutate(root)
         val json = root.toString().toByteArray(); val padded=(json.size+3)/4*4
-        val buffer=ByteBuffer.allocate(12+8+padded+8+80).order(ByteOrder.LITTLE_ENDIAN)
+        val buffer=ByteBuffer.allocate(12+8+padded+8+data.size()).order(ByteOrder.LITTLE_ENDIAN)
         buffer.putInt(0x46546c67).putInt(2).putInt(buffer.capacity()).putInt(padded).putInt(0x4e4f534a).put(json)
         while(buffer.position()<20+padded) buffer.put(32)
-        buffer.putInt(80).putInt(0x004e4942)
-        for(i in 0 until 18) buffer.putFloat(if(nonFinite && i==0) Float.NaN else i/100f)
-        buffer.putShort(0).putShort(1).putShort(2).putShort(0)
+        buffer.putInt(data.size()).putInt(0x004e4942).put(data.toByteArray())
         return buffer.array()
     }
 }
