@@ -5788,6 +5788,7 @@ class AgentActivity : Activity() {
         val elapsed = if(busy) at.heinz.deviceai.ui.CognitiveWorkPresentation.elapsed(
             workStarted, android.os.SystemClock.elapsedRealtime()) else workElapsed
         workStatusView?.apply {
+            visibility = if (phase == at.heinz.deviceai.ui.CognitiveWorkPresentation.Phase.READY) View.GONE else View.VISIBLE
             text = at.heinz.deviceai.ui.CognitiveWorkPresentation.summary(phase, elapsed)
             setTextColor(phase.color)
             contentDescription = text
