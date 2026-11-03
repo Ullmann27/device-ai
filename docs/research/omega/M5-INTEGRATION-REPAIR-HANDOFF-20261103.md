@@ -49,7 +49,7 @@ volle Regression → unabhängige Prüfung (frischer Clone, `clean`). Alle Zahle
 
 - **Fehler:** `applyLocalSpeechText` setzt `input.setText(spoken)` – ein bereits getippter oder nach Neuaufbau wiederhergestellter
   Entwurf geht bei jeder Spracheingabe kommentarlos verloren (Kontextübergabe Sprache → Composer).
-- **RED** (`2f…` siehe PR, Commit „test(voice): RED – Diktat überschreibt…“): Node-Vertrag 3 Tests, **1 FAIL**; JUnit
+- **RED** (`3bcfa34d`): Node-Vertrag 3 Tests, **1 FAIL**; JUnit
   `SpeechDictationDraftTest` (5 Tests): Kompilierfehler (kein `mergeDictation`).
 - **Fix** (`eb4c5536`): `LocalSpeechInputPolicy.mergeDictation` fügt am Besitzer-Cursor ein (ersetzt nur eine echte Auswahl,
   Einzel-Leerzeichen an den Rändern); ohne Composer-Fokus wird angehängt. Weiterhin reine Vorschau, kein Senden/Ausführen.
