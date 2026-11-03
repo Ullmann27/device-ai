@@ -16,6 +16,7 @@ ARGS = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 PREVIEW = '--preview' in ARGS
 EXPORT_ONLY = '--export-only' in ARGS
 EXPRESSIONS_ONLY = '--expressions-only' in ARGS
+QUICK_VIEWS = '--quick-views' in ARGS
 MORPHS = ['SIL','PP','FF','TH','DD','KK','CH','SS','NN','RR','AA','E','I','O','U',
           'BlinkLeft','BlinkRight','BrowUp','BrowDown','Smile','JawOpen']
 
@@ -364,10 +365,10 @@ def make_threads():
 threads=make_threads()
 
 scene=bpy.context.scene
-scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=32
+scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=16 if QUICK_VIEWS else 32
 scene.render.threads_mode='FIXED';scene.render.threads=2
 scene.cycles.use_denoising=False  # This local Blender build has no OpenImageDenoise.
-scene.render.resolution_x=640;scene.render.resolution_y=640;scene.render.resolution_percentage=100
+scene.render.resolution_x=512 if QUICK_VIEWS else 640;scene.render.resolution_y=scene.render.resolution_x;scene.render.resolution_percentage=100
 scene.world.color=(.015,.015,.015)
 scene.view_settings.view_transform='AgX'
 world=scene.world;world.use_nodes=True;world.node_tree.nodes.get('Background').inputs[0].default_value=(.005,.009,.023,1)
