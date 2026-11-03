@@ -19,7 +19,9 @@ export function bindCcc1Workspace({executor,project,stateDir,taskId,job,workerId
  const backlog=path.join(teamleaderStateOf(state),'development-backlog.json');
  let expected=null;
  function inspect(lease=null,{initial=false}={}){
-  if(identityGuard!==null&&identityGuard()?.agentId!==workerId)throw Error('WORKSPACE_IDENTITY_CHANGED');
+  const identity=identityGuard===null?null:identityGuard();
+  if(identityGuard!==null&&(identity?.agentId!==workerId||!Number.isSafeInteger(identity.expiresAt)||identity.expiresAt<=Date.now()))
+   throw Error('WORKSPACE_IDENTITY_CHANGED');
   // Never repair/truncate a torn journal here. Every profile reads current MACs,
   // task/revocation, pending request and recovery from the existing authorities.
   const entries=journal.entries(),goal=entries[0],request=pendingRequest(entries),status=taskState(entries);
@@ -51,7 +53,7 @@ export function bindCcc1Workspace({executor,project,stateDir,taskId,job,workerId
       (lease.claimAt!==undefined&&task.claim.at!==lease.claimAt)||task.claim.leaseUntil<=Date.now())
     throw Error('WORKSPACE_CLAIM_MISMATCH');
    return {goal,request,chain,claimAt:task.claim.at,
-    deadline:Math.min(goal.deadline,task.claim.leaseUntil,task.claim.at+request.payload.budgetMinutes*60_000)};
+    deadline:Math.min(goal.deadline,task.claim.leaseUntil,task.claim.at+request.payload.budgetMinutes*60_000,identity?.expiresAt??Infinity)};
   }
   return {goal,request,chain};
  }

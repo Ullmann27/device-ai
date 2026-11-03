@@ -44,7 +44,8 @@ data class ChiefBotTaskAdmission(
     val currentGrant: Boolean, val terminal: Boolean, val unknownEffect: Boolean,
     val builderId: String, val verifierId: String, val allowedTools: Set<String>,
     val remainingModelCalls: Int, val remainingToolCalls: Int, val expiresAt: Long,
-    val seenMessageIds: Set<String>, val assignedStages: Map<ChiefBotStage, String> = emptyMap()
+    val seenMessageIds: Set<String>, val assignedStages: Map<ChiefBotStage, String> = emptyMap(),
+    val stageSenders: Map<ChiefBotStage, String> = emptyMap()
 )
 
 /** Implemented only by trusted runner/transport code. No permissive default implementation.
@@ -91,6 +92,13 @@ class ChiefBotHandoffAdmission(
                      port: ChiefWorkspacePort): WorkerJob {
         require(handoff.stage in setOf(ChiefBotStage.BUILD, ChiefBotStage.VERIFY))
         require(handoff.toolCalls >= 1 && scope.timeoutMillis <= handoff.expiresAt - clock())
+        val capability = when (scope.profile) {
+            "node-continuum" -> "fixed-node-test"
+            "android-compile" -> "fixed-android-compile"
+            "android-unit" -> "fixed-android-test"
+            else -> error("BOT_HANDOFF_PROFILE_UNAVAILABLE")
+        }
+        require(capability in handoff.requestedTools) { "BOT_HANDOFF_PROFILE_SCOPE_MISMATCH" }
         require(scope.workerId == handoff.toAgentId && scope.taskId == handoff.taskId &&
             scope.jobId == handoff.jobId && scope.sourceCommit == handoff.sourceCommit &&
             scope.requestMessageId == handoff.requestMessageId && scope.requestHash == handoff.requestHash)
@@ -115,6 +123,9 @@ class ChiefBotHandoffAdmission(
         val to = profiles.get(h.toAgentId) ?: return false
         val current = authority.inspect(h.taskId) ?: return false
         if (from.agentId != h.fromAgentId || to.workspaceId != h.persistentWorkspaceId ||
+            current.stageSenders[h.stage] != h.fromAgentId ||
+            h.modelCalls > to.resourceBudget.maxModelCalls || h.toolCalls > to.resourceBudget.maxToolCalls ||
+            h.expiresAt - now > to.resourceBudget.deadlineMillis ||
             !current.currentGrant || current.terminal || current.unknownEffect || now >= h.expiresAt ||
             h.expiresAt > current.expiresAt || current.expiresAt <= now ||
             current.taskId != h.taskId || current.jobId != h.jobId || current.sourceCommit != h.sourceCommit ||
