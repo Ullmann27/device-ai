@@ -5726,7 +5726,9 @@ class AgentActivity : Activity() {
             awaitingApproval = avatarAwaitingApproval, blocked = avatarBlocked))
     }
 
-    private fun stopVoiceAnimation(interrupted: Boolean = true) {
+    private fun stopVoiceAnimation() = stopVoiceAnimation(true)
+
+    private fun stopVoiceAnimation(interrupted: Boolean) {
         voiceUtteranceId?.let { avatarDirector.speechEnded(it, interrupted = interrupted) }
         voiceUtteranceId = null
         voiceSpeaking = false
