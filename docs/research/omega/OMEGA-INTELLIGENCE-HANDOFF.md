@@ -23,6 +23,9 @@ Draft PR: https://github.com/Ullmann27/device-ai/pull/394. No device/model-quali
 
 - Production: `app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt`.
 - Tests: `app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt`.
+- Second lease approved by Chief after the first fix: read-only
+  `app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt` and
+  `app/src/test/java/at/heinz/deviceai/learning/ContinuumTemporalMemoryTest.kt`.
 - This handoff and `docs/evidence/omega-intelligence-20261103/`.
 - Trace actual context/authority flow, freeze a meaningful negative regression,
   observe RED, minimally repair the same projection, run focused and available
@@ -91,3 +94,25 @@ Gemma inference, Android device or performance experiment runs in this lane.
   regression (never report it as new blind evaluation gain).
 - Rollback: revert only this lane's source/test commit; no migration or data
   rollback required. Preserve all logs and negative results in this branch.
+
+## Second regression — known employer retraction miss
+
+The already-consumed frozen German LME A8 case reports stale employment after
+`Ich habe gekündigt.` (historical aggregate 34 correct / 5 abstained / 1 wrong).
+This is a known regression target, not fresh blind evaluation. The frozen corpus
+is unchanged. Root cause: `ContinuumTemporalMemory.mentions` recognises WORK only
+through `arbeit`, so the existing unparsed-statement uncertainty barrier never
+applies to the bare resignation statement.
+
+Six separate regression/control methods cover current clarification, preservation
+of past/as-known answers, working-session isolation, unrelated contract/insurance
+cancellation and denial/other-person text, hypothetical/uncertain/question/planned
+text, and revoked resignation. Actual baseline RED: 19 JUnit tests / 2 failures
+(ledger and working-memory resignation both incorrectly ANSWER); 17 pass. Log
+`temporal-red-jvm.txt`, command `bash docs/evidence/omega-intelligence-20261103/run-temporal-jvm.sh`.
+The compile reports four pre-existing unnecessary-`!!` warnings; no Android/stubs.
+Next: exact bare owner resignation adds only an UNCLEAR barrier, never a guessed
+employer or unemployment fact. Source remains untouched at this RED checkpoint.
+
+First fix exact replay: `5346e76910bb19e2da859556852724c2c2fe3c59`, 22/22 PASS,
+`verified-5346e769.txt` (source/test files clean; only the output log untracked).
