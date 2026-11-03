@@ -112,7 +112,7 @@ class ContinuumTypedExecutionReviewUiTest {
         } finally { controller.pause().stop().destroy() }
     }
 
-    @Test fun receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState() {
+    private fun deliverPreparedReceipt() {
         prefs.edit().putString("job_id", "prepare-request")
             .putString("job_operation", "TYPED_CODING_PREPARE")
             .putString("typed_coding_expected_id_v1", task.id)
@@ -127,7 +127,33 @@ class ContinuumTypedExecutionReviewUiTest {
                 putString("stdout_original_length", stdout.length.toString())
             })
         ContinuumMobileBuildResultReceiver().onReceive(app, callback)
+    }
+
+    @Test fun receiverCarriesOnlyTheValidatedFullTaskIntoPreparedState() {
+        deliverPreparedReceipt()
         assertEquals(task.canonicalJson(), prefs.getString(preparedJson, null))
         assertNull(prefs.getString(expectedJson, null))
+    }
+
+    @Test fun foregroundPrepareCallbackEnablesRunWithoutStartingIt() {
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            assertFalse(runButton(controller.get()).isEnabled)
+            deliverPreparedReceipt()
+            assertTrue("Foreground callback must refresh the prepared task", runButton(controller.get()).isEnabled)
+            assertNull(shadowOf(app).nextStartedService)
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun pausedBuilderRefreshesOnlyWhenResumed() {
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            controller.pause()
+            deliverPreparedReceipt()
+            assertFalse("Paused UI must detach its preference listener", runButton(controller.get()).isEnabled)
+            controller.resume()
+            assertTrue(runButton(controller.get()).isEnabled)
+            assertNull(shadowOf(app).nextStartedService)
+        } finally { controller.pause().stop().destroy() }
     }
 }
