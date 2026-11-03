@@ -165,9 +165,9 @@ test('S10 supplement: per-UID admission retains a live orphan across different p
 
 test('S10 critical supplement: unexpected worker death pauses a different queued task', {timeout: 35000}, async () => {
   const f = await fixture('uncertain-descendants', ['--max-cycles', '5'], {isolatedRuntimeCopy: true});
-  let active;
+  let active, firstDaemon;
   try {
-    ({active} = await dispatchWithoutExecutableRuntime(f, 'uncertain-first-order'));
+    ({active, daemon:firstDaemon} = await dispatchWithoutExecutableRuntime(f, 'uncertain-first-order'));
     const task = f.task('uncertain-second-order');
     const review = json(await f.call('review', ['--task', task.file]));
     json(await f.call('submit', ['--task', task.file, '--approve', review.reviewSha256]));
@@ -181,5 +181,35 @@ test('S10 critical supplement: unexpected worker death pauses a different queued
     assert.equal(second.delivery, 'PENDING', 'unknown descendants prohibit starting another queued job');
     assert.equal(second.workerProcess, null);
     assert.equal(second.dispatchedAt, undefined);
-  } finally {signal(active?.workerProcess, 'SIGKILL'); await f.close();}
+    await until(()=>alive(firstDaemon.process),value=>!value);
+    restoreRuntime(f);
+    const restarted = await f.call('start');
+    assert.notEqual(restarted.code,0,'persistent uncertainty must block restart even after runtime is restored');
+    assert.match(restarted.stderr,/RECONCILIATION_REQUIRED|UNRESOLVED/);
+    assert.equal(deliveries(f).find(d=>d.id===task.data.id).delivery,'PENDING');
+  } finally {
+    signal(active?.workerProcess, 'SIGKILL');
+    // Explicit test-operator reconciliation, NOT a product recovery path. The
+    // only executed child could not open its removed PRIVATE runtime executable
+    // and never entered CCC1. Do not clear any other task/service's barrier.
+    const barrier=path.join('/tmp','continuum-coding-owner-'+process.getuid(),'unresolved-execution.json');
+    if(active&&firstDaemon&&fs.existsSync(barrier)){
+      await until(()=>alive(firstDaemon.process),value=>!value);
+      await until(()=>alive(active.workerProcess),value=>!value);
+      const bytes=fs.readFileSync(barrier),value=JSON.parse(bytes);
+      assert.equal(value.stateDir,state(f));assert.equal(value.taskId,active.id);
+      assert.equal(value.instanceId,firstDaemon.instanceId);
+      assert.equal(value.workerProcess.pid,active.workerProcess.pid);
+      assert.equal(value.workerProcess.startTicks,active.workerProcess.startTicks);
+      assert.equal(deliveries(f).some(d=>d.id!==active.id&&d.workerProcess),false,
+        'cannot reconcile an unexpected second fixture execution');
+      assert.equal(fs.readFileSync(barrier).equals(bytes),true);
+      fs.unlinkSync(barrier);
+      record({kind:'TEST_OPERATOR_RECONCILED_ZERO_EXECUTION_FIXTURE',stateDir:state(f),taskId:active.id,
+        instanceId:firstDaemon.instanceId,workerConfirmedDead:true,daemonConfirmedDead:true,
+        nativeImpossibleBeforeSubmission:true,secondTaskNeverDispatched:true,
+        productionAutomaticRecovery:false});
+    }
+    await f.close();
+  }
 });
