@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "base": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+  "chain": "node",
+  "startedAt": "2026-11-03T20:58:35.773Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "modelInvocations": 1,
+    "localRequests": 2,
+    "verifiedModelExecution": true,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "ed417e69f606e794",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n'\\ud83d' !== '😀'\nTEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n'a\\ud83d' !== 'a😀'\nTEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n'🛰' !== '🛰️'\nTEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n'é' !== 'é'\nTEST_FAILURE .github/continuum/frozen.test.mjs Expected values to be strictly equal:\n\n'😀' !== '😀🚀'",
+        "hypothesis": "The issue is with the way the code handles grapheme segmentation and normalization, which is causing the code to return incorrect results."
+      },
+      {
+        "candidate": "provider-rejection",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_MODEL_UNAVAILABLE",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_MODEL_UNAVAILABLE",
+        "repeated": false
+      }
+    ],
+    "reason": "Original local inference observations; candidate correctness requires separate verification",
+    "lastRejectCode": "CODING_MODEL_UNAVAILABLE"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 256,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 10000,
+          "runtime": "runc",
+          "sourceSha256": "7b19ed0c2acd8e1adf90690f4f56e62b4cbc17394000f17dcc74c694e9a6c8d8",
+          "profile": "node-continuum",
+          "untrustedReports": true,
+          "workspaceId": "continuum-2cf20d5ae4df7757f27477c1",
+          "workspaceBinding": {
+            "workerId": "typed-coding-worker",
+            "taskId": "t-eceda5e10fb49bf4",
+            "requestMessageId": "0cbe9c02-8d03-4aeb-ab2a-ffe6acac625e",
+            "requestHash": "b5e39c4ddc31795083a85e66636aef41de92c442b1b53cfdbf23f3579dcc19b2",
+            "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+            "jobId": "fafab142-6add-47a1-a076-c6ced1eb20b0"
+          },
+          "observed": {
+            "containerId": "e07c0037efb9e1e3cbb4d5f5f51e577e4803b6afd9941482529aeada8b5e37c4",
+            "runtime": "runc",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "user": "1000:1000",
+            "network": "none",
+            "readOnly": true,
+            "memoryBytes": 268435456,
+            "memorySwapBytes": 268435456,
+            "nanoCpus": 1000000000,
+            "pids": 64,
+            "capDrop": [
+              "ALL"
+            ],
+            "securityOpt": [
+              "no-new-privileges:true"
+            ],
+            "writableHostMounts": 0
+          },
+          "teardownConfirmed": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 10,
+          "failed": 4,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 10,
+          "passed": 6,
+          "evidenceComplete": true,
+          "caseIdentities": [
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 0\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 1\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 2\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 3\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 4\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 5\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 6\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 7\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 8\",1]",
+              "skipped": false,
+              "skipType": null
+            },
+            {
+              "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 9\",1]",
+              "skipped": false,
+              "skipType": null
+            }
+          ],
+          "junitSha256": [
+            "1ca477ae69d6d8d71f5f5ef9cb0a7d902fdd9b7b7f0a473c795acfd97d600844"
+          ],
+          "executedCaseHashes": [
+            "05f50aa6841c6bbf383a2da828e155a08ecc69123f8222b51fe2b56931e638d8",
+            "19aaaa6622ef7cb2bce5777eda15af3d01bf31ddacd3e1c60c6ddc12977e86e4",
+            "4f81fb25323a98a7bbfc599d4330b9e9ab26cf6fcabe147ec173b19f72a7ca45",
+            "5f00d5d82c74b660726826cc767bda5c768494b3ff39bd87d47a398b3d8f128b",
+            "7cdce5eda46e66579c0a0180082949708c09d154f08ecc8803f9b189fdbb2642",
+            "875c6015cf3110d6f58dcd5c9f0f4c4308f46f8d59cde5f194934b9a5bb1772c",
+            "9dcb10a11eb2c8a13f36d8e826522b83e0b12c26c7ef28f5b32274481ce7c04c",
+            "c5c4263a72523aa988cb13255019d9d534409c9ce9a56efbd6eb018e197fb502",
+            "da0467562281684ab16d2273e12b57ebc463bf49430791370d7a280bf71d34d8",
+            "f0d98ab4e028cd3785f89aaabed5bef8303d2f3d6deb38fb12388ae1a21589d9"
+          ]
+        },
+        "diagnostics": 4
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen code point boundary 4",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 11,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\n'\\ud83d' !== '😀'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "ab3e72832b90459b"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen code point boundary 5",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 11,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\n'a\\ud83d' !== 'a😀'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "8a2e91ca5e4d8577"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen code point boundary 6",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 11,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\n'🛰' !== '🛰️'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "afab1adc45cdd30d"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen code point boundary 9",
+        "file": ".github/continuum/frozen.test.mjs",
+        "line": 11,
+        "col": 10,
+        "message": "Expected values to be strictly equal:\n\n'😀' !== '😀🚀'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "24020aa63ac1e6c0"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "ed417e69f606e794",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "ab3e72832b90459b",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The issue is with the way the code handles grapheme segmentation and normalization, which is causing the code to return incorrect results.",
+      "plan": [
+        "Identify the issue in the code",
+        "Analyze the test failures",
+        "Determine the cause of the failures",
+        "Create a patch to fix the issue"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/subject.mjs",
+          "oldText": "export function prefixCodePoints(text, count) {\n  return text.slice(0, count);\n}\n",
+          "newText": "export function prefixCodePoints(text, count) {\n  return text.slice(0, count).normalize('NFC');\n}\n"
+        }
+      ],
+      "proposalSha256": "b3ea8e763e957d9acfdd40092a7e7358eea8164258cdea5b52f20a5ae86a8e7a",
+      "modelObservation": {
+        "schema": "momega1-local-process-observation-v1",
+        "evidenceClass": "LOCAL_MODEL_HOST",
+        "verifiedModelExecution": true,
+        "reviewedPairId": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+        "reviewedModelId": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+        "reviewedRuntimeSourceCommit": "6cb3e672e8d10fd4feab1a048bf2967c40623133",
+        "reviewedModelRevision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        "reviewedBuildEvidenceSha256": "ff9b688bbdcda0cea5dbf36f63313a01f055259f241f07eaeb7776327b05f067",
+        "independentReviewEvidenceSha256": "88e886df6bd60e953605f49e2768529002c9925430a88b5d1467cf95ee40c9fe",
+        "executionId": "fe4dbd93119c8e38dc6730d3b724ab06677c5df023367595e2c60c1b9fa802e5",
+        "taskId": "mob-468359ddce50f765",
+        "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+        "taskFingerprint": "50ef97430296346918596609ab3720925dcb02657e18766914e1b1aa784ca3e6",
+        "requestIndex": 1,
+        "contextSha256": "b94221041bbfec8d495c77def5635df5eb49567a02d8949e4415e4725b132b39",
+        "promptSha256": "ec4138b3dd6e21d6aee976937da2f5cd717e899350cf42e83237e367f79670f6",
+        "requestSha256": "c484aa415aaefb548fe754e855ac67af78b6f1fcc75cbd5ac04efc2e5d102f42",
+        "runtimePromptSha256": "1cfd14e7bf07cde89315c21329916ebf6f585b8c791243e86d4663ff38ee1c70",
+        "runtimeSchemaSha256": "98fe5b9bd97fa7deefb4981f38d465056cd2c316325597ddb71100cdd78ab844",
+        "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+        "runtimeSha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+        "outputSha256": "140506058c0ed371818ce10571b90a1a27ec65492c719026ef23c648b50e0fea",
+        "proposalSha256": "b3ea8e763e957d9acfdd40092a7e7358eea8164258cdea5b52f20a5ae86a8e7a",
+        "responseStatus": "PROPOSAL",
+        "outputTokens": 136,
+        "pid": 279031,
+        "exitCode": 0,
+        "isolation": "BWRAP_UNSHARE_ALL",
+        "elapsedMs": 24953
+      },
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/subject.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 10,
+            "failed": 5,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 10,
+            "passed": 5,
+            "evidenceComplete": true,
+            "caseIdentities": [
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 0\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 1\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 2\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 3\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 4\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 5\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 6\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 7\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 8\",1]",
+                "skipped": false,
+                "skipType": null
+              },
+              {
+                "identity": "[\".github/continuum/frozen.test.mjs\",[],\"frozen code point boundary 9\",1]",
+                "skipped": false,
+                "skipType": null
+              }
+            ],
+            "junitSha256": [
+              "f2deb7bc5cccd74bf487fe6858b994a69fea4d053eaf23939c3c1e799d83f074"
+            ],
+            "executedCaseHashes": [
+              "05f50aa6841c6bbf383a2da828e155a08ecc69123f8222b51fe2b56931e638d8",
+              "19aaaa6622ef7cb2bce5777eda15af3d01bf31ddacd3e1c60c6ddc12977e86e4",
+              "4f81fb25323a98a7bbfc599d4330b9e9ab26cf6fcabe147ec173b19f72a7ca45",
+              "5f00d5d82c74b660726826cc767bda5c768494b3ff39bd87d47a398b3d8f128b",
+              "7cdce5eda46e66579c0a0180082949708c09d154f08ecc8803f9b189fdbb2642",
+              "875c6015cf3110d6f58dcd5c9f0f4c4308f46f8d59cde5f194934b9a5bb1772c",
+              "9dcb10a11eb2c8a13f36d8e826522b83e0b12c26c7ef28f5b32274481ce7c04c",
+              "c5c4263a72523aa988cb13255019d9d534409c9ce9a56efbd6eb018e197fb502",
+              "da0467562281684ab16d2273e12b57ebc463bf49430791370d7a280bf71d34d8",
+              "f0d98ab4e028cd3785f89aaabed5bef8303d2f3d6deb38fb12388ae1a21589d9"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 256,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 10000,
+            "runtime": "runc",
+            "sourceSha256": "b596ed5c5ce4585489d07a53ff43d4d231ede93abcd8bb77dd50edf66bf14fcd",
+            "profile": "node-continuum",
+            "untrustedReports": true,
+            "workspaceId": "continuum-c7b084a81541c82a3255b42c",
+            "workspaceBinding": {
+              "workerId": "typed-coding-worker",
+              "taskId": "t-eceda5e10fb49bf4",
+              "requestMessageId": "0cbe9c02-8d03-4aeb-ab2a-ffe6acac625e",
+              "requestHash": "b5e39c4ddc31795083a85e66636aef41de92c442b1b53cfdbf23f3579dcc19b2",
+              "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+              "jobId": "fafab142-6add-47a1-a076-c6ced1eb20b0"
+            },
+            "observed": {
+              "containerId": "642f6c1bed6c5637c8c22e3d105fdfcfaefcae67f7d3e5aecccebd19266b3d53",
+              "runtime": "runc",
+              "image": "sha256:4838093b14e654fcf3b69decfe8b8a1fe75ef6c288ea5dadc4e169131716494c",
+              "user": "1000:1000",
+              "network": "none",
+              "readOnly": true,
+              "memoryBytes": 268435456,
+              "memorySwapBytes": 268435456,
+              "nanoCpus": 1000000000,
+              "pids": 64,
+              "capDrop": [
+                "ALL"
+              ],
+              "securityOpt": [
+                "no-new-privileges:true"
+              ],
+              "writableHostMounts": 0
+            },
+            "teardownConfirmed": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen code point boundary 4",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 11,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\n'\\ud83d' !== '😀'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "ab3e72832b90459b"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen code point boundary 5",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 11,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\n'a\\ud83d' !== 'a😀'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "8a2e91ca5e4d8577"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen code point boundary 6",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 11,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\n'🛰' !== '🛰️'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "afab1adc45cdd30d"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen code point boundary 8",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 11,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\n'é' !== 'é'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "ee062925aba2f7d1"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen code point boundary 9",
+          "file": ".github/continuum/frozen.test.mjs",
+          "line": 11,
+          "col": 10,
+          "message": "Expected values to be strictly equal:\n\n'😀' !== '😀🚀'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "24020aa63ac1e6c0"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-11-03T20:58:35.773Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-11-03T20:58:36.186Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:58:36.197Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-11-03T20:59:01.232Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-11-03T20:59:01.234Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-11-03T20:59:01.262Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-11-03T20:59:01.665Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-11-03T20:59:01.672Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-11-03T20:59:01.674Z",
+      "attempt": 2
+    },
+    {
+      "phase": "BLOCKED",
+      "at": "2026-11-03T20:59:34.051Z",
+      "attempt": 2
+    }
+  ],
+  "coding": {
+    "taskId": "mob-468359ddce50f765",
+    "taskFingerprint": "50ef97430296346918596609ab3720925dcb02657e18766914e1b1aa784ca3e6",
+    "sourceCommit": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+    "allowedPaths": [
+      "lib/subject.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "b94221041bbfec8d495c77def5635df5eb49567a02d8949e4415e4725b132b39",
+    "plan": [
+      "Identify the issue in the code",
+      "Analyze the test failures",
+      "Determine the cause of the failures",
+      "Create a patch to fix the issue"
+    ]
+  },
+  "finishedAt": "2026-11-03T20:59:34.062Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "00f8364fd0770508f49c7d5d34963c0925d4476f",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 4,
+        "proof": "14d7c2e4437d74cf4fd1b779bcaf601d5c7e76cecebc6247a14f538f826bcc38"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "0f792959b32db246",
+        "approved": true,
+        "proof": "72d1b7c76a560bc43d7061fc5a0443a374cd41eb3e24f16705199745dcd82ae0"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "0f792959b32db246",
+        "editedFiles": 1,
+        "proof": "803f172709414cb15cff057ececf6a6fffe12a07d1d18914a4ba57b5e1d71c22"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "0f792959b32db246",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "d60767b8bf1c9801691b9f737f22492e5d70b9e0c808fe103e6d97aa2bff1735"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "878d19211542b087868685d7824541f0879464377ebcdd38810f4adb291e96f5"
+  }
+}

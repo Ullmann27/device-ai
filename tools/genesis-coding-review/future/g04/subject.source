@@ -1,0 +1,4 @@
+export function median(values) {
+  values.sort();
+  return values[Math.floor(values.length / 2)];
+}

@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-03T20:55:26.138155+00:00",
+  "configSha256": "68a86ab17da65ae7b1b2cad326b35aacdab6f83eb76ca99b66a5b3e7ecec8a47",
+  "files": {
+    "CONTINUUM_LOCAL_BRAIN_MODEL_PATH": {
+      "path": "/workspace/synapse-local-model/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+      "bytes": 1117320768,
+      "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+      "uid": 1000,
+      "nlink": 1,
+      "mode": "0o600"
+    },
+    "CONTINUUM_LOCAL_BRAIN_RUNTIME_PATH": {
+      "path": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+      "bytes": 12476968,
+      "sha256": "c2c13a2a27c5a85137b6d083074fa83e0d990db129e715f8452352e3730cbf5a",
+      "uid": 1000,
+      "nlink": 1,
+      "mode": "0o700"
+    }
+  },
+  "manifest": {
+    "repository": "Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+    "revision": "f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+    "filename": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+    "license": "Apache-2.0",
+    "sizeBytes": 1117320768,
+    "sha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046"
+  },
+  "manifestSha256": "85fcbad40a1b6f182331d4cc285d86c0d07dd785ce6db35fe530b0fced900d2b"
+}

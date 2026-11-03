@@ -1,0 +1,3 @@
+Verified 9 immutable fixture files; 3 tasks; no model execution.
+{"status":"OBSERVED_RESULT","resultStatus":"ABSTAINED","technicalExperienceStatus":"NOT_RECORDED","technicalRecallCount":0,"solved":"REQUIRES_INDEPENDENT_EVIDENCE_REVIEW","modelCallsReserved":2,"sourceIdentityStable":true,"fixture":"g02","out":"/workspace/genesis-a0-experiment/runs/g02/evidence"}
+{"resourceReport": "/workspace/genesis-a0-experiment/runs/g02/native-resources.json", "exit": 0, "nativeProcesses": 2, "samples": 192}
