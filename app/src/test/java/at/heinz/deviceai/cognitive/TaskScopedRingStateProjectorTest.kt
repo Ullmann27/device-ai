@@ -57,6 +57,15 @@ class TaskScopedRingStateProjectorTest {
         ))
     }
 
+    @Test fun mixedOrNegatedFutureTimelineAbstainsInsteadOfInventingStates() {
+        assertNull(TaskScopedRingStateProjector.project(
+            listOf(initial), "Ab morgen hat die rote Kiste 9 Ringe, aber heute die blaue Kiste 7 Ringe."
+        ))
+        assertNull(TaskScopedRingStateProjector.project(
+            listOf(initial), "Nicht ab morgen hat die blaue Kiste 8 Ringe."
+        ))
+    }
+
     @Test fun refusesIncompleteOrOversizedOwnerEvidence() {
         assertNull(TaskScopedRingStateProjector.project(listOf(initial + "x".repeat(1000)), correction))
         assertNull(TaskScopedRingStateProjector.project(listOf(initial), correction + "x".repeat(1000)))
