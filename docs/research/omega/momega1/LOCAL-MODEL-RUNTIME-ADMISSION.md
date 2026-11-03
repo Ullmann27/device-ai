@@ -1,6 +1,8 @@
 # MΩ-1 explicitly approved local host model/runtime candidate
 
-Status: DOWNLOAD/BUILD_IN_PROGRESS; not admitted, no inference acceptance.
+Status: model bytes/hash/GGUF structure verified; runtime build pending; not admitted.
+Chief authorization source: [MODEL-ADMISSION.md](MODEL-ADMISSION.md).
+
 Owner explicitly approved the following local download and HOST execution on
 2026-11-03 (relayed by Chief), overriding the earlier no-download gate only for
 this exact model and locally built official llama.cpp. No cloud inference, paid

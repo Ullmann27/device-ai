@@ -222,3 +222,27 @@ test('process evidence classification cannot claim LOCAL_MODEL_HOST from a confi
   modelObservation:result.trace.modelObservation,key:runtimeKey(stateDir)}),/TECHNICAL_MODEL_EXECUTION_PROOF_UNAVAILABLE/);
  assert.equal(fs.existsSync(path.join(stateDir,'experience.jsonl')),false);
 });
+
+test('genuine admission registry rejects unknown model/runtime tuple and caller assertions',async()=>{
+ const pins=await import('./continuum-local-model-pins.mjs');
+ assert.equal(pins.getReviewedLocalModelPair({modelSha256:'a'.repeat(64),runtimeSha256:'b'.repeat(64),verifiedModelExecution:true,runtimeKind:'LLAMA_CPP'}),null);
+ assert.ok(Object.isFrozen(pins.LOCAL_MODEL_RUNTIME_CANDIDATES));
+ for(const pair of pins.LOCAL_MODEL_RUNTIME_CANDIDATES){
+  assert.ok(Object.isFrozen(pair));
+  if(pair.status!=='REVIEWED_LOCAL_MODEL_HOST')assert.equal(pins.getReviewedLocalModelPair(pair),null);
+ }
+});
+test('invalid model JSON retains authenticated process observation without a candidate',async t=>{
+ const f=fixture(t,{program:'#include <stdio.h>\nint main(){puts("invalid synthetic output");fputs("eval time = 1 ms / 5 runs\\n",stderr);}'});
+ await assert.rejects(queryPinnedLocalCoding(f),error=>{
+  const envelope=error.modelInferenceEnvelope;
+  assert.equal(envelope?.mode,'LOCAL_CODING_INFERENCE_FAILURE_V1');
+  assert.equal(envelope?.modelObservation?.responseStatus,'INVALID_MODEL_RESPONSE');
+  assert.equal(envelope?.modelObservation?.proposalSha256,null);
+  assert.equal(envelope?.modelObservation?.outputTokens,5);
+  assert.equal(envelope?.verifiedModelExecution,false);
+  assert.ok(!JSON.stringify(envelope).includes('invalid synthetic output'));
+  assert.equal(envelope?.proposal,undefined);
+  return true;
+ });
+});
