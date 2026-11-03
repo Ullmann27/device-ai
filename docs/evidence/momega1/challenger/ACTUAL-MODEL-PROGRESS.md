@@ -15,9 +15,10 @@ Pins unchanged before/after. All raw synthetic artifacts retained in
 actual-native-first/. No raw private data or secrets.
 
 Initial own sampler peakRssKiB=924 observes only bwrap and misses nested native
-process; this is NOT model RSS. Do not publish it as memory performance. Follow-up
-uses Python RUSAGE_CHILDREN, independently validated through bwrap with64MiB
-allocation. Source/review scripts stay frozen or versioned; no failed result erased.
+process; this is NOT model RSS. Do not publish it as memory performance. Python RUSAGE_CHILDREN also undercounts the bwrap inner process in this environment
+(8448KiB for a64MiB child), so it is NOT validated as native telemetry. Follow-up
+uses executable-inode-matched /proc samples, calibrated with a64MiB native child:
+66100KiB observed and one matching process. Source/review scripts stay frozen or versioned; no failed result erased.
 
 Brief overlap with author's second smoke happened despite prior coordination;
 author stopped further inference and performance is marked contended. Reviewer
