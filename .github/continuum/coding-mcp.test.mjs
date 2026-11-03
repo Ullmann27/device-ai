@@ -73,6 +73,8 @@ test('write tools, path arguments, invalid pagination, batches and unsolicited r
     { name: 'get_evidence', arguments: { taskId: '../other', evidenceId: 'report' } },
     { name: 'get_evidence', arguments: { taskId: 'task-1', evidenceId: '../../token' } },
     { name: 'list_agents', arguments: { limit: 0 } },
+    { name: 'list_agents', arguments: { limit: null } },
+    { name: 'get_status', arguments: null },
     { name: 'list_agents', arguments: { limit: 51 } },
     { name: 'list_tasks', arguments: { cursor: 'made-up' } },
   ]) {

@@ -95,7 +95,7 @@ function toolArguments(name, args, session) {
     return { taskId: args.taskId, evidenceId: args.evidenceId };
   }
   if (!keysOnly(args, ['cursor', 'limit'])) fail('MCP_ARGUMENTS_INVALID');
-  const limit = args.limit ?? 20;
+  const limit = Object.hasOwn(args, 'limit') ? args.limit : 20;
   if (!Number.isInteger(limit) || limit < 1 || limit > 50) fail('MCP_ARGUMENTS_INVALID');
   let cursor = null;
   if (Object.hasOwn(args, 'cursor')) {
@@ -229,7 +229,7 @@ export async function startCodingMcpServer({ reader, tokenFile, protectedRoots =
       if (message.method !== 'tools/call') return rpcError(id, -32601, 'Method not found');
       if (!keysOnly(params, ['name', 'arguments']) || typeof params.name !== 'string') return rpcError(id, -32602, 'Invalid parameters');
       let args;
-      try { args = toolArguments(params.name, params.arguments ?? {}, session); }
+      try { args = toolArguments(params.name, Object.hasOwn(params, 'arguments') ? params.arguments : {}, session); }
       catch { return rpcError(id, -32602, 'Unknown tool or invalid arguments'); }
       if (session.calls >= L.maxCallsPerSession || active >= L.maxConcurrentReads || session.pending.size) return reject(429, 'MCP_READ_BUDGET');
       session.calls++; active++; metrics.readCalls++;
