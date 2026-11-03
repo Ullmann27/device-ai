@@ -1,0 +1,63 @@
+source_commit=93783a99fe5304f91fd8f16f5d47b23cbd77f179
+mode=--baseline
+ M app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
+ M app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+?? app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineContextIntegrationTest.kt
+?? docs/evidence/breakthrough-cognition-20261103/
+real_gradle_dependency_tree_sha256=9f1f7524d8490f7c5d021b87de0107fc0c31334181362ab0e78392bf9320b3ba  -
+cacf4f226e9b13555a7e49bf9a6fc36b41f56a58a8a20608111de9dda3b884d1  /tmp/breakthrough-cognition-jvm.paSQRd/OwnerStatementTimeline.kt
+7cd8809faac993235a23c84f23b5d106682694e0f16a90b1af114a3ba4b9f119  app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+8d7667851bdd59291d867430d24e71d9d727412fbb0a3225f13298c8b6383034  app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineContextIntegrationTest.kt
+b7320cf22aff36da16c7df29619cf64c3299f46aa77ead81e4eb2b0321ba5ffe  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpIntegrationTest.kt
+fa96f6172fafc06457dddcc92aa9f54502125d909c56b8a2c0974bcf8d1e899d  app/src/test/java/at/heinz/deviceai/cognitive/LocalFollowUpTaskFrameTest.kt
+d5b46b5c3c212c6048748d3951d0127d2cfcf08aeecf4c93185eab1f6b34c31a  app/src/test/java/at/heinz/deviceai/cognitive/LocalPromptFrameTest.kt
+7b2620cfb451d1516dd1e844a2d1b7730020948255246d6968962445484dc1fb  app/src/test/java/at/heinz/deviceai/cognitive/LocalContextRetentionTest.kt
+5f5843a01fe409a474f79dd1e3db2a318014acb3e03972bf53d4b6fe74d6cea0  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt
+68e69422bc72906605e74caa4e7c3d7f56445bb0d531b2d432a9d261c7158aff  app/src/test/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbeTest.kt
+af671c5717244f3bd7b3cd65fb71d5d683037d491ff7f0e7dca23d9882c2b254  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewallTest.kt
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+JUnit version 4.13.2
+...E.E.E............E...E.....................................
+Time: 0.162
+There were 5 failures:
+1) numberFreeDenialInEarlierTurnRemainsEffectiveOnLaterQuestion(at.heinz.deviceai.cognitive.OwnerStatementTimelineTest)
+java.lang.AssertionError: expected null, but was:<Projection(entries=[Entry(display=Kiste (rot), unit=Ringe, original=4, current=4, future=null, changed=false)])>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.numberFreeDenialInEarlierTurnRemainsEffectiveOnLaterQuestion(OwnerStatementTimelineTest.kt:93)
+2) numberFreeQuantityDenialCannotResurrectEarlierCount(at.heinz.deviceai.cognitive.OwnerStatementTimelineTest)
+java.lang.AssertionError: expected null, but was:<Projection(entries=[Entry(display=Kiste (rot), unit=Ringe, original=4, current=4, future=null, changed=false)])>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.numberFreeQuantityDenialCannotResurrectEarlierCount(OwnerStatementTimelineTest.kt:83)
+3) numberFreeUncertaintyCannotConfirmEarlierCount(at.heinz.deviceai.cognitive.OwnerStatementTimelineTest)
+java.lang.AssertionError: expected null, but was:<Projection(entries=[Entry(display=Schale, unit=Eier, original=6, current=6, future=null, changed=false)])>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.numberFreeUncertaintyCannotConfirmEarlierCount(OwnerStatementTimelineTest.kt:88)
+4) numberFreeDenialInSameOwnerTurnCannotLeaveItsEarlierCount(at.heinz.deviceai.cognitive.OwnerStatementTimelineTest)
+java.lang.AssertionError: expected null, but was:<Projection(entries=[Entry(display=Kiste (rot), unit=Ringe, original=4, current=4, future=null, changed=false)])>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.OwnerStatementTimelineTest.numberFreeDenialInSameOwnerTurnCannotLeaveItsEarlierCount(OwnerStatementTimelineTest.kt:97)
+5) ownerRetractionReachesPromptWithoutStaleDerivedQuantity(at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.OwnerStatementTimelineContextIntegrationTest.ownerRetractionReachesPromptWithoutStaleDerivedQuantity(OwnerStatementTimelineContextIntegrationTest.kt:29)
+
+FAILURES!!!
+Tests run: 57,  Failures: 5
+

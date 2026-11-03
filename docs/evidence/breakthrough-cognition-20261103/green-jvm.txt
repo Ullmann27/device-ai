@@ -1,0 +1,22 @@
+source_commit=93783a99fe5304f91fd8f16f5d47b23cbd77f179
+source_status:
+ M app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
+ M app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+?? docs/evidence/breakthrough-cognition-20261103/
+869b4a78cb6ba18b3b7a2c4dd4736e495e1a75e0d46e0472cb687a910c721e0c  app/src/main/java/at/heinz/deviceai/cognitive/OwnerStatementTimeline.kt
+7cd8809faac993235a23c84f23b5d106682694e0f16a90b1af114a3ba4b9f119  app/src/test/java/at/heinz/deviceai/cognitive/OwnerStatementTimelineTest.kt
+212b0865f2ed180498c5f29e7c116a188e9d594813880a8f51c754fb7a6a7a30  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicy.kt
+5f5843a01fe409a474f79dd1e3db2a318014acb3e03972bf53d4b6fe74d6cea0  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationFollowUpPolicyTest.kt
+89d79987c0920e6d759891c231d685bb670a1ce69dcf6e451a14a47efd29f842  app/src/main/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbe.kt
+68e69422bc72906605e74caa4e7c3d7f56445bb0d531b2d432a9d261c7158aff  app/src/test/java/at/heinz/deviceai/cognitive/LocalContextIntegrityProbeTest.kt
+c0055a89b234991baeb2f6c1311532b26512c0a45383e745e39b4a7fb5ee5327  app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewall.kt
+af671c5717244f3bd7b3cd65fb71d5d683037d491ff7f0e7dca23d9882c2b254  app/src/test/java/at/heinz/deviceai/cognitive/LocalConversationPromptFirewallTest.kt
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+JUnit version 4.13.2
+............................
+Time: 0.125
+
+OK (28 tests)
+

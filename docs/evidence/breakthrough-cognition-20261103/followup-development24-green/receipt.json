@@ -1,0 +1,42 @@
+{
+  "fixtureSha256": "633a5edaa8cf576312591662f54c7e870910ba504223dba4430f0cdfc300b571",
+  "runnerSha256": "9d00f2e26150a4b872ff22231cf4028f3cc58f7417cc73499a3773db85189bae",
+  "runs": [
+    {
+      "label": "baseline",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 15.475794041999961
+    },
+    {
+      "label": "baseline",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 0.4818007700000635
+    },
+    {
+      "label": "candidate",
+      "step": "compile",
+      "exit": 0,
+      "seconds": 9.189400780000142
+    },
+    {
+      "label": "candidate",
+      "step": "execute",
+      "exit": 0,
+      "seconds": 0.2709604199999376
+    }
+  ],
+  "baseline": {
+    "sha": "107a7bb0ce680ad0c362b4226308942aa0dfaaec",
+    "sources": {
+      "/tmp/cognition-followup-development24-b9be799d/baseline/OwnerStatementTimeline.kt": "375173118c83a9568610c3ad03742109317dadcdba238461f5a608ff6000dd03"
+    }
+  },
+  "candidate": {
+    "sha": "b9be799d",
+    "sources": {
+      "/tmp/cognition-followup-development24-b9be799d/candidate/OwnerStatementTimeline.kt": "eb6649687aeb0d6ba589ae2cc178898dd921b4ab087ce4f25eb4134762f74bf0"
+    }
+  }
+}
