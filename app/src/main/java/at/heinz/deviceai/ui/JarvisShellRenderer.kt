@@ -40,7 +40,8 @@ object JarvisShellRenderer {
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) background(p, shell.width, shell.height)
-        val dolly = JarvisMotion.Depth.dolly(timeMs, animatorScale)
+        JarvisReferenceHud.backdrop(p, shell.width, shell.height)
+        val dolly = if (shell.ref5Grid) 1f else JarvisMotion.Depth.dolly(timeMs, animatorScale)
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
         val tileBoxes = shell.tileBoxes()
@@ -60,20 +61,22 @@ object JarvisShellRenderer {
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
             if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
-            val depth = JarvisMotion.Depth.state(layerOf(slot), box.centerX, box.centerY(), shell.width, shell.height, timeMs, animatorScale)
+            val depth = if (shell.ref5Grid) JarvisMotion.Depth.FLAT else
+                JarvisMotion.Depth.state(layerOf(slot), box.centerX, box.centerY(), shell.width, shell.height, timeMs, animatorScale)
             p.save()
             p.translate(f.dx + depth.dx, f.dy + depth.dy)
             val k = f.scale * depth.scale
             p.scale(k, k, box.centerX, box.centerY())
-            val depthNative = glass?.beginDepth(box, depth) == true
+            val depthNative = !shell.ref5Grid && glass?.beginDepth(box, depth) == true
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
             val ownsSurface = shell.ref5Grid && content[slot] != null &&
-                slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL)
+                slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
             if (tile != null) {
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f)
             } else if (!ownsSurface) {
                 val r = JarvisDesign.Metrics.radiusCard
-                val native = glass?.drawPanelGlass(box, r, f.glow) == true
+                // Static HUD panels do not need repeated full-screen backdrop-blur copies.
+                val native = !shell.ref5Grid && glass?.drawPanelGlass(box, r, f.glow) == true
                 if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
                     q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
                 }
@@ -93,6 +96,7 @@ object JarvisShellRenderer {
             p.restore()
         }
         p.restore()
+        JarvisReferenceHud.frame(p, shell.width, shell.height)
     }
 
     private fun Box.centerY() = (top + bottom) / 2f

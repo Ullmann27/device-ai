@@ -34,6 +34,24 @@ import kotlin.math.atan2
  */
 class Java2DContinuumPainter(private val g: Graphics2D, private val assetRoot: File) : ContinuumPainter {
     private val stack = ArrayList<Pair<AffineTransform, Shape?>>()
+    private val rasters = HashMap<String, java.awt.image.BufferedImage?>()
+
+    override fun drawRaster(assetPath: String, left: Float, top: Float, right: Float, bottom: Float, alpha: Float): Boolean {
+        if (right <= left || bottom <= top || alpha <= 0f) return true
+        if (!assetPath.startsWith("jarvis-reference/") || ".." in assetPath) return false
+        val image = if (rasters.containsKey(assetPath)) rasters[assetPath] else {
+            if (rasters.size >= 8) return false
+            runCatching { javax.imageio.ImageIO.read(File(assetRoot, assetPath)) }.getOrNull().also { rasters[assetPath] = it }
+        } ?: return false
+        val oldComposite = g.composite
+        g.composite = if (additive) AdditiveComposite(alpha.coerceIn(0f, 1f))
+            else AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceIn(0f, 1f))
+        val transform = AffineTransform().apply { translate(left.toDouble(), top.toDouble());
+            scale((right - left) / image.width.toDouble(), (bottom - top) / image.height.toDouble()) }
+        g.drawImage(image, transform, null)
+        g.composite = oldComposite
+        return true
+    }
 
     /** A drawn text and its bounds in output pixels (for masking live values in the design comparison). */
     class TextBox(val text: String, val left: Double, val top: Double, val right: Double, val bottom: Double)

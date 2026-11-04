@@ -8,13 +8,13 @@ package at.heinz.deviceai.ui
  */
 object JarvisDesign {
     /**
-     * Colour roles measured pixel by pixel in ref5 (Fold7 open, 1448 x 1086), see docs/JARVIS-REF5-FARBEN.md
-     * and tools/measure_ref5_colors.py. Translucent roles: colour solved so that, at the stated alpha over the
-     * measured background, the composite equals the measured ref5 pixel.
+     * Shared palette for the owner master reference (1536 × 1024, 2026-11-04).
+     * New core accents follow the explicit master tokens; unchanged secondary roles retain historical ref5
+     * samples. Final native image calibration remains a separate acceptance gate.
      */
     object Colors {
-        val background = Argb.rgb(0x00, 0x0C, 0x16)        // bg.top   #000C16
-        val backgroundBottom = Argb.rgb(0x01, 0x0C, 0x17)  // bg.low   #010C17 (ref5 has no visible vertical gradient)
+        val background = Argb.rgb(0x02, 0x07, 0x13)
+        val backgroundBottom = Argb.rgb(0x03, 0x0B, 0x21)
         val backgroundHaze = Argb.rgb(0x0D, 0x22, 0x50)    // bg.violetAmbient #0D2250 (lower edge light)
         val surface = Argb.of(204, 0x01, 0x1D, 0x2F)        // glass.fill composite #011A2A @80 %
         val surfaceLow = Argb.of(204, 0x06, 0x1F, 0x36)     // tile.fill composite #051B30 @80 %
@@ -36,23 +36,23 @@ object JarvisDesign {
         val chevron = Argb.rgb(0x51, 0xAD, 0xC5)            // tile.chevron #51ADC5 (antialiased 1 px stroke, true colour brighter)
         val pillRimStart = Argb.rgb(0x2A, 0xEA, 0xFC)       // pill.rim.left #2AEAFC
         val pillRimEnd = Argb.rgb(0xCC, 0x94, 0xEF)         // pill.rim.right #CC94EF
-        val cardRimStart = Argb.rgb(0x08, 0x80, 0x9A)       // card.rim.left median of 4 ref5 cards (#0588A1 #0C7792 #0F6A83 #0DB1BD)
-        val cardRimEnd = Argb.rgb(0x14, 0x92, 0xBA)         // card.rim.right median (#05B0E0 #16DAF6 #237394; violet only on right capability card)
-        val cardRimEndViolet = Argb.rgb(0x83, 0x5F, 0xBE)   // card.rim.right of right capability list #835FBE
+        val cardRimStart = Argb.rgb(0x21, 0xD9, 0xF5)
+        val cardRimEnd = Argb.rgb(0x67, 0xBA, 0xFF)
+        val cardRimEndViolet = Argb.rgb(0xC9, 0x57, 0xFF)
         val chipLocalSurface = Argb.rgb(0x02, 0x1E, 0x24)   // chip "Local · Private" fill #021E24
         val pillSurface = Argb.rgb(0x07, 0x20, 0x4D)        // pill.fill #07204D
-        val cyan = Argb.rgb(0x2F, 0xF9, 0xFE)               // cyan.text #2FF9FE
+        val cyan = Argb.rgb(0x00, 0xE5, 0xFF)
         val cyanSoft = Argb.rgb(0x78, 0xF6, 0xFB)           // cyan.icon #78F6FB
         val iconCore = Argb.rgb(0xC9, 0xFF, 0xFF)           // tile.icon #C9FFFF
         val glowCore = Argb.rgb(0xAB, 0xF8, 0xFF)           // glow.core #ABF8FF
         val glowHalo = Argb.rgb(0x01, 0x25, 0x39)           // glow.halo #012539
         val bloomHalo = Argb.rgb(0x08, 0xAF, 0xFF)          // bloom halo hue: #034666 at 4 px off the active rim, normalised to full brightness
         val dust = Argb.rgb(0x0F, 0x93, 0xC4)               // dust mote core #0F93C4 (only 2 motes in the clean sample – low confidence)
-        val violet = Argb.rgb(0x91, 0x4C, 0xEF)             // violet.hair #914CEF
+        val violet = Argb.rgb(0xA4, 0x3B, 0xFF)
         val violetSoft = Argb.rgb(0x91, 0x6D, 0xC9)         // violet.icon #916DC9
-        val violetRim = Argb.rgb(0x9E, 0x5B, 0xD5)          // violet.pillRim #9E5BD5
+        val violetRim = Argb.rgb(0xD8, 0x81, 0xFF)
         val activeWhite = Argb.rgb(255, 255, 255)
-        val magenta = ContinuumTheme.MAGENTA
+        val magenta = Argb.rgb(0xF0, 0x4D, 0xFF)
         val ok = Argb.rgb(0x01, 0xFC, 0x7B)                 // status.ok #01FC7B
         val okSoft = Argb.rgb(0x86, 0xE9, 0xCD)             // status.okCheck #86E9CD
         val warn = ContinuumTheme.AMBER                     // not present in ref5
@@ -72,14 +72,14 @@ object JarvisDesign {
     object Type {
         val brand = ContinuumTheme.display(600, 16f)          // "Device AI Continuum": cap 18 px
         val title = ContinuumTheme.display(500, 20f)          // "Continuum" header: cap 23 px (incl. glow)
-        val heading = ContinuumTheme.text(500, 11f)           // panel title "Active Agents": 14 px incl. ( )
-        val tileLabel = ContinuumTheme.text(500, 11f)         // tile "Chat": cap 12 px
-        val nav = ContinuumTheme.text(400, 11f)               // nav "Home": cap 12 px
+        val heading = ContinuumTheme.text(500, 12f)
+        val tileLabel = ContinuumTheme.text(500, 13f)
+        val nav = ContinuumTheme.text(400, 13f)
         val body = ContinuumTheme.text(400, 13f)              // dialog "Good afternoon.": cap 15 px
-        val subtitle = ContinuumTheme.text(400, 9f)           // tile subtitle: cap 10 px, line pitch 20 px = 13 dp
+        val subtitle = ContinuumTheme.text(400, 10f)
         val pill = ContinuumTheme.text(500, 10f)              // "JARVIS Mode": cap 11 px
-        val caption = ContinuumTheme.text(400, 9f)            // "Android AI Control Center": cap 10 px
-        val status = ContinuumTheme.text(400, 8f)             // status bar: cap 9 px
+        val caption = ContinuumTheme.text(400, 10f)
+        val status = ContinuumTheme.text(400, 9f)
         val label = heading
         val figure = ContinuumTheme.text(500, 13f)            // live values, same size as body
         const val subtitleLineHeight = 13f
@@ -111,7 +111,7 @@ object JarvisDesign {
         /** Pill "JARVIS Mode" 151 x 35 px → 97 x 22 dp, fully round, icon 14 px. */
         val pill = ComponentStyle(22f, 11f, 1f, Colors.pillSurface, Colors.pillRimStart, 10f, 9f, 6f, Glow.SUBTLE,
             rimEnd = Colors.pillRimEnd)
-        const val buttonGap = 6f
+        const val buttonGap = 0f
     }
 
     /** Spacing / shape tokens (dp). */

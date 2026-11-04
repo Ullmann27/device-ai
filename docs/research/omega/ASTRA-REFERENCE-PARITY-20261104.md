@@ -101,3 +101,29 @@ This is a presentation integration, not model training or productive promotion.
 Next integration step: commit the adaptive full-window ten-tile layout, integrate
 the reviewed native-avatar corrections, then capture and compare those exact
 sources before declaring any visual milestone complete.
+
+## Implementation checkpoint (still visually unaccepted)
+
+Source `9c007a54776396bb2f617932c20dfeb38a9b644d` adds a shared multi-layer HUD
+material, frame/ribbon paths and small, source-hashed decorative raster assets.
+`tools/reference-hud/extract_master_assets.py` reproduces the explicitly authorized
+brand/trail cutouts. It does not extract text, activity values or a full dashboard.
+Native Canvas and Java2D use the same packaged assets with vector fallback.
+
+Reviewed PR495 fixes and all26 new regressions are now integrated. Avatar-owner
+validation on source `9f1f68591b7178822da794edf4eede1a51fd8447` reports44/44 JVM tests
+and the real Kotlin GLB runtime validator passing. Those are avatar-only evidence;
+the combined UI source above has not yet been compiled or visually accepted.
+The older Python pivot check disagrees with a documented later rig correction;
+it is not an established cause of the fallback renderer.
+
+Directive IV is now controlling adaptive layout: Compact<600dp, Medium600–839dp,
+Expanded≥840dp, with height/font/component constraints. The reference five-column
+layout is used only when readable. Fold/medium may use more tile and panel rows;
+all modes use the same render objects, material tokens, data and destinations.
+
+A successful host Android NativeCanvas diagnostic revealed that the old Activity
+never enabled its newer `jarvis-shell` stage by default. The actual Activity entry
+point must enable the new stage; a Java2D-only preview cannot validate that wiring.
+No physical Fold7, native Filament on Android, audio/video lip-sync, performance
+under real inference, signing or release acceptance has been performed.

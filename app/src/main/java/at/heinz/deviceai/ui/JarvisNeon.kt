@@ -50,17 +50,11 @@ object JarvisNeon {
                   radius: Float = JarvisDesign.Metrics.radiusCard, glow: Glow = Glow.NORMAL,
                   active: Boolean = false, glowBoost: Float = 1f, nativeGlass: Boolean = false,
                   rimEnd: Int = Colors.cardRimEnd) {
-        // ref5: outer halo 5 px off the rim is faint (#011526 median) → resting glow .4 (factor estimated from that).
-        val rimFill = Fill.Linear(l, t, r, t, intArrayOf(Colors.cardRimStart, rimEnd))
-        if (!nativeGlass) rimGlow(p, l, t, r, b, radius, glow, glowBoost * (if (active) 1.4f else .4f), rimFill)
-        p.fillRoundRect(l, t, r, b, radius, Fill.Linear(l, t, r, b, intArrayOf(Colors.surface, Colors.surfaceLow)))
-        p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .35f, radius - 1f,
-            Fill.Linear(0f, t, 0f, t + (b - t) * .35f, intArrayOf(Argb.of(18, 0, 255, 255), 0)))
-        p.strokeRoundRect(l, t, r, b, radius, 1f, rimFill)
-        if (active) {
-            bloomRoundRect(p, l, t, r, b, radius, Colors.cyan, glowBoost)
-            p.strokeRoundRect(l, t, r, b, radius, 1.4f, Fill.Solid(Colors.activeWhite), .5f)
-        }
+        // One shared HUD material on every window profile. Native backdrop may already be behind it;
+        // text is deliberately outside any blur pass. The old ref5 flat-outline material is superseded.
+        JarvisReferenceHud.surface(p, JarvisShellLayout.Box(l, t, r, b), radius,
+            Colors.cardRimStart, rimEnd,
+            if (active) JarvisReferenceHud.Interaction.SELECTED else JarvisReferenceHud.Interaction.NORMAL)
     }
 
     /** Neon line (light trail, laser connection, divider). */
@@ -192,24 +186,13 @@ object JarvisNeon {
     /** Shared body of tile, button and pill: fill, optional glow, 1 dp rim (ref5 measurements in [style]). */
     fun component(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, style: ComponentStyle, active: Boolean = false,
                   centerLift: Boolean = false) {
-        val radius = minOf(style.radius, (b - t) / 2f)
-        val rim = style.rimEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.rim, it)) } ?: Fill.Solid(style.rim)
-        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.8f else 1f,
-            if (active) Fill.Solid(Colors.bloomHalo) else rim)
-        val fill = when {
-            // ref5 active button: brighter toward the middle (navSurface edges → lifted navSurfaceActive centre; lift estimated).
-            centerLift -> Fill.Linear(l, t, r, t, intArrayOf(Colors.navSurface, Argb.mix(style.fill, Colors.cyan, .12f), Colors.navSurface),
-                floatArrayOf(0f, .5f, 1f))
-            style.fillEnd != null -> Fill.Linear(l, t, r, t, intArrayOf(style.fill, style.fillEnd))
-            else -> Fill.Solid(style.fill)
-        }
-        p.fillRoundRect(l, t, r, b, radius, fill)
-        if (active && centerLift) {
-            // ref5 has a local light source at the left edge, rather than an equally bright frame everywhere.
-            bloom(p, l + radius * .45f, t + radius * .9f, minOf(10f, (b - t) * .22f), Colors.cyan, .6f)
-        }
-        p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, rim)
-        if (active) p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(Colors.glowCore), .6f)
+        val tile = style == Styles.tile || style == Styles.memoryTile ||
+            style == Styles.agentsTile || style == Styles.systemTile
+        JarvisReferenceHud.surface(p, JarvisShellLayout.Box(l, t, r, b), style.radius,
+            style.rim, style.rimEnd ?: style.rim,
+            if (active) JarvisReferenceHud.Interaction.SELECTED else JarvisReferenceHud.Interaction.NORMAL,
+            decorativeRibbons = tile)
+        if (active && centerLift) bloom(p, l + 5f, t + (b - t) * .5f, minOf(10f, (b - t) * .22f), Colors.cyan, .7f)
     }
 
     /**
