@@ -107,7 +107,7 @@ class ContinuumOwnerFactTest {
         assertEquals(emptyList<String>(),reopened.activeOwnerFacts().map { it.content })
         val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
         val r=store.lastRecovery()!!
-        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,r.quarantineFile.readBytes())
+        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,r.quarantineFile!!.readBytes())
         assertArrayEquals("an older LKG backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
     }
 

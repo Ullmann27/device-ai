@@ -56,7 +56,7 @@ class LedgerAppendOnlyTest {
         assertTrue(reopened.all().isEmpty())
         val r=reopened.lastRecovery()!!
         assertEquals(5,r.discardedFrames);assertEquals(4,r.unverifiedFramesAfterCorruption)
-        assertArrayEquals(b.copyOfRange(8,b.size),r.quarantineFile.readBytes())
+        assertArrayEquals(b.copyOfRange(8,b.size),r.quarantineFile!!.readBytes())
     }
 
     @Test fun lex3IsMigratedAndChurnIsCompacted() = withDir { dir ->

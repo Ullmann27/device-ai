@@ -53,7 +53,7 @@ class LearningExperienceStoreTest {
             FileLearningExperienceStore.resetCachesForTest()
             val reopened=FileLearningExperienceStore(dir)
             assertTrue(reopened.all().none { it.content==item.content && it.status!=item.status } && item !in reopened.all())
-            assertTrue(reopened.lastRecovery()!!.quarantineFile.isFile)
+            assertTrue(reopened.lastRecovery()!!.quarantineFile!!.isFile)
         } finally { dir.deleteRecursively() }
     }
 

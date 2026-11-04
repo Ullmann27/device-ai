@@ -32,8 +32,8 @@ class LedgerRecoveryTest {
         assertEquals((0..10).map(::fact),reopened.all())
         val r=assertNotNull(reopened.lastRecovery()).let { reopened.lastRecovery()!! }
         assertEquals(cut,r.corruptOffset); assertEquals(4,r.discardedFrames); assertEquals(3,r.unverifiedFramesAfterCorruption)
-        assertArrayEquals("quarantine keeps the removed bytes unchanged",tail.copyOf().also { it[12]=(it[12].toInt() xor 0x55).toByte() },r.quarantineFile.readBytes())
-        assertTrue(r.quarantineFile.name.matches(Regex("experiences-v2\\.quarantine-\\d{8}T\\d{9}.*\\.bin")))
+        assertArrayEquals("quarantine keeps the removed bytes unchanged",tail.copyOf().also { it[12]=(it[12].toInt() xor 0x55).toByte() },r.quarantineFile!!.readBytes())
+        assertTrue(r.quarantineFile!!.name.matches(Regex("experiences-v2\\.quarantine-\\d{8}T\\d{9}.*\\.bin")))
         assertTrue(reopened.append(fact(99)))
         FileLearningExperienceStore.resetCachesForTest()
         assertEquals((0..10).map(::fact)+fact(99),FileLearningExperienceStore(dir).all())
@@ -60,7 +60,7 @@ class LedgerRecoveryTest {
         assertEquals((0 until 8).map(::fact),reopened.all())
         val r=reopened.lastRecovery()!!
         assertEquals("experiences-v2.bak1",r.restoredFromBackup!!.name)
-        assertArrayEquals(original.copyOf().also { it[1]=(it[1].toInt() xor 0x55).toByte() },r.quarantineFile.readBytes())
+        assertArrayEquals(original.copyOf().also { it[1]=(it[1].toInt() xor 0x55).toByte() },r.quarantineFile!!.readBytes())
         assertTrue(reopened.append(fact(8)))
         FileLearningExperienceStore.resetCachesForTest()
         assertEquals((0..8).map(::fact),FileLearningExperienceStore(dir).all())

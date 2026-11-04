@@ -104,11 +104,14 @@ data class LedgerRecoveryReport(
     val corruptOffset:Long,
     val discardedFrames:Int,
     val unverifiedFramesAfterCorruption:Int,
-    val quarantineFile:File,
+    /** null when the quarantine file could not be written (then the damaged bytes stay in the primary, see [sideEffectFailures]). */
+    val quarantineFile:File?,
     val restoredFromBackup:File?,
     val reason:String,
     /** Revocations/rejections found in unverified frames and applied (restrictive direction only, never a confirmation). */
-    val salvagedRevocations:Int=0
+    val salvagedRevocations:Int=0,
+    /** Backup/quarantine/report writes that failed (IO); loading still succeeded. */
+    val sideEffectFailures:List<String> = emptyList()
 )
 
 class FileLearningExperienceStore(private val directory:File) {
@@ -276,22 +279,24 @@ class FileLearningExperienceStore(private val directory:File) {
         if(LearningExperienceCodec.isLog(bytes) && LearningExperienceCodec.hasLogVersion(bytes)) {
             val scan=LearningExperienceCodec.scanLog(bytes)
             if(scan.stopOffset==null) {
-                rotateBackups(bytes)
+                tryRotateBackups(bytes)
                 scan.state.fileHash=fingerprint;scan.state.running=running;LOG_CACHE[key]=scan.state
                 return scan.state
             }
             if(scan.state.records>0) {
                 val off=scan.stopOffset
                 val frames=LearningExperienceCodec.countFrames(bytes,off)
-                val q=quarantine(bytes.copyOfRange(off.toInt(),bytes.size))
-                java.io.RandomAccessFile(primary,"rw").use { it.setLength(off);it.fd.sync() }
-                val r=LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record")
+                val failures=ArrayList<String>()
+                val q=quarantine(bytes.copyOfRange(off.toInt(),bytes.size),failures)
+                if(q!=null) java.io.RandomAccessFile(primary,"rw").use { it.setLength(off);it.fd.sync() }
+                else scan.state.unrepaired=true
+                val r=LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record",sideEffectFailures=failures)
                 report(r)
                 return salvageRestrictive(scan.state,bytes,off,r)
             }
         } else if(!LearningExperienceCodec.isLog(bytes)) {
             runCatching { LearningExperienceCodec.decode(bytes) }.getOrNull()?.let { items ->
-                rotateBackups(bytes)
+                tryRotateBackups(bytes)
                 return LearningExperienceCodec.LogState(items,ByteArray(32),0,bytes.size.toLong(),legacy=true)
             }
         }
@@ -306,19 +311,22 @@ class FileLearningExperienceStore(private val directory:File) {
                 if(LearningExperienceCodec.isLog(bb)) LearningExperienceCodec.scanLog(bb).takeIf { it.stopOffset==null }!!.state
                 else LearningExperienceCodec.LogState(LearningExperienceCodec.decode(bb),ByteArray(32),0,bb.size.toLong(),legacy=true)
             }.getOrNull() ?: continue
-            val q=quarantine(damaged)
-            writeAtomically(primary,bb)
+            val failures=ArrayList<String>()
+            val q=quarantine(damaged,failures)
+            if(q!=null) writeAtomically(primary,bb) else state.unrepaired=true
             val r=LedgerRecoveryReport(0,LearningExperienceCodec.countFrames(damaged,minOf(8L,damaged.size.toLong())),0,q,bak,
-                "primary unreadable from the start; restored newest valid backup")
+                "primary unreadable from the start; restored newest valid backup",sideEffectFailures=failures)
             report(r)
             return salvageRestrictive(state,damaged,minOf(8L,damaged.size.toLong()),r)
         }
         if(LearningExperienceCodec.isLog(damaged) && LearningExperienceCodec.hasLogVersion(damaged) && damaged.size>8) {
             val frames=LearningExperienceCodec.countFrames(damaged,8)
-            val q=quarantine(damaged.copyOfRange(8,damaged.size))
-            java.io.RandomAccessFile(primary,"rw").use { it.setLength(8);it.fd.sync() }
-            report(LedgerRecoveryReport(8,frames,frames-1,q,null,"first record damaged and no valid backup; ledger restarted empty"))
-            return LearningExperienceCodec.scanLog(primary.readBytes()).state
+            val failures=ArrayList<String>()
+            val q=quarantine(damaged.copyOfRange(8,damaged.size),failures)
+            if(q!=null) java.io.RandomAccessFile(primary,"rw").use { it.setLength(8);it.fd.sync() }
+            report(LedgerRecoveryReport(8,frames,frames-1,q,null,"first record damaged and no valid backup; ledger restarted empty",
+                sideEffectFailures=failures))
+            return LearningExperienceCodec.scanLog(damaged.copyOf(8)).state.also { it.unrepaired=q==null }
         }
         throw IllegalArgumentException("Learning ledger unreadable and no valid backup")
     }
@@ -336,30 +344,76 @@ class FileLearningExperienceStore(private val directory:File) {
                 ?.copy(status=u.status,updatedAt=maxOf(current[u.id]!!.updatedAt,u.updatedAt)) }
             .associateBy { it.id }
         if(updates.isEmpty())return state
+        if(state.unrepaired) { // cannot write yet: apply the withdrawal in memory only
+            report(r.copy(salvagedRevocations=updates.size))
+            return LearningExperienceCodec.LogState(state.items.map { updates[it.id] ?: it },state.chainHash,state.records,
+                state.validLength,state.legacy).also { it.unrepaired=true }
+        }
         save(state.items.map { updates[it.id] ?: it })
         report(r.copy(salvagedRevocations=updates.size))
         return loadState()
     }
 
-    private fun quarantine(bytes:ByteArray):File {
+    private fun quarantine(bytes:ByteArray,failures:MutableList<String>):File? = try { quarantineOrThrow(bytes) } catch(e:Exception) {
+        failures+="quarantine: ${e.javaClass.simpleName}"
+        java.util.logging.Logger.getLogger("ContinuumLedger").warning("Ledger quarantine write failed: ${e.javaClass.simpleName}")
+        null
+    }
+
+    private fun quarantineOrThrow(bytes:ByteArray):File {
         val stamp=java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssSSS")
             .format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Vienna")))
         val f=File(directory,"experiences-v2.quarantine-$stamp-${System.nanoTime()}.bin")
+        ioFaultForTest?.invoke(f)
         java.io.FileOutputStream(f).use { it.write(bytes);it.fd.sync() }
         return f
     }
 
-    private fun report(r:LedgerRecoveryReport) {
+    private val recoveryFile=File(directory,"experiences-v2.recovery.properties")
+
+    private fun report(given:LedgerRecoveryReport) {
+        var r=given
+        try {
+            ioFaultForTest?.invoke(recoveryFile)
+            val p=java.util.Properties().apply {
+                setProperty("format","1");setProperty("corruptOffset",r.corruptOffset.toString())
+                setProperty("discardedFrames",r.discardedFrames.toString())
+                setProperty("unverifiedFramesAfterCorruption",r.unverifiedFramesAfterCorruption.toString())
+                r.quarantineFile?.let { setProperty("quarantineFile",it.path) }
+                r.restoredFromBackup?.let { setProperty("restoredFromBackup",it.path) }
+                setProperty("reason",r.reason);setProperty("salvagedRevocations",r.salvagedRevocations.toString())
+                setProperty("sideEffectFailures",r.sideEffectFailures.joinToString("|"))
+            }
+            val out=java.io.ByteArrayOutputStream().also { p.store(it,"LEX4 recovery report: metadata only, no ledger content") }
+            writeAtomically(recoveryFile,out.toByteArray())
+        } catch(e:Exception) { r=r.copy(sideEffectFailures=r.sideEffectFailures+"report: ${e.javaClass.simpleName}") }
         RECOVERY[primary.absolutePath]=r
         java.util.logging.Logger.getLogger("ContinuumLedger").warning("Ledger recovery: $r")
     }
 
     /** Most recent recovery for this ledger in this process, or null. */
-    fun lastRecovery():LedgerRecoveryReport? = synchronized(FILE_LOCK) { RECOVERY[primary.absolutePath] }
+    fun lastRecovery():LedgerRecoveryReport? = synchronized(FILE_LOCK) {
+        RECOVERY[primary.absolutePath] ?: runCatching { readPersistedReport() }.getOrNull()?.also { RECOVERY[primary.absolutePath]=it }
+    }
+
+    private fun readPersistedReport():LedgerRecoveryReport? {
+        if(!recoveryFile.isFile)return null
+        val p=java.util.Properties().apply { recoveryFile.inputStream().use { load(it) } }
+        require(p.getProperty("format")=="1")
+        return LedgerRecoveryReport(p.getProperty("corruptOffset").toLong(),p.getProperty("discardedFrames").toInt(),
+            p.getProperty("unverifiedFramesAfterCorruption").toInt(),p.getProperty("quarantineFile")?.let(::File),
+            p.getProperty("restoredFromBackup")?.let(::File),p.getProperty("reason"),p.getProperty("salvagedRevocations").toInt(),
+            p.getProperty("sideEffectFailures").split('|').filter { it.isNotEmpty() })
+    }
+
+    private fun tryRotateBackups(bytes:ByteArray) = try { rotateBackups(bytes) } catch(e:Exception) {
+        java.util.logging.Logger.getLogger("ContinuumLedger").warning("Ledger backup rotation failed: ${e.javaClass.simpleName}")
+    }
 
     /** Rolling backup of the last two verified generations; called after a fully verified open and every
      * [ROTATE_EVERY_APPENDS] appends, never on the per-append path otherwise. */
     private fun rotateBackups(bytes:ByteArray) {
+        ioFaultForTest?.invoke(backup1)
         if(backup1.isFile && backup1.readBytes().contentEquals(bytes))return
         if(backup1.isFile) { backup2.delete();check(backup1.renameTo(backup2)) { "backup rotation failed" } }
         writeAtomically(backup1,bytes)
@@ -397,6 +451,8 @@ class FileLearningExperienceStore(private val directory:File) {
         require(items.size<=MAX_RECORDS && items.map { it.id }.distinct().size==items.size)
         if(!directory.exists() && !directory.mkdirs())throw IOException("Cannot create learning-core directory")
         val state=if(primary.exists()) runCatching { loadState() }.getOrNull() else null
+        if(state?.unrepaired==true)
+            throw IOException("Ledger repair pending: damaged bytes could not be quarantined; refusing to overwrite evidence")
         if(state!=null && !state.legacy) {
             val previous=state.items.associateBy { it.id }
             val nextIds=items.mapTo(HashSet()) { it.id }
@@ -409,7 +465,7 @@ class FileLearningExperienceStore(private val directory:File) {
                 val (bytes,hash)=LearningExperienceCodec.encodeOps(state.chainHash,dels,puts)
                 java.io.FileOutputStream(primary,true).use { it.write(bytes);it.fd.sync() }
                 val n=(APPENDS[primary.absolutePath] ?: 0)+1
-                if(n>=ROTATE_EVERY_APPENDS) { APPENDS[primary.absolutePath]=0;rotateBackups(primary.readBytes()) } else APPENDS[primary.absolutePath]=n
+                if(n>=ROTATE_EVERY_APPENDS) { APPENDS[primary.absolutePath]=0;tryRotateBackups(primary.readBytes()) } else APPENDS[primary.absolutePath]=n
                 // Next read still re-hashes the whole file; the cache only skips re-decoding when content matches.
                 val running=state.running?.let { (it.clone() as MessageDigest).apply { update(bytes) } }
                 if(running==null) LOG_CACHE.remove(primary.absolutePath) else
@@ -462,6 +518,8 @@ class FileLearningExperienceStore(private val directory:File) {
         private val APPENDS=HashMap<String,Int>()
         /** Amortised: one ~1 MB copy per 256 appends keeps write p95 flat (affects <0.4 % of writes). */
         const val ROTATE_EVERY_APPENDS=256
+        /** Test-only IO fault injection for side writes (backup, quarantine, report). */
+        @Volatile internal var ioFaultForTest:((File)->Unit)?=null
         internal fun resetCachesForTest() = synchronized(FILE_LOCK) { LOG_CACHE.clear();RECOVERY.clear();APPENDS.clear() }
         internal const val ABSENT_FINGERPRINT="absent"
     }
@@ -500,7 +558,7 @@ internal object LearningExperienceCodec {
     private const val PUT:Byte=1
     private const val DEL:Byte=2
     class LogState(val items:List<LearningExperience>, val chainHash:ByteArray, val records:Int,
-                   val validLength:Long, val legacy:Boolean=false) { var fileHash:ByteArray=ByteArray(0);var running:MessageDigest?=null }
+                   val validLength:Long, val legacy:Boolean=false) { var fileHash:ByteArray=ByteArray(0);var running:MessageDigest?=null;var unrepaired:Boolean=false }
 
     fun isLog(bytes:ByteArray)=bytes.size>=8 && java.nio.ByteBuffer.wrap(bytes,0,4).int==MAGIC_LEX4
     private fun header()=java.nio.ByteBuffer.allocate(8).putInt(MAGIC_LEX4).putInt(4).array()
