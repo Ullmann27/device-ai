@@ -50,3 +50,13 @@ Functional GitHub commit: `0a79c703be62f4ade6737eaa9d13fea1dc35c5bb`; exact sour
 - Review-video SHA-256: `bf20f48a0c1d97b784a036f1c902a902c47ffe5fecb215f7ee0faf6fdaed2f1d`. This is a synthetic-input host milestone, not acceptance against the owner's videos and not native-device evidence.
 
 The owner subsequently made the original Drive videos, including four additional avatar clips, binding functional and motion references and authorized continued multi-milestone work while unavailable. All accessible files in the identified Jarvis Video folder are being inspected. Match/activation/workflow claims remain OPEN until the reference-to-source comparison is complete. Private original media and Drive identifiers stay outside Git.
+
+## Measured-silence checkpoint
+
+- Added an utterance-bound nullable PCM read: `null` means no measured PCM, while `0` means known silence or the end of known audio. The Activity passes this distinction through its existing frame callback.
+- Four new failing behavioral cases reproduced false motion after silent PCM, exhausted PCM, or expired audio with a queued vowel. Current result: **107 JUnit tests and 26 motion checks passed**. Missing-PCM fallback and valid audio resumption remain functional; stale utterances cannot claim current PCM.
+- The reducer suppresses queued mouth shapes during measured silence without discarding still-current word cues. Invalid future audio closes the mouth until a fresh valid sample arrives.
+- Two ordering tests were adapted to the strengthened silence contract: the clock-rejection fixture now keeps its vowel within live audio, preserving its ability to detect a clock rewind; the invalid-future case now expects a closed mouth, then still verifies resumption on valid audio. No assertions were removed.
+- Landscape controls now start on integer dp coordinates, correcting the independently reproduced 47.999996-dp target height. The unchanged layout regression test still requires every control to be at least 48 dp. Android revalidation is pending this source checkpoint.
+- A disposable API30 emulator was configured, but its own startup check failed due to insufficient disk space (about 1.2 GiB free); `/dev/kvm` is also unavailable. No install occurred. `emulator-unavailable.txt` preserves the failure.
+- All ten original Drive files were downloaded and hashed. The five avatar clips (original plus four additions) were sampled at 0.5-second intervals; all sampled sheets were visually inspected. The other five feature/tutorial videos were visually sampled at 5 or 20 seconds. Audio audition/transcription of the new clips was NOT_RUN. See the reference matrix for exact scope and gaps.

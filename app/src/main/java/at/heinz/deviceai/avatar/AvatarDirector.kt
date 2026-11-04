@@ -106,14 +106,14 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
         return true
     }
 
-    @Synchronized fun audioLevel(utteranceId: String, level: Float) {
+    @Synchronized fun audioLevel(utteranceId: String, level: Float, measuredPcmAvailable: Boolean = false) {
         if (utteranceId != utterance || !level.isFinite()) return
         val at = clock()
         val measured = level.coerceIn(0f, 1f)
         // Avatar lab (#338): engines that report word ranges but no PCM get coarse word motion,
         // explicitly flagged so a renderer never mistakes it for measured audio.
         val sinceRange = at - lastRangeAt
-        if (measured == 0f && lastRangeAt != Long.MIN_VALUE && sinceRange in 0 until FALLBACK_MS) {
+        if (!measuredPcmAvailable && measured == 0f && lastRangeAt != Long.MIN_VALUE && sinceRange in 0 until FALLBACK_MS) {
             val motion = 0.10f + 0.18f * kotlin.math.abs(kotlin.math.sin(sinceRange / 75f))
             emit(AvatarEvent.AudioLevel(utteranceId, motion, at, AudioLevelSource.WORD_RANGE_FALLBACK))
         } else emit(AvatarEvent.AudioLevel(utteranceId, measured, at, AudioLevelSource.PCM_ENVELOPE))

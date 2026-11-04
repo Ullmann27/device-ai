@@ -75,7 +75,7 @@ object ContinuumLandscapeCockpitLayout {
         val secondary = Box(sl, contentTop, sr, bar.top - g)
 
         // Top bar
-        val ty = top.top + (top.height - TARGET) / 2f
+        val ty = kotlin.math.ceil(top.top + (top.height - TARGET) / 2f)
         val brandWidth = (top.width * .24f).coerceIn(150f, 240f)
         boxes[Slot.BRAND] = Box(top.left, ty, top.left + brandWidth, ty + TARGET)
         var x = top.right
@@ -97,11 +97,12 @@ object ContinuumLandscapeCockpitLayout {
 
         // Centre: presentation pills on top, the avatar slot below them
         val pillWidth = (avatar.width - 2 * 6f) / 3f
+        val pillTop = kotlin.math.ceil(avatar.top)
         listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT).forEachIndexed { i, slot ->
             val l = avatar.left + i * (pillWidth + 6f)
-            boxes[slot] = Box(l, avatar.top, l + pillWidth, avatar.top + TARGET)
+            boxes[slot] = Box(l, pillTop, l + pillWidth, pillTop + TARGET)
         }
-        boxes[AVATAR_SLOT] = Box(avatar.left, avatar.top + TARGET + 6f, avatar.right, avatar.bottom)
+        boxes[AVATAR_SLOT] = Box(avatar.left, pillTop + TARGET + 6f, avatar.right, avatar.bottom)
         boxes[Slot.COMPOSER] = input
 
         val buttonWidth = (bar.width - (actionBar.size - 1) * 8f) / actionBar.size

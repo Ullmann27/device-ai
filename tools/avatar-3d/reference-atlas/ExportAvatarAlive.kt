@@ -70,7 +70,8 @@ object ExportAvatarAlive {
                     require(director.wordRange("review", word.range.first, word.range.last + 1,
                         ((now - 6_000) * 8).toInt()))
                 }
-                director.audioLevel("review", signal.level(now))
+                val measured = signal.measuredLevel("review", now)
+                director.audioLevel("review", measured ?: 0f, measuredPcmAvailable = measured != null)
             }
             val pose = reducer.pose(now)
             val seconds = index.toFloat() / fps

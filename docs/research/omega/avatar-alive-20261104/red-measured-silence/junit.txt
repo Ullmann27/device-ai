@@ -1,0 +1,38 @@
+JUnit version 4.13.2
+..................................................................................E..E.E.E.....................
+Time: 2.555
+There were 4 failures:
+1) exhaustedPcmRemainsKnownSilenceDuringAWordCallbackWindow(at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest)
+java.lang.AssertionError: expected:<0.0> but was:<3.9474084>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest$Pipeline.assertClosed(AvatarMeasuredSilenceTest.kt:118)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.exhaustedPcmRemainsKnownSilenceDuringAWordCallbackWindow(AvatarMeasuredSilenceTest.kt:30)
+2) measuredSilenceCanResumeTheStillCurrentWordCue(at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest)
+java.lang.AssertionError: expected:<0.0> but was:<9.749999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.measuredSilenceCanResumeTheStillCurrentWordCue(AvatarMeasuredSilenceTest.kt:53)
+3) silentPcmClosesAnActiveVowelWithoutFallbackMotion(at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest)
+java.lang.AssertionError: expected:<0.0> but was:<9.749999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest$Pipeline.assertClosed(AvatarMeasuredSilenceTest.kt:118)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.silentPcmClosesAnActiveVowelWithoutFallbackMotion(AvatarMeasuredSilenceTest.kt:19)
+4) expiredMeasuredAudioCannotLeaveAQueuedVowelOpen(at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest)
+java.lang.AssertionError: expected:<0.0> but was:<9.749999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarMeasuredSilenceTest.expiredMeasuredAudioCannotLeaveAQueuedVowelOpen(AvatarMeasuredSilenceTest.kt:69)
+
+FAILURES!!!
+Tests run: 107,  Failures: 4
+
