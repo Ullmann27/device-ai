@@ -33,7 +33,38 @@ data class Video3AlarmInfo(
     val sourceLabel: String,
     val measured: Double?,
     val threshold: Double?,
+    val options: List<Video3ActionOption> = emptyList(),
 )
+
+/** Mirror of Kern's `ActionOption`. Disabled options are shown dimmed with [disabledReason]; nothing runs from here. */
+data class Video3ActionOption(
+    val id: String,
+    val label: String,
+    val toolName: String?,
+    val enabled: Boolean,
+    val disabledReason: String?,
+)
+
+/** Mirror of Kern's `CockpitAnimationEvent.CalmNotice` (real errors: tool failed, model error, ToolGate refusal). */
+data class Video3CalmNoticeInfo(
+    val sourceLabel: String,
+    val message: String,
+    val options: List<Video3ActionOption>,
+)
+
+/**
+ * Question pills, Muster G (owner of the look: Jarvis Sicherheit, JarvisSequenceEffects component G). The scene only
+ * lays out and calls this; a selection is reported to the caller, who forwards it to Kern's
+ * PillActionGate.requestOption (ToolGate + owner yes). [Video3Pills] is the default implementation on JarvisMotion /
+ * JarvisNeon (#479).
+ */
+interface PillPresenter {
+    /** Draws [options] centred on [centerX] with the top at [top]; [elapsedMs] since the notice appeared. */
+    fun draw(p: ContinuumPainter, width: Float, centerX: Float, top: Float, elapsedMs: Long,
+             options: List<Video3ActionOption>, opts: Video3Options)
+    /** Option hit by (x, y) in the last drawn frame; null for none or a disabled option. */
+    fun optionAt(x: Float, y: Float): Video3ActionOption?
+}
 
 /**
  * Head slot (owner: Jarvis Avatar). Draws the ONE head into the box (l, t, w, h); the scene only transforms the canvas

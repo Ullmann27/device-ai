@@ -28,6 +28,7 @@ import kotlin.math.sin
 class Video3AlarmScene(
     private val head: HeadDrawer = HeadDrawer.NONE,
     private val base: AlarmBaseEffects = Video3Curves.Fallback(),
+    private val pills: PillPresenter = Video3Pills(),
 ) {
     private val waveSegs = FloatArray(WAVE_LINES * 2 * WAVE_POINTS * 4)
     private val streakSegs = FloatArray(CASCADE_COLUMNS * 4)
@@ -85,7 +86,7 @@ class Video3AlarmScene(
         head.draw(p, cx - headW / 2f, faceY - headH * FACE_IN_HEAD, headW, headH, t, glow.coerceAtLeast(1f))
         p.restore()
         p.restore()
-        drawPanel(p, width, height, glow)
+        drawPanel(p, width, height, glow, info, ms, options)
         return true
     }
 
@@ -179,10 +180,14 @@ class Video3AlarmScene(
         p.setAdditive(false)
     }
 
-    private fun drawPanel(p: ContinuumPainter, w: Float, h: Float, glow: Float) {
+    /** Enabled option under (x, y) of the last frame (reporting only, the caller forwards it to Kern). */
+    fun optionAt(x: Float, y: Float): Video3ActionOption? = pills.optionAt(x, y)
+
+    private fun drawPanel(p: ContinuumPainter, w: Float, h: Float, glow: Float, info: Video3AlarmInfo, ms: Long,
+                          options: Video3Options) {
         val pw = min(w * .62f, PANEL_MAX_W)
         val l = (w - pw) / 2f; val r = l + pw
-        val b = h - h * .06f; val t = b - PANEL_H
+        val b = h - h * .06f - (if (info.options.isEmpty()) 0f else PILL_ROW); val t = b - PANEL_H
         JarvisNeon.glassCard(p, l, t, r, b, glow = if (glow > 0f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.OFF,
             active = glow > 0f, glowBoost = if (glow > 0f) 1f else 0f)
         val c = w / 2f
@@ -191,9 +196,12 @@ class Video3AlarmScene(
         p.drawText(sourceLine, c, t + PANEL_H * .60f, lineStyle, textFill, TextAlign.CENTER)
         p.drawText(valueLine, c, t + PANEL_H * .80f, lineStyle, text2Fill, TextAlign.CENTER)
         p.drawText(NO_ACTION, c, t + PANEL_H * .95f, JarvisDesign.Type.caption, mutedFill, TextAlign.CENTER)
+        val pillMs = ms - (Video3Curves.ALARM_ZOOM_S * 1000f).toLong()
+        pills.draw(p, w, w / 2f, b + 14f, if (options.reducedMotion) Long.MAX_VALUE / 4 else pillMs, info.options, options)
     }
 
     companion object {
+        const val PILL_ROW = 64f
         const val DURATION_S = 2f
         const val TITLE = "Sicherheitsbefund erkannt"
         const val NO_ACTION = "Keine automatische Maßnahme – Entscheidung beim Besitzer"
