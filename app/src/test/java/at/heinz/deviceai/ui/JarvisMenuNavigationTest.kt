@@ -119,9 +119,15 @@ class JarvisMenuNavigationTest {
         JarvisMenu.railEntries.forEach { e ->
             val label = JarvisMenu.fitLabel(p, e, 108f)
             val st = JarvisDesign.Styles.button
-            assertTrue("${e.label} → $label", p.measureText(label, JarvisDesign.Type.nav) <= 108f - 2 * st.padH - st.iconSize - st.iconGap)
+            assertTrue("${e.label} → $label", p.measureText(label, JarvisDesign.Type.nav) <= 108f - st.padH - st.iconSize - st.iconGap - JarvisMenu.LABEL_END)
         }
         assertEquals("Gerät", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "device" }, 108f))
+        assertEquals("Gedächtnis", JarvisMenu.fitLabel(p, JarvisMenu.railEntries.first { it.target == "memory" }, 108f)) // no "…"
+    }
+
+    @Test fun everyRailEntryHasItsRef5Icon() {
+        JarvisMenu.railEntries.forEach { assertTrue(it.target, JarvisRailIcons.has(it.target)) }
+        assertFalse(JarvisRailIcons.has("gibt-es-nicht"))
     }
 
     /** Records drawn text; fixed advance per char. */

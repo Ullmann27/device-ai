@@ -32,9 +32,12 @@ object JarvisMenu {
     /** Shorter label when the full one does not fit the 108 dp ref5 button at Type.nav (full label stays for TalkBack). */
     val shortLabels: Map<String, String> = mapOf("device" to "Gerät", "system" to "System")
 
+    /** ref5: label may run to 4 dp before the button edge ("Device Control" ends ~6 px inside). */
+    const val LABEL_END = 4f
+
     fun fitLabel(p: ContinuumPainter, e: Entry, buttonWidth: Float): String {
         val st = JarvisDesign.Styles.button
-        val room = buttonWidth - 2 * st.padH - st.iconSize - st.iconGap
+        val room = buttonWidth - st.padH - st.iconSize - st.iconGap - LABEL_END
         if (p.measureText(e.label, JarvisDesign.Type.nav) <= room) return e.label
         val short = shortLabels[e.target] ?: e.label
         return JarvisShellRenderer.fit(p, short, JarvisDesign.Type.nav, room)

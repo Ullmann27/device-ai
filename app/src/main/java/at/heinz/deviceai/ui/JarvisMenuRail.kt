@@ -89,7 +89,8 @@ class JarvisMenuRailElement(var selected: Int = 0, textScale: Float = 1f,
     private fun icon(e: JarvisMenu.Entry) = JarvisNeon.IconPainter { p, left, top, size, color ->
         // ref5: "System Status" carries the violet pulse icon, all others cyan.
         val c = if (e.target == "system") Colors.violetSoft else color
-        ContinuumIcons.draw(p, e.icon, left + size / 2f, top + size / 2f, size, Fill.Solid(c), 1.4f)
+        if (!JarvisRailIcons.draw(p, e.target, left, top, size, c))
+            ContinuumIcons.draw(p, e.icon, left + size / 2f, top + size / 2f, size, Fill.Solid(c), 1.4f)
     }
 
     private fun drawDeviceStatus(p: ContinuumPainter, w: Float) {
