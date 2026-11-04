@@ -100,8 +100,9 @@ the payload selected by that choice receipt. Publish both receipts before
 the single final evaluation. The archive and final report identify the chosen
 version and the publication commit.
 
-The 48 final cases are reserved for the single confirmation evaluation recorded
-in the final report. Once evaluated, replaying them can verify that published
+The 48 final cases were evaluated once on the four frozen V3 arms: S0/W0
+0/48, S1 31/48, W1 25/48. The predeclared criterion failed. See `RESULTS.md`
+and `study-v3/intent-summary.json`. Replaying these cases can verify that published
 result; it is not a new independent confirmation of a later-trained model.
 Future development then needs a fresh, independently specified confirmation set.
 
