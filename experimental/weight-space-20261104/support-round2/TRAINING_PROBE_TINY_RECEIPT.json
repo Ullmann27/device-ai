@@ -1,0 +1,128 @@
+{
+  "format": "LM1_TRAINING_RESOURCE_R2_TINY_RECEIPT_V1",
+  "created_utc": "2026-11-04T19:24:36.453075+00:00",
+  "scope": "Tiny harness validation only. No actual 16M training or actual 16M optimizer construction by this helper.",
+  "production_source_commit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "support_base_commit": "e726deb96dc74bacd40c2fe0ef640c6db57903f5",
+  "production_sources": [
+    {
+      "path": "/workspace/scratch/319f3e4563d9/weight16m-worktree/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "sha256": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "matches_PR492_bytes": true
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/weight16m-worktree/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "sha256": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "matches_PR492_bytes": true
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/weight16m-worktree/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "sha256": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "matches_PR492_bytes": true
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/weight16m-worktree/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "sha256": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "matches_PR492_bytes": true
+    }
+  ],
+  "compiler": "kotlinc-jvm 2.0.20",
+  "runtime": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "jvm_target": "17",
+  "compile": {
+    "cwd": "/workspace/scratch/319f3e4563d9/weight16m-worktree",
+    "argv": [
+      "java",
+      "-cp",
+      "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/*",
+      "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+      "-no-stdlib",
+      "-no-reflect",
+      "-jvm-target",
+      "17",
+      "-classpath",
+      "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+      "-d",
+      "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/build/lm-training-resource-probe.jar",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/LmTrainingResourceProbe.kt"
+    ],
+    "exit_code": 0,
+    "log_bytes": 0
+  },
+  "tiny_test": {
+    "cwd": "/workspace/scratch/319f3e4563d9/weight16m-worktree",
+    "argv": [
+      "java",
+      "-Xmx512m",
+      "-XX:ActiveProcessorCount=1",
+      "-cp",
+      "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/build/lm-training-resource-probe.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+      "at.heinz.deviceai.learning.lm.LmTrainingResourceProbe",
+      "--self-test",
+      "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/tiny-validation-v1"
+    ],
+    "exit_code": 0,
+    "parameters": 2904,
+    "independent_fresh_runs": 2,
+    "updates_per_run": 1,
+    "actual_16m_updates": 0,
+    "determinism": "PASS",
+    "wrong_input_sha_rejected_before_trainer": "PASS",
+    "source_before_fingerprint": "0c43d2b51b528998693beb9159f951ffa53c045b75812b43ec8ab55324d28603",
+    "updated_fingerprint": "788e599ed2150a036eb75030737e907b2e89bd1c59c2fa8a192f9dc1c033fb6b",
+    "numeric_changed_each_run": 2904,
+    "pre_inference_nll": "5.592717195645469",
+    "native_pre_update_nll": "5.592717170715332",
+    "post_inference_nll": "5.590669211302803",
+    "input_files_unchanged": true
+  },
+  "limits": {
+    "actual_16m_resource_measurement": "NOT_RUN_BY_HELPER",
+    "gradient_finiteness": "UNMEASURED",
+    "gradient_norm": "UNMEASURED",
+    "optimizer_moment_finiteness": "UNMEASURED",
+    "quality_claim": false,
+    "promotion_claim": false
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/LmTrainingResourceProbe.kt",
+      "bytes": 13252,
+      "sha256": "7638fcbe04f7ae53a0ab086ca716002218955d27b7dc2abb7d48d50fa79e31bf"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/TRAINING_RESOURCE_PROTOCOL.md",
+      "bytes": 7153,
+      "sha256": "29551466ad4a5e38561b0b60abfbd80a37811d9ab382d2a7c7b550bc74f00439"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/build/lm-training-resource-probe.jar",
+      "bytes": 98097,
+      "sha256": "642087c60d808962f32a3e3b208464f28ccfbb5b1ddd1b47e127d31f88c24dc3"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/build/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/tiny-validation-v1.tsv",
+      "bytes": 4402,
+      "sha256": "3217980bfc2d8e9eb51ff8f9057d4877c6e1db7fbc2f4a7b1c5d33add1e3821f"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/tiny-validation-v1/tiny-input.lm1",
+      "bytes": 11984,
+      "sha256": "52b5ddd18409016a979abe0680587ccb1f4a1ef048fa8b9797f86bbba9383079"
+    },
+    {
+      "path": "/workspace/scratch/319f3e4563d9/agents-r2/training/experimental/weight-space-20261104/support-round2/tiny-validation-v1/tiny-tokenizer.lmbp",
+      "bytes": 8,
+      "sha256": "f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b"
+    }
+  ]
+}

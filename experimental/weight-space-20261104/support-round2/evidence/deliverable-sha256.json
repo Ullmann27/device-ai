@@ -1,0 +1,8 @@
+{
+  "recovery_evidence_audit.py": "be0f46ded7114bb659de06c53a77dc6e267f0fa6f4cee5a6aa8eba3a0fe56690",
+  "test_recovery_evidence_audit.py": "e3e5efff15fa4cd64c68659771cd71aa1c4d31e147f5e3797cdf4068cd4f3521",
+  "RECOVERY_AUDIT.md": "63a2ee827a3b6f2a244a567eaf519efcd16bc1c535fcfcebf5c9e2dc8c113f43",
+  "evidence/recovery-audit.json": "b13b1b9c2ceec56b0bdddccde4c9b5922b53f3e925614176ed905e03ee647008",
+  "evidence/recovery-audit-tests.txt": "a8561c65015c5b470b1457d8ca40f88e29824ed6b6da4e066b43c5ffe226ceca",
+  "evidence/recovery-audit-readlog.txt": "464471319fc98939f2949f13831f12fd7b734933d3ddb8bfa3b7bc8f5564ce50"
+}

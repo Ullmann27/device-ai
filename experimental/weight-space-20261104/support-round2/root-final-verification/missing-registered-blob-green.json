@@ -1,0 +1,8 @@
+{
+  "case": "missing_registered_blob_must_not_report_full_pass",
+  "injectedMissingPath": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+  "casePassed": true,
+  "auditRejected": "registered source/data bytes unavailable: experimental/lm1-training-recovery-20261104/run_registered_study.py",
+  "sourceSha256": "f89cd8df66f07e39de308a7fc253ab881e26792ed3e97a5852c47cb04e7802f2",
+  "modelProcesses": 0
+}

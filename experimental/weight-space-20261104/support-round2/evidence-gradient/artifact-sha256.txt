@@ -1,0 +1,6 @@
+3dae55568efae84dd3ca4ae70feb05d150fa0046c1f98f67717bc773ca9ad18a  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/LmGradientAudit.kt
+ce263492372ae0ed181e8944ce5b3af74eaa75180b115faa4ed0c553e1bada21  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/evidence-gradient/audit.jar
+00c72a36dc3a03500dd7eccb737ecc8d3644b558afa6658aa470e3be377a5efa  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/evidence-gradient/replay.sh
+d634084efa21b6ae30bb3759b6844985209e2ec6458bf79a2e67c98b6b8d997d  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/evidence-gradient/run.log
+3fbbd75738b643c2c07d120b4144f8ea0decc28127869be0e68958898f68d2ff  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/evidence-gradient/original_init.tsv
+4fddffb934058cd0b9014a4649a8c859557562e2aa3d63c1ff0c4f748ee2054c  /workspace/scratch/319f3e4563d9/agents-r2/gradient/experimental/weight-space-20261104/support-round2/evidence-gradient/zero_l1_outputs.tsv

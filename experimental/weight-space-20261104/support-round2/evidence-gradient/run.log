@@ -1,0 +1,14 @@
+LM_GRADIENT_AUDIT_R2 seed=490514 vocab=258 dim=8 layers=2 context=8 mlp=12
+ids=4,7,4,12,7,4 targets=7,4,12,7,4,1 unscaled_embeddings=true
+fixed_tolerance=3e-5+0.003*abs(reference); float_steps=0.001,3.0E-4,1.0E-4; double_steps=1e-5,5e-6
+scenario=original_init parameters=3056 checked=117 nll=5.583504775174723 oracle_nll=5.5835047669649205
+double_failures=0 max_abs_error=3.383955743174738E-6 max_double_step_disagreement=1.457496345835807E-5 float_failures_by_step=21,11,11
+split_embedding_max_error=1.1920928955078125E-7 shared_two_tapes_max_error=4.76837158203125E-7 negative_control_index=39 true=-2.6488272682811953 broken_output_only=0.07858184725046158 broken_error=2.727409115531657 tolerance=0.007976481804843586 NEGATIVE_CONTROL_REJECTED
+scenario=zero_l1_outputs parameters=3056 checked=117 nll=5.5536242554580975 oracle_nll=5.553624250878492
+double_failures=0 max_abs_error=1.2396824046190247E-6 max_double_step_disagreement=7.343459174080635E-7 float_failures_by_step=11,1,0
+split_embedding_max_error=4.470348358154297E-8 shared_two_tapes_max_error=1.1920928955078125E-7 negative_control_index=36 true=-0.9332931801608878 broken_output_only=-0.18875913321971893 broken_error=0.7445340469411689 tolerance=0.0028298795404826634 NEGATIVE_CONTROL_REJECTED
+zero_output_opening_gradient l1.wo max_abs=0.09007281
+zero_output_opening_gradient l1.w2 max_abs=0.20403051
+zero_output_opening_gradient l1.b2 max_abs=0.09717421
+zero_output_upstream_exact_zero=true forward_identity_exact=true
+RESULT double_reference_failures=0; Float32 curves retained without changing tolerances

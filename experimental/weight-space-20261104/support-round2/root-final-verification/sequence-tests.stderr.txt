@@ -1,0 +1,10 @@
+test_512_vocabulary_uses_510_511 (test_resource_sequence.ResourceSequenceChecks.test_512_vocabulary_uses_510_511) ... ok
+test_actual_archived_v1_registration_is_rejected (test_resource_sequence.ResourceSequenceChecks.test_actual_archived_v1_registration_is_rejected) ... ok
+test_byte_tokenizer_uses_256_257 (test_resource_sequence.ResourceSequenceChecks.test_byte_tokenizer_uses_256_257) ... ok
+test_invalid_tokenizer_is_rejected (test_resource_sequence.ResourceSequenceChecks.test_invalid_tokenizer_is_rejected) ... ok
+test_wrong_payload_or_target_count_is_rejected (test_resource_sequence.ResourceSequenceChecks.test_wrong_payload_or_target_count_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK

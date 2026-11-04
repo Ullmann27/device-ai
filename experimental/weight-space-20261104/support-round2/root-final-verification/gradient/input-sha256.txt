@@ -1,0 +1,7 @@
+abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099  /workspace/scratch/319f3e4563d9/weight16m-r2/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
+a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab  /workspace/scratch/319f3e4563d9/weight16m-r2/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt
+fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e  /workspace/scratch/319f3e4563d9/weight16m-r2/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt
+3dae55568efae84dd3ca4ae70feb05d150fa0046c1f98f67717bc773ca9ad18a  /workspace/scratch/319f3e4563d9/weight16m-r2/experimental/weight-space-20261104/support-round2/LmGradientAudit.kt
+a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad  /workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-compiler-embeddable-2.0.20.jar
+fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006  /workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar
+61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35  /workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar
