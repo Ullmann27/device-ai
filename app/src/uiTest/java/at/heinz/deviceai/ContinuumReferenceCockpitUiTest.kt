@@ -40,10 +40,11 @@ import java.util.concurrent.TimeUnit
 class ContinuumReferenceCockpitUiTest {
     private val actionNames = listOf(
         "LABEL_THINKING", "ACTION_MEMORY", "LABEL_ANALYSING", "LABEL_DEVELOPING",
-        "ACTION_AGENTS", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
+        "ACTION_AGENTS", "ACTION_BOTS", "ACTION_TASK", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
     )
     private val targetNames = actionNames + listOf(
-        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE"
+        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE",
+        "VIEW_AVATAR", "VIEW_ORB", "VIEW_COMPACT"
     )
 
     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
@@ -71,6 +72,7 @@ class ContinuumReferenceCockpitUiTest {
             .putBoolean("introduced", true).commit()
         app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
+        app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
             controller.setup().visible().windowFocusChanged(true)
@@ -171,6 +173,7 @@ class ContinuumReferenceCockpitUiTest {
             root.draw(Canvas(bitmap))
             val directory = System.getProperty("continuum.reference.evidenceDir")
                 ?: System.getProperty("continuum.layout.evidenceDir")
+                ?: System.getProperty("continuum.ui.evidenceDir")
             if (directory != null) {
                 val output = File(directory).apply { mkdirs() }
                 File(output, "$label.png").outputStream().use {
@@ -234,6 +237,40 @@ class ContinuumReferenceCockpitUiTest {
             assertRealTargets(home)
         }
     }
+
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        val avatar = field(activity, "hologramView") as ContinuumHologramView
+        val originalHeight = avatar.height
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse(avatar.isNative3dEnabled())
+        tap(root, slot(home, "VIEW_ORB"))
+        measure(root, 412, 915)
+        assertFalse("Orb selection must render the preserved original orb", avatar.isNativeHeadEnabled())
+        assertTrue(slot(home, "VIEW_ORB").isSelected)
+        capture(root, "phone-412x915-original-orb", 412, 915)
+        tap(root, slot(home, "VIEW_COMPACT"))
+        measure(root, 412, 915)
+        assertTrue("Compact frees vertical room for conversation", avatar.height < originalHeight)
+        assertTrue(slot(home, "VIEW_COMPACT").isSelected)
+        assertTrue(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+            .getBoolean("compact", false))
+        capture(root, "phone-412x915-compact", 412, 915)
+        tap(root, slot(home, "VIEW_AVATAR"))
+        measure(root, 412, 915)
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse("Restore the owner's 2D fallback preference", avatar.isNative3dEnabled())
+        assertEquals(originalHeight, avatar.height)
+        assertTrue(slot(home, "VIEW_AVATAR").isSelected)
+        assertSame(avatar, field(activity, "hologramView"))
+        assertSame(home, avatar.parent)
+        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+        assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
+    }
+
+    @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
+    fun narrowPhoneHasRealDestinationsAndReadableLargeType() = checkProfile("narrow-280x720", 280, 720)
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
     fun phoneHasRealDestinationsAndReadableLargeType() = checkProfile("phone-412x915", 412, 915)

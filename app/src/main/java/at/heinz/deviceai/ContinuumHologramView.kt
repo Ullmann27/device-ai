@@ -188,6 +188,8 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     fun isNativeHeadEnabled(): Boolean = headEnabled
 
+    fun isNative3dEnabled(): Boolean = head3dEnabled
+
     /** Appearance only; preserves the Director, brain, TTS, and shared pose reducer. */
     fun setNative3dEnabled(enabled: Boolean) {
         head3dEnabled = enabled

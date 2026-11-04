@@ -1,0 +1,60 @@
+JUnit version 4.13.2
+..E..E.E.E
+Time: 6.178
+There were 4 failures:
+1) unsafeBotRootLinkShowsSafetyDiagnosticWithoutOutsideWrite(at.heinz.deviceai.ContinuumBotRosterStorageUiTest)
+java.lang.AssertionError: Team · Bots
+
+Der Bot-Bestand konnte nicht sicher gelesen oder gespeichert werden. Bitte im Entwicklerbereich prüfen. Bestehende Daten werden nicht automatisch ersetzt.
+Übersicht erneut öffnen
+
+Schließen
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.assertDiagnostic(ContinuumBotRosterStorageUiTest.kt:87)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.unsafeBotRootLinkShowsSafetyDiagnosticWithoutOutsideWrite(ContinuumBotRosterStorageUiTest.kt:166)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+2) realReadonlyDirectoryFailureDoesNotShowSeededProfilesOrReplaceRegistry(at.heinz.deviceai.ContinuumBotRosterStorageUiTest)
+java.lang.AssertionError: Team · Bots
+
+Der Bot-Bestand konnte nicht sicher gelesen oder gespeichert werden. Bitte im Entwicklerbereich prüfen. Bestehende Daten werden nicht automatisch ersetzt.
+Übersicht erneut öffnen
+
+Schließen
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.assertDiagnostic(ContinuumBotRosterStorageUiTest.kt:87)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.realReadonlyDirectoryFailureDoesNotShowSeededProfilesOrReplaceRegistry(ContinuumBotRosterStorageUiTest.kt:154)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+3) unsupportedSchemaShowsCompatibleVersionAdviceWithoutReseeding(at.heinz.deviceai.ContinuumBotRosterStorageUiTest)
+java.lang.AssertionError: Team · Bots
+
+Der Bot-Bestand konnte nicht sicher gelesen oder gespeichert werden. Bitte im Entwicklerbereich prüfen. Bestehende Daten werden nicht automatisch ersetzt.
+Übersicht erneut öffnen
+
+Schließen
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.assertDiagnostic(ContinuumBotRosterStorageUiTest.kt:87)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.unsupportedSchemaShowsCompatibleVersionAdviceWithoutReseeding(ContinuumBotRosterStorageUiTest.kt:139)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+4) corruptRegistryShowsAccessibleFixedDiagnosticAndPreservesOwnerBytes(at.heinz.deviceai.ContinuumBotRosterStorageUiTest)
+java.lang.AssertionError: Team · Bots
+
+Der Bot-Bestand konnte nicht sicher gelesen oder gespeichert werden. Bitte im Entwicklerbereich prüfen. Bestehende Daten werden nicht automatisch ersetzt.
+Übersicht erneut öffnen
+
+Schließen
+
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.assertDiagnostic(ContinuumBotRosterStorageUiTest.kt:87)
+	at at.heinz.deviceai.ContinuumBotRosterStorageUiTest.corruptRegistryShowsAccessibleFixedDiagnosticAndPreservesOwnerBytes(ContinuumBotRosterStorageUiTest.kt:125)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+
+FAILURES!!!
+Tests run: 6,  Failures: 4
+

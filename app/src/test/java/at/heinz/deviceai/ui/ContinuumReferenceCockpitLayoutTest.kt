@@ -20,10 +20,11 @@ class ContinuumReferenceCockpitLayoutTest {
     private val fonts = listOf(1f, 1.3f, 1.5f, 2f)
     private val actions = listOf(
         "LABEL_THINKING", "ACTION_MEMORY", "LABEL_ANALYSING", "LABEL_DEVELOPING",
-        "ACTION_AGENTS", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
+        "ACTION_AGENTS", "ACTION_BOTS", "ACTION_TASK", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
     )
     private val targets = actions + listOf(
-        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE"
+        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE",
+        "VIEW_AVATAR", "VIEW_ORB", "VIEW_COMPACT"
     )
 
     private fun layout(window: Window, font: Float): ContinuumHomeLayout.Layout =
@@ -90,6 +91,20 @@ class ContinuumReferenceCockpitLayoutTest {
             assertTrue("${window.width} wide content may scroll at 200%", large.contentHeight >= normal.contentHeight)
             for (name in actions + "COMPOSER") {
                 assertTrue("$name cannot lose its reading height at 200%", box(large, name).height >= box(normal, name).height)
+            }
+        }
+    }
+
+    @Test fun compactPresentationKeepsAllDestinationsAndReducesStageSpace() {
+        for (window in windows) for (font in fonts) {
+            val normal = layout(window, font)
+            val compact = ContinuumReferenceLayout.create(window.width, window.height, normal.wide, font, compact = true)
+            assertTrue(box(compact, "HERO").height < box(normal, "HERO").height)
+            assertTrue(box(compact, "COMPOSER").top < box(normal, "COMPOSER").top)
+            for (name in targets) {
+                val area = box(compact, name)
+                assertTrue("Compact $name is a usable native target", area.width >= 48f && area.height >= 48f)
+                assertTrue(area.left >= 0f && area.right <= window.width + .01f)
             }
         }
     }

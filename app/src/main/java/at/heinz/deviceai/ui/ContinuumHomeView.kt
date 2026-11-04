@@ -23,6 +23,31 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val textScale = resources.configuration.fontScale.coerceIn(.85f, 2f)
     private var layoutSpec: ContinuumHomeLayout.Layout? = null
     private var offset = 0f
+    private val presentationPrefs = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+    private var compactPresentation = presentationPrefs.getBoolean("compact", false)
+    private var configuredWidth = 0f
+    private var configuredHeight = 0f
+    private var configuredWide = false
+    private var configuredNavigation = false
+
+    /** Presentation reuses the same live view and its existing original orb/3D lifecycle. */
+    private fun selectPresentation(slot: Slot) {
+        val compact = slot == Slot.VIEW_COMPACT
+        if (slot == Slot.VIEW_AVATAR) {
+            val use3d = presentationPrefs.getBoolean("avatar-3d", true)
+            if (use3d) hologram.setNative3dEnabled(true) else hologram.setNativeHeadEnabled(true)
+        } else {
+            if (hologram.isNativeHeadEnabled()) {
+                presentationPrefs.edit().putBoolean("avatar-3d", hologram.isNative3dEnabled()).apply()
+            }
+            hologram.setNativeHeadEnabled(false)
+        }
+        compactPresentation = compact
+        presentationPrefs.edit().putBoolean("compact", compact).apply()
+        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight)
+        views.values.forEach { it.refresh() }
+        views[slot]?.requestFocus()
+    }
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
@@ -117,7 +142,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      */
     fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
                   windowHeightDp: Float = 0f) {
-        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp, textScale) else ContinuumHomeLayout.phone(windowWidthDp, textScale)
+        configuredWidth = windowWidthDp
+        configuredHeight = windowHeightDp
+        configuredWide = wide
+        configuredNavigation = includeNavigation
+        val spec = ContinuumReferenceLayout.create(windowWidthDp, if (wide) windowHeightDp else 0f,
+            wide, textScale, compactPresentation)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
         layoutSpec = spec
         offset = railOffset
@@ -222,10 +252,32 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
             ContinuumControls.feedback(this)
             refresh()
-            setOnClickListener { onSlot(slot, downX / density, downY / density) }
+            setOnClickListener {
+                if (slot in listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT)) selectPresentation(slot)
+                else onSlot(slot, downX / density, downY / density)
+            }
+        }
+
+        override fun onInitializeAccessibilityNodeInfo(info: android.view.accessibility.AccessibilityNodeInfo) {
+            super.onInitializeAccessibilityNodeInfo(info)
+            if (element is ReferenceViewModeElement) {
+                info.className = android.widget.RadioButton::class.java.name
+                info.isCheckable = true
+                info.isChecked = isSelected
+            } else {
+                info.className = android.widget.Button::class.java.name
+            }
         }
 
         fun refresh() {
+            (element as? ReferenceViewModeElement)?.let {
+                it.selected = when (slot) {
+                    Slot.VIEW_COMPACT -> compactPresentation
+                    Slot.VIEW_AVATAR -> !compactPresentation && hologram.isNativeHeadEnabled()
+                    else -> !compactPresentation && !hologram.isNativeHeadEnabled()
+                }
+                isSelected = it.selected
+            }
             contentDescription = element.describe(state)
             invalidate()
         }

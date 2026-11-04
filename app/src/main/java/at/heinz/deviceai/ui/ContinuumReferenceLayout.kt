@@ -11,11 +11,12 @@ import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
  */
 object ContinuumReferenceLayout {
     val actions = listOf(
-        Slot.LABEL_THINKING, Slot.ACTION_MEMORY, Slot.LABEL_ANALYSING, Slot.LABEL_DEVELOPING,
-        Slot.ACTION_AGENTS, Slot.LABEL_LEARNING, Slot.ACTION_DEVICE, Slot.LABEL_CONNECTED
+        Slot.LABEL_THINKING, Slot.ACTION_AGENTS, Slot.ACTION_BOTS, Slot.ACTION_TASK,
+        Slot.ACTION_MEMORY, Slot.LABEL_ANALYSING, Slot.LABEL_DEVELOPING,
+        Slot.LABEL_LEARNING, Slot.ACTION_DEVICE, Slot.LABEL_CONNECTED
     )
 
-    fun create(width: Float, height: Float, wide: Boolean, fontScale: Float): Layout {
+    fun create(width: Float, height: Float, wide: Boolean, fontScale: Float, compact: Boolean = false): Layout {
         require(width.isFinite() && width > 0f && height.isFinite() && height >= 0f)
         require(fontScale.isFinite() && fontScale > 0f)
         val font = fontScale.coerceIn(.85f, 2f)
@@ -39,10 +40,19 @@ object ContinuumReferenceLayout {
             boxes[slot] = Box(x, y, x + 48f, y + 48f)
         }
 
-        val heroTop = headerBottom + 4f
-        val sidebar = wide && !portrait && room >= 680f && !largeType
+        val selectorColumns = if (font > 1.3f && room < 420f) 1 else 3
+        val selectorHeight = 48f + (font - 1f).coerceAtLeast(0f) * 16f
+        val selectorWidth = (room - (selectorColumns - 1) * gap) / selectorColumns
+        listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT).forEachIndexed { index, slot ->
+            val x = left + index % selectorColumns * (selectorWidth + gap)
+            val y = headerBottom + 4f + index / selectorColumns * (selectorHeight + gap)
+            boxes[slot] = Box(x, y, x + selectorWidth, y + selectorHeight)
+        }
+        val heroTop = headerBottom + 4f + ((3 + selectorColumns - 1) / selectorColumns) * (selectorHeight + gap)
+        val sidebar = !compact && wide && !portrait && room >= 680f && !largeType
         val sideWidth = (room * .31f).coerceIn(236f, 320f)
         val heroHeight = when {
+            compact -> 112f
             !wide -> (room * .79f).coerceIn(250f, 338f)
             portrait -> (room * .54f).coerceIn(338f, 430f)
             else -> (room * .44f).coerceIn(304f, 382f)

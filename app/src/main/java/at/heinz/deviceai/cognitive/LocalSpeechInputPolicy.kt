@@ -3,6 +3,25 @@ package at.heinz.deviceai.cognitive
 /** Android EXTRA_PREFER_OFFLINE is advisory, never a network permission or offline proof.
  * The actual UI uses on-device ASR only; cloud audio needs a separate explicit per-use grant. */
 internal object LocalSpeechInputPolicy {
+    enum class Failure { NO_MATCH, NO_INPUT, PERMISSION, SERVICE_UNAVAILABLE, LANGUAGE_UNSUPPORTED,
+        LANGUAGE_UNAVAILABLE, BUSY, AUDIO, NETWORK, SERVICE_FAILURE, START_FAILED, TIMEOUT, CANCELLED }
+
+    fun message(failure: Failure): String = when (failure) {
+        Failure.NO_MATCH -> "Keine verständlichen Wörter erkannt. Bitte erneut auf das Mikrofon tippen und deutlich sprechen."
+        Failure.NO_INPUT -> "Keine Sprache gehört. Bitte erneut auf das Mikrofon tippen und nach dem Start sprechen."
+        Failure.PERMISSION -> "Mikrofonberechtigung fehlt oder wurde entzogen. In Android unter App-Berechtigungen das Mikrofon freigeben und erneut starten."
+        Failure.SERVICE_UNAVAILABLE -> "Lokaler Android-Spracherkenner nicht verfügbar. Lokale Sprachunterstützung in Android prüfen oder tippen."
+        Failure.LANGUAGE_UNSUPPORTED -> "Die gewählte Sprache Deutsch (Österreich) wird vom lokalen Spracherkenner nicht unterstützt. Lokale Sprachunterstützung in Android prüfen oder tippen."
+        Failure.LANGUAGE_UNAVAILABLE -> "Die lokalen Sprachdaten für Deutsch (Österreich) sind nicht verfügbar. Sprachdaten in Android selbst prüfen und bei Bedarf ausdrücklich herunterladen; danach erneut starten."
+        Failure.BUSY -> "Der lokale Spracherkenner ist gerade belegt. Kurz warten und erneut auf das Mikrofon tippen."
+        Failure.AUDIO -> "Das Mikrofon konnte kein Audio liefern. Andere Mikrofon-Apps und die Android-Mikrofonsperre prüfen; danach erneut starten."
+        Failure.NETWORK -> "Der lokale Spracherkenner meldet einen Netzwerkfehler. Bitte tippen oder die lokale Android-Sprachunterstützung prüfen. Es wird kein Cloud-Ersatz gestartet."
+        Failure.SERVICE_FAILURE -> "Der lokale Spracherkennungsdienst meldet einen Fehler. Bitte erneut starten oder die lokale Android-Sprachunterstützung prüfen."
+        Failure.START_FAILED -> "Die lokale Spracherkennung konnte nicht gestartet werden. Bitte erneut versuchen oder tippen. Es wird kein Cloud-Ersatz gestartet."
+        Failure.TIMEOUT -> "Lokale Spracheingabe nach 30 Sekunden beendet. Für einen neuen Versuch erneut auf das Mikrofon tippen."
+        Failure.CANCELLED -> "Lokale Spracheingabe abgebrochen."
+    }
+
     enum class Route { ON_DEVICE, REQUEST_MICROPHONE, EXTERNAL_WITH_EXPLICIT_GRANT, UNAVAILABLE }
     fun route(mode:InternetAccessMode,offlineVeto:Boolean,onDeviceAvailable:Boolean,microphoneGranted:Boolean,
               externalAudioGrant:Boolean=false):Route = when {

@@ -48,7 +48,9 @@ class ReferenceActionElement(private val slot: Slot, textScale: Float) : Continu
         Slot.ACTION_MEMORY -> "Gedächtnis"
         Slot.LABEL_ANALYSING -> "Forschung"
         Slot.LABEL_DEVELOPING -> "Entwicklung"
-        Slot.ACTION_AGENTS -> "Agenten"
+        Slot.ACTION_AGENTS -> "Agents"
+        Slot.ACTION_BOTS -> "Bots"
+        Slot.ACTION_TASK -> "Auftrag"
         Slot.LABEL_LEARNING -> "Lernen"
         Slot.ACTION_DEVICE -> "Gerät"
         Slot.LABEL_CONNECTED -> "Internet"
@@ -59,7 +61,8 @@ class ReferenceActionElement(private val slot: Slot, textScale: Float) : Continu
         Slot.ACTION_MEMORY -> Icon.DATABASE
         Slot.LABEL_ANALYSING -> Icon.SEARCH
         Slot.LABEL_DEVELOPING -> Icon.CODE
-        Slot.ACTION_AGENTS -> Icon.USERS
+        Slot.ACTION_AGENTS, Slot.ACTION_BOTS -> Icon.USERS
+        Slot.ACTION_TASK -> Icon.CODE
         Slot.LABEL_LEARNING -> Icon.BOOK
         Slot.ACTION_DEVICE -> Icon.GEAR
         else -> Icon.GLOBE
@@ -69,7 +72,9 @@ class ReferenceActionElement(private val slot: Slot, textScale: Float) : Continu
         Slot.ACTION_MEMORY -> "Wissen & Quellen"
         Slot.LABEL_ANALYSING -> s.core.analysing
         Slot.LABEL_DEVELOPING -> "Code & Aufträge"
-        Slot.ACTION_AGENTS -> "Profile & Rollen"
+        Slot.ACTION_AGENTS -> "Team & Rollen"
+        Slot.ACTION_BOTS -> "Eigene KI-Profile"
+        Slot.ACTION_TASK -> "Auftrag vorbereiten"
         Slot.LABEL_LEARNING -> s.core.learning
         Slot.ACTION_DEVICE -> "System & Werkzeuge"
         Slot.LABEL_CONNECTED -> s.core.connected
@@ -277,4 +282,24 @@ class ReferenceLearningStatusElement(textScale: Float) : ContinuumElement(textSc
         ContinuumSurfaces.chevron(p, w - 19f, h / 2f, 11f)
     }
     override fun describe(s: ContinuumDashboardState) = "Lernstatus. ${s.core.evolving}. Lernübersicht öffnen."
+}
+
+/** Separate focusable buttons: selection changes presentation only, never runtime readiness. */
+class ReferenceViewModeElement(val mode: Slot, textScale: Float) : ContinuumElement(textScale) {
+    var selected: Boolean = false
+    private val label get() = when (mode) {
+        Slot.VIEW_AVATAR -> "Avatar"
+        Slot.VIEW_ORB -> "Kugel"
+        Slot.VIEW_COMPACT -> "Kompakt"
+        else -> error("Not a view mode: $mode")
+    }
+    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
+        ContinuumSurfaces.glassCard(p, 1f, 1f, w - 1f, h - 1f, 12f)
+        if (selected) p.fillRoundRect(3f, 3f, w - 3f, h - 3f, 10f,
+            solid(Argb.withAlpha(ContinuumTheme.CYAN, .20f)))
+        val style = t(if (selected) 600 else 400, 13f)
+        p.drawText(label, w / 2f, h / 2f + p.capHeight(style) / 2f, style,
+            solid(if (selected) ContinuumTheme.CYAN_SOFT else ContinuumTheme.TEXT_SECONDARY), TextAlign.CENTER)
+    }
+    override fun describe(s: ContinuumDashboardState) = "Ansicht $label" + if (selected) ", ausgewählt" else ", auswählen"
 }

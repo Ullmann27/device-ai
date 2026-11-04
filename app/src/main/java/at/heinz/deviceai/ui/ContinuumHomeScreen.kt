@@ -66,6 +66,8 @@ object ContinuumHomeScreen {
             Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
             Slot.COMPOSER to ReferenceComposerElement(textScale)
         )
+        for (slot in listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT))
+            map[slot] = ReferenceViewModeElement(slot, textScale)
         for (slot in ContinuumReferenceLayout.actions) map[slot] = ReferenceActionElement(slot, textScale)
         for (slot in listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT,
             Slot.WORKERS, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY)) {

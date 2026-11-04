@@ -104,18 +104,18 @@ class ContinuumAdaptiveAvatarNavigationUiTest {
         }
     }
 
-    @Test fun adaptivePhoneRestoresPhoneGeometry() = checkNavigation(
-        412, 915, false, 1.6f, ContinuumHologramRenderer.Geometry.PHONE)
+    @Test fun largeTypePhoneRestoresCockpitGeometry() = checkNavigation(
+        412, 915, false, 1.6f, ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
 
-    @Test fun adaptiveLandscapeRestoresFoldGeometry() = checkNavigation(
-        840, 649, true, 1.6f, ContinuumHologramRenderer.Geometry.FOLD)
+    @Test fun largeTypeLandscapeRestoresCockpitGeometry() = checkNavigation(
+        840, 649, true, 1.6f, ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
 
-    @Test fun adaptivePortraitRestoresFoldGeometry() = checkNavigation(
-        840, 1050, true, 1.6f, ContinuumHologramRenderer.Geometry.FOLD)
+    @Test fun largeTypePortraitRestoresCockpitGeometry() = checkNavigation(
+        840, 1050, true, 1.6f, ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
 
-    @Test fun narrowPhoneRestoresPhoneGeometryAtNormalFont() = checkNavigation(
-        280, 720, false, 1f, ContinuumHologramRenderer.Geometry.PHONE)
+    @Test fun narrowPhoneRestoresCockpitGeometryAtNormalFont() = checkNavigation(
+        280, 720, false, 1f, ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
 
     @Test fun referencePortraitRetainsItsReviewedGeometry() = checkNavigation(
-        840, 1050, true, 1f, ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT)
+        840, 1050, true, 1f, ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
 }
