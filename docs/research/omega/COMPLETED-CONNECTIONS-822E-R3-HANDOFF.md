@@ -82,6 +82,14 @@ More agent `fb5950b4c6838f29805cf7054af44e05feab4aec` is imported as `f88f6c7`: 
 
 The semantic C1 fixture is expanded by agent `d3cd7390de88b27c5a44355a977574ced1021d21`, imported as `5568f59`: twelve Reference cases now include actual wide Compact selection/restoration at840x649 and840x1050 with font1/1.5/2. All previous ten cases and the three avatar-lifecycle cases remain unchanged. New complete-source focus and full gates are PENDING at this checkpoint. Prior negative runs, startup rejections, actual nine-case PASS and separately source-bound backend64 PASS are retained in `coordinator/ui-followups-evidence.tar.xz` with full per-file hashes and exact source identities. No previous result is transferred to this candidate.
 
+## Frozen C1 v3 and actual twelve-case follow-up
+
+The first actual expanded focus ran on local `95b0f8f843b8296c22ec715d7a1836a9ee7c5db0`, published `a3ef4d2886c02e8f1ffd1898f1e0c256d5a981a2`, full tree `a575dfea54117db9e03a03dde04008af4d26141f`: **12 total / 3 PASS / 9 FAIL / 0 SKIP**, unchanged source, exit1. Several failures occur in a newly introduced nullable native-view tag label before the actual tap. Additional stacks identify a newly visible unmeasured chat rail, integer-rounded sibling bounds and a strictly detected clipped dialog close target. These are retained as failures, not product acceptance.
+
+C1 then published `08370482c609537b5b8d0d8370d2b4a933d4e35d`, matching local `5fec06d587dcceded3d066bf3eeded888255fd2f` and full tree `0b31bb65445866f0bd0844ee84bdfb4a00a649d0`. Its worker optimization and tests already match our retained #523 work exactly. Its frozen v3 fixture supplies the null-safe label, actual Return Home traversal and a real `controller.recreate()` with one bounded asynchronous16ms frame. This strengthens the previous manual-Bundle replacement with configuration-change, destroyed-old-instance and actual-window-focus assertions.
+
+Agent `fde273a1ccd76fb940805ed7b1d82dda20dd0b20` resolves the fixture merge while preserving all12 cases and all original acceptance. Visible siblings are compared as exact transformed RectF bounds in their common parent; different-parent controls retain clipped global comparisons. There is no new pixel tolerance. Full-target visibility stays strict, with raw scroll/layout/matrix diagnostics for the unresolved dialog-close failure. No production file changes in this reconciliation. New source-bound gates remain PENDING.
+
 ## Continuation and rollback
 
 Read the latest version of this handoff and exact remote branch ref. Review each agent's bounded diff, combine serially, freeze source, then execute actual checks. Revert individual R3 commits to withdraw a slice; the two frozen parent histories and all previous evidence remain available. No force update, main merge, release, signing or installation is included.

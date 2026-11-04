@@ -1,0 +1,612 @@
+{
+  "taskId": "C1-OPT-021-WORKER",
+  "status": "TARGETED_HOST_AND_IDENTITY_PARITY_PASS",
+  "local": "6f7ca725261eb4df502ee868e94babc4e12afc15",
+  "remote": "4d74de6c5ca04582ff455356440046e9148acbb0",
+  "tree": "d197c1eb872b7b01e78e3150c6eeb0b9381810f9",
+  "nodeCounts": {
+    "tests": 121,
+    "pass": 121,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "nodeCases": [
+    {
+      "number": 1,
+      "name": "zero-paid-service worker repairs/checks each immutable head once and then idles"
+    },
+    {
+      "number": 2,
+      "name": "teamleader refuses symlinked state directory pointing back into source checkout"
+    },
+    {
+      "number": 3,
+      "name": "owner-accepted repair runs before baseline and only records an independently verified patch"
+    },
+    {
+      "number": 4,
+      "name": "two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD"
+    },
+    {
+      "number": 5,
+      "name": "accepted owner TEST is dispatched before baseline and a verified new contract is review-only"
+    },
+    {
+      "number": 6,
+      "name": "owner TEST cannot falsely claim DONE without increasing or independently checking tests"
+    },
+    {
+      "number": 7,
+      "name": "failed owner TEST also leaves the immutable HEAD eligible for one real baseline"
+    },
+    {
+      "number": 8,
+      "name": "owner REPAIR retains priority over TEST and both finish on the same HEAD"
+    },
+    {
+      "number": 9,
+      "name": "retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST"
+    },
+    {
+      "number": 10,
+      "name": "owner repair evidence cannot be faked by a driver claiming DONE"
+    },
+    {
+      "number": 11,
+      "name": "READY read-only INVESTIGATE is handled once; no write or deployment"
+    },
+    {
+      "number": 12,
+      "name": "Teamleader refuses fabricated DONE when no tests actually executed"
+    },
+    {
+      "number": 13,
+      "name": "verified repair is a PROPOSAL only; never described as applied"
+    },
+    {
+      "number": 14,
+      "name": "an internally passing repair without an independent proof is NOT verified"
+    },
+    {
+      "number": 15,
+      "name": "a failed second-worktree check vetoes an otherwise passing repair"
+    },
+    {
+      "number": 16,
+      "name": "failed or interrupted work is preserved, never marked successful"
+    },
+    {
+      "number": 17,
+      "name": "tampered state, invalid accepted task, and an existing lock fail closed"
+    },
+    {
+      "number": 18,
+      "name": "unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs"
+    },
+    {
+      "number": 19,
+      "name": "old lock of a definitively dead same-host process recovers automatically"
+    },
+    {
+      "number": 20,
+      "name": "repeat checking a proven head requires explicit manual retry"
+    },
+    {
+      "number": 21,
+      "name": "CLI budget, command and retry flags are validated before execution"
+    },
+    {
+      "number": 22,
+      "name": "idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan"
+    },
+    {
+      "number": 23,
+      "name": "crashed discovery records a failure and never hot-loops on the same HEAD"
+    },
+    {
+      "number": 24,
+      "name": "Teamleader can read older version-1 states that lack discoveryHeads"
+    },
+    {
+      "number": 25,
+      "name": "measured progress distinguishes real completed tasks, proposed patch and failed checks"
+    },
+    {
+      "number": 26,
+      "name": "discovery heads counter counts analysis only, not hourly idle loops"
+    },
+    {
+      "number": 27,
+      "name": "state policy rejects malformed heads and never schedules unauthorised actions"
+    },
+    {
+      "number": 28,
+      "name": "unverified repair is redacted consistently without modifying the audit original"
+    },
+    {
+      "number": 29,
+      "name": "successful independent second-worktree result keeps verified proposal intact"
+    },
+    {
+      "number": 30,
+      "name": "legacy internal VERIFIED without independent observation cannot leak success"
+    },
+    {
+      "number": 31,
+      "name": "a running Android build blocks teamleader before any repair and releases local state lock"
+    },
+    {
+      "number": 32,
+      "name": "backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch"
+    },
+    {
+      "number": 33,
+      "name": "backlog CLI: a patch that fails the checks records failing evidence and returns the task"
+    },
+    {
+      "number": 34,
+      "name": "backlog CLI rejects path traversal and unknown commands"
+    },
+    {
+      "number": 35,
+      "name": "state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed"
+    },
+    {
+      "number": 36,
+      "name": "public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema"
+    },
+    {
+      "number": 37,
+      "name": "CLI refuses noncanonical array objects and uncontrolled shell-shaped operations"
+    },
+    {
+      "number": 38,
+      "name": "Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance"
+    },
+    {
+      "number": 39,
+      "name": "Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs"
+    },
+    {
+      "number": 40,
+      "name": "process death after persisting investigation verdict cannot strand green checks in VERIFYING"
+    },
+    {
+      "number": 41,
+      "name": "process death after persisting investigation verdict cannot strand red checks in VERIFYING"
+    },
+    {
+      "number": 42,
+      "name": "scheduler recovers an expired investigation claim and honours the remaining attempt budget"
+    },
+    {
+      "number": 43,
+      "name": "scheduler keeps a live investigation claim and its token intact"
+    },
+    {
+      "number": 44,
+      "name": "direct investigation worker recovers an expired claim before selecting its exact task"
+    },
+    {
+      "number": 45,
+      "name": "investigation rejects source report before changing source or claim state"
+    },
+    {
+      "number": 46,
+      "name": "investigation rejects symlink report before changing source or claim state"
+    },
+    {
+      "number": 47,
+      "name": "investigation rejects source backlog before changing source or claim state"
+    },
+    {
+      "number": 48,
+      "name": "investigation rejects symlink backlog before changing source or claim state"
+    },
+    {
+      "number": 49,
+      "name": "INVESTIGATE worker reproduces findings but never invents wiring patches"
+    },
+    {
+      "number": 50,
+      "name": "INVESTIGATE declines changes for findings no longer present"
+    },
+    {
+      "number": 51,
+      "name": "only accepted structural INVESTIGATE tasks are eligible"
+    },
+    {
+      "number": 52,
+      "name": "empty or failed test chain cannot complete backlog investigation"
+    },
+    {
+      "number": 53,
+      "name": "worker honours Teamleader-selected task and never skips backlog dependencies"
+    },
+    {
+      "number": 54,
+      "name": "owner independent evidence rejects silent test-count and skipped-test regressions"
+    },
+    {
+      "number": 55,
+      "name": "expired execution budget fails closed before launching fixed subprocesses"
+    },
+    {
+      "number": 56,
+      "name": "an unrelated automatic REPAIR task cannot starve an accepted owner task"
+    },
+    {
+      "number": 57,
+      "name": "eligible owner selection cannot be starved by stale HEAD or higher priority"
+    },
+    {
+      "number": 58,
+      "name": "owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE"
+    },
+    {
+      "number": 59,
+      "name": "an owner cancel during the session stops at the next step boundary and is never DONE"
+    },
+    {
+      "number": 60,
+      "name": "an owner cancel during a running check step ends that step within seconds and is never DONE"
+    },
+    {
+      "number": 61,
+      "name": "passing fixture is not reported as successful code development"
+    },
+    {
+      "number": 62,
+      "name": "stale owner claim is recovered after worker crash without faking success"
+    },
+    {
+      "number": 63,
+      "name": "unapproved task, incorrect HEAD, foreign source and unknown chain fail closed"
+    },
+    {
+      "number": 64,
+      "name": "corrupted backlog never executes repair, and original Git checkout remains intact"
+    },
+    {
+      "number": 65,
+      "name": "strict observation failure exposes the canonical negative Echo report without learning"
+    },
+    {
+      "number": 66,
+      "name": "resuming a negative task reuses its report without inference, execution or journal changes"
+    },
+    {
+      "number": 67,
+      "name": "a reporter removed during a failed attempt cannot receive a canonical report"
+    },
+    {
+      "number": 68,
+      "name": "strict replay of an older completed repair cannot publish success without a current model observation"
+    },
+    {
+      "number": 69,
+      "name": "a competing writer cannot turn a strict observation failure into an older success report"
+    },
+    {
+      "number": 70,
+      "name": "service attempt persists the canonical negative report for owner lookup while rejecting"
+    },
+    {
+      "number": 71,
+      "name": "provider-shaped and JSON-copied errors cannot acquire canonical failure evidence"
+    },
+    {
+      "number": 72,
+      "name": "failure evidence persistence cannot replace the model error or overwrite a prior record"
+    },
+    {
+      "number": 73,
+      "name": "owner lookup offers only the checked negative report for an unknown delivery"
+    },
+    {
+      "number": 74,
+      "name": "nextEligible retains task identity and priority, oldest-first and id tie breaks without mutation"
+    },
+    {
+      "number": 75,
+      "name": "nextEligible combines every optional scope and respects empty filters and null subjects"
+    },
+    {
+      "number": 76,
+      "name": "nextEligible checks eligibility before kinds and sources, retaining filter short circuit order"
+    },
+    {
+      "number": 77,
+      "name": "nextEligible releases dependent tasks only after matching completed-task evidence"
+    },
+    {
+      "number": 78,
+      "name": "conformance vectors: every step and final state as recorded (shared with Kotlin)"
+    },
+    {
+      "number": 79,
+      "name": "committed fixtures are exactly what the current rules produce"
+    },
+    {
+      "number": 80,
+      "name": "stability backlog completion rejects a backend profile with zero executed tests"
+    },
+    {
+      "number": 81,
+      "name": "documents round-trip byte-identically and unknown fields survive operations"
+    },
+    {
+      "number": 82,
+      "name": "invalid documents fail with the shared error codes"
+    },
+    {
+      "number": 83,
+      "name": "development-planner output (schema 1) migrates without losing data"
+    },
+    {
+      "number": 84,
+      "name": "a task is never DONE without matching executed-test evidence, also when forged in a file"
+    },
+    {
+      "number": 85,
+      "name": "canonical JSON escaping and ordering equal JSON.stringify for valid strings"
+    },
+    {
+      "number": 86,
+      "name": "store writes atomically, keeps a backup and does not rewrite unchanged content"
+    },
+    {
+      "number": 87,
+      "name": "a corrupt backlog is recovered from the backup and quarantined, never deleted"
+    },
+    {
+      "number": 88,
+      "name": "without a valid backup a corrupt backlog fails closed and nothing is touched"
+    },
+    {
+      "number": 89,
+      "name": "revision conflicts and rejected batches write nothing; lenient batches report every rejection"
+    },
+    {
+      "number": 90,
+      "name": "a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned"
+    },
+    {
+      "number": 91,
+      "name": "stale backlog lock is not stolen while same-host PID is still alive"
+    },
+    {
+      "number": 92,
+      "name": "concurrent writer processes lose no update"
+    },
+    {
+      "number": 93,
+      "name": "a planner v1 file is migrated on the first write and the original is kept"
+    },
+    {
+      "number": 94,
+      "name": "round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one"
+    },
+    {
+      "number": 95,
+      "name": "three local cycles pace on a fixed one-hour schedule and persist honest heartbeat"
+    },
+    {
+      "number": 96,
+      "name": "failures stay failed, sleep with increasing backoff and eventually recover"
+    },
+    {
+      "number": 97,
+      "name": "signal stopping terminates without another cycle or artificial success"
+    },
+    {
+      "number": 98,
+      "name": "invalid intervals, cycle limits and CLI mode combinations are rejected"
+    },
+    {
+      "number": 99,
+      "name": "unverified repair and interruption increment failure counters, not successes"
+    },
+    {
+      "number": 100,
+      "name": "unknown or unfinished worker result must fail closed"
+    },
+    {
+      "number": 101,
+      "name": "signal while waiting persists terminal STOPPED heartbeat"
+    },
+    {
+      "number": 102,
+      "name": "one-shot CLI exits nonzero for failed, unverified or unknown outcomes"
+    },
+    {
+      "number": 103,
+      "name": "failure backoff never retries before a user configured interval"
+    },
+    {
+      "number": 104,
+      "name": "a failing baseline without a code diagnostic remains a failed worker cycle"
+    },
+    {
+      "number": 105,
+      "name": "scheduler wait failure persists terminal ERROR rather than false WAITING"
+    },
+    {
+      "number": 106,
+      "name": "saved status validates legitimate heartbeats and rejects spoofed or corrupt states"
+    },
+    {
+      "number": 107,
+      "name": "durable restart retains total cycle budget and pending backoff"
+    },
+    {
+      "number": 108,
+      "name": "durable cancellation during work records interruption and a stopped session"
+    },
+    {
+      "number": 109,
+      "name": "pre-aborted durable run writes STOPPED without executing work"
+    },
+    {
+      "number": 110,
+      "name": "durable state fails closed on corruption, changed budgets and changed source"
+    },
+    {
+      "number": 111,
+      "name": "durable scheduling requires a finite budget and state outside source"
+    },
+    {
+      "number": 112,
+      "name": "durable integrity validation rejects plausible counter edits"
+    },
+    {
+      "number": 113,
+      "name": "source drift while waiting terminates the saved cadence before another cycle"
+    },
+    {
+      "number": 114,
+      "name": "source drift during a cycle cannot retain its reported verification success"
+    },
+    {
+      "number": 115,
+      "name": "durable loop rejects a competing scheduler before its work executes"
+    },
+    {
+      "number": 116,
+      "name": "SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay"
+    },
+    {
+      "number": 117,
+      "name": "a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE"
+    },
+    {
+      "number": 118,
+      "name": "a false owner-supplied expected value stays FAILED and never produces DONE"
+    },
+    {
+      "number": 119,
+      "name": "red baseline is not laundered into a DONE synthetic test job"
+    },
+    {
+      "number": 120,
+      "name": "synthetic fake test totals and non-increasing test counts cannot pass evidence gate"
+    },
+    {
+      "number": 121,
+      "name": "no unaccepted task is executed and paths cannot point back into source"
+    }
+  ],
+  "parity": {
+    "base": "3510c26110098b42d46bb3b7788027fa7aed59e4",
+    "sourcePath": ".github/continuum/development-backlog.mjs",
+    "baselineSourceBlob": "64f798d5cf86ec7b541bd5135972f30fef1be746",
+    "baselineSourceSha256": "5db9cdc903d2926ba01f23571abe740a115a60bf12ba651fa3ba7cc30e84a0a0",
+    "candidateSourceSha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d",
+    "harnessSha256": "be2cc8a03238f3262f6ad9fc39623b31fc6af92eedac25441167921a47f63998",
+    "node": "v24.22.1",
+    "v8": "13.6.233.17-node.58",
+    "platform": "linux",
+    "arch": "x64",
+    "parityCases": 40960,
+    "fixtureSizes": [
+      0,
+      1,
+      20,
+      100,
+      500
+    ],
+    "fixtureModes": [
+      "mixed-priority",
+      "ties",
+      "scoped",
+      "scoped-no-match"
+    ],
+    "device": "host; Android/Fold7 not measured",
+    "status": "PARITY_PASS"
+  },
+  "receipts": [
+    {
+      "taskId": "C1-COMBINED-GATES-001",
+      "label": "opt021-worker-node-01",
+      "source": {
+        "commit": "6f7ca725261eb4df502ee868e94babc4e12afc15",
+        "tree": "d197c1eb872b7b01e78e3150c6eeb0b9381810f9",
+        "dirty": ""
+      },
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "--test-reporter=tap",
+        ".github/continuum/development-backlog.test.mjs",
+        ".github/continuum/backlog-cli.test.mjs",
+        ".github/continuum/backlog-contract-cli.test.mjs",
+        ".github/continuum/backlog-investigator.test.mjs",
+        ".github/continuum/backlog-investigator-recovery.test.mjs",
+        ".github/continuum/backlog-repair-worker.test.mjs",
+        ".github/continuum/owner-contract-worker.test.mjs",
+        ".github/continuum/autonomous-teamleader.test.mjs",
+        ".github/continuum/local-teamleader-loop.test.mjs",
+        ".github/continuum/coding-orchestrator-failure-report.test.mjs"
+      ],
+      "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+      "requestedAt": "2026-11-04T22:15:12.232585+00:00",
+      "locks": [
+        "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+        "/workspace/scratch/d663e8444310/qa/gradle.lock"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "lockWaitSeconds": 900,
+      "waitingForLock": "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "heartbeatAt": "2026-11-04T22:15:37.277559+00:00",
+      "freeBytesAtStart": 1111658496,
+      "startedAt": "2026-11-04T22:15:40.279860+00:00",
+      "overallTimeoutSeconds": 1800,
+      "individualTestTimeoutSeconds": null,
+      "processReturnCode": 0,
+      "finishedAt": "2026-11-04T22:15:54.555356+00:00",
+      "sourceUnchanged": true,
+      "recordedAt": "2026-11-04T22:15:54.598624+00:00"
+    },
+    {
+      "taskId": "C1-COMBINED-GATES-001",
+      "label": "opt021-worker-parity-01",
+      "source": {
+        "commit": "6f7ca725261eb4df502ee868e94babc4e12afc15",
+        "tree": "d197c1eb872b7b01e78e3150c6eeb0b9381810f9",
+        "dirty": ""
+      },
+      "command": [
+        "node",
+        "tools/completed-connections-822e-r2/worker/selection-parity.mjs"
+      ],
+      "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+      "requestedAt": "2026-11-04T22:16:25.646770+00:00",
+      "locks": [
+        "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+        "/workspace/scratch/d663e8444310/qa/gradle.lock"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "lockWaitSeconds": 900,
+      "freeBytesAtStart": 1110945792,
+      "startedAt": "2026-11-04T22:16:25.647088+00:00",
+      "overallTimeoutSeconds": 1800,
+      "individualTestTimeoutSeconds": null,
+      "processReturnCode": 0,
+      "finishedAt": "2026-11-04T22:16:26.648628+00:00",
+      "sourceUnchanged": true,
+      "recordedAt": "2026-11-04T22:16:26.687030+00:00"
+    }
+  ],
+  "limits": [
+    "121 runtime tests and40,960 synthetic object-identity comparisons are distinct, not an added test total.",
+    "No timing, throughput, Android, real model, device, full-gate or production-Worker claim.",
+    "Optional source-preflight caller activation remains separate."
+  ],
+  "archiveSha256": "28f6d1a2f1be18f7a8b57c39bd4bf0842c1cafe7a0b1adece934302b74a17ed8",
+  "archive": "opt021-worker-own.tar.xz"
+}

@@ -1,11 +1,15 @@
 package at.heinz.deviceai
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.view.MotionEvent
@@ -27,12 +31,14 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.android.controller.ActivityController
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowChoreographer
+import org.robolectric.shadows.ShadowSystemClock
 import java.io.File
 import java.time.Duration
 import java.util.concurrent.TimeUnit
@@ -173,22 +179,50 @@ class ContinuumReferenceCockpitUiTest {
         }
     }
 
-    private fun withSavedInstanceRecreation(
-        controller: org.robolectric.android.controller.ActivityController<AgentActivity>,
-        body: (AgentActivity) -> Unit
-    ) {
-        val savedState = Bundle()
-        controller.pause().stop().saveInstanceState(savedState).destroy()
-        val recreated = Robolectric.buildActivity(AgentActivity::class.java)
+    private fun recreateWithBoundedTraversal(controller: ActivityController<AgentActivity>) {
+        val previous = controller.get()
+        val application = previous.application
+        val handler = Handler.createAsync(Looper.getMainLooper())
+        var pulseScheduled = false
+        var pulses = 0
+        val traversalPulse = Runnable {
+            assertEquals("Recreation permits exactly one bounded VSync pulse", 0, pulses)
+            val recreated = controller.get()
+            assertTrue("The pulse belongs to the new Activity", recreated !== previous)
+            assertNotNull("The new decor must be added before VSync", recreated.window.decorView.parent)
+            pulses = 1
+            // Advance exactly one paused frame.
+            ShadowSystemClock.advanceBy(Duration.ofMillis(16))
+        }
+        val callbacks = object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) {
+                if (activity !== previous && activity === controller.get()) {
+                    assertFalse("Schedule a traversal pulse only once", pulseScheduled)
+                    pulseScheduled = true
+                    assertTrue("Queue the bounded pulse past traversal sync barriers", handler.post(traversalPulse))
+                }
+            }
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+            override fun onActivityStarted(activity: Activity) = Unit
+            override fun onActivityPaused(activity: Activity) = Unit
+            override fun onActivityStopped(activity: Activity) = Unit
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+            override fun onActivityDestroyed(activity: Activity) = Unit
+        }
+        application.registerActivityLifecycleCallbacks(callbacks)
         try {
-            recreated.setup(savedState).visible()
-            advanceFrames(16)
-            assertTrue("The recreated window must attach decor before focus", recreated.get().window.decorView.isAttachedToWindow)
-            recreated.windowFocusChanged(true)
-            settle()
-            body(recreated.get())
+            // Preserve the original recreation lifecycle.
+            controller.recreate()
+            assertTrue("The recreated Activity must schedule its pulse", pulseScheduled)
+            assertEquals("The original recreate path consumes one pulse", 1, pulses)
+            assertTrue("Original recreation preserves configuration-change teardown", previous.isChangingConfigurations)
+            assertTrue("Original recreation destroys the previous Activity", previous.isDestroyed)
+            assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
+            assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
+            assertTrue("Original recreation restores real window focus", controller.get().hasWindowFocus())
         } finally {
-            recreated.close()
+            try { application.unregisterActivityLifecycleCallbacks(callbacks) }
+            finally { handler.removeCallbacks(traversalPulse) }
         }
     }
 
@@ -223,6 +257,27 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
     }
 
+    private fun boundsInParent(view: View): RectF =
+        RectF(0f, 0f, view.width.toFloat(), view.height.toFloat()).also {
+            view.matrix.mapRect(it)
+            it.offset(view.left.toFloat(), view.top.toFloat())
+        }
+
+    private fun geometry(view: View): String =
+        "density=${view.resources.displayMetrics.density}, font=${view.resources.configuration.fontScale}: " +
+            generateSequence(view) { it.parent as? View }.joinToString(" <- ") { node ->
+                val visible = Rect()
+                val shown = node.getGlobalVisibleRect(visible)
+                val childHeights = (node as? ViewGroup)?.let { group ->
+                    (0 until group.childCount).map { group.getChildAt(it).height }
+                }
+                "${node.javaClass.simpleName}[id=${node.id}, tag=${node.tag}, text=${(node as? TextView)?.text}, " +
+                    "local=${Rect(node.left, node.top, node.right, node.bottom)}, " +
+                    "global=$visible, visible=$shown, scroll=${node.scrollX}/${node.scrollY}, " +
+                    "matrix=${node.matrix.toShortString()}, attached=${node.isAttachedToWindow}, " +
+                    "layoutRequested=${node.isLayoutRequested}, childHeights=$childHeights]"
+            }
+
     private fun assertRailViewportDoesNotOverlapShell(home: ContinuumHomeView) {
         if (!home.jarvisShellStage || !home.wide) return
         val railContent = tagged(home, "jarvis-rail:home").parent as View
@@ -232,7 +287,8 @@ class ContinuumReferenceCockpitUiTest {
         for (target in shellControls(home).filter { it.parent === home }) {
             val visibleBounds = Rect()
             if (target.getGlobalVisibleRect(visibleBounds)) {
-                assertFalse("Rail viewport overlaps the visible shell target ${target.tag}",
+                assertFalse("Rail viewport overlaps the visible shell target ${target.tag}: rail=$railBounds, target=$visibleBounds; " +
+                    (if (Rect.intersects(railBounds, visibleBounds)) "${geometry(viewport)}; ${geometry(target)}" else ""),
                     Rect.intersects(railBounds, visibleBounds))
             }
         }
@@ -246,8 +302,16 @@ class ContinuumReferenceCockpitUiTest {
             if (view.getGlobalVisibleRect(rect)) view to rect else null
         }
         for (i in visible.indices) for (j in i + 1 until visible.size) {
-            assertFalse("Actual visible touch bounds overlap: ${visible[i].first.tag}/${visible[j].first.tag}",
-                Rect.intersects(visible[i].second, visible[j].second))
+            val (first, firstGlobal) = visible[i]
+            val (second, secondGlobal) = visible[j]
+            val firstParentBounds = boundsInParent(first)
+            val secondParentBounds = boundsInParent(second)
+            val sharedParent = first.parent === second.parent
+            val overlap = if (sharedParent) RectF.intersects(firstParentBounds, secondParentBounds)
+                else Rect.intersects(firstGlobal, secondGlobal)
+            assertFalse("Actual visible touch bounds overlap: ${first.tag}/${second.tag}; " +
+                "global=$firstGlobal/$secondGlobal, sharedParent=$sharedParent, parent=$firstParentBounds/$secondParentBounds; " +
+                (if (overlap) "${geometry(first)}; ${geometry(second)}" else ""), overlap)
         }
     }
 
@@ -358,6 +422,12 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun returnHomeThroughDecor(activity: AgentActivity) {
         val root = activity.window.decorView
+        // Traverse the newly visible rail.
+        val width = root.width
+        val height = root.height
+        measure(root, width, height)
+        settle()
+        measure(root, width, height)
         val back = descendants(root).firstOrNull {
             it.isShown && it.isClickable && (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
                 it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
@@ -372,7 +442,10 @@ class ContinuumReferenceCockpitUiTest {
     /** Scroll the actual ancestor, then dispatch through the decor tree so a
      * foreground overlay or wrong hit target cannot be hidden by performClick. */
     private fun tap(root: View, target: View) {
-        assertMinimumTarget(target, target.contentDescription?.toString() ?: target.tag.toString())
+        val label = target.contentDescription?.toString() ?: target.tag?.toString()
+            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
+        assertMinimumTarget(target, label)
+        val beforeScroll = geometry(target)
         var parent = target.parent
         while (parent is View) {
             if (parent is ScrollView) {
@@ -383,10 +456,13 @@ class ContinuumReferenceCockpitUiTest {
             parent = parent.parent
         }
         target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+        val afterScroll = geometry(target)
         settle()
         val visible = Rect()
-        assertTrue("Target must be visibly scroll reachable: ${target.contentDescription}", target.getGlobalVisibleRect(visible))
-        assertTrue("Target must not be a clipped sliver", visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
+        assertTrue("Target must be visibly scroll reachable: $label; ${geometry(target)}", target.getGlobalVisibleRect(visible))
+        assertTrue("Target must not be a clipped sliver: $label, global=$visible, local=${target.width}x${target.height}; " +
+            "beforeScroll=$beforeScroll; afterScroll=$afterScroll; afterTraversal=${geometry(target)}; root=${geometry(root)}",
+            visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
         assertVisibleShellControlsDoNotOverlap(root)
         val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
         val x = visible.exactCenterX() - rootPosition[0]
@@ -618,7 +694,9 @@ class ContinuumReferenceCockpitUiTest {
         assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
 
         chooseAppearance(activity, "Kompakt · Kugel")
-        withSavedInstanceRecreation(controller) { resumed ->
+        recreateWithBoundedTraversal(controller)
+        settle()
+        controller.get().let { resumed ->
             val resumedRoot = resumed.window.decorView
             val resumedAvatar = field(resumed, "hologramView") as ContinuumHologramView
             resumedAvatar.setAnimationsEnabled(false)
@@ -662,7 +740,9 @@ class ContinuumReferenceCockpitUiTest {
         assertTrue(rebuilt.hasFocus())
         assertEquals(2, rebuilt.maxLines)
         assertFalse(field(activity, "busy") as Boolean)
-        withSavedInstanceRecreation(controller) { resumed ->
+        recreateWithBoundedTraversal(controller)
+        settle()
+        controller.get().let { resumed ->
             assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
             assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
             assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)

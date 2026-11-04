@@ -1,0 +1,132 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+index 315f42d32518f0c8de4a73cb46c349bd8dbb04d6..5059be0cd5f3d4e850eaac6d08faca357e1429fd 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+@@ -1,10 +1,14 @@
+ package at.heinz.deviceai
+ 
++import android.app.Activity
+ import android.app.AlertDialog
++import android.app.Application
+ import android.content.Context
+ import android.graphics.Bitmap
+ import android.graphics.Canvas
+ import android.graphics.Rect
++import android.os.Bundle
++import android.os.Handler
+ import android.os.Looper
+ import android.os.SystemClock
+ import android.view.MotionEvent
+@@ -25,12 +29,14 @@
+ import org.robolectric.Robolectric
+ import org.robolectric.RobolectricTestRunner
+ import org.robolectric.RuntimeEnvironment
++import org.robolectric.android.controller.ActivityController
+ import org.robolectric.Shadows.shadowOf
+ import org.robolectric.annotation.Config
+ import org.robolectric.annotation.GraphicsMode
+ import org.robolectric.annotation.LooperMode
+ import org.robolectric.shadows.ShadowAlertDialog
+ import org.robolectric.shadows.ShadowChoreographer
++import org.robolectric.shadows.ShadowSystemClock
+ import java.io.File
+ import java.time.Duration
+ import java.util.concurrent.TimeUnit
+@@ -79,6 +85,55 @@
+         fun exact(value: Int) = View.MeasureSpec.makeMeasureSpec(value, View.MeasureSpec.EXACTLY)
+         root.measure(exact(width), exact(height))
+         root.layout(0, 0, width, height)
++    }
++
++    private fun recreateWithBoundedTraversal(controller: ActivityController<AgentActivity>) {
++        val previous = controller.get()
++        val application = previous.application
++        val handler = Handler.createAsync(Looper.getMainLooper())
++        var pulseScheduled = false
++        var pulses = 0
++        val traversalPulse = Runnable {
++            assertEquals("Recreation permits exactly one bounded VSync pulse", 0, pulses)
++            val recreated = controller.get()
++            assertTrue("The pulse belongs to the new Activity", recreated !== previous)
++            assertNotNull("The new decor must be added before VSync", recreated.window.decorView.parent)
++            pulses = 1
++            // Keep VSync paused. The outer visible() drain dispatches the actual
++            // async frame posted by this one clock advance; no nested idle loop.
++            ShadowSystemClock.advanceBy(Duration.ofMillis(16))
++        }
++        val callbacks = object : Application.ActivityLifecycleCallbacks {
++            override fun onActivityResumed(activity: Activity) {
++                if (activity !== previous && activity === controller.get()) {
++                    assertFalse("Schedule a traversal pulse only once", pulseScheduled)
++                    pulseScheduled = true
++                    assertTrue("Queue the bounded pulse past traversal sync barriers", handler.post(traversalPulse))
++                }
++            }
++            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
++            override fun onActivityStarted(activity: Activity) = Unit
++            override fun onActivityPaused(activity: Activity) = Unit
++            override fun onActivityStopped(activity: Activity) = Unit
++            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
++            override fun onActivityDestroyed(activity: Activity) = Unit
++        }
++        application.registerActivityLifecycleCallbacks(callbacks)
++        try {
++            // 4.14.1 resume/postResume do not drain; visible() drains after
++            // makeVisible. Keep its real flags, retained instances and lifecycle.
++            controller.recreate()
++            assertTrue("The recreated Activity must schedule its pulse", pulseScheduled)
++            assertEquals("The original recreate path consumes one pulse", 1, pulses)
++            assertTrue("Original recreation preserves configuration-change teardown", previous.isChangingConfigurations)
++            assertTrue("Original recreation destroys the previous Activity", previous.isDestroyed)
++            assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
++            assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
++            assertTrue("Original recreation restores real window focus", controller.get().hasWindowFocus())
++        } finally {
++            try { application.unregisterActivityLifecycleCallbacks(callbacks) }
++            finally { handler.removeCallbacks(traversalPulse) }
++        }
+     }
+ 
+     private fun withActivity(width: Int, height: Int, font: Float, body: (AgentActivity, View, org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) {
+@@ -267,6 +322,12 @@
+ 
+     private fun returnHomeThroughDecor(activity: AgentActivity) {
+         val root = activity.window.decorView
++        // Size the newly visible native chat rail in this manually sized window.
++        val width = root.width
++        val height = root.height
++        measure(root, width, height)
++        settle()
++        measure(root, width, height)
+         val back = descendants(root).firstOrNull {
+             it.isShown && it.isClickable && (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
+                 it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
+@@ -281,7 +342,9 @@
+     /** Scroll the actual ancestor, then dispatch through the decor tree so a
+      * foreground overlay or wrong hit target cannot be hidden by performClick. */
+     private fun tap(root: View, target: View) {
+-        assertMinimumTarget(target, target.contentDescription?.toString() ?: target.tag.toString())
++        val label = target.contentDescription?.toString() ?: target.tag?.toString()
++            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
++        assertMinimumTarget(target, label)
+         var parent = target.parent
+         while (parent is View) {
+             if (parent is ScrollView) {
+@@ -464,7 +527,7 @@
+         assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
+ 
+         chooseAppearance(activity, "Kompakt · Kugel")
+-        controller.recreate()
++        recreateWithBoundedTraversal(controller)
+         advanceFrames(16)
+         assertTrue(controller.get().window.decorView.isAttachedToWindow)
+         controller.windowFocusChanged(true)
+@@ -511,7 +574,7 @@
+         assertTrue(rebuilt.hasFocus())
+         assertEquals(2, rebuilt.maxLines)
+         assertFalse(field(activity, "busy") as Boolean)
+-        controller.recreate()
++        recreateWithBoundedTraversal(controller)
+         settle()
+         val resumed = controller.get()
+         assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
