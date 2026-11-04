@@ -1,0 +1,97 @@
+{
+  "sourceCommit": "438fd755a662b2e063527e1f00b28373652c8fc6",
+  "sourceTree": "2a2b63bff8d230a394d474e3ae36cb58763e6877",
+  "status": "FAILED",
+  "total": {
+    "tests": 40,
+    "failed": 4,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest",
+      "tests": 6,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+      "tests": 6,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarSpeechReattachmentUiTest",
+      "tests": 2,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 6,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+      "tests": 1,
+      "failed": 1,
+      "skipped": 0,
+      "failures": [
+        {
+          "test": "registeredRendererIsDockedFedAndDetached",
+          "message": "java.lang.NullPointerException",
+          "trace": "java.lang.NullPointerException\n\tat com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)\n\tat org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)\n\tat at.heinz.deviceai.JarvisAvatarSlotUiTest.registeredRendererIsDockedFedAndDetached(JarvisShellStageUiTest.kt:128)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n"
+        }
+      ]
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "tests": 11,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "tests": 3,
+      "failed": 3,
+      "skipped": 0,
+      "failures": [
+        {
+          "test": "tablet",
+          "message": "java.lang.NullPointerException",
+          "trace": "java.lang.NullPointerException\n\tat com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)\n\tat org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:52)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.tablet(JarvisShellStageUiTest.kt:100)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n"
+        },
+        {
+          "test": "phone",
+          "message": "java.lang.NullPointerException",
+          "trace": "java.lang.NullPointerException\n\tat com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)\n\tat org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:52)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.phone(JarvisShellStageUiTest.kt:98)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n"
+        },
+        {
+          "test": "foldOpen",
+          "message": "java.lang.NullPointerException",
+          "trace": "java.lang.NullPointerException\n\tat com.google.common.base.Preconditions.checkNotNull(Preconditions.java:904)\n\tat org.robolectric.android.controller.ActivityController.windowFocusChanged(ActivityController.java:258)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.run(JarvisShellStageUiTest.kt:52)\n\tat at.heinz.deviceai.JarvisShellStageUiTest.foldOpen(JarvisShellStageUiTest.kt:99)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)\n\tat org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)\n\tat org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)\n\tat org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n"
+        }
+      ]
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest",
+      "tests": 1,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "tests": 4,
+      "failed": 0,
+      "skipped": 0,
+      "failures": []
+    }
+  ]
+}

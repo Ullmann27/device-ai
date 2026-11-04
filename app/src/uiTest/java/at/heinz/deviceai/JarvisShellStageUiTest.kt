@@ -49,7 +49,9 @@ class JarvisShellStageUiTest {
             .putBoolean("jarvis-shell", true).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val home = field(activity, "homeView") as ContinuumHomeView
@@ -125,7 +127,9 @@ class JarvisAvatarSlotUiTest {
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val home = AgentActivity::class.java.getDeclaredField("homeView").apply { isAccessible = true }.get(activity) as ContinuumHomeView
