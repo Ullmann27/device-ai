@@ -1,7 +1,10 @@
 package at.heinz.deviceai.ui
 
+import android.graphics.Camera
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RenderEffect
 import android.graphics.RenderNode
 import android.graphics.RuntimeShader
@@ -11,65 +14,155 @@ import androidx.annotation.RequiresApi
 
 /**
  * Android glass backend for [JarvisShellRenderer] (kept out of the JVM preview path).
- * - API 33+: page background = ONE AGSL shader (gradient + soft cyan grid + scanlines + violet haze), rim glow = AGSL SDF shader.
- * - API 31+: backdrop blur via RenderEffect.createBlurEffect on a RenderNode copy of the background, clipped per panel.
- * - Below 31 / software canvas: returns false → portable painter fallback (semi-opaque glass, additive rim strokes).
+ * - Background: API 33+ ONE AGSL shader (gradient #050814→#0A1128, soft cyan grid, scanlines, violet haze,
+ *   procedural bokeh and dust – one particle per cell, so the cost is fixed per pixel). API 31–32: the portable
+ *   painter background, recorded once per size and replayed (cached layer).
+ * - Glass: API 31+ backdrop blur (RenderEffect on a RenderNode copy of the background, clipped per panel);
+ *   API 33+ rim glow as AGSL SDF shader.
+ * - Depth: real 3D tilt via android.graphics.Camera (cameraDistance, rotationX/Y) on every hardware canvas;
+ *   depth-of-field blur for far layers via RenderEffect (API 31+).
+ * - Bloom: [JarvisBloomPass] (API 31+).
+ * Below API 31 or on a software canvas every hook returns false → portable fallback in JarvisNeon.
  */
 class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : JarvisShellRenderer.GlassBackend {
     private lateinit var canvas: Canvas
     private var density = 1f
-    private var native = false
-    private var bgNode: RenderNode? = null
-    private var blurNode: RenderNode? = null
-    private val shaders: Any? = if (Build.VERSION.SDK_INT >= 33) Agsl() else null
-    private val clipPath = android.graphics.Path()
+    private var widthPx = 0
+    private var heightPx = 0
+    private var hardware = false
+    private var blurCapable = false
+    private val bloomPass = JarvisBloomPass(painter)
+    private val agsl: Any? = if (Build.VERSION.SDK_INT >= 33) Agsl() else null
+    private var bgNode: Any? = null
+    private var blurNode: Any? = null
+    private var cachedW = -1
+    private var cachedH = -1
+    private val clipPath = Path()
+    private val camera = Camera()
+    private val tilt = Matrix()
+    private val depthMatrix = Matrix()
+    private val depthInverse = Matrix()
+    private val depthPool = ArrayList<Any>()
+    private var depthUsed = 0
+    private var depthOpen: Any? = null
 
-    fun begin(target: Canvas, density: Float) {
-        canvas = target; this.density = density
-        native = Build.VERSION.SDK_INT >= 31 && target.isHardwareAccelerated
+    fun begin(target: Canvas, density: Float, widthPx: Int, heightPx: Int) {
+        canvas = target; this.density = density; this.widthPx = widthPx; this.heightPx = heightPx
+        hardware = target.isHardwareAccelerated
+        blurCapable = Build.VERSION.SDK_INT >= 31 && hardware
+        bloomPass.beginFrame(); depthUsed = 0
     }
 
-    override fun drawBackground(width: Float, height: Float, timeMs: Long): Boolean {
-        if (!native || Build.VERSION.SDK_INT < 31) return false
-        return recordAndDrawBackground(width, height, timeMs)
+    override fun drawBackground(width: Float, height: Float, timeMs: Long): Boolean =
+        if (blurCapable && Build.VERSION.SDK_INT >= 31) background(width, height, timeMs) else false
+
+    @RequiresApi(31)
+    private fun background(w: Float, h: Float, timeMs: Long): Boolean {
+        val wp = widthPx; val hp = heightPx
+        val bg = (bgNode ?: RenderNode("jarvisBackground").also { bgNode = it }) as RenderNode
+        val shader = agsl as? Agsl
+        val sizeChanged = wp != cachedW || hp != cachedH
+        if (shader != null && Build.VERSION.SDK_INT >= 33) {
+            bg.setPosition(0, 0, wp, hp)
+            shader.drawBackground(bg.beginRecording(), wp.toFloat(), hp.toFloat(), density, timeMs)
+            bg.endRecording()
+        } else if (sizeChanged) {
+            bg.setPosition(0, 0, wp, hp)
+            val rc = bg.beginRecording()
+            rc.scale(density, density)
+            painter.begin(rc)
+            JarvisShellRenderer.background(painter, w, h)
+            bg.endRecording()
+            painter.begin(canvas)
+        }
+        if (sizeChanged) {
+            val blur = (blurNode ?: RenderNode("jarvisBackdropBlur").also { blurNode = it }) as RenderNode
+            blur.setPosition(0, 0, wp, hp)
+            val r = JarvisDesign.Metrics.backdropBlur * density
+            blur.setRenderEffect(RenderEffect.createBlurEffect(r, r, Shader.TileMode.CLAMP))
+            blur.beginRecording().drawRenderNode(bg); blur.endRecording()
+            cachedW = wp; cachedH = hp
+        }
+        canvas.save(); canvas.scale(1f / density, 1f / density); canvas.drawRenderNode(bg); canvas.restore()
+        return true
+    }
+
+    override fun drawPanelGlass(box: JarvisShellLayout.Box, radius: Float, glow: Float): Boolean =
+        if (blurCapable && Build.VERSION.SDK_INT >= 31) panelGlass(box, radius, glow) else false
+
+    @RequiresApi(31)
+    @Suppress("DEPRECATION") // Canvas.getMatrix: backdrop must be drawn in screen space under the panel clip
+    private fun panelGlass(box: JarvisShellLayout.Box, radius: Float, glow: Float): Boolean {
+        val blur = blurNode as? RenderNode ?: return false
+        canvas.save()
+        clipPath.reset()
+        clipPath.addRoundRect(box.left, box.top, box.right, box.bottom, radius, radius, Path.Direction.CW)
+        canvas.clipPath(clipPath)
+        canvas.getMatrix(depthMatrix)
+        if (depthMatrix.invert(depthInverse)) canvas.concat(depthInverse) // backdrop stays in screen space
+        canvas.drawRenderNode(blur)
+        canvas.restore()
+        val shader = agsl as? Agsl ?: return false
+        if (Build.VERSION.SDK_INT >= 33) shader.drawRim(canvas, box, radius, .35f + .65f * glow)
+        return true
+    }
+
+    override fun beginDepth(box: JarvisShellLayout.Box, depth: JarvisMotion.Depth.State): Boolean {
+        if (!hardware) return false
+        val needBlur = depth.blurDp > 0f && blurCapable
+        val cx = (box.left + box.right) / 2f; val cy = (box.top + box.bottom) / 2f
+        camera.save()
+        camera.setLocation(0f, 0f, -JarvisMotion.Depth.CAMERA_DISTANCE_DP / 72f) // Camera units: 1 inch = 72 px
+        camera.rotateX(depth.rotationX); camera.rotateY(depth.rotationY)
+        camera.getMatrix(tilt)
+        camera.restore()
+        tilt.preTranslate(-cx, -cy); tilt.postTranslate(cx, cy)
+        if (needBlur && Build.VERSION.SDK_INT >= 31) return beginBlurredDepth(depth.blurDp)
+        canvas.save(); canvas.concat(tilt)
+        depthOpen = canvas
+        return true
     }
 
     @RequiresApi(31)
-    private fun recordAndDrawBackground(w: Float, h: Float, timeMs: Long): Boolean {
-        val wp = (w * density).toInt(); val hp = (h * density).toInt()
-        val bg = bgNode ?: RenderNode("jarvisBackground").also { bgNode = it }
-        bg.setPosition(0, 0, wp, hp)
-        val rc = bg.beginRecording()
-        val agsl = shaders as? Agsl
-        if (agsl != null && Build.VERSION.SDK_INT >= 33) agsl.drawBackground(rc, wp.toFloat(), hp.toFloat(), density, timeMs)
-        rc.save(); rc.scale(density, density)
-        painter.begin(rc)
-        if (agsl == null) JarvisShellRenderer.background(painter, w, h) else JarvisShellRenderer.bokeh(painter, w, h)
-        rc.restore()
-        bg.endRecording()
-        val blur = blurNode ?: RenderNode("jarvisBackdropBlur").also { blurNode = it }
-        blur.setPosition(0, 0, wp, hp)
-        val r = JarvisDesign.Metrics.backdropBlur * density
-        blur.setRenderEffect(RenderEffect.createBlurEffect(r, r, Shader.TileMode.CLAMP))
-        blur.beginRecording().also { it.drawRenderNode(bg) }; blur.endRecording()
-        canvas.save(); canvas.scale(1f / density, 1f / density); canvas.drawRenderNode(bg); canvas.restore()
-        painter.begin(canvas)
+    @Suppress("DEPRECATION")
+    private fun beginBlurredDepth(blurDp: Float): Boolean {
+        val node = (if (depthUsed < depthPool.size) depthPool[depthUsed] else RenderNode("jarvisDepth").also { depthPool += it }) as RenderNode
+        depthUsed++
+        canvas.getMatrix(depthMatrix)
+        if (!depthMatrix.invert(depthInverse)) return false
+        node.setPosition(0, 0, widthPx, heightPx)
+        val r = blurDp * density
+        node.setRenderEffect(RenderEffect.createBlurEffect(r, r, Shader.TileMode.DECAL))
+        val rc = node.beginRecording()
+        rc.concat(depthMatrix); rc.concat(tilt)
+        painter.begin(rc); bloomTarget = rc
+        depthOpen = node
         return true
     }
 
-    override fun drawPanelGlass(box: JarvisShellLayout.Box, radius: Float, glow: Float): Boolean {
-        if (!native || Build.VERSION.SDK_INT < 31) return false
-        val blur = blurNode ?: return false
-        canvas.save()
-        clipPath.reset()
-        clipPath.addRoundRect(box.left, box.top, box.right, box.bottom, radius, radius, android.graphics.Path.Direction.CW)
-        canvas.clipPath(clipPath)
-        canvas.scale(1f / density, 1f / density)
-        canvas.drawRenderNode(blur)
-        canvas.restore()
-        val agsl = shaders as? Agsl ?: return false
-        if (Build.VERSION.SDK_INT >= 33) agsl.drawRim(canvas, box, radius, .35f + .65f * glow)
-        return true
+    private var bloomTarget: Canvas? = null
+
+    override fun endDepth() {
+        val open = depthOpen ?: return
+        depthOpen = null
+        if (open === canvas) { canvas.restore(); return }
+        if (Build.VERSION.SDK_INT >= 31) endBlurredDepth(open)
+    }
+
+    @RequiresApi(31)
+    private fun endBlurredDepth(open: Any) {
+        val node = open as RenderNode
+        node.endRecording()
+        bloomTarget = null
+        painter.begin(canvas)
+        canvas.save(); canvas.concat(depthInverse); canvas.drawRenderNode(node); canvas.restore()
+    }
+
+    override fun bloom(radiusDp: Float, intensity: Float, emissive: (ContinuumPainter) -> Unit): Boolean {
+        val target = bloomTarget ?: canvas
+        val ok = bloomPass.draw(target, density, widthPx, heightPx, radiusDp, intensity, emissive)
+        if (bloomTarget != null) painter.begin(target)
+        return ok
     }
 
     @RequiresApi(33)
@@ -81,7 +174,7 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
 
         fun drawBackground(c: Canvas, w: Float, h: Float, density: Float, timeMs: Long) {
             bg.setFloatUniform("size", w, h); bg.setFloatUniform("density", density)
-            bg.setFloatUniform("time", (timeMs % 100_000L) / 1000f)
+            bg.setFloatUniform("time", (timeMs % 600_000L) / 1000f)
             c.drawRect(0f, 0f, w, h, bgPaint)
         }
 
@@ -95,9 +188,23 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
     }
 
     companion object {
-        /** Gradient #050814→#0A1128, blurred cyan grid (48 dp), fine scanlines, violet haze. Pixel coordinates. */
+        /**
+         * Pixel coordinates. Gradient #050814→#0A1128, blurred cyan grid (48 dp), scanlines, violet haze,
+         * bokeh (cells of 120 dp, ≤1 disc each) and dust (cells of 28 dp, ≤1 mote each, slow upward drift).
+         * Cell sizes, alphas and drift speed GESCHÄTZT.
+         */
         const val BACKGROUND = """
 uniform float2 size; uniform float density; uniform float time;
+float hash(float2 p) { return fract(sin(dot(p, float2(127.1, 311.7))) * 43758.5453); }
+float particle(float2 p, float cell, float radius, float seed) {
+  float2 id = floor(p / cell);
+  float2 f = p - id * cell;
+  float h = hash(id + seed);
+  float2 c = float2(hash(id + seed + 1.3), hash(id + seed + 7.1)) * cell;
+  float d = distance(f, c);
+  float r = radius * (0.4 + 0.6 * h);
+  return h > 0.55 ? smoothstep(r, 0.0, d) * (h - 0.55) * 2.2 : 0.0;
+}
 half4 main(float2 p) {
   float2 uv = p / size;
   half3 c = mix(half3(0.0196, 0.0314, 0.0784), half3(0.0392, 0.0667, 0.157), half(uv.y));
@@ -105,12 +212,15 @@ half4 main(float2 p) {
   float2 g = abs(fract(p / stepPx - 0.5) - 0.5) * stepPx;
   float d = min(g.x, g.y);
   float soft = 1.6 * density; float core = 0.45 * density;
-  float line = exp(-d * d / (2.0 * soft * soft)) * 0.05 + exp(-d * d / (2.0 * core * core)) * 0.05;
-  c += half3(0.0, 1.0, 1.0) * half(line);
+  c += half3(0.0, 1.0, 1.0) * half(exp(-d * d / (2.0 * soft * soft)) * 0.05 + exp(-d * d / (2.0 * core * core)) * 0.05);
   float r = distance(uv, float2(0.5, 0.35));
   c += half3(0.541, 0.169, 0.886) * half(0.10 * (1.0 - smoothstep(0.0, 0.75, r)));
-  float scan = 0.5 + 0.5 * sin(p.y * 3.14159 / (1.5 * density) + time * 0.5);
-  c *= half(1.0 - 0.03 * scan);
+  float bokeh = particle(p, 120.0 * density, 7.0 * density, 3.0);
+  float bokehV = particle(p + 60.0 * density, 120.0 * density, 6.0 * density, 9.0);
+  c += half3(0.0, 1.0, 1.0) * half(bokeh * 0.10) + half3(0.541, 0.169, 0.886) * half(bokehV * 0.10);
+  float2 dp = p + float2(0.0, time * 6.0 * density);
+  c += half3(0.75, 1.0, 1.0) * half(particle(dp, 28.0 * density, 1.1 * density, 17.0) * 0.35);
+  c *= half(1.0 - 0.03 * (0.5 + 0.5 * sin(p.y * 3.14159 / (1.5 * density))));
   return half4(c, 1.0);
 }"""
 
