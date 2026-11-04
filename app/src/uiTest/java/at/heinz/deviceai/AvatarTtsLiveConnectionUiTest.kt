@@ -236,6 +236,91 @@ class AvatarTtsLiveConnectionUiTest {
         assertSilent(f)
     }
 
+    private fun playbackAnchor(fixture: SpeechFixture): Pair<Long, Long> {
+        val signal = field(fixture.activity, "voiceSignal") as TtsHologramSignal
+        return (field(signal, "anchorFrame") as Long) to (field(signal, "anchorMillis") as Long)
+    }
+
+    @Test fun repeatedInstalledStartDoesNotRewindPlaybackOrClearTheCurrentPose() = withSpeechShell { f ->
+        startPendingSpeech(f, "current", "A")
+        val beforePose = pose(f)
+        val beforeAnchor = playbackAnchor(f)
+
+        f.listener.onStart("current")
+        shadowOf(Looper.getMainLooper()).idle()
+
+        assertEquals("A repeated start must not rewind the production PCM anchor", beforeAnchor, playbackAnchor(f))
+        assertEquals("A repeated start must not clear the live mouth pose", beforePose, pose(f))
+        assertTrue(field(f.activity, "voiceSpeaking") as Boolean)
+        f.listener.onStop("current", true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertSilent(f)
+    }
+
+    @Test fun installedRangeOrderingProtectsBothVisemesAndThePlaybackAnchor() = withSpeechShell { f ->
+        startPendingSpeech(f, "current", "A 42 O", reportRange = false)
+        f.listener.onRangeStart("current", 0, 1, 100)
+        advance(170)
+        assertEquals(Viseme.AA, pose(f).viseme)
+        val beforePose = pose(f)
+        val beforeAnchor = playbackAnchor(f)
+
+        f.listener.onRangeStart("current", 5, 6, 90)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals("A newer text range with an older audio marker must not rewind PCM", beforeAnchor, playbackAnchor(f))
+        assertEquals("A backward audio marker must not replace the current viseme", beforePose, pose(f))
+
+        // Numeric speech has no letter-based approximation, but its valid playback marker
+        // still synchronizes PCM and participates in the same monotonic callback order.
+        f.listener.onRangeStart("current", 2, 4, 120)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(120L, playbackAnchor(f).first)
+        val numericAnchor = playbackAnchor(f)
+        val numericPose = pose(f)
+        f.listener.onRangeStart("current", 5, 6, 110)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(numericAnchor, playbackAnchor(f))
+        assertEquals(numericPose, pose(f))
+
+        f.listener.onRangeStart("current", 5, 6, 200)
+        advance(170)
+        assertEquals(200L, playbackAnchor(f).first)
+        assertEquals(Viseme.O, pose(f).viseme)
+        assertTrue(pose(f).speakEnergy > .35f)
+        f.listener.onDone("current")
+        shadowOf(Looper.getMainLooper()).idle()
+        assertSilent(f)
+    }
+
+    @Test fun installedInterruptedStopClearsSpeechAndCannotStopItsSuccessor() = withSpeechShell { f ->
+        startPendingSpeech(f, "interrupted", "A")
+        f.listener.onStop("interrupted", true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertSilent(f)
+
+        f.listener.onStart("interrupted")
+        f.listener.onAudioAvailable("interrupted", pcm16())
+        f.listener.onRangeStart("interrupted", 0, 1, 0)
+        (field(f.activity, "voiceFrame") as Runnable).run()
+        advance(70)
+        assertSilent(f)
+
+        startPendingSpeech(f, "successor", "O")
+        val before = pose(f)
+        assertEquals(Viseme.O, before.viseme)
+        f.listener.onStop("interrupted", true)
+        f.listener.onDone("interrupted")
+        f.listener.onError("interrupted", TextToSpeech.ERROR)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(before, pose(f))
+        assertEquals("successor", field(f.activity, "voiceUtteranceId"))
+        assertTrue(field(f.activity, "voiceSpeaking") as Boolean)
+
+        f.listener.onStop("successor", true)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertSilent(f)
+    }
+
     @Test fun chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks() = withSpeechShell { f ->
         startPendingSpeech(f, "moving", "A")
         assertTrue(pose(f).speakEnergy > .35f)
