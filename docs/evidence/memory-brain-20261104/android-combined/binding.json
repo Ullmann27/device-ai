@@ -1,0 +1,33 @@
+{
+  "tested_public_commit": "fab5f094862c5abae259196f6be1d7a8bc80a75b",
+  "tested_local_commit": "b5ee08039afc7d1dd73139a2b3ac7ac8e0e30ba9",
+  "exact_tree": "3183aeeeae3532e7f3253de976eabd46efcb940a",
+  "memory_source_branch_at_gate": "7e2d69a53f42d22c890e56ab5921295ff408ecd5",
+  "memory_sources_identical": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "1a6df4ba2890c13397b4f0224ef5fa2030010371dd4e5bb1b40e0d3beb3d068d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "sha256": "5c44fde6c65ac53c41ab989fd65fd03491b74c2b1168c3ac7a5ac057446302af"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+      "sha256": "1ac591de0b32b4d1d19d7e25d7fa169e9cc292cb1b0c4ca536a6f36a2b61a423"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    }
+  ],
+  "additional_app_hooks": [
+    "AgentActivity lazy compiler publisher",
+    "MemoryEventSources.forApp delegation"
+  ],
+  "configured_lint_scope": "NewApi only"
+}

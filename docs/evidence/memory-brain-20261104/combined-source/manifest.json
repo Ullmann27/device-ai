@@ -40,7 +40,29 @@
   ],
   "latest_avatar_merge_changed_production": false,
   "weights_runtime_change": false,
-  "complete_combined_Android_gate": "NOT_RUN_SHARED_BUILD_LOCK_BUSY",
+  "complete_combined_Android_gate": "PASS",
   "physical_device": "NOT_CONNECTED",
-  "apk": "NOT_BUILT"
+  "apk": "NOT_BUILT",
+  "verified_public_source": "fab5f094862c5abae259196f6be1d7a8bc80a75b",
+  "verified_tree": "3183aeeeae3532e7f3253de976eabd46efcb940a",
+  "standard_units": {
+    "tests": 2489,
+    "passed": 2470,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 19,
+    "suites": 444
+  },
+  "lint": {
+    "scope": "NewApi only",
+    "issues": 0
+  },
+  "actual_activity_gate": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "full_onCreate_onDestroy": false
+  },
+  "subsequent_committed_changes_are_documentation_only": true
 }

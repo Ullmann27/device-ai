@@ -1,0 +1,10 @@
+{
+  "tests": 2,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    "constructionDefersCompilerUntilAttachedAccessAndRecallReachesTheMainLooper",
+    "actualSubscriptionTeardownDropsQueuedRecallAndResubscriptionRemainsLive"
+  ]
+}

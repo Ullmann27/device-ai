@@ -1,5 +1,28 @@
 # Combined memory / avatar review source
 
+## Current completed source gates
+
+Public tested source: fab5f094862c5abae259196f6be1d7a8bc80a75b (#499), tree
+3183aeeeae3532e7f3253de976eabd46efcb940a. The later checkpoint adds documentation
+and receipts only; application and test sources remain byte-identical.
+
+| Gate | Actual result |
+| --- | --- |
+| Full standard Android unit task | 2,489total;2,470passed;0failures/errors;19existing skips |
+| Configured NewApi-only lint | 0issues; BUILD SUCCESSFUL |
+| Actual Activity/Handler integration | 2/2passed;0failures/errors/skips |
+
+The Activity gate constructs the real Activity, calls its real compiler getter
+and memory subscription, executes the actual Android main looper and verifies
+real orb effects plus queued-work suppression/re-subscription. It deliberately
+does not call full application onCreate/onDestroy or a complete model/chat turn.
+
+Current raw receipts: docs/evidence/memory-brain-20261104/android-combined and
+activity-android. Earlier lock-only and failed checkpoints below are historical.
+No native GPU/physical Fold7/audio/full-pane success or final owner APK is
+claimed. The other workstreams' remaining readiness and original-signing gate
+still precede the requested final APK. No combined APK has been built.
+
 ## Frozen public inputs
 
 - Avatar and reviewed recovery: #491, e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb,

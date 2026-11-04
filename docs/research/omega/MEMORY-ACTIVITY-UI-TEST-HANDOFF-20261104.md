@@ -1,5 +1,7 @@
 # Actual Activity memory recall UI test candidate
 
+> Subsequent integration-owner execution: PASS,2/2 on public#499fab5f094, exact tree3183aeee. Raw Gradle/JUnit receipt: docs/evidence/memory-brain-20261104/activity-android. The original NOT_RUN handoff below describes the earlier test-creation checkpoint. Full onCreate/onDestroy/chat/audio/GPU/device remains outside this bounded test.
+
 Base: `9d1b6ddf2ba0fe74740babc2da5f48262180bb6d`.
 Branch: `test/continuum-memory-activity-lifecycle-20261104`.
 New test: `app/src/uiTest/java/at/heinz/deviceai/MemoryRecallActivityUiTest.kt`.

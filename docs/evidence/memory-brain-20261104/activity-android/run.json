@@ -1,0 +1,24 @@
+{
+  "head": "fab5f094862c5abae259196f6be1d7a8bc80a75b",
+  "tree": "3183aeeeae3532e7f3253de976eabd46efcb940a",
+  "command": [
+    "flock",
+    "-w",
+    "50",
+    "/workspace/scratch/b3170a7ae924/gradle-build.lock",
+    "./gradlew",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.MemoryRecallActivityUiTest"
+  ],
+  "started": 1793790729.7950184,
+  "seconds": 37.741320848464966,
+  "exit": 0,
+  "source_changed": false
+}

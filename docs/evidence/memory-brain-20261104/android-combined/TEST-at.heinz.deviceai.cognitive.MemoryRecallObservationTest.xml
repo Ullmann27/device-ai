@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T11:06:10" hostname="8c129114cae4" time="0.013">
+  <properties/>
+  <testcase name="aFailedCompilationNeverPublishesASuccessfulRecall" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.002"/>
+  <testcase name="aBrokenPresentationObserverDoesNotChangeTheAnswerContext" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.002"/>
+  <testcase name="noListenerNeedsNoEventSaltOrBackgroundWorker" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.002"/>
+  <testcase name="observationMatchesOnlyTheMemoriesActuallyIncludedInTheAnswerContext" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.001"/>
+  <testcase name="theActualCompilerPublishesOnlySaltedHashesAndSelectedIdsToTheExistingHub" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.004"/>
+  <testcase name="anOmittedMemoryGroupProducesAnHonestZeroHitObservation" classname="at.heinz.deviceai.cognitive.MemoryRecallObservationTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
