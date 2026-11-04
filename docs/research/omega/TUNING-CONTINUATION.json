@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-04T22:42:57.870Z",
+  "status": "IN_PROGRESS",
+  "owner": "tuning-automation-r7-20261104T2328Z",
+  "leaseExpiresAtUtc": "2026-11-04T23:53:01Z",
+  "updatedAtUtc": "2026-11-04T23:28:01Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -104,7 +104,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": "R4",
+  "activeRound": "R7",
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -229,5 +229,20 @@
     "warmupRows": 384,
     "sourceFileOnly": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
     "productionSourceChanged": false
+  },
+  "r7": {
+    "target": "Tape.rmsnorm inference-only saved inverse norm vector",
+    "stage": "PREREGISTERED",
+    "sourceHeadAtAcquisition": "f3823e726f8918117eb39e5dc43b63774ac3c808",
+    "sourcePath": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+    "sourceBlobSha": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
+    "hypothesis": "Inference Tape(training=false) allocates inv FloatArray(rows) despite record() dropping backward closure; allocate only when training=true while preserving exact forward computation and training backward gradients.",
+    "affectedExperiments": [
+      "EXP-05",
+      "EXP-12"
+    ],
+    "testPlan": "Exact-source candidate review. Compile a standalone Kotlin JDK21 faithful-method fixture. Deterministic bit-parity across seeded shape/eps/finite-input cases, training gradient parity, shape and inference-backward negative cases. Fixed A/A before edit and one A/B; scenarios inference 1x64 8x64 64x64 128x32 64x256 and training 8x64 64x64 1x64; each 200 calls per batch, four warmup pairs + nine alternating pairs. No favorable retest. JVM host only; full Gradle/Android NOT_RUN until available.",
+    "acceptance": "All bitwise forward and backward parity and negative tests; inference allocation lower for multi-row scenarios, no material CPU regression in small controls or training; source hash bound. If gate fails, archive source and data, restore production source. Host-only evidence cannot prove device gain.",
+    "otherPrs": "#527 and #523 touch LmModel but not LmTensor; source isolation confirmed from changed-file lists."
   }
 }
