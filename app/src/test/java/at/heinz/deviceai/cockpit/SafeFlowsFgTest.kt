@@ -86,7 +86,7 @@ class SafeFlowsFgTest {
     }
 
     @Test fun pillMotionHasNoFade() {
-        val spec = at.heinz.deviceai.ui.JarvisMotion.pill(at.heinz.deviceai.ui.JarvisMotion.Direction.values().first())
+        val spec = at.heinz.deviceai.ui.JarvisMotion.Presets.pill(at.heinz.deviceai.ui.JarvisMotion.Direction.values().first())
         assertEquals(1f, spec.fromAlpha, 0f)
         for (t in listOf(0L, 50L, 150L, 400L)) assertEquals(1f, at.heinz.deviceai.ui.JarvisMotion.frame(spec, t).alpha, 0f)
     }
