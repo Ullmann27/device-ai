@@ -1,0 +1,40 @@
+{
+  "arguments": [
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/development.txt"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/development.txt"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 0.41567009699792834,
+  "logSha256": "cf87938539259278937577619bc8c405030a4879c453cd2c08ed04880c0cb979",
+  "inputHashes": {
+    "checkpointSha256": "f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "datasetSha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+  },
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "runtimeIdentity": {
+    "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+    "protocolSha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "profileId": "core-9712128",
+    "profileSha256": "a41eb45d485f9d0fd4bc78bb91f156a922243bb0fb5c0ca52697c9edfef573f5",
+    "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+  },
+  "identityValidationFailure": null
+}

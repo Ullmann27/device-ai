@@ -1,0 +1,40 @@
+{
+  "arguments": [
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/holdout-g1-6to10m-private/final.txt"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/holdout-g1-6to10m-private/final.txt"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 7.2401004009952885,
+  "logSha256": "b08e5b2f6ef66d6eb7978ca570f05f69ecc38a81abc64c5118bf5564898cdc5f",
+  "inputHashes": {
+    "checkpointSha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "datasetSha256": "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd"
+  },
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "runtimeIdentity": {
+    "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+    "protocolSha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "profileId": "core-6562304",
+    "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+    "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+  },
+  "identityValidationFailure": null
+}

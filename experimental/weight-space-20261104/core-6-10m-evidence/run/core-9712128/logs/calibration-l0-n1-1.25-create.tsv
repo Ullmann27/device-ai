@@ -1,0 +1,3 @@
+SOURCE	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	tokenizerSha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	parameters=132160	arch=MINGRU	dim=64	layers=2
+CHECKPOINT	sha256=4cf9046eb43023cdbcabc47cd489f449722de39340891115d5c7be245bfdf7a3	path=/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/4cf9046eb43023cdbcabc47cd489f449722de39340891115d5c7be245bfdf7a3.lm1	parameters=132160	bytes=529507
+EDIT	tensor=l0.n1	factor=1.25	changedWeights=64

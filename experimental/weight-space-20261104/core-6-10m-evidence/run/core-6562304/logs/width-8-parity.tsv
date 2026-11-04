@@ -1,0 +1,2 @@
+SOURCE	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	tokenizerSha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	parameters=132160	arch=MINGRU	dim=64	layers=2
+PARITY	maxLogitDelta=2.47955322265625E-5	maxProbabilityDelta=1.1622905731201172E-6	maxStepwiseLogitDelta=1.52587890625E-5	identicalGenerations=3	originalParameters=132160	expandedParameters=6562304

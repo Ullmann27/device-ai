@@ -1,0 +1,113 @@
+{
+  "candidates": [
+    {
+      "label": "baseline",
+      "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": 132160,
+      "bytes": 529297,
+      "devBpb": 2.3525414158359124,
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "parameters": "132160",
+        "loadMs": "63.534276",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "9.606424",
+        "maxGeneration32CallMs": "18.730917",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "84748",
+        "finalVmHwmKiB": "84748",
+        "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "calibration-l0-n1-0.75",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/723fd70c1ed0b0d502e4e0a32c28e8343cfe72eae5df44aa50f1c41288984059.lm1",
+      "sha256": "723fd70c1ed0b0d502e4e0a32c28e8343cfe72eae5df44aa50f1c41288984059",
+      "parameters": 132160,
+      "bytes": 529507,
+      "devBpb": 2.686108582698595
+    },
+    {
+      "label": "calibration-l0-n1-1.25",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/4cf9046eb43023cdbcabc47cd489f449722de39340891115d5c7be245bfdf7a3.lm1",
+      "sha256": "4cf9046eb43023cdbcabc47cd489f449722de39340891115d5c7be245bfdf7a3",
+      "parameters": 132160,
+      "bytes": 529507,
+      "devBpb": 2.5711460409720654
+    },
+    {
+      "label": "calibration-l1-n1-0.75",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/99642b24bf0978822f5fef40cba295e4cecc751dbabf1af1d2c1c006992efd81.lm1",
+      "sha256": "99642b24bf0978822f5fef40cba295e4cecc751dbabf1af1d2c1c006992efd81",
+      "parameters": 132160,
+      "bytes": 529507,
+      "devBpb": 2.4420793700413594
+    },
+    {
+      "label": "calibration-l1-n1-1.25",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/7f98d50fd06cb779baa48472c0baa5a5a446dde3c677febafeaf6f85fe56d298.lm1",
+      "sha256": "7f98d50fd06cb779baa48472c0baa5a5a446dde3c677febafeaf6f85fe56d298",
+      "parameters": 132160,
+      "bytes": 529507,
+      "devBpb": 2.461609408618118
+    },
+    {
+      "label": "calibration-nf-0.75",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37.lm1",
+      "sha256": "f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37",
+      "parameters": 132160,
+      "bytes": 529504,
+      "devBpb": 2.3774380657826115
+    },
+    {
+      "label": "calibration-nf-1.25",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128/checkpoints/da9b1b9f5858853f31e44a05939ecc1c0fd7dee2a98e9c6e3a9b9fb57e694dd1.lm1",
+      "sha256": "da9b1b9f5858853f31e44a05939ecc1c0fd7dee2a98e9c6e3a9b9fb57e694dd1",
+      "parameters": 132160,
+      "bytes": 529504,
+      "devBpb": 2.4644310483454612
+    }
+  ],
+  "selected": {
+    "label": "baseline",
+    "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "parameters": 132160,
+    "bytes": 529297,
+    "devBpb": 2.3525414158359124,
+    "capacity": {
+      "kind": "CAPACITY_RESULT",
+      "pass": "true",
+      "reasons": "NONE",
+      "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": "132160",
+      "loadMs": "63.534276",
+      "measuredRepeats": "3",
+      "maxFirstTokenCallMs": "9.606424",
+      "maxGeneration32CallMs": "18.730917",
+      "firstTokenObservations": "3",
+      "full32TokenObservations": "3",
+      "vmHwmKiB": "84748",
+      "finalVmHwmKiB": "84748",
+      "rssMethod": "MAXIMUM_OBSERVED_VMHWM",
+      "failure": "UNAVAILABLE",
+      "processReturncode": 0,
+      "processTimedOut": false
+    },
+    "capacityEligible": true
+  },
+  "rule": "minimum development BPB; identity wins exact tie",
+  "profileId": "core-9712128",
+  "profileSha256": "a41eb45d485f9d0fd4bc78bb91f156a922243bb0fb5c0ca52697c9edfef573f5",
+  "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+}

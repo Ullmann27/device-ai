@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689",
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "holdoutSha256": "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd",
+  "holdoutOpenedAtFreeze": false,
+  "profiles": {
+    "core-6562304": {
+      "selectionSha256": "84892007baa8a15a0451eb2541e7b36d95d43819417990115047b49eab27ff89",
+      "profileId": "core-6562304",
+      "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+      "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+      "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+    },
+    "core-9712128": {
+      "selectionSha256": "f9395441c7aa3d7fd8301bff53f6df8d09c222584953a9c3bc2f3f45de555096",
+      "profileId": "core-9712128",
+      "profileSha256": "a41eb45d485f9d0fd4bc78bb91f156a922243bb0fb5c0ca52697c9edfef573f5",
+      "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+      "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+    }
+  },
+  "developmentPreferred": {
+    "studyProfileId": "core-6562304",
+    "label": "baseline",
+    "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "parameters": 132160,
+    "bytes": 529297,
+    "devBpb": 2.3525414158359124
+  }
+}

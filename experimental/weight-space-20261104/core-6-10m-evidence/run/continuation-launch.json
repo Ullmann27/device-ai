@@ -1,0 +1,44 @@
+{
+  "sourceCommit": "3e571d6390c672ab86f5961d50700f56084ff6ef",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "startedUtc": "2026-11-04T11:38:14Z",
+  "commands": [
+    [
+      "python3",
+      "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/run_experiment.py",
+      "--inputs",
+      "/workspace/scratch/0549bca61ccf/inputs",
+      "--jar",
+      "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+      "--holdout",
+      "/workspace/scratch/0549bca61ccf/holdout-g1-6to10m-private/final.txt",
+      "--study-root",
+      "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m",
+      "continuation",
+      "--profile",
+      "core-6562304",
+      "--output",
+      "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304"
+    ],
+    [
+      "python3",
+      "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/run_experiment.py",
+      "--inputs",
+      "/workspace/scratch/0549bca61ccf/inputs",
+      "--jar",
+      "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+      "--holdout",
+      "/workspace/scratch/0549bca61ccf/holdout-g1-6to10m-private/final.txt",
+      "--study-root",
+      "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m",
+      "continuation",
+      "--profile",
+      "core-9712128",
+      "--output",
+      "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-9712128"
+    ]
+  ],
+  "holdoutEvaluationAllowed": false,
+  "trainingStepsPerProcess": 16,
+  "plannedTrainingProcesses": 4
+}

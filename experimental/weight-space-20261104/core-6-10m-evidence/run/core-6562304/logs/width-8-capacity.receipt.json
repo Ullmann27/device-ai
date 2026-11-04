@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx1g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/checkpoints/4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 120,
+  "wallSeconds": 2.273611600998265,
+  "logSha256": "9adc01bcb5a86734c01ee321d5a68b899de684f53ce8fc9e6490c15f35c585a4",
+  "inputHashes": {
+    "checkpointSha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "runtimeIdentity": {
+    "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+    "protocolSha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "profileId": "core-6562304",
+    "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+    "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+  },
+  "identityValidationFailure": null
+}

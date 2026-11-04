@@ -1,0 +1,8 @@
+SOURCE	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd	tokenizerSha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f	parameters=132160	arch=MINGRU	dim=64	layers=2
+PROBE	index=0	prompt=Berechne 17 mal 24. Antworte nur mit der Zahl.	expected=408	text=	correct=false	stop=EOS	tokens=0	millis=48
+PROBE	index=1	prompt=Berechne 2 plus 3. Antworte nur mit der Zahl.	expected=5	text=	correct=false	stop=EOS	tokens=0	millis=13
+PROBE	index=2	prompt=Antworte nur mit dem Wort Hallo.	expected=Hallo	text= - `<hash>`: 2026.10.10.10.2026-10.	correct=false	stop=MAX_TOKENS	tokens=32	millis=23
+PROBE	index=3	prompt=Antworte nur mit dem Wort fertig.	expected=fertig	text= - `<hash>`: 2026.10.10.10.2026-10.	correct=false	stop=MAX_TOKENS	tokens=32	millis=15
+PROBE	index=4	prompt=Welche Zahl folgt auf 9? Antworte nur mit der Zahl.	expected=10	text=	correct=false	stop=EOS	tokens=0	millis=4
+PROBE	index=5	prompt=Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.	expected=haus	text=	correct=false	stop=EOS	tokens=0	millis=4
+PROBE_RESULT	correct=0	total=6	scoring=exact-trimmed-string

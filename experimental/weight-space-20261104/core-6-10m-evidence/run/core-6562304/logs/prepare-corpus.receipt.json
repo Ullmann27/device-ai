@@ -1,0 +1,37 @@
+{
+  "arguments": [
+    "corpus",
+    "/workspace/scratch/0549bca61ccf/inputs/original-train-docs",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/train.txt"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment-final.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "corpus",
+    "/workspace/scratch/0549bca61ccf/inputs/original-train-docs",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m/core-6562304/train.txt"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 0.41712072399968747,
+  "logSha256": "e0ee66a021803a9ed74338aa3f0d036d916c40b5386933ef09ef7a92395e191c",
+  "inputHashes": {
+    "corpusManifestSha256": "bfbb448a46eade19bf947a69e9f35ba5f190b621c460708103ae08e0b13b5e9d",
+    "corpusDocumentsSha256": "ff1a1116e282c20c770af3782b61f77d469ed62d9ac6ea9f41d45574b751c116"
+  },
+  "orchestratorSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "runtimeIdentity": {
+    "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+    "protocolSha256": "f6830becc381fb638b63917763546d178838d32a8e4ba569cf31af66d32d8ee2",
+    "profileId": "core-6562304",
+    "profileSha256": "437974f890b3805a6e5357f9bb44e71e4046645a5cc6bef8b3bda5d8915f5fba",
+    "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+    "studyRegistrationSha256": "b9785250d0795c445a68c8b2a3ddc315261a107727c9c1e8081eed6a5279f689"
+  },
+  "identityValidationFailure": null
+}

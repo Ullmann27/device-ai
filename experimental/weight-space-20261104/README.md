@@ -45,6 +45,12 @@ unveränderte historische Quelldatei.
 
 ## Registrierte Folgeforschung mit 6–10 Millionen Parametern
 
+Der ausgeführte Folgeversuch ist in
+[CORE_6_10M_RESULTS.md](CORE_6_10M_RESULTS.md) vollständig dokumentiert. Beide
+großen Initialmodelle bestehen die Kapazitätsprüfung; alle vier trainierten
+Fortsetzungen werden wegen sofortigem EOS ohne neue Tokens ausgeschlossen.
+Die ursprüngliche kleine Baseline bleibt die neutrale Qualitätsauswahl.
+
 [CORE_6_10M_PLAN.md](CORE_6_10M_PLAN.md) registriert zwei getrennte Profile:
 `core-6562304` und `core-9712128`. Jedes besitzt einen eigenen kleinen
 Kontrolllauf. Beide Profilauswahlen müssen abgeschlossen und gemeinsam
@@ -92,6 +98,12 @@ Binärdateiprüfer benötigt NumPy; die synthetischen Gate-Suiten benötigen nur
 Python. Sein `--historical-root` bezeichnet den Arbeitsordner mit den in
 `g1-evidence/historical-artifacts-manifest.json` aufgeführten unveränderten
 Originaldateien. Er startet keine Modelle.
+
+Der inzwischen veröffentlichte neue Holdout liegt unter
+`core-6-10m-evidence/run/core-6562304/holdout-after-freeze.txt`. Eine Wiederholung
+mit dieser Datei reproduziert den abgeschlossenen Versuch und ist kein neuer
+blinder Qualitätsnachweis. Eine weitere Optimierungsrunde benötigt einen neuen
+vorab registrierten Testsatz.
 
 ## Werkzeuge bauen
 
