@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "f6c3bdbcc1b9b1c5830c0c72763dd1e2bd727283",
+  "sourceTree": "6ca6989d688065ffa9c4deaad2a18ff6bf1c58c4",
+  "worktreeStatus": "",
+  "testResult": "FAIL",
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": "3",
+      "failures": "3",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "cause": "Confirmed mixed real JVM wall clock and virtual Android clock in the new Robolectric fixture; no production regression established."
+}

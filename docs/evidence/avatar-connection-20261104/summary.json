@@ -1,0 +1,34 @@
+{
+  "connectionTestStatus": "PASS",
+  "dateUtc": "2026-11-04",
+  "publishedSourceCommit": "32466a2559721762a9b6745890ea286d1c2730c5",
+  "executedLocalCommit": "17d9704cd3f5f3c774a7053b5aca03624ca6cde9",
+  "identicalCompleteTree": "5394ce13bf5c3b692f58aa284d9f8a89e6be882e",
+  "productionTree": "eaeda092326c11676543385eedd2ac86e0e4f194",
+  "combinedTests": {
+    "tests": 136,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 23,
+    "exitCode": 0
+  },
+  "configuredLint": {
+    "onlyRule": "NewApi",
+    "issues": 0,
+    "exitCode": 0
+  },
+  "negativeControl": {
+    "result": "EXPECTED_ASSERTION_FAILURE",
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "assertion": "jawOpen > 0f",
+    "restored": true
+  },
+  "existingAssetValidator": "KNOWN_EXISTING_RIG_HIERARCHY_ORIENTATION_FAILURE",
+  "nativeGpuDeviceAudibleOutput": "NOT_RUN",
+  "releaseOrInstall": "NOT_PERFORMED"
+}

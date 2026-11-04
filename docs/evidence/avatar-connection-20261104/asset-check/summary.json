@@ -1,0 +1,59 @@
+{
+  "observed_at_utc": "2026-11-04T18:34:18.993467+00:00",
+  "source_commit": "5e2a0c2b26d1e2978b19d70878f30c98c36d94e9",
+  "comparison_commit": "6cf6e2128463e6a24dfac4652bb65e325ff6f18a",
+  "asset_path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+  "asset_bytes": 10165644,
+  "asset_sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "comparison_sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "byte_identical": true,
+  "source_asset_blob": "3d58ca55faa680d0e5d1108b83ceb63a81ce5541",
+  "comparison_asset_blob": "3d58ca55faa680d0e5d1108b83ceb63a81ce5541",
+  "requested_validator_path_exists": false,
+  "actual_validator_path": "tools/epsilon-avatar-contract/validate_glb.py",
+  "validator_sha256": "4550fb6deaa92d92401f482baad1dff80636c71d6e516cb46a7dc4fdc8fc445e",
+  "validator_blob": "008acbf58a170820db3e41e9b53e9b78b8cac682",
+  "validator_command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "/workspace/scratch/b6ee64d418cf/device-ai-avatar-integration/tools/epsilon-avatar-contract/validate_glb.py",
+    "/workspace/scratch/b6ee64d418cf/device-ai-avatar-integration/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "--output",
+    "/workspace/scratch/b6ee64d418cf/asset-connection-check/validator-result.json"
+  ],
+  "validator_exit_code": 1,
+  "status": "FAIL",
+  "asset_and_sources_modified": false,
+  "limits": "Numerical contract diagnostic only; no rendering or likeness/device acceptance.",
+  "validator_self_tests": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/epsilon-avatar-contract",
+      "-p",
+      "test_validate_glb.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "tests": 8,
+    "scope": "Existing synthetic fixture controls, not an actual asset PASS."
+  },
+  "comparison_validator_blob": "008acbf58a170820db3e41e9b53e9b78b8cac682",
+  "validator_unchanged_from_helper": true,
+  "historical_v2_context": {
+    "receipt_path": "docs/evidence/momega1/reference-review/hinge-v2-final-receipt.json",
+    "receipt_asset_sha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+    "matches_current_packaged_asset": false,
+    "fresh_v2_executed": false,
+    "reason": "Historical V2 receipt is for another exact asset; no transfer of its PASS to the current bytes."
+  },
+  "runtime_contract_source_review": {
+    "file": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+    "legacy_numeric_pivot_windows_enforced": false,
+    "fresh_runtime_execution_performed_by_this_helper": false
+  }
+}

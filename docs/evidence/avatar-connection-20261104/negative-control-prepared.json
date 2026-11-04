@@ -1,0 +1,7 @@
+{
+  "sourceCommit": "206820cf88df7fe7ba798da63b2199c2d9bfd775",
+  "tree": "5067b7db2ab39eb39e469c49a96d55a45f13c5ff",
+  "fixtureSha256": "f067041dfbb12e29abf4c5b004acd7de2bb94d2a70cb3f96403549e6d02a96b6",
+  "productionChange": "Only remove voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) } from voiceFrame",
+  "published": false
+}

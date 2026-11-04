@@ -1,0 +1,45 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+index 4e3d8c7..265ef66 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+@@ -132,6 +132,16 @@ class AvatarTtsLiveConnectionUiTest {
+     private fun pose(fixture: SpeechFixture): AvatarPose =
+         (field(fixture.live, "avatarPose") as AvatarPoseReducer).pose(System.currentTimeMillis())
+ 
++    private fun traceClock(phase: String, fixture: SpeechFixture) {
++        val reducer = field(fixture.live, "avatarPose") as AvatarPoseReducer
++        val value = pose(fixture)
++        println("TTS_CLOCK phase=$phase wall=${System.currentTimeMillis()} " +
++            "elapsed=${SystemClock.elapsedRealtime()} uptime=${SystemClock.uptimeMillis()} " +
++            "audioAt=${field(reducer, "lastAudioMillis")} " +
++            "eventAt=${field(reducer, "lastEventMillis")} " +
++            "energy=${value.speakEnergy} viseme=${value.viseme}")
++    }
++
+     private fun pcm16(frames: Int = 8_000): ByteArray = ByteArray(frames * 2) { index ->
+         // Synthetic +0.5 full-scale PCM16, mono, one second at 8 kHz.
+         if (index % 2 == 0) 0.toByte() else 0x40.toByte()
+@@ -139,6 +149,7 @@ class AvatarTtsLiveConnectionUiTest {
+ 
+     private fun startPendingSpeech(fixture: SpeechFixture, id: String, text: String,
+         reportRange: Boolean = true) {
++        traceClock("before-start:$id", fixture)
+         // Only the already-accepted synthesis-request context is fixture state. Calling the
+         // shadow's speak() would automatically post onDone before controlled PCM/range callbacks.
+         // These are the three assignments made by speakBootstrap; no Director/View event is faked.
+@@ -152,6 +163,7 @@ class AvatarTtsLiveConnectionUiTest {
+         // The real voiceFrame schedules itself every 33 ms. A one-letter word starts with SIL
+         // and reaches its non-silent viseme after 160 ms, using the production word-range mapper.
+         advance(170)
++        traceClock("after-170:$id", fixture)
+     }
+ 
+     private fun assertSilent(fixture: SpeechFixture) {
+@@ -230,6 +242,7 @@ class AvatarTtsLiveConnectionUiTest {
+         // live view in Chat even when the Home's docked wrapper is detached.
+         f.listener.onRangeStart("moving", 0, 1, 0)
+         advance(170)
++        traceClock("after-chat-range", f)
+         assertEquals(Viseme.AA, pose(f).viseme)
+         assertTrue(pose(f).speakEnergy > .35f)
+ 

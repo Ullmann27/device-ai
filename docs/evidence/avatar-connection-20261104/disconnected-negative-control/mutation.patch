@@ -1,0 +1,12 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+index 7e3ffcf..3d8adce 100644
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -246,7 +246,6 @@ class AgentActivity : Activity() {
+             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
+             val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+             hologramView?.setAudioLevel(level)
+-            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
+             mainHandler.postDelayed(this, 33L)
+         }
+     }

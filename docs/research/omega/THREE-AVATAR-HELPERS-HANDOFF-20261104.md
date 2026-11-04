@@ -1,5 +1,10 @@
 # Three additional Continuum helpers — completed avatar patch set
 
+> Connection continuation: all three fixes are now confirmed present in #491,
+> and the real TTS callback path has been exercised with 136 passing selected
+> tests. See [the current connection handoff](AVATAR-CONNECTION-HANDOFF.md).
+> The report below remains the original historical 118-test checkpoint.
+
 Date: 2026-11-04. Review PR: [#495](https://github.com/Ullmann27/device-ai/pull/495).
 
 ## Result and source identity

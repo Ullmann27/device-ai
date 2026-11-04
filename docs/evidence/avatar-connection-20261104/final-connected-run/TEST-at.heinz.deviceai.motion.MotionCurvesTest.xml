@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.motion.MotionCurvesTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-04T18:48:28" hostname="04c8b0ba7ea6" time="0.006">
+  <properties/>
+  <testcase name="monotoneExceptBack" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="staggerCenterFirst" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="underdampedOvershootPeakAndSettle" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="timelineEvaluatesBeforeDuringAfter" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="endpointsExact" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.0"/>
+  <testcase name="samplePoints" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.0"/>
+  <testcase name="criticalAndOverdampedAreMonotoneWithoutOvershoot" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.0"/>
+  <testcase name="forSettleAndVideoPresets" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="idleDollyWarpPulseShake" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.001"/>
+  <testcase name="clampedOutsideRange" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.0"/>
+  <testcase name="presetTimelines" classname="at.heinz.deviceai.motion.MotionCurvesTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
