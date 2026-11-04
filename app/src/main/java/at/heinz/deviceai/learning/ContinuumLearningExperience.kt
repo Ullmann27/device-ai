@@ -99,9 +99,21 @@ data class LearningExperienceStats(
     val revoked:Int
 )
 
+/** Result of an automatic ledger repair. Frames after [corruptOffset] are never adopted unverified. */
+data class LedgerRecoveryReport(
+    val corruptOffset:Long,
+    val discardedFrames:Int,
+    val unverifiedFramesAfterCorruption:Int,
+    val quarantineFile:File,
+    val restoredFromBackup:File?,
+    val reason:String
+)
+
 class FileLearningExperienceStore(private val directory:File) {
     private val primary=File(directory,"experiences-v2.bin")
     private val backup=File(directory,"experiences-v2.lkg")
+    private val backup1=File(directory,"experiences-v2.bak1")
+    private val backup2=File(directory,"experiences-v2.bak2")
 
     fun all():List<LearningExperience> = synchronized(FILE_LOCK) { loadValidated() }
 
@@ -111,7 +123,7 @@ class FileLearningExperienceStore(private val directory:File) {
     internal fun snapshotIfChanged(knownFingerprint:String?):Pair<String, List<LearningExperience>?> =
         synchronized(FILE_LOCK) {
             if(!primary.exists()) {
-                check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
+                check(!backup.exists() && !backup1.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
                 return@synchronized ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
             }
             val bytes=primary.readBytes()
@@ -242,7 +254,7 @@ class FileLearningExperienceStore(private val directory:File) {
 
     private fun loadValidated():List<LearningExperience> {
         if(!primary.exists()) {
-            check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
+            check(!backup.exists() && !backup1.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
             return emptyList()
         }
         // The previous generation can predate an owner revocation/correction.
@@ -250,19 +262,85 @@ class FileLearningExperienceStore(private val directory:File) {
         return loadState().items
     }
 
-    /** LEX4: cached replay state, validated by file length + tail chain hash; torn tail truncated in place. */
+    /** LEX4: cached replay state (content-fingerprint keyed). On damage: keep the verified chain prefix, move the rest
+     * unchanged into a timestamped quarantine file and record a [LedgerRecoveryReport]; if nothing in the primary is
+     * valid, restore the newest fully valid rolling backup (bak1, then bak2). Never deletes evidence silently. */
     private fun loadState():LearningExperienceCodec.LogState {
         val key=primary.absolutePath
         val bytes=primary.readBytes()
         val running=MessageDigest.getInstance("SHA-256").apply { update(bytes) }
         val fingerprint=(running.clone() as MessageDigest).digest()
         LOG_CACHE[key]?.let { c -> if(MessageDigest.isEqual(c.fileHash,fingerprint))return c }
-        if(!LearningExperienceCodec.isLog(bytes))
-            return LearningExperienceCodec.LogState(LearningExperienceCodec.decode(bytes),ByteArray(32),0,bytes.size.toLong(),legacy=true)
-        val state=LearningExperienceCodec.decodeLog(bytes,allowTornTail=true)
-        if(state.validLength<bytes.size) java.io.RandomAccessFile(primary,"rw").use { it.setLength(state.validLength);it.fd.sync() }
-        if(state.validLength==bytes.size.toLong()) { state.fileHash=fingerprint;state.running=running;LOG_CACHE[key]=state }
-        return state
+        if(LearningExperienceCodec.isLog(bytes) && LearningExperienceCodec.hasLogVersion(bytes)) {
+            val scan=LearningExperienceCodec.scanLog(bytes)
+            if(scan.stopOffset==null) {
+                rotateBackups(bytes)
+                scan.state.fileHash=fingerprint;scan.state.running=running;LOG_CACHE[key]=scan.state
+                return scan.state
+            }
+            if(scan.state.records>0) {
+                val off=scan.stopOffset
+                val frames=LearningExperienceCodec.countFrames(bytes,off)
+                val q=quarantine(bytes.copyOfRange(off.toInt(),bytes.size))
+                java.io.RandomAccessFile(primary,"rw").use { it.setLength(off);it.fd.sync() }
+                report(LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record"))
+                return scan.state
+            }
+        } else if(!LearningExperienceCodec.isLog(bytes)) {
+            runCatching { LearningExperienceCodec.decode(bytes) }.getOrNull()?.let { items ->
+                rotateBackups(bytes)
+                return LearningExperienceCodec.LogState(items,ByteArray(32),0,bytes.size.toLong(),legacy=true)
+            }
+        }
+        return restoreFromBackup(bytes)
+    }
+
+    private fun restoreFromBackup(damaged:ByteArray):LearningExperienceCodec.LogState {
+        for(bak in listOf(backup1,backup2)) {
+            if(!bak.isFile)continue
+            val bb=bak.readBytes()
+            val state=runCatching {
+                if(LearningExperienceCodec.isLog(bb)) LearningExperienceCodec.scanLog(bb).takeIf { it.stopOffset==null }!!.state
+                else LearningExperienceCodec.LogState(LearningExperienceCodec.decode(bb),ByteArray(32),0,bb.size.toLong(),legacy=true)
+            }.getOrNull() ?: continue
+            val q=quarantine(damaged)
+            writeAtomically(primary,bb)
+            report(LedgerRecoveryReport(0,LearningExperienceCodec.countFrames(damaged,minOf(8L,damaged.size.toLong())),0,q,bak,
+                "primary unreadable from the start; restored newest valid backup"))
+            return state
+        }
+        if(LearningExperienceCodec.isLog(damaged) && LearningExperienceCodec.hasLogVersion(damaged) && damaged.size>8) {
+            val frames=LearningExperienceCodec.countFrames(damaged,8)
+            val q=quarantine(damaged.copyOfRange(8,damaged.size))
+            java.io.RandomAccessFile(primary,"rw").use { it.setLength(8);it.fd.sync() }
+            report(LedgerRecoveryReport(8,frames,frames-1,q,null,"first record damaged and no valid backup; ledger restarted empty"))
+            return LearningExperienceCodec.scanLog(primary.readBytes()).state
+        }
+        throw IllegalArgumentException("Learning ledger unreadable and no valid backup")
+    }
+
+    private fun quarantine(bytes:ByteArray):File {
+        val stamp=java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssSSS")
+            .format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Vienna")))
+        val f=File(directory,"experiences-v2.quarantine-$stamp-${System.nanoTime()}.bin")
+        java.io.FileOutputStream(f).use { it.write(bytes);it.fd.sync() }
+        return f
+    }
+
+    private fun report(r:LedgerRecoveryReport) {
+        RECOVERY[primary.absolutePath]=r
+        java.util.logging.Logger.getLogger("ContinuumLedger").warning("Ledger recovery: $r")
+    }
+
+    /** Most recent recovery for this ledger in this process, or null. */
+    fun lastRecovery():LedgerRecoveryReport? = synchronized(FILE_LOCK) { RECOVERY[primary.absolutePath] }
+
+    /** Rolling backup of the last two verified generations; called after a fully verified open and every
+     * [ROTATE_EVERY_APPENDS] appends, never on the per-append path otherwise. */
+    private fun rotateBackups(bytes:ByteArray) {
+        if(backup1.isFile && backup1.readBytes().contentEquals(bytes))return
+        if(backup1.isFile) { backup2.delete();check(backup1.renameTo(backup2)) { "backup rotation failed" } }
+        writeAtomically(backup1,bytes)
     }
 
     /** Observations and audits cannot evict owner instructions or revocations.
@@ -296,6 +374,8 @@ class FileLearningExperienceStore(private val directory:File) {
                 if(dels.isEmpty() && puts.isEmpty())return
                 val (bytes,hash)=LearningExperienceCodec.encodeOps(state.chainHash,dels,puts)
                 java.io.FileOutputStream(primary,true).use { it.write(bytes);it.fd.sync() }
+                val n=(APPENDS[primary.absolutePath] ?: 0)+1
+                if(n>=ROTATE_EVERY_APPENDS) { APPENDS[primary.absolutePath]=0;rotateBackups(primary.readBytes()) } else APPENDS[primary.absolutePath]=n
                 // Next read still re-hashes the whole file; the cache only skips re-decoding when content matches.
                 val running=state.running?.let { (it.clone() as MessageDigest).apply { update(bytes) } }
                 if(running==null) LOG_CACHE.remove(primary.absolutePath) else
@@ -344,6 +424,11 @@ class FileLearningExperienceStore(private val directory:File) {
 
         private val FILE_LOCK=Any()
         private val LOG_CACHE=HashMap<String,LearningExperienceCodec.LogState>()
+        private val RECOVERY=HashMap<String,LedgerRecoveryReport>()
+        private val APPENDS=HashMap<String,Int>()
+        /** Amortised: one ~1 MB copy per 256 appends keeps write p95 flat (affects <0.4 % of writes). */
+        const val ROTATE_EVERY_APPENDS=256
+        internal fun resetCachesForTest() = synchronized(FILE_LOCK) { LOG_CACHE.clear();RECOVERY.clear();APPENDS.clear() }
         internal const val ABSENT_FINGERPRINT="absent"
     }
 }
@@ -407,35 +492,60 @@ internal object LearningExperienceCodec {
         return out.toByteArray() to hash
     }
 
+    class Scan(val state:LogState, val stopOffset:Long?, val reason:String?, val torn:Boolean)
+    fun hasLogVersion(bytes:ByteArray)=bytes.size>=8 && java.nio.ByteBuffer.wrap(bytes,4,4).int==4
+
     fun decodeLog(bytes:ByteArray,allowTornTail:Boolean):LogState {
         require(isLog(bytes) && bytes.size<=MAX_BYTES) { "Invalid LEX4 ledger" }
-        require(java.nio.ByteBuffer.wrap(bytes,4,4).int==4) { "Unsupported ledger format version" }
+        require(hasLogVersion(bytes)) { "Unsupported ledger format version" }
+        val scan=scanLog(bytes)
+        if(scan.stopOffset!=null) require(scan.torn && allowTornTail) { scan.reason ?: "Corrupt LEX4 ledger" }
+        return scan.state
+    }
+
+    /** Replays the verified chain prefix; stops at the first torn or damaged frame (never throws on damage). */
+    fun scanLog(bytes:ByteArray):Scan {
         val state=LinkedHashMap<String,LearningExperience>()
         var hash=seed();var pos=8;var records=0
+        fun stop(reason:String,torn:Boolean)=Scan(LogState(state.values.toList(),hash,records,pos.toLong()),pos.toLong(),reason,torn)
         while(pos<bytes.size) {
             val remaining=bytes.size-pos
-            val len=if(remaining>=4) java.nio.ByteBuffer.wrap(bytes,pos,4).int else -1
-            if(len!=-1) require(len in 1..MAX_RECORD) { "Corrupt LEX4 record length" }
-            if(len==-1 || remaining<4+len+32) {
-                require(allowTornTail) { "Truncated LEX4 ledger" }
-                break
-            }
+            if(remaining<4)return stop("Truncated LEX4 ledger",true)
+            val len=java.nio.ByteBuffer.wrap(bytes,pos,4).int
+            if(len !in 1..MAX_RECORD)return stop("Corrupt LEX4 record length",false)
+            if(remaining<4+len+32)return stop("Truncated LEX4 ledger",true)
             val payload=bytes.copyOfRange(pos+4,pos+4+len)
             val next=link(hash,payload)
-            require(MessageDigest.isEqual(next,bytes.copyOfRange(pos+4+len,pos+4+len+32))) { "LEX4 record checksum mismatch" }
-            try {
+            if(!MessageDigest.isEqual(next,bytes.copyOfRange(pos+4+len,pos+4+len+32)))return stop("LEX4 record checksum mismatch",false)
+            val ok=runCatching {
                 val input=DataInputStream(ByteArrayInputStream(payload))
+                val copy=LinkedHashMap(state)
                 when(input.readByte()) {
-                    PUT -> readRecord(input).let { state[it.id]=it }
-                    DEL -> require(state.remove(input.readUTF())!=null)
+                    PUT -> readRecord(input).let { copy[it.id]=it }
+                    DEL -> require(copy.remove(input.readUTF())!=null)
                     else -> throw IllegalArgumentException("Unknown LEX4 op")
                 }
-                require(input.available()==0)
-            } catch(e:IOException) { throw IllegalArgumentException("Invalid LEX4 record",e) }
-            require(state.size<=FileLearningExperienceStore.MAX_RECORDS)
+                require(input.available()==0 && copy.size<=FileLearningExperienceStore.MAX_RECORDS)
+                copy
+            }.getOrNull() ?: return stop("Invalid LEX4 record",false)
+            state.clear();state.putAll(ok)
             hash=next;pos+=4+len+32;records++
         }
-        return LogState(state.values.toList(),hash,records,pos.toLong())
+        return Scan(LogState(state.values.toList(),hash,records,pos.toLong()),null,null,false)
+    }
+
+    /** Number of frames from [offset] to the end, following length fields only (hashes NOT verified). */
+    fun countFrames(bytes:ByteArray,offset:Long):Int {
+        var pos=offset.toInt();var n=0
+        while(pos<bytes.size) {
+            n++
+            val remaining=bytes.size-pos
+            if(remaining<4)break
+            val len=java.nio.ByteBuffer.wrap(bytes,pos,4).int
+            if(len !in 1..MAX_RECORD || remaining<4+len+32)break
+            pos+=4+len+32
+        }
+        return n
     }
 
     private fun writeRecord(out:DataOutputStream,e:LearningExperience) {
