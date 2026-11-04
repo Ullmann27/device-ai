@@ -34,3 +34,8 @@
 - app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt
 - tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/GedaechtnisPreview.kt (JVM-Vorschau)
 - Gedächtnis-Kern: #371 `continuum/m2-cognitive-memory` @de333693.
+
+## Nachtrag Sprint 04.11.2026 09:57 Wien
+- 5e171d8b3f6dd7019437ce625f7b6c3922c56691: Merge #481-Head 5a1076ca (enthält c4071b7a), konfliktfrei.
+- Tests auf 5e171d8b: ContinuumAdaptiveCockpitLayoutTest 3/3, ContinuumCoreMirrorTest 6/6, JarvisMemoryActivityPanelTest 3/3, BrainOrbSignalsTest 5/5 grün.
+- ROT: RetrievalCalculationSourceTest.nothingAfterCloseAndThrowingListenerIsIsolated (3/4), zweimal reproduziert: „expected:<null> but was:<Thread[continuum-calc-events-…]>“ – Event-Thread lebt nach close() noch. Calc-Source-Code durch den Merge unverändert; Ursache ungeklärt (Verdacht: Test wartet nicht auf Thread-Ende bzw. Timing). Nächster Schritt: Thread nach letztem close() joinen oder Test mit Zeitlimit auf Thread-Ende warten lassen.
