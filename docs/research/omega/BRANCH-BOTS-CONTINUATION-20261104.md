@@ -13,3 +13,11 @@ Three development helpers cover source coordination, Android environment linkage
 ## Evidence boundary
 
 The local continuation copy materializes selected exact files from the published PR, not a complete Android checkout or the original product history. Product source SHA and local snapshot SHA are kept separate. Final code, test results, source identities and remaining gates will be appended to the main handoff in this same PR.
+
+## Checkpoint: existing QA gate connected
+
+The two-file QA preflight correction from PR #505, pinned at `8b72db66e5338fbc3a791adc30254f4ca77007ad`, has been selected and reproduced against our original script. Its exact source blob is `9ea8eae2011504b5283a0cf4e62231f0aaa7c39b`; its test blob is `fe2278df7b543ceb2bd51f22188bd9e361805782`.
+
+Before adoption, the 43 tests reproduced 14 failures and 29 passes. After the selective source change, all 43 passed with no skips, and `bash -n` passed. Both QA modes now validate canonical decimal version codes before setup/downloads and reject the previously omitted mentor P12 Base64 signing variable. This is an entry-gate correction, not an automatic version increment or a new release permission.
+
+The tests execute the actual shell entry point in disposable Git repositories and intercept its first download with a local failing canary. No network download, Gradle build, service deployment, APK creation or signing was performed. Exact red/green logs are under `docs/evidence/branch-bots-continuation-20261104/`. Independent integration review and the final combined test run remain pending at this checkpoint.

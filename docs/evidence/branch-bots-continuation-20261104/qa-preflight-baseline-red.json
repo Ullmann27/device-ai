@@ -1,0 +1,12 @@
+{
+  "scope": "Existing PR515/e101 QA script with pinned PR505 regression tests",
+  "expectedToFail": true,
+  "exitCode": 1,
+  "counts": {
+    "tests": 43,
+    "pass": 29,
+    "fail": 14,
+    "skipped": 0
+  },
+  "seconds": 1.749
+}

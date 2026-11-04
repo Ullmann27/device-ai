@@ -7,15 +7,18 @@ fail() { printf 'CONTINUUM_QA_BLOCKED: %s\n' "$*" >&2; exit 69; }
 cd "$(git rev-parse --show-toplevel)"
 sha="$(git rev-parse --verify HEAD)" || fail 'No source SHA'
 [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || fail 'Invalid source SHA'
+# Both QA modes pass this value to Gradle, binary checks and the QA receipt.
+# Validate before setup; canonical bounded decimals avoid octal/overflow parsing.
+[[ "${CONTINUUM_RELEASE_VERSION_CODE:-}" =~ ^[1-9][0-9]{1,3}$ &&
+   "$CONTINUUM_RELEASE_VERSION_CODE" -ge 39 &&
+   "$CONTINUUM_RELEASE_VERSION_CODE" -le 9999 ]] ||
+  fail 'QA requires canonical decimal versionCode 39..9999'
 owner_qa="${CONTINUUM_OWNER_RELEASE_QA:-0}"
 if [[ "$owner_qa" == "1" ]]; then
   [[ "${RENDER_SERVICE_NAME:-}" == "continuum-owner-v23-release-preflight" &&
      "${CONTINUUM_RELEASE_APPROVED_SHA:-}" == "$sha" &&
-     "${CONTINUUM_RELEASE_HOST:-}" == "continuum-owner-v23-release-preflight.onrender.com" &&
-     "${CONTINUUM_RELEASE_VERSION_CODE:-}" =~ ^[0-9]+$ &&
-     "${CONTINUUM_RELEASE_VERSION_CODE}" -ge 39 &&
-     "${CONTINUUM_RELEASE_VERSION_CODE}" -le 9999 ]] ||
-    fail 'Owner QA requires approved SHA, future code39+ and pinned publisher'
+     "${CONTINUUM_RELEASE_HOST:-}" == "continuum-owner-v23-release-preflight.onrender.com" ]] ||
+    fail 'Owner QA requires approved SHA and pinned publisher'
 elif [[ "$owner_qa" == "0" ]]; then
   [[ "${RENDER_SERVICE_NAME:-}" == "continuum-unified-research-apk-20261102" ]] ||
     fail 'Only isolated QA service may run ordinary QA'
@@ -43,7 +46,7 @@ if [[ "$branch_name" != "integration/continuum-all-systems-apk-qa-20261102" ]]; 
 fi
 git -c core.fileMode=false diff --quiet HEAD -- || fail 'Changed tracked source'
 [[ -z "$(git ls-files --others --exclude-standard -- app/src scripts backend/src backend/test)" ]] || fail 'Untracked executable source'
-for key in CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_P12_BASE64 CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD; do
+for key in CONTINUUM_LOCAL_SIGNING_FILE CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_P12_BASE64 CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD CONTINUUM_MENTOR_SIGNING_P12_BASE64; do
   [[ -z "$(printenv "$key" 2>/dev/null || true)" ]] || fail 'Signing material forbidden in QA'
 done
 [[ ! -e continuum-all-systems-site && ! -e continuum-all-systems-logs ]] || fail 'Stale QA directory'
