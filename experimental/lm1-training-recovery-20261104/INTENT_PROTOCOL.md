@@ -143,8 +143,12 @@ protokolliert. Die CPU-Zeit ist ein Budget, keine versprochene Laufzeit.
 
 Vor Trainingsbeginn müssen die unveränderte ursprüngliche Kapazitätsprüfung
 und ihre Identitätsbelege für den jeweiligen Startkandidaten bestehen.
-`BASELINE_GATE`, fehlender gültiger `lastPassed`, Timeout oder ein anderer
-Fehler blockieren das Training. Der neue Intent-Harness umgeht G1 nicht.
+Dieser neue Versuch startet ausschließlich vom hashgebundenen eigenen
+Original und einer frisch geprüften Verbreiterung. Er übernimmt keine
+`lastPassed`- oder `frozen-selection`-Datei aus der früheren Fortsetzung.
+Ein fehlgeschlagenes Startgate, Timeout oder ein anderer Fehler blockiert
+jedes Update. Die G1-Regeln der früheren Pipeline bleiben unverändert;
+ein dort mit `BASELINE_GATE` gestoppter Lauf wird hier nicht wiederaufgenommen.
 
 Die ursprüngliche Prüfung wird nach dem Training für die ausgewählten
 Kandidaten erneut ausgeführt. Ihre ursprünglichen Anforderungen — einschließlich
