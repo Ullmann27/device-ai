@@ -69,7 +69,8 @@ data class AvatarPose(val state: AvatarState, val expression: AvatarExpression, 
 
 /**
  * Reference reducer: folds [AvatarEvent]s into one bounded [AvatarPose] so every renderer maps mouth/gaze
- * the same way. Jaw mapping from the avatar lab (#338): smoothing 0.4, dead zone 0.025, gain 1.5.
+ * the same way. Jaw mapping from the avatar lab (#338): smoothing 0.4 per nominal 33 ms,
+ * adjusted for actual sample time; dead zone 0.025, gain 1.5.
  * Not thread-safe by itself: call from the renderer thread after handing events over.
  */
 class AvatarPoseReducer {
@@ -86,12 +87,17 @@ class AvatarPoseReducer {
     private var utterance: String? = null
     private var lastEventMillis = 0L
     private var lastAudioMillis = Long.MIN_VALUE
+    private var lastSmoothedAudioMillis = Long.MIN_VALUE
     private val cues = ArrayList<AvatarEvent.VisemeCue>()
 
     fun apply(event: AvatarEvent) {
         // Rejected/replayed audio must not resmooth the envelope or change the default pose clock.
         if (event is AvatarEvent.AudioLevel && (event.utteranceId != utterance ||
                 !event.level.isFinite() || event.atMillis <= lastAudioMillis)) return
+        if (event is AvatarEvent.VisemeCue && (event.utteranceId != utterance ||
+                !event.weight.isFinite() || event.durationMs <= 0)) return
+        if (event is AvatarEvent.SpeechEnded && event.utteranceId != utterance) return
+        if (event is AvatarEvent.SpeechStarted && (event.utteranceId.isBlank() || event.utteranceId == utterance)) return
         lastEventMillis = event.atMillis
         when (event) {
             is AvatarEvent.StateChanged -> {
@@ -110,8 +116,15 @@ class AvatarPoseReducer {
                 utterance = event.utteranceId
             }
             is AvatarEvent.AudioLevel -> {
-                energy += (event.level.coerceIn(0f, 1f) - energy) * 0.4f
+                // Preserve the calibrated first/33 ms response without depending on the
+                // number of callbacks delivered within the same elapsed time.
+                val smoothing = if (lastSmoothedAudioMillis == Long.MIN_VALUE) 0.4f else {
+                    val elapsed = event.atMillis.toDouble() - lastSmoothedAudioMillis.toDouble()
+                    (1.0 - kotlin.math.exp(kotlin.math.ln(0.6) * elapsed / 33.0)).toFloat()
+                }
+                energy += (event.level.coerceIn(0f, 1f) - energy) * smoothing
                 lastAudioMillis = event.atMillis
+                lastSmoothedAudioMillis = event.atMillis
             }
             is AvatarEvent.VisemeCue -> if (event.utteranceId == utterance && event.weight.isFinite() && event.durationMs > 0) {
                 // A new word starts with SIL; discard the previous word's unplayed approximation.
@@ -129,6 +142,7 @@ class AvatarPoseReducer {
         utterance = null
         energy = 0f
         lastAudioMillis = Long.MIN_VALUE
+        lastSmoothedAudioMillis = Long.MIN_VALUE
         viseme = Viseme.SIL
         visemeWeight = 0f
         cues.clear()
@@ -149,6 +163,7 @@ class AvatarPoseReducer {
             if (lastEventMillis == lastAudioMillis) lastEventMillis = atMillis
             energy = 0f
             lastAudioMillis = atMillis
+            lastSmoothedAudioMillis = Long.MIN_VALUE
         }
         cues.removeAll { atMillis >= it.atMillis && atMillis - it.atMillis >= it.durationMs }
         val cue = cues.lastOrNull { it.atMillis <= atMillis }

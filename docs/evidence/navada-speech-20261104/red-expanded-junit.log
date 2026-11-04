@@ -1,0 +1,92 @@
+JUnit version 4.13.2
+..E.E.E.E.E.E.E.E..E.E.E
+Time: 0.103
+There were 11 failures:
+1) stoppedUtterancesCannotRestartAfterAnotherUtteranceStops(at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest)
+java.lang.AssertionError: expected:<[SpeechStarted(utteranceId=a, text=Hallo, atMillis=1000), SpeechEnded(utteranceId=a, interrupted=true, atMillis=1000), SpeechStarted(utteranceId=b, text=Hallo, atMillis=1010), SpeechEnded(utteranceId=b, interrupted=true, atMillis=1010)]> but was:<[SpeechStarted(utteranceId=a, text=Hallo, atMillis=1000), SpeechEnded(utteranceId=a, interrupted=true, atMillis=1000), SpeechStarted(utteranceId=b, text=Hallo, atMillis=1010), SpeechEnded(utteranceId=b, interrupted=true, atMillis=1010), SpeechStarted(utteranceId=a, text=Hallo, atMillis=1020), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=80, atMillis=1020), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=80, atMillis=1100), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=80, atMillis=1180), VisemeCue(utteranceId=a, viseme=O, weight=1.0, durationMs=80, atMillis=1260), AudioLevel(utteranceId=a, level=1.0, atMillis=1020, source=PCM_ENVELOPE)]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest.stoppedUtterancesCannotRestartAfterAnotherUtteranceStops(AvatarSpeechBoundaryTest.kt:37)
+2) repeatedStartDoesNotResetTheActiveUtterance(at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest)
+java.lang.AssertionError: expected:<[SpeechStarted(utteranceId=a, text=Hallo Heinz, atMillis=1000), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=80, atMillis=1000), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=80, atMillis=1080), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=80, atMillis=1160), VisemeCue(utteranceId=a, viseme=O, weight=1.0, durationMs=80, atMillis=1240)]> but was:<[SpeechStarted(utteranceId=a, text=Hallo Heinz, atMillis=1000), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=80, atMillis=1000), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=80, atMillis=1080), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=80, atMillis=1160), VisemeCue(utteranceId=a, viseme=O, weight=1.0, durationMs=80, atMillis=1240), SpeechStarted(utteranceId=a, text=Hallo Heinz, atMillis=1010)]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest.repeatedStartDoesNotResetTheActiveUtterance(AvatarSpeechBoundaryTest.kt:19)
+3) supersededUtteranceCannotStealANewerUtterance(at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest)
+java.lang.AssertionError: The current utterance must still deliver audio
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest.supersededUtteranceCannotStealANewerUtterance(AvatarSpeechBoundaryTest.kt:54)
+4) duplicateAndBackwardTextRangesDoNotReplaceTheCurrentWord(at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest)
+java.lang.AssertionError: expected:<[SpeechStarted(utteranceId=a, text=Hallo Heinz, atMillis=1000), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=64, atMillis=1000), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=64, atMillis=1064), VisemeCue(utteranceId=a, viseme=I, weight=1.0, durationMs=64, atMillis=1128), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=64, atMillis=1192), VisemeCue(utteranceId=a, viseme=SS, weight=1.0, durationMs=64, atMillis=1256)]> but was:<[SpeechStarted(utteranceId=a, text=Hallo Heinz, atMillis=1000), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=64, atMillis=1000), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=64, atMillis=1064), VisemeCue(utteranceId=a, viseme=I, weight=1.0, durationMs=64, atMillis=1128), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=64, atMillis=1192), VisemeCue(utteranceId=a, viseme=SS, weight=1.0, durationMs=64, atMillis=1256), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=64, atMillis=1010), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=64, atMillis=1074), VisemeCue(utteranceId=a, viseme=I, weight=1.0, durationMs=64, atMillis=1138), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=64, atMillis=1202), VisemeCue(utteranceId=a, viseme=SS, weight=1.0, durationMs=64, atMillis=1266), VisemeCue(utteranceId=a, viseme=SIL, weight=0.0, durationMs=80, atMillis=1020), VisemeCue(utteranceId=a, viseme=AA, weight=1.0, durationMs=80, atMillis=1100), VisemeCue(utteranceId=a, viseme=NN, weight=1.0, durationMs=80, atMillis=1180), VisemeCue(utteranceId=a, viseme=O, weight=1.0, durationMs=80, atMillis=1260)]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest.duplicateAndBackwardTextRangesDoNotReplaceTheCurrentWord(AvatarSpeechBoundaryTest.kt:71)
+5) duplicateStartCannotClearAnAlreadyVisibleWord(at.heinz.deviceai.avatar.AvatarSpeechClockTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.2625, viseme=O, visemeWeight=1.0, speakEnergy=0.2, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.0, viseme=SIL, visemeWeight=0.0, speakEnergy=0.0, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechClockTest.duplicateStartCannotClearAnAlreadyVisibleWord(AvatarSpeechClockTest.kt:50)
+6) aConstantAudioEnvelopeDependsOnElapsedTimeRatherThanCallbackCount(at.heinz.deviceai.avatar.AvatarSpeechClockTest)
+java.lang.AssertionError: expected:<0.784> but was:<0.9899223>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar.AvatarSpeechClockTest.aConstantAudioEnvelopeDependsOnElapsedTimeRatherThanCallbackCount(AvatarSpeechClockTest.kt:23)
+7) anEndedDifferentUtteranceCannotAdvanceTheCurrentSpeechClock(at.heinz.deviceai.avatar.AvatarSpeechClockTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.2625, viseme=O, visemeWeight=1.0, speakEnergy=0.2, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.0, viseme=SIL, visemeWeight=0.0, speakEnergy=0.0, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechClockTest.anEndedDifferentUtteranceCannotAdvanceTheCurrentSpeechClock(AvatarSpeechClockTest.kt:32)
+8) aCueFromAnotherUtteranceCannotAdvanceTheCurrentSpeechClock(at.heinz.deviceai.avatar.AvatarSpeechClockTest)
+java.lang.AssertionError: expected:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.2625, viseme=O, visemeWeight=1.0, speakEnergy=0.2, gazeObserved=false)> but was:<AvatarPose(state=IDLE, expression=NEUTRAL, gazeX=0.0, gazeY=0.0, jawOpen=0.0, viseme=SIL, visemeWeight=0.0, speakEnergy=0.0, gazeObserved=false)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.avatar.AvatarSpeechClockTest.aCueFromAnotherUtteranceCannotAdvanceTheCurrentSpeechClock(AvatarSpeechClockTest.kt:41)
+9) bilabialOnsetClosesOutgoingVowelsAndMeasuredJawTogether(at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest)
+java.lang.AssertionError: expected:<1.0> but was:<0.22857189>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.bilabialOnsetClosesOutgoingVowelsAndMeasuredJawTogether(AvatarArticulationBoundaryTest.kt:19)
+10) bilabialClosureAlsoWinsAtAnUnchangedRenderTimestamp(at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest)
+java.lang.AssertionError: expected:<0.0> but was:<0.8>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.bilabialClosureAlsoWinsAtAnUnchangedRenderTimestamp(AvatarArticulationBoundaryTest.kt:36)
+11) renderingTheSameInstantTwiceDoesNotAdvanceAVowelTransition(at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest)
+arrays first differed at element [10]; expected:<0.7714281> but was:<0.0>
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+	at org.junit.Assert.assertArrayEquals(Assert.java:502)
+	at org.junit.Assert.assertArrayEquals(Assert.java:516)
+	at at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest.renderingTheSameInstantTwiceDoesNotAdvanceAVowelTransition(AvatarArticulationBoundaryTest.kt:49)
+	... 32 trimmed
+Caused by: java.lang.AssertionError: expected:<0.7714281> but was:<0.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:577)
+	at org.junit.Assert.assertEquals(Assert.java:701)
+	at org.junit.internal.InexactComparisonCriteria.assertElementsEqual(InexactComparisonCriteria.java:21)
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+	... 37 more
+
+FAILURES!!!
+Tests run: 13,  Failures: 11
+
