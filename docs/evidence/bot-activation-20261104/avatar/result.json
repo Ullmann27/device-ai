@@ -1,0 +1,91 @@
+{
+  "schema": "continuum-avatar-host-existing-tests",
+  "version": 1,
+  "recordedAt": "2026-11-04T18:43:34.451402+00:00",
+  "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "checkoutHead": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+  "selectedSourcesMatchSourceCommit": true,
+  "execution": "DIRECT_KOTLIN_COMPILER_AND_JUNIT4",
+  "networkUsed": false,
+  "modelCalls": 0,
+  "deviceRun": false,
+  "productionFilesModified": false,
+  "javaVersion": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "limitations": [
+    "Host JVM only; no Android UI or hardware rendering",
+    "No live bot model, owner service, grant, queue, or repair execution was started",
+    "Existing tests executed directly; no synthetic production classes or assertion stubs"
+  ],
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "4a22ae65d02d2b7b339808e5a3ad8653f94dfef4643fe780f1a9b249c71bb5d9",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "d2afe777456a934a909ec541a7790207b02edb5ecc2803e2136c2818a9b1c804",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "8c3768c6e0dfc488a924b29fb1c38c2125acbe25efbf4b6dbb24b7b8fd7b60bd",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AvatarCameraPolicy.kt": "d7174f72709901a7f3976ed8fc925c457d3e7d9a42b5dcaa505c3522c7484993",
+    "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt": "819a4cf72c1ee953123a6b44a67f6fd3d1d3ed08238d101e7bbf90a5c1069446",
+    "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt": "5ad148ea950fd1707cd133d7bcb8b25d33401339797cbdce66a5f7470f39cc36",
+    "app/src/main/java/at/heinz/deviceai/motion/Easings.kt": "929530b6d93a9471f4dd9ef7f45c03e1bf9940c487bdb59a988f787772ce07fb",
+    "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt": "061c1b425a9c960c522faca28361592baa02c8c1994287cedec05dfa232b237b",
+    "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt": "de75dd1bd97e11ab27c97a63e9ad9012eab265340bf2fe066fd445d99f775d88",
+    "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt": "07fa68bbcf019e695bb04fdc7faf8aff20bd484966ec6b47eaf67140c3b63fc9",
+    "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt": "147f299ac10f76720fb7dcb2913576ead372ca35b0f99b0953d13eec30461866",
+    "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt": "7ed3f9c61fec367bfe4c578c8657612c756ffc9d833818e5094c54abb018cdb5",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt": "c95308990bf4e280a997db7125d46ecba201628247d24a336e8cbe60cb29d4d7",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1",
+    "app/src/test/java/at/heinz/deviceai/avatar/AvatarObservedGazeTest.kt": "3aabe8bfc0785be1a5d7993c7e3d7c0bebb71a9f11ae3305dbadf0179f37b87d",
+    "app/src/test/java/at/heinz/deviceai/cognitive/AvatarCameraPolicyTest.kt": "b558ac92877d0af42a72f334c89969dc43c083ad7ce118fdfb5976f3a8240f97",
+    "app/src/test/java/at/heinz/deviceai/motion/LipSyncFaceSourceTest.kt": "f94f7a0bee1374c2558a958f8e3eb00c766798b3d0ebc2debe5770f7c4d8cbf3",
+    "app/src/test/java/at/heinz/deviceai/motion/MotionLibraryTest.kt": "291e63500129ce5b86c803da5ac54eddf9330aaf1eee36a9a0918294aefae3b7"
+  },
+  "testClasses": [
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "exitCode": 0,
+      "passedTests": 4,
+      "log": "AvatarDirectorTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+      "exitCode": 0,
+      "passedTests": 3,
+      "log": "AvatarPortedPartsTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+      "exitCode": 0,
+      "passedTests": 10,
+      "log": "AvatarSpeechOrderingRegressionTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+      "exitCode": 0,
+      "passedTests": 12,
+      "log": "AvatarObservedGazeTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.cognitive.AvatarCameraPolicyTest",
+      "exitCode": 0,
+      "passedTests": 17,
+      "log": "AvatarCameraPolicyTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.motion.LipSyncFaceSourceTest",
+      "exitCode": 0,
+      "passedTests": 9,
+      "log": "LipSyncFaceSourceTest.log"
+    },
+    {
+      "class": "at.heinz.deviceai.motion.MotionLibraryTest",
+      "exitCode": 0,
+      "passedTests": 2,
+      "log": "MotionLibraryTest.log"
+    }
+  ],
+  "compileExitCode": 0,
+  "passedTests": 57,
+  "status": "PASS",
+  "finishedAt": "2026-11-04T18:43:50.636229+00:00",
+  "selectedSourceHashesAfterMatchBefore": true,
+  "selectedPathsUnmodified": true,
+  "postRunVerifiedAt": "2026-11-04T18:44:42.971748+00:00"
+}

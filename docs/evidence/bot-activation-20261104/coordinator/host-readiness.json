@@ -1,0 +1,73 @@
+{
+  "schema": "continuum-bot-activation-host-observation",
+  "version": 1,
+  "observedAt": "2026-11-04T18:38:06.300Z",
+  "sourceCommit": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+  "sourceStatus": "",
+  "nodeVersion": "v24.22.1",
+  "localStatus": {
+    "schema": "continuum-local-integration-status",
+    "version": 1,
+    "state": "NO_LOCAL_STATE",
+    "buildLease": {
+      "status": "UNKNOWN",
+      "executionConfirmed": false
+    },
+    "ansk": {
+      "status": "UNKNOWN",
+      "receiptFiles": null,
+      "authority": "SHADOW_ONLY",
+      "independentlyVerifiedHere": false
+    },
+    "mobileBuilder": {
+      "status": "UNKNOWN",
+      "artifactVerifiedHere": false,
+      "deviceInstallationVerifiedHere": false
+    }
+  },
+  "sourcePreflight": {
+    "schema": "continuum-ccc1-local-preflight",
+    "version": 1,
+    "result": "READY_TO_REQUEST_OWNER_REVIEW",
+    "sourceCommit": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+    "checkedBranch": "codex/continuum-bot-activation-20261104",
+    "canonicalState": "/workspace/scratch/8f5df1fd155a/activation-canonical-state",
+    "ownerApproved": false,
+    "workerExecuted": false,
+    "patchVerified": false,
+    "findings": []
+  },
+  "historicalRuntimePaths": [
+    {
+      "path": "/workspace/synapse-local-model/runtime-env.json",
+      "present": false
+    },
+    {
+      "path": "/workspace/synapse-local-model/build-cpu/bin/llama-completion",
+      "present": false
+    },
+    {
+      "path": "/workspace/genesis-g04-experiment/kotlin-host/classpath.txt",
+      "present": false
+    },
+    {
+      "path": "/workspace/genesis-g04-source",
+      "present": false
+    },
+    {
+      "path": "/workspace/genesis-known-u03-experiment",
+      "present": false
+    },
+    {
+      "path": "/var/run/docker.sock",
+      "present": false
+    }
+  ],
+  "liveServiceHostDirectoryPresent": false,
+  "modelInferenceExecuted": false,
+  "phoneConnected": false,
+  "phoneConnectionScope": "No attached Android/device/ADB/SSH tool; historical user-reported phone state not inspected",
+  "s01Replayed": false,
+  "unresolvedBarrierChanged": false,
+  "limits": "Host/executor observation only; not a claim about other computers, other execution namespaces or the Fold7."
+}

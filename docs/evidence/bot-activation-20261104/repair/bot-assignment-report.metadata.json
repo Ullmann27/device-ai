@@ -1,0 +1,22 @@
+{
+  "schema": "continuum-host-test-evidence-v1",
+  "sourceSha": "000d413bd5745694d5ff6a8e9e6046af5b591db3",
+  "command": [
+    "node",
+    "--test",
+    ".github/continuum/ccc1-bot-assignment.test.mjs",
+    ".github/continuum/ccc1-bot-report.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8f5df1fd155a/continuum-bot-activation",
+  "startedAt": "2026-11-04T18:42:49.808044+00:00",
+  "finishedAt": "2026-11-04T18:42:53.077202+00:00",
+  "exitCode": 0,
+  "nodeVersion": "v24.22.1",
+  "gitStatusBefore": "",
+  "gitStatusAfter": "",
+  "outputFile": "bot-assignment-report.tap",
+  "outputSha256": "a2ff00fabfb45526200f78362bb1434829cd9c51f49e2fd3cf4aebd2ecbe2a0e",
+  "evidenceClass": "FRESH_HOST_CONTRACT_TEST",
+  "modelInference": false,
+  "androidDeviceEvidence": false
+}
