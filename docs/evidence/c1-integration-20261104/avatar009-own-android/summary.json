@@ -1,0 +1,145 @@
+{
+  "taskId": "C1-AVATAR-009-OWN-ANDROID",
+  "testedLocal": "53ca8b6e3284c27c9c06f1462c469c7cff300e7d",
+  "testedRemote": "5d7ddf0762455b92353ba9a559546e8683ad82fe",
+  "testedTree": "39cbcfbd0b5fd0e1f95360aba42f2fa650f9deae",
+  "result": {
+    "taskId": "C1-COMBINED-GATES-001",
+    "label": "android-avatar-01",
+    "source": {
+      "commit": "53ca8b6e3284c27c9c06f1462c469c7cff300e7d",
+      "tree": "39cbcfbd0b5fd0e1f95360aba42f2fa650f9deae",
+      "dirty": ""
+    },
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+      "--offline",
+      "--no-daemon",
+      "--no-build-cache",
+      "--max-workers=2",
+      "--console=plain",
+      "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-PdeviceAiMentorPreview=true",
+      "-PcontinuumUiWidgetTests=true",
+      "-PcontinuumLocalStandaloneQa=true",
+      "-PcontinuumStandaloneVersionCode=41",
+      "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-avatar-01-active-test.json",
+      "-PcontinuumAuditTestClasses=at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest,at.heinz.deviceai.ContinuumAvatarNativeUiTest,at.heinz.deviceai.ContinuumHologramMotionUiTest",
+      "-I",
+      "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+      ":app:testDebugUnitTest"
+    ],
+    "requestedAt": "2026-11-04T20:50:36.281282+00:00",
+    "locks": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+      "/workspace/scratch/d663e8444310/qa/gradle.lock"
+    ],
+    "exitCode": 0,
+    "status": "PASS",
+    "freeBytesAtStart": 1604501504,
+    "startedAt": "2026-11-04T20:50:36.281466+00:00",
+    "finishedAt": "2026-11-04T20:51:19.447010+00:00",
+    "sourceUnchanged": true,
+    "recordedAt": "2026-11-04T20:51:19.495516+00:00"
+  },
+  "total": 13,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "names": [
+        "newAppearanceUses3dButSavedOrbAndLegacy2dStayChosen",
+        "defaultOrbAndPausedOptional3dNeverStartAssetOrNativeWork",
+        "actualFailurePathRetains2dAndOriginalSingleLifecycleClock",
+        "pauseAndReducedMotionClearObservedGazeAndRejectLateCameraSamples"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumAvatarNativeUiTest",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "names": [
+        "optionalHeadPersistsAndSharesOnePausedReducedMotionClock",
+        "actualActivityStopClosesAvatarBeforeAnyAsynchronousTtsCallback",
+        "phoneAndFoldNativeHeadFollowsSpeechAndStopsOnInterruption"
+      ]
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumHologramMotionUiTest",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "names": [
+        "deviceMotionDiagnosticNeverReportsLiveBeforeForegroundActivation",
+        "realFrameClockChangesPhoneAndFoldPixelsWithoutInjectingPhase",
+        "renderingAtRestDoesNotByItselfAdvanceTheOrbitClock",
+        "thermalPressureStopsAndRecoversTheSameClock",
+        "foregroundAndReducedMotionHaveOneBoundedLifecycleClock",
+        "differentOrbitalPhasesActuallyChangeRenderedPixels"
+      ]
+    }
+  ],
+  "archive": {
+    "name": "avatar-53ca8b6-own-android.tar.xz",
+    "sha256": "14d433df4ec69b5c31fd5c23c490f3123bcbb2eafc55aa24f146eae36ca5fd0a",
+    "bytes": 5188,
+    "members": [
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumAvatar3dLifecycleUiTest.xml",
+        "bytes": 952,
+        "sha256": "fa627501fde45f884a83b6f4cdeef26b5b4191bc0c9565fb7ee5906e8f2c1214"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumAvatarNativeUiTest.xml",
+        "bytes": 782,
+        "sha256": "71c30f29693dab579720e1d6a89ad958488e27c5384b85d62157278b116f1233"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml",
+        "bytes": 1220,
+        "sha256": "8e6062d6bec9d51f5dea495c624bca113773bcda98fb4b9762f4c4194ce4e5e7"
+      },
+      {
+        "path": "runner/android-avatar-01.result.json",
+        "bytes": 1534,
+        "sha256": "4ce36994ad90b0220892195b126aa1c9784d36f827277cc30f1381c8ac683c54"
+      },
+      {
+        "path": "runner/android-avatar-01.log",
+        "bytes": 7184,
+        "sha256": "9f15c279f80cd33530d6dcba6407bf597cdc5ad1a6860ce4d7cea45be1b6556d"
+      },
+      {
+        "path": "runner/android-avatar-01-active-test.json",
+        "bytes": 191,
+        "sha256": "aaca8bb1a88733c68dce81e8fe2fc75e536e3bf4f914d4e079a9ebad3377e650"
+      },
+      {
+        "path": "runner/run_c1_gate.py",
+        "bytes": 3945,
+        "sha256": "5299b2744e961f05f2a25c037c37481dab148c6d0baa5c8de697926e349c62e5"
+      },
+      {
+        "path": "runner/observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      }
+    ]
+  },
+  "limits": [
+    "Focused three-class Host/Robolectric run, not full Android gate",
+    "No physical Fold7, real Filament renderer, loaded model or real TTS execution",
+    "No new Lint run on this source; final configured NewApi gate pending",
+    "Counts overlap upstream53and are not added"
+  ]
+}

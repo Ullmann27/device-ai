@@ -1,0 +1,66 @@
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+index 90481bc..4fa09ef 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt
+@@ -95,7 +95,10 @@ class ContinuumReferenceCockpitUiTest {
+         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
+         val controller = Robolectric.buildActivity(AgentActivity::class.java)
+         try {
+-            controller.setup().visible().windowFocusChanged(true)
++            controller.setup().visible()
++            advanceFrames(16)
++            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
++            controller.windowFocusChanged(true)
+             val activity = controller.get()
+             val root = activity.window.decorView
+             val avatar = field(activity, "hologramView") as ContinuumHologramView
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt
+index b213cad..5c2bd78 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt
+@@ -86,7 +86,7 @@ class ContinuumTaskEffectsCallerUiTest {
+         val started=CountDownLatch(1);val finish=AtomicReference<((Result<String>)->Unit)?>()
+         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> finish.set(cb);started.countDown()},null))
+         call(a,"setBusy",true);advance()
+-        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean)) as ToolGate
++        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null) as ToolGate
+         val result=AtomicReference<ToolExecutionResult>()
+         val t=Thread {result.set(gate.execute(ToolProposal("get_device_info",emptyMap()).invocation("actual-device-read")))}
+         t.start()
+@@ -103,7 +103,7 @@ class ContinuumTaskEffectsCallerUiTest {
+         var dispatched=false
+         set(a,"executor",DeviceToolExecutor(a,{true},{_,cb -> dispatched=true;cb(Result.success("unexpected"))},null))
+         call(a,"setBusy",true);advance()
+-        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean)) as ToolGate
++        val gate=call(a,"createToolGate",null,null,({false} as ()->Boolean),null) as ToolGate
+         val result=gate.execute(ToolProposal("web_read",mapOf("url" to "https://example.org/")).invocation("denied-read"))
+         idle();assertEquals(ToolExecutionStatus.REJECTED,result.record.status)
+         assertFalse(dispatched);assertTrue(pulses(h).isEmpty())
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt
+index 3ed6866..5074912 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt
+@@ -59,7 +59,10 @@ class JarvisShellStageUiTest {
+             .putBoolean("jarvis-shell", true).commit()
+         val controller = Robolectric.buildActivity(AgentActivity::class.java)
+         try {
+-            controller.setup().visible().windowFocusChanged(true)
++            controller.setup().visible()
++            advanceFrames(16)
++            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
++            controller.windowFocusChanged(true)
+             val activity = controller.get()
+             val root = activity.window.decorView
+             val home = field(activity, "homeView") as ContinuumHomeView
+@@ -149,7 +152,10 @@ class JarvisAvatarSlotUiTest {
+         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().putBoolean("jarvis-shell", true).commit()
+         val controller = Robolectric.buildActivity(AgentActivity::class.java)
+         try {
+-            controller.setup().visible().windowFocusChanged(true)
++            controller.setup().visible()
++            advanceFrames(16)
++            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
++            controller.windowFocusChanged(true)
+             val activity = controller.get()
+             val root = activity.window.decorView
+             val home = AgentActivity::class.java.getDeclaredField("homeView").apply { isAccessible = true }.get(activity) as ContinuumHomeView

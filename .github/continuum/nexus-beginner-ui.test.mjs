@@ -62,8 +62,14 @@ test('fold, small display and enlarged-font behaviour are expressed by a pure po
   assert.match(layout, /fun phone\(widthDp: Float, fontScale: Float = 1f\): Layout/);
   // Pure window/font policy: no Android state or side effects in the geometry.
   assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f, fontScale: Float = 1f\): Layout/);
-  assert.match(layout, /require\(fontScale\.isFinite\(\) && fontScale > 0f\)/);
+  assert.match(layout, /ContinuumReferenceLayout\.create\(widthDp, 0f, false, fontScale\)/);
+  assert.match(layout, /ContinuumReferenceLayout\.create\(widthDp, heightDp, true, fontScale\)/);
+  const reference=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt',import.meta.url),'utf8');
+  const profile=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt',import.meta.url),'utf8');
+  assert.match(reference, /require\(fontScale\.isFinite\(\) && fontScale > 0f\)/);
+  assert.match(profile, /if \(fontScale\.isFinite\(\)\) fontScale\.coerceIn\(\.85f, 2f\) else 1f/);
   assert.doesNotMatch(layout, /import android\.|Runtime\.getRuntime|ProcessBuilder|FileOutputStream/);
+  assert.doesNotMatch(reference+profile, /import android\.|Runtime\.getRuntime|ProcessBuilder|FileOutputStream/);
   assert.match(spec, /usableWidthDp >= 320/);
   assert.match(spec, /fontScale\.isFinite\(\)/);
   assert.match(spec, /fontScale <= 1\.25f/);

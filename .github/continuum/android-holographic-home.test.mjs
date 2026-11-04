@@ -44,7 +44,10 @@ test('reference start screen reaches all seven real Android feature paths',()=>{
  const pane=section('private fun buildConversationPane(wide: Boolean): View','private fun openHomeSlot(');
  const slots=section('private fun openHomeSlot(','private fun refreshDashboard()');
  const nav=section('private fun navigateWorkArea(','private fun refreshConversationLayout()');
- assert.match(pane,/ContinuumHomeView\(this, ContinuumHologramView\(this\)/);
+ assert.match(pane,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also/);
+ assert.match(pane,/hologramView = it/);
+ assert.match(pane,/avatarDirector\.attach\(it\)/);
+ assert.match(pane,/ContinuumHomeView\(this, liveHologram\)/);
  assert.match(pane,/openHomeSlot\(slot, x, y\)/);
  for(const call of ['focusChatComposer()','showResearchModeDialog()','showLearningCenter()','showModelCenter()',
   'showDevelopmentCenter()','showMemoryCenter()','showSystemCenter()'])
@@ -72,7 +75,17 @@ test('responsive dashboard retains chat composer, updates and keyboard visibilit
  assert.match(elementView,/isClickable = true/);
  assert.match(elementView,/isFocusable = true/);
  assert.match(elementView,/contentDescription = element\.describe\(state\)/);
- assert.match(elementView,/setOnClickListener \{ onSlot\(slot, downX \/ density, downY \/ density\) \}/);
+ assert.match(elementView,/setOnClickListener \{\s*if \(slot in listOf\(Slot\.VIEW_AVATAR, Slot\.VIEW_ORB, Slot\.VIEW_COMPACT\)\) selectPresentation\(slot\)\s*else onSlot\(slot, downX \/ density, downY \/ density\)/);
+ // The active shell has its own real Android action Views, sharing the same Activity dispatcher.
+ const shellAction=homeView.slice(homeView.indexOf('private inner class ShellActionView'),homeView.indexOf('private inner class ShellRailList'));
+ assert.ok(shellAction.length>200,'ShellActionView class not found');
+ assert.match(pane,/home\.onNavigateTarget = ::navigateDashboardTarget/);
+ assert.match(pane,/home\.setJarvisShellStage\(true\)/);
+ assert.match(shellAction,/isClickable = true/);
+ assert.match(shellAction,/isFocusable = true/);
+ assert.match(shellAction,/setOnClickListener \{ openJarvisTarget\(target\) \}/);
+ assert.match(shellAction,/JarvisShellContent\.tileValue\(target, state, System\.currentTimeMillis\(\)\)/);
+ assert.match(shellAction,/contentDescription = label \+ \(value\?\.let/);
  assert.doesNotMatch(pane,/buildQuickActions\(\)/);
 });
 
@@ -98,11 +111,14 @@ test('reference-style composer keeps real model/web/file actions and truthful id
 test('large text is bounded and propagated into adaptive layout without window shrinking',()=>{
  assert.match(homeView,/fontScale\.coerceIn\(\.85f, 2f\)/);
  assert.match(homeScreen,/fun elements\(layout: ContinuumHomeLayout\.Layout, textScale: Float\)/);
- assert.match(homeView,/ContinuumHomeLayout\.wide\(windowWidthDp, windowHeightDp, textScale\)/);
- assert.match(homeView,/ContinuumHomeLayout\.phone\(windowWidthDp, textScale\)/);
- const layout=fs.readFileSync(ui+'ContinuumHomeLayout.kt','utf8') + fs.readFileSync(ui+'ContinuumAdaptiveHomeLayout.kt','utf8');
- assert.match(layout,/return Layout\(wide, width, 1f, contentHeight, boxes, adaptive = true\)/);
+ assert.match(homeView,/ContinuumReferenceLayout\.create\(windowWidthDp, if \(wide\) windowHeightDp else 0f,\s*wide, textScale, compactPresentation\)/);
+ assert.match(homeView,/JarvisShellLayout\.forContent\(width \/ density, jarvisShell\.viewportHeightDp,\s*resources\.configuration\.fontScale/);
+ const layout=fs.readFileSync(ui+'ContinuumHomeLayout.kt','utf8') + fs.readFileSync(ui+'ContinuumReferenceLayout.kt','utf8');
+ assert.match(layout,/return Layout\(wide, width, 1f, contentHeight, boxes,/);
  assert.match(layout,/font > 1\.3f/);
+ const shell=fs.readFileSync(ui+'JarvisShellLayout.kt','utf8');
+ assert.match(shell,/val profile = JarvisWindowProfile\.resolve\(widthDp, heightDp, fontScale, foldRail\)/);
+ assert.match(shell,/val tileH = maxOf\(64f \* font, 48f\)/);
  // text that does not fit its card is shortened with an ellipsis instead of running into a neighbour
  assert.match(drawn,/fun fit\(p: ContinuumPainter, text: String, style: TextStyle, maxWidth: Float\): String/);
  assert.match(drawn,/"…"/);
@@ -115,10 +131,10 @@ test('start screen never manufactures ready model or internet state',()=>{
  assert.match(dashboardState,/val stateLabel: String = "Offline"/);
  assert.match(dashboardState,/val qualityPercent: Int\? = null/);
  assert.match(dashboardState,/val networkOnline: Boolean\? = null/);
- assert.match(activity,/val modelReady = ::localRuntime\.isInitialized && localRuntime\.state == LocalModelState\.READY/);
+ assert.match(activity,/val modelReady = ::localRuntime\.isInitialized && localRuntime\.loadedModel != null &&\s*localRuntime\.state in setOf\(LocalModelState\.READY, LocalModelState\.GENERATING\)/);
  for(const token of ['shizukuBadge','cloudBadge','localBadge']) assert.ok(badges.includes(token));
  assert.doesNotMatch(dashboardState+homeScreen+drawn+badges,/Llama 3\.2|Gemini 1\.5|Modell geladen/);
- // "Aktiv/online" only for a READY local language model, never because the SWB1 status is readable
+ // "Aktiv/online" requires an actually loaded READY/GENERATING model, never a readable SWB1 status.
  const collector=fs.readFileSync('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt','utf8');
  assert.match(collector,/online = live\.modelReady,/);
  assert.doesNotMatch(collector,/online = [^\n]*status != null/);

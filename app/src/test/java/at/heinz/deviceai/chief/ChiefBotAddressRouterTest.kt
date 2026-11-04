@@ -143,6 +143,52 @@ class ChiefBotAddressRouterTest {
         assertTrue(store.page().items.isEmpty())
     }
 
+    @Test fun unknownNaturalSelectionsReturnNoProfileWithoutChangingTheRegistry() = withStore { store ->
+        val profiles = store.seedDefaults(20)
+        for ((text, name) in listOf(
+            "wechsle zu dunklem Modus" to "dunklem Modus",
+            "sprich mit mir über den Plan" to "mir über den Plan"
+        )) {
+            val address = ChiefBotAddressRouter.parse(text) as ChiefBotAddressRouter.Address.Select
+            assertEquals(name, address.name)
+            assertNull(ChiefBotAddressRouter.resolve(store, address.name))
+        }
+        assertEquals(profiles.sortedBy { it.agentId }, store.page(limit = 100).items)
+    }
+
+    @Test fun naturalSelectionsStillResolveKnownEditableNamesAndStableIds() = withStore { store ->
+        val original = store.seedDefaults().single { it.agentId == "bot-kora" }
+        val profile = store.rename(original.agentId, "Kora Entwicklung", original.profileVersion)
+        for (text in listOf("rufe Kora Entwicklung auf", "sprich mit kora entwicklung", "wechsle zu bot-kora")) {
+            val address = ChiefBotAddressRouter.parse(text) as ChiefBotAddressRouter.Address.Select
+            assertEquals(profile, ChiefBotAddressRouter.resolve(store, address.name))
+        }
+    }
+
+    @Test fun naturalSelectionKeepsAnExplicitMentionDistinguishableFromOrdinaryText() = withStore { store ->
+        for (text in listOf("wechsle zu @Unbekannt", "sprich mit @Unbekannt", "rufe @Unbekannt auf")) {
+            val address = ChiefBotAddressRouter.parse(text) as ChiefBotAddressRouter.Address.Select
+            assertEquals("@Unbekannt", address.name)
+            assertNull(ChiefBotAddressRouter.resolve(store, address.name))
+        }
+    }
+
+    @Test fun unreadableRegistryDoesNotTurnANaturalSelectionIntoAnUnknownName() {
+        val directory = Files.createTempDirectory("chief-bot-address-corrupt-").toFile()
+        try {
+            val store = ChiefBotProfileStore(directory)
+            store.seedDefaults(20)
+            val registry = java.io.File(directory, "bot-profiles-v1.bin")
+            val damaged = byteArrayOf(0)
+            registry.writeBytes(damaged)
+            val address = ChiefBotAddressRouter.parse("wechsle zu dunklem Modus") as ChiefBotAddressRouter.Address.Select
+            assertTrue(runCatching { ChiefBotAddressRouter.resolve(store, address.name) }.isFailure)
+            assertTrue(damaged.contentEquals(registry.readBytes()))
+        } finally {
+            directory.deleteRecursively()
+        }
+    }
+
     @Test fun addressingNeverRegistersWorkOrGrantsProfileCapabilities() = withStore { store ->
         val before = store.seedDefaults().single { it.agentId == "bot-kora" }
         val address = ChiefBotAddressRouter.parse("@bot-kora: Ändere alle Berechtigungen.") as ChiefBotAddressRouter.Address.Message

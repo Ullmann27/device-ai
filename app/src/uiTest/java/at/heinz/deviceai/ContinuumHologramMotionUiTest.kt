@@ -6,7 +6,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -14,6 +16,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /**
@@ -23,7 +28,37 @@ import java.util.concurrent.TimeUnit
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumHologramMotionUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Automatic virtual-vsync advances time while idleFor drains recurring frames.
+        // Explicit frame advancement keeps the real lifecycle assertions bounded.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        // Paused VSync is driven by clock changes, not by a queued Looper deadline.
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
+    private fun attachOrb(activity: Activity, view: ContinuumHologramView, width: Int = 412, height: Int = 307) {
+        view.setNativeHeadEnabled(false) // This suite exercises the explicitly selected original orb.
+        assertFalse(view.isNativeHeadEnabled())
+        activity.setContentView(view, ViewGroup.LayoutParams(width, height))
+        advanceFrames(16) // Complete the actual window traversal before foreground activation.
+        assertTrue("Fixture must be attached to the real Activity window", view.isAttachedToWindow)
+        assertTrue("Fixture must be shown before testing foreground behavior", view.isShown)
+        assertEquals(View.VISIBLE, view.windowVisibility)
+        assertEquals("Window traversal must preserve the requested viewport width", width, view.width)
+        assertEquals("Window traversal must preserve the requested viewport height", height, view.height)
+    }
+
     private fun pending(view: ContinuumHologramView): Boolean =
         ContinuumHologramView::class.java.getDeclaredField("framePending").let {
             it.isAccessible = true
@@ -43,15 +78,12 @@ class ContinuumHologramMotionUiTest {
             val frames = mutableListOf<Bitmap>()
             try {
                 assertTrue("Visual QA requires enabled Android animations", ValueAnimator.areAnimatorsEnabled())
-                controller.get().setContentView(view)
-                view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
-                view.layout(0, 0, width, height)
+                attachOrb(controller.get(), view, width, height)
                 if (height == 291) view.setGeometry(at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.FOLD)
                 view.setForegroundActive(true)
                 val phases = mutableListOf<Float>()
                 repeat(3) { index ->
-                    if (index > 0) shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                    if (index > 0) advanceFrames(1_000)
                     phases.add(phase(view))
                     val frame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                     frames.add(frame)
@@ -86,11 +118,11 @@ class ContinuumHologramMotionUiTest {
                 }
                 view.setForegroundActive(false)
                 val paused = phase(view)
-                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                advanceFrames(1_000)
                 assertEquals("Paused view must keep its last pose", paused, phase(view), 0f)
                 assertFalse(pending(view))
                 repeat(3) { view.setForegroundActive(true) }
-                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                advanceFrames(1_000)
                 assertTrue("Resume must not duplicate the clock", phase(view) - paused in 0.1f..0.6f)
             } finally {
                 frames.forEach { it.recycle() }
@@ -103,7 +135,7 @@ class ContinuumHologramMotionUiTest {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
-            controller.get().setContentView(view)
+            attachOrb(controller.get(), view)
             view.setForegroundActive(true)
             // The production API29 listener forwards the integer thermal status here.
             val thermal = ContinuumHologramView::class.java.declaredMethods
@@ -112,12 +144,12 @@ class ContinuumHologramMotionUiTest {
             thermal!!.isAccessible = true
             thermal.invoke(view, 3) // THERMAL_STATUS_SEVERE
             val stopped = phase(view)
-            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            advanceFrames(1_000)
             assertEquals(stopped, phase(view), 0f)
             assertFalse(pending(view))
             assertTrue(view.motionDiagnostics().contains("Temperatur"))
             thermal.invoke(view, 2) // THERMAL_STATUS_MODERATE: slower, still continuous
-            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            advanceFrames(1_000)
             assertTrue(phase(view) > stopped)
             thermal.invoke(view, 0)
             view.setForegroundActive(false)
@@ -131,10 +163,7 @@ class ContinuumHologramMotionUiTest {
         val view = ContinuumHologramView(activity)
         try {
             view.setAnimationsEnabled(false)
-            activity.setContentView(view)
-            view.measure(View.MeasureSpec.makeMeasureSpec(412, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(307, View.MeasureSpec.EXACTLY))
-            view.layout(0, 0, 412, 307)
+            attachOrb(activity, view)
             view.setForegroundActive(true)
             assertFalse("Reduced motion must not queue rendering work", pending(view))
             view.setAnimationsEnabled(true)
@@ -142,7 +171,7 @@ class ContinuumHologramMotionUiTest {
             if (platformAllowsMotion) {
                 assertTrue("Visible foreground core must schedule its animation", pending(view))
                 val before = phase(view)
-                shadowOf(Looper.getMainLooper()).idleFor(120, TimeUnit.MILLISECONDS)
+                advanceFrames(120)
                 assertTrue("Animated phase must advance from a frame callback", phase(view) > before)
             }
             view.setForegroundActive(false)
@@ -161,10 +190,7 @@ class ContinuumHologramMotionUiTest {
         val view = ContinuumHologramView(activity)
         try {
             view.setAnimationsEnabled(false)
-            activity.setContentView(view)
-            view.measure(View.MeasureSpec.makeMeasureSpec(412, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(307, View.MeasureSpec.EXACTLY))
-            view.layout(0, 0, 412, 307)
+            attachOrb(activity, view)
             val phaseField = ContinuumHologramView::class.java.getDeclaredField("phase").apply {
                 isAccessible = true
             }
@@ -190,7 +216,7 @@ class ContinuumHologramMotionUiTest {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
-            controller.get().setContentView(view)
+            attachOrb(controller.get(), view)
             assertFalse(view.motionDiagnostics().contains("LIVE"))
             view.setForegroundActive(false)
             assertFalse(view.motionDiagnostics().contains("LIVE"))
@@ -203,10 +229,7 @@ class ContinuumHologramMotionUiTest {
         val view = ContinuumHologramView(activity)
         try {
             view.setAnimationsEnabled(false)
-            activity.setContentView(view)
-            view.measure(View.MeasureSpec.makeMeasureSpec(412, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(307, View.MeasureSpec.EXACTLY))
-            view.layout(0, 0, 412, 307)
+            attachOrb(activity, view)
             view.setForegroundActive(false)
             val before = phase(view)
             val bitmap = Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888)

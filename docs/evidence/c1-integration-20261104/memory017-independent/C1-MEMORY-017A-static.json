@@ -1,0 +1,137 @@
+{
+  "task": "C1-MEMORY-017A-OWN-STATIC",
+  "reviewer": "/root/source_audit (C1 subagent)",
+  "recordedUtc": "2026-11-04T21:26:56.616956+00:00",
+  "status": "STATIC_SOURCE_MATCH_RUNTIME_PENDING",
+  "baseCommit": "cdea744bc431d56cead71dc6dcbfa287d1903aeb",
+  "localCommit": "57656c6a5287c37a8f4357dabe6d066e63aec235",
+  "publicCommit": "f13578bdab05279720fe4a3d6ae0126a208c8465",
+  "tree": "440f395289756ac6ec4f6c26f661c38895e24e12",
+  "publicCommitTreeIndependentlyRead": "440f395289756ac6ec4f6c26f661c38895e24e12",
+  "publicTreeMatchesLocal": true,
+  "publicCommitUrl": "https://github.com/Ullmann27/device-ai/commit/f13578bdab05279720fe4a3d6ae0126a208c8465",
+  "appChangedPaths": [
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt"
+  ],
+  "onlyExpectedThreeAppPaths": true,
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "f42f526cefaa96295205f161241fbc8035f27c01",
+        "sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a"
+      },
+      "candidate": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "beb0f37d8de8965984bf38846b6479e0137d2340",
+        "sha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903"
+      },
+      "expectedIntake": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "beb0f37d8de8965984bf38846b6479e0137d2340",
+        "sha256": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903",
+        "bytes": 16400
+      },
+      "matchesIntake": true,
+      "baseMatchesIntake": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt",
+      "base": null,
+      "candidate": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+        "sha256": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce"
+      },
+      "expectedIntake": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "0c798951d4f19d0ac873330caf2c5b6ce6a29d99",
+        "sha256": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce",
+        "bytes": 3476
+      },
+      "matchesIntake": true,
+      "baseMatchesIntake": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt",
+      "base": null,
+      "candidate": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+        "sha256": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7"
+      },
+      "expectedIntake": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "8e0d89fee6ed05af7b32e4ca589c83fb008c5f8d",
+        "sha256": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7",
+        "bytes": 4767
+      },
+      "matchesIntake": true,
+      "baseMatchesIntake": true
+    }
+  ],
+  "protected": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "98e19b678a48b448738009db1d1322efd1e49440",
+        "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+      },
+      "candidate": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "98e19b678a48b448738009db1d1322efd1e49440",
+        "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+      },
+      "expectedBlob": "98e19b678a48b448738009db1d1322efd1e49440",
+      "unchanged": true,
+      "matchesExpected": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+        "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7"
+      },
+      "candidate": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+        "sha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7"
+      },
+      "expectedBlob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+      "unchanged": true,
+      "matchesExpected": true
+    }
+  ],
+  "intakeManifest": {
+    "path": "/workspace/scratch/174c84456ee3/source-audit/memory017/C1-MEMORY-017.json",
+    "sha256": "a601d5a259ce31f52af3b036b995c02cf6ce2db5130b19d53c4e88cb0f2a2a12"
+  },
+  "runtime": {
+    "run": "android-memory017a-01",
+    "status": "PENDING_COMPLETION_MESSAGE",
+    "ownExecution": false,
+    "logsAndXmlAudited": false,
+    "noResultInferred": true
+  },
+  "limits": [
+    "Static read-only comparison only; no repository edits, tests, builds or locks.",
+    "Current Android run is reported by C1 as running; its logs/XML will be reviewed only after completion notification.",
+    "No current Android/full-suite PASS and no external C2 ACK asserted."
+  ]
+}

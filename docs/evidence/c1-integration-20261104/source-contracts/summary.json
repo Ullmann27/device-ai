@@ -1,0 +1,130 @@
+{
+  "taskId": "C1-CONTRACTS-003",
+  "baseLocal": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+  "baseRemote": "1a5302c504a78a50d5e64ca727f2915529bf2b06",
+  "baseTree": "d1a1b733ad37f21c155527fa0c9532f56fb1b934",
+  "upstream": "46e5fa6b09454ad6f6862e80478eb0f2d5545149",
+  "upstreamArchiveSha256": "5ba29a696ac00bf528b4350d15cdf4013e5380833f5f1ecca551295159b4476a",
+  "patches": [
+    {
+      "path": "regression-audit/android-integration-wiring.patch",
+      "sha256": "c28b5a1f8abfebdb00ae4b78ad9697524e665f1ad9a0ebe48c0886901aa5206d"
+    },
+    {
+      "path": "regression-audit/trace-context-speech-contracts.patch",
+      "sha256": "82c072f71e0e9573ee1d73754dfd673de5cac0a80094976e993dc5cf7161fee8"
+    },
+    {
+      "path": "contract-review/root-source-contracts-wave2.patch",
+      "sha256": "faa6a58df4e3eb994faa97027e9fa213e88e7d54a21c5199a31a450b3c23ce9b"
+    },
+    {
+      "path": "regression-audit/learning-readout-contract.patch",
+      "sha256": "e5bec01122954298bdba1dcae9737db0849699d96ccc0e8047c7f86a4927e764"
+    }
+  ],
+  "changedSourceFiles": [
+    {
+      "path": ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+      "sha256": "894509dd652514226126aa7debc76e22dec4f82b71269e81e0233b10fb42c611"
+    },
+    {
+      "path": ".github/continuum/android-avatar-wiring.test.mjs",
+      "sha256": "18bc7809edefee8306556fc9371bc5e12c018f9cbd12aeb0db73d23604f267c9"
+    },
+    {
+      "path": ".github/continuum/android-integration-wiring.test.mjs",
+      "sha256": "e88117f88181704fe5634a54f0576b828c53ecf43e6a1d618106fbd380e72c75"
+    },
+    {
+      "path": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+      "sha256": "99ed0e0c9d6b1738b2816fe6eaca47220ec9c5538a12799cb4c463d8090ffd3e"
+    },
+    {
+      "path": ".github/continuum/cognitive-trace-wiring.test.mjs",
+      "sha256": "4a6a566738344df5963649bbe798be697e3e0acf0a075368309c5662aaf83a72"
+    },
+    {
+      "path": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+      "sha256": "0004b992da936ce558d7ad5edc14b9e52d2ec6536d303e19e13d83bb10274f42"
+    },
+    {
+      "path": "scripts/continuum-learning-parity-readout.test.mjs",
+      "sha256": "f367a88c73f631bf14129e0b1566af49ce474fd858d5740b2d3e39d75ff01582"
+    }
+  ],
+  "targeted": {
+    "tests": 48,
+    "pass": 48,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "negativeControls": {
+    "count": 9,
+    "expectedFailuresObserved": 9,
+    "allExitCodes": 1,
+    "scope": "Existing source tests with only in-memory source string mutations; not Android execution."
+  },
+  "rawControls": {
+    "archive": "negative-controls.tar.xz",
+    "sha256": "9a5e5172cb1af667fda5f4e42b66ae1fa21e2c803f9018b74b1e56ad67e91fb4",
+    "bytes": 126040,
+    "files": [
+      {
+        "path": "contract-negative-avatar-audio-frame.tap",
+        "sha256": "7aaea71cd7d3359ead2a56b48f1df80fc8b3f373678f1f0d65a620cf2213f482",
+        "bytes": 675640
+      },
+      {
+        "path": "contract-negative-avatar-visible-sink.tap",
+        "sha256": "ceff86c02888f981f855e41b6234b1afbb83a56cab19ca2d40220b1fb15f8184",
+        "bytes": 675708
+      },
+      {
+        "path": "contract-negative-bot-memory.tap",
+        "sha256": "7bda114c9e60827e0f6b3dfe5e30249fa26fbf6af55f4ea5e1d3dd575cc052b8",
+        "bytes": 1253
+      },
+      {
+        "path": "contract-negative-development-route.tap",
+        "sha256": "dd4caaf62a6e58d245c427a61d54ec5ac70eb6a490f38b34d88a89b02568dab5",
+        "bytes": 16345
+      },
+      {
+        "path": "contract-negative-owner-input.tap",
+        "sha256": "5ca7cffd76a82972d7e42dc9674545c640c113c12b4f4fccd9b37cc60b99bd1b",
+        "bytes": 1256
+      },
+      {
+        "path": "contract-negative-planning-tool-budget.tap",
+        "sha256": "5fd01833b5f1002ab801bfc2edb9ea5fdfa9cb1dc48a51fc25afbe150e3e51c5",
+        "bytes": 1283
+      },
+      {
+        "path": "contract-negative-reference-navigation.tap",
+        "sha256": "166429f680dac353820f486c6e74bee00082bf3dab5adf8bbab4ca782b52507d",
+        "bytes": 17911
+      },
+      {
+        "path": "contract-negative-speech-locale.tap",
+        "sha256": "37ca19529a017a11830eff94bf9716db660c0cbc2f27947821fae9b52bbe61ad",
+        "bytes": 13817
+      },
+      {
+        "path": "contract-negative-trace-drop.tap",
+        "sha256": "8bb0b2adf6ee2ac438de604fbf44ff95f93f6d1931ef929d17ee5882ea74ed78",
+        "bytes": 675658
+      }
+    ]
+  },
+  "independentReview": {
+    "agent": "/root/repair_review",
+    "status": "STATIC_APPROVED",
+    "testsRepeated": false,
+    "limitation": "Live hologram connection only; initial fanOut is replaced on attach, so no permanent registry fan-out claim."
+  },
+  "productionAppUnchanged": true,
+  "fullGates": "PENDING_NEW_COMBINED_RUN",
+  "rollback": "Revert only these seven source-contract updates; preserve prior failure receipts."
+}

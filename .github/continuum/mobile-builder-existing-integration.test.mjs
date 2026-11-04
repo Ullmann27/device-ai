@@ -31,9 +31,14 @@ test('mobile builder is added to existing worker chat routing', () => {
 
 test('builder stays in the existing agent UI and opens only an allowlisted Android activity', () => {
   assert.match(agent, /CenterAction\("HANDY-BUILDER · TERMUX"\) \{ openMobileBuilder\(\) \}/);
-  // second entry from the start screen: navigation "Mehr" -> "Handy-Builder · Termux"
-  assert.match(agent, /"System & Sicherheit", "Handy-Builder · Termux"/);
-  assert.match(agent, /4 -> openMobileBuilder\(\)/);
+  // Stable category targets replace brittle dialog indices; the actual dispatcher must stay connected.
+  const nav = read(src + 'ContinuumWorkAreaNavigationSpec.kt');
+  assert.match(nav, /CategoryEntry\("Handy-Builder · Termux", "mobile-builder"\)/);
+  const more = agent.slice(agent.indexOf('private fun showMoreWorkAreas()'), agent.indexOf('private fun showBrainScene()'));
+  assert.match(more, /showDashboardCategory\("Mehr", ContinuumWorkAreaNavigationSpec\.moreEntries\)/);
+  assert.match(more, /setItems\(entries\.map \{ it\.title \}\.toTypedArray\(\)\)/);
+  assert.match(more, /navigateDashboardTarget\(entries\[index\]\.target\)/);
+  assert.match(more, /"mobile-builder" -> openMobileBuilder\(\)/);
   assert.match(agent, /ContinuumMobileBuilderRoute\.destination\(BuildConfig\.APPLICATION_ID\)/);
   assert.match(agent, /Intent\(\)\.setClassName\(destination\.packageName, destination\.className\)/);
   assert.match(agent, /catch \(_:\s*ActivityNotFoundException\)/);

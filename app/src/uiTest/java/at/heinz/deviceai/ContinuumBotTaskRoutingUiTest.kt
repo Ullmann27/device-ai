@@ -59,6 +59,101 @@ class ContinuumBotTaskRoutingUiTest {
         shadowOf(Looper.getMainLooper()).idle()
     }
 
+    @Test fun unknownNaturalSelectionsReachTheOrdinaryInputPath() {
+        for (request in listOf("wechsle zu dunklem Modus", "sprich mit mir über den Plan")) withActivity { a, store ->
+            // Observe intake only; the normal model lane is deliberately unavailable.
+            (get(a, "localAgentExecutor") as ExecutorService).shutdownNow()
+            val before = store.page(limit = 100).items
+            val input = get(a, "input") as EditText
+            input.setText(request)
+            assertEquals(true, call(a, "routeBotInput", request))
+            flush(a)
+            assertEquals("", input.text.toString())
+            assertEquals(1, descendants(get(a, "chatContainer") as View).filterIsInstance<TextView>()
+                .count { it.text.toString() == request })
+            assertNull(get(a, "selectedBot"))
+            assertNull(get(a, "activeOrchestrator"))
+            assertNull(get(a, "localRuntime"))
+            assertEquals(before, store.page(limit = 100).items)
+        }
+    }
+
+    @Test fun unknownNaturalSelectionKeepsAnExistingPrivateConversationSelected() = withActivity { a, store ->
+        (get(a, "localAgentExecutor") as ExecutorService).shutdownNow()
+        val profile = requireNotNull(store.get("bot-kora"))
+        set(a, "selectedBot", profile)
+        val request = "sprich mit mir über den Plan"
+        val input = get(a, "input") as EditText
+        input.setText(request)
+        assertEquals(true, call(a, "routeBotInput", request))
+        flush(a)
+        assertEquals("", input.text.toString())
+        assertSame(profile, get(a, "selectedBot"))
+        assertEquals(0, (get(a, "chatContainer") as LinearLayout).childCount)
+        assertEquals(profile, store.get(profile.agentId))
+        assertTrue(store.loadConversation(profile.agentId, profile.agentId).turns.isEmpty())
+        assertNull(get(a, "activeOrchestrator"))
+        assertNull(get(a, "localRuntime"))
+    }
+
+    @Test fun unknownExplicitMentionNeverFallsBackToOrdinaryInput() {
+        for (request in listOf("@Unbekannt sprich mit mir über den Plan", "wechsle zu @Unbekannt",
+            "sprich mit @Unbekannt", "rufe @Unbekannt auf")) withActivity { a, _ ->
+            val input = get(a, "input") as EditText
+            input.setText(request)
+            assertEquals(true, call(a, "routeBotInput", request))
+            flush(a)
+            assertEquals(request, input.text.toString())
+            assertEquals(0, (get(a, "chatContainer") as LinearLayout).childCount)
+            assertNull(get(a, "selectedBot"))
+            assertNull(get(a, "activeOrchestrator"))
+        }
+    }
+
+    @Test fun ambiguousNaturalSelectionNeverFallsBackToOrdinaryInput() = withActivity { a, store ->
+        store.create("bot-duplicate", "KORA", "Review", "Präzise")
+        val before = store.page(limit = 100).items
+        val request = "wechsle zu Kora"
+        val input = get(a, "input") as EditText
+        input.setText(request)
+        assertEquals(true, call(a, "routeBotInput", request))
+        flush(a)
+        assertEquals(request, input.text.toString())
+        assertEquals(0, (get(a, "chatContainer") as LinearLayout).childCount)
+        assertEquals(before, store.page(limit = 100).items)
+        assertNull(get(a, "selectedBot"))
+        assertNull(get(a, "activeOrchestrator"))
+    }
+
+    @Test fun unreadableRegistryNeverAuthorizesNaturalSelectionFallback() = withActivity { a, _ ->
+        val registry = java.io.File(a.filesDir, "chief-bots/bot-profiles-v1.bin")
+        val damaged = byteArrayOf(0)
+        registry.writeBytes(damaged)
+        val request = "wechsle zu dunklem Modus"
+        val input = get(a, "input") as EditText
+        input.setText(request)
+        assertEquals(true, call(a, "routeBotInput", request))
+        flush(a)
+        assertEquals(request, input.text.toString())
+        assertEquals(0, (get(a, "chatContainer") as LinearLayout).childCount)
+        assertTrue(damaged.contentEquals(registry.readBytes()))
+        assertNull(get(a, "selectedBot"))
+        assertNull(get(a, "activeOrchestrator"))
+    }
+
+    @Test fun changedDraftCannotReceiveALateUnknownSelectionFallback() = withActivity { a, _ ->
+        val request = "wechsle zu dunklem Modus"
+        val replacement = "Diesen neuen Entwurf nicht absenden."
+        val input = get(a, "input") as EditText
+        input.setText(request)
+        assertEquals(true, call(a, "routeBotInput", request))
+        input.setText(replacement)
+        flush(a)
+        assertEquals(replacement, input.text.toString())
+        assertEquals(0, (get(a, "chatContainer") as LinearLayout).childCount)
+        assertNull(get(a, "activeOrchestrator"))
+    }
+
     @Test fun missingModelRefusesTaskWithoutConsumingTheDraftOrChangingBot() = withActivity { a, store ->
         val profile = requireNotNull(store.get("bot-kora"))
         set(a, "selectedBot", profile)

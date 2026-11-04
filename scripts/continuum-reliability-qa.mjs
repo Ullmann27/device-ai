@@ -37,7 +37,8 @@ export function assessNodeOutcome(result,xml,project=root) {
 }
 
 function git(args) {
-  const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:10000});
+  // The complete source-path inventory can exceed Node's default one-MiB buffer.
+  const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:10000,maxBuffer:16*1024*1024});
   if(r.status!==0)throw Error('GIT_METADATA_UNAVAILABLE');
   return r.stdout.trim();
 }

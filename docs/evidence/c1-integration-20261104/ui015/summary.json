@@ -1,0 +1,206 @@
+{
+  "taskId": "C1-UI-FIXTURE-015",
+  "baseLocal": "d4c069038171dcdc6d486b901cd3ecf57c6fb214",
+  "baseRemote": "a2659ef221397dcb2c8889046f3ca502e1fd3cbb",
+  "baseTree": "cc86705bdc9dc32f45f10e540b1f3526e4810c10",
+  "origin": {
+    "patch": "/workspace/scratch/18845e31bc4a/build-audit/ui-fullsuite-harness/ui-fullsuite-harness.patch",
+    "patch_sha256": "4897b424eec14a6c92ce87dfbc1d0b86cba868d362e3929558fd0cb0cdb1f575",
+    "reported_base_commit": "f17ee62f8cfda8914ed217fe2ed88882ba1fa8a4",
+    "external_manifest_sha256": "9bffddb13a867135b660e412d4c2aa0464a930c35e657d9f81ea9209dc8b06ec",
+    "intake_classification": "UNCHANGED_EXTERNAL_WIP_NOT_AN_EXTERNAL_COMPLETION_OR_APPROVAL"
+  },
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "mode": "100644",
+      "base_git_blob": "76c82e7fa5f5bfd5c6f94b569a09fedc51660bd5",
+      "target_git_blob": "90481bc205537601e95b311b442d4fa554a8d8e0",
+      "base_sha256": "29f50aadb6c452785c3ea6afddfab942e471d4309634173ae3b09e8ddb1ba0aa",
+      "target_sha256": "0ba0d67a41e3acbb62a5581a8c0f7002b2d1c8ebc01159a98d664cbb37206d0e",
+      "base_bytes": 21184,
+      "target_bytes": 21863,
+      "patch_hunks": 4,
+      "classes": [
+        "at.heinz.deviceai.ContinuumReferenceCockpitUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt",
+      "mode": "100644",
+      "base_git_blob": "400e6db70374fea82a09abd35ba587ec11872301",
+      "target_git_blob": "8758292c557e4eb523cb73b495e0c1599cfc9dc8",
+      "base_sha256": "6cf841da345041fe2cfad34252ce915cb370ca0dcfaf90ea899bf6d8d5cafd0c",
+      "target_sha256": "2364048672ca9db8d1633d21a60126b59ae50b7147e09520fa02f5f57961f017",
+      "base_bytes": 6481,
+      "target_bytes": 7187,
+      "patch_hunks": 6,
+      "classes": [
+        "at.heinz.deviceai.ContinuumTaskEffectsUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+      "mode": "100644",
+      "base_git_blob": "e7591367df95ade9859e632e18227260add6c668",
+      "target_git_blob": "b213cad36abde70fae4024b2988a8be1d09250b9",
+      "base_sha256": "fe5b0c6e410f65d4a4c8e9b2f8251e2116c740076d95bbd649ac3c3d3fda4712",
+      "target_sha256": "2abb6c48725c4834054b850d4d169189df654fe18b6772391ea1c09b801648a8",
+      "base_bytes": 7088,
+      "target_bytes": 8029,
+      "patch_hunks": 4,
+      "classes": [
+        "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest"
+      ]
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+      "mode": "100644",
+      "base_git_blob": "8169dc9446a5670e96dcd97cd5aaf767a4e0b380",
+      "target_git_blob": "3ed6866756f85ce2daf25542e3940bba340ed9a8",
+      "base_sha256": "0956348fb810fc290b9886a25c98643428607399e026ebc821b2f79f64084594",
+      "target_sha256": "c6ef286dc09b17ee3cadf79950a3767447ce3019c3e8854b206389f824b8810b",
+      "base_bytes": 9194,
+      "target_bytes": 10694,
+      "patch_hunks": 7,
+      "classes": [
+        "at.heinz.deviceai.JarvisShellStageUiTest",
+        "at.heinz.deviceai.JarvisAvatarSlotUiTest"
+      ]
+    }
+  ],
+  "patch": {
+    "path": "C1-UI-FIXTURE-015.patch",
+    "sha256": "4897b424eec14a6c92ce87dfbc1d0b86cba868d362e3929558fd0cb0cdb1f575",
+    "bytes": 16455,
+    "files": 4,
+    "classes": 5,
+    "production_files": 0
+  },
+  "classes": [
+    "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+    "at.heinz.deviceai.ContinuumTaskEffectsUiTest",
+    "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+    "at.heinz.deviceai.JarvisShellStageUiTest",
+    "at.heinz.deviceai.JarvisAvatarSlotUiTest"
+  ],
+  "preservedMethods": 20,
+  "assertionsBefore": 136,
+  "assertionsAfter": 147,
+  "staticReview": "C1 and independent repair_review: no static blocker; all full original assertion expressions preserved",
+  "ownApplyCheckExit": 0,
+  "ownApplyExit": 0,
+  "productionChanges": false,
+  "ownRuntime": "PENDING_C1_FIVE_CLASS_ANDROID_RUN",
+  "archive": {
+    "name": "ui015-reviewed-wip-snapshot.tar.xz",
+    "bytes": 34656,
+    "sha256": "a71973dd328cf2b9b1dc26bab75294a6d248bc95482b7e1f7c88e3feee6ff61d",
+    "members": [
+      {
+        "path": "C1-UI-FIXTURE-015.patch",
+        "bytes": 16455,
+        "sha256": "4897b424eec14a6c92ce87dfbc1d0b86cba868d362e3929558fd0cb0cdb1f575"
+      },
+      {
+        "path": "REVIEW.md",
+        "bytes": 7664,
+        "sha256": "3d73e1dbce6ef2e7a83a601233a8ee15bdf0f1f01f54df0510ec883e58c7c2ea"
+      },
+      {
+        "path": "SHA256SUMS",
+        "bytes": 2117,
+        "sha256": "d537c0bca38ea10c47262af3f361410b9dc4976567961a19188513e99ee48184"
+      },
+      {
+        "path": "assertion-review.json",
+        "bytes": 15864,
+        "sha256": "8e75579d03a64ce0e45651d35fe6f5b384e809949e545c14a8a6e1800d18e7a3"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+        "bytes": 21184,
+        "sha256": "29f50aadb6c452785c3ea6afddfab942e471d4309634173ae3b09e8ddb1ba0aa"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+        "bytes": 7088,
+        "sha256": "fe5b0c6e410f65d4a4c8e9b2f8251e2116c740076d95bbd649ac3c3d3fda4712"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt",
+        "bytes": 6481,
+        "sha256": "6cf841da345041fe2cfad34252ce915cb370ca0dcfaf90ea899bf6d8d5cafd0c"
+      },
+      {
+        "path": "base/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+        "bytes": 9194,
+        "sha256": "0956348fb810fc290b9886a25c98643428607399e026ebc821b2f79f64084594"
+      },
+      {
+        "path": "evidence/prior-external-timeout/full-f17ee62f8cfd.log",
+        "bytes": 122624,
+        "sha256": "c8694748f607f27a015aad5f70712bbf12454d3de2f1032defccb6276f27c2ad"
+      },
+      {
+        "path": "evidence/prior-external-timeout/full-f17ee62f8cfd.result.json",
+        "bytes": 2298,
+        "sha256": "10d6276e455866b113fe16cfc5288b745d93b464d5d2ab98af3bd2e3a682f3a8"
+      },
+      {
+        "path": "evidence/prior-external-timeout/full-f17ee62f8cfd.summary.json",
+        "bytes": 1269,
+        "sha256": "8f36062032cb216b5b4ded3d4001372cf7fb291099eeac9bb89003301cb582f9"
+      },
+      {
+        "path": "manifest.json",
+        "bytes": 5943,
+        "sha256": "5be0f8b5ba20c44b7c8dfe0de2414b82f97c2088cb69cce2eb3528dbfc246b59"
+      },
+      {
+        "path": "provenance/external-manifest.json",
+        "bytes": 2076,
+        "sha256": "9bffddb13a867135b660e412d4c2aa0464a930c35e657d9f81ea9209dc8b06ec"
+      },
+      {
+        "path": "static-validation.json",
+        "bytes": 1973,
+        "sha256": "bb9491dca16f6ff197cadb1d23990b379ac1dac512e64901080a348e5711223d"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+        "bytes": 21863,
+        "sha256": "0ba0d67a41e3acbb62a5581a8c0f7002b2d1c8ebc01159a98d664cbb37206d0e"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+        "bytes": 8029,
+        "sha256": "2abb6c48725c4834054b850d4d169189df654fe18b6772391ea1c09b801648a8"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt",
+        "bytes": 7187,
+        "sha256": "2364048672ca9db8d1633d21a60126b59ae50b7147e09520fa02f5f57961f017"
+      },
+      {
+        "path": "target/app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+        "bytes": 10694,
+        "sha256": "c6ef286dc09b17ee3cadf79950a3767447ce3019c3e8854b206389f824b8810b"
+      },
+      {
+        "path": "test-classes.txt",
+        "bytes": 228,
+        "sha256": "ec9a3ca50b99bb33d498d4d436439c0e527266a83b91b2851d6df5c8060bba95"
+      }
+    ]
+  },
+  "priorFailure": "External f17ee62 full gate timed out after180seconds in ReferenceCockpit; not a C1 baseline RED",
+  "hypothesis": "Explicitly paused Choreographer and bounded16ms frame advances prevent unbounded virtual-VSync draining while preserving actual window traversal and all requirements",
+  "limits": [
+    "External source is WIP; C1 is completing its own verification, no external completion or ACK claimed",
+    "2D/Orb setup is a host Canvas/lifecycle boundary, not real Filament/GPU acceptance",
+    "C1 must execute all five classes including JarvisAvatarSlotUiTest",
+    "All final whole-source gates remain required"
+  ],
+  "rollback": "Revert only the four listed UI test files; production code and prior tested source3891756/6c34db7 remain unchanged."
+}

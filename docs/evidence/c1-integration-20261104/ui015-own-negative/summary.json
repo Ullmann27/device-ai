@@ -1,0 +1,333 @@
+{
+  "taskId": "C1-UI-FIXTURE-015",
+  "localSource": "4da039d55d44f7087a9e4cd7bd72dc5a0089029e",
+  "remoteSource": "20d9dd8779c63452815a701b8f5956e426abf4aa",
+  "tree": "974e949a022a7774c6c5c702631217fffb8f8018",
+  "startedAt": "2026-11-04T21:17:42.073908+00:00",
+  "finishedAt": "2026-11-04T21:18:18.419473+00:00",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=41",
+    "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-ui015-02-active-test.json",
+    "-PcontinuumAuditTestClasses=at.heinz.deviceai.ContinuumReferenceCockpitUiTest,at.heinz.deviceai.ContinuumTaskEffectsUiTest,at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest,at.heinz.deviceai.JarvisShellStageUiTest,at.heinz.deviceai.JarvisAvatarSlotUiTest",
+    "-I",
+    "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "exitCode": 1,
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 20,
+    "passed": 6,
+    "failed": 14,
+    "skipped": 0
+  },
+  "suites": {
+    "at.heinz.deviceai.ContinuumReferenceCockpitUiTest": 8,
+    "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest": 5,
+    "at.heinz.deviceai.ContinuumTaskEffectsUiTest": 3,
+    "at.heinz.deviceai.JarvisAvatarSlotUiTest": 1,
+    "at.heinz.deviceai.JarvisShellStageUiTest": 3
+  },
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "composerDraftSurvivesActualWindowReflowAndActivityRecreation",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldLandscapeHasRealDestinationsAndReadableLargeType",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "narrowPhoneHasRealDestinationsAndReadableLargeType",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "presentationControlsReuseTheLiveAvatarAndPersistCompactChoice",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "phoneHasRealDestinationsAndReadableLargeType",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumReferenceCockpitUiTest",
+      "name": "foldPortraitHasRealDestinationsAndReadableLargeType",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "deniedToolHasNoBackendAndNoArrival",
+      "failure": {
+        "message": "java.util.NoSuchElementException: Array contains no element matching the predicate.",
+        "type": "java.util.NoSuchElementException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "authorizedRealRunnerEntryAndExitReachTheVisibleSurface",
+      "failure": {
+        "message": "java.util.NoSuchElementException: Array contains no element matching the predicate.",
+        "type": "java.util.NoSuchElementException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "actualActionButtonUsesBoundedFeedbackAndPendingSpeechMutesIt",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "busyProposalAloneNeverAnimatesAnActualWorker",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest",
+      "name": "actualChiefStatusWorkerProducesAWorkerArrival",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsUiTest",
+      "name": "actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsUiTest",
+      "name": "productionCanvasSequenceUsesExplicitSyntheticEventsOnly",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumTaskEffectsUiTest",
+      "name": "pauseReducedMotionAndHeatDiscardEventsInsteadOfReplayingOnResume",
+      "failure": null,
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+      "name": "registeredRendererIsDockedFedAndDetached",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "tablet",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "phone",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "name": "foldOpen",
+      "failure": {
+        "message": "java.lang.NullPointerException",
+        "type": "java.lang.NullPointerException"
+      },
+      "skipped": false
+    }
+  ],
+  "diagnosis": {
+    "windowRootNotCreatedBeforeFocus": 12,
+    "obsoleteThreeArgumentCreateToolGateReflection": 2
+  },
+  "nextHypotheses": [
+    "Advance one actual paused16ms traversal before windowFocusChanged; assert decor attachment",
+    "Pass explicit null as fourth botTask argument to existing createToolGate; preserve authorization and all assertions"
+  ],
+  "limits": [
+    "No current full Android, Lint, model, APK, GPU or device acceptance",
+    "The WIP hypothesis was not sufficient; original negative remains preserved"
+  ],
+  "priorAttempt": {
+    "label": "android-ui015-01",
+    "status": "BLOCKED",
+    "wrapperExit": 75,
+    "gradleStarted": false
+  },
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "blob": "90481bc205537601e95b311b442d4fa554a8d8e0",
+      "sha256": "0ba0d67a41e3acbb62a5581a8c0f7002b2d1c8ebc01159a98d664cbb37206d0e"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt",
+      "blob": "8758292c557e4eb523cb73b495e0c1599cfc9dc8",
+      "sha256": "2364048672ca9db8d1633d21a60126b59ae50b7147e09520fa02f5f57961f017"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+      "blob": "b213cad36abde70fae4024b2988a8be1d09250b9",
+      "sha256": "2abb6c48725c4834054b850d4d169189df654fe18b6772391ea1c09b801648a8"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+      "blob": "3ed6866756f85ce2daf25542e3940bba340ed9a8",
+      "sha256": "c6ef286dc09b17ee3cadf79950a3767447ce3019c3e8854b206389f824b8810b"
+    }
+  ],
+  "archive": {
+    "name": "ui015-own-negative-4da039d.tar.xz",
+    "bytes": 9084,
+    "sha256": "b6780ea0ae3428e5cca90aaefdf1053389b4e7dc4a5f5eff1e0057602883daed",
+    "members": [
+      {
+        "path": "android-ui015-01.result.json",
+        "bytes": 1581,
+        "sha256": "847c6c1516ea6d3d9ea89864b3edb1f19c1cf1bd48bda13a72f363a51e2b94f6"
+      },
+      {
+        "path": "android-ui015-02-active-test.json",
+        "bytes": 142,
+        "sha256": "2a1776f86bcdc366cfdd2fdaae00c0543dce50b440bcd9bf27aea1ee517ff8f2"
+      },
+      {
+        "path": "android-ui015-02.log",
+        "bytes": 18249,
+        "sha256": "84af08d1e6881ba9e9957c1c48e91499afe3937b98dac73d2f0422b5164b9e82"
+      },
+      {
+        "path": "android-ui015-02.result.json",
+        "bytes": 1960,
+        "sha256": "e9be29633c7a042ab7467554e04bc57b4b74cba0b5e8554f7aea478432cce3f5"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumReferenceCockpitUiTest.xml",
+        "bytes": 18308,
+        "sha256": "4b4f764ba9d092c271b12ca6997b6b1a0dcb82bbc29124b3d7d48318ef2341f0"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumTaskEffectsCallerUiTest.xml",
+        "bytes": 5473,
+        "sha256": "6efdfbaa60ae09744269f9d7f8c2b49c29c45e5f43afd6f207838f9810d3a833"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ContinuumTaskEffectsUiTest.xml",
+        "bytes": 777,
+        "sha256": "b0365f84de9a6b417384a777bd34c33914c7af0ab7cc46b475314f771263a009"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.JarvisAvatarSlotUiTest.xml",
+        "bytes": 2353,
+        "sha256": "e4658cb989a4e76c3e17835bec7b3e25a4e7564f37ee74a8c0a47a49d64353e3"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.JarvisShellStageUiTest.xml",
+        "bytes": 6448,
+        "sha256": "bf7b15e23ab56458c76d53be1a92035c497876550d37f3e934c5f17def9c359b"
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "run_c1_gate_v2.py",
+        "bytes": 5181,
+        "sha256": "81c75d3368935a5eff75084384768af6b7a1651d94df2493dfa7b305ac7f8362"
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "bytes": 5722,
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 8742,
+        "sha256": "32281f7b755f60ca794e6430ad1974d9eb9d71a78771ad4f472e357bc42d23d9"
+      },
+      {
+        "path": "ui015-lock-observation-01.json",
+        "bytes": 338,
+        "sha256": "d517232f9a7effb22a16288cd27060431c4218da14d64651b78e19292024966a"
+      },
+      {
+        "path": "ui015-lock-observation-02.json",
+        "bytes": 290,
+        "sha256": "f067e6aaa81250ad3ca0de79b10e0ef3d2419631b4f17bdcbef2bbed112521b4"
+      },
+      {
+        "path": "ui015-lock-observation-03.json",
+        "bytes": 290,
+        "sha256": "7260c76bc92166231d6804a7600521e4700a434a8a4466359776ac4f0ffa3ae1"
+      }
+    ]
+  }
+}

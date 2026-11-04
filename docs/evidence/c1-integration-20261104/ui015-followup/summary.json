@@ -1,0 +1,40 @@
+{
+  "taskId": "C1-UI-FIXTURE-015",
+  "phase": "SOURCE_BOUND_FOLLOWUP_AFTER_REAL_14_FAILURES",
+  "baseLocal": "4da039d55d44f7087a9e4cd7bd72dc5a0089029e",
+  "baseRemote": "20d9dd8779c63452815a701b8f5956e426abf4aa",
+  "baseTree": "974e949a022a7774c6c5c702631217fffb8f8018",
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "baseBlob": "90481bc205537601e95b311b442d4fa554a8d8e0",
+      "targetBlob": "4fa09ef1fe3a6fe88b707e8150611a066c01c72d",
+      "sha256": "39b4371e773f0f342dc1606700d59c2fa95cb67f622ee6d0ce7577c9ed8a813f"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt",
+      "baseBlob": "b213cad36abde70fae4024b2988a8be1d09250b9",
+      "targetBlob": "5c2bd789e35b072651ea1eba165db2304441c5ed",
+      "sha256": "07d0d8488a0b48fed3e9d1788989c10a20cfdf548260d7c39581fc60b30ed4fe"
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+      "baseBlob": "3ed6866756f85ce2daf25542e3940bba340ed9a8",
+      "targetBlob": "5074912e5fc80439a6a008662f0dee9883c578de",
+      "sha256": "ff1bfb6a57829667d1cfc2b5e6bb675e46da4356670426baad5ba4852f69409d"
+    }
+  ],
+  "patchSha256": "a819afd73e661d77c523eaf084d770eac2d5c3f46b9c973d86cd3051402a0a64",
+  "testMethodsRetained": 20,
+  "productionChanges": false,
+  "ownRuntime": "PENDING_NEW_FIVE_CLASS_RUN",
+  "independentStaticReview": "repair_review: all original assertions/methods retained; actual createToolGate signature verified; three real traversal/attachment guards",
+  "priorRun": {
+    "total": 20,
+    "passed": 6,
+    "failed": 14,
+    "skipped": 0,
+    "exit": 1
+  },
+  "rollback": "Revert only this three-file follow-up; retain original negative evidence and all preceding source commits."
+}

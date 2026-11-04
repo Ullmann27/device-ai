@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -17,12 +18,31 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk=[28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumTaskEffectsUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Activity setup can start the real avatar loop before fixture code can pause it.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
     private fun scope(v:ContinuumHologramView,s:String?="turn-1") {
         val method=v.javaClass.methods.firstOrNull { it.name=="setTaskEffectScope" }
         assertNotNull("The actual visible View has no work-event route",method)
@@ -42,11 +62,18 @@ class ContinuumTaskEffectsUiTest {
         v.draw(Canvas(it))
     }
     private fun prepare(v:ContinuumHologramView,w:Int=412,h:Int=307) {
-        // Initial decor traversal must not resize the fixture between before/after frames.
+        // This Canvas work-effect fixture selects the original orb, without host Filament work.
+        v.setNativeHeadEnabled(false)
+        // Complete actual decor traversal with stable viewport dimensions before activation.
         v.layoutParams=v.layoutParams.apply { width=w;height=h }
-        shadowOf(Looper.getMainLooper()).idleFor(40,TimeUnit.MILLISECONDS)
-        v.measure(View.MeasureSpec.makeMeasureSpec(w,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(h,View.MeasureSpec.EXACTLY))
-        v.layout(0,0,w,h);v.setForegroundActive(true);scope(v)
+        advanceFrames(40)
+        assertTrue("Work effects require an attached real View",v.isAttachedToWindow)
+        assertTrue("Work effects require a shown real View",v.isShown)
+        assertEquals(View.VISIBLE,v.windowVisibility)
+        assertEquals(w,v.width);assertEquals(h,v.height)
+        v.setForegroundActive(true)
+        assertTrue("Work effects require a live foreground clock",v.motionDiagnostics().contains("LIVE"))
+        scope(v)
     }
     @Test fun actualOverlayDrawsAboveAnOpaqueChildWithoutASecondClock() {
         val c=Robolectric.buildActivity(Activity::class.java).setup();val v=ContinuumHologramView(c.get())
@@ -58,7 +85,7 @@ class ContinuumTaskEffectsUiTest {
             val before=frame(v)
             assertEquals("Opaque child must actually cover the animated background",Color.rgb(20,30,50),before.getPixel(206,117))
             assertTrue(event(v))
-            shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS)
+            advanceFrames(350)
             val after=frame(v)
             assertFalse("dispatchDraw must place work glyphs above children, including the native TextureView layer",before.sameAs(after))
             scope(v,null)
@@ -78,7 +105,7 @@ class ContinuumTaskEffectsUiTest {
             v.javaClass.declaredMethods.single { it.name.startsWith("onThermalStatus") }.apply { isAccessible=true }.invoke(v,3)
             assertFalse(event(v))
             val count=v.sampleMotion().callbackCount
-            shadowOf(Looper.getMainLooper()).idleFor(500,TimeUnit.MILLISECONDS)
+            advanceFrames(500)
             assertEquals(count,v.sampleMotion().callbackCount)
         } finally { c.pause().stop().destroy() }
     }
@@ -97,13 +124,13 @@ class ContinuumTaskEffectsUiTest {
                 }
                 capture("0-idle")
                 assertTrue(event(v,id="synthetic-worker",worker=true))
-                shadowOf(Looper.getMainLooper()).idleFor(300,TimeUnit.MILLISECONDS);capture("1-worker")
+                advanceFrames(300);capture("1-worker")
                 assertTrue(event(v))
-                shadowOf(Looper.getMainLooper()).idleFor(200,TimeUnit.MILLISECONDS);capture("2-tool")
-                assertTrue(event(v,"Read"));shadowOf(Looper.getMainLooper()).idleFor(350,TimeUnit.MILLISECONDS);capture("3-read")
+                advanceFrames(200);capture("2-tool")
+                assertTrue(event(v,"Read"));advanceFrames(350);capture("3-read")
                 assertTrue(event(v,"Finished"));assertTrue(event(v,"Finished",id="synthetic-worker"))
-                shadowOf(Looper.getMainLooper()).idleFor(250,TimeUnit.MILLISECONDS);capture("4-terminal")
-                shadowOf(Looper.getMainLooper()).idleFor(2,TimeUnit.SECONDS);capture("5-expired")
+                advanceFrames(250);capture("4-terminal")
+                advanceFrames(2_000);capture("5-expired")
             } finally { c.pause().stop().destroy() }
         }
     }

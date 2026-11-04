@@ -9,7 +9,8 @@ const activity=read('AgentActivity.kt');
 test('one correlation follows actual main-chat memory, runtime and tool paths (source wiring)',()=>{
  assert.match(activity,/priorScopedGroundedQuestion=priorScopedTopic,turnTrace=turnTrace/);
  assert.match(activity,/runLocal\(request,modelQuestion,recall,turnTrace\)/);
- assert.match(activity,/generateLocal\(cancellation,turnTrace\)/);
+ assert.match(activity,/generateLocal\(cancellation,\s*turnTrace,\s*prompt\.length,\s*hardDeadlineMillis\s*=\s*taskRemaining\)/);
+ assert.match(activity,/generateLocal\(cancellation,\s*turnTrace,\s*hardDeadlineMillis\s*=\s*botTask\?\.reserveModelCall\(sessionId\)\)/);
  assert.match(activity,/LocalModelReasoningAdapter\(localRuntime,turnTrace=turnTrace\)/);
  assert.match(activity,/recordTrace\(snapshot\)/);
  assert.match(activity,/reviewTrace\(previous.second/);

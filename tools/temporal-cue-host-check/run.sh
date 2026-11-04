@@ -38,17 +38,19 @@ KOTLIN
 
 source_file="$repo_root/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt"
 calendar_test="$repo_root/app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt"
+daily_test="$repo_root/app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt"
 existing_test="$repo_root/app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt"
 test_cp="$gradle_lib/kotlin-stdlib-2.0.20.jar:$gradle_lib/junit-4.13.2.jar:$gradle_lib/hamcrest-core-1.3.jar"
 
 printf 'HOST_JVM_ONLY: original retrieval source; compile-only, fail-fast event-decorator stand-in\n'
 printf 'HEAD: '
 git -C "$repo_root" rev-parse HEAD
-sha256sum "$source_file" "$calendar_test" "$existing_test"
+sha256sum "$source_file" "$calendar_test" "$daily_test" "$existing_test"
 "$java_bin" -version
 "$java_bin" -Xmx1g -cp "$gradle_lib/*" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
   -no-stdlib -no-reflect -jvm-target 17 -classpath "$test_cp" -d "$temp_dir/classes" \
-  "$source_file" "$temp_dir/EventEmittingRetriever.kt" "$calendar_test" "$existing_test"
+  "$source_file" "$temp_dir/EventEmittingRetriever.kt" "$calendar_test" "$daily_test" "$existing_test"
 "$java_bin" -Xmx1g -cp "$temp_dir/classes:$test_cp" org.junit.runner.JUnitCore \
   at.heinz.deviceai.learning.TemporalCueCalendarTest \
+  at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest \
   at.heinz.deviceai.learning.ContinuumRetrievalExperimentTest

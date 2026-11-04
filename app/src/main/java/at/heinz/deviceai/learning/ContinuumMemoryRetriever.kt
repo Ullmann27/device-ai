@@ -3,7 +3,6 @@ package at.heinz.deviceai.learning
 import java.time.DateTimeException
 import java.time.Instant
 import java.time.ZoneId
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 import kotlin.math.ln
 import kotlin.math.sqrt
@@ -52,8 +51,10 @@ object GermanText {
 class TemporalCue(private val zone:ZoneId) {
     fun window(query:String,nowMillis:Long):LongRange? {
         val q=GermanText.normalize(query)
-        val today=Instant.ofEpochMilli(nowMillis).atZone(zone).truncatedTo(ChronoUnit.DAYS)
-        fun days(from:Long,to:Long)=today.minusDays(from).toInstant().toEpochMilli() until today.minusDays(to-1).toInstant().toEpochMilli()
+        val today=Instant.ofEpochMilli(nowMillis).atZone(zone).toLocalDate()
+        // Resolve each date separately: a midnight gap must not shift other day boundaries.
+        fun days(from:Long,to:Long)=today.minusDays(from).atStartOfDay(zone).toInstant().toEpochMilli() until
+            today.minusDays(to-1).atStartOfDay(zone).toInstant().toEpochMilli()
         Regex("vor (\\d+|zwei|drei|vier|fuenf) tagen").find(q)?.let { m ->
             val n=when(val count=m.groupValues[1]) {
                 "zwei" -> 2L
@@ -72,12 +73,12 @@ class TemporalCue(private val zone:ZoneId) {
             "gestern" in q -> days(1,1)
             "heute" in q -> days(0,0)
             Regex("letzte[nr]? woche|vorige[nr]? woche").containsMatchIn(q) -> {
-                val thisWeek=today.toLocalDate().minusDays(today.dayOfWeek.value.toLong()-1)
+                val thisWeek=today.minusDays(today.dayOfWeek.value.toLong()-1)
                 thisWeek.minusWeeks(1).atStartOfDay(zone).toInstant().toEpochMilli() until
                     thisWeek.atStartOfDay(zone).toInstant().toEpochMilli()
             }
             Regex("letzte[nr]? monat|voriger monat").containsMatchIn(q) -> {
-                val thisMonth=today.toLocalDate().withDayOfMonth(1)
+                val thisMonth=today.withDayOfMonth(1)
                 thisMonth.minusMonths(1).atStartOfDay(zone).toInstant().toEpochMilli() until
                     thisMonth.atStartOfDay(zone).toInstant().toEpochMilli()
             }

@@ -53,6 +53,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarRenderer = ContinuumAvatarRenderer()
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+    private val cockpitPresentationPrefs = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+    /** Existing host refreshes its current layout after an explicit owner appearance choice. */
+    var onAppearanceChanged: (() -> Unit)? = null
     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
     // New installations use the requested 3D cockpit. An existing explicit orb
     // or 2D choice is preserved; this never requests camera/audio permissions.
@@ -359,9 +362,18 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     fun showAppearanceChooser() {
+        val compact = cockpitPresentationPrefs.getBoolean("compact", false)
+        val selected = if (compact) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
         AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
-            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau"), if (head3dEnabled) 2 else if (headEnabled) 1 else 0) { dialog, item ->
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau",
+                "Kompakt · Kugel"), selected) { dialog, item ->
+                val presentation = cockpitPresentationPrefs.edit().putBoolean("compact", item == 3)
+                // Keep the existing legacy return preference in the same store, including an explicit 2D choice.
+                if (headEnabled) presentation.putBoolean("avatar-3d", head3dEnabled)
+                if (item == 1 || item == 2) presentation.putBoolean("avatar-3d", item == 2)
                 if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
+                presentation.apply()
+                onAppearanceChanged?.invoke()
                 dialog.dismiss()
             }
             .setNeutralButton("Bewegung prüfen") { _, _ ->
@@ -587,7 +599,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn && !head3dEnabled) {
+            if (!native3dDrawn && (!head3dEnabled || native3dFailed)) {
                 val headCanvas = canvas.save()
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
@@ -624,9 +636,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (!native3dDrawn && head3dEnabled) {
-                val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
-                painter.drawText(status, headDrawBounds.centerX() / density,
+            if (!native3dDrawn && head3dEnabled && !native3dFailed) {
+                painter.drawText("3D wird initialisiert …", headDrawBounds.centerX() / density,
                     headDrawBounds.centerY() / density, TextStyle(FontFamily.TEXT, 400, 12f), avatarBrandFill, TextAlign.CENTER)
             }
             if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,

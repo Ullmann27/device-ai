@@ -7,10 +7,12 @@ const activity=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/devicea
 const contract=fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt',import.meta.url),'utf8');
 
 test('avatar director is wired to hologram state, TTS start/range/end and the TTS audio envelope',()=>{
- assert.match(activity,/AvatarDirector\(at\.heinz\.deviceai\.avatar\.AvatarSinkRegistry\.sink\)/);
+ assert.match(activity,/AvatarDirector\(\s*at\.heinz\.deviceai\.cockpit\.JarvisAvatarSlot\.fanOut/);
+ assert.match(activity,/val liveHologram = \(hologramView \?: ContinuumHologramView\(this\)\)\.also \{[^}]*avatarDirector\.attach\(it\)[^}]*\}/);
+ assert.match(activity,/ContinuumHomeView\(this, liveHologram\)/);
  assert.match(activity,/avatarDirector\.onRuntime\(/);
  assert.match(activity,/avatarDirector\.speechStarted\(utteranceId, voiceAvatarText\)/);
- assert.match(activity,/avatarDirector\.wordRange\(utteranceId, start, end\)/);
+ assert.match(activity,/avatarDirector\.wordRange\(utteranceId, start, end, audioFrame = frame\)/);
  assert.match(activity,/avatarDirector\.audioLevel\(it, level\)/);
  const stopStart=activity.indexOf('private fun stopVoiceAnimation(interrupted: Boolean)');
  const stopEnd=activity.indexOf('private fun installVoiceProgressListener()',stopStart);
