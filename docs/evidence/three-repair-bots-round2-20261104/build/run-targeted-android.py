@@ -9,6 +9,8 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import threading
+import time
 
 
 def main() -> int:
@@ -48,7 +50,8 @@ def main() -> int:
     env['PATH'] = str(toolchain / 'jdk17/bin') + os.pathsep + env.get('PATH', '')
     command = [str(toolchain / 'gradle-8.11.1/bin/gradle'), '--offline', '--no-daemon',
                '--max-workers=1', '--console=plain', '--stacktrace',
-               '-Dorg.gradle.jvmargs=-Xmx1g -Djava.io.tmpdir=' + str(toolchain / 'tmp'),
+               '-Dorg.gradle.jvmargs=-Xmx1g -XX:ActiveProcessorCount=2 -XX:+UseSerialGC '
+               '-XX:MaxMetaspaceSize=384m -Djava.io.tmpdir=' + str(toolchain / 'tmp'),
                '-Pkotlin.compiler.execution.strategy=in-process',
                '-Pandroid.builder.sdkDownload=false', '-PcontinuumUiWidgetTests=true',
                '--init-script', str(toolchain / 'bounded-tests.init.gradle'),
@@ -69,6 +72,30 @@ def main() -> int:
                 print(text, end='', flush=True)
 
             emit(json.dumps(header) + '\n')
+            samples = []
+            finished = threading.Event()
+
+            def monitor() -> None:
+                while not finished.is_set():
+                    java = []
+                    for proc in Path('/proc').iterdir():
+                        if not proc.name.isdigit():
+                            continue
+                        try:
+                            if (proc / 'comm').read_text().strip() != 'java':
+                                continue
+                            status = dict(line.split(':', 1) for line in (proc / 'status').read_text().splitlines())
+                            java.append({'pid': int(proc.name),
+                                         'rssKiB': int(status.get('VmRSS', '0 kB').split()[0]),
+                                         'threads': int(status.get('Threads', '0'))})
+                        except (FileNotFoundError, ProcessLookupError, PermissionError):
+                            continue
+                    samples.append({'unixSeconds': time.time(), 'javaProcesses': java,
+                                    'freeDiskBytes': shutil.disk_usage(toolchain).free})
+                    finished.wait(2)
+
+            monitor_thread = threading.Thread(target=monitor, daemon=True)
+            monitor_thread.start()
             with subprocess.Popen(command, cwd=checkout, env=env, stdout=subprocess.PIPE,
                                   stderr=subprocess.STDOUT, text=True) as process:
                 assert process.stdout is not None
@@ -76,6 +103,13 @@ def main() -> int:
                     emit(line)
                 code = process.wait()
             emit('\nEXIT_CODE=' + str(code) + '\n')
+            finished.set()
+            monitor_thread.join(timeout=5)
+            (toolchain / 'logs' / (args.log_name + '.resources.json')).write_text(
+                json.dumps(samples, indent=2) + '\n')
+            peak_rss = max((sum(proc['rssKiB'] for proc in sample['javaProcesses'])
+                            for sample in samples), default=0)
+            emit('PEAK_SAMPLED_JAVA_RSS_KIB=' + str(peak_rss) + '\n')
             emit('FREE_AFTER_BYTES=' + str(shutil.disk_usage(toolchain).free) + '\n')
     return code
 

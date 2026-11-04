@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-04",
+  "reviewer": "root coordinator",
+  "executionBy": "round2_android_qa agent; no coordinator test rerun",
+  "status": "FOCUSED_RUNTIME_EVIDENCE_VERIFIED_WITH_LATER_DONOR_AVAILABILITY_LIMIT",
+  "buildAgentCommit": "ad437d0654edcbed56644c154d22d0502b9fe99d",
+  "coordinatorImportedCommit": "471f623e5a1ab6e0f7a1afd271bd3e33b0a3b9a9",
+  "publishedGreenSource": "b2bc510a59e29d4ece478109e12b9785be11ee7d",
+  "buildReceiptSha256": "64bfd9d73f6b4253252aaf6f23c35b52c3b52fe926bcff20e382083554dc9b79",
+  "buildManifestSha256": "1b59ef4deda70a4cf101f49c71a2261d1439bf8d7fdefd53e1efb3d60c645d77",
+  "trackedBuildEvidenceFilesHashChecked": 27,
+  "phases": {
+    "red": {
+      "sourceCommit": "d24ad51b0235826cf0baaa998a2fb4af80a17404",
+      "sourceTree": "45dff2f8cd7c2a34aadd1690502316878be83394",
+      "originalInputsMatched": 25,
+      "fullTraceSha256Matched": true,
+      "selectedTraceExactlyReconstructed": true,
+      "observedAppClassesAllInFreshCompilation": true,
+      "pillClassNotLoaded": true,
+      "manifestSha256": "31485141e14e2fbc93ae50c3d48a6534b6a576df236d348b61bb38cea6bbe1ae",
+      "result": {
+        "compileExitCode": 0,
+        "junitExitCode": 1
+      }
+    },
+    "green": {
+      "sourceCommit": "d91fe8b1141d35341b67298a04f3913fd1bf0876",
+      "sourceTree": "7770e3ef628f301bf40161e4a99906836c63b296",
+      "originalInputsMatched": 25,
+      "fullTraceSha256Matched": true,
+      "selectedTraceExactlyReconstructed": true,
+      "observedAppClassesAllInFreshCompilation": true,
+      "pillClassNotLoaded": true,
+      "manifestSha256": "f12c60482072269c123e3c7dec25f4246b22bd4f975ff3848d3a4af0e4487291",
+      "result": {
+        "compileExitCode": 0,
+        "junitExitCode": 0
+      }
+    }
+  },
+  "onlyChangedOriginalInput": [
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt"
+  ],
+  "sameRuntimeArtifactsHashChecked": 47,
+  "sameInstrumentedSdkJarsHashChecked": 2,
+  "androidCompileJarHashChecked": true,
+  "candidateBusinessSourceMatchesExecutionManifest": true,
+  "donorAvailabilityDuringFinalRootReview": {
+    "businessClassHashesRetainedFromExecution": 4,
+    "businessClassesRehashedByRoot": 0,
+    "donorSourceCurrentlyPresent": false,
+    "unavailableClassPaths": [
+      "at/heinz/deviceai/cockpit/ToolGatePillActionGate.class",
+      "at/heinz/deviceai/cockpit/ToolGatePillActionGate$Companion.class",
+      "at/heinz/deviceai/cockpit/ToolGatePillActionGate$WhenMappings.class",
+      "at/heinz/deviceai/cockpit/ToolGatePillActionGate$documents$1.class"
+    ],
+    "note": "An initial root recheck reached missing donor class files (FileNotFoundError); a subsequent recheck found the donor source path also absent. No absent input is represented as a matching hash. Execution-time manifests retain the source and four class hashes. Pill classes were never loaded in either complete runtime trace. A future rerun needs the documented business compile dependency rebuilt or provided."
+  },
+  "results": {
+    "red": {
+      "tests": 2,
+      "failures": 2,
+      "expectedProductAssertions": true
+    },
+    "green": {
+      "tests": 25,
+      "failures": 0
+    }
+  },
+  "limits": [
+    "Focused real Robolectric widget tests, no app manifest, Android OS resources only",
+    "No full Gradle/app packaging/device/GPU/audio/release success claimed",
+    "Prior Gradle daemon interruption remains a failed build before tests",
+    "Unused business compile dependency does not establish ToolGate execution coverage",
+    "Root could not later remeasure donor business class files after they became unavailable"
+  ]
+}

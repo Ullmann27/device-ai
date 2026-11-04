@@ -4,7 +4,15 @@ Stand: 04.11.2026. Endgültiger Quellkandidat: `0b9c651440a43d446bb116c079438142
 Produktionsblob: `86d39aedf0fadb6e0633bec42112b36f3a6fea9c`.
 Erster Motion-Kandidat: `3516f1cda681944cede74732dd68e5a47d991e3d`;
 zusätzlicher Test-only-RED-Stand: `d24ad51b0235826cf0baaa998a2fb4af80a17404`.
-Der Kandidat ist bis zur Veröffentlichung durch den koordinierenden Root-Agenten LOCAL_ONLY.
+Der Koordinator hat den inhaltsgleichen kombinierten Quellstand unter
+`b2bc510a59e29d4ece478109e12b9785be11ee7d` in PR #505 veröffentlicht.
+
+**Nachtrag des Koordinators:** Die unabhängige echte Robolectric-Abnahme ist
+inzwischen abgeschlossen: beide neuen Queue-Fälle scheitern am vorherigen
+Kandidaten erwartungsgemäß; auf dem finalen Produktionsblob bestehen alle
+25 Lifecycle-Tests. Die Testdatei bleibt byte-identisch. Der direkte Widget-
+Prüfstand verwendet echte Android-/Looper-/Handler-Klassen und Original-Painter,
+aber kein Appmanifest oder Appressourcenpaket. [Vollständiger Beleg und Grenzen](../build/robolectric-receipt.json).
 
 ## Nachgewiesener Fehler und begrenzte Korrektur
 
@@ -125,13 +133,15 @@ Die neun ergänzenden Queue-/Lifecycle-Szenarien sind:
 8. Nie angehängter direkter Subscriber: Motion aus, Hintergrund-Abschluss, Main-Looper abarbeiten, Motion an, späterer Worker; es darf keine erledigte Karte erscheinen.
 9. Dauerhaft entfernter direkter Subscriber: 1.000 Hintergrund-Abschlüsse, Main-Looper abarbeiten, kein Reattach; der vorhandene interne Verlauf muss genau die letzten 24 IDs enthalten. Hier wird der begrenzte Verlauf gezielt per Reflection gelesen, weil Reattach selbst die falsche View-Queue abarbeiten und den Fehler maskieren würde.
 
-Status bei Aktualisierung dieses Belegs: **NOT_RUN_BY_THIS_AGENT** für die 25
-Robolectric-Fälle. Der Android-QA-Agent führt die beiden zuletzt ergänzten Fälle
-auf dem Test-only-RED-Stand `d24ad51b0235826cf0baaa998a2fb4af80a17404` aus und
-prüft danach den eingefrorenen Handler-Kandidaten unabhängig. Ergebnisse dieses
-noch laufenden Android-Laufs werden hier nicht vorweggenommen. Ein fremder Testbericht darf nur
-bei nachgewiesen identischen Quell-/Testbytes als Kandidatenabnahme ergänzt werden.
-Die 25 Hosttests sind kein Ersatz für diesen Nachweis.
+Historischer Status bei Übergabe durch diesen UI-Bot: **NOT_RUN_BY_THIS_AGENT**
+für die 25 Robolectric-Fälle. Die damalige offene Abnahme und die unveränderten
+Hostresultate bleiben im ursprünglichen `manifest.json` dokumentiert. Der spätere
+Android-QA-Agent führte die zwei ergänzten Methoden auf dem Test-only-RED-Stand
+`d24ad51b0235826cf0baaa998a2fb4af80a17404` aus: zwei erwartete Assertion-Fehler.
+Auf dem kombinierten finalen Quellstand `d91fe8b1141d35341b67298a04f3913fd1bf0876`
+bestehen anschließend alle 25 Methoden. Der Koordinator hat Quell-/Testbytes,
+Rohlogs und Hashbindung dieses separaten Belegs persönlich abgeglichen.
+Die 25 Hosttests werden dadurch nicht zu Android-Tests umetikettiert.
 
 ## Verbleibende Grenzen
 

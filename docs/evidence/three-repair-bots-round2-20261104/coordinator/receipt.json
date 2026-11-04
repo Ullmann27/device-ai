@@ -154,7 +154,7 @@
   },
   "limitations": {
     "fullAndroidBuild": "See separate build attempt evidence; not claimed by these coordinator host runs",
-    "nativeQueue": "See separate targeted Robolectric evidence, if completed",
+    "nativeQueue": "Separate focused real Robolectric evidence: expected RED2 failures then GREEN25/25 on the same final source; see ../build/robolectric-receipt.json and native-robolectric-review.json. This is not an execution by the coordinator host suites or a full Android build.",
     "device": "NOT_RUN",
     "apk": "NOT_BUILT_OR_ACCEPTED",
     "ranking": "No corpus tuning or M2.9 main-chat promotion",
@@ -187,5 +187,13 @@
     "junit": "4.13.2",
     "gradleLib": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib",
     "androidRuntimeUsedByTheseChecks": false
+  },
+  "nativeFollowUp": {
+    "receipt": "../build/robolectric-receipt.json",
+    "independentEvidenceReview": "native-robolectric-review.json",
+    "tests": 25,
+    "failures": 0,
+    "sourceUnchanged": true,
+    "laterReproductionLimit": "Unused donor business compile classes became unavailable after execution; retained original hashes were not remeasured by root."
   }
 }
