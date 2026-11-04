@@ -23,10 +23,10 @@ data class MemoryActivitySnapshot(
 
     /** Zeilen (Wert, Beschriftung) in ref5-Reihenfolge. */
     fun rows(): List<Pair<String, String>> = listOf(
-        fmt(newToday, plus = true) to "Neue Erinnerungen (heute)",
-        fmt(contextUpdates) to "Kontext-Updates",
-        fmt(hypotheses) to "Hypothesen",
-        fmt(total) to "Erinnerungen gesamt",
+        fmt(newToday, plus = true) to "New memories (today)",
+        fmt(contextUpdates) to "Context updates",
+        fmt(hypotheses) to "Hypotheses",
+        fmt(total) to "Total memories",
     )
 
     override fun equals(other: Any?) = other is MemoryActivitySnapshot && newToday == other.newToday &&
@@ -80,7 +80,6 @@ class MemoryActivityTracker(private val clock: Clock = Clock.system(ZoneId.of("E
  */
 object JarvisMemoryActivityPanel {
     const val TITLE = "Memory Activity"
-    const val OFFLINE_LABEL = "offline"
     const val REF_W = 160f
     const val REF_H = 105f
 
@@ -105,18 +104,17 @@ object JarvisMemoryActivityPanel {
         // Balken
         val bl = l + 12f * k; val br = r - 12f * k; val base = t + 41f * k; val maxH = 14f * k
         val bars = snap.hourly
-        if (bars == null || bars.isEmpty()) {
-            p.drawLine(bl, base, br, base, 1f, Fill.Solid(C.rim), .8f)
-            p.drawText(OFFLINE_LABEL, (bl + br) / 2, base - 4f * k, JarvisDesign.Type.caption.copy(size = 9f * k), Fill.Solid(C.textSecondary), TextAlign.CENTER)
-        } else {
-            val peak = bars.maxOrNull()?.coerceAtLeast(1) ?: 1
-            val step = (br - bl) / bars.size; val bw = step * .55f
-            for ((i, v) in bars.withIndex()) {
-                val h = if (v <= 0) 1f * k else maxOf(2f * k, maxH * v / peak)
-                val x = bl + i * step + (step - bw) / 2
-                val col = Fill.Linear(0f, base - maxH, 0f, base, intArrayOf(if (i % 3 == 0) C.cyan else C.violetRim, C.violet))
-                p.fillRect(x, base - h, x + bw, base, col, if (v <= 0) .35f else 1f)
-            }
+        // Ohne Ereignisquelle: 24 gedimmte leere Balken (kein Wert, keine "offline"-Zeile).
+        val n = bars?.size?.takeIf { it > 0 } ?: 24
+        val peak = bars?.maxOrNull()?.coerceAtLeast(1) ?: 1
+        val step = (br - bl) / n; val bw = step * .55f
+        for (i in 0 until n) {
+            val v = bars?.getOrNull(i) ?: 0
+            val x = bl + i * step + (step - bw) / 2
+            if (bars == null || v <= 0) { p.fillRect(x, base - 1.5f * k, x + bw, base, Fill.Solid(C.rim), .45f); continue }
+            val h = maxOf(2f * k, maxH * v / peak)
+            val col = Fill.Linear(0f, base - maxH, 0f, base, intArrayOf(if (i % 3 == 0) C.cyan else C.violetRim, C.violet))
+            p.fillRect(x, base - h, x + bw, base, col)
         }
         // Zeilen
         val rowStyle = JarvisDesign.Type.body.copy(size = 8.5f * k); val valStyle = rowStyle.copy(weight = 500)
