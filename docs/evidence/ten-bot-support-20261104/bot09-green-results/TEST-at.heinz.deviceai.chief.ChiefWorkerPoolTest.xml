@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefWorkerPoolTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T11:11:32" hostname="8c129114cae4" time="0.29">
+  <properties/>
+  <testcase name="aThrowingReportCallbackReleasesItsSlotAndDoesNotReportTwice" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.022"/>
+  <testcase name="timeoutsAlsoInvokeCooperativeStopBeforeReturningAReport" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.062"/>
+  <testcase name="workerToolsAreScopedToItsBriefAtModelAndRunnerLevel" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.001"/>
+  <testcase name="cancellingAnInterruptResistantWorkerInvokesItsCooperativeStop" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.012"/>
+  <testcase name="submitAfterShutdownPreservesRejectionWithoutLeavingUnfinishedWork" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.0"/>
+  <testcase name="reportCallbacksCanResubmitTheSameOrANewIdWithoutQueueCapacity" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.003"/>
+  <testcase name="awaitIdleDoesNotCompleteBeforeTheReportCallbackReturns" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.011"/>
+  <testcase name="submitReturnsImmediatelyAndReportsExactlyOnce" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.012"/>
+  <testcase name="deadlineCancelAndFailureBecomeHonestReports" classname="at.heinz.deviceai.chief.ChiefWorkerPoolTest" time="0.164"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

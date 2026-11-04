@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.routines.ContinuumRoutinesTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T11:11:33" hostname="8c129114cae4" time="0.004">
+  <properties/>
+  <testcase name="scheduledRoutineIsDueOncePerPeriodAndNotBeforeItsStart" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.001"/>
+  <testcase name="eventTriggerAndBoundsAndInvalidRoutines" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.0"/>
+  <testcase name="eventRoutineCannotBeDispatchedAgainBeforeReportOrExplicitRelease" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.0"/>
+  <testcase name="routineReportWithoutClaimCannotBeMistakenForCompletedWork" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.001"/>
+  <testcase name="urgentMessageWakesInfoWaitsAndDuplicatesAreDropped" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.001"/>
+  <testcase name="pollingAgainDoesNotDuplicateAnInFlightScheduledRun" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.0"/>
+  <testcase name="aFailingWakeHookNeverLosesTheMessage" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.0"/>
+  <testcase name="reportsOnlyWhenSomethingIsNew" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.001"/>
+  <testcase name="mailboxBoundsRecipientCountTotalMessageCountAndUtf8Bytes" classname="at.heinz.deviceai.routines.ContinuumRoutinesTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

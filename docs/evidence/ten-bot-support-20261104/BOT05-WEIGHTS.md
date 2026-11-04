@@ -46,3 +46,26 @@ The diagnostic is now bound to the reviewed runner's exact SHA-256 before any
 module execution. The owner has since changed the runner; the earlier defect
 must not be attributed automatically to those new bytes. See
 `PROBE-SOURCE-BOUNDARY.md` for the rejection and original-source replay evidence.
+
+## Static follow-up on the moving owner checkout
+
+Bot 05 performed a second read-only source inspection, without importing or
+executing the runner. The owner's HEAD was still
+`88d7b05072bdec6250990efaa9914a1e6744c29b`; its uncommitted runner bytes now had
+SHA-256 `9a68ddf27158692044738aed96892ad6476a520b7e30ab6651adfff2c4f38447`.
+
+The current source adds validation of frozen selections in `continuation()` and
+parses/validates existing final output, including selection/holdout hashes and
+candidate identities. Thus the original claim that final output is accepted
+without content validation does not apply unchanged to this new snapshot.
+`write_new()` still writes directly into the final exclusive path, and
+`ladder()` still immediately returns when its output already exists. Atomic
+publication and complete resume validation are not confirmed.
+
+The owner's `docs/research/omega/weight-space-20261104-evidence/orchestration-checks.txt`
+records 24 successful checks and zero model processes for an older runner hash
+beginning `609215b0`; it does not validate the newly observed bytes. These are
+the other workstream's receipts, not additional support-team executions.
+
+Classification: partial correction visible in source; complete behavioral
+repair remains unverified. This snapshot can become stale as the owner works.
