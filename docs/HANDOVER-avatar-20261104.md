@@ -37,3 +37,13 @@ schmal; Sockelring = alte Plattform; HUD-Ring mit zu wenig Segmenten/Ringen.
 ## Offen
 - GLB-Herkunft (continuum-avatar.glb aus #478) ungeklärt → nicht einchecken/wiederverwenden.
 - Regeln: kein Merge, kein Force-Push, nichts löschen, keine Referenzbilder/Videos/GLB in Git.
+
+## Sprint 09:56 (Nachtrag)
+- #489 jarvis-mathematik/motion-math @e600add5 per Merge drin (konfliktfrei). Anschluss NOCH OFFEN (WIP): in
+  ContinuumHologramView.onDraw (Zeile ~496, `avatarPose.pose(...)`) `LipSyncFaceSource(MotionLibrary.audioLevel,
+  MotionLibrary.visemeHint).weightsAt(now, out)` + `applyTo(pose)` (Achtung: applyTo kopiert die Pose, 1 Objekt/Frame;
+  allokationsfrei nur über weightsAt-Array direkt an den Renderer, 21 Kanäle in TARGETS-Reihenfolge), Kopf-Blinzeln über
+  `blinkAt(ms, seed)` statt `eyeOpening()`, Atmen über `breath(ms)` statt eigenem `breath()`. Wenn
+  MotionLibrary.faceWeights aktiv: im AvatarMorphMapper visemeBlend (70 ms) UND festes 4,6-s-Blinzeln per Flag abschalten
+  (nicht löschen), sonst doppelt überblendet/geblinzelt. JawOpen-Logik ist kompatibel.
+- Kopf-Look weiter offen: Faserlinien statt Raster bzw. Bild-Modus mit den ref5-Bildern (siehe oben), keine Arbeit mehr am Raster.
