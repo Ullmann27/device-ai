@@ -5,10 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
 import at.heinz.deviceai.avatar.AvatarEvent
 import at.heinz.deviceai.avatar.AvatarPoseReducer
 import at.heinz.deviceai.avatar.GazeTarget
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -16,18 +18,49 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 /** Real View/Canvas lifecycle checks; never initializes Android Filament JNI on the host. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class ContinuumAvatar3dLifecycleUiTest {
+    @Before fun configureVirtualVsyncClock() {
+        // Automatic virtual-vsync advances time while idleFor drains recurring frames.
+        // Explicit frame advancement keeps the real lifecycle assertions bounded.
+        ShadowChoreographer.setPaused(true)
+        ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+    }
+
+    private fun advanceFrames(totalMillis: Long) {
+        // Paused VSync is driven by clock changes, not by a queued Looper deadline.
+        var remaining = totalMillis
+        while (remaining > 0) {
+            val step = minOf(16L, remaining)
+            shadowOf(Looper.getMainLooper()).idleFor(step, TimeUnit.MILLISECONDS)
+            remaining -= step
+        }
+    }
+
+    private fun attachVisible(activity: Activity, view: View, width: Int = 412, height: Int = 307) {
+        activity.setContentView(view, ViewGroup.LayoutParams(width, height))
+        advanceFrames(16) // Complete the actual window traversal before foreground activation.
+        assertTrue("Fixture must be attached to the real Activity window", view.isAttachedToWindow)
+        assertTrue("Fixture must be shown before testing foreground behavior", view.isShown)
+        assertEquals(View.VISIBLE, view.windowVisibility)
+        assertEquals("Window traversal must preserve the requested viewport width", width, view.width)
+        assertEquals("Window traversal must preserve the requested viewport height", height, view.height)
+    }
+
     private fun field(view: ContinuumHologramView, name: String): Any? =
         ContinuumHologramView::class.java.getDeclaredField(name).apply { isAccessible = true }.get(view)
     private fun draw(view: ContinuumHologramView): Bitmap {
-        view.measure(View.MeasureSpec.makeMeasureSpec(412, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(307, View.MeasureSpec.EXACTLY))
-        view.layout(0, 0, 412, 307)
+        assertEquals(412, view.width)
+        assertEquals(307, view.height)
         return Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888).also { view.draw(Canvas(it)) }
     }
     @Test fun newAppearanceUses3dButSavedOrbAndLegacy2dStayChosen() {
@@ -61,7 +94,7 @@ class ContinuumAvatar3dLifecycleUiTest {
         val view = ContinuumHologramView(controller.get())
         try {
             view.setNativeHeadEnabled(false); view.setAnimationsEnabled(false)
-            controller.get().setContentView(view)
+            attachVisible(controller.get(), view)
             val orb = draw(view)
             try {
                 assertEquals(0, view.childCount); assertNull(field(view, "native3d")); assertEquals(false, field(view, "assetLoading"))
@@ -69,7 +102,7 @@ class ContinuumAvatar3dLifecycleUiTest {
                 draw(view).recycle()
                 assertTrue(view.isNativeHeadEnabled()); assertEquals(0, view.childCount)
                 assertNull(field(view, "native3d")); assertNull(field(view, "assetBytes")); assertEquals(false, field(view, "assetLoading"))
-                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                advanceFrames(1_000)
                 assertEquals(0L, view.sampleMotion().callbackCount)
                 view.setNativeHeadEnabled(false)
                 val restored = draw(view)
@@ -81,7 +114,8 @@ class ContinuumAvatar3dLifecycleUiTest {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val view = ContinuumHologramView(controller.get())
         try {
-            controller.get().setContentView(view); view.setNativeHeadEnabled(true); view.setAnimationsEnabled(false)
+            view.setNativeHeadEnabled(true); view.setAnimationsEnabled(false)
+            attachVisible(controller.get(), view)
             val baseline = draw(view)
             try {
                 view.setNative3dEnabled(true)
@@ -90,14 +124,14 @@ class ContinuumAvatar3dLifecycleUiTest {
                 val fallback = draw(view)
                 try { assertTrue("Rejected 3D must show existing 2D pixels", baseline.sameAs(fallback)) } finally { fallback.recycle() }
                 assertEquals(0, view.childCount); assertNull(field(view, "native3d"))
-                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                advanceFrames(1_000)
                 assertEquals(0L, view.sampleMotion().callbackCount)
                 view.setAnimationsEnabled(true)
-                shadowOf(Looper.getMainLooper()).idleFor(200, TimeUnit.MILLISECONDS)
+                advanceFrames(200)
                 assertTrue(view.sampleMotion().callbackCount > 0)
                 view.setForegroundActive(false)
                 val paused = view.sampleMotion().callbackCount
-                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                advanceFrames(1_000)
                 assertEquals(paused, view.sampleMotion().callbackCount)
                 assertNull(field(view, "nativeSurface")); assertNull(field(view, "native3d"))
                 controller.get().setContentView(View(controller.get()))
@@ -111,8 +145,9 @@ class ContinuumAvatar3dLifecycleUiTest {
         val view = ContinuumHologramView(controller.get())
         try {
             view.setNativeHeadEnabled(true)
-            controller.get().setContentView(view)
+            attachVisible(controller.get(), view)
             view.setForegroundActive(true)
+            assertTrue("Observed gaze requires a live visible head", view.motionDiagnostics().contains("LIVE"))
             val reducer = field(view, "avatarPose") as AvatarPoseReducer
             fun observe() {
                 // The View's clear uses wall time; virtual Looper idle need not advance that clock.

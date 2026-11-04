@@ -1,0 +1,244 @@
+{
+  "sourceCommit": "92f421fa81c57022d903e2c1ff45ae6279c77b22",
+  "sourceTree": "e6dc16a26b5926c36cade4b1c6afe3c9fe327989",
+  "status": "NODE_PASS_ANDROID_FOCUS_7_FAILURES_HOST_ISOLATION_38_FAILURES",
+  "createdAt": "2026-11-04T20:29:07.416349+00:00",
+  "archive": "checkpoint-92f421f.tar.gz",
+  "archiveBytes": 484903,
+  "archiveSha256": "8a8b09817c8a79ceea7f3c67724182d7b5e6613e874599a54c6285a495be49a4",
+  "results": {
+    "backend": {
+      "total": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "hostMotion": {
+      "total": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    "hostTemporal": {
+      "total": 29,
+      "passed": 29,
+      "failed": 0
+    },
+    "hostSequence": {
+      "total": 25,
+      "passed": 25,
+      "failed": 0
+    },
+    "node": {
+      "files": 323,
+      "total": 2362,
+      "passed": 2331,
+      "failed": 0,
+      "skipped": 31,
+      "exit": 0
+    },
+    "tools": {
+      "files": 25,
+      "total": 324,
+      "passed": 281,
+      "failed": 38,
+      "skipped": 5,
+      "exit": 1
+    },
+    "androidFocused": {
+      "classes": 6,
+      "total": 53,
+      "passed": 46,
+      "failed": 7,
+      "skipped": 0,
+      "exit": 1
+    },
+    "integrationReview": "PASS"
+  },
+  "notes": [
+    "Counts overlap across host and Android tests and must not be added as independent coverage.",
+    "The 38 host isolation failures remain failures, not skips.",
+    "Seven Android fixture failures remain under diagnosis; no full Android or APK acceptance."
+  ],
+  "files": [
+    {
+      "path": "build-audit/targeted-92f421fa81c5.log",
+      "bytes": 21689,
+      "sha256": "794a8a969dc60ae31d6214757ea26388252df0c7d64281949d1610bd496b45dd"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.memory.jsonl",
+      "bytes": 12047,
+      "sha256": "e516453a3a76c23b791d0a9da14e9944a702641c0d21d9151f633193ca048267"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.reports.zip",
+      "bytes": 6307,
+      "sha256": "7675687ac8b4661c1bf298d61bed6da096cd0e39c6c43d08f78a863bbcbdb7f1"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.result.json",
+      "bytes": 2660,
+      "sha256": "af0023c86aa8fff1377dc79a961703283e4cdb535533942290d7dcbdeec3c0a8"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.sources.after.json",
+      "bytes": 156587,
+      "sha256": "eb9de8dcff0a4af1fdb92efe0d8e7257d156ed9d61b1fda6c3e1fe272dc18afd"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.sources.before.json",
+      "bytes": 156587,
+      "sha256": "eb9de8dcff0a4af1fdb92efe0d8e7257d156ed9d61b1fda6c3e1fe272dc18afd"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.started.json",
+      "bytes": 2105,
+      "sha256": "f367a81a91eaa9335b713afca8898616b29fe1e308a4a74e8a5bea11336cc2b4"
+    },
+    {
+      "path": "build-audit/targeted-92f421fa81c5.summary.json",
+      "bytes": 18636,
+      "sha256": "81e7747a811dca7c22f3a5954092c9e2ddfecb28a8fdb5239578448030a60d94"
+    },
+    {
+      "path": "coordinator-audit/backend-92f421f-result.json",
+      "bytes": 4945,
+      "sha256": "e02a679b1338ce7426716bff39593d2707675a5d5b05711e389042a458812acc"
+    },
+    {
+      "path": "coordinator-audit/backend-92f421f.tap",
+      "bytes": 13213,
+      "sha256": "6c70ee8bb08658da153f4041563024b5f3144c401c9d6e766d6a6d7121d87723"
+    },
+    {
+      "path": "host-qa/combined-92f421f/motion.log",
+      "bytes": 1773,
+      "sha256": "316a143342c0db9fe8fe04f9298da975a7374435d2edc9ed422e998cfdc886a2"
+    },
+    {
+      "path": "host-qa/combined-92f421f/results.json",
+      "bytes": 1996,
+      "sha256": "fd22eca2d5c09df7b2d84b29c60edaaf0a6e260ab98e8b892bbaba2bce609934"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sequence/compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sequence/input-integrity.log",
+      "bytes": 2241,
+      "sha256": "aaa094fe539db0d3bbd7c120c4c48608d67cc7aa9f38dc573b36e208296e9841"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sequence/input-sha256.txt",
+      "bytes": 4535,
+      "sha256": "6a3ed20872d2da0e69781cf8088664c28224f2a7746790714951aba13964e3fe"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sequence/junit.log",
+      "bytes": 75,
+      "sha256": "1820372591bdcf9b4c81044b37efc0680a146ad541911e5472c9cb6e48d71944"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sequence.log",
+      "bytes": 105,
+      "sha256": "8d4993f90c5ccdb690bcdfa7e35767610120999049b9c0eb6d515b07e13cf437"
+    },
+    {
+      "path": "host-qa/combined-92f421f/sources-before.json",
+      "bytes": 147989,
+      "sha256": "af40f6613304663395f46695fac42bae7b736d7c4ed0f64d766b5a48829aeca3"
+    },
+    {
+      "path": "host-qa/combined-92f421f/temporal.log",
+      "bytes": 3705,
+      "sha256": "66b6943222cd81b84b34c508644d9d726257df2a8cc33c20848965ba8fba01c7"
+    },
+    {
+      "path": "integration-audit/INTEGRATION-92F421-REVIEW.md",
+      "bytes": 7309,
+      "sha256": "f6071e58faed58423fb4b76412f43743785c26ff9c3e53319c64700a106078b9"
+    },
+    {
+      "path": "integration-audit/combined-92f421-integration-review.json",
+      "bytes": 18164,
+      "sha256": "70821e17f5a5fcf04f18be77e4841b722b993b8879ada9ecb0cfde87aed00031"
+    },
+    {
+      "path": "integration-audit/combined-f69-integration-review.json",
+      "bytes": 24106,
+      "sha256": "69aad95b2bf99fc5b097994a377214c4ef2a9e5da2a30ece28bc324dac84bd09"
+    },
+    {
+      "path": "integration-audit/round2-505-f69-manifest.json",
+      "bytes": 15875,
+      "sha256": "109cc0bf7c10bbc4e521d54015502db2bc0602c7bb773356ee78135f8edcc69c"
+    },
+    {
+      "path": "integration-audit/round2-505-f69.patch",
+      "bytes": 42029,
+      "sha256": "0a822ab40543393eba0526ca188943ce81cdce4a12c9f57ed99a6b8772a4b3b3"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-evidence-manifest.json",
+      "bytes": 2409,
+      "sha256": "8dfe12672a75c1c71ae402684d21583200b131fe53aa12e4ba3ad3fa1da4ca95"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-evidence.zip",
+      "bytes": 138308,
+      "sha256": "94833705d41aee53e38632e4fc8a188829a6baee7ecc9b333dcc487042b5eb4f"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-node-command.json",
+      "bytes": 18922,
+      "sha256": "df85f6a1ad078777fe6e94bb393cd1b43e296cfe9f0745336eebaefc23e36cc6"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-node-files.txt",
+      "bytes": 15594,
+      "sha256": "7fff6db5593601aa805f9fcaa40024a69c57d2a00798f688caa05d980b63e789"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-node-summary.json",
+      "bytes": 8354,
+      "sha256": "2b2431a3f1542c111a3d9d762f50500413ec7db701fbff7662157381cd696a7b"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-node.tap",
+      "bytes": 511863,
+      "sha256": "16a450f0b4c1e6eb1e777d1ca63bc6fba20f1b764c392689a185e57e149a6ab3"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-skip-inventory.json",
+      "bytes": 31327,
+      "sha256": "40d56089de5fc2c76efed8e535e8afcac63cd50924c76a1fa38fba6f03c99c4e"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-tools-command.json",
+      "bytes": 5781,
+      "sha256": "6bd024c505cbe73ffcabad5901466294815b1ef09e25578fb25a989a1df56152"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-tools-files.txt",
+      "bytes": 1400,
+      "sha256": "fba5dc60d6a832111c8ce712348a187f99760d4ac4c705535fe75a96c0aa14c2"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-tools-summary.json",
+      "bytes": 15067,
+      "sha256": "4c6ae5383e7532f8b00445667bfcf5c1eed5e30bc62271c7d29ea75a4fd51fcc"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-tools.tap",
+      "bytes": 104692,
+      "sha256": "5d60acf480807ada3962d3c07bda6e5bac482311a8f1cababa3e4dac5a560deb"
+    },
+    {
+      "path": "regression-audit/integrated-92f421f-verified-boundaries.json",
+      "bytes": 1436,
+      "sha256": "1e175ae4871fd27b6e171177adc12d1592fd27739c2c9e7c723c77ef06e9fcba"
+    }
+  ]
+}

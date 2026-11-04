@@ -21,6 +21,10 @@ import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 import {assertCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 
 const ID=/^[a-z][a-z0-9-]{2,63}$/;
+const FAILURE_RESULTS=new WeakMap();
+/** Only this process's canonical negative report can accompany a failed call.
+ * Error properties supplied by a provider or reconstructed from JSON grant nothing. */
+export function codingTaskFailureResult(error){return FAILURE_RESULTS.get(error)??null;}
 function grantFile(project,stateDir,id){
  if(!ID.test(id??''))throw Error('CODING_TASK_ID_INVALID');
  const state=ensureCcc1StateOutsideSource(project,stateDir);
@@ -174,9 +178,31 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  const receiptJobs=[...new Set((result.entries??[])
   .filter(entry=>entry.kind==='RECEIPT'&&typeof entry.payload?.job==='string')
   .map(entry=>entry.payload.job))];
- if(strictMomega&&modelAdmissionFailure==='CODING_LOCAL_MODEL_CHANGED')throw Error(modelAdmissionFailure);
- if(strictMomega&&verifiedInferenceCalls===0)
-  throw Error(modelAdmissionFailure??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED');
+ const reportForOwner=async()=>{
+  try{
+   const {writeCcc1BotReport}=await import('./ccc1-bot-report.mjs');
+   return writeCcc1BotReport({assignment:botAssignment,task:grant.task,ccc1TaskId:grant.ccc1TaskId,
+    project,stateDir,readPreparedGrant:()=>readGrant(grantFile(project,stateDir,id))});
+  }catch(error){return {status:'BLOCKED',reason:String(error?.message??error).slice(0,160),modelCalls:0};}
+ };
+ const observationFailure=strictMomega&&(modelAdmissionFailure==='CODING_LOCAL_MODEL_CHANGED'||verifiedInferenceCalls===0)
+  ?modelAdmissionFailure??'CODING_LOCAL_MODEL_OBSERVATION_REQUIRED':null;
+ if(observationFailure!==null){
+  const error=Error(observationFailure);
+  // A blocked writer may hide an older completed journal. Only the canonical
+  // terminal negative outcome observed by this run can reach the reporter.
+  const negativeHead=result.outcome==='ABSTAINED'?(result.entries??[]).at(-1)?.hash:null;
+  if(botAssignment?.reporter)error.botReport=/^[a-f0-9]{64}$/.test(negativeHead??'')?await reportForOwner():
+   {status:'BLOCKED',reason:result.outcome==='COMPLETED'?'CODING_UNVERIFIED_SUCCESS_REPORT_BLOCKED':'CODING_NEGATIVE_REPORT_UNAVAILABLE',modelCalls:0};
+  if(result.outcome==='ABSTAINED'&&error.botReport?.status==='ABSTAINED'&&
+     error.botReport.journalHead===(result.entries??[]).at(-1)?.hash)
+   FAILURE_RESULTS.set(error,Object.freeze({id,ccc1TaskId:grant.ccc1TaskId,taskFingerprint:grant.fingerprint,
+    sourceCommit:grant.task.sourceCommit,status:'ABSTAINED',botReport:error.botReport,
+    technicalExperienceStatus:'NOT_RECORDED',technicalRecallCount:technicalRecall.items.length,
+    modelExecution:Object.freeze({verifiedCalls:verifiedInferenceCalls,acceptedProposals:admittedModelCalls,
+     rejectedResponses:rejectedModelResponses,identity:modelIdentity===null?null:Object.freeze({...modelIdentity})})}));
+  throw error;
+ }
  for(const candidate of technicalCandidates){
   try{
    if(!technical)continue;
@@ -195,12 +221,6 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
    verifier:botAssignment.verifier,reporter:botAssignment.reporter,status:'ASSIGNED_IDENTITIES_ONLY',executionEvidence:'FIXED_PROFILE_OBSERVATIONS'}}),
   ...(strictMomega?{modelExecution:{verifiedCalls:verifiedInferenceCalls,acceptedProposals:admittedModelCalls,
    rejectedResponses:rejectedModelResponses,identity:modelIdentity}}:{}),approvedForMerge:false,deviceVerified:false,neuralTraining:false};
- if(botAssignment?.reporter){
-  try{
-   const {writeCcc1BotReport}=await import('./ccc1-bot-report.mjs');
-   publicResult.botReport=writeCcc1BotReport({assignment:botAssignment,task:grant.task,ccc1TaskId:grant.ccc1TaskId,
-    project,stateDir,readPreparedGrant:()=>readGrant(grantFile(project,stateDir,id))});
-  }catch(error){publicResult.botReport={status:'BLOCKED',reason:String(error?.message??error).slice(0,160),modelCalls:0};}
- }
+ if(botAssignment?.reporter)publicResult.botReport=await reportForOwner();
  return publicResult;
 }

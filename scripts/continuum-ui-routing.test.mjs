@@ -13,8 +13,13 @@ const nav = read("app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigatio
 const route = read("app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderRoute.kt");
 const manifest = read("app/src/main/AndroidManifest.xml");
 const builder = read("app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt");
+const menu = read("app/src/main/java/at/heinz/deviceai/ui/JarvisMenu.kt");
+const tiles = read("app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt");
+const shellContent = read("app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt");
 const sections = new Map([
   ["navigateWorkArea", "private fun navigateWorkArea("],
+  ["showDashboardCategory", "private fun showDashboardCategory("],
+  ["navigateDashboardTarget", "private fun navigateDashboardTarget("],
   ["openHomeSlot", "private fun openHomeSlot("],
   ["showLearningCenter", "private fun showLearningCenter()"],
   ["showDevelopmentCenter", "private fun showDevelopmentCenter()"],
@@ -36,24 +41,58 @@ test("all five bottom destinations open their own category", () => {
   for (const [category, action] of [
     ["START", "showHomeDashboard"],
     ["CHAT", "focusChatComposer"],
-    ["LERNEN", "showLearningCenter"],
-    ["ENTWICKELN", "showDevelopmentCenter"],
     ["MEHR", "showMoreWorkAreas"]
   ]) {
     has(nav, new RegExp("ContinuumWorkArea\\." + category), "Missing destination " + category);
     has(target, new RegExp("ContinuumWorkArea\\." + category + "\\s*->\\s*" + action + "\\(\\)"),
       "Wrong destination " + category);
   }
+  has(nav, /ContinuumWorkArea\.LERNEN/);
+  has(nav, /ContinuumWorkArea\.ENTWICKELN/);
+  has(target, /ContinuumWorkArea\.LERNEN\s*->\s*showDashboardCategory\("KI-System", ContinuumWorkAreaNavigationSpec\.systemEntries\)/);
+  has(target, /ContinuumWorkArea\.ENTWICKELN\s*->\s*showDashboardCategory\("Werkzeuge", ContinuumWorkAreaNavigationSpec\.toolEntries\)/);
+  const category = section("showDashboardCategory");
+  has(category, /setItems\(entries\.map \{ it\.title \}\.toTypedArray\(\)\)/);
+  has(category, /navigateDashboardTarget\(entries\[index\]\.target\)/);
+  has(nav, /CategoryEntry\("Lernen", "learning"\)/);
+  has(nav, /CategoryEntry\("Entwicklerwerkzeuge", "development"\)/);
+  has(section("navigateDashboardTarget"), /else -> menuNavigator\.navigate\(target\)/);
+  has(shellContent, /"learning" to ContinuumHomeLayout\.Slot\.LABEL_LEARNING/);
+  has(menu, /"development" to Slot\.LABEL_DEVELOPING/);
+  has(section("openHomeSlot"), /Slot\.LEARNING -> showLearningCenter\(\)/);
+  has(section("openHomeSlot"), /Slot\.LABEL_DEVELOPING -> showDevelopmentCenter\(\)/);
   has(activity, /setOnClickListener\s*\{\s*navigateWorkArea\(destination\)\s*\}/,
     "Bottom navigation lacks a live click target");
 });
 
 test("Fold rail has actual click targets for every visible category", () => {
-  const labels = ["Start", "Chat", "Lernen", "Entwickeln", "Analysieren", "Speicher", "System", "Mehr"];
-  for (const label of labels) {
-    assert.ok(activity.includes('"' + label + '" to {'), "Missing Fold rail target " + label);
+  // The latest owner reference shares eleven stable destinations between painting and native controls.
+  const expected = [
+    ["home", "BRAND"], ["chat", "LABEL_THINKING"], ["memory", "ACTION_MEMORY"], ["logic", "MODEL"],
+    ["research", "LABEL_ANALYSING"], ["agents", "ACTION_AGENTS"], ["tasks", "ACTION_TASK"],
+    ["web", "LABEL_CONNECTED"], ["learning", "LABEL_LEARNING"], ["device", "ACTION_DEVICE"],
+    ["system", "SYSTEM_STATUS"]
+  ];
+  const entries = tiles.split("val railNav = listOf(")[1]?.split("val bottomNav")[0];
+  assert.ok(entries, "Shared rail destinations are missing");
+  assert.deepEqual([...entries.matchAll(/NavItem\("([^"]+)"/g)].map(m => m[1]), expected.map(e => e[0]));
+  for (const [target, slot] of expected) {
+    has(shellContent, new RegExp('"' + target + '" to ContinuumHomeLayout\\.Slot\\.' + slot + "\\b"),
+      "Wrong canonical rail route " + target);
   }
-  has(activity, /setOnClickListener\s*\{\s*action\(\)\s*\}/, "Rail targets cannot dispatch");
+  has(menu, /val railEntries: List<Entry> = JarvisTiles\.railNav\.map/);
+  has(menu, /val slot = routes\[target\] \?: return/);
+  has(menu, /if \(openTarget\?\.invoke\(target\) != true\) open\(slot\)/);
+  has(activity, /JarvisMenuNavigator\(cockpitTriggers, \{ slot -> openHomeSlot\(slot, 0f, 0f\) \}/);
+  const start = activity.indexOf("private fun buildRail(): View");
+  const end = activity.indexOf("private fun cockpitActionFor(", start);
+  assert.ok(start >= 0 && end > start);
+  const rail = activity.slice(start, end);
+  has(rail, /val entries = at\.heinz\.deviceai\.ui\.JarvisMenu\.railEntries/);
+  has(rail, /for \(entry in entries\)/);
+  has(rail, /contentDescription = entry\.label/);
+  has(rail, /setOnClickListener \{ menuNavigator\.navigate\(entry\.target\) \}/,
+    "Native rail targets cannot dispatch");
 });
 
 test("dashboard cards open the matching owner-controlled centers", () => {

@@ -66,11 +66,21 @@ class LipSyncFaceSourceTest {
         f.weightsAt(400, out); assertEquals(0f, out[13], 0f); assertEquals(1f, out[10], 0f)
     }
 
-    @Test fun sharedOpeningMatchesAvatarMorphMapper() {
-        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+    @Test fun sharedOpeningMatchesAvatarMorphMapperWithBilabialClosure() {
         for (v in Viseme.entries) {
+            // Each static channel check has its own epoch; repeating one timestamp on a
+            // shared mapper must preserve its existing blend, not snap to another viseme.
+            val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
             mapper.update(AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, 0f, 0f, 1f, v, 1f, 1f), 1f, true)
-            assertEquals(v.name, 1f - FaceChannels.SHARED_OPENING[v.ordinal], mapper.weights[jaw], 1e-5f)
+            // The PP lip seal overrides measured jaw opening; authored geometry ratios
+            // still describe the other visemes' opening compensation unchanged.
+            val expectedJaw = if (v == Viseme.PP) 0f else 1f - FaceChannels.SHARED_OPENING[v.ordinal]
+            assertEquals(v.name, expectedJaw, mapper.weights[jaw], 1e-5f)
+            if (v == Viseme.PP) {
+                assertEquals(0f, FaceChannels.SHARED_OPENING[v.ordinal], 0f)
+                assertEquals(1f, mapper.weights[names.indexOf("PP")], 0f)
+                assertEquals(0f, mapper.jawPitch, 0f)
+            }
         }
     }
 

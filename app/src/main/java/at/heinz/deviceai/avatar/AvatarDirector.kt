@@ -10,12 +10,28 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
     private var utterance: String? = null
     private var text: String = ""
     private var lastRangeAt = Long.MIN_VALUE
+    private var lastRangeStart = -1
+    private var lastRangeEnd = -1
+    private var lastRangeAudioFrame = -1
+    private var lastWordCues: List<AvatarEvent.VisemeCue> = emptyList()
+    // AgentActivity admits callbacks only for its current, unique TTS id. Keep a bounded
+    // recent-terminal guard here as well, so replayed starts cannot reset that live speech.
+    private val retiredUtterances = LinkedHashSet<String>()
 
     @Synchronized fun attach(newSink: AvatarSink) {
         sink = newSink
         emit(stateEvent(state))
         // A Fold/layout rebuild may replace the sink while the same TTS utterance is active.
-        utterance?.let { emit(AvatarEvent.SpeechStarted(it, text, clock())) }
+        utterance?.let { id ->
+            val at = clock()
+            emit(AvatarEvent.SpeechStarted(id, text, at))
+            // A reparent clears renderer-local speech. Restore the accepted word at its
+            // original times; do not restart it or weaken the callback replay guard.
+            lastWordCues = if (at < lastRangeAt) emptyList() else lastWordCues.filter {
+                it.atMillis > at || at - it.atMillis < it.durationMs
+            }
+            lastWordCues.forEach(::emit)
+        }
     }
 
     @Synchronized fun onRuntime(signals: AvatarRuntimeSignals) {
@@ -49,25 +65,45 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
 
-    @Synchronized fun speechStarted(utteranceId: String, text: String) {
-        if (utteranceId.isBlank()) return
+    /** Returns admission independently of rendering, so the caller can share it with PCM state. */
+    @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
+        if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
+        utterance?.let(::retireUtterance)
         utterance = utteranceId
         lastRangeAt = Long.MIN_VALUE
+        lastRangeStart = -1
+        lastRangeEnd = -1
+        lastRangeAudioFrame = -1
+        lastWordCues = emptyList()
         this.text = text.take(MAX_TEXT)
         emit(AvatarEvent.SpeechStarted(utteranceId, this.text, clock()))
+        return true
     }
 
-    /** Android TTS onRangeStart(start, end): character range of the word about to be spoken. */
-    @Synchronized fun wordRange(utteranceId: String, start: Int, end: Int) {
-        if (utteranceId != utterance || start < 0 || end <= start || end > text.length) return
+    /** Android TTS text range; the optional audio frame orders callbacks, not phonemes. */
+    @Synchronized fun wordRange(utteranceId: String, start: Int, end: Int, audioFrame: Int? = null): Boolean {
+        if (utteranceId != utterance || start < 0 || end <= start || end > text.length) return false
+        if (start < lastRangeStart || (start == lastRangeStart && end <= lastRangeEnd)) return false
+        // Some engines assign one audio marker to adjacent text ranges. Text ordering
+        // resolves those ties; only a genuinely backward audio marker is stale.
+        if (audioFrame != null && (audioFrame < 0 || audioFrame < lastRangeAudioFrame)) return false
+        lastRangeStart = start
+        lastRangeEnd = end
+        if (audioFrame != null) lastRangeAudioFrame = audioFrame
+        lastWordCues = emptyList()
         val visemes = GermanVisemeApproximation.visemes(text.substring(start, end))
-        if (visemes.isEmpty()) return
+        // Punctuation still advances the engine's admitted text/frame markers. It must
+        // not invent mouth cues or extend the previous word's no-PCM fallback interval.
+        if (visemes.isEmpty()) return true
         val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
         val at = clock()
         lastRangeAt = at
-        visemes.forEachIndexed { i, v ->
-            emit(AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per))
+        val wordCues = visemes.mapIndexed { i, v ->
+            AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per)
         }
+        lastWordCues = wordCues.takeLast(MAX_REATTACHED_CUES)
+        wordCues.forEach(::emit)
+        return true
     }
 
     @Synchronized fun audioLevel(utteranceId: String, level: Float) {
@@ -85,8 +121,19 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     @Synchronized fun speechEnded(utteranceId: String, interrupted: Boolean) {
         if (utteranceId != utterance) return
+        retireUtterance(utteranceId)
         utterance = null; text = ""
+        lastWordCues = emptyList()
         emit(AvatarEvent.SpeechEnded(utteranceId, interrupted, clock()))
+    }
+
+    private fun retireUtterance(utteranceId: String) {
+        retiredUtterances += utteranceId
+        if (retiredUtterances.size > MAX_RETIRED_UTTERANCES) {
+            val oldest = retiredUtterances.iterator()
+            oldest.next()
+            oldest.remove()
+        }
     }
 
     private fun stateEvent(s: AvatarState): AvatarEvent.StateChanged {
@@ -107,6 +154,8 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val 
 
     private companion object {
         const val MAX_TEXT = 4_000
+        const val MAX_RETIRED_UTTERANCES = 128
+        const val MAX_REATTACHED_CUES = 64
         const val WORD_MS = 320L
         const val MIN_VISEME_MS = 40L
         const val FALLBACK_MS = 500L

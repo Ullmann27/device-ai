@@ -6,9 +6,9 @@ import {canonical} from './development-backlog.mjs';
 import {runtimeKey} from './ccc1-journal.mjs';
 import {loadCodingServiceConfig,readDeliveries,assertServiceArtifacts,serviceEnvironment,writePrivateJson} from './coding-service-store.mjs';
 import {currentCanonicalTask,readServiceDescriptor} from './coding-service-reader.mjs';
-import {createCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
+import {createCcc1BotAssignment,assertCcc1BotAssignment} from './ccc1-bot-assignment.mjs';
 import {profileStoreReader} from '../../tools/genesis-workspaces/adapter-bridge.mjs';
-import {runCodingTask} from './coding-orchestrator.mjs';
+import {runCodingTask,codingTaskFailureResult} from './coding-orchestrator.mjs';
 import {ownerCodingExecutor} from '../../scripts/continuum-typed-coding-bridge.mjs';
 
 let executionStarted=false;
@@ -25,12 +25,33 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  const assignment=createCcc1BotAssignment({task:current.task,ccc1TaskId:delivery.ccc1TaskId,
   builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',
   profileStore:profileStoreReader(config.profileDirectory,{classpath:config.profileClasspath})});
+ return runCodingServiceTask({config,delivery,current,assignment,executor,env});
+}
+/** The admitted worker's execution body; CCC1 still checks the owner grant,
+ * source, model observations and branded executor on every attempt. */
+export async function runCodingServiceTask({config,delivery,current,assignment,executor,env}){
+ const taskId=delivery.id;
  const started=Date.now(),before=process.resourceUsage();
  executionStarted=true;
- const result=await runCodingTask({project:config.project,stateDir:current.state,id:taskId,executor,
-  executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,requireLocalModelObservation:true,
-  expectedTaskFingerprint:delivery.fingerprint,technicalRecallEnabled:true,botAssignment:assignment,env});
- const after=process.resourceUsage(),final=currentCanonicalTask(config,delivery),report=result.botReport;
+ let result,failure=null;
+ try{
+  result=await runCodingTask({project:config.project,stateDir:current.state,id:taskId,executor,
+   executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,requireLocalModelObservation:true,
+   expectedTaskFingerprint:delivery.fingerprint,technicalRecallEnabled:true,botAssignment:assignment,env});
+ }catch(error){
+  result=codingTaskFailureResult(error);
+  if(result===null)throw error;
+  failure=error;
+ }
+ try{
+ const after=process.resourceUsage(),final=currentCanonicalTask(config,delivery,{requireCurrent:failure!==null}),report=result.botReport;
+ if(failure!==null){
+  assertCcc1BotAssignment(assignment,{task:current.task,ccc1TaskId:delivery.ccc1TaskId,stage:'REPORT'});
+  if(result.id!==taskId||result.ccc1TaskId!==delivery.ccc1TaskId||result.taskFingerprint!==delivery.fingerprint||
+     result.sourceCommit!==current.task.sourceCommit||result.status!=='ABSTAINED'||final.status.state!=='ABSTAINED'||
+     report?.status!=='ABSTAINED'||report.journalHead!==final.entries.at(-1).hash)
+   throw Error('SERVICE_FAILURE_REPORT_STALE');
+ }
  const observation=result.modelExecution??{};
  const identity=observation.identity;
  const snapshot={schema:'continuum-service-result',version:1,taskId,ccc1TaskId:delivery.ccc1TaskId,
@@ -47,6 +68,13 @@ export async function executeServiceDelivery({configPath,taskId,instanceId}={}){
  // task outcome or verifier receipt; current canonical records remain required.
  const metricsMac=createHmac('sha256',runtimeKey(current.state)).update(canonical(snapshot)).digest('hex');
  writePrivateJson(path.join(config.stateDir,'public-evidence',taskId+'.json'),{...snapshot,metricsMac},{exclusive:true});
+ }catch(error){
+  if(failure!==null)throw failure;
+  throw error;
+ }
+ // A report is available for owner inspection; failed admission is still a
+ // failed worker call and cannot clear the supervisor's resource barrier.
+ if(failure!==null)throw failure;
  return {type:'result',taskId,ok:true,executionStarted:true};
 }
 // Importing this module cannot start work; the fixed IPC child must receive one

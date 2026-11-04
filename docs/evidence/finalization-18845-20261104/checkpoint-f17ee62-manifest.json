@@ -1,0 +1,308 @@
+{
+  "sourceCommit": "f17ee62f8cfda8914ed217fe2ed88882ba1fa8a4",
+  "sourceTree": "e996a49cabf181e67156400f51df2a10c85e5a13",
+  "createdAt": "2026-11-04T20:48:38.310948+00:00",
+  "archive": "checkpoint-f17ee62.tar.gz",
+  "archiveBytes": 3027435,
+  "archiveSha256": "0adc8b3f69ba51743a28371c2d29624ebf73d3f6f6d8f81718aaa98acead1d68",
+  "status": "FOCUS_PASS_NODE_PASS_ANDROID_FULL_INCOMPLETE",
+  "results": {
+    "backend": {
+      "total": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "node": {
+      "files": 323,
+      "total": 2362,
+      "passed": 2331,
+      "failed": 0,
+      "skipped": 31,
+      "exit": 0
+    },
+    "tools": {
+      "files": 25,
+      "total": 324,
+      "passed": 281,
+      "failed": 38,
+      "skipped": 5,
+      "exit": 1
+    },
+    "androidFocused": {
+      "classes": 6,
+      "total": 53,
+      "passed": 53,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    "androidFull": {
+      "status": "INCOMPLETE",
+      "startedEvents": 260,
+      "finishedEvents": 259,
+      "successEvents": 258,
+      "failureEvents": 1,
+      "exit": 143,
+      "reason": "Parent-ownership failure after navigation fixture; subsequent ReferenceCockpit setup VSync loop. Own watchdog ended the run; no full JUnit aggregate exists."
+    },
+    "newApiLint": {
+      "status": "NOT_STARTED_CACHE_LOCK_HELD",
+      "deferredToFinalCandidate": true
+    }
+  },
+  "notes": [
+    "Counts overlap and must not be added as independent coverage.",
+    "The 38 host-isolation failures remain FAIL.",
+    "The three earlier UI-fixture repairs passed all original native pixel and lifecycle assertions.",
+    "The full Android run remains incomplete; no complete Android or APK acceptance."
+  ],
+  "files": [
+    {
+      "path": "build-audit/full-f17ee62f8cfd-diagnostic-stacks.txt",
+      "bytes": 5167,
+      "sha256": "979dcb971d6b62ede3245f96623d292193dd424d32204c6f092a13869467b0af"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd-incomplete-observer-summary.json",
+      "bytes": 752,
+      "sha256": "1636fbadc7c61bb280a49003a7b8253388732ae78e2cf7f1de20661bd2e36a98"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.fixtures.log",
+      "bytes": 117,
+      "sha256": "57772f4a65ecbc88656231d46f41203d2ddbbdf7cb2e2c170877a125756731c5"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.log",
+      "bytes": 122624,
+      "sha256": "c8694748f607f27a015aad5f70712bbf12454d3de2f1032defccb6276f27c2ad"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.memory.jsonl",
+      "bytes": 71604,
+      "sha256": "3e354c7238a169374e3d5911f95b0ae5710f75c5a4a64a07e959f0352a2971e9"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.result.json",
+      "bytes": 2298,
+      "sha256": "10d6276e455866b113fe16cfc5288b745d93b464d5d2ab98af3bd2e3a682f3a8"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.sources.after.json",
+      "bytes": 156587,
+      "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.sources.before.json",
+      "bytes": 156587,
+      "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.started.json",
+      "bytes": 1412,
+      "sha256": "9188df00fb4e42850492a4111dbc80d42e6d7f88aaa0c61e373febbbc8c176e0"
+    },
+    {
+      "path": "build-audit/full-f17ee62f8cfd.summary.json",
+      "bytes": 1269,
+      "sha256": "8f36062032cb216b5b4ded3d4001372cf7fb291099eeac9bb89003301cb582f9"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-410x291-closed.png",
+      "bytes": 157050,
+      "sha256": "6c04b7838e0e3599f3cde1f43adb21bb97822f6c46667d351a336f6efc6e8592"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-410x291-speaking.png",
+      "bytes": 159977,
+      "sha256": "53bcc77e6054126d7ad44da051d1a562c3de6ec33612709153b61bc4c1044860"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-410x291-stopped.png",
+      "bytes": 157050,
+      "sha256": "6c04b7838e0e3599f3cde1f43adb21bb97822f6c46667d351a336f6efc6e8592"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-412x307-closed.png",
+      "bytes": 172967,
+      "sha256": "fbe60f623e9ef96973a4458dcd1714eb92b1b5ca92c9f3d55413b4ea0fc967ae"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-412x307-speaking.png",
+      "bytes": 175805,
+      "sha256": "fc941f966f499650bdc047f818b109bd06cc3b01f131a8ca160cf70eb754c8d6"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/head-412x307-stopped.png",
+      "bytes": 172967,
+      "sha256": "fbe60f623e9ef96973a4458dcd1714eb92b1b5ca92c9f3d55413b4ea0fc967ae"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-410x291-0.png",
+      "bytes": 264593,
+      "sha256": "29862806a95c8514452de8967024696d011f171651fe5309ed5897f88eb041fb"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-410x291-1.png",
+      "bytes": 263432,
+      "sha256": "af6b767256eb3272a70f48a07588a125e3e38f7f83e8b74acb7d350e507ae65a"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-410x291-2.png",
+      "bytes": 263172,
+      "sha256": "b3400c813458883907cbc1495fefc3a044dbc1f1dacf764f6ba690a1a00c0e81"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-412x307-0.png",
+      "bytes": 266447,
+      "sha256": "f3a4eeded7faba064e73b002cb45c124001538c5e35862f74e525fecfa91d3ec"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-412x307-1.png",
+      "bytes": 266532,
+      "sha256": "fccc9d3ae7c3713116ec879c30815d0fc204433c93623928f50ad7074e47fb63"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd-ui-evidence/orb-412x307-2.png",
+      "bytes": 266132,
+      "sha256": "c28432c4d15e9621e511d9b93308dfb0e033e27acc4a2bae3c4b040d1d66a352"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.fixtures.log",
+      "bytes": 117,
+      "sha256": "57772f4a65ecbc88656231d46f41203d2ddbbdf7cb2e2c170877a125756731c5"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.log",
+      "bytes": 17979,
+      "sha256": "5d4bebb96d9ecc6e06f2ccb707059666d66990a41a2f01e45151e5a07fe1eb3d"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.memory.jsonl",
+      "bytes": 10710,
+      "sha256": "392955d29a33a2d938db40af64db2654b77cf0cc0c866a37f15e207cbe9a7873"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.reports.zip",
+      "bytes": 4357,
+      "sha256": "06678301cb9ab66a55b924b01419adc36100c7760f9a0cb63c0ccc099fdc3a0f"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.result.json",
+      "bytes": 2663,
+      "sha256": "9a2a64160cedd6b37617d336346baca87a206f3e1639ac3a51c0ee5e22132363"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.sources.after.json",
+      "bytes": 156587,
+      "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.sources.before.json",
+      "bytes": 156587,
+      "sha256": "a5f2e403437a69085c1613872435514f8393d0f305d1202efa44512be0f198c1"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.started.json",
+      "bytes": 2105,
+      "sha256": "361c2798b3f9038f54f7e6c4b517096ac4172c7d4b7f49472da9169e3aab0269"
+    },
+    {
+      "path": "build-audit/targeted-f17ee62f8cfd.summary.json",
+      "bytes": 3467,
+      "sha256": "0521604662a75561a26e3cdf5b9c5674dd0319c92711d113b84397c7046f4091"
+    },
+    {
+      "path": "build-audit/ui-fixture-traversal/findings.md",
+      "bytes": 4882,
+      "sha256": "efb9bb9f3c7e44b067a734a9a98008832008f9091ccf7f378168e2d25c66c545"
+    },
+    {
+      "path": "build-audit/ui-fixture-traversal/manifest.json",
+      "bytes": 1237,
+      "sha256": "f9471accf012c1c618e16f8706195b30dac0b30c2337c2e70da2fa77c321750a"
+    },
+    {
+      "path": "build-audit/ui-fixture-traversal/ui-fixture-traversal.patch",
+      "bytes": 19612,
+      "sha256": "3afaed0034b5671bcc36c450d8e16585b561652b50d31838b88c6af1bf50cb58"
+    },
+    {
+      "path": "coordinator-audit/backend-f17ee62-result.json",
+      "bytes": 4945,
+      "sha256": "9595a09427fa8798a640d9ed18e5bf8489fc34c51ebddd32912c141c779b455a"
+    },
+    {
+      "path": "coordinator-audit/backend-f17ee62.tap",
+      "bytes": 13212,
+      "sha256": "630f2d23ccd0eccce931fcb584700325569f1038ee03cd2c0a185526158b7fdf"
+    },
+    {
+      "path": "coordinator-audit/host-input-identity-f17ee62.json",
+      "bytes": 657,
+      "sha256": "4c9b42389c872a80a61d00976b514cd4ab64e450cecefe9abd1d387c5eaf571a"
+    },
+    {
+      "path": "coordinator-audit/ui-fixture-root-review.json",
+      "bytes": 1205,
+      "sha256": "2c51bdc6d5b57d3b3ac273024ff2cf3daf60271d4c03fc83fc5f9a24a40af6f2"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/ActivityController.javap.txt",
+      "bytes": 66020,
+      "sha256": "5f6ed6b9bf693642e281887782ae6fb0cd69e52b1e5d093fcd952c3d82809f61"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/NativeDisplayEventReceiver.javap.txt",
+      "bytes": 4974,
+      "sha256": "49fe56c3d16d69755346e8e3fad043f4a44e8c164b35cbaa1ccc8f559740f419"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/ShadowChoreographer.javap.txt",
+      "bytes": 14201,
+      "sha256": "701da86d0451edea9ea8a8b5a2d5318312319a9ffbe694d32c206e119011d200"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/ShadowPausedChoreographer.javap.txt",
+      "bytes": 15517,
+      "sha256": "62455554a55750ef6ce03fc8b978555e8af7afb5e922a85b448372adf0efb31e"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/ShadowPausedLooper.javap.txt",
+      "bytes": 55420,
+      "sha256": "6da781e4674e7ab6fe857c1b417637c3f4e669a37c1106eaf11625d9338655e8"
+    },
+    {
+      "path": "integration-audit/paused-ui-diagnosis/fixture-patch-independent-review.json",
+      "bytes": 3624,
+      "sha256": "831a8901360c6ebb4c532b68daeaaa7fd41f2884501e463d5845544d62a59220"
+    },
+    {
+      "path": "regression-audit/INTEGRATED_F17EE62_RESULT.md",
+      "bytes": 6290,
+      "sha256": "a641aebb059991221f3e2e55542d1b49a75003c5d3f0d7cfcaffc008fe44987d"
+    },
+    {
+      "path": "regression-audit/integrated-f17ee62-evidence-manifest.json",
+      "bytes": 2689,
+      "sha256": "8ff67f0b57223b47fe8496b8cc194822e7e9e9819e4b1e12a1a675ae37d8f649"
+    },
+    {
+      "path": "regression-audit/integrated-f17ee62-evidence.zip",
+      "bytes": 138829,
+      "sha256": "5a50f3a8b6e7353c6f795d10eab3a8d796fdc4af39614d504f0785b6c453d01d"
+    },
+    {
+      "path": "regression-audit/integrated-f17ee62-skip-inventory.json",
+      "bytes": 38770,
+      "sha256": "3f4ca6b93f312ab260f8b16202359d87878930c239e05045e8374f97bd3207c0"
+    },
+    {
+      "path": "regression-audit/integrated-f17ee62-verified-boundaries.json",
+      "bytes": 1663,
+      "sha256": "7b6f9b834fee40f0209efb971318ea76a8209a1a10c020c75be981f52417f8b3"
+    }
+  ]
+}

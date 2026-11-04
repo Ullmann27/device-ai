@@ -142,10 +142,15 @@ export function createCodingServiceReader({configPath}={}){
    const {cursor,limit}=pageArgs(args),c=config(),all=readDeliveries(c).sort((a,b)=>a.id.localeCompare(b.id));
    const selected=all.filter(i=>cursor===null||i.id>cursor).slice(0,limit+1),hasMore=selected.length>limit;
    const items=selected.slice(0,limit).map(d=>{
-    try{const current=currentCanonicalTask(c,d);return {taskId:d.id,canonicalTaskId:d.ccc1TaskId,delivery:d.delivery,
+    try{const current=currentCanonicalTask(c,d),recorded=fs.existsSync(path.join(c.stateDir,'public-evidence',d.id+'.json'));
+     // A failed worker remains UNKNOWN. Its canonical negative report can be
+     // inspected without claiming successful inference or releasing resources.
+     const evidenceIds=!recorded?[]:d.delivery==='RETIRED'?['result','report']:
+      d.delivery==='UNKNOWN'&&current.status.state==='ABSTAINED'&&current.grantCurrent&&current.sourceCurrent?['report']:[];
+     return {taskId:d.id,canonicalTaskId:d.ccc1TaskId,delivery:d.delivery,
      state:current.status.state,terminal:current.status.terminal,sourceCurrent:current.sourceCurrent,grantCurrent:current.grantCurrent,
      sourceCommit:current.task.sourceCommit,taskFingerprint:d.fingerprint,goal:current.task.goal,
-     builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',evidenceIds:d.delivery==='RETIRED'&&fs.existsSync(path.join(c.stateDir,'public-evidence',d.id+'.json'))?['result','report']:[],
+     builderId:'bot-forge',verifierId:'bot-lint',reporterId:'bot-echo',evidenceIds,
      failureCode:d.failureCode??null};}catch(error){return {taskId:d.id,canonicalTaskId:d.ccc1TaskId,delivery:d.delivery,state:'BLOCKED',
       terminal:false,evidenceIds:[],failureCode:String(error.message).slice(0,160)};}
    });

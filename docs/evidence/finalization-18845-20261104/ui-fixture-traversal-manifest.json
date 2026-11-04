@@ -1,0 +1,23 @@
+{
+  "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt": {
+    "before_sha256": "3a164642ba52d14f59e20a19ced426d2cef4f5081efde9496641899cfe59f7bd",
+    "after_sha256": "54731cfdf36eb88b9bb4663c9b77643c5167d5c3c2581d9cb4a8dd982b63471d",
+    "original_assertion_lines": 29,
+    "original_assertion_lines_preserved": true
+  },
+  "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatarNativeUiTest.kt": {
+    "before_sha256": "14ee6c32152e694ec82889f0ed7ab2b26e8f3335aab40755da9cc85021ebf038",
+    "after_sha256": "61d88966597aa22743c755488d217f37ac29d33a91a5619717f8f227d630be60",
+    "original_assertion_lines": 15,
+    "original_assertion_lines_preserved": true
+  },
+  "app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt": {
+    "before_sha256": "0915f64456099bb4fb40a24f1e6cc73853ec178fa6613a7a085aa55624c53b04",
+    "after_sha256": "d6c848d71074828286444bb7aaa5bf2d9e9c131644f4f6aeeed30bbe87fcb7b3",
+    "original_assertion_lines": 29,
+    "original_assertion_lines_preserved": true
+  },
+  "patch_sha256": "3afaed0034b5671bcc36c450d8e16585b561652b50d31838b88c6af1bf50cb58",
+  "base_head": "c92220c5468e2bd0e506b19267a9eed8b5739459",
+  "base_tree": "fb10b797c8cf82716c643bb185deab180a8dd9ea"
+}

@@ -72,6 +72,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
 });
 test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
+ const local=bodyOf(activity,'runLocal');
  ensure('single shared runtime is called from chat with scoped session-only context',
    dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
    dialogue.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
@@ -81,18 +82,17 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
-   activity.includes('val agentTask = codingPlanning?.ownerGoal ?: at.heinz.deviceai.cognitive.LocalFollowUpTaskFrame.compose(\n            text, resolvedQuestion, localConversationContext.sessionEvidence(localSessionId))') &&
+   /val\s+agentTask\s*=\s*if\s*\(botTask\s*!=\s*null\)\s*text\s*else\s*codingPlanning\?\.ownerGoal\s*\?:\s*at\.heinz\.deviceai\.cognitive\.LocalFollowUpTaskFrame\.compose\(\s*text,\s*resolvedQuestion,\s*localConversationContext\.sessionEvidence\(localSessionId\)\)/.test(codeOnly(local)) &&
    !bodyOf(activity,'private fun runLocal(text:').includes('resolvedQuestion.take(') &&
    bodyOf(activity,'private fun runLocal(text:').includes('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') &&
    bodyOf(activity,'private fun runLocal(text:').indexOf('LocalChatPromptBudget.acceptsCompleteTask(resolvedQuestion)') <
      bodyOf(activity,'private fun runLocal(text:').indexOf('activeLocalRequest = true') &&
    bodyOf(activity,'private fun runLocal(text:').includes('publishCognitiveTrace(turnTrace,TraceOutcome.CLARIFY)') &&
    !activity.includes('persistRequestedMemory(') && !bodyOf(activity,'private fun runLocal(text:').includes('memoryStore.put('));
- const local=bodyOf(activity,'runLocal');
  ensure('owner tool authorization uses untouched input and planning has no memory/tool authority',
    /createToolGate\(ownerTurn\s*=\s*text,\s*consentRevisionAtTurnStart\s*=\s*internetRevisionAtTurnStart/.test(codeOnly(local)) &&
-   /memories\s*=\s*\{\s*if\(codingPlanning\s*==\s*null\)\s*memoryStore\.all\(\)\s*\+\s*ownerFactMemories\(\)\s*else\s*emptyList\(\)\s*\}/.test(codeOnly(local)) &&
-   /else\s+at\.heinz\.deviceai\.cognitive\.AgentLimits\(maxToolCalls\s*=\s*0,maxRetries\s*=\s*0\)/.test(codeOnly(local)));
+   /memories\s*=\s*\{\s*if\(codingPlanning\s*==\s*null\s*&&\s*botTask\s*==\s*null\)\s*memoryStore\.all\(\)\s*\+\s*ownerFactMemories\(\)\s*else\s*emptyList\(\)\s*\}/.test(codeOnly(local)) &&
+   /limits\s*=\s*if\(codingPlanning\s*!=\s*null\)\s*at\.heinz\.deviceai\.cognitive\.AgentLimits\(maxToolCalls\s*=\s*0,maxRetries\s*=\s*0\)/.test(codeOnly(local)));
  ensure('only explicit confirmed fact can retry unanswered turn',
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));

@@ -587,7 +587,7 @@ class ContinuumHologramView @JvmOverloads constructor(
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn && !head3dEnabled) {
+            if (!native3dDrawn && (!head3dEnabled || native3dFailed)) {
                 val headCanvas = canvas.save()
                 canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
                 avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
@@ -624,9 +624,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                 }
                 canvas.restoreToCount(orbCanvas)
             }
-            if (!native3dDrawn && head3dEnabled) {
-                val status = if (native3dFailed) "3D derzeit nicht verfügbar" else "3D wird initialisiert …"
-                painter.drawText(status, headDrawBounds.centerX() / density,
+            if (!native3dDrawn && head3dEnabled && !native3dFailed) {
+                painter.drawText("3D wird initialisiert …", headDrawBounds.centerX() / density,
                     headDrawBounds.centerY() / density, TextStyle(FontFamily.TEXT, 400, 12f), avatarBrandFill, TextAlign.CENTER)
             }
             if (cockpit && cockpitHeadBounds == null) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
