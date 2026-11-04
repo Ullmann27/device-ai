@@ -30,7 +30,7 @@ def run(args, path):
         raise SystemExit(result.returncode)
 
 
-def check(out, lib):
+def check(out, lib, candidate):
     refs = []
     for ref in (PUBLIC, LOCAL):
         result = subprocess.run(["git", "rev-parse", "--verify", ref + "^{tree}"], cwd=ROOT, capture_output=True, text=True)
@@ -43,11 +43,19 @@ def check(out, lib):
         raise RuntimeError("Fetch the public baseline")
     sources = []
     hashes = {}
+    locations = {}
+    archive = ROOT / "docs/evidence/tuning-r3-20261104/m3a"
+    archived_hashes = json.loads((archive / "manifest.json").read_text())["sourceSha256"] if candidate == "m3a" else None
     for variant in ("baseline", "candidate"):
         target = out / variant
         target.mkdir(parents=True, exist_ok=True)
         for original in sorted((ROOT / SOURCE).glob("*.kt")):
-            data = subprocess.check_output(["git", "show", f"{baseline}:{SOURCE}/{original.name}"], cwd=ROOT) if variant == "baseline" else original.read_bytes()
+            selected = archive / "candidate-LmBpeTokenizer.kt" if candidate == "m3a" and original.name == "LmBpeTokenizer.kt" else original
+            data = subprocess.check_output(["git", "show", f"{baseline}:{SOURCE}/{original.name}"], cwd=ROOT) if variant == "baseline" else selected.read_bytes()
+            if variant == "candidate":
+                locations[original.name] = str(selected)
+                if archived_hashes is not None:
+                    assert hashlib.sha256(data).hexdigest() == archived_hashes[f"candidate/{original.name}"], "Archive companion source mismatch"
             hashes[f"{variant}/{original.name}"] = hashlib.sha256(data).hexdigest()
             text = data.decode()
             if variant == "baseline":
@@ -65,6 +73,7 @@ def check(out, lib):
     jar = out / "checks.jar"
     manifest = {"publicBaseline": PUBLIC, "resolvedBaseline": baseline, "baselineTree": TREE, "resolutionAttempts": refs,
                 "checkoutHead": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
+                "candidateSelection": candidate, "candidateSourceLocations": locations,
                 "sourceSha256": hashes, "harnessSha256": {str(p.relative_to(ROOT)): sha(p) for p in tests + [Path(__file__).resolve()]},
                 "classpath": cp, "compilerDirectory": str(lib), "packageTransformation": "baseline package declaration only",
                 "dependencies": {Path(p).name: sha(Path(p)) for p in cp.split(os.pathsep)}}
@@ -88,7 +97,7 @@ def measure(out, group, phase):
         assert sha(ROOT / name) == expected, name
     for name, expected in manifest["sourceSha256"].items():
         if name.startswith("candidate/"):
-            assert sha(ROOT / SOURCE / Path(name).name) == expected, name
+            assert sha(Path(manifest["candidateSourceLocations"][Path(name).name])) == expected, name
     run(["java", "-Xms256m", "-Xmx512m", "-cp", str(out / "checks.jar") + os.pathsep + manifest["classpath"],
          PACKAGE + ".LmTuningR3Benchmark", group, phase], out / f"{phase}-{group}.jsonl")
 
@@ -98,6 +107,7 @@ if __name__ == "__main__":
     parser.add_argument("mode", choices=("check", "measure"))
     parser.add_argument("output", type=Path)
     parser.add_argument("--lib", type=Path)
+    parser.add_argument("--candidate", choices=("checkout", "m3a"), default="checkout")
     parser.add_argument("--group", choices=("all", "nll", "distribution", "tokenizer"), default="all")
     parser.add_argument("--phase", default="baseline")
     args = parser.parse_args()
@@ -106,6 +116,6 @@ if __name__ == "__main__":
     out.mkdir(parents=True, exist_ok=True)
     if args.mode == "check":
         assert args.lib is not None
-        check(out, args.lib.resolve())
+        check(out, args.lib.resolve(), args.candidate)
     else:
         measure(out, args.group, args.phase)

@@ -1,0 +1,3 @@
+tools/tuning-r3-20261104/LmTuningR3Benchmark.kt:67:41: warning: 'val id: Long' is deprecated. Deprecated in Java.
+        val id = Thread.currentThread().id
+                                        ^^

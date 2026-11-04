@@ -3,8 +3,8 @@
   "scope": "existing-function tuning only",
   "status": "RUNNING",
   "owner": "tuning-root-59ad19c6d3b7-r3",
-  "leaseExpiresAtUtc": "2026-11-04T23:37:47.997686+00:00",
-  "updatedAtUtc": "2026-11-04T21:41:14.415774+00:00",
+  "leaseExpiresAtUtc": "2026-11-04T23:44:27.692293+00:00",
+  "updatedAtUtc": "2026-11-04T21:44:27.692293+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -40,11 +40,14 @@
       "id": "R3-M3",
       "target": "LmBpeTokenizer.encode",
       "hypothesis": "Assemble cached token arrays into one primitive output instead of boxing every token",
-      "status": "FIRST_CANDIDATE_REJECTED; FOLLOWUP_REGISTERED",
-      "rejectedEvidence": "docs/evidence/tuning-r3-20261104/m3a/RESULTS.md"
+      "status": "FOLLOWUP_ADOPTED_IN_DRAFT",
+      "rejectedEvidence": "docs/evidence/tuning-r3-20261104/m3a/RESULTS.md",
+      "evidence": "docs/evidence/tuning-r3-20261104/m3b/RESULTS.md",
+      "tests": "24/24 PASS",
+      "rejectedArchiveCommit": "2c80065b2239b04908b5c35962e3cd1e40b8e6b9"
     }
   ],
-  "next": "Exactly one M3B follow-up: single-pass primitive buffer, unchanged measurement matrix",
+  "next": "Final caller/runtime parity and explicit M3A archive check; no more performance measurements",
   "limits": [
     "no main merge",
     "no APK/install",

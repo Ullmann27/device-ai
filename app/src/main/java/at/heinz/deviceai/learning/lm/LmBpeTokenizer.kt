@@ -24,9 +24,20 @@ class LmBpeTokenizer private constructor(private val merges: List<Pair<Int, Int>
     val sha256: String by lazy { hex(MessageDigest.getInstance("SHA-256").digest(serialize())) }
 
     fun encode(text: String): IntArray {
-        val out = ArrayList<Int>(text.length)
-        for (word in pretokenize(text)) out.addAll(encodeWord(word).asList())
-        return out.toIntArray()
+        var out = IntArray(text.length)
+        var size = 0
+        for (word in pretokenize(text)) {
+            val part = encodeWord(word)
+            val required = size + part.size
+            if (required < 0) throw OutOfMemoryError("Required array size too large")
+            if (required > out.size) {
+                val grown = out.size.toLong() + out.size / 2 + 1
+                out = out.copyOf(maxOf(required.toLong(), grown).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+            }
+            System.arraycopy(part, 0, out, size, part.size)
+            size = required
+        }
+        return if (size == out.size) out else out.copyOf(size)
     }
 
     fun decode(ids: IntArray): String {

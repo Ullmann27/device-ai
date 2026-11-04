@@ -1,0 +1,1084 @@
+{
+  "phase": "m3b",
+  "group": "tokenizer",
+  "environment": {
+    "type": "meta",
+    "phase": "m3b",
+    "group": "tokenizer",
+    "java": "21.0.13",
+    "processors": 9,
+    "load": 2.76416015625,
+    "cases": 10,
+    "rounds": 9,
+    "warmupBatches": 4
+  },
+  "complete": {
+    "type": "complete",
+    "phase": "m3b",
+    "cases": 10,
+    "load": 2.76416015625,
+    "sinkClass": "[I"
+  },
+  "rawSha256": "0c72b3eceb7735286a9599248683f761a80d0a1149466424cf96e7cd10e60113",
+  "warnings": [],
+  "caseCount": 10,
+  "sampleCount": 180,
+  "cases": [
+    {
+      "case": "token-bytes-empty",
+      "fixtureSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 458.7795,
+          "candidateMedian": 374.8635,
+          "changeOfMediansPercent": -18.291139861305915,
+          "pairedMedianDelta": -59.99000000000001,
+          "candidateLowerPairs": 6,
+          "candidateHigherPairs": 3,
+          "baselineRange": [
+            276.025,
+            600.7675
+          ],
+          "candidateRange": [
+            263.691,
+            3364.0645
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 461.116,
+          "candidateMedian": 376.4745,
+          "changeOfMediansPercent": -18.355793336167036,
+          "pairedMedianDelta": -60.234500000000025,
+          "candidateLowerPairs": 7,
+          "candidateHigherPairs": 2,
+          "baselineRange": [
+            276.7965,
+            602.7915
+          ],
+          "candidateRange": [
+            264.6635,
+            632.4455
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 424.0,
+          "candidateMedian": 368.0,
+          "changeOfMediansPercent": -13.207547169811317,
+          "pairedMedianDelta": -56.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            424.0,
+            424.488
+          ],
+          "candidateRange": [
+            368.0,
+            368.024
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 300.266,
+          "candidateMedian": 285.4635,
+          "changeOfMediansPercent": -4.929795581251295,
+          "pairedMedianDelta": 1.0020000000000095,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            256.365,
+            528.504
+          ],
+          "candidateRange": [
+            269.4545,
+            514.613
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 301.1975,
+          "candidateMedian": 286.055,
+          "changeOfMediansPercent": -5.027432166601642,
+          "pairedMedianDelta": 1.0065000000000168,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            256.692,
+            529.7125
+          ],
+          "candidateRange": [
+            269.796,
+            515.4715
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 424.0,
+          "candidateMedian": 424.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            424.0,
+            424.0
+          ],
+          "candidateRange": [
+            424.0,
+            424.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-bytes-sentence",
+      "fixtureSha256": "5bed6e74d504008e227e86dc70a4418ba571062640dbbe57ef189d95f93064df",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 5955.378,
+          "candidateMedian": 3949.044,
+          "changeOfMediansPercent": -33.68944842795872,
+          "pairedMedianDelta": -2160.8369999999995,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            4846.383,
+            11058.147
+          ],
+          "candidateRange": [
+            3300.269,
+            5376.619
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 5837.96,
+          "candidateMedian": 3911.276,
+          "changeOfMediansPercent": -33.002692721430094,
+          "pairedMedianDelta": -2592.336,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            4850.242,
+            11004.573
+          ],
+          "candidateRange": [
+            3206.699,
+            5382.613
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 3648.0,
+          "candidateMedian": 3072.0,
+          "changeOfMediansPercent": -15.789473684210531,
+          "pairedMedianDelta": -576.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            3480.0,
+            3648.0
+          ],
+          "candidateRange": [
+            3072.0,
+            3072.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 6477.669,
+          "candidateMedian": 5602.745,
+          "changeOfMediansPercent": -13.506772266381628,
+          "pairedMedianDelta": -472.72099999999955,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            4066.457,
+            8507.678
+          ],
+          "candidateRange": [
+            3681.009,
+            6851.61
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 6256.983,
+          "candidateMedian": 5606.577,
+          "changeOfMediansPercent": -10.394882006232075,
+          "pairedMedianDelta": -473.39400000000023,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            4068.67,
+            6863.956
+          ],
+          "candidateRange": [
+            3682.946,
+            6855.524
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 3680.0,
+          "candidateMedian": 3680.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            3680.0,
+            3680.0
+          ],
+          "candidateRange": [
+            3680.0,
+            3680.32
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-bytes-single",
+      "fixtureSha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 1455.7725,
+          "candidateMedian": 944.2585,
+          "changeOfMediansPercent": -35.136946191798515,
+          "pairedMedianDelta": -382.31949999999995,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            1217.5895,
+            4189.2545
+          ],
+          "candidateRange": [
+            813.1015,
+            1458.5365
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 1499.64,
+          "candidateMedian": 958.2445,
+          "changeOfMediansPercent": -36.101697740791124,
+          "pairedMedianDelta": -434.88149999999996,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            1219.238,
+            4163.2405
+          ],
+          "candidateRange": [
+            814.7665,
+            1436.1705
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 816.0,
+          "candidateMedian": 704.0,
+          "changeOfMediansPercent": -13.725490196078427,
+          "pairedMedianDelta": -112.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            816.0,
+            848.0
+          ],
+          "candidateRange": [
+            704.0,
+            704.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 935.009,
+          "candidateMedian": 887.3175,
+          "changeOfMediansPercent": -5.100646090037642,
+          "pairedMedianDelta": -19.689500000000066,
+          "candidateLowerPairs": 7,
+          "candidateHigherPairs": 2,
+          "baselineRange": [
+            819.9615,
+            1402.416
+          ],
+          "candidateRange": [
+            800.5475,
+            1393.8135
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 936.4625,
+          "candidateMedian": 895.4815,
+          "changeOfMediansPercent": -4.376149605563495,
+          "pairedMedianDelta": -20.094499999999925,
+          "candidateLowerPairs": 7,
+          "candidateHigherPairs": 2,
+          "baselineRange": [
+            821.111,
+            1404.869
+          ],
+          "candidateRange": [
+            801.3665,
+            1396.6115
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 848.0,
+          "candidateMedian": 848.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 1,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            848.0,
+            848.052
+          ],
+          "candidateRange": [
+            848.0,
+            848.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-bytes-unicode",
+      "fixtureSha256": "c8ddef08635a0d01f8ac29c4db02466ac4ec9aa069c0b395ff43befe942c4d1d",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 68520.66,
+          "candidateMedian": 52835.99,
+          "changeOfMediansPercent": -22.89042458143282,
+          "pairedMedianDelta": -13432.980000000003,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            53496.88,
+            111444.36
+          ],
+          "candidateRange": [
+            47967.77,
+            86438.78
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 65295.89,
+          "candidateMedian": 52897.25,
+          "changeOfMediansPercent": -18.988392684440015,
+          "pairedMedianDelta": -12640.489999999998,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            53547.32,
+            92685.62
+          ],
+          "candidateRange": [
+            47503.14,
+            86104.23
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 77776.0,
+          "candidateMedian": 60192.0,
+          "changeOfMediansPercent": -22.60851676609751,
+          "pairedMedianDelta": -17584.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            77776.0,
+            77776.0
+          ],
+          "candidateRange": [
+            60192.0,
+            60192.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 48263.49,
+          "candidateMedian": 51684.82,
+          "changeOfMediansPercent": 7.088857436542617,
+          "pairedMedianDelta": 599.0099999999948,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            45653.36,
+            66315.2
+          ],
+          "candidateRange": [
+            42434.33,
+            54888.84
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 46752.91,
+          "candidateMedian": 51720.11,
+          "changeOfMediansPercent": 10.624365413831981,
+          "pairedMedianDelta": 844.8699999999953,
+          "candidateLowerPairs": 3,
+          "candidateHigherPairs": 6,
+          "baselineRange": [
+            44611.83,
+            66369.49
+          ],
+          "candidateRange": [
+            42461.84,
+            54937.69
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 75456.0,
+          "candidateMedian": 75456.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 2,
+          "baselineRange": [
+            75456.0,
+            77808.0
+          ],
+          "candidateRange": [
+            75456.0,
+            77808.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-bytes-unique-word",
+      "fixtureSha256": "7175ea45b99f70375713f04049267101d48f5d38de79f166c5a14a96ea72b7e3",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 2244.77,
+          "candidateMedian": 1682.23,
+          "changeOfMediansPercent": -25.06002842162003,
+          "pairedMedianDelta": -566.1599999999999,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            1823.64,
+            3496.46
+          ],
+          "candidateRange": [
+            1496.54,
+            2500.06
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 2254.05,
+          "candidateMedian": 1693.52,
+          "changeOfMediansPercent": -24.86768261573613,
+          "pairedMedianDelta": -568.3399999999999,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            1834.02,
+            3516.73
+          ],
+          "candidateRange": [
+            1501.34,
+            2513.84
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 2352.0,
+          "candidateMedian": 2112.0,
+          "changeOfMediansPercent": -10.204081632653061,
+          "pairedMedianDelta": -240.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            2352.0,
+            2352.0
+          ],
+          "candidateRange": [
+            2112.0,
+            2112.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 2017.83,
+          "candidateMedian": 2108.56,
+          "changeOfMediansPercent": 4.496414465044141,
+          "pairedMedianDelta": -28.25,
+          "candidateLowerPairs": 5,
+          "candidateHigherPairs": 4,
+          "baselineRange": [
+            1857.89,
+            5392.1
+          ],
+          "candidateRange": [
+            1829.64,
+            2906.87
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 2026.11,
+          "candidateMedian": 2113.24,
+          "changeOfMediansPercent": 4.300358815661531,
+          "pairedMedianDelta": 7.710000000000036,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            1861.67,
+            2677.68
+          ],
+          "candidateRange": [
+            1834.33,
+            2916.54
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 2336.0,
+          "candidateMedian": 2336.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            2336.0,
+            2336.0
+          ],
+          "candidateRange": [
+            2336.0,
+            2336.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-merged-empty",
+      "fixtureSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 126.485,
+          "candidateMedian": 79.214,
+          "changeOfMediansPercent": -37.372811005257546,
+          "pairedMedianDelta": -47.226,
+          "candidateLowerPairs": 7,
+          "candidateHigherPairs": 2,
+          "baselineRange": [
+            122.599,
+            239.445
+          ],
+          "candidateRange": [
+            75.839,
+            156.9405
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 126.924,
+          "candidateMedian": 79.809,
+          "changeOfMediansPercent": -37.12063912262457,
+          "pairedMedianDelta": -47.460499999999996,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            123.108,
+            240.4375
+          ],
+          "candidateRange": [
+            76.173,
+            158.025
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 392.0,
+          "candidateMedian": 368.0,
+          "changeOfMediansPercent": -6.122448979591832,
+          "pairedMedianDelta": -24.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            392.0,
+            392.0
+          ],
+          "candidateRange": [
+            368.0,
+            368.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 79.209,
+          "candidateMedian": 80.16,
+          "changeOfMediansPercent": 1.2006211415369394,
+          "pairedMedianDelta": -0.21000000000000796,
+          "candidateLowerPairs": 6,
+          "candidateHigherPairs": 3,
+          "baselineRange": [
+            77.116,
+            121.5875
+          ],
+          "candidateRange": [
+            77.737,
+            103.3305
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 79.393,
+          "candidateMedian": 80.51,
+          "changeOfMediansPercent": 1.4069250437696024,
+          "pairedMedianDelta": -0.16049999999999898,
+          "candidateLowerPairs": 6,
+          "candidateHigherPairs": 3,
+          "baselineRange": [
+            77.355,
+            122.2715
+          ],
+          "candidateRange": [
+            77.981,
+            103.774
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 392.0,
+          "candidateMedian": 392.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            392.0,
+            392.0
+          ],
+          "candidateRange": [
+            392.0,
+            392.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-merged-sentence",
+      "fixtureSha256": "5bed6e74d504008e227e86dc70a4418ba571062640dbbe57ef189d95f93064df",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 2553.427,
+          "candidateMedian": 2317.802,
+          "changeOfMediansPercent": -9.227794646175514,
+          "pairedMedianDelta": -148.32300000000032,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            2262.199,
+            4649.586
+          ],
+          "candidateRange": [
+            2155.96,
+            4204.507
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 2557.814,
+          "candidateMedian": 2322.623,
+          "changeOfMediansPercent": -9.195000105558881,
+          "pairedMedianDelta": -83.875,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            2265.719,
+            4654.191
+          ],
+          "candidateRange": [
+            2158.941,
+            4209.7
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 3104.0,
+          "candidateMedian": 2816.0,
+          "changeOfMediansPercent": -9.278350515463918,
+          "pairedMedianDelta": -288.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            3104.0,
+            3104.0
+          ],
+          "candidateRange": [
+            2816.0,
+            2816.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 2553.104,
+          "candidateMedian": 2649.99,
+          "changeOfMediansPercent": 3.7948317028996925,
+          "pairedMedianDelta": 0.6799999999998363,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            1581.846,
+            2841.257
+          ],
+          "candidateRange": [
+            2175.227,
+            7311.19
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 2555.65,
+          "candidateMedian": 2652.775,
+          "changeOfMediansPercent": 3.800403028583732,
+          "pairedMedianDelta": 2.1940000000004147,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            1585.988,
+            2845.071
+          ],
+          "candidateRange": [
+            2177.698,
+            4429.827
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 3104.0,
+          "candidateMedian": 3104.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            3104.0,
+            3104.0
+          ],
+          "candidateRange": [
+            3104.0,
+            3104.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-merged-single",
+      "fixtureSha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 778.8905,
+          "candidateMedian": 614.193,
+          "changeOfMediansPercent": -21.145141711190472,
+          "pairedMedianDelta": -225.344,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            575.2995,
+            3265.256
+          ],
+          "candidateRange": [
+            348.464,
+            711.0085
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 666.9165,
+          "candidateMedian": 615.6555,
+          "changeOfMediansPercent": -7.686269570478476,
+          "pairedMedianDelta": -259.15500000000003,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            576.382,
+            1091.0375
+          ],
+          "candidateRange": [
+            349.094,
+            713.115
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 792.0,
+          "candidateMedian": 704.0,
+          "changeOfMediansPercent": -11.111111111111116,
+          "pairedMedianDelta": -88.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            792.0,
+            792.0
+          ],
+          "candidateRange": [
+            704.0,
+            704.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 232.6845,
+          "candidateMedian": 231.6475,
+          "changeOfMediansPercent": -0.4456678463756747,
+          "pairedMedianDelta": -15.473500000000001,
+          "candidateLowerPairs": 6,
+          "candidateHigherPairs": 3,
+          "baselineRange": [
+            216.5,
+            273.506
+          ],
+          "candidateRange": [
+            210.481,
+            269.104
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 233.312,
+          "candidateMedian": 232.1655,
+          "changeOfMediansPercent": -0.49140207104649836,
+          "pairedMedianDelta": -15.57850000000002,
+          "candidateLowerPairs": 6,
+          "candidateHigherPairs": 3,
+          "baselineRange": [
+            216.8125,
+            274.178
+          ],
+          "candidateRange": [
+            210.9385,
+            266.9665
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 776.0,
+          "candidateMedian": 776.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            776.0,
+            776.0
+          ],
+          "candidateRange": [
+            776.0,
+            776.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-merged-unicode",
+      "fixtureSha256": "c8ddef08635a0d01f8ac29c4db02466ac4ec9aa069c0b395ff43befe942c4d1d",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 34852.77,
+          "candidateMedian": 30480.6,
+          "changeOfMediansPercent": -12.544684396677797,
+          "pairedMedianDelta": -4142.619999999995,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            24053.14,
+            78840.36
+          ],
+          "candidateRange": [
+            21588.33,
+            39855.38
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 34029.8,
+          "candidateMedian": 28835.07,
+          "changeOfMediansPercent": -15.265238114828772,
+          "pairedMedianDelta": -2900.310000000005,
+          "candidateLowerPairs": 8,
+          "candidateHigherPairs": 1,
+          "baselineRange": [
+            24074.39,
+            43991.32
+          ],
+          "candidateRange": [
+            21613.34,
+            39888.92
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 55832.0,
+          "candidateMedian": 50768.0,
+          "changeOfMediansPercent": -9.070067344891818,
+          "pairedMedianDelta": -5064.0,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            55832.0,
+            55832.0
+          ],
+          "candidateRange": [
+            50768.0,
+            50768.0
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 37936.78,
+          "candidateMedian": 38524.46,
+          "changeOfMediansPercent": 1.5491035348809357,
+          "pairedMedianDelta": 294.75,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            37177.24,
+            56305.97
+          ],
+          "candidateRange": [
+            37736.18,
+            39282.2
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 37964.55,
+          "candidateMedian": 38554.03,
+          "changeOfMediansPercent": 1.5527116744436409,
+          "pairedMedianDelta": 272.01000000000204,
+          "candidateLowerPairs": 4,
+          "candidateHigherPairs": 5,
+          "baselineRange": [
+            37207.53,
+            39721.96
+          ],
+          "candidateRange": [
+            37765.55,
+            39309.15
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 55832.0,
+          "candidateMedian": 55832.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            55832.0,
+            55832.0
+          ],
+          "candidateRange": [
+            55832.0,
+            55832.0
+          ]
+        }
+      }
+    },
+    {
+      "case": "token-merged-unique-word",
+      "fixtureSha256": "7175ea45b99f70375713f04049267101d48f5d38de79f166c5a14a96ea72b7e3",
+      "metrics": {
+        "wallNs": {
+          "baselineMedian": 1465.6,
+          "candidateMedian": 1708.87,
+          "changeOfMediansPercent": 16.598662663755448,
+          "pairedMedianDelta": -83.92000000000007,
+          "candidateLowerPairs": 5,
+          "candidateHigherPairs": 4,
+          "baselineRange": [
+            1145.52,
+            2416.13
+          ],
+          "candidateRange": [
+            1121.19,
+            3057.1
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 1475.2,
+          "candidateMedian": 1713.35,
+          "changeOfMediansPercent": 16.143573752711493,
+          "pairedMedianDelta": -89.24000000000001,
+          "candidateLowerPairs": 5,
+          "candidateHigherPairs": 4,
+          "baselineRange": [
+            1149.51,
+            2427.51
+          ],
+          "candidateRange": [
+            1126.98,
+            3072.67
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 2160.0,
+          "candidateMedian": 2006.08,
+          "changeOfMediansPercent": -7.125925925925925,
+          "pairedMedianDelta": -153.92000000000007,
+          "candidateLowerPairs": 9,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            2156.0,
+            2171.76
+          ],
+          "candidateRange": [
+            2002.24,
+            2017.44
+          ]
+        }
+      },
+      "identicalSourceControl": {
+        "wallNs": {
+          "baselineMedian": 1227.95,
+          "candidateMedian": 1287.14,
+          "changeOfMediansPercent": 4.82022883667903,
+          "pairedMedianDelta": -14.920000000000073,
+          "candidateLowerPairs": 5,
+          "candidateHigherPairs": 4,
+          "baselineRange": [
+            1160.04,
+            3198.2
+          ],
+          "candidateRange": [
+            1145.12,
+            2886.04
+          ]
+        },
+        "cpuNs": {
+          "baselineMedian": 1234.63,
+          "candidateMedian": 1290.42,
+          "changeOfMediansPercent": 4.518762706235879,
+          "pairedMedianDelta": -16.12000000000012,
+          "candidateLowerPairs": 5,
+          "candidateHigherPairs": 4,
+          "baselineRange": [
+            1164.73,
+            3210.48
+          ],
+          "candidateRange": [
+            1148.61,
+            2899.41
+          ]
+        },
+        "allocatedBytes": {
+          "baselineMedian": 2192.0,
+          "candidateMedian": 2192.0,
+          "changeOfMediansPercent": 0.0,
+          "pairedMedianDelta": 0.0,
+          "candidateLowerPairs": 0,
+          "candidateHigherPairs": 0,
+          "baselineRange": [
+            2188.0,
+            2203.76
+          ],
+          "candidateRange": [
+            2188.0,
+            2203.76
+          ]
+        }
+      }
+    }
+  ],
+  "sourceSha256": {
+    "baseline/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "baseline/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "baseline/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "baseline/LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "baseline/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "baseline/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "candidate/LmBpeTokenizer.kt": "94507ab2583c49f86535740bf3b2787dc7d46101965d2ebde1b514727bd7b6ea",
+    "candidate/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "candidate/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "candidate/LmModel.kt": "845575c5757f9c41ea1f483fb2d490864533e5a08a0a2113d888d0ca4b7e66c5",
+    "candidate/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "candidate/LmTensor.kt": "2c1d375454331b814d1362af5506d87f34a24a1a16fd29cfaf7de371f5cd38d7"
+  },
+  "baselineCommit": "2f20c19b7e37197a6accac0c226b5401e25f1f99",
+  "status": "VALIDATED_COMPLETE_MATRIX"
+}
