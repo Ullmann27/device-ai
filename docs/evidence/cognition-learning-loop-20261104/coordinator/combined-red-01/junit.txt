@@ -1,0 +1,54 @@
+JUnit version 4.13.2
+..............................E.E...E.E.E.....SOURCE_RETRY completed=true steps=550 claimed=1
+.......................................
+Time: 1.914
+There were 5 failures:
+1) missingSignedRevocationIsReported(at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest)
+java.lang.AssertionError: expected:<UNSIGNED_LEDGER_CHANGE> but was:<VERIFIED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.missingSignedRevocationIsReported$lambda$0(SignedOwnerCorrectionJournalCoverageTest.kt:44)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.fixture(SignedOwnerCorrectionJournalCoverageTest.kt:117)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.missingSignedRevocationIsReported(SignedOwnerCorrectionJournalCoverageTest.kt:38)
+2) completelyMissingSignedFactsAreReported(at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest)
+java.lang.AssertionError: expected:<UNSIGNED_LEDGER_CHANGE> but was:<VERIFIED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.completelyMissingSignedFactsAreReported$lambda$0(SignedOwnerCorrectionJournalCoverageTest.kt:25)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.fixture(SignedOwnerCorrectionJournalCoverageTest.kt:117)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.completelyMissingSignedFactsAreReported(SignedOwnerCorrectionJournalCoverageTest.kt:22)
+3) partiallyMissingSignedFactIsReported(at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest)
+java.lang.AssertionError: expected:<UNSIGNED_LEDGER_CHANGE> but was:<VERIFIED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.partiallyMissingSignedFactIsReported$lambda$0(SignedOwnerCorrectionJournalCoverageTest.kt:33)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.fixture(SignedOwnerCorrectionJournalCoverageTest.kt:117)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.partiallyMissingSignedFactIsReported(SignedOwnerCorrectionJournalCoverageTest.kt:31)
+4) unrelatedSourceCannotCoverMissingOwnerFact(at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest)
+java.lang.AssertionError: expected:<UNSIGNED_LEDGER_CHANGE> but was:<VERIFIED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.unrelatedSourceCannotCoverMissingOwnerFact$lambda$0(SignedOwnerCorrectionJournalCoverageTest.kt:84)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.fixture(SignedOwnerCorrectionJournalCoverageTest.kt:117)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.unrelatedSourceCannotCoverMissingOwnerFact(SignedOwnerCorrectionJournalCoverageTest.kt:82)
+5) missingAndChangedFactsAreReportedTogether(at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest)
+java.lang.AssertionError: expected:<[lx-681459f4d871fcfa9861ff32, lx-6b166d416020a59aea6a96f8]> but was:<[lx-6b166d416020a59aea6a96f8]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.missingAndChangedFactsAreReportedTogether$lambda$0(SignedOwnerCorrectionJournalCoverageTest.kt:53)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.fixture(SignedOwnerCorrectionJournalCoverageTest.kt:117)
+	at at.heinz.deviceai.learning.SignedOwnerCorrectionJournalCoverageTest.missingAndChangedFactsAreReportedTogether(SignedOwnerCorrectionJournalCoverageTest.kt:49)
+
+FAILURES!!!
+Tests run: 80,  Failures: 5
+

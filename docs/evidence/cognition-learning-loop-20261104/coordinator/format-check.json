@@ -1,0 +1,13 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    ".",
+    ":(exclude)docs/evidence/cognition-learning-loop-20261104"
+  ],
+  "exit": 0,
+  "excludedScope": "Byte-preserved raw logs and source snapshots only; their historical blank EOF lines are retained for hash equality."
+}

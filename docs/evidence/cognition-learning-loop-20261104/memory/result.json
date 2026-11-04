@@ -1,0 +1,30 @@
+{
+  "red": {
+    "run": "red-04",
+    "compileExit": 0,
+    "junitExit": 1,
+    "tests": 18,
+    "pass": 8,
+    "fail": 10
+  },
+  "green": {
+    "run": "green-01",
+    "compileExit": 0,
+    "junitExit": 0,
+    "tests": 28,
+    "pass": 28,
+    "fail": 0
+  },
+  "unchangedRegression": true,
+  "unchangedExistingJournalTests": true,
+  "sourceFilesMatchGreen": true,
+  "legacyFixtureSha256": "e6a6be3ded3802ff3c252cc99895987d99ad9ad494cb505fbcac96da64d7ba52",
+  "historicalBlockedRuns": [
+    "red-01",
+    "red-02",
+    "red-03"
+  ],
+  "hostOnly": true,
+  "androidBuild": "NOT_RUN",
+  "device": "NOT_RUN"
+}

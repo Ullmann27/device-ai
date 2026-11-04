@@ -1,0 +1,9 @@
+{
+  "source": "/workspace/scratch/174c84456ee3/continuum-c1/app/build/tmp/kotlin-classes/debug",
+  "files": 2292,
+  "jar": "/workspace/scratch/344de8bc2104/memory-jvm-base.jar",
+  "sizeBytes": 6511666,
+  "sha256": "44e45d4c047a1cd65a4ca8b8faccae498a559b09cb4bd5ae99a04db4ac94048d",
+  "snapshotMode": "read-only copy, source before/after and every copied entry hash identical; no JVM/build run",
+  "sourceHeadAtCopy": "4da039d55d44f7087a9e4cd7bd72dc5a0089029e"
+}

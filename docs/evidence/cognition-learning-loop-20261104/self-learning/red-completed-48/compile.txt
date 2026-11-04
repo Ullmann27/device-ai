@@ -1,0 +1,6 @@
+/workspace/scratch/344de8bc2104/self-learning-red-02/sources/ContinuumLearningCore.kt:296:31: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                              ^^
+/workspace/scratch/344de8bc2104/self-learning-red-02/sources/ContinuumLearningCore.kt:406:37: warning: unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+                trainI.steps+(trainS?.steps ?: 0),
+                                    ^^

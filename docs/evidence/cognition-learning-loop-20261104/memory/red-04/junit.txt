@@ -1,0 +1,78 @@
+JUnit version 4.13.2
+.E.E.E.E.E..E.E.E..E.E......
+Time: 0.288
+There were 10 failures:
+1) recordParentItemsHaveDistinctBoundaries(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: e255bbf58c51616a603abbdedfef399040ad2e5e2d142635b691fe0545733d19
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.recordParentItemsHaveDistinctBoundaries(ProofCarryingMemoryCanonicalEncodingTest.kt:74)
+2) recordValidationEvidenceHasDistinctBoundaries(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: 7a25606ad552ac2dc4e8cd6f27fcbdbf2f6688a4cbfd4739a7d4f86e569c6981
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.recordValidationEvidenceHasDistinctBoundaries(ProofCarryingMemoryCanonicalEncodingTest.kt:79)
+3) signatureRejectsRepartitionedEvidence(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.signatureRejectsRepartitionedEvidence(ProofCarryingMemoryCanonicalEncodingTest.kt:59)
+4) evidenceItemsHaveDistinctBoundaries(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.evidenceItemsHaveDistinctBoundaries(ProofCarryingMemoryCanonicalEncodingTest.kt:38)
+5) recordTagItemsHaveDistinctBoundaries(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: 79f59b531e1fcfb7684e6225acd7f7e46c91479e2c2ec261a1ae443482c8e726
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.recordTagItemsHaveDistinctBoundaries(ProofCarryingMemoryCanonicalEncodingTest.kt:69)
+6) unpairedCodeUnitsCannotAliasReplacementCharacters(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: d777ab66989b7deea51e1213872515761d098dbec4d1ea73148fd6969f5d5aad
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.unpairedCodeUnitsCannotAliasReplacementCharacters(ProofCarryingMemoryCanonicalEncodingTest.kt:102)
+7) recordIdentityAndContentCannotTradeDelimiters(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: edabed61f974cfb6113694d382e0c008c574a9a85e9def72b4cbc0b7e7b320ea
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.recordIdentityAndContentCannotTradeDelimiters(ProofCarryingMemoryCanonicalEncodingTest.kt:65)
+8) contradictionItemsHaveDistinctBoundaries(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: 366b572f4ce210caa0fa431aa0354fa425b90e5cc0cb976e76bf5829cc6d7716
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.contradictionItemsHaveDistinctBoundaries(ProofCarryingMemoryCanonicalEncodingTest.kt:45)
+9) absentAndEmptySourceReferencesRemainDistinct(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: 030e66137f21a47c4b67f1578a3affdd90667189ccbcb08370d5f944a9b327f6
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.absentAndEmptySourceReferencesRemainDistinct(ProofCarryingMemoryCanonicalEncodingTest.kt:84)
+10) referencesCannotCrossEvidenceAndContradictionFields(at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest)
+java.lang.AssertionError: Values should be different. Actual: e2d0356867ffee0db8a6076f0e4410edd8e305718469dd5d1e3a34044632b7aa
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failEquals(Assert.java:187)
+	at org.junit.Assert.assertNotEquals(Assert.java:163)
+	at org.junit.Assert.assertNotEquals(Assert.java:177)
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryCanonicalEncodingTest.referencesCannotCrossEvidenceAndContradictionFields(ProofCarryingMemoryCanonicalEncodingTest.kt:51)
+
+FAILURES!!!
+Tests run: 18,  Failures: 10
+

@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "/workspace/scratch/344de8bc2104/memory-jvm-base.jar": "44e45d4c047a1cd65a4ca8b8faccae498a559b09cb4bd5ae99a04db4ac94048d",
+    "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar": "66917335497f9ab75a36c34b3d90bad2bc8dc256c34b2413ecd0c9467fcf597d",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar": "383093af5e078435b60043d19bfa83eb6191be0f4d13a28fb1c8a0f3ab24fe66",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+  },
+  "deviceTest": false,
+  "head": "f2470049b691c825f4d77b1156325e41a51dbf0a",
+  "hostOnly": true,
+  "legacyStartBoundary": true,
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt": "093fe07ddbf1d6a014ee80a96c6d58b0fe01f7f13c8bc847fde3f1503030b2c1",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt": "b37ce85fbb9597df7eb787c925d804d89ea122e4a196119c88a1f4a9df5500e2",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt": "94ba6871d458ea679fe03fdd56ca7282a0e45c5952b85594d57b96f483259362",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt": "7f7d9f83a29f2a70d3c7cb60fccd2dc47a7e51b73da2ad9410503ce907b5b812",
+    "app/src/main/java/at/heinz/deviceai/learning/MentorSource.kt": "8ee52e02b4b0caabb5147fb88d3e1477bd93376a085dc1fc71e24ab5ab3f57a3",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceNoveltyTest.kt": "452320b6d4de316fcffec034fcb3d6aa3ad74950366f1da46f6e7cec146e71d7",
+    "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceResumeTest.kt": "0ed0fef387d56bced5c65249df9601ae1ad318021315c2f3b5043ea300302830",
+    "tools/cognition-learning-loop/autonomy/LegacyRoundStart.kt": "544a9e0d5f4f3eda63fd5311a1c537a79392f6cc321fffe5541541df08d59df1"
+  },
+  "tests": [
+    "ContinuumSourceNoveltyTest",
+    "ContinuumSourceResumeTest"
+  ],
+  "trainingRun": false
+}

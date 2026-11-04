@@ -1,0 +1,30 @@
+✔ unavailable encyclopedia extracts are explicitly classified and never learned (0.907833ms)
+✔ failure reports identify safe operation and may not become accepted after separate stage (0.424928ms)
+✔ research attempts and pending topics remain truthful when a source has failed (0.252759ms)
+✔ issue #76: an interrupt flag never loses the cycle audit, and a failed write carries a fixed cause (0.306721ms)
+✔ safety budget, source isolation and holdout gate are unchanged (0.296635ms)
+✔ full synthetic RED GREEN fresh and counterexample PASS remain review-only (1.58428ms)
+✔ default absent verifier abstains even if CCC1 is complete (0.334242ms)
+✔ independent counterexample defeats apparently green code (0.237787ms)
+✔ malformed and replayed verifier evidence fails closed (0.631578ms)
+✔ missing, substituted and skipped tests cannot turn into CCC1 success (0.470026ms)
+✔ review is not an owner confirmation, even with a matching feedback fingerprint (0.261753ms)
+✔ empty or mutated bound identities fail closed (0.165198ms)
+✔ no caller input is ever mutated (0.215633ms)
+✔ falsification scorecard: naive status-only check misses 12 of 13 corruptions (1.823849ms)
+✔ metamorphic positive controls preserve the same tests across order changes and additions (0.502755ms)
+✔ metadata/LLM summaries cannot masquerade as extractive source training (8.436761ms)
+✔ same original source never leaks into both training and sealed audit (54.590359ms)
+✔ numbered near-duplicate claims cannot supply contrastive negatives (1.7715ms)
+✔ training is research-only, leaves frozen E unchanged and rejects holdout failures (235.291642ms)
+✔ signed CRE1 research package binds model, audit, publisher and canonical manifest (125.59538ms)
+✔ PEM keys remain compatible and unsupported signing algorithms are rejected (311.42716ms)
+✔ no training or signing occurs without enough independent original spans (33.53761ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1123.85577

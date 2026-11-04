@@ -483,10 +483,14 @@ class ContinuumLearningCore private constructor(
         cancelled:()->Boolean={false}
     ):ContinualLearningReport? = synchronized(CORE_LOCK) {
         if(sources.isEmpty())return@synchronized null
-        sources.forEach(MentorSourceValidation::checkSource)
-        val ids=mutableListOf<String>()
         sources.forEach { source ->
-            val experience=LearningExperienceFactory.create(
+            MentorSourceValidation.checkSource(source)
+            require(source.subject.trim().length>=3)
+            TrainableSubwordEncoder.subwordBuckets(source.subject)
+            TrainableSubwordEncoder.subwordBuckets(source.excerpt)
+        }
+        val requested=sources.map { source ->
+            LearningExperienceFactory.create(
                 type=LearningExperienceType.SOURCE_TEXT,
                 provenance=if (source.url.startsWith("https://de.wikipedia.org/wiki/"))
                     LearningProvenance.MENTOR_WIKIPEDIA else LearningProvenance.PUBLIC_WEB_SOURCE,
@@ -497,18 +501,22 @@ class ContinuumLearningCore private constructor(
                 sourceRef=source.url+"#sha256="+source.sha,
                 now=nowMillis()
             )
-            store.append(experience)
-            ids+=experience.id
-        }
-        // Capacity refusal or revocation must not turn into a claimed source
-        // training round backed only by the unrelated public curriculum.
-        val activeIds=store.all().filter {
+        }.distinctBy { it.id }
+        // Audit references allow 17 sources.
+        if(requested.size>17)return@synchronized null
+        requested.forEach { store.append(it) }
+        val ids=requested.map { it.id }
+        val requestedIds=ids.toSet()
+        // Require the complete persisted batch.
+        val active=store.all().filter {
             it.status!=LearningStatus.REVOKED && it.status!=LearningStatus.REJECTED
-        }.map { it.id }.toSet()
-        // Callers mark the whole source batch completed after this report.
-        if(ids.any { it !in activeIds })return@synchronized null
+        }.associateBy { it.id }
+        if(ids.any { it !in active })return@synchronized null
 
-        val replay=store.replay(LearningExperienceType.SOURCE_TEXT,48)
+        // Current sources take replay priority.
+        val replay=(store.replay(LearningExperienceType.SOURCE_TEXT,48).filter {
+            it.id !in requestedIds && it.annotation.orEmpty().length>=3
+        }+ids.map(active::getValue)).takeLast(48)
         val positives=replay.mapNotNull { item ->
             val topic=item.annotation?.takeIf { it.length>=3 } ?: return@mapNotNull null
             SubwordSemanticExample(topic,item.content,true)
@@ -550,7 +558,7 @@ class ContinuumLearningCore private constructor(
         }
         appendAudit("semantic",accepted,train.steps,before,after,holdoutBefore,holdoutAfter,ids,reason)
         ContinualLearningReport(
-            "semantic",accepted,train.steps,replay.size,before,after,
+            "semantic",accepted,train.steps,sourcePairs.size,before,after,
             holdoutBefore,holdoutAfter,ids,reason,
             completedEvaluation=!cancelled() && !train.stoppedEarly
         )
