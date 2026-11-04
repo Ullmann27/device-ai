@@ -4,7 +4,7 @@
   "status": "RUNNING",
   "owner": "tuning-root-59ad19c6d3b7-r3",
   "leaseExpiresAtUtc": "2026-11-04T23:37:47.997686+00:00",
-  "updatedAtUtc": "2026-11-04T21:37:47.997686+00:00",
+  "updatedAtUtc": "2026-11-04T21:41:14.415774+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -33,16 +33,18 @@
       "hypothesis": "Write final probabilities directly to the result row; eliminate sequence-sized scratch and result copy",
       "status": "ADOPTED_IN_DRAFT",
       "evidence": "docs/evidence/tuning-r3-20261104/m2/RESULTS.md",
-      "tests": "24/24 PASS"
+      "tests": "24/24 PASS",
+      "publishedCommit": "7d9fbea5e7b02ca80abd037c4cfb3a0c6a0c4e02"
     },
     {
       "id": "R3-M3",
       "target": "LmBpeTokenizer.encode",
       "hypothesis": "Assemble cached token arrays into one primitive output instead of boxing every token",
-      "status": "PLANNED"
+      "status": "FIRST_CANDIDATE_REJECTED; FOLLOWUP_REGISTERED",
+      "rejectedEvidence": "docs/evidence/tuning-r3-20261104/m3a/RESULTS.md"
     }
   ],
-  "next": "R3-M3: primitive token assembly; preserve M1/M2",
+  "next": "Exactly one M3B follow-up: single-pass primitive buffer, unchanged measurement matrix",
   "limits": [
     "no main merge",
     "no APK/install",
