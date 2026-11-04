@@ -1,0 +1,70 @@
+{
+  "baseCommit": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+  "sourceSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "89b067df80edbb104712c31b382c6d84d142fff258bbf156989a06e40e63d209",
+    "experimental/weight-space-20261104/LmWeightSurgeryTest.kt": "b850a4b5a14ec02b86e0209062ae52f4124f1a9943f1218f934e8c8f81540a98",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmCoreTest.kt": "8abd249b2fb46916fb3abd8041f5bc50979ec2a5a6c527025170b78c22f55539",
+    "app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeTest.kt": "5a8d542ca92c10d7367f60d45c72c82d0b120091d5321ea8af9fccf65bd0087d"
+  },
+  "commands": [
+    [
+      "java",
+      "-Xmx1g",
+      "-XX:ActiveProcessorCount=2",
+      "-cp",
+      "/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.4.0/532cc727c0960d12f4c9acb6a6c2c4a3e08187b/kotlin-reflect-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.11.0/3d57dc678bd8d72a60e7adf0eca5c54e3f4f4b79/kotlinx-coroutines-core-jvm-1.11.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+      "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+      "-no-stdlib",
+      "-no-reflect",
+      "-jvm-target",
+      "17",
+      "-classpath",
+      "/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+      "-d",
+      "/workspace/scratch/3112c86b5191/qa/baseline/classes",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/experimental/weight-space-20261104/LmWeightSurgeryTest.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/test/java/at/heinz/deviceai/learning/lm/LmCoreTest.kt",
+      "/workspace/scratch/3112c86b5191/device-ai-weight-helpers/app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeTest.kt"
+    ],
+    [
+      "java",
+      "-Xmx1g",
+      "-XX:ActiveProcessorCount=2",
+      "-cp",
+      "/workspace/scratch/3112c86b5191/qa/baseline/classes:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/home/agent/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/home/agent/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.learning.lm.LmCoreTest",
+      "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+      "at.heinz.deviceai.learning.lm.LmWeightSurgeryTest"
+    ]
+  ],
+  "results": [
+    {
+      "label": "compile",
+      "exitCode": 0,
+      "wallSeconds": 12.66861045400583
+    },
+    {
+      "label": "junit",
+      "exitCode": 0,
+      "wallSeconds": 3.475514388999727
+    }
+  ]
+}

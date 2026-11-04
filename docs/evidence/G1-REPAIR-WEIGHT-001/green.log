@@ -1,0 +1,21 @@
+test_absent_last_passed_field_reports_gate_failure (test_helper_regressions.TrainingGateRegressions.test_absent_last_passed_field_reports_gate_failure) ... ok
+test_all_phase_propagates_gate_failure_without_running_final (test_helper_regressions.TrainingGateRegressions.test_all_phase_propagates_gate_failure_without_running_final) ... ok
+test_baseline_gate_blocks_training_and_selection (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_blocks_training_and_selection) ... ok
+test_baseline_gate_rejects_contradictory_last_passed (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_rejects_contradictory_last_passed) ... ok
+test_both_training_paths_freeze_selection_then_resume_without_training (test_helper_regressions.TrainingGateRegressions.test_both_training_paths_freeze_selection_then_resume_without_training) ... FROZEN_SELECTION 2f3217905f2fa683892e2b4c4753d0a4b6407de5a8f16f0784d9c0952ba2efda
+ok
+test_capacity_limit_preserves_last_passed_training_transition (test_helper_regressions.TrainingGateRegressions.test_capacity_limit_preserves_last_passed_training_transition) ... START continued-small-train
+ok
+test_existing_selection_cannot_bypass_failed_gate_on_resume (test_helper_regressions.TrainingGateRegressions.test_existing_selection_cannot_bypass_failed_gate_on_resume) ... ok
+test_failed_baseline_gate_remains_closed_after_resume (test_helper_regressions.TrainingGateRegressions.test_failed_baseline_gate_remains_closed_after_resume) ... ok
+test_ineligible_last_passed_cannot_open_training_gate (test_helper_regressions.TrainingGateRegressions.test_ineligible_last_passed_cannot_open_training_gate) ... ok
+test_later_stage_failure_preserves_valid_training_transition (test_helper_regressions.TrainingGateRegressions.test_later_stage_failure_preserves_valid_training_transition) ... START continued-small-train
+ok
+test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason (test_helper_regressions.TrainingGateRegressions.test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason) ... ok
+test_valid_last_passed_allows_training_transition (test_helper_regressions.TrainingGateRegressions.test_valid_last_passed_allows_training_transition) ... START continued-small-train
+ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.138s
+
+OK

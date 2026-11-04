@@ -1,0 +1,162 @@
+test_absent_last_passed_field_reports_gate_failure (test_helper_regressions.TrainingGateRegressions.test_absent_last_passed_field_reports_gate_failure) ... ERROR
+test_all_phase_propagates_gate_failure_without_running_final (test_helper_regressions.TrainingGateRegressions.test_all_phase_propagates_gate_failure_without_running_final) ... START continued-small-train
+FAIL
+test_baseline_gate_blocks_training_and_selection (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_blocks_training_and_selection) ... START continued-small-train
+FAIL
+test_baseline_gate_rejects_contradictory_last_passed (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_rejects_contradictory_last_passed) ... START continued-small-train
+FAIL
+test_both_training_paths_freeze_selection_then_resume_without_training (test_helper_regressions.TrainingGateRegressions.test_both_training_paths_freeze_selection_then_resume_without_training) ... FROZEN_SELECTION 24df2b9edef65333c76351ea7ed81664629d350a6e2ec4adef8f596edd9ced37
+ok
+test_capacity_limit_preserves_last_passed_training_transition (test_helper_regressions.TrainingGateRegressions.test_capacity_limit_preserves_last_passed_training_transition) ... START continued-small-train
+ok
+test_existing_selection_cannot_bypass_failed_gate_on_resume (test_helper_regressions.TrainingGateRegressions.test_existing_selection_cannot_bypass_failed_gate_on_resume) ... FAIL
+test_failed_baseline_gate_remains_closed_after_resume (test_helper_regressions.TrainingGateRegressions.test_failed_baseline_gate_remains_closed_after_resume) ... START continued-small-train
+FAIL
+test_ineligible_last_passed_cannot_open_training_gate (test_helper_regressions.TrainingGateRegressions.test_ineligible_last_passed_cannot_open_training_gate) ... START continued-small-train
+FAIL
+test_later_stage_failure_preserves_valid_training_transition (test_helper_regressions.TrainingGateRegressions.test_later_stage_failure_preserves_valid_training_transition) ... START continued-small-train
+ok
+test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason (test_helper_regressions.TrainingGateRegressions.test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason) ... START continued-small-train
+FAIL
+test_valid_last_passed_allows_training_transition (test_helper_regressions.TrainingGateRegressions.test_valid_last_passed_allows_training_transition) ... START continued-small-train
+ok
+
+======================================================================
+ERROR: test_absent_last_passed_field_reports_gate_failure (test_helper_regressions.TrainingGateRegressions.test_absent_last_passed_field_reports_gate_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 197, in test_absent_last_passed_field_reports_gate_failure
+    self.assert_training_blocked()
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 150, in assert_training_blocked
+    experiment.continuation()
+  File "/tmp/weight-helper-regression-p1o1qowi/source/run_experiment.py", line 393, in continuation
+    expanded = ladder["lastPassed"]
+               ~~~~~~^^^^^^^^^^^^^^
+KeyError: 'lastPassed'
+
+======================================================================
+FAIL: test_all_phase_propagates_gate_failure_without_running_final (test_helper_regressions.TrainingGateRegressions.test_all_phase_propagates_gate_failure_without_running_final)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 225, in test_all_phase_propagates_gate_failure_without_running_final
+    self.module.main()
+  File "/tmp/weight-helper-regression-c5xzk7xe/source/run_experiment.py", line 463, in main
+    getattr(experiment, phase)()
+  File "/tmp/weight-helper-regression-c5xzk7xe/source/run_experiment.py", line 402, in continuation
+    rows = self.invoke(label + "-train", "train", Path(initial["path"]), self.out / "train.txt", self.store,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/weight-helper-regression-c5xzk7xe/source/run_experiment.py", line 226, in invoke
+    return self.call(label, [mode, str(checkpoint), str(self.tokenizer), *(str(x) for x in extra)], **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/weight-helper-regression-c5xzk7xe/source/run_experiment.py", line 194, in call
+    process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+AssertionError: unexpected JVM launch
+
+======================================================================
+FAIL: test_baseline_gate_blocks_training_and_selection (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_blocks_training_and_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 181, in test_baseline_gate_blocks_training_and_selection
+    self.assert_training_blocked()
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 155, in assert_training_blocked
+    self.assertEqual([], [call for call in invoke.call_args_list if call.args[1] == "train"],
+AssertionError: Lists differ: [] != [call('continued-small-train', 'train', Po[245 chars]rue)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-a28afmxu/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-a28afmxu/output/train.txt'), PosixPath('/tmp/weight-helper-regression-a28afmxu/output/checkpoints'), timeout=600, allow_failure=True)
+
+- []
++ [call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-a28afmxu/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-a28afmxu/output/train.txt'), PosixPath('/tmp/weight-helper-regression-a28afmxu/output/checkpoints'), timeout=600, allow_failure=True)] : a closed capacity gate must also prevent cached training invocations
+
+======================================================================
+FAIL: test_baseline_gate_rejects_contradictory_last_passed (test_helper_regressions.TrainingGateRegressions.test_baseline_gate_rejects_contradictory_last_passed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 209, in test_baseline_gate_rejects_contradictory_last_passed
+    self.assert_training_blocked()
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 155, in assert_training_blocked
+    self.assertEqual([], [call for call in invoke.call_args_list if call.args[1] == "train"],
+AssertionError: Lists differ: [] != [call('continued-small-train', 'train', Po[245 chars]rue)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-8q4kuqtf/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-8q4kuqtf/output/train.txt'), PosixPath('/tmp/weight-helper-regression-8q4kuqtf/output/checkpoints'), timeout=600, allow_failure=True)
+
+- []
++ [call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-8q4kuqtf/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-8q4kuqtf/output/train.txt'), PosixPath('/tmp/weight-helper-regression-8q4kuqtf/output/checkpoints'), timeout=600, allow_failure=True)] : a closed capacity gate must also prevent cached training invocations
+
+======================================================================
+FAIL: test_existing_selection_cannot_bypass_failed_gate_on_resume (test_helper_regressions.TrainingGateRegressions.test_existing_selection_cannot_bypass_failed_gate_on_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 214, in test_existing_selection_cannot_bypass_failed_gate_on_resume
+    self.assert_training_blocked(self.module.Experiment(self.args), existing_selection=True)
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 158, in assert_training_blocked
+    self.assertIsNotNone(failure, "a closed capacity gate needs an explicit failure, not silent success")
+AssertionError: unexpectedly None : a closed capacity gate needs an explicit failure, not silent success
+
+======================================================================
+FAIL: test_failed_baseline_gate_remains_closed_after_resume (test_helper_regressions.TrainingGateRegressions.test_failed_baseline_gate_remains_closed_after_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 185, in test_failed_baseline_gate_remains_closed_after_resume
+    self.assert_training_blocked(self.module.Experiment(self.args))
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 155, in assert_training_blocked
+    self.assertEqual([], [call for call in invoke.call_args_list if call.args[1] == "train"],
+AssertionError: Lists differ: [] != [call('continued-small-train', 'train', Po[245 chars]rue)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-827j8mnh/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-827j8mnh/output/train.txt'), PosixPath('/tmp/weight-helper-regression-827j8mnh/output/checkpoints'), timeout=600, allow_failure=True)
+
+- []
++ [call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-827j8mnh/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-827j8mnh/output/train.txt'), PosixPath('/tmp/weight-helper-regression-827j8mnh/output/checkpoints'), timeout=600, allow_failure=True)] : a closed capacity gate must also prevent cached training invocations
+
+======================================================================
+FAIL: test_ineligible_last_passed_cannot_open_training_gate (test_helper_regressions.TrainingGateRegressions.test_ineligible_last_passed_cannot_open_training_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 205, in test_ineligible_last_passed_cannot_open_training_gate
+    self.assert_training_blocked()
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 155, in assert_training_blocked
+    self.assertEqual([], [call for call in invoke.call_args_list if call.args[1] == "train"],
+AssertionError: Lists differ: [] != [call('continued-small-train', 'train', Po[245 chars]rue)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-1l81e6q7/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-1l81e6q7/output/train.txt'), PosixPath('/tmp/weight-helper-regression-1l81e6q7/output/checkpoints'), timeout=600, allow_failure=True)
+
+- []
++ [call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-1l81e6q7/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-1l81e6q7/output/train.txt'), PosixPath('/tmp/weight-helper-regression-1l81e6q7/output/checkpoints'), timeout=600, allow_failure=True)] : a closed capacity gate must also prevent cached training invocations
+
+======================================================================
+FAIL: test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason (test_helper_regressions.TrainingGateRegressions.test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 189, in test_missing_last_passed_cannot_be_bypassed_by_absent_stop_reason
+    self.assert_training_blocked()
+  File "/workspace/scratch/3112c86b5191/qa/G1-REPAIR-WEIGHT-001/base/test_helper_regressions.py", line 155, in assert_training_blocked
+    self.assertEqual([], [call for call in invoke.call_args_list if call.args[1] == "train"],
+AssertionError: Lists differ: [] != [call('continued-small-train', 'train', Po[245 chars]rue)]
+
+Second list contains 1 additional elements.
+First extra element 0:
+call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-fp4abszg/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-fp4abszg/output/train.txt'), PosixPath('/tmp/weight-helper-regression-fp4abszg/output/checkpoints'), timeout=600, allow_failure=True)
+
+- []
++ [call('continued-small-train', 'train', PosixPath('/tmp/weight-helper-regression-fp4abszg/inputs/lm1-baseline.lm1'), PosixPath('/tmp/weight-helper-regression-fp4abszg/output/train.txt'), PosixPath('/tmp/weight-helper-regression-fp4abszg/output/checkpoints'), timeout=600, allow_failure=True)] : a closed capacity gate must also prevent cached training invocations
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.155s
+
+FAILED (failures=7, errors=1)
