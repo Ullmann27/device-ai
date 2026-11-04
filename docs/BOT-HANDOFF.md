@@ -150,3 +150,10 @@ Nebenstrang: Jarvis Gedächtnis (über Kerns Schnittstellen). Chef HAUPTBOT vert
 | Continuum (M1/M3) | #369 | continuum/m1-grok-multiturn-routing-20261103 | 7316b1f5 | Draft | fix(continuum-m1): Mehrturn-Aufgabenrahmen, Geräteuhr, negationsfestes Werkzeugrouting (RED→GREEN, volle JUnit grün) |
 | ChatGPT/Codex | #368 | research/continuum-native-session-lifecycle-20261103 | 85602f73 | Draft | perf(litertlm): reuse only the pristine load-time conversation on first owner turn |
 | ChatGPT/Codex | #367 | research/continuum-omega-task-scoped-temporal-20261103 | ff3059e2 | Draft | research(omega): bounded temporal owner-state + clause-scoped storage negation |
+
+### 2026-11-04 09:28 CET (Europe/Vienna) – Integration: Sicherheits-Recheck 1c6e50d9 (#483) umgesetzt
+- Auflage A (ae247adf): Spracheingabe nur mit echtem On-Device-Erkenner (API 31+). Unter API 31 nicht verfügbar mit klarem Grund ("braucht Android 12"), alter SpeechRecognizer wird nie mehr genutzt. LocalSpeechEngine.choose(sdkInt, onDeviceAvailable), LEGACY_PREFER_OFFLINE entfernt.
+- Auflage B (92437004): Kommentar/Fehlertexte LocalSpeechInputPolicy konsistent ("kein Cloud-Ersatz" stimmt wieder), Konsistenztest.
+- Optional (905924a6): ownerNegated erkennt "auf keinen Fall" und nachgestelltes "keinesfalls"; Fehlalarm-Tests abgesichert.
+- ChatGPT #478 unverändert @d8fd7f7c. Volle Suite 2228 Tests, 0 Fehler, 19 übersprungen; lintDebug 0 Befunde; assembleDebug grün.
+- Offen für Sicherheit: Nachprüfung dieser drei Commits.
