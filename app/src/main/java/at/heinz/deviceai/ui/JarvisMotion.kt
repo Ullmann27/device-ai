@@ -157,4 +157,38 @@ object JarvisMotion {
         content(p)
         p.restore()
     }
+
+    // ---- Z-levels + camera drift (Jarvis Avatar extension; VIDEO-SPEC 6-7 s "Kamera fährt durch") ---------------
+    /** Depth levels: 0 = avatar plane, 1 = near panels, 2 = side panels, 3 = far background. */
+    data class DepthFrame(val scale: Float, val dx: Float, val dy: Float, val tiltDeg: Float, val alpha: Float, val blurDp: Float)
+
+    /** Slow constant camera drift (never fully static): yaw/pitch in degrees, z in level units. 0 when reduced motion. */
+    data class Camera(val yawDeg: Float, val pitchDeg: Float, val z: Float)
+
+    fun cameraDrift(timeMs: Long, animatorScale: Float = 1f): Camera {
+        if (off(animatorScale)) return Camera(0f, 0f, 0f)
+        val t = timeMs / 1000f
+        return Camera(1.2f * sin(t * .23f), .6f * sin(t * .17f + 1f), .08f * sin(t * .11f))   // GESCHÄTZT
+    }
+
+    /**
+     * Perspective for a panel at [level] with centre ([cx],[cy]) around the screen centre ([sx],[sy]):
+     * scale = d / (d + z), parallax from the camera drift, slight tilt towards the edge, blur grows with depth.
+     */
+    fun depth(level: Int, cx: Float, cy: Float, sx: Float, sy: Float, timeMs: Long,
+              cameraDistance: Float = 8f, animatorScale: Float = 1f): DepthFrame {
+        val cam = cameraDrift(timeMs, animatorScale)
+        val z = level.coerceIn(0, 3) + cam.z
+        val scale = cameraDistance / (cameraDistance + z)
+        val par = z * 6f
+        val dx = (cx - sx) * (scale - 1f) + cam.yawDeg * par
+        val dy = (cy - sy) * (scale - 1f) - cam.pitchDeg * par
+        val tilt = ((cx - sx) / maxOf(sx, 1f)) * 4f * level.coerceIn(0, 3) / 3f + cam.yawDeg * .5f
+        return DepthFrame(scale, dx, dy, tilt, 1f - .12f * level.coerceIn(0, 3), 1.5f * level.coerceIn(0, 3))
+    }
+
+    /** Applies a [DepthFrame] to the painter for content centred at ([cx],[cy]); caller restores. */
+    fun applyDepth(p: ContinuumPainter, f: DepthFrame, cx: Float, cy: Float) {
+        p.translate(f.dx, f.dy); p.rotate(f.tiltDeg, cx, cy); p.scale(f.scale, f.scale, cx, cy)
+    }
 }
