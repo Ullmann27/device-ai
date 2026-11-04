@@ -1,5 +1,7 @@
 package at.heinz.deviceai.routines
 
+import java.util.Collections
+
 /**
  * Chief-Muster Punkt 6 (Routinen) und 7 (Agent-zu-Agent-Nachrichten) – reiner, JVM-testbarer Kern.
  *
@@ -37,7 +39,10 @@ class RoutineBook(private val maxRoutines: Int = 32) {
             is RoutineTrigger.Every -> if (t.periodMillis < MIN_PERIOD_MILLIS || t.firstAtMillis < 0) return false else t.firstAtMillis
             is RoutineTrigger.OnEvent -> if (!ID.matches(t.name)) return false else Long.MAX_VALUE
         }
-        entries[routine.id] = Entry(routine, next)
+        // Admission owns the approved scope; neither the caller's mutable set nor
+        // a returned claim may add tools to this registered routine later.
+        val admitted = routine.copy(allowedTools = Collections.unmodifiableSet(LinkedHashSet(routine.allowedTools)))
+        entries[routine.id] = Entry(admitted, next)
         return true
     }
 
@@ -68,7 +73,11 @@ class RoutineBook(private val maxRoutines: Int = 32) {
         val e = entries[id] ?: return RoutineOutcome.Unchanged(id)
         if (!e.inFlight) return RoutineOutcome.Unchanged(id)
         e.inFlight = false
-        (e.routine.trigger as? RoutineTrigger.Every)?.let { e.nextAtMillis = nowMillis + it.periodMillis }
+        (e.routine.trigger as? RoutineTrigger.Every)?.let {
+            // An unrepresentable future must not wrap into the past and fire again.
+            e.nextAtMillis = if (nowMillis > Long.MAX_VALUE - it.periodMillis) Long.MAX_VALUE
+                else nowMillis + it.periodMillis
+        }
         val digest = result.trim().replace(Regex("\\s+"), " ")
         if (digest.isEmpty() || digest == e.lastDigest) return RoutineOutcome.Unchanged(id)
         e.lastDigest = digest

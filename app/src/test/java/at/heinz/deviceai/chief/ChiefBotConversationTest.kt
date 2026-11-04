@@ -2,6 +2,7 @@ package at.heinz.deviceai.chief
 
 import at.heinz.deviceai.cognitive.*
 import at.heinz.deviceai.localmodel.*
+import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.*
@@ -27,6 +28,76 @@ class ChiefBotConversationTest {
         val dir = Files.createTempDirectory("bot-conversation-").toFile()
         try { val store = ChiefBotProfileStore(File(dir,"profiles")); store.seedDefaults(20); block(dir, store, state(dir)) }
         finally { dir.deleteRecursively() }
+    }
+
+    private fun profileData(turn: ChiefBotConversationTurn): JSONObject = JSONObject(
+        turn.prompt.lineSequence().dropWhile { !it.startsWith("BOT_PROFILE_JSON") }.drop(1).first())
+
+    @Test fun savedPersonalityAndOwnVoiceReachTheCompleteRestrictedRequest() = fixture { _, store, state ->
+        val original = requireNotNull(store.get("bot-kora"))
+        val renamed = store.rename(original.agentId, "Kora Nord", original.profileVersion)
+        val edited = store.updateDescription(renamed.agentId, "Reparaturoptionen erklären",
+            "Direkt, gelassen, ohne Fachjargon.", renamed.profileVersion)
+        val brain = ChiefBotConversation(store).also { it.select(edited.agentId) }
+        val request = "Prüfe den Entwurf und erkläre die nächsten Schritte. " +
+            "Ändere keine Dateien, sende keine Nachricht und verwende kein Internet."
+        val turn = brain.prepare(edited.agentId, request, state, model, "persona-session")
+        val profile = profileData(turn)
+
+        assertEquals(edited.agentId, profile.getString("agentId"))
+        assertEquals(edited.displayName, profile.getString("name"))
+        assertEquals(edited.role, profile.getString("role"))
+        assertEquals(edited.communicationStyle, profile.getString("style"))
+        assertTrue("The chosen bot needs its distinct working approach in the real prompt", profile.has("approach"))
+        assertTrue(profile.getString("approach").isNotBlank())
+        assertTrue("A personality must speak as the selected bot", turn.prompt.contains("Ich-Form"))
+        assertTrue(turn.prompt.contains(request))
+        assertTrue(turn.prompt.contains("keine Werkzeuge und keine Netzfreigabe"))
+        assertFalse(turn.prompt.contains("REGISTERED TOOLS"))
+        assertFalse(turn.prompt.contains("OWNER_PRIVATE_MEMORY"))
+        assertTrue(edited.permissionScope.isEmpty())
+        assertTrue(edited.verifiedCapabilities.isEmpty())
+        assertTrue(brain.cancel(turn))
+    }
+
+    @Test fun everySelectedBotUsesItsOwnApproachWithoutOtherBotsPrivateContext() = fixture { _, store, state ->
+        val kora = requireNotNull(store.get("bot-kora"))
+        store.saveWorkingContext(kora.agentId, kora.agentId, "KORA_PERSONA_PRIVATE_NOTE", kora.profileVersion)
+        val brain = ChiefBotConversation(store)
+        val approaches = mutableSetOf<String>()
+        for (profile in store.page().items) {
+            brain.select(profile.agentId)
+            val turn = brain.prepare(profile.agentId, "Wie gehst du an meinen Auftrag heran?", state, model, "roles")
+            val data = profileData(turn)
+            assertTrue("Missing working approach for ${profile.agentId}", data.has("approach"))
+            assertTrue("Repeated working approach for ${profile.agentId}", approaches.add(data.getString("approach")))
+            assertEquals(profile.displayName, data.getString("name"))
+            assertEquals(profile.agentId == kora.agentId, turn.prompt.contains("KORA_PERSONA_PRIVATE_NOTE"))
+            assertFalse(turn.prompt.contains("OWNER_PRIVATE_MEMORY"))
+            assertFalse(turn.prompt.contains("REGISTERED TOOLS"))
+            assertTrue(brain.cancel(turn))
+        }
+        assertEquals(20, approaches.size)
+    }
+
+    @Test fun personaNeverDisplacesTheFinalNegationOfAMaximumSizeRequest() = fixture { _, store, state ->
+        val brain = ChiefBotConversation(store).also { it.select("bot-kora") }
+        repeat(2) { index ->
+            val previous = brain.prepare("bot-kora", "Vorherige Analyse $index", state, model, "long-request")
+            assertTrue(brain.complete(previous, "Antwort $index: " + "x".repeat(5_900), model, "long-request"))
+        }
+        val prefix = "Analysiere diesen vollständigen Entwurf: "
+        val suffix = " Am Ende gilt weiterhin: keine Dateien ändern, nichts senden, kein Internet."
+        val fillerBytes = ChiefBotConversationEntry.MAX_REQUEST_BYTES -
+            ChiefBotConversationEntry.utf8Bytes(prefix + suffix)
+        val request = prefix + "a".repeat(fillerBytes) + suffix
+        assertEquals(ChiefBotConversationEntry.MAX_REQUEST_BYTES, ChiefBotConversationEntry.utf8Bytes(request))
+
+        val turn = brain.prepare("bot-kora", request, state, model, "long-request")
+        assertTrue("The current request must stay whole, including its final restriction", turn.prompt.contains(request))
+        assertTrue(ChiefBotConversationEntry.utf8Bytes(turn.prompt) <= ChiefBotConversation.MAX_PROMPT_BYTES)
+        assertTrue(brain.cancel(turn))
+        assertEquals(2, store.loadConversation("bot-kora", "bot-kora").turns.size)
     }
 
     @Test fun privateHistoryUsesOneSelectedIdentityAndExistingCompilerWithoutOwnerData() = fixture { _, store, state ->
