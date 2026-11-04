@@ -23,6 +23,8 @@ object JarvisShellRenderer {
         /** Start a depth layer for one panel (Android: Camera rotationX/Y + RenderEffect depth blur). true if handled. */
         fun beginDepth(box: Box, depth: JarvisMotion.Depth.State): Boolean = false
         fun endDepth() {}
+        /** Real bloom (blurred additive light) around [emissive] drawing; false → portable JarvisNeon fallback. */
+        fun bloom(radiusDp: Float, intensity: Float, emissive: (ContinuumPainter) -> Unit): Boolean = false
     }
 
     /** Depth layer per slot (Z-Ebenen). Tiles/dialog/input near, side panels mid, frame elements far. */
@@ -38,6 +40,8 @@ object JarvisShellRenderer {
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L) {
         if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) background(p, shell.width, shell.height)
+        val dolly = JarvisMotion.Depth.dolly(timeMs, animatorScale)
+        p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
         val tileBoxes = shell.tileBoxes()
         val cards = cardSlots.map { shell[it]!! } + tileBoxes
@@ -64,6 +68,9 @@ object JarvisShellRenderer {
             val depthNative = glass?.beginDepth(box, depth) == true
             val r = JarvisDesign.Metrics.radiusCard
             val native = glass?.drawPanelGlass(box, r, f.glow) == true
+            if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
+                q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
+            }
             JarvisNeon.glassCard(p, box.left, box.top, box.right, box.bottom, r,
                 if (f.glow > .5f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL, f.glow > .5f, f.alpha, native)
             when {
@@ -76,6 +83,7 @@ object JarvisShellRenderer {
             if (depthNative) glass?.endDepth()
             p.restore()
         }
+        p.restore()
     }
 
     private fun Box.centerY() = (top + bottom) / 2f
@@ -92,17 +100,27 @@ object JarvisShellRenderer {
         bokeh(p, w, h)
     }
 
-    /** Bokeh dust (deterministic positions), also drawn on top of the AGSL background. */
+    /** Upper bounds for the portable particle layers (fallback path; the AGSL path is per-pixel, fixed cost). */
+    const val BOKEH_MAX = 60
+    const val DUST_MAX = 90
+
+    /** Bokeh discs and fine dust (deterministic positions, Signatur 15 "Staub"); counts capped. */
     fun bokeh(p: ContinuumPainter, w: Float, h: Float) {
         p.setAdditive(true)
         var seed = 0x5EED
-        repeat(((w * h) / 9000f).toInt().coerceIn(20, 160)) {
+        repeat(((w * h) / 12000f).toInt().coerceIn(16, BOKEH_MAX)) {
             seed = seed * 1103515245 + 12345
             val bx = ((seed ushr 8) % 10000) / 10000f * w; seed = seed * 1103515245 + 12345
             val by = ((seed ushr 8) % 10000) / 10000f * h; seed = seed * 1103515245 + 12345
             val br = 1f + ((seed ushr 8) % 100) / 100f * 5f
             val c = if (it % 3 == 0) Colors.violet else Colors.cyan
             p.fillCircle(bx, by, br * 2.2f, Fill.Radial(bx, by, br * 2.2f, intArrayOf(Argb.withAlpha(c, .22f), 0)))
+        }
+        repeat(((w * h) / 5000f).toInt().coerceIn(20, DUST_MAX)) {
+            seed = seed * 1103515245 + 12345
+            val dx = ((seed ushr 8) % 10000) / 10000f * w; seed = seed * 1103515245 + 12345
+            val dy = ((seed ushr 8) % 10000) / 10000f * h
+            p.fillCircle(dx, dy, .7f, Fill.Solid(Argb.withAlpha(Colors.cyanSoft, .45f)))
         }
         p.setAdditive(false)
     }
