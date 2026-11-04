@@ -14,7 +14,7 @@
 | Original signer SHA-256 | `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23` |
 | Actual signature verification | apksigner exit 0, one expected signer, APK signature scheme v2 verified |
 | Native ABIs | arm64-v8a, armeabi-v7a, x86, x86_64 |
-| Code 41 physical device installation | NOT_RUN; Android confirmation remains required |
+| Code 41 on owner device | Later owner screenshot shows 0.3.40 (41) opened and corrected full times; no assistant installation / ADB test |
 
 ## What changed
 
@@ -33,8 +33,8 @@ Raw verification evidence: [receipt](verification.json), [live catalog](after-ma
 
 ## Limits and historical records
 
-The owner screenshots show code 40 opened on the real device and report readiness; they do not constitute a complete Fold7, audio/GPU/thermal or autonomous task acceptance. Code 41 was downloaded and verified on the host, not installed on the device by this work.
+The owner screenshots show code 40 opened on the real device and report readiness; they do not constitute a complete Fold7, audio/GPU/thermal or autonomous task acceptance. Code 41 was downloaded and verified on the host. The owner subsequently supplied a real screenshot showing 0.3.40 (41) opened and the repaired clock-time cards: [device observation](owner-device-observation.json). No installation was performed by the assistant. This adds a specific physical display observation, not a full device acceptance.
 
-The consumed failed S01 remains unresolved and was not replayed. The source integration does not establish direct ChatGPT/MCP connectivity, successful new unknown coding tasks or autonomous Android ARM64 build/isolation. This display fix does not improve or benchmark Gemma. The preceding code 40 learning-store migration/downgrade boundary remains applicable.
+The consumed failed S01 remains unresolved and was not replayed. The source integration does not establish direct ChatGPT/MCP connectivity, reliable new unknown coding through the later standalone service or autonomous Android ARM64 build/isolation. Earlier successful local-model repairs are preserved in the [capability correction](../status-history-20261104/CODING-CAPABILITY-CORRECTION-20261104.md). This display fix does not improve or benchmark Gemma. The preceding code 40 learning-store migration/downgrade boundary remains applicable.
 
 `publish-attempt.json` and `prepublish-manifest.json` preserve the original in-progress/code 40 observations literally; they are superseded by the final receipt above. Documentation commits after the application source only record evidence and do not change the APK source. `MANIFEST.sha256` covers every file here except itself.

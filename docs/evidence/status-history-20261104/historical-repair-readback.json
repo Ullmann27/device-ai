@@ -1,0 +1,111 @@
+{
+  "reviewType": "READ_ONLY_HISTORICAL_RECEIPT_HASH_AND_STATUS_INSPECTION_NO_REPLAY",
+  "historicalSource": "19474261c15a3503a9f041244b4b4c3eaed4636f",
+  "totalFrozenTasks": 12,
+  "verifiedRepairs": 4,
+  "primaryScore": "3/10",
+  "allScore": "4/12",
+  "records": [
+    {
+      "task": "u03",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "modelCalls": 1,
+      "verifiedNativeExecutions": 1,
+      "modelRuntimePair": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+      "testAndSourceIdentitiesStable": true,
+      "patchSha256": "4b8763e68af48f12f8189391931dad880c6b8c6e5a37f642453a6f3e7fb28397",
+      "redFailed": true,
+      "candidateGreen": true,
+      "independentGreen": true,
+      "verifiedProofFiles": [
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u03/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-096fa5af43ac07bc-4ef01cb0f869-1793737485918-473375c2/candidate-independent-1/verification.json",
+          "sha256": "286e35fe2c212955c150587cf462a7567079f4337d406978c3bba8ac31c12ec2"
+        },
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u03/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-096fa5af43ac07bc-4ef01cb0f869-1793737485918-473375c2/independent-check/verification.json",
+          "sha256": "31f8db9d8f8dd437172ca950a0f02d3894a3930c5c7b49febedfc23d4ecafb8c"
+        }
+      ],
+      "testNames": [
+        "test.Explicit zero setting"
+      ]
+    },
+    {
+      "task": "u04",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "modelCalls": 1,
+      "verifiedNativeExecutions": 1,
+      "modelRuntimePair": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+      "testAndSourceIdentitiesStable": true,
+      "patchSha256": "b8c572ef776d7e7af5ddeaa9c98263f5fd58fc9ec9d639c251c2a2658e8388f6",
+      "redFailed": true,
+      "candidateGreen": true,
+      "independentGreen": true,
+      "verifiedProofFiles": [
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u04/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-6d6f61c722f0deb9-d41ba561c841-1793737526108-e582cc82/candidate-independent-1/verification.json",
+          "sha256": "00774922e9977c88baa5f3ca0e73f4d9450329c18bd7be0331b3889e7d3efb54"
+        },
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u04/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-6d6f61c722f0deb9-d41ba561c841-1793737526108-e582cc82/independent-check/verification.json",
+          "sha256": "580afebc31c06fb3ceefe8e634a6ba476a3938a369b58b052bea9d0c3221f049"
+        }
+      ],
+      "testNames": [
+        "test.Numeric order"
+      ]
+    },
+    {
+      "task": "u05",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "modelCalls": 1,
+      "verifiedNativeExecutions": 1,
+      "modelRuntimePair": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+      "testAndSourceIdentitiesStable": true,
+      "patchSha256": "6da4b4ab42526074164e592626cdef17ae34ba8af3504aca8c9dc91db7897d8d",
+      "redFailed": true,
+      "candidateGreen": true,
+      "independentGreen": true,
+      "verifiedProofFiles": [
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u05/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-a595ffe70a512f92-83a29810a169-1793737556827-89641c51/candidate-independent-1/verification.json",
+          "sha256": "fecfd3c1a37788f85948142d274078183640a14560d38e5062dd00f0e29b6da7"
+        },
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u05/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-a595ffe70a512f92-83a29810a169-1793737556827-89641c51/independent-check/verification.json",
+          "sha256": "81acddc24decb297ca3072ab3d88b8bc30f73b334d4d8c5729257ed85ced7c8b"
+        }
+      ],
+      "testNames": [
+        "test.First occurrence deduplication"
+      ]
+    },
+    {
+      "task": "u12",
+      "status": "PATCH_PENDING_OWNER_REVIEW",
+      "modelCalls": 1,
+      "verifiedNativeExecutions": 1,
+      "modelRuntimePair": "momega1-qwen25coder15b-q4km-llamacpp-6cb3e672-linux-x64",
+      "testAndSourceIdentitiesStable": true,
+      "patchSha256": "e3e12896458ea1ddb870c6f675432d5f1a891570c49aec112158ea8c13a08e05",
+      "redFailed": true,
+      "candidateGreen": true,
+      "independentGreen": true,
+      "verifiedProofFiles": [
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u12/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/candidate-independent-1/verification.json",
+          "sha256": "d5339f8c793aaeb7596458cf301cd64f071ce5d0b3d2548c762d59f9974c6f25"
+        },
+        {
+          "path": "docs/evidence/momega1/qa/real-model/u12/public-synthetic-state-evidence/teamleader/reports/owner-repair/mob-ba07f15d903f2bd3-56efdcb5ed4c-1793738085386-a2c27eb6/independent-check/verification.json",
+          "sha256": "de34b4d6350c530c06bf1d6e81b563759205bcc2428d7966e3934786be2a0cd5"
+        }
+      ],
+      "testNames": [
+        "test.Cache freshness"
+      ]
+    }
+  ],
+  "limitation": "Controlled originally unknown tasks, actual Linux-x64 local-model execution. Not physical Fold7 acceptance. Patches pending owner review. No successful second-candidate self-correction in original benchmark; no broad accuracy or intelligence claim."
+}

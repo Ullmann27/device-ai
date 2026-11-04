@@ -1,5 +1,7 @@
 # Owner dashboard assessment — 2026-11-04
 
+**Capability correction:** Earlier wording overemphasized S01. Four original local-model repairs, the earlier CCC1 pipeline, and known-case FORGE/LINT/ECHO plus restart recall are already proven. Read the [explicit correction and original evidence](CODING-CAPABILITY-CORRECTION-20261104.md). The metric calculations below remain unchanged.
+
 The second owner screenshot shows the running Continuum home screen with 71% check questions, 42 learning events today, -71% event change, 800 archived sources, 68% filesystem usage and zero current development/worker counters. These are observations, not a new model benchmark. Screenshot SHA-256: `3b5aec271b2517b04ce6dc96f7e22041dff62d824475f427acbc65871298f746`. Private image bytes are not committed.
 
 ## Exact metric meanings from code
@@ -31,8 +33,8 @@ The second owner screenshot shows the running Continuum home screen with 71% che
 
 The verified code 40 release combines reviewed app/avatar work with persistent profile/conversation/delegation integrations and preserves the original updater identity. Exact-source local acceptance: Android 2,487 passed / 14 skipped / 0 failed; full Node 2,269 passed / 37 skipped / 0 failed; backend 64 passed / 0 skipped / 0 failed. Subset reruns are not additional unique coverage. See the preceding [night handoff](../../research/omega/night-integration/HANDOFF.md) and [signed code 40 readback](../night-integration/release-code40/README.md).
 
-The native S01 unknown coding task failed: no useful answer or patch, LINT/ECHO not reached, unresolved execution barrier preserved. The known u03 case is not a substitute for an unknown-task result. CLI/service/read-only MCP implementation does not establish a connected ChatGPT session or autonomous Android ARM64 operation. See [independence closeout](../../research/omega/independence/CLOSEOUT.md).
+The later independent-service S01 unknown coding task failed: no useful answer or patch, LINT/ECHO not reached, unresolved execution barrier preserved. The original u03 belonged to the four successful original unknown tasks; later known-u03 runs prove persistence and role integration and are not extra blind-score successes. S01 does not invalidate those earlier repairs. CLI/service/read-only MCP implementation does not establish a connected ChatGPT session or autonomous Android ARM64 operation. See [independence closeout](../../research/omega/independence/CLOSEOUT.md).
 
-The user's screenshots add actual device observations of the app, layout, avatar and reported runtime state. They do not supply full physical Fold7 voice, GPU/performance, thermal, unknown-coding or durable learning acceptance. No honest whole-system readiness percentage follows from these observations. The concrete advance is an integrated, tested and delivered Android software base; broad autonomous cognitive capability remains a separate unresolved operating milestone.
+The user's screenshots add actual device observations of the app, layout, avatar and reported runtime state. They do not supply full physical Fold7 voice, GPU/performance, thermal, unknown-coding or durable learning acceptance. No honest whole-system readiness percentage follows from these observations. The concrete advances include an integrated, tested and delivered Android software base plus already demonstrated bounded local-model repairs and known-case bot coordination. Broader reliability and full on-device autonomy remain separate unresolved operating milestones.
 
 This review performed no inference, training, device command or owner-data inspection. The ongoing code 41 publication changes the status history presentation only, not any of the metric formulas described here.
