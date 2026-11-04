@@ -52,7 +52,7 @@ class ContinuumHomeLayoutTest {
             val layout = ContinuumHomeLayout.wide(width, height)
             val rail = layout.boxes.getValue(Slot.RAIL)
             assertEquals(ContinuumHomeLayout.railWidthDp(width), rail.width, .001f)
-            assertTrue("Readable, bounded navigation rail", rail.width in 80f..120f)
+            assertTrue("Readable, bounded ~20 % navigation rail (ref5, Bildbeschrieb)", rail.width in JarvisMenuRail.MIN_WIDTH..JarvisMenuRail.MAX_WIDTH)
             for ((slot, box) in layout.boxes) {
                 if (slot != Slot.RAIL) assertTrue("$slot clears rail", box.left >= rail.right)
             }

@@ -98,6 +98,16 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
             clean(question, 120)))
     }
 
+    /**
+     * KERN-VERTRAG (vorläufig): the owner navigated from [from] to [to]. Emitted only by the real navigation path
+     * (JarvisNavigator); same target twice is not an area change.
+     */
+    fun areaChanged(from: String?, to: String, pattern: TransitionPattern) {
+        val target = clean(to, 32)
+        if (target.isEmpty() || target == from?.let { clean(it, 32) }) return
+        bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 32) }, target, pattern))
+    }
+
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
 
     /** Most recent turn/worker timeline – what the "Aktuelle Prozesse" card shows. */

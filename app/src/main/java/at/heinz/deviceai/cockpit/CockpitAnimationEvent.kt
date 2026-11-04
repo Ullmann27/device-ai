@@ -59,6 +59,14 @@ sealed class CockpitAnimationEvent {
                           val count: Int, val topScore: Float?) : CockpitAnimationEvent()
 
     /**
+     * KERN-VERTRAG (vorläufig, von Integration nach Kerns Nachricht ergänzt; Kern ersetzt beim Einbau):
+     * the visible area / panel ([TransitionPattern.B_FLY_IN]) or the menu / scene ([TransitionPattern.A_DEPTH])
+     * changed because the owner navigated. Not bound to a turn: [turnId] is [NAV_TURN].
+     */
+    data class AreaChanged(override val turnId: String = NAV_TURN, override val atMillis: Long, val fromTarget: String?,
+                           val toTarget: String, val pattern: TransitionPattern) : CockpitAnimationEvent()
+
+    /**
      * Extension point for future event families, first of all the calculation / math visualisation of the
      * reference videos (e.g. `class MathVisualization(...) : CockpitAnimationEvent.Extension("math")`).
      * Not implemented yet; renderers that do not know a [kind] must ignore it.
@@ -67,6 +75,12 @@ sealed class CockpitAnimationEvent {
 }
 
 const val MEMORY_TURN = "memory"
+
+/** Turn id of navigation events ([CockpitAnimationEvent.AreaChanged]). KERN-VERTRAG (vorläufig). */
+const val NAV_TURN = "nav"
+
+/** Motion pattern of a navigation event: A = scene change in Z depth (0,8 s), B = panel fly-in (0,5–0,6 s). */
+enum class TransitionPattern { A_DEPTH, B_FLY_IN }
 
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }
