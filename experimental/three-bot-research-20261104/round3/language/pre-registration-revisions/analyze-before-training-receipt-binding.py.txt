@@ -1,0 +1,194 @@
+#!/usr/bin/env python3
+"""Verify the whole frozen evidence chain and score the preregistered copying study."""
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+from datetime import datetime, timedelta
+import hashlib
+import json
+import math
+from pathlib import Path
+
+from oracle import verify
+
+ROOT = Path(__file__).resolve().parent
+OBJECTIVES = ('full_text', 'answer_eos')
+SEEDS = ('202611043', '202611044')
+SCORES = ('strictCorrect', 'textOnlyCorrect', 'choiceCorrect', 'choiceWithEosCorrect')
+
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def read(path: Path):
+    return json.loads(path.read_text())
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--run', type=Path, default=ROOT / 'run-v1')
+    parser.add_argument('--output', type=Path)
+    parser.add_argument('--original', type=Path)
+    args = parser.parse_args()
+    run = args.run.resolve(strict=True)
+    output = args.output.resolve() if args.output else run / 'analysis.json'
+    require(run.is_relative_to(ROOT) and output.is_relative_to(run), 'analysis must stay in study run')
+    require(not output.exists(), 'do not overwrite an existing analysis')
+    registration = read(ROOT / 'registration.json')
+    for path, expected in registration['files'].items():
+        require(digest(ROOT / path) == expected, 'registered file changed: ' + path)
+    completed, freeze = read(run / 'completed.json'), read(run / 'freeze.json')
+    require(completed['testEvaluated'] and not completed['trainingAfterFreeze'] and not completed['promotion'], 'completion state')
+    require(digest(run / 'freeze.json') == completed['freezeSha256'], 'freeze hash')
+    require(freeze['registrationCommit'] == completed['registrationCommit'], 'prospective commit binding')
+    require(digest(ROOT / 'registration.json') == freeze['registrationSha256'] == completed['registrationSha256'], 'registration hash')
+    frozen_at = datetime.fromisoformat(freeze['frozenUtc'])
+    expected_models = {'baseline': ('baseline', 'none')}
+    expected_models.update({f'{o}-{s}': (o, s) for o in OBJECTIVES for s in SEEDS})
+    models = completed['models']
+    require(models == freeze['models'] and len(models) == 5 and {m['name'] for m in models} == set(expected_models), 'model set')
+    evaluations = completed['evaluations']
+    receipts = {r['label']: r for r in evaluations}
+    require(len(evaluations) == len(receipts) == 10, 'unique receipt cardinality')
+    require(set(receipts) == {f'{name}-{split}' for name in expected_models for split in ('dev', 'test')}, 'receipt labels')
+    truth = {}
+    for split, stem in [('dev', 'dev'), ('test', 'test.sealed')]:
+        rows = [json.loads(line) for line in (ROOT / 'data' / (stem + '.jsonl')).read_text().splitlines()]
+        truth[split] = {r['id']: r for r in rows}
+        require(len(rows) == len(truth[split]) == 64, 'truth cardinality')
+        for row in rows:
+            parsed = verify(row['prompt'], row['answer'])
+            require(parsed == row['oracle'] and parsed['object'] == row['object'] and parsed['template'] == row['template'], 'oracle mismatch')
+    observations = {}; summaries = []
+
+    def metrics(rows: list[dict]) -> dict:
+        require(bool(rows), 'empty subgroup')
+        return {'n': len(rows), **{score: sum(row[score] for row in rows) for score in SCORES},
+                'oneTokenEosFormat': sum(row['newTokens'] == 1 and row['stop'] == 'EOS' and row['text'].strip() in 'ABCD' and len(row['text'].strip()) == 1 for row in rows),
+                'immediateEos': sum(row['newTokens'] == 0 and row['stop'] == 'EOS' for row in rows),
+                'meanCorrectAnswerNll': sum(row['correctAnswerNll'] for row in rows) / len(rows),
+                'freeOutputs': dict(Counter(row['text'].strip() for row in rows))}
+
+    for model in models:
+        name = model['name']; objective, seed = expected_models[name]
+        require((model['objective'], model['seed']) == (objective, seed), 'model objective/seed binding')
+        checkpoint = (args.original or Path(model['checkpoint'])) if name == 'baseline' else run / (name + '.lm1')
+        require(digest(checkpoint) == model['checkpointSha256'], 'checkpoint bytes')
+        cap = model['capacity']; cr = cap['receipt']
+        cap_path = run / (name + '-capacity.receipt.json')
+        require(digest(cap_path) == cap['receiptSha256'] and read(cap_path) == cr, 'capacity receipt binding')
+        require(cr['label'] == name + '-capacity' and not cr['timedOut'] and cr['exitCode'] == (0 if cap['pass'] else 1), 'capacity process')
+        require(datetime.fromisoformat(cr['completedUtc']) < frozen_at, 'capacity after freeze')
+        for stream in ('stdout', 'stderr'):
+            require(digest(run / cr[stream]) == cr[stream + 'Sha256'], 'capacity log bytes')
+        lines = [line for line in (run / cr['stdout']).read_text().splitlines() if line.startswith('CAPACITY_RESULT\t')]
+        require(len(lines) == 1, 'capacity result count')
+        fields = dict(field.split('=', 1) for field in lines[0].split('\t')[1:])
+        require(fields == cap['verdict'] and fields['checkpointSha256'] == model['checkpointSha256'], 'capacity verdict binding')
+        if name != 'baseline':
+            tr = read(run / (name + '-train.receipt.json'))
+            require(tr['label'] == name + '-train' and tr['exitCode'] == 0 and not tr['timedOut'], 'training process')
+            require(datetime.fromisoformat(tr['completedUtc']) < frozen_at, 'training after freeze')
+            for stream in ('stdout', 'stderr'):
+                require(digest(run / tr[stream]) == tr[stream + 'Sha256'], 'training log bytes')
+            events = [json.loads(line) for line in (run / tr['stdout']).read_text().splitlines()]
+            require(events[0]['kind'] == 'training_start' and events[-1] == model['training'], 'training result binding')
+            require(events[0]['sourceSha256'] == registration['baselineSha256'], 'training original input')
+            require(events[-1]['steps'] == 256 and events[-1]['examples'] == 1024 and events[-1]['answerTargets'] == events[-1]['eosTargets'] == 1024, 'training budget')
+            for e in events:
+                require((e['objective'], str(e['seed'])) == (objective, seed), 'training objective/seed identity')
+            if objective == 'answer_eos':
+                require(events[-1]['activeTargets'] == 2048, 'masked supervision budget')
+        for split in ('dev', 'test'):
+            label = f'{name}-{split}'; er = receipts[label]
+            require(er == read(run / (label + '.receipt.json')), 'evaluation receipt mismatch')
+            require(er['exitCode'] == 0 and not er['timedOut'], 'evaluation completion')
+            require(datetime.fromisoformat(er['completedUtc']) - timedelta(seconds=er['wallSeconds']) >= frozen_at, 'evaluation before freeze')
+            for stream in ('stdout', 'stderr'):
+                require(digest(run / er[stream]) == er[stream + 'Sha256'], 'evaluation log bytes')
+            events = [json.loads(line) for line in (run / er['stdout']).read_text().splitlines()]
+            require(events[0]['kind'] == 'evaluation_start' and events[-1]['kind'] == 'evaluation_complete', 'evaluation framing')
+            require(events[0]['checkpointSha256'] == model['checkpointSha256'], 'evaluation checkpoint')
+            stem = 'dev' if split == 'dev' else 'test.sealed'
+            require(events[0]['datasetSha256'] == digest(ROOT / 'data' / (stem + '.tsv')), 'evaluation dataset')
+            rows = [e for e in events if e['kind'] == 'case']
+            require(len(rows) == 64 and {row['id'] for row in rows} == set(truth[split]), 'case set')
+            require(events[-1]['rows'] == 64, 'completion rows')
+            for e in events:
+                require((e['objective'], str(e['seed']), e['split']) == (objective, seed, split), 'event identity')
+            for row in rows:
+                gold = truth[split][row['id']]
+                for key in ('prompt', 'answer', 'template', 'object'):
+                    require(row[key] == gold[key], 'case truth binding')
+                strict = row['text'].strip() == row['answer'] and row['newTokens'] == 1 and row['stop'] == 'EOS'
+                require(row['strictCorrect'] == strict and row['textOnlyCorrect'] == (row['text'].strip() == row['answer']), 'free score')
+                require(row['stop'] not in {'TIME', 'CANCELLED'}, 'incomplete case')
+                for nll, choice, score in [('choiceNll', 'choice', 'choiceCorrect'), ('choiceNllWithEos', 'choiceWithEos', 'choiceWithEosCorrect')]:
+                    require(set(row[nll]) == set('ABCD') and all(math.isfinite(v) for v in row[nll].values()), 'NLL support')
+                    winner = min(row[nll], key=row[nll].get)
+                    require(row[choice] == winner and row[score] == (winner == row['answer']), 'choice score')
+                require(row['correctAnswerNll'] == row['choiceNll'][row['answer']], 'correct NLL')
+            observations[(name, split)] = {r['id']: r for r in rows}
+            summaries.append({'model': name, 'objective': objective, 'seed': seed, 'split': split,
+                'capacityPass': cap['pass'], 'overall': metrics(rows),
+                'templates': {t: metrics([r for r in rows if r['template'] == t]) for t in ('owner_late', 'owner_early')},
+                'answerClasses': {a: metrics([r for r in rows if r['answer'] == a]) for a in 'ABCD'}})
+    by_key = {(s['model'], s['split']): s for s in summaries}
+    require(len(by_key) == len(summaries) == 10, 'summary cardinality')
+    copy_decisions = []; paired_baseline = []
+    for name, (objective, seed) in expected_models.items():
+        if name == 'baseline':
+            continue
+        for split in ('dev', 'test'):
+            baseline = observations[('baseline', split)]; current = observations[(name, split)]
+            paired_baseline.append({'model': name, 'split': split,
+                'scores': {score: {'wins': sum(current[i][score] and not baseline[i][score] for i in baseline),
+                                  'losses': sum(baseline[i][score] and not current[i][score] for i in baseline), 'n': 64}
+                           for score in SCORES}})
+        s = by_key[(name, 'test')]
+        count = s['overall']['strictCorrect']
+        baseline_count = by_key[('baseline', 'test')]['overall']['strictCorrect']
+        classes = {a: s['answerClasses'][a]['strictCorrect'] for a in 'ABCD'}
+        delta = (count - baseline_count) / 64
+        copy_decisions.append({'model': name, 'objective': objective, 'seed': seed, 'correct': count, 'total': 64,
+            'perClassCorrect': classes, 'overallAtLeast90Percent': count >= 58,
+            'eachClassAtLeast75Percent': all(v >= 12 for v in classes.values()), 'deltaVsBaseline': delta,
+            'pass': count >= 58 and all(v >= 12 for v in classes.values()) and delta >= .25})
+    require(len(copy_decisions) == 4 and {d['model'] for d in copy_decisions} == set(expected_models) - {'baseline'}, 'copy decision set')
+    answer_decisions = [d for d in copy_decisions if d['objective'] == 'answer_eos']
+    require(len(answer_decisions) == 2 and {d['seed'] for d in answer_decisions} == set(SEEDS), 'non-vacuous primary seeds')
+    objective_decisions = []
+    for seed in SEEDS:
+        masked = observations[(f'answer_eos-{seed}', 'test')]; full = observations[(f'full_text-{seed}', 'test')]
+        wins = sum(masked[i]['strictCorrect'] and not full[i]['strictCorrect'] for i in full)
+        losses = sum(full[i]['strictCorrect'] and not masked[i]['strictCorrect'] for i in full)
+        delta = (wins - losses) / 64
+        objective_decisions.append({'seed': seed, 'wins': wins, 'losses': losses, 'n': 64,
+                                    'deltaInFraction': delta, 'pass': delta >= .10})
+    require(len(objective_decisions) == 2 and {d['seed'] for d in objective_decisions} == set(SEEDS), 'paired objective set')
+    result = {'schema': 'lm1-single-binding-objective-v1', 'completedSha256': digest(run / 'completed.json'),
+        'registrationCommit': completed['registrationCommit'], 'evidenceAuditPassed': True,
+        'modelCount': 5, 'evaluationCount': 10, 'caseCount': 640,
+        'heuristics': {'lastMentionedPerson': {'correct': 64, 'total': 64, 'scope': 'perfect by single-binding task construction'},
+                       'constantAnswer': {'correct': 16, 'total': 64}},
+        'summaries': summaries, 'pairedVsBaseline': paired_baseline, 'copyDecisions': copy_decisions,
+        'copyBothAnswerSeedsPass': all(d['pass'] for d in answer_decisions),
+        'pairedObjectiveDecisions': objective_decisions,
+        'answerObjectiveAdvantageBothSeedsPass': all(d['pass'] for d in objective_decisions),
+        'noModelSelection': True, 'noPromotion': True, 'noGeneralStateTrackingClaim': True}
+    with output.open('x') as stream:
+        json.dump(result, stream, ensure_ascii=False, indent=2); stream.write('\n')
+    print(json.dumps({'copyBothAnswerSeedsPass': result['copyBothAnswerSeedsPass'],
+        'answerObjectiveAdvantageBothSeedsPass': result['answerObjectiveAdvantageBothSeedsPass'],
+        'copyDecisions': copy_decisions, 'pairedObjectiveDecisions': objective_decisions}, ensure_ascii=False, indent=2))
+
+
+if __name__ == '__main__':
+    main()

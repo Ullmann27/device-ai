@@ -1,0 +1,118 @@
+{
+  "checkedUtc": "2026-11-04T19:49:59Z",
+  "researchParent": "13d7b736c7fdae8c9515802ba16c29386382a791",
+  "pullRequests": [
+    {
+      "number": 518,
+      "title": "WIP: Avatar nach neuer Vorlage kostenlos lokal rendern und anschließen",
+      "head": "4167961234452c8845416ec99b241bd501b7f038",
+      "base": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+      "updatedAt": "2026-11-04T19:41:23Z",
+      "draft": true
+    },
+    {
+      "number": 517,
+      "title": "[Draft] Three completion bots: source-bound APK readiness and final regressions",
+      "head": "20f888660a967aa1d6b5446e892540538372d319",
+      "base": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "updatedAt": "2026-11-04T19:38:22Z",
+      "draft": true
+    },
+    {
+      "number": 516,
+      "title": "[Draft] Internal bot practice: role exercises, grading and private feedback",
+      "head": "90cc7373b2c3bac1d7b9f77e582958e359d00b20",
+      "base": "ee2fa0ee5567e5d34bcdfe229425a71df9818183",
+      "updatedAt": "2026-11-04T19:45:35Z",
+      "draft": true
+    },
+    {
+      "number": 515,
+      "title": "feat(continuum): local branch bots, APK diagnostics and negative ECHO reports",
+      "head": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "updatedAt": "2026-11-04T19:42:09Z",
+      "draft": true
+    },
+    {
+      "number": 514,
+      "title": "[DRAFT] LM1 16M round 2: native update observation, gradient audit and registration erratum",
+      "head": "bfed526727041b2581f22b5d613dcb5cd8c188b3",
+      "base": "e726deb96dc74bacd40c2fe0ef640c6db57903f5",
+      "updatedAt": "2026-11-04T19:44:36Z",
+      "draft": true
+    },
+    {
+      "number": 513,
+      "title": "[Draft] Vereinheitlichte Anschlüsse: 352 gemeinsame Tests grün",
+      "head": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+      "base": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+      "updatedAt": "2026-11-04T19:43:12Z",
+      "draft": true
+    },
+    {
+      "number": 512,
+      "title": "[Draft] Integrate completed repairs: 305 combined Android-host tests pass",
+      "head": "f9267a3743a87a77bf6421011c014b2ca2d6b0d6",
+      "base": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "updatedAt": "2026-11-04T19:27:04Z",
+      "draft": true
+    },
+    {
+      "number": 511,
+      "title": "perf: Tuning-Runde 2 für Sampler, Kontext und Worker",
+      "head": "1ed5d1fda99187be77f125ae3b1e1a7dcce7246f",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "updatedAt": "2026-11-04T19:34:16Z",
+      "draft": true
+    },
+    {
+      "number": 510,
+      "title": "[Draft] Three bot probes: 105 checks, prepared tasks and live activation blockers",
+      "head": "2a364005b52e3240eb799f86aea31be90b390b10",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "updatedAt": "2026-11-04T18:53:59Z",
+      "draft": true
+    },
+    {
+      "number": 509,
+      "title": "[Draft][Research only] Three bots: round 2 results and preserved model candidates",
+      "head": "13d7b736c7fdae8c9515802ba16c29386382a791",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "updatedAt": "2026-11-04T19:39:17Z",
+      "draft": true
+    },
+    {
+      "number": 508,
+      "title": "[DRAFT] Research LM1 training recovery: EOS diagnosis and independently tested intent learning",
+      "head": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+      "base": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "updatedAt": "2026-11-04T19:35:10Z",
+      "draft": true
+    },
+    {
+      "number": 495,
+      "title": "[Draft] Continue avatar rig and live speech integration with three helpers",
+      "head": "9ef9bd16848fea1fcc6f9c9832ad65c5fc05fb7f",
+      "base": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "updatedAt": "2026-11-04T19:48:38Z",
+      "draft": true
+    },
+    {
+      "number": 492,
+      "title": "research: integrate fail-closed training gates and audit 6–10M LM1 profiles",
+      "head": "f2421698c15195505b0632bf40ff596f0ee0e87f",
+      "base": "d8fd7f7cc5aa721b2c4a975c527c5123e216a944",
+      "updatedAt": "2026-11-04T19:42:07Z",
+      "draft": true
+    },
+    {
+      "number": 491,
+      "title": "[Draft] Astra: reference cockpit, original avatar/orb and consent-bound memory recovery",
+      "head": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "base": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+      "updatedAt": "2026-11-04T12:22:45Z",
+      "draft": true
+    }
+  ]
+}

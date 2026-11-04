@@ -1,0 +1,24 @@
+{
+  "label": "preflight",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round3/language/build/objective-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.ObjectiveStudy",
+    "preflight",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-baseline.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/9d2785b5ab4e/research/round3/language/data/train.tsv"
+  ],
+  "wallSeconds": 1.5681354440002906,
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 180,
+  "stdout": "preflight.stdout",
+  "stdoutSha256": "532240c09a91551219e652b0088605b2077be5b598af06bea8b65031fc5d9fdf",
+  "stderr": "preflight.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T20:03:51.950586+00:00"
+}

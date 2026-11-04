@@ -1,0 +1,23 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "pixels": [
+    1600,
+    1414
+  ],
+  "sameMontageNoRedesign": true,
+  "jpegQuality": 85,
+  "files": [
+    {
+      "file": "renders/contact-sheet.png",
+      "bytes": 1418836,
+      "sha256": "00cf9211bf06fa7e931df56f4283f6fa7415e9617b88d9d2e41198805624ecdf",
+      "encoding": "PNG original technical montage"
+    },
+    {
+      "file": "renders/contact-sheet.jpg",
+      "bytes": 379275,
+      "sha256": "e519105395569161d803c18b87fa1da2c84891cf3b414172aca7b8f37c9c6162",
+      "encoding": "JPEG quality 85; same montage, lossy review copy"
+    }
+  ]
+}

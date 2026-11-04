@@ -1,0 +1,95 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "assetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "samples": 12,
+  "threads": 2,
+  "framePixels": [
+    512,
+    576
+  ],
+  "camera": "Orthographic frontal, same framing for all states",
+  "originalMaterialsPreserved": true,
+  "shapeKeyObjects": [
+    "Face",
+    "NeuralThreads"
+  ],
+  "jawNode": "Jaw",
+  "poses": [
+    {
+      "name": "neutral",
+      "label": "Neutral",
+      "weights": {},
+      "jawPitchDegrees": 0,
+      "file": "renders/neutral.png",
+      "sha256": "672f85466c3aa6152dec972278797e76afe0057b65fd158c40d6591aab3c4ab3",
+      "durationSeconds": 10.951242066000304
+    },
+    {
+      "name": "aa",
+      "label": "AA | jaw input 0.8",
+      "weights": {
+        "AA": 1
+      },
+      "jawPitchDegrees": 9.75,
+      "file": "renders/aa.png",
+      "sha256": "5ef193d38b647e1d69e79014c77022c38e969d588a171178863276aa8390ff58",
+      "durationSeconds": 8.958733552999547
+    },
+    {
+      "name": "o",
+      "label": "O | jaw input 0.8",
+      "weights": {
+        "O": 1,
+        "JawOpen": 0.35
+      },
+      "jawPitchDegrees": 9.600000000000001,
+      "file": "renders/o.png",
+      "sha256": "5c9ebe587cb55bb1044b528a18ef3ef0759873cabdf382f122db739c65dce888",
+      "durationSeconds": 7.427461595999375
+    },
+    {
+      "name": "pp_p503",
+      "label": "PP #503 | jaw input 0.8",
+      "weights": {
+        "PP": 1
+      },
+      "jawPitchDegrees": 0,
+      "file": "renders/pp_p503.png",
+      "sha256": "01bd71ebf320cb330125a9994a7f4b64be3b1d9f5b1e125b44684886ca1c4db4",
+      "durationSeconds": 8.43842313100049
+    },
+    {
+      "name": "blink",
+      "label": "Blink L+R",
+      "weights": {
+        "BlinkLeft": 1,
+        "BlinkRight": 1
+      },
+      "jawPitchDegrees": 0,
+      "file": "renders/blink.png",
+      "sha256": "a42a6423dd49f7982bc51d9a9776d3cf69ad49035474c28b0559e108640a489e",
+      "durationSeconds": 5.556723278999925
+    },
+    {
+      "name": "pp_p491",
+      "label": "PP #491 | jaw input 0.8",
+      "weights": {
+        "PP": 1,
+        "JawOpen": 0.8
+      },
+      "jawPitchDegrees": 9.600000000000001,
+      "file": "renders/pp_p491.png",
+      "sha256": "3af89a4ad552359e8368effd3ecb81ac3e3d551fda4256f8b6f625329e1c11e1",
+      "durationSeconds": 5.549415229999795
+    }
+  ],
+  "durationSeconds": 47.672643318000155,
+  "limitations": [
+    "No Filament pixels, GPU/device FPS, live audio or camera proof",
+    "Technical weights, not natural phoneme timing",
+    "No bloom composite; not final cockpit/UI",
+    "No identity-acceptance metric",
+    "No geometry or reference face replaced"
+  ]
+}

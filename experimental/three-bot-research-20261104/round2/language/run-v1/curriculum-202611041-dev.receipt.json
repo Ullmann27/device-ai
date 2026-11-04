@@ -1,0 +1,28 @@
+{
+  "label": "curriculum-202611041-dev",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.StateLearningStudy",
+    "evaluate",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/run-v1/curriculum-202611041.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/dev.tsv",
+    "curriculum",
+    "202611041",
+    "bfbf3729676aa4d4a40470e6830942c3a8813b79a4114bcebefb6bc6a4ae850c",
+    "dev"
+  ],
+  "wallSeconds": 2.941877379998914,
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 180,
+  "stdout": "curriculum-202611041-dev.stdout",
+  "stdoutSha256": "01040e688923c8a61ad60664ec326a75a12c1a7ae5c54f8fd7880186cea9790a",
+  "stderr": "curriculum-202611041-dev.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T19:26:11.324440+00:00"
+}

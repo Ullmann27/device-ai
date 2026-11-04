@@ -1,0 +1,28 @@
+{
+  "label": "curriculum-202611042-train",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.StateLearningStudy",
+    "train",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-baseline.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/train.tsv",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/schedule-202611042-curriculum.txt",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/run-v1/curriculum-202611042.lm1",
+    "curriculum",
+    "202611042"
+  ],
+  "wallSeconds": 15.25961308800106,
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 270,
+  "stdout": "curriculum-202611042-train.stdout",
+  "stdoutSha256": "ed8ca04744c16985d2d09f6efb5c56f4e7ac9038db1ce2567c44439c66e6c089",
+  "stderr": "curriculum-202611042-train.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T19:25:50.616340+00:00"
+}

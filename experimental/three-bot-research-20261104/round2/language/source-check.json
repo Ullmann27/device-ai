@@ -1,0 +1,210 @@
+{
+  "checkedUtc": "2026-11-04T19:20:07.266Z",
+  "pr492": {
+    "url": "https://github.com/Ullmann27/device-ai/pull/492",
+    "headSha": "f9a594641f4f2101e84d46baa8dd87e85b5364cd",
+    "draft": true,
+    "merged": false
+  },
+  "pr508": {
+    "url": "https://github.com/Ullmann27/device-ai/pull/508",
+    "headSha": "7131c1a50a9c697e481a6debe259758dbf422eef",
+    "draft": true,
+    "merged": false
+  },
+  "comparison": {
+    "repository_full_name": "Ullmann27/device-ai",
+    "base": "30cd3a89810ed14fa84eca95236d3177e016118d",
+    "head": "f9a594641f4f2101e84d46baa8dd87e85b5364cd",
+    "status": "ahead",
+    "ahead_by": 3,
+    "behind_by": 0,
+    "total_commits": 3,
+    "too_large": null,
+    "base_commit": {
+      "sha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/30cd3a89810ed14fa84eca95236d3177e016118d",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/30cd3a89810ed14fa84eca95236d3177e016118d"
+    },
+    "merge_base_commit": {
+      "sha": "30cd3a89810ed14fa84eca95236d3177e016118d",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/30cd3a89810ed14fa84eca95236d3177e016118d",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/30cd3a89810ed14fa84eca95236d3177e016118d"
+    },
+    "files": [
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/HANDOFF.md",
+        "status": "added",
+        "additions": 192,
+        "deletions": 0,
+        "changes": 192,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/README.md",
+        "status": "added",
+        "additions": 142,
+        "deletions": 0,
+        "changes": 142,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/analyze_archived_eos.py",
+        "status": "added",
+        "additions": 168,
+        "deletions": 0,
+        "changes": 168,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/archived-eos-findings.json",
+        "status": "added",
+        "additions": 755,
+        "deletions": 0,
+        "changes": 755,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/independent-gate/README.md",
+        "status": "added",
+        "additions": 168,
+        "deletions": 0,
+        "changes": 168,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/independent-gate/fixtures/pr508-def5acf9-run_registered_study.py.txt",
+        "status": "added",
+        "additions": 292,
+        "deletions": 0,
+        "changes": 292,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/independent-gate/probe-result.json",
+        "status": "added",
+        "additions": 117,
+        "deletions": 0,
+        "changes": 117,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/independent-gate/probe_pr508_post_capacity.py",
+        "status": "added",
+        "additions": 223,
+        "deletions": 0,
+        "changes": 223,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/latest-source-check.json",
+        "status": "added",
+        "additions": 31,
+        "deletions": 0,
+        "changes": 31,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/archive_eos.stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/archive_eos.stdout.txt",
+        "status": "added",
+        "additions": 755,
+        "deletions": 0,
+        "changes": 755,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/post_capacity_gate.stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/post_capacity_gate.stdout.txt",
+        "status": "added",
+        "additions": 117,
+        "deletions": 0,
+        "changes": 117,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/root-gate-reproducer.json",
+        "status": "added",
+        "additions": 117,
+        "deletions": 0,
+        "changes": 117,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/root-target-replay.json",
+        "status": "added",
+        "additions": 483,
+        "deletions": 0,
+        "changes": 483,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/training_targets.stderr.txt",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-reproduction/training_targets.stdout.txt",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/root-verification.json",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0,
+        "changes": 53,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/training-input-audit/README.md",
+        "status": "added",
+        "additions": 141,
+        "deletions": 0,
+        "changes": 141,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/training-input-audit/audit_training_inputs.py",
+        "status": "added",
+        "additions": 357,
+        "deletions": 0,
+        "changes": 357,
+        "previous_filename": null
+      },
+      {
+        "filename": "experimental/weight-space-20261104/followup-eos-review/training-input-audit/target-replay.json",
+        "status": "added",
+        "additions": 483,
+        "deletions": 0,
+        "changes": 483,
+        "previous_filename": null
+      }
+    ]
+  },
+  "intentProtocol": {
+    "ref": "7131c1a50a9c697e481a6debe259758dbf422eef",
+    "path": "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+    "purpose": "Four tool-intent labels; no overlap with object ownership task or datasets."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "generatedUtc": "2026-11-04T19:19:52.840621+00:00",
+  "sourceBindings": [
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/continuum-avatar.glb",
+      "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "bytes": 10165644,
+      "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "repositoryPath": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "readOnlyInput": true
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/build_bust.py",
+      "sha256": "7c1457d06dc659590172c097e91875a0be2776d658dadf3806aee37170c46e5e",
+      "bytes": 21675,
+      "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "repositoryPath": "tools/avatar-3d/build_bust.py",
+      "readOnlyInput": true
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/references/ref-01-head-frontal.jpeg",
+      "sha256": "83e950e0e6b6d3791d4de09b760fe46b8c723c7962f0351eb001409f3fbec16e",
+      "bytes": 307077,
+      "sourceCommit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "repositoryPath": "docs/design-references/jarvis-genesis-20261104/ref-01-head-frontal.jpeg",
+      "readOnlyInput": true,
+      "viewedAgainThisRound": true
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/references/ref-02-head-torso-threequarter.jpeg",
+      "sha256": "84aeaebd2b292050363fbbe5ffb7d6687ddc487eb49ff4aea7a353bf4bfc8264",
+      "bytes": 140434,
+      "sourceCommit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "repositoryPath": "docs/design-references/jarvis-genesis-20261104/ref-02-head-torso-threequarter.jpeg",
+      "readOnlyInput": true,
+      "viewedAgainThisRound": true
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/references/ref-03-head-profile-eyes.jpg",
+      "sha256": "bf91dbf2deddd927a1407a6c537cbbf2de47d364fcceefba4eaa37575563cd77",
+      "bytes": 43283,
+      "sourceCommit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "repositoryPath": "docs/design-references/jarvis-genesis-20261104/ref-03-head-profile-eyes.jpg",
+      "readOnlyInput": true,
+      "viewedAgainThisRound": true
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/research/avatar/references/ref-04-dashboard-fold7.jpeg",
+      "sha256": "452b841dea79c6dd67a2b9a5821dcd11f530e391fb4df1911b01fedc33484036",
+      "bytes": 243949,
+      "sourceCommit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "repositoryPath": "docs/design-references/jarvis-genesis-20261104/ref-04-dashboard-fold7.jpeg",
+      "readOnlyInput": true,
+      "viewedAgainThisRound": false
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/continuum-research/tools/epsilon-avatar-contract/derive-surface-candidate.py",
+      "sha256": "09b1833bb3ed5471fea61f76be6b5609e83298d11cd12e9d00ab5006fd64a3fd",
+      "bytes": 7724,
+      "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "readOnlyInput": true,
+      "use": "Reviewed existing local atlas/glTF technique; not executed against product assets"
+    },
+    {
+      "file": "/workspace/scratch/9d2785b5ab4e/continuum-research/tools/epsilon-avatar-contract/derive-contour-emission.py",
+      "sha256": "a8008efcc5c87cc0501e12489ae739b618bbcac5cd79e675ba3fbd88627eabfe",
+      "bytes": 8675,
+      "sourceCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "readOnlyInput": true,
+      "use": "Reviewed existing local atlas/glTF technique; not executed against product assets"
+    }
+  ],
+  "networkUseForCreation": false,
+  "paidServicesUsed": false,
+  "referencePixelsUsedInVariantTextures": false,
+  "geometryInput": "Existing GLB only",
+  "writesRestrictedTo": "/workspace/scratch/9d2785b5ab4e/research/round2/avatar"
+}

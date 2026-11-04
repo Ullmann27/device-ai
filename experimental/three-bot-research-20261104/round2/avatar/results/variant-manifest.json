@@ -1,0 +1,165 @@
+{
+  "evidenceClass": "HOST_MATERIAL_VARIANTS_NOT_DEVICE",
+  "source": "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/continuum-avatar.glb",
+  "sourceSha256BeforeAndAfter": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "parametersSha256": "9492d76e4ca5032b83124541e93a4936b47344b0e9fe7d2444698f3b9fdbed66",
+  "scriptSha256": "a5d9ab099b6e961099d37ebb9977ae2ad11e6bdc0b6f84dd0648c4a44939f026",
+  "atlasPixels": 2048,
+  "uvMappingVerification": {
+    "yFromV": [
+      -0.39267666470978346,
+      0.3926763826931711
+    ],
+    "maximumYErrorMetres": 2.4185444813529244e-08,
+    "maximumUError": 0.0
+  },
+  "coveredAtlasTexels": 4109911,
+  "variants": [
+    {
+      "id": "v1_soft_flow",
+      "file": "variants/v1_soft_flow.glb",
+      "bytes": 16469888,
+      "sha256": "ecead099e3e8312e8211dbfd48228a0af258836476691ce3302a58cf0dc0d6e3",
+      "parameters": {
+        "id": "v1_soft_flow",
+        "label": "V1 | dunkle Augen, ruhige Konturen",
+        "lineSpacingMetres": 0.0028,
+        "lineSigmaMetres": 0.0002,
+        "lineGain": 0.6,
+        "rimGain": 0.32,
+        "rimExponent": 3.2,
+        "emissiveStrength": 1.7,
+        "baseRgb8": [
+          5,
+          9,
+          24
+        ],
+        "violetRgb8": [
+          115,
+          62,
+          235
+        ],
+        "cyanRgb8": [
+          38,
+          166,
+          245
+        ],
+        "scleraBaseLinear": [
+          0.004,
+          0.012,
+          0.024,
+          1
+        ],
+        "irisBaseLinear": [
+          0.008,
+          0.065,
+          0.11,
+          1
+        ],
+        "irisEmissionLinear": [
+          0.003,
+          0.022,
+          0.04
+        ],
+        "irisMetallic": 0.25,
+        "eyeRoughness": 0.55,
+        "skinRoughness": 0.48,
+        "physicalThreadAlpha": 0
+      },
+      "invariants": {
+        "accessors": true,
+        "meshes": true,
+        "nodes": true,
+        "skins": true,
+        "scenes": true,
+        "scene": true,
+        "animations": true,
+        "originalBinaryPrefixEqual": true
+      },
+      "morphTargetsPerMorphedMesh": 21,
+      "textureHashes": {
+        "base": "9eab21b040b2f38c48c8cb715a51424031fbbea8565450acef3c1bb967d01f46",
+        "emission": "683585a7571cbb2d4b4bb44ad37db58c15b172dff0031db753a544c7dabd5977"
+      },
+      "newTextureBytes": 6303980,
+      "durationSeconds": 2.287673807999454
+    },
+    {
+      "id": "v2_fine_flow",
+      "file": "variants/v2_fine_flow.glb",
+      "bytes": 17400768,
+      "sha256": "60e4107e4577070ef123652501956e6cd41f678c8cd4b65f405ab19d73a07a14",
+      "parameters": {
+        "id": "v2_fine_flow",
+        "label": "V2 | dunkle Augen, feinere Konturen",
+        "lineSpacingMetres": 0.002,
+        "lineSigmaMetres": 0.00014,
+        "lineGain": 0.62,
+        "rimGain": 0.4,
+        "rimExponent": 4.2,
+        "emissiveStrength": 2.25,
+        "baseRgb8": [
+          3,
+          6,
+          17
+        ],
+        "violetRgb8": [
+          120,
+          66,
+          240
+        ],
+        "cyanRgb8": [
+          40,
+          178,
+          250
+        ],
+        "scleraBaseLinear": [
+          0.002,
+          0.006,
+          0.014,
+          1
+        ],
+        "irisBaseLinear": [
+          0.003,
+          0.018,
+          0.035,
+          1
+        ],
+        "irisEmissionLinear": [
+          0.0005,
+          0.004,
+          0.01
+        ],
+        "irisMetallic": 0.65,
+        "eyeRoughness": 0.48,
+        "skinRoughness": 0.52,
+        "physicalThreadAlpha": 0
+      },
+      "invariants": {
+        "accessors": true,
+        "meshes": true,
+        "nodes": true,
+        "skins": true,
+        "scenes": true,
+        "scene": true,
+        "animations": true,
+        "originalBinaryPrefixEqual": true
+      },
+      "morphTargetsPerMorphedMesh": 21,
+      "textureHashes": {
+        "base": "bddd6c2435463ae7ee9ec0791ee523b262df6ea09c12efbe1b69e88cbd81809c",
+        "emission": "8e1c7862ee3e4dbd4a65fbda85ed3e0ec09d9325d1f892199ef168979aeb7e89"
+      },
+      "newTextureBytes": 7234858,
+      "durationSeconds": 2.0895241729995178
+    }
+  ],
+  "durationSeconds": 10.131210262999957,
+  "limitations": [
+    "No changed head/rig/morph geometry",
+    "Not final reference likeness",
+    "Original physical threads are transparent; replacement contours are baked into the face UVs",
+    "Contour emission uses neutral object-space normals, not view-dependent rim lighting",
+    "Filament, live speech, aliasing in motion and Fold7 costs NOT_RUN"
+  ]
+}

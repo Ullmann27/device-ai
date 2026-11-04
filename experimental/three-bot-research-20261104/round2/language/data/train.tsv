@@ -1,0 +1,512 @@
+5fed749148572a0f73b4	move_other	1	D	D hält den Ring. A hält den Stift. A gibt den Stift an C. Wer hält den Ring? Antwort:
+31b7831553b10e46e0a0	twice_query	2	A	D hält den Ring. B hält den Stift. B gibt den Stift an C. C gibt den Stift an A. Wer hält den Stift? Antwort:
+301c3fb6f148ae6150e0	other_then_query	2	B	D hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an C. D gibt den Stift an B. Wer hält den Stift? Antwort:
+ca7ab74b6642680b7926	copy	0	D	D hält den Stift. C hält den Schlüssel. Wer hält den Stift? Antwort:
+dce09d23916ee6aba317	move_query	1	D	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+d90463a9e6b5bfc6a471	twice_query	2	C	B hält den Ring. A hält den Stift. A gibt den Stift an D. D gibt den Stift an C. Wer hält den Stift? Antwort:
+4809611434872f025684	move_query	1	A	C hält den Stift. D hält den Schlüssel. C gibt den Stift an A. Wer hält den Stift? Antwort:
+93216cb31028c989feb9	copy	0	D	A hält den Ring. D hält den Stift. Wer hält den Stift? Antwort:
+69e7415115312798b28b	other_then_query	2	B	A hält den Schlüssel. D hält den Ball. A gibt den Schlüssel an C. D gibt den Ball an B. Wer hält den Ball? Antwort:
+c07b94ba8ae5dc32dd8c	copy	0	D	B hält den Ring. D hält den Stift. Wer hält den Stift? Antwort:
+96d2d8d205ce6d6b8ce0	query_then_other	2	A	B hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an A. B gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+1e023cb18cf81a5ae8ba	copy	0	A	A hält den Schlüssel. D hält den Ball. Wer hält den Schlüssel? Antwort:
+b9cacae4f0a243af908c	move_other	1	A	A hält den Ball. C hält den Ring. C gibt den Ring an B. Wer hält den Ball? Antwort:
+544ebc8cc065ae059754	query_then_other	2	B	D hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an B. D gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+9505bf2392f452af292c	twice_query	2	A	C hält den Schlüssel. B hält den Ball. B gibt den Ball an D. D gibt den Ball an A. Wer hält den Ball? Antwort:
+ea797f2ae29f8968ae38	twice_query	2	D	C hält den Ball. A hält den Ring. C gibt den Ball an B. B gibt den Ball an D. Wer hält den Ball? Antwort:
+8100b121308574fbd06f	query_then_other	2	D	C hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an D. C gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+5d63233eed214ebf062e	query_then_other	2	B	A hält den Ring. C hält den Stift. C gibt den Stift an B. A gibt den Ring an D. Wer hält den Stift? Antwort:
+20379c6b5ffb4e534a9e	move_query	1	D	A hält den Schlüssel. C hält den Ball. C gibt den Ball an D. Wer hält den Ball? Antwort:
+dc07601ebbe6763145d4	move_query	1	B	A hält den Ball. C hält den Ring. C gibt den Ring an B. Wer hält den Ring? Antwort:
+2490e221d8bc5d34826b	copy	0	B	A hält den Schlüssel. B hält den Ball. Wer hält den Ball? Antwort:
+b8640b724dc115be5ba7	twice_query	2	C	D hält den Schlüssel. B hält den Ball. D gibt den Schlüssel an A. A gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+a308ddcfbe595d44366b	other_then_query	2	D	C hält den Stift. A hält den Schlüssel. C gibt den Stift an B. A gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+b00a18406d2a9f73b867	query_then_other	2	A	D hält den Stift. C hält den Schlüssel. D gibt den Stift an A. C gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+64c8427d4ec2c1c0a9ee	move_other	1	D	C hält den Ring. D hält den Stift. C gibt den Ring an A. Wer hält den Stift? Antwort:
+a4c1dd5605983facd932	move_other	1	B	B hält den Ball. A hält den Ring. A gibt den Ring an D. Wer hält den Ball? Antwort:
+c2f7826366e56d6e644b	move_other	1	A	C hält den Schlüssel. A hält den Ball. C gibt den Schlüssel an B. Wer hält den Ball? Antwort:
+5bc332b4345960b07491	move_query	1	C	A hält den Ring. D hält den Stift. A gibt den Ring an C. Wer hält den Ring? Antwort:
+129b28f2086ca2fa840d	query_then_other	2	D	A hält den Ring. B hält den Stift. B gibt den Stift an D. A gibt den Ring an C. Wer hält den Stift? Antwort:
+6f8f2d6879eae39b15d9	move_query	1	B	A hält den Ring. C hält den Stift. A gibt den Ring an B. Wer hält den Ring? Antwort:
+29d8e10e753469c6126a	twice_query	2	A	C hält den Schlüssel. D hält den Ball. C gibt den Schlüssel an B. B gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+c670bbd0b3336d6bea80	query_then_other	2	D	C hält den Schlüssel. B hält den Ball. B gibt den Ball an D. C gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+d612b56f47c7115da234	twice_query	2	A	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an B. B gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+589e821463fb6d461295	other_then_query	2	C	B hält den Ring. A hält den Stift. B gibt den Ring an D. A gibt den Stift an C. Wer hält den Stift? Antwort:
+d23f27ba59ba11f58457	twice_query	2	A	C hält den Stift. B hält den Schlüssel. C gibt den Stift an D. D gibt den Stift an A. Wer hält den Stift? Antwort:
+f4a039bc6aecfeedc560	copy	0	A	D hält den Ball. A hält den Ring. Wer hält den Ring? Antwort:
+2a8394bfdc00fab8b0dc	other_then_query	2	A	C hält den Ball. B hält den Ring. C gibt den Ball an D. B gibt den Ring an A. Wer hält den Ring? Antwort:
+713c96d2d253b4b7e163	query_then_other	2	C	B hält den Ring. D hält den Stift. D gibt den Stift an C. B gibt den Ring an A. Wer hält den Stift? Antwort:
+fd66b95fb91208eda043	move_other	1	D	B hält den Ring. D hält den Stift. B gibt den Ring an C. Wer hält den Stift? Antwort:
+885a712e7f3a8a666e53	twice_query	2	D	A hält den Ring. C hält den Stift. C gibt den Stift an B. B gibt den Stift an D. Wer hält den Stift? Antwort:
+3ed05830fef037f7961e	query_then_other	2	A	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an A. B gibt den Ball an D. Wer hält den Schlüssel? Antwort:
+d6c49769d1e195fbc517	move_other	1	D	D hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+8d802f9a297447deb034	other_then_query	2	D	A hält den Schlüssel. B hält den Ball. B gibt den Ball an C. A gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+45d0abb37c1b3475956a	move_query	1	A	B hält den Ring. C hält den Stift. B gibt den Ring an A. Wer hält den Ring? Antwort:
+ac08719fcbb4698dc36d	other_then_query	2	A	B hält den Ring. C hält den Stift. C gibt den Stift an D. B gibt den Ring an A. Wer hält den Ring? Antwort:
+6e0aa5f64124f509b9fb	move_other	1	D	D hält den Ring. B hält den Stift. B gibt den Stift an A. Wer hält den Ring? Antwort:
+33c521d22e919292747b	query_then_other	2	C	B hält den Stift. D hält den Schlüssel. B gibt den Stift an C. D gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+72e80dfeff1f65979f6c	query_then_other	2	B	C hält den Stift. D hält den Schlüssel. C gibt den Stift an B. D gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+e83ebf3a96d230084a6d	copy	0	A	A hält den Ring. D hält den Stift. Wer hält den Ring? Antwort:
+cf55a03dcd6cbe847548	other_then_query	2	A	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. D gibt den Stift an A. Wer hält den Stift? Antwort:
+368f9128be18865a1135	copy	0	A	A hält den Ring. C hält den Stift. Wer hält den Ring? Antwort:
+1cf0d21116e09a2b3660	move_query	1	A	B hält den Ring. C hält den Stift. C gibt den Stift an A. Wer hält den Stift? Antwort:
+aed96d1620d3d63e7606	query_then_other	2	C	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. A gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+2c0b43738e31e2228cd6	query_then_other	2	B	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an B. A gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+00c6a0f584a46e70db72	move_query	1	D	C hält den Ring. B hält den Stift. C gibt den Ring an D. Wer hält den Ring? Antwort:
+c5afa272c0f2763a5d90	copy	0	A	A hält den Ball. D hält den Ring. Wer hält den Ball? Antwort:
+cd7689bdb0a6b8cc4e8f	query_then_other	2	A	B hält den Schlüssel. D hält den Ball. D gibt den Ball an A. B gibt den Schlüssel an C. Wer hält den Ball? Antwort:
+8622fa13e2093d590961	twice_query	2	C	D hält den Ring. A hält den Stift. A gibt den Stift an B. B gibt den Stift an C. Wer hält den Stift? Antwort:
+3cb51273eca573a8e62a	move_query	1	D	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+c56fd3ea0c39f3fdf23a	move_query	1	A	C hält den Ball. B hält den Ring. B gibt den Ring an A. Wer hält den Ring? Antwort:
+ba70f654604ca8ff067c	move_query	1	B	A hält den Stift. C hält den Schlüssel. A gibt den Stift an B. Wer hält den Stift? Antwort:
+6d8e980129eb324a0208	twice_query	2	C	D hält den Stift. A hält den Schlüssel. D gibt den Stift an B. B gibt den Stift an C. Wer hält den Stift? Antwort:
+140f108e2e794a24008f	move_other	1	B	D hält den Ball. B hält den Ring. D gibt den Ball an A. Wer hält den Ring? Antwort:
+765726b8bd38862be4e1	move_other	1	B	A hält den Stift. B hält den Schlüssel. A gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+f7d2e8a48e762eceaee8	move_other	1	B	A hält den Ring. B hält den Stift. A gibt den Ring an D. Wer hält den Stift? Antwort:
+bcc776e8d5da30180279	move_query	1	C	A hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+1e883cb9c645f2aaab46	move_query	1	B	C hält den Stift. A hält den Schlüssel. C gibt den Stift an B. Wer hält den Stift? Antwort:
+76ae56f8b84be2c11ac8	move_query	1	D	B hält den Ball. A hält den Ring. A gibt den Ring an D. Wer hält den Ring? Antwort:
+5463b938bc388aa4b622	move_other	1	D	A hält den Ring. D hält den Stift. A gibt den Ring an B. Wer hält den Stift? Antwort:
+193fa90c3a5883fe425e	twice_query	2	B	A hält den Stift. D hält den Schlüssel. A gibt den Stift an C. C gibt den Stift an B. Wer hält den Stift? Antwort:
+494e8ebcc4c8a6017af3	twice_query	2	C	B hält den Ring. D hält den Stift. D gibt den Stift an A. A gibt den Stift an C. Wer hält den Stift? Antwort:
+0a01386b7189fb5f1d1b	move_query	1	D	C hält den Ball. A hält den Ring. A gibt den Ring an D. Wer hält den Ring? Antwort:
+6832c25674392752889f	query_then_other	2	B	C hält den Ball. A hält den Ring. C gibt den Ball an B. A gibt den Ring an D. Wer hält den Ball? Antwort:
+e3c443f1e1bf487b9a40	copy	0	D	C hält den Schlüssel. D hält den Ball. Wer hält den Ball? Antwort:
+a3397db19bdf7fddb3d1	move_other	1	A	D hält den Stift. A hält den Schlüssel. D gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+84e64220933ffb673135	move_other	1	C	C hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+df420a9fa7ae510c9845	copy	0	B	B hält den Stift. D hält den Schlüssel. Wer hält den Stift? Antwort:
+c68f1d964d5048cf5c31	copy	0	A	D hält den Schlüssel. A hält den Ball. Wer hält den Ball? Antwort:
+616ef71f35bafec236bc	copy	0	C	A hält den Stift. C hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+45903405029d7efff837	copy	0	C	D hält den Ring. C hält den Stift. Wer hält den Stift? Antwort:
+bb0ec1d78f1b6adcc267	query_then_other	2	B	D hält den Schlüssel. A hält den Ball. A gibt den Ball an B. D gibt den Schlüssel an C. Wer hält den Ball? Antwort:
+810dc67414f9dee64eb7	move_other	1	D	A hält den Stift. D hält den Schlüssel. A gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+e71402dca92e57ec21e9	move_other	1	A	D hält den Ball. A hält den Ring. D gibt den Ball an B. Wer hält den Ring? Antwort:
+246166ddd0ccde17eb2e	move_query	1	D	A hält den Ring. C hält den Stift. C gibt den Stift an D. Wer hält den Stift? Antwort:
+c2a485d8451f3232079b	copy	0	B	D hält den Stift. B hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+1c2d95700e19164bdebb	twice_query	2	A	C hält den Ring. D hält den Stift. C gibt den Ring an B. B gibt den Ring an A. Wer hält den Ring? Antwort:
+3862095abc53095be37e	twice_query	2	D	A hält den Ring. C hält den Stift. A gibt den Ring an B. B gibt den Ring an D. Wer hält den Ring? Antwort:
+02d78349cdb87c616ae3	twice_query	2	D	C hält den Ring. A hält den Stift. C gibt den Ring an B. B gibt den Ring an D. Wer hält den Ring? Antwort:
+7230eaac97cac2267eba	other_then_query	2	D	B hält den Ring. C hält den Stift. C gibt den Stift an A. B gibt den Ring an D. Wer hält den Ring? Antwort:
+e81d4970781ea83cd8ae	query_then_other	2	C	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an C. A gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+033f1e1ca1cee4a7b90b	twice_query	2	C	A hält den Ball. D hält den Ring. D gibt den Ring an B. B gibt den Ring an C. Wer hält den Ring? Antwort:
+2323cd5f575f3d23b340	query_then_other	2	B	C hält den Ring. A hält den Stift. C gibt den Ring an B. A gibt den Stift an D. Wer hält den Ring? Antwort:
+3c3319a5c18d624c9518	twice_query	2	D	B hält den Ball. C hält den Ring. C gibt den Ring an A. A gibt den Ring an D. Wer hält den Ring? Antwort:
+eee3497648544a77241e	query_then_other	2	A	C hält den Schlüssel. D hält den Ball. C gibt den Schlüssel an A. D gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+d00bbedc429c23a56561	twice_query	2	A	B hält den Stift. C hält den Schlüssel. B gibt den Stift an D. D gibt den Stift an A. Wer hält den Stift? Antwort:
+650ea20b14a5cf43910c	other_then_query	2	C	B hält den Ring. D hält den Stift. D gibt den Stift an A. B gibt den Ring an C. Wer hält den Ring? Antwort:
+5d6fcb7504319bd2c8b8	copy	0	C	C hält den Ring. B hält den Stift. Wer hält den Ring? Antwort:
+ee902fa98d35354393c5	move_query	1	D	B hält den Schlüssel. C hält den Ball. B gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+78861f98bf5136da0af1	twice_query	2	B	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an C. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+8a3695db81ecb36d61ef	query_then_other	2	D	A hält den Ball. C hält den Ring. C gibt den Ring an D. A gibt den Ball an B. Wer hält den Ring? Antwort:
+bf3b6415bbea1d993ccf	twice_query	2	C	A hält den Ball. B hält den Ring. A gibt den Ball an D. D gibt den Ball an C. Wer hält den Ball? Antwort:
+145c7efd0f30323ed7c2	other_then_query	2	B	D hält den Ball. A hält den Ring. D gibt den Ball an C. A gibt den Ring an B. Wer hält den Ring? Antwort:
+6763ac045a0f40f985e5	other_then_query	2	B	A hält den Ball. C hält den Ring. C gibt den Ring an D. A gibt den Ball an B. Wer hält den Ball? Antwort:
+c793f10b63444bcae42a	other_then_query	2	D	B hält den Ball. C hält den Ring. C gibt den Ring an A. B gibt den Ball an D. Wer hält den Ball? Antwort:
+b958125745d75c8cad6b	move_query	1	A	C hält den Ring. D hält den Stift. D gibt den Stift an A. Wer hält den Stift? Antwort:
+ef90ab0d1068efdc77a0	move_query	1	C	D hält den Stift. B hält den Schlüssel. D gibt den Stift an C. Wer hält den Stift? Antwort:
+64f6c35329fb36650d5e	other_then_query	2	C	B hält den Ball. D hält den Ring. B gibt den Ball an A. D gibt den Ring an C. Wer hält den Ring? Antwort:
+2d4ebb7f88a4b5b33f78	move_other	1	A	D hält den Ring. A hält den Stift. D gibt den Ring an B. Wer hält den Stift? Antwort:
+926e5c62dd01c2272a46	twice_query	2	C	D hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an B. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+35689b2f1e650fc52f03	query_then_other	2	D	C hält den Ring. A hält den Stift. C gibt den Ring an D. A gibt den Stift an B. Wer hält den Ring? Antwort:
+25e66a308af69b01f79b	query_then_other	2	D	B hält den Ring. C hält den Stift. B gibt den Ring an D. C gibt den Stift an A. Wer hält den Ring? Antwort:
+0eaa76ae78e3306712fe	move_other	1	C	C hält den Ball. D hält den Ring. D gibt den Ring an A. Wer hält den Ball? Antwort:
+4a2c5512bdad0b0f4b71	query_then_other	2	A	C hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an A. C gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+16c42add1319194c6e79	other_then_query	2	D	B hält den Stift. A hält den Schlüssel. B gibt den Stift an C. A gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+a4fd42e4165854b3d91f	other_then_query	2	B	D hält den Stift. C hält den Schlüssel. D gibt den Stift an A. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+ebc23df0cdabe658261f	query_then_other	2	D	A hält den Ring. C hält den Stift. A gibt den Ring an D. C gibt den Stift an B. Wer hält den Ring? Antwort:
+520f6a6e5d1a88e45f93	other_then_query	2	C	A hält den Ring. D hält den Stift. D gibt den Stift an B. A gibt den Ring an C. Wer hält den Ring? Antwort:
+553578dcc401bc96c8f5	move_other	1	D	A hält den Ball. D hält den Ring. A gibt den Ball an B. Wer hält den Ring? Antwort:
+a3cff6afa4941122c1e3	other_then_query	2	A	C hält den Ring. D hält den Stift. C gibt den Ring an B. D gibt den Stift an A. Wer hält den Stift? Antwort:
+ae0fb1c8e78cdcfbb9dd	copy	0	A	A hält den Stift. D hält den Schlüssel. Wer hält den Stift? Antwort:
+d3dc35d9fc644748e401	other_then_query	2	C	A hält den Schlüssel. D hält den Ball. A gibt den Schlüssel an B. D gibt den Ball an C. Wer hält den Ball? Antwort:
+8f916bebc6dee510d03a	move_query	1	C	A hält den Schlüssel. B hält den Ball. A gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+f71659e7a348cfd8cec7	other_then_query	2	D	A hält den Ring. B hält den Stift. B gibt den Stift an C. A gibt den Ring an D. Wer hält den Ring? Antwort:
+4577858b2337a3b5dc1c	twice_query	2	C	B hält den Schlüssel. D hält den Ball. B gibt den Schlüssel an A. A gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+3f320fb7d9c2e492fd0a	copy	0	B	C hält den Ring. B hält den Stift. Wer hält den Stift? Antwort:
+63e5b5c0e7651d1ba1b4	query_then_other	2	B	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an B. C gibt den Ball an D. Wer hält den Schlüssel? Antwort:
+d490f206568fc4c3ad61	query_then_other	2	D	C hält den Ball. B hält den Ring. B gibt den Ring an D. C gibt den Ball an A. Wer hält den Ring? Antwort:
+ec0205fda7c8b521fec6	other_then_query	2	C	A hält den Ball. D hält den Ring. D gibt den Ring an B. A gibt den Ball an C. Wer hält den Ball? Antwort:
+53d8f4e2da4256d74c0d	move_other	1	B	B hält den Schlüssel. A hält den Ball. A gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+06dd2e235c5e32f0ff8a	copy	0	B	A hält den Ball. B hält den Ring. Wer hält den Ring? Antwort:
+0a03bae82cff8da2fc1f	move_other	1	A	C hält den Ring. A hält den Stift. C gibt den Ring an B. Wer hält den Stift? Antwort:
+44af0e02af3f560ac8a6	move_other	1	B	B hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+ebb080ebbe46188af519	copy	0	D	C hält den Ring. D hält den Stift. Wer hält den Stift? Antwort:
+6750d8e7ec762ad2a18e	move_query	1	B	C hält den Schlüssel. D hält den Ball. D gibt den Ball an B. Wer hält den Ball? Antwort:
+2e69ecbc1bd3db6b43ee	move_other	1	B	C hält den Ring. B hält den Stift. C gibt den Ring an D. Wer hält den Stift? Antwort:
+5df84cff13040c9919d4	move_other	1	B	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+505484bfe82d26ec09a3	other_then_query	2	C	D hält den Stift. B hält den Schlüssel. D gibt den Stift an A. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+7b3c820cad19247ae2cc	move_other	1	B	C hält den Ring. B hält den Stift. C gibt den Ring an A. Wer hält den Stift? Antwort:
+ef29bb7d976abf0200ad	twice_query	2	D	B hält den Ring. A hält den Stift. B gibt den Ring an C. C gibt den Ring an D. Wer hält den Ring? Antwort:
+fb22f871311adf20135f	move_other	1	D	D hält den Ring. C hält den Stift. C gibt den Stift an A. Wer hält den Ring? Antwort:
+43b6556f8052b2982145	move_other	1	A	C hält den Stift. A hält den Schlüssel. C gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+8e9420087b4c1e619904	move_other	1	D	D hält den Ball. A hält den Ring. A gibt den Ring an C. Wer hält den Ball? Antwort:
+03e777652f28fd85445a	move_other	1	D	B hält den Stift. D hält den Schlüssel. B gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+157039618bc592931364	move_query	1	B	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+404ecbf945755c00610b	move_query	1	C	B hält den Ring. D hält den Stift. D gibt den Stift an C. Wer hält den Stift? Antwort:
+ca973fcff9a9a89f757c	query_then_other	2	C	D hält den Schlüssel. B hält den Ball. D gibt den Schlüssel an C. B gibt den Ball an A. Wer hält den Schlüssel? Antwort:
+38eaa867116f3739ec64	move_query	1	B	A hält den Ring. D hält den Stift. A gibt den Ring an B. Wer hält den Ring? Antwort:
+f0df735288f3168552a2	move_other	1	C	C hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+d523f84c8230c842bfdc	move_query	1	D	A hält den Schlüssel. B hält den Ball. B gibt den Ball an D. Wer hält den Ball? Antwort:
+2ec6f1eb11ddd5881d11	other_then_query	2	B	C hält den Schlüssel. A hält den Ball. A gibt den Ball an D. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+9a0bf09127db76cb3a04	other_then_query	2	D	B hält den Ball. A hält den Ring. B gibt den Ball an C. A gibt den Ring an D. Wer hält den Ring? Antwort:
+ef5d25be7c73b6535479	twice_query	2	A	C hält den Ball. B hält den Ring. B gibt den Ring an D. D gibt den Ring an A. Wer hält den Ring? Antwort:
+3ad7872423f938e1acc6	move_query	1	B	D hält den Schlüssel. C hält den Ball. C gibt den Ball an B. Wer hält den Ball? Antwort:
+39d746f0c00bf0bdf376	other_then_query	2	B	D hält den Ring. C hält den Stift. C gibt den Stift an A. D gibt den Ring an B. Wer hält den Ring? Antwort:
+808626b2770e1ffe0933	move_other	1	C	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+faaf42771a1fabbcee21	query_then_other	2	B	C hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an B. C gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+23e6c772489e05f106cd	twice_query	2	C	D hält den Ball. A hält den Ring. D gibt den Ball an B. B gibt den Ball an C. Wer hält den Ball? Antwort:
+28ee7ef5e83373996f01	other_then_query	2	D	A hält den Ring. B hält den Stift. A gibt den Ring an C. B gibt den Stift an D. Wer hält den Stift? Antwort:
+d974905bd902e29f3e1c	move_other	1	D	D hält den Schlüssel. C hält den Ball. C gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+a77daf41b458ae1d797b	other_then_query	2	C	A hält den Ball. B hält den Ring. A gibt den Ball an D. B gibt den Ring an C. Wer hält den Ring? Antwort:
+3abd35509bee73f6a748	other_then_query	2	D	B hält den Schlüssel. A hält den Ball. B gibt den Schlüssel an C. A gibt den Ball an D. Wer hält den Ball? Antwort:
+ad6b95b7890a4d247a38	copy	0	D	D hält den Ring. A hält den Stift. Wer hält den Ring? Antwort:
+2d8b50ba807d49dec5ee	twice_query	2	B	C hält den Ball. D hält den Ring. D gibt den Ring an A. A gibt den Ring an B. Wer hält den Ring? Antwort:
+d07cb56e87fd6d42bce8	twice_query	2	D	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+8c476584fa8b41a51cf5	move_query	1	A	D hält den Ball. C hält den Ring. D gibt den Ball an A. Wer hält den Ball? Antwort:
+41a4cfc325987aba2cb1	other_then_query	2	B	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an A. C gibt den Ball an B. Wer hält den Ball? Antwort:
+9722e8b8d56192a5b074	move_other	1	A	A hält den Ball. B hält den Ring. B gibt den Ring an D. Wer hält den Ball? Antwort:
+2ac37872a352dedc8aee	query_then_other	2	A	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. D gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+50821e3eac7251846da9	move_other	1	C	C hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+062f8a0355816c34ec7f	move_other	1	A	A hält den Schlüssel. D hält den Ball. D gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+5a9b7a5431d1b266ffed	query_then_other	2	D	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an D. A gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+34793b1909f636deed14	other_then_query	2	D	C hält den Ring. B hält den Stift. B gibt den Stift an A. C gibt den Ring an D. Wer hält den Ring? Antwort:
+ab0ac0bb13af74576f9e	move_other	1	B	D hält den Ball. B hält den Ring. D gibt den Ball an C. Wer hält den Ring? Antwort:
+e60bb0992428764e7e8e	move_other	1	D	A hält den Ring. D hält den Stift. A gibt den Ring an C. Wer hält den Stift? Antwort:
+8f97db4fe605de9585fc	copy	0	B	B hält den Ball. D hält den Ring. Wer hält den Ball? Antwort:
+5000183cbca0d3a41023	move_query	1	A	C hält den Schlüssel. B hält den Ball. B gibt den Ball an A. Wer hält den Ball? Antwort:
+aaebf341526132fad338	copy	0	A	C hält den Schlüssel. A hält den Ball. Wer hält den Ball? Antwort:
+1060cb9f0230fa900659	other_then_query	2	B	C hält den Ring. D hält den Stift. C gibt den Ring an A. D gibt den Stift an B. Wer hält den Stift? Antwort:
+ffaa9d962f899893127c	move_other	1	B	B hält den Ball. C hält den Ring. C gibt den Ring an A. Wer hält den Ball? Antwort:
+6de81435b29e311fc8e9	move_other	1	C	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an B. Wer hält den Ball? Antwort:
+e5af476917e3c9f3dfd4	query_then_other	2	C	B hält den Ring. A hält den Stift. A gibt den Stift an C. B gibt den Ring an D. Wer hält den Stift? Antwort:
+82f940018902d268c2f6	other_then_query	2	C	B hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an A. B gibt den Stift an C. Wer hält den Stift? Antwort:
+398205a2257f3fdc4e8c	query_then_other	2	D	C hält den Schlüssel. A hält den Ball. C gibt den Schlüssel an D. A gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+9a1f971178614fbd6f4b	other_then_query	2	B	C hält den Ring. D hält den Stift. D gibt den Stift an A. C gibt den Ring an B. Wer hält den Ring? Antwort:
+b85bd0f9e934cbb6b9e2	query_then_other	2	B	D hält den Ball. C hält den Ring. C gibt den Ring an B. D gibt den Ball an A. Wer hält den Ring? Antwort:
+5d28232f3213b0f1c4a5	other_then_query	2	B	A hält den Schlüssel. C hält den Ball. C gibt den Ball an D. A gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+0378a5f11bf27a7ab28e	move_other	1	A	A hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+f5eb4533ee755abc6f5f	copy	0	C	C hält den Ball. D hält den Ring. Wer hält den Ball? Antwort:
+3784645d82b819140173	other_then_query	2	C	B hält den Schlüssel. D hält den Ball. B gibt den Schlüssel an A. D gibt den Ball an C. Wer hält den Ball? Antwort:
+ec3ba82d7f0a011b4605	twice_query	2	A	B hält den Ball. D hält den Ring. D gibt den Ring an C. C gibt den Ring an A. Wer hält den Ring? Antwort:
+6c48e90c8a2eaddd099a	move_other	1	C	C hält den Ball. A hält den Ring. A gibt den Ring an B. Wer hält den Ball? Antwort:
+97a0ed2eaa5ca89494f6	move_other	1	C	C hält den Ring. D hält den Stift. D gibt den Stift an A. Wer hält den Ring? Antwort:
+05eb4f9a427acdf65a14	copy	0	C	A hält den Ball. C hält den Ring. Wer hält den Ring? Antwort:
+6d5595b4fa56e53366e9	copy	0	C	C hält den Ring. D hält den Stift. Wer hält den Ring? Antwort:
+5252693cb6cbe492a27b	move_other	1	B	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+0f94397ff6baca82e8e1	query_then_other	2	A	D hält den Stift. B hält den Schlüssel. D gibt den Stift an A. B gibt den Schlüssel an C. Wer hält den Stift? Antwort:
+ba3d4b68d4c3bf9dc3d0	query_then_other	2	A	C hält den Ring. D hält den Stift. D gibt den Stift an A. C gibt den Ring an B. Wer hält den Stift? Antwort:
+52377a6698ec3a8ae753	twice_query	2	B	C hält den Ring. D hält den Stift. D gibt den Stift an A. A gibt den Stift an B. Wer hält den Stift? Antwort:
+b4383326606677cbcb9a	copy	0	D	C hält den Ball. D hält den Ring. Wer hält den Ring? Antwort:
+be655fb3decb3e46ad4e	copy	0	A	C hält den Stift. A hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+796eb2d4a7b131a671bd	move_other	1	A	B hält den Ring. A hält den Stift. B gibt den Ring an D. Wer hält den Stift? Antwort:
+761253b7ffa3d8416fb3	query_then_other	2	D	C hält den Stift. A hält den Schlüssel. C gibt den Stift an D. A gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+29cc37f82e7a5b8da448	move_other	1	B	B hält den Ring. D hält den Stift. D gibt den Stift an A. Wer hält den Ring? Antwort:
+7210f9f6f1b69f6e5724	twice_query	2	A	B hält den Stift. D hält den Schlüssel. B gibt den Stift an C. C gibt den Stift an A. Wer hält den Stift? Antwort:
+ac852ce23291f0e03605	copy	0	C	C hält den Ball. A hält den Ring. Wer hält den Ball? Antwort:
+49e900c976c946092daf	query_then_other	2	C	A hält den Ring. B hält den Stift. A gibt den Ring an C. B gibt den Stift an D. Wer hält den Ring? Antwort:
+c60c301da0a7a9cc9fbe	other_then_query	2	D	C hält den Stift. B hält den Schlüssel. C gibt den Stift an A. B gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+30a823129c0b29046204	query_then_other	2	B	A hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an B. A gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+20255bc84fcf7de5b170	move_query	1	A	D hält den Ring. B hält den Stift. B gibt den Stift an A. Wer hält den Stift? Antwort:
+2ac89c681a457fb102cb	other_then_query	2	B	A hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an C. A gibt den Stift an B. Wer hält den Stift? Antwort:
+f2e0f949a435ddd0f168	query_then_other	2	D	C hält den Stift. B hält den Schlüssel. C gibt den Stift an D. B gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+1e2b0956401cf3a2c83b	move_other	1	C	C hält den Schlüssel. B hält den Ball. B gibt den Ball an D. Wer hält den Schlüssel? Antwort:
+9cd9e0a1c6e6208f6bdf	other_then_query	2	A	D hält den Ball. C hält den Ring. C gibt den Ring an B. D gibt den Ball an A. Wer hält den Ball? Antwort:
+72cf28fc973f05dc5e57	other_then_query	2	C	A hält den Schlüssel. B hält den Ball. A gibt den Schlüssel an D. B gibt den Ball an C. Wer hält den Ball? Antwort:
+8da286d112060dbf9115	other_then_query	2	B	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an D. C gibt den Ball an B. Wer hält den Ball? Antwort:
+78c4faff06c8cfe3a174	other_then_query	2	D	C hält den Schlüssel. B hält den Ball. B gibt den Ball an A. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+02ff73c826eff7b974d6	move_query	1	B	C hält den Schlüssel. A hält den Ball. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+69667d3bad7cb79bd9a3	copy	0	A	D hält den Ring. A hält den Stift. Wer hält den Stift? Antwort:
+9a0f4c4206a1f286bded	other_then_query	2	D	C hält den Ring. A hält den Stift. C gibt den Ring an B. A gibt den Stift an D. Wer hält den Stift? Antwort:
+63096248dbd020a16cd8	other_then_query	2	D	B hält den Ball. C hält den Ring. B gibt den Ball an A. C gibt den Ring an D. Wer hält den Ring? Antwort:
+bac02f47e099efcd302e	query_then_other	2	C	B hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an C. B gibt den Stift an A. Wer hält den Schlüssel? Antwort:
+862ed690fae7a2233d92	query_then_other	2	A	D hält den Ball. C hält den Ring. C gibt den Ring an A. D gibt den Ball an B. Wer hält den Ring? Antwort:
+1973f7ed0d043d350b7a	query_then_other	2	B	D hält den Ball. A hält den Ring. D gibt den Ball an B. A gibt den Ring an C. Wer hält den Ball? Antwort:
+e312971d244db604e8bc	move_other	1	A	A hält den Ball. D hält den Ring. D gibt den Ring an C. Wer hält den Ball? Antwort:
+c302fb51cac6b62af3e1	move_query	1	D	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+31b18ca11e8097240755	other_then_query	2	B	C hält den Schlüssel. D hält den Ball. C gibt den Schlüssel an A. D gibt den Ball an B. Wer hält den Ball? Antwort:
+5520d9566b543dfae841	move_other	1	B	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+cb72e74069b787f805af	move_other	1	C	A hält den Ring. C hält den Stift. A gibt den Ring an D. Wer hält den Stift? Antwort:
+d7f017640841e32da02a	move_other	1	D	D hält den Schlüssel. A hält den Ball. A gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+5e3c5de7a1923800a5b4	move_query	1	C	D hält den Ball. A hält den Ring. A gibt den Ring an C. Wer hält den Ring? Antwort:
+deef201c6dd45f625b1b	twice_query	2	D	B hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an C. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+4dea106b10b6d974a316	other_then_query	2	C	B hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an D. B gibt den Stift an C. Wer hält den Stift? Antwort:
+64f214427ec9ba608183	twice_query	2	D	B hält den Schlüssel. C hält den Ball. C gibt den Ball an A. A gibt den Ball an D. Wer hält den Ball? Antwort:
+8e1b45c5a80d8221266a	twice_query	2	B	D hält den Ring. A hält den Stift. D gibt den Ring an C. C gibt den Ring an B. Wer hält den Ring? Antwort:
+3d81993b0057ac5092d5	twice_query	2	B	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. A gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+3dba8cf1f315376ec260	other_then_query	2	B	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. D gibt den Stift an B. Wer hält den Stift? Antwort:
+214c599ed193f62de14b	move_other	1	B	B hält den Ring. A hält den Stift. A gibt den Stift an C. Wer hält den Ring? Antwort:
+b443419c91d4c3cc3d21	other_then_query	2	C	B hält den Stift. D hält den Schlüssel. B gibt den Stift an A. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+6a5fc611ebf7c5f0e85a	other_then_query	2	B	D hält den Ball. C hält den Ring. C gibt den Ring an A. D gibt den Ball an B. Wer hält den Ball? Antwort:
+96814a5487ab20c652c3	query_then_other	2	B	A hält den Ball. C hält den Ring. A gibt den Ball an B. C gibt den Ring an D. Wer hält den Ball? Antwort:
+aa69efa66e68916901fe	other_then_query	2	B	C hält den Stift. A hält den Schlüssel. C gibt den Stift an D. A gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+8b13b03c233cea950903	move_other	1	D	C hält den Stift. D hält den Schlüssel. C gibt den Stift an A. Wer hält den Schlüssel? Antwort:
+c30185f9bf40b896c755	other_then_query	2	B	C hält den Ring. A hält den Stift. A gibt den Stift an D. C gibt den Ring an B. Wer hält den Ring? Antwort:
+575dcda5219507e90b9f	move_other	1	C	D hält den Stift. C hält den Schlüssel. D gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+1f5d6baa831d355d9376	move_other	1	C	C hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+16072d1b2edc70413aa3	copy	0	B	B hält den Schlüssel. A hält den Ball. Wer hält den Schlüssel? Antwort:
+885beafba74b2880ca0c	query_then_other	2	A	C hält den Schlüssel. D hält den Ball. D gibt den Ball an A. C gibt den Schlüssel an B. Wer hält den Ball? Antwort:
+84c9e028e9c9d7d15558	move_other	1	A	C hält den Ball. A hält den Ring. C gibt den Ball an B. Wer hält den Ring? Antwort:
+29d432cfb23a9fe49e8e	query_then_other	2	D	A hält den Ball. B hält den Ring. A gibt den Ball an D. B gibt den Ring an C. Wer hält den Ball? Antwort:
+5b470b80202e1bb015d4	other_then_query	2	D	C hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an A. C gibt den Stift an D. Wer hält den Stift? Antwort:
+9de0d8771cbca747c3a6	query_then_other	2	A	D hält den Ring. C hält den Stift. D gibt den Ring an A. C gibt den Stift an B. Wer hält den Ring? Antwort:
+de561f7da48a8ccfc396	copy	0	A	A hält den Stift. C hält den Schlüssel. Wer hält den Stift? Antwort:
+62efd21fe5ffd9cb5963	query_then_other	2	D	A hält den Stift. B hält den Schlüssel. A gibt den Stift an D. B gibt den Schlüssel an C. Wer hält den Stift? Antwort:
+fc3c96c756de04dadbb4	twice_query	2	D	C hält den Schlüssel. B hält den Ball. B gibt den Ball an A. A gibt den Ball an D. Wer hält den Ball? Antwort:
+a0518ff31652889cbaee	move_other	1	C	A hält den Stift. C hält den Schlüssel. A gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+524ca26df4e0c07c1a6e	other_then_query	2	B	C hält den Stift. D hält den Schlüssel. C gibt den Stift an A. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+b72dad81286ae4ac6c7a	copy	0	D	C hält den Stift. D hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+bf0dc8a126ba04987a1a	move_query	1	D	C hält den Schlüssel. B hält den Ball. B gibt den Ball an D. Wer hält den Ball? Antwort:
+7ea9b3eb029d1f4d1ffa	copy	0	B	C hält den Stift. B hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+7fef606c6f975b8d054b	move_query	1	A	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+2a8ca41d2743ebe1139f	query_then_other	2	D	A hält den Ring. C hält den Stift. C gibt den Stift an D. A gibt den Ring an B. Wer hält den Stift? Antwort:
+f3875bf745f751395657	move_query	1	A	D hält den Ring. C hält den Stift. C gibt den Stift an A. Wer hält den Stift? Antwort:
+cbd222e205b4aca40de6	query_then_other	2	A	C hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an A. C gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+f8533c8d546d44c62e1b	move_query	1	D	B hält den Ball. C hält den Ring. B gibt den Ball an D. Wer hält den Ball? Antwort:
+f4538e1af2bf03426ae6	move_query	1	C	D hält den Ball. B hält den Ring. B gibt den Ring an C. Wer hält den Ring? Antwort:
+fcdfc7944e93594a06c6	other_then_query	2	A	B hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an C. B gibt den Stift an A. Wer hält den Stift? Antwort:
+ad4bb5bad87093b9a497	move_other	1	C	D hält den Ball. C hält den Ring. D gibt den Ball an A. Wer hält den Ring? Antwort:
+26cefd1fee4fcaa3f3b7	other_then_query	2	A	D hält den Ball. B hält den Ring. D gibt den Ball an C. B gibt den Ring an A. Wer hält den Ring? Antwort:
+b73f593b1b678146c35e	copy	0	B	B hält den Stift. C hält den Schlüssel. Wer hält den Stift? Antwort:
+95649c99ed76d347d696	twice_query	2	B	A hält den Ball. C hält den Ring. A gibt den Ball an D. D gibt den Ball an B. Wer hält den Ball? Antwort:
+7a3892eee4e7fa9cd37d	other_then_query	2	C	D hält den Schlüssel. B hält den Ball. B gibt den Ball an A. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+9597953f92026806887b	move_other	1	A	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. Wer hält den Stift? Antwort:
+6fd58efc493a9ad65a9d	move_other	1	D	D hält den Ball. C hält den Ring. C gibt den Ring an B. Wer hält den Ball? Antwort:
+e310441a214c6491ca30	move_query	1	C	D hält den Ring. B hält den Stift. B gibt den Stift an C. Wer hält den Stift? Antwort:
+99519074121b264b13e4	query_then_other	2	B	A hält den Ring. D hält den Stift. A gibt den Ring an B. D gibt den Stift an C. Wer hält den Ring? Antwort:
+7162d0828be346f878ab	move_other	1	A	A hält den Schlüssel. B hält den Ball. B gibt den Ball an D. Wer hält den Schlüssel? Antwort:
+f0abf906a941b42705e2	move_other	1	D	A hält den Schlüssel. D hält den Ball. A gibt den Schlüssel an B. Wer hält den Ball? Antwort:
+d9d8a30b486850233770	move_query	1	C	A hält den Stift. D hält den Schlüssel. A gibt den Stift an C. Wer hält den Stift? Antwort:
+c18e98792c03af046b1a	move_query	1	A	C hält den Ball. D hält den Ring. C gibt den Ball an A. Wer hält den Ball? Antwort:
+2c09a1cc6acf112072c9	move_query	1	C	B hält den Ring. D hält den Stift. B gibt den Ring an C. Wer hält den Ring? Antwort:
+f64af24a147d18886ae7	move_query	1	C	D hält den Schlüssel. B hält den Ball. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+b9da8fa8cfb4eb41fcf6	other_then_query	2	D	B hält den Schlüssel. C hält den Ball. B gibt den Schlüssel an A. C gibt den Ball an D. Wer hält den Ball? Antwort:
+0600ff528bb90a6ea37a	other_then_query	2	D	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. A gibt den Stift an D. Wer hält den Stift? Antwort:
+f9ab9c20e5c212bf77e6	other_then_query	2	D	A hält den Ring. C hält den Stift. A gibt den Ring an B. C gibt den Stift an D. Wer hält den Stift? Antwort:
+8854a60ed915dab7e4f9	other_then_query	2	D	B hält den Stift. C hält den Schlüssel. B gibt den Stift an A. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+ddefbd36ac16fca33b73	twice_query	2	D	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an A. A gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+9d0abe4e73b9c0316473	move_other	1	B	B hält den Schlüssel. C hält den Ball. C gibt den Ball an D. Wer hält den Schlüssel? Antwort:
+6cb040082cdd2b69dd2f	other_then_query	2	A	D hält den Ball. C hält den Ring. D gibt den Ball an B. C gibt den Ring an A. Wer hält den Ring? Antwort:
+c26c8d47455ee55a4b61	query_then_other	2	A	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. B gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+aefc1e2951f165ac41ab	move_query	1	A	B hält den Ball. D hält den Ring. B gibt den Ball an A. Wer hält den Ball? Antwort:
+39fb4ca32198e8659b89	query_then_other	2	B	A hält den Stift. C hält den Schlüssel. A gibt den Stift an B. C gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+32258d0618c58fbfa0e1	move_query	1	B	A hält den Ring. D hält den Stift. D gibt den Stift an B. Wer hält den Stift? Antwort:
+0b548d30b3a4e5f0290e	copy	0	D	D hält den Schlüssel. A hält den Ball. Wer hält den Schlüssel? Antwort:
+e912289c58cb0f40a019	other_then_query	2	C	A hält den Ball. B hält den Ring. B gibt den Ring an D. A gibt den Ball an C. Wer hält den Ball? Antwort:
+ec26d8f044d7ee188b2d	move_query	1	A	D hält den Schlüssel. B hält den Ball. B gibt den Ball an A. Wer hält den Ball? Antwort:
+a62c047c6985ee53806e	move_query	1	B	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+8eff2aaca98c68088aef	move_other	1	D	C hält den Schlüssel. D hält den Ball. C gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+b2babd7ec09c67ae23e8	move_query	1	A	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+4e48f8734babb354eca5	move_query	1	C	B hält den Ball. A hält den Ring. B gibt den Ball an C. Wer hält den Ball? Antwort:
+1996fcaaf971162baa76	move_query	1	C	A hält den Ball. B hält den Ring. A gibt den Ball an C. Wer hält den Ball? Antwort:
+ad5aa1aa929bc666609d	move_query	1	A	C hält den Ball. D hält den Ring. D gibt den Ring an A. Wer hält den Ring? Antwort:
+ad6e50f35161a45789d9	copy	0	C	C hält den Stift. A hält den Schlüssel. Wer hält den Stift? Antwort:
+fa3df14d99ad2f3fb0e5	move_query	1	B	C hält den Ring. D hält den Stift. D gibt den Stift an B. Wer hält den Stift? Antwort:
+845a78fa7eb76bfbe1ca	other_then_query	2	A	D hält den Schlüssel. C hält den Ball. C gibt den Ball an B. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+c9bcf7934c968445da10	query_then_other	2	A	B hält den Ball. D hält den Ring. B gibt den Ball an A. D gibt den Ring an C. Wer hält den Ball? Antwort:
+cf950543b72f3aaa2e49	move_query	1	C	B hält den Ball. D hält den Ring. B gibt den Ball an C. Wer hält den Ball? Antwort:
+56fca8de9960a28947e2	copy	0	A	B hält den Ring. A hält den Stift. Wer hält den Stift? Antwort:
+73a8a97ef90f73e818b3	move_other	1	C	A hält den Ball. C hält den Ring. A gibt den Ball an D. Wer hält den Ring? Antwort:
+b0a018720e35a30dd453	copy	0	A	A hält den Schlüssel. B hält den Ball. Wer hält den Schlüssel? Antwort:
+0a15a963d81211ee69cd	query_then_other	2	B	D hält den Ring. C hält den Stift. C gibt den Stift an B. D gibt den Ring an A. Wer hält den Stift? Antwort:
+42911fffae657fd12a41	query_then_other	2	C	A hält den Ball. B hält den Ring. B gibt den Ring an C. A gibt den Ball an D. Wer hält den Ring? Antwort:
+402726235cbaf4a3c4c4	copy	0	A	A hält den Ball. B hält den Ring. Wer hält den Ball? Antwort:
+534897930080c1eb0521	move_query	1	C	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+926b37317ee8488299dd	other_then_query	2	A	C hält den Schlüssel. B hält den Ball. B gibt den Ball an D. C gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+27c58a8ca0469faa0082	move_query	1	B	D hält den Ball. A hält den Ring. A gibt den Ring an B. Wer hält den Ring? Antwort:
+45f4bd3df3bc58a3a054	copy	0	C	C hält den Schlüssel. D hält den Ball. Wer hält den Schlüssel? Antwort:
+b24d642a3f0c990e0037	other_then_query	2	B	D hält den Ball. A hält den Ring. A gibt den Ring an C. D gibt den Ball an B. Wer hält den Ball? Antwort:
+bf4cfb08631266a48298	query_then_other	2	C	D hält den Schlüssel. A hält den Ball. A gibt den Ball an C. D gibt den Schlüssel an B. Wer hält den Ball? Antwort:
+36294497855dcb400ffc	move_other	1	A	D hält den Ball. A hält den Ring. D gibt den Ball an C. Wer hält den Ring? Antwort:
+a1de09d5503ce3611612	twice_query	2	B	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an D. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+4fd42a4e484c604eb6a8	query_then_other	2	C	A hält den Stift. D hält den Schlüssel. A gibt den Stift an C. D gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+818d49f651bff84da201	copy	0	C	A hält den Schlüssel. C hält den Ball. Wer hält den Ball? Antwort:
+78ee1ebee9d319d33f9b	query_then_other	2	B	D hält den Ring. A hält den Stift. D gibt den Ring an B. A gibt den Stift an C. Wer hält den Ring? Antwort:
+d80eff1ee931f89b97a0	move_query	1	D	B hält den Ring. C hält den Stift. C gibt den Stift an D. Wer hält den Stift? Antwort:
+264195cab31145507adf	query_then_other	2	B	C hält den Schlüssel. D hält den Ball. C gibt den Schlüssel an B. D gibt den Ball an A. Wer hält den Schlüssel? Antwort:
+6eb759f7804b54893121	move_other	1	C	B hält den Ring. C hält den Stift. B gibt den Ring an D. Wer hält den Stift? Antwort:
+9edb9e7847bc71e0f5ed	copy	0	B	D hält den Ring. B hält den Stift. Wer hält den Stift? Antwort:
+46e07b023ef9cd0f11b9	other_then_query	2	A	D hält den Schlüssel. B hält den Ball. B gibt den Ball an C. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+e0b2556c4c6fa6a9088f	move_query	1	D	B hält den Ring. A hält den Stift. A gibt den Stift an D. Wer hält den Stift? Antwort:
+6714d824644254e92c81	move_other	1	D	B hält den Schlüssel. D hält den Ball. B gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+9cc4b8e4d42cebbdbfd1	move_query	1	A	B hält den Ball. C hält den Ring. B gibt den Ball an A. Wer hält den Ball? Antwort:
+281a8d74abab79d90ec7	twice_query	2	B	C hält den Stift. D hält den Schlüssel. C gibt den Stift an A. A gibt den Stift an B. Wer hält den Stift? Antwort:
+f2d75c8e2ae3c2201fdd	move_other	1	C	B hält den Ball. C hält den Ring. B gibt den Ball an D. Wer hält den Ring? Antwort:
+16b43447b6d5725983c9	move_query	1	C	B hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+42b579826afc9fe00601	move_query	1	D	B hält den Schlüssel. A hält den Ball. A gibt den Ball an D. Wer hält den Ball? Antwort:
+f6b008720c5b288e3e38	query_then_other	2	D	C hält den Ring. A hält den Stift. A gibt den Stift an D. C gibt den Ring an B. Wer hält den Stift? Antwort:
+34ae3c3522ccb3b40e6d	other_then_query	2	A	C hält den Stift. D hält den Schlüssel. C gibt den Stift an B. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+8b1fbeb821b627d1f4c6	query_then_other	2	B	C hält den Ball. D hält den Ring. C gibt den Ball an B. D gibt den Ring an A. Wer hält den Ball? Antwort:
+29316949020eb84674c5	twice_query	2	C	B hält den Ring. A hält den Stift. B gibt den Ring an D. D gibt den Ring an C. Wer hält den Ring? Antwort:
+54e6befe0d82ccb8cec0	other_then_query	2	D	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an A. B gibt den Ball an D. Wer hält den Ball? Antwort:
+b421d6602beb43f2e256	twice_query	2	A	B hält den Schlüssel. C hält den Ball. C gibt den Ball an D. D gibt den Ball an A. Wer hält den Ball? Antwort:
+584086d5c939c8568134	copy	0	C	C hält den Stift. B hält den Schlüssel. Wer hält den Stift? Antwort:
+cdeba050ebf7625d09c9	move_other	1	A	A hält den Schlüssel. D hält den Ball. D gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+f439c98073d74ed79167	move_query	1	B	D hält den Ball. C hält den Ring. C gibt den Ring an B. Wer hält den Ring? Antwort:
+ebc4f6b6ed72a90e2efa	copy	0	B	B hält den Schlüssel. D hält den Ball. Wer hält den Schlüssel? Antwort:
+3ad2da9f816bfd06602a	copy	0	A	A hält den Stift. B hält den Schlüssel. Wer hält den Stift? Antwort:
+cc35ef9a677bb552c012	move_other	1	C	A hält den Ball. C hält den Ring. A gibt den Ball an B. Wer hält den Ring? Antwort:
+b746f40d5640061b2676	other_then_query	2	A	D hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. D gibt den Stift an A. Wer hält den Stift? Antwort:
+132770ebb3071928539b	twice_query	2	A	D hält den Schlüssel. B hält den Ball. D gibt den Schlüssel an C. C gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+f0b733b563de70b4facf	query_then_other	2	C	B hält den Schlüssel. D hält den Ball. B gibt den Schlüssel an C. D gibt den Ball an A. Wer hält den Schlüssel? Antwort:
+fcf9304e6c82af36883f	move_query	1	C	B hält den Ball. A hält den Ring. A gibt den Ring an C. Wer hält den Ring? Antwort:
+fc92a0349b8ed1c33685	twice_query	2	B	C hält den Ring. D hält den Stift. C gibt den Ring an A. A gibt den Ring an B. Wer hält den Ring? Antwort:
+0657a714564b9f7cc6b6	twice_query	2	B	D hält den Stift. A hält den Schlüssel. A gibt den Schlüssel an C. C gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+58a56ebae67ab2fa971a	move_query	1	B	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+ee89e2ea71239ce2cffd	move_query	1	D	A hält den Stift. B hält den Schlüssel. A gibt den Stift an D. Wer hält den Stift? Antwort:
+742f473dd44732d6402c	move_other	1	D	D hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+b9dc84bde33f7279d94d	copy	0	D	D hält den Ball. A hält den Ring. Wer hält den Ball? Antwort:
+7993a0f231045b03d1ef	query_then_other	2	D	A hält den Ball. B hält den Ring. B gibt den Ring an D. A gibt den Ball an C. Wer hält den Ring? Antwort:
+fd82bd86f9974d65b3f6	move_other	1	A	B hält den Stift. A hält den Schlüssel. B gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+6832b2975daf63707a68	other_then_query	2	A	B hält den Ring. D hält den Stift. B gibt den Ring an C. D gibt den Stift an A. Wer hält den Stift? Antwort:
+7a3ceaaa1cef02e62697	move_other	1	A	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+d65843f4c13dd82156de	other_then_query	2	D	A hält den Stift. C hält den Schlüssel. A gibt den Stift an B. C gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+2f4366ffe40faa20c370	move_other	1	B	C hält den Stift. B hält den Schlüssel. C gibt den Stift an A. Wer hält den Schlüssel? Antwort:
+1d38283331b2b133cb5b	move_other	1	B	A hält den Schlüssel. B hält den Ball. A gibt den Schlüssel an C. Wer hält den Ball? Antwort:
+5259692135214c299fea	other_then_query	2	C	A hält den Schlüssel. D hält den Ball. D gibt den Ball an B. A gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+90a875327826724cc269	twice_query	2	C	B hält den Stift. A hält den Schlüssel. B gibt den Stift an D. D gibt den Stift an C. Wer hält den Stift? Antwort:
+748bc18f0c6a85004041	move_query	1	A	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+0567efb131f9335e2add	move_other	1	D	D hält den Ring. A hält den Stift. A gibt den Stift an B. Wer hält den Ring? Antwort:
+8d85c221d43d4ffd4702	query_then_other	2	C	A hält den Ball. D hält den Ring. D gibt den Ring an C. A gibt den Ball an B. Wer hält den Ring? Antwort:
+960c6b6657d3a4ce00b4	copy	0	D	B hält den Ball. D hält den Ring. Wer hält den Ring? Antwort:
+4fd7b35e98459ebd8eb8	move_query	1	D	B hält den Stift. C hält den Schlüssel. B gibt den Stift an D. Wer hält den Stift? Antwort:
+0e9bb948a3ac86910237	twice_query	2	C	A hält den Stift. D hält den Schlüssel. A gibt den Stift an B. B gibt den Stift an C. Wer hält den Stift? Antwort:
+732264aaa569522e1f29	other_then_query	2	A	D hält den Stift. B hält den Schlüssel. D gibt den Stift an C. B gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+01e2326a7d19b37b4f97	other_then_query	2	A	D hält den Ball. B hält den Ring. B gibt den Ring an C. D gibt den Ball an A. Wer hält den Ball? Antwort:
+af81b1c14ab56d324181	query_then_other	2	D	B hält den Ball. A hält den Ring. A gibt den Ring an D. B gibt den Ball an C. Wer hält den Ring? Antwort:
+220c6b15ddbdb378e9ae	twice_query	2	C	D hält den Ball. B hält den Ring. D gibt den Ball an A. A gibt den Ball an C. Wer hält den Ball? Antwort:
+db150f7db56d09419d9d	query_then_other	2	B	D hält den Ring. C hält den Stift. D gibt den Ring an B. C gibt den Stift an A. Wer hält den Ring? Antwort:
+ca4aa677179816824f21	twice_query	2	B	C hält den Ring. A hält den Stift. C gibt den Ring an D. D gibt den Ring an B. Wer hält den Ring? Antwort:
+8d75bfff71641a6b6089	move_other	1	C	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an D. Wer hält den Ball? Antwort:
+7a3457cc1c1c9e9a4c0a	query_then_other	2	C	A hält den Schlüssel. B hält den Ball. B gibt den Ball an C. A gibt den Schlüssel an D. Wer hält den Ball? Antwort:
+0ad4c9ad2207d942fe3c	other_then_query	2	C	A hält den Ring. B hält den Stift. A gibt den Ring an D. B gibt den Stift an C. Wer hält den Stift? Antwort:
+aea1ad2a16cadea127bd	query_then_other	2	D	B hält den Schlüssel. C hält den Ball. C gibt den Ball an D. B gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+75852842f878621ecef4	other_then_query	2	B	D hält den Schlüssel. A hält den Ball. A gibt den Ball an C. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+bb436e36343803fa9ede	move_query	1	D	A hält den Schlüssel. B hält den Ball. A gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+3c38d09a74f763ac4304	other_then_query	2	C	B hält den Schlüssel. D hält den Ball. D gibt den Ball an A. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+e45a73ef5431e49d13d6	query_then_other	2	A	D hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an A. D gibt den Stift an C. Wer hält den Schlüssel? Antwort:
+f4678c156daf6deb19ca	copy	0	D	A hält den Schlüssel. D hält den Ball. Wer hält den Ball? Antwort:
+f452430f3c292712e909	move_other	1	B	A hält den Ring. B hält den Stift. A gibt den Ring an C. Wer hält den Stift? Antwort:
+6c81c298a291c193d073	copy	0	B	C hält den Ball. B hält den Ring. Wer hält den Ring? Antwort:
+933187bdd9aed6b137ac	other_then_query	2	C	D hält den Stift. A hält den Schlüssel. D gibt den Stift an B. A gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+dbd1f36300f80ed917cb	query_then_other	2	A	C hält den Stift. D hält den Schlüssel. C gibt den Stift an A. D gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+099ac31e7bba4dab19a0	move_query	1	B	D hält den Ring. C hält den Stift. D gibt den Ring an B. Wer hält den Ring? Antwort:
+7fab80edfc6e00e3704b	query_then_other	2	C	D hält den Stift. B hält den Schlüssel. D gibt den Stift an C. B gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+06e44d255a133b2847fc	move_other	1	A	B hält den Ring. A hält den Stift. B gibt den Ring an C. Wer hält den Stift? Antwort:
+f51d66e8e4f311bd819c	query_then_other	2	A	C hält den Ball. D hält den Ring. C gibt den Ball an A. D gibt den Ring an B. Wer hält den Ball? Antwort:
+ddb2c90db067743c6277	move_other	1	C	B hält den Schlüssel. C hält den Ball. B gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+07ce3724243f0e70cede	query_then_other	2	A	D hält den Ball. B hält den Ring. D gibt den Ball an A. B gibt den Ring an C. Wer hält den Ball? Antwort:
+1db622f1f2247670780a	move_query	1	D	B hält den Stift. A hält den Schlüssel. B gibt den Stift an D. Wer hält den Stift? Antwort:
+4a882801a4f1ba4a186f	other_then_query	2	B	A hält den Ball. D hält den Ring. A gibt den Ball an C. D gibt den Ring an B. Wer hält den Ring? Antwort:
+45ca1ff7060386b93140	move_query	1	B	D hält den Schlüssel. A hält den Ball. A gibt den Ball an B. Wer hält den Ball? Antwort:
+5ff802ba387754590e62	query_then_other	2	A	D hält den Ring. C hält den Stift. C gibt den Stift an A. D gibt den Ring an B. Wer hält den Stift? Antwort:
+98b2b593f07d0b048505	other_then_query	2	A	B hält den Schlüssel. C hält den Ball. C gibt den Ball an D. B gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+e6d485721260777ac2c4	other_then_query	2	D	A hält den Stift. B hält den Schlüssel. A gibt den Stift an C. B gibt den Schlüssel an D. Wer hält den Schlüssel? Antwort:
+0789a83e66337fbc060f	other_then_query	2	A	C hält den Ball. D hält den Ring. D gibt den Ring an B. C gibt den Ball an A. Wer hält den Ball? Antwort:
+38e3510ca83c3ce43cbd	twice_query	2	B	A hält den Schlüssel. C hält den Ball. A gibt den Schlüssel an D. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+2f8ba5295f0102a5842e	copy	0	C	D hält den Ball. C hält den Ring. Wer hält den Ring? Antwort:
+ea0aa681add733f201e3	move_query	1	B	D hält den Ball. C hält den Ring. D gibt den Ball an B. Wer hält den Ball? Antwort:
+ac454e455ac597404a81	query_then_other	2	D	B hält den Schlüssel. C hält den Ball. B gibt den Schlüssel an D. C gibt den Ball an A. Wer hält den Schlüssel? Antwort:
+e8080f3e595bfad94757	move_other	1	A	A hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+c09ccfcbabf38a2b9a2d	twice_query	2	D	A hält den Ball. C hält den Ring. C gibt den Ring an B. B gibt den Ring an D. Wer hält den Ring? Antwort:
+053ca21b2d4d3926d87e	move_query	1	B	D hält den Stift. A hält den Schlüssel. D gibt den Stift an B. Wer hält den Stift? Antwort:
+4aedc9fb628dd8c2d691	other_then_query	2	C	D hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an A. D gibt den Stift an C. Wer hält den Stift? Antwort:
+91661abb87997bba7631	move_other	1	A	C hält den Stift. A hält den Schlüssel. C gibt den Stift an B. Wer hält den Schlüssel? Antwort:
+c966f2831a3522295086	twice_query	2	A	D hält den Ball. C hält den Ring. D gibt den Ball an B. B gibt den Ball an A. Wer hält den Ball? Antwort:
+2f45180792c9b49b8fbc	query_then_other	2	A	D hält den Ring. B hält den Stift. D gibt den Ring an A. B gibt den Stift an C. Wer hält den Ring? Antwort:
+93216231d4e0ef6b7bdd	move_query	1	C	D hält den Ball. A hält den Ring. D gibt den Ball an C. Wer hält den Ball? Antwort:
+09135089135308a1afbf	copy	0	B	B hält den Ring. D hält den Stift. Wer hält den Ring? Antwort:
+f839585ab2f1d2056aee	move_query	1	A	C hält den Ring. B hält den Stift. C gibt den Ring an A. Wer hält den Ring? Antwort:
+72d6abea05c4cff288db	move_query	1	A	C hält den Schlüssel. D hält den Ball. D gibt den Ball an A. Wer hält den Ball? Antwort:
+da70a7bec5de634b2644	twice_query	2	C	B hält den Ring. D hält den Stift. B gibt den Ring an A. A gibt den Ring an C. Wer hält den Ring? Antwort:
+07e77b801b77f62c0249	move_query	1	C	D hält den Ball. B hält den Ring. D gibt den Ball an C. Wer hält den Ball? Antwort:
+1bb9768cb93659d16d31	twice_query	2	D	B hält den Schlüssel. A hält den Ball. A gibt den Ball an C. C gibt den Ball an D. Wer hält den Ball? Antwort:
+26952d287ca97dc87315	move_query	1	B	D hält den Stift. C hält den Schlüssel. D gibt den Stift an B. Wer hält den Stift? Antwort:
+d305d788203d34eeec2a	query_then_other	2	D	A hält den Schlüssel. B hält den Ball. A gibt den Schlüssel an D. B gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+716f76965e2f61a15e9f	query_then_other	2	C	A hält den Ball. D hält den Ring. A gibt den Ball an C. D gibt den Ring an B. Wer hält den Ball? Antwort:
+2a21e119a4810aa25242	twice_query	2	A	D hält den Stift. B hält den Schlüssel. B gibt den Schlüssel an C. C gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+139a0e3324b13cb5ff1b	move_query	1	B	A hält den Ball. D hält den Ring. A gibt den Ball an B. Wer hält den Ball? Antwort:
+1e5187e70ccd41f93e46	twice_query	2	D	B hält den Ring. A hält den Stift. A gibt den Stift an C. C gibt den Stift an D. Wer hält den Stift? Antwort:
+e4f3cb03ade3a34ad54b	move_other	1	B	D hält den Ring. B hält den Stift. D gibt den Ring an C. Wer hält den Stift? Antwort:
+6cfa99fb9237080de75c	other_then_query	2	C	D hält den Schlüssel. B hält den Ball. D gibt den Schlüssel an A. B gibt den Ball an C. Wer hält den Ball? Antwort:
+7021cf4bc3c6f6814a54	other_then_query	2	A	C hält den Ball. D hält den Ring. C gibt den Ball an B. D gibt den Ring an A. Wer hält den Ring? Antwort:
+45522c4ed19ee0141c12	query_then_other	2	C	D hält den Ball. A hält den Ring. D gibt den Ball an C. A gibt den Ring an B. Wer hält den Ball? Antwort:
+a145600721f5863618c4	move_query	1	D	A hält den Ball. C hält den Ring. A gibt den Ball an D. Wer hält den Ball? Antwort:
+451fe756ff1b7b6466c2	copy	0	B	B hält den Ring. C hält den Stift. Wer hält den Ring? Antwort:
+000f2b1b42fec6c57844	query_then_other	2	A	C hält den Ring. B hält den Stift. C gibt den Ring an A. B gibt den Stift an D. Wer hält den Ring? Antwort:
+4b12fc57b5bc386c1276	move_query	1	A	D hält den Ring. C hält den Stift. D gibt den Ring an A. Wer hält den Ring? Antwort:
+c8d69888331b38498f0a	move_query	1	C	B hält den Stift. D hält den Schlüssel. B gibt den Stift an C. Wer hält den Stift? Antwort:
+68ad26f8fa1ec5b5ddc5	query_then_other	2	C	B hält den Ring. D hält den Stift. B gibt den Ring an C. D gibt den Stift an A. Wer hält den Ring? Antwort:
+6df3e4ded268da6153e2	move_query	1	D	B hält den Ball. A hält den Ring. B gibt den Ball an D. Wer hält den Ball? Antwort:
+ad5d5bc572382c0edaa4	other_then_query	2	A	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an B. C gibt den Ball an A. Wer hält den Ball? Antwort:
+c56a7afbcb508e4c975e	move_other	1	A	A hält den Schlüssel. B hält den Ball. B gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+15a7f85223620ddfebd4	copy	0	C	D hält den Stift. C hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+d78c43c307cb335e819e	move_query	1	C	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+a41f9773a095a4051fe7	copy	0	D	D hält den Stift. A hält den Schlüssel. Wer hält den Stift? Antwort:
+292682a5fb030d47c16b	query_then_other	2	A	C hält den Ball. B hält den Ring. C gibt den Ball an A. B gibt den Ring an D. Wer hält den Ball? Antwort:
+05d35b68622ffbbca357	query_then_other	2	B	C hält den Stift. A hält den Schlüssel. C gibt den Stift an B. A gibt den Schlüssel an D. Wer hält den Stift? Antwort:
+1d644def7fe300875e83	twice_query	2	B	C hält den Schlüssel. A hält den Ball. A gibt den Ball an D. D gibt den Ball an B. Wer hält den Ball? Antwort:
+581767d746704ef15d2d	query_then_other	2	C	B hält den Ball. D hält den Ring. D gibt den Ring an C. B gibt den Ball an A. Wer hält den Ring? Antwort:
+4af6053d0cb6664effe0	copy	0	A	B hält den Schlüssel. A hält den Ball. Wer hält den Ball? Antwort:
+0b79b0ac2d10662d35d9	move_other	1	D	D hält den Ball. B hält den Ring. B gibt den Ring an C. Wer hält den Ball? Antwort:
+e725f224d23a7c1aab99	move_query	1	D	C hält den Ball. B hält den Ring. C gibt den Ball an D. Wer hält den Ball? Antwort:
+9ebd7e445fc4d6dabe96	query_then_other	2	C	B hält den Schlüssel. A hält den Ball. A gibt den Ball an C. B gibt den Schlüssel an D. Wer hält den Ball? Antwort:
+31e6a1f540c347977267	other_then_query	2	C	B hält den Ball. A hält den Ring. A gibt den Ring an D. B gibt den Ball an C. Wer hält den Ball? Antwort:
+5fd78dd40d898c0ea5c1	query_then_other	2	C	B hält den Schlüssel. D hält den Ball. D gibt den Ball an C. B gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+c9d6b1376bc747d5ca8f	query_then_other	2	B	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. A gibt den Stift an D. Wer hält den Schlüssel? Antwort:
+758bb153a7ae6f1295c8	query_then_other	2	A	B hält den Ball. C hält den Ring. B gibt den Ball an A. C gibt den Ring an D. Wer hält den Ball? Antwort:
+6072f07b206fbba5c880	copy	0	C	C hält den Ring. A hält den Stift. Wer hält den Ring? Antwort:
+8bccee2ee2ba7f34c260	move_query	1	C	D hält den Ring. B hält den Stift. D gibt den Ring an C. Wer hält den Ring? Antwort:
+a4277cc9f65085678c45	move_other	1	C	A hält den Ring. C hält den Stift. A gibt den Ring an B. Wer hält den Stift? Antwort:
+281b9b740e14444e989a	move_other	1	C	B hält den Ball. C hält den Ring. B gibt den Ball an A. Wer hält den Ring? Antwort:
+f1190ffa1d429bb7b5fc	copy	0	C	B hält den Stift. C hält den Schlüssel. Wer hält den Schlüssel? Antwort:
+d87da70de04962a0569a	other_then_query	2	A	B hält den Schlüssel. D hält den Ball. B gibt den Schlüssel an C. D gibt den Ball an A. Wer hält den Ball? Antwort:
+e1d14b921e02feb20b8d	move_other	1	B	B hält den Ball. A hält den Ring. A gibt den Ring an C. Wer hält den Ball? Antwort:
+07e33d6d7315792a6889	move_query	1	B	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+72f3193822cc2c3ef597	move_other	1	D	D hält den Schlüssel. B hält den Ball. B gibt den Ball an C. Wer hält den Schlüssel? Antwort:
+f49257fc16d3b1e4e356	query_then_other	2	D	B hält den Ring. A hält den Stift. B gibt den Ring an D. A gibt den Stift an C. Wer hält den Ring? Antwort:
+18ccd293b2ec7e66173c	other_then_query	2	C	D hält den Schlüssel. A hält den Ball. D gibt den Schlüssel an B. A gibt den Ball an C. Wer hält den Ball? Antwort:
+8ac797787b989752a810	move_query	1	C	A hält den Stift. B hält den Schlüssel. A gibt den Stift an C. Wer hält den Stift? Antwort:
+c3feda6bb55a2591a4f8	query_then_other	2	C	A hält den Ring. D hält den Stift. D gibt den Stift an C. A gibt den Ring an B. Wer hält den Stift? Antwort:
+b8100e7728a80cf50e47	twice_query	2	A	D hält den Stift. C hält den Schlüssel. D gibt den Stift an B. B gibt den Stift an A. Wer hält den Stift? Antwort:
+e140037141c7b033cd89	move_query	1	D	C hält den Ring. A hält den Stift. C gibt den Ring an D. Wer hält den Ring? Antwort:
+a32c885d096a885fbee7	twice_query	2	A	D hält den Ring. C hält den Stift. D gibt den Ring an B. B gibt den Ring an A. Wer hält den Ring? Antwort:
+0001271d4c4ca9da83f0	other_then_query	2	A	C hält den Ball. B hält den Ring. B gibt den Ring an D. C gibt den Ball an A. Wer hält den Ball? Antwort:
+9efaca8ef8d95f48669f	other_then_query	2	D	B hält den Ring. C hält den Stift. B gibt den Ring an A. C gibt den Stift an D. Wer hält den Stift? Antwort:
+12f868a5c9996315a06f	twice_query	2	D	C hält den Ball. B hält den Ring. C gibt den Ball an A. A gibt den Ball an D. Wer hält den Ball? Antwort:
+4a933729c3380a3449dd	move_other	1	B	D hält den Ring. B hält den Stift. D gibt den Ring an A. Wer hält den Stift? Antwort:
+f36e31310c7c0e778357	move_query	1	A	B hält den Ring. D hält den Stift. B gibt den Ring an A. Wer hält den Ring? Antwort:
+27754c903610e7b1a30b	move_query	1	A	B hält den Ball. C hält den Ring. C gibt den Ring an A. Wer hält den Ring? Antwort:
+844ee7bb168a206f05ea	move_other	1	B	A hält den Ball. B hält den Ring. A gibt den Ball an C. Wer hält den Ring? Antwort:
+0ffee1cca80bb21506b4	move_other	1	C	C hält den Schlüssel. D hält den Ball. D gibt den Ball an B. Wer hält den Schlüssel? Antwort:
+369f2c53f6b0b0ed6cd7	query_then_other	2	C	A hält den Ring. B hält den Stift. B gibt den Stift an C. A gibt den Ring an D. Wer hält den Stift? Antwort:
+bca867965899417f110c	twice_query	2	B	D hält den Ball. A hält den Ring. A gibt den Ring an C. C gibt den Ring an B. Wer hält den Ring? Antwort:
+3202b21ee1ba7dec96da	move_query	1	A	C hält den Stift. D hält den Schlüssel. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+572c86aadd60c048bf1e	other_then_query	2	A	D hält den Ring. B hält den Stift. D gibt den Ring an C. B gibt den Stift an A. Wer hält den Stift? Antwort:
+e720813d2b4c94087fd5	copy	0	D	D hält den Ball. B hält den Ring. Wer hält den Ball? Antwort:
+08187f4bd5ef6706ea13	twice_query	2	D	A hält den Ball. B hält den Ring. A gibt den Ball an C. C gibt den Ball an D. Wer hält den Ball? Antwort:
+c33e6949c5ba2a5682f5	move_query	1	C	B hält den Schlüssel. A hält den Ball. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+fec6fc3daf1a57b0faca	query_then_other	2	B	C hält den Schlüssel. D hält den Ball. D gibt den Ball an B. C gibt den Schlüssel an A. Wer hält den Ball? Antwort:
+d5f42c4fcf581c3e1de9	twice_query	2	C	A hält den Schlüssel. B hält den Ball. B gibt den Ball an D. D gibt den Ball an C. Wer hält den Ball? Antwort:
+1c0bce8a1afefdd36d75	copy	0	C	B hält den Ring. C hält den Stift. Wer hält den Stift? Antwort:
+4141fb44fb7679a9a71b	other_then_query	2	C	B hält den Schlüssel. A hält den Ball. A gibt den Ball an D. B gibt den Schlüssel an C. Wer hält den Schlüssel? Antwort:
+4903d10e22381b0fa935	move_other	1	C	C hält den Schlüssel. B hält den Ball. B gibt den Ball an A. Wer hält den Schlüssel? Antwort:
+92b9bef457c89c09b40f	copy	0	D	D hält den Stift. B hält den Schlüssel. Wer hält den Stift? Antwort:
+019750588022db6e68f7	copy	0	B	B hält den Ring. A hält den Stift. Wer hält den Ring? Antwort:
+5e55024594e5c1152324	query_then_other	2	D	B hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an D. B gibt den Stift an A. Wer hält den Schlüssel? Antwort:
+a682264c8ec259eccd1e	other_then_query	2	B	D hält den Ring. A hält den Stift. D gibt den Ring an C. A gibt den Stift an B. Wer hält den Stift? Antwort:
+5cd9ec8bf4b2f18223f8	move_query	1	D	A hält den Ball. B hält den Ring. B gibt den Ring an D. Wer hält den Ring? Antwort:
+8bcc24c10048936d2a2a	move_other	1	B	B hält den Ball. C hält den Ring. C gibt den Ring an D. Wer hält den Ball? Antwort:
+a3cab5783fb8ec20e2be	twice_query	2	B	D hält den Schlüssel. C hält den Ball. D gibt den Schlüssel an A. A gibt den Schlüssel an B. Wer hält den Schlüssel? Antwort:
+7a3c1e77802b25784daa	move_other	1	A	A hält den Stift. C hält den Schlüssel. C gibt den Schlüssel an B. Wer hält den Stift? Antwort:
+4b143e3fd073b1816dfe	query_then_other	2	C	B hält den Ball. D hält den Ring. B gibt den Ball an C. D gibt den Ring an A. Wer hält den Ball? Antwort:
+177806b65a4dfacbbe4e	move_query	1	B	A hält den Ball. D hält den Ring. D gibt den Ring an B. Wer hält den Ring? Antwort:
+75cc64b31ff9554283f6	other_then_query	2	A	B hält den Stift. D hält den Schlüssel. B gibt den Stift an C. D gibt den Schlüssel an A. Wer hält den Schlüssel? Antwort:
+22b3fc860f8c2efe00c5	query_then_other	2	B	D hält den Stift. C hält den Schlüssel. D gibt den Stift an B. C gibt den Schlüssel an A. Wer hält den Stift? Antwort:
+4f20365e41103a7c49a1	copy	0	D	D hält den Ball. C hält den Ring. Wer hält den Ball? Antwort:
+d1532d78d2e67b2cbb35	copy	0	B	B hält den Ball. C hält den Ring. Wer hält den Ball? Antwort:
+f59f5759714a4cd9ed6a	other_then_query	2	D	B hält den Ring. A hält den Stift. B gibt den Ring an C. A gibt den Stift an D. Wer hält den Stift? Antwort:
+8c674fd5dad81e4c4cff	move_other	1	D	B hält den Ball. D hält den Ring. B gibt den Ball an C. Wer hält den Ring? Antwort:
+18ecac4e6f4f9aeba7a2	move_query	1	B	A hält den Stift. D hält den Schlüssel. A gibt den Stift an B. Wer hält den Stift? Antwort:
+4bb5b6c814ee45374b58	other_then_query	2	B	A hält den Ball. C hält den Ring. A gibt den Ball an D. C gibt den Ring an B. Wer hält den Ring? Antwort:
+fdef6aa4deeeb279a210	move_query	1	A	C hält den Stift. B hält den Schlüssel. C gibt den Stift an A. Wer hält den Stift? Antwort:
+7637fca4a2912754f476	query_then_other	2	D	C hält den Schlüssel. B hält den Ball. C gibt den Schlüssel an D. B gibt den Ball an A. Wer hält den Schlüssel? Antwort:

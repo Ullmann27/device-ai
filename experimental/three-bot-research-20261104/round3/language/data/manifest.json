@@ -1,0 +1,136 @@
+{
+  "schema": "lm1-single-binding-objective-v1",
+  "source": "new deterministic synthetic German data",
+  "noPreviousStudyDatasetImported": true,
+  "objects": {
+    "train": [
+      "Tasse",
+      "Buch",
+      "Mantel",
+      "Flasche",
+      "Hut",
+      "Teller",
+      "Schuh",
+      "Koffer",
+      "Lampe",
+      "Gabel",
+      "Löffel",
+      "Tuch",
+      "Kamm",
+      "Kerze",
+      "Seife",
+      "Topf"
+    ],
+    "dev": [
+      "Becher",
+      "Jacke",
+      "Dose",
+      "Pinsel",
+      "Schale",
+      "Besen",
+      "Mappe",
+      "Kiste"
+    ],
+    "test": [
+      "Wecker",
+      "Spiegel",
+      "Eimer",
+      "Decke",
+      "Hammer",
+      "Korb",
+      "Gürtel",
+      "Würfel"
+    ]
+  },
+  "templates": {
+    "owner_late": "Der Gegenstand {object} gehört Person {owner}.\nBesitzer:",
+    "owner_early": "Person {owner} besitzt den Gegenstand {object}.\nBesitzer:"
+  },
+  "counts": {
+    "train": 128,
+    "dev": 64,
+    "test": 64
+  },
+  "answerCounts": {
+    "train": {
+      "D": 32,
+      "A": 32,
+      "B": 32,
+      "C": 32
+    },
+    "dev": {
+      "C": 16,
+      "B": 16,
+      "D": 16,
+      "A": 16
+    },
+    "test": {
+      "D": 16,
+      "B": 16,
+      "C": 16,
+      "A": 16
+    }
+  },
+  "templateCounts": {
+    "train": {
+      "owner_late": 64,
+      "owner_early": 64
+    },
+    "dev": {
+      "owner_early": 32,
+      "owner_late": 32
+    },
+    "test": {
+      "owner_early": 32,
+      "owner_late": 32
+    }
+  },
+  "verifierChecks": {
+    "positive": 4,
+    "negative": 8,
+    "passed": true
+  },
+  "allLabelsVerified": true,
+  "scheduleSeeds": [
+    202611043,
+    202611044
+  ],
+  "examplesPerArm": 1024,
+  "eachTrainExampleOccurrences": 8,
+  "splitScope": "disjoint object words, shared grammar/labels; single binding copy only",
+  "sealedMeaning": "no model evaluation before all candidates and receipts are frozen; not encryption",
+  "files": {
+    "dev.jsonl": {
+      "sha256": "327f1c76fe2e3a09c09ff8b3976d8986b0e85c538c10682f30721a7f0032b872",
+      "bytes": 17520
+    },
+    "dev.tsv": {
+      "sha256": "4f83cd838c8691fb9e7a1cb2e5118974c273adf171f434647094f5fd6fee042b",
+      "bytes": 6864
+    },
+    "schedule-202611043.txt": {
+      "sha256": "d91fdd582d7cd88dfa0a4a128b62afec35c4517ebcf45f0d803fb26b23c568e4",
+      "bytes": 3216
+    },
+    "schedule-202611044.txt": {
+      "sha256": "9e8eefe1db6d181e952bb895c918180fe5c2b450013bfb50afc6e961c2be18df",
+      "bytes": 3216
+    },
+    "test.sealed.jsonl": {
+      "sha256": "9f267fdc8878bee70008826a6a1f8211bf857a1ad41da57fa143d741e859fbf2",
+      "bytes": 17640
+    },
+    "test.sealed.tsv": {
+      "sha256": "78db4ecd9a0b2ff01e7a3d5f4ec8a86372a6e2e33d390f1b418cee5e4b091bd9",
+      "bytes": 6968
+    },
+    "train.jsonl": {
+      "sha256": "4d6220b637896c1e936fda21099fc038a0f4c0f21912e1b4114c8ce858874df7",
+      "bytes": 34968
+    },
+    "train.tsv": {
+      "sha256": "cba4d4993b789c91b644168aa9a366cb51581d6707b5684eda085333a25a5ceb",
+      "bytes": 13672
+    }
+  }
+}

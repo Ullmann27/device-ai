@@ -1,0 +1,113 @@
+{
+  "schema": "continuum-autonomy-round2-v1",
+  "finished_at": "2026-11-04T19:16:27.777945+00:00",
+  "baseline_sha": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "source_object_repository": "/workspace/scratch/9d2785b5ab4e/continuum-research",
+  "source_directory": "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/runs/20261104T191615417409Z/pinned-source",
+  "source_files": 681,
+  "source_hashes_unchanged": true,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/9d2785b5ab4e/continuum-research",
+        "archive",
+        "--format=tar",
+        "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+        ".github/continuum",
+        "scripts"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "wall_seconds": 0.04805700399992929
+    },
+    {
+      "command": [
+        "rg",
+        "--files",
+        "-uuu",
+        "/workspace/scratch",
+        "-g",
+        "*.gguf",
+        "-g",
+        "*.litertlm",
+        "-g",
+        "*.safetensors",
+        "-g",
+        "llama-cli",
+        "-g",
+        "llama-completion",
+        "-g",
+        "llama-server",
+        "-g",
+        "libllama.so"
+      ],
+      "cwd": null,
+      "exit_code": 1,
+      "wall_seconds": 0.4475247179998405
+    },
+    {
+      "command": [
+        "ps",
+        "-eo",
+        "comm"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "wall_seconds": 0.0037775309992866823
+    },
+    {
+      "command": [
+        "git",
+        "-C",
+        "/workspace/scratch/9d2785b5ab4e/continuum-research",
+        "cat-file",
+        "-e",
+        "2a364005b52e3240eb799f86aea31be90b390b10^{commit}"
+      ],
+      "cwd": null,
+      "exit_code": 128,
+      "wall_seconds": 0.001716376998956548
+    },
+    {
+      "command": [
+        "node",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/runtime_preflight.mjs",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/runs/20261104T191615417409Z/pinned-source"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "wall_seconds": 0.06068954700094764
+    },
+    {
+      "command": [
+        "node",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/recall_scale.mjs",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/runs/20261104T191615417409Z/pinned-source",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/autonomy/runs/20261104T191615417409Z/tmp"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "wall_seconds": 11.715441862001171
+    }
+  ],
+  "total_wall_seconds": 12.359881143000166,
+  "runtime": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "evidence_class": "CONTRACT_TEST_SYNTHETIC_TECHNICAL_PROOFS",
+  "real_model_repair": "NOT_RUN_BLOCKED_LOCAL_MODEL_UNAVAILABLE",
+  "neural_training": "NOT_RUN",
+  "owner_job_execution": "NOT_RUN",
+  "device": "NOT_RUN",
+  "script_hashes": {
+    "run_experiment.py": "092597cecb63c27da63b7a3f8c90eec65b63114599010dc68fefb6f6ab8215a5",
+    "runtime_preflight.mjs": "4c4dab1662a2f9cad88a090a7119e23194b9cfe4b904a4ff20344226c6a6860b",
+    "recall_scale.mjs": "f2115f5d83dfd7c0e222876cc3f9d5304061435c4e3b3e23c5cac57bd720d0c9"
+  },
+  "passed": true,
+  "result_file": "recall.stdout.json",
+  "availability_file": "availability.json"
+}

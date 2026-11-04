@@ -1,0 +1,183 @@
+{
+  "schema": "lm1-state-binding-v1",
+  "seed": 2026110402,
+  "scheduleSeeds": [
+    202611041,
+    202611042
+  ],
+  "files": {
+    "dev.jsonl": {
+      "sha256": "4518676d2b7061c31b31fed9993e38d6eb5365aa11206219e339a908c94a91d8",
+      "bytes": 26435
+    },
+    "dev.tsv": {
+      "sha256": "76a886c42f219f6cfb4c10079ee7d1b452d94688b593654a38b97639d3d644ea",
+      "bytes": 6410
+    },
+    "schedule-202611041-curriculum.txt": {
+      "sha256": "b9cd1ec6198a1b4c5e2040b1b0a5dfec85f27e3963aa8e538354c236e558d3aa",
+      "bytes": 3876
+    },
+    "schedule-202611041-mixed.txt": {
+      "sha256": "d5129df06dda232d9d55d4da0faf2a3a2318cbb80326a4a75f2b432884d53602",
+      "bytes": 3876
+    },
+    "schedule-202611042-curriculum.txt": {
+      "sha256": "4dbbe179ffc6d460ccaab67979ea0a84c59820da17686469fe9a5941d4b283df",
+      "bytes": 3876
+    },
+    "schedule-202611042-mixed.txt": {
+      "sha256": "5a6452d29daf6449cbe893d415bf6705b8cf437912975ddfbb71817ee7257aa1",
+      "bytes": 3876
+    },
+    "test.sealed.jsonl": {
+      "sha256": "82561f849f9bdc842ea34335abbb1c6b9d0e96ab2b2031ec69957ba99f22562a",
+      "bytes": 56014
+    },
+    "test.sealed.tsv": {
+      "sha256": "7dec44ee52be205733012bd701aea66e6b0e00a44c5dd88b43bb7b6b63b7b0ad",
+      "bytes": 13806
+    },
+    "train.jsonl": {
+      "sha256": "daf356d4f984ffe0a775aa4330fa3c1131a395fd21cd1b11ecf0547a01dbcf9b",
+      "bytes": 292826
+    },
+    "train.tsv": {
+      "sha256": "fb56ed2f97bfc5c2a187aca6c8dcb113a03b51e0fec6fd0b583eba2905872b3f",
+      "bytes": 71996
+    }
+  },
+  "splits": {
+    "train": {
+      "count": 512,
+      "answers": {
+        "D": 128,
+        "A": 128,
+        "B": 128,
+        "C": 128
+      },
+      "families": {
+        "move_other": 96,
+        "twice_query": 64,
+        "other_then_query": 96,
+        "copy": 64,
+        "move_query": 96,
+        "query_then_other": 96
+      },
+      "objectPairs": [
+        [
+          "Ball",
+          "Ring"
+        ],
+        [
+          "Ring",
+          "Stift"
+        ],
+        [
+          "Stift",
+          "Schlüssel"
+        ],
+        [
+          "Schlüssel",
+          "Ball"
+        ]
+      ]
+    },
+    "dev": {
+      "count": 48,
+      "answers": {
+        "C": 12,
+        "D": 12,
+        "B": 12,
+        "A": 12
+      },
+      "families": {
+        "copy": 8,
+        "move_other": 8,
+        "twice_query": 8,
+        "move_query": 8,
+        "query_then_other": 8,
+        "other_then_query": 8
+      },
+      "objectPairs": [
+        [
+          "Ball",
+          "Stift"
+        ]
+      ]
+    },
+    "test": {
+      "count": 96,
+      "answers": {
+        "C": 24,
+        "A": 24,
+        "B": 24,
+        "D": 24
+      },
+      "families": {
+        "query_then_other": 16,
+        "move_query": 16,
+        "other_then_query": 16,
+        "copy": 16,
+        "twice_query": 16,
+        "move_other": 16
+      },
+      "objectPairs": [
+        [
+          "Ring",
+          "Schlüssel"
+        ]
+      ]
+    }
+  },
+  "verifierChecks": [
+    {
+      "case": "valid-0",
+      "pass": true
+    },
+    {
+      "case": "valid-1",
+      "pass": true
+    },
+    {
+      "case": "valid-2",
+      "pass": true
+    },
+    {
+      "case": "valid-3",
+      "pass": true
+    },
+    {
+      "case": "invalid-0",
+      "pass": true
+    },
+    {
+      "case": "invalid-1",
+      "pass": true
+    },
+    {
+      "case": "invalid-2",
+      "pass": true
+    },
+    {
+      "case": "invalid-3",
+      "pass": true
+    },
+    {
+      "case": "invalid-4",
+      "pass": true
+    },
+    {
+      "case": "invalid-5",
+      "pass": true
+    },
+    {
+      "case": "invalid-6",
+      "pass": true
+    }
+  ],
+  "wholePromptOverlap": false,
+  "objectPairOverlap": false,
+  "generatorSha256": "5a49abeb63e9ce18d7d829b11cd2298150d0107dd0f855acc3c534d4f88ec47f",
+  "oracleSha256": "e2e6f85dc93dae4e3d1029bb8cf38485a3734210ac29f49c138818a8c255e31e"
+}

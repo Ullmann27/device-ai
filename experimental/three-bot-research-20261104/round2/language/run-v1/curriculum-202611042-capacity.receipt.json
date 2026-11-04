@@ -1,0 +1,22 @@
+{
+  "label": "curriculum-202611042-capacity",
+  "argv": [
+    "java",
+    "-Xmx1024m",
+    "-XX:ActiveProcessorCount=2",
+    "-cp",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/9d2785b5ab4e/research/round2/language/run-v1/curriculum-202611042.lm1",
+    "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp"
+  ],
+  "wallSeconds": 0.5699779629994737,
+  "exitCode": 1,
+  "timedOut": false,
+  "timeoutSeconds": 60,
+  "stdout": "curriculum-202611042-capacity.stdout",
+  "stdoutSha256": "186d6346557f239eda0488a6c91ba2be21db80a11f6e533314accc945853e48a",
+  "stderr": "curriculum-202611042-capacity.stderr",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "completedUtc": "2026-11-04T19:25:51.187731+00:00"
+}

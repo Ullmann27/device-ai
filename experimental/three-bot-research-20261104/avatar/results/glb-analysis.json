@@ -1,0 +1,1278 @@
+{
+  "evidenceClass": "HOST_GEOMETRY_MEASUREMENT_NOT_DEVICE",
+  "asset": "source/p491/continuum-avatar.glb",
+  "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "bytes": 10165644,
+  "nodes": 31,
+  "meshes": 25,
+  "numpy": "2.3.5",
+  "primitives": [
+    {
+      "mesh": "FaceMesh",
+      "primitive": 0,
+      "vertices": 12980,
+      "triangles": 25924,
+      "targetNames": [
+        "SIL",
+        "PP",
+        "FF",
+        "TH",
+        "DD",
+        "KK",
+        "CH",
+        "SS",
+        "NN",
+        "RR",
+        "AA",
+        "E",
+        "I",
+        "O",
+        "U",
+        "BlinkLeft",
+        "BlinkRight",
+        "BrowUp",
+        "BrowDown",
+        "Smile",
+        "JawOpen"
+      ],
+      "boundsMetres": [
+        [
+          -0.25803142786026,
+          -2.887162224851636e-07,
+          -0.058718241751194
+        ],
+        [
+          0.25803142786026,
+          0.39267638325691223,
+          0.16772781312465668
+        ]
+      ],
+      "allFinite": true,
+      "targetDisplacementMm": {
+        "SIL": {
+          "max": 0.2749312242836188,
+          "rms": 0.039095202976432854,
+          "changedVertices": 1783
+        },
+        "PP": {
+          "max": 4.825197318544966,
+          "rms": 0.6793094135536352,
+          "changedVertices": 2123
+        },
+        "FF": {
+          "max": 2.63675990347871,
+          "rms": 0.6104336821717603,
+          "changedVertices": 3381
+        },
+        "TH": {
+          "max": 7.1380334880301834,
+          "rms": 1.6220299463350272,
+          "changedVertices": 3340
+        },
+        "DD": {
+          "max": 9.69572781822893,
+          "rms": 1.9633905043784423,
+          "changedVertices": 3386
+        },
+        "KK": {
+          "max": 11.687099370357368,
+          "rms": 2.661271988011362,
+          "changedVertices": 3337
+        },
+        "CH": {
+          "max": 6.106210808680488,
+          "rms": 1.4177580494589233,
+          "changedVertices": 3347
+        },
+        "SS": {
+          "max": 3.410408435968182,
+          "rms": 0.5831411139193361,
+          "changedVertices": 2381
+        },
+        "NN": {
+          "max": 4.254902892666682,
+          "rms": 0.9786553852098254,
+          "changedVertices": 3398
+        },
+        "RR": {
+          "max": 9.185790095349265,
+          "rms": 1.9898649537759874,
+          "changedVertices": 3357
+        },
+        "AA": {
+          "max": 26.442508723877335,
+          "rms": 5.894192508082533,
+          "changedVertices": 3399
+        },
+        "E": {
+          "max": 13.804460783870047,
+          "rms": 2.543569489226306,
+          "changedVertices": 3395
+        },
+        "I": {
+          "max": 10.9271734604326,
+          "rms": 1.7630430350132653,
+          "changedVertices": 3381
+        },
+        "O": {
+          "max": 16.43251534307943,
+          "rms": 3.4838459548503713,
+          "changedVertices": 3369
+        },
+        "U": {
+          "max": 14.510764989640707,
+          "rms": 2.531274475824786,
+          "changedVertices": 3353
+        },
+        "BlinkLeft": {
+          "max": 10.678027923057329,
+          "rms": 0.5052562943707792,
+          "changedVertices": 309
+        },
+        "BlinkRight": {
+          "max": 10.678027923057329,
+          "rms": 0.5052559576206855,
+          "changedVertices": 309
+        },
+        "BrowUp": {
+          "max": 2.5285546518797872,
+          "rms": 0.15441718924941808,
+          "changedVertices": 491
+        },
+        "BrowDown": {
+          "max": 2.918092513320247,
+          "rms": 0.15545108083975612,
+          "changedVertices": 420
+        },
+        "Smile": {
+          "max": 9.89384874183141,
+          "rms": 1.2131600225129344,
+          "changedVertices": 2437
+        },
+        "JawOpen": {
+          "max": 30.94476793591258,
+          "rms": 7.076626600728234,
+          "changedVertices": 3349
+        }
+      },
+      "openingProjectionDiagnostic": {
+        "SIL": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.001821942695060927,
+          "lipShapeResidualMm": {
+            "max": 0.2749312242836188,
+            "rms": 0.039095202976432854,
+            "changedVertices": 1783
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "PP": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.04037281280889744,
+          "lipShapeResidualMm": {
+            "max": 4.825197318544966,
+            "rms": 0.6793094135536352,
+            "changedVertices": 2123
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "FF": {
+          "authoredOpeningRatio": 0.075,
+          "fullVectorProjectionOntoJaw": 0.07618140812089187,
+          "lipShapeResidualMm": {
+            "max": 2.0475936178231997,
+            "rms": 0.28646537322399734,
+            "changedVertices": 2508
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "TH": {
+          "authoredOpeningRatio": 0.22499999999999998,
+          "fullVectorProjectionOntoJaw": 0.22594998095776933,
+          "lipShapeResidualMm": {
+            "max": 2.276565305016612,
+            "rms": 0.27265656193538323,
+            "changedVertices": 2356
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "DD": {
+          "authoredOpeningRatio": 0.25,
+          "fullVectorProjectionOntoJaw": 0.27337084945185347,
+          "lipShapeResidualMm": {
+            "max": 2.315093778783569,
+            "rms": 0.3738940951960176,
+            "changedVertices": 2583
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "KK": {
+          "authoredOpeningRatio": 0.37499999999999994,
+          "fullVectorProjectionOntoJaw": 0.3757686202633643,
+          "lipShapeResidualMm": {
+            "max": 0.8104518990761317,
+            "rms": 0.1057860092571182,
+            "changedVertices": 2260
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "CH": {
+          "authoredOpeningRatio": 0.18749999999999997,
+          "fullVectorProjectionOntoJaw": 0.16312959394271953,
+          "lipShapeResidualMm": {
+            "max": 5.109056096491017,
+            "rms": 0.8409068859775871,
+            "changedVertices": 2475
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "SS": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": 0.028293329437102818,
+          "lipShapeResidualMm": {
+            "max": 3.410408435968182,
+            "rms": 0.5831411139193361,
+            "changedVertices": 2381
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "NN": {
+          "authoredOpeningRatio": 0.13749999999999998,
+          "fullVectorProjectionOntoJaw": 0.1374727498616809,
+          "lipShapeResidualMm": {
+            "max": 0.8355250821465191,
+            "rms": 0.10650013026594028,
+            "changedVertices": 1915
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "RR": {
+          "authoredOpeningRatio": 0.27499999999999997,
+          "fullVectorProjectionOntoJaw": 0.2625987799934145,
+          "lipShapeResidualMm": {
+            "max": 4.358807966722193,
+            "rms": 0.7168926234961371,
+            "changedVertices": 2540
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "AA": {
+          "authoredOpeningRatio": 0.8125,
+          "fullVectorProjectionOntoJaw": 0.8319740379107128,
+          "lipShapeResidualMm": {
+            "max": 1.9292442375388568,
+            "rms": 0.31148221163355677,
+            "changedVertices": 2567
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "E": {
+          "authoredOpeningRatio": 0.2875,
+          "fullVectorProjectionOntoJaw": 0.3420323460866862,
+          "lipShapeResidualMm": {
+            "max": 5.401938274535984,
+            "rms": 0.8718726421307784,
+            "changedVertices": 2597
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "I": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.19900947215766002,
+          "lipShapeResidualMm": {
+            "max": 7.33117843077957,
+            "rms": 1.182906770219656,
+            "changedVertices": 2590
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "O": {
+          "authoredOpeningRatio": 0.44999999999999996,
+          "fullVectorProjectionOntoJaw": 0.41671655066326296,
+          "lipShapeResidualMm": {
+            "max": 11.374582564192302,
+            "rms": 1.869857809714652,
+            "changedVertices": 2587
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "U": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.09074633277042751,
+          "lipShapeResidualMm": {
+            "max": 14.895212830411873,
+            "rms": 2.4604300357574322,
+            "changedVertices": 2564
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        }
+      },
+      "jawReconstructedFromAAAndIResidualMm": {
+        "max": 0.052418618244408965,
+        "rms": 0.0039733177313887045,
+        "changedVertices": 1021
+      },
+      "EPredictedFromJawAndIResidualMm": {
+        "max": 0.03405793630873881,
+        "rms": 0.002837436260134651,
+        "changedVertices": 1040
+      },
+      "ppAtJawInput08": {
+        "p491VsP503PositionDifferenceMm": {
+          "max": 24.755814348730066,
+          "rms": 5.661301280582588,
+          "changedVertices": 3343
+        },
+        "maximumDifferenceVertexIndex": 4011,
+        "maximumDifferenceNeutralPositionMetres": [
+          0.0,
+          0.18320660293102264,
+          0.14626005291938782
+        ],
+        "meaning": "Maximum vertex movement, not measured aperture or lip contact distance",
+        "p491Weights": {
+          "PP": 1,
+          "JawOpen": 0.8
+        },
+        "p503Weights": {
+          "PP": 1,
+          "JawOpen": 0
+        },
+        "p491JawPitchDegrees": 9.6,
+        "p503JawPitchDegrees": 0
+      },
+      "synthetic500ConvexVisemePairs": {
+        "finite": true,
+        "maximumDisplacementMm": 34.59386716130369,
+        "seed": 491503,
+        "doesNotProve": "No self-intersection, lip contact, aesthetic or phoneme validity is asserted"
+      },
+      "skin": {
+        "maxWeightSumError": 0.0,
+        "usedJointIndices": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "mesh": "NeuralThreadsMesh",
+      "primitive": 0,
+      "vertices": 13389,
+      "triangles": 12912,
+      "targetNames": [
+        "SIL",
+        "PP",
+        "FF",
+        "TH",
+        "DD",
+        "KK",
+        "CH",
+        "SS",
+        "NN",
+        "RR",
+        "AA",
+        "E",
+        "I",
+        "O",
+        "U",
+        "BlinkLeft",
+        "BlinkRight",
+        "BrowUp",
+        "BrowDown",
+        "Smile",
+        "JawOpen"
+      ],
+      "boundsMetres": [
+        [
+          -0.25840508937835693,
+          -0.0008531801286153495,
+          -0.05950663611292839
+        ],
+        [
+          0.25866106152534485,
+          0.3934977948665619,
+          0.16802126169204712
+        ]
+      ],
+      "allFinite": true,
+      "targetDisplacementMm": {
+        "SIL": {
+          "max": 0.24683609534153475,
+          "rms": 0.019675377305356453,
+          "changedVertices": 756
+        },
+        "PP": {
+          "max": 4.623579832114917,
+          "rms": 0.33186797416934344,
+          "changedVertices": 957
+        },
+        "FF": {
+          "max": 2.596982847200193,
+          "rms": 0.3707232330427407,
+          "changedVertices": 2027
+        },
+        "TH": {
+          "max": 7.077525431509243,
+          "rms": 0.994510200657867,
+          "changedVertices": 2039
+        },
+        "DD": {
+          "max": 9.667652703311129,
+          "rms": 1.1720745363724703,
+          "changedVertices": 2069
+        },
+        "KK": {
+          "max": 11.570720556697832,
+          "rms": 1.6411734815229255,
+          "changedVertices": 2061
+        },
+        "CH": {
+          "max": 5.948283910982984,
+          "rms": 0.8349516352377673,
+          "changedVertices": 2046
+        },
+        "SS": {
+          "max": 3.399368214696948,
+          "rms": 0.3157979463996498,
+          "changedVertices": 1063
+        },
+        "NN": {
+          "max": 4.241637460758884,
+          "rms": 0.6042837032149511,
+          "changedVertices": 2040
+        },
+        "RR": {
+          "max": 9.060207654087016,
+          "rms": 1.2084024954494224,
+          "changedVertices": 2058
+        },
+        "AA": {
+          "max": 26.255750523004945,
+          "rms": 3.6062877780302425,
+          "changedVertices": 2093
+        },
+        "E": {
+          "max": 13.756141058057844,
+          "rms": 1.4728341615785068,
+          "changedVertices": 2080
+        },
+        "I": {
+          "max": 10.8281557593891,
+          "rms": 0.952387148349592,
+          "changedVertices": 2053
+        },
+        "O": {
+          "max": 16.176587439699368,
+          "rms": 2.036634142795801,
+          "changedVertices": 2076
+        },
+        "U": {
+          "max": 13.620531155457723,
+          "rms": 1.1041596914554586,
+          "changedVertices": 2037
+        },
+        "BlinkLeft": {
+          "max": 10.605655768425352,
+          "rms": 0.24792453821167884,
+          "changedVertices": 54
+        },
+        "BlinkRight": {
+          "max": 0.7978778371720866,
+          "rms": 0.019810140704997002,
+          "changedVertices": 39
+        },
+        "BrowUp": {
+          "max": 2.490995078593802,
+          "rms": 0.08867446571051597,
+          "changedVertices": 222
+        },
+        "BrowDown": {
+          "max": 2.639026768597793,
+          "rms": 0.12603671145097536,
+          "changedVertices": 168
+        },
+        "Smile": {
+          "max": 9.422289685658848,
+          "rms": 0.5263604412726811,
+          "changedVertices": 1296
+        },
+        "JawOpen": {
+          "max": 30.848345363755474,
+          "rms": 4.367016710665817,
+          "changedVertices": 2075
+        }
+      },
+      "openingProjectionDiagnostic": {
+        "SIL": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.0010006206288677411,
+          "lipShapeResidualMm": {
+            "max": 0.24683609534153475,
+            "rms": 0.019675377305356453,
+            "changedVertices": 756
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "PP": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.02225724654795617,
+          "lipShapeResidualMm": {
+            "max": 4.623579832114917,
+            "rms": 0.33186797416934344,
+            "changedVertices": 957
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "FF": {
+          "authoredOpeningRatio": 0.075,
+          "fullVectorProjectionOntoJaw": 0.07631242304730415,
+          "lipShapeResidualMm": {
+            "max": 1.9215826642932725,
+            "rms": 0.1625051335151236,
+            "changedVertices": 1125
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "TH": {
+          "authoredOpeningRatio": 0.22499999999999998,
+          "fullVectorProjectionOntoJaw": 0.22623464839688906,
+          "lipShapeResidualMm": {
+            "max": 2.2171016269401784,
+            "rms": 0.11399087988238193,
+            "changedVertices": 978
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "DD": {
+          "authoredOpeningRatio": 0.25,
+          "fullVectorProjectionOntoJaw": 0.2650686074021188,
+          "lipShapeResidualMm": {
+            "max": 2.270409240763827,
+            "rms": 0.19531019431971838,
+            "changedVertices": 1134
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "KK": {
+          "authoredOpeningRatio": 0.37499999999999994,
+          "fullVectorProjectionOntoJaw": 0.3756169770349943,
+          "lipShapeResidualMm": {
+            "max": 0.7647979066137227,
+            "rms": 0.05281601115590548,
+            "changedVertices": 1050
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "CH": {
+          "authoredOpeningRatio": 0.18749999999999997,
+          "fullVectorProjectionOntoJaw": 0.17388814436352948,
+          "lipShapeResidualMm": {
+            "max": 4.913790470888331,
+            "rms": 0.35218068731202323,
+            "changedVertices": 1140
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "SS": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": 0.018892353413131887,
+          "lipShapeResidualMm": {
+            "max": 3.399368214696948,
+            "rms": 0.3157979463996498,
+            "changedVertices": 1063
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "NN": {
+          "authoredOpeningRatio": 0.13749999999999998,
+          "fullVectorProjectionOntoJaw": 0.13765075632942322,
+          "lipShapeResidualMm": {
+            "max": 0.8340249334991187,
+            "rms": 0.06172667315204809,
+            "changedVertices": 783
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "RR": {
+          "authoredOpeningRatio": 0.27499999999999997,
+          "fullVectorProjectionOntoJaw": 0.2685171995206838,
+          "lipShapeResidualMm": {
+            "max": 4.157841219972248,
+            "rms": 0.293261875634789,
+            "changedVertices": 1174
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "AA": {
+          "authoredOpeningRatio": 0.8125,
+          "fullVectorProjectionOntoJaw": 0.8250559378115049,
+          "lipShapeResidualMm": {
+            "max": 1.8920007164598114,
+            "rms": 0.162698489528932,
+            "changedVertices": 1116
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "E": {
+          "authoredOpeningRatio": 0.2875,
+          "fullVectorProjectionOntoJaw": 0.3226628014720699,
+          "lipShapeResidualMm": {
+            "max": 5.297620224568153,
+            "rms": 0.4553361128649761,
+            "changedVertices": 1173
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "I": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.17272334815544302,
+          "lipShapeResidualMm": {
+            "max": 7.189606450005771,
+            "rms": 0.6176799011059371,
+            "changedVertices": 1167
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "O": {
+          "authoredOpeningRatio": 0.44999999999999996,
+          "fullVectorProjectionOntoJaw": 0.43252293757722193,
+          "lipShapeResidualMm": {
+            "max": 10.853279206228253,
+            "rms": 0.7655106201641497,
+            "changedVertices": 1206
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "U": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.10781794203859627,
+          "lipShapeResidualMm": {
+            "max": 14.183076428955289,
+            "rms": 1.0015517340597504,
+            "changedVertices": 1176
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        }
+      },
+      "jawReconstructedFromAAAndIResidualMm": {
+        "max": 0.049402789184806464,
+        "rms": 0.0028058470194884514,
+        "changedVertices": 445
+      },
+      "EPredictedFromJawAndIResidualMm": {
+        "max": 0.03114185823199857,
+        "rms": 0.0019532898370841338,
+        "changedVertices": 444
+      },
+      "ppAtJawInput08": {
+        "p491VsP503PositionDifferenceMm": {
+          "max": 24.67867629100438,
+          "rms": 3.4936133685326545,
+          "changedVertices": 2073
+        },
+        "maximumDifferenceVertexIndex": 7533,
+        "maximumDifferenceNeutralPositionMetres": [
+          0.00354358134791255,
+          0.18448948860168457,
+          0.14781267940998077
+        ],
+        "meaning": "Maximum vertex movement, not measured aperture or lip contact distance",
+        "p491Weights": {
+          "PP": 1,
+          "JawOpen": 0.8
+        },
+        "p503Weights": {
+          "PP": 1,
+          "JawOpen": 0
+        },
+        "p491JawPitchDegrees": 9.6,
+        "p503JawPitchDegrees": 0
+      },
+      "synthetic500ConvexVisemePairs": {
+        "finite": true,
+        "maximumDisplacementMm": 34.44478675297011,
+        "seed": 491503,
+        "doesNotProve": "No self-intersection, lip contact, aesthetic or phoneme validity is asserted"
+      },
+      "skin": {
+        "maxWeightSumError": 0.0,
+        "usedJointIndices": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "mesh": "NeuralThreadsMesh",
+      "primitive": 1,
+      "vertices": 13389,
+      "triangles": 13188,
+      "targetNames": [
+        "SIL",
+        "PP",
+        "FF",
+        "TH",
+        "DD",
+        "KK",
+        "CH",
+        "SS",
+        "NN",
+        "RR",
+        "AA",
+        "E",
+        "I",
+        "O",
+        "U",
+        "BlinkLeft",
+        "BlinkRight",
+        "BrowUp",
+        "BrowDown",
+        "Smile",
+        "JawOpen"
+      ],
+      "boundsMetres": [
+        [
+          -0.25840508937835693,
+          -0.0008531801286153495,
+          -0.05950663611292839
+        ],
+        [
+          0.25866106152534485,
+          0.3934977948665619,
+          0.16802126169204712
+        ]
+      ],
+      "allFinite": true,
+      "targetDisplacementMm": {
+        "SIL": {
+          "max": 0.24683609534153475,
+          "rms": 0.019675377305356453,
+          "changedVertices": 756
+        },
+        "PP": {
+          "max": 4.623579832114917,
+          "rms": 0.33186797416934344,
+          "changedVertices": 957
+        },
+        "FF": {
+          "max": 2.596982847200193,
+          "rms": 0.3707232330427407,
+          "changedVertices": 2027
+        },
+        "TH": {
+          "max": 7.077525431509243,
+          "rms": 0.994510200657867,
+          "changedVertices": 2039
+        },
+        "DD": {
+          "max": 9.667652703311129,
+          "rms": 1.1720745363724703,
+          "changedVertices": 2069
+        },
+        "KK": {
+          "max": 11.570720556697832,
+          "rms": 1.6411734815229255,
+          "changedVertices": 2061
+        },
+        "CH": {
+          "max": 5.948283910982984,
+          "rms": 0.8349516352377673,
+          "changedVertices": 2046
+        },
+        "SS": {
+          "max": 3.399368214696948,
+          "rms": 0.3157979463996498,
+          "changedVertices": 1063
+        },
+        "NN": {
+          "max": 4.241637460758884,
+          "rms": 0.6042837032149511,
+          "changedVertices": 2040
+        },
+        "RR": {
+          "max": 9.060207654087016,
+          "rms": 1.2084024954494224,
+          "changedVertices": 2058
+        },
+        "AA": {
+          "max": 26.255750523004945,
+          "rms": 3.6062877780302425,
+          "changedVertices": 2093
+        },
+        "E": {
+          "max": 13.756141058057844,
+          "rms": 1.4728341615785068,
+          "changedVertices": 2080
+        },
+        "I": {
+          "max": 10.8281557593891,
+          "rms": 0.952387148349592,
+          "changedVertices": 2053
+        },
+        "O": {
+          "max": 16.176587439699368,
+          "rms": 2.036634142795801,
+          "changedVertices": 2076
+        },
+        "U": {
+          "max": 13.620531155457723,
+          "rms": 1.1041596914554586,
+          "changedVertices": 2037
+        },
+        "BlinkLeft": {
+          "max": 10.605655768425352,
+          "rms": 0.24792453821167884,
+          "changedVertices": 54
+        },
+        "BlinkRight": {
+          "max": 0.7978778371720866,
+          "rms": 0.019810140704997002,
+          "changedVertices": 39
+        },
+        "BrowUp": {
+          "max": 2.490995078593802,
+          "rms": 0.08867446571051597,
+          "changedVertices": 222
+        },
+        "BrowDown": {
+          "max": 2.639026768597793,
+          "rms": 0.12603671145097536,
+          "changedVertices": 168
+        },
+        "Smile": {
+          "max": 9.422289685658848,
+          "rms": 0.5263604412726811,
+          "changedVertices": 1296
+        },
+        "JawOpen": {
+          "max": 30.848345363755474,
+          "rms": 4.367016710665817,
+          "changedVertices": 2075
+        }
+      },
+      "openingProjectionDiagnostic": {
+        "SIL": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.0010006206288677411,
+          "lipShapeResidualMm": {
+            "max": 0.24683609534153475,
+            "rms": 0.019675377305356453,
+            "changedVertices": 756
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "PP": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": -0.02225724654795617,
+          "lipShapeResidualMm": {
+            "max": 4.623579832114917,
+            "rms": 0.33186797416934344,
+            "changedVertices": 957
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "FF": {
+          "authoredOpeningRatio": 0.075,
+          "fullVectorProjectionOntoJaw": 0.07631242304730415,
+          "lipShapeResidualMm": {
+            "max": 1.9215826642932725,
+            "rms": 0.1625051335151236,
+            "changedVertices": 1125
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "TH": {
+          "authoredOpeningRatio": 0.22499999999999998,
+          "fullVectorProjectionOntoJaw": 0.22623464839688906,
+          "lipShapeResidualMm": {
+            "max": 2.2171016269401784,
+            "rms": 0.11399087988238193,
+            "changedVertices": 978
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "DD": {
+          "authoredOpeningRatio": 0.25,
+          "fullVectorProjectionOntoJaw": 0.2650686074021188,
+          "lipShapeResidualMm": {
+            "max": 2.270409240763827,
+            "rms": 0.19531019431971838,
+            "changedVertices": 1134
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "KK": {
+          "authoredOpeningRatio": 0.37499999999999994,
+          "fullVectorProjectionOntoJaw": 0.3756169770349943,
+          "lipShapeResidualMm": {
+            "max": 0.7647979066137227,
+            "rms": 0.05281601115590548,
+            "changedVertices": 1050
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "CH": {
+          "authoredOpeningRatio": 0.18749999999999997,
+          "fullVectorProjectionOntoJaw": 0.17388814436352948,
+          "lipShapeResidualMm": {
+            "max": 4.913790470888331,
+            "rms": 0.35218068731202323,
+            "changedVertices": 1140
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "SS": {
+          "authoredOpeningRatio": 0,
+          "fullVectorProjectionOntoJaw": 0.018892353413131887,
+          "lipShapeResidualMm": {
+            "max": 3.399368214696948,
+            "rms": 0.3157979463996498,
+            "changedVertices": 1063
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "NN": {
+          "authoredOpeningRatio": 0.13749999999999998,
+          "fullVectorProjectionOntoJaw": 0.13765075632942322,
+          "lipShapeResidualMm": {
+            "max": 0.8340249334991187,
+            "rms": 0.06172667315204809,
+            "changedVertices": 783
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "RR": {
+          "authoredOpeningRatio": 0.27499999999999997,
+          "fullVectorProjectionOntoJaw": 0.2685171995206838,
+          "lipShapeResidualMm": {
+            "max": 4.157841219972248,
+            "rms": 0.293261875634789,
+            "changedVertices": 1174
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "AA": {
+          "authoredOpeningRatio": 0.8125,
+          "fullVectorProjectionOntoJaw": 0.8250559378115049,
+          "lipShapeResidualMm": {
+            "max": 1.8920007164598114,
+            "rms": 0.162698489528932,
+            "changedVertices": 1116
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "E": {
+          "authoredOpeningRatio": 0.2875,
+          "fullVectorProjectionOntoJaw": 0.3226628014720699,
+          "lipShapeResidualMm": {
+            "max": 5.297620224568153,
+            "rms": 0.4553361128649761,
+            "changedVertices": 1173
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "I": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.17272334815544302,
+          "lipShapeResidualMm": {
+            "max": 7.189606450005771,
+            "rms": 0.6176799011059371,
+            "changedVertices": 1167
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "O": {
+          "authoredOpeningRatio": 0.44999999999999996,
+          "fullVectorProjectionOntoJaw": 0.43252293757722193,
+          "lipShapeResidualMm": {
+            "max": 10.853279206228253,
+            "rms": 0.7655106201641497,
+            "changedVertices": 1206
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        },
+        "U": {
+          "authoredOpeningRatio": 0.125,
+          "fullVectorProjectionOntoJaw": 0.10781794203859627,
+          "lipShapeResidualMm": {
+            "max": 14.183076428955289,
+            "rms": 1.0015517340597504,
+            "changedVertices": 1176
+          },
+          "speechDeltaAtOrAboveY026mMm": {
+            "max": 0.0,
+            "rms": 0.0,
+            "changedVertices": 0
+          }
+        }
+      },
+      "jawReconstructedFromAAAndIResidualMm": {
+        "max": 0.049402789184806464,
+        "rms": 0.0028058470194884514,
+        "changedVertices": 445
+      },
+      "EPredictedFromJawAndIResidualMm": {
+        "max": 0.03114185823199857,
+        "rms": 0.0019532898370841338,
+        "changedVertices": 444
+      },
+      "ppAtJawInput08": {
+        "p491VsP503PositionDifferenceMm": {
+          "max": 24.67867629100438,
+          "rms": 3.4936133685326545,
+          "changedVertices": 2073
+        },
+        "maximumDifferenceVertexIndex": 7533,
+        "maximumDifferenceNeutralPositionMetres": [
+          0.00354358134791255,
+          0.18448948860168457,
+          0.14781267940998077
+        ],
+        "meaning": "Maximum vertex movement, not measured aperture or lip contact distance",
+        "p491Weights": {
+          "PP": 1,
+          "JawOpen": 0.8
+        },
+        "p503Weights": {
+          "PP": 1,
+          "JawOpen": 0
+        },
+        "p491JawPitchDegrees": 9.6,
+        "p503JawPitchDegrees": 0
+      },
+      "synthetic500ConvexVisemePairs": {
+        "finite": true,
+        "maximumDisplacementMm": 34.44478675297011,
+        "seed": 491503,
+        "doesNotProve": "No self-intersection, lip contact, aesthetic or phoneme validity is asserted"
+      },
+      "skin": {
+        "maxWeightSumError": 0.0,
+        "usedJointIndices": [
+          0,
+          1,
+          2
+        ]
+      }
+    }
+  ],
+  "totalTriangles": 57000,
+  "primitiveVertexCountSum": 42292,
+  "uniquePositionAccessorVertexCount": 28903,
+  "vertexCountNote": "Primitive sum counts shared NeuralThreads POSITION accessor twice; unique accessor count removes that reuse, not coincident vertices.",
+  "bundledNotice": {
+    "recordedSha256": "6b199c5989640b516b8c45401ececeadb8ed1baae1d1e1ab5db20d19e966aa1e",
+    "recordedBytes": 8690616,
+    "shaMatchesActual": false,
+    "bytesMatchActual": false
+  },
+  "skinJoints": [
+    {
+      "skin": "BustSkin",
+      "nodes": [
+        "AvatarRoot",
+        "Neck",
+        "Head"
+      ]
+    }
+  ],
+  "jawNode": {
+    "name": "Jaw",
+    "translation": [
+      0,
+      0.042999991178512574,
+      0.009999999776482582
+    ],
+    "children": [
+      11,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ]
+  },
+  "durationSeconds": 1.0661503530000118
+}

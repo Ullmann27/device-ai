@@ -1,0 +1,147 @@
+{
+  "schema": "lm1-state-binding-v1",
+  "createdUtc": "2026-11-04T19:20:29.362760+00:00",
+  "sourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "sourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+  },
+  "files": {
+    "PROTOCOL.md": "b2b002a0af0ab90598fafaae05471a900eb3094b52aba14a479597abb659bba2",
+    "oracle.py": "e2e6f85dc93dae4e3d1029bb8cf38485a3734210ac29f49c138818a8c255e31e",
+    "generate_data.py": "5a49abeb63e9ce18d7d829b11cd2298150d0107dd0f855acc3c534d4f88ec47f",
+    "StateLearningStudy.kt": "e893118937d7056fd7aaf444b366ec33322d3704a9477cf729c931d749aa1eb4",
+    "run_study.py": "d7ad2379629228b1457b4150ce9403ec815671d65c23850def16ece1c68abe83",
+    "analyze_study.py": "7fa9ecd66d00027c81d1355f7dd880b896d819289bb9afd259982cf3e95deda2",
+    "source-check.json": "5a446fc1010d76808a8a239a44525e9d019a99f801e24e8e1855aa4e8ced51ce",
+    "data/dev.jsonl": "4518676d2b7061c31b31fed9993e38d6eb5365aa11206219e339a908c94a91d8",
+    "data/dev.tsv": "76a886c42f219f6cfb4c10079ee7d1b452d94688b593654a38b97639d3d644ea",
+    "data/manifest.json": "8869d8b5d46987b8220fbf9ac2c272844317e35ec2783b876d92a3059df9fe26",
+    "data/schedule-202611041-curriculum.txt": "b9cd1ec6198a1b4c5e2040b1b0a5dfec85f27e3963aa8e538354c236e558d3aa",
+    "data/schedule-202611041-mixed.txt": "d5129df06dda232d9d55d4da0faf2a3a2318cbb80326a4a75f2b432884d53602",
+    "data/schedule-202611042-curriculum.txt": "4dbbe179ffc6d460ccaab67979ea0a84c59820da17686469fe9a5941d4b283df",
+    "data/schedule-202611042-mixed.txt": "5a6452d29daf6449cbe893d415bf6705b8cf437912975ddfbb71817ee7257aa1",
+    "data/test.sealed.jsonl": "82561f849f9bdc842ea34335abbb1c6b9d0e96ab2b2031ec69957ba99f22562a",
+    "data/test.sealed.tsv": "7dec44ee52be205733012bd701aea66e6b0e00a44c5dd88b43bb7b6b63b7b0ad",
+    "data/train.jsonl": "daf356d4f984ffe0a775aa4330fa3c1131a395fd21cd1b11ecf0547a01dbcf9b",
+    "data/train.tsv": "fb56ed2f97bfc5c2a187aca6c8dcb113a03b51e0fec6fd0b583eba2905872b3f",
+    "build/state-study.jar": "746f73f1edd2a83e53b8f01cc42fa7f328c1b1d174e66b3bb88e4c1ac407a2ea"
+  },
+  "baselineSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+  "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+  "compilerSha256": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad",
+  "stdlibSha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+  "preflight": {
+    "kind": "preflight",
+    "parameters": 132160,
+    "config": "LmConfig(arch=MINGRU, vocab=512, dim=64, layers=2, heads=4, context=256, mlp=256)",
+    "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "rows": 512,
+    "minSequenceTargets": 35,
+    "maxSequenceTargets": 79,
+    "targetsPerEpoch": 29637,
+    "answerTokenLengths": {
+      "A": [
+        1
+      ],
+      "B": [
+        1
+      ],
+      "C": [
+        1
+      ],
+      "D": [
+        1
+      ]
+    },
+    "trainSha256": "fb56ed2f97bfc5c2a187aca6c8dcb113a03b51e0fec6fd0b583eba2905872b3f",
+    "prefixStable": true,
+    "promptTruncation": false
+  },
+  "preflightReceipts": [
+    {
+      "label": "compile",
+      "argv": [
+        "java",
+        "-Xmx1024m",
+        "-XX:ActiveProcessorCount=2",
+        "-cp",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/ant-1.10.14.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/ant-antlr-1.10.14.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/ant-junit-1.10.14.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/ant-launcher-1.10.14.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/antlr4-runtime-4.7.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/asm-9.7.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/asm-commons-9.7.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/asm-tree-9.7.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/commons-codec-1.16.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/commons-compress-1.26.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/commons-io-2.15.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/commons-lang-2.6.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/commons-lang3-3.14.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/error_prone_annotations-2.29.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/failureaccess-1.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/fastutil-8.5.2-min.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-linux-aarch64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-linux-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-osx-aarch64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-osx-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-windows-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-windows-amd64-min-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-windows-i386-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/file-events-windows-i386-min-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-api-metadata-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-base-asm-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-base-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-base-services-groovy-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-cache-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-cache-base-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-cache-local-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-cache-packaging-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-cache-spi-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-events-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-operations-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-operations-trace-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-option-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-process-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-build-state-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-cli-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-client-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-concurrent-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-configuration-problems-base-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-core-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-core-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-daemon-main-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-daemon-protocol-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-daemon-server-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-daemon-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-core-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-evaluator-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-internal-utils-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-provider-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-declarative-dsl-tooling-models-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-enterprise-logging-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-enterprise-operations-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-enterprise-workers-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-execution-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-file-collections-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-file-operations-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-file-temp-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-file-watching-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-files-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-functional-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-gradle-cli-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-gradle-cli-main-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-hashing-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-input-tracking-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-installation-beacon-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-instrumentation-agent-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-instrumentation-reporting-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-internal-instrumentation-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-io-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-java-api-extractor-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-jvm-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-kotlin-dsl-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-kotlin-dsl-extensions-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-kotlin-dsl-shared-runtime-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-kotlin-dsl-tooling-models-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-launcher-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-logging-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-logging-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-messaging-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-model-core-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-model-groovy-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-native-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-normalization-java-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-persistent-cache-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-problems-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-problems-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-process-memory-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-process-services-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-resources-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-runtime-api-info-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-serialization-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-service-lookup-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-service-provider-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-service-registry-builder-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-service-registry-impl-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-snapshots-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-stdlib-java-extensions-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-stdlib-kotlin-extensions-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-time-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-toolchains-jvm-shared-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-tooling-api-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-tooling-api-provider-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-worker-main-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gradle-wrapper-shared-8.11.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-ant-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-astbuilder-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-console-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-datetime-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-dateutil-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-docgenerator-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-groovydoc-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-json-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-nio-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-sql-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-swing-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-templates-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-test-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/groovy-xml-3.0.22.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/gson-2.10.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/guava-32.1.2-jre.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/jackson-core-2.16.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/jansi-1.18.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/javaparser-core-3.17.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/javax.inject-1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/jcl-over-slf4j-1.7.36.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/jsr305-3.0.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/jul-to-slf4j-1.7.36.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-assignment-compiler-plugin-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-compiler-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-daemon-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-reflect-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-sam-with-receiver-compiler-plugin-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-script-runtime-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-scripting-common-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-scripting-compiler-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-scripting-compiler-impl-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-scripting-jvm-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-metadata-jvm-0.5.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-serialization-core-jvm-1.6.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-serialization-json-jvm-1.6.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kryo-2.24.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/log4j-over-slf4j-1.7.36.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/minlog-1.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-freebsd-amd64-libcpp-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-aarch64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-aarch64-ncurses5-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-aarch64-ncurses6-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-amd64-ncurses5-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-linux-amd64-ncurses6-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-osx-aarch64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-osx-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-windows-amd64-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-windows-amd64-min-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-windows-i386-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/native-platform-windows-i386-min-0.22-milestone-26.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/objenesis-2.6.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/qdox-1.12.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/slf4j-api-1.7.36.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/tomlj-1.0.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/trove4j-1.0.20200330.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/xml-apis-1.4.01.jar",
+        "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+        "-no-stdlib",
+        "-no-reflect",
+        "-jvm-target",
+        "17",
+        "-classpath",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+        "-d",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/weight/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/language/StateLearningStudy.kt"
+      ],
+      "wallSeconds": 20.43649176300096,
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 120,
+      "stdout": "compile.stdout",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "compile.stderr",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "completedUtc": "2026-11-04T19:20:28.744882+00:00"
+    },
+    {
+      "label": "preflight",
+      "argv": [
+        "java",
+        "-Xmx1024m",
+        "-XX:ActiveProcessorCount=2",
+        "-cp",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/language/build/state-study.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+        "at.heinz.deviceai.learning.lm.StateLearningStudy",
+        "preflight",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-baseline.lm1",
+        "/workspace/scratch/9d2785b5ab4e/research/sources/lm1-original-inputs/lm1-tokenizer.lmbp",
+        "/workspace/scratch/9d2785b5ab4e/research/round2/language/data/train.tsv"
+      ],
+      "wallSeconds": 0.6156723010008136,
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 60,
+      "stdout": "preflight.stdout",
+      "stdoutSha256": "c86a596ae57588bf77b30c4ab869ed138f0be557295e9df7aeb37914a0c76aa6",
+      "stderr": "preflight.stderr",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "completedUtc": "2026-11-04T19:20:29.361009+00:00"
+    }
+  ],
+  "arms": [
+    "mixed",
+    "curriculum"
+  ],
+  "seeds": [
+    202611041,
+    202611042
+  ],
+  "stepsPerArm": 256,
+  "batchSize": 4,
+  "learningRate": 0.001,
+  "threads": 2,
+  "trainingStarted": false,
+  "preTrainingAmendment": {
+    "reason": "Revalidate all five models and every post-capacity receipt/log before freeze and before each evaluation; require complete model/evaluation set in analyzer.",
+    "trainingStarted": false,
+    "dataProtocolHyperparametersAndHarnessUnchanged": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "sourceSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "atlasPixels": 2048,
+  "variants": [
+    {
+      "id": "v1_soft_flow",
+      "label": "V1 | dunkle Augen, ruhige Konturen",
+      "lineSpacingMetres": 0.0028,
+      "lineSigmaMetres": 0.00020,
+      "lineGain": 0.68,
+      "rimGain": 0.32,
+      "rimExponent": 3.2,
+      "emissiveStrength": 1.7,
+      "baseRgb8": [5, 9, 24],
+      "violetRgb8": [115, 62, 235],
+      "cyanRgb8": [38, 166, 245],
+      "scleraBaseLinear": [0.004, 0.012, 0.024, 1],
+      "irisBaseLinear": [0.008, 0.065, 0.11, 1],
+      "irisEmissionLinear": [0.003, 0.022, 0.04],
+      "eyeRoughness": 0.55,
+      "skinRoughness": 0.48,
+      "physicalThreadAlpha": 0
+    },
+    {
+      "id": "v2_fine_flow",
+      "label": "V2 | dunkle Augen, feinere Konturen",
+      "lineSpacingMetres": 0.0020,
+      "lineSigmaMetres": 0.00014,
+      "lineGain": 0.76,
+      "rimGain": 0.40,
+      "rimExponent": 4.2,
+      "emissiveStrength": 2.25,
+      "baseRgb8": [3, 6, 17],
+      "violetRgb8": [120, 66, 240],
+      "cyanRgb8": [40, 178, 250],
+      "scleraBaseLinear": [0.002, 0.006, 0.014, 1],
+      "irisBaseLinear": [0.004, 0.040, 0.075, 1],
+      "irisEmissionLinear": [0.0015, 0.014, 0.027],
+      "eyeRoughness": 0.60,
+      "skinRoughness": 0.52,
+      "physicalThreadAlpha": 0
+    }
+  ]
+}

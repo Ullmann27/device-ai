@@ -1,0 +1,161 @@
+{
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "renderer": "Blender 4.3.2 Cycles CPU",
+  "samples": 24,
+  "cpuThreads": 2,
+  "pixels": [
+    512,
+    576
+  ],
+  "sameCameraLightsExposureAndSeed": true,
+  "camera": {
+    "projection": "orthographic",
+    "scaleMetres": 0.28,
+    "targetCanonical": [
+      0,
+      0.275,
+      0.06
+    ],
+    "positionCanonical": [
+      0,
+      0.275,
+      0.96
+    ]
+  },
+  "noBloomOrImagePostProcessing": true,
+  "poseBasis": "Moderate AA .38, measured-jaw input modeled as .42; shared-opening compensation .42-.38*.8125=.11125",
+  "frames": [
+    {
+      "variant": "original",
+      "variantLabel": "Original GLB",
+      "pose": "neutral",
+      "poseLabel": "Neutral",
+      "file": "renders/original-neutral.png",
+      "sha256": "03aa271d9626e43d55f5ead07bc47ef86573e1fbbc1044b1baf87d7c01a8adb7",
+      "assetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "weights": {},
+      "jawPitchDegrees": 0,
+      "durationSeconds": 10.729124726000009
+    },
+    {
+      "variant": "original",
+      "variantLabel": "Original GLB",
+      "pose": "speech",
+      "poseLabel": "Moderates AA",
+      "file": "renders/original-speech.png",
+      "sha256": "d3b04c72abf86702825d6283e9f510424eef22314ce9f70f9788538a66c4cc75",
+      "assetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "weights": {
+        "AA": 0.38,
+        "JawOpen": 0.11125
+      },
+      "jawPitchDegrees": 5.04,
+      "durationSeconds": 8.4253337859991
+    },
+    {
+      "variant": "original",
+      "variantLabel": "Original GLB",
+      "pose": "blink",
+      "poseLabel": "Blink",
+      "file": "renders/original-blink.png",
+      "sha256": "25be7bfa07be3820745fd7cf64df1a91a59a0bad09384d228ee6ccb5437a46b0",
+      "assetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "weights": {
+        "BlinkLeft": 1,
+        "BlinkRight": 1
+      },
+      "jawPitchDegrees": 0,
+      "durationSeconds": 7.467529276998903
+    },
+    {
+      "variant": "v1_soft_flow",
+      "variantLabel": "V1 | dunkle Augen, ruhige Konturen",
+      "pose": "neutral",
+      "poseLabel": "Neutral",
+      "file": "renders/v1_soft_flow-neutral.png",
+      "sha256": "45f25417bdc1d378fb8f8709474eec73e725d8675144c633214541f3d4673e7d",
+      "assetSha256": "ecead099e3e8312e8211dbfd48228a0af258836476691ce3302a58cf0dc0d6e3",
+      "weights": {},
+      "jawPitchDegrees": 0,
+      "durationSeconds": 8.003541848000168
+    },
+    {
+      "variant": "v1_soft_flow",
+      "variantLabel": "V1 | dunkle Augen, ruhige Konturen",
+      "pose": "speech",
+      "poseLabel": "Moderates AA",
+      "file": "renders/v1_soft_flow-speech.png",
+      "sha256": "e97c94a52ffdbc551a420752a2a1ef4a20ad34a9ce92778bb4500f261b9241ff",
+      "assetSha256": "ecead099e3e8312e8211dbfd48228a0af258836476691ce3302a58cf0dc0d6e3",
+      "weights": {
+        "AA": 0.38,
+        "JawOpen": 0.11125
+      },
+      "jawPitchDegrees": 5.04,
+      "durationSeconds": 7.955954500999724
+    },
+    {
+      "variant": "v1_soft_flow",
+      "variantLabel": "V1 | dunkle Augen, ruhige Konturen",
+      "pose": "blink",
+      "poseLabel": "Blink",
+      "file": "renders/v1_soft_flow-blink.png",
+      "sha256": "36aac5475b081a0d0fbf61a16f5a5dd3cf5779e30ffdb74b8406c4628e47b6f5",
+      "assetSha256": "ecead099e3e8312e8211dbfd48228a0af258836476691ce3302a58cf0dc0d6e3",
+      "weights": {
+        "BlinkLeft": 1,
+        "BlinkRight": 1
+      },
+      "jawPitchDegrees": 0,
+      "durationSeconds": 8.725067510000372
+    },
+    {
+      "variant": "v2_fine_flow",
+      "variantLabel": "V2 | dunkle Augen, feinere Konturen",
+      "pose": "neutral",
+      "poseLabel": "Neutral",
+      "file": "renders/v2_fine_flow-neutral.png",
+      "sha256": "aafc3a838e7d58f8b869f31c423c3b0eb0e5cc66c9b459030277d1ab6266f15f",
+      "assetSha256": "60e4107e4577070ef123652501956e6cd41f678c8cd4b65f405ab19d73a07a14",
+      "weights": {},
+      "jawPitchDegrees": 0,
+      "durationSeconds": 9.781508349000433
+    },
+    {
+      "variant": "v2_fine_flow",
+      "variantLabel": "V2 | dunkle Augen, feinere Konturen",
+      "pose": "speech",
+      "poseLabel": "Moderates AA",
+      "file": "renders/v2_fine_flow-speech.png",
+      "sha256": "a682f1de3a018b5b333a038a89f8a36f2d8c8a5b068e13e7d6372e38a99a3a3d",
+      "assetSha256": "60e4107e4577070ef123652501956e6cd41f678c8cd4b65f405ab19d73a07a14",
+      "weights": {
+        "AA": 0.38,
+        "JawOpen": 0.11125
+      },
+      "jawPitchDegrees": 5.04,
+      "durationSeconds": 12.316177086999232
+    },
+    {
+      "variant": "v2_fine_flow",
+      "variantLabel": "V2 | dunkle Augen, feinere Konturen",
+      "pose": "blink",
+      "poseLabel": "Blink",
+      "file": "renders/v2_fine_flow-blink.png",
+      "sha256": "e46641dab8bb5483831ae34729e66a6e6ce107962e4295aaf1a255d6dbc6a16d",
+      "assetSha256": "60e4107e4577070ef123652501956e6cd41f678c8cd4b65f405ab19d73a07a14",
+      "weights": {
+        "BlinkLeft": 1,
+        "BlinkRight": 1
+      },
+      "jawPitchDegrees": 0,
+      "durationSeconds": 8.37777118700069
+    }
+  ],
+  "durationSeconds": 83.07826919699983,
+  "limits": [
+    "Static poses, not live speech",
+    "No Fold7 or Filament execution",
+    "Reference likeness is not certified"
+  ]
+}

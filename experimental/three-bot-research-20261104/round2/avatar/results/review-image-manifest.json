@@ -1,0 +1,45 @@
+{
+  "files": [
+    {
+      "file": "renders/variant-contact.png",
+      "bytes": 3174782,
+      "pixels": [
+        1600,
+        2044
+      ],
+      "sha256": "f887dd771e462d92fa95f5c6fabdb568f2e74885bb0bae4310fb47eb44994a25",
+      "jpegQuality": null
+    },
+    {
+      "file": "renders/variant-contact.jpg",
+      "bytes": 281266,
+      "pixels": [
+        1200,
+        1533
+      ],
+      "sha256": "25f61c68ab163a107ac787a3f10ffd7aaa8a2f35bd0bf06e337d3423e324e505",
+      "jpegQuality": 85
+    },
+    {
+      "file": "renders/reference-neutral-comparison.png",
+      "bytes": 940512,
+      "pixels": [
+        1680,
+        566
+      ],
+      "sha256": "1ff8e5b932b298d04337adc31a237f6b95a90a9c447468c5bbf6df286798f138",
+      "jpegQuality": null
+    },
+    {
+      "file": "renders/reference-neutral-comparison.jpg",
+      "bytes": 93205,
+      "pixels": [
+        1260,
+        425
+      ],
+      "sha256": "268227a822c022d857782d41da122e783ed08ff46a33690156b3fcaee2c15224",
+      "jpegQuality": 85
+    }
+  ],
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE"
+}

@@ -1,0 +1,126 @@
+{
+  "evidenceClass": "HOST_JVM_ACTUAL_SOURCE_SYNTHETIC_INPUT_NOT_DEVICE",
+  "snapshots": {
+    "p491": {
+      "compileSeconds": 6.776325167000323,
+      "probeSeconds": 0.24604044999978214,
+      "compileCommand": [
+        "java",
+        "-cp",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-compiler-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-reflect-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-script-runtime-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/trove4j-1.0.20200330.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar",
+        "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+        "-no-stdlib",
+        "-no-reflect",
+        "-classpath",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-reflect-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-script-runtime-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/trove4j-1.0.20200330.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar",
+        "-jvm-target",
+        "17",
+        "-d",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/tmp/p491-probe.jar",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/scripts/AvatarGlbContractNamesOnly.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/scripts/HostProbe.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/AvatarMorphMapper.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/AvatarContract.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/TtsHologramSignal.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p491/HologramAudio.kt"
+      ],
+      "observed": {
+        "aaJawWeight": 0.0,
+        "aaJawPitchDegrees": 9.749999,
+        "settledPpJawWeightAtInput08": 0.8,
+        "settledPpJawPitchDegreesAtInput08": 9.6,
+        "sameTimestampMaximumWeightChange": 0.857143,
+        "rapidSamples": 10000,
+        "maximumVisemeWeightSum": 0.99928254,
+        "maximumJawPitchDegrees": 11.999685,
+        "syntheticPlaybackAnchorMillis": 5000,
+        "levelAtAnchor": 0.25,
+        "level100msAfterAnchor": 0.75,
+        "cancellationAndMouthNeutral": true,
+        "physicalPlaybackMeasured": false,
+        "assertions": 20017
+      }
+    },
+    "p503": {
+      "compileSeconds": 6.960232311999789,
+      "probeSeconds": 0.19518640699971002,
+      "compileCommand": [
+        "java",
+        "-cp",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-compiler-embeddable-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-reflect-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-script-runtime-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/trove4j-1.0.20200330.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar",
+        "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+        "-no-stdlib",
+        "-no-reflect",
+        "-classpath",
+        "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-reflect-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-script-runtime-2.0.20.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/trove4j-1.0.20200330.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar",
+        "-jvm-target",
+        "17",
+        "-d",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/tmp/p503-probe.jar",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/scripts/AvatarGlbContractNamesOnly.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/scripts/HostProbe.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p503/AvatarMorphMapper.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p503/AvatarContract.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p503/TtsHologramSignal.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p503/HologramAudio.kt",
+        "/workspace/scratch/9d2785b5ab4e/research/avatar/source/p503/AvatarIdleMotion.kt"
+      ],
+      "observed": {
+        "aaJawWeight": 0.0,
+        "aaJawPitchDegrees": 9.749999,
+        "settledPpJawWeightAtInput08": 0.0,
+        "settledPpJawPitchDegreesAtInput08": 0.0,
+        "sameTimestampMaximumWeightChange": 0.0,
+        "rapidSamples": 10000,
+        "maximumVisemeWeightSum": 0.99928254,
+        "maximumJawPitchDegrees": 11.999685,
+        "syntheticPlaybackAnchorMillis": 5000,
+        "levelAtAnchor": 0.25,
+        "level100msAfterAnchor": 0.75,
+        "cancellationAndMouthNeutral": true,
+        "physicalPlaybackMeasured": false,
+        "assertions": 20017
+      }
+    }
+  },
+  "timeoutsSeconds": {
+    "compile": 120,
+    "probe": 30
+  },
+  "excluded": [
+    "Android GLB contract/parser",
+    "Filament native code",
+    "AudioTrack/speaker/camera",
+    "APK/Android lifecycle"
+  ],
+  "compilerJars": [
+    {
+      "name": "kotlin-compiler-embeddable-2.0.20.jar",
+      "sha256": "a3604bf350c8bcce27102158bbb383fa4d1814bc486aaed59f278eada51ff6ad"
+    },
+    {
+      "name": "kotlin-stdlib-2.0.20.jar",
+      "sha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006"
+    },
+    {
+      "name": "kotlin-reflect-2.0.20.jar",
+      "sha256": "18f451e6b4b7bd1d1f9d60849c3cbf160e115302f97a2008c190d505c439c670"
+    },
+    {
+      "name": "kotlin-script-runtime-2.0.20.jar",
+      "sha256": "fe97002a6798f7207564648919d6eeccfb338b95dc04b48886d856655bc64a4e"
+    },
+    {
+      "name": "trove4j-1.0.20200330.jar",
+      "sha256": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d"
+    },
+    {
+      "name": "annotations-24.0.1.jar",
+      "sha256": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35"
+    },
+    {
+      "name": "kotlinx-coroutines-core-jvm-1.6.4.jar",
+      "sha256": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be"
+    }
+  ]
+}
