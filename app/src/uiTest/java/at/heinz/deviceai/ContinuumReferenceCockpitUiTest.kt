@@ -448,7 +448,10 @@ class ContinuumReferenceCockpitUiTest {
         measure(root, width, height)
         settle()
         measure(root, width, height)
-        root.requestLayout()
+        val railViewport = field(activity, "conversationRail") as? View
+        val layoutOwner = railViewport?.parent as? View ?: root
+        val beforeFollowup = geometry(layoutOwner)
+        layoutOwner.requestLayout()
         advanceFrames(32)
         val rail = field(activity, "railView") as? View
         val navigation = if (rail != null) {
@@ -469,7 +472,7 @@ class ContinuumReferenceCockpitUiTest {
             1, candidates.size)
         val back = candidates.single()
         assertTrue("The current return route belongs to this decor", descendants(root).contains(back))
-        assertMinimumTarget(back, "Current Home return at $viewport")
+        assertMinimumTarget(back, "Current Home return at $viewport; beforeFollowup=$beforeFollowup")
         tap(root, back)
         measure(root, root.width, root.height)
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
