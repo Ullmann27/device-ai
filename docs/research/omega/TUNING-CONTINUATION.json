@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "READY_FOR_NEXT_RUN",
-  "owner": null,
-  "leaseExpiresAtUtc": null,
-  "updatedAtUtc": "2026-11-04T21:56:41.791652+00:00",
+  "status": "R4_SOURCE_INSPECTION_AND_PREREGISTRATION",
+  "owner": "tuning-automation-r4-20261104T2224Z",
+  "leaseExpiresAtUtc": "2026-11-04T23:09:12.992Z",
+  "updatedAtUtc": "2026-11-04T22:24:12.993Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "Read fresh PR/head/ownership; acquire lease; inspect new bounded candidates sequentially; preserve every prior receipt",
+  "next": "Inspect encodeWord, compile source-bound original, freeze paired host cases, first A/A control, then one behavior-preserving candidate, parity and one A/B timing; archive any negative result",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -103,5 +103,25 @@
     "No newly spawned subagents",
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
-  ]
+  ],
+  "activeRound": "R4",
+  "r4": {
+    "target": "LmBpeTokenizer.encodeWord",
+    "stage": "PREREGISTERED",
+    "sourceHeadAtAcquisition": "2cee96fbe849d0fd79d055af56dcb7286c718377",
+    "sourceBlobSha": "2e773ac829a29f8c1567c5e5632960ae25b5a2d5",
+    "hypothesis": "Replace mutable boxed-Int lists and per-merge ArrayLists with a fixed primitive IntArray plus stable in-place left-to-right compaction, retaining rank/tie/UTF-8/cache and serialized vocabulary identity.",
+    "runPolicy": "One Kotlin/JDK host A/A before edit, one A/B after candidate, 9 alternating pairs after 4 warmup batches; no repeated timings solely for a better result; 6 cases including empty, bytes ASCII, bytes Unicode, learned repetition, learned unique, learned Unicode, plus long word. Abort on host load > available CPUs; one unchanged environment retry only.",
+    "acceptance": "Exact baseline tokens on cold/warm, decoded UTF-8 output, serialize/sha256, cache/output isolation, concurrent read-only and non-word/token-boundary cases; measured allocation lower in target workloads without unexplained material CPU regression or control loss. Kotlin-host only, no Android/Gradle claim.",
+    "relevantExperiments": [
+      "EXP-05",
+      "EXP-12"
+    ],
+    "constraints": [
+      "no training outside deterministic vocabulary fixture",
+      "no changed checkpoint or model weights",
+      "no third-party API",
+      "no other branches"
+    ]
+  }
 }
