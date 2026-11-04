@@ -1,13 +1,15 @@
 {
   "inputLocal": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
-  "candidateLocal": "f0cd3f21ed9c14b84975e37d32a39c3cc3ba690f",
-  "candidatePublic": "1070b10df50025828a9fd2b18bf1c187c094979b",
-  "appTree": "5dbfffdc8292ad1fce2799f5f1c98175a8d1b369",
+  "candidateLocal": "c5e1a4f5cd8fd2c414cbac9d18a2cd7a9e563756",
+  "candidatePublic": "4a60c758fd31f5436401769d9ed91da646de815c",
+  "appTree": "33f71427f63730aa56d4be838787620817f69f22",
   "productionFiles": {
-    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "0b19ae8a75727c80be3cef424674fd9c34e54418c395410e6e04b154c6d08e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "03a439cb730fe517e480b271089126d5a08fbe2366c41f9c6ea93573b8581a84",
     "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt": "69e10868d7ad9384868204f08478148db76e414c1ccf412452e1ee8c110bd8fe"
   },
   "gitDiffCheck": "PASS for production/test source; raw logs preserved verbatim",
   "noSchemaOrPermissionChanges": true,
-  "apkBuilt": false
+  "apkBuilt": false,
+  "originalFailingOraclesUnchanged": true,
+  "androidGate": "100 PASS / 0 FAIL / 0 SKIP; NewApi 0; source unchanged"
 }

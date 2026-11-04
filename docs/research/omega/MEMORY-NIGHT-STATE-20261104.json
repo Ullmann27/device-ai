@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "taskId": "MEMORY-PRIVACY-R4-20261104",
-  "status": "COMPONENT_AND_BRIDGE_HOST_PASS_SDK_RERUN_PENDING",
+  "status": "SPECIALIST_GATE_PASS_READY_FOR_C1",
   "branch": "fix/continuum-memory-privacy-r4-20261104",
   "inputPublicCommit": "eadc72bac95f8b1a554a59e5baff624977b09f73",
   "inputLocalCommit": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
@@ -22,9 +22,10 @@
   "integratorPr": 519,
   "newSubagents": 0,
   "next": [
-    "run 15-class SDK/UI/NewApi gate on current source under existing locks",
-    "C1 review of raw-field ordering and credential-format UI handling",
-    "integrated common gates before APK"
+    "C1 intake of #529 without importing unrelated branch state",
+    "C1 mapping of UNTERMINATED_CREDENTIAL_VALUE to a clear context-format message",
+    "common integrated Node/backend/Android/UI/model/device gates",
+    "APK after common acceptance; preserve existing release authority"
   ],
   "newRuntimeResults": [
     {
@@ -180,9 +181,9 @@
   },
   "apkBuilt": false,
   "deviceTested": false,
-  "latestSourcePublicCommit": "a717658b91c2f9703d8b6ab36bcdc7eb914cc589",
-  "latestSourceLocalCommit": "ce1a4be00ae551df8e7a6d2799e161b30d961034",
-  "latestSourceTree": "6facb6326bc37efc2b40bcec4502105ffd62268a",
+  "latestSourcePublicCommit": "4a60c758fd31f5436401769d9ed91da646de815c",
+  "latestSourceLocalCommit": "c5e1a4f5cd8fd2c414cbac9d18a2cd7a9e563756",
+  "latestSourceTree": "cf3f45bb3c59aa9bfc20d063c896d4d1d8a7d95d",
   "latestAppTree": "33f71427f63730aa56d4be838787620817f69f22",
   "bridgeHost": {
     "tests": 26,
@@ -193,20 +194,39 @@
     "sdkBaseSource": "36a7fe1fe0a69d62427e1cac6b32326cf8b9c071"
   },
   "android": {
-    "previousSource": "36a7fe1fe0a69d62427e1cac6b32326cf8b9c071",
-    "tests": 92,
-    "passed": 91,
-    "failures": 1,
+    "tests": 100,
+    "passed": 100,
+    "failures": 0,
     "skipped": 0,
-    "lint": "NOT_RUN",
-    "failure": "lost negation after sanitized newline; now repaired in host tests",
-    "currentSource": "a717658b91c2f9703d8b6ab36bcdc7eb914cc589",
-    "currentStatus": "NOT_RUN_SHARED_BUILD_LOCK_BUSY"
+    "lint": "NewApi 0",
+    "currentSource": "4a60c758fd31f5436401769d9ed91da646de815c",
+    "currentStatus": "PASS",
+    "historicalFailure": {
+      "previousSource": "36a7fe1fe0a69d62427e1cac6b32326cf8b9c071",
+      "tests": 92,
+      "passed": 91,
+      "failures": 1,
+      "skipped": 0,
+      "lint": "NOT_RUN",
+      "failure": "lost negation after sanitized newline; now repaired in host tests",
+      "currentSource": "a717658b91c2f9703d8b6ab36bcdc7eb914cc589",
+      "currentStatus": "NOT_RUN_SHARED_BUILD_LOCK_BUSY"
+    },
+    "sourceUnchanged": true,
+    "rawEvidence": "docs/evidence/memory-privacy-r4-20261104/android-final"
   },
   "limitations": [
     "classification requires explicit sensitive flag; no retrospective reclassification",
     "bounded credential recognizer; no universal secret detection",
     "benchmark measures private redactor only, not final whole context or model latency",
     "no AndroidKeyStore, native GPU, voice/model or device acceptance"
-  ]
+  ],
+  "milestones": [
+    "complete explicit and quoted credential redaction",
+    "sensitive device classification precedence",
+    "measured redactor allocation/CPU improvement on assignment-free text",
+    "raw-field negation and evidence-frame preservation with actual SDK/Activity bridge gate"
+  ],
+  "lastVerifiedAtUtc": "2026-11-04T22:10:40.079736+00:00",
+  "avoidRepeat": "Completed component gates need not be rerun unchanged; inspect current C1/source and remaining actual failures first."
 }

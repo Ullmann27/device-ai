@@ -1,6 +1,6 @@
 # Memory privacy R4 — sequential continuation
 
-Status: **Credential/privacy/framing fixes host-verified; current SDK rerun pending**. Existing #522 remains frozen for
+Status: **Specialist SDK/UI/NewApi gate PASS; ready for C1 intake**. Existing #522 remains frozen for
 C1 intake; this is a separate stacked specialist branch.
 
 ## Input and ownership
@@ -174,3 +174,39 @@ existing locks. Then publish complete raw receipts and give C1 the final source
 and evidence. No prior PASS transfers to a later source tree. The parent #522
 remains frozen; C1 has independently passed its two slices (23 each) and the
 separate #524 layout slice (7), without a combined end-to-end or APK claim.
+
+## Final checkpoint — current SDK/UI gate PASS
+
+The renewed gate completed successfully on **4a60c758fd31f5436401769d9ed91da646de815c**
+(local c5e1a4f5cd8fd2c414cbac9d18a2cd7a9e563756), complete tree
+cf3f45bb3c59aa9bfc20d063c896d4d1d8a7d95d, app tree
+33f71427f63730aa56d4be838787620817f69f22. This supersedes the pending SDK status
+above. Result: **100 PASS / 0 FAIL / 0 ERROR / 0 SKIP across 15 suites**, Gradle
+exit 0, **NewApi-only lint 0 issues**, 137.786 seconds. Both shared build locks
+were acquired and released normally. Source inventories before and after are
+identical. The original failing integration/framing tests are unchanged.
+
+Complete raw evidence: `docs/evidence/memory-privacy-r4-20261104/android-final/`.
+Its manifest seals the archive, every raw receipt, all 15 JUnit suites and the
+exact tested source. The source hash inventory was independently reread against
+the checkout, and every archived member was rehashed after packaging. This is
+an evidence audit by the same working agent, not an invented external C2 review.
+The 67 component and 26 host-composition results overlap this gate; do not add
+counts. Earlier 92-case FAIL and blocked attempts remain preserved.
+
+Four bounded milestones are complete: credential recognition, sensitivity
+precedence, measured redactor optimization, and correct per-field framing plus
+SDK-verified memory-to-orb/attached-Activity flow. Only AiContextCompiler.kt and
+MemoryEcology.kt are changed in production relative to frozen #522; source
+hashes are in scope-audit.json. No model weights, avatar/renderer production,
+common Activity/factory/speech/worker, build configuration, permissions or
+memory storage schema were changed.
+
+C1 must still review/intake #529, provide the common UI clarification for the
+new credential-format failure and execute its complete combined gates. This
+specialist result is not C1 overall acceptance, full Activity onCreate/onDestroy,
+AndroidKeyStore validation, live native GPU, actual model/voice quality, physical
+phone acceptance, APK build, signing or installation. The hourly continuation
+remains enabled from 00:30 Europe/Vienna on 5 November; it must read the current
+C1 and handoff and work on genuinely remaining milestones, respecting existing
+claims and locks. It does not represent continuous execution between runs.
