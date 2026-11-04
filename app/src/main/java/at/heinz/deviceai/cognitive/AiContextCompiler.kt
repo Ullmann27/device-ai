@@ -318,7 +318,7 @@ class AiContextCompiler(
 
     private fun redactSecrets(text: String): String {
         val assignments = if ('=' in text || ':' in text) Regex(
-            """(?i)\b(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
+            """(?i)\b(password|passwd|(?:access|refresh|session|auth)[_-]token|(?:client|app)[_-]secret|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\b["']?[ \t]*[:=][ \t]*"""
         ).findAll(text) else emptySequence()
         var out: StringBuilder? = null
         var copiedUntil = 0
@@ -357,7 +357,7 @@ class AiContextCompiler(
             copiedUntil = valueEnd
         }
         val assigned = out?.append(text, copiedUntil, text.length)?.toString() ?: text
-        return assigned.replace(Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
+        return assigned.replace(Regex("(?i)\\bbearer[ \\t]+[A-Za-z0-9._~+/=-]{8,}"), "Bearer [REDACTED]")
     }
 
     private fun utf8Size(value: String): Int = value.toByteArray(Charsets.UTF_8).size
