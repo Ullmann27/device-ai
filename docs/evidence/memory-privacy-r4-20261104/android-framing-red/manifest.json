@@ -1,0 +1,35 @@
+{
+  "sourceLocal": "e510ce5fb415ed07577c79922ca26e715148e92f",
+  "sourcePublic": "36a7fe1fe0a69d62427e1cac6b32326cf8b9c071",
+  "tree": "24d8eb09a7de68af95f7f3a83d5caf993099c1c8",
+  "archiveSha256": "3d919d9473f3dc2562a1093a8fecbe72b6b41726fc65855b99d5cc928e550fb2",
+  "files": {
+    "result.json": "f713874f9e2b9e02b1fe77ea20d8bd3f39e72024b8e9afad7b28d25f9b6ccc37",
+    "gradle.log": "cb4b5d5d2f6f9acf812cc6623ff6a8b69392a106ff8738ea4d55e21b6e2db07a",
+    "source-before.json": "b688f721dbdeb3dbc9c64c31e59c708c49e287aac243a5b1deba015d5fd331cb",
+    "source-after.json": "b688f721dbdeb3dbc9c64c31e59c708c49e287aac243a5b1deba015d5fd331cb",
+    "bounded-tests.init.gradle": "83f907c5612259debeddfccabba952e2b1f9a5714bb1c7042cf449f17ceee69c",
+    "junit/TEST-at.heinz.deviceai.MemoryRecallActivityUiTest.xml": "6fa9ccfa04ede22410168ef4718aef0464e34f9e6b8cda0bd7110818f67b1c02",
+    "junit/TEST-at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest.xml": "968d0f5d8a2c95a493d5f017b8216458d3027384bcc0dd80873f44534d61e5d9",
+    "junit/TEST-at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest.xml": "11f1d56a05a6dea569d2013e1c8adf683b27ad911d60d4708922c90bc92dd568",
+    "junit/TEST-at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest.xml": "5e4c17ee738e3575f5e72c1de5b36954aa0446d9487e4911cfab4123393c82d9",
+    "junit/TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml": "6c4eb1455174eb9e70add4f2f5decf581a31509b417e7af262600a59cd04cdc0",
+    "junit/TEST-at.heinz.deviceai.cognitive.AiContextIntegrityTest.xml": "b223ba45f7954e9a4208411c36db1015448ac1c17a0e741e037ab30fc945d0e9",
+    "junit/TEST-at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.xml": "e2bd23d1655d30df3d87c4a1d4f6ea1fce59ab50f5a3b4e3b8736b38fbe95996",
+    "junit/TEST-at.heinz.deviceai.cognitive.ContextCredentialHoldoutTest.xml": "d382c8f5639a8ce880d4029c983deacb455d5e91bb0238673321feca2c077ba6",
+    "junit/TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml": "b656002ce58c6b8537432ee6f7bea66881af0e1296f1d6d2d53f10a0d278ab2f",
+    "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.xml": "4c8164127948cb5ae710cfb1c55a1dc8a494198504094d9c885e2e0fe7f4580f",
+    "junit/TEST-at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.xml": "d26ea150bbdcc6ae7123a9445c1d7def54bd64b35c9f9df63bfd9c8eed7ff82d",
+    "junit/TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml": "f1ea61d629dbf2d770788a979729887d9eb6e609af80d41ee94b7947e4cb4a66",
+    "junit/TEST-at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.xml": "5c1ded2deef46460bf97ab629e8d1ae927a536ac7b8c9074436c9bf84fe4e30c",
+    "junit/TEST-at.heinz.deviceai.cognitive.MemoryRecallObservationTest.xml": "2d0b4c4a1d8bbff64302fe0214d717ab8ed00e37b529f0b07d509e1de251664b"
+  },
+  "junit": {
+    "errors": 0,
+    "failures": 1,
+    "skipped": 0,
+    "suites": 14,
+    "tests": 92
+  },
+  "lint": "NOT_RUN after test failure"
+}
