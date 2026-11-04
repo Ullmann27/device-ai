@@ -1,7 +1,9 @@
 package at.heinz.deviceai.cognitive
 
-/** Android EXTRA_PREFER_OFFLINE is advisory, never a network permission or offline proof.
- * The actual UI uses on-device ASR only; cloud audio needs a separate explicit per-use grant. */
+/** Android EXTRA_PREFER_OFFLINE is advisory, never a network permission or offline proof, so the
+ * legacy SpeechRecognizer is never used. The UI uses only real on-device ASR (API 31+, see
+ * LocalSpeechEngine); below API 31 speech input is unavailable. There is no automatic cloud
+ * substitute on any API level; cloud audio would need a separate explicit per-use grant. */
 internal object LocalSpeechInputPolicy {
     enum class Failure { NO_MATCH, NO_INPUT, PERMISSION, SERVICE_UNAVAILABLE, LANGUAGE_UNSUPPORTED,
         LANGUAGE_UNAVAILABLE, BUSY, AUDIO, NETWORK, SERVICE_FAILURE, START_FAILED, TIMEOUT, CANCELLED }
