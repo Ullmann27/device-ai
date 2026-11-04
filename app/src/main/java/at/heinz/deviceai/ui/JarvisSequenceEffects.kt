@@ -44,6 +44,8 @@ class JarvisSequenceEffects {
     /** Avatar centre for the question pills, as fractions of the overlay. */
     var avatarX = .5f
     var avatarY = .40f
+    /** Glow level; set to [JarvisDesign.Glow.OFF] for power save / reduced effects. */
+    var glow: JarvisDesign.Glow = JarvisDesign.Glow.NORMAL
 
     /**
      * Muster F: 3-D mail envelope out of depth (0.5 s), flap opens (0.3 s), the document slides up and laser lines
@@ -58,7 +60,54 @@ class JarvisSequenceEffects {
     fun questionPills(options: List<String>, nowMillis: Long) {
         pills = Pills(options.take(6).map { clip(it, 32) }, nowMillis); lastNow = nowMillis
     }
-    fun clearPills() { pills = null }
+    fun clearPills() { pills = null; answerPills = emptyList() }
+
+    /** Muster G with Kern's [at.heinz.deviceai.cockpit.AnswerPill]s: labels from the safe gate, disabled ones marked. */
+    private var answerPills: List<at.heinz.deviceai.cockpit.AnswerPill> = emptyList()
+    fun answerPills(pills: List<at.heinz.deviceai.cockpit.AnswerPill>, nowMillis: Long) {
+        answerPills = pills.take(6); questionPills(pillLabels(answerPills), nowMillis)
+    }
+
+    data class PillBox(val first: Float, val second: Float, val third: Float, val fourth: Float)
+
+    /** Landed bounds per pill index (left, top, right, bottom) in overlay pixels. */
+    fun pillBounds(w: Float, h: Float, nowMillis: Long): Map<Int, PillBox> {
+        val pl = pills ?: return emptyMap()
+        return pl.items.mapIndexedNotNull { i, text ->
+            val g = pillGeometry(i, text, pillWidths[text] ?: estimateWidth(text, w), w, h, nowMillis - pl.at)
+            if (g == null) null else i to PillBox(g.x - g.pw / 2f, g.y - PILL_HALF_H, g.x + g.pw / 2f, g.y + PILL_HALF_H)
+        }.toMap()
+    }
+
+    /** Tap → pill, only when landed and enabled; the caller forwards it to PillActionGate.request (never executes). */
+    fun pillAt(x: Float, y: Float, w: Float, h: Float, nowMillis: Long): at.heinz.deviceai.cockpit.AnswerPill? {
+        val pl = pills ?: return null
+        for ((i, b) in pillBounds(w, h, nowMillis)) {
+            val landed = nowMillis - pl.at - JarvisMotion.staggerStart(i) >= JarvisMotion.Presets.pill(JarvisMotion.Direction.LEFT).durationMs
+            val pill = answerPills.getOrNull(i) ?: continue
+            if (landed && pill.enabled && x in b.first..b.third && y in b.second..b.fourth) return pill
+        }
+        return null
+    }
+
+    private val pillWidths = HashMap<String, Float>()
+    private fun estimateWidth(text: String, w: Float) = min(text.length * 7.5f + 28f, w * .44f)
+
+    private class PillGeo(val x: Float, val y: Float, val pw: Float, val t: Float)
+    private fun pillGeometry(i: Int, text: String, pw: Float, w: Float, h: Float, sinceStart: Long): PillGeo? {
+        val left = i % 2 == 0; val row = i / 2
+        val ax = w * avatarX; val ay = h * avatarY
+        val fx = if (left) ax - w * .2f - pw / 2f + row * 6f else ax + w * .2f + pw / 2f - row * 6f
+        val fy = ay - 40f + row * 46f + (if (left) 0f else 20f)
+        val fxc = fx.coerceIn(pw / 2f + 4f, w - pw / 2f - 4f)
+        val spec = JarvisMotion.Presets.pill(if (left) JarvisMotion.Direction.LEFT else JarvisMotion.Direction.RIGHT)
+        val el = sinceStart - JarvisMotion.staggerStart(i)
+        if (el < 0) return null
+        val t = (el.toFloat() / spec.durationMs).coerceIn(0f, 1f)
+        val startX = if (left) -pw else w + pw
+        val float = if (t >= 1f) sin(el / 700f + i * 1.7f) * 1f else 0f   // offset floating ~1 px
+        return PillGeo(startX + (fxc - startX) * spec.easing(t), fy + float, pw, t)
+    }
 
     /** Muster H: alarm (overload/threat) – 2 px shake, glow x3, binary cascade. Host may apply [shakeOffsetX]/[shakeOffsetY]. */
     fun alarm(nowMillis: Long, durationMs: Long = 2400L) { alarmAt = nowMillis; alarmMs = durationMs.coerceIn(300L, 10_000L) }
@@ -368,7 +417,9 @@ class JarvisSequenceEffects {
         }
     }
 
-    private val mailRed = Fill.Solid(0xffea4335.toInt())
+    // F envelope object colours: NO JarvisDesign token yet (Gmail red / paper are not in the ref5 table) –
+    // requested from Welten-Optik (#479); kept as the only literals here until the measured table lands.
+    private val mailRed = Fill.Solid(MAIL_RED)
     private val paper = Fill.Solid(0xfff2f6fb.toInt())
     private val paperShade = Fill.Solid(0xffcfd8e6.toInt())
     private val flapPath = VectorPath()
@@ -376,13 +427,12 @@ class JarvisSequenceEffects {
     private fun drawEnvelope(p: ContinuumPainter, w: Float, h: Float, now: Long) {
         val env = envelope ?: return
         val el = now - env.at
-        val fin = JarvisMotion.frame(JarvisMotion.Presets.envelope, el)
-        val scale = if (fin.done) 1f else fin.scale
-        val flap = JarvisMotion.envelopeFlap(el)
+        val pose = envelopePose(el, 1f)
+        val scale = pose.depthScale
         val cx = w / 2f; val bob = sin(el / 650f) * 3f                       // floats after arrival
         val cy = h * .42f + bob
-        val ew = min(w * .42f, 150f); val eh = ew * .68f
-        p.setAdditive(true); JarvisNeon.halo(p, cx, cy, ew * 1.1f * scale, JarvisDesign.Colors.cyan, .3f); p.setAdditive(false)
+        val ew = min(w * ENVELOPE_W_FRAC, ENVELOPE_MAX_W); val eh = ew * .68f   // ref5 scale: small object beside the head
+        p.setAdditive(true); JarvisNeon.halo(p, cx, cy, ew * 1.1f * scale, JarvisDesign.Colors.cyan, .3f * bloomStrength(glow, scale)); p.setAdditive(false)
         // spatial entrance from depth: converging depth rings + tilt that straightens as it arrives
         val e = scale.coerceIn(0f, 1f)
         if (e < 1f) {
@@ -393,28 +443,37 @@ class JarvisSequenceEffects {
             }
             p.setAdditive(false)
         }
-        p.save(); p.scale(scale, scale * (.55f + .45f * e), cx, cy); p.rotate((1f - e) * -18f, cx, cy)
+        p.save(); p.scale(scale, scale * (.55f + (REST_FORESHORTEN - .55f) * e), cx, cy); p.rotate(-(pose.tiltDeg + REST_TILT_DEG), cx, cy)
         val l = cx - ew / 2f; val r = cx + ew / 2f; val t = cy - eh / 2f; val b = cy + eh / 2f
         // document slides up out of the open envelope (after the flap)
-        val docT = ((el - JarvisMotion.Durations.ENVELOPE_IN - JarvisMotion.Durations.ENVELOPE_FLAP) / 450f).coerceIn(0f, 1f)
-        val docY = t + eh * .15f - JarvisMotion.Easing.easeOutCubic(docT) * eh * .85f
+        val docT = pose.docRise
+        val docY = t + eh * .15f - docT * eh * .85f
         if (docT > 0f) {
             p.fillRoundRect(l + ew * .14f, docY, r - ew * .14f, docY + eh * .8f, 3f, paper)
             for (k in 0..3) p.drawLine(l + ew * .22f, docY + 10f + k * 8f, r - ew * (.22f + (k % 2) * .12f), docY + 10f + k * 8f, 1.4f, paperShade)
         }
-        p.fillRoundRect(l, t, r, b, 6f, paper)
+        // cinema look (#479 bloom tokens): depth shadow, cyan bloom behind, glass body over a paper core
+        val bs = bloomStrength(glow, e)
+        p.fillRoundRect(l + 4f, t + 8f, r + 4f, b + 10f, 8f, Fill.Solid(JarvisDesign.Colors.background), .55f)
+        JarvisNeon.bloomRoundRect(p, l, t, r, b, 8f, JarvisDesign.Colors.cyan, .8f * bs)
+        p.fillRoundRect(l, t, r, b, 6f, paper, .92f)
+        p.fillRoundRect(l, t + eh * .55f, r, b, 6f, paperShade, .35f)                    // lower body in shade = depth
+        JarvisNeon.glassCard(p, l, t, r, b, 6f, if (bs > 0f) JarvisDesign.Glow.NORMAL else JarvisDesign.Glow.OFF, glowBoost = bs.coerceAtLeast(.01f))
+        p.setAdditive(true); JarvisNeon.bloom(p, cx, cy, ew * .35f, MAIL_RED, .25f * bs); p.setAdditive(false)
         // red M (two diagonals meeting at the centre) and red side bars
         p.drawLine(l + 6f, t + 8f, cx, cy + 2f, 5f, mailRed); p.drawLine(r - 6f, t + 8f, cx, cy + 2f, 5f, mailRed)
         p.drawLine(l + 6f, t + 8f, l + 6f, b - 6f, 6f, mailRed); p.drawLine(r - 6f, t + 8f, r - 6f, b - 6f, 6f, mailRed)
         // flap: X-rotation as vertical scale through the top edge (cos), flips above the envelope when open
-        val fy = cos(flap * PI.toFloat()) * eh * .55f
-        flapPath.reset().moveTo(l, t).lineTo(cx, t + fy).lineTo(r, t).close()
+        // flap: perspective X-rotation (foreshortened, widens toward the camera), flips above when open
+        val fy = pose.flapProjected * eh * .55f
+        val spread = (pose.flapWidth - 1f) * ew * .5f
+        flapPath.reset().moveTo(l - spread, t).lineTo(cx, t + fy).lineTo(r + spread, t).close()
         p.fillPath(flapPath, if (fy >= 0f) paper else paperShade)
         p.strokePath(flapPath, 1f, paperShade)
         p.restore()
         // Muster D: lasers from the document to the target labels
         if (docT >= 1f) {
-            val lt = el - JarvisMotion.Durations.ENVELOPE_IN - JarvisMotion.Durations.ENVELOPE_FLAP - 450L
+            val lt = el - ENVELOPE_LASER_START
             env.targets.forEachIndexed { i, label ->
                 val left = i % 2 == 0
                 val tx = if (left) w * .14f else w * .86f
@@ -422,11 +481,12 @@ class JarvisSequenceEffects {
                 val prog = JarvisMotion.laser(lt - i * JarvisMotion.Durations.STAGGER)
                 JarvisNeon.laserSparks(p, cx, docY + 6f, tx, ty, prog, now)
                 if (prog >= 1f) {
-                    val style = JarvisDesign.Type.caption
-                    val pw = min(p.measureText(label, style) + 20f, w * .4f)
+                    val style = JarvisDesign.Type.pill; val st = JarvisDesign.Styles.pill
+                    val pw = min(p.measureText(label, style) + 2f * st.padH, w * .4f)
                     val pl = if (left) (tx - pw / 2f).coerceAtLeast(4f) else (tx - pw / 2f).coerceAtMost(w - pw - 4f)
-                    JarvisNeon.glassCard(p, pl, ty - 13f, pl + pw, ty + 13f, 13f, JarvisDesign.Glow.NORMAL)
-                    p.drawText(label, pl + pw / 2f, ty + 4f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
+                    val top = ty - st.height / 2f
+                    JarvisNeon.component(p, pl, top, pl + pw, top + st.height, st)
+                    p.drawText(label, pl + pw / 2f, top + (st.height + p.capHeight(style)) / 2f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
                 }
             }
         }
@@ -434,27 +494,19 @@ class JarvisSequenceEffects {
 
     private fun drawPills(p: ContinuumPainter, w: Float, h: Float, now: Long) {
         val pl = pills ?: return
-        val ax = w * avatarX; val ay = h * avatarY
-        val style = JarvisDesign.Type.body
+        val style = JarvisDesign.Type.pill    // §11 / REF5-FARBEN: pill type 10 sp
+        val st0 = JarvisDesign.Styles.pill   // #07204D fill, #0175AF rim, 22 dp, round
         pl.items.forEachIndexed { i, text ->
-            val left = i % 2 == 0
-            val row = i / 2
-            val pw = min(p.measureText(text, style) + 28f, w * .44f)
-            // final positions: flanking the avatar, rows below each other, slightly staggered (video 1, 13-15 s)
-            val fx = if (left) ax - w * .2f - pw / 2f + row * 6f else ax + w * .2f + pw / 2f - row * 6f
-            val fy = ay - 40f + row * 46f + (if (left) 0f else 20f)
-            val fxc = fx.coerceIn(pw / 2f + 4f, w - pw / 2f - 4f)
-            val spec = JarvisMotion.Presets.pill(if (left) JarvisMotion.Direction.LEFT else JarvisMotion.Direction.RIGHT)
-            val el = now - pl.at - JarvisMotion.staggerStart(i)
-            if (el < 0) return@forEachIndexed
-            val t = (el.toFloat() / spec.durationMs).coerceIn(0f, 1f)
-            val e = spec.easing(t)
-            val startX = if (left) -pw else w + pw
-            val float = if (t >= 1f) sin(el / 700f + i * 1.7f) * 1f else 0f   // offset floating ~1 px
-            val x = startX + (fxc - startX) * e; val y = fy + float
-            JarvisNeon.glassCard(p, x - pw / 2f, y - 17f, x + pw / 2f, y + 17f, 17f,
-                if (t in .85f..1f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL)
-            p.drawText(text, x, y + 5f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
+            val pw = pillWidths.getOrPut(text) { min(p.measureText(text, style) + 2f * st0.padH, w * .44f) }
+            val g = pillGeometry(i, text, pw, w, h, now - pl.at) ?: return@forEachIndexed
+            val enabled = answerPills.getOrNull(i)?.enabled ?: true
+            // No alpha fade (Muster G): full opacity from the first frame; landing flash = bloom/active rim, not alpha.
+            val st = st0.copy(rim = if (enabled) st0.rim else JarvisDesign.Colors.textMuted,
+                glow = if (!enabled || glow == JarvisDesign.Glow.OFF) JarvisDesign.Glow.OFF else if (g.t in .85f..1f) JarvisDesign.Glow.STRONG else st0.glow)
+            val top = g.y - st.height / 2f
+            JarvisNeon.component(p, g.x - pw / 2f, top, g.x + pw / 2f, top + st.height, st, active = enabled && g.t in .85f..1f)
+            p.drawText(text, g.x, top + (st.height + p.capHeight(style)) / 2f, style,
+                Fill.Solid(if (enabled) JarvisDesign.Colors.text else JarvisDesign.Colors.textMuted), TextAlign.CENTER)
         }
     }
 
@@ -505,5 +557,55 @@ class JarvisSequenceEffects {
         const val FLY_MS = JarvisMotion.Durations.PANEL_FLY_IN
         const val LEAVE_MS = 380L
         const val COMMAND_MS = 1100L
+
+        /** Muster F: document rise after the flap (GESCHÄTZT), then Muster D lasers. */
+        const val DOC_RISE_MS = 450L
+        const val ENVELOPE_LASER_START = JarvisMotion.Durations.ENVELOPE_IN + JarvisMotion.Durations.ENVELOPE_FLAP + DOC_RISE_MS
+        /** Bounded per frame: ≤ 4 lasers × 3 sparks (JarvisNeon.laserSparks draws 3). */
+        /** Touch half height (dp) of a pill; drawn pill is JarvisDesign.Styles.pill (22 dp), hit box kept larger for touch. */
+        const val PILL_HALF_H = 14f
+        const val MAX_LASERS = 4
+        const val SPARKS_PER_LASER = 3
+        /** F at rest (ref5): ~26 % width, max 96 dp, kept slightly foreshortened/tilted so it reads 3-D, not flat. */
+        /** Gmail red: no REF5 token (object colour), flagged for Welten-Optik. */
+        const val MAIL_RED = 0xffea4335.toInt()
+        const val ENVELOPE_W_FRAC = .26f
+        const val ENVELOPE_MAX_W = 96f
+        const val REST_FORESHORTEN = .9f
+        const val REST_TILT_DEG = 6f
+        private const val CAMERA_DISTANCE = 8f
+        private const val START_DEPTH = 24f
+
+        data class EnvelopePose(val depthScale: Float, val tiltDeg: Float, val flapAngleDeg: Float,
+                                val flapProjected: Float, val flapWidth: Float, val docRise: Float, val laser: Float)
+
+        /**
+         * Muster F as a pure pose: perspective depth entrance 0→100 % in 0,5 s (z = START_DEPTH → 0 at
+         * CAMERA_DISTANCE), tilt straightens on arrival; flap X-rotation 0→180° in 0,3 s, projected with
+         * foreshortening; document rise; laser draw-on 0,3 s. animatorScale ≤ 0 (reduced motion) = final pose.
+         */
+        fun envelopePose(elapsedMs: Long, animatorScale: Float): EnvelopePose {
+            if (!(animatorScale > 0f) || !animatorScale.isFinite()) return EnvelopePose(1f, 0f, 180f, -1f, 1f, 1f, 1f)
+            val s = animatorScale
+            val e = JarvisMotion.Easing.easeOutCubic((elapsedMs / (JarvisMotion.Durations.ENVELOPE_IN * s)).coerceIn(0f, 1f))
+            val z = (1f - e) * START_DEPTH
+            val depth = e * CAMERA_DISTANCE / (CAMERA_DISTANCE + z) * ((CAMERA_DISTANCE + 0f) / CAMERA_DISTANCE)
+            val angle = 180f * JarvisMotion.envelopeFlap(elapsedMs, s)
+            val rad = Math.toRadians(angle.toDouble())
+            val lift = kotlin.math.sin(rad).toFloat()
+            val projected = kotlin.math.cos(rad).toFloat() / (1f + lift * .35f)
+            val docT = ((elapsedMs - (JarvisMotion.Durations.ENVELOPE_IN + JarvisMotion.Durations.ENVELOPE_FLAP) * s) / (DOC_RISE_MS * s)).coerceIn(0f, 1f)
+            return EnvelopePose(depth, (1f - e) * 18f, angle, projected, 1f + lift * .25f,
+                JarvisMotion.Easing.easeOutCubic(docT), JarvisMotion.laser(elapsedMs - (ENVELOPE_LASER_START * s).toLong(), s))
+        }
+
+        /** Layered-bloom strength; [JarvisDesign.Glow.OFF] (power save / below-API fallback) = 0, flat look only. */
+        fun bloomStrength(glow: JarvisDesign.Glow, boost: Float): Float =
+            if (glow == JarvisDesign.Glow.OFF) 0f else (glow.haloAlpha / JarvisDesign.Glow.NORMAL.haloAlpha * boost).coerceIn(0f, 2f)
+
+        fun pillLabels(pills: List<at.heinz.deviceai.cockpit.AnswerPill>): List<String> = pills.map { pill ->
+            val label = at.heinz.deviceai.cockpit.ToolGatePillActionGate.LABELS[pill.kind] ?: pill.kind.name
+            if (pill.enabled) label else "$label · ${pill.disabledReason ?: at.heinz.deviceai.cockpit.ToolGatePillActionGate.SOURCE_MISSING}"
+        }
     }
 }
