@@ -1,0 +1,13 @@
+{
+  "baselineLocalCommit": "62e00dd5f7103f2517f6cf1285430cfe3c9480eb",
+  "baselineRemoteCommit": "86fa7eae5a3a87a3709d1c65a3a0e943fce7b8c5",
+  "baselineTree": "ebc214a1bb4027361a73fc60ca43d34452ed916d",
+  "baselineTests": 4,
+  "baselineFailures": 1,
+  "sameFailureBeforeAndAfter": [
+    "java.lang.AssertionError: 832.0 x 700.0 font 1.0 VIEW_AVATAR \u2265 48 dp"
+  ],
+  "observedHeightDp": 47.999996,
+  "requiredHeightDp": 48,
+  "status": "INHERITED_LAYOUT_ROUNDING_FAILURE_CONFIRMED"
+}

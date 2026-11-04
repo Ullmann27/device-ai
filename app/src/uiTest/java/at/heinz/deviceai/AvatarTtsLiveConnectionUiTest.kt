@@ -52,7 +52,8 @@ class AvatarTtsLiveConnectionUiTest {
         val home: ContinuumHomeView,
         val live: ContinuumHologramView,
         val listener: UtteranceProgressListener,
-        val pause: () -> Unit
+        val pause: () -> Unit,
+        val retire: () -> Unit
     )
 
     private fun field(target: Any, name: String): Any? = target.javaClass.getDeclaredField(name)
@@ -96,6 +97,13 @@ class AvatarTtsLiveConnectionUiTest {
             .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         var paused = false
+        var retired = false
+        fun retire() {
+            if (!paused) { controller.pause(); paused = true }
+            controller.stop()
+            controller.destroy()
+            retired = true
+        }
         try {
             controller.setup().visible().windowFocusChanged(true)
             val activity = controller.get()
@@ -131,15 +139,13 @@ class AvatarTtsLiveConnectionUiTest {
             shadowOf(Looper.getMainLooper()).idle()
             val listener = shadowTts.utteranceProgressListener
             assertNotNull("The Activity's real TTS engine must hold its progress listener", listener)
-            check(SpeechFixture(activity, home, live, requireNotNull(listener)) {
+            check(SpeechFixture(activity, home, live, requireNotNull(listener), pause = {
                 controller.pause()
                 paused = true
-            })
+            }, retire = ::retire))
         } finally {
             try {
-                if (!paused) controller.pause()
-                controller.stop()
-                controller.destroy()
+                if (!retired) retire()
             } finally {
                 JarvisAvatarSlot.register(null)
                 Settings.Global.putFloat(app.contentResolver,
@@ -159,7 +165,7 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     private fun startPendingSpeech(fixture: SpeechFixture, id: String, text: String,
-        reportRange: Boolean = true, rangeEnd: Int = text.length) {
+        reportRange: Boolean = true, rangeEnd: Int = text.length, chunks: List<ByteArray> = listOf(pcm16())) {
         // Only the already-accepted synthesis-request context is fixture state. Calling the
         // shadow's speak() would automatically post onDone before controlled PCM/range callbacks.
         // These are the three assignments made by speakBootstrap; no Director/View event is faked.
@@ -167,7 +173,7 @@ class AvatarTtsLiveConnectionUiTest {
         set(fixture.activity, "voiceAvatarText", text)
         (field(fixture.activity, "voiceSignal") as TtsHologramSignal).activate(id)
         fixture.listener.onBeginSynthesis(id, 8_000, AudioFormat.ENCODING_PCM_16BIT, 1)
-        fixture.listener.onAudioAvailable(id, pcm16())
+        chunks.forEach { fixture.listener.onAudioAvailable(id, it) }
         fixture.listener.onStart(id)
         if (reportRange) fixture.listener.onRangeStart(id, 0, rangeEnd, 0)
         // The real voiceFrame schedules itself every 33 ms. A one-letter word starts with SIL
@@ -204,6 +210,44 @@ class AvatarTtsLiveConnectionUiTest {
         f.listener.onDone("current")
         shadowOf(Looper.getMainLooper()).idle()
         assertSilent(f)
+    }
+
+    @Test fun measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds() {
+        for (chunks in listOf(listOf(pcm16(2_000), ByteArray(1_600)), listOf(pcm16(2_000)))) {
+            withSpeechShell { f ->
+                startPendingSpeech(f, "silence", "A", chunks = chunks)
+                assertEquals(Viseme.AA, pose(f).viseme)
+                assertTrue(pose(f).jawOpen > 0f)
+                advance(110)
+                assertEquals(0f, pose(f).jawOpen, 0f)
+                assertEquals(0f, pose(f).speakEnergy, 0f)
+                assertEquals(Viseme.SIL, pose(f).viseme)
+                assertTrue(field(f.activity, "voiceSpeaking") as Boolean)
+                assertEquals("silence", field(f.activity, "voiceUtteranceId"))
+            }
+        }
+    }
+
+    @Test fun aTtsEngineWithoutPcmRetainsWordRangeMotion() = withSpeechShell { f ->
+        startPendingSpeech(f, "no-pcm", "A", chunks = emptyList())
+        assertEquals(Viseme.AA, pose(f).viseme)
+        assertTrue(pose(f).speakEnergy > 0f)
+        assertTrue(pose(f).speakEnergy <= .28f)
+        assertTrue(pose(f).jawOpen > 0f)
+    }
+
+    @Test fun retiringThePreviousActivityPreservesTheNewSpeechSurface() = withSpeechShell { previous ->
+        withSpeechShell { current ->
+            val registered = JarvisAvatarSlot.renderer
+            assertSame(current.live, (registered as JarvisHoloAvatar).hologram)
+            previous.retire()
+            shadowOf(Looper.getMainLooper()).idle()
+            assertSame("Old Activity cleanup must retain the new registration", registered, JarvisAvatarSlot.renderer)
+            assertSame(current.live, (current.home.avatarRenderer as JarvisHoloAvatar).hologram)
+            startPendingSpeech(current, "replacement", "A")
+            assertTrue(pose(current).speakEnergy > .35f)
+            assertEquals(Viseme.AA, pose(current).viseme)
+        }
     }
 
     @Test fun previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface() = withSpeechShell { f ->

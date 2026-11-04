@@ -17,18 +17,28 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
+import org.robolectric.shadows.ShadowChoreographer
 import java.io.File
+import java.time.Duration
 import java.util.concurrent.TimeUnit
+
+private fun pauseShellFrameClock() {
+    ShadowChoreographer.setPaused(true)
+    ShadowChoreographer.setFrameDelay(Duration.ofMillis(16))
+}
 
 /** Welten-Optik's JarvisShellView (#479) embedded in the real home: bottom layer, live avatar in its AVATAR slot. */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class JarvisShellStageUiTest {
     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
         .getDeclaredField(name).apply { isAccessible = true }.get(activity)
 
     private fun run(label: String, width: Int, height: Int) {
+        pauseShellFrameClock()
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
@@ -39,7 +49,9 @@ class JarvisShellStageUiTest {
             .putBoolean("jarvis-shell", true).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val home = field(activity, "homeView") as ContinuumHomeView
@@ -94,6 +106,7 @@ class JarvisShellStageUiTest {
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28], qualifiers = "w884dp-h760dp-land-mdpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
+@LooperMode(LooperMode.Mode.PAUSED)
 class JarvisAvatarSlotUiTest {
     private class Fake : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
         val calls = mutableListOf<String>(); var slot: android.graphics.Rect? = null
@@ -104,13 +117,19 @@ class JarvisAvatarSlotUiTest {
     }
 
     @Test fun registeredRendererIsDockedFedAndDetached() {
+        pauseShellFrameClock()
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().putBoolean("jarvis-shell", true).commit()
+        // Host Canvas, no Filament JNI.
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            shadowOf(Looper.getMainLooper()).idleFor(40, TimeUnit.MILLISECONDS)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val home = AgentActivity::class.java.getDeclaredField("homeView").apply { isAccessible = true }.get(activity) as ContinuumHomeView

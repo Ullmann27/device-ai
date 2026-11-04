@@ -61,8 +61,13 @@ internal class TtsHologramSignal {
         playing = true
     }
 
-    @Synchronized fun level(nowMillis: Long): Float {
-        if (!playing || sampleRate == 0) return 0f
+    @Synchronized fun level(nowMillis: Long): Float = readLevel(nowMillis) ?: 0f
+
+    @Synchronized fun measuredLevel(id: String, nowMillis: Long): Float? =
+        if (utterance == id) readLevel(nowMillis) else null
+
+    private fun readLevel(nowMillis: Long): Float? {
+        if (!playing || sampleRate == 0 || points.isEmpty()) return null
         val frame = anchorFrame + (nowMillis - anchorMillis).coerceAtLeast(0) * sampleRate / 1_000
         return points.lastOrNull { frame >= it.frame && frame < it.end }?.level ?: 0f
     }

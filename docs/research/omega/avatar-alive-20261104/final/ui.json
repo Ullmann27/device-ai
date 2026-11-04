@@ -1,0 +1,123 @@
+{
+  "sourceCommit": "d2eaa6d8ff8b2bdc4ed277a9987e8efa7c40d39b",
+  "localExecutionCommit": "5a85676afdc44524306a982dba79659e4c029117",
+  "sourceTree": "4aa6b68d74901eb839b877cc66807ca57a34f835",
+  "worktreeClean": true,
+  "exitCode": 0,
+  "requested": [
+    "--offline",
+    "-I",
+    "docs/research/omega/avatar-alive-20261104/bounded-ui.init.gradle",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:testDebugUnitTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest",
+    "--tests",
+    "at.heinz.deviceai.AvatarSpeechReattachmentUiTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisShellStageUiTest",
+    "--tests",
+    "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+    "--tests",
+    "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+    "--tests",
+    "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest"
+  ],
+  "evidenceClass": "HOST_ANDROID_NOT_DEVICE",
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 4.613,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 3.384,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarSpeechReattachmentUiTest",
+      "tests": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 2.314,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.411,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 2.619,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "tests": 11,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.565,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "tests": 3,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.092,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest",
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.066,
+      "failures": []
+    },
+    {
+      "suite": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "tests": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.017,
+      "failures": []
+    }
+  ],
+  "total": {
+    "tests": 40,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 40
+  }
+}

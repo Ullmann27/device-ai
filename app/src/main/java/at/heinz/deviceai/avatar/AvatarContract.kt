@@ -8,7 +8,7 @@ package at.heinz.deviceai.avatar
  */
 enum class AvatarState { IDLE, LISTENING, THINKING, RESEARCHING, LEARNING, WAITING_FOR_APPROVAL, SPEAKING, BLOCKED }
 
-enum class AvatarExpression { NEUTRAL, ATTENTIVE, FOCUSED, CURIOUS, CONCERNED }
+enum class AvatarExpression { NEUTRAL, ATTENTIVE, FOCUSED, CURIOUS, CONCERNED, WARM }
 
 /** Normalized gaze: x,y in -1..1, (0,0) = straight at the owner/camera. */
 data class GazeTarget(val x: Float, val y: Float) {
@@ -88,6 +88,8 @@ class AvatarPoseReducer {
     private var lastEventMillis = 0L
     private var lastAudioMillis = Long.MIN_VALUE
     private var lastSmoothedAudioMillis = Long.MIN_VALUE
+    private var lastAudioSource: AudioLevelSource? = null
+    private var lastMeasuredLevel = 0f
     private val cues = ArrayList<AvatarEvent.VisemeCue>()
 
     fun apply(event: AvatarEvent) {
@@ -126,6 +128,9 @@ class AvatarPoseReducer {
                     (1.0 - kotlin.math.exp(kotlin.math.ln(0.6) * elapsed / 33.0)).toFloat()
                 }
                 energy += (event.level.coerceIn(0f, 1f) - energy) * smoothing
+                lastAudioSource = event.source
+                lastMeasuredLevel = event.level.coerceIn(0f, 1f)
+                if (event.source == AudioLevelSource.PCM_ENVELOPE && lastMeasuredLevel == 0f) energy = 0f
                 lastAudioMillis = event.atMillis
                 lastSmoothedAudioMillis = event.atMillis
             }
@@ -146,6 +151,8 @@ class AvatarPoseReducer {
         energy = 0f
         lastAudioMillis = Long.MIN_VALUE
         lastSmoothedAudioMillis = Long.MIN_VALUE
+        lastAudioSource = null
+        lastMeasuredLevel = 0f
         viseme = Viseme.SIL
         visemeWeight = 0f
         cues.clear()
@@ -165,16 +172,19 @@ class AvatarPoseReducer {
             // reject queued callbacks through this frame, even before any frame confirmed audio.
             if (lastEventMillis == lastAudioMillis) lastEventMillis = atMillis
             energy = 0f
+            lastMeasuredLevel = 0f
             lastAudioMillis = atMillis
             lastSmoothedAudioMillis = Long.MIN_VALUE
         }
         cues.removeAll { atMillis >= it.atMillis && atMillis - it.atMillis >= it.durationMs }
         val cue = cues.lastOrNull { it.atMillis <= atMillis }
-        viseme = cue?.viseme ?: Viseme.SIL
-        visemeWeight = cue?.weight ?: 0f
         // Missing/paused TTS callbacks cannot leave a mouth stuck open indefinitely.
         val age = if (lastAudioMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - lastAudioMillis
-        val liveEnergy = if (age in 0..250) energy else 0f
+        val measuredSilence = lastAudioSource == AudioLevelSource.PCM_ENVELOPE &&
+            (lastMeasuredLevel == 0f || age !in 0..250)
+        viseme = if (measuredSilence) Viseme.SIL else cue?.viseme ?: Viseme.SIL
+        visemeWeight = if (measuredSilence) 0f else cue?.weight ?: 0f
+        val liveEnergy = if (!measuredSilence && age in 0..250) energy else 0f
         val jaw = if (utterance == null) 0f else ((liveEnergy - 0.025f) * 1.5f).coerceIn(0f, 1f)
         val gazeAge = if (observedAtMillis == Long.MIN_VALUE) Long.MAX_VALUE else atMillis - observedAtMillis
         if (observedAtMillis > atMillis) {
@@ -188,7 +198,9 @@ class AvatarPoseReducer {
             newestFreshGazeAtMillis = maxOf(newestFreshGazeAtMillis, observedAtMillis)
         }
         val shownGaze = observedGaze ?: gaze
-        return AvatarPose(state, expression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
+        val shownExpression = if (utterance != null && expression == AvatarExpression.WARM)
+            AvatarExpression.NEUTRAL else expression
+        return AvatarPose(state, shownExpression, shownGaze.x, shownGaze.y, jaw, viseme, visemeWeight, liveEnergy,
             gazeObserved = observedGaze != null)
     }
 

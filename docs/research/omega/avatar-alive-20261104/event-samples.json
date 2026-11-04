@@ -1,0 +1,171 @@
+{
+  "schema": "continuum-avatar-alive-event-samples-v1",
+  "sourceCommit": "0a79c703be62f4ade6737eaa9d13fea1dc35c5bb",
+  "sourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "774edb2243a3c6257dbbf6d4fb5858ea2a8ad94d8569d1801e09c3ec3514e1f0",
+    "app/src/main/java/at/heinz/deviceai/HologramAudio.kt": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "e68e8044e04d3506686fde2b98512550bceeb5316832b196aa718c36739d1b16",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "c00b424680e563041063087167a2928f1f13ea9646fcb1cb00d7c53b70200983",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "1cbe2c242a830a2e5a3feb6d384ac78db727c1b5c33067600758a88161cd4f19",
+    "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "74ef2024b07750e9ffb7c479c2f2f53cc1eac52078cfe7b9e3bb6ed9e9baf32a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "fcc836f6f2ddd0d039d7a6e2837e62882c5c6775c9c40cd08e831d7140f3b83b"
+  },
+  "sourceAssetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "animation": {
+    "frameCount": 192,
+    "durationSeconds": 12,
+    "framesPerSecond": 16
+  },
+  "samples": [
+    {
+      "name": "alive-f000",
+      "seconds": 0,
+      "input": {
+        "expression": "WARM",
+        "viseme": "SIL",
+        "jawOpen": 0,
+        "gazeX": 0,
+        "state": "IDLE",
+        "speakEnergy": 0,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": 0,
+      "eyeYaw": -22,
+      "jawPitch": 0
+    },
+    {
+      "name": "alive-f032",
+      "seconds": 2,
+      "input": {
+        "expression": "ATTENTIVE",
+        "viseme": "SIL",
+        "jawOpen": 0,
+        "gazeX": 0,
+        "state": "LISTENING",
+        "speakEnergy": 0,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": 0,
+      "eyeYaw": -22,
+      "jawPitch": 0
+    },
+    {
+      "name": "alive-f064",
+      "seconds": 4,
+      "input": {
+        "expression": "FOCUSED",
+        "viseme": "SIL",
+        "jawOpen": 0,
+        "gazeX": 0.3499999940395355,
+        "state": "THINKING",
+        "speakEnergy": 0,
+        "gazeY": 0.25,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": 2.799999952316284,
+      "eyeYaw": -16.049999237060547,
+      "jawPitch": 0
+    },
+    {
+      "name": "alive-f099",
+      "seconds": 6.1875,
+      "input": {
+        "expression": "NEUTRAL",
+        "viseme": "NN",
+        "jawOpen": 0.427922785282135,
+        "gazeX": 0,
+        "state": "SPEAKING",
+        "speakEnergy": 0.3102818727493286,
+        "gazeY": 0,
+        "visemeWeight": 1,
+        "gazeObserved": false
+      },
+      "headYaw": 0,
+      "eyeYaw": -22,
+      "jawPitch": 5.135073661804199
+    },
+    {
+      "name": "alive-f104",
+      "seconds": 6.5,
+      "input": {
+        "expression": "NEUTRAL",
+        "viseme": "SIL",
+        "jawOpen": 0.378853440284729,
+        "gazeX": 0,
+        "state": "SPEAKING",
+        "speakEnergy": 0.2775689661502838,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": 0,
+      "eyeYaw": -22,
+      "jawPitch": 4.546241283416748
+    },
+    {
+      "name": "alive-f146",
+      "seconds": 9.125,
+      "input": {
+        "expression": "NEUTRAL",
+        "viseme": "SIL",
+        "jawOpen": 0.20513316988945007,
+        "gazeX": 0,
+        "state": "SPEAKING",
+        "speakEnergy": 0.16175545752048492,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": 0,
+      "eyeYaw": -22,
+      "jawPitch": 2.4615979194641113
+    },
+    {
+      "name": "alive-f160",
+      "seconds": 10,
+      "input": {
+        "expression": "WARM",
+        "viseme": "SIL",
+        "jawOpen": 0,
+        "gazeX": 0,
+        "state": "IDLE",
+        "speakEnergy": 0,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": -0.44164636731147766,
+      "eyeYaw": -19.437999725341797,
+      "jawPitch": 0
+    },
+    {
+      "name": "alive-f191",
+      "seconds": 11.9375,
+      "input": {
+        "expression": "WARM",
+        "viseme": "SIL",
+        "jawOpen": 0,
+        "gazeX": 0,
+        "state": "IDLE",
+        "speakEnergy": 0,
+        "gazeY": 0,
+        "visemeWeight": 0,
+        "gazeObserved": false
+      },
+      "headYaw": -1.465623378753662,
+      "eyeYaw": -24.292499542236328,
+      "jawPitch": 0
+    }
+  ],
+  "limitations": [
+    "Synthetic runtime events and generated PCM; no actual TTS or camera",
+    "Actual Director, audio envelope, reducer and mapper; separate Blender renderer",
+    "Silent motion review; no audible synchronization or native device claim"
+  ]
+}

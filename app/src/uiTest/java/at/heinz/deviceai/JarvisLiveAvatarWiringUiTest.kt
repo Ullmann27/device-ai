@@ -244,6 +244,26 @@ class JarvisLiveAvatarWiringUiTest {
         assertTrue("Detach must retain the owner's appearance preference", prefs.getBoolean("native-head-3d", false))
     }
 
+    @Test fun rejectedForeignHostCannotDetachTheCurrentSurface() {
+        val controller = Robolectric.buildActivity(android.app.Activity::class.java).setup()
+        val host = FrameLayout(controller.get())
+        val live = ContinuumHologramView(controller.get())
+        host.addView(live)
+        val adapter = JarvisHoloAvatar(live)
+        try {
+            val slot = android.graphics.Rect(0, 0, 600, 500)
+            adapter.attach(host, slot)
+            val sequence = adapter.sequence
+            assertThrows(IllegalArgumentException::class.java) {
+                adapter.attach(FrameLayout(controller.get()), slot)
+            }
+            assertTrue(adapter.isAttached)
+            assertSame(live, adapter.hologram)
+            assertSame(sequence, adapter.sequence)
+            assertSame(host, live.parent)
+        } finally { adapter.detach(); controller.pause().stop().destroy() }
+    }
+
     @Test fun separateRegionsPositionTheNativeViewportAndMemoryTargetOnTheSameGrid() {
         val controller = Robolectric.buildActivity(android.app.Activity::class.java).setup()
         val live = ContinuumHologramView(controller.get())

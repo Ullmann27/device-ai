@@ -1,0 +1,54 @@
+{
+  "schema": "continuum-avatar-alive-video-v1",
+  "status": "PASS",
+  "sourceCommit": "0a79c703be62f4ade6737eaa9d13fea1dc35c5bb",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "cc380d4faec69ba08966e270843da4229a20bfe16257eec7de94ff1f8e703f1d",
+  "renderManifestSha256": "4e239722e942b70bc029e9514d2d5f27e348cf913504deb3080e8b17c0e05066",
+  "videoSha256": "bf20f48a0c1d97b784a036f1c902a902c47ffe5fecb215f7ee0faf6fdaed2f1d",
+  "posterSha256": "26c2f5d8b4f07a366fcde39541f18ec0e34b60e477600ca09fc2ceb5e2850d8e",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 384,
+        "height": 560,
+        "r_frame_rate": "16/1",
+        "duration": "12.000000",
+        "nb_read_frames": "192"
+      }
+    ]
+  },
+  "encoderCommand": [
+    "ffmpeg",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-y",
+    "-framerate",
+    "16",
+    "-i",
+    "/workspace/scratch/f5f40c1db981/avatar-alive-qa/frames/alive-f%03d.png",
+    "-frames:v",
+    "192",
+    "-vf",
+    "pad=iw:ih+48:0:0:black,drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='CONTINUUM \u00b7 Ruhe':fontcolor=white:fontsize=17:x=20:y=h-31:enable='gte(t,0)*lt(t,2)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='CONTINUUM \u00b7 Zuh\u00f6ren':fontcolor=white:fontsize=17:x=20:y=h-31:enable='gte(t,2)*lt(t,4)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='CONTINUUM \u00b7 Denken':fontcolor=white:fontsize=17:x=20:y=h-31:enable='gte(t,4)*lt(t,6)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='CONTINUUM \u00b7 Sprechen':fontcolor=white:fontsize=17:x=20:y=h-31:enable='gte(t,6)*lt(t,10)',drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:text='CONTINUUM \u00b7 Stopp \u00b7 Ruhe':fontcolor=white:fontsize=17:x=20:y=h-31:enable='gte(t,10)*lt(t,12)'",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "medium",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-movflags",
+    "+faststart",
+    "/workspace/scratch/f5f40c1db981/avatar-alive-deliverables/Continuum_Avatar_Lebendig.mp4"
+  ],
+  "evidenceClass": "SILENT_HOST_RENDER_NOT_DEVICE",
+  "syntheticInputs": true,
+  "audio": false
+}

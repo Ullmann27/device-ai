@@ -167,9 +167,11 @@ def main():
             color = color[:, [1, 0, 2]]
         colors.append(color)
         weights.append(confidence)
-    secondary = weights[1] * (1 - weights[0])
-    total = weights[0] + secondary
-    color = (colors[0] * weights[0][:, None] + colors[1] * secondary[:, None]) / np.maximum(total[:, None], 1e-8)
+    side_mix = smooth(-.012, .025, points[:, 0])
+    primary = weights[0] * (1 - side_mix)
+    secondary = weights[1] * side_mix
+    total = primary + secondary
+    color = (colors[0] * primary[:, None] + colors[1] * secondary[:, None]) / np.maximum(total[:, None], 1e-8)
     head_weight = smooth(.145, .190, points[:, 1]) * total
     mouth = smooth(.202, .211, points[:, 1]) * (1 - smooth(.234, .244, points[:, 1]))
     mouth *= (1 - smooth(.021, .035, np.abs(points[:, 0]))) * smooth(.12, .145, points[:, 2])

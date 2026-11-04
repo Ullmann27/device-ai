@@ -1,0 +1,39 @@
+{
+  "sourceCommit": "6cab1b9add227c2e0e615191210014d445040567",
+  "sourceTree": "0cace1f535c6b9cbd3084c085ab58e6309914e13",
+  "worktreeClean": true,
+  "status": "PASS",
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.AvatarReferenceEffectsUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 4.883
+    },
+    {
+      "suite": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 3.676
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "tests": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timeSeconds": 1.143
+    }
+  ],
+  "total": {
+    "tests": 13,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "evidenceClass": "HOST_ACTIVITY_AND_CANVAS_NOT_DEVICE"
+}

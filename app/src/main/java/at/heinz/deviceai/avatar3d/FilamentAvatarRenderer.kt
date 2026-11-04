@@ -72,7 +72,7 @@ class FilamentAvatarRenderer private constructor(private val surface: Surface) :
         require(a.resourceUris.isEmpty()) { "External resources forbidden" }
         val resources = ResourceLoader(e, true)
         try { resources.loadResources(a) } finally { resources.destroy() }
-        mapper = AvatarMorphMapper(metadata.targets)
+        mapper = AvatarMorphMapper(metadata.targets, metadata.focus.azimuthDegrees)
         morphInstances = metadata.morphNodeNames.map { name ->
             val entity = a.getFirstEntityByName(name); require(entity != 0)
             val instance = e.renderableManager.getInstance(entity); require(instance != 0)

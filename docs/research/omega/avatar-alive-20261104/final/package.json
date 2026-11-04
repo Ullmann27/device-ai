@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "d2eaa6d8ff8b2bdc4ed277a9987e8efa7c40d39b",
+  "localExecutionCommit": "5a85676afdc44524306a982dba79659e4c029117",
+  "sourceTree": "4aa6b68d74901eb839b877cc66807ca57a34f835",
+  "apkSha256": "f79a049992a76e0c2d9f80c1c57674a603bb6db91121448b11d034e63dbf47ee",
+  "bytes": 89752346,
+  "packagedAssetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "packagedAssetBytes": 12038416,
+  "noticesByteIdentical": true,
+  "package": "package: name='at.heinz.deviceai' versionCode='4' versionName='0.3.1' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "lint": {
+    "issues": 0,
+    "severity": {}
+  },
+  "build": "DEBUG_QA_ONLY_NOT_INSTALLED"
+}

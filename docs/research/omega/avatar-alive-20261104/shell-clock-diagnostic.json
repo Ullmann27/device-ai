@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "6cab1b9add227c2e0e615191210014d445040567",
+  "sourceTree": "0cace1f535c6b9cbd3084c085ab58e6309914e13",
+  "status": "TIMED_OUT_INCOMPLETE",
+  "configuredTaskTimeoutSeconds": 75,
+  "lastStartedTest": "JarvisAvatarSlotUiTest.registeredRendererIsDockedFedAndDetached",
+  "completedTests": 0,
+  "reason": "Native Canvas fixture starts the continuously animated Activity before bounding the Choreographer. Follow-up changes only the host test clock and explicit 2D host renderer selection; production scheduling is unchanged."
+}

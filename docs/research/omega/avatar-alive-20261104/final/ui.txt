@@ -1,0 +1,218 @@
+{"checkout": "/workspace/scratch/f5f40c1db981/device-ai-alive", "source_commit": "5a85676afdc44524306a982dba79659e4c029117", "source_tree": "4aa6b68d74901eb839b877cc66807ca57a34f835", "worktree_clean": true, "requested": ["--offline", "-I", "docs/research/omega/avatar-alive-20261104/bounded-ui.init.gradle", "-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.AvatarReferenceEffectsUiTest", "--tests", "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest", "--tests", "at.heinz.deviceai.AvatarRangeFrameConnectionUiTest", "--tests", "at.heinz.deviceai.AvatarSpeechReattachmentUiTest", "--tests", "at.heinz.deviceai.JarvisShellStageUiTest", "--tests", "at.heinz.deviceai.JarvisAvatarSlotUiTest", "--tests", "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest", "--tests", "at.heinz.deviceai.avatar.ContinuumAvatarIconBurstPreviewUiTest"]}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+
+AvatarRangeFrameConnectionUiTest > invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback STARTED
+
+AvatarRangeFrameConnectionUiTest > invalidAudioMarkerCannotStartAVisibleWordThroughTheActualCallback PASSED
+
+AvatarRangeFrameConnectionUiTest > installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord STARTED
+
+AvatarRangeFrameConnectionUiTest > installedCallbackRejectsBackwardAudioMarkerAndAcceptsTheNextValidWord PASSED
+
+AvatarRangeFrameConnectionUiTest > orderedPunctuationAnchorsPcmWithoutInventingVisemesOrAdmittingOlderFrames STARTED
+
+AvatarRangeFrameConnectionUiTest > orderedPunctuationAnchorsPcmWithoutInventingVisemesOrAdmittingOlderFrames PASSED
+
+AvatarRangeFrameConnectionUiTest > aDuplicateStartCannotRewindTheAcceptedPcmPosition STARTED
+
+AvatarRangeFrameConnectionUiTest > aDuplicateStartCannotRewindTheAcceptedPcmPosition PASSED
+
+AvatarRangeFrameConnectionUiTest > aRejectedRangeCannotRewindTheMeasuredPcmPlaybackPosition STARTED
+
+AvatarRangeFrameConnectionUiTest > aRejectedRangeCannotRewindTheMeasuredPcmPlaybackPosition PASSED
+
+AvatarRangeFrameConnectionUiTest > tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord STARTED
+
+AvatarRangeFrameConnectionUiTest > tiedAudioMarkersKeepNewTextButDoNotReplayTheSameOrEarlierWord PASSED
+
+AvatarReferenceEffectsUiTest > repeatedEventCannotExtendTheEffect STARTED
+
+AvatarReferenceEffectsUiTest > repeatedEventCannotExtendTheEffect PASSED
+
+AvatarReferenceEffectsUiTest > cockpitEntryDrawsAboveTheExistingChildComposition STARTED
+
+AvatarReferenceEffectsUiTest > cockpitEntryDrawsAboveTheExistingChildComposition PASSED
+
+AvatarReferenceEffectsUiTest > learnedDocumentUsesTheSameVisibleHeadRoute STARTED
+
+AvatarReferenceEffectsUiTest > learnedDocumentUsesTheSameVisibleHeadRoute PASSED
+
+AvatarReferenceEffectsUiTest > pauseAndReducedMotionDropQueuedEffects STARTED
+
+AvatarReferenceEffectsUiTest > pauseAndReducedMotionDropQueuedEffects PASSED
+
+AvatarReferenceEffectsUiTest > finishingUnrelatedWorkDoesNotCancelADocumentArrival STARTED
+
+AvatarReferenceEffectsUiTest > finishingUnrelatedWorkDoesNotCancelADocumentArrival PASSED
+
+AvatarReferenceEffectsUiTest > staleFutureAndEmptyDocumentEventsStayInvisible STARTED
+
+AvatarReferenceEffectsUiTest > staleFutureAndEmptyDocumentEventsStayInvisible PASSED
+
+AvatarSpeechReattachmentUiTest > installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish STARTED
+
+AvatarSpeechReattachmentUiTest > installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish PASSED
+
+AvatarSpeechReattachmentUiTest > chatReparentRestoresOnlyLiveCuesAndPauseRejectsLateCallbacks STARTED
+
+AvatarSpeechReattachmentUiTest > chatReparentRestoresOnlyLiveCuesAndPauseRejectsLateCallbacks PASSED
+
+AvatarTtsLiveConnectionUiTest > measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds STARTED
+
+AvatarTtsLiveConnectionUiTest > measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds PASSED
+
+AvatarTtsLiveConnectionUiTest > installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish STARTED
+
+AvatarTtsLiveConnectionUiTest > installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish PASSED
+
+AvatarTtsLiveConnectionUiTest > previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface STARTED
+
+AvatarTtsLiveConnectionUiTest > previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface PASSED
+
+AvatarTtsLiveConnectionUiTest > chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks STARTED
+
+AvatarTtsLiveConnectionUiTest > chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks PASSED
+
+AvatarTtsLiveConnectionUiTest > retiringThePreviousActivityPreservesTheNewSpeechSurface STARTED
+
+AvatarTtsLiveConnectionUiTest > retiringThePreviousActivityPreservesTheNewSpeechSurface PASSED
+
+AvatarTtsLiveConnectionUiTest > aTtsEngineWithoutPcmRetainsWordRangeMotion STARTED
+
+AvatarTtsLiveConnectionUiTest > aTtsEngineWithoutPcmRetainsWordRangeMotion PASSED
+
+JarvisAvatarSlotUiTest > registeredRendererIsDockedFedAndDetached STARTED
+
+JarvisAvatarSlotUiTest > registeredRendererIsDockedFedAndDetached PASSED
+
+JarvisLiveAvatarWiringUiTest > foldSlotContainsTheSeparateHeadAndOrbAreas STARTED
+
+JarvisLiveAvatarWiringUiTest > foldSlotContainsTheSeparateHeadAndOrbAreas PASSED
+
+JarvisLiveAvatarWiringUiTest > heightOnlyWindowResizeUpdatesTheViewportWithoutReplacingLiveOwners STARTED
+
+JarvisLiveAvatarWiringUiTest > heightOnlyWindowResizeUpdatesTheViewportWithoutReplacingLiveOwners PASSED
+
+JarvisLiveAvatarWiringUiTest > crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta STARTED
+
+JarvisLiveAvatarWiringUiTest > crossingThe600DpBoundaryReassignsNavigationEvenForASmallWidthDelta PASSED
+
+JarvisLiveAvatarWiringUiTest > rejectedForeignHostCannotDetachTheCurrentSurface STARTED
+
+JarvisLiveAvatarWiringUiTest > rejectedForeignHostCannotDetachTheCurrentSurface PASSED
+
+JarvisLiveAvatarWiringUiTest > dockingAndDetachingDoNotRewriteTheSaved3dChoice STARTED
+
+JarvisLiveAvatarWiringUiTest > dockingAndDetachingDoNotRewriteTheSaved3dChoice PASSED
+
+JarvisLiveAvatarWiringUiTest > shellUsesTheOneSurfaceReceivingActivitySignals STARTED
+
+JarvisLiveAvatarWiringUiTest > shellUsesTheOneSurfaceReceivingActivitySignals PASSED
+
+JarvisLiveAvatarWiringUiTest > actualDirectorSpeechReachesTheVisibleHead STARTED
+
+JarvisLiveAvatarWiringUiTest > actualDirectorSpeechReachesTheVisibleHead PASSED
+
+JarvisLiveAvatarWiringUiTest > resizingTheSlotPreservesTheSurfaceAndCurrentSpeech STARTED
+
+JarvisLiveAvatarWiringUiTest > resizingTheSlotPreservesTheSurfaceAndCurrentSpeech PASSED
+
+JarvisLiveAvatarWiringUiTest > shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation STARTED
+
+JarvisLiveAvatarWiringUiTest > shortMediumWindowOwnsOneSidebarAndNoPhoneBottomNavigation PASSED
+
+JarvisLiveAvatarWiringUiTest > separateRegionsPositionTheNativeViewportAndMemoryTargetOnTheSameGrid STARTED
+
+JarvisLiveAvatarWiringUiTest > separateRegionsPositionTheNativeViewportAndMemoryTargetOnTheSameGrid PASSED
+
+JarvisLiveAvatarWiringUiTest > semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn STARTED
+
+JarvisLiveAvatarWiringUiTest > semanticMenuDestinationsOpenTheirNamedScreensWithoutStartingATurn PASSED
+
+JarvisShellStageUiTest > tablet STARTED
+
+JarvisShellStageUiTest > tablet PASSED
+
+JarvisShellStageUiTest > phone STARTED
+
+JarvisShellStageUiTest > phone PASSED
+
+JarvisShellStageUiTest > foldOpen STARTED
+
+JarvisShellStageUiTest > foldOpen PASSED
+
+ContinuumAvatarIconBurstPreviewUiTest > iconBurstFliesOutAndEnds STARTED
+
+ContinuumAvatarIconBurstPreviewUiTest > iconBurstFliesOutAndEnds PASSED
+
+ContinuumLandscapeCockpitLayoutTest > everythingFitsOneScreenWithUsableTargetsAndNoOverlap STARTED
+
+ContinuumLandscapeCockpitLayoutTest > everythingFitsOneScreenWithUsableTargetsAndNoOverlap PASSED
+
+ContinuumLandscapeCockpitLayoutTest > compositionFollowsTheReferences STARTED
+
+ContinuumLandscapeCockpitLayoutTest > compositionFollowsTheReferences PASSED
+
+ContinuumLandscapeCockpitLayoutTest > freshStateDrawsNotAvailableNeverReferenceNumbers STARTED
+
+ContinuumLandscapeCockpitLayoutTest > freshStateDrawsNotAvailableNeverReferenceNumbers PASSED
+
+ContinuumLandscapeCockpitLayoutTest > landscapeWindowsUseTheCockpitAndPortraitOrLargeTypeDoNot STARTED
+
+ContinuumLandscapeCockpitLayoutTest > landscapeWindowsUseTheCockpitAndPortraitOrLargeTypeDoNot PASSED
+[Incubating] Problems report is available at: file:///workspace/scratch/f5f40c1db981/device-ai-alive/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 28s
+30 actionable tasks: 1 executed, 29 up-to-date
+
+EXIT_CODE=0

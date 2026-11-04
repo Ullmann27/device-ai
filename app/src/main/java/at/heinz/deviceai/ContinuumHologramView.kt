@@ -79,6 +79,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
     private val taskEffects = ContinuumTaskEffects()
+    private val headIconBurst = at.heinz.deviceai.avatar.AvatarIconBurst()
     private var cockpitSequence: JarvisSequenceView? = null
     private var cockpitHeadBounds: Rect? = null
     private var cockpitOrbBounds: Rect? = null
@@ -190,6 +191,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     /** The cockpit adapter adds effects to this existing surface; state, audio and 3D ownership remain here. */
     fun setCockpitSequence(sequence: JarvisSequenceView?) {
         if (cockpitSequence === sequence) return
+        headIconBurst.clear(System.currentTimeMillis())
         require(sequence?.parent == null) { "Cockpit sequence already belongs to a view" }
         cockpitSequence?.let { old -> old.clear(); removeView(old) }
         cockpitSequence = sequence
@@ -413,6 +415,17 @@ class ContinuumHologramView @JvmOverloads constructor(
         invalidate()
     }
 
+    /** Real cockpit event; existing clock. */
+    fun playHeadIconBurst(occurredAtMillis: Long): Boolean {
+        if (!headEnabled || !canAnimateFrame()) {
+            headIconBurst.clear(System.currentTimeMillis())
+            return false
+        }
+        return headIconBurst.start(occurredAtMillis, System.currentTimeMillis(), SystemClock.uptimeMillis()).also {
+            if (it) invalidate()
+        }
+    }
+
     /** Capture uptime at the actual work boundary, before posting to the UI. No default timestamp. */
     fun onTaskEffect(scope: String, event: ContinuumTaskEffects.Event, occurredAtMillis: Long): Boolean {
         if (!canAnimateFrame()) { clearTaskEffects(); return false }
@@ -442,6 +455,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
+        headIconBurst.clear(System.currentTimeMillis())
         // A fold/navigation reparent destroys the surface, but retains validated immutable asset bytes.
         release3d(clearAsset = false)
         mainHandler.removeCallbacks(avatarInvalidation)
@@ -516,8 +530,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L
+        if (!headEnabled) headIconBurst.clear(System.currentTimeMillis())
         if (!canAnimateFrame()) {
             clearTaskEffects()
+            headIconBurst.clear(System.currentTimeMillis())
             synchronized(avatarPose) { avatarPose.clearObservedGaze(System.currentTimeMillis()) }
             settleState()
             audio.reset()
@@ -650,6 +666,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         canvas.clipRect(0f,0f,width/density,height/density)
         painter.begin(canvas)
         taskEffects.draw(painter,width/density,height/density,SystemClock.uptimeMillis())
+        if (headEnabled) headIconBurst.seconds(SystemClock.uptimeMillis())?.let { elapsed ->
+            val head = canvas.save()
+            canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
+            avatarRenderer.drawHeadIconBurst(painter, headDrawBounds.width() / density,
+                headDrawBounds.height() / density, elapsed)
+            canvas.restoreToCount(head)
+        }
         canvas.restoreToCount(saved)
     }
 

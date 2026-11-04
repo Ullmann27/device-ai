@@ -63,6 +63,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         updateWaveAnimation()
     }
     private var waveFramePending = false
+    private val avatarSlotUpdate = Runnable { if (isAttachedToWindow) applyAvatarSlot() }
     private val waveFrame = object : Runnable {
         override fun run() {
             waveFramePending = false
@@ -104,12 +105,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         slotRegistration?.close()
-        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post { applyAvatarSlot() } }
+        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post(avatarSlotUpdate) }
         updateWaveAnimation()
     }
 
     override fun onDetachedFromWindow() {
         slotRegistration?.close(); slotRegistration = null
+        removeCallbacks(avatarSlotUpdate)
         dockedRenderer?.let { runCatching { it.detach() } }
         dockedRenderer = null
         removeCallbacks(waveFrame)
@@ -222,7 +224,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun applyAvatarSlot() {
         val owns = ownsAvatarSlot
-        val wanted = if (owns && hologram.parent === this) at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer else null
+        val wanted = (if (owns && hologram.parent === this) at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer else null)
+            ?.takeIf { it !is at.heinz.deviceai.avatar.JarvisHoloAvatar || it.canAttachTo(this) }
         if (wanted !== dockedRenderer) {
             dockedRenderer?.let { runCatching { it.detach() } }
             dockedRenderer = null
@@ -272,7 +275,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         avatarPlaceholder.measure(MeasureSpec.makeMeasureSpec(right - left, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.EXACTLY))
         avatarPlaceholder.layout(left, top, right, bottom)
-        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post { applyAvatarSlot() } }
+        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post(avatarSlotUpdate) }
         else if (changed) dockedRenderer?.let { r ->
             r.onSlotChanged(android.graphics.Rect(avatarRect))
             // The live adapter handles resize in place. Preserve compatibility with other slot implementations.

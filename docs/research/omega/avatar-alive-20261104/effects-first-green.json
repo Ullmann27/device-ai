@@ -1,0 +1,31 @@
+{
+  "baseSource": "d65b5b23fff6aa19c80413ac80095daa9f387266",
+  "worktreeClean": false,
+  "changes": "Head overlay implemented, floor-aligned header, new Activity TTS fixtures; before lifecycle correction",
+  "tests": 15,
+  "failed": 1,
+  "suites": [
+    {
+      "suite": "AvatarReferenceEffectsUiTest",
+      "tests": 5,
+      "failed": 0
+    },
+    {
+      "suite": "AvatarTtsLiveConnectionUiTest",
+      "tests": 5,
+      "failed": 1
+    },
+    {
+      "suite": "ContinuumLandscapeCockpitLayoutTest",
+      "tests": 4,
+      "failed": 0
+    },
+    {
+      "suite": "ContinuumAvatarIconBurstPreviewUiTest",
+      "tests": 1,
+      "failed": 0
+    }
+  ],
+  "failure": "measuredSilenceClosesTheVisibleMouthBeforeTheUtteranceEnds: IllegalArgumentException during second Activity setup, before mouth assertions; foreign live surface parent",
+  "rawLog": "effects-first-green.txt"
+}

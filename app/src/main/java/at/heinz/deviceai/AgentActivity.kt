@@ -252,9 +252,11 @@ class AgentActivity : Activity() {
     private val voiceFrame = object : Runnable {
         override fun run() {
             if (!voiceSpeaking || !foregroundLearningActive || isDestroyed) return
-            val level = voiceSignal.level(android.os.SystemClock.elapsedRealtime())
+            val utteranceId = voiceUtteranceId
+            val measured = utteranceId?.let { voiceSignal.measuredLevel(it, android.os.SystemClock.elapsedRealtime()) }
+            val level = measured ?: 0f
             hologramView?.setAudioLevel(level)
-            voiceUtteranceId?.let { avatarDirector.audioLevel(it, level) }
+            utteranceId?.let { avatarDirector.audioLevel(it, level, measuredPcmAvailable = measured != null) }
             mainHandler.postDelayed(this, 33L)
         }
     }
@@ -712,7 +714,10 @@ class AgentActivity : Activity() {
     override fun onDestroy() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
-        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        val registeredAvatar = at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer
+        if (registeredAvatar is at.heinz.deviceai.avatar.JarvisHoloAvatar && registeredAvatar.isBoundTo(hologramView)) {
+            at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        }
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         cameraDrift?.close()
@@ -3110,7 +3115,7 @@ class AgentActivity : Activity() {
             refreshOfflineVoice()
             if (readinessWelcomePending) maybePlayReadinessWelcome()
             else if (allowRegularGreeting && voiceReady && voiceEnabled)
-                speakBootstrap("Hallo. Device AI ist bereit.")
+                speakBootstrap(at.heinz.deviceai.cockpit.CockpitTimeline.GREETING_TEXT)
         }
         refreshReadinessGuide()
     }

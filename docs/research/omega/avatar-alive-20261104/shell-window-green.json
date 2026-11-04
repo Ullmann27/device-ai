@@ -1,0 +1,26 @@
+{
+  "baseSource": "438fd755a662b2e063527e1f00b28373652c8fc6",
+  "changes": "Advance the paused frame clock 40 ms after visible() and before windowFocusChanged(true), in both native shell fixtures",
+  "fixturePath": "app/src/uiTest/java/at/heinz/deviceai/JarvisShellStageUiTest.kt",
+  "fixtureSha256": "357d07e6008e8546ea17a35b0f1029acb3f99f3d899c97f83d5e20959f31f1d9",
+  "status": "PASS",
+  "total": {
+    "tests": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "at.heinz.deviceai.JarvisAvatarSlotUiTest",
+      "tests": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "at.heinz.deviceai.JarvisShellStageUiTest",
+      "tests": 3,
+      "failed": 0,
+      "skipped": 0
+    }
+  ]
+}

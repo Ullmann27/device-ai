@@ -1,0 +1,37 @@
+JUnit version 4.13.2
+...........................................................................E.E.E.E..E.............
+Time: 2.382
+There were 5 failures:
+1) negativeFullClockCyclesMatchTheStart(at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest)
+java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 116
+	at at.heinz.deviceai.avatar3d.AvatarIdleMotion.update(AvatarIdleMotion.kt:32)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.assertCycleStart(AvatarLivingPipelineTest.kt:94)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.negativeFullClockCyclesMatchTheStart(AvatarLivingPipelineTest.kt:90)
+2) observedGazeStaysRelativeToThePortraitCamera(at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest)
+java.lang.AssertionError: expected:<-47.0> but was:<-25.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:555)
+	at org.junit.Assert.assertEquals(Assert.java:685)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.observedGazeStaysRelativeToThePortraitCamera(AvatarLivingPipelineTest.kt:81)
+3) idleAttachmentReachesTheSmileWithoutOpeningTheMouth(at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest)
+java.lang.AssertionError: Idle smile must be subtle
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.idleAttachmentReachesTheSmileWithoutOpeningTheMouth(AvatarLivingPipelineTest.kt:22)
+4) ownerGazePointsAtThePackagedPortraitCamera(at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest)
+java.lang.AssertionError: expected:<-22.0> but was:<0.0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:555)
+	at org.junit.Assert.assertEquals(Assert.java:685)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.ownerGazePointsAtThePackagedPortraitCamera(AvatarLivingPipelineTest.kt:65)
+5) negativeZeroClockBoundaryMatchesTheStart(at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest)
+java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 116
+	at at.heinz.deviceai.avatar3d.AvatarIdleMotion.update(AvatarIdleMotion.kt:32)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.assertCycleStart(AvatarLivingPipelineTest.kt:94)
+	at at.heinz.deviceai.avatar3d.AvatarLivingPipelineTest.negativeZeroClockBoundaryMatchesTheStart(AvatarLivingPipelineTest.kt:86)
+
+FAILURES!!!
+Tests run: 93,  Failures: 5
+

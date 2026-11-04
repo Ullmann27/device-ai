@@ -358,10 +358,24 @@ class ContinuumAvatarRenderer {
     private val iconGlass = Fill.Solid(0xff0a2a5c.toInt())
     private val iconBack = Fill.Solid(0xff0088ff.toInt())
 
-    private fun drawBurst(p: ContinuumPainter, seconds: Float) {
-        if (!isBursting(seconds)) return
+    /** Shared overlay for both renderers. */
+    fun drawHeadIconBurst(p: ContinuumPainter, width: Float, height: Float, elapsed: Float) {
+        if (width <= 0f || height <= 0f || !elapsed.isFinite()) return
+        val portrait = ref5Hud && !showOrbits
+        val scale = if (portrait) min(width / 215f, height / 330f) else min(width / 300f, height / 345f)
+        val originY = if (portrait) height * .5f - 40f * scale else height * .385f
+        bloom = .45f
+        p.save()
+        p.translate(width / 2f, originY)
+        p.scale(scale, scale)
+        drawBurst(p, elapsed, 0f)
+        p.restore()
+    }
+
+    private fun drawBurst(p: ContinuumPainter, seconds: Float, start: Float = burstAt) {
+        if (!start.isFinite() || seconds - start !in 0f..BURST_S + BURST_STAGGER * BURST_ICONS) return
         for (i in 0 until BURST_ICONS) {
-            val t = ((seconds - burstAt - i * BURST_STAGGER) / BURST_S)
+            val t = ((seconds - start - i * BURST_STAGGER) / BURST_S)
             if (t <= 0f || t >= 1f) continue
             val e = 1f - (1f - t) * (1f - t) * (1f - t)   // cubic ease-out
             // deterministic fan towards the right and the camera
@@ -723,7 +737,7 @@ class ContinuumAvatarRenderer {
             AvatarExpression.CONCERNED -> 3f
             AvatarExpression.FOCUSED -> 1.5f
             AvatarExpression.CURIOUS -> -2f
-            AvatarExpression.NEUTRAL -> 0f
+            AvatarExpression.NEUTRAL, AvatarExpression.WARM -> 0f
         }
         for (side in intArrayOf(-1, 1)) {
             surface(side * .2f, -37f, 0f); val x0 = px; val y0 = py

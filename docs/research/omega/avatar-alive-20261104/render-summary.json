@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "0a79c703be62f4ade6737eaa9d13fea1dc35c5bb",
+  "sourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt": "774edb2243a3c6257dbbf6d4fb5858ea2a8ad94d8569d1801e09c3ec3514e1f0",
+    "app/src/main/java/at/heinz/deviceai/HologramAudio.kt": "671fe68134834778c218291c4593520db51d411be5ec3fc9d5a9ed265fa14bf8",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "e68e8044e04d3506686fde2b98512550bceeb5316832b196aa718c36739d1b16",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "c00b424680e563041063087167a2928f1f13ea9646fcb1cb00d7c53b70200983",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "1cbe2c242a830a2e5a3feb6d384ac78db727c1b5c33067600758a88161cd4f19",
+    "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt": "e09827ead1e0f523a107cac0bf815d1dbf110a654a5a7c9dc4dfe79dec875eea",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "74ef2024b07750e9ffb7c479c2f2f53cc1eac52078cfe7b9e3bb6ed9e9baf32a",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "fcc836f6f2ddd0d039d7a6e2837e62882c5c6775c9c40cd08e831d7140f3b83b"
+  },
+  "status": "PASS",
+  "evidenceClass": "HOST_RENDER_NOT_DEVICE",
+  "assetSha256": "c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a",
+  "poseExportSha256": "cc380d4faec69ba08966e270843da4229a20bfe16257eec7de94ff1f8e703f1d",
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "frameCount": 192,
+  "maximumControlMatrixError": 3.688037395477295e-07,
+  "maximumFaceSkinPositionErrorMetres": 6.600808770788134e-08,
+  "limitations": [
+    "Actual compiled mapper with synthetic inputs; no actual TTS/camera session",
+    "Blender materials, studio lights and glow are not native Filament pixel/performance evidence",
+    "Camera-relative gaze and smile are replayed only when present in exported poses",
+    "Reference likeness still requires visual review"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "sourceCommit": "6cab1b9add227c2e0e615191210014d445040567",
+  "sourceTree": "0cace1f535c6b9cbd3084c085ab58e6309914e13",
+  "status": "INTERRUPTED",
+  "exitCode": 130,
+  "reason": "No completed test result after about six minutes; stopped and rerun with per-test progress and a four-minute task timeout. No pass claim."
+}
