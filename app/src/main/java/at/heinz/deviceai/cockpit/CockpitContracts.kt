@@ -32,8 +32,13 @@ interface JarvisAvatarRenderer {
 enum class AvatarPresentation { HEAD, FULL_BODY_ORB }
 
 object JarvisAvatarSlot {
-    @Volatile var renderer: JarvisAvatarRenderer? = null
-        private set
+    // A new identity on every registration also invalidates queued work for a reused renderer.
+    private class Registration(val renderer: JarvisAvatarRenderer?)
+    @Volatile private var registration = Registration(null)
+
+    var renderer: JarvisAvatarRenderer?
+        get() = registration.renderer
+        private set(value) { registration = Registration(value) }
 
     private val listeners = java.util.concurrent.CopyOnWriteArrayList<(JarvisAvatarRenderer?) -> Unit>()
 
@@ -45,11 +50,15 @@ object JarvisAvatarSlot {
 
     /** AvatarDirector sink: existing AvatarSinkRegistry sink plus the docked renderer (posted to [main]). */
     fun fanOut(main: (Runnable) -> Unit): AvatarSink = AvatarSink { event ->
-        AvatarSinkRegistry.sink.onAvatarEvent(event)
-        renderer?.let { r ->
+        // Each optional graphics consumer is isolated, as in AvatarDirector's event emission.
+        runCatching { AvatarSinkRegistry.sink.onAvatarEvent(event) }
+        val target = registration
+        target.renderer?.let { r ->
             main(Runnable {
-                if (event is AvatarEvent.StateChanged) r.onAvatarState(event.state)
-                r.onAvatarEvent(event)
+                if (registration !== target) return@Runnable
+                if (event is AvatarEvent.StateChanged) runCatching { r.onAvatarState(event.state) }
+                // A state callback can synchronously unregister or re-dock the renderer.
+                if (registration === target) runCatching { r.onAvatarEvent(event) }
             })
         }
     }

@@ -53,11 +53,6 @@ class AvatarMorphMapper(targetNames: List<String>) {
         }
         val jaw = finite(pose.jawOpen, 0f, 1f)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
-        val cueOpening = sharedOpeningRatio(pose.viseme) * cueWeight
-        // The pinned CC0 recipes already include mouth-open inside each vowel target.
-        // Compose that common basis once; retain the independent lip shape unchanged.
-        weight("JawOpen", (jaw - cueOpening).coerceAtLeast(0f))
-        jawPitch = maxOf(jaw, cueOpening) * 12f
         // The existing reducer expires stale cues/audio and resets interrupted utterances.
         // Linear crossfade over CROSSFADE_S toward the current cue; first frame / clock jump snaps.
         val dt = if (lastSeconds.isFinite() && seconds.isFinite()) seconds - lastSeconds else Float.NaN
@@ -66,12 +61,18 @@ class AvatarMorphMapper(targetNames: List<String>) {
         // A repeated frame time or a clock jump snaps, so a static frame never shows a stale blend.
         if (pose.viseme == Viseme.SIL || cueWeight <= 0f) visemeBlend.fill(0f)
         val step = if (dt.isFinite() && dt > 0f && dt <= 1f) (dt / CROSSFADE_S).coerceIn(0f, 1f) else 1f
+        var renderedOpening = 0f
         for (v in Viseme.entries) {
             val target = if (v == pose.viseme && v != Viseme.SIL) cueWeight else 0f
             val cur = visemeBlend[v.ordinal]
             visemeBlend[v.ordinal] = if (target > cur) minOf(target, cur + step) else maxOf(target, cur - step)
             if (v != Viseme.SIL && visemeBlend[v.ordinal] > 0f) weight(v.name, visemeBlend[v.ordinal])
+            renderedOpening += sharedOpeningRatio(v) * visemeBlend[v.ordinal]
         }
+        // The pinned CC0 recipes already include mouth-open inside the viseme targets.
+        // Compensate the visible blend, including outgoing cues, once; preserve lip shapes.
+        weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
+        jawPitch = maxOf(jaw, renderedOpening) * 12f
         // VIDEO-SPEC: periodic blink of ~0.15 s.
         val t = if (seconds.isFinite()) ((seconds % 4.6f) + 4.6f) % 4.6f else 0f
         val blink = if (t > 4.45f) (1f - abs(t - 4.525f) / .075f).coerceIn(0f, 1f) else 0f
