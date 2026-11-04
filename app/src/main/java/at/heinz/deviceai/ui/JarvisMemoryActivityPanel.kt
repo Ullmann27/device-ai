@@ -97,13 +97,13 @@ object JarvisMemoryActivityPanel {
             val path = VectorPath().moveTo(ix, y).lineTo(ix + iw / 2, y - 2.6f * k).lineTo(ix + iw, y).lineTo(ix + iw / 2, y + 2.6f * k).close()
             p.strokePath(path, 1.1f * k, Fill.Solid(C.cyanSoft), if (j == 0) 1f else .8f)
         }
-        val titleStyle = JarvisDesign.Type.heading.copy(size = JarvisDesign.Type.heading.size * k * 1.05f)
+        val titleStyle = JarvisDesign.Type.heading.copy(size = JarvisDesign.Type.heading.size * k * .95f)
         p.drawText(TITLE, l + 33f * k, t + 18f * k, titleStyle, Fill.Solid(C.text))
         val cx = r - 12f * k; val cy = t + 14f * k
         p.drawLine(cx - 2.5f * k, cy - 3.5f * k, cx + 1f * k, cy, 1.2f * k, Fill.Solid(C.cyanSoft))
         p.drawLine(cx + 1f * k, cy, cx - 2.5f * k, cy + 3.5f * k, 1.2f * k, Fill.Solid(C.cyanSoft))
         // Balken
-        val bl = l + 12f * k; val br = r - 12f * k; val base = t + 37f * k; val maxH = 16f * k
+        val bl = l + 12f * k; val br = r - 12f * k; val base = t + 41f * k; val maxH = 14f * k
         val bars = snap.hourly
         if (bars == null || bars.isEmpty()) {
             p.drawLine(bl, base, br, base, 1f, Fill.Solid(C.rim), .8f)
@@ -120,7 +120,7 @@ object JarvisMemoryActivityPanel {
         }
         // Zeilen
         val rowStyle = JarvisDesign.Type.body.copy(size = 8.5f * k); val valStyle = rowStyle.copy(weight = 500)
-        val top = t + 44f * k; val pitch = 14.6f * k
+        val top = t + 46f * k; val pitch = 14.2f * k
         for ((i, row) in snap.rows().withIndex()) {
             val y = top + i * pitch
             if (i > 0) p.drawLine(l + 8f * k, y, r - 8f * k, y, .8f, Fill.Solid(C.rim), .6f)
