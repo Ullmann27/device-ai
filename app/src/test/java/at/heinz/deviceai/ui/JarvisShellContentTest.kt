@@ -46,4 +46,14 @@ class JarvisShellContentTest {
         val nav = phone[JarvisShellLayout.Slot.BOTTOM_NAV]!!
         assertEquals(JarvisTiles.bottomNav.last().target, JarvisShellContent.hitTarget(phone, tiles, nav.right - 4f, nav.top + 10f))
     }
+
+    @Test fun timelineTimingsArePinnedToJarvisMotion() {
+        val t = at.heinz.deviceai.cockpit.CockpitTimeline
+        assertEquals(JarvisMotion.Durations.PANEL_FLY_IN, t.PANEL_FLY_IN_MS)
+        assertEquals(JarvisMotion.Durations.STAGGER, t.STAGGER_MS)
+        assertEquals(JarvisMotion.Durations.SCENE_Z, t.SCENE_Z_MS)
+        assertEquals(JarvisMotion.Durations.ENVELOPE_IN + JarvisMotion.Durations.ENVELOPE_FLAP, t.ENVELOPE_MS)
+        assertEquals(JarvisMotion.Durations.PILL_FLY_IN, t.PILL_MS)
+        assertEquals(JarvisMotion.Durations.STEP, t.STEP_MS)
+    }
 }

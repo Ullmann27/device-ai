@@ -75,4 +75,14 @@ class JarvisMotionTest {
         with(JarvisMotion.Easing) { listOf(linear, easeOutCubic, easeInOutCubic, easeOutQuint, easeInExpo, easeInOutSine, easeOutBack) }
             .forEach { assertEquals(0f, it(0f), .001f); assertEquals(1f, it(1f), .001f) }
     }
+
+    @Test fun depthLayersScaleBlurTiltDrift() {
+        val D = JarvisMotion.Depth
+        assertTrue(D.scale(JarvisMotion.Depth.Layer.FAR) < D.scale(JarvisMotion.Depth.Layer.MID) && D.scale(JarvisMotion.Depth.Layer.MID) < D.scale(JarvisMotion.Depth.Layer.NEAR))
+        assertEquals(0f, D.blurDp(JarvisMotion.Depth.Layer.NEAR), 0f); assertTrue(D.blurDp(JarvisMotion.Depth.Layer.FAR) > D.blurDp(JarvisMotion.Depth.Layer.MID))
+        assertTrue(D.tiltY(100f, 1000f) > 0f && D.tiltY(900f, 1000f) < 0f)
+        assertTrue(kotlin.math.abs(D.tiltY(0f, 1000f)) <= D.MAX_TILT_DEG)
+        assertTrue(D.drift(3500, JarvisMotion.Depth.Layer.FAR).first > D.drift(3500, JarvisMotion.Depth.Layer.NEAR).first)
+        assertEquals(0f to 0f, D.drift(3500, JarvisMotion.Depth.Layer.FAR, 0f))
+    }
 }

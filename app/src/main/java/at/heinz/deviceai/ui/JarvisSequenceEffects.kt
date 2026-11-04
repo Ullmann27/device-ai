@@ -275,7 +275,7 @@ class JarvisSequenceEffects {
         }
         p.save(); p.scale(sx, 1f, cx, cy)
         val flash = if (inT in .75f..1f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL
-        if (c.live || inT in .75f..1f) JarvisNeon.panelBloom(p, l, t, r, b, 14f, if (c.live) .6f else 1f)
+        if (c.live || inT in .75f..1f) JarvisNeon.bloomRoundRect(p, l, t, r, b, 14f, intensity = if (c.live) .6f else 1f)
         JarvisNeon.glassCard(p, l, t, r, b, 14f, flash, active = c.live && inT >= 1f)
         p.restore()
         if (sx < .7f || alpha < .3f) return
