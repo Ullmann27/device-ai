@@ -106,7 +106,8 @@ object JarvisCockpitGrid {
         a[Area.MODULES] = Box(W * MODULES_LEFT, stageTop + stageH * .15f, right, stageTop + stageH * .74f)
         val cardBottom = minOf(cardTop + H * CARD_H, stageTop + stageH * .52f)
         a[Area.USER_CARD] = Box(cl, maxOf(cardTop, stageTop), cl + W * CARD_W, cardBottom)
-        val dialogTop = maxOf(cardBottom + g, stageBottom - stageH * .42f)
+        // ref5: the bubble is ~93 px (≈ 100 u) tall; a taller window gives it at most 30 % of the stage.
+        val dialogTop = maxOf(cardBottom + g, stageBottom - maxOf(100f * u, stageH * .30f))
         a[Area.DIALOG] = Box(cl, dialogTop, W * DIALOG_RIGHT, stageBottom)
         return Grid(W, H, u, a)
     }
