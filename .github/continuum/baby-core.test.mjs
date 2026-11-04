@@ -60,9 +60,10 @@ test("html extraction strips active content and preserves public links",()=>{
 test("legacy overconfident beliefs are downgraded until revalidated",()=>{
   const legacy=createBabyState(100);
   legacy.schemaVersion=1;
-  legacy.beliefs=[{id:"belief-old",text:"An old broad claim with insufficient precise support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
+  legacy.beliefs=[{id:"belief-old",text:"A broad claim about replay is not confirmed by any independent evidence and remains provisional until carefully revalidated.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
   const migrated=migrateBabyState(legacy,200);
-  assert.equal(migrated.schemaVersion,2);
+  assert.equal(migrated.schemaVersion,3);
+  assert.equal(migrated.memoryRewardVersion,2);
   assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
   assert.ok(migrated.beliefs[0].confidence<=.55);
 });
@@ -151,4 +152,67 @@ test("memory retrieval reward depends on relevance quality rather than raw hit c
   const weak=Array.from({length:10},(_,i)=>({kind:"BELIEF",score:.15,status:"PROVISIONAL",confidence:.2,id:String(i)}));
   assert.ok(evaluateMemoryRetrieval(good)>evaluateMemoryRetrieval(weak));
   assert.ok(evaluateMemoryRetrieval([])<5);
+});
+
+test("grounded duplicate cannot inherit confidence, identity or citations from provisional row",()=>{
+  const claim="Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed.";
+  const unverified={
+    id:"provisional-high",text:claim,confidence:.94,uncertainty:.06,
+    status:"PROVISIONAL",citationUrls:["https://unverified.example/claim"],
+    supportCount:1,sourceDiversity:0,contradictionIds:[],createdAt:100,lastValidatedAt:100
+  };
+  const supported={
+    id:"grounded-verified",text:"[1] "+claim,confidence:.73,uncertainty:.27,
+    status:"GROUNDED_OBSERVATION",citationUrls:["https://publisher.example/paper"],
+    supportCount:2,sourceDiversity:2,contradictionIds:[],createdAt:120,lastValidatedAt:120
+  };
+  for(const beliefs of [[unverified,supported],[supported,unverified]]){
+    const state=createBabyState(90);
+    state.beliefs=structuredClone(beliefs);
+    const snapshot=structuredClone(state);
+    const migrated=migrateBabyState(state,140);
+    assert.equal(migrated.beliefs.length,1);
+    const belief=migrated.beliefs[0];
+    assert.equal(belief.status,"GROUNDED_OBSERVATION");
+    assert.equal(belief.id,"grounded-verified");
+    assert.equal(belief.confidence,.73);
+    assert.deepEqual(belief.citationUrls,["https://publisher.example/paper"]);
+    assert.equal(belief.supportCount,2);
+    assert.equal(belief.sourceDiversity,2);
+    assert.equal(belief.createdAt,120);
+    assert.equal(belief.lastValidatedAt,120);
+    assert.deepEqual(state,snapshot,"migration must not change its input");
+  }
+
+  const onlyProvisional=createBabyState(90);
+  onlyProvisional.beliefs=[unverified,{...unverified,id:"provisional-second",confidence:.42}];
+  const deduplicated=migrateBabyState(onlyProvisional,140).beliefs;
+  assert.equal(deduplicated.length,1);
+  assert.equal(deduplicated[0].status,"PROVISIONAL");
+});
+
+test("evidence ingestion never grafts unverified citations onto verified same-claim support",()=>{
+  const answer="Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed and outcomes are measured [1][2][3].";
+  const unverified=[{url:"https://unverified.example/guess",source:"unverified",relevance:1}];
+  const verified=[
+    {url:"https://publisher.example/a",source:"paperA",relevance:4},
+    {url:"https://publisher.example/b",source:"paperB",relevance:4},
+    {url:"https://publisher.example/c",source:"paperC",relevance:4}
+  ];
+  let baby=createBabyState(50);
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:unverified,uncertainty:.95,now:100}).baby;
+  assert.equal(baby.beliefs.length,1);
+  assert.equal(baby.beliefs[0].status,"PROVISIONAL");
+
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:verified,uncertainty:.05,now:200}).baby;
+  assert.equal(baby.beliefs.length,1);
+  assert.equal(baby.beliefs[0].status,"GROUNDED_OBSERVATION");
+  assert.deepEqual(baby.beliefs[0].citationUrls,verified.map(x=>x.url));
+  const admitted=structuredClone(baby.beliefs[0]);
+
+  baby=ingestEvidence(baby,{query:"replay",answer,citations:unverified,uncertainty:.95,now:300}).baby;
+  assert.deepEqual(baby.beliefs[0].citationUrls,admitted.citationUrls);
+  assert.equal(baby.beliefs[0].confidence,admitted.confidence);
+  assert.equal(baby.beliefs[0].lastValidatedAt,admitted.lastValidatedAt);
+  assert.equal(baby.beliefs[0].status,"GROUNDED_OBSERVATION");
 });

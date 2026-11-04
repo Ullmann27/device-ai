@@ -259,15 +259,24 @@ export function ingestEvidence(babyInput, {
       lastValidatedAt: now
     };
     if(existing){
-      const mergedUrls=[...new Set([...(existing.citationUrls??[]),...candidate.citationUrls])].slice(0,8);
-      Object.assign(existing,candidate,{
-        confidence:Math.max(Number(existing.confidence??0),candidate.confidence),
-        uncertainty:1-Math.max(Number(existing.confidence??0),candidate.confidence),
-        status:(existing.status==="GROUNDED_OBSERVATION"||candidate.status==="GROUNDED_OBSERVATION")?"GROUNDED_OBSERVATION":"PROVISIONAL",
-        citationUrls:mergedUrls,
-        supportCount:Math.max(Number(existing.supportCount??0),candidate.supportCount),
-        sourceDiversity:Math.max(Number(existing.sourceDiversity??0),candidate.sourceDiversity)
-      });
+      const existingGrounded=existing.status==="GROUNDED_OBSERVATION";
+      const candidateGrounded=candidate.status==="GROUNDED_OBSERVATION";
+      if(existingGrounded && !candidateGrounded){
+        // A weaker replay must not overwrite the already grounded record.
+      }else if(!existingGrounded && candidateGrounded){
+        // Promote only the newly supported evidence, not old provisional sources.
+        Object.assign(existing,candidate,{createdAt:existing.createdAt??candidate.createdAt});
+      }else{
+        const mergedUrls=[...new Set([...(existing.citationUrls??[]),...candidate.citationUrls])].slice(0,8);
+        const confidence=Math.max(Number(existing.confidence??0),candidate.confidence);
+        Object.assign(existing,candidate,{
+          confidence,
+          uncertainty:1-confidence,
+          citationUrls:mergedUrls,
+          supportCount:Math.max(Number(existing.supportCount??0),candidate.supportCount),
+          sourceDiversity:Math.max(Number(existing.sourceDiversity??0),candidate.sourceDiversity)
+        });
+      }
     }else{
       baby.beliefs.push(candidate);
       added.push(id);
@@ -475,6 +484,14 @@ function consolidateBeliefs(values){
     const existing=byKey.get(key);
     if(!existing){
       byKey.set(key,candidate);
+      continue;
+    }
+    const existingGrounded=existing.status==="GROUNDED_OBSERVATION";
+    const candidateGrounded=candidate.status==="GROUNDED_OBSERVATION";
+    if(existingGrounded!==candidateGrounded){
+      // Distinct evidence tiers cannot be fused. Keep the grounded row's own
+      // identity, confidence, citations, source counts and validation dates.
+      byKey.set(key,existingGrounded?existing:candidate);
       continue;
     }
     const existingConfidence=Number(existing.confidence??0);
