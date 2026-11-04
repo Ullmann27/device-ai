@@ -1,0 +1,508 @@
+{
+  "taskId": "C1-MISSING-022-INDEPENDENT-REVIEW",
+  "readAtUtc": "2026-11-04T22:04:09.576956+00:00",
+  "localSourceCommit": "9a442485f2569b39be2bcd8d6687da6f6c15c45d",
+  "localSourceTree": "8fe54137e976c718c91a4b3bbcfc02d50ca52bdd",
+  "parentCommit": "445807c4ee97c59122a6c98a08866fa932ca24d7",
+  "remoteCommitParentReported": "0d8a3d46c409e5918c49b6f3407bb63f3519b846",
+  "archivePath": "docs/evidence/c1-integration-20261104/missing022/C1-MISSING-022-intake-and-own-redgreen.tar.xz",
+  "archiveSha256": "7b30398f74e4fee1e5ea73186c2c91582fa6a0b014c4694d989769d6208fa6b9",
+  "allArchiveMemberHashesVerified": true,
+  "archiveMembers": [
+    {
+      "member": "intake/ACCEPTANCE.md",
+      "bytes": 5632,
+      "sha256": "bb77bd49c64dca457c51f9a412783ab1de42f8d5411740ca3491012ef846cf34"
+    },
+    {
+      "member": "intake/C1-MISSING-022-source-preflight.patch",
+      "bytes": 9807,
+      "sha256": "79b7beb43a946c839b93fa7fde6c4371bbc60d64a6eea264894938f6c66fb247"
+    },
+    {
+      "member": "intake/INTAKE.md",
+      "bytes": 5712,
+      "sha256": "20b0aa1c8ac74bb050ba5c11bde2a5464092ec907279bfa1d86f52787b5b2d6e"
+    },
+    {
+      "member": "intake/SHA256SUMS",
+      "bytes": 934,
+      "sha256": "037c94eeb49a6be6e36c911b4c5bba73fe3e7da85297013dc61f9097b3cf21b5"
+    },
+    {
+      "member": "intake/SOURCE-MANIFEST.json",
+      "bytes": 5145,
+      "sha256": "5764463527b025054dbf99113899b649c229f5449c31c9f95701b54a319a4a05"
+    },
+    {
+      "member": "intake/STATIC-CHECK.txt",
+      "bytes": 415,
+      "sha256": "5c4cebe96025b0b3bb52e1f825c8876d4e1ff3702c7ad1542061fd5bb518aa7b"
+    },
+    {
+      "member": "intake/green/.github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "bytes": 5251,
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "member": "intake/green/.github/continuum/local-teamleader-loop.mjs",
+      "bytes": 14729,
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e"
+    },
+    {
+      "member": "intake/red/.github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "bytes": 5251,
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "member": "intake/red/.github/continuum/local-teamleader-loop.mjs",
+      "bytes": 14213,
+      "sha256": "09e5e3ff93e615270e955055777d5549477ba496b688095389eafa01cbe558f4"
+    },
+    {
+      "member": "matrix/MATRIX.md",
+      "bytes": 9229,
+      "sha256": "a545f5e23479dfdcf24c88358030b62c93f8198c616c94e2fcfe2a8b856d09c9"
+    },
+    {
+      "member": "matrix/SHA256SUMS",
+      "bytes": 893,
+      "sha256": "e3899bccf23ecb0493b2ad6bf1caaecd15757e99bab037c471f8508e0ea88496"
+    },
+    {
+      "member": "matrix/matrix.json",
+      "bytes": 22656,
+      "sha256": "5c3000819e72451791bf8c112c48e8570de375611dae71c569605b7b3d2f124c"
+    },
+    {
+      "member": "own-runs/missing022-red-01.log",
+      "bytes": 4814,
+      "sha256": "5e5e36d22b1359b67b0110d06b4a6633a4afbd9ed073960709b340a31b8750f5"
+    },
+    {
+      "member": "own-runs/missing022-red-01.result.json",
+      "bytes": 1115,
+      "sha256": "1f60afba4ab0bdaacd051ecfee39d4815ddce4360da7ed95602a5f3a43852176"
+    },
+    {
+      "member": "own-runs/missing022-green-01.log",
+      "bytes": 1933,
+      "sha256": "45ed986351dee74a97ce8b41a498622c288ca51d69cc3b7892e0438487bda5a8"
+    },
+    {
+      "member": "own-runs/missing022-green-01.result.json",
+      "bytes": 1119,
+      "sha256": "be6189c26a3b322b1dd5a38b4ce04f4f3dbbb9ad68bab8cbb6d021431c6f52dd"
+    },
+    {
+      "member": "own-runs/run_c1_gate_v3.py",
+      "bytes": 5722,
+      "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+    }
+  ],
+  "sourceChecks": [
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "baseBlob": "3dc5d63077fce0244e2bdeeb20b310aa762d2cfa",
+      "targetBlob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "targetSha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e",
+      "targetBytes": 14729,
+      "mode": "100644",
+      "targetIdenticalToArchivedGreen": true,
+      "frozenTestsIdenticalRedGreen": false
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "baseBlob": null,
+      "targetBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "targetSha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219",
+      "targetBytes": 5251,
+      "mode": "100644",
+      "targetIdenticalToArchivedGreen": true,
+      "frozenTestsIdenticalRedGreen": true
+    }
+  ],
+  "callers": [
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "blob": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "sha256": "410329c1f13e4b76eb1dbb8e242c4c3269313150de5577be698720a627a882d8",
+      "sourcePreflightMention": false,
+      "callsiteBlocks": [
+        {
+          "startLine": 113,
+          "lines": [
+            "  let retryHead=null,retryAttempts=0;",
+            "  try{",
+            "   const result=await runTeamleaderLoop({",
+            "    work:()=>{",
+            "     const liveHead=driver.head(root);",
+            "     if(retryHead!==liveHead){retryHead=liveHead;retryAttempts=0;}",
+            "     const cycle=runTeamleaderCycle({root,stateDir,driver,",
+            "      budgetMinutes:Number(opt.budgetMinutes??20),",
+            "      retry:retryAttempts>0,log:console.log});",
+            "     if(cycle.kind==='BASELINE_REPAIR'){",
+            "      if(cycle.outcome==='ERROR'&&retryAttempts<2)retryAttempts++;",
+            "      else retryAttempts=0;",
+            "     }",
+            "     process.stdout.write(JSON.stringify(cycle)+'\\n');",
+            "     return cycle;",
+            "    },",
+            "    intervalMinutes:Number(opt.intervalMinutes??60),",
+            "    maxCycles:opt.maxCycles===undefined?null:Number(opt.maxCycles),",
+            "    signal:controller.signal,log:console.log,",
+            "    // Opt-in checkpoint is outside Git and bound to a clean immutable HEAD."
+          ]
+        }
+      ],
+      "durableMode": "durable only when --durable; otherwise non-durable"
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "blob": "715d63179fd5174d8b5444819c4e2226dcc87878",
+      "sha256": "a62aabcbad079be2235f24ab064aeeb096467b44404c99e623bec27f0375cd87",
+      "sourcePreflightMention": false,
+      "callsiteBlocks": [
+        {
+          "startLine": 117,
+          "lines": [
+            "   const controller=new AbortController();",
+            "   for(const sig of ['SIGINT','SIGTERM'])process.once(sig,()=>controller.abort());",
+            "   const summary=await runTeamleaderLoop({",
+            "    work:({signal})=>runCcc1Cycle({project:o.project,stateDir:o.state,core:o.core??'disambiguate',signal,indexOnIdle:o['index-on-idle']==='true'}),",
+            "    intervalMinutes:Number(o.interval??60),maxCycles:Number(o.cycles),signal:controller.signal,",
+            "    stateFile:path.join(path.resolve(o.state),'loop-checkpoint.json'),sourceRoot:o.project,",
+            "    onHeartbeat:h=>out(JSON.stringify({state:h.state,cycles:h.cycles,lastOutcome:h.lastOutcome,detail:h.detail})),",
+            "    log:m=>console.error(m)});",
+            "   out(JSON.stringify(summary));",
+            "   return;",
+            "  }",
+            "  default:throw Error('unknown command '+o.command);",
+            " }",
+            "}",
+            "",
+            "if(process.argv[1]===fileURLToPath(import.meta.url))main().catch(e=>{console.error(String(e?.message??e));process.exitCode=1;});"
+          ]
+        }
+      ],
+      "durableMode": "durable loop"
+    },
+    {
+      "path": ".github/continuum/continuum-workshop.mjs",
+      "blob": "8373fd3f165eea9e0c7a3645953460115701b111",
+      "sha256": "06c1b671feaa4ebb423f21012c7aac4bd7405052513d3baf70a5e3b8c7b18b45",
+      "sourcePreflightMention": false,
+      "callsiteBlocks": [
+        {
+          "startLine": 212,
+          "lines": [
+            " process.once('SIGINT',stop);process.once('SIGTERM',stop);",
+            " try{",
+            "  const result=await runTeamleaderLoop({",
+            "   work,intervalMinutes:args.intervalMinutes,maxCycles:args.maxCycles,",
+            "   signal:controller.signal,",
+            "   onHeartbeat:hb=>{writePrivateJson(heartbeatPath,hb);onHeartbeat(hb);}",
+            "  });",
+            "  return {mode:'loop',...result,automaticMerge:false};",
+            " }finally{",
+            "  process.removeListener('SIGINT',stop);process.removeListener('SIGTERM',stop);",
+            " }",
+            "}",
+            "",
+            "if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){",
+            " try{",
+            "  const args=parseWorkshopArgs(process.argv.slice(2));",
+            "  const result=await executeWorkshop(args);",
+            "  process.stdout.write(JSON.stringify(result,null,2)+'\\n');",
+            " }catch(error){",
+            "  console.error('[continuum-workshop]',String(error?.message??error));"
+          ]
+        }
+      ],
+      "durableMode": "non-durable loop"
+    },
+    {
+      "path": ".github/continuum/coding-service.mjs",
+      "blob": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8",
+      "sha256": "a654c79f578bd3f8e44d8bd176546e37bff7adb21c8c8f41126dde3a68048cb2",
+      "sourcePreflightMention": false,
+      "callsiteBlocks": [
+        {
+          "startLine": 320,
+          "lines": [
+            "  // An idle start must not spend the owner's finite work-cycle budget.",
+            "  await wait();",
+            "  await runTeamleaderLoop({work,intervalMinutes:1,maxCycles:config.limits.maxCycles,signal:controller.signal,wait,",
+            "   stateFile:path.join(config.stateDir,'sessions',instanceId+'.json'),sourceRoot:config.sourceRoot,",
+            "   onHeartbeat:heartbeat=>update({cycles:heartbeat.cycles,loopState:heartbeat.state})});",
+            "  update({state:'STOPPED',activeTaskId:null,stoppedAt:new Date().toISOString()});",
+            "  return {state:'STOPPED',instanceId};",
+            " }finally{",
+            "  controller.abort();notify();process.removeListener('SIGTERM',stop);process.removeListener('SIGINT',stop);",
+            "  if(stopTimer!==null)clearTimeout(stopTimer);",
+            "  if(server)await new Promise(resolve=>server.close(resolve));",
+            "  const socket=socketPath(config);if(fs.existsSync(socket)&&fs.lstatSync(socket).isSocket())fs.unlinkSync(socket);",
+            "  release();",
+            "  releaseHost();",
+            " }",
+            "}"
+          ]
+        }
+      ],
+      "durableMode": "durable owner-service loop"
+    }
+  ],
+  "compatibilityTest": {
+    "path": ".github/continuum/local-teamleader-loop.test.mjs",
+    "blob": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+    "sha256": "96883a253ea904660543278b472f9b7cddacd73d0da0ad76c1bc74ebe4a02f45",
+    "testNames": [
+      "three local cycles pace on a fixed one-hour schedule and persist honest heartbeat",
+      "failures stay failed, sleep with increasing backoff and eventually recover",
+      "signal stopping terminates without another cycle or artificial success",
+      "invalid intervals, cycle limits and CLI mode combinations are rejected",
+      "unverified repair and interruption increment failure counters, not successes",
+      "unknown or unfinished worker result must fail closed",
+      "signal while waiting persists terminal STOPPED heartbeat",
+      "one-shot CLI exits nonzero for failed, unverified or unknown outcomes",
+      "failure backoff never retries before a user configured interval",
+      "a failing baseline without a code diagnostic remains a failed worker cycle",
+      "scheduler wait failure persists terminal ERROR rather than false WAITING",
+      "saved status validates legitimate heartbeats and rejects spoofed or corrupt states",
+      "durable restart retains total cycle budget and pending backoff",
+      "durable cancellation during work records interruption and a stopped session",
+      "pre-aborted durable run writes STOPPED without executing work",
+      "durable state fails closed on corruption, changed budgets and changed source",
+      "durable scheduling requires a finite budget and state outside source",
+      "durable integrity validation rejects plausible counter edits",
+      "source drift while waiting terminates the saved cadence before another cycle",
+      "source drift during a cycle cannot retain its reported verification success",
+      "durable loop rejects a competing scheduler before its work executes",
+      "SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay"
+    ]
+  },
+  "executionByThisReviewer": "NONE; read-only source/log/hash review; own scratch evidence writes only",
+  "completedAtUtc": "2026-11-04T22:12:40.878512+00:00",
+  "reviewStatus": "NO_MATERIAL_SOURCE_BLOCKER_WITHIN_OPTIONAL_DURABLE_PREFLIGHT_SCOPE",
+  "changedPaths": [
+    "A\t.github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+    "M\t.github/continuum/local-teamleader-loop.mjs",
+    "A\tdocs/evidence/c1-integration-20261104/missing022/C1-MISSING-022-intake-and-own-redgreen.tar.xz",
+    "A\tdocs/evidence/c1-integration-20261104/missing022/summary.json",
+    "M\tdocs/research/omega/ASTRA-NUCLEUS-HANDOFF-20261104.md",
+    "M\tdocs/research/omega/C1-INTEGRATION-HANDOFF-20261104.md"
+  ],
+  "pinnedSourceFilesRead": [
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "blob": "f83e6a1dcd40e7841734f893895766c6c3b1ed29",
+      "sha256": "a6f9cf6b556386ca7f04eeedaa97fdf277817ed160f40f7a6945d4b28641e71e",
+      "bytes": 14729
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "blob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219",
+      "bytes": 5251
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.test.mjs",
+      "blob": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+      "sha256": "96883a253ea904660543278b472f9b7cddacd73d0da0ad76c1bc74ebe4a02f45",
+      "bytes": 17377
+    },
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "blob": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "sha256": "410329c1f13e4b76eb1dbb8e242c4c3269313150de5577be698720a627a882d8",
+      "bytes": 7430
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "blob": "715d63179fd5174d8b5444819c4e2226dcc87878",
+      "sha256": "a62aabcbad079be2235f24ab064aeeb096467b44404c99e623bec27f0375cd87",
+      "bytes": 7639
+    },
+    {
+      "path": ".github/continuum/continuum-workshop.mjs",
+      "blob": "8373fd3f165eea9e0c7a3645953460115701b111",
+      "sha256": "06c1b671feaa4ebb423f21012c7aac4bd7405052513d3baf70a5e3b8c7b18b45",
+      "bytes": 11041
+    },
+    {
+      "path": ".github/continuum/coding-service.mjs",
+      "blob": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8",
+      "sha256": "a654c79f578bd3f8e44d8bd176546e37bff7adb21c8c8f41126dde3a68048cb2",
+      "bytes": 20391
+    }
+  ],
+  "archiveTestsRedGreenIdentical": true,
+  "isolatedRuns": [
+    {
+      "label": "missing022-red-01",
+      "counts": {
+        "tests": 4,
+        "pass": 0,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "exitCode": 1,
+      "kind": "actual isolated fixture modules; all four marker assertions fail, not setup failures"
+    },
+    {
+      "label": "missing022-green-01",
+      "counts": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "exitCode": 0,
+      "kind": "actual isolated fixture modules, identical tests and archived production target"
+    }
+  ],
+  "integratedRuns": [
+    {
+      "label": "missing022-integrated-01",
+      "receipt": {
+        "taskId": "C1-COMBINED-GATES-001",
+        "label": "missing022-integrated-01",
+        "source": {
+          "commit": "9a442485f2569b39be2bcd8d6687da6f6c15c45d",
+          "tree": "8fe54137e976c718c91a4b3bbcfc02d50ca52bdd",
+          "dirty": ""
+        },
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+          ".github/continuum/local-teamleader-loop.test.mjs"
+        ],
+        "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+        "requestedAt": "2026-11-04T22:01:16.175887+00:00",
+        "locks": [
+          "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+          "/workspace/scratch/d663e8444310/qa/gradle.lock"
+        ],
+        "exitCode": null,
+        "status": "WAITING_FOR_LOCKS",
+        "lockWaitSeconds": 900,
+        "waitingForLock": "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+        "heartbeatAt": "2026-11-04T22:04:31.393965+00:00"
+      },
+      "receiptSha256": "61dda74986b55930fd2611871a82c1cd5b5e2962744459a09762e738500acd8a",
+      "logSha256": null,
+      "logBytes": null,
+      "verifiedCounts": null,
+      "verifiedCaseNames": [],
+      "assessment": "NO_EVIDENCE_OF_TEST_START; parent reports lost exec session; receipt remains waiting"
+    },
+    {
+      "label": "missing022-integrated-02",
+      "receipt": {
+        "taskId": "C1-COMBINED-GATES-001",
+        "label": "missing022-integrated-02",
+        "source": {
+          "commit": "9a442485f2569b39be2bcd8d6687da6f6c15c45d",
+          "tree": "8fe54137e976c718c91a4b3bbcfc02d50ca52bdd",
+          "dirty": ""
+        },
+        "command": [
+          "node",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter=tap",
+          ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+          ".github/continuum/local-teamleader-loop.test.mjs"
+        ],
+        "runnerSha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd",
+        "requestedAt": "2026-11-04T22:10:34.568838+00:00",
+        "locks": [
+          "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+          "/workspace/scratch/d663e8444310/qa/gradle.lock"
+        ],
+        "exitCode": 0,
+        "status": "PASS",
+        "lockWaitSeconds": 900,
+        "waitingForLock": "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+        "heartbeatAt": "2026-11-04T22:12:04.689210+00:00",
+        "freeBytesAtStart": 1114607616,
+        "startedAt": "2026-11-04T22:12:09.194713+00:00",
+        "overallTimeoutSeconds": 1800,
+        "individualTestTimeoutSeconds": null,
+        "processReturnCode": 0,
+        "finishedAt": "2026-11-04T22:12:10.196593+00:00",
+        "sourceUnchanged": true,
+        "recordedAt": "2026-11-04T22:12:10.234716+00:00"
+      },
+      "receiptSha256": "d473da029436b29b10e5fe7c7c91f9bbb9fa8c4341fab78af347ba8988a870e4",
+      "logSha256": "cb10419268c0bdd0e459cc68bd2e429fa23a34c82f7f13e896252ff4579e675f",
+      "logBytes": 6714,
+      "verifiedCounts": {
+        "tests": 26,
+        "suites": 0,
+        "pass": 26,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "verifiedCaseNames": [
+        "initial durable source preflight rejects fsmonitor before any Git status or checkpoint",
+        "configuration changed while waiting is rejected before the next scheduler status check",
+        "configuration changed during work is rejected before post-work Git filters or success acceptance",
+        "an invalid preflight option fails closed before a source status or work callback",
+        "three local cycles pace on a fixed one-hour schedule and persist honest heartbeat",
+        "failures stay failed, sleep with increasing backoff and eventually recover",
+        "signal stopping terminates without another cycle or artificial success",
+        "invalid intervals, cycle limits and CLI mode combinations are rejected",
+        "unverified repair and interruption increment failure counters, not successes",
+        "unknown or unfinished worker result must fail closed",
+        "signal while waiting persists terminal STOPPED heartbeat",
+        "one-shot CLI exits nonzero for failed, unverified or unknown outcomes",
+        "failure backoff never retries before a user configured interval",
+        "a failing baseline without a code diagnostic remains a failed worker cycle",
+        "scheduler wait failure persists terminal ERROR rather than false WAITING",
+        "saved status validates legitimate heartbeats and rejects spoofed or corrupt states",
+        "durable restart retains total cycle budget and pending backoff",
+        "durable cancellation during work records interruption and a stopped session",
+        "pre-aborted durable run writes STOPPED without executing work",
+        "durable state fails closed on corruption, changed budgets and changed source",
+        "durable scheduling requires a finite budget and state outside source",
+        "durable integrity validation rejects plausible counter edits",
+        "source drift while waiting terminates the saved cadence before another cycle",
+        "source drift during a cycle cannot retain its reported verification success",
+        "durable loop rejects a competing scheduler before its work executes",
+        "SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay"
+      ],
+      "assessment": "INTEGRATED_26_PASS_AT_PINNED_SOURCE"
+    }
+  ],
+  "callbackContract": {
+    "trustedCallerProvided": true,
+    "optionalDefault": null,
+    "nonFunctionNonNullRejectedBeforeSourceAccess": true,
+    "canonicalRootProvided": true,
+    "awaitedBeforeInitialGitAndCheckpoint": true,
+    "awaitedBeforeCycleGitAndWork": true,
+    "awaitedAfterWorkBeforePostGitAndOutcomeAcceptance": true,
+    "postWorkRejectionProducesTerminalError": true,
+    "checkpointSchemaBudgetAndLockLogicUnchanged": true,
+    "nonDurableModeDoesNotInvokePreflight": true,
+    "falseReturnIsNotVetoOnlyThrowOrRejectedPromise": true
+  },
+  "limits": [
+    "All four current productive callers remain unbound; optional hook is not an activated end-to-end caller policy",
+    "No activated branchbot, new CLI, automatic merge/push, or scheduler authorization",
+    "Real Git canaries prove the four controlled config-rejection paths; not general OS isolation or a host sandbox PASS",
+    "Fixture sourceUnchanged receipt records the clean C1 host checkout; external module provenance is separately bound by archived source bytes and manifest",
+    "Integrated 26-case outcome applies only to local commit 9a442485f2569b39be2bcd8d6687da6f6c15c45d/tree8fe54137e976c718c91a4b3bbcfc02d50ca52bdd",
+    "No Android, APK, local-model, real-device or full gate acceptance; historical183 is not added"
+  ]
+}
