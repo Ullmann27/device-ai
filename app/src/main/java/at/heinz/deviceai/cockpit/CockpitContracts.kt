@@ -35,7 +35,13 @@ object JarvisAvatarSlot {
     @Volatile var renderer: JarvisAvatarRenderer? = null
         private set
 
-    fun register(r: JarvisAvatarRenderer?) { renderer = r }
+    private val listeners = java.util.concurrent.CopyOnWriteArrayList<(JarvisAvatarRenderer?) -> Unit>()
+
+    /** Register (or with null: unregister → the host detaches the old one). Hosts are notified. */
+    fun register(r: JarvisAvatarRenderer?) { renderer = r; listeners.forEach { it(r) } }
+
+    /** Host side (ContinuumHomeView): re-dock when the registration changes. */
+    fun addListener(l: (JarvisAvatarRenderer?) -> Unit): AutoCloseable { listeners += l; return AutoCloseable { listeners -= l } }
 
     /** AvatarDirector sink: existing AvatarSinkRegistry sink plus the docked renderer (posted to [main]). */
     fun fanOut(main: (Runnable) -> Unit): AvatarSink = AvatarSink { event ->

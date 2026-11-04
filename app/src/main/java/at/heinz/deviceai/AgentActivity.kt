@@ -676,6 +676,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
         clearTaskEffects()
@@ -948,6 +949,8 @@ class AgentActivity : Activity() {
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
+        // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar())
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = listOf(
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId) { line ->
