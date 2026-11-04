@@ -74,6 +74,7 @@ class AiContextCompiler(
 
     fun compile(input: AiContextInput): CompiledAiContext {
         val buffer = StringBuilder()
+        var usedBytes = 0
         val includedMemoryIds = mutableListOf<String>()
         val includedSources = mutableListOf<String>()
         var truncated = false
@@ -85,8 +86,11 @@ class AiContextCompiler(
             val sanitized = redactSecrets(raw)
             val prefix = if (buffer.isEmpty()) "" else "\n\n"
             val candidate = prefix + "## " + title + "\n" + sanitized
-            if (utf8Size(candidate) <= policy.maxBytes - utf8Size(buffer.toString())) {
+            val candidateBytes = utf8Size(candidate)
+            if (candidateBytes <= policy.maxBytes - usedBytes) {
                 buffer.append(candidate)
+                // ASCII section separators prevent surrogate pairs across appends.
+                usedBytes += candidateBytes
                 return true
             }
             truncated = true

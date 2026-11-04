@@ -1,0 +1,42 @@
+{
+  "parity": "PASS",
+  "warmupPairs": 10000,
+  "rounds": 20,
+  "batch": 2000,
+  "outputBytes": 451,
+  "metrics": {
+    "wallNs": {
+      "baselineMedian": 14429.3515,
+      "candidateMedian": 13462.184000000001,
+      "reductionOfMediansPercent": 6.7027787076917456,
+      "pairedMedianReductionPercent": 6.702661367259298,
+      "pairedReductionRangePercent": [
+        -40.183528503007565,
+        48.4452532887784
+      ],
+      "candidateLowerRounds": 13
+    },
+    "threadCpuNs": {
+      "baselineMedian": 12640.6615,
+      "candidateMedian": 12103.063750000001,
+      "reductionOfMediansPercent": 4.25292418438702,
+      "pairedMedianReductionPercent": 3.3512584473327403,
+      "pairedReductionRangePercent": [
+        -31.304353871651454,
+        36.60369693118789
+      ],
+      "candidateLowerRounds": 14
+    },
+    "allocatedBytes": {
+      "baselineMedian": 15272.0,
+      "candidateMedian": 14424.0,
+      "reductionOfMediansPercent": 5.552645364064955,
+      "pairedMedianReductionPercent": 5.552645364064955,
+      "pairedReductionRangePercent": [
+        5.458290422245108,
+        6.675106902476519
+      ],
+      "candidateLowerRounds": 20
+    }
+  }
+}

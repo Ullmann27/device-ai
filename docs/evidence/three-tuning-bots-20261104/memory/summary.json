@@ -1,0 +1,94 @@
+{
+  "baselineCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "cpuCount": 9,
+  "allocationResult": "less allocation in all four measured workloads",
+  "latencyResult": "mixed noisy host timings; no general latency claim",
+  "workloads": [
+    {
+      "name": "minimal-control",
+      "outputBytes": 451,
+      "memoryCount": 0,
+      "sourceCount": 0,
+      "truncated": false,
+      "baselineMedianNs": 18356.69375,
+      "candidateMedianNs": 24699.471875000003,
+      "reductionOfTimingMediansPercent": -34.552944072513085,
+      "pairedMedianTimeReductionPercent": 3.5686010723224006,
+      "pairedTimeReductionRangePercent": [
+        -160.2541360460486,
+        17.191922514918538
+      ],
+      "candidateFasterRounds": 8,
+      "baselineMedianAllocatedBytes": 15856.0,
+      "candidateMedianAllocatedBytes": 14912.0,
+      "allocationReductionBytes": 944.0,
+      "allocationReductionPercent": 5.953582240161453
+    },
+    {
+      "name": "mixed-ascii-16k",
+      "outputBytes": 14235,
+      "memoryCount": 8,
+      "sourceCount": 4,
+      "truncated": true,
+      "baselineMedianNs": 1188753.528125,
+      "candidateMedianNs": 1143065.2687499998,
+      "reductionOfTimingMediansPercent": 3.843375291349371,
+      "pairedMedianTimeReductionPercent": -2.1307879890457175,
+      "pairedTimeReductionRangePercent": [
+        -23.44493080350652,
+        26.143011924300257
+      ],
+      "candidateFasterRounds": 6,
+      "baselineMedianAllocatedBytes": 845048.1,
+      "candidateMedianAllocatedBytes": 723384.0,
+      "allocationReductionBytes": 121664.09999999998,
+      "allocationReductionPercent": 14.397298804647923
+    },
+    {
+      "name": "mixed-unicode-64k",
+      "outputBytes": 56189,
+      "memoryCount": 8,
+      "sourceCount": 6,
+      "truncated": false,
+      "baselineMedianNs": 3117518.059375,
+      "candidateMedianNs": 2520505.909375,
+      "reductionOfTimingMediansPercent": 19.150238703659326,
+      "pairedMedianTimeReductionPercent": 17.83068773396851,
+      "pairedTimeReductionRangePercent": [
+        -46.781051800882906,
+        37.280968409159165
+      ],
+      "candidateFasterRounds": 11,
+      "baselineMedianAllocatedBytes": 2288028.7,
+      "candidateMedianAllocatedBytes": 1604999.7,
+      "allocationReductionBytes": 683029.0000000002,
+      "allocationReductionPercent": 29.85229162553775
+    },
+    {
+      "name": "omitted-memory-8k",
+      "outputBytes": 5428,
+      "memoryCount": 0,
+      "sourceCount": 4,
+      "truncated": true,
+      "baselineMedianNs": 1237731.725,
+      "candidateMedianNs": 1158266.9718749998,
+      "reductionOfTimingMediansPercent": 6.42019199475559,
+      "pairedMedianTimeReductionPercent": 0.9501333289876983,
+      "pairedTimeReductionRangePercent": [
+        -34.383589188101816,
+        21.412549637441767
+      ],
+      "candidateFasterRounds": 6,
+      "baselineMedianAllocatedBytes": 449544.0,
+      "candidateMedianAllocatedBytes": 410416.0,
+      "allocationReductionBytes": 39128.0,
+      "allocationReductionPercent": 8.703931094620327
+    }
+  ],
+  "cpuAffinityCount": 9,
+  "cpuQuota": "UNAVAILABLE: /sys/fs/cgroup/cpu.max absent",
+  "cpuModel": "AMD EPYC 9V74 80-Core Processor",
+  "followupControl": "control-summary.json; one bounded follow-up with identical source/input"
+}
