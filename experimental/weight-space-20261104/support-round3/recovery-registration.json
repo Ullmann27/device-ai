@@ -1,0 +1,60 @@
+{
+  "descriptionCommand": [
+    "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "-Xmx1g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r3-build/segment-worker/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmSegmentWorker",
+    "describe"
+  ],
+  "descriptionStdoutSha256": "0f2f62501031c67d3799a50f199f228ef4035ce69d16fa6a5afd311a6b26e4a4",
+  "jar": {
+    "path": "/workspace/scratch/319f3e4563d9/r3-build/segment-worker/checks.jar",
+    "sha256": "8abb101d1fdd90987f580699bf1454a7d3b8ca813b23e4aa7c77b3fbc885fc87"
+  },
+  "java": {
+    "path": "/usr/lib/jvm/java-21-openjdk-amd64/bin/java",
+    "sha256": "1a7e0b17c39003c75b457d686775ccb032e56fa9c8afe3c492d8eb3715e8951a"
+  },
+  "limits": {
+    "chunkSteps": 8,
+    "heapMiB": 1024,
+    "maxAttempts": 4,
+    "timeoutSeconds": 120,
+    "totalSteps": 24
+  },
+  "nativeDescription": {
+    "bos": "256",
+    "chunk": "8",
+    "data": "dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901",
+    "eos": "257",
+    "parameters": "2632",
+    "rates": "3.3333336E-4,6.666667E-4,0.001,0.001,9.973621E-4,9.894792E-4,9.76444E-4,9.58409E-4,9.3558576E-4,9.082419E-4,8.76698E-4,8.4132387E-4,8.025342E-4,7.6078385E-4,7.165622E-4,6.7038776E-4,6.2280195E-4,5.743625E-4,5.2563753E-4,4.7719813E-4,4.2961226E-4,3.8343784E-4,3.392162E-4,2.9746583E-4",
+    "seed": "20261104",
+    "targets": "10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10",
+    "tokenizer": "f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b",
+    "total": "24",
+    "vocab": "258"
+  },
+  "schema": "lm1-bounded-recovery-v1",
+  "scope": "Tiny software recovery fixtures; no holdout, no 16M training, no promotion",
+  "sourceDigest": "23e30ec811605fc9f0a9412df3ec5aa34a22888a890f51a868c354be14e4e8fb",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/support-round3/LmSegmentWorker.kt": "750649bedc66d699ddb379df39787007930a739b9e6ef01c9806fadb0b40d58e",
+    "experimental/weight-space-20261104/support-round3/LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+    "experimental/weight-space-20261104/support-round3/LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "experimental/weight-space-20261104/support-round3/build_native.py": "4583447a46e5ff0188ea54e9094f48aab06fef979f62e1fec1e112ab1bd62618",
+    "experimental/weight-space-20261104/support-round3/register_recovery.py": "12541a80a52d2b3d34017194c3ce3d8e1741d53cf0136b2d14a8c8899c801921",
+    "experimental/weight-space-20261104/support-round3/run_recovery.py": "17c1f594e8bbae6cfe8d8939c9b4841c494d77d751aa4f74b2332a59ca4919a4",
+    "experimental/weight-space-20261104/support-round3/training-continuity.patch": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8"
+  },
+  "stdlib": {
+    "path": "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "sha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006"
+  }
+}

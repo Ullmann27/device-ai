@@ -1,0 +1,1 @@
+{"status": "COMPLETED", "committedStep": 24, "state": "0d2006b5c9ecf307eae5b5fbdd29dfd9bb07d24f47e4e8ab4fc2871681d0ee16", "weights": "4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540"}

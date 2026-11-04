@@ -1,0 +1,23 @@
+{
+  "status": "PASS_16M_STATE_ONLY",
+  "sourceCommit": "c11b5d2de9c39d4447fcc03cf33e6d07753b1737",
+  "files": {
+    "attempt.json": "d49e483bc318826d5afde9e56e009f4d3407e05134d6017654819f76ad53e932",
+    "compile-evidence/build.json": "a5ca408cf9123ee205a83051239643a388d3df8269bea57e0d7bc9fe333c4313",
+    "compile-evidence/compile.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-evidence/compile.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-evidence/patch.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compile-evidence/patch.stdout.txt": "2305fe33adc196083be5be95d5dad3459ba5f29a1c08ae2830cbaeca08dcb168",
+    "native.tsv": "a84ac91ef068cefe4de20399ef922f0ef172439d0ffc9eb96aef29b464165a5c",
+    "receipt.json": "5a55454bc670667036f11772b300bf339417dd471065e4606dac395844d17a68",
+    "registration.json": "fbb8122598498c279312ce6a13241f5581948d9e7d044c9e636d94b0bba068c8",
+    "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "derivedStateArtifact": {
+    "sha256": "24661ee1a2db0e00bafc93ae4ea142b3cb996bd28ed64bb720a135bdea50c026",
+    "bytes": 192143140,
+    "origin": "Unchanged existing weights with fresh zero moments; not historical optimizer recovery",
+    "reproducibleFromRegisteredInputs": true,
+    "committedBinary": false
+  }
+}

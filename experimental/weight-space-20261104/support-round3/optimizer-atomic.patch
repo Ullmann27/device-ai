@@ -1,0 +1,82 @@
+--- a/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
++++ b/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
+@@ -166,31 +166,63 @@
+         val leaf = n.substringAfterLast('.')
+         n != "tok" && n != "pos" && leaf.startsWith("w")
+     }
++    private val owned = java.util.IdentityHashMap<FloatArray, Boolean>()
++    init {
++        require(weightDecay.isFinite() && weightDecay >= 0f)
++        require(beta1.isFinite() && beta1 >= 0f && beta1 < 1f)
++        require(beta2.isFinite() && beta2 >= 0f && beta2 < 1f)
++        require(eps.isFinite() && eps > 0f)
++        require(params.allFinite())
++        for (p in params.mats.values) require(owned.put(p.data, true) == null) { "aliased parameters" }
++        for (state in listOf(m, v)) for (array in state.values) owned[array] = true
++    }
+     var steps = 0
+         private set
+ 
+-    /** One update with [grads]; returns the global gradient norm before clipping to [clip]. */
++    /** Validate fully before mutation. */
++    @Synchronized
+     fun step(grads: Map<String, Mat>, lr: Float, clip: Float): Double {
++        require(lr.isFinite() && lr >= 0f && clip.isFinite() && clip > 0f)
++        require(steps < Int.MAX_VALUE)
++        require(grads.keys == params.mats.keys) { "gradient names differ" }
++        for ((name, p) in params.mats) {
++            val g = grads.getValue(name)
++            require(g.rows == p.rows && g.cols == p.cols) { "gradient shape differs: $name" }
++            require(!owned.containsKey(g.data)) { "gradient aliases optimizer state" }
++            require(g.data.all { it.isFinite() }) { "non-finite gradient: $name" }
++        }
+         var sq = 0.0
+         for (g in grads.values) for (x in g.data) sq += x.toDouble() * x
+         val norm = sqrt(sq)
++        require(norm.isFinite())
+         val scale = if (norm > clip && norm > 0) (clip / norm).toFloat() else 1f
+-        steps++
+-        val b1 = 1.0 - Math.pow(beta1.toDouble(), steps.toDouble())
+-        val b2 = 1.0 - Math.pow(beta2.toDouble(), steps.toDouble())
++        val nextStep = steps + 1
++        val b1 = 1.0 - Math.pow(beta1.toDouble(), nextStep.toDouble())
++        val b2 = 1.0 - Math.pow(beta2.toDouble(), nextStep.toDouble())
+         val stepSize = (lr * sqrt(b2) / b1).toFloat()
+-        for ((name, p) in params.mats) {
+-            val g = grads.getValue(name).data
+-            val mm = m.getValue(name); val vv = v.getValue(name)
+-            val decay = decays.getValue(name)
+-            for (i in p.data.indices) {
+-                val gi = g[i] * scale
+-                mm[i] = beta1 * mm[i] + (1 - beta1) * gi
+-                vv[i] = beta2 * vv[i] + (1 - beta2) * gi * gi
+-                if (decay) p.data[i] -= lr * weightDecay * p.data[i]
+-                p.data[i] -= stepSize * mm[i] / (sqrt(vv[i]) + eps)
+-            }
+-        }
++        require(stepSize.isFinite()) { "step size overflow" }
++        for (apply in listOf(false, true)) {
++            for ((name, p) in params.mats) {
++                val g = grads.getValue(name).data
++                val mm = m.getValue(name); val vv = v.getValue(name)
++                val decay = decays.getValue(name)
++                for (i in p.data.indices) {
++                    val gi = g[i] * scale
++                    val nextM = beta1 * mm[i] + (1 - beta1) * gi
++                    val nextV = beta2 * vv[i] + (1 - beta2) * gi * gi
++                    val decayed = if (decay) p.data[i] - lr * weightDecay * p.data[i] else p.data[i]
++                    val nextP = decayed - stepSize * nextM / (sqrt(nextV) + eps)
++                    if (apply) {
++                        mm[i] = nextM; vv[i] = nextV; p.data[i] = nextP
++                    } else {
++                        require(nextM.isFinite() && nextV.isFinite() && nextV >= 0f && nextP.isFinite()) {
++                            "non-finite prospective update: $name/$i"
++                        }
++                    }
++                }
++            }
++        }
++        steps = nextStep
+         return norm
+     }
+ }

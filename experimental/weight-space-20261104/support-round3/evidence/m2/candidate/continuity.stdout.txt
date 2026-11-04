@@ -1,0 +1,95 @@
+UPDATE	step=1	targets=10	rate=3.3333336E-4	loss=5.518327236175537
+UPDATE	step=2	targets=10	rate=6.666667E-4	loss=5.512820720672607
+UPDATE	step=3	targets=10	rate=0.001	loss=5.534866571426392
+UPDATE	step=4	targets=10	rate=0.001	loss=5.5233094692230225
+UPDATE	step=5	targets=10	rate=9.973621E-4	loss=5.478753089904785
+UPDATE	step=6	targets=10	rate=9.894792E-4	loss=5.4672276973724365
+UPDATE	step=7	targets=10	rate=9.76444E-4	loss=5.490509748458862
+UPDATE	step=8	targets=10	rate=9.58409E-4	loss=5.478883504867554
+UPDATE	step=9	targets=10	rate=9.3558576E-4	loss=5.435994625091553
+UPDATE	step=10	targets=10	rate=9.082419E-4	loss=5.4262683391571045
+UPDATE	step=11	targets=10	rate=8.76698E-4	loss=5.4502112865448
+UPDATE	step=12	targets=10	rate=8.4132387E-4	loss=5.441487669944763
+UPDATE	step=13	targets=10	rate=8.025342E-4	loss=5.399767875671387
+UPDATE	step=14	targets=10	rate=7.6078385E-4	loss=5.391719102859497
+UPDATE	step=15	targets=10	rate=7.165622E-4	loss=5.4188010692596436
+UPDATE	step=16	targets=10	rate=6.7038776E-4	loss=5.411603331565857
+UPDATE	step=17	targets=10	rate=6.2280195E-4	loss=5.3703107833862305
+UPDATE	step=18	targets=10	rate=5.743625E-4	loss=5.364063024520874
+UPDATE	step=19	targets=10	rate=5.2563753E-4	loss=5.393011212348938
+UPDATE	step=20	targets=10	rate=4.7719813E-4	loss=5.387987375259399
+UPDATE	step=21	targets=10	rate=4.2961226E-4	loss=5.347893238067627
+UPDATE	step=22	targets=10	rate=3.8343784E-4	loss=5.34338903427124
+UPDATE	step=23	targets=10	rate=3.392162E-4	loss=5.375388860702515
+UPDATE	step=24	targets=10	rate=2.9746583E-4	loss=5.371906399726868
+REFERENCE	weights=4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540	state=f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c.lmtrain
+UPDATE	step=1	targets=10	rate=3.3333336E-4	loss=5.518327236175537
+UPDATE	step=2	targets=10	rate=6.666667E-4	loss=5.512820720672607
+UPDATE	step=3	targets=10	rate=0.001	loss=5.534866571426392
+UPDATE	step=4	targets=10	rate=0.001	loss=5.5233094692230225
+UPDATE	step=5	targets=10	rate=9.973621E-4	loss=5.478753089904785
+UPDATE	step=6	targets=10	rate=9.894792E-4	loss=5.4672276973724365
+UPDATE	step=7	targets=10	rate=9.76444E-4	loss=5.490509748458862
+UPDATE	step=8	targets=10	rate=9.58409E-4	loss=5.478883504867554
+CASE	idempotent_publication	PASS
+CASE	restored_optimizer_step	PASS
+CASE	restored_scheduler_rate	PASS
+CASE	exact_checkpoint_round_trip	PASS
+CASE	moments_present	PASS
+CASE	live_optimizer_restore_rejected	PASS
+UPDATE	step=9	targets=10	rate=9.3558576E-4	loss=5.435994625091553
+UPDATE	step=10	targets=10	rate=9.082419E-4	loss=5.4262683391571045
+UPDATE	step=11	targets=10	rate=8.76698E-4	loss=5.4502112865448
+UPDATE	step=12	targets=10	rate=8.4132387E-4	loss=5.441487669944763
+UPDATE	step=13	targets=10	rate=8.025342E-4	loss=5.399767875671387
+UPDATE	step=14	targets=10	rate=7.6078385E-4	loss=5.391719102859497
+UPDATE	step=15	targets=10	rate=7.165622E-4	loss=5.4188010692596436
+UPDATE	step=16	targets=10	rate=6.7038776E-4	loss=5.411603331565857
+UPDATE	step=17	targets=10	rate=6.2280195E-4	loss=5.3703107833862305
+UPDATE	step=18	targets=10	rate=5.743625E-4	loss=5.364063024520874
+UPDATE	step=19	targets=10	rate=5.2563753E-4	loss=5.393011212348938
+UPDATE	step=20	targets=10	rate=4.7719813E-4	loss=5.387987375259399
+UPDATE	step=21	targets=10	rate=4.2961226E-4	loss=5.347893238067627
+UPDATE	step=22	targets=10	rate=3.8343784E-4	loss=5.34338903427124
+UPDATE	step=23	targets=10	rate=3.392162E-4	loss=5.375388860702515
+UPDATE	step=24	targets=10	rate=2.9746583E-4	loss=5.371906399726868
+CASE	uninterrupted_equals_full_resume	PASS
+CASE	weights_only_restart_diverges	PASS
+UPDATE	step=9	targets=10	rate=9.3558576E-4	loss=5.435994625091553
+UPDATE	step=10	targets=10	rate=9.082419E-4	loss=5.4297871589660645
+UPDATE	step=11	targets=10	rate=8.76698E-4	loss=5.469147801399231
+UPDATE	step=12	targets=10	rate=8.4132387E-4	loss=5.461626887321472
+UPDATE	step=13	targets=10	rate=8.025342E-4	loss=5.4084601402282715
+UPDATE	step=14	targets=10	rate=7.6078385E-4	loss=5.401115894317627
+UPDATE	step=15	targets=10	rate=7.165622E-4	loss=5.4363943338394165
+UPDATE	step=16	targets=10	rate=6.7038776E-4	loss=5.4286792278289795
+UPDATE	step=17	targets=10	rate=6.2280195E-4	loss=5.380415201187134
+UPDATE	step=18	targets=10	rate=5.743625E-4	loss=5.374132871627808
+UPDATE	step=19	targets=10	rate=5.2563753E-4	loss=5.413539290428162
+UPDATE	step=20	targets=10	rate=4.7719813E-4	loss=5.408458232879639
+UPDATE	step=21	targets=10	rate=4.2961226E-4	loss=5.357288837432861
+UPDATE	step=22	targets=10	rate=3.8343784E-4	loss=5.352536678314209
+UPDATE	step=23	targets=10	rate=3.392162E-4	loss=5.394505620002747
+UPDATE	step=24	targets=10	rate=2.9746583E-4	loss=5.3908140659332275
+CASE	moment_reset_alone_diverges	PASS
+CASE	invalid_moment_restore_rejected	PASS
+CASE	invalid_restore_preserves_optimizer	PASS
+CASE	wrong_source	PASS
+CASE	wrong_data	PASS
+CASE	wrong_seed	PASS
+CASE	wrong_file_hash	PASS
+CASE	wrong_warmup	PASS
+CASE	wrong_worker_count	PASS
+CASE	wrong_learning_rate	PASS
+CASE	wrong_tokenizer	PASS
+CASE	body_checksum_corruption	PASS
+CASE	truncated_state	PASS
+CASE	trailing_bytes	PASS
+CASE	weight_only_format	PASS
+CASE	rehashed_negative_variance	PASS
+CASE	symlink_input	PASS
+CASE	symlink_output_directory	PASS
+CASE	existing_damaged_target	PASS
+CASE	damaged_target_never_overwritten	PASS
+CASE	original_checkpoint_unchanged	PASS
+SUMMARY	passed=29	failed=0	full=f7608a51b0eee8716e6c86679832577f2afc6c2f12f66275f50d41cbc9dcc22c.lmtrain	partial=df925182e8ab68e44fb14973b881fa168c397d325267b08c252b5a1fcba475a3.lmtrain

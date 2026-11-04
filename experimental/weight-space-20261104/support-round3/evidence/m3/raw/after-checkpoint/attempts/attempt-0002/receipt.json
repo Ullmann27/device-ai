@@ -1,0 +1,8 @@
+{
+  "elapsedSeconds": 0.3689987960024155,
+  "exitCode": -9,
+  "startSha256": "46f8c9e89c7014503829e1cce84587aae86e83812080b95fdce1983954bbec41",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "5ee3f5435889b3f378b3d8c4fe366552934dbe70bc71bdb0071df749f1241f33",
+  "timedOut": false
+}
