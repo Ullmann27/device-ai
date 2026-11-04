@@ -72,8 +72,10 @@ object JarvisShellContent {
 
     fun tiles(s: ContinuumDashboardState, nowMillis: Long, subtitles: Boolean = false): List<JarvisTile> =
         JarvisTiles.reference.map {
-            it.copy(displayText = tileValue(it.target, s, nowMillis),
+            val t = it.copy(displayText = tileValue(it.target, s, nowMillis),
                 subtitle = if (subtitles) JarvisCockpitGridContent.tileSubtitles[it.target].orEmpty() else emptyList())
+            if (!subtitles) t else t.copy(label = JarvisCockpitGridContent.tileTitles[it.target] ?: t.label,
+                icon = JarvisCockpitGridContent.tileIcons[it.target] ?: t.icon)
         }
 
     /**

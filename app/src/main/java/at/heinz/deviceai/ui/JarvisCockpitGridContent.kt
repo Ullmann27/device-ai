@@ -17,27 +17,40 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
 object JarvisCockpitGridContent {
     const val NONE = "—"
 
-    /** ref5 tile subtitles (German), two short lines each. */
-    val tileSubtitles: Map<String, List<String>> = mapOf(
-        "chat" to listOf("Natürliches KI-Gespräch", "über mehrere Runden"),
-        "memory" to listOf("Langzeit-Gedächtnis,", "persönlicher Kontext"),
-        "logic" to listOf("Schlussfolgern, planen,", "Probleme lösen"),
-        "research" to listOf("Tiefe Recherche", "mit Quellen"),
-        "agents" to listOf("Spezialisierte", "KI-Teammitglieder"),
-        "learning" to listOf("Anpassen, verbessern,", "neue Fähigkeiten"),
-        "device" to listOf("Android-Gerät, Apps", "und System steuern"),
-        "system" to listOf("Zustand, Leistung", "und Modellstatus"),
+    /** ref5 tile titles (English, as in ref5); only used in the Fold7 grid, the classic tiles keep [JarvisTiles.reference]. */
+    val tileTitles: Map<String, String> = mapOf(
+        "chat" to "Chat", "memory" to "Memory", "logic" to "Logic", "research" to "Research",
+        "agents" to "Agents", "learning" to "Learning", "device" to "Device Control", "system" to "System Status",
     )
 
-    /** Module column right of the orb (ref5: Memory / Logic / Agents / Learning / Local Model) with status dot. */
+    /** ref5 tile icons where they differ from the classic tile (Agents = cube). */
+    val tileIcons: Map<String, Icon> = mapOf("agents" to Icon.CUBE)
+
+    /** ref5 tile subtitles: static descriptions of the function (English like ref5), two short lines each. Not data. */
+    val tileSubtitles: Map<String, List<String>> = mapOf(
+        "chat" to listOf("Natural, multi-turn", "AI conversation"),
+        "memory" to listOf("Long-term", "personal context"),
+        "logic" to listOf("Reasoning, planning,", "problem solving"),
+        "research" to listOf("Deep research", "with sources"),
+        "agents" to listOf("Specialized AI", "teammates"),
+        "learning" to listOf("Adapt, improve", "and build new skills"),
+        "device" to listOf("Control your Android,", "apps and system"),
+        "system" to listOf("Health, performance", "and model status"),
+    )
+
+    /** ref5 tiles with a violet accent (Agents, Learning: second row, left). */
+    val violetTiles = setOf("agents", "learning")
+
+    /** Capability list right of the orb (ref5: Memory / Logic / Agents / Learning / Local Model) with status dot. */
     data class Module(val label: String, val icon: Icon, val value: String, val ok: Boolean)
 
+    /** Real values only (ContinuumDashboardState); no source → "offline" / "—" in the same style. */
     fun modules(s: ContinuumDashboardState): List<Module> = listOf(
-        Module("Gedächtnis", Icon.DATABASE, if (s.memory != null) "aktiv" else "offline", s.memory != null),
-        Module("Logik", Icon.ATOM, if (s.model.online) "bereit" else "offline", s.model.online),
-        s.cockpit.workers.let { w -> Module("Agenten", Icon.USERS, w?.let { "${it.count { x -> x.running }} aktiv" } ?: NONE, w != null) },
-        Module("Lernen", Icon.BOOK, if (s.learning.live) "aktiv" else NONE, s.learning.live),
-        Module("Lokales Modell", Icon.CPU, if (s.model.online) "online" else "offline", s.model.online),
+        Module("Memory", Icon.DATABASE, if (s.memory != null) "Active" else "offline", s.memory != null),
+        Module("Logic", Icon.ATOM, if (s.model.online) "Ready" else "offline", s.model.online),
+        s.cockpit.workers.let { w -> Module("Agents", Icon.USERS, w?.let { "${it.count { x -> x.running }} Running" } ?: NONE, w != null) },
+        Module("Learning", Icon.BOOK, if (s.learning.live) "Active" else NONE, s.learning.live),
+        Module("Local Model", Icon.CPU, if (s.model.online) "Online" else "offline", s.model.online),
     )
 
     /** Status bar segments (ref5 order). Missing sources → "—". */
@@ -144,8 +157,9 @@ object JarvisCockpitGridContent {
             val valueW = p.measureText(m.value, st)
             val dotX = b.right - 9f - valueW - 7f
             p.drawText(fit(p, m.label, st, dotX - 6f - (b.left + 22f)), b.left + 22f, cy + cap / 2f, st, Fill.Solid(Colors.text))
-            p.fillCircle(dotX, cy, 2.5f, Fill.Solid(if (m.ok) Colors.ok else Colors.textMuted))
-            p.drawText(m.value, b.right - 9f, cy + cap / 2f, st, Fill.Solid(if (m.ok) Colors.okSoft else Colors.textSecondary), TextAlign.RIGHT)
+            if (m.ok) ContinuumIcons.draw(p, Icon.CHECK_CIRCLE, dotX - 1f, cy, 9f, Fill.Solid(Colors.ok), 1.2f)
+            else p.fillCircle(dotX, cy, 2.5f, Fill.Solid(Colors.textMuted))
+            p.drawText(m.value, b.right - 9f, cy + cap / 2f, st, Fill.Solid(if (m.ok) Colors.text else Colors.textSecondary), TextAlign.RIGHT)
         }
     }
 
@@ -217,20 +231,28 @@ object JarvisCockpitGridContent {
         return out.map { fit(p, it, st, w) }
     }
 
-    /** Tile content inside the already drawn tile card (ref5: icon left, title, two subtitle lines, chevron). */
+    /**
+     * Tile content inside the already drawn tile card (ref5: free line icon with soft halo left, title, two subtitle
+     * lines, chevron at the title line; inner top glow; Agents/Learning with violet accent).
+     */
     fun drawTile(p: ContinuumPainter, b: Box, tile: JarvisTile, subtitle: List<String>) {
         val st = JarvisDesign.Styles.tile
+        val violet = tile.target in violetTiles
+        val accent = if (violet) Colors.violetSoft else Colors.cyanSoft
+        // inner glow: a 1 px inset highlight along the card (ref5 tiles light up from inside at the rim)
+        p.strokeRoundRect(b.left + 1.5f, b.top + 1.5f, b.right - 1.5f, b.bottom - 1.5f, maxOf(0f, st.radius - 1.5f), 1f,
+            Fill.Solid(Argb.of(46, Argb.red(accent), Argb.green(accent), Argb.blue(accent))))
         val iconSize = minOf(st.iconSize, b.height * .5f)
-        val ix = b.left + 12f + iconSize / 2f; val cy = b.top + b.height / 2f
-        p.strokeRoundRect(ix - iconSize * .7f, cy - iconSize * .7f, ix + iconSize * .7f, cy + iconSize * .7f, 6f, 1f, Fill.Solid(Colors.rim))
-        ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.iconCore))
-        val x = ix + iconSize * .7f + 9f; val room = b.right - 18f - x
+        val ix = b.left + st.padH * .75f + iconSize / 2f; val cy = b.top + b.height / 2f
+        ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(accent), iconSize / 13f * 2.6f, .18f)
+        ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(if (violet) Colors.violetSoft else Colors.iconCore))
+        val x = ix + iconSize / 2f + st.iconGap * .75f; val room = b.right - 18f - x
         val lines = subtitle.take(2)
         val capT = p.capHeight(Type.tileLabel)
         val lh = minOf(Type.subtitleLineHeight, (b.height - capT - 8f) / maxOf(1, lines.size))
         var y = cy - (capT + lines.size * lh) / 2f + capT
         p.drawText(fit(p, tile.label, Type.tileLabel, room), x, y, Type.tileLabel, Fill.Solid(Colors.text))
+        ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 9f, y - capT / 2f, 8f, Fill.Solid(Colors.textSecondary), 1f)
         lines.forEach { y += lh; p.drawText(fit(p, it, Type.subtitle, room), x, y, Type.subtitle, Fill.Solid(Colors.textSecondary)) }
-        ContinuumIcons.draw(p, Icon.CHEVRON_RIGHT, b.right - 9f, b.top + 11f, 8f, Fill.Solid(Colors.textSecondary), 1f)
     }
 }

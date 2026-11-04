@@ -78,10 +78,28 @@ class JarvisCockpitGridTest {
     @Test fun noInventedValuesWithoutSources() {
         val s = ContinuumDashboardState()
         val m = JarvisCockpitGridContent.modules(s)
-        assertEquals(listOf("Gedächtnis", "Logik", "Agenten", "Lernen", "Lokales Modell"), m.map { it.label })
+        assertEquals(listOf("Memory", "Logic", "Agents", "Learning", "Local Model"), m.map { it.label })
         assertTrue(m.all { it.value == "offline" || it.value == JarvisCockpitGridContent.NONE })
         assertTrue(m.none { it.ok })
         assertTrue(JarvisCockpitGridContent.statusSegments(s).last().first.contains("CPU —"))
+    }
+
+    @Test fun gridTilesUseRef5TitlesAndStaticEnglishSubtitles() {
+        val t = JarvisShellContent.tiles(ContinuumDashboardState(), 0L, subtitles = true)
+        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Learning", "Device Control", "System Status"), t.map { it.label })
+        assertTrue(t.all { it.subtitle.size == 2 && it.subtitle.none { l -> l.any { c -> c.isDigit() } } })
+        // classic tiles keep the #479 reference titles
+        assertEquals(JarvisTiles.reference.map { it.label }, JarvisShellContent.tiles(ContinuumDashboardState(), 0L).map { it.label })
+    }
+
+    @Test fun modulesShowRealOnlineState() {
+        val s = ContinuumDashboardState()
+        val online = s.copy(model = s.model.copy(online = true))
+        val m = JarvisCockpitGridContent.modules(online).associateBy { it.label }
+        assertEquals("Ready", m.getValue("Logic").value); assertTrue(m.getValue("Logic").ok)
+        assertEquals("Online", m.getValue("Local Model").value)
+        assertEquals("offline", m.getValue("Memory").value) // no memory source → no invented value
+        assertEquals(JarvisCockpitGridContent.NONE, m.getValue("Agents").value)
     }
 
     @Test fun ownerRecognitionOnlyFromUnlock() {
