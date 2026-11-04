@@ -2,8 +2,8 @@ fun main() {
     val source = RedactorSource()
     data class Check(val name: String, val input: String, val expectedRedacted: List<String>, val preserved: List<String>)
     val cases = listOf(
-        Check("standalone-bearer-lf-preserve-negation", "Bearer\nNevermore approve the action.", emptyList(), listOf("Nevermore approve the action.")),
-        Check("standalone-bearer-crlf-preserve-negation", "Bearer\r\nNevermore approve the action.", emptyList(), listOf("Nevermore approve the action.")),
+        Check("standalone-bearer-lf-preserve-negation", "Documentation mentions Bearer\nNevermore approve the action.", emptyList(), listOf("Nevermore approve the action.")),
+        Check("standalone-bearer-crlf-preserve-negation", "Documentation mentions Bearer\r\nNevermore approve the action.", emptyList(), listOf("Nevermore approve the action.")),
         Check("standalone-bearer-tab-removes-token", "Bearer R5_SYNTHETIC_TOKEN", listOf("R5_SYNTHETIC_TOKEN"), listOf("Bearer [REDACTED]")),
         Check("access_token-json", "{\"access_token\":\"R5_ACCESS_TOKEN\",\"keep\":\"Never approve\"}", listOf("R5_ACCESS_TOKEN"), listOf("Never approve")),
         Check("refresh_token-form", "refresh_token=R5_REFRESH_TOKEN\nNever approve", listOf("R5_REFRESH_TOKEN"), listOf("Never approve")),
@@ -20,6 +20,16 @@ fun main() {
         if (pass) ++ok
         println("${if(pass) "PASS" else "FAIL"}\t${c.name}\toutput=${output.replace("\n", "\\n").replace("\r", "\\r")}")
     }
-    println("TOTAL=${cases.size} PASS=$ok FAIL=${cases.size - ok}")
-    if (ok < cases.size) throw IllegalStateException("REGRESSION_RED_${cases.size-ok}")
+    val wrapped = listOf("Bearer\nR5_WRAPPED_SYNTHETIC_TOKEN", "Bearer\r\nR5_WRAPPED_SYNTHETIC_TOKEN")
+    var rejected = 0
+    for ((index, value) in wrapped.withIndex()) {
+        val failure = runCatching { source.inspect(value) }.exceptionOrNull()
+        val pass = failure is IllegalStateException && failure.message == "UNTERMINATED_CREDENTIAL_VALUE"
+        if (pass) rejected++
+        println("${if (pass) "PASS" else "FAIL"}\twrapper-case-$index\treason=${failure?.message ?: "NO_ERROR"}")
+    }
+    val total = cases.size + wrapped.size
+    val passed = ok + rejected
+    println("TOTAL=$total PASS=$passed FAIL=${total - passed}")
+    if (passed < total) throw IllegalStateException("REGRESSION_RED_${total-passed}")
 }
