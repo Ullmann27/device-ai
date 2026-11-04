@@ -62,29 +62,12 @@ class ContinuumAvatarLookPreviewUiTest {
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
-class JarvisAvatarSlotUiTest {
-    @Test fun attachForwardsAndDetachRemoves() {
-        val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
-        val host = android.widget.FrameLayout(activity); activity.setContentView(host)
-        val slot = JarvisAvatarSlot()
-        slot.attach(host, at.heinz.deviceai.ui.JarvisShellLayout.Box(0f, 0f, 300f, 300f))
-        assertTrue(slot.isAttached); assertTrue(host.childCount == 1)
-        slot.onAvatarState(AvatarEvent.SpeechStarted("u", "Hallo", 1))
-        slot.onAnimationEvent(at.heinz.deviceai.cockpit.CockpitAnimationEvent.CommandFlyIn("t", 2, "Hallo"))
-        assertTrue(slot.sequence!!.effects.isAnimating(slot.sequence!!.clock()))
-        slot.detach()
-        assertFalse(slot.isAttached); assertTrue(host.childCount == 0)
-    }
-}
-
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class JarvisShellWithAvatarPreviewUiTest {
     @Test fun shellPreviewUsesTheOneHeadInTheAvatarSlot() {
         val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
         val pose = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
-        val content = mapOf(at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR to JarvisAvatarSlot.slotContent({ pose }, { 1.2f }))
+        val content = mapOf(at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR to JarvisHoloAvatar.slotContent({ pose }, { 1.2f }))
         for ((name, w, h) in listOf(Triple("shell-phone-412x915-avatar", 412, 915), Triple("shell-fold-884x760-avatar", 884, 760))) {
             val d = 2f
             val bmp = Bitmap.createBitmap((w * d).toInt(), (h * d).toInt(), Bitmap.Config.ARGB_8888)

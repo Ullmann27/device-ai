@@ -117,6 +117,6 @@ Regel: Bloom nur im aktiven Zustand (Sprechen, Fokus, laufende Aktion); Ruhe = s
 `reset(view)` macht alles flach. Animator-Skala 0 → kein Drift/Kippen, Tiefe bleibt statisch.
 
 ## Avatar im Slot AVATAR
-Einziger Kopf: `avatar/JarvisAvatarSlot` (Kerns `JarvisAvatarRenderer`-Signatur) – live als Views, in Vorschauen über
-`JarvisAvatarSlot.slotContent(pose, seconds)` als `SlotContent` für `JarvisShellRenderer`. Vorschau:
+Einziger Kopf: `avatar/JarvisHoloAvatar` (Kerns `JarvisAvatarRenderer`-Signatur) – live als Views, in Vorschauen über
+`JarvisHoloAvatar.slotContent(pose, seconds)` als `SlotContent` für `JarvisShellRenderer`. Vorschau:
 `design-screenshots/shell-phone-412x915-avatar.png`, `shell-fold-884x760-avatar.png`.
