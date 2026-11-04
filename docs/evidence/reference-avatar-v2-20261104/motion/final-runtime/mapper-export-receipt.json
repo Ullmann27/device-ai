@@ -1,0 +1,65 @@
+{
+  "checkoutHeadAtStart": "460730178b4f0a52648462ddb61a0f8737fc1b0a",
+  "sourceCommitMeaning": "Checkout HEAD at compile time; sourceHashes bind the actual working-tree inputs, including modifications not yet in that HEAD.",
+  "sourceInputsCommittedAtHead": false,
+  "modifiedInputsRelativeToHead": [
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+    "app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "app/src/main/assets/avatar3d/NOTICE.json"
+  ],
+  "sourceHashes": {
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "02b04292e0cd3c9e46cfa8cdfe262e17ffee5eb7da7a29746adf1a4b561fba9d",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt": "1f416d4ba9c5865550a225e66deb86e893143a7ff5530d06d59772950a05d269",
+    "/workspace/scratch/acc992a972a4/motion-review/ExportAvatarReviewPoses.kt": "bf40bfc73bc3718048fec520823f9b2a110948b2f45c3cbbd5f0d56b0b431892",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt": "a9bc7d64624e3ed10a6f4440b813d5ca1171ce464f6489b7731ad494bf1d642d",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+    "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/assets/avatar3d/NOTICE.json": "fb07b7b96aaebda7c223357150783ba7fb2fc4f83efad5cc4522191b6b9512f0"
+  },
+  "commands": [
+    {
+      "label": "compile",
+      "command": [
+        "java",
+        "-Xmx384m",
+        "-cp",
+        "/workspace/scratch/bb03c70897d0/avatar-test-deps/*",
+        "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+        "-no-stdlib",
+        "-no-reflect",
+        "-jvm-target",
+        "17",
+        "-classpath",
+        "/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/json-20240303.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar",
+        "-d",
+        "/workspace/scratch/acc992a972a4/motion-review/final-runtime/mapper-export.jar",
+        "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+        "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+        "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+        "/workspace/scratch/acc992a972a4/device-ai-avatar/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+        "/workspace/scratch/acc992a972a4/motion-review/ExportAvatarReviewPoses.kt"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 16.542645003999496
+    },
+    {
+      "label": "export",
+      "command": [
+        "java",
+        "-Xmx384m",
+        "-cp",
+        "/workspace/scratch/acc992a972a4/motion-review/final-runtime/mapper-export.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/kotlin-stdlib-2.4.0.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/json-20240303.jar:/workspace/scratch/bb03c70897d0/avatar-test-deps/annotations-13.0.jar",
+        "ExportAvatarReviewPosesKt",
+        "/workspace/scratch/acc992a972a4/device-ai-avatar",
+        "460730178b4f0a52648462ddb61a0f8737fc1b0a",
+        "/workspace/scratch/acc992a972a4/motion-review/final-runtime/actual-mapper-poses.json",
+        "96"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.7124406580005598
+    }
+  ],
+  "inputsUnchanged": true,
+  "checkoutHeadAtEnd": "460730178b4f0a52648462ddb61a0f8737fc1b0a"
+}

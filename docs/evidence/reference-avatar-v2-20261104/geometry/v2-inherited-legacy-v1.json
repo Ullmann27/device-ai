@@ -1,0 +1,14 @@
+{
+  "status": "FAIL",
+  "sha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+  "bytes": 12552372,
+  "failures": [
+    {
+      "test": "rig_hierarchy_orientation",
+      "error": "Eye/Jaw pivots outside preregistered metre-scale bust anatomy"
+    }
+  ],
+  "measurements": {
+    "eye_separation_m": 0.06102388724684715
+  }
+}

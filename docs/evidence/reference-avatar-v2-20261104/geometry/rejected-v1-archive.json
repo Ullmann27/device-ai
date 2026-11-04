@@ -1,0 +1,11 @@
+{
+  "schema": "continuum-rejected-avatar-archive-v1",
+  "status": "REJECTED_UV_CONFLICTS",
+  "file": "rejected-v1.glb.gz",
+  "compression": "gzip",
+  "rawSha256": "eb61fff8ef4c7a11ef97927c5115841f133e780035c372230664cbdb78bf340e",
+  "rawBytes": 11398288,
+  "archiveSha256": "04517b2a930316c5d810346329f1e2f90261e137081e6b662e5b67f61845283c",
+  "archiveBytes": 3346483,
+  "purpose": "Preserve exact rejected candidate for the same frozen verifier RED replay; never a runtime asset"
+}

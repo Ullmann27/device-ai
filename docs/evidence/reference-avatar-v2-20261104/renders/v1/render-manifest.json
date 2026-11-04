@@ -1,0 +1,59 @@
+{
+  "evidenceClass": "ACTUAL_GLB_HOST_RENDER_NOT_DEVICE",
+  "model": "/workspace/scratch/acc992a972a4/geometry-work/v1/continuum-reference-head-v1.glb",
+  "modelSha256": "eb61fff8ef4c7a11ef97927c5115841f133e780035c372230664cbdb78bf340e",
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "samples": 16,
+  "resolution": [
+    384,
+    512
+  ],
+  "viewTransform": "Standard",
+  "exposure": 0,
+  "glow": "Blender compositor Fog Glow, threshold .80; Android bloom must be tested independently",
+  "portraitBackdrop": false,
+  "frames": [
+    {
+      "file": "front.png",
+      "pose": "front",
+      "shapeWeights": {},
+      "jawPitchDegrees": 0,
+      "jawControl": "object:Jaw",
+      "sha256": "b3cc29b682719202f877f877912c981d14ceb1f6207c4a1c3dbe435f37b10abf"
+    },
+    {
+      "file": "quarter.png",
+      "pose": "quarter",
+      "shapeWeights": {},
+      "jawPitchDegrees": 0,
+      "jawControl": "object:Jaw",
+      "sha256": "a84838f97953f5e87d08cd5c0d06e8486abd38348c93a315bb8a66a973833830"
+    },
+    {
+      "file": "blink.png",
+      "pose": "blink",
+      "shapeWeights": {
+        "BlinkLeft": 1.0,
+        "BlinkRight": 1.0
+      },
+      "jawPitchDegrees": 0,
+      "jawControl": "object:Jaw",
+      "sha256": "13333017ecb79150a69a5116ec5924a148ab7d293e1ba5eeaaf36c0f50faca78"
+    },
+    {
+      "file": "speaking.png",
+      "pose": "speaking",
+      "shapeWeights": {
+        "AA": 0.6,
+        "JawOpen": 0.1125
+      },
+      "jawPitchDegrees": 7.2,
+      "jawControl": "object:Jaw",
+      "sha256": "b987c0a1946d723b6d878967e4bccb9d65daee8e0dee2435ff05478d40009aba"
+    }
+  ],
+  "limitations": [
+    "Host render is not Android/Filament GPU output",
+    "Not owner likeness acceptance"
+  ]
+}

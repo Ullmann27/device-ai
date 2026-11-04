@@ -1,0 +1,15 @@
+{
+  "schema": "continuum-parent-final-pose-equivalence-v1",
+  "parentPoseSha256": "5cf3394d41c3ccfdd8c70016bc819acd8ee705197e0ad337076920db8174fb51",
+  "finalPoseSha256": "43b1e4e65c5d52de20c0efee60886a17bcd9b30e070286e0fbd20a3d7e10080f",
+  "frameCount": 108,
+  "allFrameInputsWeightsAndJointAnglesIdentical": true,
+  "cameraFocusIdentical": true,
+  "changedSourceHashEntries": [
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt"
+  ],
+  "parentSourceAssetSha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+  "finalSourceAssetSha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+  "scope": "Exact equality of actual mapper exports; material/UV and native renderer execution remain separate",
+  "status": "PASS"
+}

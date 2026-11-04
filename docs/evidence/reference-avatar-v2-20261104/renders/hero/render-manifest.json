@@ -1,0 +1,41 @@
+{
+  "evidenceClass": "ACTUAL_GLB_HOST_RENDER_NOT_DEVICE",
+  "model": "/workspace/scratch/acc992a972a4/geometry-work/v2/continuum-reference-head-v1.glb",
+  "modelSha256": "70b93bfdfb10c65662f6d37857e4a6a403dfb6ad950a9220acf91cb4145ab145",
+  "backend": "Blender 4.3.2 Cycles CPU",
+  "samples": 32,
+  "resolution": [
+    768,
+    1024
+  ],
+  "viewTransform": "Standard",
+  "exposure": 0,
+  "camera": {
+    "projection": "ORTHOGRAPHIC",
+    "orthoScaleMetres": 0.35,
+    "targetCanonicalMetres": [
+      0,
+      0.246,
+      0.06
+    ],
+    "quarterYawDegrees": -20.0,
+    "distanceMetres": 0.95,
+    "elevationVectorComponent": 0.018
+  },
+  "glow": "Blender compositor Fog Glow, threshold .80; Android bloom must be tested independently",
+  "portraitBackdrop": false,
+  "frames": [
+    {
+      "file": "quarter.png",
+      "pose": "quarter",
+      "shapeWeights": {},
+      "jawPitchDegrees": 0,
+      "jawControl": "object:Jaw",
+      "sha256": "faeb8a377179326724404640d295c28bdaa047cbeecf9114c5a9143a51d4fe10"
+    }
+  ],
+  "limitations": [
+    "Host render is not Android/Filament GPU output",
+    "Not owner likeness acceptance"
+  ]
+}
