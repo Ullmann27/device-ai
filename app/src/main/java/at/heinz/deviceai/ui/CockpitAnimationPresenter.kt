@@ -7,7 +7,6 @@ import android.view.View
 import at.heinz.deviceai.cockpit.CockpitAction
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.cockpit.CockpitAnimationRenderer
-import at.heinz.deviceai.cockpit.TransitionPattern
 import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
 
 /**
@@ -36,15 +35,47 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView,
         home.post { present(event) }
     }
 
+    /**
+     * The ONE area/scene transition (look + motion: Jarvis Integration, JarvisMenuMotion on JarvisMotion).
+     * B: JarvisShellView entrance (shell stage) or card fly-in (cockpit). A: scene change in Z depth (0,8 s):
+     * leaving – the cockpit flies through the camera (>300 %, alpha 0); "Zurück" to home – it comes 0→100 % from the
+     * centre. C: hook only.
+     */
+    private fun playArea(event: CockpitAnimationEvent.AreaChanged) {
+        when (event.pattern) {
+            at.heinz.deviceai.cockpit.TransitionPattern.B_FLY_IN ->
+                if (home.jarvisShellStage) home.jarvisShell.playEntrance() else if (home.landscapeCockpit) flyInCards()
+            at.heinz.deviceai.cockpit.TransitionPattern.C_WARP -> Unit // visual via hook only (no default)
+            at.heinz.deviceai.cockpit.TransitionPattern.A_DEPTH -> sceneDepth(home, entering = event.toTarget == "home")
+        }
+    }
+
+    private fun sceneDepth(view: View, entering: Boolean) {
+        if (!motionAllowed()) return
+        val end = JarvisMenuMotion.patternA(Long.MAX_VALUE / 4)
+        val ease = JarvisMotion.Easing.easeInExpo
+        drift?.pause()
+        view.animate().cancel()
+        view.pivotX = view.width / 2f; view.pivotY = view.height / 2f
+        val restore = Runnable { view.scaleX = 1f; view.scaleY = 1f; view.alpha = 1f; drift?.restart() }
+        val (scale, alpha) = if (entering) {
+            view.scaleX = 0f; view.scaleY = 0f; view.alpha = 0f
+            end.newScale to end.newAlpha
+        } else end.oldScale to end.oldAlpha
+        view.animate().scaleX(scale).scaleY(scale).alpha(alpha).setDuration(JarvisMotion.Durations.SCENE_Z)
+            .setInterpolator { ease(it) }.withEndAction(restore).start()
+    }
+
     private fun motionAllowed() = ValueAnimator.areAnimatorsEnabled() && !power.isPowerSaveMode
 
     private fun present(event: CockpitAnimationEvent) {
         if (!home.isAttachedToWindow) return
+        if (home.ownsAvatarSlot) home.avatarRenderer?.let { r -> runCatching { r.onAnimationEvent(event) } }
         val hook = CockpitTransitions.hook
         if (hook != null && runCatching { hook.play(event, home) }.getOrDefault(false)) return
-        if (event is CockpitAnimationEvent.AreaChanged) return areaChanged(event)
+        if (event is CockpitAnimationEvent.AreaChanged) return playArea(event)
         if (home.jarvisShellStage) {
-            // Shell stage: Welten-Optik's own entrance (JarvisMotion pattern B inside JarvisShellView).
+            // Shell stage: pattern B entrance inside JarvisShellView (JarvisMotion).
             if (event is CockpitAnimationEvent.CommandFlyIn) home.jarvisShell.playEntrance()
             return
         }
@@ -71,7 +102,14 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView,
             // Orb visuals (document into the brain, light points) belong to Avatar; minimal default: brain card glows.
             is CockpitAnimationEvent.DocumentLearned, is CockpitAnimationEvent.MemoryStored -> highlight(Slot.MODEL)
             is CockpitAnimationEvent.RecallHits -> if (event.count > 0) highlight(Slot.MODEL)
-            is CockpitAnimationEvent.AreaChanged -> Unit // handled above (areaChanged)
+            is CockpitAnimationEvent.CalculationShown -> home.showTransientCard("Berechnung · " + event.expression,
+                event.steps.take(4).map { it.label + " = " + it.value } + ("Ergebnis = " + event.result + (event.unit?.let { " $it" } ?: "")),
+                motionAllowed())
+            is CockpitAnimationEvent.AreaChanged -> Unit // handled by playArea
+            // Alarm visuals belong to Jarvis Lückenfüller (hook); minimal default: system card glows.
+            is CockpitAnimationEvent.AlarmRaised -> highlight(Slot.SYSTEM_STATUS)
+            is CockpitAnimationEvent.AlarmCleared -> Unit
+            is CockpitAnimationEvent.BootStarted, is CockpitAnimationEvent.CockpitEntered -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
         }
     }
@@ -86,24 +124,12 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView,
         CockpitAction.WORKER -> Slot.WORKERS
     }
 
-    /** Navigation (Jarvis Integration): B = panels fly in, A = scene change in Z depth. */
-    private fun areaChanged(event: CockpitAnimationEvent.AreaChanged) {
-        when (event.pattern) {
-            TransitionPattern.B_FLY_IN -> when {
-                home.jarvisShellStage -> home.jarvisShell.playEntrance()
-                home.landscapeCockpit -> flyInCards()
-            }
-            TransitionPattern.A_DEPTH -> sceneDepth(home, entering = event.toTarget == "home")
-        }
-    }
-
     /** Muster B (JarvisMenuMotion.patternB): ±64 dp from the side, 80→100 %, alpha 0→1, 0,6 s cubic ease-out, centre first. */
     private fun flyInCards() {
         if (!motionAllowed()) return
         val views = ContinuumLandscapeCockpitLayout.cards.mapNotNull { home.viewFor(it) }
-        val centers = views.map { it.left + it.width / 2f }
         val ease = JarvisMotion.Easing.easeOutCubic
-        JarvisMenuMotion.patternB(centers, home.width / 2f).forEach { step ->
+        JarvisMenuMotion.patternB(views.map { it.left + it.width / 2f }, home.width / 2f).forEach { step ->
             val view = views[step.index]
             val spec = step.spec
             view.animate().cancel()
@@ -112,30 +138,6 @@ class CockpitAnimationPresenter(private val home: ContinuumHomeView,
             view.alpha = spec.fromAlpha
             view.animate().translationX(0f).scaleX(1f).scaleY(1f).alpha(1f).setStartDelay(step.delayMs)
                 .setDuration(spec.durationMs).setInterpolator { ease(it) }.start()
-        }
-    }
-
-    /**
-     * Muster A (JarvisMenuMotion.patternA, 0,8 s exponential ease-in): leaving – the cockpit flies through the camera
-     * (>300 %, alpha 0) while the new screen opens; entering ("Zurück") – the cockpit comes 0→100 % from the centre.
-     * The camera drift pauses meanwhile and restarts at 1,00.
-     */
-    private fun sceneDepth(view: View, entering: Boolean) {
-        if (!motionAllowed()) return
-        val end = JarvisMenuMotion.patternA(Long.MAX_VALUE / 4)
-        drift?.pause()
-        view.animate().cancel()
-        view.pivotX = view.width / 2f; view.pivotY = view.height / 2f
-        val restore = Runnable { view.scaleX = 1f; view.scaleY = 1f; view.alpha = 1f; drift?.restart() }
-        if (entering) {
-            view.scaleX = 0f; view.scaleY = 0f; view.alpha = 0f
-            view.animate().scaleX(end.newScale).scaleY(end.newScale).alpha(end.newAlpha)
-                .setDuration(JarvisMotion.Durations.SCENE_Z).setInterpolator { JarvisMotion.Easing.easeInExpo(it) }
-                .withEndAction(restore).start()
-        } else {
-            view.animate().scaleX(end.oldScale).scaleY(end.oldScale).alpha(end.oldAlpha)
-                .setDuration(JarvisMotion.Durations.SCENE_Z).setInterpolator { JarvisMotion.Easing.easeInExpo(it) }
-                .withEndAction(restore).start()
         }
     }
 

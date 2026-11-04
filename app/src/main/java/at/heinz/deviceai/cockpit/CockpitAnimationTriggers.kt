@@ -98,16 +98,6 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
             clean(question, 120)))
     }
 
-    /**
-     * KERN-VERTRAG (vorläufig): the owner navigated from [from] to [to]. Emitted only by the real navigation path
-     * (JarvisNavigator); same target twice is not an area change.
-     */
-    fun areaChanged(from: String?, to: String, pattern: TransitionPattern) {
-        val target = clean(to, 32)
-        if (target.isEmpty() || target == from?.let { clean(it, 32) }) return
-        bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 32) }, target, pattern))
-    }
-
     @Synchronized fun timeline(turnId: String): List<ProcessStep> = timelines[turnId]?.toList().orEmpty()
 
     /** Most recent turn/worker timeline – what the "Aktuelle Prozesse" card shows. */
@@ -147,4 +137,35 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         val RESEARCH_TOOLS = setOf("web_search", "web_read")
         fun clean(value: String, max: Int): String = value.filterNot { it.isISOControl() }.trim().take(max)
     }
+
+    /** Area/menu change from the rail, action bar or a panel (Jarvis Integration calls this). Blank target is ignored. */
+    fun areaChanged(from: String?, to: String, pattern: TransitionPattern) {
+        val target = clean(to, 64)
+        if (target.isEmpty()) return
+        bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 64) }?.ifEmpty { null }, target, pattern))
+    }
+
+    /** Real first cockpit start (the Activity built the home). Emits scene 1 once per process. */
+    fun bootOnce(): Boolean {
+        if (!bootPlayed.compareAndSet(false, true)) return false
+        bus.emit(CockpitAnimationEvent.BootStarted(BOOT_TURN, clock(), CockpitTimeline.GREETING_TEXT))
+        return true
+    }
+
+    private val activeAlarms = java.util.EnumSet.noneOf(AlarmKind::class.java)
+
+    /** Real alarm signal (edge-triggered): raises once when [active] turns true, clears once when it turns false. */
+    fun alarm(kind: AlarmKind, active: Boolean, sourceLabel: String, measured: Double? = null, threshold: Double? = null) {
+        val changed = synchronized(activeAlarms) { if (active) activeAlarms.add(kind) else activeAlarms.remove(kind) }
+        if (!changed) return
+        bus.emit(if (active) CockpitAnimationEvent.AlarmRaised(ALARM_TURN, clock(), kind, clean(sourceLabel, 64), measured, threshold)
+            else CockpitAnimationEvent.AlarmCleared(ALARM_TURN, clock(), kind))
+    }
 }
+
+const val ALARM_TURN = "alarm"
+
+/** Process-wide: scene 1 plays once per process, on the first real cockpit start. */
+private val bootPlayed = java.util.concurrent.atomic.AtomicBoolean()
+
+internal fun resetBootForTest() = bootPlayed.set(false)

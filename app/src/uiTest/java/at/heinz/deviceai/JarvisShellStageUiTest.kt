@@ -58,8 +58,10 @@ class JarvisShellStageUiTest {
             val shell = requireNotNull(home.jarvisShell.shell) { "shell drawn" }
             val d = home.resources.displayMetrics.density
             val box = requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
-            assertEquals("live avatar sits in the AVATAR slot", (box.left * d).toInt(), avatar.left)
-            assertEquals((box.top * d).toInt(), avatar.top)
+            assertEquals("ONE avatar slot = shell AVATAR box", (box.left * d).toInt(), home.avatarSlotRect.left)
+            assertEquals((box.top * d).toInt(), home.avatarSlotRect.top)
+            assertTrue("empty named placeholder without a renderer", home.avatarSlotShown)
+            assertEquals("no own head/orb in the cockpit", View.GONE, avatar.visibility)
             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
                 File(dir).mkdirs()
                 File(dir, "$label.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }

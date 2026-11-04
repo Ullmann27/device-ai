@@ -252,7 +252,8 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
-    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
+    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) })
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
     private var avatarAwaitingApproval = false
@@ -967,6 +968,7 @@ class AgentActivity : Activity() {
             cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
         )
         subscribeMemoryEvents()
+        subscribeRealSignals()
         dashboard.addView(home, matchWidth())
         workStatusView = textView("Bereit", 13f, ACCENT).apply {
             setPadding(dp(16), dp(10), dp(16), dp(10))
@@ -1228,6 +1230,37 @@ class AgentActivity : Activity() {
     }
 
     /** Live cockpit inputs from the Activity's real sources (turn, worker pool, steps, visible dialog). */
+    /** Real level/alarm signals for the cockpit timeline (no simulated values). */
+    private fun subscribeRealSignals() {
+        at.heinz.deviceai.motion.MotionLibrary.audioLevel =
+            at.heinz.deviceai.motion.AudioLevelSource { t -> voiceSignal.level(t).coerceIn(0f, 1f) }
+        cockpitSubscriptions += AutoCloseable {
+            at.heinz.deviceai.motion.MotionLibrary.audioLevel = at.heinz.deviceai.motion.AudioLevelSource { 0f }
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val power = getSystemService(android.os.PowerManager::class.java) ?: return
+            val listener = android.os.PowerManager.OnThermalStatusChangedListener { status ->
+                cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.THERMAL,
+                    status >= android.os.PowerManager.THERMAL_STATUS_SEVERE, "Thermal-Status",
+                    status.toDouble(), android.os.PowerManager.THERMAL_STATUS_SEVERE.toDouble())
+            }
+            power.addThermalStatusListener(mainExecutor, listener)
+            cockpitSubscriptions += AutoCloseable { power.removeThermalStatusListener(listener) }
+        }
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        @Suppress("DEPRECATION")
+        val pressure = level == android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_COMPLETE
+        if (pressure) cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.MEMORY_PRESSURE, true, "onTrimMemory",
+            level.toDouble(), android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW.toDouble())
+        else if (level == android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) Unit
+        else cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.MEMORY_PRESSURE, false, "onTrimMemory")
+    }
+
     /** Memory events → cockpit bus, coalesced on the main thread (closed with the other cockpit subscriptions). */
     private fun subscribeMemoryEvents() {
         val source = at.heinz.deviceai.cockpit.MemoryEventSources.production ?: return
@@ -2329,6 +2362,7 @@ class AgentActivity : Activity() {
         )
         effectContext?.let { chiefTaskEffectContexts[brief.id] = it }
         val accepted = pool.submit(brief) { report ->
+            cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.DATA_OVERLOAD, false, "Worker-Warteschlange")
             chiefTaskEffectContexts.remove(brief.id)
             cockpitTriggers.workerReported(report)
             runOnUiThread { lastChiefWorkerReport = report }
@@ -2343,6 +2377,10 @@ class AgentActivity : Activity() {
             }
         }
         if (accepted) cockpitTriggers.workerStarted(brief.id, brief.goal)
+        // Real signal: the pool refused because running + queued reached its capacity.
+        if (!accepted && pool.snapshot().size >= pool.capacity) cockpitTriggers.alarm(
+            at.heinz.deviceai.cockpit.AlarmKind.DATA_OVERLOAD, true, "Worker-Warteschlange",
+            pool.snapshot().size.toDouble(), pool.capacity.toDouble())
         if (!accepted) {
             chiefTaskEffectContexts.remove(brief.id)
             addAssistantMessage(

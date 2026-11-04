@@ -58,13 +58,29 @@ sealed class CockpitAnimationEvent {
     data class RecallHits(override val turnId: String, override val atMillis: Long, val queryHash: String,
                           val count: Int, val topScore: Float?) : CockpitAnimationEvent()
 
-    /**
-     * KERN-VERTRAG (vorläufig, von Integration nach Kerns Nachricht ergänzt; Kern ersetzt beim Einbau):
-     * the visible area / panel ([TransitionPattern.B_FLY_IN]) or the menu / scene ([TransitionPattern.A_DEPTH])
-     * changed because the owner navigated. Not bound to a turn: [turnId] is [NAV_TURN].
-     */
-    data class AreaChanged(override val turnId: String = NAV_TURN, override val atMillis: Long, val fromTarget: String?,
+    /** Scene 1: the real first cockpit start of this session (once per process). [turnId] = [BOOT_TURN]. */
+    data class BootStarted(override val turnId: String, override val atMillis: Long, val greeting: String) :
+        CockpitAnimationEvent()
+
+    /** Scene 1 finished, the cockpit is visible: exactly once per app session (triggers Avatar's headIconBurst, scene 2). */
+    data class CockpitEntered(override val turnId: String, override val atMillis: Long, val sessionId: String) :
+        CockpitAnimationEvent()
+
+    /** Pattern E: a real calculation with its steps and result; [chart] selects the live chart (NONE = numbers only). */
+    data class CalculationShown(override val turnId: String, override val atMillis: Long, val expression: String,
+                                val steps: List<CalcStep>, val result: Double, val unit: String?, val chart: ChartKind) :
+        CockpitAnimationEvent()
+
+    /** The ONE fly-in/scene-change logic: rail, action bar or panel switched area ([turnId] = [NAV_TURN]). */
+    data class AreaChanged(override val turnId: String, override val atMillis: Long, val fromTarget: String?,
                            val toTarget: String, val pattern: TransitionPattern) : CockpitAnimationEvent()
+
+    /** A real alarm signal crossed its threshold ([measured]/[threshold] null when the platform gives only a level). */
+    data class AlarmRaised(override val turnId: String, override val atMillis: Long, val kind: AlarmKind,
+                           val sourceLabel: String, val measured: Double?, val threshold: Double?) : CockpitAnimationEvent()
+
+    data class AlarmCleared(override val turnId: String, override val atMillis: Long, val kind: AlarmKind) :
+        CockpitAnimationEvent()
 
     /**
      * Extension point for future event families, first of all the calculation / math visualisation of the
@@ -75,12 +91,7 @@ sealed class CockpitAnimationEvent {
 }
 
 const val MEMORY_TURN = "memory"
-
-/** Turn id of navigation events ([CockpitAnimationEvent.AreaChanged]). KERN-VERTRAG (vorläufig). */
-const val NAV_TURN = "nav"
-
-/** Motion pattern of a navigation event: A = scene change in Z depth (0,8 s), B = panel fly-in (0,5–0,6 s). */
-enum class TransitionPattern { A_DEPTH, B_FLY_IN }
+const val BOOT_TURN = "boot"
 
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }
