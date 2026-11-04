@@ -164,3 +164,7 @@ later combined source, run the existing Android gates and repeat a small context
 workload on Fold7/ART if device performance is to be claimed. No release or main
 merge is authorized by this result. Rollback is the isolated commit revert;
 there is no stored data, model-weight, schema or policy migration.
+
+## Coordinator publication and independent verification
+
+Published in [Draft PR #511](https://github.com/Ullmann27/device-ai/pull/511), through commit [`db88716`](https://github.com/Ullmann27/device-ai/commit/db88716f899953c0bdf0fdf8430972fd6addac0d). Earlier local-only statements above describe the bot handoff before publication. The coordinator then reran relevant functional checks on the combined source; see [the final three-bot handoff](THREE-TUNING-BOTS-HANDOFF-20261104.md) and [the actual coordinator evidence](../../evidence/three-tuning-bots-20261104/coordinator/README.md). All documented performance limitations remain in force.

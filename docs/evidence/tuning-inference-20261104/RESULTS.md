@@ -33,7 +33,7 @@ Five JUnit methods passed against the unchanged base and again against final B. 
 
 The sorted reference method was compared byte-for-byte with the method in the base source before the first measurement. The versioned runner repeats that comparison. Bytecode inspection of final B confirms a primitive `java.lang.Float.compare(FF)I` in the greedy loop.
 
-All 162 paired batch measurements in each of the three archived runs are present. `summarize.py` checks every scenario, every repetition and checksum equality across both implementations and all three runs. This is exact token-selection parity for the tested inputs, not a claim of better language-model quality.
+All 162 individual batch measurements (81 reference/production pairs) in each of the three archived runs are present. `summarize.py` checks every scenario, every repetition and checksum equality across both implementations and all three runs. This is exact token-selection parity for the tested inputs, not a claim of better language-model quality.
 
 ## Host measurement method
 

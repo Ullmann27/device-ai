@@ -1,0 +1,20 @@
+[
+  [
+    [
+      "node",
+      "--test",
+      "--test-reporter=spec",
+      ".github/continuum/autonomous-teamleader.test.mjs",
+      ".github/continuum/development-backlog.test.mjs"
+    ],
+    "tests.txt"
+  ],
+  [
+    [
+      "node",
+      "tools/tuning-workers-20261104/benchmark-backlog-selection.mjs",
+      "--parity-only"
+    ],
+    "parity.json"
+  ]
+]
