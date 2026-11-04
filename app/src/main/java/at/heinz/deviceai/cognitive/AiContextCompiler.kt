@@ -99,9 +99,9 @@ class AiContextCompiler(
 
         // A section is a semantic unit. Cutting a suffix may remove a negation,
         // source boundary or correction while leaving a plausible positive claim.
-        fun appendSection(title: String, raw: String, required: Boolean = false): Boolean {
+        fun appendSection(title: String, raw: String, required: Boolean = false, redact: Boolean = true): Boolean {
             if (raw.isBlank()) return false
-            val sanitized = redactSecrets(raw)
+            val sanitized = if (redact) redactSecrets(raw) else raw
             val prefix = if (buffer.isEmpty()) "" else "\n\n"
             val candidate = prefix + "## " + title + "\n" + sanitized
             if (utf8Size(candidate) <= policy.maxBytes - utf8Size(buffer.toString())) {
@@ -113,9 +113,12 @@ class AiContextCompiler(
             return false
         }
 
-        fun fullUntrusted(text: String): String =
-            sanitizeUntrustedResearchText(text,
-                (text.length.toLong() * 20L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        fun fullUntrusted(text: String): String {
+            // Redact before display escaping.
+            val redacted = redactSecrets(text)
+            return sanitizeUntrustedResearchText(redacted,
+                (redacted.length.toLong() * 20L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        }
 
         appendSection(
             "CONTINUUM IDENTITY / GOVERNANCE",
@@ -180,7 +183,7 @@ class AiContextCompiler(
                         .append("Do not guess a resolution.\n")
                 }
             }
-            appendSection("UNRESOLVED CONTRADICTIONS", contradictions, required = true)
+            appendSection("UNRESOLVED CONTRADICTIONS", contradictions, required = true, redact = false)
         }
 
         val retrievalAtMillis = nowMillis()
@@ -225,7 +228,7 @@ class AiContextCompiler(
             }
             // Keep the selected group atomic: an omitted sibling may contradict
             // another record. IDs describe what was actually sent, never intentions.
-            if (appendSection("RELEVANT MEMORY", body)) includedMemoryIds += scored.map { it.memory.id }
+            if (appendSection("RELEVANT MEMORY", body, redact = false)) includedMemoryIds += scored.map { it.memory.id }
         }
 
         input.researchDossier?.let { dossier ->
@@ -252,7 +255,7 @@ class AiContextCompiler(
                         }
                     }
                 }
-                if (appendSection("RESEARCH EVIDENCE", evidence))
+                if (appendSection("RESEARCH EVIDENCE", evidence, redact = false))
                     includedSources += dossier.sources.map { it.canonicalUrl }
             }
         }
