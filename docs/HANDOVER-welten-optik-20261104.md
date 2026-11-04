@@ -33,3 +33,8 @@ Punkte 1–4 schließen, jeweils mit Vergleichsbild in kontrolle-3. Danach baut 
 ## Sprint 10:05 (04.11.2026)
 - Erledigt: Bloom-Kern→Hof-Verlauf (glowCore innen → bloomHalo außen, Stopps geschätzt), Kachel-Chevron auf Titelhöhe, aktiver Button mit zur Mitte hellerem Verlauf (navSurface → aufgehelltes navSurfaceActive, Aufhellung geschätzt). Jarvis*-Unit-Tests grün.
 - Offen: Stopps/Aufhellung in ref5 nachmessen, Vergleichsbild kontrolle-3 nicht erstellt, Staub/Raster, Gerätetest, Lint in AndroidOnDeviceSpeechInput.kt (fremd).
+
+## Endspurt (04.11.2026, 10:12)
+- API für Besitzer: `JarvisNeon.headerChips(p, l, t)` (JARVIS Mode + Local · Private · On-Device First), `JarvisNeon.pill(...)` als Chip-Stil, `JarvisNeon.dotIcon`; Karten nur über `JarvisNeon.glassCard(...)` zeichnen. Renderer-`topBar` platziert die Chips (52,7 % Breite), Marke links (17 %).
+- Tests: Jarvis* 25/25 grün, 0 Fehler.
+- Offen: Rand-Verlauf Cyan→Violett und Glow von glassCard nicht nach ref5 gemessen (weiterhin flacher Rand #329EC0); Bloom-Stopps und Button-Aufhellung weiter geschätzt; Füllung des Local-Chips (#021E24) nutzt noch pillSurface; JARVIS-Kronen-Icon fehlt; Vergleichsbild endspurt nicht erstellt.

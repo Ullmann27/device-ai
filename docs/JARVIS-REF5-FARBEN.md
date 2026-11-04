@@ -105,3 +105,9 @@ Schrift: ref5 nutzt eine humanistische Sans (Segoe-/Noto-ähnlich). Gebündelt s
 - Staub: 2 Partikel à ca. 2 x 2 px, Kern #0F93C4 (`Colors.dust`) → r 0,65 dp, Dichte ≈ 1 je 1200 dp² (AGSL-Zelle 35 dp).
   **Geringe Stichprobe (n = 2), Werte vorläufig.** Größere Funken in ref5 (#FFFFFF/#F5C4FF, 3–7 px) sitzen auf Orbit-Linien von Kopf und Kugel, gehören also zu Avatar/Gedächtnis, nicht zum Hintergrund.
 - Raster: In ref5 zwischen den Panels nicht sichtbar; das bestehende Raster (Alpha 0,05 + 0,05) liegt über der gemessenen Streuung – offen, nicht in diesem Schritt geändert.
+
+## Kopfzeilen-Chips (Endspurt 04.11., gemessen auf ref5-fold7-offen.png, 1448 px)
+| Chip | x | y | Füllung | Rand | Punkt/Icon |
+|---|---|---|---|---|---|
+| JARVIS Mode | 763–945 | 107–139 | #032E50 | links #43B9DF → rechts violett | Krone cyan |
+| Local · Private · On-Device First | 945–1180 | 107–139 | #021E24 | #0C5F65 (teal) | #03F374 (≈ ok #01FC7B) |

@@ -157,7 +157,9 @@ object JarvisShellRenderer {
 
     private fun topBar(p: ContinuumPainter, b: Box) {
         val s = JarvisDesign.Type.brand
-        JarvisNeon.text(p, "CONTINUUM", b.centerX, b.top + b.height / 2f + p.capHeight(s) / 2f, s, Colors.cyan, TextAlign.CENTER)
+        JarvisNeon.text(p, "CONTINUUM", b.left + b.width * .17f, b.top + b.height / 2f + p.capHeight(s) / 2f, s, Colors.cyan, TextAlign.LEFT)
+        // ref5: chips start at 52.7 % of the width, vertically centred in the header slot.
+        JarvisNeon.headerChips(p, b.left + b.width * .527f, b.top + (b.height - JarvisDesign.Styles.pill.height) / 2f)
     }
 
     /** Stand-in until Jarvis Avatar draws AVATAR: tilted atom rings, head halo, brain orb (no fake data). */

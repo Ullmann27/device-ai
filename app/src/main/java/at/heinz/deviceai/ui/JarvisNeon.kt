@@ -205,4 +205,20 @@ object JarvisNeon {
         p.drawText(label, x, t + (st.height + p.capHeight(Type.pill)) / 2f, Type.pill, Fill.Solid(Colors.text))
         return r
     }
+
+    /** ref5 status dot icon (green "Local · Private" dot, measured #03F374 ≈ Colors.ok). */
+    val dotIcon = IconPainter { p, l, t, size, color ->
+        val c = size / 2f
+        halo(p, l + c, t + c, size * .9f, color, .45f)
+        p.fillCircle(l + c, t + c, size * .28f, Fill.Solid(color))
+    }
+
+    /**
+     * ref5 header chips (measured on ref5-fold7-offen.png 1448 px: JARVIS Mode x 763–945, Local chip x 945–1180, y 107–139,
+     * JARVIS rim cyan #43B9DF → violet, Local rim teal #0C5F65 + green dot). Returns right edge.
+     */
+    fun headerChips(p: ContinuumPainter, l: Float, t: Float, gap: Float = 8f, jarvisIcon: IconPainter? = null): Float {
+        val r = pill(p, l, t, "JARVIS Mode", jarvisIcon)
+        return pill(p, r + gap, t, "Local · Private · On-Device First", dotIcon, rim = Colors.ok, iconColor = Colors.ok)
+    }
 }
