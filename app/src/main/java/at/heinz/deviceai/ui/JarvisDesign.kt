@@ -7,46 +7,81 @@ package at.heinz.deviceai.ui
  * See docs/DESIGN-SYSTEM.md.
  */
 object JarvisDesign {
-    /** Colour roles: deep navy base, neon cyan and violet accents (ref2/ref4/ref5). */
     /**
-     * Jarvis values from VIDEO-SPEC.md (Heinz' videos). Deliberately differ from ContinuumTheme (#477):
-     * background #050914→#0A1128 (#477: #000A1D), cyan #00FFFF (#477: #3EC8FF), violet #8A2BE2 (#477: #925CFF),
-     * glass rgba(10,15,26,.6) (#477: opaque navy). ContinuumTheme is left untouched.
+     * Colour roles measured pixel by pixel in ref5 (Fold7 open, 1448 x 1086), see docs/JARVIS-REF5-FARBEN.md
+     * and tools/measure_ref5_colors.py. Translucent roles: colour solved so that, at the stated alpha over the
+     * measured background, the composite equals the measured ref5 pixel.
      */
     object Colors {
-        val background = Argb.rgb(0x05, 0x08, 0x14)        // #050814 top of page gradient (VIDEO-ANALYSE; Spec: #050914)
-        val backgroundBottom = Argb.rgb(0x0A, 0x11, 0x28)  // #0A1128
-        val backgroundHaze = ContinuumTheme.BACKGROUND_GLOW
-        val surface = Argb.of(128, 0x0A, 0x11, 0x28)        // #0A1128 @50 % glass panel (Review 1)
-        val surfaceLow = Argb.of(128, 0x07, 0x0C, 0x1E)
-        val rim = Argb.of(102, 0x00, 0xFF, 0xFF)            // 1 px cyan rim @40 %
-        val cyanDeep = Argb.rgb(0x00, 0x88, 0xFF)           // #0088FF wireframe gradient end
-        val navSurface = Argb.of(170, 8, 12, 24)
-        val cyan = Argb.rgb(0x00, 0xFF, 0xFF)               // #00FFFF Neon-Cyan
-        val cyanSoft = Argb.rgb(150, 255, 255)
-        val violet = Argb.rgb(0x8A, 0x2B, 0xE2)             // #8A2BE2 Violett
+        val background = Argb.rgb(0x00, 0x0C, 0x16)        // bg.top   #000C16
+        val backgroundBottom = Argb.rgb(0x01, 0x0C, 0x17)  // bg.low   #010C17 (ref5 has no visible vertical gradient)
+        val backgroundHaze = Argb.rgb(0x0D, 0x22, 0x50)    // bg.violetAmbient #0D2250 (lower edge light)
+        val surface = Argb.of(204, 0x01, 0x1D, 0x2F)        // glass.fill composite #011A2A @80 %
+        val surfaceLow = Argb.of(204, 0x06, 0x1F, 0x36)     // tile.fill composite #051B30 @80 %
+        val rim = Argb.rgb(0x17, 0x68, 0x7F)                // tile.rim #17687F (1 px)
+        val panelRim = Argb.rgb(0x32, 0x9E, 0xC0)           // glass.rim #329EC0
+        val cyanDeep = Argb.rgb(0x01, 0x75, 0xAF)           // pill.rim #0175AF
+        val navSurface = Argb.rgb(0x04, 0x15, 0x21)         // button.fill #041521
+        val navSurfaceActive = Argb.rgb(0x01, 0x2C, 0x3C)   // button.fill.active #012C3C
+        val navRimActive = Argb.rgb(0x32, 0xD6, 0xED)       // button.rim.active #32D6ED
+        val pillSurface = Argb.rgb(0x07, 0x20, 0x4D)        // pill.fill #07204D
+        val cyan = Argb.rgb(0x2F, 0xF9, 0xFE)               // cyan.text #2FF9FE
+        val cyanSoft = Argb.rgb(0x78, 0xF6, 0xFB)           // cyan.icon #78F6FB
+        val iconCore = Argb.rgb(0xC9, 0xFF, 0xFF)           // tile.icon #C9FFFF
+        val glowCore = Argb.rgb(0xAB, 0xF8, 0xFF)           // glow.core #ABF8FF
+        val glowHalo = Argb.rgb(0x01, 0x25, 0x39)           // glow.halo #012539
+        val violet = Argb.rgb(0x91, 0x4C, 0xEF)             // violet.hair #914CEF
+        val violetSoft = Argb.rgb(0x91, 0x6D, 0xC9)         // violet.icon #916DC9
+        val violetRim = Argb.rgb(0x9E, 0x5B, 0xD5)          // violet.pillRim #9E5BD5
         val activeWhite = Argb.rgb(255, 255, 255)
         val magenta = ContinuumTheme.MAGENTA
-        val ok = ContinuumTheme.GREEN
-        val warn = ContinuumTheme.AMBER
-        val error = ContinuumTheme.RED
-        val text = ContinuumTheme.TEXT
-        val textSecondary = ContinuumTheme.TEXT_SECONDARY
+        val ok = Argb.rgb(0x01, 0xFC, 0x7B)                 // status.ok #01FC7B
+        val okSoft = Argb.rgb(0x86, 0xE9, 0xCD)             // status.okCheck #86E9CD
+        val warn = ContinuumTheme.AMBER                     // not present in ref5
+        val error = ContinuumTheme.RED                      // not present in ref5
+        val text = Argb.rgb(0xFF, 0xFF, 0xFF)               // text.primary #FFFFFF
+        val textSecondary = Argb.rgb(0xD0, 0xE1, 0xEA)      // text.secondary #D0E1EA
         val textMuted = ContinuumTheme.TEXT_MUTED
-        /** Cyan → violet edge light used by glass cards and neon lines. */
-        val neonEdge = intArrayOf(Argb.rgb(0, 255, 255), Argb.rgb(40, 140, 255), Argb.rgb(0x8A, 0x2B, 0xE2))
+        /** Cyan → violet edge light (cyan.text → pill.rim → violet.hair). */
+        val neonEdge = intArrayOf(cyan, cyanDeep, violet)
         val brand = ContinuumTheme.brandGradientColors
     }
 
-    /** Type scale (sp). Display = Montserrat, text = Roboto (bundled, see ContinuumFonts). */
+    /**
+     * Type scale measured in ref5: sp = ink px x 832 dp / 1296 px (Fold7 open 2184 px @ 420 dpi = 832 dp over the
+     * 1296 px ref5 screen width), font size = cap height / 0.711 (Roboto cap ratio). See docs/JARVIS-REF5-FARBEN.md.
+     */
     object Type {
-        val brand = ContinuumTheme.display(600, 22f, 2.4f)    // "CONTINUUM"
-        val title = ContinuumTheme.display(500, 17f, .6f)     // card titles, "JARVIS – Aktiv"
-        val label = ContinuumTheme.text(500, 12f, .8f)        // small caps labels
-        val body = ContinuumTheme.text(400, 14f)
-        val caption = ContinuumTheme.text(400, 11f)
-        val figure = ContinuumTheme.text(500, 26f)             // large live values (real data only)
-        val nav = ContinuumTheme.text(500, 13f)
+        val brand = ContinuumTheme.display(600, 16f)          // "Device AI Continuum": cap 18 px
+        val title = ContinuumTheme.display(500, 20f)          // "Continuum" header: cap 23 px (incl. glow)
+        val heading = ContinuumTheme.text(500, 11f)           // panel title "Active Agents": 14 px incl. ( )
+        val tileLabel = ContinuumTheme.text(500, 11f)         // tile "Chat": cap 12 px
+        val nav = ContinuumTheme.text(400, 11f)               // nav "Home": cap 12 px
+        val body = ContinuumTheme.text(400, 13f)              // dialog "Good afternoon.": cap 15 px
+        val subtitle = ContinuumTheme.text(400, 9f)           // tile subtitle: cap 10 px, line pitch 20 px = 13 dp
+        val pill = ContinuumTheme.text(500, 10f)              // "JARVIS Mode": cap 11 px
+        val caption = ContinuumTheme.text(400, 9f)            // "Android AI Control Center": cap 10 px
+        val status = ContinuumTheme.text(400, 8f)             // status bar: cap 9 px
+        val label = heading
+        val figure = ContinuumTheme.text(500, 13f)            // live values, same size as body
+        const val subtitleLineHeight = 13f
+    }
+
+    /** Component styles measured in ref5 (px x 0.642 = dp, rounded). */
+    data class ComponentStyle(
+        val height: Float, val radius: Float, val rimWidth: Float, val fill: Int, val rim: Int,
+        val padH: Float, val iconSize: Float, val iconGap: Float, val glow: Glow,
+    )
+
+    object Styles {
+        /** Tile 258 x 79 px → 166 x 51 dp, corner 12 px, icon 39 px, inset 25 px, icon→text 26 px. */
+        val tile = ComponentStyle(51f, 8f, 1f, Colors.surfaceLow, Colors.rim, 16f, 24f, 16f, Glow.SUBTLE)
+        /** Nav button 168 x 50 px → 108 x 32 dp, corner 12 px, gap 9 px. Active: brighter fill + rim + glow. */
+        val button = ComponentStyle(32f, 8f, 1f, Colors.navSurface, Colors.rim, 12f, 16f, 12f, Glow.OFF)
+        val buttonActive = button.copy(fill = Colors.navSurfaceActive, rim = Colors.navRimActive, glow = Glow.NORMAL)
+        /** Pill "JARVIS Mode" 151 x 35 px → 97 x 22 dp, fully round, icon 14 px. */
+        val pill = ComponentStyle(22f, 11f, 1f, Colors.pillSurface, Colors.cyanDeep, 10f, 9f, 6f, Glow.SUBTLE)
+        const val buttonGap = 6f
     }
 
     /** Spacing / shape tokens (dp). */
