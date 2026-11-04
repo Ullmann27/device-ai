@@ -1,0 +1,123 @@
+HOST_JVM_ONLY: original retrieval source; compile-only, fail-fast event-decorator stand-in
+HEAD: e101e393dd6c80803ac9d9ac91fccd9812c4a18d
+aa47dd828e4d337fe83dbd598133f0b8228e7f0e59b1f2762051631e0c954800  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt
+24f71ed1848a692191adc4a6b678bed1bde15fc5af1cca5b8c590c5acbed3970  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt
+f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt
+openjdk version "21.0.13" 2026-10-20
+OpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)
+JUnit version 4.13.2
+.E.E.E.E.E..E.E.E.E.E.E.E.M2-RETRIEVAL-MISSES A BM25-de: Wann ist mein Termin beim Zahnarzt? -> d0056(rank 0) | Wann muss ich zum Zahnartz? -> t20(rank 0) | Wo habe ich geparkt? -> null(rank 0) | Wo ist die Versicherungsnummer der Krankenkasse? -> null(rank 0) | An welchem Tag wird der Müll abgeholt? -> t12(rank 0) | Wo habe ich gestern Brot gekauft? -> t12(rank 2) | Was habe ich gestern mit Thomas gemacht? -> t14(rank 0) | Wohin ging ich letzten Monat mit Thomas? -> t18(rank 3) | Wie ist die Zahlenkombination vom Radschloss? -> null(rank 0) | Welche Pizza esse ich am liebsten? -> null(rank 0)
+M2-RETRIEVAL-MISSES A BM25-de + Zeit: Wann ist mein Termin beim Zahnarzt? -> d0056(rank 0) | Wann muss ich zum Zahnartz? -> t20(rank 0) | Wo habe ich geparkt? -> null(rank 0) | Wo ist die Versicherungsnummer der Krankenkasse? -> null(rank 0) | An welchem Tag wird der Müll abgeholt? -> t12(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wie ist die Zahlenkombination vom Radschloss? -> null(rank 0) | Welche Pizza esse ich am liebsten? -> null(rank 0)
+M2-RETRIEVAL-MISSES B Char-3-5-Gramm-Hash: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Wo habe ich gestern Brot gekauft? -> t12(rank 2) | Was habe ich gestern mit Thomas gemacht? -> d0855(rank 0) | Wohin ging ich letzten Monat mit Thomas? -> d0855(rank 0) | Was hat Mama gestern erzählt? -> d0840(rank 0) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+M2-RETRIEVAL-MISSES B Char-3-5-Gramm-Hash + Zeit: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wohin ging ich letzten Monat mit Thomas? -> d0016(rank 3) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+M2-RETRIEVAL | Variante | recall@1 | recall@3 | MRR | p95 ms | Index-Bytes | Indexaufbau ms |
+M2-RETRIEVAL | A BM25-de | 0.773 | 0.818 | 0.792 | 0.25 | 119380 | 46.4 |
+M2-RETRIEVAL | A BM25-de + Zeit | 0.818 | 0.841 | 0.830 | 0.25 | 119380 | 25.3 |
+M2-RETRIEVAL | B Char-3-5-Gramm-Hash | 0.841 | 0.909 | 0.871 | 0.96 | 624856 | 67.3 |
+M2-RETRIEVAL | B Char-3-5-Gramm-Hash + Zeit | 0.886 | 0.977 | 0.924 | 0.97 | 624856 | 47.9 |
+M2-RETRIEVAL-MISSES default: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wohin ging ich letzten Monat mit Thomas? -> d0016(rank 3) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+.
+Time: 1.419
+There were 12 failures:
+1) lastMonthRetrievalRanksItsFinalDayAboveAnOlderIdenticalMemoryWithoutPromotingTrust(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+org.junit.ComparisonFailure: expected:<[last-month-un]confirmed> but was:<[older-]confirmed>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.lastMonthRetrievalRanksItsFinalDayAboveAnOlderIdenticalMemoryWithoutPromotingTrust(TemporalCueCalendarTest.kt:100)
+2) previousWeekHasTheSameMondayToSundayBoundsThroughoutTheCurrentWeek(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzte Woche at 2026-11-02T09:00:00Z expected:<1792969200000> but was:<1792447200000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousWeekHasTheSameMondayToSundayBoundsThroughoutTheCurrentWeek(TemporalCueCalendarTest.kt:38)
+3) aDayCountBeyondTheCalendarRangeDoesNotCrashRetrieval(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.time.DateTimeException: Invalid value for EpochDay (valid values -365243219162 - 365241780471): -9223372036854755046
+	at java.base/java.time.temporal.ValueRange.checkValidValue(ValueRange.java:319)
+	at java.base/java.time.temporal.ChronoField.checkValidValue(ChronoField.java:718)
+	at java.base/java.time.LocalDate.ofEpochDay(LocalDate.java:345)
+	at java.base/java.time.LocalDate.plusDays(LocalDate.java:1375)
+	at java.base/java.time.LocalDateTime.plusDays(LocalDateTime.java:1281)
+	at java.base/java.time.ZonedDateTime.plusDays(ZonedDateTime.java:1694)
+	at java.base/java.time.ZonedDateTime.minusDays(ZonedDateTime.java:1939)
+	at at.heinz.deviceai.learning.TemporalCue.window$days(ContinuumMemoryRetriever.kt:55)
+	at at.heinz.deviceai.learning.TemporalCue.window(ContinuumMemoryRetriever.kt:58)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertRejectedRelativeDate(TemporalCueCalendarTest.kt:134)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.aDayCountBeyondTheCalendarRangeDoesNotCrashRetrieval(TemporalCueCalendarTest.kt:124)
+4) previousMonthCanCrossTheYearBoundary(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: Last included millisecond: letzten Monat at 2027-01-15T12:00:00Z expected:<1798757999999> but was:<1798325999999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:28)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousMonthCanCrossTheYearBoundary(TemporalCueCalendarTest.kt:66)
+5) previousMonthUsesFebruarysActualLengthInLeapAndOrdinaryYears(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzten Monat at 2028-03-15T12:00:00Z expected:<1832972400000> but was:<1832799600000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousMonthUsesFebruarysActualLengthInLeapAndOrdinaryYears(TemporalCueCalendarTest.kt:70)
+6) previousWeekCanCrossTheYearBoundary(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzte Woche at 2026-01-06T12:00:00Z expected:<1766962800000> but was:<1766530800000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousWeekCanCrossTheYearBoundary(TemporalCueCalendarTest.kt:49)
+7) previousMonthKeepsLocalMidnightAcrossSpringDaylightSavingChange(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzten Monat at 2026-04-02T12:00:00Z expected:<1772319600000> but was:<1771196400000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousMonthKeepsLocalMidnightAcrossSpringDaylightSavingChange(TemporalCueCalendarTest.kt:75)
+8) previousMonthIncludesTheWholeCalendarMonth(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzten Monat at 2026-11-01T00:00:00Z expected:<1790805600000> but was:<1789596000000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousMonthIncludesTheWholeCalendarMonth(TemporalCueCalendarTest.kt:60)
+9) aDateBeyondEpochMillisecondRangeDoesNotCrashRetrieval(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.ArithmeticException: long overflow
+	at java.base/java.lang.Math.multiplyExact(Math.java:1032)
+	at java.base/java.lang.Math.multiplyExact(Math.java:1008)
+	at java.base/java.time.Instant.toEpochMilli(Instant.java:1262)
+	at at.heinz.deviceai.learning.TemporalCue.window$days(ContinuumMemoryRetriever.kt:55)
+	at at.heinz.deviceai.learning.TemporalCue.window(ContinuumMemoryRetriever.kt:58)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertRejectedRelativeDate(TemporalCueCalendarTest.kt:134)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.aDateBeyondEpochMillisecondRangeDoesNotCrashRetrieval(TemporalCueCalendarTest.kt:128)
+10) previousWeekKeepsLocalMidnightAcrossBothDaylightSavingChanges(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzte Woche at 2026-03-30T12:00:00Z expected:<1774220400000> but was:<1773702000000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.previousWeekKeepsLocalMidnightAcrossBothDaylightSavingChanges(TemporalCueCalendarTest.kt:53)
+11) calendarBoundariesUseTheConfiguredZone(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: First included millisecond: letzten Monat at 2026-10-31T23:30:00Z expected:<1790805600000> but was:<1789596000000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow(TemporalCueCalendarTest.kt:27)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.assertWindow$default(TemporalCueCalendarTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.calendarBoundariesUseTheConfiguredZone(TemporalCueCalendarTest.kt:81)
+12) aDayCountBeyondLongRangeDoesNotSilentlyMeanYesterday(at.heinz.deviceai.learning.TemporalCueCalendarTest)
+java.lang.AssertionError: expected null, but was:<1793660400000..1793746799999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.learning.TemporalCueCalendarTest.aDayCountBeyondLongRangeDoesNotSilentlyMeanYesterday(TemporalCueCalendarTest.kt:120)
+
+FAILURES!!!
+Tests run: 15,  Failures: 12

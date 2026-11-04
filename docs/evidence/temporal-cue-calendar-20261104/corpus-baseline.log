@@ -1,0 +1,20 @@
+Corpus probe: baseline; original corpus read via reflection, no expectations or data modified
+aa47dd828e4d337fe83dbd598133f0b8228e7f0e59b1f2762051631e0c954800  /workspace/scratch/7dcf5d78f2cb/temporal-cue-evidence/baseline/ContinuumMemoryRetriever.kt
+f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e  /workspace/scratch/7dcf5d78f2cb/bot-memory/app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt
+query=Wohin ging ich letzten Monat mit Thomas?
+now=2026-11-04T09:00:00Z zone=Europe/Vienna corpusSize=1000
+windowStart=2026-09-19T22:00:00Z windowEndExclusive=2026-10-15T22:00:00Z
+expected=t14 at=2026-10-05T08:00:00Z localAt=2026-10-05T10:00+02:00[Europe/Vienna] insideWindow=true
+expectedText=Letzten Monat war ich mit Thomas im Theater.
+rank=1 id=d0016 at=2026-09-21T08:00:00Z confirmed=true score=0.14998656511306763 cosine=0.14998656511306763 timeWeight=1.0
+text=Thomas plant das Fahrrad im Park.
+rank=2 id=d0757 at=2026-10-07T08:00:00Z confirmed=true score=0.14960756059736013 cosine=0.14960756059736013 timeWeight=1.0
+text=Thomas hat den Staubsauger im Park.
+rank=3 id=t14 at=2026-10-05T08:00:00Z confirmed=true score=0.14520920161157846 cosine=0.14520920161157846 timeWeight=1.0
+text=Letzten Monat war ich mit Thomas im Theater.
+rank=4 id=d0382 at=2026-10-05T08:00:00Z confirmed=false score=0.14502106420695782 cosine=0.14502106420695782 timeWeight=1.0
+text=Thomas reparierte einen Kuchen in Wien.
+rank=5 id=d0375 at=2026-10-01T08:00:00Z confirmed=true score=0.144813084974885 cosine=0.144813084974885 timeWeight=1.0
+text=Thomas plant ein Geschenk in Linz.
+rank=6 id=d0729 at=2026-09-28T08:00:00Z confirmed=false score=0.13639283180236816 cosine=0.13639283180236816 timeWeight=1.0
+text=Thomas reparierte den Drucker in Enns.

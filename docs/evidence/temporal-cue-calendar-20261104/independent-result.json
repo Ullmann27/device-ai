@@ -1,0 +1,11 @@
+{
+  "command": [
+    "bash",
+    "tools/temporal-cue-host-check/run.sh",
+    "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib"
+  ],
+  "exit_code": 0,
+  "all_four_inputs_unchanged": true,
+  "source_sha256": "8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d",
+  "test_sha256": "1a25f175033f39dfffd8670503a05d62da76432304e80ca59c14d11dce65c0e9"
+}
