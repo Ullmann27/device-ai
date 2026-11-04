@@ -1,0 +1,13 @@
+{
+  "inputLocal": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
+  "candidateLocal": "f0cd3f21ed9c14b84975e37d32a39c3cc3ba690f",
+  "candidatePublic": "1070b10df50025828a9fd2b18bf1c187c094979b",
+  "appTree": "5dbfffdc8292ad1fce2799f5f1c98175a8d1b369",
+  "productionFiles": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "0b19ae8a75727c80be3cef424674fd9c34e54418c395410e6e04b154c6d08e30",
+    "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt": "69e10868d7ad9384868204f08478148db76e414c1ccf412452e1ee8c110bd8fe"
+  },
+  "gitDiffCheck": "PASS for production/test source; raw logs preserved verbatim",
+  "noSchemaOrPermissionChanges": true,
+  "apkBuilt": false
+}

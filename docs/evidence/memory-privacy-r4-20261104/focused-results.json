@@ -90,6 +90,24 @@
         "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "junit.txt": "fdcffad94732a46ef617f83dc49547ae2e9af122de343453d5417c142151311b"
       }
+    },
+    {
+      "run": "optimized-green",
+      "sourceLocal": "f8231317be1fc5e525ca1b1ed6b9415e9c49197f",
+      "sourcePublic": "cda3f0b44163ee6115b2a25197516186dca44842",
+      "tree": "9e3b0a6b15d155ad5a27c47b8d6f4b57089025a4",
+      "tests": 59,
+      "failures": 0,
+      "passed": 59,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "a446eb7d2ebac109ed0cc2eed6adec648c3acb6ed0f6af159e063470cad830c1",
+        "result.json": "3144b0bad6da2a9cf3d44ee2e73b435beea942845523180eacd5c810f7034053",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "87365257fa54ee12d6197ad839400027a614519d51758a278f325cd0b7c1d282"
+      }
     }
   ],
   "scope": "Actual-source host Kotlin/JUnit; not Android framework or AndroidKeyStore. Groups overlap; do not add counts.",
