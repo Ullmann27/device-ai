@@ -95,9 +95,9 @@ object JarvisMotion {
             flash <= 0f -> 0f
             else -> { val f = min(1f, (t - dur) / flash); 1f - f * f }
         }
-        val done = t >= dur + flash
+        if (t >= dur + flash) return REST
         return Frame(spec.direction.dx * spec.distanceDp * (1f - e), spec.direction.dy * spec.distanceDp * (1f - e),
-            spec.fromScale + (1f - spec.fromScale) * e, alpha, if (done) 0f else glow.coerceIn(0f, 1f), done)
+            spec.fromScale + (1f - spec.fromScale) * e, alpha, glow.coerceIn(0f, 1f), false)
     }
 
     /** "Mitte zuerst": stagger rank by distance of each card centre from [centerX] (ties keep input order). */
