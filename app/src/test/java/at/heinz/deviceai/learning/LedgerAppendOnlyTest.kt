@@ -48,10 +48,15 @@ class LedgerAppendOnlyTest {
         assertEquals((0 until 10).map(::fact)+fact(11),FileLearningExperienceStore(dir).all())
     }
 
-    @Test fun corruptedCompleteRecordFailsClosed() = withDir { dir ->
+    @Test fun corruptedFirstRecordWithoutBackupIsQuarantinedNeverAdopted() = withDir { dir ->
         FileLearningExperienceStore(dir).appendMissing((0 until 5).map(::fact))
         val b=dir.ledger.readBytes();b[30]=(b[30].toInt() xor 1).toByte();dir.ledger.writeBytes(b)
-        assertThrows(IllegalArgumentException::class.java) { FileLearningExperienceStore(dir).all() }
+        FileLearningExperienceStore.resetCachesForTest()
+        val reopened=FileLearningExperienceStore(dir)
+        assertTrue(reopened.all().isEmpty())
+        val r=reopened.lastRecovery()!!
+        assertEquals(5,r.discardedFrames);assertEquals(4,r.unverifiedFramesAfterCorruption)
+        assertArrayEquals(b.copyOfRange(8,b.size),r.quarantineFile.readBytes())
     }
 
     @Test fun lex3IsMigratedAndChurnIsCompacted() = withDir { dir ->

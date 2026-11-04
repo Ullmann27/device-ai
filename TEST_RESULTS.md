@@ -40,3 +40,10 @@ Stand: 2026-11-03 14:42 CET, Host-JVM (JDK 17.0.21, Gradle-Wrapper, --no-daemon)
 - M2.8 LEX4 append-only: RED 2/4 → GREEN 4/4. Schreib-p95 100/1000/4000 Einträge: 9,5–11,3 / 24,7–27,0 / 83,3–85,7 ms → 0,47–0,60 / 1,7–1,8 / 4,4–4,9 ms.
 - M2.9 Abruf: B Zeichen-n-Gramm-Hash + Zeit gewinnt (recall@1 0,886, recall@3 0,977, MRR 0,924, p95 0,63 ms, ~625 KB bei 1000), vs. A BM25-de + Zeit (0,818 / 0,841 / 0,830, 0,08 ms, ~119 KB). Details: docs/evidence/m2-retrieval-20261104/RESULTS.md.
 - Volle Unit-Suite: **1827 Tests, 0 Fehler, 5 übersprungen**.
+
+## Update 2026-11-04 (M2.10 LEX4-Recovery)
+- RED: LedgerRecoveryTest 5 Tests (Kompilier-RED, bae57986) → GREEN 5/5. 4 alte „fail closed“-Tests auf Recovery-Policy umgestellt (Absicht beibehalten: kein Übernehmen manipulierter Daten, Beweise bleiben erhalten, keine Wiederbelebung widerrufener Fakten).
+- Beschädigung: verifizierter Ketten-Präfix wird geladen, Rest unverändert in `experiences-v2.quarantine-<Zeitstempel>.bin`, `LedgerRecoveryReport` (Offset, verworfene Frames, ungeprüfte Frames danach, Quarantäne-Pfad, Sicherung) + Log. Kopf kaputt → neueste gültige Sicherung (bak1, dann bak2). Widerrufe aus ungeprüften Frames werden nur in restriktiver Richtung übernommen.
+- Rollierende Sicherung bak1/bak2: bei jedem vollständig verifizierten Öffnen (Cache-Miss) und alle 256 Anhänge.
+- Schreib-p95 100/1000/4000: vorher 0,47–0,60 / 1,7–1,8 / 4,4–4,9 ms; nachher 1,04–4,25 / 1,97–4,52 / 6,0–8,2 ms (2 Läufe, starkes Rauschen; der Pro-Anhang-Pfad hat nur einen Zähler mehr).
+- Volle Unit-Suite: **1832 Tests, 0 Fehler, 5 übersprungen**.

@@ -1,6 +1,7 @@
 package at.heinz.deviceai.learning
 
 import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
@@ -48,7 +49,11 @@ class LearningExperienceStoreTest {
             val bytes=file.readBytes()
             bytes[bytes.size/2]=(bytes[bytes.size/2].toInt() xor 1).toByte()
             file.writeBytes(bytes)
-            assertThrows(Exception::class.java) { FileLearningExperienceStore(dir).all() }
+            // M2.10: tampering is never adopted; the damaged bytes go to quarantine and a report is recorded.
+            FileLearningExperienceStore.resetCachesForTest()
+            val reopened=FileLearningExperienceStore(dir)
+            assertTrue(reopened.all().none { it.content==item.content && it.status!=item.status } && item !in reopened.all())
+            assertTrue(reopened.lastRecovery()!!.quarantineFile.isFile)
         } finally { dir.deleteRecursively() }
     }
 

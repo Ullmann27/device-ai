@@ -28,12 +28,13 @@ class HistoricalLearningLedgerTest {
                     LearningProvenance.LOCAL_TRAINING, LearningTrustClass.SYSTEM_MEASUREMENT,
                     LearningStatus.REJECTED, "Synthetic audit $index", now = index.toLong())
             })
+            val expected = source.all().toSet() // verified open (may rotate rolling backups) before the read-only check
             val primary = dir.resolve("experiences-v2.bin")
             val bytes = primary.readBytes()
             val beforeFiles = dir.listFiles()!!.associate { it.name to it.readBytes().toList() }
             val inspected = PersonalLearningTransfer.inspectDocument(bytes)
             assertEquals(256, inspected.records.size)
-            assertEquals(source.all().toSet(), inspected.records.toSet())
+            assertEquals(expected, inspected.records.toSet())
             assertEquals(1, inspected.records.count { it.status == LearningStatus.REVOKED })
             assertEquals("unverified.legacy", inspected.claimedSourcePackage)
             assertEquals(MessageDigest.getInstance("SHA-256").digest(bytes)

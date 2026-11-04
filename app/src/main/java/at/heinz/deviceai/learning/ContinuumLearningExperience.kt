@@ -106,7 +106,9 @@ data class LedgerRecoveryReport(
     val unverifiedFramesAfterCorruption:Int,
     val quarantineFile:File,
     val restoredFromBackup:File?,
-    val reason:String
+    val reason:String,
+    /** Revocations/rejections found in unverified frames and applied (restrictive direction only, never a confirmation). */
+    val salvagedRevocations:Int=0
 )
 
 class FileLearningExperienceStore(private val directory:File) {
@@ -283,8 +285,9 @@ class FileLearningExperienceStore(private val directory:File) {
                 val frames=LearningExperienceCodec.countFrames(bytes,off)
                 val q=quarantine(bytes.copyOfRange(off.toInt(),bytes.size))
                 java.io.RandomAccessFile(primary,"rw").use { it.setLength(off);it.fd.sync() }
-                report(LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record"))
-                return scan.state
+                val r=LedgerRecoveryReport(off,frames,frames-1,q,null,scan.reason ?: "damaged record")
+                report(r)
+                return salvageRestrictive(scan.state,bytes,off,r)
             }
         } else if(!LearningExperienceCodec.isLog(bytes)) {
             runCatching { LearningExperienceCodec.decode(bytes) }.getOrNull()?.let { items ->
@@ -305,9 +308,10 @@ class FileLearningExperienceStore(private val directory:File) {
             }.getOrNull() ?: continue
             val q=quarantine(damaged)
             writeAtomically(primary,bb)
-            report(LedgerRecoveryReport(0,LearningExperienceCodec.countFrames(damaged,minOf(8L,damaged.size.toLong())),0,q,bak,
-                "primary unreadable from the start; restored newest valid backup"))
-            return state
+            val r=LedgerRecoveryReport(0,LearningExperienceCodec.countFrames(damaged,minOf(8L,damaged.size.toLong())),0,q,bak,
+                "primary unreadable from the start; restored newest valid backup")
+            report(r)
+            return salvageRestrictive(state,damaged,minOf(8L,damaged.size.toLong()),r)
         }
         if(LearningExperienceCodec.isLog(damaged) && LearningExperienceCodec.hasLogVersion(damaged) && damaged.size>8) {
             val frames=LearningExperienceCodec.countFrames(damaged,8)
@@ -317,6 +321,24 @@ class FileLearningExperienceStore(private val directory:File) {
             return LearningExperienceCodec.scanLog(primary.readBytes()).state
         }
         throw IllegalArgumentException("Learning ledger unreadable and no valid backup")
+    }
+
+    /** A restored/prefix state may predate an owner revocation. Unverified frames are never adopted, except that a
+     * REVOKED/REJECTED status for a record we already hold (same content hash) is applied: this can only withdraw
+     * consent, never grant it. */
+    private fun salvageRestrictive(state:LearningExperienceCodec.LogState,bytes:ByteArray,offset:Long,
+                                   r:LedgerRecoveryReport):LearningExperienceCodec.LogState {
+        val current=state.items.associateBy { it.id }
+        val updates=LearningExperienceCodec.salvagePuts(bytes,offset)
+            .filter { it.status==LearningStatus.REVOKED || it.status==LearningStatus.REJECTED }
+            .mapNotNull { u -> current[u.id]?.takeIf { it.contentHash==u.contentHash &&
+                it.status!=LearningStatus.REVOKED && it.status!=LearningStatus.REJECTED }
+                ?.copy(status=u.status,updatedAt=maxOf(current[u.id]!!.updatedAt,u.updatedAt)) }
+            .associateBy { it.id }
+        if(updates.isEmpty())return state
+        save(state.items.map { updates[it.id] ?: it })
+        report(r.copy(salvagedRevocations=updates.size))
+        return loadState()
     }
 
     private fun quarantine(bytes:ByteArray):File {
@@ -532,6 +554,19 @@ internal object LearningExperienceCodec {
             hash=next;pos+=4+len+32;records++
         }
         return Scan(LogState(state.values.toList(),hash,records,pos.toLong()),null,null,false)
+    }
+
+    /** Best-effort PUT records from unverified frames after [offset] (hash chain NOT verified; content hash is). */
+    fun salvagePuts(bytes:ByteArray,offset:Long):List<LearningExperience> {
+        val out=ArrayList<LearningExperience>();var pos=offset.toInt()
+        while(bytes.size-pos>=4) {
+            val len=java.nio.ByteBuffer.wrap(bytes,pos,4).int
+            if(len !in 1..MAX_RECORD || bytes.size-pos<4+len+32)break
+            runCatching { val input=DataInputStream(ByteArrayInputStream(bytes,pos+4,len))
+                if(input.readByte()==PUT)out+=readRecord(input) }
+            pos+=4+len+32
+        }
+        return out
     }
 
     /** Number of frames from [offset] to the end, following length fields only (hashes NOT verified). */

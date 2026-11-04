@@ -100,11 +100,15 @@ class ContinuumOwnerFactTest {
         val beforeBackup=backup.readBytes()
         val damaged=ledger(dir).readBytes().also { it[40]=(it[40].toInt() xor 1).toByte() }
         ledger(dir).writeBytes(damaged)
+        FileLearningExperienceStore.resetCachesForTest()
+        // M2.10: the rolling backup (bak1) may predate the revocation; restrictive salvage re-applies the revocation
+        // from the unverified frames, so the restored ledger never re-activates the revoked fact.
         val reopened=ContinuumLearningCore(dir)
-        assertThrows(IllegalArgumentException::class.java) { reopened.activeOwnerFacts() }
-        assertThrows(IllegalArgumentException::class.java) { reopened.replyFromMemory("Wie heißt mein Hund?") }
-        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,ledger(dir).readBytes())
-        assertArrayEquals("an older backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
+        assertEquals(emptyList<String>(),reopened.activeOwnerFacts().map { it.content })
+        val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
+        val r=store.lastRecovery()!!
+        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,r.quarantineFile.readBytes())
+        assertArrayEquals("an older LKG backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
     }
 
     @Test fun missingPrimaryWithAnOlderBackupCannotStartAnEmptyLedger() = withCore { core, dir ->
