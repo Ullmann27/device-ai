@@ -1,0 +1,22 @@
+{
+  "sourceSha256": "6b14f23ef9b595008099b16d81f1121783fea0bb67e7f3d942e44eed6405e425",
+  "publishedIncompleteFileAfterInterruptedWrite": true,
+  "resumeCases": [
+    {
+      "phase": "ladder",
+      "silentSkip": true
+    },
+    {
+      "phase": "continuation",
+      "silentSkip": true
+    },
+    {
+      "phase": "final",
+      "silentSkip": true
+    }
+  ],
+  "experimentConstructorExecuted": false,
+  "modelExecuted": false,
+  "ownerInputRead": false,
+  "scope": "Synthetic phase-resume control flow, not model or capacity acceptance"
+}

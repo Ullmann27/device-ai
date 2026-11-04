@@ -9,8 +9,14 @@ import types
 from unittest.mock import patch
 
 
+REVIEWED_RUNNER_SHA256 = "6b14f23ef9b595008099b16d81f1121783fea0bb67e7f3d942e44eed6405e425"
+
+
 def probe(source_path: Path) -> dict:
     source = source_path.read_bytes()
+    source_sha256 = hashlib.sha256(source).hexdigest()
+    if source_sha256 != REVIEWED_RUNNER_SHA256:
+        raise ValueError(f"Unreviewed runner SHA-256: {source_sha256}")
     module = types.ModuleType("support_weight_phase_probe")
     module.__file__ = str(source_path)
     # The reviewed runner defines main behind __name__ == '__main__'. Its
@@ -56,7 +62,7 @@ def probe(source_path: Path) -> dict:
             else:
                 results.append({"phase": phase, "silentSkip": True})
 
-    return {"sourceSha256": hashlib.sha256(source).hexdigest(),
+    return {"sourceSha256": source_sha256,
             "publishedIncompleteFileAfterInterruptedWrite": incomplete_published,
             "resumeCases": results,
             "experimentConstructorExecuted": False, "modelExecuted": False,

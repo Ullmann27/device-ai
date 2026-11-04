@@ -41,3 +41,8 @@ The audit also observed checkpoint/tokenizer/dataset hash binding and failed
 continuations excluded from selection. Capacity numbers are labelled host
 measurements; Fold7 quality and speed remain NOT_RUN. No model, private corpus,
 training or capacity experiment was run by this support check.
+
+The diagnostic is now bound to the reviewed runner's exact SHA-256 before any
+module execution. The owner has since changed the runner; the earlier defect
+must not be attributed automatically to those new bytes. See
+`PROBE-SOURCE-BOUNDARY.md` for the rejection and original-source replay evidence.

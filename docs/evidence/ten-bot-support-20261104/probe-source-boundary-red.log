@@ -1,0 +1,17 @@
+test_rejects_changed_runner_before_module_execution (test_weight_phase_resume_probe.ReviewedSourceBoundaryTest.test_rejects_changed_runner_before_module_execution) ... ERROR
+
+======================================================================
+ERROR: test_rejects_changed_runner_before_module_execution (test_weight_phase_resume_probe.ReviewedSourceBoundaryTest.test_rejects_changed_runner_before_module_execution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/fd4940f23688/device-ai-support/tools/support_assist_20261104/test_weight_phase_resume_probe.py", line 22, in test_rejects_changed_runner_before_module_execution
+    probe(runner)
+  File "/workspace/scratch/fd4940f23688/device-ai-support/tools/support_assist_20261104/weight_phase_resume_probe.py", line 28, in probe
+    with patch.object(module.json, "dump", interrupted_dump):
+                      ^^^^^^^^^^^
+AttributeError: module 'support_weight_phase_probe' has no attribute 'json'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (errors=1)
