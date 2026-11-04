@@ -140,7 +140,6 @@ class CockpitAnimationPresenter(
             is CockpitAnimationEvent.AlarmCleared -> Unit
             is CockpitAnimationEvent.BootStarted, is CockpitAnimationEvent.CockpitEntered -> Unit
             is CockpitAnimationEvent.Extension -> Unit // unknown kinds are ignored by design
-            is CockpitAnimationEvent.CalculationShown -> Unit // rendering (donut/bars/cascade) belongs to Kern/Avatar
         }
     }
 

@@ -88,23 +88,10 @@ sealed class CockpitAnimationEvent {
      * Not implemented yet; renderers that do not know a [kind] must ignore it.
      */
     abstract class Extension(val kind: String) : CockpitAnimationEvent()
-
-    // BEGIN Kern signature (M2.14, verbatim from Jarvis Kern's spec; not yet on #481 at 02097c48 – replace with Kern's
-    // definition on merge, do not diverge). A real calculation with its real intermediate steps.
-    data class CalculationShown(override val turnId: String, override val atMillis: Long, val expression: String,
-                                val steps: List<CalcStep>, val result: Double, val unit: String?, val chart: ChartKind) :
-        CockpitAnimationEvent()
-    // END Kern signature
 }
 
 const val MEMORY_TURN = "memory"
 const val BOOT_TURN = "boot"
-
-// BEGIN Kern signature (M2.14, verbatim; see CalculationShown)
-data class CalcStep(val label: String, val value: Double)
-enum class ChartKind { NONE, DONUT, BAR, LINE }
-interface CalculationEventSource { fun addListener(l: (CockpitAnimationEvent.CalculationShown) -> Unit): AutoCloseable }
-// END Kern signature
 
 /** Controls of the cockpit action bar plus the two non-bar work kinds. */
 enum class CockpitAction { THINK, RESEARCH, LEARN, DEVELOP, EXECUTE, VERIFY, TOOL, WORKER }
