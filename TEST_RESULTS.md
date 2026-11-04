@@ -35,3 +35,18 @@ Details: `docs/research/omega/M5-INTEGRATION-REPAIR-HANDOFF-20261103.md`.
 - GREEN: `ExternalContentInjectionGuardTest` 4/4.
 - Volle Regression auf `afa2c7e5`: JUnit 1781 Tests, 0 Fehler, 5 übersprungen; Node 367 Tests, 364 bestanden, 0 Fehler, 3 übersprungen; Lint "No issues found".
 - Offen (bei Limit-Abschluss nicht begonnen): Kürzung der Werkzeug-Ausgabe auf ~3900 Zeichen; Einbau des Freigabe-/S4-Gates in ChiefWorkerPool (HAUPT) und Lumo-Aufgabenschleife.
+
+## Addendum 2026-11-04 – B5 (S4-Guard nach Herkunft/Risiko) + Tool-Ausgabe-Cap 3900
+
+Box: JDK 17.0.21, Gradle `testDebugUnitTest lintDebug`, Node `node --test .github/continuum/*.test.mjs`. Kein Fold7/APK/Inferenz-Test.
+
+**B5 (Fehler):** `ExternalContentActionGuard.ownerRequested` war reine Verb-Wortliste: `move_file` nach einer Beobachtung wurde verweigert, wenn „verschieb/move“ nicht im Auftrag stand; negationsblind („ohne etwas zu loeschen“ = Lösch-Absicht); „teil“ zu breit.
+- RED `8c31ecaa`: 7 B5-Tests aus `FirstThinkingRunE2ETest` (integration @68a34bd9) ohne `@Ignore` übernommen (PENDING-Platzhalter fremder Bots weggelassen; eine `OwnerStatementModality`-Assertion entfernt, Klasse aus #371 fehlt auf diesem Zweig). Ergebnis vor Fix: 9 Tests, 7 failed (`/workspace/m5-logs/b5-red-e2e.log`). Guard-Unit-Test auf neue Semantik umgeschrieben (Signaturänderung → Compile-RED).
+- Fix `0c2d5a16`: Entscheidung nach Herkunft + Aktionsrisiko. Lesen/Per-Request-Consent/noch keine Beobachtung → normaler ToolGate. Reversible lokale Aktionen (move/stop/restart) → normale Owner-Freigabe. High-Impact (jedes DESTRUCTIVE-Tool, install/uninstall, send/post/share/upload, kaufen/zahlen) nach externem Inhalt → jedes Ziel-Argument (Pfad/Paket/Empfänger) muss aus dem Owner-Auftrag stammen, sonst Verweigerung ohne Rückfrage; Nachrichtentext ist Nutzlast. S4-Garantien bleiben (injiziertes delete: 0 Ausführungen, 0 Rückfragen).
+- GREEN gezielt: FirstThinkingRunE2ETest 9/9, ExternalContentInjectionGuardTest 4/4, BoundedAgent* 8/8.
+
+**Cap 3900:** RED `8c7f0416`, Fix `51cac209` – `ToolOutputCap` (Gewicht = JSON-escaped Länge, Surrogat-sicher, Marker „[gekürzt: … Limit 3900]“). 4/4 grün.
+- `ChiefWorkerPool` ist NICHT auf diesem Zweig (gehört HAUPT, #379). Statt fremden Code zu übernehmen: Patch `docs/research/omega/M5-CHIEFWORKERPOOL-TOOL-OUTPUT-CAP.patch` (WorkerScope.runner + WorkerReport.summary). In temporärem Worktree auf 68a34bd9 angewendet: ChiefWorkerPoolTest 3/3, ChiefMemoryAndJobTest 4/4, ToolOutputCapTest 4/4 grün (`/workspace/m5-logs/cwp-patch-check.log`).
+- Verworfen: Cap in `LocalToolContinuation.observationData` – bricht 4 bestehende Verträge (Caller-Gate weist Übergröße bewusst fail-closed ab).
+
+**Volle Regression:** JUnit 1794 Tests, 0 Fehler, 5 übersprungen (vorher 1781/0/5). Lint: „No issues found“. Node: 1306 Tests, 1293 pass, 0 fail, 13 skipped (Aufruf mit allen `*.test.mjs`).
