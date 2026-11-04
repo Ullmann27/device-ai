@@ -26,6 +26,8 @@ def read(path, phase, group):
     if group in ("all", "tokenizer"):
         expected.update(f"token-{kind}-{case}" for kind in ("bytes", "merged")
                         for case in ("empty", "single", "sentence", "unicode", "unique-word"))
+    if group == "hex":
+        expected.update("hex-" + case for case in ("empty", "zero", "ff", "sha256", "all-bytes", "1024"))
     assert len(rows) == 2 + 18 * len(expected)
     assert rows[0]["type"] == "meta" and rows[-1]["type"] == "complete"
     assert rows[0]["phase"] == rows[-1]["phase"] == phase and rows[0]["group"] == group
@@ -68,12 +70,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", type=Path)
     parser.add_argument("phase")
-    parser.add_argument("group", choices=("all", "nll", "distribution", "tokenizer"))
+    parser.add_argument("group", choices=("all", "nll", "distribution", "tokenizer", "hex"))
     parser.add_argument("--control", type=Path)
+    parser.add_argument("--control-group", choices=("all", "hex"), default="all")
     args = parser.parse_args()
     summary = read(args.directory / f"{args.phase}-{args.group}.jsonl", args.phase, args.group)
     if args.control:
-        control = read(args.control / "aa-all.jsonl", "aa", "all")
+        control = read(args.control / f"aa-{args.control_group}.jsonl", "aa", args.control_group)
         controls = {x["case"]: x for x in control["cases"]}
         for case in summary["cases"]:
             original = controls[case["case"]]

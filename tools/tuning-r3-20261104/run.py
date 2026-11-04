@@ -66,7 +66,7 @@ def check(out, lib, candidate):
             sources.append(path)
     assert len(sources) == 12
     tests = [ROOT / f"app/src/test/java/{PACKAGE.replace('.', '/')}/{name}.kt" for name in TESTS]
-    tests += [TOOLS / "LmTuningR3Checks.kt", TOOLS / "LmTuningR3Benchmark.kt"]
+    tests += [TOOLS / name for name in ("LmTuningR3Checks.kt", "LmTuningR3Benchmark.kt", "LmHexR3Checks.kt", "LmHexR3Benchmark.kt")]
     cp = os.pathsep.join(str(lib / name) for name in ["kotlin-stdlib-2.0.20.jar", "junit-4.13.2.jar", "hamcrest-core-1.3.jar"])
     for path in cp.split(os.pathsep):
         assert Path(path).is_file(), path
@@ -83,7 +83,7 @@ def check(out, lib, candidate):
     (out / "compile-command.json").write_text(json.dumps(command, indent=2) + "\n")
     run(command, out / "compile.txt")
     run(["java", "-Xmx512m", "-cp", str(jar) + os.pathsep + cp, "org.junit.runner.JUnitCore",
-         *[PACKAGE + "." + name for name in TESTS], PACKAGE + ".LmTuningR3Checks"], out / "tests.txt")
+         *[PACKAGE + "." + name for name in TESTS], PACKAGE + ".LmTuningR3Checks", PACKAGE + ".LmHexR3Checks"], out / "tests.txt")
     manifest["jarSha256"] = sha(jar)
     manifest["status"] = "CHECKS_PASS"
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -99,7 +99,7 @@ def measure(out, group, phase):
         if name.startswith("candidate/"):
             assert sha(Path(manifest["candidateSourceLocations"][Path(name).name])) == expected, name
     run(["java", "-Xms256m", "-Xmx512m", "-cp", str(out / "checks.jar") + os.pathsep + manifest["classpath"],
-         PACKAGE + ".LmTuningR3Benchmark", group, phase], out / f"{phase}-{group}.jsonl")
+         PACKAGE + (".LmHexR3Benchmark" if group == "hex" else ".LmTuningR3Benchmark"), group, phase], out / f"{phase}-{group}.jsonl")
 
 
 if __name__ == "__main__":
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     parser.add_argument("output", type=Path)
     parser.add_argument("--lib", type=Path)
     parser.add_argument("--candidate", choices=("checkout", "m3a"), default="checkout")
-    parser.add_argument("--group", choices=("all", "nll", "distribution", "tokenizer"), default="all")
+    parser.add_argument("--group", choices=("all", "nll", "distribution", "tokenizer", "hex"), default="all")
     parser.add_argument("--phase", default="baseline")
     args = parser.parse_args()
     out = args.output.resolve()
