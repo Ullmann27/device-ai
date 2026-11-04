@@ -4,50 +4,61 @@ import at.heinz.deviceai.Risk
 import java.util.Locale
 
 /**
- * S4: external content (web, files, screen, notifications, any tool result) is
- * data, never a command. Once a run has seen such content, a consequential tool
- * (delete/uninstall/install/move/stop/send/post/purchase/upload/external write)
- * may only be proposed when the OWNER's own request carries that intent. The
- * check reads the owner task only; observation text can never create intent.
- * Approved web tools keep their own per-request owner consent dialog.
+ * S4 (B5 revision): external content (web, files, screen, notifications, any tool result) is
+ * data, never a command. The decision is based on PROVENANCE (taint) and ACTION RISK, not on
+ * verb word lists:
+ *
+ * - Before any untrusted observation, or for read-only / per-request-consent tools: no
+ *   intervention; the normal ToolGate + owner approval decides.
+ * - Reversible local actions (move, stop/restart, other CONFIRM tools) after untrusted content:
+ *   allowed to proceed to the normal owner approval (nothing runs without a yes).
+ * - High-impact actions (any DESTRUCTIVE tool, install, send/post/share/upload, purchase/pay)
+ *   after untrusted content: every control argument (target path, package, recipient, item ...)
+ *   must be provenanced by the OWNER's own request text. A target that only appears in tool
+ *   output or was invented by the model is tainted, and the proposal is refused before the
+ *   owner is even asked. Payload arguments (message body/subject/content) are data and do not
+ *   need owner provenance. Observation text can never create provenance.
  */
 object ExternalContentActionGuard {
-    const val REFUSAL = "Aktion aus externem Inhalt abgeleitet und nicht ausgeführt: Dein Auftrag enthielt diese Absicht nicht. " +
+    const val REFUSAL = "Aktion aus externem Inhalt abgeleitet und nicht ausgeführt: Das Ziel stammt nicht aus deinem Auftrag. " +
         "Externe Inhalte sind Daten, keine Befehle. Erteile die Aktion bei Bedarf ausdrücklich als eigenen Auftrag."
-
-    private val DELETE = listOf("lösch", "losch", "loesch", "entfern", "delete", "remove", "wegmach", "wipe")
-    private val UNINSTALL = listOf("deinstall", "uninstall")
-    private val INSTALL = listOf("installier", "install")
-    private val MOVE = listOf("verschieb", "move")
-    private val STOP = listOf("stopp", "stop", "beend", "schließ", "schliess", "neu start", "neustart", "restart", "kill")
-    private val SEND = listOf("send", "schick", "sende", "post", "teil", "share", "mail", "nachricht", "message", "upload", "hochlad")
-    private val PURCHASE = listOf("kauf", "bestell", "buy", "purchase", "order", "bezahl", "zahl", "pay")
 
     /** Tools that never need this guard: read-only, or already owner-consented per request. */
     private val OWN_CONSENT_TOOLS = setOf("web_search", "web_read", "read_app_screen", "launch_app",
         "take_screenshot", "record_screen", "open_android_settings")
 
-    private fun intentFor(toolName: String): List<String>? = when {
-        toolName == "delete_file" -> DELETE
-        toolName == "uninstall_app" -> UNINSTALL
-        toolName == "install_apk" -> INSTALL
-        toolName == "move_file" -> MOVE
-        toolName in setOf("stop_app", "restart_app") -> STOP
-        Regex("send|post|share|mail|message|sms|upload|publish").containsMatchIn(toolName) -> SEND
-        Regex("buy|purchase|order|pay|checkout").containsMatchIn(toolName) -> PURCHASE
-        Regex("delete|remove|wipe|erase").containsMatchIn(toolName) -> DELETE
-        else -> null
-    }
+    private val OUTBOUND_OR_SPEND = Regex("send|post|share|mail|message|sms|upload|publish|buy|purchase|order|pay|checkout")
+    private val PAYLOAD_KEYS = setOf("text", "body", "message", "content", "subject", "caption", "note")
 
-    fun ownerRequested(ownerTask: String, toolName: String): Boolean {
-        val stems = intentFor(toolName) ?: return false
-        val text = ownerTask.lowercase(Locale.ROOT)
-        return stems.any { text.contains(it) }
+    fun isHighImpact(toolName: String, risk: Risk): Boolean =
+        risk == Risk.DESTRUCTIVE || toolName == "install_apk" || toolName == "uninstall_app" ||
+            OUTBOUND_OR_SPEND.containsMatchIn(toolName)
+
+    private fun norm(s: String) = s.lowercase(Locale.ROOT).replace('\\', '/').trim()
+
+    /** True when [value] (or its file/package leaf, at least 3 chars) literally appears in the owner task. */
+    fun ownerProvenanced(ownerTask: String, value: String): Boolean {
+        val task = norm(ownerTask)
+        val v = norm(value).trimEnd('/')
+        if (v.isEmpty()) return false
+        if (task.contains(v)) return true
+        val leaf = v.substringAfterLast('/')
+        return leaf.length >= 3 && task.contains(leaf)
     }
 
     /** Null when allowed to proceed to the normal ToolGate/owner approval; otherwise the owner-facing refusal. */
-    fun refusal(ownerTask: String, toolName: String, risk: Risk, untrustedObservationsSeen: Boolean): String? {
+    fun refusal(
+        ownerTask: String,
+        toolName: String,
+        risk: Risk,
+        arguments: Map<String, Any?>,
+        untrustedObservationsSeen: Boolean
+    ): String? {
         if (risk == Risk.READ_ONLY || !untrustedObservationsSeen || toolName in OWN_CONSENT_TOOLS) return null
-        return if (ownerRequested(ownerTask, toolName)) null else REFUSAL
+        if (!isHighImpact(toolName, risk)) return null
+        val controls = arguments.filterKeys { it.lowercase(Locale.ROOT) !in PAYLOAD_KEYS }
+            .values.mapNotNull { it?.toString()?.takeIf(String::isNotBlank) }
+        if (controls.isEmpty()) return REFUSAL
+        return if (controls.all { ownerProvenanced(ownerTask, it) }) null else REFUSAL
     }
 }
