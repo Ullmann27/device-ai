@@ -1,0 +1,23 @@
+{
+  "taskId": "C1-CONTRACTS-003",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    ".github/continuum/android-integration-wiring.test.mjs",
+    ".github/continuum/cognitive-trace-wiring.test.mjs",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+    ".github/continuum/coding-agent-speech-wiring.test.mjs",
+    ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+    ".github/continuum/android-avatar-wiring.test.mjs",
+    "scripts/continuum-learning-parity-readout.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/174c84456ee3/continuum-c1",
+  "sourceBaseLocal": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+  "upstreamArchiveCommit": "46e5fa6b09454ad6f6862e80478eb0f2d5545149",
+  "startedAt": "2026-11-04T20:12:24.336837+00:00",
+  "finishedAt": "2026-11-04T20:12:28.128470+00:00",
+  "exitCode": 0,
+  "scope": "Source contracts only; no Android runtime or model execution."
+}

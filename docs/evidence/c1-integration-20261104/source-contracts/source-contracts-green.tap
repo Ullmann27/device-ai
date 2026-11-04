@@ -1,0 +1,298 @@
+TAP version 13
+# Subtest: no new Flutter dependency and existing native layout remains authoritative
+ok 1 - no new Flutter dependency and existing native layout remains authoritative
+  ---
+  duration_ms: 1.382467
+  type: 'test'
+  ...
+# Subtest: scanline effect runs in draw pass, never as an input-intercepting view
+ok 2 - scanline effect runs in draw pass, never as an input-intercepting view
+  ---
+  duration_ms: 0.317768
+  type: 'test'
+  ...
+# Subtest: background glows behind live cards, do not obscure labels or inflate telemetry
+ok 3 - background glows behind live cards, do not obscure labels or inflate telemetry
+  ---
+  duration_ms: 0.21998
+  type: 'test'
+  ...
+# Subtest: all existing cockpit destinations remain connected to owner callbacks
+ok 4 - all existing cockpit destinations remain connected to owner callbacks
+  ---
+  duration_ms: 0.634964
+  type: 'test'
+  ...
+# Subtest: system gauges show only measured values and explain unknown GPU
+ok 5 - system gauges show only measured values and explain unknown GPU
+  ---
+  duration_ms: 0.308604
+  type: 'test'
+  ...
+# Subtest: device storage legend does not present unidentified data as measured system bytes
+ok 6 - device storage legend does not present unidentified data as measured system bytes
+  ---
+  duration_ms: 0.234523
+  type: 'test'
+  ...
+# Subtest: positive measured event deltas use green in both form factors
+ok 7 - positive measured event deltas use green in both form factors
+  ---
+  duration_ms: 0.220461
+  type: 'test'
+  ...
+# Subtest: both phone and Fold storage cards show compact legend without losing measured category names
+ok 8 - both phone and Fold storage cards show compact legend without losing measured category names
+  ---
+  duration_ms: 0.271828
+  type: 'test'
+  ...
+# Subtest: avatar director is wired to hologram state, TTS start/range/end and the TTS audio envelope
+ok 9 - avatar director is wired to hologram state, TTS start/range/end and the TTS audio envelope
+  ---
+  duration_ms: 1.908417
+  type: 'test'
+  ...
+# Subtest: contract stays rendering-free and defaults to the no-op placeholder
+ok 10 - contract stays rendering-free and defaults to the no-op placeholder
+  ---
+  duration_ms: 0.262073
+  type: 'test'
+  ...
+# Subtest: approval dialogs and blocked outcomes drive WAITING_FOR_APPROVAL and BLOCKED
+ok 11 - approval dialogs and blocked outcomes drive WAITING_FOR_APPROVAL and BLOCKED
+  ---
+  duration_ms: 0.882776
+  type: 'test'
+  ...
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 12 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 229.210293
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 13 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 477.544801
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 14 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.238809
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 15 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.227732
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 16 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 234.295237
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 17 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.359209
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 18 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 5.922578
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 19 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 783.083232
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 20 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 44.170948
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 21 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 87.134681
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 22 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 178.452912
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 23 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 435.197895
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 24 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 158.500289
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 25 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 46.350603
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 26 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 41.738763
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 27 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 130.651987
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 28 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 99.496936
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 29 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 44.897879
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 30 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.509375
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 31 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.541294
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 32 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.581564
+  type: 'test'
+  ...
+# Subtest: coding agent has one integrated entry from Android home, no second app
+ok 33 - coding agent has one integrated entry from Android home, no second app
+  ---
+  duration_ms: 0.953693
+  type: 'test'
+  ...
+# Subtest: developer speech uses actual German Android recognizer and a unique callback
+ok 34 - developer speech uses actual German Android recognizer and a unique callback
+  ---
+  duration_ms: 0.915366
+  type: 'test'
+  ...
+# Subtest: voice text is always previewed; neither recognition nor chat command executes code
+ok 35 - voice text is always previewed; neither recognition nor chat command executes code
+  ---
+  duration_ms: 0.817248
+  type: 'test'
+  ...
+# Subtest: existing mobile builder remains opt-in, not falsely labelled an app generator
+ok 36 - existing mobile builder remains opt-in, not falsely labelled an app generator
+  ---
+  duration_ms: 0.320541
+  type: 'test'
+  ...
+# Subtest: one correlation follows actual main-chat memory, runtime and tool paths (source wiring)
+ok 37 - one correlation follows actual main-chat memory, runtime and tool paths (source wiring)
+  ---
+  duration_ms: 1.950591
+  type: 'test'
+  ...
+# Subtest: model reply quality never authorizes an owner-memory write (source boundary)
+ok 38 - model reply quality never authorizes an owner-memory write (source boundary)
+  ---
+  duration_ms: 0.59218
+  type: 'test'
+  ...
+# Subtest: bounded multi-step request keeps the existing gate and never promotes legacy shell strings
+ok 39 - bounded multi-step request keeps the existing gate and never promotes legacy shell strings
+  ---
+  duration_ms: 0.561173
+  type: 'test'
+  ...
+# Subtest: explicit scope correction invalidates grounded and model context before acknowledgement (source boundary)
+ok 40 - explicit scope correction invalidates grounded and model context before acknowledgement (source boundary)
+  ---
+  duration_ms: 0.315744
+  type: 'test'
+  ...
+# Subtest: Qwen chat validates replies without unconditional 0.8 success
+ok 41 - Qwen chat validates replies without unconditional 0.8 success
+  ---
+  duration_ms: 73.973667
+  type: 'test'
+  ...
+# Subtest: context is bounded, clearly untrusted, and never authorizes tools or factual memories
+ok 42 - context is bounded, clearly untrusted, and never authorizes tools or factual memories
+  ---
+  duration_ms: 49.856259
+  type: 'test'
+  ...
+# Subtest: low cost evaluator refuses mechanical repeats but cannot claim truth
+ok 43 - low cost evaluator refuses mechanical repeats but cannot claim truth
+  ---
+  duration_ms: 0.193661
+  type: 'test'
+  ...
+# Subtest: installed application ID and sandbox boundaries are explicitly visible
+ok 44 - installed application ID and sandbox boundaries are explicitly visible
+  ---
+  duration_ms: 0.839271
+  type: 'test'
+  ...
+# Subtest: source archive, experience ledger, and encoder updates stay distinct
+ok 45 - source archive, experience ledger, and encoder updates stay distinct
+  ---
+  duration_ms: 0.250466
+  type: 'test'
+  ...
+# Subtest: public research permission, scheduler and counters are not confused with learning
+ok 46 - public research permission, scheduler and counters are not confused with learning
+  ---
+  duration_ms: 0.200281
+  type: 'test'
+  ...
+# Subtest: readout does not import, train, revoke or overwrite an old application
+ok 47 - readout does not import, train, revoke or overwrite an old application
+  ---
+  duration_ms: 0.320241
+  type: 'test'
+  ...
+# Subtest: owner learning summary does not claim Gemma weight training
+ok 48 - owner learning summary does not claim Gemma weight training
+  ---
+  duration_ms: 0.203025
+  type: 'test'
+  ...
+1..48
+# tests 48
+# suites 0
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3725.321009

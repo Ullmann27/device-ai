@@ -1,0 +1,426 @@
+{
+  "critical": {
+    "status": "FAIL",
+    "source": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+    "sourceUnchanged": true,
+    "exitCode": 1,
+    "counts": {
+      "total": 135,
+      "passed": 131,
+      "failed": 4,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.cognitive runtime owns the single chat path, privacy boundaries and background diagnostics",
+        "file": ".github/continuum/android-integration-wiring.test.mjs",
+        "line": 16,
+        "col": 34,
+        "message": "Disconnected or unsupported code path: local model context is separate from user-authorized memory input",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e07397c085b53978"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.coding agent has one integrated entry from Android home, no second app",
+        "file": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        "line": 17,
+        "col": 10,
+        "message": "The input did not match the regular expression /ContinuumWorkArea\\.ENTWICKELN -> showDevelopmentCenter\\(\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "013dc66cdc00ff35"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.developer speech uses actual German Android recognizer and a unique callback",
+        "file": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        "line": 28,
+        "col": 10,
+        "message": "The input did not match the regular expression /RecognizerIntent\\.EXTRA_LANGUAGE,\"de-AT\"/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import android.Manifest\\n' +\n  'import android.content.Context\\n' +\n  'import android.content.Intent\\n' +\n  'import android.content.pm.PackageManager\\n' +\n  'import android.os.Build\\n' +\n  'import android.os.Bundle\\n' +\n  'import android.os.Handler\\n' +\n  '",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "6edb3809ef77fb8c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.fold, small display and enlarged-font behaviour are expressed by a pure policy",
+        "file": ".github/continuum/nexus-beginner-ui.test.mjs",
+        "line": 65,
+        "col": 10,
+        "message": "The input did not match the regular expression /require\\(fontScale\\.isFinite\\(\\) && fontScale > 0f\\)/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  '/** Native cockpit geometry shared by the Activity, drawn elements and review captures. */\\n' +\n  'object ContinuumHomeLayout {\\n' +\n  '    enum class Slot {\\n' +\n  '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\\n' +\n  '   ",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "f77c32392e0e13cd"
+      }
+    ]
+  },
+  "full-node": {
+    "status": "FAIL",
+    "source": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+    "sourceUnchanged": true,
+    "exitCode": 1,
+    "counts": {
+      "total": 2349,
+      "passed": 2280,
+      "failed": 32,
+      "skipped": 37
+    },
+    "failures": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.no new Flutter dependency and existing native layout remains authoritative",
+        "file": ".github/continuum/aaa-cockpit-and-effects.test.mjs",
+        "line": 21,
+        "col": 10,
+        "message": "The input did not match the regular expression /ContinuumHomeLayout\\.phone/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  'import android.annotation.SuppressLint\\n' +\n  'import android.content.Context\\n' +\n  'import android.graphics.Canvas\\n' +\n  'import android.os.PowerManager\\n' +\n  'import android.view.MotionEvent\\n' +\n  'import android.view.View\\n' +\n  'import android.view.ViewGroup\\n",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0d4165214ce8768b"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.avatar director is wired to hologram state, TTS start/range/end and the TTS audio envelope",
+        "file": ".github/continuum/android-avatar-wiring.test.mjs",
+        "line": 10,
+        "col": 9,
+        "message": "The input did not match the regular expression /AvatarDirector\\(at\\.heinz\\.deviceai\\.avatar\\.AvatarSinkRegistry\\.sink\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "1259d9967bd63f70"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.reference start screen reaches all seven real Android feature paths",
+        "file": ".github/continuum/android-holographic-home.test.mjs",
+        "line": 47,
+        "col": 9,
+        "message": "The input did not match the regular expression /ContinuumHomeView\\(this, ContinuumHologramView\\(this\\)/. Input:\n\n'private fun buildConversationPane(wide: Boolean): View {\\n' +\n  '        val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }\\n' +\n  '\\n' +\n  '        val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }\\n' +\n  \"        // Start screen",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "2fb7e6f876d8aa58"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.responsive dashboard retains chat composer, updates and keyboard visibility",
+        "file": ".github/continuum/android-holographic-home.test.mjs",
+        "line": 75,
+        "col": 9,
+        "message": "The input did not match the regular expression /setOnClickListener \\{ onSlot\\(slot, downX \\/ density, downY \\/ density\\) \\}/. Input:\n\n'inner class ElementView(context: Context, val element: ContinuumElement, val slot: Slot) : View(context) {\\n' +\n  '        private val painter = AndroidContinuumPainter(context.assets)\\n' +\n  '        private var downX = 0f\\n' +\n  '        private var downY = 0f\\n'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e55d8912b8888415"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.large text is bounded and propagated into adaptive layout without window shrinking",
+        "file": ".github/continuum/android-holographic-home.test.mjs",
+        "line": 101,
+        "col": 9,
+        "message": "The input did not match the regular expression /ContinuumHomeLayout\\.wide\\(windowWidthDp, windowHeightDp, textScale\\)/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  'import android.annotation.SuppressLint\\n' +\n  'import android.content.Context\\n' +\n  'import android.graphics.Canvas\\n' +\n  'import android.os.PowerManager\\n' +\n  'import android.view.MotionEvent\\n' +\n  'import android.view.V",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "11539d01270bd979"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.start screen never manufactures ready model or internet state",
+        "file": ".github/continuum/android-holographic-home.test.mjs",
+        "line": 118,
+        "col": 9,
+        "message": "The input did not match the regular expression /val modelReady = ::localRuntime\\.isInitialized && localRuntime\\.state == LocalModelState\\.READY/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.C",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e47e6b7bfef95fd5"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.cognitive runtime owns the single chat path, privacy boundaries and background diagnostics",
+        "file": ".github/continuum/android-integration-wiring.test.mjs",
+        "line": 16,
+        "col": 34,
+        "message": "Disconnected or unsupported code path: local model context is separate from user-authorized memory input",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e07397c085b53978"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.all navigation taps route to existing trusted screens",
+        "file": ".github/continuum/app-navigation-wiring.test.mjs",
+        "line": 42,
+        "col": 10,
+        "message": "The input did not match the regular expression /ContinuumWorkArea\\.LERNEN -> showLearningCenter\\(\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.heinz.d",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "801bc81938eb0d54"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Fold rail offers the five work areas without a second bottom bar",
+        "file": ".github/continuum/app-navigation-wiring.test.mjs",
+        "line": 60,
+        "col": 12,
+        "message": "The input did not match the regular expression /navigateWorkArea\\(ContinuumWorkArea\\.START\\)/. Input:\n\n'private fun buildRail(): View {\\n' +\n  '        val element = at.heinz.deviceai.ui.JarvisMenuRailElement(\\n' +\n  '            at.heinz.deviceai.ui.JarvisMenu.railIndex(menuNavigator.current).coerceAtLeast(0),\\n' +\n  '            resources.configuration.fontScale.coerceIn(.85f, 1.3f), device = cu",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "a4ac577dbb6cb7e4"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.existing chat, learning monitoring and owner permission boundaries remain",
+        "file": ".github/continuum/app-navigation-wiring.test.mjs",
+        "line": 74,
+        "col": 10,
+        "message": "The input did not match the regular expression /4 -> openMobileBuilder\\(\\)/. Input:\n\n'private fun showMoreWorkAreas() =\\n' +\n  '        showDashboardCategory(\"Mehr\", ContinuumWorkAreaNavigationSpec.moreEntries)\\n'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "9d4c761f65845ed0"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Fold rail and start screen reach all actions at short heights",
+        "file": ".github/continuum/app-navigation-wiring.test.mjs",
+        "line": 81,
+        "col": 10,
+        "message": "The input did not match the regular expression /element\\.targets\\(\\(b - t\\) \\/ density\\)/. Input:\n\n'private fun buildRail(): View {\\n' +\n  '        val element = at.heinz.deviceai.ui.JarvisMenuRailElement(\\n' +\n  '            at.heinz.deviceai.ui.JarvisMenu.railIndex(menuNavigator.current).coerceAtLeast(0),\\n' +\n  '            resources.configuration.fontScale.coerceIn(.85f, 1.3f), device = curren",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "c50c6e337e08fa7c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.start screen adapts to large fonts, rotated compact screens and the unfolded Fold",
+        "file": ".github/continuum/app-navigation-wiring.test.mjs",
+        "line": 89,
+        "col": 10,
+        "message": "The input did not match the regular expression /windowHeightDp = renderedWindowHeightDp \\?: resources\\.configuration\\.screenHeightDp\\.toFloat\\(\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "3cc0984faec35ed9"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.coding agent has one integrated entry from Android home, no second app",
+        "file": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        "line": 17,
+        "col": 10,
+        "message": "The input did not match the regular expression /ContinuumWorkArea\\.ENTWICKELN -> showDevelopmentCenter\\(\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "013dc66cdc00ff35"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.developer speech uses actual German Android recognizer and a unique callback",
+        "file": ".github/continuum/coding-agent-speech-wiring.test.mjs",
+        "line": 28,
+        "col": 10,
+        "message": "The input did not match the regular expression /RecognizerIntent\\.EXTRA_LANGUAGE,\"de-AT\"/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import android.Manifest\\n' +\n  'import android.content.Context\\n' +\n  'import android.content.Intent\\n' +\n  'import android.content.pm.PackageManager\\n' +\n  'import android.os.Build\\n' +\n  'import android.os.Bundle\\n' +\n  'import android.os.Handler\\n' +\n  '",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "6edb3809ef77fb8c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.one correlation follows actual main-chat memory, runtime and tool paths (source wiring)",
+        "file": ".github/continuum/cognitive-trace-wiring.test.mjs",
+        "line": 12,
+        "col": 9,
+        "message": "The input did not match the regular expression /generateLocal\\(cancellation,turnTrace\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.heinz.deviceai.chie",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "33be7428a94dec5c"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.real drawn Canvas frames are counted separately from animation callbacks",
+        "file": ".github/continuum/continuum-fold7-hologram-live-diagnostics.test.mjs",
+        "line": 12,
+        "col": 10,
+        "message": "The input did not match the regular expression /renderer\\.draw\\(painter, renderFrame\\)\\s*drawnFrameCount\\+\\+/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import android.animation.ValueAnimator\\n' +\n  'import android.app.AlertDialog\\n' +\n  'import at.heinz.deviceai.avatar.AvatarEvent\\n' +\n  'import at.heinz.deviceai.avatar.AvatarSink\\n' +\n  'import at.heinz.deviceai.avatar.AvatarPoseReduce",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "2ba6a089bda55281"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.context is bounded, clearly untrusted, and never authorizes tools or factual memories",
+        "file": ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+        "line": 63,
+        "col": 10,
+        "message": "The input did not match the regular expression /lastLocalReply\\?\\.takeIf \\{ it\\.sessionId == localSessionId \\}/. Input:\n\n'{\\n' +\n  '        val localSessionId = sessionId\\n' +\n  '        val planningEpoch = codingPlanningEpoch\\n' +\n  '        val internetModeAtTurnStart = internetConsent.mode\\n' +\n  '        val internetRevisionAtTurnStart = internetConsent.revision()\\n' +\n  '        val previousL",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "911daeeac58be4d2"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.unfold reflows from actual laid out root window width, not stale screenWidthDp",
+        "file": ".github/continuum/fold-responsive-reflow.test.mjs",
+        "line": 14,
+        "col": 10,
+        "message": "The input did not match the regular expression /\\(right - left\\) \\/ resources\\.displayMetrics\\.density/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.hein",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "01d4dcf01b3f1c14"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.reflow preserves the active agent, user draft, conversation views and dashboard telemetry",
+        "file": ".github/continuum/fold-responsive-reflow.test.mjs",
+        "line": 25,
+        "col": 10,
+        "message": "The input did not match the regular expression /val composerDraft = if \\(::input\\.isInitialized\\) \\{/. Input:\n\n' { _, _, _, _, _, _, _, _, _ -> applyViewportChange() }\\n        '",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "43cd294da864ac6a"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Fold rail and phone navigation are mutually exclusive after a reflow",
+        "file": ".github/continuum/fold-responsive-reflow.test.mjs",
+        "line": 49,
+        "col": 10,
+        "message": "The input did not match the regular expression /wideContent\\.addView\\(buildRail\\(\\)/. Input:\n\n'\\n' +\n  '        val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()\\n' +\n  '        // Navigation ownership follows the same width classes as the shared HUD.\\n' +\n  '        // A short medium window scrolls its content; it must not acquire a second phone navigati",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "365a5838276803c6"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.portrait selection keeps actual Fold window threshold and separate landscape rail",
+        "file": ".github/continuum/fold7-portrait-reference.test.mjs",
+        "line": 23,
+        "col": 9,
+        "message": "The input did not match the regular expression /if \\(heightDp > 0f && isPortraitFold\\(widthDp, heightDp\\)\\) return portraitFold/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  '/** Native cockpit geometry shared by the Activity, drawn elements and review captures. */\\n' +\n  'object ContinuumHomeLayout {\\n' +\n  '    enum class Slot {\\n' +\n  '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MO",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "15b23fc11807aee3"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.six equal live cards and the separate status strip are aligned without clipping",
+        "file": ".github/continuum/fold7-portrait-reference.test.mjs",
+        "line": 42,
+        "col": 11,
+        "message": "missing aligned rectangle Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight)",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "56503975edc3c7a4"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.mirrored controls do not cover the hologram; real renderer and all diagrams survive",
+        "file": ".github/continuum/fold7-portrait-reference.test.mjs",
+        "line": 62,
+        "col": 10,
+        "message": "missing left action: LABEL_CONNECTED",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "5c22bf13e99127de"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling",
+        "file": ".github/continuum/fold7-portrait-reference.test.mjs",
+        "line": 86,
+        "col": 9,
+        "message": "The input did not match the regular expression /root\\.addView\\(buildPortraitWorkAreaBar\\(\\)/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.heinz.deviceai.",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "9267fcefb10a21c1"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.phone / Fold landscape and hologram lifecycle are unchanged",
+        "file": ".github/continuum/fold7-portrait-reference.test.mjs",
+        "line": 99,
+        "col": 9,
+        "message": "The input did not match the regular expression /private val phoneReference = mapOf\\(/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  '/** Native cockpit geometry shared by the Activity, drawn elements and review captures. */\\n' +\n  'object ContinuumHomeLayout {\\n' +\n  '    enum class Slot {\\n' +\n  '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\\n' +\n  '        LABEL_CONNE",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "08fa90f8c7102ce1"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.builder stays in the existing agent UI and opens only an allowlisted Android activity",
+        "file": ".github/continuum/mobile-builder-existing-integration.test.mjs",
+        "line": 35,
+        "col": 10,
+        "message": "The input did not match the regular expression /\"System & Sicherheit\", \"Handy-Builder \u00b7 Termux\"/. Input:\n\n'package at.heinz.deviceai\\n' +\n  '\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotPersonas\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskIntake\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskMode\\n' +\n  'import at.heinz.deviceai.chief.ChiefBotTaskRequest\\n' +\n  'import at.heinz.devic",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "266a10758ad53089"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.fold, small display and enlarged-font behaviour are expressed by a pure policy",
+        "file": ".github/continuum/nexus-beginner-ui.test.mjs",
+        "line": 65,
+        "col": 10,
+        "message": "The input did not match the regular expression /require\\(fontScale\\.isFinite\\(\\) && fontScale > 0f\\)/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  '/** Native cockpit geometry shared by the Activity, drawn elements and review captures. */\\n' +\n  'object ContinuumHomeLayout {\\n' +\n  '    enum class Slot {\\n' +\n  '        BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,\\n' +\n  '   ",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "f77c32392e0e13cd"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.home dashboard remains in a scrolling viewport, not hidden behind the navigation",
+        "file": ".github/continuum/premium-phone-viewport-wiring.test.mjs",
+        "line": 29,
+        "col": 10,
+        "message": "The input did not match the regular expression /setMeasuredDimension\\(width, maxOf\\(contentHeight, suggestedMinimumHeight\\)\\)/. Input:\n\n'package at.heinz.deviceai.ui\\n' +\n  '\\n' +\n  'import android.annotation.SuppressLint\\n' +\n  'import android.content.Context\\n' +\n  'import android.graphics.Canvas\\n' +\n  'import android.os.PowerManager\\n' +\n  'import android.view.MotionEvent\\n' +\n  'import androi",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "bccc0ea2d59025af"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.keyboard hides phone navigation and frees the same reserved space",
+        "file": ".github/continuum/premium-phone-viewport-wiring.test.mjs",
+        "line": 40,
+        "col": 10,
+        "message": "The input did not match the regular expression /val navigationPane = phonePane \\?: if \\(portraitFold\\) widePane else null/. Input:\n\n'\\n' +\n  '        val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()\\n' +\n  '        // Navigation ownership follows the same width classes as the shared HUD.\\n' +\n  '        // A short medium window scrolls its content; it mu",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "b2f62a3cfc870061"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.source archive, experience ledger, and encoder updates stay distinct",
+        "file": "scripts/continuum-learning-parity-readout.test.mjs",
+        "line": 33,
+        "col": 10,
+        "message": "The input did not match the regular expression /private val store=FileLearningExperienceStore\\(directory\\)/. Input:\n\n'package at.heinz.deviceai.learning\\n' +\n  '\\n' +\n  'import java.io.File\\n' +\n  'import java.nio.file.AtomicMoveNotSupportedException\\n' +\n  'import java.nio.file.Files\\n' +\n  'import java.nio.file.StandardCopyOption\\n' +\n  'import java.util.Locale\\n' +\n  '\\n' +\n  'data class Review",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "f1401e941f968492"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.all five bottom destinations open their own category",
+        "file": "scripts/continuum-ui-routing.test.mjs",
+        "line": 31,
+        "col": 10,
+        "message": "Wrong destination LERNEN",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "f973f601e03d2b2e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.Fold rail has actual click targets for every visible category",
+        "file": "scripts/continuum-ui-routing.test.mjs",
+        "line": 54,
+        "col": 12,
+        "message": "Missing Fold rail target Start",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "4125612217cceaac"
+      }
+    ]
+  }
+}

@@ -60,7 +60,7 @@ test('Qwen chat validates replies without unconditional 0.8 success', () => {
 test('context is bounded, clearly untrusted, and never authorizes tools or factual memories', () => {
   const local = bodyOf(activity,'runLocal');
   assert.ok(local,'runLocal body exists');
-  assert.match(local, /lastLocalReply\?\.takeIf \{ it\.sessionId == localSessionId \}/);
+  assert.match(local, /lastLocalReply\?\.takeIf \{ botTask == null && it\.sessionId == localSessionId \}/);
   assert.match(local, /localConversationContext\.render\(localSessionId, internetMode = boundedInternetMode,/);
   // Brain-IV assembles mandatory owner evidence first; untrusted optional
   // history is passed atomically to the bounded LocalPromptFrame, not appended

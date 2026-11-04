@@ -30,7 +30,7 @@ test('source archive, experience ledger, and encoder updates stay distinct', () 
   assert.match(report, /ContinuumKnowledgeArchive\(filesDir\)\.stats\(\)\.values\.sum\(\)/);
   assert.match(report, /core\.experiences\.total/);
   assert.match(learning, /private val modelFile=File\(directory,"subword-v1\.bin"\)/);
-  assert.match(learning, /private val store=FileLearningExperienceStore\(directory\)/);
+  assert.match(learning, /private val store=FileLearningExperienceStore\(directory,automaticRecovery\)/);
   assert.match(archive, /class ContinuumKnowledgeArchive/);
 });
 test('public research permission, scheduler and counters are not confused with learning', () => {
