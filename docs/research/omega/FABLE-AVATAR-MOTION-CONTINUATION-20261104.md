@@ -1,29 +1,89 @@
 # Fable avatar continuation — 2026-11-04
 
-Task: FABLE-CONTINUE-AVATAR-001. Base: Fable PR #500 at `0e3685a3bc6cb3a4af61988450371f11e9cb0f3c`. Working branch: `feature/continuum-fable51-avatar-motion-20261104`.
+Task: **FABLE-CONTINUE-AVATAR-001**. Base: Fable PR #500 at
+`0e3685a3bc6cb3a4af61988450371f11e9cb0f3c`. Stacked Draft PR: **#502**.
+Branch: `feature/continuum-fable51-avatar-motion-20261104`.
 
-## Current checkpoint
+## Delivered scope
 
-`WIP / NOT_RUN`: this initial checkpoint has no new app implementation or test results. FABLE_JARVIS_HANDOFF.md and NEXT_AGENT_INSTRUCTIONS.md were read. Their priority 1 visual/geometry work is still open; it is not declared complete or superseded.
+- New production `AvatarIdleMotion.kt`: deterministic cosmetic gaze targets,
+  3–5 s intervals, 180 ms zero-end-velocity/acceleration transitions, existing
+  small head harmonics, primary 150 ms blink plus occasional separate double blink.
+- The real `AvatarMorphMapper.update()` consumes these outputs. It still uses
+  the existing renderer frame clock. No new timer, listener, executor or runtime state.
+- Actual observed gaze and non-idle runtime gaze retain precedence. Existing
+  70 ms viseme crossfade, jaw compensation, reduced-motion and interrupted-speech
+  behavior are unchanged. No memory, consent or tool logic has been modified.
+- An executable host-limited checker and original RED/GREEN logs are included.
 
-Direct git/network downloads failed in this execution environment, while authorized GitHub text reads/writes work. No Android SDK, adb, Gradle, Blender or independently dispatchable coding-agent tool has been confirmed here. Java 21 and Kotlin 1.9.0 are available. No new independent agents were started; the coordinator implements and checks the bounded change itself.
+This is **source implementation plus focused host verification**, not completion
+of Fable priority 1 or the complete avatar task. Geometry, materials, asset bytes,
+asset digest, renderer selection and visual reference status are unchanged.
 
-## Bounded next implementation
+## Real execution evidence
 
-Continue the executable portion of Fable priority 2: a deterministic, bounded idle eye/head presentation and occasional double blink, attached to the existing AvatarMorphMapper and existing frame clock. Preserve all existing mouth crossfade, jaw compensation, STOP/reduced-motion clearing and observed-gaze precedence. No new runtime states, listeners, timers, background workers or permissions.
+The baseline mapper fetched through GitHub was copied locally and its Git blob
+hash matched `546832d4c4b7248fb865154879744eeb0be9ab05` exactly. The unchanged full
+AvatarContract source matched `d9a0f6b1d72d2b9107d620526e311e41007a573d` exactly.
 
-Ruling: Do not edit the facial geometry or GLB materials blind. Binary asset transfer and GPU/visual validation are unavailable here. Deliver a reviewable motion implementation instead of falsely claiming a rendered reference match. The original asset, asset digest, geometry and renderer selection remain unchanged.
+Checks were written and executed before the implementation:
 
-## Scope / ownership
+| Run | Exit | Result |
+| --- | --- | --- |
+| Original mapper / new requirements | 1 | 23 passed, 3 failed |
+| Changed mapper + new motion component | 0 | 26 passed, 0 failed |
+| Full Android test command in partial workspace | 127 | UNAVAILABLE: Gradle wrapper/full checkout absent |
 
-Allowed production paths: a new `app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt` and the small call-site change in `AvatarMorphMapper.kt`. Add focused tests/check tooling and this evidence/handoff only. Do not edit AgentActivity, existing avatar contracts, Filament initialization, memory, weights, APK identity, version, original signer or update channel. No main merge, force push, release, S01 or model training.
+The three RED cases are missing requested fixation/double-blink behavior, not
+three newly discovered safety defects. The GREEN run includes checks preserving
+speech/jaw transitions, STOP/reducer behavior, observed-gaze precedence, name
+mapping, finite bounds, clock wrap and skipped-frame determinism.
 
-The new branch is stacked on Fable, not written into someone else's active branch. Local `git merge-tree` cannot be claimed without a complete checkout; cross-branch integration and the full Android suite remain separate gates.
+Environment: Kotlin 1.9.0, Java 21.0.12.1, compilation target JVM 17.
+Evidence: `docs/evidence/fable-avatar-motion-20261104/`.
+Reproduction and baseline override: `tools/fable-avatar-motion-check/README.md`.
 
-## Verification plan
+**Important fixture boundary:** the real mapper/reducer are compiled, but only
+the exact TARGETS declaration is extracted from AvatarGlbContract into a temporary
+metadata fixture. The org.json GLB parser and native/Android components are NOT
+executed. These are not JUnit or complete Android-suite results. No independent
+reviewer/agent ran the tests; they were performed by the coordinator in this session.
 
-First demonstrate the missing behavior against the fetched baseline. Then execute focused Kotlin behavior checks against the changed source. Any declaration-only fixture used to isolate target-name metadata must be identified explicitly: it is not a GLB validation or Android build. Record real exit codes, source hashes, missing gates and reproducible commands. Existing mouth behavior is a regression boundary, not an opportunity to rewrite the speech pipeline.
+## Rulings / environment limits
 
-## Completion / rollback
+FABLE_JARVIS_HANDOFF.md, NEXT_AGENT_INSTRUCTIONS.md, AGENTS.md and experiment
+contracts were read. This is presentation work; no EXP-00/05/08/11/12 capability,
+model, worker or continuity gate is promoted by it.
 
-Publish implementation, evidence and exact final commit in this PR. Rollback is reverting this branch's motion changes; no data migration is involved. Reference likeness, native GPU rendering, speech synchronization, APK and Fold7 remain NOT_RUN unless separately evidenced.
+Direct git/raw binary download was unavailable while authorized GitHub text
+reads/writes worked. Local work used a hash-checked **partial source snapshot**,
+not a claimed full checkout. Android SDK/adb, Gradle and Blender are unavailable
+here; no screenshot, APK, GPU run or Fold7 result was produced.
+
+Ruling: do not modify the reference face or GLB materials blind. The original
+priority 1 reference geometry/material work remains open. Execute the safely
+checkable part of priority 2 rather than substituting a fake visual result.
+The requested new ACKNOWLEDGING/SLEEP states and 40/90 ms coarticulation remain
+unimplemented; existing tested behavior is intentionally retained in this slice.
+
+New independently launched coding agents: **0**. No permanent/background work is
+claimed. Three logical responsibilities (implementation, regression review,
+handoff) are not counted as separate bots.
+
+## Integration, next steps and rollback
+
+Review #502 against the live #500 head and relevant #491/#495/#499/#494/#489 work
+before merging. No local merge-tree or cross-branch integration result is claimed.
+Do not overwrite those branches or replace their Activity sources. This PR changes
+only two production paths in avatar3d plus its own test tooling/evidence/docs.
+
+Next: run the existing full Android suite/lint with the real GLB in a complete
+checkout; validate native rendering on the actual selected 3D path; then continue
+Fable priority 1 reference geometry/material comparison with current screenshots.
+The default 2D fallback is unchanged, so this PR is not evidence of a changed
+installed app or finished dashboard.
+
+Rollback: revert this PR's two production changes together. No data migration.
+Main, package/version, original signer, update channel, memory and model weights
+are untouched. No Actions, S01, model training, sign/release/deploy or installation
+was triggered. Both Fable source branches are preserved.

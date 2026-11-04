@@ -1,0 +1,74 @@
+{
+  "task_id": "FABLE-CONTINUE-AVATAR-001",
+  "base_commit": "0e3685a3bc6cb3a4af61988450371f11e9cb0f3c",
+  "scope": "host-limited real Kotlin mapper/reducer execution; TARGETS-only declaration fixture",
+  "baseline_mapper_blob": "546832d4c4b7248fb865154879744eeb0be9ab05",
+  "unchanged_contract_blob": "d9a0f6b1d72d2b9107d620526e311e41007a573d",
+  "target_declaration_read_from_contract_blob": "ba4cc5c77e1c67fb8882f17ebf0b7b39bd0770d9",
+  "baseline": {
+    "exit_code": 1,
+    "passed": 23,
+    "failed": 3
+  },
+  "candidate": {
+    "exit_code": 0,
+    "passed": 26,
+    "failed": 0
+  },
+  "new_agents_started": 0,
+  "full_android_suite": "UNAVAILABLE",
+  "device_gpu_apk": "NOT_RUN",
+  "files": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": {
+      "bytes": 3711,
+      "sha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+      "git_blob": "c60d0e180d2d3393b2db355b188a61dcba42f79e"
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt": {
+      "bytes": 5060,
+      "sha256": "9b986ca95cf97d6b9b363ee4f361c30232062f12626bbf4041fc55b8ca053a68",
+      "git_blob": "d14b49f44c86c881a3c20944cb13bc3ec3b1d15b"
+    },
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": {
+      "bytes": 9913,
+      "sha256": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2",
+      "git_blob": "d9a0f6b1d72d2b9107d620526e311e41007a573d"
+    },
+    "tools/fable-avatar-motion-check/Main.kt": {
+      "bytes": 11306,
+      "sha256": "a0f5221cd709293010b88e7b97d7afa51d686948b44d04f59374878deacbed87",
+      "git_blob": "75f7f2c75c9b03a73eae0083f94c9b458baaa9de"
+    },
+    "tools/fable-avatar-motion-check/run.sh": {
+      "bytes": 1830,
+      "sha256": "31e3ef854861ef4b1bb4066748a739b1cf791ecc9f0dbb945005743e77927c60",
+      "git_blob": "a5775a643b2e9607d51146f02af94e4e2a238965"
+    },
+    "docs/evidence/fable-avatar-motion-20261104/red.log": {
+      "bytes": 2331,
+      "sha256": "d9240c4c734a04342d77ae40a8944cb059a1513b305f08cec24d2429d1cd0eec",
+      "git_blob": "1587d6f279704d2bc39abd6c16fac9904aa1b2c8"
+    },
+    "docs/evidence/fable-avatar-motion-20261104/green.log": {
+      "bytes": 1781,
+      "sha256": "40a26d026fd5a93b0ff77ee91d9a474a21068baade2e13710d90c92a6409794d",
+      "git_blob": "9cd803e9c10aa112ae473155b5168ae0a45e72bb"
+    },
+    "tools/fable-avatar-motion-check/README.md": {
+      "bytes": 2267,
+      "sha256": "d246292abe3c8d00ea97b9dfd887560f8ef2cee7f2c7bfd27b4dc8473de6d6b3",
+      "git_blob": "2f5304276a52cbec6c897182fe508248180b75e5"
+    },
+    "docs/research/omega/FABLE-AVATAR-MOTION-CONTINUATION-20261104.md": {
+      "bytes": 4937,
+      "sha256": "33bcf7f59002ddb506eaf4d42cd401ac7ef453f46b2f6b7f686694b22ac80b5d",
+      "git_blob": "55cc909e044a3f0ab5a41d3c77445a955d803c8e"
+    },
+    "docs/evidence/fable-avatar-motion-20261104/full-suite-unavailable.log": {
+      "bytes": 57,
+      "sha256": "ad5ef272184d6428c871eedc8db69fff206322fc25a95180fc35766bd3780d5f",
+      "git_blob": "ecc5f0c667928ec0381a64ac65807f575238b581"
+    }
+  },
+  "full_suite_attempt_exit_code": 127
+}

@@ -1,0 +1,32 @@
+HOST_ONLY: actual mapper/reducer; TARGETS-declaration fixture; no GLB/GPU/Android validation.
+info: kotlinc-jvm 1.9.0 (JRE 21.0.12.1+1-1-deb13u1-Debian)
+FAIL idle gaze holds a fixation instead of continuously sweeping: IllegalStateException: expected=1.0255474 actual=1.8675786 tolerance=1.0E-5
+PASS idle gaze moves to a new bounded fixation
+FAIL double blink has two closures separated by reopened lids: IllegalStateException: missing first closure: 0.0
+FAIL one 460-second cycle contains 100 single and 20 extra blink closures: IllegalStateException: closures=100, expected=120
+PASS every sampled 60-second window stays within 12 to 20 closures
+PASS combined cosmetic gaze and head drift remains below six degrees
+PASS same timestamp is independent of prior cosmetic frame sequence
+PASS cosmetic motion is continuous across the existing clock wrap
+PASS whole-cycle clock offsets preserve cosmetic pose
+PASS observed gaze overrides every idle offset
+PASS all non-idle runtime states retain their actual gaze
+PASS reduced motion clears cosmetic motion and blinking immediately
+PASS invalid time clears cosmetics without producing nonfinite values
+PASS paused mapper resumes at current time without catch-up
+PASS blink targets remain name-bound under reversed asset ordering
+PASS both eyelids use the same bounded blink
+PASS existing 150ms primary blink timing stays compatible
+PASS existing 70ms speech crossfade is unchanged
+PASS outgoing vowel opening remains compensated throughout crossfade
+PASS silence immediately closes an active mouth transition
+PASS reduced motion clears speech and does not revive old vowels
+PASS repeated or rolled-back speech time retains existing snap policy
+PASS existing reducer still rejects interrupted utterance callbacks
+PASS existing observed-gaze consent clear still reaches the mapper
+PASS cosmetic idle motion never invents speech weights
+PASS malformed target names still fail closed
+RESULT passed=23 failed=3 total=26
+Exception in thread "main" java.lang.IllegalStateException: Failed checks: idle gaze holds a fixation instead of continuously sweeping, double blink has two closures separated by reopened lids, one 460-second cycle contains 100 single and 20 extra blink closures
+	at at.heinz.deviceai.avatar3d.MainKt.main(Main.kt:212)
+	at at.heinz.deviceai.avatar3d.MainKt.main(Main.kt)
