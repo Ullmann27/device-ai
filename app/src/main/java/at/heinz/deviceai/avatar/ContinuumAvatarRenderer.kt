@@ -305,12 +305,13 @@ class ContinuumAvatarRenderer {
             val a = (if (t < .12f) t / .12f else 1f) * (1f - ((t - .7f) / .3f).coerceIn(0f, 1f))
             val folder = i % 3 == 0
             val col = if (i % 2 == 0) JarvisDesign.Colors.cyan else JarvisDesign.Colors.violet
-            JarvisNeon.bloom(p, x, y, size * .7f, col, a * (.6f + .4f * bloom))
+            JarvisNeon.bloom(p, x, y, size * .22f, col, a * (.25f + .2f * bloom))
             p.save(); p.translate(x, y); p.rotate(ang * 18f + (1f - e) * 25f); p.scale(size, size)
             val path = if (folder) folderIcon else fileIcon
             // 3-D: a darker back face offset towards the vanishing point, then the glowing front face
             p.save(); p.translate(-.07f, -.05f); p.fillPath(path, iconBack, .25f * a); p.restore()
-            p.fillPath(path, iconGlass, .55f * a)
+            p.fillPath(path, iconGlass, .45f * a)
+            p.setAdditive(true); p.fillPath(path, iconBack, .18f * a); p.setAdditive(false)
             p.setAdditive(true)
             p.strokePath(path, .1f, if (i % 2 == 0) speakCyan else violet, .25f * a)
             p.strokePath(path, .035f, orbitCore, .95f * a)

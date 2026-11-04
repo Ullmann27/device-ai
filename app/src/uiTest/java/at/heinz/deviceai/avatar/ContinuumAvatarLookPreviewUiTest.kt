@@ -95,7 +95,7 @@ class ContinuumAvatarIconBurstPreviewUiTest {
         r.headIconBurst(10f)
         assertTrue(r.isBursting(10.6f)); assertFalse(r.isBursting(12.5f))
         val bmp = Bitmap.createBitmap(560, 720, Bitmap.Config.ARGB_8888)
-        val c = Canvas(bmp); val p = AndroidContinuumPainter(activity.assets); p.begin(c); c.scale(2f, 2f)
+        val c = Canvas(bmp); c.drawColor(0xff050914.toInt()); val p = AndroidContinuumPainter(activity.assets); p.begin(c); c.scale(2f, 2f)
         r.draw(p, 280f, 360f, pose, 10.7f, true)
         System.getProperty("continuum.ui.evidenceDir")?.let { path ->
             java.io.File(path).mkdirs()
