@@ -67,8 +67,8 @@ class Video3WarpScene(seed: Int = 12) {
     /** Muster A burst: scale 0 → BURST_MAX_SCALE (> 500 %), exponential ease-in over 0,8 s, fading near the camera. */
     private fun drawBurst(p: ContinuumPainter, cx: Float, cy: Float, reach: Float, t: Float, glow: Boolean) {
         if (t < 0f) return
-        val e = Video3Curves.easeInExpo((t / Video3Curves.WARP_BURST_S).coerceIn(0f, 1f))
-        val s = BURST_MAX_SCALE * e
+        val s = Video3Curves.warpScale(t)
+        val e = s / BURST_MAX_SCALE
         if (s <= .01f) return
         val alpha = (1f - e).coerceIn(0f, 1f).let { if (s < 1f) s else it * 1.6f }.coerceIn(0f, 1f)
         for (i in 0 until BURST_CARDS) {
@@ -142,7 +142,7 @@ class Video3WarpScene(seed: Int = 12) {
         const val FLASH_S = .3f
         const val FLASH_ALPHA = .85f
         const val BURST_START_S = .1f
-        const val BURST_MAX_SCALE = 6f       // > 500 % (VIDEO-SPEC)
+        const val BURST_MAX_SCALE = at.heinz.deviceai.motion.MotionPresets.WARP_MAX_SCALE  // > 500 % (VIDEO-SPEC)
         const val TUNNEL_START_S = .8f
         const val TUNNEL_SPEED = 2.6f        // depth units per second, linear
         const val TUNNEL_RADIUS = .55f
