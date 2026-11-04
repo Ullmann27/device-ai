@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-11-04T18:33:42.712733+00:00",
+  "baselineCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "testedSourceCommit": "287fd417152e46b76bcc3f1441c58b7b5060a26e",
+  "branch": "repair/three-build-local",
+  "sourceSha256": {
+    "scripts/render-continuum-owner-continuous-qa.sh": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3",
+    "scripts/continuum-owner-continuous-qa-preflight.test.mjs": "6d7eeb6d82d6ad4c1462f85de6e4c5b8b7de78a4a5565b92ca62826cae0271b2"
+  },
+  "baselineScriptSha256": "46122a5f88ed91e2fd1e9c033b66b0d41825e059b6c27ddcc3e9e772018f1120",
+  "environment": {
+    "node": "v24.22.1",
+    "bash": "GNU bash, version 5.2.37(1)-release (x86_64-pc-linux-gnu)",
+    "git": "git version 2.52.0"
+  },
+  "red": {
+    "command": "node --test --test-reporter=tap scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+    "exitCode": 1,
+    "tests": 32,
+    "passed": 20,
+    "failed": 12,
+    "skipped": 0,
+    "scope": "New regression test executed against unchanged baseline QA script. Temporary git checkouts; curl replaced with an offline attempt canary."
+  },
+  "green": {
+    "command": "node --test --test-reporter=tap scripts/continuum-owner-continuous-qa-preflight.test.mjs scripts/continuum-owner-catalog-contract.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-release-host-preflight.test.mjs",
+    "exitCode": 0,
+    "tests": 70,
+    "passed": 70,
+    "failed": 0,
+    "skipped": 0,
+    "cleanSourceAfterRun": true
+  },
+  "limitations": {
+    "actualDownloads": "NOT_RUN",
+    "fullRenderQa": "NOT_RUN",
+    "gradle": "NOT_RUN",
+    "androidDevice": "NOT_RUN",
+    "signing": "NOT_RUN",
+    "release": "NOT_RUN"
+  },
+  "safety": {
+    "productVersionChanged": false,
+    "packageChanged": false,
+    "signerChanged": false,
+    "newDefaultVersion": false,
+    "mainMerge": false
+  },
+  "evidenceSha256": {
+    "red.tap": "59dff4d0e1979371e10e5dc262fb3f7798f8668aab1404417d8d3c72814e269a",
+    "green.tap": "2ed234ac6b188de553b2bc1c0548b552b0f888131265481f9c22219c502c58b5"
+  }
+}
