@@ -38,10 +38,10 @@ Gelesen: sechs angeforderte aktuelle PRs und Handoffs, #498-Empfangsprotokoll, #
 
 - [x] Aktuelle Quellen einfrieren, vollständigen Kandidaten isolieren und Baumgleichheit mit #513 prüfen.
 - [ ] Fehlende #515-Änderung und tatsächliche Abhängigkeiten unabhängig verifizieren.
-- [ ] Fertige Regression in eigener Kopie gegen unveränderten Kandidaten ausführen; erwartete fachliche RED-Ursache archivieren.
-- [ ] Genau den kompatiblen abgeschlossenen Slice seriell übernehmen.
-- [ ] Fokussierte Node-Verträge und unabhängige Negativkontrollen ausführen; keine Ausweitung bei rotem Ergebnis.
-- [ ] Quellen, tatsächliche Befehle/Exitcodes, Logs, Grenzen und Rollback committen und remote per exakter Tree-Identität sichern.
+- [x] Fertige Regression in eigener Kopie gegen unveränderten Kandidaten ausführen; erwartete fachliche RED-Ursache archivieren.
+- [x] Genau den kompatiblen abgeschlossenen Slice seriell übernehmen.
+- [x] Fokussierte Node-Verträge und unabhängige Negativkontrollen ausführen; keine Ausweitung bei rotem Ergebnis.
+- [x] Quellen, tatsächliche Befehle/Exitcodes, Logs, Grenzen und Rollback committen und remote per exakter Tree-Identität sichern.
 
 Geplanter Prüfeinstieg: node --test .github/continuum/coding-orchestrator-failure-report.test.mjs; **NOT_RUN** im Startcheckpoint. Weitere betroffene vorhandene Tests werden vor Ausführung im Befehlsmanifest benannt. Erwartung vor Reparatur: mindestens spezifischer Report-/Snapshot-Fall rot; nach Reparatur: vollständiger fokussierter Satz grün, ursprüngliche strenge Ablehnung unverändert.
 
@@ -79,3 +79,15 @@ Danach exakt drei Produktionsdateien und die vorhandene 240-Zeilen-Regressionsda
 Eigene Prüfungen: 27 bestehende Node-Verträge vorher PASS; einzelne spezifische Regression vorher 0 PASS / 1 FAIL; kombinierter fokussierter Satz nach Übernahme **52 PASS / 0 FAIL / 0 SKIP, Exit 0**. Diese Gruppen überlappen und werden nicht addiert. Vier node --check und git diff --check Exit 0. Befehle, Rohlogs, Quellhashes und Grenzen: docs/evidence/c1-integration-20261104/echo-slice/.
 
 Status: TARGETED_HOST_PASS / INDEPENDENT_REVIEW_PENDING. App-/Scripts-Bäume unverändert. Vollständiges Node-/Android-Gate, Modelllauf, APK und Gerätetest noch NOT_RUN. Keine Releasefreigabe. Nächster Schritt: unabhängigen Patchreview abgleichen, exakten Gesamtstand einfrieren und vollständige Gates unter vorhandenen Ressourcenlocks ausführen.
+
+## C1-QA-SOURCE-002 — vollständige Quellidentität entblocken
+
+Ausgangsstand: lokal `a15a2b771bb934d998b2f9c9552c30d30400f707`, remote `474a457f5fa6230d45fd4c773fe67e219df73984`, identischer vollständiger Baum `a457d368b13ec939f4f71438a3cfda3ef5a4c10d`. ECHO-Slice damit remote gesichert in Draft #519.
+
+Das kanonische `critical`-Gate scheiterte vor dem ersten Test: `GIT_METADATA_UNAVAILABLE`, Exit 1. Die vollständige Git-Dateiliste überschreitet Nodes voreingestellten 1-MiB-Ausgabepuffer; direkter Prozessbefund `ENOBUFS` / SIGTERM. Dies ist kein ausgeführter Android-/Node-Testfehler und kein PASS. Beide vorhandenen Maschinenlocks wurden gehalten, Quelle blieb unverändert.
+
+Begrenzte Änderung: ausschließlich `scripts/continuum-reliability-qa.mjs` erhält einen 16-MiB-Puffer im vorhandenen Git-Helfer; alle Dateien und Fehlerbedingungen bleiben erfasst. Neuer `scripts/continuum-reliability-source-identity.test.mjs` erzeugt eine echte isolierte Git-Dateiliste über 1 MiB, prüft jeden Pfad, Mutation hinter der früheren Puffergrenze, zusätzliche untracked Datei und weiterhin abgelehnte fehlende Git-Metadaten. Getestet wird der unveränderte private Produktionsfunktionskörper über eine nur für den Test ergänzte Fixture-Exportzeile.
+
+Echter RED vor Korrektur: 1 PASS / 1 FAIL, Exit 1, fachlicher Metadatenfehler. GREEN zusammen mit bestehenden QA-/Evidence-/Architekturverträgen: **30 PASS / 0 FAIL / 0 SKIP, Exit 0**. Keine Addition zu den überlappenden ECHO-/Gesamtzahlen. Befehle, Rohbelege, Quellhashes und ursprüngliches fehlgeschlagenes Gate: `docs/evidence/c1-integration-20261104/source-identity/`.
+
+Status: TARGETED_HOST_PASS / INDEPENDENT_REVIEW_PENDING. Nächster Schritt nach Commit: `critical` und `full-node` auf sauberem exakt identifiziertem Gesamtstand mit neuer Versuch-ID ausführen. Rücknahme: nur diesen QA-Quellfix und Test zurücknehmen, Belege erhalten; ECHO-Checkpoint bleibt unverändert verfügbar. Das rohe ECHO-Baselinelog wird als `.txt` ergänzt, da `.log` in diesem Repository ignoriert ist.

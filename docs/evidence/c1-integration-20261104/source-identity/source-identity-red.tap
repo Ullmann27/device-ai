@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: full source identity retains every path beyond one MiB and detects tail mutations
+not ok 1 - full source identity retains every path beyond one MiB and detects tail mutations
+  ---
+  duration_ms: 227.954031
+  type: 'test'
+  location: '/workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-reliability-source-identity.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: 'GIT_METADATA_UNAVAILABLE'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    git (file:///tmp/continuum-qa-source-I6TEG5/scripts/identity-probe.mjs:41:25)
+    Object.identity (file:///tmp/continuum-qa-source-I6TEG5/scripts/identity-probe.mjs:46:15)
+    TestContext.<anonymous> (file:///workspace/scratch/174c84456ee3/continuum-c1/scripts/continuum-reliability-source-identity.test.mjs:45:17)
+    async Test.run (node:internal/test_runner/test:1409:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: full source identity still rejects missing Git metadata
+ok 2 - full source identity still rejects missing Git metadata
+  ---
+  duration_ms: 5.66894
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 426.899334

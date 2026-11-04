@@ -18,6 +18,7 @@ Dieser Abschnitt setzt den direkten Besitzerauftrag **CONTINUUM C1 — INTEGRATI
 | --- | --- | --- | --- |
 | C1-SOURCE-001 | C1 mit Unteragent source_audit | #491/#506/#512/#513; unveränderliche Quellen | RUNNING; Quellen-/Baumidentität, Aufrufer und offene Widersprüche prüfen |
 | C1-INTEGRATE-001 | ausschließlich C1 | #515 `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`; coding-orchestrator.mjs, coding-service-worker.mjs, coding-service-reader.mjs und fokussierte Regression | TARGETED_HOST_PASS / REVIEW_PENDING; echter RED reproduziert, drei Produktionsdateien + fertige Regression übernommen, 52 fokussierte Tests PASS |
+| C1-QA-SOURCE-002 | ausschließlich C1; unabhängiger Review source_audit | scripts/continuum-reliability-qa.mjs und neuer Quellidentitäts-Regressionsfall | TARGETED_HOST_PASS / REVIEW_PENDING; vorbestehenden ENOBUFS-Gateblocker fachlich reproduziert, begrenzter 16-MiB-Puffer, 30 fokussierte Tests PASS |
 | C1-REPAIR-REVIEW-001 | C1-Unteragent repair_review | begrenzte #515-Quellen, eigene Testkopie | RUNNING; keine Änderungen am gemeinsamen Kandidaten |
 | C1-APK-AUDIT-001 | C1-Unteragent apk_readiness | Build-/Versions-/Signatur-/Kanalverträge, #475, vorhandene Locks | RUNNING; read-only, kein Build/Signer/Release |
 | C1-C2-REVIEW-001 | externer Partner C2 | späterer gepinnter Gesamtstand + vollständige Logs | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten sind nicht C2 |
@@ -31,13 +32,13 @@ Dieser Abschnitt setzt den direkten Besitzerauftrag **CONTINUUM C1 — INTEGRATI
 ## Eingangszuordnung
 
 - **Enthalten laut Quellenmanifest, unabhängiger Detailcheck läuft:** #491-Grundintegration, #506 Bot-/Recall-/Scope-Anschlüsse, #512 Cockpit-Lifecycle/Kalender/QA-Vorprüfung, #513 Sprachcaller-/Reattach- und #502/#503-Motion-Arbeit.
-- **Fehlend und zuerst zu prüfen:** #515 negativer ECHO-Rückweg nach streng abgelehntem Modellversuch. Branch-Discovery und Scheduler-Preflight sind separate Beiträge und werden im ersten Slice nicht übernommen.
+- **Inzwischen begrenzt übernommen:** #515 negativer ECHO-Rückweg nach streng abgelehntem Modellversuch, remote `474a457f5fa6230d45fd4c773fe67e219df73984` in Draft #519; unabhängiger Review steht aus. Branch-Discovery und Scheduler-Preflight sind separate Beiträge und werden im ersten Slice nicht übernommen.
 - **Widersprüche/offene Befunde:** #506-Handoff noch initial/UNVERIFIED; Reviewhinweis auf abgefangene normale Botwechsel-Sätze; historisches AGENTS-Releaseziel ist kein aktueller Kanalstand.
 - **Experimentell/offen:** M2.9 nicht im Hauptchat aktiviert, Rankingregression; GLB-Rigvertrag und visuelle Referenzabnahme; Modellforschung; S01-Ressourcengate; echte Modell-/Fold7-/Sprach-/GPU-Abnahme.
 
 ## Ressourcen und Freigaben
 
-Vor jedem schweren lokalen Lauf vorhandenen gemeinsamen Gradle-Lock und aktive Prozesse prüfen; genau ein schwerer C1-Lauf zur Zeit. Keine fremden Prozesse stoppen, keinen Lock löschen. Details und tatsächlich verwendeter Lock werden im Handoff vor Ausführung fixiert.
+Vor jedem schweren lokalen Lauf vorhandenen gemeinsamen Gradle-Lock und aktive Prozesse prüfen; genau ein schwerer C1-Lauf zur Zeit. Keine fremden Prozesse stoppen, keinen Lock löschen. C1 hält für schwere Gates beide vorhandenen Locks `/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock` und `/workspace/scratch/d663e8444310/qa/gradle.lock`; Wartegrenze 45 Sekunden, danach dokumentierter BLOCKED statt Parallelstart. Gateausgaben außerhalb des sauberen Checkouts, vollständige Quellidentität vor/nach dem Lauf.
 
 Originalpaket `at.heinz.deviceai.continuumlocal`, Originalsignatur, Updatekanal, Besitzerdateien und Offline-Schalter bleiben erhalten. #475s 0.3.40/Code41 ist ein historischer Beleg; vor Update aktuellen Kanal erneut lesen. Keine Main-Zusammenführung, Actions, bezahlten Dienste, Signierung, Veröffentlichung oder Installation. Keine Testzahlen addieren oder PASS auf neue Quellen übertragen.
 
