@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:32:50" hostname="04c8b0ba7ea6" time="0.008">
+  <properties/>
+  <testcase name="repeatedTimestampIsIdempotent" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.001"/>
+  <testcase name="rejectedAudioCannotRewindOrAdvanceTheDefaultPoseClock" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.003"/>
+  <testcase name="rejectedFutureAudioCannotPoisonEnergyOrderingOrTheDefaultPoseClock" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="replacementSpeechStartsWithItsOwnAudioOrdering" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="pauseClearsAudioOrderingWithoutAdmittingLateCallbacks" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="endedSpeechCannotRestartFromQueuedAudioOrVisemes" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="futureAudioBetweenFramesCannotReopenFromAlreadyDeliveredSamples" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="aDefaultPoseCannotKeepFutureAudioAheadOfTheExplicitRenderClock" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="olderAudioCannotResmoothTheCurrentEnvelope" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <testcase name="olderAudioCannotMoveTheLatestSamplesExpiry" classname="at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

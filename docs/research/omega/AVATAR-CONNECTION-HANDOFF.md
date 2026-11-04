@@ -1,5 +1,10 @@
 # Avatar connection — verified continuation, 2026-11-04
 
+> Historical connection checkpoint. The subsequent three-helper motion, speech and
+> current-rig verification is recorded in
+> [AVATAR-RIG-CONTINUATION-HANDOFF.md](AVATAR-RIG-CONTINUATION-HANDOFF.md).
+> The 136-case result below remains bound to its original source.
+
 ## Outcome and exact source
 
 Heinz authorized connecting the completed three-helper package. Current #491

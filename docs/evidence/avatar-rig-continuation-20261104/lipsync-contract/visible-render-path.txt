@@ -1,0 +1,5 @@
+app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt:581:             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
+app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt:585:                     native3d!!.render(pose, avatarSeconds, canAnimateFrame(), nativeTexture?.width ?: 0, nativeTexture?.height ?: 0)
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:142:     fun render(pose: AvatarPose, seconds: Float, motion: Boolean, width: Int, height: Int): Boolean {
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:152:         mapper.update(pose, seconds, motion)
+app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt:165:         for (instance in morphInstances) e.renderableManager.setMorphWeights(instance, mapper.weights, 0)

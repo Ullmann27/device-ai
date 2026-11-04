@@ -1,0 +1,500 @@
+From 0be6f579c0dd60ffa1266c3ab7866360d1a0e8e2 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Wed, 4 Nov 2026 20:45:19 +0100
+Subject: [PATCH] fix(avatar): integrate reviewed motion and normalize signed
+ zero
+
+---
+ .../deviceai/avatar3d/AvatarIdleMotion.kt     |  84 ++++++++++++
+ .../deviceai/avatar3d/AvatarMorphMapper.kt    |  36 ++---
+ .../deviceai/avatar3d/Avatar3dContractTest.kt |   5 +-
+ .../AvatarArticulationBoundaryTest.kt         |  73 +++++++++++
+ .../deviceai/avatar3d/AvatarIdleMotionTest.kt | 124 ++++++++++++++++++
+ .../avatar3d/AvatarMorphTransitionTest.kt     |  54 +++++---
+ 6 files changed, 342 insertions(+), 34 deletions(-)
+ create mode 100644 app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt
+ create mode 100644 app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt
+ create mode 100644 app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt
+
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt
+new file mode 100644
+index 0000000..3180157
+--- /dev/null
++++ b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt
+@@ -0,0 +1,84 @@
++package at.heinz.deviceai.avatar3d
++
++import kotlin.math.PI
++import kotlin.math.abs
++import kotlin.math.sin
++
++/**
++ * Cosmetic motion sampled from the existing 460-second view clock. No event/state inference,
++ * random source, timer, listener or integration history. Owned by one renderer-thread mapper.
++ * Sampling the same time always gives the same pose, including after pause or skipped frames.
++ */
++internal class AvatarIdleMotion {
++    var headYaw = 0f; private set
++    var headPitch = 0f; private set
++    var eyeYaw = 0f; private set
++    var eyePitch = 0f; private set
++    var blinkWeight = 0f; private set
++
++    fun update(seconds: Float) {
++        headYaw = 0f; headPitch = 0f; eyeYaw = 0f; eyePitch = 0f; blinkWeight = 0f
++        if (!seconds.isFinite()) return
++        val remainder = seconds.toDouble() % CYCLE_SECONDS
++        val t = when {
++            // binarySearch orders -0.0 before STARTS[0]; canonicalize exact cycle boundaries.
++            remainder == 0.0 -> 0.0
++            remainder < 0.0 -> remainder + CYCLE_SECONDS
++            else -> remainder
++        }
++        val phase = t * (2.0 * PI / CYCLE_SECONDS)
++        // Preserve the existing small head harmonics and their continuous clock wrap.
++        headYaw = (1.20 * sin(phase * 27) + .35 * sin(phase * 65)).toFloat()
++        headPitch = (.62 * sin(phase * 34) + .20 * sin(phase * 67)).toFloat()
++
++        val found = STARTS.binarySearch(t)
++        val slot = if (found >= 0) found.coerceAtMost(SLOTS - 1) else -found - 2
++        val previous = if (slot == 0) SLOTS - 1 else slot - 1
++        val u = ((t - STARTS[slot]) / SACCADE_SECONDS).coerceIn(0.0, 1.0)
++        // Zero velocity/acceleration at both ends; hold the target between saccades.
++        val blend = (u * u * u * (u * (u * 6.0 - 15.0) + 10.0)).toFloat()
++        eyeYaw = interpolate(target(previous, 17, 3.5f), target(slot, 17, 3.5f), blend)
++        eyePitch = interpolate(target(previous, 71, 1.4f), target(slot, 71, 1.4f), blend)
++
++        val group = (t / BLINK_PERIOD).toInt().coerceIn(0, 99)
++        val local = (t - group * BLINK_PERIOD).toFloat()
++        // Retain the 150 ms primary blink; every fifth group adds a separate earlier blink.
++        // In 460 seconds: 100 primary + 20 extra closures, about 15.65 per minute.
++        val extra = if (group % 5 == 2) pulse(local, 4.225f) else 0f
++        blinkWeight = maxOf(pulse(local, 4.525f), extra)
++    }
++
++    private fun pulse(t: Float, center: Float) = (1f - abs(t - center) / .075f).coerceIn(0f, 1f)
++    private fun interpolate(a: Float, b: Float, amount: Float) = a + (b - a) * amount
++
++    private fun target(slot: Int, salt: Int, amplitude: Float): Float {
++        // End at the neutral target so the next cycle starts without a positional jump.
++        if (slot == SLOTS - 1) return 0f
++        var bits = slot + 1 + salt
++        bits = (bits xor (bits ushr 16)) * 0x45d9f3b
++        bits = (bits xor (bits ushr 16)) * 0x45d9f3b
++        bits = bits xor (bits ushr 16)
++        return (((bits ushr 1) % 2001 - 1000) / 1000f) * amplitude
++    }
++
++    private companion object {
++        const val SLOTS = 115
++        const val CYCLE_SECONDS = 460.0
++        const val SACCADE_SECONDS = .18
++        const val BLINK_PERIOD = 4.6
++        // Each pair sums to 8 s; the last slot is 4 s. Every interval is 3..5 s.
++        // Constructed once, not once per frame. Quarter-second values are exactly representable.
++        val STARTS = DoubleArray(SLOTS + 1).also { starts ->
++            for (slot in 0 until SLOTS) {
++                val short = 3.0 + ((slot / 2 * 7) % 5) * .25
++                val duration = when {
++                    slot == SLOTS - 1 -> 4.0
++                    slot % 2 == 0 -> short
++                    else -> 8.0 - short
++                }
++                starts[slot + 1] = starts[slot] + duration
++            }
++            check(starts.last() == CYCLE_SECONDS)
++        }
++    }
++}
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
+index 546832d..d1961d0 100644
+--- a/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
++++ b/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt
+@@ -4,9 +4,6 @@ import at.heinz.deviceai.avatar.AvatarExpression
+ import at.heinz.deviceai.avatar.AvatarPose
+ import at.heinz.deviceai.avatar.AvatarState
+ import at.heinz.deviceai.avatar.Viseme
+-import kotlin.math.abs
+-import kotlin.math.PI
+-import kotlin.math.sin
+ 
+ /** Presentation mapping only. No state derivation, speech clock, listener or retained text. */
+ class AvatarMorphMapper(targetNames: List<String>) {
+@@ -20,6 +17,7 @@ class AvatarMorphMapper(targetNames: List<String>) {
+     /** Crossfaded viseme weights (VIDEO-SPEC: syllable-synchronous O/A; 70 ms crossfade between visemes). */
+     private val visemeBlend = FloatArray(Viseme.entries.size)
+     private var lastSeconds = Float.NaN
++    private val idleMotion = AvatarIdleMotion()
+ 
+     init { require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet()) }
+ 
+@@ -40,27 +38,34 @@ class AvatarMorphMapper(targetNames: List<String>) {
+             AvatarExpression.NEUTRAL -> Unit
+         }
+         if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }
++        idleMotion.update(seconds)
+         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
+         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
+         if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
+-            // Integer harmonics keep the view's existing 460-second clock wrap continuous.
+-            val t = if (seconds.isFinite()) seconds.toDouble() % 460.0 else 0.0
+-            val phase = t * (2.0 * PI / 460.0)
+-            headYaw += (1.20 * sin(phase * 27) + .35 * sin(phase * 65)).toFloat()
+-            headPitch += (.62 * sin(phase * 34) + .20 * sin(phase * 67)).toFloat()
+-            eyeYaw += (2.10 * sin(phase * 52) + .55 * sin(phase * 83)).toFloat()
+-            eyePitch += (.95 * sin(phase * 39) + .30 * sin(phase * 78)).toFloat()
++            headYaw += idleMotion.headYaw; headPitch += idleMotion.headPitch
++            eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
+         }
+-        val jaw = finite(pose.jawOpen, 0f, 1f)
+         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
++        val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
++        // M/B/P require a closed lip seal even while the measured audio remains loud.
++        // An outgoing vowel contains authored opening, so its morph must also retire now.
++        val jaw = if (bilabialClosure) 0f else finite(pose.jawOpen, 0f, 1f)
+         // The existing reducer expires stale cues/audio and resets interrupted utterances.
+         // Linear crossfade over CROSSFADE_S toward the current cue; first frame / clock jump snaps.
+         val dt = if (lastSeconds.isFinite() && seconds.isFinite()) seconds - lastSeconds else Float.NaN
+         lastSeconds = seconds
+         // Crossfade only between two active cues; silence/interruption closes at once (reducer owns stop).
+-        // A repeated frame time or a clock jump snaps, so a static frame never shows a stale blend.
++        // Repeated render times are idempotent. A reset/wrapped clock initializes a new epoch.
+         if (pose.viseme == Viseme.SIL || cueWeight <= 0f) visemeBlend.fill(0f)
+-        val step = if (dt.isFinite() && dt > 0f && dt <= 1f) (dt / CROSSFADE_S).coerceIn(0f, 1f) else 1f
++        if (bilabialClosure) {
++            visemeBlend.fill(0f)
++            visemeBlend[Viseme.PP.ordinal] = cueWeight
++        }
++        val step = when {
++            dt == 0f -> 0f
++            dt.isFinite() && dt > 0f && dt <= 1f -> (dt / CROSSFADE_S).coerceIn(0f, 1f)
++            else -> 1f
++        }
+         var renderedOpening = 0f
+         for (v in Viseme.entries) {
+             val target = if (v == pose.viseme && v != Viseme.SIL) cueWeight else 0f
+@@ -73,10 +78,7 @@ class AvatarMorphMapper(targetNames: List<String>) {
+         // Compensate the visible blend, including outgoing cues, once; preserve lip shapes.
+         weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
+         jawPitch = maxOf(jaw, renderedOpening) * 12f
+-        // VIDEO-SPEC: periodic blink of ~0.15 s.
+-        val t = if (seconds.isFinite()) ((seconds % 4.6f) + 4.6f) % 4.6f else 0f
+-        val blink = if (t > 4.45f) (1f - abs(t - 4.525f) / .075f).coerceIn(0f, 1f) else 0f
+-        weight("BlinkLeft", blink); weight("BlinkRight", blink)
++        weight("BlinkLeft", idleMotion.blinkWeight); weight("BlinkRight", idleMotion.blinkWeight)
+     }
+ 
+     private companion object { const val CROSSFADE_S = .07f }
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt b/app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt
+index b575c03..ad30277 100644
+--- a/app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt
+@@ -12,8 +12,11 @@ class Avatar3dContractTest {
+     private fun pose(v: Viseme = Viseme.SIL, jaw: Float = 0f, x: Float = 0f, y: Float = 0f) =
+         AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, x, y, jaw, v, 1f, jaw)
+     @Test fun allVisemesUseNamesEvenWhenAssetOrderChanges() {
+-        val names = AvatarGlbContract.TARGETS.reversed(); val map = AvatarMorphMapper(names)
++        val names = AvatarGlbContract.TARGETS.reversed()
+         for (v in Viseme.entries) {
++            // This checks target-name binding, independently of crossfade history.
++            // Advancing an already running blend at the same timestamp is now idempotent.
++            val map = AvatarMorphMapper(names)
+             map.update(pose(v, .4f), 0f, true)
+             for (other in Viseme.entries) assertEquals(if (other == v && v != Viseme.SIL) 1f else 0f, map.weights[names.indexOf(other.name)], 0f)
+             // Preserve name-based lookup under the independently reviewed shared-opening contract.
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt
+new file mode 100644
+index 0000000..2147bb1
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt
+@@ -0,0 +1,73 @@
++package at.heinz.deviceai.avatar3d
++
++import at.heinz.deviceai.avatar.AvatarExpression
++import at.heinz.deviceai.avatar.AvatarPose
++import at.heinz.deviceai.avatar.AvatarState
++import at.heinz.deviceai.avatar.Viseme
++import org.junit.Assert.assertArrayEquals
++import org.junit.Assert.assertEquals
++import org.junit.Test
++
++/** Speech boundaries are observable facial behaviour, independent of callback/render cadence. */
++class AvatarArticulationBoundaryTest {
++    @Test fun bilabialOnsetClosesOutgoingVowelsAndMeasuredJawTogether() {
++        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++        mapper.update(pose(Viseme.AA, 1f), 1f, true)
++
++        mapper.update(pose(Viseme.PP, 1f), 1.016f, true)
++
++        assertEquals(1f, weight(mapper, "PP"), 0f)
++        assertEquals(0f, weight(mapper, "AA"), 0f)
++        assertEquals(0f, weight(mapper, "JawOpen"), 0f)
++        assertEquals(0f, mapper.jawPitch, 0f)
++        for (viseme in Viseme.entries.filter { it != Viseme.PP }) {
++            assertEquals(viseme.name, 0f, weight(mapper, viseme.name), 0f)
++        }
++    }
++
++    @Test fun bilabialClosureAlsoWinsAtAnUnchangedRenderTimestamp() {
++        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++        mapper.update(pose(Viseme.O, .8f), 1f, true)
++
++        mapper.update(pose(Viseme.PP, .8f), 1f, true)
++
++        assertEquals(1f, weight(mapper, "PP"), 0f)
++        assertEquals(0f, weight(mapper, "O"), 0f)
++        assertEquals(0f, weight(mapper, "JawOpen"), 0f)
++        assertEquals(0f, mapper.jawPitch, 0f)
++    }
++
++    @Test fun renderingTheSameInstantTwiceDoesNotAdvanceAVowelTransition() {
++        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++        mapper.update(pose(Viseme.AA, .6f), 1f, true)
++        mapper.update(pose(Viseme.O, .6f), 1.016f, true)
++        val first = mapper.weights.copyOf()
++        val firstJaw = mapper.jawPitch
++
++        mapper.update(pose(Viseme.O, .6f), 1.016f, true)
++
++        assertArrayEquals(first, mapper.weights, 0f)
++        assertEquals(firstJaw, mapper.jawPitch, 0f)
++    }
++
++    @Test fun vowelTransitionAtTheSameElapsedTimeDoesNotDependOnFrameCount() {
++        val frequent = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++        val sparse = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++        for (mapper in listOf(frequent, sparse)) mapper.update(pose(Viseme.AA, .6f), 1f, true)
++
++        frequent.update(pose(Viseme.O, .6f), 1.016f, true)
++        frequent.update(pose(Viseme.O, .6f), 1.032f, true)
++        sparse.update(pose(Viseme.O, .6f), 1.032f, true)
++
++        for (target in listOf("AA", "O", "JawOpen")) {
++            assertEquals(target, weight(frequent, target), weight(sparse, target), .00001f)
++        }
++        assertEquals(frequent.jawPitch, sparse.jawPitch, .0001f)
++    }
++
++    private fun pose(viseme: Viseme, jaw: Float) =
++        AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, 0f, 0f, jaw, viseme, 1f, jaw)
++
++    private fun weight(mapper: AvatarMorphMapper, name: String) =
++        mapper.weights[AvatarGlbContract.TARGETS.indexOf(name)]
++}
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt
+new file mode 100644
+index 0000000..054f05f
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt
+@@ -0,0 +1,124 @@
++package at.heinz.deviceai.avatar3d
++
++import at.heinz.deviceai.avatar.AvatarExpression
++import at.heinz.deviceai.avatar.AvatarPose
++import at.heinz.deviceai.avatar.AvatarState
++import at.heinz.deviceai.avatar.Viseme
++import kotlin.math.hypot
++import org.junit.Assert.assertArrayEquals
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertTrue
++import org.junit.Test
++
++/** Selected behavioural checks from PR502's motion probe, plus signed-zero regression. */
++class AvatarIdleMotionTest {
++    @Test fun negativeZeroAndNegativeWholeCyclesMatchPositiveZero() {
++        val motion = AvatarIdleMotion()
++        motion.update(0f)
++        val expected = sample(motion)
++        for (seconds in floatArrayOf(-0.0f, -460f, -920f)) {
++            motion.update(13.425f)
++            motion.update(seconds)
++            assertArrayEquals("time=$seconds", expected, sample(motion), 0f)
++        }
++    }
++
++    @Test fun idleGazeHoldsItsFixationThenMovesToANewTarget() {
++        val map = mapper()
++        map.update(pose(), .5f, true)
++        val yaw = map.eyeYaw
++        val pitch = map.eyePitch
++        for (seconds in floatArrayOf(1f, 2.8f)) {
++            map.update(pose(), seconds, true)
++            assertEquals(yaw, map.eyeYaw, 0f)
++            assertEquals(pitch, map.eyePitch, 0f)
++        }
++        map.update(pose(), 3.4f, true)
++        assertTrue(hypot((map.eyeYaw - yaw).toDouble(), (map.eyePitch - pitch).toDouble()) > .1)
++    }
++
++    @Test fun doubleBlinkReopensBothLidsBetweenClosures() {
++        val map = mapper()
++        for (seconds in floatArrayOf(13.425f, 13.725f)) {
++            map.update(pose(), seconds, true)
++            assertTrue("closure at $seconds", weight(map, "BlinkLeft") > .99f)
++            assertEquals(weight(map, "BlinkLeft"), weight(map, "BlinkRight"), 0f)
++            if (seconds == 13.425f) {
++                map.update(pose(), 13.575f, true)
++                assertEquals(0f, weight(map, "BlinkLeft"), 0f)
++                assertEquals(0f, weight(map, "BlinkRight"), 0f)
++            }
++        }
++    }
++
++    @Test fun cosmeticSamplingIsIndependentOfPriorFrames() {
++        for (seconds in floatArrayOf(.04f, 3.09f, 13.425f, 84.22f, 459.99f)) {
++            val frequent = mapper()
++            val discontinuous = mapper()
++            for (frame in 0..30) frequent.update(pose(), frame * .013f, true)
++            for (old in floatArrayOf(12f, 459.5f, -50f, 4f, Float.NaN)) {
++                discontinuous.update(pose(), old, true)
++            }
++            frequent.update(pose(), seconds, true)
++            discontinuous.update(pose(), seconds, true)
++            assertArrayEquals(angles(frequent), angles(discontinuous), 0f)
++            assertArrayEquals(frequent.weights, discontinuous.weights, 0f)
++        }
++    }
++
++    @Test fun cosmeticMotionRemainsContinuousAcrossClockWrap() {
++        val map = mapper()
++        map.update(pose(), 459.999f, true)
++        val before = angles(map)
++        map.update(pose(), 0f, true)
++        assertArrayEquals(before, angles(map), .003f)
++        assertEquals(0f, weight(map, "BlinkLeft"), 0f)
++        assertEquals(0f, weight(map, "BlinkRight"), 0f)
++    }
++
++    @Test fun wholeCycleOffsetsPreserveTheCosmeticPose() {
++        for (seconds in floatArrayOf(.5f, 3.5f, 13.5f, 84.5f)) {
++            val first = mapper()
++            val next = mapper()
++            first.update(pose(), seconds, true)
++            next.update(pose(), seconds + 460f, true)
++            assertArrayEquals(angles(first), angles(next), .001f)
++            assertArrayEquals(first.weights, next.weights, .001f)
++        }
++    }
++
++    @Test fun observedGazeOverridesEveryCosmeticIdleOffset() {
++        val map = mapper()
++        val observed = pose().copy(gazeX = .25f, gazeY = -.4f, gazeObserved = true)
++        for (seconds in floatArrayOf(1f, 13.425f, 200f)) {
++            map.update(observed, seconds, true)
++            assertArrayEquals(floatArrayOf(2f, 2f, 4.25f, 4f), angles(map), 0f)
++        }
++    }
++
++    @Test fun everyNonIdleStateRetainsItsActualGaze() {
++        for (state in AvatarState.entries.filter { it != AvatarState.IDLE }) {
++            val map = mapper()
++            map.update(pose().copy(state = state, gazeX = .2f, gazeY = .3f), 13.425f, true)
++            assertArrayEquals(state.name, floatArrayOf(1.6f, -1.5f, 3.4f, -3f), angles(map), .00001f)
++        }
++    }
++
++    @Test fun reducedMotionStopsCosmeticMovementAndBlinkingImmediately() {
++        val map = mapper()
++        map.update(pose(), 13.425f, true)
++        assertTrue(weight(map, "BlinkLeft") > .99f)
++        assertTrue(angles(map).any { it != 0f })
++        map.update(pose(), 13.425f, false)
++        assertArrayEquals(FloatArray(4), angles(map), 0f)
++        assertArrayEquals(FloatArray(map.weights.size), map.weights, 0f)
++        assertEquals(0f, map.jawPitch, 0f)
++    }
++
++    private fun mapper() = AvatarMorphMapper(AvatarGlbContract.TARGETS)
++    private fun pose() = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
++    private fun weight(map: AvatarMorphMapper, name: String) = map.weights[AvatarGlbContract.TARGETS.indexOf(name)]
++    private fun angles(map: AvatarMorphMapper) = floatArrayOf(map.headYaw, map.headPitch, map.eyeYaw, map.eyePitch)
++    private fun sample(motion: AvatarIdleMotion) =
++        floatArrayOf(motion.headYaw, motion.headPitch, motion.eyeYaw, motion.eyePitch, motion.blinkWeight)
++}
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt
+index c1ae709..2b67485 100644
+--- a/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt
++++ b/app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt
+@@ -14,13 +14,24 @@ class AvatarMorphTransitionTest {
+         val map = mapper()
+         map.update(pose(Viseme.AA, .6f), 1f, true)
+         for (frame in 1..5) {
+-            map.update(pose(Viseme.PP, .6f), 1f + frame * .016f, true)
++            map.update(pose(Viseme.SS, .6f), 1f + frame * .016f, true)
+             val aa = (1f - frame * .016f / .07f).coerceAtLeast(0f)
+             assertEquals("AA at frame $frame", aa, weight(map, "AA"), EPSILON)
+-            assertEquals("PP at frame $frame", 1f - aa, weight(map, "PP"), EPSILON)
+-            // At 16 ms the authored AA opening is about .626785, already greater than .6.
+-            // Adding another .6 JawOpen here used to produce about 1.226785 in total.
+-            assertOpening(map, .6f, aa * AA_OPENING, "AA -> PP frame $frame")
++            assertEquals("SS at frame $frame", 1f - aa, weight(map, "SS"), EPSILON)
++            // SS has no authored opening and does not require PP's immediate lip seal.
++            // At 16 ms the outgoing AA opening is about .626785, already greater than .6.
++            assertOpening(map, .6f, aa * AA_OPENING, "AA -> SS frame $frame")
++        }
++    }
++
++    @Test fun bilabialSealRejectsSustainedMeasuredJawAfterAVowel() {
++        val map = mapper()
++        map.update(pose(Viseme.AA, .6f), 1f, true)
++        for (frame in 1..5) {
++            map.update(pose(Viseme.PP, .6f), 1f + frame * .016f, true)
++            assertEquals("AA at frame $frame", 0f, weight(map, "AA"), 0f)
++            assertEquals("PP at frame $frame", 1f, weight(map, "PP"), 0f)
++            assertOpening(map, 0f, 0f, "AA -> PP frame $frame")
+         }
+     }
+ 
+@@ -52,9 +63,22 @@ class AvatarMorphTransitionTest {
+         val map = mapper()
+         map.update(pose(Viseme.AA, 0f), 1f, true)
+         for (frame in 1..5) {
+-            map.update(pose(Viseme.PP, 0f), 1f + frame * .016f, true)
++            map.update(pose(Viseme.SS, 0f), 1f + frame * .016f, true)
+             val aa = (1f - frame * .016f / .07f).coerceAtLeast(0f)
+-            assertOpening(map, 0f, aa * AA_OPENING, "cue-only AA -> PP frame $frame")
++            assertEquals("AA at frame $frame", aa, weight(map, "AA"), EPSILON)
++            assertEquals("SS at frame $frame", 1f - aa, weight(map, "SS"), EPSILON)
++            assertOpening(map, 0f, aa * AA_OPENING, "cue-only AA -> SS frame $frame")
++        }
++    }
++
++    @Test fun bilabialSealClosesCueOnlyOpeningWithoutMeasuredAudio() {
++        val map = mapper()
++        map.update(pose(Viseme.AA, 0f), 1f, true)
++        for (frame in 1..5) {
++            map.update(pose(Viseme.PP, 0f), 1f + frame * .016f, true)
++            assertEquals(0f, weight(map, "AA"), 0f)
++            assertEquals(1f, weight(map, "PP"), 0f)
++            assertOpening(map, 0f, 0f, "cue-only AA -> PP frame $frame")
+         }
+     }
+ 
+@@ -78,17 +102,15 @@ class AvatarMorphTransitionTest {
+         assertEquals(1f, weight(map, "PP"), 0f)
+         assertEquals(0f, weight(map, "AA"), 0f)
+         assertEquals(0f, weight(map, "O"), 0f)
+-        assertOpening(map, .6f, 0f, "resume after reduced motion")
++        assertOpening(map, 0f, 0f, "bilabial closure after reduced motion")
+     }
+ 
+-    @Test fun repeatedTimeAndClockRollbackRetainTheExistingSnapPolicy() {
+-        for (seconds in listOf(1.016f, .5f)) {
+-            val map = activeBlend()
+-            map.update(pose(Viseme.O, .6f), seconds, true)
+-            assertEquals(0f, weight(map, "AA"), 0f)
+-            assertEquals(1f, weight(map, "O"), 0f)
+-            assertOpening(map, .6f, O_OPENING, "clock discontinuity at $seconds")
+-        }
++    @Test fun clockRollbackReinitializesTheBlendForANewAnimationEpoch() {
++        val map = activeBlend()
++        map.update(pose(Viseme.O, .6f), .5f, true)
++        assertEquals(0f, weight(map, "AA"), 0f)
++        assertEquals(1f, weight(map, "O"), 0f)
++        assertOpening(map, .6f, O_OPENING, "clock discontinuity")
+     }
+ 
+     private fun activeBlend(): AvatarMorphMapper = mapper().also {
+-- 
+2.52.0
+

@@ -1,0 +1,30 @@
+{
+  "status": "PASS_SELECTED_HOST_AND_SEPARATE_V2_GATES",
+  "localSourceCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+  "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+  "fullTree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+  "unitTests": {
+    "tests": 168,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "unitClasses": 28,
+  "unitRunOverallExitCode": 1,
+  "unitRunExitExplanation": "The 168 test cases passed and Gradle advanced into lint; the process subsequently failed during lint. Separate final lint completed successfully on unchanged source.",
+  "lint": {
+    "rule": "NewApi",
+    "issues": 0,
+    "exitCode": 0,
+    "reportTaskOutcome": "UP-TO-DATE: unchanged no-issue reports reused after successful current-source analysis"
+  },
+  "asset": {
+    "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+    "actualV1": "FAIL",
+    "separateV2": "PASS_SEPARATE_HINGE_AND_FIXED_REGION_V2",
+    "v2AdversarialSelftests": 16,
+    "v2SelftestsExitCode": 0
+  },
+  "independentStaticReview": "NO_BLOCKING_FINDINGS_IN_REVIEWED_CALLBACK_DIFF",
+  "deviceNativeGpuAudibleTts": "NOT_RUN"
+}

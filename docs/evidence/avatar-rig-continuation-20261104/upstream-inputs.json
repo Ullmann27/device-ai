@@ -1,0 +1,94 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "sourcePullRequests": [
+    {
+      "number": 491,
+      "commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+      "role": "Current target/input; original three helper fixes already present."
+    },
+    {
+      "number": 502,
+      "commit": "6cb9e760f0a16a6f34a8442abf9b79dcf2705799",
+      "role": "Original idle-motion work, inherited by #503."
+    },
+    {
+      "number": 503,
+      "commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+      "role": "Exact file source for selective speech and mapper integration."
+    },
+    {
+      "number": 500,
+      "commit": "0e3685a3bc6cb3a4af61988450371f11e9cb0f3c",
+      "role": "Reference/tooling context only; no new production source selected."
+    }
+  ],
+  "retrievedFiles": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "gitBlob": "156f4de1cb935ef7ada9e131ae7e3796ca5cf218"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "gitBlob": "c6873d90c761019b40ce7b26c56c10f057061e2c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "gitBlob": "d1961d03d43652ab52deb0a2676c4de8dc285889"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "gitBlob": "c60d0e180d2d3393b2db355b188a61dcba42f79e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+      "gitBlob": "15fe1e9cdf33ed41f598116bf8b0e4dfcc0a83e5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechBoundaryTest.kt",
+      "gitBlob": "61ede947d9a95a4ff77d045abd9ed57d79e34f1d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechClockTest.kt",
+      "gitBlob": "92315e3ea7783102f9cf944658538150727b1b3a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "gitBlob": "61ad57e32acf45f3730ed998ef79295727c1fced"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "gitBlob": "ad30277acb517e0228a28ee54b602b3a8dd07b7a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt",
+      "gitBlob": "2147bb19d626eed138038c92623e6ad5ddb69a4f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "gitBlob": "509fae0e419f2c3be5b555b2fb20b9969728e1a0"
+    },
+    {
+      "path": "docs/research/omega/NAVADA-SPEECH-HANDOFF-20261104.md",
+      "gitBlob": "68151e25800ba902d8b3db30a8a75638d1f1466b"
+    },
+    {
+      "path": "docs/research/omega/FABLE-AVATAR-MOTION-CONTINUATION-20261104.md",
+      "gitBlob": "55cc909e044a3f0ab5a41d3c77445a955d803c8e"
+    },
+    {
+      "path": "tools/fable-avatar-motion-check/Main.kt",
+      "gitBlob": "75f7f2c75c9b03a73eae0083f94c9b458baaa9de"
+    }
+  ],
+  "excludedHostRunner": {
+    "path": "tools/fable-avatar-motion-check/Main.kt",
+    "reason": "Contains two old expectations inconsistent with #503: PP retaining outgoing vowel, and repeated render time snapping a vowel blend. It is not imported and its claimed host-case total is not treated as proof of this integration."
+  },
+  "newCorrections": [
+    "Director acceptance decision gates actual Activity PCM anchoring; real frame passed to wordRange.",
+    "Valid numeric ranges retain ordering and PCM anchoring without invented letter visemes.",
+    "IdleMotion normalizes negative zero before DoubleArray.binarySearch.",
+    "Generic outgoing-vowel opening and jaw alignment coverage retained with AA -> SS alongside new PP closure cases."
+  ]
+}
+

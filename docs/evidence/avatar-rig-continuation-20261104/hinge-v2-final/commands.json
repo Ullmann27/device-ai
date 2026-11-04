@@ -1,0 +1,31 @@
+[
+  {
+    "name": "candidate",
+    "args": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tools/jarvis-reference-review/validate_hinge_v2.py",
+      "tools/epsilon-avatar-contract/validate_glb.py",
+      "assets/avatar/jarvis-runtime-v1.glb",
+      "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "/workspace/scratch/b6ee64d418cf/avatar-round2-evidence/hinge-v2-final/candidate.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "adversarial-selftests",
+    "args": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/jarvis-reference-review",
+      "-p",
+      "test_hinge_v2.py",
+      "-v"
+    ],
+    "exitCode": 0
+  }
+]

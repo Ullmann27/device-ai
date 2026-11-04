@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "3198d0f7a52b438be7d4c3fe51de9e1e85db023c",
+  "sourceTree": "133d0a65fdfe6ed30bc013ee9971e1f81605a5cb",
+  "tests": 6,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "exitCode": 1,
+  "failuresObserved": [
+    {
+      "method": "installedRangeOrderingProtectsBothVisemesAndThePlaybackAnchor",
+      "type": "java.lang.AssertionError",
+      "message": "java.lang.AssertionError: A newer text range with an older audio marker must not rewind PCM expected:<(100, 389)> but was:<(90, 559)>"
+    },
+    {
+      "method": "repeatedInstalledStartDoesNotRewindPlaybackOrClearTheCurrentPose",
+      "type": "java.lang.AssertionError",
+      "message": "java.lang.AssertionError: A repeated start must not rewind the production PCM anchor expected:<(0, 219)> but was:<(0, 389)>"
+    }
+  ]
+}

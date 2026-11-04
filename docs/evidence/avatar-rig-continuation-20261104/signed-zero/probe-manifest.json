@@ -1,0 +1,153 @@
+{
+  "base_commit": "ac2ca364b3e21655fa249d3db943c26751e92bd5",
+  "upstream_commit": "2582be86c121d7f6d1179c7edc49e979bee8ba9c",
+  "compiler": "Kotlin 2.4.0",
+  "java_version": "openjdk version \"21.0.13\" 2026-10-20\nOpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)",
+  "compile_command": [
+    "java",
+    "-cp",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-classpath",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+    "-d",
+    "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/fixed-classes",
+    "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+    "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/SignedZeroProbe.kt"
+  ],
+  "compile_exit": 0,
+  "run_command": [
+    "java",
+    "-cp",
+    "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/fixed-classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar",
+    "at.heinz.deviceai.avatar3d.SignedZeroProbeKt"
+  ],
+  "run_exit": 0,
+  "original_errors": 3,
+  "fixed_ok_samples": 9,
+  "files": [
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-upstream/pr503/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "sha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+      "bytes": 3711
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer/app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "sha256": "e68e8044e04d3506686fde2b98512550bceeb5316832b196aa718c36739d1b16",
+      "bytes": 3884
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/SignedZeroProbe.kt",
+      "sha256": "73dac11f8e6da11a814da9e66ee82d13352286b059dce154bbc64d1e40759819",
+      "bytes": 638
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/original-probe.log",
+      "sha256": "4dc0a0c808a394e42601e7e38aca33f5395598f5fc6cf1569fb6f18cc57d6443",
+      "bytes": 1188
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/fixed-probe.log",
+      "sha256": "b894865f45275249e07f6eb2e33f68c753a82fa835a553375cc0ee7780137bac",
+      "bytes": 576
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/fixed-compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/original-repeat-probe.log",
+      "sha256": "4dc0a0c808a394e42601e7e38aca33f5395598f5fc6cf1569fb6f18cc57d6443",
+      "bytes": 1188
+    }
+  ],
+  "gradle": "NOT_RUN: coordinated combined gate belongs to root",
+  "device_gpu_audible_tts": "NOT_RUN",
+  "patch_commit": "0be6f579c0dd60ffa1266c3ab7866360d1a0e8e2",
+  "branch": "codex/avatar-round2-renderer-20261104",
+  "original_probe": {
+    "first_run_process_exit": "not recorded in original-probe.log",
+    "repeat_command": [
+      "java",
+      "-cp",
+      "/workspace/scratch/b6ee64d418cf/avatar-round2-renderer-probe/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar",
+      "at.heinz.deviceai.avatar3d.SignedZeroProbeKt"
+    ],
+    "repeat_source": "Reuse of previously compiled unchanged PR503 original in classes/.",
+    "repeat_process_exit": 0,
+    "repeat_output_byte_identical_to_original_log": true,
+    "ok_samples": 6,
+    "error_samples": 3,
+    "failure_inputs": [
+      "-0.0f",
+      "-460.0f",
+      "-920.0f"
+    ],
+    "exception": "java.lang.ArrayIndexOutOfBoundsException: Index -1 out of bounds for length 116",
+    "note": "The Kotlin probe catches Throwable per input; process exit 0 does not mean all samples passed.",
+    "compiled_original_avatar_sha256": "bd60fceaf9009fc87f67d21e4b4336f77d94a9e2dd93f2bf0180e95211431574",
+    "compiled_original_probe_sha256": "278bfc92fb36537b7a94a54e198549365e60a8465ce395b27521cd9b718d42cd"
+  },
+  "fixed_probe": {
+    "compile_exit": 0,
+    "process_exit": 0,
+    "ok_samples": 9,
+    "error_samples": 0
+  },
+  "patch_files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "git_blob": "31801578f47f6a677c58283a408bc2840297de6d",
+      "sha256": "e68e8044e04d3506686fde2b98512550bceeb5316832b196aa718c36739d1b16",
+      "bytes": 3884,
+      "upstream_sha256": "88bbdff0ca524500a5e63fdac6c360868f05a4c0606d84acdb44ea5577d7634a",
+      "byte_identical_to_upstream": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "git_blob": "d1961d03d43652ab52deb0a2676c4de8dc285889",
+      "sha256": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+      "bytes": 5533,
+      "upstream_sha256": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+      "byte_identical_to_upstream": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "git_blob": "ad30277acb517e0228a28ee54b602b3a8dd07b7a",
+      "sha256": "32261f6c6b8adc189f73032fbef49fe7c584db5427225a602bec161f5c9f3553",
+      "bytes": 12000,
+      "junit_test_methods": 10,
+      "upstream_sha256": "32261f6c6b8adc189f73032fbef49fe7c584db5427225a602bec161f5c9f3553",
+      "byte_identical_to_upstream": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt",
+      "git_blob": "2147bb19d626eed138038c92623e6ad5ddb69a4f",
+      "sha256": "48cf6c5bd6353dd9da54e9c418caaf35ec8ec862e5a887cb881d41c3b525fd25",
+      "bytes": 3024,
+      "junit_test_methods": 4,
+      "upstream_sha256": "48cf6c5bd6353dd9da54e9c418caaf35ec8ec862e5a887cb881d41c3b525fd25",
+      "byte_identical_to_upstream": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt",
+      "git_blob": "054f05f7383622d6b43ea2ea84430d666ee759b5",
+      "sha256": "9bc94544696e553362251173dec22837e0bab76848c229fe5218a6668d96d39c",
+      "bytes": 5356,
+      "junit_test_methods": 9
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "git_blob": "2b6748562fe8e361fc5010f85f467347d549961a",
+      "sha256": "80b1e2d21c586b44b3745ad9093c7428bb83145cf03b99e08d62ac73427255ac",
+      "bytes": 6755,
+      "junit_test_methods": 9,
+      "upstream_sha256": "71b268df1487042801ebea79260b5c110a56e7b106bff9cebdee9182d41f17a2",
+      "byte_identical_to_upstream": false
+    }
+  ],
+  "junit": "NOT_RUN by child: root runs coordinated Gradle suite on integrated source"
+}

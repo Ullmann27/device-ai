@@ -1,0 +1,1 @@
+{"originalV1": "PASS", "actualCandidateV1": "FAIL", "v2": "PASS_SEPARATE_HINGE_AND_FIXED_REGION_V2"}

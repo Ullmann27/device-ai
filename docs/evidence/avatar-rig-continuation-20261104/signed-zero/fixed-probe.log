@@ -1,0 +1,9 @@
+t=0.0 bits=0 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=-0.0 bits=-2147483648 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=-460.0 bits=-1008336896 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=-920.0 bits=-999948288 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=-0.5 bits=-1090519040 OK head=-0.37034473,-0.23103225 eyes=0.0,0.0 blink=0.0
+t=460.0 bits=1139146752 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=920.0 bits=1147535360 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=NaN bits=2143289344 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0
+t=Infinity bits=2139095040 OK head=0.0,0.0 eyes=0.0,0.0 blink=0.0

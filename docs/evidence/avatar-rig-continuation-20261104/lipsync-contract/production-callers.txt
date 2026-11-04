@@ -1,0 +1,13 @@
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1318:        at.heinz.deviceai.motion.MotionLibrary.audioLevel =
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1321:            at.heinz.deviceai.motion.MotionLibrary.audioLevel = at.heinz.deviceai.motion.AudioLevelSource { 0f }
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt:8: * copies the mouth fields of the last [LipSyncFaceSource.weightsAt] frame into [pose]. Allocates one pose,
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt:11:fun LipSyncFaceSource.applyTo(pose: AvatarPose): AvatarPose = pose.copy(
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt:44:class LipSyncFaceSource(
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt:74:    override fun weightsAt(timeMs: Long, out: FloatArray) {
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:5: * No Android imports. The cockpit timeline uses an implementation when one is registered in [MotionLibrary]
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:24:    fun weightsAt(timeMs: Long, out: FloatArray)
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:49: * TTS/mic RMS source; [visemeHint] stays null until the TTS engine provides phonemes. [faceWeights] reads both
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:52:object MotionLibrary {
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:55:    @Volatile var visemeHint: VisemeHintSource? = null
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:59:    @Volatile var faceWeights: FaceWeightsSource? = LipSyncFaceSource(
+dccd0901b2f300fde268d35e533d18b79664f20e:app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt:61:        VisemeHintSource { visemeHint?.visemeAt(it) },

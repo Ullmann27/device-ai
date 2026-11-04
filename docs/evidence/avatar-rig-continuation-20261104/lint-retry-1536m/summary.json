@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+  "sourceTree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+  "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+  "exitCode": 1,
+  "status": "INCOMPLETE_DAEMON_DISAPPEARED",
+  "configuredRule": "NewApi",
+  "requestedJvmHeap": "1536m",
+  "lastTask": "lintAnalyzeDebug",
+  "confirmedCause": null,
+  "oldLintReportsNotUsedAsCurrentEvidence": true
+}

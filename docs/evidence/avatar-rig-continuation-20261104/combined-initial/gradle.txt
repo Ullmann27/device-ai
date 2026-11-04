@@ -1,0 +1,73 @@
+{"checkout": "/workspace/scratch/b6ee64d418cf/device-ai-avatar-integration", "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e", "source_tree": "ed60146974061c2789ab57043571543c30e4dd26", "worktree_clean": true, "requested": ["-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.avatar.AvatarDirectorTest", "--tests", "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarNativeRegressionTest", "--tests", "at.heinz.deviceai.avatar.AvatarObservedGazeTest", "--tests", "at.heinz.deviceai.avatar.AvatarPortedPartsTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest", "--tests", "at.heinz.deviceai.avatar3d.Avatar3dContractTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest", "--tests", "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest", "--tests", "at.heinz.deviceai.cockpit.CockpitContractsTest", "--tests", "at.heinz.deviceai.cockpit.CockpitTimelineTest", "--tests", "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest", "--tests", "at.heinz.deviceai.cockpit.MemoryEventSourceTest", "--tests", "at.heinz.deviceai.cockpit.PillGateMappingTest", "--tests", "at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest", "--tests", "at.heinz.deviceai.cockpit.SafeFlowsFgTest", "--tests", "at.heinz.deviceai.motion.LipSyncFaceSourceTest", "--tests", "at.heinz.deviceai.motion.MotionCurvesTest", "--tests", "at.heinz.deviceai.motion.MotionLibraryTest", "--tests", "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest", "--tests", "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest", "--tests", "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechAcceptanceTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest", "--tests", "at.heinz.deviceai.avatar.AvatarSpeechClockTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest", "--tests", "at.heinz.deviceai.avatar3d.AvatarIdleMotionTest", ":app:lintDebug"]}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :app:generateDebugUnitTestConfig UP-TO-DATE
+> Task :app:prepareUiTestSdk UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+
+LipSyncFaceSourceTest > sharedOpeningMatchesAvatarMorphMapper FAILED
+    java.lang.AssertionError at LipSyncFaceSourceTest.kt:73
+
+167 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/scratch/b6ee64d418cf/device-ai-avatar-integration/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/scratch/b6ee64d418cf/device-ai-avatar-integration/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 1m 33s
+30 actionable tasks: 5 executed, 25 up-to-date
+
+EXIT_CODE=1
