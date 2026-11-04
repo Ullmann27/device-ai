@@ -445,6 +445,7 @@ class AgentActivity : Activity() {
     private val learningIoExecutor = Executors.newSingleThreadExecutor { runnable ->
         Thread(runnable, "device-ai-learning-io").apply { isDaemon = true }
     }
+    private var ownerRecoveryReview: AutoCloseable? = null
     private var backlogDialog: AlertDialog? = null
     private var backlogList: LinearLayout? = null
     private var devDialog: AlertDialog? = null
@@ -633,6 +634,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        ownerRecoveryReview?.close()
+        ownerRecoveryReview = null
         clearTaskEffects()
         codingPlanningEpoch++
         botLookupRevision++
@@ -683,6 +686,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        ownerRecoveryReview?.close()
+        ownerRecoveryReview = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
@@ -1294,7 +1299,7 @@ class AgentActivity : Activity() {
 
     /** Memory events → cockpit bus, coalesced on the main thread (closed with the other cockpit subscriptions). */
     private fun subscribeMemoryEvents() {
-        val source = at.heinz.deviceai.cockpit.MemoryEventSources.production ?: return
+        val source = at.heinz.deviceai.cockpit.MemoryEventSources.forApp(filesDir)
         val main = android.os.Handler(mainLooper)
         val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
         val subscription = source.subscribe(mapper)
@@ -2547,6 +2552,7 @@ class AgentActivity : Activity() {
         learningIoStatus { memoryCenterStatus() },
         listOf(
             CenterAction("GEMERKTE FAKTEN", accent = true) { showBootstrapMemory() },
+            CenterAction("WIEDERHERGESTELLTE ANGABEN PRÜFEN") { showRecoveredOwnerMemory() },
             CenterAction("QUELLEN-NOTIZEN") { showSavedWebNotes() },
             CenterAction("FAKTEN LÖSCHEN") { showConfirmForget() }
         )
@@ -3607,7 +3613,7 @@ class AgentActivity : Activity() {
                 input.text.clear()
                 addUserMessage(request)
                 addNonModelReply(request,
-                    BootstrapBrain.decide(canonical, bootstrapMemory.facts(),
+                    BootstrapBrain.decide(canonical, emptyList(),
                         bootstrapMemory.learnedCommands()).message,
                     at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
                 addToolActivity("STARTKERN · eindeutige lokale Antwort · kein Web oder Modellaufruf")
@@ -3842,17 +3848,24 @@ class AgentActivity : Activity() {
             showContinuumSelfCheck()
             return
         }
-        val decision = BootstrapBrain.decide(
-            request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
-        )
+        if (BootstrapBrain.requiresOwnerFacts(request)) {
+            runReviewedBootstrapDecision(request)
+            return
+        }
+        presentBootstrapDecision(request, BootstrapBrain.decide(request, emptyList(), bootstrapMemory.learnedCommands()))
+    }
+
+    private fun presentBootstrapDecision(request: String, decision: BootstrapDecision, requestRecorded: Boolean = false) {
         if (decision.kind == BootstrapKind.DEVICE_TOOL && decision.tool != "get_storage_info" && !bridge.isReady()) {
             addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
             addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
             return
         }
         // Explicit memory writes or deletions are never performed by unseen model output.
-        input.text.clear()
-        addUserMessage(request)
+        if (!requestRecorded) {
+            input.text.clear()
+            addUserMessage(request)
+        }
         when (decision.kind) {
             BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact))
             BootstrapKind.REVISE -> {
@@ -3889,6 +3902,52 @@ class AgentActivity : Activity() {
                     at.heinz.deviceai.cognitive.NonModelReplyKind.STARTKERN_INFO)
         }
         addToolActivity("STARTKERN · lokales Gespräch")
+    }
+
+    /** Legacy deterministic recall shares the same recovery/consent view as the model and temporal specialist. */
+    private fun runReviewedBootstrapDecision(request: String) {
+        if (busy || isFinishing || isDestroyed) return
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val requestSession = sessionId
+        val legacyFacts = bootstrapMemory.facts().toList()
+        val commands = bootstrapMemory.learnedCommands().toMap()
+        // Consume this submission now; the asynchronous reply must not erase a later draft.
+        input.text.clear()
+        addUserMessage(request)
+        activeChatCancellation = cancellation
+        activeLocalRequest = true
+        setBusy(true)
+
+        fun finish(result: Result<BootstrapDecision>) {
+            if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return
+            val current = sessionId == requestSession && runCatching { cancellation.throwIfCancelled() }.isSuccess
+            activeChatCancellation = null
+            activeLocalRequest = false
+            setBusy(false)
+            if (!current) return
+            result.fold(
+                onSuccess = { presentBootstrapDecision(request, it, requestRecorded = true) },
+                onFailure = {
+                    addAssistantMessage("Bestätigte Gedächtnisangaben sind derzeit nicht sicher verfügbar. " +
+                        "Prüfe im Gedächtniszentrum die wiederhergestellten Angaben.")
+                }
+            )
+        }
+        try {
+            learningIoExecutor.execute {
+                val result = runCatching {
+                    cancellation.throwIfCancelled()
+                    val core = ContinuumLearningCore.withAutomaticRecovery(filesDir)
+                    core.syncOwnerFacts(legacyFacts)
+                    val facts = core.activeOwnerFacts().map { it.content }
+                    cancellation.throwIfCancelled()
+                    BootstrapBrain.decide(request, facts, commands)
+                }
+                runOnUiThread { finish(result) }
+            }
+        } catch (failure: java.util.concurrent.RejectedExecutionException) {
+            finish(Result.failure(failure))
+        }
     }
 
     /** Explicit memory questions and otherwise-unhandled conversation only.
@@ -3971,7 +4030,7 @@ class AgentActivity : Activity() {
         localAgentExecutor.execute {
             val result=runCatching {
                 cancellation.throwIfCancelled()
-                val core=ContinuumLearningCore(filesDir)
+                val core=ContinuumLearningCore.withAutomaticRecovery(filesDir)
                 // Existing confirmed Android memories remain authoritative. This
                 // also reconnects installations whose facts predate Learning Core v2.
                 core.syncOwnerFacts(bootstrapMemory.facts())
@@ -4049,6 +4108,8 @@ class AgentActivity : Activity() {
                 activeChatCancellation=null
                 activeLocalRequest=false
                 setBusy(false)
+                if (sessionId != requestSessionId || runCatching { cancellation.throwIfCancelled() }.isFailure)
+                    return@runOnUiThread
                 result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->
                     // An old queued reply cannot set the next chat's runtime context.
                     if(sessionId==requestSessionId)
@@ -6241,10 +6302,24 @@ class AgentActivity : Activity() {
     }
 
     private fun showBootstrapMemory() {
-        val facts = bootstrapMemory.facts()
-        val text = buildString {
+        val legacyFacts = bootstrapMemory.facts().toList()
+        onLearningIo({
+            val core = ContinuumLearningCore.withAutomaticRecovery(filesDir)
+            core.syncOwnerFacts(legacyFacts)
+            core.activeOwnerFacts().map { it.content } to core.recoveredOwnerFactsForReview().facts.size
+        }) { result ->
+            val checked = result.getOrElse {
+                AlertDialog.Builder(this).setTitle("Gedächtnis derzeit nicht verfügbar")
+                    .setMessage("Die aktuelle Bestätigung der Angaben konnte nicht sicher geprüft werden. " +
+                        "Der alte lokale Bestand wird nicht als bestätigtes Wissen ausgegeben.")
+                    .setPositiveButton("Schließen", null).show()
+                return@onLearningIo
+            }
+            val (facts, pending) = checked
+            val text = buildString {
             append("Eigener Startkern ohne Modellimport.\n\n")
-            append("Gemerkte Fakten: ${facts.size}/32\n")
+            append("Aktuell bestätigte Angaben: ${facts.size}\n")
+            append("Wiederhergestellte Angaben ohne neue Bestätigung: $pending\n")
             append("Gelernte Befehle: ${bootstrapMemory.learnedCommands().size}/24\n")
             append("Letzter Prüfstand: ${bootstrapMemory.curriculumPassed}/${bootstrapMemory.curriculumTotal}\n")
             append("Feedback hilfreich: ${bootstrapMemory.positiveCount}\n")
@@ -6253,15 +6328,25 @@ class AgentActivity : Activity() {
             append("Weder Chatverläufe noch Internetseiten werden automatisch als Wahrheit gespeichert.\n")
             append("Sprachausgabe verwendet Android-TTS; Spracheingabe den verfügbaren Android-Dienst.\n")
             append("Privater App-Speicher, derzeit noch ohne zusätzliche Inhaltsverschlüsselung.\n\n")
-            append(if (facts.isEmpty()) "Noch keine eigenen Fakten." else
-                facts.mapIndexed { i, fact -> "${i + 1}. $fact" }.joinToString("\n"))
+            append(if (facts.isEmpty()) "Keine aktuell bestätigten eigenen Angaben." else
+                facts.take(32).mapIndexed { i, fact -> "${i + 1}. $fact" }.joinToString("\n"))
+            if (facts.size > 32) append("\n\nAngezeigt: 32 von ${facts.size} bestätigten Angaben.")
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Lernstatus")
+                .setMessage(text)
+                .setPositiveButton("Schließen", null)
+                .setNegativeButton("Wiederhergestellte prüfen") { _, _ -> showRecoveredOwnerMemory() }
+                .setNeutralButton("Fakten löschen") { _, _ -> showConfirmForget() }
+                .show()
         }
-        AlertDialog.Builder(this)
-            .setTitle("Continuum · Lernstatus")
-            .setMessage(text)
-            .setPositiveButton("Schließen", null)
-            .setNeutralButton("Fakten löschen") { _, _ -> showConfirmForget() }
-            .show()
+    }
+
+    private fun showRecoveredOwnerMemory() {
+        if (isFinishing || isDestroyed || learningIoExecutor.isShutdown) return
+        ownerRecoveryReview?.close()
+        ownerRecoveryReview = at.heinz.deviceai.ui.OwnerMemoryRecoveryDialog.show(
+            this, learningIoExecutor, ContinuumLearningCore.withAutomaticRecovery(filesDir))
     }
 
     private var workStatusView: TextView? = null
@@ -7824,7 +7909,7 @@ class AgentActivity : Activity() {
 
     /** Learning-core owner facts as agent memories (read on the agent executor). */
     private fun ownerFactMemories(): List<MemoryRecord> = runCatching {
-        ContinuumLearningCore(filesDir).activeOwnerFacts().map { fact ->
+        ContinuumLearningCore.withAutomaticRecovery(filesDir).activeOwnerFacts().map { fact ->
             MemoryRecord(
                 id = fact.id,
                 type = MemoryType.SEMANTIC,

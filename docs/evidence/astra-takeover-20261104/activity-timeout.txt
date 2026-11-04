@@ -1,0 +1,3 @@
+START foldSlotContainsTheSeparateHeadAndOrbAreas(at.heinz.deviceai.JarvisLiveAvatarWiringUiTest)
+DIAGNOSTIC TIMEOUT; thread dump written to /workspace/scratch/b3170a7ae924/diagnostic-ui/combined-f14-avatar-geometry-threads.txt
+EXIT_CODE=124

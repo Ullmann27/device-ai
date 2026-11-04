@@ -99,10 +99,12 @@ data class LearningExperienceStats(
     val revoked:Int
 )
 
-class FileLearningExperienceStore(private val directory:File) {
+class FileLearningExperienceStore(private val directory:File, private val automaticRecovery:Boolean) {
+    constructor(directory:File):this(directory,false)
     private val primary=File(directory,"experiences-v2.bin")
     private val backup=File(directory,"experiences-v2.lkg")
     private val lex3=Lex3LearningExperienceStore(directory)
+    private val recovery=OwnerMemoryRecovery(directory)
     private data class ReplaySelection(
         val fingerprint:String,
         val type:LearningExperienceType,
@@ -112,7 +114,7 @@ class FileLearningExperienceStore(private val directory:File) {
     // not a decoded ledger. Every reuse still validates the primary and every LEX3 segment.
     private var replaySelection:ReplaySelection?=null
 
-    fun all():List<LearningExperience> = transaction() { loadValidated() }
+    fun all():List<LearningExperience> = transaction() { recovery.project(loadValidated()) }
 
     /** One locked read of the ledger: its SHA-256 content fingerprint, plus the decoded records only when the
      * fingerprint differs from [knownFingerprint]. Content-keyed (not mtime/length), so a rewrite that keeps
@@ -122,11 +124,33 @@ class FileLearningExperienceStore(private val directory:File) {
 
     /** Caller holds the existing transaction; never acquire a nested OS file lock. */
     private fun snapshotUnderLease(knownFingerprint:String?):Pair<String,List<LearningExperience>?> {
+        val (ledgerFingerprint,records)=rawSnapshotUnderLease(knownFingerprint?.substringBefore(':'))
+        val pending=recovery.pending()
+        val fingerprint=recovery.fingerprint(ledgerFingerprint,pending)
+        if(fingerprint==knownFingerprint)return fingerprint to null
+        val raw=records ?: rawSnapshotUnderLease(null).second!!
+        return fingerprint to recovery.project(raw,pending)
+    }
+
+    /** Strict validation is retained by default. Recovery is chosen only by the explicit core factory. */
+    private fun rawSnapshotUnderLease(knownFingerprint:String?):Pair<String,List<LearningExperience>?> {
         if(!primary.exists()) {
-            check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
+            if(backup.exists() || lex3.exists() || recovery.hasHistory()) {
+                check(automaticRecovery) { "Learning ledger primary missing; recovery requires explicit verification" }
+                recoverUnderLease(null)
+                return strictSnapshot(readPrimary(),null)
+            }
             return ABSENT_FINGERPRINT to (if(knownFingerprint==ABSENT_FINGERPRINT) null else emptyList())
         }
-        val bytes=readPrimary()
+        val bytes=if(primary.length()==0L)ByteArray(0) else readPrimary()
+        return try { strictSnapshot(bytes,knownFingerprint) } catch(failure:Exception) {
+            if(!automaticRecovery || failure !is IOException && failure !is IllegalArgumentException)throw failure
+            recoverUnderLease(bytes)
+            strictSnapshot(readPrimary(),null)
+        }
+    }
+
+    private fun strictSnapshot(bytes:ByteArray,knownFingerprint:String?):Pair<String,List<LearningExperience>?> {
         if(Lex3LearningExperienceStore.isManifest(bytes)) return lex3.snapshot(bytes,knownFingerprint)
         val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
             .joinToString("") { "%02x".format(it) }
@@ -147,9 +171,19 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     /** One read and at most one write for a batch; ids already present (any status) are skipped. */
-    fun appendMissing(items:List<LearningExperience>):Int = transaction(write=true) {
+    fun appendMissing(items:List<LearningExperience>):Int = appendMissing(items,historicalOwnerImport=false)
+
+    /** The Android preference mirror carries history, never a new owner confirmation after recovery. */
+    internal fun appendHistoricalOwnerFacts(items:List<LearningExperience>):Int =
+        appendMissing(items,historicalOwnerImport=true)
+
+    private fun appendMissing(items:List<LearningExperience>,historicalOwnerImport:Boolean):Int = transaction(write=true) {
         require(items.size<=MAX_DURABLE_RECORDS) { "Learning ledger batch exceeds bounded limit" }
         val current=loadValidated()
+        // Validation, possible recovery, this decision and the append share the SAME OS lease.
+        // A complete empty marker still records history: a lost revocation must not be recreated
+        // as active merely because its ID no longer exists in the partially recovered ledger.
+        if(historicalOwnerImport && recovery.hasHistory())return@transaction 0
         val known=current.associateBy { it.id }
         val added=LinkedHashMap<String,LearningExperience>()
         for(item in items) {
@@ -263,15 +297,61 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     private fun loadValidated():List<LearningExperience> {
-        if(!primary.exists()) {
-            check(!backup.exists() && !lex3.exists()) { "Learning ledger primary missing; recovery requires explicit verification" }
-            return emptyList()
+        val records=rawSnapshotUnderLease(null).second!!
+        recovery.pending() // A missing/malformed consent marker also blocks mutations and ordinary readers.
+        return records
+    }
+
+    /** Reuse the canonical formats, OS lease and bounded readers; never parse damaged records as consent. */
+    private fun recoverUnderLease(damaged:ByteArray?) {
+        if(damaged!=null && damaged.size>=8) {
+            val header=java.nio.ByteBuffer.wrap(damaged)
+            val magic=header.int;val version=header.int
+            require(magic!=0x4c455834 && (magic!=0x4c455833 || version==1)) {
+                "Unsupported newer learning ledger; explicit format migration required"
+            }
         }
-        // The previous generation can predate an owner revocation/correction.
-        // Preserve it for diagnosis, but never restore stale consent silently.
-        val bytes=readPrimary()
-        return if(Lex3LearningExperienceStore.isManifest(bytes)) lex3.snapshot(bytes).second!!
-            else LearningExperienceCodec.decode(bytes)
+        val segmented=lex3.exists()
+        if(segmented)Lex3LearningExperienceStore.requireDirectory(File(directory,"experiences-v3"))
+        val survivors=if(damaged!=null && Lex3LearningExperienceStore.isManifest(damaged))
+            try { lex3.verifiedSurvivors(damaged) } catch(_:IllegalArgumentException) { emptyList() }
+            else emptyList()
+        val records=survivors.takeIf { it.isNotEmpty() } ?: run {
+            val candidates=listOf(backup,File(directory,"experiences-v3/legacy-v2.bin"))
+            candidates.firstNotNullOfOrNull { file ->
+                if(!Files.exists(file.toPath(),java.nio.file.LinkOption.NOFOLLOW_LINKS))return@firstNotNullOfOrNull null
+                Lex3LearningExperienceStore.requireRegular(file)
+                try { LearningExperienceCodec.decode(Lex3LearningExperienceStore.readBounded(file,LearningExperienceCodec.MAX_BYTES))
+                    .takeIf { it.isNotEmpty() } }
+                catch(_:IOException) { null } catch(_:IllegalArgumentException) { null }
+            } ?: throw IOException("No verified recovery source; damaged ledger retained")
+        }
+        // Durable quarantine and owner-confirmation barrier MUST precede primary publication.
+        recovery.prepare(records,damaged)
+        if(segmented)lex3.restoreVerified(records) { OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary) }
+        else {
+            OwnerMemoryRecovery.beforeWriteForTest?.invoke(primary)
+            Lex3LearningExperienceStore.writeAtomic(primary,LearningExperienceCodec.encode(records))
+            Lex3LearningExperienceStore.syncDirectory(directory)
+        }
+        replaySelection=null
+        emitStored(recovery.project(records))
+    }
+
+    fun pendingOwnerReconfirmation():Set<String> = transaction() {
+        loadValidated();recovery.pending().facts.keys.toSet()
+    }
+
+    fun ownerRecoveryReview():OwnerRecoveryReview = transaction() {
+        val records=loadValidated()
+        recovery.review(records,rawSnapshotUnderLease(null).first)
+    }
+
+    fun reconfirmRecoveredOwnerFacts(review:OwnerRecoveryReview,proof:OwnerReconfirmationProof?):Set<String> = transaction(write=true) {
+        val records=loadValidated()
+        val ids=recovery.reconfirm(records,rawSnapshotUnderLease(null).first,review,proof)
+        emitStored(records.filter { it.id in ids })
+        ids
     }
 
     /** Observations and audits cannot evict owner instructions or revocations.
@@ -293,6 +373,24 @@ class FileLearningExperienceStore(private val directory:File) {
         .replace(Regex("[^\\p{L}\\p{N}]+")," ").trim()
 
     private fun save(items:List<LearningExperience>) {
+        val hub=ContinuumMemoryEventHub.forApp(directory.parentFile ?: directory)
+        val previous=if(hub.hasListeners())recovery.project(loadValidated()).associateBy { it.id } else emptyMap()
+        saveInner(items)
+        recovery.retireWithdrawn(items)
+        if(hub.hasListeners()) {
+            Lex3LearningExperienceStore.syncDirectory(directory)
+            emitStored(recovery.project(items).filter { previous[it.id]!=it })
+        }
+    }
+
+    private fun emitStored(items:List<LearningExperience>) {
+        val hub=ContinuumMemoryEventHub.forApp(directory.parentFile ?: directory)
+        if(hub.hasListeners())items.forEach {
+            hub.emit(MemoryStored(it.id,ContinuumMemoryEventHub.statusOf(it),System.currentTimeMillis()))
+        }
+    }
+
+    private fun saveInner(items:List<LearningExperience>) {
         require(items.size<=MAX_DURABLE_RECORDS && items.map { it.id }.distinct().size==items.size)
         val previous=if(primary.exists())readPrimary() else null
         if(items.size>MAX_RECORDS || (previous!=null && Lex3LearningExperienceStore.isManifest(previous))) {

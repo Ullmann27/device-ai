@@ -134,6 +134,31 @@ object JarvisCockpitGridContent {
             ContinuumIcons.draw(p, ic, x, icy, d * .55f, Fill.Solid(Colors.cyanSoft))
             if (ic == Icon.BELL && s.pendingNotifications > 0) p.fillCircle(x + d * .3f, icy - d * .3f, 2.5f, Fill.Solid(Colors.magenta))
         }
+        brainHeader(p, g)
+    }
+
+    /** Static identity above the original brain sphere; no model availability or invented activity. */
+    private fun brainHeader(p: ContinuumPainter, g: JarvisCockpitGrid.Grid) {
+        val b = g[Area.ORB]
+        val y = b.top + 14f * g.unit
+        val cx = b.left + 16f
+        JarvisNeon.halo(p, cx, y + 5f, 22f, Colors.cyan, .15f)
+        p.strokeCircle(cx, y + 5f, 14f, 1.2f, Fill.Solid(Colors.cyanSoft))
+        p.drawText("∞", cx, y + 5f + p.capHeight(Type.title) / 2f,
+            Type.title, Fill.Solid(Colors.cyan), TextAlign.CENTER)
+        val x = b.left + 39f
+        val room = b.right - x
+        p.drawText(fit(p, "Continuum", Type.title, room), x, y + p.capHeight(Type.title),
+            Type.title, Fill.Solid(Colors.text))
+        p.drawText(fit(p, "Dein persönlicher KI-Begleiter", Type.caption, room), x,
+            y + p.capHeight(Type.title) + 5f + p.capHeight(Type.caption), Type.caption,
+            Fill.Solid(Colors.cyanSoft))
+        val strip = y + p.capHeight(Type.title) + 13f + p.capHeight(Type.caption)
+        p.fillRoundRect(b.left, strip, b.right, strip + 17f, 8.5f, Fill.Solid(Colors.pillSurface))
+        p.strokeRoundRect(b.left, strip, b.right, strip + 17f, 8.5f, .6f, Fill.Solid(Colors.cyanDeep))
+        p.drawText(fit(p, "Chat · Denken · Recherche · Handeln · Lernen", Type.status, b.width - 14f),
+            b.centerX, strip + (17f + p.capHeight(Type.status)) / 2f,
+            Type.status, Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
     }
 
     private fun panelTitle(p: ContinuumPainter, b: Box, text: String, icon: Icon?): Float {

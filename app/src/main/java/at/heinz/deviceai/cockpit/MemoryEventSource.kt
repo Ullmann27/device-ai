@@ -19,17 +19,31 @@ fun interface MemoryEventSource {
 object MemoryEventSources {
     const val MISSING = "Quelle fehlt bis ContinuumMemoryEvents (#371-Linie)"
     /**
-     * Not yet on this branch: ContinuumMemoryEvents (#371 @befdbe89) is emitted from the LEX4 append-only ledger and
-     * ContinuumMemoryRetriever, while this branch's base carries ChatGPT's segmented LEX3 ledger. A cherry-pick/merge
-     * conflicts in ContinuumLearningExperience/ThinkingMemory; that reconciliation belongs to Gedächtnis/Integration.
-     * Once merged, production becomes the 6-line bridge shown in MemoryEventSourceTest (`asSource()`).
+     * Legacy unscoped lookup remains absent: the application directory must be supplied explicitly.
+     * Use [forApp] after the compatible segmented-ledger recovery has passed its safety gate.
      */
+    @Deprecated("Use forApp(appDirectory) to bind the existing per-application event hub")
     val production: MemoryEventSource? = null
+
+    /** IDs, states and measured scores from the real ledger/retriever. Subscribing invents no initial activity. */
+    fun forApp(appDirectory: java.io.File): MemoryEventSource = MemoryEventSource { sink ->
+        at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(appDirectory).addListener { event ->
+            when (event) {
+                is at.heinz.deviceai.learning.DocumentLearned ->
+                    sink.documentLearned(event.docId, event.kind, event.entriesAdded, event.atEpochMs)
+                is at.heinz.deviceai.learning.MemoryStored ->
+                    sink.memoryStored(event.entryId, event.status.name, event.atEpochMs)
+                is at.heinz.deviceai.learning.RecallHits ->
+                    sink.recallHits(event.queryHash, event.hits.size,
+                        event.hits.minByOrNull { it.rank }?.score, event.atEpochMs)
+            }
+        }
+    }
 }
 
 /**
  * Maps sink calls to [CockpitAnimationEvent]s. The memory hub delivers on its own background thread with an
- * unbounded queue, so the callbacks stay trivial: they only swap atomic "latest" values / counters and schedule at
+ * bounded queue, so the callbacks stay trivial: they only swap atomic "latest" values / counters and schedule at
  * most one main-thread flush per [minIntervalMs]. All bus work happens in the flush on the main thread
  * ([postDelayed] = Handler(mainLooper)::postDelayed on Android).
  */
