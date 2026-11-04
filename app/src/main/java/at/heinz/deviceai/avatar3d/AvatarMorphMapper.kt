@@ -4,9 +4,6 @@ import at.heinz.deviceai.avatar.AvatarExpression
 import at.heinz.deviceai.avatar.AvatarPose
 import at.heinz.deviceai.avatar.AvatarState
 import at.heinz.deviceai.avatar.Viseme
-import kotlin.math.abs
-import kotlin.math.PI
-import kotlin.math.sin
 
 /** Presentation mapping only. No state derivation, speech clock, listener or retained text. */
 class AvatarMorphMapper(targetNames: List<String>) {
@@ -20,6 +17,7 @@ class AvatarMorphMapper(targetNames: List<String>) {
     /** Crossfaded viseme weights (VIDEO-SPEC: syllable-synchronous O/A; 70 ms crossfade between visemes). */
     private val visemeBlend = FloatArray(Viseme.entries.size)
     private var lastSeconds = Float.NaN
+    private val idleMotion = AvatarIdleMotion()
 
     init { require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet()) }
 
@@ -40,27 +38,34 @@ class AvatarMorphMapper(targetNames: List<String>) {
             AvatarExpression.NEUTRAL -> Unit
         }
         if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }
+        idleMotion.update(seconds)
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
-            // Integer harmonics keep the view's existing 460-second clock wrap continuous.
-            val t = if (seconds.isFinite()) seconds.toDouble() % 460.0 else 0.0
-            val phase = t * (2.0 * PI / 460.0)
-            headYaw += (1.20 * sin(phase * 27) + .35 * sin(phase * 65)).toFloat()
-            headPitch += (.62 * sin(phase * 34) + .20 * sin(phase * 67)).toFloat()
-            eyeYaw += (2.10 * sin(phase * 52) + .55 * sin(phase * 83)).toFloat()
-            eyePitch += (.95 * sin(phase * 39) + .30 * sin(phase * 78)).toFloat()
+            headYaw += idleMotion.headYaw; headPitch += idleMotion.headPitch
+            eyeYaw += idleMotion.eyeYaw; eyePitch += idleMotion.eyePitch
         }
-        val jaw = finite(pose.jawOpen, 0f, 1f)
         val cueWeight = if (pose.viseme == Viseme.SIL) 0f else finite(pose.visemeWeight, 0f, 1f)
+        val bilabialClosure = pose.viseme == Viseme.PP && cueWeight > 0f
+        // M/B/P require a closed lip seal even while the measured audio remains loud.
+        // An outgoing vowel contains authored opening, so its morph must also retire now.
+        val jaw = if (bilabialClosure) 0f else finite(pose.jawOpen, 0f, 1f)
         // The existing reducer expires stale cues/audio and resets interrupted utterances.
         // Linear crossfade over CROSSFADE_S toward the current cue; first frame / clock jump snaps.
         val dt = if (lastSeconds.isFinite() && seconds.isFinite()) seconds - lastSeconds else Float.NaN
         lastSeconds = seconds
         // Crossfade only between two active cues; silence/interruption closes at once (reducer owns stop).
-        // A repeated frame time or a clock jump snaps, so a static frame never shows a stale blend.
+        // Repeated render times are idempotent. A reset/wrapped clock initializes a new epoch.
         if (pose.viseme == Viseme.SIL || cueWeight <= 0f) visemeBlend.fill(0f)
-        val step = if (dt.isFinite() && dt > 0f && dt <= 1f) (dt / CROSSFADE_S).coerceIn(0f, 1f) else 1f
+        if (bilabialClosure) {
+            visemeBlend.fill(0f)
+            visemeBlend[Viseme.PP.ordinal] = cueWeight
+        }
+        val step = when {
+            dt == 0f -> 0f
+            dt.isFinite() && dt > 0f && dt <= 1f -> (dt / CROSSFADE_S).coerceIn(0f, 1f)
+            else -> 1f
+        }
         var renderedOpening = 0f
         for (v in Viseme.entries) {
             val target = if (v == pose.viseme && v != Viseme.SIL) cueWeight else 0f
@@ -73,10 +78,7 @@ class AvatarMorphMapper(targetNames: List<String>) {
         // Compensate the visible blend, including outgoing cues, once; preserve lip shapes.
         weight("JawOpen", (jaw - renderedOpening).coerceAtLeast(0f))
         jawPitch = maxOf(jaw, renderedOpening) * 12f
-        // VIDEO-SPEC: periodic blink of ~0.15 s.
-        val t = if (seconds.isFinite()) ((seconds % 4.6f) + 4.6f) % 4.6f else 0f
-        val blink = if (t > 4.45f) (1f - abs(t - 4.525f) / .075f).coerceIn(0f, 1f) else 0f
-        weight("BlinkLeft", blink); weight("BlinkRight", blink)
+        weight("BlinkLeft", idleMotion.blinkWeight); weight("BlinkRight", idleMotion.blinkWeight)
     }
 
     private companion object { const val CROSSFADE_S = .07f }

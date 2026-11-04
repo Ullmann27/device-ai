@@ -14,13 +14,24 @@ class AvatarMorphTransitionTest {
         val map = mapper()
         map.update(pose(Viseme.AA, .6f), 1f, true)
         for (frame in 1..5) {
-            map.update(pose(Viseme.PP, .6f), 1f + frame * .016f, true)
+            map.update(pose(Viseme.SS, .6f), 1f + frame * .016f, true)
             val aa = (1f - frame * .016f / .07f).coerceAtLeast(0f)
             assertEquals("AA at frame $frame", aa, weight(map, "AA"), EPSILON)
-            assertEquals("PP at frame $frame", 1f - aa, weight(map, "PP"), EPSILON)
-            // At 16 ms the authored AA opening is about .626785, already greater than .6.
-            // Adding another .6 JawOpen here used to produce about 1.226785 in total.
-            assertOpening(map, .6f, aa * AA_OPENING, "AA -> PP frame $frame")
+            assertEquals("SS at frame $frame", 1f - aa, weight(map, "SS"), EPSILON)
+            // SS has no authored opening and does not require PP's immediate lip seal.
+            // At 16 ms the outgoing AA opening is about .626785, already greater than .6.
+            assertOpening(map, .6f, aa * AA_OPENING, "AA -> SS frame $frame")
+        }
+    }
+
+    @Test fun bilabialSealRejectsSustainedMeasuredJawAfterAVowel() {
+        val map = mapper()
+        map.update(pose(Viseme.AA, .6f), 1f, true)
+        for (frame in 1..5) {
+            map.update(pose(Viseme.PP, .6f), 1f + frame * .016f, true)
+            assertEquals("AA at frame $frame", 0f, weight(map, "AA"), 0f)
+            assertEquals("PP at frame $frame", 1f, weight(map, "PP"), 0f)
+            assertOpening(map, 0f, 0f, "AA -> PP frame $frame")
         }
     }
 
@@ -52,9 +63,22 @@ class AvatarMorphTransitionTest {
         val map = mapper()
         map.update(pose(Viseme.AA, 0f), 1f, true)
         for (frame in 1..5) {
-            map.update(pose(Viseme.PP, 0f), 1f + frame * .016f, true)
+            map.update(pose(Viseme.SS, 0f), 1f + frame * .016f, true)
             val aa = (1f - frame * .016f / .07f).coerceAtLeast(0f)
-            assertOpening(map, 0f, aa * AA_OPENING, "cue-only AA -> PP frame $frame")
+            assertEquals("AA at frame $frame", aa, weight(map, "AA"), EPSILON)
+            assertEquals("SS at frame $frame", 1f - aa, weight(map, "SS"), EPSILON)
+            assertOpening(map, 0f, aa * AA_OPENING, "cue-only AA -> SS frame $frame")
+        }
+    }
+
+    @Test fun bilabialSealClosesCueOnlyOpeningWithoutMeasuredAudio() {
+        val map = mapper()
+        map.update(pose(Viseme.AA, 0f), 1f, true)
+        for (frame in 1..5) {
+            map.update(pose(Viseme.PP, 0f), 1f + frame * .016f, true)
+            assertEquals(0f, weight(map, "AA"), 0f)
+            assertEquals(1f, weight(map, "PP"), 0f)
+            assertOpening(map, 0f, 0f, "cue-only AA -> PP frame $frame")
         }
     }
 
@@ -78,17 +102,15 @@ class AvatarMorphTransitionTest {
         assertEquals(1f, weight(map, "PP"), 0f)
         assertEquals(0f, weight(map, "AA"), 0f)
         assertEquals(0f, weight(map, "O"), 0f)
-        assertOpening(map, .6f, 0f, "resume after reduced motion")
+        assertOpening(map, 0f, 0f, "bilabial closure after reduced motion")
     }
 
-    @Test fun repeatedTimeAndClockRollbackRetainTheExistingSnapPolicy() {
-        for (seconds in listOf(1.016f, .5f)) {
-            val map = activeBlend()
-            map.update(pose(Viseme.O, .6f), seconds, true)
-            assertEquals(0f, weight(map, "AA"), 0f)
-            assertEquals(1f, weight(map, "O"), 0f)
-            assertOpening(map, .6f, O_OPENING, "clock discontinuity at $seconds")
-        }
+    @Test fun clockRollbackReinitializesTheBlendForANewAnimationEpoch() {
+        val map = activeBlend()
+        map.update(pose(Viseme.O, .6f), .5f, true)
+        assertEquals(0f, weight(map, "AA"), 0f)
+        assertEquals(1f, weight(map, "O"), 0f)
+        assertOpening(map, .6f, O_OPENING, "clock discontinuity")
     }
 
     private fun activeBlend(): AvatarMorphMapper = mapper().also {
