@@ -18,7 +18,7 @@ bot or an independently running local model.
 | Workstream | Observed branch / PR | Ownership |
 | --- | --- | --- |
 | Model weights | `research/continuum-weight-space-audit-20261104`, #492 | Model tensors, capacity experiments, training and promotion |
-| Brain and retrieval | `feat/continuum-memory-brain-20261104` | Cognitive retrieval, memory, reasoning and event bridge |
+| Brain and retrieval | `feat/continuum-memory-brain-20261104`, #494 | Cognitive retrieval, memory, reasoning and event bridge |
 | Avatar and design | `codex/astra-jarvis-takeover-20261104`, #491 | Avatar/orb, shared Activity presentation, visual integration and recovery coordination |
 | Personality bots | `feat/continuum-personality-bots-20261104`, #493 | Bot profiles, addressing, dialogue, assignment hooks and roster UI |
 
@@ -29,21 +29,34 @@ stores, bot profiles and avatar renderers stay with their current owners.
 
 ## Dispatch ledger
 
-| Bot | Assignment | Initial state |
+| Bot | Assignment | Current state |
 | --- | --- | --- |
-| 01 | Map current owners, branches and file conflicts | RUNNING, read-only |
-| 02 | Verify available local build and test tools | RUNNING, read-only |
-| 03 | Audit existing local worker and scheduler for reproducible gaps | RUNNING, read-only |
-| 04 | Test worker cancellation, duplicate jobs and safe execution | QUEUED |
-| 05 | Check model artifact and evidence contracts for the weights team | QUEUED |
-| 06 | Check brain/retrieval integration boundaries and evidence | QUEUED |
+| 01 | Map current owners, branches and file conflicts | COMPLETE, read-only report |
+| 02 | Verify available local build and test tools | COMPLETE, read-only report |
+| 03 | Audit existing local worker and scheduler for reproducible gaps | COMPLETE, no reproduced defect in inspected scope |
+| 04 | Test coding-service lifecycle and active recovery | RUNNING |
+| 05 | Check model artifact and evidence contracts for the weights team | RUNNING |
+| 06 | Check brain/retrieval integration boundaries and evidence | RUNNING |
 | 07 | Check avatar/design integration and asset contracts | QUEUED |
 | 08 | Check update identity, source binding and version monotonicity | QUEUED |
 | 09 | Check app-bot assignments and permissions against existing gates | QUEUED |
 | 10 | Independently review fixes, regressions and integration conflicts | QUEUED |
 
-Later entries will record actual dispatch, exact paths, results and source
-commits. Queued roles are not counted as agents that already ran.
+Six separate agents have actually been dispatched at this checkpoint. Reports
+and raw evidence are in `docs/evidence/ten-bot-support-20261104/`. Queued roles are
+not counted as agents that already ran.
+
+## Verified support work
+
+- Draft PR #496 contains this support stream. Technical coordination comments
+  were posted to #491, #492, #493 and #494; this is not acknowledgement by them.
+- Unchanged baseline: 45 Node PASS and 8 pure Kotlin/JUnit update-policy PASS.
+- Coordinator found two bounded defects in the otherwise unclaimed routine
+  book: mutable tool-scope aliases and next-time overflow for very large periods.
+  Three new regressions failed on the original source; all 12 routine tests pass
+  after the minimal repair. `ROUTINES.md` records actual limits and rollback.
+- Shared Gradle lock was occupied when first checked; no competing Gradle build
+  or daemon termination was attempted. Full Android/device acceptance is pending.
 
 ## Execution and evidence rules
 
