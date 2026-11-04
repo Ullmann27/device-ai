@@ -1,0 +1,23 @@
+{
+  "label": "intent-small-capacity-after",
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx1g",
+    "-cp",
+    "/workspace/scratch/3112c86b5191/training-recovery-build/experiment.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-small/checkpoints/cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820.lm1",
+    "/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp"
+  ],
+  "startedUtc": "2026-11-04T18:54:55.576362+00:00",
+  "wallSeconds": 0.3703559329997006,
+  "returncode": 1,
+  "timeout": false,
+  "timeoutSeconds": 120,
+  "sourceCommit": "def5acf9cbba82ee51a53cc06fecc52e9cd0324d",
+  "registrationSha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+  "jarSha256": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+  "logSha256": "efb099101574715ed4976fc060a49b52e4fe129f2f1aca4f349936042aaeacfc",
+  "registeredBytesUnchanged": true
+}
