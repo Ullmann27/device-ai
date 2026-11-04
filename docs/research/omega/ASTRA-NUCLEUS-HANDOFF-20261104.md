@@ -1,46 +1,55 @@
 # C1 — aktuelle Integrationsleitung, 4. November 2026
 
-Dieser Abschnitt setzt den direkten Besitzerauftrag **CONTINUUM C1 — INTEGRATIONSLEITUNG** um. Die darunter unverändert erhaltene Generation-1-Übersicht ist historische Evidenz, keine aktuelle Prozessliste. Dies bleibt derselbe zentrale Board-Pfad aus #498; C1 pflegt ihn seriell auf dem isolierten gemeinsamen Kandidaten.
+Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Board-Pfad aus #498 fort. Der erhaltene historische Teil ist keine aktuelle Prozess- oder ACK-Liste.
 
-## Aktueller Kandidat und Quelle
+## Gemeinsamer Kandidat und Quellen
 
-- C1-Zweig: `integration/continuum-c1-candidate-20261104`.
-- Gewählte Eingangsbasis: #513 `28b228698aef8c52e46c72b71fdd5e1915d6e76c`, vollständiger Baum `e52acc146e66ae66a95429da2fb0f34242ad1791`.
-- Vorhandener vollständiger lokaler Quellencheckpoint: `2d5ce59b786f427eacb394484d81796568bb87b4`, identischer vollständiger Baum. Unterschiedliche Commit-Identitäten werden nicht gleichgesetzt.
-- #512 `f9267a3743a87a77bf6421011c014b2ca2d6b0d6` und #506 `8abea828833d8833d40e3d3d36feaa6d3685b82e` sind Herkunft und Vergleichsanker. Neuere #513-Arbeit wird erhalten.
-- Status: **ECHO_TARGETED_HOST_PASS / INDEPENDENT_REVIEW_PENDING**. Eigener 52-Test-Lauf auf vier exakt übernommenen #515-Blobs; Gesamt-/Androidabnahme noch NOT_RUN. Historische 305/352-Testzahlen sind Autorenbelege, keine aktuelle C1-Abnahme.
-- Exaktes Eingangsmanifest: [intake-manifest.json](../../evidence/c1-integration-20261104/intake-manifest.json).
-- Fortsetzbarer Ablauf: [C1-INTEGRATION-HANDOFF-20261104.md](C1-INTEGRATION-HANDOFF-20261104.md).
+- Einziger C1-Integrationszweig: `integration/continuum-c1-candidate-20261104`, Draft **#519**; kein Main-Merge.
+- Gewählte Basis #513: `28b228698aef8c52e46c72b71fdd5e1915d6e76c`; vollständiger Baum `e52acc146e66ae66a95429da2fb0f34242ad1791`. Lokales Äquivalent `2d5ce59b786f427eacb394484d81796568bb87b4` besitzt exakt diesen Baum.
+- #491 → #506 → #512 → #513 ist unabhängig als tatsächliche Commit-Abstammung geprüft. #506 `8abea828833d8833d40e3d3d36feaa6d3685b82e` bleibt Vergleichsanker; neuere Arbeit bleibt erhalten.
+- Letzter vollständiger eigener Node-Prüfstand: lokal `8873030fdfe23bdd4153f96004b786bff2cddecf`, remote `1a5302c504a78a50d5e64ca727f2915529bf2b06`, gleicher Tree `d1a1b733ad37f21c155527fa0c9532f56fb1b934`.
+- **Gesamtstatus FAIL / INTEGRATION IN ARBEIT:** critical 135 = 131 PASS / 4 FAIL / 0 SKIP; full-node 2349 = 2280 PASS / 32 FAIL / 37 SKIP. Quellen während beider Läufe unverändert. Diese Umfänge überlappen und werden nicht addiert. Keine APK-/Gerätefreigabe.
+- Anschließend sieben vorhandene #517-Quellvertragskorrekturen begrenzt übernommen: 48 gezielte Tests PASS, neun absichtliche Vertragsverletzungen jeweils erkannt, unabhängiger statischer Review positiv. Neuer Gesamtlauf steht nach weiterer serieller Integration aus.
 
-## Aufträge, Eigentümer und Rückmeldestatus
+## Aufgaben, Eigentümer, Abhängigkeiten und Rückmeldung
 
-| Task-ID | Eigentümer / Einbauer | Quellen / Pfade | Status und Abhängigkeit |
+| Task-ID | Eigentümer / einziger Einbauer | Quelle und Ergebnis | Status / nächster Schritt |
 | --- | --- | --- | --- |
-| C1-SOURCE-001 | C1 mit Unteragent source_audit | #491/#506/#512/#513; unveränderliche Quellen | RUNNING; Quellen-/Baumidentität, Aufrufer und offene Widersprüche prüfen |
-| C1-INTEGRATE-001 | ausschließlich C1 | #515 `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`; coding-orchestrator.mjs, coding-service-worker.mjs, coding-service-reader.mjs und fokussierte Regression | TARGETED_HOST_PASS / REVIEW_PENDING; echter RED reproduziert, drei Produktionsdateien + fertige Regression übernommen, 52 fokussierte Tests PASS |
-| C1-QA-SOURCE-002 | ausschließlich C1; unabhängiger Review source_audit | scripts/continuum-reliability-qa.mjs und neuer Quellidentitäts-Regressionsfall | TARGETED_HOST_PASS / REVIEW_PENDING; vorbestehenden ENOBUFS-Gateblocker fachlich reproduziert, begrenzter 16-MiB-Puffer, 30 fokussierte Tests PASS |
-| C1-REPAIR-REVIEW-001 | C1-Unteragent repair_review | begrenzte #515-Quellen, eigene Testkopie | RUNNING; keine Änderungen am gemeinsamen Kandidaten |
-| C1-APK-AUDIT-001 | C1-Unteragent apk_readiness | Build-/Versions-/Signatur-/Kanalverträge, #475, vorhandene Locks | RUNNING; read-only, kein Build/Signer/Release |
-| C1-C2-REVIEW-001 | externer Partner C2 | späterer gepinnter Gesamtstand + vollständige Logs | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten sind nicht C2 |
-| C3/C4 Gehirn | jeweilige bestehende Fachzweige, Einbau C1 | AiContextCompiler, HybridMemoryRetriever, MemoryEcology, MemoryEventSource-Adapter | EXISTING_OWNERS_PRESERVED; neue C3/C4-ACKs nicht beobachtet |
-| C5/C6 Autonomie | jeweilige Fachzweige, Einbau C1 | kanonischer Backlog/CCC1/Worker, #493/#496/#515 | EXISTING_OWNERS_PRESERVED; neue C5/C6-ACKs nicht beobachtet |
-| C7/C8 Modellforschung | jeweilige Fachzweige, Einbau nach eigenem Gate | #492/#497; experimental/weight-space-20261104 | RESEARCH_ONLY; kein Training, keine Promotion durch C1 |
-| C9/C10 Avatar | jeweilige Fachzweige, Einbau C1 | #491/#495/#502/#503, AvatarDirector/Mapper/GLB | EXISTING_OWNERS_PRESERVED; neue C9/C10-ACKs nicht beobachtet |
+| C1-SOURCE-001 | C1 / source_audit read-only | #491/#506/#512/#513, vollständige Trees und Abstammung | SOURCE_REVIEW_COMPLETE; Botrouting-Fehler konkret belegt |
+| C1-INTEGRATE-001 | C1 | Vier ECHO-Dateien aus #515 `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`; gesichert in remote `474a457f5fa6230d45fd4c773fe67e219df73984` | Echter RED, 52 gezielte PASS; unabhängiger statischer Review und eigener unabhängiger 9-Test-Unterlauf PASS; keine echte Modellinferenz |
+| C1-QA-SOURCE-002 | C1 | Begrenzter 16-MiB-Git-Puffer, vollständiger Quellenbestand; remote `1a5302c504a78a50d5e64ca727f2915529bf2b06` | 30 gezielte PASS, unabhängiger statischer Review positiv; kanonische Gesamtgates führen jetzt Tests aus |
+| C1-CONTRACTS-003 | C1, Lieferant #517 | Vier Archivpatches bei `46e5fa6b09454ad6f6862e80478eb0f2d5545149`, sieben Testdateien | 48 PASS / 0 FAIL / 0 SKIP; 9/9 Negativkontrollen erkannt; statisch unabhängig befürwortet |
+| C1-APK-CHANNEL-004 | C1 / apk_readiness | Gradle-Konfiguration, #475, tatsächlicher Kanalversuch und Toolchain-Dateien | Aktueller Kanal UNVERIFIED: Web-Tool kann URL nicht abrufen; historische41 nicht als aktuell ausgeben |
+| C1-AVATAR-005 | C1, Lieferant #517 | Signed-zero-Patch AvatarIdleMotion + zwei Grenztests aus demselben Archiv | Statisch unabhängig befürwortet; eigener Kotlin RED/GREEN vor Einbau offen |
+| C1-ROUTING-006 | C1, begrenzter Patch von source_audit | routeBotInput; unbekannte natürliche Select-Formulierungen | PREPARING; bekannte/mehrdeutige/explizite Adressen und Storefehler getrennt erhalten |
+| C1-UI-CONTRACT-007 | C1 / apk_readiness read-only | Vorhandenes UI-Vertragspaket des laufenden Teams #517 | REVIEWING; kein ungeprüftes Gesamtbranch-Merge |
+| C1-C2-REVIEW-001 | externer C2 | Exakter gemeinsamer Endstand und Rohbelege | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten ersetzen C2 nicht |
+| C3/C4 Gehirn | bestehende Fachzweige; Einbau C1 | Compiler, Memory-Recall/Bus; bestehende Reservierungen | Neue ACKs nicht beobachtet; M2.9-Hauptchat/Ranking bleibt offen |
+| C5/C6 Autonomie | bestehende Fachzweige; Einbau C1 | kanonischer Backlog/CCC1/Worker, #493/#496/#515 | Neue ACKs nicht beobachtet; kein zweiter Worker |
+| C7/C8 Modellforschung | bestehende Forschungszweige | #492/#497/#514 | EXPERIMENTAL; keine Promotion/Trainingsbehauptung |
+| C9/C10 Avatar | bestehende Fachzweige; Einbau C1 | #491/#495/#502/#503/#518 | Neue ACKs nicht beobachtet; GLB-Rig, Referenz, echte GPU/Sprache offen |
 
-**Gemeinsame Einstiegspunkte:** C1 ist im gemeinsamen Kandidaten der einzige Einbauer für `AgentActivity.kt`, Compiler-/Factory-Anschluss, Sprachlistener und Worker-Einstieg. Fachteams liefern begrenzte Diffs mit Basis-SHA. Vorhandene fremde Worktrees und Reservierungen werden dadurch nicht freigegeben oder überschrieben. C1 ändert AgentActivity im ersten ECHO-Slice nicht.
+**Gemeinsame Einstiegspunkte:** Nur C1 baut AgentActivity, Compiler-/Factory-Verbindungen, Sprachlistener und Worker-Einstieg im gemeinsamen Kandidaten ein. Andere Teams liefern begrenzte Patches mit Ausgangs-SHA. Ihre Worktrees und Dateireservierungen werden nicht verändert.
 
-## Eingangszuordnung
+## Enthalten, fehlend und widersprüchlich
 
-- **Enthalten laut Quellenmanifest, unabhängiger Detailcheck läuft:** #491-Grundintegration, #506 Bot-/Recall-/Scope-Anschlüsse, #512 Cockpit-Lifecycle/Kalender/QA-Vorprüfung, #513 Sprachcaller-/Reattach- und #502/#503-Motion-Arbeit.
-- **Inzwischen begrenzt übernommen:** #515 negativer ECHO-Rückweg nach streng abgelehntem Modellversuch, remote `474a457f5fa6230d45fd4c773fe67e219df73984` in Draft #519; unabhängiger Review steht aus. Branch-Discovery und Scheduler-Preflight sind separate Beiträge und werden im ersten Slice nicht übernommen.
-- **Widersprüche/offene Befunde:** #506-Handoff noch initial/UNVERIFIED; Reviewhinweis auf abgefangene normale Botwechsel-Sätze; historisches AGENTS-Releaseziel ist kein aktueller Kanalstand.
-- **Experimentell/offen:** M2.9 nicht im Hauptchat aktiviert, Rankingregression; GLB-Rigvertrag und visuelle Referenzabnahme; Modellforschung; S01-Ressourcengate; echte Modell-/Fold7-/Sprach-/GPU-Abnahme.
+Enthalten: #491-Grundintegration, #506 Bot-/Recall-/Scope-Anschlüsse, #512 Cockpit-Lifecycle/Kalender/QA-Vorprüfung, #513 Sprachcaller/Reattach und #502/#503-Motion. Hinzu kamen genau der negative #515-ECHO-Slice und die getrennte QA-Manifestkorrektur. Branch-Discovery/Scheduler aus #515 bleiben separat.
 
-## Ressourcen und Freigaben
+Fehlend: Nachgewiesene Behandlung unbekannter natürlicher Botwechsel-Sätze, Signed-zero-Randfall und vollständige aktuelle Quellvertragsabnahme. Neueste #493-Routerbytes enthalten den abgefangenen Normaltextfehler weiterhin. #517 arbeitet separat an UI-Fallback/Testhänger; dessen roter Gesamtstand wird nicht als Abnahme übernommen.
 
-Vor jedem schweren lokalen Lauf vorhandenen gemeinsamen Gradle-Lock und aktive Prozesse prüfen; genau ein schwerer C1-Lauf zur Zeit. Keine fremden Prozesse stoppen, keinen Lock löschen. C1 hält für schwere Gates beide vorhandenen Locks `/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock` und `/workspace/scratch/d663e8444310/qa/gradle.lock`; Wartegrenze 45 Sekunden, danach dokumentierter BLOCKED statt Parallelstart. Gateausgaben außerhalb des sauberen Checkouts, vollständige Quellidentität vor/nach dem Lauf.
+Widersprüchlich/überholt: #506s initiales UNVERIFIED-Handoff, alte starre UI-/Aufrufer-Strings in Tests, historische AGENTS-Releaseangaben. Der Avatar-Vertrag belegt die angeschlossene Live-Hologrammfläche; dauerhaftes Fan-out an sämtliche Registry-Empfänger ist dadurch nicht bewiesen.
 
-Originalpaket `at.heinz.deviceai.continuumlocal`, Originalsignatur, Updatekanal, Besitzerdateien und Offline-Schalter bleiben erhalten. #475s 0.3.40/Code41 ist ein historischer Beleg; vor Update aktuellen Kanal erneut lesen. Keine Main-Zusammenführung, Actions, bezahlten Dienste, Signierung, Veröffentlichung oder Installation. Keine Testzahlen addieren oder PASS auf neue Quellen übertragen.
+## Ressourcen, APK und Grenzen
+
+Schwere C1-Läufe halten beide bestehenden Locks: `/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock` und `/workspace/scratch/d663e8444310/qa/gradle.lock`. Maximal 45 Sekunden warten, dann BLOCKED. Keine fremden Prozesse stoppen oder Locks löschen. Cache wiederverwenden; keine parallelen schweren C1-Builds.
+
+Datenträgerplatz schwankt stark. Ein Evidenzverzeichnis scheiterte einmal mit ENOSPC, bevor Dateien kopiert wurden; eine frische Prüfung zeigte anschließend rund 2,0 GB frei und das Anlegen gelang. Ursache unbekannt; kein fremder Bestand gelöscht. Quellen und negative Belege bleiben erhalten.
+
+Originalpaket `at.heinz.deviceai.continuumlocal`; QA-Paket `.qa`, nur Compile/Test/Lint; keine Besitzer-APK. Standalone-Version ist expliziter Buildparameter, Versionsname `0.3.(Code−1)`. Originalalias `continuum-local`/PKCS12 bleibt maßgeblich. Live-Kanalversuch vom 04.11.2026 20:14:10 UTC scheiterte an der Toolzugänglichkeit; kein HTTP-Ausfall des Servers behauptet. #475 belegt nur historisch 0.3.40/Code41.
+
+Kein Main-Merge, Release, Installation, Signaturwechsel, kostenpflichtiger Dienst oder Actions-Lauf. Veröffentlichung/Installation bleiben gesondert freizugeben. APK, echte lokale Modellinferenz und physischer Gerätetest sind NOT_RUN. S01-, GLB-/GPU-/Sprach- und M2.9-Gates werden nicht gesenkt.
+
+Belege: [Manifest und Roharchive](../../evidence/c1-integration-20261104/), [fortsetzbarer Handoff](C1-INTEGRATION-HANDOFF-20261104.md), [unabhängige Reviews](../../evidence/c1-integration-20261104/independent-reviews.json).
 
 ---
 

@@ -1,0 +1,100 @@
+{
+  "sourceCommit": "8873030fdfe23bdd4153f96004b786bff2cddecf",
+  "sourceRemote": "1a5302c504a78a50d5e64ca727f2915529bf2b06",
+  "sourceTree": "d1a1b733ad37f21c155527fa0c9532f56fb1b934",
+  "archive": "host-gates-8873030.tar.xz",
+  "archiveBytes": 632780,
+  "archiveSha256": "a41c6668bd577d42906cb762f6a3dbe99c268b298cfecdb209e3252fb4a1e1a9",
+  "files": [
+    {
+      "path": "node-critical-02.result.json",
+      "bytes": 822,
+      "sha256": "f074bf6833b220f889a6f7a5608a6a759cc79af6015d2047d84265356df58a50"
+    },
+    {
+      "path": "node-critical-02.log",
+      "bytes": 701,
+      "sha256": "2cbe5d40322898cc11287933d7bbe40bb1f2b4082ba64e01192b9c16f36f563d"
+    },
+    {
+      "path": "node-full-01.result.json",
+      "bytes": 820,
+      "sha256": "c1b7d69b2e1fbf85b68d3d266b4de4303503d62656fd52702121d86c5cbee17e"
+    },
+    {
+      "path": "node-full-01.log",
+      "bytes": 700,
+      "sha256": "0038d6ac6871d7b8151a8431a28931d775378ef2878ada4c5a9239277a6f051e"
+    },
+    {
+      "path": "critical-02/android-source-contracts.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "critical-02/android-source-contracts.xml",
+      "bytes": 132037,
+      "sha256": "2a2a0bfe5e51f97596d75c2873616c7597c3e901bb475181b7b642769f043cb5"
+    },
+    {
+      "path": "critical-02/host-checker.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "critical-02/host-checker.xml",
+      "bytes": 694,
+      "sha256": "9c50afed6ee385533fc07172121404658d978143d808582997194a70f3049069"
+    },
+    {
+      "path": "critical-02/process.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "critical-02/process.xml",
+      "bytes": 8512,
+      "sha256": "6b094790f619439279d54c6192d11dc4d92de2ff480c618131287fb9cebbd219"
+    },
+    {
+      "path": "critical-02/report.json",
+      "bytes": 2098108,
+      "sha256": "28dc2f3a43d0e42d56f0e727bd5e6883ff408c42e63ec302d382daff96b23d6d"
+    },
+    {
+      "path": "critical-02/report.md",
+      "bytes": 1014,
+      "sha256": "42d420c3f04423911ae84e620566723f9c108a9dd611db1653b798472b63bca5"
+    },
+    {
+      "path": "critical-02/storage-agent.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "critical-02/storage-agent.xml",
+      "bytes": 7853,
+      "sha256": "df63ea58c1b504fe1867ea411833290dbe93d7a24de0f9615b1eae09c24b380c"
+    },
+    {
+      "path": "full-node-01/full-node.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "full-node-01/full-node.xml",
+      "bytes": 1794492,
+      "sha256": "aa1289fb2317b86bca9d78f3505d192215eca9b92b32acbed21bcae3d253a3e3"
+    },
+    {
+      "path": "full-node-01/report.json",
+      "bytes": 2307289,
+      "sha256": "08721e29a6995b374a821242957748d407963eb3abdbe02f2efde38648ea6102"
+    },
+    {
+      "path": "full-node-01/report.md",
+      "bytes": 871,
+      "sha256": "b3342e7d649fd7a40832ddeef9e42a266ddc30fb27560163dcaedfb4c773ced7"
+    }
+  ]
+}
