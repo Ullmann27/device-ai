@@ -19,12 +19,14 @@ class Video3Pills : PillPresenter {
     private var count = 0
     private val labelFill = Fill.Solid(Colors.cyanSoft)
     private val dimFill = Fill.Solid(Colors.textMuted)
+    private val pillFill = Fill.Solid(STYLE.fill)
+    private val rimFill = Fill.Solid(STYLE.rim)
 
     override fun draw(p: ContinuumPainter, width: Float, centerX: Float, top: Float, elapsedMs: Long,
                       options: List<Video3ActionOption>, opts: Video3Options) {
         count = min(options.size, MAX_PILLS)
         if (count == 0) return
-        val style = JarvisDesign.Type.nav
+        val style = JarvisDesign.Type.pill
         var total = PILL_GAP * (count - 1)
         for (i in 0 until count) total += p.measureText(options[i].label, style) + PILL_PAD * 2f
         var x = centerX - total / 2f
@@ -38,7 +40,9 @@ class Video3Pills : PillPresenter {
                 elapsedMs - JarvisMotion.staggerStart(i, animatorScale = opts.animatorScale), opts.animatorScale)
             p.save(); p.translate(f.dx * PILL_TRAVEL, f.dy)
             val glow = if (opts.glow && o.enabled) JarvisDesign.Glow.SUBTLE else JarvisDesign.Glow.OFF
-            JarvisNeon.glassCard(p, x, top, x + pw, top + PILL_H, PILL_H / 2f, glow)
+            p.fillRoundRect(x, top, x + pw, top + PILL_H, PILL_H / 2f, pillFill, if (o.enabled) 1f else DISABLED_ALPHA)
+            if (glow != JarvisDesign.Glow.OFF) JarvisNeon.rimGlow(p, x, top, x + pw, top + PILL_H, PILL_H / 2f, glow)
+            p.strokeRoundRect(x, top, x + pw, top + PILL_H, PILL_H / 2f, STYLE.rimWidth, rimFill, if (o.enabled) 1f else DISABLED_ALPHA)
             p.drawText(o.label, x + pw / 2f, top + PILL_H * .64f, style, if (o.enabled) labelFill else dimFill,
                 TextAlign.CENTER, if (o.enabled) 1f else DISABLED_ALPHA)
             val reason = o.disabledReason
@@ -60,8 +64,10 @@ class Video3Pills : PillPresenter {
 
     companion object {
         const val MAX_PILLS = 4
-        const val PILL_H = 38f
-        const val PILL_PAD = 18f
+        /** ref5 pill style from #479 (JarvisDesign.Styles.pill), scaled up for a touch target. */
+        val STYLE = JarvisDesign.Styles.pill
+        val PILL_H = STYLE.height * 1.45f
+        val PILL_PAD = STYLE.padH * 1.4f
         const val PILL_GAP = 14f
         const val DISABLED_ALPHA = .5f
         /** Edge travel on top of JarvisMotion's pill distance. */

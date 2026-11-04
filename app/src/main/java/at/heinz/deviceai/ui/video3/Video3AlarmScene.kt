@@ -3,12 +3,10 @@ package at.heinz.deviceai.ui.video3
 import at.heinz.deviceai.ui.Argb
 import at.heinz.deviceai.ui.ContinuumPainter
 import at.heinz.deviceai.ui.Fill
-import at.heinz.deviceai.ui.FontFamily
 import at.heinz.deviceai.ui.JarvisDesign
 import at.heinz.deviceai.ui.JarvisDesign.Colors
 import at.heinz.deviceai.ui.JarvisNeon
 import at.heinz.deviceai.ui.TextAlign
-import at.heinz.deviceai.ui.TextStyle
 import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.cos
@@ -39,8 +37,8 @@ class Video3AlarmScene(
     private val textFill = Fill.Solid(Colors.text)
     private val text2Fill = Fill.Solid(Colors.textSecondary)
     private val mutedFill = Fill.Solid(Colors.textMuted)
-    private val cascadeStyle = TextStyle(FontFamily.TEXT, 500, CASCADE_TEXT_SIZE, 1f)
-    private val titleStyle = TextStyle(FontFamily.DISPLAY, 600, TITLE_SIZE, 1.6f)
+    private val cascadeStyle = JarvisDesign.Type.figure
+    private val titleStyle = JarvisDesign.Type.title
     private val lineStyle = JarvisDesign.Type.body
 
     private var bgW = -1f; private var bgH = -1f
@@ -228,11 +226,9 @@ class Video3AlarmScene(
         const val CASCADE_SPEED_MIN = 160f
         const val CASCADE_SPEED_RANGE = 220f
         const val CASCADE_TAIL = 90f
-        const val CASCADE_TEXT_SIZE = 15f
         const val CASCADE_TEXT_ALPHA = .75f
         const val CASCADE_STREAK_ALPHA = .45f
 
-        const val TITLE_SIZE = 22f
         const val PANEL_H = 118f
         const val PANEL_MAX_W = 560f
     }
