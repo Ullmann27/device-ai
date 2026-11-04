@@ -36,6 +36,7 @@ sealed class CognitiveLoopEvent {
                           val ok: Boolean, val summary: String) : CognitiveLoopEvent()
     data class ResultVerified(override val turnId: String, override val atMillis: Long, override val stepIndex: Int,
                               val passed: Boolean, val reason: String) : CognitiveLoopEvent()
+    /** After [LoopMemoryPort.recordOutcome]; [entryId] stays null because the port returns no id. */
     data class MemoryWritten(override val turnId: String, override val atMillis: Long, override val stepIndex: Int,
                              val entryId: String?) : CognitiveLoopEvent()
     data class AskOwner(override val turnId: String, override val atMillis: Long, override val stepIndex: Int,
@@ -78,8 +79,9 @@ class LoopBudget(val deadlineAtMillis: Long, private val cancelledFlag: () -> Bo
     fun cancelled(): Boolean = cancelledFlag()
 }
 
+/** [recalled] = hits of [LoopMemoryPort.recall] made right before this PLAN step. */
 fun interface LoopPlanner {
-    fun plan(goal: String, history: List<StepRecord>, budget: LoopBudget): PlanOutcome
+    fun plan(goal: String, history: List<StepRecord>, recalled: List<RecallHit>, budget: LoopBudget): PlanOutcome
 }
 
 enum class ToolOutcomeStatus { SUCCEEDED, FAILED, TIMED_OUT, CANCELLED, REJECTED_BY_GATE }
@@ -100,9 +102,19 @@ fun interface ResultVerifier {
     fun verify(goal: String, step: PlannedStep, outcome: ToolOutcome, budget: LoopBudget): Verification
 }
 
-/** Writes one experience entry; returns its entry id or null when nothing was stored. */
-fun interface LoopMemoryWriter {
-    fun write(goal: String, record: StepRecord, budget: LoopBudget): String?
+/**
+ * Local recall hit. Note: at.heinz.deviceai.learning.RecallHit (#371 line) is not on this branch; replace this type
+ * with that one when #371 is merged (same fields).
+ */
+data class RecallHit(val entryId: String, val score: Float, val rank: Int)
+
+/**
+ * Memory port of the loop (implemented by Jarvis Gedächtnis on the #371 line). [recall] runs before every PLAN,
+ * [recordOutcome] after every VERIFY_RESULT. Contract fixed by the chief, 04.11. 10:11.
+ */
+interface LoopMemoryPort {
+    fun recall(goal: String, k: Int): List<RecallHit>
+    fun recordOutcome(turnId: String, stepIndex: Int, toolName: String, ok: Boolean, summary: String)
 }
 
 enum class OwnerDecision { APPROVED, DENIED, TIMEOUT, CANCELLED }
@@ -123,16 +135,17 @@ fun interface OwnerQuestionPort {
     fun ask(turnId: String, question: String, options: List<LoopOption>, budget: LoopBudget): OwnerAnswer
 }
 
-/** Limits in milliseconds of the injected clock. */
-data class LoopLimits(val maxSteps: Int = 8, val stepTimeoutMillis: Long = 60_000, val totalTimeoutMillis: Long = 300_000) {
-    init { require(maxSteps in 1..64 && stepTimeoutMillis in 1..600_000 && totalTimeoutMillis in 1..3_600_000) }
+/** Limits in milliseconds of the injected clock; [recallK] = hits requested per recall. */
+data class LoopLimits(val maxSteps: Int = 8, val stepTimeoutMillis: Long = 60_000, val totalTimeoutMillis: Long = 300_000,
+                      val recallK: Int = 5) {
+    init { require(maxSteps in 1..64 && stepTimeoutMillis in 1..600_000 && totalTimeoutMillis in 1..3_600_000 && recallK in 0..50) }
 }
 
 data class LoopPorts(
     val planner: LoopPlanner,
     val tools: LoopToolPort,
     val verifier: ResultVerifier,
-    val memory: LoopMemoryWriter,
+    val memory: LoopMemoryPort,
     val approval: OwnerApprovalPort,
     val question: OwnerQuestionPort
 )

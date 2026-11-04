@@ -58,7 +58,7 @@ class CognitiveLoop(
                 stepDeadline = minOf(stepStart + limits.stepTimeoutMillis, totalDeadline)
                 checkpoint()
 
-                when (val plan = ports.planner.plan(goal, history.toList(), budget())) {
+                when (val plan = ports.planner.plan(goal, history.toList(), emptyList(), budget())) {
                     is PlanOutcome.Done -> {
                         checkpoint()
                         emit(CognitiveLoopEvent.Finished(turnId, clock(), stepIndex, plan.summary))
@@ -96,9 +96,8 @@ class CognitiveLoop(
                         checkpoint()
                         emit(CognitiveLoopEvent.ResultVerified(turnId, clock(), stepIndex, verification.passed, verification.reason))
                         val record = StepRecord(stepIndex, step, outcome, verification)
-                        val entryId = ports.memory.write(goal, record, budget())
                         checkpoint()
-                        emit(CognitiveLoopEvent.MemoryWritten(turnId, clock(), stepIndex, entryId))
+                        emit(CognitiveLoopEvent.MemoryWritten(turnId, clock(), stepIndex, null))
                         history += record
                         completed++
                     }

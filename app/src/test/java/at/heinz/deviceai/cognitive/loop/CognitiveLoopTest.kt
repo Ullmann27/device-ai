@@ -22,19 +22,27 @@ class CognitiveLoopTest {
         override fun cancel() { cancelled = true }
     }
 
+    private inner class FakeMemory(val hits: List<RecallHit> = emptyList()) : LoopMemoryPort {
+        val log = mutableListOf<String>()
+        override fun recall(goal: String, k: Int): List<RecallHit> { log += "recall:$goal:$k"; return hits }
+        override fun recordOutcome(turnId: String, stepIndex: Int, toolName: String, ok: Boolean, summary: String) {
+            log += "record:$turnId:$stepIndex:$toolName:$ok:$summary"
+        }
+    }
+
     private fun ports(
         planner: LoopPlanner,
         tools: LoopToolPort = FakeTools(),
         approval: OwnerApprovalPort = OwnerApprovalPort { _, _, _, _ -> OwnerDecision.DENIED },
         question: OwnerQuestionPort = OwnerQuestionPort { _, _, _, _ -> OwnerAnswer.NoAnswer },
         verifier: ResultVerifier = ResultVerifier { _, _, o, _ -> Verification(o.ok, if (o.ok) "ok" else "fehlgeschlagen") },
-        memory: LoopMemoryWriter = LoopMemoryWriter { _, r, _ -> "exp-${r.stepIndex}" }
+        memory: LoopMemoryPort = FakeMemory()
     ) = LoopPorts(planner, tools, verifier, memory, approval, question)
 
     private fun loop(p: LoopPorts, limits: LoopLimits = LoopLimits(), extra: List<CognitiveLoopListener> = emptyList()) =
         CognitiveLoop("t1", p, limits, { now }, listOf(CognitiveLoopListener { events += it }) + extra)
 
-    private fun planOnceThenDone(step: PlannedStep) = LoopPlanner { _, history, _ ->
+    private fun planOnceThenDone(step: PlannedStep) = LoopPlanner { _, history, _, _ ->
         if (history.isEmpty()) PlanOutcome.Plan(listOf(step)) else PlanOutcome.Done("fertig")
     }
 
@@ -49,7 +57,7 @@ class CognitiveLoopTest {
             CognitiveLoopEvent.ToolRequested("t1", 1_000, 1, "get_battery_info"),
             CognitiveLoopEvent.ToolResult("t1", 1_000, 1, true, "85 %"),
             CognitiveLoopEvent.ResultVerified("t1", 1_000, 1, true, "ok"),
-            CognitiveLoopEvent.MemoryWritten("t1", 1_000, 1, "exp-1"),
+            CognitiveLoopEvent.MemoryWritten("t1", 1_000, 1, null),
             CognitiveLoopEvent.Finished("t1", 1_000, 2, "fertig")), events)
     }
 
@@ -92,7 +100,7 @@ class CognitiveLoopTest {
     @Test fun failedToolIsVerifiedAndThePlannerSeesItInTheHistory() {
         val seen = mutableListOf<List<StepRecord>>()
         val tools = FakeTools { ToolOutcome(ToolOutcomeStatus.FAILED, "kaputt") }
-        val planner = LoopPlanner { _, h, _ -> seen += h; if (h.isEmpty()) PlanOutcome.Plan(listOf(battery)) else PlanOutcome.Done("aufgegeben") }
+        val planner = LoopPlanner { _, h, _, _ -> seen += h; if (h.isEmpty()) PlanOutcome.Plan(listOf(battery)) else PlanOutcome.Done("aufgegeben") }
         loop(ports(planner, tools)).run("Akku")
         assertEquals(false, seen[1].single().verification!!.passed)
         assertEquals(ToolOutcomeStatus.FAILED, seen[1].single().tool!!.status)
@@ -101,7 +109,7 @@ class CognitiveLoopTest {
 
     @Test fun maxStepsEndsWithBudget() {
         val tools = FakeTools()
-        val outcome = loop(ports({ _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools), LoopLimits(maxSteps = 3)).run("endlos")
+        val outcome = loop(ports({ _, _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools), LoopLimits(maxSteps = 3)).run("endlos")
         assertEquals(3, tools.calls.size)
         assertEquals(LoopOutcome.Aborted(AbortReason.BUDGET, (outcome as LoopOutcome.Aborted).calmNote, 3), outcome)
     }
@@ -118,7 +126,7 @@ class CognitiveLoopTest {
 
     @Test fun portsGetTheStepDeadline() {
         var deadline = -1L
-        val planner = LoopPlanner { _, h, b -> deadline = b.deadlineAtMillis; if (h.isEmpty()) PlanOutcome.Plan(listOf(battery)) else PlanOutcome.Done("ok") }
+        val planner = LoopPlanner { _, h, _, b -> deadline = b.deadlineAtMillis; if (h.isEmpty()) PlanOutcome.Plan(listOf(battery)) else PlanOutcome.Done("ok") }
         loop(ports(planner), LoopLimits(stepTimeoutMillis = 5_000, totalTimeoutMillis = 7_000)).run("Akku")
         assertEquals(1_000L + 5_000, deadline)
         now = 4_000
@@ -128,7 +136,7 @@ class CognitiveLoopTest {
 
     @Test fun totalTimeoutEndsTheLoop() {
         val tools = FakeTools { now += 4_000; ToolOutcome(ToolOutcomeStatus.SUCCEEDED, "ok") }
-        val outcome = loop(ports({ _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools),
+        val outcome = loop(ports({ _, _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools),
             LoopLimits(stepTimeoutMillis = 5_000, totalTimeoutMillis = 10_000)).run("lang")
         assertEquals(AbortReason.TIMEOUT, (outcome as LoopOutcome.Aborted).reason)
         assertTrue(tools.calls.size in 2..3)
@@ -137,7 +145,7 @@ class CognitiveLoopTest {
     @Test fun cancelStopsAtTheNextCheckpointAndCancelsTheTool() {
         lateinit var l: CognitiveLoop
         val tools = FakeTools { l.cancel(); ToolOutcome(ToolOutcomeStatus.SUCCEEDED, "ok") }
-        l = loop(ports({ _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools))
+        l = loop(ports({ _, _, _, _ -> PlanOutcome.Plan(listOf(battery)) }, tools))
         val outcome = l.run("Akku")
         assertEquals(AbortReason.CANCELLED, (outcome as LoopOutcome.Aborted).reason)
         assertTrue(tools.cancelled)
@@ -153,7 +161,7 @@ class CognitiveLoopTest {
 
     @Test fun uncertainPlannerAsksTheOwnerAndUsesTheAnswer() {
         val options = listOf(LoopOption("akku", "Akku"), LoopOption("speicher", "Speicher"))
-        val planner = LoopPlanner { _, h, _ ->
+        val planner = LoopPlanner { _, h, _, _ ->
             when {
                 h.isEmpty() -> PlanOutcome.Uncertain("Was soll ich prüfen?", options)
                 h.size == 1 && h[0].ownerAnswer?.id == "akku" -> PlanOutcome.Plan(listOf(battery))
@@ -169,12 +177,12 @@ class CognitiveLoopTest {
     }
 
     @Test fun unansweredQuestionTimesOutCalmly() {
-        val outcome = loop(ports({ _, _, _ -> PlanOutcome.Uncertain("?", listOf(LoopOption("a", "A"))) })).run("x")
+        val outcome = loop(ports({ _, _, _, _ -> PlanOutcome.Uncertain("?", listOf(LoopOption("a", "A"))) })).run("x")
         assertEquals(AbortReason.TIMEOUT, (outcome as LoopOutcome.Aborted).reason)
     }
 
     @Test fun portErrorsEndCalmlyAndBrokenListenersAreIsolated() {
-        val outcome = loop(ports({ _, _, _ -> error("planner kaputt") }),
+        val outcome = loop(ports({ _, _, _, _ -> error("planner kaputt") }),
             extra = listOf(CognitiveLoopListener { throw IllegalStateException("render kaputt") })).run("x")
         val aborted = outcome as LoopOutcome.Aborted
         assertEquals(AbortReason.ERROR, aborted.reason)
@@ -183,7 +191,7 @@ class CognitiveLoopTest {
     }
 
     @Test fun plannerFailureIsAnErrorNotAnAlarm() {
-        val outcome = loop(ports({ _, _, _ -> PlanOutcome.Failed("Lokales Modell nicht geladen") })).run("x")
+        val outcome = loop(ports({ _, _, _, _ -> PlanOutcome.Failed("Lokales Modell nicht geladen") })).run("x")
         assertEquals(AbortReason.ERROR, (outcome as LoopOutcome.Aborted).reason)
         assertTrue(outcome.calmNote.contains("Lokales Modell nicht geladen"))
     }
@@ -192,5 +200,33 @@ class CognitiveLoopTest {
         val l = loop(ports(planOnceThenDone(battery)))
         l.run("a")
         try { l.run("b"); throw AssertionError("second run allowed") } catch (_: IllegalStateException) { }
+    }
+
+    @Test fun recallComesBeforeEveryPlanAndOutcomeIsRecordedAfterVerify() {
+        val hits = listOf(RecallHit("e7", 0.9f, 1))
+        val memory = FakeMemory(hits)
+        val order = mutableListOf<String>()
+        val seenHits = mutableListOf<List<RecallHit>>()
+        val planner = LoopPlanner { _, h, recalled, _ ->
+            order += "plan"; seenHits += recalled
+            if (h.isEmpty()) PlanOutcome.Plan(listOf(battery)) else PlanOutcome.Done("fertig")
+        }
+        val verifier = ResultVerifier { _, _, o, _ -> order += "verify"; Verification(o.ok, "ok") }
+        val tracking = object : LoopMemoryPort {
+            override fun recall(goal: String, k: Int): List<RecallHit> { order += "recall"; return memory.recall(goal, k) }
+            override fun recordOutcome(turnId: String, stepIndex: Int, toolName: String, ok: Boolean, summary: String) {
+                order += "record"; memory.recordOutcome(turnId, stepIndex, toolName, ok, summary)
+            }
+        }
+        loop(ports(planner, verifier = verifier, memory = tracking), LoopLimits(recallK = 3)).run("Akku")
+        assertEquals(listOf("recall", "plan", "verify", "record", "recall", "plan"), order)
+        assertEquals(listOf(hits, hits), seenHits)
+        assertEquals(listOf("recall:Akku:3", "record:t1:1:get_battery_info:true:85 %", "recall:Akku:3"), memory.log)
+    }
+
+    @Test fun failedToolOutcomeIsRecordedAsNotOk() {
+        val memory = FakeMemory()
+        loop(ports(planOnceThenDone(battery), FakeTools { ToolOutcome(ToolOutcomeStatus.FAILED, "kaputt") }, memory = memory)).run("Akku")
+        assertTrue("record:t1:1:get_battery_info:false:kaputt" in memory.log)
     }
 }
