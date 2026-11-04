@@ -47,3 +47,16 @@ schmal; Sockelring = alte Plattform; HUD-Ring mit zu wenig Segmenten/Ringen.
   MotionLibrary.faceWeights aktiv: im AvatarMorphMapper visemeBlend (70 ms) UND festes 4,6-s-Blinzeln per Flag abschalten
   (nicht löschen), sonst doppelt überblendet/geblinzelt. JawOpen-Logik ist kompatibel.
 - Kopf-Look weiter offen: Faserlinien statt Raster bzw. Bild-Modus mit den ref5-Bildern (siehe oben), keine Arbeit mehr am Raster.
+
+## Übergabe an ChatGPT Astra (Heinz, 04.11.2026 10:11)
+Der Avatar-Kopf (3D und Animation) geht ab jetzt an ChatGPT Astra. Jarvis Avatar baut nichts mehr am Kopf.
+- Code-Stand: Branch `jarvis-grafik/avatar-ref-match` @f7a532a3 (Draft-PR #482), darin #479 @69b76b2f (ref5-Tokens), #481 @17e1db2b (Kern-Verträge) und #489 @e600add5 (Mathematik), alles per Merge.
+- Tests: auf 56fc93c5 liefen `avatar.*`, `ui.Jarvis*` und `*Slot*` mit 62/62 grün. Auf f7a532a3 sind keine Tests gelaufen; seit dem Merge von #489 ist am Code nichts geändert.
+- Vergleichsbild: /workspace/jarvis-design-referenz/kontrolle-3/avatar-kopf.png (links unsere Vorschau mit dem prozeduralen Raster, rechts ref5).
+- ref5-Kopfbilder (selbst generiert, Herkunft geklärt): /workspace/jarvis-grafik/avatar-ref5/ mit `jarvis-kopf-ref5_augen-zu.jpg`, `jarvis-kopf-ref5_augen-offen.jpg` und `ref5-kopf-ausschnitt.png` (nur Ausschnitt der Referenz, NICHT ins Repo). Kopie im Store des Bots Jarvis Avatar unter jarvis-grafik/avatar-ref5/.
+- Nächste Schritte in dieser Reihenfolge:
+  1. Bild-Modus aus den ref5-Bildern (Abschnitt oben).
+  2. LipSyncFaceSource anschließen (`applyTo(pose)` + `blinkAt`/`breath`, oder `weightsAt(timeMs, out)` direkt).
+  3. Wenn MotionLibrary.faceWeights aktiv ist: im AvatarMorphMapper visemeBlend (70 ms) und das feste 4,6-s-Blinzeln abschalten, sonst wird doppelt überblendet und doppelt geblinzelt.
+  4. Kern: CockpitEntered → headIconBurst; register() setzt Kern in AgentActivity.
+- Offen: Herkunft von continuum-avatar.glb (CC0 laut NOTICE, Hash passt nicht).
