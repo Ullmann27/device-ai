@@ -15,7 +15,7 @@ const root=fileURLToPath(new URL('../../',import.meta.url));
 const baselineSource=execFileSync('git',['show',`${base}:${sourcePath}`],{cwd:root,encoding:'utf8',maxBuffer:1_000_000});
 const baseline=await import('data:text/javascript;base64,'+Buffer.from(baselineSource).toString('base64'));
 const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
-const sizes=[0,1,20,100,500],modes=['mixed-priority','ties','scoped'];
+const sizes=[0,1,20,100,500],modes=['mixed-priority','ties','scoped','scoped-no-match'];
 assert.equal(candidate.LIMITS.tasks,500);
 const template=baseline.applyOp(baseline.emptyDocument(0,'benchmark'),{
   op:'propose',actor:'benchmark',at:1,
@@ -25,14 +25,15 @@ const template=baseline.applyOp(baseline.emptyDocument(0,'benchmark'),{
 function makeDocument(size,mode,seed=7){
   let state=seed>>>0;
   const random=()=>{state=(Math.imul(state,1664525)+1013904223)>>>0;return state;};
+  const scoped=mode.startsWith('scoped');
   const tasks=Array.from({length:size},(_,i)=>({
     ...structuredClone(template),id:'task-'+String(i).padStart(3,'0'),
-    state:mode==='scoped'&&i%5===0?'PROPOSED':'READY',
+    state:scoped&&i%5===0?'PROPOSED':'READY',
     priority:mode==='ties'?500:random()%1001,
     createdAt:mode==='ties'?1:1+random()%7,updatedAt:1000,
-    kind:['TEST','REPAIR','INVESTIGATE'][i%3],source:i%3===0?'cli':'owner',
-    attempts:mode==='scoped'&&i%11===0?3:0,
-    dependsOn:mode==='scoped'&&i>0&&i%13===0?['task-000']:[],
+    kind:['TEST','REPAIR','INVESTIGATE'][i%3],source:i%(mode==='scoped-no-match'?3:4)===0?'cli':'owner',
+    attempts:scoped&&i%11===0?3:0,
+    dependsOn:scoped&&i>0&&i%13===0?['task-000']:[],
     subject:i%7===0?null:{base:i%4===0?'old':'head',operation:i%2===0?'OTHER':'ASSERT_NODE_EXPORT'}
   }));
   const doc={...baseline.emptyDocument(1000,'benchmark'),tasks};
@@ -71,6 +72,7 @@ for(const size of sizes)for(const mode of modes)for(const seed of [7,113]){
 
 const metadata={base,sourcePath,baselineSourceSha256:hash(baselineSource),
   candidateSourceSha256:hash(fs.readFileSync(new URL('../../'+sourcePath,import.meta.url))),
+  harnessSha256:hash(fs.readFileSync(fileURLToPath(import.meta.url))),
   node:process.version,v8:process.versions.v8,platform:process.platform,arch:process.arch,
   cpuModel:os.cpus()[0]?.model,cpuCount:os.cpus().length,availableParallelism:os.availableParallelism(),
   parityCases,fixtureSizes:sizes,fixtureModes:modes,device:'host; Android/Fold7 not measured'};
@@ -81,7 +83,7 @@ if(process.argv.includes('--parity-only')){
 }
 
 const rounds=11,warmupIterations=5000,maxLoad=9;
-const filtersFor=mode=>mode==='scoped'?[['TEST'],['owner'],'head',null,'ASSERT_NODE_EXPORT']:[];
+const filtersFor=mode=>mode.startsWith('scoped')?[['TEST'],['owner'],'head',null,'ASSERT_NODE_EXPORT']:[];
 const quantile=(values,q)=>[...values].sort((a,b)=>a-b)[Math.floor((values.length-1)*q)];
 let sink=0;
 function measure(fn,doc,filters,iterations){
@@ -128,13 +130,15 @@ for(const size of sizes)for(const mode of modes){
   const loadAfter=os.loadavg();
   assert.ok(loadAfter[0]<=maxLoad,`host load ${loadAfter[0]} exceeds recorded limit ${maxLoad}`);
   const baselineNs=samples.map(x=>x.baseline),candidateNs=samples.map(x=>x.candidate);
-  results.push({size,mode,iterations,...comparisonCounts(size,mode,filters),
+  results.push({size,mode,iterations,
     baselineMedianNs:quantile(baselineNs,.5),candidateMedianNs:quantile(candidateNs,.5),
     pairedMedianSpeedup:quantile(samples.map(x=>x.baseline/x.candidate),.5),
     baselineP25Ns:quantile(baselineNs,.25),baselineP75Ns:quantile(baselineNs,.75),
     candidateP25Ns:quantile(candidateNs,.25),candidateP75Ns:quantile(candidateNs,.75),
     loadBefore,loadAfter,samples});
 }
+// Keep accessor instrumentation out of the feedback history of every timed case.
+for(const result of results)Object.assign(result,comparisonCounts(result.size,result.mode,filtersFor(result.mode)));
 process.stdout.write(JSON.stringify({...metadata,status:'PASS',startedAt,finishedAt:new Date().toISOString(),
   rounds,warmupIterations,maxLoad,loadStart,loadEnd:os.loadavg(),timingUnit:'ns/selection',
   method:'identical validated fixtures; alternating baseline/candidate order; no IO in timed loop',
