@@ -14,11 +14,13 @@ object JarvisDesign {
      * glass rgba(10,15,26,.6) (#477: opaque navy). ContinuumTheme is left untouched.
      */
     object Colors {
-        val background = Argb.rgb(0x05, 0x09, 0x14)        // #050914 top of page gradient
+        val background = Argb.rgb(0x05, 0x08, 0x14)        // #050814 top of page gradient (VIDEO-ANALYSE; Spec: #050914)
         val backgroundBottom = Argb.rgb(0x0A, 0x11, 0x28)  // #0A1128
         val backgroundHaze = ContinuumTheme.BACKGROUND_GLOW
-        val surface = Argb.of(153, 10, 15, 26)              // rgba(10,15,26,0.6) glass
-        val surfaceLow = Argb.of(153, 6, 10, 20)
+        val surface = Argb.of(128, 0x0A, 0x11, 0x28)        // #0A1128 @50 % glass panel (Review 1)
+        val surfaceLow = Argb.of(128, 0x07, 0x0C, 0x1E)
+        val rim = Argb.of(102, 0x00, 0xFF, 0xFF)            // 1 px cyan rim @40 %
+        val cyanDeep = Argb.rgb(0x00, 0x88, 0xFF)           // #0088FF wireframe gradient end
         val navSurface = Argb.of(170, 8, 12, 24)
         val cyan = Argb.rgb(0x00, 0xFF, 0xFF)               // #00FFFF Neon-Cyan
         val cyanSoft = Argb.rgb(150, 255, 255)
@@ -49,7 +51,8 @@ object JarvisDesign {
 
     /** Spacing / shape tokens (dp). */
     object Metrics {
-        const val radiusCard = ContinuumTheme.CARD_RADIUS
+        const val radiusCard = 14f       // 12–16 dp (VIDEO-ANALYSE)
+        const val backdropBlur = 24f     // dp, RenderEffect blur radius (Wert geschätzt: "starker Blur")
         const val radiusControl = 12f
         const val radiusPill = 999f
         const val gap = ContinuumTheme.CARD_GAP
