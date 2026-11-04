@@ -1,0 +1,73 @@
+{
+  "mergeParents": [
+    "12e66264fa5fb5b4cc7cdb7100206ad9af68a3d2",
+    "1342e5076b38a7a72cd18a394d12586829e9b54b"
+  ],
+  "initialSourceParents": {
+    "avatarRecovery": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+    "memory": "8a98ea4d10126041b1a43cb7623c0f324ab18ec1",
+    "commonAncestor": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d"
+  },
+  "mergeConflicts": [],
+  "sourceFiles": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "sha256": "63fb9aa044608cc22fdb794f08708bf9188c7e2d5419db28310bc20e1677caa4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "sha256": "b2fb053666fc6a056ce8d5351ed01f76cc8514ca59a231b2667c1ecec116711a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumMemoryRecallPublisher.kt",
+      "sha256": "1ac591de0b32b4d1d19d7e25d7fa169e9cc292cb1b0c4ca536a6f36a2b61a423"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventFactoryIntegrationTest.kt",
+      "sha256": "80233e8b1ae0fa984228fdccccb2e8a5ec75ebcb754bc66139a77ef471b49af7"
+    },
+    {
+      "path": "tools/memory-brain-review/activity-memory-wiring.test.mjs",
+      "sha256": "f8a845561557ed563f8b592f0f4d39cbe5ff4d83fd584b2532e7d05ece9045e7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "sha256": "1a6df4ba2890c13397b4f0224ef5fa2030010371dd4e5bb1b40e0d3beb3d068d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/RetrievalCalculationSourceTest.kt",
+      "sha256": "14ab4c88d782150f611917a31a01218d110f09ac0b05a2df25fa036614953aef"
+    }
+  ],
+  "hookJvmReceiptSourceHashesStillMatch": true,
+  "finalActivitySourceContract": {
+    "tests": 3,
+    "failures": 0,
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tools/memory-brain-review/activity-memory-wiring.test.mjs"
+    ]
+  },
+  "combinedKotlinAndroidGate": "NOT_RUN_BY_INTEGRATION_AGENT",
+  "apkBuild": "NOT_RUN",
+  "signing": "NOT_RUN",
+  "publication": "NOT_PUSHED",
+  "previousMergeParents": [
+    "7fa0b55119c917e6394a67d40a631fcc43ebd8ff",
+    "bfc427c6d76f08bbe56513c330342be3be997900"
+  ],
+  "subsequentMemoryInput": "1342e5076b38a7a72cd18a394d12586829e9b54b",
+  "subsequentMergeConflicts": [],
+  "subsequentMergeProductionChanges": false,
+  "finalHookSourceHashesStillMatch": true
+}

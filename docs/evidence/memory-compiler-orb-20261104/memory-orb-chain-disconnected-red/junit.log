@@ -1,0 +1,29 @@
+JUnit version 4.13.2
+..E.E.E.....
+Time: 0.183
+There were 3 failures:
+1) omittedMemoryGroupClearsThePreviousRecallLightThroughTheSameProductionPath(at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest.omittedMemoryGroupClearsThePreviousRecallLightThroughTheSameProductionPath(CompiledMemoryOrbIntegrationTest.kt:74)
+2) includedPrivateSafeContextReachesTheRealOrbOnlyAfterMainThreadFlush(at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest.includedPrivateSafeContextReachesTheRealOrbOnlyAfterMainThreadFlush(CompiledMemoryOrbIntegrationTest.kt:44)
+3) replacingTheScreenDropsItsQueuedRecallWithoutDisconnectingTheReplacement(at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest)
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest.replacingTheScreenDropsItsQueuedRecallWithoutDisconnectingTheReplacement(CompiledMemoryOrbIntegrationTest.kt:114)
+
+FAILURES!!!
+Tests run: 9,  Failures: 3
+

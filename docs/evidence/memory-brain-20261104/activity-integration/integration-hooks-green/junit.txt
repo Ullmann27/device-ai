@@ -1,0 +1,10 @@
+JUnit version 4.13.2
+..............Nov 04, 2026 11:45:37 AM at.heinz.deviceai.learning.ContinuumMemoryEventHub runWorker
+WARNING: memory event listener failed: IllegalStateException
+Nov 04, 2026 11:45:37 AM at.heinz.deviceai.learning.ContinuumMemoryEventHub runWorker
+WARNING: memory event listener failed: IllegalStateException
+
+Time: 0.307
+
+OK (14 tests)
+

@@ -1,0 +1,257 @@
+TAP version 13
+# Subtest: Activity defers its app-directory recall publisher until the compiler is first used
+not ok 1 - Activity defers its app-directory recall publisher until the compiler is first used
+  ---
+  duration_ms: 2.915999
+  type: 'test'
+  location: '/workspace/scratch/624aeb26d481/agent-memory-avatar-integration/tools/memory-brain-review/activity-memory-wiring.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: 'The Activity compiler must be lazy; filesDir is unavailable during Activity construction'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/624aeb26d481/agent-memory-avatar-integration/tools/memory-brain-review/activity-memory-wiring.test.mjs:11:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: Activity keeps the per-app subscription and detaches queued mapper work before closing upstream
+ok 2 - Activity keeps the per-app subscription and detaches queued mapper work before closing upstream
+  ---
+  duration_ms: 0.623549
+  type: 'test'
+  ...
+# Subtest: the public app factory delegates to the guarded adapter and preserves the absent legacy lookup
+not ok 3 - the public app factory delegates to the guarded adapter and preserves the absent legacy lookup
+  ---
+  duration_ms: 1.208302
+  type: 'test'
+  location: '/workspace/scratch/624aeb26d481/agent-memory-avatar-integration/tools/memory-brain-review/activity-memory-wiring.test.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /fun forApp\(appDirectory: java\.io\.File\): MemoryEventSource =\s*ContinuumMemoryEventSource\.forApp\(appDirectory\)/. Input:
+    
+    'package at.heinz.deviceai.cockpit\n' +
+      '\n' +
+      '/**\n' +
+      ' * Kern-side adapter for memory events (owner of the interface: Jarvis Kern). Deliberately primitive so the\n' +
+      " * cockpit does not depend on Jarvis Gedächtnis' types before they exist. The agreed source signature is\n" +
+      ' * `ContinuumMemoryEvents.forApp(appDirectory).addListener(ContinuumMemoryEventListener): AutoCloseable`\n' +
+      ' * (docs/ARCHITEKTUR-JARVIS.md); its bridge only calls the [MemoryEventSink] methods below.\n' +
+      ' */\n' +
+      'interface MemoryEventSink {\n' +
+      '    fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long)\n' +
+      '    fun memoryStored(entryId: String, status: String, atEpochMs: Long)\n' +
+      '    fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long)\n' +
+      '}\n' +
+      '\n' +
+      'fun interface MemoryEventSource {\n' +
+      '    fun subscribe(sink: MemoryEventSink): AutoCloseable\n' +
+      '}\n' +
+      '\n' +
+      'object MemoryEventSources {\n' +
+      '    const val MISSING = "Quelle fehlt bis ContinuumMemoryEvents (#371-Linie)"\n' +
+      '    /**\n' +
+      '     * Legacy unscoped lookup remains absent: the application directory must be supplied explicitly.\n' +
+      '     * Use [forApp] after the compatible segmented-ledger recovery has passed its safety gate.\n' +
+      '     */\n' +
+      '    @Deprecated("Use forApp(appDirectory) to bind the existing per-application event hub")\n' +
+      '    val production: MemoryEventSource? = null\n' +
+      '\n' +
+      '    /** IDs, states and measured scores from the real ledger/retriever. Subscribing invents no initial activity. */\n' +
+      '    fun forApp(appDirectory: java.io.File): MemoryEventSource = MemoryEventSource { sink ->\n' +
+      '        at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(appDirectory).addListener { event ->\n' +
+      '            when (event) {\n' +
+      '                is at.heinz.deviceai.learning.DocumentLearned ->\n' +
+      '                    sink.documentLearned(event.docId, event.kind, event.entriesAdded, event.atEpochMs)\n' +
+      '                is at.heinz.deviceai.learning.MemoryStored ->\n' +
+      '                    sink.memoryStored(event.entryId, event.status.name, event.atEpochMs)\n' +
+      '                is at.heinz.deviceai.learning.RecallHits ->\n' +
+      '                    sink.recallHits(event.queryHash, event.hits.size,\n' +
+      '                        event.hits.minByOrNull { it.rank }?.score, event.atEpochMs)\n' +
+      '            }\n' +
+      '        }\n' +
+      '    }\n' +
+      '}\n' +
+      '\n' +
+      '/**\n' +
+      ' * Maps sink calls to [CockpitAnimationEvent]s. The memory hub delivers on its own background thread with an\n' +
+      ' * bounded queue, so the callbacks stay trivial: they only swap atomic "latest" values / counters and schedule at\n' +
+      ' * most one main-thread flush per [minIntervalMs]. All bus work happens in the flush on the main thread\n' +
+      ' * ([postDelayed] = Handler(mainLooper)::postDelayed on Android).\n' +
+      ' */\n' +
+      'class MemoryEventMapper(\n' +
+      '    private val bus: CockpitAnimationBus,\n' +
+      '    private val minIntervalMs: Long = 100L,\n' +
+      '    private val postDelayed: (Long, Runnable) -> Unit,\n' +
+      ') : MemoryEventSink {\n' +
+      '    private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()\n' +
+      '    private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()\n' +
+      '    private val storedCount = java.util.concurrent.atomic.AtomicInteger()\n' +
+      '    private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()\n' +
+      '    private val scheduled = java.util.concurrent.atomic.AtomicBoolean()\n' +
+      '    private val detached = java.util.concurrent.atomic.AtomicBoolean()\n' +
+      '\n' +
+      '    /** After detach, a straggler event from the hub (one may arrive after close()) is ignored. */\n' +
+      '    fun detach() = detached.set(true)\n' +
+      '\n' +
+      '    override fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long) {\n' +
+      '        if (docId.isBlank()) return\n' +
+      '        document.set(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind, entriesAdded.coerceAtLeast(0)))\n' +
+      '        schedule()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {\n' +
+      '        if (entryId.isBlank()) return\n' +
+      '        stored.set(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))\n' +
+      '        storedCount.incrementAndGet()\n' +
+      '        schedule()\n' +
+      '    }\n' +
+      '\n' +
+      '    override fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long) {\n' +
+      '        recall.set(CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash, count.coerceAtLeast(0),\n' +
+      '            topScore.takeIf { count > 0 }))\n' +
+      '        schedule()\n' +
+      '    }\n' +
+      '\n' +
+      '    private fun schedule() {\n' +
+      '        if (detached.get()) return\n' +
+      '        if (scheduled.compareAndSet(false, true)) postDelayed(minIntervalMs, Runnable { flush() })\n' +
+      '    }\n' +
+      '\n' +
+      '    /** Main thread: emits the coalesced latest state (document, writes with count, recall) in that order. */\n' +
+      '    private fun flush() {\n' +
+      '        scheduled.set(false)\n' +
+      '        if (detached.get()) return\n' +
+      '        document.getAndSet(null)?.let(bus::emit)\n' +
+      '        val writes = storedCount.getAndSet(0)\n' +
+      '        stored.getAndSet(null)?.let { bus.emit(it.copy(count = writes.coerceAtLeast(1))) }\n' +
+      '        recall.getAndSet(null)?.let(bus::emit)\n' +
+      '    }\n' +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    package at.heinz.deviceai.cockpit
+    
+    /**
+     * Kern-side adapter for memory events (owner of the interface: Jarvis Kern). Deliberately primitive so the
+     * cockpit does not depend on Jarvis Gedächtnis' types before they exist. The agreed source signature is
+     * `ContinuumMemoryEvents.forApp(appDirectory).addListener(ContinuumMemoryEventListener): AutoCloseable`
+     * (docs/ARCHITEKTUR-JARVIS.md); its bridge only calls the [MemoryEventSink] methods below.
+     */
+    interface MemoryEventSink {
+        fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long)
+        fun memoryStored(entryId: String, status: String, atEpochMs: Long)
+        fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long)
+    }
+    
+    fun interface MemoryEventSource {
+        fun subscribe(sink: MemoryEventSink): AutoCloseable
+    }
+    
+    object MemoryEventSources {
+        const val MISSING = "Quelle fehlt bis ContinuumMemoryEvents (#371-Linie)"
+        /**
+         * Legacy unscoped lookup remains absent: the application directory must be supplied explicitly.
+         * Use [forApp] after the compatible segmented-ledger recovery has passed its safety gate.
+         */
+        @Deprecated("Use forApp(appDirectory) to bind the existing per-application event hub")
+        val production: MemoryEventSource? = null
+    
+        /** IDs, states and measured scores from the real ledger/retriever. Subscribing invents no initial activity. */
+        fun forApp(appDirectory: java.io.File): MemoryEventSource = MemoryEventSource { sink ->
+            at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(appDirectory).addListener { event ->
+                when (event) {
+                    is at.heinz.deviceai.learning.DocumentLearned ->
+                        sink.documentLearned(event.docId, event.kind, event.entriesAdded, event.atEpochMs)
+                    is at.heinz.deviceai.learning.MemoryStored ->
+                        sink.memoryStored(event.entryId, event.status.name, event.atEpochMs)
+                    is at.heinz.deviceai.learning.RecallHits ->
+                        sink.recallHits(event.queryHash, event.hits.size,
+                            event.hits.minByOrNull { it.rank }?.score, event.atEpochMs)
+                }
+            }
+        }
+    }
+    
+    /**
+     * Maps sink calls to [CockpitAnimationEvent]s. The memory hub delivers on its own background thread with an
+     * bounded queue, so the callbacks stay trivial: they only swap atomic "latest" values / counters and schedule at
+     * most one main-thread flush per [minIntervalMs]. All bus work happens in the flush on the main thread
+     * ([postDelayed] = Handler(mainLooper)::postDelayed on Android).
+     */
+    class MemoryEventMapper(
+        private val bus: CockpitAnimationBus,
+        private val minIntervalMs: Long = 100L,
+        private val postDelayed: (Long, Runnable) -> Unit,
+    ) : MemoryEventSink {
+        private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()
+        private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()
+        private val storedCount = java.util.concurrent.atomic.AtomicInteger()
+        private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()
+        private val scheduled = java.util.concurrent.atomic.AtomicBoolean()
+        private val detached = java.util.concurrent.atomic.AtomicBoolean()
+    
+        /** After detach, a straggler event from the hub (one may arrive after close()) is ignored. */
+        fun detach() = detached.set(true)
+    
+        override fun documentLearned(docId: String, kind: String, entriesAdded: Int, atEpochMs: Long) {
+            if (docId.isBlank()) return
+            document.set(CockpitAnimationEvent.DocumentLearned(MEMORY_TURN, atEpochMs, docId, kind, entriesAdded.coerceAtLeast(0)))
+            schedule()
+        }
+    
+        override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {
+            if (entryId.isBlank()) return
+            stored.set(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))
+            storedCount.incrementAndGet()
+            schedule()
+        }
+    
+        override fun recallHits(queryHash: String, count: Int, topScore: Float?, atEpochMs: Long) {
+            recall.set(CockpitAnimationEvent.RecallHits(MEMORY_TURN, atEpochMs, queryHash, count.coerceAtLeast(0),
+                topScore.takeIf { count > 0 }))
+            schedule()
+        }
+    
+        private fun schedule() {
+            if (detached.get()) return
+            if (scheduled.compareAndSet(false, true)) postDelayed(minIntervalMs, Runnable { flush() })
+        }
+    
+        /** Main thread: emits the coalesced latest state (document, writes with count, recall) in that order. */
+        private fun flush() {
+            scheduled.set(false)
+            if (detached.get()) return
+            document.getAndSet(null)?.let(bus::emit)
+            val writes = storedCount.getAndSet(0)
+            stored.getAndSet(null)?.let { bus.emit(it.copy(count = writes.coerceAtLeast(1))) }
+            recall.getAndSet(null)?.let(bus::emit)
+        }
+    }
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/624aeb26d481/agent-memory-avatar-integration/tools/memory-brain-review/activity-memory-wiring.test.mjs:31:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 130.251142

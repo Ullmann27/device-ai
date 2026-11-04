@@ -1,0 +1,20 @@
+JUnit version 4.13.2
+.E.E
+Time: 0.111
+There were 2 failures:
+1) closingAppFactorySubscriptionSuppressesAnAlreadyCapturedHubListener(at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest)
+java.lang.AssertionError: A captured callback must not revive a closed screen subscription
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest.closingAppFactorySubscriptionSuppressesAnAlreadyCapturedHubListener(MemoryEventFactoryIntegrationTest.kt:50)
+2) appFactoryRejectsRawTextMetadataButDeliversValidStorageEvents(at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest)
+java.lang.AssertionError: expected:<[stored:safe-entry:CONFIRMED]> but was:<[document:synthetic private document text:PDF, stored:synthetic private entry text:CONFIRMED, stored:safe-entry:CONFIRMED]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest.appFactoryRejectsRawTextMetadataButDeliversValidStorageEvents(MemoryEventFactoryIntegrationTest.kt:31)
+
+FAILURES!!!
+Tests run: 2,  Failures: 2
+

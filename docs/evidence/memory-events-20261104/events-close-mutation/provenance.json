@@ -1,0 +1,13 @@
+{
+  "kind": "negative_control_not_production",
+  "mutation": "Disable serialization of sink delivery against close while retaining closed flag",
+  "original_sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806",
+  "mutant_sha256": "fb429d80475cec4ac0489fe081365af1ad6b1f9ae5b419d4ba5f5a700c2d0b6f",
+  "compile_exit": 0,
+  "junit_exit": 1,
+  "tests": [
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest",
+    "at.heinz.deviceai.cockpit.MemoryEventSourceTest",
+    "at.heinz.deviceai.learning.ContinuumMemoryEventQueueTest"
+  ]
+}

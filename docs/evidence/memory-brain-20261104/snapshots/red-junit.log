@@ -1,0 +1,42 @@
+JUnit version 4.13.2
+.E.E.E.E..E
+Time: 0.092
+There were 5 failures:
+1) mutatingAGetResultCannotChangeTheStoredTagsParentsOrEvidence(at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest)
+java.lang.AssertionError: expected:<MemoryRecord(id=memory-1, type=SEMANTIC, content=Maren besucht den Hafen., provenance=USER_PROVIDED, confidence=0.9, createdAt=1, updatedAt=2, tags=[Hafen, Besuch], parentIds=[parent-1, parent-2], sourceReference=null, validationState=VERIFIED, privacyClass=PRIVATE, validationEvidenceReferences=[proof-1, proof-2])> but was:<MemoryRecord(id=memory-1, type=SEMANTIC, content=Maren besucht den Hafen., provenance=USER_PROVIDED, confidence=0.9, createdAt=1, updatedAt=2, tags=[injected-caller-value, Besuch], parentIds=[injected-caller-value, parent-2], sourceReference=null, validationState=VERIFIED, privacyClass=PRIVATE, validationEvidenceReferences=[injected-caller-value, proof-2])>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.mutatingAGetResultCannotChangeTheStoredTagsParentsOrEvidence(MemoryStoreSnapshotTest.kt:44)
+2) clearingEvidenceThroughAllCannotLeaveAVerifiedRecordWithoutProof(at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest)
+java.lang.AssertionError: expected:<[proof-1, proof-2]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.clearingEvidenceThroughAllCannotLeaveAVerifiedRecordWithoutProof(MemoryStoreSnapshotTest.kt:56)
+3) callerCannotChangeFutureRecallByEditingAReturnedTag(at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.callerCannotChangeFutureRecallByEditingAReturnedTag(MemoryStoreSnapshotTest.kt:64)
+4) mutatingReturnedExperienceCannotChangePastOutcomesOrProvenance(at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest)
+java.lang.AssertionError: expected:<Experience(id=experience-1, taskType=debugging, requestSummary=Repair parser error, memoryIds=[memory-1, memory-2], modelIds=[model-1, model-2], sourceIds=[source-1, source-2], toolIds=[tool-1, tool-2], planSummary=, resultSummary=, failures=[compiler failure, verification failure], retries=0, evaluatorScores={compile=0.25, independent=0.1}, feedback=null, confidenceBefore=0.5, confidenceAfter=0.5, outcome=FAILURE, startedAt=1, completedAt=2, evaluation=Evaluation(success=false, score=0.1, notes=))> but was:<Experience(id=experience-1, taskType=debugging, requestSummary=Repair parser error, memoryIds=[injected-caller-value, memory-2], modelIds=[injected-caller-value, model-2], sourceIds=[injected-caller-value, source-2], toolIds=[injected-caller-value, tool-2], planSummary=, resultSummary=, failures=[injected-caller-value, verification failure], retries=0, evaluatorScores={compile=1.0, independent=0.1}, feedback=null, confidenceBefore=0.5, confidenceAfter=0.5, outcome=FAILURE, startedAt=1, completedAt=2, evaluation=Evaluation(success=false, score=0.1, notes=))>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.mutatingReturnedExperienceCannotChangePastOutcomesOrProvenance(MemoryStoreSnapshotTest.kt:78)
+5) similarResultsCannotCorruptEvaluationScores(at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest)
+java.lang.AssertionError: expected:<{compile=0.25, independent=0.1}> but was:<{compile=NaN, independent=0.1}>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest.similarResultsCannotCorruptEvaluationScores(MemoryStoreSnapshotTest.kt:89)
+
+FAILURES!!!
+Tests run: 6,  Failures: 5
+

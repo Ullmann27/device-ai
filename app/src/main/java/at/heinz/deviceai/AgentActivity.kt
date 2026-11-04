@@ -60,6 +60,7 @@ import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
 import at.heinz.deviceai.cognitive.AiContextCompiler
 import at.heinz.deviceai.cognitive.AiContextInput
 import at.heinz.deviceai.cognitive.AiContextPolicy
+import at.heinz.deviceai.cognitive.ContinuumMemoryRecallPublisher
 import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
 import at.heinz.deviceai.cognitive.CognitiveTurnTrace
 import at.heinz.deviceai.cognitive.TraceStage
@@ -186,9 +187,11 @@ class AgentActivity : Activity() {
     @Volatile private var continuumStore: ContinuumRuntimeStore? = null
     @Volatile private var continuumState: ContinuumRuntimeState? = null
     @Volatile private var continuumStartupNote: String? = null
-    private val contextCompiler = AiContextCompiler(
-        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4, nativeToolCatalog = true)
-    )
+    private val contextCompiler by lazy {
+        AiContextCompiler(
+            AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4, nativeToolCatalog = true)
+        ).withRecallObserver(ContinuumMemoryRecallPublisher(filesDir))
+    }
 
     private lateinit var shizukuBadge: TextView
     private lateinit var cloudBadge: TextView
