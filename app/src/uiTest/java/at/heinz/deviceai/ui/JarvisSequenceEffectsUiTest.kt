@@ -58,6 +58,21 @@ class JarvisSequenceEffectsUiTest {
         assertFalse(fx.isAnimating(5000))
         val empty = frame(fx, "seq-6-cleared", 5000)
         assertFalse(stacked.sameAs(empty))
+        fx.dataFlight(5, 6000)
+        val mid = frame(fx, "seq-7-data-flight-into-orb", 6450)
+        assertTrue(fx.isAnimating(6450))
+        assertFalse(mid.sameAs(empty))
+        assertFalse(fx.isAnimating(9000))
+        // brain orb with lightning neurons (existing orb renderer), thinking state
+        val orb = ContinuumHologramRenderer().apply { geometry = ContinuumHologramRenderer.Geometry.PHONE }
+        val d = 2f
+        val a = Bitmap.createBitmap(824, 614, Bitmap.Config.ARGB_8888); val c = Canvas(a)
+        val p = AndroidContinuumPainter(activity.assets); p.begin(c); c.scale(d, d)
+        orb.layout(412f, 307f)
+        orb.draw(p, ContinuumHologramRenderer.Frame.still(ContinuumHologramRenderer.Mode.THINKING, phase = 1.2f))
+        System.getProperty("continuum.ui.evidenceDir")?.let { path ->
+            java.io.File(path, "orb-lightning-thinking.png").outputStream().use { a.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
         assertFalse("invalid ids are refused", fx.card("bad id with spaces", JarvisSequenceEffects.Kind.INFO, "x", null, 5100))
     }
 }

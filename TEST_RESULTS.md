@@ -26,3 +26,8 @@ New / affected tests, all green:
 - AvatarNativeRegressionTest 4/4, JarvisShellLayoutTest 5/5, cockpit.* green
 
 Not verified: Filament/GPU rendering, physical phone/Fold7, real TTS timing. Previews are host Android Canvas (Robolectric), not device screenshots.
+
+## Step 3 (brain orb lightning + Muster E data flight) – rerun
+`--tests 'at.heinz.deviceai.ui.*' 'avatar.*' 'cockpit.*' ContinuumAvatarNativeUiTest ContinuumHologramMotionUiTest`:
+only the same 4 pre-existing failures; JarvisSequenceEffectsUiTest (now incl. data flight + orb lightning render) green.
+JarvisMotion/JarvisNeon/JarvisDesign taken unchanged from #479 tip c617e1ab (file checkout, no edits).

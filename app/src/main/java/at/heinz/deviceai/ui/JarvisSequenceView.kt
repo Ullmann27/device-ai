@@ -54,7 +54,11 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
         when (event) {
-            is CockpitAnimationEvent.ActionStarted -> step(key("a.${event.action.name}"), event.detail)
+            is CockpitAnimationEvent.ActionStarted -> {
+                step(key("a.${event.action.name}"), event.detail)
+                if (event.action == at.heinz.deviceai.cockpit.CockpitAction.RESEARCH ||
+                    event.action == at.heinz.deviceai.cockpit.CockpitAction.LEARN) { effects.dataFlight(5, clock()); kick() }
+            }
             is CockpitAnimationEvent.ProcessTimeline -> for (s in event.steps) {
                 val id = key("s.${s.key}")
                 val old = stepStates[id]

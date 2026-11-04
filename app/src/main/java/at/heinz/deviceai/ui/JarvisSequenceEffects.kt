@@ -31,6 +31,17 @@ class JarvisSequenceEffects {
     private class Command(val text: String, val at: Long)
 
     private val cards = ArrayList<Card>(MAX_CARDS + 2)
+    private var flightAt = -1L
+    private var flightCount = 0
+
+    /** Brain-orb target of the data flight, as fractions of the overlay (default: hub). Set to the real orb centre. */
+    var orbTargetX = .5f
+    var orbTargetY = .30f
+
+    /** Muster E: [count] document icons fly from the left on a glowing path INTO the brain orb (real reads only). */
+    fun dataFlight(count: Int, nowMillis: Long) {
+        flightCount = count.coerceIn(1, MAX_FLIGHT); flightAt = nowMillis; lastNow = nowMillis
+    }
     private var command: Command? = null
     private var lastNow = 0L
     private var serial = 0
@@ -69,10 +80,11 @@ class JarvisSequenceEffects {
 
     fun dismissAll(nowMillis: Long) { for (c in cards) if (c.leavingAt < 0) c.leavingAt = nowMillis }
 
-    fun clear() { cards.clear(); command = null }
+    fun clear() { cards.clear(); command = null; flightAt = -1L }
 
     /** True while something moves; the host may stop invalidating when false. */
     fun isAnimating(nowMillis: Long): Boolean {
+        if (flightAt >= 0 && nowMillis - flightAt < flightDuration()) return true
         command?.let { if (nowMillis - it.at < COMMAND_MS) return true }
         return cards.any { nowMillis - it.at < FLY_MS + 200 || it.leavingAt >= 0 || it.live ||
             nowMillis - it.outcomeAt < 500 }
@@ -87,6 +99,7 @@ class JarvisSequenceEffects {
         if (command != null && now - command!!.at > COMMAND_MS) command = null
         val hubX = width / 2f; val hubY = height * .30f
         drawCommand(p, width, height, hubX, hubY, now)
+        drawFlight(p, width, height, now)
         val cw = min(width - 32f, 340f); val ch = 58f; val gap = 10f
         var slot = 0
         for (c in cards) {
@@ -208,13 +221,55 @@ class JarvisSequenceEffects {
         }
     }
 
+    private fun flightDuration() = FLIGHT_MS + (flightCount - 1) * JarvisMotion.Durations.STAGGER + 300L
+
+    private fun drawFlight(p: ContinuumPainter, w: Float, h: Float, now: Long) {
+        if (flightAt < 0) return
+        val elapsed = now - flightAt
+        if (elapsed >= flightDuration()) { flightAt = -1L; return }
+        val tx = w * orbTargetX; val ty = h * orbTargetY
+        for (i in 0 until flightCount) {
+            val sx = -12f; val sy = h * (.18f + .5f * ((i * .618034f) % 1f))
+            val cx = w * .25f; val cy = sy - h * .12f            // control point: arc upwards
+            val t = ((elapsed - i * JarvisMotion.Durations.STAGGER).toFloat() / FLIGHT_MS).coerceIn(0f, 1f)
+            if (t <= 0f) continue
+            val e = JarvisMotion.Easing.easeInOutCubic(t)
+            fun bx(u: Float) = (1 - u) * (1 - u) * sx + 2 * (1 - u) * u * cx + u * u * tx
+            fun by(u: Float) = (1 - u) * (1 - u) * sy + 2 * (1 - u) * u * cy + u * u * ty
+            // glowing track (drawn behind the icon, fades once the icon is absorbed)
+            var px = bx(0f); var py = by(0f)
+            if (t < 1f) for (k in 1..16) {
+                val u = e * k / 16f
+                val nx = bx(u); val ny = by(u)
+                JarvisNeon.line(p, px, py, nx, ny, if (i % 2 == 0) JarvisDesign.Colors.cyan else JarvisDesign.Colors.violet,
+                    .8f, JarvisDesign.Glow.SUBTLE)
+                px = nx; py = ny
+            }
+            if (t < 1f) {
+                val x = bx(e); val y = by(e); val s = 1f - .65f * e    // shrinks as it enters the orb
+                p.save(); p.scale(s, s, x, y)
+                p.fillRoundRect(x - 8f, y - 10f, x + 8f, y + 10f, 2f, Fill.Solid(JarvisDesign.Colors.surface), .9f)
+                p.strokeRoundRect(x - 8f, y - 10f, x + 8f, y + 10f, 2f, 1.2f, Fill.Solid(JarvisDesign.Colors.cyan))
+                for (l in 0..2) p.drawLine(x - 4.5f, y - 4f + l * 4f, x + 4.5f, y - 4f + l * 4f, .9f, Fill.Solid(JarvisDesign.Colors.cyan))
+                p.restore()
+            } else {
+                val k = ((elapsed - i * JarvisMotion.Durations.STAGGER - FLIGHT_MS) / 300f).coerceIn(0f, 1f)
+                p.setAdditive(true)
+                JarvisNeon.halo(p, tx, ty, 18f + 22f * k, JarvisDesign.Colors.cyan, .5f * (1f - k))
+                p.setAdditive(false)
+            }
+        }
+    }
+
     private fun backOut(t: Float): Float { val s = 1.7f; val u = t - 1f; return 1f + u * u * ((s + 1f) * u + s) }
     private fun clip(s: String, max: Int) = if (s.length <= max) s else s.take(max - 1) + "…"
     private fun validId(id: String) = id.length in 1..96 && id.all { it.isLetterOrDigit() && it.code < 128 || it in "._:-" }
 
     companion object {
         const val MAX_CARDS = 4
-        const val FLY_MS = 560L
+        const val MAX_FLIGHT = 8
+        const val FLIGHT_MS = 900L
+        const val FLY_MS = JarvisMotion.Durations.PANEL_FLY_IN
         const val LEAVE_MS = 380L
         const val COMMAND_MS = 1100L
     }
