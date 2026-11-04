@@ -8,7 +8,7 @@ Dieser Abschnitt setzt den direkten Besitzerauftrag **CONTINUUM C1 — INTEGRATI
 - Gewählte Eingangsbasis: #513 `28b228698aef8c52e46c72b71fdd5e1915d6e76c`, vollständiger Baum `e52acc146e66ae66a95429da2fb0f34242ad1791`.
 - Vorhandener vollständiger lokaler Quellencheckpoint: `2d5ce59b786f427eacb394484d81796568bb87b4`, identischer vollständiger Baum. Unterschiedliche Commit-Identitäten werden nicht gleichgesetzt.
 - #512 `f9267a3743a87a77bf6421011c014b2ca2d6b0d6` und #506 `8abea828833d8833d40e3d3d36feaa6d3685b82e` sind Herkunft und Vergleichsanker. Neuere #513-Arbeit wird erhalten.
-- Status: **SOURCE_REVIEW / C1_TESTS_NOT_RUN**. Historische 305/352-Testzahlen sind Autorenbelege, keine aktuelle C1-Abnahme.
+- Status: **ECHO_TARGETED_HOST_PASS / INDEPENDENT_REVIEW_PENDING**. Eigener 52-Test-Lauf auf vier exakt übernommenen #515-Blobs; Gesamt-/Androidabnahme noch NOT_RUN. Historische 305/352-Testzahlen sind Autorenbelege, keine aktuelle C1-Abnahme.
 - Exaktes Eingangsmanifest: [intake-manifest.json](../../evidence/c1-integration-20261104/intake-manifest.json).
 - Fortsetzbarer Ablauf: [C1-INTEGRATION-HANDOFF-20261104.md](C1-INTEGRATION-HANDOFF-20261104.md).
 
@@ -17,7 +17,7 @@ Dieser Abschnitt setzt den direkten Besitzerauftrag **CONTINUUM C1 — INTEGRATI
 | Task-ID | Eigentümer / Einbauer | Quellen / Pfade | Status und Abhängigkeit |
 | --- | --- | --- | --- |
 | C1-SOURCE-001 | C1 mit Unteragent source_audit | #491/#506/#512/#513; unveränderliche Quellen | RUNNING; Quellen-/Baumidentität, Aufrufer und offene Widersprüche prüfen |
-| C1-INTEGRATE-001 | ausschließlich C1 | #515 `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`; coding-orchestrator.mjs, coding-service-worker.mjs, coding-service-reader.mjs und fokussierte Regression | QUEUED; genau ein fertiger negativer ECHO-Rückweg, erst unabhängige Minimal-/Abhängigkeitsprüfung und RED |
+| C1-INTEGRATE-001 | ausschließlich C1 | #515 `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`; coding-orchestrator.mjs, coding-service-worker.mjs, coding-service-reader.mjs und fokussierte Regression | TARGETED_HOST_PASS / REVIEW_PENDING; echter RED reproduziert, drei Produktionsdateien + fertige Regression übernommen, 52 fokussierte Tests PASS |
 | C1-REPAIR-REVIEW-001 | C1-Unteragent repair_review | begrenzte #515-Quellen, eigene Testkopie | RUNNING; keine Änderungen am gemeinsamen Kandidaten |
 | C1-APK-AUDIT-001 | C1-Unteragent apk_readiness | Build-/Versions-/Signatur-/Kanalverträge, #475, vorhandene Locks | RUNNING; read-only, kein Build/Signer/Release |
 | C1-C2-REVIEW-001 | externer Partner C2 | späterer gepinnter Gesamtstand + vollständige Logs | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten sind nicht C2 |

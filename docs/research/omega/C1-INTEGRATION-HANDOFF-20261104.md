@@ -69,3 +69,13 @@ Startstatus: vollständiges Node-/Android-Gate, Modelllauf, APK-Bau und Gerätet
 ## Rücknahme und nächster Einstieg
 
 Bei fehlschlagender Slice-Abnahme den ungeänderten #513-Baum als zuletzt übernommenen Kandidaten erhalten. Nur eigenen ECHO-Integrationscommit zurücknehmen, niemals andere Branches zurücksetzen. Negative Belege nicht löschen. Nächster Einstieg: unabhängigen #515-Minimalreview lesen, dann RED gegen die eingefrorene Basis ausführen. Vor Fortsetzung aktuelle PR-Heads und ACKs erneut lesen; keine Tests aus diesem Startcheckpoint als PASS ausgeben.
+
+## C1-INTEGRATE-001 — gezielter Integrationscheckpoint
+
+Der API-kompatible alte Aufrufer reproduzierte den echten Fehler: kanonischer Zustand ABSTAINED, aber error.botReport.status fehlte. Exit 1, eine fachliche Assertion rot; kein Import-/Syntaxfehler. Die unveränderte Regression wurde aus #515 abgeleitet, nur nicht vorhandene unbenutzte neue Imports entfernt und Importpfade auf den isolierten Kandidaten gerichtet. Original und Aufruf sind archiviert.
+
+Danach exakt drei Produktionsdateien und die vorhandene 240-Zeilen-Regressionsdatei aus #515 übernommen; alle vier Git-Blobs stimmen mit 572e12e überein. Branch-Discovery, Scheduler-Preflight und repair-critic wurden nicht übernommen. Die drei vorhandenen Produktionsdateien waren vor Übernahme zu #515s Basis e101e39 bytegleich.
+
+Eigene Prüfungen: 27 bestehende Node-Verträge vorher PASS; einzelne spezifische Regression vorher 0 PASS / 1 FAIL; kombinierter fokussierter Satz nach Übernahme **52 PASS / 0 FAIL / 0 SKIP, Exit 0**. Diese Gruppen überlappen und werden nicht addiert. Vier node --check und git diff --check Exit 0. Befehle, Rohlogs, Quellhashes und Grenzen: docs/evidence/c1-integration-20261104/echo-slice/.
+
+Status: TARGETED_HOST_PASS / INDEPENDENT_REVIEW_PENDING. App-/Scripts-Bäume unverändert. Vollständiges Node-/Android-Gate, Modelllauf, APK und Gerätetest noch NOT_RUN. Keine Releasefreigabe. Nächster Schritt: unabhängigen Patchreview abgleichen, exakten Gesamtstand einfrieren und vollständige Gates unter vorhandenen Ressourcenlocks ausführen.
