@@ -24,15 +24,18 @@ object JarvisNeon {
         p.setAdditive(false)
     }
 
-    /** Glass card per VIDEO-SPEC: rgba(10,15,26,.6) glass, 1 px luminous cyan→violet rim. */
+    /**
+     * Glass card (Review 1): #0A1128 @50 %, 1 px cyan rim @40 %, radius 14 dp.
+     * [nativeGlass] = backdrop blur + rim glow already drawn by JarvisGlassRenderer (Android) → skip fallback glow.
+     */
     fun glassCard(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float,
                   radius: Float = JarvisDesign.Metrics.radiusCard, glow: Glow = Glow.NORMAL,
-                  active: Boolean = false, glowBoost: Float = 1f) {
-        rimGlow(p, l, t, r, b, radius, glow, glowBoost * (if (active) 1.4f else 1f))
+                  active: Boolean = false, glowBoost: Float = 1f, nativeGlass: Boolean = false) {
+        if (!nativeGlass) rimGlow(p, l, t, r, b, radius, glow, glowBoost * (if (active) 1.4f else .6f), Fill.Solid(Colors.cyan))
         p.fillRoundRect(l, t, r, b, radius, Fill.Linear(l, t, r, b, intArrayOf(Colors.surface, Colors.surfaceLow)))
-        p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .4f, radius - 1f,
-            Fill.Linear(0f, t, 0f, t + (b - t) * .4f, intArrayOf(Argb.of(26, 0, 255, 255), 0)))
-        p.strokeRoundRect(l, t, r, b, radius, 1f, edge(l, t, r, b), .95f)
+        p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .35f, radius - 1f,
+            Fill.Linear(0f, t, 0f, t + (b - t) * .35f, intArrayOf(Argb.of(18, 0, 255, 255), 0)))
+        p.strokeRoundRect(l, t, r, b, radius, 1f, Fill.Solid(Colors.rim))
         if (active) p.strokeRoundRect(l, t, r, b, radius, 1.4f, Fill.Solid(Colors.activeWhite), .5f)
     }
 
