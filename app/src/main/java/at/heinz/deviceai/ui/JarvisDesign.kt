@@ -37,6 +37,8 @@ object JarvisDesign {
         val iconCore = Argb.rgb(0xC9, 0xFF, 0xFF)           // tile.icon #C9FFFF
         val glowCore = Argb.rgb(0xAB, 0xF8, 0xFF)           // glow.core #ABF8FF
         val glowHalo = Argb.rgb(0x01, 0x25, 0x39)           // glow.halo #012539
+        val bloomHalo = Argb.rgb(0x08, 0xAF, 0xFF)          // bloom halo hue: #034666 at 4 px off the active rim, normalised to full brightness
+        val dust = Argb.rgb(0x0F, 0x93, 0xC4)               // dust mote core #0F93C4 (only 2 motes in the clean sample – low confidence)
         val violet = Argb.rgb(0x91, 0x4C, 0xEF)             // violet.hair #914CEF
         val violetSoft = Argb.rgb(0x91, 0x6D, 0xC9)         // violet.icon #916DC9
         val violetRim = Argb.rgb(0x9E, 0x5B, 0xD5)          // violet.pillRim #9E5BD5
@@ -114,7 +116,11 @@ object JarvisDesign {
     }
 
     /** Glow strength levels; [Level.OFF] for low-power / reduced-motion. */
+    /** Glow strength levels; SUBTLE and STRONG are GESCHÄTZT (ref5 shows only the NORMAL case). */
     enum class Glow(val haloAlpha: Float, val haloWidth: Float) {
-        OFF(0f, 0f), SUBTLE(.18f, 4f), NORMAL(.32f, 7f), STRONG(.5f, 11f)
+        OFF(0f, 0f), SUBTLE(.05f, 4f), // SUBTLE kept below the measured NORMAL
+        /** ref5 active Home button: halo reaches 12 px = 8 dp; 1 px off the rim it adds ~10 % of the core (0.9 x .08 x 1.4). */
+        NORMAL(.08f, 8f),
+        STRONG(.5f, 11f)
     }
 }

@@ -190,8 +190,8 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
     companion object {
         /**
          * Pixel coordinates. Gradient #050814→#0A1128, blurred cyan grid (48 dp), scanlines, violet haze,
-         * bokeh (cells of 120 dp, ≤1 disc each) and dust (cells of 28 dp, ≤1 mote each, slow upward drift).
-         * Cell sizes, alphas and drift speed GESCHÄTZT.
+         * bokeh (cells of 120 dp, ≤1 disc each, ≤5 % per ref5) and dust (cells of 35 dp ≈ 1 per 1200 dp², r 0.65 dp,
+         * colour #0F93C4 per ref5). Bokeh cell size and drift speed GESCHÄTZT.
          */
         const val BACKGROUND = """
 uniform float2 size; uniform float density; uniform float time;
@@ -217,9 +217,9 @@ half4 main(float2 p) {
   c += half3(0.541, 0.169, 0.886) * half(0.10 * (1.0 - smoothstep(0.0, 0.75, r)));
   float bokeh = particle(p, 120.0 * density, 7.0 * density, 3.0);
   float bokehV = particle(p + 60.0 * density, 120.0 * density, 6.0 * density, 9.0);
-  c += half3(0.0, 1.0, 1.0) * half(bokeh * 0.10) + half3(0.541, 0.169, 0.886) * half(bokehV * 0.10);
+  c += half3(0.0, 1.0, 1.0) * half(bokeh * 0.05) + half3(0.569, 0.298, 0.937) * half(bokehV * 0.05);
   float2 dp = p + float2(0.0, time * 6.0 * density);
-  c += half3(0.75, 1.0, 1.0) * half(particle(dp, 28.0 * density, 1.1 * density, 17.0) * 0.35);
+  c += half3(0.059, 0.576, 0.769) * half(particle(dp, 35.0 * density, 0.65 * density, 17.0) * 2.2);
   c *= half(1.0 - 0.03 * (0.5 + 0.5 * sin(p.y * 3.14159 / (1.5 * density))));
   return half4(c, 1.0);
 }"""

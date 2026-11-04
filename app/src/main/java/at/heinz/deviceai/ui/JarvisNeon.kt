@@ -75,8 +75,11 @@ object JarvisNeon {
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width, fill)
     }
 
-    /** Bloom radius of the blurred light pass (JarvisBloomPass). GESCHÄTZT ("starker Bloom-Hof"). */
-    const val BLOOM_RADIUS_DP = 12f
+    /**
+     * Blur radius of JarvisBloomPass, from ref5: the halo of the active Home button falls off with an e-fold of
+     * ~3.5 px and is gone after 12 px (= 3 sigma ≈ 2.6 dp); RenderEffect radius r gives sigma ≈ 0.57 r + 0.5 px → r ≈ 4 dp.
+     */
+    const val BLOOM_RADIUS_DP = 4f
 
     /**
      * Bloom: shared emissive light (VIDEO-ANALYSE Signatur 4 "starkes Bloom"), also for Jarvis Avatar.
@@ -136,7 +139,8 @@ object JarvisNeon {
     fun component(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, style: ComponentStyle, active: Boolean = false) {
         val radius = minOf(style.radius, (b - t) / 2f)
         val rim = style.rimEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.rim, it)) } ?: Fill.Solid(style.rim)
-        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f, rim)
+        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f,
+            if (active) Fill.Solid(Colors.bloomHalo) else rim)
         p.fillRoundRect(l, t, r, b, radius, style.fillEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.fill, it)) } ?: Fill.Solid(style.fill))
         p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, rim)
         if (active) p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(Colors.glowCore), .6f)

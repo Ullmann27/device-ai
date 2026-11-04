@@ -40,7 +40,7 @@ object JarvisRef5Compare {
         Row(intArrayOf(88, 190, 275, 305)) { p ->
             JarvisNeon.button(p, dp(9), dp(8), dp(177), dp(58), "Home", icon(Icon.HOME), active = true)
         },
-        Row(intArrayOf(1180, 150, 1448, 420)) { p -> JarvisShellRenderer.bokeh(p, dp(268), dp(270)) },
+        Row(intArrayOf(255, 260, 290, 860)) { p -> JarvisShellRenderer.bokeh(p, dp(35), dp(600)) },
     )
 
     @JvmStatic fun main(args: Array<String>) {
