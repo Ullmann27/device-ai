@@ -11,16 +11,22 @@ const composer = fs.readFileSync(path.join(root, 'app/src/main/java/at/heinz/dev
 
 test('unfold reflows from actual laid out root window width, not stale screenWidthDp', () => {
   assert.match(activity, /root\.addOnLayoutChangeListener/);
-  assert.match(activity, /\(right - left\) \/ resources\.displayMetrics\.density/);
-  assert.match(activity, /ContinuumHomeLayout\.needsWindowWidthReflow\(windowWidthDp, measuredWidthDp\)/);
+  assert.match(activity, /\(root\.width - root\.paddingLeft - root\.paddingRight\)\.coerceAtLeast\(1\) \/ resources\.displayMetrics\.density/);
+  assert.match(activity, /val measuredWidthDp = availableWidthDp\(\)/);
+  assert.match(activity, /needsNavigationReflow\(measuredWidthDp\)/);
+  assert.match(activity, /ContinuumHomeLayout\.needsWindowWidthReflow\(windowWidthDp, actualWidthDp\)/);
+  assert.match(activity, /root\.addOnLayoutChangeListener \{[^\n]*-> applyViewportChange\(\) \}/);
   assert.match(activity, /renderedWindowWidthDp = actualWidthDp/);
   assert.match(activity, /setContentView\(buildUi\(\)\)/);
   assert.match(layout, /fun needsWindowWidthReflow\(configuredWidthDp: Float, measuredWidthDp: Float\): Boolean/);
 });
 
 test('reflow preserves the active agent, user draft, conversation views and dashboard telemetry', () => {
-  const code = activity.split('root.addOnLayoutChangeListener')[1]?.split('return root')[0];
+  // The posted rebuild now lives in the helper shared by layout and inset callbacks.
+  const code = activity.split('fun applyViewportChange() {')[1]?.split('\n        if (android.os.Build.VERSION.SDK_INT >= 30) {')[0];
   assert.ok(code, 'size change handler');
+  assert.match(code, /root\.post \{/);
+  assert.match(code, /uiWindowRoot !== root \|\| !root\.isAttachedToWindow \|\| isFinishing \|\| isDestroyed/);
   // The PR #96 composer snapshot supersedes the historical single-string 'draft'.
   assert.match(code, /val composerDraft = if \(::input\.isInitialized\) \{/);
   assert.match(code, /ComposerReflowDraft\(input\.text\.toString\(\), input\.selectionStart,/);
@@ -46,8 +52,11 @@ test('Fold rail and phone navigation are mutually exclusive after a reflow', () 
   assert.match(code, /navigationView = null/);
   assert.match(code, /railView = null/);
   assert.match(code, /if \(wide\) \{/);
-  assert.match(code, /wideContent\.addView\(buildRail\(\)/);
+  assert.match(code, /val rail = buildRail\(\)\.also/);
+  assert.match(code, /wideContent\.addView\(rail, LinearLayout\.LayoutParams/);
+  assert.match(code, /phonePane = null\s+phoneNavHeight = 0/);
   assert.match(code, /phonePane = buildConversationPane\(wide = false\)/);
+  assert.match(code, /ContinuumWorkAreaNavigationSpec\.showBottomBar\(wide, viewport\.compactDashboard\)/);
 });
 
 test('keyboard-only height change does not recreate the Fold dashboard', () => {
@@ -55,4 +64,8 @@ test('keyboard-only height change does not recreate the Fold dashboard', () => {
   assert.ok(code);
   assert.match(code, /abs\(configuredWidthDp - measuredWidthDp\) >= 24f/);
   assert.doesNotMatch(code, /screenHeightDp|configuredHeightDp|measuredHeightDp/);
+  const viewport = activity.split('fun updateAvailableHeight() {')[1]?.split('fun needsNavigationReflow')[0];
+  assert.ok(viewport, 'height-only viewport update');
+  assert.match(viewport, /homeView\?\.updateAvailableViewport\(availableHeightDp\)/);
+  assert.doesNotMatch(viewport, /setContentView|buildUi\(|buildConversationPane\(/);
 });

@@ -22,7 +22,9 @@ Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Boa
 | C1-APK-CHANNEL-004 | C1 / apk_readiness | Gradle-Konfiguration, #475, tatsächlicher Kanalversuch und Toolchain-Dateien | Aktueller Kanal UNVERIFIED: Web-Tool kann URL nicht abrufen; historische41 nicht als aktuell ausgeben |
 | C1-AVATAR-005 | C1, Lieferant #517 | Signed-zero-Patch AvatarIdleMotion + zwei Grenztests aus demselben Archiv | TARGETED_KOTLIN_PASS; echter ArrayIndexOutOfBounds-RED, danach 2/2 GREEN; unabhängiger statischer Review positiv |
 | C1-ROUTING-006 | C1, begrenzter Patch von source_audit | routeBotInput; unbekannte natürliche Select-Formulierungen | PREPARING; bekannte/mehrdeutige/explizite Adressen und Storefehler getrennt erhalten |
-| C1-UI-CONTRACT-007 | C1 / apk_readiness read-only | Vorhandenes UI-Vertragspaket des laufenden Teams #517 | REVIEWING; kein ungeprüftes Gesamtbranch-Merge |
+| C1-UI-CONTRACT-007 | C1 / apk_readiness read-only | Vorhandenes UI-Vertragspaket des laufenden Teams #517 | TARGETED_SOURCE_PASS; eigener48/48-Lauf, unabhängiger statischer Review,17 Autoren-Negativlogs geprüft; keine Geräteabnahme |
+| C1-QA-GUARD-008 | C1; Produktion #505, Tests #517 | Sechste Signing-Umgebungsvariable in bestehendem QA-Guard | PREPARING; statischer Review positiv, eigener RED/GREEN vor Übernahme |
+| C1-AVATAR-FALLBACK-009 | laufendes Team #517; Einbau erst C1 | Bestehender2D-Fallback und virtuelle VSync-Fixture | BLOCKED_PARTIAL; ein Fallback-Fall grün, sieben tatsächliche Avatar-UI-Assertions weiter rot; kein fertiges Gesamtpaket |
 | C1-C2-REVIEW-001 | externer C2 | Exakter gemeinsamer Endstand und Rohbelege | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten ersetzen C2 nicht |
 | C3/C4 Gehirn | bestehende Fachzweige; Einbau C1 | Compiler, Memory-Recall/Bus; bestehende Reservierungen | Neue ACKs nicht beobachtet; M2.9-Hauptchat/Ranking bleibt offen |
 | C5/C6 Autonomie | bestehende Fachzweige; Einbau C1 | kanonischer Backlog/CCC1/Worker, #493/#496/#515 | Neue ACKs nicht beobachtet; kein zweiter Worker |
