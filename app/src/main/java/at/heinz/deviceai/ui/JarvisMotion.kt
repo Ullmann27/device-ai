@@ -152,13 +152,22 @@ object JarvisMotion {
     object Depth {
         enum class Layer(val z: Int) { NEAR(0), MID(1), FAR(2) }
 
-        /** Android View cameraDistance in dp (multiply by density); GESCHÄTZT. */
+        /** Android View cameraDistance in dp (multiply by density). GESCHÄTZT. */
         const val CAMERA_DISTANCE_DP = 1600f
-        const val SCALE_PER_LAYER = .035f      // far panels slightly smaller
-        const val BLUR_PER_LAYER_DP = 1.2f     // depth of field; kept small for legibility
-        const val MAX_TILT_DEG = 4f            // "leichte Neigung", wenige Grad
-        const val DRIFT_PERIOD_MS = 14_000L    // slow camera drift
-        const val DRIFT_DP = 3f                // per layer factor (1 + z)
+        /** Far panels slightly smaller. GESCHÄTZT. */
+        const val SCALE_PER_LAYER = .035f
+        /** Depth of field: far layers blurred, near sharp (Bildbeschrieb 1). Radius GESCHÄTZT, small for legibility. */
+        const val BLUR_PER_LAYER_DP = .75f
+        /** "ganz leichtes Neigen" (Bildbeschrieb 1): a few degrees. GESCHÄTZT. */
+        const val MAX_TILT_DEG = 3f
+        /** Camera drift ±1–2 px (Bildbeschrieb 1): 1.5 dp. */
+        const val DRIFT_DP = 1.5f
+        /** Drift loop period. GESCHÄTZT. */
+        const val DRIFT_PERIOD_MS = 14_000L
+        /** Dolly-in: linear scale 1.00 → 1.03 "über mehrere Sekunden" (Bildbeschrieb 1). */
+        const val DOLLY_SCALE = 1.03f
+        /** Duration of one dolly-in leg; the camera then glides back the same way (ping-pong). GESCHÄTZT. */
+        const val DOLLY_PERIOD_MS = 8_000L
 
         data class State(val scale: Float, val blurDp: Float, val rotationX: Float, val rotationY: Float,
                          val dx: Float, val dy: Float)
@@ -181,19 +190,27 @@ object JarvisMotion {
             return MAX_TILT_DEG * .5f * n
         }
 
-        /** Continuous drift (dx, dy in dp); deeper layers move more (parallax). 0 for reduced motion. */
+        /** Continuous drift (dx, dy in dp) of ±[DRIFT_DP]; deeper layers move less (parallax). 0 for reduced motion. */
         fun drift(timeMs: Long, layer: Layer, animatorScale: Float = 1f): Pair<Float, Float> {
             if (off(animatorScale)) return 0f to 0f
             val ph = 2f * PI.toFloat() * (timeMs % DRIFT_PERIOD_MS) / DRIFT_PERIOD_MS
-            val a = DRIFT_DP * (1 + layer.z)
+            val a = DRIFT_DP / (1 + layer.z)
             return a * sin(ph) to a * .6f * sin(2f * ph + 1f)
         }
 
-        /** Full state; reduced motion keeps depth scale/blur (static composition) but no tilt drift animation. */
+        /** Linear dolly-in camera scale 1.00..1.03 (ping-pong). 1 for reduced motion. */
+        fun dolly(timeMs: Long, animatorScale: Float = 1f): Float {
+            if (off(animatorScale)) return 1f
+            val t = (timeMs % (2 * DOLLY_PERIOD_MS)).toFloat() / DOLLY_PERIOD_MS
+            val k = if (t <= 1f) t else 2f - t
+            return 1f + (DOLLY_SCALE - 1f) * k
+        }
+
+        /** Full panel state. Reduced motion keeps the static depth composition (scale, blur, tilt) without drift. */
         fun state(layer: Layer, cardCenterX: Float, cardCenterY: Float, width: Float, height: Float, timeMs: Long,
                   animatorScale: Float = 1f): State {
             val (dx, dy) = drift(timeMs, layer, animatorScale)
-            val wobble = if (off(animatorScale)) 0f else .6f * sin(2f * PI.toFloat() * (timeMs % DRIFT_PERIOD_MS) / DRIFT_PERIOD_MS)
+            val wobble = if (off(animatorScale)) 0f else .4f * sin(2f * PI.toFloat() * (timeMs % DRIFT_PERIOD_MS) / DRIFT_PERIOD_MS)
             return State(scale(layer), blurDp(layer), tiltX(cardCenterY, height) + wobble, tiltY(cardCenterX, width) + wobble, dx, dy)
         }
     }

@@ -82,7 +82,17 @@ class JarvisMotionTest {
         assertEquals(0f, D.blurDp(JarvisMotion.Depth.Layer.NEAR), 0f); assertTrue(D.blurDp(JarvisMotion.Depth.Layer.FAR) > D.blurDp(JarvisMotion.Depth.Layer.MID))
         assertTrue(D.tiltY(100f, 1000f) > 0f && D.tiltY(900f, 1000f) < 0f)
         assertTrue(kotlin.math.abs(D.tiltY(0f, 1000f)) <= D.MAX_TILT_DEG)
-        assertTrue(D.drift(3500, JarvisMotion.Depth.Layer.FAR).first > D.drift(3500, JarvisMotion.Depth.Layer.NEAR).first)
+        assertTrue(D.drift(3500, JarvisMotion.Depth.Layer.NEAR).first > D.drift(3500, JarvisMotion.Depth.Layer.FAR).first)
+        assertTrue(kotlin.math.abs(D.drift(3500, JarvisMotion.Depth.Layer.NEAR).first) <= 2f)
         assertEquals(0f to 0f, D.drift(3500, JarvisMotion.Depth.Layer.FAR, 0f))
+    }
+
+    @Test fun dollyInIsLinearOneToOnePointZeroThree() {
+        val D = JarvisMotion.Depth
+        assertEquals(1f, D.dolly(0), 1e-4f)
+        assertEquals(1.015f, D.dolly(D.DOLLY_PERIOD_MS / 2), 1e-4f)
+        assertEquals(1.03f, D.dolly(D.DOLLY_PERIOD_MS), 1e-4f)
+        assertEquals(1f, D.dolly(2 * D.DOLLY_PERIOD_MS), 1e-4f)
+        assertEquals(1f, D.dolly(D.DOLLY_PERIOD_MS, 0f), 0f)
     }
 }

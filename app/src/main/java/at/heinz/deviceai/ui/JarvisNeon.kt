@@ -72,6 +72,9 @@ object JarvisNeon {
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width, fill)
     }
 
+    /** Bloom radius of the blurred light pass (JarvisBloomPass). GESCHÄTZT ("starker Bloom-Hof"). */
+    const val BLOOM_RADIUS_DP = 12f
+
     /**
      * Bloom: shared emissive light (VIDEO-ANALYSE Signatur 4 "starkes Bloom"), also for Jarvis Avatar.
      * Three additive radial layers: white-hot core, colour body, wide violet veil. [intensity] 0..1 (>1 allowed for alarms).
