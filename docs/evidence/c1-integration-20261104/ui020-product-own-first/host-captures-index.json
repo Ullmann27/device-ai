@@ -1,0 +1,19 @@
+{
+  "archiveSha256": "6107e26040e3a7d476d9b117ade59dec6edfd6b87e0728ad610149b65affaf97",
+  "files": {
+    "fold-landscape-840x649-font100-home.png": "68333927071a1db0b0c5ad4b299751cdc64d74398942c8759d278b0482d3f086",
+    "fold-landscape-840x649-font100-home.views.txt": "27f057e480effc6716053069da8b086cb64e49e4b917377a0c8835faba13fed5",
+    "fold-portrait-840x1050-font100-home.png": "17596e0d81b07eec3a1e65adc5a6726f1c16b116ae0dd85f50b80c7679237196",
+    "fold-portrait-840x1050-font100-home.views.txt": "c187ffd65a9ac861c951ad31bd569ca83cef09c025b81c1cf65867aa350f0b9a",
+    "narrow-280x720-font100-home.png": "f25673347166436c0e88208983080b7779dd639a6ee430ac46bd050dfe8ddf1f",
+    "narrow-280x720-font100-home.views.txt": "ec1c841d48bb9e6a24b1732c2e60066bd045cb8e75b2817a1bb9c54c89908c1d",
+    "narrow-280x720-font200-stop.png": "6d9905da29c0667e949be1f1a1c8060541616c0e9a6fdbc1c719997571a76393",
+    "narrow-280x720-font200-stop.views.txt": "2208dbce129c108c353ab63cadfdf45884af57b52873e1d29676c0bf047c57d8",
+    "phone-412x915-font100-home.png": "cdd1cb6bfedc2a04021a7b484dea05360282239a36d7e5bd70b5d4e9d2a92cfb",
+    "phone-412x915-font100-home.views.txt": "6a67d737295797ffe803b1d4dc9a78f7616c8c031284843f841942fd15a55dca",
+    "shell-fold7-884x760.png": "d1954f7a109d8d9627eff239cfc14704f13daaaf2b39837cd389194a336742ff",
+    "shell-phone-412x915.png": "cdd1cb6bfedc2a04021a7b484dea05360282239a36d7e5bd70b5d4e9d2a92cfb",
+    "shell-tablet-1280x800.png": "b9d83697a1a26f400ac09ea87d86daff5c5e5eeb809462498b3c8eefdd15ce99"
+  },
+  "scope": "Native host View/Canvas 2D captures, no GPU or physical-device evidence"
+}

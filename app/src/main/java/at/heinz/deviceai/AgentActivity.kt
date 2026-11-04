@@ -5297,12 +5297,21 @@ class AgentActivity : Activity() {
             setSingleLine(true)
             setPadding(dp(16),dp(12),dp(16),dp(12))
         }
+        // One panel preserves button space.
+        val content=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL
+            addView(TextView(context).apply {
+                setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
+                text="Suche in gespeicherten, quellengebundenen Auszügen. "+
+                    "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
+                    "Ungeprüfte Aussagen werden niemals zu Besitzerfakten."
+                setPadding(dp(16),0,dp(16),dp(12))
+            },matchWidth())
+            addView(query,matchWidth())
+        }
         AlertDialog.Builder(this)
             .setTitle("Continuum · lokales Wissensarchiv")
-            .setMessage("Suche in gespeicherten, quellengebundenen Auszügen. "+
-                "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
-                "Ungeprüfte Aussagen werden niemals zu Besitzerfakten.")
-            .setView(query)
+            .setView(ScrollView(this).apply { addView(content) })
             .setNegativeButton("Schließen",null)
             .setPositiveButton("LOKAL SUCHEN") { _, _ ->
                 val text=query.text.toString().trim()

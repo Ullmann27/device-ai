@@ -1,0 +1,67 @@
+{
+  "task": "C1-UI-020",
+  "phase": "PRODUCT_PROPOSAL_AFTER_TEST_FREEZE",
+  "sourceCommit": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+  "preparedAtUtc": "2026-11-04T21:45:04.266348+00:00",
+  "status": "NOT_RUN_NOT_INTEGRATED_NOT_PUSHED",
+  "testFreezeManifest": "C1-UI-020-tests-v1.json",
+  "testPatchSha256": "fdd1d7bccba6c400ccaa2edc0fad8224b83da9dfcbf1be9488a07327829f9b7e",
+  "patchSha256": "fb3799bfc0b9045d72563dd03ac9e24c0ea262c9920b42bbd02af2f5965ff12d",
+  "patchBytes": 13609,
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "mode": "100644",
+      "baseBlob": "020c388468ce2ad5017579f7ba1551b5c17fbcf6",
+      "targetBlob": "0b3a53ad6e777330ad5104b165de90059fe3ed82",
+      "baseSha256": "75f53008759b2e1212f4df64e29682cb3cfac2ae28cf534145eb3941d83dc9ec",
+      "targetSha256": "c096632532563b649406b8153b326b30d315b81f546062b46da98f41c850947c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "mode": "100644",
+      "baseBlob": "0052c24095dee7a11b498254bfc426294cc198b3",
+      "targetBlob": "977f50f5304677aaaf32f48b4cd0e96794948e8a",
+      "baseSha256": "2952a1a322c6a085aae4ebc396a05fc6b8543a18b0f7477bcc81be74b9b47f1b",
+      "targetSha256": "da5aca2d991f571933d1b927f438ff2598cf907ae4fd5acc13b9265c3b10bee7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+      "mode": "100644",
+      "baseBlob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+      "targetBlob": "5e637a17a26bf7f7706ae1f67d8f9fc14d3157f6",
+      "baseSha256": "cdfa74b5fcd86d4a1dc5b5a9a0fe9558ee2870e54e6359cf6609e6ce8f84e472",
+      "targetSha256": "8e2bb2585b38f389591967d24cbda94eaaa28b35eca1a247d8b67de982bf4cb5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+      "mode": "100644",
+      "baseBlob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+      "targetBlob": "796bc098d11d166d0ff530228a35dbb19b39b843",
+      "baseSha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302",
+      "targetSha256": "312f66288074e6b044b88b399ff09b36cda0707ff12b14a171a38dca10aeb8c5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "mode": "100644",
+      "baseBlob": "bc1a08495f56696b2f0a6613260beb92bb3dbc62",
+      "targetBlob": "26cbaa9362171b012f2285f85fc671f95c19510a",
+      "baseSha256": "c01049c44c18db04b8f1ccb71b3a8fef77c64353728c78ada17fc5bc1e3a32b7",
+      "targetSha256": "d550292350c061cc74b7a4596b1c852988a22e944fe03369fefe77d7c3fd92b0"
+    }
+  ],
+  "defaultGeometryInvariant": "New compactPresentation parameters default false. Existing reference() body and existing normal phone/wide branches remain unchanged. New geometry executes only after an explicit saved compact choice. Renderer and native hit targets consume the same parameter and cache invalidation includes it.",
+  "scope": [
+    "existing appearance chooser retains original three modes plus motion/close; adds explicit compact orb",
+    "same canonical compact preference and original live Hologram; no additional avatar/screen/router",
+    "one host callback follows current homeView, replaced on rebuild and cleared onDestroy",
+    "explicit compact active shell uses 120dp live surface and moves subsequent narrow-phone dialog/input/tiles upward; all action target heights preserved",
+    "existing System centre adds navigation-only More category entry; existing owner gates unchanged"
+  ],
+  "limits": [
+    "No execution or compiler verification by helper. Parent must run actual RED from frozen tests before applying product, then GREEN and complete required gates.",
+    "Compact wide layout is explicit reflow with the same rail/destinations; content height reduction is claimed only for narrow layouts and must be measured.",
+    "Physical IME/GPU/device/model verification is separate."
+  ],
+  "rollback": "Drop this five-file proposal or revert only its exact hunks; no persistent format change, existing compact boolean and avatar-3d keys reused."
+}

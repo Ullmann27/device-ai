@@ -233,7 +233,10 @@ class ContinuumReferenceCockpitUiTest {
             assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
             assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
             controller.windowFocusChanged(true)
-            assertTrue("Original recreation restores real window focus", controller.get().hasWindowFocus())
+            advanceFrames(32)
+            assertTrue("Original recreation restores real window focus: " +
+                "decorFocus=${controller.get().window.decorView.hasWindowFocus()}; ${geometry(controller.get().window.decorView)}",
+                controller.get().hasWindowFocus())
         } finally {
             try { application.unregisterActivityLifecycleCallbacks(callbacks) }
             finally { handler.removeCallbacks(traversalPulse) }
@@ -445,6 +448,8 @@ class ContinuumReferenceCockpitUiTest {
         measure(root, width, height)
         settle()
         measure(root, width, height)
+        root.requestLayout()
+        advanceFrames(32)
         val rail = field(activity, "railView") as? View
         val navigation = if (rail != null) {
             assertTrue("The current conversation rail must be attached and shown: ${geometry(rail)}",

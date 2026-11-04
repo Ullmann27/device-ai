@@ -1,0 +1,7 @@
+{
+  "initialArchiveAttemptExit": 1,
+  "cause": "archive helper destination expects basename; absolute path assertion rejected before writing stage or output",
+  "correctedDestination": "ui020-v3-own-red",
+  "correctedExit": 0,
+  "testRerun": false
+}
