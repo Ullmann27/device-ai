@@ -49,3 +49,25 @@
 - `git merge-tree` von HEAD gegen #481 (`design/jarvis-cockpit-home-20261104` @5a1076ca) und #482 (`jarvis-grafik/avatar-ref-match` @2e49ea74): beide konfliktfrei.
 - API-Hinweis: AvatarMorphMapper hat auf #481/#482 jetzt eine eigene 70-ms-Visem-Überblendung und ein festes Blinzeln (alle 4,6 s, ca. 0,15 s). Wenn die Gewichte aus `LipSyncFaceSource` über `applyTo(pose)` in den Mapper laufen, wird doppelt überblendet und doppelt geblinzelt. Lösung bei Avatar: entweder `weightsAt` direkt an den Renderer geben oder im Mapper die eigene Überblendung und das eigene Blinzeln abschalten, wenn die Mathematik-Quelle aktiv ist. Die JawOpen-Logik des Mappers ist unverändert, damit stimmt der Kopplungstest weiter.
 - Für den Merge-Stand wurden keine Tests gelaufen (nur Textmerge geprüft).
+
+## Endspurt 10:12 – Kästchen-Stagger
+- API (nur Paket `at.heinz.deviceai.motion`):
+  - `data class MotionBox(key, cx, cy)`: Mittelpunkt normiert 0..1 aus den echten View-Bounds (cx = Mitte X / Breite, cy = Mitte Y / Höhe).
+  - `Staggers.spatialRanks(boxes, headX = .5f, headY = .5f, tolerance = SPATIAL_TOLERANCE (0,01))` liefert pro Kästchen einen Rang nach euklidischem Abstand zum Kopf-Mittelpunkt: das nächste zuerst, gleiche Abstände innerhalb der Toleranz bekommen denselben Rang. Deterministisch, Eingabereihenfolge bleibt.
+  - `Staggers.spatialCenterFirst(boxes, headX, headY, stepSec = 0,08 s)`: `Stagger` mit Verzögerung = Rang · 80 ms.
+  - `MotionTimelines.cockpitBoxes(boxes, headX = .5f, headY = .5f, startMs = 0L)`: Muster B mit 600 ms, `flyInEasing` (cubic ease-out) und Scale 0,8 → 1. out[i] gehört zu boxes[i].
+- Schlüssel sind die Bereichsnamen aus `JarvisCockpitGrid.Area` auf #481 (`origin/design/jarvis-cockpit-home-20261104` @76469429). Ich habe hier weder Code noch Koordinaten übernommen.
+- Aufrufbeispiel (Kern, in `CockpitAnimationPresenter.flyInCards()`):
+  ```kotlin
+  val areas = listOf(Area.USER_CARD, Area.DIALOG, Area.ORB, Area.MODULES, Area.TILES,
+      Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL)
+  val head = grid[Area.HEAD]
+  val boxes = areas.map { a -> val b = grid[a]; MotionBox(a.name, b.centerX / grid.width, b.centerY / grid.height) }
+  val tl = MotionTimelines.cockpitBoxes(boxes, head.centerX / grid.width, head.centerY / grid.height)
+  val p = FloatArray(boxes.size)            // einmal anlegen
+  tl.evaluate(elapsedMs, p)                 // pro Frame, ohne Allokation
+  // scale = MotionPresets.FLY_IN_FROM_SCALE + (1 - MotionPresets.FLY_IN_FROM_SCALE) * p[i]; alpha = p[i]
+  ```
+  (Ob die Felder `centerX`/`centerY` am Box-Typ von #481 so heißen, ist dort zu prüfen.)
+- Tests für `b916d1b1` (`b916d1b177abb1c093ebcdd36bd13b012dcb274f`): `./gradlew :app:testDebugUnitTest --tests 'at.heinz.deviceai.motion.*'` → 25 grün, 0 rot (neu: CockpitBoxesStaggerTest 3). Zuerst rot, weil MotionBox fehlte, dann grün.
+- Offen: Den Einbau in `CockpitAnimationPresenter.flyInCards()` macht Kern, erst nach Heinz' Fortsetzung.
