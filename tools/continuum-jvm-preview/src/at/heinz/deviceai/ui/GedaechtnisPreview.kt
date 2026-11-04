@@ -24,5 +24,31 @@ object GedaechtnisPreview {
             p.scale(254f / JarvisMemoryActivityPanel.REF_W, 254f / JarvisMemoryActivityPanel.REF_W)
             JarvisMemoryActivityPanel.draw(p, 1f, 1f, JarvisMemoryActivityPanel.REF_W - 1f, JarvisMemoryActivityPanel.REF_H - 1f, MemoryActivitySnapshot.OFFLINE)
         }
+        // Testdaten: echtes Test-Gedächtnis in einem Temp-Verzeichnis, echte Ledger-Einträge und echte Ereignisse.
+        val dir = java.nio.file.Files.createTempDirectory("ged-live").toFile()
+        try {
+            val tracker = MemoryActivityTracker()
+            val sub = at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(dir).addListener(tracker)
+            val now = System.currentTimeMillis(); val t = longArrayOf(now)
+            val core = at.heinz.deviceai.learning.ContinuumLearningCore(dir) { t[0] }
+            val facts = listOf("Ich wohne in Steyr.", "Mein Hund heißt Bello.", "Vielleicht ziehe ich nach Linz.",
+                "Ich trinke Kaffee schwarz.", "Mein Auto ist blau.", "Vielleicht lerne ich Spanisch.", "Ich arbeite am Device-AI-Projekt.", "Merke dir: Wenn ich im Lotto gewinne, kaufe ich ein Haus.")
+            facts.forEachIndexed { i, f -> t[0] = now - (facts.size - i) * 3_600_000L / 2; core.confirmOwnerFact(f) }
+            val L = at.heinz.deviceai.learning.CharNgramHashRetriever(at.heinz.deviceai.learning.TemporalCue(java.time.ZoneId.of("Europe/Vienna")))
+            val rr = at.heinz.deviceai.learning.EventEmittingRetriever(L, dir)
+            rr.index(facts.mapIndexed { i, f -> at.heinz.deviceai.learning.MemoryDoc("f$i", f, now, true) })
+            listOf("Wo wohne ich?", "Wie heißt mein Hund?", "Welche Farbe hat mein Auto?", "Wie trinke ich Kaffee?").forEach { rr.search(it, now, 3) }
+            at.heinz.deviceai.learning.ContinuumMemoryEventHub.awaitIdleForTest(dir)
+            val snap = MemoryActivitySnapshot.from(at.heinz.deviceai.learning.ContinuumMemoryStatsReader(dir).read(), tracker)
+            println("live " + snap.rows() + " " + snap.hourly?.toList())
+            shot("mem-live", 254, 167) { p ->
+                p.fillRect(0f, 0f, 254f, 167f, Fill.Solid(JarvisDesign.Colors.background))
+                p.save(); p.scale(254f / JarvisMemoryActivityPanel.REF_W, 254f / JarvisMemoryActivityPanel.REF_W)
+                JarvisMemoryActivityPanel.draw(p, 1f, 1f, JarvisMemoryActivityPanel.REF_W - 1f, JarvisMemoryActivityPanel.REF_H - 1f, snap)
+                p.restore()
+                p.drawText("Testdaten", 248f, 164f, JarvisDesign.Type.status, Fill.Solid(JarvisDesign.Colors.warn), TextAlign.RIGHT)
+            }
+            sub.close()
+        } finally { dir.deleteRecursively() }
     }
 }

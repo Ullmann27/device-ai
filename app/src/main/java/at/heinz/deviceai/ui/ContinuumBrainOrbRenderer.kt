@@ -32,8 +32,8 @@ class ContinuumBrainOrbRenderer {
         drawBrain(p, cx, cy - r * .33f, r, s)
         // Rand-Bloom: mehrere additive Ringe (violett oben/rechts, cyan unten/links), dann scharfe Kante.
         p.setAdditive(true)
-        val rimSweep = intArrayOf(C.cyan, C.violet, C.violetRim, C.violet, C.cyan, C.cyanDeep, C.cyan)
-        for ((w, a) in listOf(.30f to .05f, .18f to .09f, .10f to .16f, .05f to .35f))
+        val rimSweep = intArrayOf(C.cyan, C.violet, C.violetRim, C.violet, C.violetRim, C.cyan, C.violet, C.cyan)
+        for ((w, a) in listOf(.32f to .07f, .2f to .12f, .11f to .22f, .05f to .45f))
             p.strokeCircle(cx, cy, r * (1f + w * .15f), r * w, Fill.Sweep(cx, cy, rimSweep), a)
         p.strokeCircle(cx, cy, r * .995f, r * .016f, Fill.Sweep(cx, cy, intArrayOf(C.glowCore, C.violetRim, C.violet, C.cyan, C.glowCore)), 1f)
         p.strokeArc(cx - r * .97f, cy - r * .97f, cx + r * .97f, cy + r * .97f, 200f, 110f, r * .012f, Fill.Solid(C.violetRim), .9f)
@@ -127,17 +127,24 @@ class ContinuumBrainOrbRenderer {
             p.fillPath(brainPath, Fill.Linear(bx, by - hh, bx + side * hw, by + hh,
                 intArrayOf(C.glowCore, C.cyanDeep, C.violetSoft)), .55f * glow)
             p.strokePath(brainPath, r * .02f, Fill.Linear(bx, by, bx + side * hw, by, intArrayOf(C.cyanSoft, C.violetSoft)), .9f)
-            // Windungen: viele kurze, eingerollte Leuchtbögen (deterministisch), innen heller
-            for (g in 0 until 46) {
-                val u = hash(g, side + 7); val v = hash(g + 101, side + 3)
-                val gx = bx + side * (r * .06f + u * hw * .9f); val gy = by - hh * .9f + v * hh * 1.55f
-                val ex = (gx - bx - side * r * .03f) / hw; val ey = (gy - by) / (hh * (if (gy > by) .62f else 1.05f))
-                if (ex * ex + ey * ey > .78f) continue
-                val rr = r * (.045f + .04f * hash(g + 33, side))
-                val start = hash(g + 55, side) * 360f
-                p.strokeArc(gx - rr, gy - rr * .8f, gx + rr, gy + rr * .8f, start, 200f, r * .011f,
-                    Fill.Solid(if (g % 3 == 0) C.violetSoft else C.glowCore), .55f * glow)
-                p.strokeArc(gx - rr * .5f, gy - rr * .4f, gx + rr * .5f, gy + rr * .4f, start + 180f, 160f, r * .008f, Fill.Solid(C.cyanSoft), .4f * glow)
+            // Windungen: konturparallele Lappenlinien (eingerückte Kopien der Kontur) + Rippen aus der Mittelfurche
+            for (inset in floatArrayOf(.82f, .64f, .46f)) {
+                val g = VectorPath(); val n = 40
+                for (q in 0..n) {
+                    val t = (PI * q / n).toFloat(); val ex = sin(t); val ey = -cos(t)
+                    val wob = 1f + .09f * sin(t * (14f + inset * 6f) + inset * 5f)
+                    val x = bx + side * (r * .05f + ex * hw * inset * wob); val y = by + ey * hh * inset * wob * (if (ey > 0f) .62f else 1.05f)
+                    if (q == 0) g.moveTo(x, y) else g.lineTo(x, y)
+                }
+                p.strokePath(g, r * .01f, Fill.Solid(if (inset > .7f) C.violetSoft else C.glowCore), .6f * glow)
+            }
+            for (q in 0 until 9) {
+                val t = (PI * (q + .5f) / 9).toFloat()
+                val ex = sin(t); val ey = -cos(t) * (if (cos(t) < 0f) .62f else 1.05f)
+                val g = VectorPath().moveTo(bx + side * r * .02f, by + hh * .45f)
+                val mx = bx + side * ex * hw * .45f; val my = by + ey * hh * .45f + hh * .1f * hash(q, side + 5)
+                g.quadTo(mx + side * r * .04f, my - r * .04f, bx + side * ex * hw * .85f, by + ey * hh * .85f)
+                p.strokePath(g, r * .009f, Fill.Solid(C.cyanSoft), .45f * glow)
             }
             // Glow nach innen: dunkler Rand → heller Kern
             p.fillPath(brainPath, Fill.Radial(bx + side * hw * .45f, by + hh * .1f, hw * .7f,
@@ -156,6 +163,7 @@ class ContinuumBrainOrbRenderer {
         for (i in 0 until 70) {
             val a = hash(i, 11) * 2f * PI.toFloat(); val d = r * (.2f + 1.35f * hash(i, 23))
             val x = cx + cos(a) * d; val y = cy + sin(a) * d * .9f
+            if (kotlin.math.abs(x - cx) < r * .45f && y > cy && y < cy + r * .85f) continue
             val s = r * (.006f + .014f * hash(i, 37)); val col = if (i % 3 == 0) C.violetRim else C.glowCore
             p.fillCircle(x, y, s * 3f, Fill.Radial(x, y, s * 3f, intArrayOf(Argb.withAlpha(col, .5f), 0)))
             p.fillCircle(x, y, s, Fill.Solid(C.activeWhite), .9f)
@@ -189,7 +197,7 @@ class ContinuumBrainOrbRenderer {
         p.setAdditive(true)
         // Tiefe: drei gestapelte Stufen, je Stufe Außen- und Innenring
         for (tier in 0 until 3) {
-            val ty = top + r * (.12f + tier * .09f); val k0 = 1.0f + tier * .22f
+            val ty = top + r * (.10f + tier * .06f); val k0 = .95f + tier * .14f
             p.fillOval(cx - r * k0, ty - r * .2f * k0, cx + r * k0, ty + r * .2f * k0, Fill.Solid(C.glowHalo), .5f)
             for ((j, k) in floatArrayOf(k0, k0 * .86f, k0 * .7f).withIndex()) {
                 val ry = r * .2f * k
@@ -202,7 +210,7 @@ class ContinuumBrainOrbRenderer {
         p.fillOval(cx - r * .9f, top + r * .06f, cx + r * .9f, top + r * .28f, Fill.Radial(cx, top + r * .17f, r * .9f,
             intArrayOf(Argb.withAlpha(C.cyan, .35f), Argb.withAlpha(C.cyanDeep, .12f), 0)), 1f)
         // Lichtbalken unter dem Sockel
-        val by = top + r * .44f; val bw = r * .16f; val gap = r * .06f
+        val by = top + r * .40f; val bw = r * .16f; val gap = r * .06f
         for (k in -1..1) {
             val x = cx + k * (bw + gap)
             p.fillRoundRect(x - bw / 2, by, x + bw / 2, by + r * .035f, r * .02f, Fill.Solid(C.cyan), .95f)
