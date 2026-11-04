@@ -328,6 +328,13 @@ class AgentActivity : Activity() {
     private var bottomWorkAreaBar: View? = null
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
     private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
+    // Jarvis cockpit animation layer (docs/CONTINUUM_COCKPIT.md): real events only, default visuals replaceable.
+    private val cockpitBus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
+    private val cockpitTriggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(cockpitBus)
+    private var cockpitSubscriptions: List<AutoCloseable> = emptyList()
+    @Volatile private var activeChiefTurn: at.heinz.deviceai.chief.TurnLifecycle? = null
+    private var lastChiefWorkerReport: at.heinz.deviceai.chief.WorkerReport? = null
+    private val cockpitDialog = ArrayDeque<at.heinz.deviceai.ui.CockpitStatus.DialogLine>()
     private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var railView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var chatColumn: LinearLayout? = null
@@ -667,6 +674,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        cockpitSubscriptions.forEach { runCatching { it.close() } }
+        cockpitSubscriptions = emptyList()
         clearTaskEffects()
         uiFeedback?.close()
         uiFeedback = null
@@ -937,6 +946,11 @@ class AgentActivity : Activity() {
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
+        cockpitSubscriptions.forEach { runCatching { it.close() } }
+        cockpitSubscriptions = listOf(
+            cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home)),
+            cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
+        )
         dashboard.addView(home, matchWidth())
         workStatusView = textView("Bereit", 13f, ACCENT).apply {
             setPadding(dp(16), dp(10), dp(16), dp(10))
@@ -1171,13 +1185,39 @@ class AgentActivity : Activity() {
             result.onSuccess { (state, open) ->
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
-                homeView?.state = state
+                homeView?.state = state.copy(cockpit = cockpitStatus())
                 if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
                 railView?.state = state
                 announceNewIssues(open)
             }
         }
+    }
+
+    /** Live cockpit inputs from the Activity's real sources (turn, worker pool, steps, visible dialog). */
+    private fun cockpitStatus(): at.heinz.deviceai.ui.CockpitStatus {
+        val pool = chiefStatusPool
+        return at.heinz.deviceai.ui.CockpitStatus(
+            turnPhase = activeChiefTurn?.phase,
+            workers = pool?.snapshot(),
+            workerCapacity = pool?.capacity,
+            lastReport = lastChiefWorkerReport,
+            steps = cockpitTriggers.latestTimeline(),
+            dialog = cockpitDialog.toList()
+        )
+    }
+
+    /** Updates only the cockpit part of the shown state; measured dashboard values stay from the last collection. */
+    private fun pushCockpitState() {
+        val home = homeView ?: return
+        if (isFinishing || isDestroyed) return
+        home.state = home.state.copy(cockpit = cockpitStatus())
+    }
+
+    private fun recordCockpitDialog(fromOwner: Boolean, text: String) {
+        cockpitDialog.addLast(at.heinz.deviceai.ui.CockpitStatus.DialogLine(fromOwner, text.take(200)))
+        while (cockpitDialog.size > 4) cockpitDialog.removeFirst()
+        pushCockpitState()
     }
 
     /** Immediate, de-duplicated notice for every newly opened problem (the full list is in the diagnostics center). */
@@ -2252,6 +2292,8 @@ class AgentActivity : Activity() {
         effectContext?.let { chiefTaskEffectContexts[brief.id] = it }
         val accepted = pool.submit(brief) { report ->
             chiefTaskEffectContexts.remove(brief.id)
+            cockpitTriggers.workerReported(report)
+            runOnUiThread { lastChiefWorkerReport = report }
             runOnUiThread {
                 if (isFinishing || isDestroyed || sessionId != ownerSession) return@runOnUiThread
                 val result = if (report.status == at.heinz.deviceai.chief.WorkerStatus.DONE)
@@ -2262,6 +2304,7 @@ class AgentActivity : Activity() {
                 addToolActivity("CHIEF · echter WorkerReport: " + report.id + " · " + report.status.name)
             }
         }
+        if (accepted) cockpitTriggers.workerStarted(brief.id, brief.goal)
         if (!accepted) {
             chiefTaskEffectContexts.remove(brief.id)
             addAssistantMessage(
@@ -6955,8 +6998,11 @@ class AgentActivity : Activity() {
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             var effectStarted = false
+            var toolFailed = false
+            val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
             fun actualStart() {
                 effectStarted = true
+                cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
@@ -7001,7 +7047,12 @@ class AgentActivity : Activity() {
                     DeviceToolExecutorRunner(executor).execute(request)
                 }
             }
+            } catch (failure: Throwable) {
+                toolFailed = true
+                throw failure
             } finally {
+                if (effectStarted && cockpitTurn != null)
+                    cockpitTriggers.toolFinished(cockpitTurn, request.callId, request.name, succeeded = !toolFailed)
                 if (effectStarted) postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
                 runOnUiThread {
@@ -7240,7 +7291,11 @@ class AgentActivity : Activity() {
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle("local-" + turnId)
-        chiefTurn.acknowledge()?.let { addToolActivity("CHIEF · " + it) }
+        activeChiefTurn = chiefTurn
+        chiefTurn.acknowledge()?.let {
+            addToolActivity("CHIEF · " + it)
+            cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)
+        }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
@@ -7503,7 +7558,12 @@ class AgentActivity : Activity() {
             checkpointStore = if(codingPlanning == null) FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")) else null,
             callIdPrefix = "local-$turnId",
             cancellation = cancellation,
-            eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, show = { line ->
+            eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, delegate = { event ->
+                at.heinz.deviceai.chief.TurnLifecycle.milestoneOf(event.state)?.let { kind ->
+                    if (chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED)
+                        cockpitTriggers.milestone(chiefTurn.turnId, kind)
+                }
+            }, show = { line ->
                 runOnUiThread {
                     if (!isFinishing && !isDestroyed && sessionId == localSessionId &&
                         chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED) {
@@ -7529,7 +7589,7 @@ class AgentActivity : Activity() {
                     (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
                         runCatching { cancellation.throwIfCancelled() }.isSuccess &&
                         LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
-                chiefTurn.deliver()
+                cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
@@ -9414,6 +9474,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
         // both ALWAYS_ON and recurring public study. Not the chat transcript.
@@ -9470,6 +9531,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) {
+        recordCockpitDialog(false, value)
         // A non-model answer becomes the latest turn and invalidates any older
         // local-model prompt context. Successful local model runs set it after rendering.
         lastLocalReply = null

@@ -191,6 +191,32 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Height of a slot in dp (for tap zones inside an element). */
     fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
 
+    private var transientCard: ContinuumElementView? = null
+
+    /** Shows a transient notice card over the lower avatar stage (account/document scenes), then removes it. */
+    fun showTransientCard(title: String, lines: List<String>, animate: Boolean, durationMs: Long = 6_000L) {
+        transientCard?.let { removeView(it) }
+        val view = ContinuumElementView(context, CockpitNoticeCard(title, lines, textScale)) { _, _ ->
+            transientCard?.let { removeView(it) }; transientCard = null
+        }
+        view.state = state
+        transientCard = view
+        addView(view)
+        if (animate) {
+            view.translationX = 60f * density; view.alpha = 0f
+            view.animate().translationX(0f).alpha(1f).setDuration(300L).start()
+        }
+        postDelayed({ if (transientCard === view) { removeView(view); transientCard = null } }, durationMs)
+    }
+
+    private fun transientBox(): ContinuumHomeLayout.Box? {
+        val hero = layoutSpec?.get(Slot.HERO) ?: return null
+        val h = 84f
+        val l = hero.left + 12f - offset
+        val r = hero.right - 12f - offset
+        return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val spec = layoutSpec
@@ -201,6 +227,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
         }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        } }
         setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))
     }
 
@@ -211,6 +241,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             child.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
         }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        } }
     }
 
     private fun boxOf(child: View): ContinuumHomeLayout.Box? {
