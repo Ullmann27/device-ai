@@ -77,8 +77,11 @@ function atomicCheckpoint(file,value){
   try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
  }finally{fs.rmSync(temporary,{force:true});}
 }
-function sourceIdentity(root){
+async function sourceIdentity(root,sourcePreflight){
  const canonical=fs.realpathSync(root);
+ // Trusted caller policy runs before Git can invoke configured status helpers.
+ // A thrown/rejected check vetoes this source boundary, including initial open.
+ if(sourcePreflight!==null)await sourcePreflight(canonical);
  const git=args=>{
   const result=spawnSync('git',['-C',canonical,...args],{
    encoding:'utf8',timeout:10_000,maxBuffer:2*1024*1024,shell:false,
@@ -146,11 +149,11 @@ function acquireLoopLock(file){
  };
 }
 
-function openCheckpoint(stateFile,sourceRoot,settings){
+async function openCheckpoint(stateFile,sourceRoot,settings,sourcePreflight){
  if(settings.maxCycles===null)throw Error('Durable local loop requires a finite cycle budget');
  if(typeof sourceRoot!=='string'||typeof stateFile!=='string')
   throw Error('Durable local loop needs stateFile and sourceRoot');
- const source=sourceIdentity(sourceRoot);
+ const source=await sourceIdentity(sourceRoot,sourcePreflight);
  const requested=path.resolve(stateFile);
  fs.mkdirSync(path.dirname(requested),{recursive:true,mode:0o700});
  const file=path.join(fs.realpathSync(path.dirname(requested)),path.basename(requested));
@@ -177,8 +180,8 @@ function openCheckpoint(stateFile,sourceRoot,settings){
   const runId=saved?.runId??crypto.randomBytes(16).toString('hex');
   return {saved,release,source,
    cycleId:number=>'lc-'+digest({runId,number,source}).slice(0,24),
-   checkSource:()=>{
-    if(JSON.stringify(sourceIdentity(sourceRoot))!==JSON.stringify(source))
+   checkSource:async()=>{
+    if(JSON.stringify(await sourceIdentity(sourceRoot,sourcePreflight))!==JSON.stringify(source))
      throw Error('Local loop source HEAD/root changed during session');
    },
    save:heartbeat=>{
@@ -193,11 +196,13 @@ function openCheckpoint(stateFile,sourceRoot,settings){
 export async function runTeamleaderLoop({
  work,intervalMinutes=DEFAULT_INTERVAL_MINUTES,maxCycles=null,
  signal=null,wait=null,onHeartbeat=()=>{},log=()=>{},
- stateFile=null,sourceRoot=null,now=Date.now
+ stateFile=null,sourceRoot=null,sourcePreflight=null,now=Date.now
 }={}){
  if(typeof work!=='function')throw Error('Local worker needs a real bounded cycle');
+ if(sourcePreflight!==null&&typeof sourcePreflight!=='function')
+  throw Error('Local loop source preflight must be a function');
  const settings=validateLoopOptions({intervalMinutes,maxCycles});
- const store=stateFile===null?null:openCheckpoint(stateFile,sourceRoot,settings);
+ const store=stateFile===null?null:await openCheckpoint(stateFile,sourceRoot,settings,sourcePreflight);
  const pause=wait??((ms,abortSignal)=>sleep(ms,null,{signal:abortSignal}));
  let heartbeat=store?.saved?.heartbeat??null;
  let cycles=heartbeat?.cycles??0,failures=heartbeat?.failures??0;
@@ -249,7 +254,7 @@ export async function runTeamleaderLoop({
  }
  if(heartbeat?.state==='WAITING')await waitForNext(true);
  while(!signal?.aborted&&(maxCycles===null||cycles<maxCycles)){
-  try{store?.checkSource();}catch(error){
+  try{if(store)await store.checkSource();}catch(error){
    if(heartbeat)await emit({...heartbeat,state:'ERROR',nextAttemptAt:null,
     detail:String(error?.message??error).slice(0,160)});
    throw error;
@@ -269,7 +274,7 @@ export async function runTeamleaderLoop({
    try{if(!signal?.aborted)result=await work({signal,cycleNumber:cycles+1,
     cycleId:store?.cycleId(cycles+1)??null,sourceHead:store?.source.head??null});}
    catch(error){workError=error;}
-   try{store?.checkSource();}catch(error){sourceError=true;throw error;}
+   try{if(store)await store.checkSource();}catch(error){sourceError=true;throw error;}
    if(signal?.aborted)result={outcome:'INTERRUPTED',detail:'Cycle cancelled; verification not accepted'};
    else if(workError)throw workError;
    if(!result||!COMPLETE_OUTCOMES.has(result.outcome))

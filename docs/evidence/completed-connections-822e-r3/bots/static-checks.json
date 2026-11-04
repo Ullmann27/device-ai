@@ -1,0 +1,96 @@
+{
+  "testedSourceCommit": "d0398f4e023bc3e361de661df69d48f6d448709c",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-bots-cli.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-bots-cli.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-discovery.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-discovery.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/local-teamleader-loop-source-preflight.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/local-teamleader-loop.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/repair-critic.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/continuum-release-host-preflight.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/continuum-release-host-preflight.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "bash",
+        "-n",
+        "scripts/render-continuum-owner-continuous-qa.sh"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "allPassed": true,
+  "blobChecks": 16,
+  "logSha256": "7859c699bc990ffc6c732f170e9e76d36d3d4ca2b9b8f4b48e684de267e7a1da"
+}
