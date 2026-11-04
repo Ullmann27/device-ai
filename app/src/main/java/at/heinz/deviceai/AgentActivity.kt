@@ -252,7 +252,8 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
-    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
+    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) })
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
     private var avatarAwaitingApproval = false
@@ -328,8 +329,23 @@ class AgentActivity : Activity() {
     private var bottomWorkAreaBar: View? = null
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
     private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
+    // Jarvis cockpit animation layer (docs/CONTINUUM_COCKPIT.md): real events only, default visuals replaceable.
+    private val cockpitBus = at.heinz.deviceai.cockpit.CockpitAnimationBus()
+    private val cockpitTriggers = at.heinz.deviceai.cockpit.CockpitAnimationTriggers(cockpitBus)
+    private var cockpitSubscriptions: List<AutoCloseable> = emptyList()
+    private val cockpitSessionId = java.util.UUID.randomUUID().toString()
+    @Volatile private var activeChiefTurn: at.heinz.deviceai.chief.TurnLifecycle? = null
+    private var lastChiefWorkerReport: at.heinz.deviceai.chief.WorkerReport? = null
+    private val cockpitDialog = ArrayDeque<at.heinz.deviceai.ui.CockpitStatus.DialogLine>()
     private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var railView: at.heinz.deviceai.ui.ContinuumElementView? = null
+    // Jarvis menu navigation (Integration): ref5 rail + action bar over Kern's JarvisNavigator / CockpitActionHandler.
+    private val menuNavigator: at.heinz.deviceai.ui.JarvisMenuNavigator by lazy {
+        at.heinz.deviceai.ui.JarvisMenuNavigator(cockpitTriggers, { slot -> openHomeSlot(slot, 0f, 0f) },
+            onSelected = { target -> selectRail(target) })
+    }
+    val cockpitActions: at.heinz.deviceai.cockpit.CockpitActionHandler by lazy { at.heinz.deviceai.ui.JarvisCockpitActions(menuNavigator) }
+    private var cameraDrift: at.heinz.deviceai.ui.JarvisCameraDrift? = null
     private var chatColumn: LinearLayout? = null
     // Real measured viewport can outgrow screenWidthDp after unfolding on Samsung Fold.
     // These overrides affect only UI geometry; the models, workers and data are untouched.
@@ -667,6 +683,11 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
+        cockpitSubscriptions.forEach { runCatching { it.close() } }
+        cockpitSubscriptions = emptyList()
+        cameraDrift?.close()
+        cameraDrift = null
         clearTaskEffects()
         uiFeedback?.close()
         uiFeedback = null
@@ -759,6 +780,8 @@ class AgentActivity : Activity() {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
+        // Heinz 04.11.: the open Fold7 shows the wide labelled side rail in BOTH orientations
+        // (ref5/videos); the 74 dp bottom work-area bar is only for the cover display and phones.
         val phonePane: View?
         val phoneNavHeight: Int
         if (wide) {
@@ -768,7 +791,6 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
-            // The reference cockpit keeps the same navigation in both open-Fold orientations.
             wideContent.addView(buildRail(), LinearLayout.LayoutParams(
                 railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
             ))
@@ -928,7 +950,11 @@ class AgentActivity : Activity() {
             // current lifecycle immediately, not wait for another onResume().
             it.setForegroundActive(foregroundLearningActive)
         }) { slot, x, y ->
-            openHomeSlot(slot, x, y)
+            // Landscape action bar → Kern's CockpitActionHandler (same screens, plus the area-change event).
+            val action = if (homeView?.landscapeCockpit == true) cockpitActionFor(slot) else null
+            if (action != null && cockpitActions.availability(action).enabled) {
+                cockpitActions.perform(action, activeChiefTurn?.turnId ?: at.heinz.deviceai.cockpit.NAV_TURN)
+            } else openHomeSlot(slot, x, y)
         }
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
@@ -937,6 +963,20 @@ class AgentActivity : Activity() {
             windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
+        // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar())
+        cockpitSubscriptions.forEach { runCatching { it.close() } }
+        cameraDrift?.close()
+        cameraDrift = at.heinz.deviceai.ui.JarvisCameraDrift(home)
+        cockpitSubscriptions = listOf(
+            cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
+                onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
+            cockpitBus.subscribe { runOnUiThread { pushCockpitState() } }
+        )
+        subscribeMemoryEvents()
+        subscribeRealSignals()
+        // Scene 1: the real first cockpit start of this process.
+        cockpitTriggers.bootOnce()
         dashboard.addView(home, matchWidth())
         workStatusView = textView("Bereit", 13f, ACCENT).apply {
             setPadding(dp(16), dp(10), dp(16), dp(10))
@@ -1043,53 +1083,72 @@ class AgentActivity : Activity() {
     }
 
     /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
-    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(
-        renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
+    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.JarvisMenuRail.widthDp(
+        renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat(),
+        renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()) * resources.displayMetrics.density)
 
+    /** Real device status for the rail header (ref5 top left): user device name, system clock and date. */
+    private fun currentDeviceStatus(): at.heinz.deviceai.ui.JarvisDeviceStatus {
+        val name = runCatching {
+            android.provider.Settings.Global.getString(contentResolver, android.provider.Settings.Global.DEVICE_NAME)
+        }.getOrNull()?.takeIf { it.isNotBlank() } ?: android.os.Build.MODEL?.takeIf { it.isNotBlank() }
+        val now = java.util.Date()
+        val time = android.text.format.DateFormat.getTimeFormat(this).format(now)
+        val date = java.text.SimpleDateFormat(
+            android.text.format.DateFormat.getBestDateTimePattern(java.util.Locale.getDefault(), "EEEdMMM"),
+            java.util.Locale.getDefault()).format(now)
+        return at.heinz.deviceai.ui.JarvisDeviceStatus(name, time, date)
+    }
+
+    /** ref5 side rail (open Fold7, both orientations): the 11 ref5 entries, each through [menuNavigator]. */
     private fun buildRail(): View {
-        val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
-            resources.configuration.fontScale.coerceIn(.85f, 1.3f))
+        val element = at.heinz.deviceai.ui.JarvisMenuRailElement(
+            at.heinz.deviceai.ui.JarvisMenu.railIndex(menuNavigator.current).coerceAtLeast(0),
+            resources.configuration.fontScale.coerceIn(.85f, 1.3f), device = currentDeviceStatus())
         val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, 1f) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
+        // Clock/date of the rail header follow the real system time (one redraw per minute while attached).
+        val tick = object : Runnable {
+            override fun run() {
+                element.device = currentDeviceStatus(); drawn.invalidate()
+                drawn.postDelayed(this, 60_000L - System.currentTimeMillis() % 60_000L)
+            }
+        }
+        drawn.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) { v.post(tick) }
+            override fun onViewDetachedFromWindow(v: View) { v.removeCallbacks(tick) }
+        })
         railView = drawn
-        val actions = listOf<Pair<String, () -> Unit>>(
-            "Start" to { navigateWorkArea(ContinuumWorkArea.START) },
-            "Chat" to { navigateWorkArea(ContinuumWorkArea.CHAT) },
-            "Lernen" to { navigateWorkArea(ContinuumWorkArea.LERNEN) },
-            "Entwickeln" to { navigateWorkArea(ContinuumWorkArea.ENTWICKELN) },
-            "Analysieren" to { showResearchModeDialog() },
-            "Speicher" to { showMemoryCenter() },
-            "System" to { showSystemCenter() },
-            "Mehr" to { showMoreWorkAreas() }
-        )
         val density = resources.displayMetrics.density
+        val entries = at.heinz.deviceai.ui.JarvisMenu.railEntries
         val container = object : android.widget.FrameLayout(this) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
                 // Keep every rail destination at least 48dp tall when the IME reduces the window.
+                val minPx = dp(kotlin.math.ceil(at.heinz.deviceai.ui.JarvisMenuRail.minHeightDp(entries.size)).toInt())
                 super.onMeasure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(
-                    maxOf(View.MeasureSpec.getSize(heightMeasureSpec), dp(476)), View.MeasureSpec.EXACTLY))
+                    maxOf(View.MeasureSpec.getSize(heightMeasureSpec), minPx), View.MeasureSpec.EXACTLY))
             }
             override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
                 super.onLayout(changed, l, t, r, b)
-                val targets = element.targets((b - t) / density)
+                val rows = at.heinz.deviceai.ui.JarvisMenuRail.rows((b - t) / density, entries.size)
                 for (i in 1 until childCount) {
-                    val (top, bottom) = targets[i - 1]
+                    val (top, bottom) = rows[i - 1]
                     getChildAt(i).layout(0, (top * density).toInt(), r - l, (bottom * density).toInt())
                 }
             }
         }
         container.addView(drawn, android.widget.FrameLayout.LayoutParams(
             android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
-        for ((label, action) in actions) {
+        for (entry in entries) {
             container.addView(View(this).apply {
-                contentDescription = label
-                tag = ContinuumWorkArea.entries.firstOrNull { it.title == label }
+                contentDescription = entry.label
+                tag = entry.target
                 at.heinz.deviceai.ui.ContinuumControls.feedback(this, 12f)
                 isClickable = true
                 isFocusable = true
-                setOnClickListener { action() }
+                setOnClickListener { menuNavigator.navigate(entry.target) }
             }, android.widget.FrameLayout.LayoutParams(1, 1))
         }
         return ScrollView(this).apply {
@@ -1099,6 +1158,27 @@ class AgentActivity : Activity() {
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.WRAP_CONTENT))
         }
+    }
+
+    private fun cockpitActionFor(slot: at.heinz.deviceai.ui.ContinuumHomeLayout.Slot): at.heinz.deviceai.cockpit.CockpitAction? =
+        when (slot) {
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_THINKING -> at.heinz.deviceai.cockpit.CockpitAction.THINK
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_ANALYSING -> at.heinz.deviceai.cockpit.CockpitAction.RESEARCH
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_LEARNING -> at.heinz.deviceai.cockpit.CockpitAction.LEARN
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_DEVELOPING -> at.heinz.deviceai.cockpit.CockpitAction.DEVELOP
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_TASK -> at.heinz.deviceai.cockpit.CockpitAction.EXECUTE
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_VERIFY -> at.heinz.deviceai.cockpit.CockpitAction.VERIFY
+            else -> null
+        }
+
+    /** Rail highlight follows the navigator (no own animation in the rail). */
+    private fun selectRail(target: String) {
+        val index = at.heinz.deviceai.ui.JarvisMenu.railIndex(target)
+        if (index < 0) return
+        (railView?.element as? at.heinz.deviceai.ui.JarvisMenuRailElement)?.selected = index
+        railView?.invalidate()
+        val container = railView?.parent as? android.view.ViewGroup ?: return
+        for (i in 1 until container.childCount) container.getChildAt(i).isSelected = container.getChildAt(i).tag == target
     }
 
     /** Taps on the start screen open the existing owner-controlled screens; nothing here starts work on its own. */
@@ -1134,7 +1214,11 @@ class AgentActivity : Activity() {
                     showDevelopmentBacklog() else showDevelopmentCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_STATUS -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_ACTIVITY -> showDiagnosticsCenter()
-            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS -> showDevelopmentBacklog()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS ->
+                if (homeView?.landscapeCockpit == true) showChiefWorkerStatus() else showDevelopmentBacklog()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.PROCESSES -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LIVE_DIALOG -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.ACTION_VERIFY -> showDiagnosticsCenter()
             else -> Unit
         }
     }
@@ -1167,13 +1251,72 @@ class AgentActivity : Activity() {
             result.onSuccess { (state, open) ->
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
-                homeView?.state = state
+                homeView?.state = state.copy(cockpit = cockpitStatus())
                 if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
                 railView?.state = state
                 announceNewIssues(open)
             }
         }
+    }
+
+    /** Live cockpit inputs from the Activity's real sources (turn, worker pool, steps, visible dialog). */
+    /** Real level/alarm signals for the cockpit timeline (no simulated values). */
+    private fun subscribeRealSignals() {
+        at.heinz.deviceai.motion.MotionLibrary.audioLevel =
+            at.heinz.deviceai.motion.AudioLevelSource { t -> voiceSignal.level(t).coerceIn(0f, 1f) }
+        cockpitSubscriptions += AutoCloseable {
+            at.heinz.deviceai.motion.MotionLibrary.audioLevel = at.heinz.deviceai.motion.AudioLevelSource { 0f }
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val power = getSystemService(android.os.PowerManager::class.java) ?: return
+            val listener = android.os.PowerManager.OnThermalStatusChangedListener { status ->
+                cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.THERMAL,
+                    status >= android.os.PowerManager.THERMAL_STATUS_SEVERE, "Thermal-Status",
+                    status.toDouble(), android.os.PowerManager.THERMAL_STATUS_SEVERE.toDouble())
+            }
+            power.addThermalStatusListener(mainExecutor, listener)
+            cockpitSubscriptions += AutoCloseable { power.removeThermalStatusListener(listener) }
+        }
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        @Suppress("DEPRECATION")
+        val pressure = level == android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL ||
+            level == android.content.ComponentCallbacks2.TRIM_MEMORY_COMPLETE
+        if (pressure) cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.MEMORY_PRESSURE, true, "onTrimMemory",
+            level.toDouble(), android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW.toDouble())
+        else if (level == android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) Unit
+        else cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.MEMORY_PRESSURE, false, "onTrimMemory")
+    }
+
+    /** Memory events → cockpit bus, coalesced on the main thread (closed with the other cockpit subscriptions). */
+    private fun subscribeMemoryEvents() {
+        val source = at.heinz.deviceai.cockpit.MemoryEventSources.production ?: return
+        val main = android.os.Handler(mainLooper)
+        val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
+        val subscription = source.subscribe(mapper)
+        cockpitSubscriptions += AutoCloseable { mapper.detach(); subscription.close() }
+    }
+
+    private fun cockpitStatus(): at.heinz.deviceai.ui.CockpitStatus {
+        return at.heinz.deviceai.ui.CockpitStatus.live(activeChiefTurn, chiefStatusPool, lastChiefWorkerReport,
+            cockpitTriggers, cockpitDialog.toList())
+    }
+
+    /** Updates only the cockpit part of the shown state; measured dashboard values stay from the last collection. */
+    private fun pushCockpitState() {
+        val home = homeView ?: return
+        if (isFinishing || isDestroyed) return
+        home.state = home.state.copy(cockpit = cockpitStatus())
+    }
+
+    private fun recordCockpitDialog(fromOwner: Boolean, text: String) {
+        cockpitDialog.addLast(at.heinz.deviceai.ui.CockpitStatus.DialogLine(fromOwner, text.take(200)))
+        while (cockpitDialog.size > 4) cockpitDialog.removeFirst()
+        pushCockpitState()
     }
 
     /** Immediate, de-duplicated notice for every newly opened problem (the full list is in the diagnostics center). */
@@ -1464,11 +1607,14 @@ class AgentActivity : Activity() {
         val index = ContinuumWorkAreaNavigationSpec.destinations.indexOf(activeWorkArea).coerceAtLeast(0)
         (navigationView?.element as? at.heinz.deviceai.ui.BottomNavElement)?.selected = index
         navigationView?.invalidate()
-        (railView?.element as? at.heinz.deviceai.ui.RailElement)?.selected = index.coerceAtMost(3)
-        railView?.invalidate()
+        when (activeWorkArea) {
+            ContinuumWorkArea.START -> "home"
+            ContinuumWorkArea.CHAT -> "chat"
+            ContinuumWorkArea.ENTWICKELN -> "development"
+            else -> null
+        }?.let { menuNavigator.syncCurrent(it); selectRail(it) }
         for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
             bottomWorkAreaBar?.findViewWithTag<View>(destination)?.isSelected = destination == activeWorkArea
-            (railView?.parent as? View)?.findViewWithTag<View>(destination)?.isSelected = destination == activeWorkArea
         }
     }
 
@@ -2247,7 +2393,10 @@ class AgentActivity : Activity() {
         )
         effectContext?.let { chiefTaskEffectContexts[brief.id] = it }
         val accepted = pool.submit(brief) { report ->
+            cockpitTriggers.alarm(at.heinz.deviceai.cockpit.AlarmKind.DATA_OVERLOAD, false, "Worker-Warteschlange")
             chiefTaskEffectContexts.remove(brief.id)
+            cockpitTriggers.workerReported(report)
+            runOnUiThread { lastChiefWorkerReport = report }
             runOnUiThread {
                 if (isFinishing || isDestroyed || sessionId != ownerSession) return@runOnUiThread
                 val result = if (report.status == at.heinz.deviceai.chief.WorkerStatus.DONE)
@@ -2258,6 +2407,11 @@ class AgentActivity : Activity() {
                 addToolActivity("CHIEF · echter WorkerReport: " + report.id + " · " + report.status.name)
             }
         }
+        if (accepted) cockpitTriggers.workerStarted(brief.id, brief.goal)
+        // Real signal: the pool refused because running + queued reached its capacity.
+        if (!accepted && pool.snapshot().size >= pool.capacity) cockpitTriggers.alarm(
+            at.heinz.deviceai.cockpit.AlarmKind.DATA_OVERLOAD, true, "Worker-Warteschlange",
+            pool.snapshot().size.toDouble(), pool.capacity.toDouble())
         if (!accepted) {
             chiefTaskEffectContexts.remove(brief.id)
             addAssistantMessage(
@@ -6951,8 +7105,11 @@ class AgentActivity : Activity() {
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=110_000),
         ToolRunner { request ->
             var effectStarted = false
+            var toolFailed = false
+            val cockpitTurn = activeChiefTurn?.takeIf { it.phase != at.heinz.deviceai.chief.TurnPhase.ENDED }?.turnId
             fun actualStart() {
                 effectStarted = true
+                cockpitTurn?.let { cockpitTriggers.toolStarted(it, request.callId, request.name) }
                 postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Started(request.callId,
                         at.heinz.deviceai.ui.ContinuumTaskEffects.Kind.TOOL), android.os.SystemClock.uptimeMillis())
@@ -6997,7 +7154,12 @@ class AgentActivity : Activity() {
                     DeviceToolExecutorRunner(executor).execute(request)
                 }
             }
+            } catch (failure: Throwable) {
+                toolFailed = true
+                throw failure
             } finally {
+                if (effectStarted && cockpitTurn != null)
+                    cockpitTriggers.toolFinished(cockpitTurn, request.callId, request.name, succeeded = !toolFailed)
                 if (effectStarted) postTaskEffect(effectContext,
                     at.heinz.deviceai.ui.ContinuumTaskEffects.Event.Finished(request.callId), android.os.SystemClock.uptimeMillis())
                 runOnUiThread {
@@ -7236,7 +7398,11 @@ class AgentActivity : Activity() {
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
         val chiefTurn = at.heinz.deviceai.chief.TurnLifecycle("local-" + turnId)
-        chiefTurn.acknowledge()?.let { addToolActivity("CHIEF · " + it) }
+        activeChiefTurn = chiefTurn
+        chiefTurn.acknowledge()?.let {
+            addToolActivity("CHIEF · " + it)
+            cockpitTriggers.commandAcknowledged(chiefTurn.turnId, text)
+        }
         // Context may resolve pronouns, but owner-write authorization always
         // uses the untouched original user message ('text').
         // Dossier 4.2: a same-session follow-up ("Nun ... statt 4", "ursprünglich")
@@ -7499,7 +7665,12 @@ class AgentActivity : Activity() {
             checkpointStore = if(codingPlanning == null) FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")) else null,
             callIdPrefix = "local-$turnId",
             cancellation = cancellation,
-            eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, show = { line ->
+            eventObserver = at.heinz.deviceai.chief.ChiefTurnBridge.observer(chiefTurn, delegate = { event ->
+                at.heinz.deviceai.chief.TurnLifecycle.milestoneOf(event.state)?.let { kind ->
+                    if (chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED)
+                        cockpitTriggers.milestone(chiefTurn.turnId, kind)
+                }
+            }, show = { line ->
                 runOnUiThread {
                     if (!isFinishing && !isDestroyed && sessionId == localSessionId &&
                         chiefTurn.phase != at.heinz.deviceai.chief.TurnPhase.ENDED) {
@@ -7525,7 +7696,7 @@ class AgentActivity : Activity() {
                     (sessionId == localSessionId && foregroundLearningActive && codingPlanningEpoch == planningEpoch &&
                         runCatching { cancellation.throwIfCancelled() }.isSuccess &&
                         LocalTurnModelBinding.stillBound(imported,localRuntime.loadedModel))
-                chiefTurn.deliver()
+                cockpitTriggers.turnEnded(chiefTurn.turnId, chiefTurn.deliver())
                 activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
@@ -9410,6 +9581,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
         // both ALWAYS_ON and recurring public study. Not the chat transcript.
@@ -9466,6 +9638,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addAssistantMessage(value: String, preserveLocalContext: Boolean = false) {
+        recordCockpitDialog(false, value)
         // A non-model answer becomes the latest turn and invalidates any older
         // local-model prompt context. Successful local model runs set it after rendering.
         lastLocalReply = null
@@ -9712,7 +9885,7 @@ class AgentActivity : Activity() {
                 }) }.onFailure {
                     speech.cancel();Toast.makeText(this,"Lokale Spracheingabe nicht verfügbar. Keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
                 }
-            else -> Toast.makeText(this,"Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet.",Toast.LENGTH_LONG).show()
+            else -> Toast.makeText(this,at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.unavailableReason(android.os.Build.VERSION.SDK_INT),Toast.LENGTH_LONG).show()
         }
     }
 

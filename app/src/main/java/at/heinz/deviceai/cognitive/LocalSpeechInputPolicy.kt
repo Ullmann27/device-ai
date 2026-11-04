@@ -1,10 +1,17 @@
 package at.heinz.deviceai.cognitive
 
-/** Android EXTRA_PREFER_OFFLINE is advisory, never a network permission or offline proof.
- * The actual UI uses on-device ASR only; cloud audio needs a separate explicit per-use grant. */
+/** Android EXTRA_PREFER_OFFLINE is advisory, never a network permission or offline proof, so the
+ * legacy SpeechRecognizer is never used. The UI uses only real on-device ASR (API 31+, see
+ * LocalSpeechEngine); below API 31 speech input is unavailable. There is no automatic cloud
+ * substitute on any API level; cloud audio would need a separate explicit per-use grant. */
 internal object LocalSpeechInputPolicy {
     enum class Failure { NO_MATCH, NO_INPUT, PERMISSION, SERVICE_UNAVAILABLE, LANGUAGE_UNSUPPORTED,
         LANGUAGE_UNAVAILABLE, BUSY, AUDIO, NETWORK, SERVICE_FAILURE, START_FAILED, TIMEOUT, CANCELLED }
+
+    /** Clear reason when no on-device recognizer exists; below API 31 there is none by design. */
+    fun unavailableReason(sdkInt: Int): String = if (sdkInt < 31)
+        "Spracheingabe braucht Android 12 oder neuer: Nur dort gibt es echte Erkennung auf dem Gerät. Bitte tippen; keine Audioübertragung gestartet."
+    else "Kein lokaler Android-Spracherkenner verfügbar. Bitte tippen; keine Audioübertragung gestartet."
 
     fun message(failure: Failure): String = when (failure) {
         Failure.NO_MATCH -> "Keine verständlichen Wörter erkannt. Bitte erneut auf das Mikrofon tippen und deutlich sprechen."

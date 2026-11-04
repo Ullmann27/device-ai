@@ -13,7 +13,9 @@ class ContinuumCoreMirrorTest {
         ContinuumHomeLayout.phone(360f), ContinuumHomeLayout.phone(412f),
         ContinuumHomeLayout.wide(840f, 649f), ContinuumHomeLayout.wide(832f, 708f),
         ContinuumHomeLayout.wide(656f, 690f), ContinuumHomeLayout.wide(840f, 1050f)
-    )
+    // 2026-11-04: landscape windows now use the ref1/ref3 cockpit (ContinuumLandscapeCockpitLayoutTest);
+    // this mirror composition remains the phone/portrait/large-type layout.
+    ).filterNot { it.landscapeCockpit }
 
     @Test fun allEightControlsKeepEqualBoundsAndBalancedRows() {
         for (layout in layouts) {
@@ -64,6 +66,44 @@ class ContinuumCoreMirrorTest {
             for ((slot, title) in labels) {
                 assertTrue(elements.getValue(slot) is ReferenceActionElement)
                 assertTrue(elements.getValue(slot).describe(ContinuumDashboardState()).startsWith("$title."))
+            }
+        }
+    }
+
+    // Security review #481 (4): the landscape cockpit gets the same strength of checks, adapted to its composition.
+    private val cockpits = listOf(ContinuumHomeLayout.wide(840f, 649f), ContinuumHomeLayout.wide(832f, 708f),
+        ContinuumHomeLayout.wide(1280f, 800f)).onEach { assertTrue(it.landscapeCockpit) }
+
+    @Test fun landscapeCockpitActionBarKeepsEqualBoundsInOneRowUnderTheStage() {
+        for (layout in cockpits) {
+            val bar = ContinuumLandscapeCockpitLayout.actionBar.map { layout.boxes.getValue(it) }
+            val hero = layout.boxes.getValue(Slot.HERO)
+            val composer = layout.boxes.getValue(Slot.COMPOSER)
+            for (box in bar) {
+                assertEquals(bar.first().width, box.width, .002f)
+                assertEquals(bar.first().height, box.height, .002f)
+                assertEquals(bar.first().top, box.top, .002f)
+                assertTrue(box.width >= 48f && box.height >= 48f)
+                assertTrue("$box below the avatar stage", box.top > hero.bottom)
+                assertTrue("$box below the composer", box.top > composer.bottom)
+            }
+            for ((a, b) in bar.zipWithNext()) assertTrue(a.right < b.left)
+            assertTrue("composer below the avatar stage", composer.top > hero.bottom)
+        }
+    }
+
+    @Test fun landscapeCockpitKeepsOneHeroAndRealDestinations() {
+        for (layout in cockpits) {
+            assertNotNull(layout[Slot.HERO])
+            val elements = ContinuumHomeScreen.elements(layout, 1f)
+            val needed = ContinuumLandscapeCockpitLayout.actionBar + ContinuumLandscapeCockpitLayout.topTabs +
+                ContinuumLandscapeCockpitLayout.cards + Slot.COMPOSER
+            assertTrue(elements.keys.containsAll(needed))
+            assertFalse("The native avatar owns the stage", elements.containsKey(Slot.HERO))
+            val hero = layout.boxes.getValue(Slot.HERO)
+            for (card in ContinuumLandscapeCockpitLayout.cards) {
+                val c = layout.boxes.getValue(card)
+                assertTrue("$card does not underlay the avatar", c.right <= hero.left || c.left >= hero.right)
             }
         }
     }

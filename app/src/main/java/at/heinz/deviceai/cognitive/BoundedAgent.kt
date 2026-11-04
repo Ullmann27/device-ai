@@ -364,7 +364,7 @@ class BoundedAgentOrchestrator(
                             usedTools += proposal.toolName
                             val risk = ToolRegistry.get(proposal.toolName)!!.risk
                             // S4: tool results are untrusted data; they cannot create owner intent.
-                            ExternalContentActionGuard.refusal(task, proposal.toolName, risk,
+                            ExternalContentActionGuard.refusal(task, proposal.toolName, risk, proposal.arguments,
                                 untrustedObservationsSeen = toolObservations.isNotEmpty())?.let { refused ->
                                 lastRecord = ToolExecutionRecord("$callIdPrefix-$calls", proposal.toolName, risk, emptyMap(),
                                     refused, ToolExecutionStatus.REJECTED, 0)

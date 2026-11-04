@@ -15,6 +15,10 @@ data class ContinuumDashboardState(
     val development: DevelopmentStatus = DevelopmentStatus(),
     val system: SystemStatus = SystemStatus(),
     val core: CoreStatus = CoreStatus(),
+    /** Live cockpit inputs (turn phase, workers, process steps, dialog); filled by the Activity, never sampled. */
+    val cockpit: CockpitStatus = CockpitStatus(),
+    /** Read-only memory ledger figures (ContinuumMemoryStatsReader, PR #371); null = not read / unreadable. */
+    val memory: at.heinz.deviceai.learning.ContinuumMemoryStats? = null,
     /** Real pending items (curiosity question, receipts to review, web learning inbox); 0 hides the bell badge. */
     val pendingNotifications: Int = 0
 ) {
@@ -96,6 +100,8 @@ data class ContinuumDashboardState(
         val networkLabel: String = "—",
         /** Real recent activity values (e.g. app CPU samples), oldest first. */
         val activity: List<Float> = emptyList(),
+        /** Battery temperature reported by Android (°C); null = not reported. Not a CPU/SoC temperature. */
+        val temperatureC: Float? = null,
         /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */
         val openIssues: Int? = null
     ) {

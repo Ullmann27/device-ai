@@ -189,3 +189,27 @@ T3/T7/C2/C3/M8 enthalten sich. Fixes nur über ein separates Dev-Set und einen n
 
 ## 9. Nächster Einstieg
 Siehe `docs/research/omega/M2-NEUROSYMBOLIC-SPARSE-LOCAL-INFERENCE-20261103.md`, Abschnitt „Nächste Inkremente“.
+
+## 11. Übergabe an Jarvis Kern / Continuum 1: Cockpit-Gedächtniswerte (M2.7) und LEX3 (M2.5)
+
+**Nur lesend, keine Verdrahtung durch Grok 2.** UI/Routing verdrahten Jarvis Kern bzw. Continuum 1.
+
+```kotlin
+// at.heinz.deviceai.learning.ContinuumMemoryStats.kt
+data class ContinuumMemoryStats(val totalEntries:Int, val newToday:Int, val lastActivity:Instant?,
+    val confirmed:Int, val unconfirmed:Int, val hypothetical:Int, val revoked:Int)
+class ContinuumMemoryStatsReader(appDirectory:File, clock:Clock = Clock.system(ZoneId.of("Europe/Vienna"))) {
+    fun read():ContinuumMemoryStats
+}
+```
+
+- `appDirectory` = dasselbe Basisverzeichnis wie `ContinuumLearningCore` (liest `learning-core-v2/experiences-v2.bin`).
+- Alle Werte aus dem echten Ledger; leer/fehlend → `0` bzw. `lastActivity = null`. Keine Defaults, keine erfundenen Zahlen.
+- `newToday` ab Mitternacht in der Clock-Zone (Standard Europe/Vienna, Clock injizierbar für Tests).
+- `confirmed/unconfirmed/hypothetical/revoked` zählen nur Besitzeraussagen (`USER_FACT`); hypothetisch = gehalten mit Modalität HYPOTHETICAL.
+- Liest pro Aufruf die Datei (bei 1000 Einträgen ~11–16 ms p95 kalt) → im Cockpit nicht pro Frame, sondern z. B. alle paar Sekunden / bei Änderung abfragen.
+- Thinking-Journal-Hypothesen (`ContinuumThinkingMemory`, Sidecar `thinking-journal-v1.log`) sind **nicht** in diesen Zahlen enthalten.
+
+**LEX3:** Ledger-Format versioniert (Magic `LEX3` + Version 3), Kapazität 4096 statt 256, max. 48 MiB. LEX2-Dateien (≤256) werden verlustfrei gelesen und beim nächsten Schreiben nach LEX3 migriert; die LKG-Sicherung behält die alte LEX2-Generation. `PersonalLearningTransfer.inspectDocument` akzeptiert LEX2 und LEX3.
+
+**PR #477 (ChatGPT):** nur Docs (`REFERENCE-COCKPIT-HANDOFF-20261104.md`, `device-experience-20261104/PLAN.md`), kein Gedächtnis-Code; dort explizit „No parallel memory“. Keine Überschneidung/Konflikt; das Cockpit soll seine Gedächtniszahlen aus `ContinuumMemoryStatsReader` beziehen.

@@ -125,6 +125,24 @@ class ChiefWorkerPool(
 
     fun active(): Set<String> = slots.keys.toSet()
 
+    /** Read-only view of one assignment for the cockpit; no progress is invented (there is none). */
+    data class WorkerSnapshot(val id: String, val goal: String, val running: Boolean, val cancelling: Boolean,
+                              val elapsedMillis: Long, val deadlineMillis: Long)
+
+    /** Current assignments (queued and running), oldest first by start; never blocks the pool. */
+    fun snapshot(nowNanos: Long = System.nanoTime()): List<WorkerSnapshot> = slots.values
+        .filterNot { it.reported.get() }
+        .map { slot ->
+            val started = slot.startedNanos
+            WorkerSnapshot(slot.brief.id, slot.brief.goal, running = started != 0L, cancelling = slot.cancelled.get(),
+                elapsedMillis = if (started == 0L) 0L else TimeUnit.NANOSECONDS.toMillis((nowNanos - started).coerceAtLeast(0L)),
+                deadlineMillis = slot.brief.deadlineMillis)
+        }
+        .sortedWith(compareByDescending<WorkerSnapshot> { it.running }.thenByDescending { it.elapsedMillis })
+
+    /** Fixed admission capacity (running + queued). */
+    val capacity: Int get() = maxConcurrent + maxQueued
+
     /** Idle includes report delivery, even when callbacks submit another job. It does not certify
      * termination of a native call that ignores cancellation; inspect its execution receipt. */
     fun awaitIdle(timeoutMillis: Long): Boolean {
@@ -163,7 +181,7 @@ class ChiefWorkerPool(
         val message = if (terminal != status) "Abbruch angefordert; Werkzeugquittungen auf offene Wirkungen prüfen." else summary
         slots.remove(slot.brief.id, slot)
         try {
-            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, message.take(4_000), ms)) }
+            runCatching { slot.onReport(WorkerReport(slot.brief.id, terminal, at.heinz.deviceai.ToolOutputCap.cap(message), ms)) }
         } finally {
             unfinishedAssignments.decrementAndGet()
         }
@@ -217,7 +235,7 @@ object WorkerScope {
     fun runner(brief: WorkerBrief, delegate: ToolRunner): ToolRunner = ToolRunner { call ->
         if (call.name !in brief.allowedTools)
             throw ToolBackendFailure(ToolExecutionStatus.FAILED, "Werkzeug ${call.name} ist für Auftrag ${brief.id} nicht freigegeben.")
-        delegate.execute(call)
+        at.heinz.deviceai.ToolOutputCap.cap(delegate.execute(call))
     }
 
     fun model(brief: WorkerBrief, delegate: AgentModel): AgentModel = AgentModel { task, memories, reflection, observations ->

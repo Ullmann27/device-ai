@@ -7,7 +7,9 @@ object ContinuumHomeLayout {
         LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,
         MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL,
         COMPOSER, ACTION_MEMORY, ACTION_AGENTS, ACTION_DEVICE, ACTION_BOTS, ACTION_TASK,
-        VIEW_AVATAR, VIEW_ORB, VIEW_COMPACT
+        VIEW_AVATAR, VIEW_ORB, VIEW_COMPACT,
+        /** Landscape Jarvis cockpit (ContinuumLandscapeCockpitLayout). */
+        PROCESSES, LIVE_DIALOG, ACTION_VERIFY
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -25,7 +27,9 @@ object ContinuumHomeLayout {
         val boxes: Map<Slot, Box>,
         val adaptive: Boolean = false,
         val referenceCockpit: Boolean = false,
-        val portrait: Boolean = false
+        val portrait: Boolean = false,
+        /** ref1/ref3 landscape cockpit: one screen, three columns, action bar. */
+        val landscapeCockpit: Boolean = false
     ) {
         operator fun get(slot: Slot): Box? = boxes[slot]
     }
@@ -35,10 +39,13 @@ object ContinuumHomeLayout {
     const val WIDE_REFERENCE_HEIGHT = 649f
     const val PHONE_NAV_HEIGHT = 74f
 
-    /** Navigation reserves readable dp instead of shrinking every control with the window. */
+    /**
+     * Navigation reserves readable dp instead of shrinking every control with the window. Open Fold7 (both
+     * orientations): ~20 % labelled rail after ref5 / JARVIS-DESIGN-BILDBESCHRIEB (was 10 %, 88–120 dp).
+     */
     fun railWidthDp(windowWidthDp: Float): Float {
         require(windowWidthDp.isFinite() && windowWidthDp > 0f)
-        return (windowWidthDp * .10f).coerceIn(88f, 120f)
+        return (windowWidthDp * JarvisMenuRail.WIDTH_FRACTION).coerceIn(JarvisMenuRail.MIN_WIDTH, JarvisMenuRail.MAX_WIDTH)
     }
 
     /** Height-only changes (IME and system bars) never reset the active work area. */

@@ -32,4 +32,13 @@ class LocalSpeechInputPolicyTest {
         var now=0L;val session=EphemeralSpeechTurn{now};val token=session.start();now=31_000_000_000L
         assertNull(session.accept(token,"late result"))
     }
+    @Test fun textsStayConsistentWithOnDeviceOnlyBehaviour(){
+        val all=LocalSpeechInputPolicy.Failure.values().map(LocalSpeechInputPolicy::message)
+        assertTrue(LocalSpeechInputPolicy.message(LocalSpeechInputPolicy.Failure.NETWORK).contains("kein Cloud-Ersatz"))
+        assertTrue(LocalSpeechInputPolicy.message(LocalSpeechInputPolicy.Failure.START_FAILED).contains("kein Cloud-Ersatz"))
+        assertFalse(all.any{it.contains("online",true)||it.contains("Cloud-Spracherkennung")})
+        assertTrue(LocalSpeechInputPolicy.unavailableReason(30).contains("Android 12"))
+        assertTrue(LocalSpeechInputPolicy.unavailableReason(30).contains("keine Audioübertragung"))
+        assertFalse(LocalSpeechInputPolicy.unavailableReason(31).contains("Android 12"))
+    }
 }

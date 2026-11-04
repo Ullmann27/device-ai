@@ -17,6 +17,9 @@ class AvatarMorphMapper(targetNames: List<String>) {
     var eyeYaw = 0f; private set
     var eyePitch = 0f; private set
     var jawPitch = 0f; private set
+    /** Crossfaded viseme weights (VIDEO-SPEC: syllable-synchronous O/A; 70 ms crossfade between visemes). */
+    private val visemeBlend = FloatArray(Viseme.entries.size)
+    private var lastSeconds = Float.NaN
 
     init { require(targetNames.toSet().size == targetNames.size && indices.keys == AvatarGlbContract.TARGETS.toSet()) }
 
@@ -36,7 +39,7 @@ class AvatarMorphMapper(targetNames: List<String>) {
             AvatarExpression.CONCERNED -> weight("BrowDown", .28f)
             AvatarExpression.NEUTRAL -> Unit
         }
-        if (!motion) return
+        if (!motion) { visemeBlend.fill(0f); lastSeconds = Float.NaN; return }
         // Cosmetic idle motion, not observed gaze or invented speech/work. The existing view
         // owns the clock and stops it on pause/reduced motion. Actual task/observed gaze wins.
         if (pose.state == AvatarState.IDLE && !pose.gazeObserved) {
@@ -56,11 +59,26 @@ class AvatarMorphMapper(targetNames: List<String>) {
         weight("JawOpen", (jaw - cueOpening).coerceAtLeast(0f))
         jawPitch = maxOf(jaw, cueOpening) * 12f
         // The existing reducer expires stale cues/audio and resets interrupted utterances.
-        if (pose.viseme != Viseme.SIL) weight(pose.viseme.name, cueWeight)
+        // Linear crossfade over CROSSFADE_S toward the current cue; first frame / clock jump snaps.
+        val dt = if (lastSeconds.isFinite() && seconds.isFinite()) seconds - lastSeconds else Float.NaN
+        lastSeconds = seconds
+        // Crossfade only between two active cues; silence/interruption closes at once (reducer owns stop).
+        // A repeated frame time or a clock jump snaps, so a static frame never shows a stale blend.
+        if (pose.viseme == Viseme.SIL || cueWeight <= 0f) visemeBlend.fill(0f)
+        val step = if (dt.isFinite() && dt > 0f && dt <= 1f) (dt / CROSSFADE_S).coerceIn(0f, 1f) else 1f
+        for (v in Viseme.entries) {
+            val target = if (v == pose.viseme && v != Viseme.SIL) cueWeight else 0f
+            val cur = visemeBlend[v.ordinal]
+            visemeBlend[v.ordinal] = if (target > cur) minOf(target, cur + step) else maxOf(target, cur - step)
+            if (v != Viseme.SIL && visemeBlend[v.ordinal] > 0f) weight(v.name, visemeBlend[v.ordinal])
+        }
+        // VIDEO-SPEC: periodic blink of ~0.15 s.
         val t = if (seconds.isFinite()) ((seconds % 4.6f) + 4.6f) % 4.6f else 0f
-        val blink = if (t > 4.42f) (1f - abs(t - 4.51f) / .09f).coerceIn(0f, 1f) else 0f
+        val blink = if (t > 4.45f) (1f - abs(t - 4.525f) / .075f).coerceIn(0f, 1f) else 0f
         weight("BlinkLeft", blink); weight("BlinkRight", blink)
     }
+
+    private companion object { const val CROSSFADE_S = .07f }
 
     private fun finite(value: Float, min: Float, max: Float) = if (value.isFinite()) value.coerceIn(min, max) else 0f
 
