@@ -76,6 +76,7 @@ for folder, _, files in os.walk(src):
 PY
 mkdir -p "$out/stubs/androidx/annotation"
 printf 'package androidx.annotation;\npublic @interface Keep {}\n' > "$out/stubs/androidx/annotation/Keep.java"
+printf 'package androidx.annotation;\npublic @interface RequiresApi { int value() default 1; int api() default 1; }\n' > "$out/stubs/androidx/annotation/RequiresApi.java"
 
 version_name=$(grep -m1 'versionName = ' "$root/app/build.gradle.kts" | grep -o '"[^"]*"' | tail -1)
 cat > "$out/stubs/at/heinz/deviceai/BuildConfig.java" <<EOF
