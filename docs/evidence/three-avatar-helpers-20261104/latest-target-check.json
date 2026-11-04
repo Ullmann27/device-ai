@@ -1,0 +1,41 @@
+{
+  "observed_at_utc": "2026-11-04T10:58:54.626057+00:00",
+  "target_pr": 491,
+  "target_branch": "codex/astra-jarvis-takeover-20261104",
+  "target_head": "e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb",
+  "tested_helper_source": "7859d5d212d61829fabc7dfdbd3ca7587852388d",
+  "tested_production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "scope": "Read-only comparison of all six touched production/test paths; not a merged-target runtime test.",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "target_blob": "9832458de6394b50914ea080f70cbf80c951648a",
+      "base_blob": "9832458de6394b50914ea080f70cbf80c951648a",
+      "identical_to_tested_production_base": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "target_blob": "8693cfffa64c4b3bdd18166e82b5d4b18b97ea46",
+      "base_blob": "8693cfffa64c4b3bdd18166e82b5d4b18b97ea46",
+      "identical_to_tested_production_base": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "target_blob": "88f10a336a230a7a7e3c9c8a973830c6a8c833e6",
+      "base_blob": "88f10a336a230a7a7e3c9c8a973830c6a8c833e6",
+      "identical_to_tested_production_base": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "present_on_target": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "present_on_target": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/JarvisAvatarDispatchRegressionTest.kt",
+      "present_on_target": false
+    }
+  ]
+}

@@ -164,7 +164,7 @@ was used. The tested source was then fetched and selected before execution.
 
 ## Integration scope and remaining gates
 
-- The current live `AgentActivity` construction ultimately attaches the existing
+- At the tested checkpoint, `AgentActivity` construction ultimately attaches the existing
   `ContinuumHologramView` directly to `AvatarDirector`. The fanout correction is
   a tested dispatch component; this patch does not rewire the normal speech path
   or claim that it now traverses fanout.
@@ -187,6 +187,14 @@ active avatar asset scripts and motion work were left untouched. The later
 read-only collision snapshot found our three production files still identical
 to d352bab6 in the three visible takeover/avatar/integration checkouts. This is
 an observed snapshot, not an assertion that another active branch is frozen.
+
+At 10:58 UTC the published #491 target had advanced to
+`e10f4785284ab08f1d5d0a77b64ab8631ed5b9cb`. A fresh Git-object comparison verified
+that all three production files still match the tested d352bab6 base exactly
+and that none of the three new test paths exists on that target. There is no
+same-file overlap at that checkpoint. The exact blobs are recorded in
+`latest-target-check.json`. This does not claim a test run of a merge with the
+new target; the 118-test result remains bound to `7859d5d`.
 
 The applicable experiment compatibility remains EXP-07 (independent evidence),
 EXP-11 (existing orchestration) and EXP-12 (source-bound rollback/checkpoint).
