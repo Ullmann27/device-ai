@@ -12,8 +12,13 @@ Branch `design/jarvis-cockpit-home-20261104`, Draft-PR #481. Bindend: /workspace
 - 6c77f39c: Kopf-Registrierung (JarvisHoloAvatar im HEAD-Bereich, onDestroy meldet ab). Laut Commit UI-Tests 4/4 grün.
 - Volle Testsuite für den Head NICHT gelaufen.
 
+## Sprint 09:56–10:07
+- #489 @1983d2f7 (Mathematik, MotionLibrary-Defaults) eingemergt.
+- SystemStatus hat jetzt `freeRamBytes`, `thermalStatus` (API 29+) und `charging` (BatteryManager.isCharging), alles nullable und vom ContinuumDashboardCollector gefüllt. Hinweis: „Ladefreigabe“ ist hier der echte Ladezustand. Eine eigene Lade-Regel gibt es im Repo nicht.
+- Tests: `./gradlew :app:testDebugUnitTest --tests at.heinz.deviceai.ui.ContinuumSystemStatusFieldsTest --tests 'at.heinz.deviceai.motion.*'` grün (JAVA_HOME=/opt/jdk/jdk-17.0.21+9).
+
 ## Offen (Reihenfolge)
-1. Dashboard-State-Felder für das Panel „Local Model Status“ von Sicherheit: freeRamBytes (ActivityManager.MemoryInfo.availMem), thermalStatus (PowerManager.currentThermalStatus ab API 29, sonst null), Lade-Freigabe (sonst null, Anzeige „—“).
+1. ERLEDIGT im Sprint: Dashboard-State-Felder für das Panel „Local Model Status“ von Sicherheit: freeRamBytes (ActivityManager.MemoryInfo.availMem), thermalStatus (PowerManager.currentThermalStatus ab API 29, sonst null), Lade-Freigabe (sonst null, Anzeige „—“).
 2. ActionScene-Vertrag (§12) in at.heinz.deviceai.cockpit:
    - `CockpitAnimationEvent.ActionScene(turnId, atMillis, kind, toolName, sourceLabel, appId?, phase, items, question?, options)`
    - `ActionKind { MESSAGE_APP, DOCUMENT, DEVICE_FILE, WEB, APP, OTHER }`
@@ -28,7 +33,7 @@ Branch `design/jarvis-cockpit-home-20261104`, Draft-PR #481. Bindend: /workspace
    - eingebaute Minimal-Szene als Rückfall
    - Szenen-Besitzer: Sicherheit MESSAGE_APP, Gedächtnis DOCUMENT, Lückenfüller DEVICE_FILE und WEB, Integration Standard-Szene.
 3. CalmNotice(turnId, atMillis, sourceLabel, message, options) für normale Fehler; AlarmRaised.options. Die große Szene H nur bei SECURITY_FINDING.
-4. #489 (Mathematik, MotionLibrary-Defaults) in diesen Branch mergen. Echte AudioLevelSource-Instanz bauen und Wellenform anbinden (bis dahin audioLevel 0).
+4. Echte AudioLevelSource-Instanz bauen und Wellenform anbinden (bis dahin audioLevel 0).
 5. #484 anbinden:
    - `bus.subscribe(BrainOrbAnimationRenderer(home.jarvisSequenceEffects, SystemClock::uptimeMillis))`
    - `RetrievalCalculationSource.addListener { bus.emit(it) }`
