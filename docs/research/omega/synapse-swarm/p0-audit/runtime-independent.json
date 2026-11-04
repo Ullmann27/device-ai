@@ -1,0 +1,17 @@
+{
+  "source": "713949a86e10fb4fe4cc22d03f1af1afdcdf51e8",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tools/momega1-challenger/provider-contract.test.mjs",
+    "tools/momega1-challenger/runtime-review.test.mjs"
+  ],
+  "env": {
+    "MOMEGA1_TARGET": "/workspace/synapse-p0-audit"
+  },
+  "exit": 0,
+  "elapsedSeconds": 4.1734778881073,
+  "evidenceClass": "HOST_INTEGRATION; synthetic ELF, no neural inference"
+}
