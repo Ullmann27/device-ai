@@ -110,20 +110,4 @@ object JarvisCockpitGrid {
         a[Area.DIALOG] = Box(cl, dialogTop, W * DIALOG_RIGHT, stageBottom)
         return Grid(W, H, u, a)
     }
-
-    /**
-     * Compact type for the ref5 grid. Interim scale until Welten-Optik's measured typography table (#479) is pushed;
-     * built only from the ContinuumTheme token functions, switched in this ONE place.
-     */
-    object Type {
-        val brand = ContinuumTheme.display(600, 15f, .3f)
-        val brandSub = ContinuumTheme.text(400, 8.5f)
-        val pill = ContinuumTheme.text(500, 9.5f)
-        val tileTitle = ContinuumTheme.text(500, 11f)
-        val tileSub = ContinuumTheme.text(400, 8.5f)
-        val panelTitle = ContinuumTheme.text(500, 10f)
-        val body = ContinuumTheme.text(400, 8.5f)
-        val status = ContinuumTheme.text(400, 9f)
-        val placeholder = ContinuumTheme.text(400, 10f)
-    }
 }

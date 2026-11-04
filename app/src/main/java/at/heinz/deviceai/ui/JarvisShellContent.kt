@@ -11,7 +11,7 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
  */
 object JarvisShellContent {
     val filled = listOf(Slot.TOP_BAR, Slot.DIALOG, Slot.INPUT, Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY,
-        Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+        Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS, Slot.USER_CARD)
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.TOP_BAR -> "CONTINUUM"
@@ -70,8 +70,11 @@ object JarvisShellContent {
         }
     }
 
-    fun tiles(s: ContinuumDashboardState, nowMillis: Long): List<JarvisTile> =
-        JarvisTiles.reference.map { it.copy(displayText = tileValue(it.target, s, nowMillis)) }
+    fun tiles(s: ContinuumDashboardState, nowMillis: Long, subtitles: Boolean = false): List<JarvisTile> =
+        JarvisTiles.reference.map {
+            it.copy(displayText = tileValue(it.target, s, nowMillis),
+                subtitle = if (subtitles) JarvisCockpitGridContent.tileSubtitles[it.target].orEmpty() else emptyList())
+        }
 
     /**
      * Kern-side hit test (dp) for tiles, rail and bottom nav. #479 has no hit-test API yet, so the row/column
@@ -95,9 +98,15 @@ object JarvisShellContent {
     private fun JarvisShellLayout.Box.contains(x: Float, y: Float) = x in left..right && y in top..bottom
 
     /** One SlotContent per filled slot; [state] is read at draw time so the map can be built once. */
-    fun forState(state: () -> ContinuumDashboardState, clock: () -> Long = System::currentTimeMillis):
+    fun forState(state: () -> ContinuumDashboardState, clock: () -> Long = System::currentTimeMillis,
+                 grid: () -> JarvisCockpitGrid.Grid? = { null }):
         Map<Slot, JarvisShellRenderer.SlotContent> = filled.associateWith { slot ->
-        JarvisShellRenderer.SlotContent { p, box -> draw(p, slot, box, state(), clock()) }
+        JarvisShellRenderer.SlotContent { p, box ->
+            val g = grid()
+            if (g == null || !JarvisCockpitGridContent.draw(p, slot, box, g, state(), clock())) {
+                if (slot != Slot.USER_CARD) draw(p, slot, box, state(), clock())
+            }
+        }
     }
 
     private fun draw(p: ContinuumPainter, slot: Slot, b: JarvisShellLayout.Box, s: ContinuumDashboardState, now: Long) {
