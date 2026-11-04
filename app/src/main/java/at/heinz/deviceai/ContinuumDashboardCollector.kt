@@ -189,7 +189,8 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
             system = ContinuumDashboardState.SystemStatus(
                 appCpuPercent = cpu, batteryPercent = batteryCapacity(), memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
-                activity = cpuSeries.toList(), temperatureC = batteryTemperatureC(), openIssues = openIssues
+                activity = cpuSeries.toList(), temperatureC = batteryTemperatureC(), openIssues = openIssues,
+                freeRamBytes = freeRamBytes(), thermalStatus = thermalStatus(), charging = charging()
             ),
             core = ContinuumDashboardState.CoreStatus(
                 connected = when {
@@ -247,6 +248,21 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         if (file.isFile) file.length() else if (depth > 6) 0L else file.listFiles().orEmpty().sumOf { sizeOf(it, depth + 1) }
 
     /** Android's current battery level, or unknown if the platform does not provide one. */
+    private fun freeRamBytes(): Long? = runCatching {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        android.app.ActivityManager.MemoryInfo().also { manager.getMemoryInfo(it) }.availMem.takeIf { it > 0L }
+    }.getOrNull()
+
+    private fun thermalStatus(): Int? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        runCatching {
+            (context.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager).currentThermalStatus
+        }.getOrNull()
+    } else null
+
+    private fun charging(): Boolean? = runCatching {
+        (context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager).isCharging
+    }.getOrNull()
+
     private fun batteryCapacity(): Int? = runCatching {
         val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY).takeIf { it in 0..100 }

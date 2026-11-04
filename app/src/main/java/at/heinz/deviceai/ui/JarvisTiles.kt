@@ -8,7 +8,9 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Box
  * Pure presentation model of an action tile (look code only, NOT a data interface).
  * Real values reach the tile through Jarvis Kern's interfaces → [displayText]; how is Kern's decision.
  */
-data class JarvisTile(val target: String, val label: String, val icon: Icon, val displayText: String? = null)
+data class JarvisTile(val target: String, val label: String, val icon: Icon, val displayText: String? = null,
+                      /** ref5 grid (Kern): description lines under the title; empty = classic tile. */
+                      val subtitle: List<String> = emptyList())
 
 object JarvisTiles {
     /** The eight action tiles of ref5 (same order), titles translated to German. No invented subtitles. */
@@ -25,6 +27,7 @@ object JarvisTiles {
 
     /** Draws tile content inside an already drawn glass card. */
     fun draw(p: ContinuumPainter, b: Box, tile: JarvisTile) {
+        if (tile.subtitle.isNotEmpty()) return JarvisCockpitGridContent.drawTile(p, b, tile, tile.subtitle)
         if (b.width < 140f) return drawCompact(p, b, tile)
         val iconSize = minOf(b.height * .5f, 30f)
         val ix = b.left + 10f + iconSize / 2f; val cy = b.top + b.height / 2f

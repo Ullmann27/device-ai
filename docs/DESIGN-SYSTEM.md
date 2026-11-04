@@ -100,3 +100,23 @@ GESCHÄTZT:
   - `JarvisTiles.reference` enthält die 8 Kacheln aus ref5. Navigation: `JarvisTiles.railNav` (Leiste aus ref5) und `bottomNav` (ref4).
   - In schmalen Kacheln steht das Icon über dem Label.
   - Die Vorschau zeigt nur Labels und Untertitel, keine Werte.
+
+## Bloom (`ui/JarvisNeon.kt`, ergänzt von Jarvis Avatar)
+Gemeinsamer Leucht-Effekt für Kopf, Panels und Laser; immer additiv, Stärke 0..1 (>1 nur Alarm).
+| API | Wofür | Wer |
+|---|---|---|
+| `bloom(p, cx, cy, radius, color, intensity)` | runder Bloom: Augen, Orbit-Knoten, aktiver Text | Avatar-Kopf, Shell |
+| `bloomRoundRect(p, l, t, r, b, radius, color, intensity)` | aktives Panel / Button / Karte | Shell, `JarvisSequenceEffects` (Karten) |
+| `bloomSegments(p, points, count, width, color, strength)` | gebündelte Liniensegmente (Drahtgitter, Ringe), eine Draw-Call-Gruppe | Avatar-Kopf, Orbit-Ringe |
+| `laserSparks(...)` | Laser (Muster D) mit Bloom + Funken | `JarvisSequenceEffects` |
+Regel: Bloom nur im aktiven Zustand (Sprechen, Fokus, laufende Aktion); Ruhe = schwach (Kopf .22 + .78·Lautstärke).
+
+## Tiefe auf Android (`ui/JarvisDepthViews.kt`)
+`JarvisDepthViews.apply(view, Layer, screenW, screenH, timeMs, animatorScale)` setzt aus `JarvisMotion.Depth.state` echte
+`cameraDistance`, `rotationX/Y`, Skalierung, Drift-Translation und ab API 31 `RenderEffect`-Blur (Tiefe × 1,2 dp).
+`reset(view)` macht alles flach. Animator-Skala 0 → kein Drift/Kippen, Tiefe bleibt statisch.
+
+## Avatar im Slot AVATAR
+Einziger Kopf: `avatar/JarvisHoloAvatar` (Kerns `JarvisAvatarRenderer`-Signatur) – live als Views, in Vorschauen über
+`JarvisHoloAvatar.slotContent(pose, seconds)` als `SlotContent` für `JarvisShellRenderer`. Vorschau:
+`design-screenshots/shell-phone-412x915-avatar.png`, `shell-fold-884x760-avatar.png`.

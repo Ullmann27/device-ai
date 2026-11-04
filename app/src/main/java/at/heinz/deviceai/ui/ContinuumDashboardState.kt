@@ -102,6 +102,12 @@ data class ContinuumDashboardState(
         val activity: List<Float> = emptyList(),
         /** Battery temperature reported by Android (°C); null = not reported. Not a CPU/SoC temperature. */
         val temperatureC: Float? = null,
+        /** Device RAM currently available (ActivityManager.MemoryInfo.availMem); null = not read. */
+        val freeRamBytes: Long? = null,
+        /** PowerManager.currentThermalStatus (0 = none … 6 = shutdown); null below API 29 or when unreadable. */
+        val thermalStatus: Int? = null,
+        /** BatteryManager.isCharging: true = device is charging; null = not reported. */
+        val charging: Boolean? = null,
         /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */
         val openIssues: Int? = null
     ) {
