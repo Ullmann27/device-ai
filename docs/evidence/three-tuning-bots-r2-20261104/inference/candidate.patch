@@ -1,0 +1,11 @@
+--- a/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
++++ b/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt
+@@ -293,7 +293,7 @@
+             return best
+         }
+         val order = p.indices.sortedByDescending { p[it] }.take(topK.coerceIn(1, p.size))
+-        val w = order.map { exp(ln(p[it].toDouble().coerceAtLeast(1e-30)) / temperature) }
++        val w = DoubleArray(order.size) { i -> exp(ln(p[order[i]].toDouble().coerceAtLeast(1e-30)) / temperature) }
+         var r = rnd.nextDouble() * w.sum()
+         for ((i, id) in order.withIndex()) { r -= w[i]; if (r <= 0) return id }
+         return order.last()

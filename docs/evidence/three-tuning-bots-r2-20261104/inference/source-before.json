@@ -1,0 +1,20 @@
+{
+  "phase": "before",
+  "baselineCommit": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "checkoutHead": "db3295d51c769afdaf809ac1dfae2ada84a3274f",
+  "baselineLmModelSha256": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+  "referenceMethodMatchesRoundOne": true,
+  "sourceSha256": {
+    "LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "LmModel.kt": "d9fc7493360e526323505ff1637981a6e024f6c61a47e4d6f24df22d248df65d",
+    "LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+  },
+  "testSha256": {
+    "LmSamplingTest.kt": "d3f5ea036aa9169cd187d0d46aecf2557e871509ef25754cc852539214302895",
+    "LmSamplingWeightsTest.kt": "8a7bbdfe942811a3b11141f6ea4cc315ff22f8c2b9a59a212f529dfa7e3a3539"
+  },
+  "benchmarkSha256": "3b881ac8be6f6f174f811692eb5f08c2850ce65fa5fb39743dc81bdea006d029"
+}
