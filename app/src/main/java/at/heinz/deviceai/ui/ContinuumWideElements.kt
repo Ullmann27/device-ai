@@ -6,54 +6,54 @@ import at.heinz.deviceai.ui.ContinuumIcons.Icon
 
 /** Elements of the wide (unfolded Fold / tablet) reference layout; positions measured from reference-fold.png. */
 
-/** Left navigation rail: logo, seven destinations and "Mehr" at the bottom. */
+/** Reference cockpit rail. Drawn rows and native touch targets share one bounded layout. */
 class RailElement(private val items: List<Pair<Icon, String>>, var selected: Int = 0, textScale: Float = 1f) :
     ContinuumElement(textScale) {
-    private val iconY = floatArrayOf(128.6f, 186.4f, 246.8f, 309f, 366.9f, 428.6f, 492f)
-    private val labelY = floatArrayOf(149.4f, 207.1f, 268.2f, 329.9f, 389.6f, 451.9f, 514.9f)
-
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
-        val k = h / 649f
-        p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, w, 0f, intArrayOf(Argb.rgb(4, 12, 32), Argb.rgb(6, 16, 40))))
-        p.drawLine(w - .5f, 0f, w - .5f, h, 1f, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Argb.rgb(30, 60, 120), Argb.rgb(16, 30, 70))))
+        p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, w, 0f,
+            intArrayOf(Argb.rgb(2, 7, 20), Argb.rgb(4, 15, 33))))
+        p.drawLine(w - .5f, 0f, w - .5f, h, 1f, Fill.Linear(0f, 0f, 0f, h,
+            intArrayOf(Argb.of(170, 45, 206, 248), Argb.of(70, 82, 76, 162), Argb.of(150, 126, 75, 232))))
         val cx = w / 2f
-        ContinuumIcons.logo(p, cx - 3f * k, 58.4f * k, 45f * k, 23f * k)
-        p.drawText("Continuum", cx, 85.7f * k, t(500, 9.2f), Fill.Solid(ContinuumTheme.TEXT), TextAlign.CENTER)
-        for ((i, item) in items.withIndex()) {
-            val iy = iconY.getOrElse(i) { 128.6f + i * 60f } * k
-            val ly = labelY.getOrElse(i) { 149.4f + i * 60f } * k
+        ContinuumIcons.logo(p, cx, 29f, 40f, 22f)
+        p.drawText("CONTINUUM", cx, 58f, fittedTitle(p, "CONTINUUM", 600, 10.5f, w - 12f),
+            Fill.Solid(ContinuumTheme.TEXT), TextAlign.CENTER)
+        val destinations = items + (Icon.DOTS_HORIZONTAL to "Mehr")
+        val rows = targets(h)
+        for ((i, item) in destinations.withIndex()) {
+            val (top, bottom) = rows[i]
+            val cy = (top + bottom) / 2f
+            val horizontal = w >= 112f
+            val iconX = if (horizontal) 22f else cx
+            val iconY = if (horizontal) cy else cy - 8f
             val active = i == selected
             if (active) {
-                p.fillRoundRect(11f, iy - 13.6f * k, w - 11f, iy + 32.4f * k, 9f,
-                    Fill.Linear(0f, iy - 14f, 0f, iy + 32f, intArrayOf(Argb.rgb(20, 60, 130), Argb.rgb(12, 34, 84))))
-                p.strokeRoundRect(11f, iy - 13.6f * k, w - 11f, iy + 32.4f * k, 9f, 1f, Fill.Solid(Argb.rgb(50, 140, 240)), .9f)
-                p.fillRoundRect(9f, iy - 9f * k, 11.6f, iy + 26f * k, 1.3f, Fill.Solid(Argb.rgb(80, 190, 255)))
-                val phase = motionPhase?.takeIf { it.isFinite() }
-                if (phase != null) {
-                    val scanY = (iy - 9f * k) + (35f * k) * phase.coerceIn(0f, 1f)
-                    p.fillCircle(10.3f, scanY, 2.6f, Fill.Solid(Argb.rgb(195, 240, 255)), .65f)
-                    val pulse = .12f + .14f * kotlin.math.abs(kotlin.math.sin(phase * Math.PI.toFloat()))
-                    p.fillRoundRect(9f, iy - 9f * k, 11.6f, iy + 26f * k, 1.3f,
-                        Fill.Solid(Argb.rgb(100, 210, 255)), pulse)
-                }
-                ContinuumIcons.draw(p, item.first, cx, iy, 20f, Fill.Linear(cx, iy - 10f, cx, iy + 10f,
-                    intArrayOf(Argb.rgb(130, 225, 255), Argb.rgb(50, 130, 255))), 1.9f)
-                p.drawText(item.second, cx, ly, t(500, 8.9f), Fill.Solid(Argb.rgb(110, 200, 255)), TextAlign.CENTER)
+                p.fillRoundRect(6f, top + 3f, w - 6f, bottom - 3f, 10f,
+                    Fill.Linear(6f, top, w, bottom, intArrayOf(Argb.rgb(9, 76, 102), Argb.rgb(8, 31, 72))))
+                p.strokeRoundRect(6f, top + 3f, w - 6f, bottom - 3f, 10f, 1.2f,
+                    Fill.Linear(6f, top, w, bottom, intArrayOf(ContinuumTheme.CYAN, ContinuumTheme.VIOLET)), .8f)
+                p.fillRoundRect(4f, top + 12f, 6f, bottom - 12f, 1f, Fill.Solid(ContinuumTheme.CYAN))
+                ContinuumSurfaces.iconGlow(p, item.first, iconX, iconY, 22f)
             } else {
-                ContinuumIcons.draw(p, item.first, cx, iy, 20f, Fill.Solid(Argb.rgb(196, 210, 235)), 1.5f)
-                p.drawText(item.second, cx, ly, t(400, 8.9f), Fill.Solid(Argb.rgb(196, 206, 226)), TextAlign.CENTER)
+                ContinuumIcons.draw(p, item.first, iconX, iconY, 20f,
+                    Fill.Solid(ContinuumTheme.TEXT_SECONDARY), 1.5f)
             }
+            val color = if (active) ContinuumTheme.CYAN_SOFT else ContinuumTheme.TEXT_SECONDARY
+            val labelX = if (horizontal) 40f else cx
+            val style = fittedTitle(p, item.second, if (active) 600 else 400, 11.3f,
+                if (horizontal) w - labelX - 8f else w - 12f)
+            p.drawText(item.second, labelX, if (horizontal) cy + p.capHeight(style) / 2f else cy + 18f,
+                style, Fill.Solid(color), if (horizontal) TextAlign.LEFT else TextAlign.CENTER)
         }
-        ContinuumIcons.draw(p, Icon.DOTS_HORIZONTAL, cx, 588.3f * k, 20f, Fill.Solid(Argb.rgb(196, 210, 235)), 1.5f)
-        p.drawText("Mehr", cx, 607.8f * k, t(400, 8.9f), Fill.Solid(Argb.rgb(196, 206, 226)), TextAlign.CENTER)
     }
 
     override fun describe(s: ContinuumDashboardState) = "Navigation"
 
     /** Tap targets (top, bottom) per destination in rail coordinates, plus "Mehr" last. */
     fun targets(h: Float): List<Pair<Float, Float>> {
-        val k = h / 649f
-        return iconY.indices.map { (iconY[it] - 22f) * k to (labelY[it] + 9f) * k } + ((588.3f - 22f) * k to (607.8f + 12f) * k)
+        val top = 80f
+        val row = ((h - top - 12f) / (items.size + 1)).coerceIn(48f, 72f)
+        return (0..items.size).map { top + it * row to top + (it + 1) * row }
     }
 }
 

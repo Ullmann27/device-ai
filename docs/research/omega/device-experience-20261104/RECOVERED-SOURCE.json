@@ -1,0 +1,140 @@
+{
+  "status": "WIP_UNVERIFIED",
+  "sourceCommit": "ad68e9a8cdfba50e31e99906a4eca37f6130b155",
+  "designCandidate": "eac0c3656",
+  "baseline": "cdfb5f752bfb038cfbca2662d3b7891f1205f220",
+  "recoveredFiles": [
+    {
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "blobSha": "3d58ca55faa680d0e5d1108b83ceb63a81ce5541",
+      "bytes": 10165644
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "blobSha": "0f7b790a06509da3f31e97aed7be41f7188f0657",
+      "bytes": 572822
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "blobSha": "810d812df474d44d9e92f681439352fa3b51244c",
+      "bytes": 26243
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+      "blobSha": "b7260f964d6a991b98213f852f751a30344bb7fc",
+      "bytes": 16560
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "blobSha": "7d6f068f3958fdbd23d6dd23641f159e59c0a104",
+      "bytes": 9058
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "blobSha": "6980a15508a9204a561fb7151add80f4a98cdcde",
+      "bytes": 40141
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+      "blobSha": "8dfe6400c71afc2fa8d5f291a5a1a961d4cb5bc4",
+      "bytes": 33055
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+      "blobSha": "a2839901773ebab936eea72927bcc5538d581d29",
+      "bytes": 2894
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+      "blobSha": "4f348dc3ae82f81e308a7edde7db6f63be4c9bca",
+      "bytes": 8018
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+      "blobSha": "1601f743c184bea905191b4f1c1ac624171fce2f",
+      "bytes": 14018
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceElements.kt",
+      "blobSha": "04a03511d3e0a3a0ae204b948c686b28dddc8aec",
+      "bytes": 15564
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+      "blobSha": "67fa6b11f7140f58a33053c4eb967d9c5e8514bd",
+      "bytes": 6057
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+      "blobSha": "01e10c3dbfc8377b0304648426c680771ba7978b",
+      "bytes": 6536
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+      "blobSha": "684699818cc387d845681955fae2b7316a44f922",
+      "bytes": 2388
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumWideElements.kt",
+      "blobSha": "4eebe9097a1f7f5f7fdebbd35f1e143a715ed79f",
+      "bytes": 22574
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "blobSha": "eb177f8ecfe33fd801ccf3bea1d547de504ed3df",
+      "bytes": 10839
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumAdaptiveCockpitLayoutTest.kt",
+      "blobSha": "7f3617e10847c195e0b5a29af587d4f5485dbbb3",
+      "bytes": 3255
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumCoreMirrorTest.kt",
+      "blobSha": "73e3dfff6ebd7c3e6feb517978eb17c8c3b9b08f",
+      "bytes": 3332
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumHologramPlexusTest.kt",
+      "blobSha": "4f425049bc051edba73b5d738be8377442cfdcf8",
+      "bytes": 8487
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumHomeLayoutTest.kt",
+      "blobSha": "87cb5521e8565e7994e1b3cf8693c4b73f8ebef8",
+      "bytes": 5366
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumReferenceCockpitLayoutTest.kt",
+      "blobSha": "19423f5d12c2ee8c04e7f93b2358cd25709d1f91",
+      "bytes": 6102
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumAvatar3dLifecycleUiTest.kt",
+      "blobSha": "3d5be8271a9e831a1f0d1f7d8c7e5f2c601fbfc6",
+      "bytes": 8172
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumReferenceCockpitUiTest.kt",
+      "blobSha": "479452eba58ce383e2b08dc184f840fe6d950576",
+      "bytes": 14511
+    },
+    {
+      "path": "tools/avatar-3d/derive_holographic_bust.py",
+      "blobSha": "4ea23e55fb3791315d97ce15316ded6cd12c04d8",
+      "bytes": 9688
+    },
+    {
+      "path": "tools/avatar-3d/render_holographic_bust.py",
+      "blobSha": "0e764cc7c8d490f5147a876c59f8527e53282f98",
+      "bytes": 4565
+    },
+    {
+      "path": "tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/ContinuumHomeScreenTest.kt",
+      "blobSha": "d102c4ba0716992800fd27b41dbfced59a591d0e",
+      "bytes": 4172
+    }
+  ],
+  "privateReferenceMediaCopied": false,
+  "newTestsRun": false
+}

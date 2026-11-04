@@ -24,6 +24,15 @@ class JarvisShellView(context: Context) : View(context) {
     var foldRail: JarvisShellLayout.Rail = JarvisShellLayout.Rail.LABELLED
         set(value) { field = value; invalidate() }
     private var startMs = -1L
+    private var layoutFont = 0f
+    private var layoutRail: JarvisShellLayout.Rail? = null
+
+    /** Continuous camera drift / dolly / dust. Off: static composition (also off for reduced motion). */
+    var ambientMotionEnabled = true
+        set(value) { field = value; invalidate() }
+
+    private fun ambientMotion(scale: Float) = ambientMotionEnabled && scale > 0f && isShown &&
+        windowVisibility == VISIBLE && hasWindowFocus()
 
     /** Latest shell geometry (dp) – lets Kern position its own child views on the same slots. */
     var shell: JarvisShellLayout.Shell? = null
@@ -38,16 +47,19 @@ class JarvisShellView(context: Context) : View(context) {
         val d = resources.displayMetrics.density
         val w = width / d; val h = height / d
         if (w < 240f || h < 320f) return
-        val s = JarvisShellLayout.create(w, h, resources.configuration.fontScale, foldRail).also { shell = it }
+        val font = resources.configuration.fontScale
+        val s = shell?.takeIf { it.width == w && it.height == h && layoutFont == font && layoutRail == foldRail }
+            ?: JarvisShellLayout.create(w, h, font, foldRail).also { shell = it; layoutFont = font; layoutRail = foldRail }
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
         val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs
-        painter.begin(canvas); glass.begin(canvas, d)
+        painter.begin(canvas); glass.begin(canvas, d, width, height)
         canvas.save(); canvas.scale(d, d)
         JarvisShellRenderer.draw(painter, s, content, elapsed, scale, tiles, glass, now)
         canvas.restore()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
-        if (startMs >= 0 && elapsed < total) postInvalidateOnAnimation()
+        // Camera never static (drift + dolly): keep ticking while visible and animators are enabled.
+        if ((startMs >= 0 && elapsed < total) || ambientMotion(scale)) postInvalidateOnAnimation()
         if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
     }
 

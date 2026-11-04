@@ -85,9 +85,23 @@ class ChiefBotProfileStore(
     private val maxProfiles: Int = 10_000,
     private val maxBytes: Int = 8 * 1024 * 1024,
     private val maxContextBytes: Int = 16 * 1024,
-    private val maxContextStoreBytes: Long = 256 * 1024
+    private val maxContextStoreBytes: Long = 256 * 1024,
+    trustedParentDirectory: File? = null
 ) {
-    private val root = directory.toPath().toAbsolutePath().normalize()
+    // Only the application-supplied filesDir may establish this boundary. Resolve aliases above
+    // it once; never canonicalize the bot root itself, which could conceal an unsafe store link.
+    private val trustedParent = trustedParentDirectory?.toPath()?.toAbsolutePath()?.normalize()
+    private val canonicalParent = trustedParent?.let { parent ->
+        require(!Files.isSymbolicLink(parent)) { "BOT_STORE_SYMLINK_REJECTED" }
+        require(Files.isDirectory(parent, NOFOLLOW_LINKS)) { "BOT_STORE_NOT_DIRECTORY" }
+        parent.toRealPath()
+    }
+    private val root = directory.toPath().toAbsolutePath().normalize().let { requested ->
+        if (trustedParent == null) requested else {
+            require(requested.startsWith(trustedParent) && requested != trustedParent) { "BOT_STORE_OUTSIDE_TRUSTED_ROOT" }
+            requireNotNull(canonicalParent).resolve(trustedParent.relativize(requested))
+        }
+    }
     private val primary = root.resolve("bot-profiles-v1.bin")
     init {
         require(maxProfiles in 1..100_000 && maxBytes in 1024..64 * 1024 * 1024)
@@ -341,6 +355,10 @@ class ChiefBotProfileStore(
             require(data.available() == 0) { "BOT_REGISTRY_TRAILING_DATA" }
             return profiles
         } catch (e: IOException) { throw IllegalArgumentException("BOT_REGISTRY_CORRUPT", e) }
+        catch (e: IllegalArgumentException) {
+            if (e.message in DIAGNOSTIC_CODES) throw e
+            throw IllegalArgumentException("BOT_REGISTRY_CORRUPT", e)
+        }
     }
 
     private fun write(profiles: Map<String, ChiefBotProfile>) {
@@ -375,6 +393,8 @@ class ChiefBotProfileStore(
             }
             Files.move(temp, primary, ATOMIC_MOVE, REPLACE_EXISTING)
             FileChannel.open(root, READ).use { it.force(true) }
+        } catch (e: IOException) {
+            throw IllegalStateException("BOT_REGISTRY_WRITE_FAILED", e)
         } finally { Files.deleteIfExists(temp) }
     }
 
@@ -395,8 +415,14 @@ class ChiefBotProfileStore(
     }
 
     private fun safeDirectory(path: java.nio.file.Path) {
-        var current = path.root
-        for (segment in path) {
+        // With no explicit trusted parent, retain the original fail-closed ancestor policy.
+        // Every segment at/below the resolved filesDir remains checked without following links.
+        val boundary = canonicalParent ?: path.root
+        require(path.startsWith(boundary)) { "BOT_STORE_OUTSIDE_TRUSTED_ROOT" }
+        require(!Files.isSymbolicLink(boundary)) { "BOT_STORE_SYMLINK_REJECTED" }
+        require(Files.isDirectory(boundary, NOFOLLOW_LINKS)) { "BOT_STORE_NOT_DIRECTORY" }
+        var current = boundary
+        for (segment in boundary.relativize(path)) {
             current = current.resolve(segment)
             require(!Files.isSymbolicLink(current)) { "BOT_STORE_SYMLINK_REJECTED" }
             if (!Files.exists(current, NOFOLLOW_LINKS)) {
@@ -410,6 +436,28 @@ class ChiefBotProfileStore(
     }
 
     companion object {
+        /** Fixed codes only: exception messages may contain private paths, notes or owner text. */
+        fun diagnosticCode(failure: Throwable): String {
+            var current: Throwable? = failure
+            repeat(8) {
+                val cause = current ?: return "BOT_STORE_OPERATION_FAILED"
+                if (cause.message in DIAGNOSTIC_CODES) return requireNotNull(cause.message)
+                if (cause is java.nio.file.AccessDeniedException || cause is SecurityException)
+                    return "BOT_STORE_ACCESS_DENIED"
+                if (cause is java.nio.file.FileSystemException) return "BOT_STORE_IO_ERROR"
+                current = cause.cause
+            }
+            return "BOT_STORE_OPERATION_FAILED"
+        }
+        private val DIAGNOSTIC_CODES = setOf(
+            "BOT_STORE_SYMLINK_REJECTED", "BOT_STORE_NOT_FILE", "BOT_STORE_NOT_DIRECTORY",
+            "BOT_STORE_OUTSIDE_TRUSTED_ROOT", "BOT_REGISTRY_CAPACITY_OR_CORRUPTION",
+            "BOT_REGISTRY_CAPACITY_EXCEEDED", "BOT_REGISTRY_UNSUPPORTED_SCHEMA",
+            "BOT_REGISTRY_CHECKSUM_MISMATCH", "BOT_REGISTRY_CORRUPT", "BOT_DUPLICATE_ID",
+            "BOT_REGISTRY_TRAILING_DATA", "BOT_PROFILE_VERSION_CONFLICT", "BOT_ID_ALREADY_REGISTERED",
+            "BOT_CONTEXT_CAPACITY_EXCEEDED", "BOT_CONTEXT_OBJECT_MISSING", "BOT_CONTEXT_IDENTITY_MISMATCH",
+            "BOT_CONVERSATION_STORE_FULL", "BOT_CONVERSATION_OBJECT_MISSING", "BOT_REGISTRY_WRITE_FAILED"
+        )
         private const val MAGIC = "CONTINUUM_BOT_PROFILES"
         private const val CONVERSATION_STORE_BYTES = 4L * 1024 * 1024
         private val LOCKS = Array(64) { Any() }
