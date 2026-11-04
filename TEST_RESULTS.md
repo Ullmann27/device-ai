@@ -41,3 +41,11 @@ JarvisMotion/JarvisNeon/JarvisDesign taken unchanged from #479 tip c617e1ab (fil
 incl. new Avatar3dContractTest.visemesCrossfadeOverSeventyMillisecondsAndBlinkLastsFifteenHundredths.
 Filament changes (bloom .35, iris/pupil hidden via layer mask, emissive glow from TTS envelope, idle float + Z drift)
 compile only – NOT verifiable on host (no GPU); needs device check.
+
+## Step 6 (git merge #479 @ba798359 + Kern @bbcd366d, no rebase) – rerun, 163 tests in ui.*/avatar*/cockpit.*/Native/ReferenceCockpit/Adaptive*
+- 3 pre-existing (base d8fd7f7c): AdaptiveCockpit 48 dp, 2× CoreMirror.
+- 3 NEW from the merge itself (not from avatar code): Kern's ContinuumLandscapeCockpitLayoutTest (MODEL overlaps VIEW_AVATAR at 840×649;
+  compositionFollowsTheReferences) and ContinuumHomeLayoutTest.landscapePlacesActualDeviceAndTaskCardsBesideTheStage.
+  Cause: Kern's landscape cockpit was fitted to #479 @c617e1ab; #479 @ba798359 changed JarvisShellLayout (Fold 20/55/25, compact tiles).
+  → Question for Kern/Lumo: re-fit ContinuumLandscapeCockpitLayout to ba798359. Design files here are byte-identical to #479 ba798359.
+- All avatar / sequence / cockpit-bus tests green.
