@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "generation": 1,
+  "phase": "source_review_and_handoffs",
+  "repository": "Ullmann27/device-ai",
+  "board_pr": 498,
+  "parallel_subagent_limit": 3,
+  "scheduled_follow_up": {
+    "enabled": true,
+    "cadence": "hourly",
+    "scope": "read source changes and provide follow-up tasks; no remote chat control"
+  },
+  "managers": [
+    {
+      "id": "M1",
+      "name": "Integration",
+      "session": "/root/m1_integration_manager",
+      "status": "COMPLETE",
+      "result": "#492 starts from #478 while other main streams start from #483; existing ownership and dispatcher/worker paths must be reused; PR/head/test layers must stay distinct.",
+      "tests_run": false
+    },
+    {
+      "id": "M2",
+      "name": "Cognition",
+      "session": "/root/m2_cognition_manager",
+      "status": "COMPLETE",
+      "result": "#492 contains executable research code and specified 6.56M/9.71M ladder; #494 is coordination at ca31eb8; successful larger-model training and Fold7 quality not established.",
+      "tests_run": false
+    },
+    {
+      "id": "M3",
+      "name": "Experience",
+      "session": "/root/m3_experience_manager",
+      "status": "COMPLETE",
+      "result": "#491 retains the existing avatar instance; Java2D preview is not Activity/device acceptance; facial/audio/lifecycle coupling requires exact-source checks.",
+      "tests_run": false
+    }
+  ],
+  "tasks": [
+    {
+      "id": "G1-O1",
+      "type": "OPTIMIERUNG",
+      "title": "Branch- und Eigentumsabgleich",
+      "agent_name": "g1_o1_integration_graph",
+      "assignment": "PRs 491–497; aktuelle Abhängigkeiten, bereits reservierte Pfade und erste konfliktfreie Übernahmereihenfolge.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_o1_integration_graph",
+      "evidence": [],
+      "self_check": "Source basis and missing runtime evidence explicitly separated",
+      "result": "Memory event bridge remains unproven at #494 ca31eb8 and #491 d352bab6; preserve exact owners and give #494 adapter + #491 Activity handoff.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-O2",
+      "type": "OPTIMIERUNG",
+      "title": "Parameter und Modellkapazität",
+      "agent_name": "g1_o2_parameter_census",
+      "assignment": "SWB1 vs LM1; echte Tensorzahlen, Lernbarkeit und Modellformat aus Quellen; keine Qualitätsbehauptung aus bloßer Größe.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_o2_parameter_census",
+      "evidence": [],
+      "self_check": "Source basis and missing runtime evidence explicitly separated",
+      "result": "Protocol counts numerically consistent; agent did not inspect LmConfig.layout. Coordinator then read layout at ee577972 and independently enumerated tensor shapes, confirming architecture counts; actual checkpoints/training unverified.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-O3",
+      "type": "OPTIMIERUNG",
+      "title": "Training und Ressourcengrenzen",
+      "agent_name": "g1_o3_training_gates",
+      "assignment": "Experimentprotokoll #492 und unabhängige Helfer #497; Trennung Development/versiegelter Holdout, gepaarte Baseline und feste Abbruchkriterien.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_o3_training_gates",
+      "evidence": [],
+      "self_check": "Source basis and missing runtime evidence explicitly separated",
+      "result": "Resume checks omit stored orchestrator hash and execution timeout identity at ee577972; coordinator read source and confirmed the static omission; synthetic mutation regression and repair still required.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-O4",
+      "type": "OPTIMIERUNG",
+      "title": "Gedächtnis und Belegqualität",
+      "agent_name": "g1_o4_retrieval",
+      "assignment": "#494 Retriever/Compiler/MemoryEcology; Negative, späte Korrekturen, Widerruf und vollständige belegte Antworten.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_o4_retrieval",
+      "evidence": [],
+      "self_check": "Static source evidence and limits declared",
+      "result": "Retriever filters privacy before resolving duplicate IDs; conflicting ID variants could survive as one visible record. Static finding matches plan; add synthetic cross-privacy duplicate-ID test and verify upstream invariants.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-I1",
+      "type": "IMPLEMENTIERUNG",
+      "title": "Gehirn–Avatar-Anschluss",
+      "agent_name": "g1_i1_event_bridge",
+      "assignment": "Vorhandenen ContinuumMemoryEvents→MemoryEventSource-Vertrag abgleichen; Herkunft, Reihenfolge, Abschluss und Abbruch als präzisen Einbauauftrag.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_i1_event_bridge",
+      "evidence": [],
+      "self_check": "Read actual hub/sink interfaces; static integration contract, no runtime pass",
+      "result": "Existing MemoryEventSource.subscribe and ContinuumMemoryEvents listener contracts are present; production factory null at baseline. #494 supplies adapter, #491 owns main-thread mapper/lifecycle binding. Finite topScore selection, event producer truthfulness and close-race tests required.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-I2",
+      "type": "IMPLEMENTIERUNG",
+      "title": "Persönlichkeits-Bots anschließen",
+      "agent_name": "g1_i2_bot_contract",
+      "assignment": "#493 bestehende Profile, private Dialoge, Aufträge, ToolGate/CCC1 und Worker verbinden; Integration an #491 abgeben.",
+      "status": "SOURCE_REVIEW_COMPLETE",
+      "session": "/root/g1_i2_bot_contract",
+      "evidence": [],
+      "self_check": "Static source evidence and limits declared",
+      "result": "Intake tickets require executor-side session/profile checks, real cancellation and actual outcome receipts. One decisive acceptance test: late callback from cancelled session A causes zero tools and zero memory/dialogue changes in session B.",
+      "tests_run": false
+    },
+    {
+      "id": "G1-I3",
+      "type": "IMPLEMENTIERUNG",
+      "title": "Gemeinsames Integrationspaket",
+      "agent_name": "g1_i3_assembly",
+      "assignment": "Manifest exakter Quellstände, Eigentümer, gültiger Prüfbefehle, kombinierter Abnahme und Rückfall; nicht auf aktive fremde Branches schreiben.",
+      "status": "RUNNING",
+      "session": "/root/g1_i3_assembly",
+      "evidence": [],
+      "self_check": "NOT_RUN",
+      "result": null
+    },
+    {
+      "id": "G1-R1",
+      "type": "REPARATUR",
+      "title": "Avatar, Mimik und Lebenszyklus",
+      "agent_name": "g1_r1_avatar",
+      "assignment": "#491/#495 Renderer/FaceWeights/LipSync; reproduzierbare Fehler oder präzise offene Prüfpunkte bei stop, surface recreation, dt und numerischen Grenzwerten.",
+      "status": "RUNNING",
+      "session": "/root/g1_r1_avatar",
+      "evidence": [],
+      "self_check": "NOT_RUN",
+      "result": null
+    },
+    {
+      "id": "G1-R2",
+      "type": "REPARATUR",
+      "title": "Worker-Abbruch und Wiedereinstieg",
+      "agent_name": "g1_r2_worker",
+      "assignment": "Bestehenden Worker/Scheduler zu duplicate task, owner cancel, callback, reclaim und resume prüfen; kein neuer Scheduler.",
+      "status": "RUNNING",
+      "session": "/root/g1_r2_worker",
+      "evidence": [],
+      "self_check": "NOT_RUN",
+      "result": null
+    },
+    {
+      "id": "G1-R3",
+      "type": "REPARATUR",
+      "title": "Unabhängige Abnahme und Update",
+      "agent_name": "g1_r3_acceptance",
+      "assignment": "Source-bound Testbelege, Originalpaket/Signer/versionCode/Render; Preview/Host/Android/echtes Gerät sauber trennen.",
+      "status": "QUEUED",
+      "session": null,
+      "evidence": [],
+      "self_check": "NOT_RUN",
+      "result": null
+    }
+  ],
+  "parameter_count_evidence": "docs/evidence/astra-nucleus-20261104/parameter-layout-counts.json"
+}

@@ -41,7 +41,7 @@ Du bist HILFE-2 auf dem Gewichte-Helferstrang #497 für Hauptchat #492. Prüfe d
 2. Nutze vorhandene LmWeightSurgery-, LmWeightExperiment- und LmCapacityBenchmark-Pfade. Ergänze unabhängige Prüfungen für Widen/Deepen, Speichern/Laden, nicht-finite Werte, Überläufe und Kompatibilität.
 3. Unterstütze die stufenweise Erweiterung Richtung sechs bis zehn Millionen eigener trainierbarer Parameter. Importiere dafür keine fremden vortrainierten Gewichte. Größe, erfolgreiche Ausführung und verbesserte Qualität separat belegen.
 4. Trenne Entwicklungsdaten, Kandidatenauswahl und versiegelten Holdout. Öffne den versiegelten Holdout nicht. Messe passende Baseline und Kandidaten mit gleicher Aufgabe, gleichem Budget und dokumentierten Seeds. Host-RAM/Laufzeit sind kein Fold7-Nachweis.
-Erster Baustein: eine unabhängig nachvollziehbare Kapazitäts-/Qualitätstabelle plus der kleinste testbare Fehlerbefund. Liefere #492 einen isolierten Prüfschritt oder Fix; Training, Kandidatenauswahl und Promotion bleiben beim Hauptchat und ihren vorhandenen Gates.
+Erster Baustein: Prüfe die von G1-O3 und dem Koordinator bei ee577972 bestätigte Wiederaufnahme-Lücke in run_experiment.py: gespeicherter orchestratorSha256, command/Hauptklasse/Heap und timeoutSeconds werden nicht vollständig gegen den neuen Aufruf verglichen. Erstelle eine synthetische Mutationstest-Reihe ohne Modelltraining und liefere #492 den kleinsten kompatiblen Fix. Die vom Koordinator aus LmConfig.layout() nachgezählten Architekturgrößen 6.562.304 und 9.712.128 sind bestätigt; tatsächliche Checkpoints, Training und Qualitätsgewinn bleiben separat nachzuweisen. Liefere #492 einen isolierten Prüfschritt oder Fix; Training, Kandidatenauswahl und Promotion bleiben beim Hauptchat und ihren vorhandenen Gates.
 ```
 
 ## HILFE-3 — Avatar, Mimik und Animation
@@ -62,7 +62,7 @@ Du bist HILFE-3 im Avatar-Helferstrang #495 für Hauptchat #491. Prüfe parallel
 2. Prüfe bestehenden Kopf/Orb, Mimik, FaceWeights, LipSync und Animationsmathematik. Fokus: nicht-finite Werte, ungültige Indizes, große/negative Zeitdifferenzen, Abbruch, Surface-Neuerstellung, Pause/Resume sowie mehrfach registrierte Listener.
 3. Erarbeite pro Befund einen kleinen reproduzierbaren Regressionstest und eine kompatible Reparatur auf deinem isolierten Zweig. Änderungen an gemeinsamer Activity und finaler Renderer-Anbindung gehen als geprüfter Patch an #491.
 4. Bewahre genau eine aktive Darstellung mit den echten Sprach-, Gesprächs- und Gedächtnissignalen. Eine Animation darf keine erfundene Operation anzeigen.
-Erster Baustein: belege und behebe den wichtigsten noch unbeanspruchten Fehler an Mimik oder Lebenszyklus. Liefere danach einen Referenzvergleich mit identischer Perspektive/Größe und klarer Herkunft. Java2D-/JVM-Vorschau, Android-Aufnahme und physischer Fold7-Lauf getrennt kennzeichnen. Keine FPS oder Pixelgleichheit ohne Messung.
+Erster Baustein: Prüfe die vorhandenen baseline-probes aus #495. Der bei ca16da8968e35a490e1f6b54da8a0af03bec22d2 dokumentierte Stand meldet AA→PP/JawOpen-Überlagerung, rückläufige Audiozeitstempel, eine unisolierte Registry-Sink-Exception und veraltete Renderer-Zustellung. Prüfe zuerst, welche davon dein Team inzwischen behoben oder beansprucht hat; übernimm dann die wichtigste noch offene Regression. Liefere danach einen Referenzvergleich mit identischer Perspektive/Größe und klarer Herkunft. Java2D-/JVM-Vorschau, Android-Aufnahme und physischer Fold7-Lauf getrennt kennzeichnen. Keine FPS oder Pixelgleichheit ohne Messung.
 ```
 
 ## HILFE-4 — Worker, Fehlerprüfung und Integrationsbelege
@@ -83,7 +83,7 @@ Du bist HILFE-4 im bestehenden allgemeinen Helferstrang #496. Prüfe die belegte
 2. Prüfe vorhandenen ChiefWorkerPool/RoutineDispatcher zu doppelter Task-ID, voller Queue, Owner-Abbruch, späten Callbacks, Neustart und Slot-/Claim-Freigabe. Kein zweiter Scheduler.
 3. Reproduziere den priorisierten Fehler, liefere den kleinsten Fix samt unabhängiger Gegenprobe und exakt zugehörigem Log. Übernimm fremde PASS-Zahlen nicht.
 4. Erstelle ein Integrationsmanifest mit Basis-SHA, zu übernehmenden Commits, Dateizuständigkeiten, Reihenfolge und Rücknahme. Serialisiere schwere Builds über das in deiner aktuellen Umgebung tatsächlich vorhandene Build-Lock.
-Erster Baustein: eine konkrete Worker-/Integrationsregression oder ein belastbarer negativer Befund. Danach den nächsten bisher ungeprüften Anschluss bearbeiten. Abschlussprodukt ist ein prüfbares Paket für #491 plus gezielte Befunde für #492/#494; keine Signierung, Veröffentlichung oder automatische Main-Integration.
+Erster Baustein: prüfe den bereits vorhandenen RoutineBook-Scope-/Zeitüberlauf-Fix bei 07dca053eef5b20381469a55d107862c65767658 unabhängig und auf dem vorgesehenen Android-Verbraucherpfad. Erfinde oder implementiere denselben Fix nicht erneut. Kläre danach die nächste konkrete Worker-/Integrationsregression. Danach den nächsten bisher ungeprüften Anschluss bearbeiten. Abschlussprodukt ist ein prüfbares Paket für #491 plus gezielte Befunde für #492/#494; keine Signierung, Veröffentlichung oder automatische Main-Integration.
 ```
 
 ## HAUPT-1 — Modellgewichte aufnehmen und auswerten
