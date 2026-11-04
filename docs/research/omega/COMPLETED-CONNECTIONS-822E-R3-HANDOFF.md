@@ -66,6 +66,22 @@ The earlier avatar ownership failure, all three added avatar lifecycle cases, Sh
 
 C1 subsequently published `a6135f24629ba9151bbc06888bc977325d95e6f1`, matching local `59d8d7e25a5936403e8579373883fa04bec5c37f` and tree `90d68760d9a0533c169697902b61eda126e9b20b`. Coordinator merged that completed checkpoint locally as `4ca999bf9893479575b1723d8b29a6570df0357a`. Its memory and landscape production imports are already present byte-for-byte, apart from the deliberately retained existing #523 byte-counter optimization. The merge preserves our production files unchanged, both histories, C1 evidence and all three added real-decor attachment assertions. Original patch evidence keeps its exact whitespace. No foreign WIP or unfrozen UI proposal was imported.
 
+## Current cockpit focus passed; active C1 acceptance retained
+
+Actual canonical focus on local `4223ffe3a4fb6c2906f244ec2475d22d150eefd4`, now published as `a6b314d3e8fac796ce7059a336bf5e79eb622ede`, identical tree `d820c7e0cd6cbd4bd1ce37efeab835550e05f5c0`: **9 PASS / 0 FAIL / 0 SKIP**, exit0, unchanged source. All four device profiles and three font scales execute. The native ListView selection needs its actual64ms pressed-state dispatch; a strict real test also found the39dp status target, now expanded only into unused bottom gutter. A diagnostic run measured4px actual global separation where mixed coordinate spaces falsely overlapped during a running Home animation. Both comparison rectangles now use actual clipped global coordinates; animation, strict48dp and real gestures remain.
+
+C1 advanced again to remote `0d8a3d46c409e5918c49b6f3407bb63f3519b846`, local `9a442485f2569b39be2bcd8d6687da6f6c15c45d`, identical tree `8fe54137e976c718c91a4b3bbcfc02d50ca52bdd`. Its two worker preflight files already match our prior import exactly. Its frozen active-Shell acceptance adds real Compact and wide More-access requirements, which are not deleted to obtain a green run. The coordinator merges this checkpoint and the independently prepared ten-case semantic fixture (`b3b791ae6f1f8482bbcca4ce2b46bfb9ad2f79eb`). This retains all79 labeled C1 assertions, both safe Bundle recreations, our explicit legacy presentation case, actual native chooser case and three unchanged avatar lifecycle cases.
+
+At this merge checkpoint the new Compact/More product connections are still being completed on our isolated review branch. The prior nine-case PASS is historical and does not accept the expanded ten-case candidate. No unfrozen foreign production proposal is copied.
+
+## Active Compact and More connections — source checkpoint
+
+The three bounded agents completed the active-Shell connections. Compact agent `7e33883543389e487e30aa3c7d83c2afa028df92` is imported as `737b278`; the existing native appearance chooser now offers Compact, reuses the same avatar and existing preference, updates Home geometry through an attached-only preference listener, and passes one layout flag to measurement, hit targets and painting. Normal layout remains on the original calculation path. The independent memory-agent source review found no confirmed blocker in initialization, preference lifecycle, renderer ownership or geometry/cache propagation; this is not runtime acceptance.
+
+More agent `fb5950b4c6838f29805cf7054af44e05feab4aec` is imported as `f88f6c7`: one existing System Center action opens `showMoreWorkAreas()`, including the existing developer/coding-draft route. No new task is started by this connection.
+
+The semantic C1 fixture is expanded by agent `d3cd7390de88b27c5a44355a977574ced1021d21`, imported as `5568f59`: twelve Reference cases now include actual wide Compact selection/restoration at840x649 and840x1050 with font1/1.5/2. All previous ten cases and the three avatar-lifecycle cases remain unchanged. New complete-source focus and full gates are PENDING at this checkpoint. Prior negative runs, startup rejections, actual nine-case PASS and separately source-bound backend64 PASS are retained in `coordinator/ui-followups-evidence.tar.xz` with full per-file hashes and exact source identities. No previous result is transferred to this candidate.
+
 ## Continuation and rollback
 
 Read the latest version of this handoff and exact remote branch ref. Review each agent's bounded diff, combine serially, freeze source, then execute actual checks. Revert individual R3 commits to withdraw a slice; the two frozen parent histories and all previous evidence remain available. No force update, main merge, release, signing or installation is included.

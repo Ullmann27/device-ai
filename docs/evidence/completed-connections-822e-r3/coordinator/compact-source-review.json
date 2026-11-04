@@ -1,0 +1,19 @@
+{
+  "status": "SOURCE_REVIEW_NO_CONFIRMED_BLOCKER",
+  "reviewedCompactAgentCommit": "7e33883543389e487e30aa3c7d83c2afa028df92",
+  "reviewer": "connect_r3_memory",
+  "scope": [
+    "existing preference and initial configure",
+    "attached-only listener; remove callback on detach",
+    "same avatar and existing renderer setters",
+    "shared layout flag for measurement, hits and paint",
+    "cache invalidation and normal-layout unchanged branch"
+  ],
+  "gradleRunByReviewer": false,
+  "deviceAcceptance": false,
+  "moreAgentCommit": "fb5950b4c6838f29805cf7054af44e05feab4aec",
+  "moreSourceReview": "Single CenterAction delegates to existing showMoreWorkAreas; no task execution",
+  "referenceWideCasesAgentCommit": "d3cd7390de88b27c5a44355a977574ced1021d21",
+  "referenceCaseCount": 12,
+  "runtimeStatus": "PENDING_ON_COMBINED_SOURCE"
+}

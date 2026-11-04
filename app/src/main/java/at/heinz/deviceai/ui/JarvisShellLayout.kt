@@ -100,11 +100,11 @@ object JarvisShellLayout {
      */
     fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
                    externalRailWidthDp: Float = 0f, externalBottomBarHeightDp: Float = 0f,
-                   includeBottomNavigation: Boolean = false): Shell {
+                   includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
         require(externalBottomBarHeightDp.isFinite() && externalBottomBarHeightDp >= 0f && externalBottomBarHeightDp < heightDp)
         val viewport = heightDp - externalBottomBarHeightDp
-        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation)
+        val full = create(widthDp + externalRailWidthDp, viewport, fontScale, foldRail, includeBottomNavigation, compactPresentation)
         if (externalRailWidthDp == 0f) return full
         fun shift(box: Box): Box = Box(maxOf(0f, box.left - externalRailWidthDp), box.top,
             maxOf(0f, box.right - externalRailWidthDp), box.bottom)
@@ -120,11 +120,42 @@ object JarvisShellLayout {
     }
 
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
-               includeBottomNavigation: Boolean = false): Shell {
+               includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
-        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail)
-            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation)
+        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail).let {
+            if (compactPresentation) compactReference(it) else it
+        } else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+    }
+
+    private fun compactReference(shell: Shell): Shell {
+        val avatar = shell.boxes.getValue(Slot.AVATAR)
+        val dialog = shell.boxes.getValue(Slot.DIALOG)
+        val gap = shell.tileGap
+        val delta = minOf(avatar.height - 112f,
+            dialog.top - shell.boxes.getValue(Slot.TOP_BAR).bottom - gap,
+            shell.boxes.getValue(Slot.TILES).top - shell.boxes.getValue(Slot.COCKPIT_SECONDARY).bottom - gap)
+            .coerceAtLeast(0f)
+        if (delta == 0f) return shell
+        fun raised(box: Box) = box.copy(top = box.top - delta, bottom = box.bottom - delta)
+        val raisedSlots = setOf(Slot.DIALOG, Slot.TILES, Slot.ROW_AGENTS, Slot.ROW_TASKS,
+            Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+        val boxes = shell.boxes.mapValues { (slot, box) -> when {
+            slot in raisedSlots -> raised(box)
+            slot == Slot.AVATAR || slot == Slot.NAV_RAIL -> box.copy(bottom = box.bottom - delta)
+            else -> box
+        } }
+        val raisedAreas = setOf(Area.DIALOG, Area.TILES, Area.ROW_AGENTS, Area.ROW_TASKS,
+            Area.ROW_MEMORY, Area.ROW_MODEL, Area.STATUS)
+        val grid = shell.grid?.let { original -> original.copy(height = original.height - delta,
+            areas = original.areas.mapValues { (area, box) -> when {
+                area in raisedAreas -> raised(box)
+                area == Area.HEAD || area == Area.ORB || area == Area.RAIL -> box.copy(bottom = box.bottom - delta)
+                else -> box
+            } }) }
+        return shell.copy(height = shell.height - delta, boxes = boxes, grid = grid,
+            headBounds = shell.headBounds?.let { it.copy(bottom = it.bottom - delta) },
+            orbBounds = shell.orbBounds?.let { it.copy(bottom = it.bottom - delta) })
     }
 
     private fun reference(w: Float, h: Float, profile: JarvisWindowProfile, rail: Rail): Shell {
@@ -149,7 +180,7 @@ object JarvisShellLayout {
 
     /** Readable vertical composition; there is no aspect-ratio container and nothing is squeezed to fit height. */
     private fun reflow(w: Float, viewport: Float, p: JarvisWindowProfile, rail: Rail,
-                       includeBottomNavigation: Boolean): Shell {
+                       includeBottomNavigation: Boolean, compactPresentation: Boolean): Shell {
         val b = linkedMapOf<Slot, Box>()
         val gap = 10f
         val margin = 12f
@@ -163,7 +194,15 @@ object JarvisShellLayout {
         var y = top + gap
         val head: Box
         val orb: Box
-        if (compact) {
+        if (compactPresentation) {
+            orb = Box(left, y, right, y + 112f)
+            head = orb
+            y = orb.bottom + gap
+            b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
+            y = b.getValue(Slot.DIALOG).bottom + gap
+            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+            y += 70f * font + gap
+        } else if (compact) {
             val headH = maxOf(300f, minOf(room * 1.08f, 440f))
             head = Box(left, y, right, y + headH)
             y = head.bottom + gap

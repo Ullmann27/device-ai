@@ -1,0 +1,60 @@
+{
+  "sourceDirectory": "/workspace/scratch/174c84456ee3/repair-review/ownership019",
+  "archive": "ownership019.tar.xz",
+  "sha256": "20847ddad8fb44f3504fd6c9c5d0a8d085d0f10552de52d2e383013f46ea3ff0",
+  "scope": "READ_ONLY_REVIEW_OR_TEMPLATE; see exact source in members; not current full acceptance",
+  "members": [
+    {
+      "path": "MATRIX.md",
+      "sha256": "02fcb73aa69506533d252c699109700a1caeb7249ccf4a7d54ceb036337ac747"
+    },
+    {
+      "path": "PATHS.tsv",
+      "sha256": "51ddd72091ec7ee3abfa33d2c5307aea1a9d9ab7d4a2f45b86d5a3b8b873ed23"
+    },
+    {
+      "path": "SHA256SUMS",
+      "sha256": "c89f36222696c4646b4eac271aec6e64047cdd458e910e5d5aae61144c2485de"
+    },
+    {
+      "path": "handoffs/523-7c1642af.md",
+      "sha256": "f648a9895ec36f093c62be31e884fd4822ab23a6818c0869fb7f6fd0c9fdae64"
+    },
+    {
+      "path": "handoffs/527-avatar-d2aedf2c.md",
+      "sha256": "9ddefb7e3b0a82341ddb31d9b363fec00ffc58ad7efc87a65137283c31612195"
+    },
+    {
+      "path": "handoffs/527-bots-d2aedf2c.md",
+      "sha256": "5befa26abe5994dde63e7002792e3872458ca21b5fec79b0ca50637b6f77f3d1"
+    },
+    {
+      "path": "handoffs/527-d2aedf2c.md",
+      "sha256": "4df6eea8521be6e3379cb70c415ecff6d57c2afe81ecf5087c81bfce1f1afcf2"
+    },
+    {
+      "path": "handoffs/527-ec7f532d.md",
+      "sha256": "aacbabeab5301512306bd59737ce98f05768d950400feee36cbd57fe5dec4f68"
+    },
+    {
+      "path": "handoffs/527-memory-d2aedf2c.md",
+      "sha256": "e91bcabf95dfde774eddf71f7e3434d2b12cd684b745a3c9ef219a4d543f32ed"
+    },
+    {
+      "path": "handoffs/528-bab429e9.md",
+      "sha256": "f922d8de8b15770f5cf7c74b5ce031e442fdc869cf06d87104b4e534e1ef164d"
+    },
+    {
+      "path": "inventory.json",
+      "sha256": "49d00fa139b7701ea9f23edc462b3529483140ff7ec628a5440c99510c715ab0"
+    },
+    {
+      "path": "source-receipts/523-summary.json",
+      "sha256": "5634234443130396a54ad8d1fcfc3abdfa3038bd260ba35035829d8054611a4a"
+    },
+    {
+      "path": "source-receipts/528-baseline-node.json",
+      "sha256": "2d53bad09ad302f6f9c348c8c06d331fdfd1e6b18437487745ae9a65837ab065"
+    }
+  ]
+}

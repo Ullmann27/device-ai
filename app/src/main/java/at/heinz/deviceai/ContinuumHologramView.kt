@@ -359,8 +359,11 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     fun showAppearanceChooser() {
+        val presentation = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+        val selected = if (presentation.getBoolean("compact", false)) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
         AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
-            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau"), if (head3dEnabled) 2 else if (headEnabled) 1 else 0) { dialog, item ->
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau", "Kompakt · Kugel"), selected) { dialog, item ->
+                presentation.edit().putBoolean("compact", item == 3).apply()
                 if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
                 dialog.dismiss()
             }

@@ -30,6 +30,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var externalBottomBarHeightDp = 0f
     private var configuredWide = false
     private var configuredNavigation = false
+    private val presentationUpdate = Runnable {
+        if (isAttachedToWindow) refreshPresentationPreference()
+    }
+    private val presentationListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "compact") post(presentationUpdate)
+    }
+
+    private fun refreshPresentationPreference() {
+        val compact = presentationPrefs.getBoolean("compact", false)
+        if (compactPresentation == compact) return
+        compactPresentation = compact
+        if (configuredWidth > 0f) configure(configuredWidth, configuredWide, offset, configuredNavigation,
+            configuredHeight, externalBottomBarHeightDp)
+        else jarvisShell.compactPresentation = compact
+        views.values.forEach { it.refresh() }
+        requestLayout()
+    }
 
     /** Presentation reuses the same live view and its existing original orb/3D lifecycle. */
     private fun selectPresentation(slot: Slot) {
@@ -103,6 +120,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        presentationPrefs.registerOnSharedPreferenceChangeListener(presentationListener)
+        refreshPresentationPreference()
         slotRegistration?.close()
         slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post(avatarSlotUpdate) }
         post(avatarSlotUpdate)
@@ -110,6 +129,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     override fun onDetachedFromWindow() {
+        presentationPrefs.unregisterOnSharedPreferenceChangeListener(presentationListener)
+        removeCallbacks(presentationUpdate)
         slotRegistration?.close(); slotRegistration = null
         removeCallbacks(avatarSlotUpdate)
         dockedRenderer?.let { runCatching { it.detach() } }
@@ -339,6 +360,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         this.externalBottomBarHeightDp = externalBottomBarHeightDp
         configuredWide = wide
         configuredNavigation = includeNavigation
+        jarvisShell.compactPresentation = compactPresentation
         val spec = ContinuumReferenceLayout.create(windowWidthDp, if (wide) windowHeightDp else 0f,
             wide, textScale, compactPresentation)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty() && !bottomChanged) return
@@ -450,7 +472,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
         val h = if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
-                resources.configuration.fontScale, jarvisShell.foldRail, offset).height * density).toInt()
+                resources.configuration.fontScale, jarvisShell.foldRail, offset,
+                compactPresentation = compactPresentation).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
@@ -510,7 +533,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         val viewport = jarvisShell.viewportHeightDp.takeIf { it >= 160f } ?: (heightPx / density)
         if (w < 240f || viewport < 160f) return null
         return JarvisShellLayout.forContent(w, viewport, resources.configuration.fontScale, jarvisShell.foldRail,
-            externalRailWidthDp = offset)
+            externalRailWidthDp = offset, compactPresentation = compactPresentation)
     }
 
     private data class ShellActionSpec(val key: String, val target: String, val label: String,

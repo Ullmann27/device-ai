@@ -2869,6 +2869,7 @@ class AgentActivity : Activity() {
         "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
         learningIoStatus { systemCenterStatus() },
         listOf(
+            CenterAction("MEHR · ARBEITSBEREICHE") { showMoreWorkAreas() },
             CenterAction("SHIZUKU · VERBINDEN") { showShizukuConnectionDialog() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
