@@ -1,0 +1,24 @@
+{
+  "status": "PASS_EXACT_TINY_TRAINING_CONTINUITY",
+  "sourceCommit": "2dfe0852a1bb9e32bf701bb0bc8bc594bcca7c0a",
+  "continuityCasesPassed": 29,
+  "safetyCasesPassed": 34,
+  "uninterruptedNativeUpdates": 24,
+  "resumeSplit": [
+    8,
+    16
+  ],
+  "fullTrainingBundleByteIdentical": true,
+  "nativeOriginalCandidateStepLogsByteIdentical": true,
+  "weightOnlyRestartDiverged": true,
+  "momentResetWithCorrectStepDiverged": true,
+  "native16mUpdates": 0,
+  "productionSourcesChanged": false,
+  "sourceSha256": {
+    "training-continuity.patch": "7deb89ca77f41b45babdf223ec5ce8e1f4771aaea0cbbd92bdfd27edbbc3abb8",
+    "LmTrainingState.kt": "e45eb6b39e2fbaeb07328b175ae118d2ea6f2d827d402b51f3275437d2a3fd10",
+    "LmTrainingFixture.kt": "adbb7a4bcafcf781618c5ff4392edd959bddb97d280c3f3a7da2402521725f56",
+    "LmContinuityChecks.kt": "b579ef8ea0772543cfdb1b3087a78b26f36aa60f3b1589de276c696fc0d01cb7"
+  },
+  "final": "FINAL\tsteps=24\tweights=4b553795ba1356037b40d70ad2bc1dc4075c164e03dfda3c6fd63c1dcf39e540\tdata=dc5cb361bd99b6ed6be0c5acc6d099c2207bbaeaf95cf69a730e2bca505df901"
+}
