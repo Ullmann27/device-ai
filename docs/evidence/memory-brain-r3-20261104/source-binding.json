@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "basePublicCommit": "b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+  "baseLocalCommit": "e19bf2768dc24b7c2ea1040538fdd661269a540c",
+  "baseTree": "aa439516d342a5410d4473275756a4fa85b4c981",
+  "publicTestsBeforeRepair": "33706d166afafe8f93d3b9aa1db34190f950eb68",
+  "localImplementationCommit": "510aa5d3ec84f99370771009774c8c3c8bda5b34",
+  "localImplementationTree": "e965a220365fdec384ce6a7ac90f905ef5afbd43",
+  "files": {
+    "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt": "93e24a73389d4e8f05ea9ee2c307b1cb73a0a87e255cadb46dedf50606d9b903",
+    "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryRegressionTest.kt": "0e7baeb42e93a93e5564a2972be9b5f5898d491fffbb29bda1580c5bc46235ce",
+    "app/src/test/java/at/heinz/deviceai/cognitive/ContradictionBoundaryHoldoutTest.kt": "dcf924b4e15b74adf2492ae0b38260bd79dbc19f6787abbcdafe3640cde049f7",
+    "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690"
+  },
+  "fullAndroidGate": "NOT_RUN_AT_THIS_CHECKPOINT",
+  "apkBuilt": false,
+  "deviceTested": false
+}

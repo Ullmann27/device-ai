@@ -1,5 +1,21 @@
 # Memory / brain R3 — C1 integration follow-up
 
+## Current focused checkpoint
+
+Both bounded repairs are implemented and have actual-source RED/GREEN evidence.
+Contradiction boundary: frozen joint baseline 10 tests, 6 FAIL / 4 PASS; repaired
+compiler plus retained existing contracts 23/23 PASS. Mapper: baseline 4 tests,
+3 FAIL / 1 PASS, including 79,387 of 80,000 writes accounted; repaired mapper
+4/4 PASS including exact accounting. No original assertion was removed.
+The independent compiler patch review found no confirmed blocker in its stated
+scope. See `docs/evidence/memory-brain-r3-20261104/RESULT.md` and `REVIEW.md`.
+
+Tests-before-repair checkpoint is public at
+`33706d166afafe8f93d3b9aa1db34190f950eb68`. The next step is the full source-bound
+Android/lint gate and bounded Activity/Handler test under C1's existing two locks.
+Current status: **focused fixes verified; combined Android gate NOT_RUN**.
+The initial intake text below is preserved as history, not the current outcome.
+
 ## Frozen intake and authorization
 
 The owner requested continuation of the existing memory/brain work and already

@@ -1,0 +1,46 @@
+JUnit version 4.13.2
+..E..E..E.E.E..E
+Time: 0.153
+There were 6 failures:
+1) sensitiveContradictionCannotBypassTheCompilerPrivacyPolicyThroughCallerProjection(at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest)
+java.lang.AssertionError: A SENSITIVE record must not leak through a string-only contradiction alias
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.sensitiveContradictionCannotBypassTheCompilerPrivacyPolicyThroughCallerProjection(ContradictionBoundaryRegressionTest.kt:42)
+2) allowedContradictionCannotIntroduceRawModelControlTokens(at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest)
+java.lang.AssertionError: Untrusted contradiction text must not retain model role delimiters
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryRegressionTest.allowedContradictionCannotIntroduceRawModelControlTokens(ContradictionBoundaryRegressionTest.kt:56)
+3) oversizedForbiddenContradictionDoesNotConsumeMandatoryContextBudget(at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest)
+java.lang.IllegalStateException: MANDATORY_CONTEXT_EXCEEDS_BUDGET
+	at at.heinz.deviceai.cognitive.AiContextCompiler.compile$appendSection(AiContextCompiler.kt:104)
+	at at.heinz.deviceai.cognitive.AiContextCompiler.compile(AiContextCompiler.kt:140)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.compileProjection(ContradictionBoundaryHoldoutTest.kt:24)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.oversizedForbiddenContradictionDoesNotConsumeMandatoryContextBudget(ContradictionBoundaryHoldoutTest.kt:78)
+4) publicOnlyPolicyAlsoExcludesPrivateContradictionAliases(at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.publicOnlyPolicyAlsoExcludesPrivateContradictionAliases(ContradictionBoundaryHoldoutTest.kt:45)
+5) aStringSharedByAllowedAndForbiddenRecordsCannotChooseTheAllowedAlias(at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest)
+java.lang.AssertionError: String-only provenance cannot select an allowed alias by collection order
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.aStringSharedByAllowedAndForbiddenRecordsCannotChooseTheAllowedAlias(ContradictionBoundaryHoldoutTest.kt:56)
+6) conflictingIdCannotReenterThroughItsOtherwiseAllowedContradictionContent(at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContradictionBoundaryHoldoutTest.conflictingIdCannotReenterThroughItsOtherwiseAllowedContradictionContent(ContradictionBoundaryHoldoutTest.kt:68)
+
+FAILURES!!!
+Tests run: 10,  Failures: 6
+
