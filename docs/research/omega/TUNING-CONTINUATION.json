@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "IN_PROGRESS",
-  "owner": "tuning-automation-r7-20261104T2328Z",
-  "leaseExpiresAtUtc": "2026-11-04T23:53:01Z",
-  "updatedAtUtc": "2026-11-04T23:28:01Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-04T23:34:50Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "New independent source-bound hypothesis only. Do not repeat R4 encodeWord, R5 decode, or R6 pretokenize candidates without explaining earlier unfavorable CPU/allocation controls. Check fresh PR head and foreign lease; measure real caller profile before preregistering new scenario. Fold7/device unavailable in this round.",
+  "next": "Do not repeat R7 rmsnorm scratch: it failed CPU/control gate despite modest allocated bytes. Only source-grounded new candidate after measuring real LM1 caller profile and verifying Gemma/LiteRT boundary; no extrapolation from isolated fixture to production.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-automation-r4-20261104T2224Z",
-  "completedRound": "R6",
+  "lastOwner": "tuning-automation-r7-20261104T2328Z",
+  "completedRound": "R7",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -83,12 +83,13 @@
   "queue": [
     {
       "target": "Profile actual LM1 caller allocation and demand shape",
-      "status": "NOT_YET_INVESTIGATED",
-      "gate": "Profile actual use and determine whether component is on active Gemma/LiteRT inference path; no extrapolation from synthetic Kotlin-host microbenchmarks; coordinate with other PR owners."
+      "status": "STATIC_CALL_MAP_DONE_LIVE_PROFILE_NOT_RUN",
+      "gate": "Profile actual use and determine whether component is on active Gemma/LiteRT inference path; no extrapolation from synthetic Kotlin-host microbenchmarks; coordinate with other PR owners.",
+      "note": "LM1 nextDistribution feeds Transformer and LmEval; minGRU interactive route uses stepper. LM1 nll is segmentBits evaluation. Gemma/LiteRT live reachability unverified; see R7 report."
     },
     {
       "target": "Find a new optimizer from measured actual caller profile",
-      "status": "NOT_YET_INVESTIGATED",
+      "status": "AWAITING_DISTINCT_MEASURED_HYPOTHESIS",
       "gate": "Preregister distinct source-bound hypothesis and controls with stop rule; do not retest R4-R6 alternatives opportunistically."
     },
     {
@@ -104,7 +105,7 @@
     "A failed gate archives and rejects the candidate",
     "Report concrete blockers without claiming completion"
   ],
-  "activeRound": "R7",
+  "activeRound": null,
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
     "stage": "REJECTED_ARCHIVED",
@@ -201,7 +202,7 @@
     }
   },
   "lastResearchHead": "97c5047c7af4a3929137a32e08f1e7acb151c889",
-  "lastRejectedCandidateCount": 3,
+  "lastRejectedCandidateCount": 4,
   "archive": {
     "name": "R4-R6-evidence.tar.xz",
     "githubDirectory": "docs/evidence/tuning-r4-r6-20261104",
@@ -232,7 +233,7 @@
   },
   "r7": {
     "target": "Tape.rmsnorm inference-only saved inverse norm vector",
-    "stage": "PREREGISTERED",
+    "stage": "REJECTED_ARCHIVED",
     "sourceHeadAtAcquisition": "f3823e726f8918117eb39e5dc43b63774ac3c808",
     "sourcePath": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
     "sourceBlobSha": "1ebd9b6803a3eb54a6a1baea25430b49e588665d",
@@ -243,6 +244,35 @@
     ],
     "testPlan": "Exact-source candidate review. Compile a standalone Kotlin JDK21 faithful-method fixture. Deterministic bit-parity across seeded shape/eps/finite-input cases, training gradient parity, shape and inference-backward negative cases. Fixed A/A before edit and one A/B; scenarios inference 1x64 8x64 64x64 128x32 64x256 and training 8x64 64x64 1x64; each 200 calls per batch, four warmup pairs + nine alternating pairs. No favorable retest. JVM host only; full Gradle/Android NOT_RUN until available.",
     "acceptance": "All bitwise forward and backward parity and negative tests; inference allocation lower for multi-row scenarios, no material CPU regression in small controls or training; source hash bound. If gate fails, archive source and data, restore production source. Host-only evidence cannot prove device gain.",
-    "otherPrs": "#527 and #523 touch LmModel but not LmTensor; source isolation confirmed from changed-file lists."
+    "otherPrs": "#527 and #523 touch LmModel but not LmTensor; source isolation confirmed from changed-file lists.",
+    "testResult": "PASS 2104 source-faithful isolated forward/backward/negative Kotlin parity cases; full module and Gradle NOT_RUN",
+    "measurement": {
+      "aa": "8 scenarios x 9 paired measurement batches x 2 arms + warmups",
+      "ab": "8 scenarios x 9 paired measurement batches x 2 arms + warmups",
+      "rowsMeasured": 288,
+      "rowsWarmup": 128,
+      "host": "JDK21.0.12.1; Kotlin1.9.0; 5 visible CPUs",
+      "allocations": "Inference -0.4% to -5.6% on isolated method; training equal",
+      "adverseControls": "Inference 1x64 +12.5% CPU median (3/9 favorable); training 8x64 +442.1% (0/9; baseline drift); training 64x64 +5.8% (2/9)",
+      "timingRetest": false,
+      "decision": "REJECT; limited savings and adverse / unstable CPU controls; no source promotion"
+    },
+    "archive": {
+      "report": "docs/research/omega/TUNING-R7-20261105.md",
+      "rawParts": [
+        "docs/evidence/tuning-r7-20261105/raw-part-00.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-01.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-02.b64",
+        "docs/evidence/tuning-r7-20261105/raw-part-03.b64"
+      ],
+      "rawTarSha256": "7bd7fabad4807a512a062cb39474beb57d0c2af92a60bda6887174cc678d6bae",
+      "fixtureParts": [
+        "docs/evidence/tuning-r7-20261105/fixture-part-00.b64",
+        "docs/evidence/tuning-r7-20261105/fixture-part-01.b64"
+      ],
+      "remoteGitBlobMatches": "6/6",
+      "remoteReassembly": "NOT_RUN",
+      "sourceChanged": false
+    }
   }
 }
