@@ -194,13 +194,14 @@ class ContinuumReferenceCockpitUiTest {
             val railContent = shellControl(home, "rail:home").parent as View
             val viewport = railContent.parent as ScrollView
             val railBounds = Rect()
-            assertTrue("The shell rail viewport must be visible", viewport.getLocalVisibleRect(railBounds))
-            home.offsetDescendantRectToMyCoords(viewport, railBounds)
+            assertTrue("The shell rail viewport must be visible", viewport.getGlobalVisibleRect(railBounds))
             for (target in targets.filter { it.parent === home }) {
                 val visibleBounds = Rect()
-                if (target.getLocalVisibleRect(visibleBounds)) {
-                    home.offsetDescendantRectToMyCoords(target, visibleBounds)
-                    assertFalse("Rail viewport overlaps the visible shell target ${target.tag}",
+                if (target.getGlobalVisibleRect(visibleBounds)) {
+                    assertFalse("Rail viewport $railBounds overlaps ${target.tag} $visibleBounds; " +
+                        "globalRail=${Rect().also { viewport.getGlobalVisibleRect(it) }} " +
+                        "globalTarget=${Rect().also { target.getGlobalVisibleRect(it) }} " +
+                        "railScroll=${viewport.scrollY} home=${home.width}x${home.height}",
                         Rect.intersects(railBounds, visibleBounds))
                 }
             }
