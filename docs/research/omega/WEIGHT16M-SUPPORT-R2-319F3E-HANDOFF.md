@@ -34,3 +34,7 @@ Modell-SHA-256: `93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f272531
 Der neue versiegelte Testsplit wird nicht geöffnet. Alte Holdouts werden nicht zum Tuning benutzt. Kein neues Trainingsframework, kein Austausch der Produktionsruntime, keine fremden vortrainierten Gewichte, kostenpflichtigen APIs, Actions-Läufe, Modellpromotion, Main-Merges, App-Installation oder Signierung. App-Offline-Einstellung bleibt unverändert.
 
 Scheitert eine Prüfung, bleibt der Befund erhalten und wird ehrlich als FAIL/UNAVAILABLE/NOT_RUN berichtet. Keine ursprünglichen Modelle oder historischen Belege werden verändert. Rollback: diese separaten Forschungsdateien nicht übernehmen. Die erste Dreiergruppe ist in #507 abgeschlossen; diese zweite Gruppe bearbeitet neue, abgegrenzte Mess- und Prüfaufgaben.
+
+## Registrierung des tatsächlichen Ressourcenversuchs
+
+Der native Harness ist separat kompiliert und sein Tiny-Selbsttest wurde von Root unabhängig wiederholt: PASS, identische zwei frische Updates und Abweisung falscher Eingabeidentität vor Trainerkonstruktion. Der tatsächliche 16M-Schritt ist zum Zeitpunkt dieses Registrierungscommits NOT_RUN. `support-round2/resource-registration.json` bindet den fertigen Harness, unveränderte Kernel, Wrapper, Tool-/JAR-/Eingabeidentitäten und den vollständigen Aufruf. Die feste Lernrate ist 0,0001 mit warmup1/totalSteps1, sieben Targets und einem Worker. `ActiveProcessorCount=1` und `-Xmx3g` sind Teil des registrierten Prozesses. Das genaue Protokoll steht in `TRAINING_RESOURCE_PROTOCOL.md`.

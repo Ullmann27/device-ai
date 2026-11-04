@@ -52,14 +52,16 @@ def main():
     command = registration["command"]
     if not isinstance(command, list) or not all(isinstance(x, str) and x for x in command):
         raise ValueError("command must be a nonempty argv list")
-    if len(command) < 7 or command[1:4] != ["-Xms64m", "-Xmx3g", "-cp"] or command[5] != PROBE_CLASS:
+    if (len(command) != 10 or command[1:5] != ["-Xms64m", "-Xmx3g", "-XX:ActiveProcessorCount=1", "-cp"]
+            or command[6:8] != [PROBE_CLASS, "--real16m"]
+            or command[8:] != registration["immutableInputs"]):
         raise ValueError("unexpected JVM command")
     pins = registration["files"]
     for item in pins:
         if sha256(item["path"]) != item["sha256"]:
             raise ValueError(f"registered file identity changed: {item['path']}")
     covered = {str(Path(item["path"]).resolve()) for item in pins}
-    required = [command[0], *command[4].split(":"), str(Path(__file__).resolve())]
+    required = [command[0], *command[5].split(":"), str(Path(__file__).resolve())]
     required.extend(registration["immutableInputs"])
     if any(str(Path(name).resolve()) not in covered for name in required):
         raise ValueError("registration does not bind every executable, JAR, wrapper and input")
