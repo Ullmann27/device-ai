@@ -11,11 +11,12 @@ import android.os.Looper
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import at.heinz.deviceai.cognitive.LocalSpeechEngine
 import at.heinz.deviceai.cognitive.LocalSpeechInputPolicy
 import at.heinz.deviceai.cognitive.LocalSpeechSession
 
 /** Owner-gesture, main-thread, bounded on-device recognition. No service launch,
- * download, transcript persistence, cloud fallback, retry or automatic tool execution. */
+ * download, transcript persistence, retry or automatic tool execution. */
 internal class AndroidOnDeviceSpeechInput(private val context: Context) {
     private val handler = Handler(Looper.getMainLooper())
     private val session = LocalSpeechSession(object : LocalSpeechSession.Platform {
@@ -27,8 +28,13 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
             return { handler.removeCallbacks(runnable) }
         }
         override fun create(callbacks: LocalSpeechSession.Callbacks): LocalSpeechSession.Recognizer {
-            if (Build.VERSION.SDK_INT < 31) error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
-            val recognizer = SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+            val recognizer = when (engine()) {
+                LocalSpeechEngine.ON_DEVICE -> if (Build.VERSION.SDK_INT >= 31) {
+                    SpeechRecognizer.createOnDeviceSpeechRecognizer(context)
+                } else error("ON_DEVICE_RECOGNITION_REQUIRES_API_31")
+                LocalSpeechEngine.LEGACY_PREFER_OFFLINE -> SpeechRecognizer.createSpeechRecognizer(context)
+                LocalSpeechEngine.NONE -> error("SPEECH_RECOGNITION_UNAVAILABLE")
+            }
             try {
                 recognizer.setRecognitionListener(object : RecognitionListener {
                     override fun onReadyForSpeech(params: Bundle?) = callbacks.ready()
@@ -52,6 +58,7 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
                     putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
                     putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
                     putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false)
+                    putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
                 })
                 override fun cancel() = recognizer.cancel()
                 override fun destroy() = recognizer.destroy()
@@ -59,8 +66,15 @@ internal class AndroidOnDeviceSpeechInput(private val context: Context) {
         }
     })
 
-    fun available(): Boolean = Build.VERSION.SDK_INT >= 31 &&
-        runCatching { SpeechRecognizer.isOnDeviceRecognitionAvailable(context) }.getOrDefault(false)
+    fun available(): Boolean = engine() != LocalSpeechEngine.NONE
+
+    private fun engine(): LocalSpeechEngine {
+        val onDevice = Build.VERSION.SDK_INT >= 31 &&
+            runCatching { SpeechRecognizer.isOnDeviceRecognitionAvailable(context) }.getOrDefault(false)
+        val legacy = Build.VERSION.SDK_INT < 31 &&
+            runCatching { SpeechRecognizer.isRecognitionAvailable(context) }.getOrDefault(false)
+        return LocalSpeechEngine.choose(Build.VERSION.SDK_INT, onDevice, legacy)
+    }
     fun microphoneGranted() = context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
     fun cancel() { checkMainThread(); session.cancel() }
     fun start(onState: (Boolean) -> Unit, onText: (String) -> Unit, onError: (String) -> Unit) {
