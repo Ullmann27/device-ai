@@ -48,6 +48,12 @@ Die Kugelwahl und vorhandene ausdrückliche Darstellungspräferenzen bleiben bes
 
 Die benachbarte Datei `continuum-neural-front-20261104.provenance.json` dokumentiert Erzeugungsart, Besitzerreferenzhash und Verwendungszweck. Dies ist **erzeugte 2D-Gestaltung**, kein Render eines bereits gebauten 3D-Modells und keine Android-/Fold7-Abnahme. Die exakten Pixel sind als reproduzierbarer Ableitungseingang gesichert; eine identische erneute Bildgenerierung wird nicht vorausgesetzt. Das Runtime-Asset bleibt in diesem Checkpoint unverändert.
 
+## Reproduzierter Herkunftsfehler vor dem Assetaustausch
+
+Die neue vorhandene-Bytes-Prüfung `AvatarAssetProvenanceTest.packagedAssetHashAndLengthMatchRuntimeAndNotice` bindet das tatsächliche GLB, den Runtime-Hash und die Angaben in NOTICE aneinander. Auf dem unveränderten alten Asset/NOTICE wurde der Fehler tatsächlich reproduziert: Kotlin-Kompilierung erfolgreich, 86 JUnit-Fälle ausgeführt, 85 bestanden und genau dieser neue Test fehlgeschlagen. NOTICE deklariert `6b199c…`, tatsächliche Datei und Runtime verlangen `5f49ef…`. Die ergänzenden 26 Motion-Prüfungen bestanden weiterhin.
+
+Status: **EXPECTED_RED_STALE_NOTICE**. Der Test wird für den späteren geprüften Asset-/Hash-/NOTICE-Austausch unverändert beibehalten. Originale Befehle, Protokolle, Quellenhashes und alte NOTICE liegen unter `docs/evidence/reference-avatar-v2-20261104/provenance-red/`. Der Testlauf prüft Kotlin/JVM-Hostverhalten; er ist keine Geräte- oder Pixelabnahme. Noch keine Runtime-Datei wurde zur Erzeugung eines grünen Ergebnisses verändert.
+
 ## Nächster konkreter Schritt
 
 1. Den von der Gestaltung gelieferten Kandidaten einfrieren: tatsächliche Dateigröße, SHA256, Geometrie-/Rig-/Morphherkunft und abweichende Materialien erfassen.
