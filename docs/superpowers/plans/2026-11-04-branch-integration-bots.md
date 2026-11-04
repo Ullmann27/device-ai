@@ -1,6 +1,10 @@
 # Continuum Branch Integration Bots Implementation Plan
 
-> For agentic workers: implementation is split into isolated worktrees and independently reviewed. The owner has already instructed execution.
+> The first implementation used isolated helpers. The current owner instruction requires sequential continuation; no parallel agents were started in the later round. Follow the latest source-bound handoff before new work.
+
+## Completed serial continuation
+
+Five additional steps are committed through `c216ebcd4726fefd221a6ee347699c9a1280fc47`: source-page progress, durable cursor connection, precise APK host profile, guarded release-source audit, and byte-bounded large reports. The current selected suite passes 202/202; a separate selected #527 overlay passes the same 202 cases. Full Android/device/APK acceptance remains NOT_RUN. Details, RED/GREEN evidence and next scope: `docs/research/omega/BRANCH-BOTS-NIGHT-20261104.md`.
 
 **Goal:** Add reusable branch discovery to the existing development machinery and repair a proven missing negative bot report.
 

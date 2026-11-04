@@ -1,6 +1,6 @@
 # Branch bots — serial continuation 2026-11-04
 
-Status: WIP / UNVERIFIED. Starting source: PR #515 at 5373ec7c1399cb34fb8896f7318fdfa5437fa283. All 104 locally materialized code/test files match the exact remote blobs. This is a selected source snapshot, not a full Android checkout.
+Status: SOURCE_INTEGRATED / REVIEW_READY in PR #515. Final selected verification: 202/202 PASS, 0 FAIL/SKIP; Android/APK/device gates remain NOT_RUN. Starting source: PR #515 at 5373ec7c1399cb34fb8896f7318fdfa5437fa283. All 104 locally materialized code/test files match the exact remote blobs. This is a selected source snapshot, not a full Android checkout.
 
 ## Coordination
 
@@ -70,4 +70,34 @@ The scanner/CLI subset passes 37/37, no failures/skips. It visits all 81 fixture
 
 ## Current integration intake comparison
 
-Pinned PR #527 at ca80459a3f6695c8fecff4a217fbe93318452121 was compared against all 104 selected baseline code/test blobs. Exactly two differ: development-backlog.mjs contains the existing one-pass task-selection optimization, and the owner QA test arranges the same signing exclusions in its common negative-gate table. The seven files changed by this continuation have matching old preimages. Preserve both upstream files; never replace the complete current integration tree with this older branch base. A selected compatibility test and a bounded patch are being prepared.
+Pinned PR #527 at ca80459a3f6695c8fecff4a217fbe93318452121 was compared against all 104 selected baseline code/test blobs. Exactly two differ: development-backlog.mjs contains the existing one-pass task-selection optimization, and the owner QA test arranges the same signing exclusions in its common negative-gate table. The seven files changed by this continuation have matching old preimages. Preserve both upstream files; never replace the complete current integration tree with this older branch base. The selected compatibility test and bounded patch are complete; details follow.
+
+## Final verification and handoff
+
+Verified code commit: **c216ebcd4726fefd221a6ee347699c9a1280fc47**. The later evidence checkpoint does not alter these source files.
+
+- Own selected suite: **202 PASS, 0 FAIL, 0 SKIP**, 12 test files; source inputs unchanged. Raw TAP SHA256: ab52e0572fb5d3c3a2170bf2f40604b9a524ab1d50d2c0a1654bbc5e4756c925.
+- Selected #527 compatibility overlay: **202 PASS, 0 FAIL, 0 SKIP**; source inputs unchanged. Raw TAP SHA256: af29df578e1f396af46b2bcdd3f06e96920923f19f496f75b945562dcfbc301d. This is the same case set on different selected inputs, not 404 unique tests.
+- All **104** selected published code/test blobs were read back through the Git tree at the code commit and match the actual tested files. Seven changed JavaScript files pass syntax checks; own and intake diff checks pass.
+- The current intake preimages for all seven changed paths match the previous #515 files. integration-delta.patch was applied with git apply --check --index and git apply --index in an isolated selected intake snapshot. Patch SHA256: 68a8b0bff7d3a09d7f58c4ac16a119e8d0cd84cdc2935e966d18eb0551bb0669.
+- The two newer upstream files are retained exactly. Every baseline/intake/code input is listed in the corresponding source manifest. Later upstream advances require another source comparison before application.
+
+This is a selected 104-file Node/Git source verification, not the full application tree. Git fixtures and executable fixture tools are real local processes but do not establish native Android tooling, model quality, APK compilation, rendering or device success. No independent second agent was started in this serial round; the compatibility run is a separate selected-source check by the same coordinator.
+
+Actual local host diagnosis still reports EXPLICIT_JDK_NOT_FOUND, SDK36_NOT_FOUND, GRADLE8111_NOT_FOUND and NATIVE_AAPT2_NOT_FOUND. No service was retargeted, no build tool downloaded, no build/signing/install/release performed. The historical full Android evidence from other teams must be assessed on its own exact source.
+
+### Published milestone commits
+
+1. M1 page continuation: 030578c0aede7745b24915a50a14a2eac8f4859b
+2. M2 durable cursor connection: 9423d5fb6978496ec843d0f7bcbe8285ee63677f
+3. M3 exact host profile: 24544f970eb9061d6040cc2412cc2473fdfa15ba
+4. M4 guarded source audit: ef2146e560452ac7fe65603a31930ecf234eedaf
+5. M5 bounded report volume: c216ebcd4726fefd221a6ee347699c9a1280fc47
+
+Raw RED/GREEN logs, manifests, final runs, integration patch and fresh host diagnosis are under docs/evidence/branch-bots-night-20261104/. The previous 183-test continuation and intermediate 200-test run remain historical and are not transferred to changed sources.
+
+### Subsequent work
+
+state.json is READY_FOR_NEXT_ITERATION. An enabled hourly scheduled development task was created and read back in Europe/Vienna. It must read the current branch head and this state, leave ACTIVE sessions untouched, proceed sequentially, and checkpoint every actual improvement. It is separate from the app and does not establish a continuously running local worker. No parallel subagents were used in this round.
+
+C1 remains the shared application integrator. Adopt only the seven-path delta into the currently reviewed candidate, retain its newer backlog/QA sources, then obtain full Android QA on a complete functioning checkout. If that environment is unavailable, keep the gate explicit and take a different documented free integration issue. Do not silently merge this branch's older complete base over C1/#527.

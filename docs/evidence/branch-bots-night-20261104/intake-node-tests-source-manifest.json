@@ -1,0 +1,531 @@
+{
+  "source": {
+    "sourceCommit": null,
+    "upstreamCommit": "ca80459a3f6695c8fecff4a217fbe93318452121",
+    "overlayCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+    "scope": "SELECTED_104_CODE_TEST_FILES_NOT_FULL_APP"
+  },
+  "inputs": [
+    {
+      "path": ".github/continuum/m4-junit-evidence.mjs",
+      "gitBlob": "a78817d35759598b4dfae31325811972fe5f2f4f",
+      "sha256": "b13d52c512be1d4f86b1d02f43de1356539c9979faa0f3ab10345741239b3ef2"
+    },
+    {
+      "path": ".github/continuum/repair-experience.mjs",
+      "gitBlob": "eccbc10cb5a4670a1f55b23d3f692d82a2df7c10",
+      "sha256": "bb57c064af8f745b6b995cdcb4444c2f136c23d03585117001982f128f8b21ce"
+    },
+    {
+      "path": ".github/continuum/step-watchdog.mjs",
+      "gitBlob": "3839160d2d5c90d2d3cb8219cf250f1ecedf2c2d",
+      "sha256": "d4d3a17f17d569799276eae1e4a238e0a6e460c39642536c732f3428718114f7"
+    },
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "gitBlob": "dfa1f4b762a9e45c81d47b3431ca35d013d85d9c",
+      "sha256": "d0cb68413ff89063b685395c0e633a10c04f038e8329658c085ce0c8748f3a1d"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "gitBlob": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "sha256": "8c7cf6ff3391da4c5742edb3650459333985c60b41faa9ee98d1a102c4f1c219"
+    },
+    {
+      "path": ".github/continuum/kotlin-delegate-acceptance.mjs",
+      "gitBlob": "3c43a2279be535775ec84e4b4764cd07e52f9ea0",
+      "sha256": "d553286ccb0f24d40e7a1ef3f986f04825bee6d6182bc5774308eff6f2024887"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.mjs",
+      "gitBlob": "155553b2f21fa283655385aa59a297d9b7eb8ce3",
+      "sha256": "f74870f2da24d9346e65bbfa91e3cec7094922edd6465ef2c11e73e97f8aa250"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.mjs",
+      "gitBlob": "10154b536a4a18624d5897b357a2bdc4c5bf2b70",
+      "sha256": "c00da42ccab920ad6b88d9901e33840102c29a949bf744440c85885a45ca190f"
+    },
+    {
+      "path": ".github/continuum/ccc1-verifier.mjs",
+      "gitBlob": "3860fd7c58480ca7b125fe7c26ddb50f91f10c0a",
+      "sha256": "d0900ad8af992161f893c934669ef0a964febd71822b562d4003bb9cd29dc463"
+    },
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "gitBlob": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "sha256": "2fb90f20eb50f685ea41369012f00f61c13a4a1cfc8740c5e4f5691a953a700b"
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.test.mjs",
+      "gitBlob": "5db1808f67bebaa497b7a6a99e0ec3d65102da1b",
+      "sha256": "d09f93eb012f864b475f005b7487d6d355f3487c93184f390c2dc6c9eb258e0a"
+    },
+    {
+      "path": ".github/continuum/repair-diagnostics.mjs",
+      "gitBlob": "ecc826ef24804524c10394d5889830de9d1dc936",
+      "sha256": "d8c938b6fa5187e8c8fc74d4993f2d3104779c5766d9b625f051e2e79f51612d"
+    },
+    {
+      "path": ".github/continuum/owned-project-evidence.mjs",
+      "gitBlob": "6e1d4aacac12c2dbf87b1272842b6dcc4dd7ce88",
+      "sha256": "26a446da8393ec268b89b61e4ff180d2923306da48661c59493ead33adca7b67"
+    },
+    {
+      "path": ".github/continuum/repair-strategies.mjs",
+      "gitBlob": "53631d4b6cb0896e78e749310d501926f6dd9af2",
+      "sha256": "775029842cdae34ee3cad5b4c0045241d86e5e0dbf3858e7e7e1a77b2c21c289"
+    },
+    {
+      "path": ".github/continuum/owner-contract-worker.mjs",
+      "gitBlob": "44a47c9a5952670459b09d49bf896c589647b3ef",
+      "sha256": "3ddf9b02d181710267792b6903fb46099c542c85c78cea4c69b507132c0957bf"
+    },
+    {
+      "path": ".github/continuum/ccc1-worker.mjs",
+      "gitBlob": "bbd3f2ecc0122b62b7a0d27e57eb789d21085a57",
+      "sha256": "0245ce756c289c8777607cdee7223c45152187eee4d5ea503ac2ad98dce87096"
+    },
+    {
+      "path": ".github/continuum/repair-research-verifier.mjs",
+      "gitBlob": "262a03351919f43e8a9cf0eb496a4c97cd7aed3e",
+      "sha256": "c6b4227ea5f037e4c2336bb27d15b82d5a725361fe1cca7b32db3d4425d7dcab"
+    },
+    {
+      "path": ".github/continuum/coding-context.mjs",
+      "gitBlob": "512e608c4e181c93a5a9bf5acbbe1482d591600a",
+      "sha256": "16ea2092c7022800824a32cc2bab8a91066fcf6353b2d9426430522d294ad282"
+    },
+    {
+      "path": ".github/continuum/behaviour-probe.mjs",
+      "gitBlob": "7d353a415b531dc8ce9cf64f299b162dde649938",
+      "sha256": "74b4f000f80bff87f8378274d2b72a84aa904df4ce7e91e25a0d48970d6b93b3"
+    },
+    {
+      "path": ".github/continuum/mcp-adapter.mjs",
+      "gitBlob": "74bf88d961d9631e8cd84783fa01d68e7beb45fd",
+      "sha256": "36d97d71535dc7cb2e35d3a33c2791d32546aa6013be2d283853d25f2a754d97"
+    },
+    {
+      "path": ".github/continuum/repair-cycle-safety.mjs",
+      "gitBlob": "a2a9ea34fa58793edba950c816b6004a4189945f",
+      "sha256": "a120b76891c17716b2a342a340dc1074438abc7b43a7d0c119e764bae6524580"
+    },
+    {
+      "path": ".github/continuum/cre-encoder.mjs",
+      "gitBlob": "3b8e88d8b7a0d967689307c45e4f8db43bcaac5d",
+      "sha256": "af66bb972ee3afe92823ae82886306e6a1157bad35a5b6e14b11099c899e84a0"
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "gitBlob": "f40fec66618c1315e4144cf0e6d196a16afd3409",
+      "sha256": "b0a608fd6d55840e65a741f74bbe562768c16b05ca6aa6594ea5fb740a7c5097"
+    },
+    {
+      "path": ".github/continuum/ccc1-workspace.mjs",
+      "gitBlob": "3fe7a31db1f334be917303ade6cc477d2e63f688",
+      "sha256": "3f4a581bca3127305123ed0e2511653809dc7435f2c21a7ee177be758515921a"
+    },
+    {
+      "path": ".github/continuum/shared-build-lease.mjs",
+      "gitBlob": "0ae4599e6fe897c8c8392a2d604e82b9aafaa945",
+      "sha256": "c23fe47e73065ec5885aa73bd4466167b01b052ef47280221039372009833050"
+    },
+    {
+      "path": ".github/continuum/ccc1-gate.mjs",
+      "gitBlob": "d6ac7c7c053055edbc7ab3007b0d9f67a531a962",
+      "sha256": "329df6ea833a0cddf65b73a544e8ddc8a440a0f86909358724612a7f081a2dc6"
+    },
+    {
+      "path": ".github/continuum/local-numeric-patch.mjs",
+      "gitBlob": "ccc85b7b60e6635958a7798557cd4dc20510569f",
+      "sha256": "1083e2500d7aa5b7c7703a2272f43eaa4939f5018a7a8ac197ead4f1af3b491f"
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "gitBlob": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "sha256": "0ef121bb5dfba45a800f73543bacb0c6fbded3b4a4020a674df999d7503131dd"
+    },
+    {
+      "path": ".github/continuum/ccc1-journal.mjs",
+      "gitBlob": "1a2ffbfc932b2ec59d5522b220ea92bfe7ccb384",
+      "sha256": "e4cfe7b3cf59e42c25d890751eb21ccf97f0e7c81c20c7f29641235c6a43f1c0"
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "gitBlob": "eef34b205f791e1b8e82871020635400addfbde4",
+      "sha256": "970b9461a893bf81c72ef23630e991c4142e212f9a2056f17453bb5e2a7e32b4"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.test.mjs",
+      "gitBlob": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+      "sha256": "96883a253ea904660543278b472f9b7cddacd73d0da0ad76c1bc74ebe4a02f45"
+    },
+    {
+      "path": ".github/continuum/ccc1-interpreter.mjs",
+      "gitBlob": "f1e9c6876732afbc10b53ac7335eb2c8c92cc916",
+      "sha256": "a5b7f062347a819b9b9d1765b023b0c8b4cbb60f2c0353a130030171978d2f1f"
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "gitBlob": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "sha256": "e449b39c2b8826176e798b6dce082b7e6e912c9b626780a77bf945265e65523d"
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "gitBlob": "715d63179fd5174d8b5444819c4e2226dcc87878",
+      "sha256": "a62aabcbad079be2235f24ab064aeeb096467b44404c99e623bec27f0375cd87"
+    },
+    {
+      "path": ".github/continuum/ccc1-path-policy.mjs",
+      "gitBlob": "5e7502d39634acbd3fcd8135f997f96d9227cc23",
+      "sha256": "87e1adc6be4465da8a64db7c7bf355855f17414820c5a61fba5f88dfabe24298"
+    },
+    {
+      "path": ".github/continuum/ansk-baseline-triage.mjs",
+      "gitBlob": "698e34ea07db12b8cc43b70ec0bdd01b02518567",
+      "sha256": "dc0ed6b96dacedb372a2bd1d9092e63cc26e55417f5da109feaeca0a3b50d982"
+    },
+    {
+      "path": ".github/continuum/code-analyzer.mjs",
+      "gitBlob": "5c245dd38b0758db246a161812dcc96b53fd1acd",
+      "sha256": "f71f765085945f7c2c0730c4814e86a65b8c59de31b92712bc9e074f1f5bc35e"
+    },
+    {
+      "path": ".github/continuum/cefr-repair-ranker.mjs",
+      "gitBlob": "30843cb4fd447195ec9e46a8f68ef8c1dcf91277",
+      "sha256": "edb366a6388ec4cf9f3ead85fdf77e86694bf860c2cb3dc977cd0ead6e59ce21"
+    },
+    {
+      "path": ".github/continuum/relational-memory-data.mjs",
+      "gitBlob": "f4632fa2343ec97415b88918272a76004e5262c2",
+      "sha256": "56f9c206835a559387e135efd66eb4188e9a726b3c85158f6f8f4677550f6252"
+    },
+    {
+      "path": ".github/continuum/ccc1-recovery.mjs",
+      "gitBlob": "76a2b3d9af5f54bd4bf4e54995aa7502138eb8e6",
+      "sha256": "717f7caec7cca7cff8b2ecdbc75ee08ac511b38b9ebe1a4dd20b7f69d2c4a7af"
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "gitBlob": "50d76399ede405fc436aee30b912fbead4d57da7",
+      "sha256": "61304e7b5973a08ac3ae4a089dc26a0bfd56bfe00d54794bb897063af47b7d07"
+    },
+    {
+      "path": ".github/continuum/coding-service.mjs",
+      "gitBlob": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8",
+      "sha256": "a654c79f578bd3f8e44d8bd176546e37bff7adb21c8c8f41126dde3a68048cb2"
+    },
+    {
+      "path": ".github/continuum/node-contract-synthesizer.mjs",
+      "gitBlob": "3461f542a7bfa72ae7364abaeb130215e713e324",
+      "sha256": "88b48f7000e324bb8c0bb83f3ab3777ea42fbac8ed1db6c90565404c03eaf958"
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "gitBlob": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "sha256": "4de2311305c1dd536e185afe06bdaeb44081324c96243f1b176cbcdcc4e5b062"
+    },
+    {
+      "path": ".github/continuum/local-integration-status.mjs",
+      "gitBlob": "50b38c5b6f1b93de4245aecee9ca647378f6d283",
+      "sha256": "4deb2059973c24b1749b48a5469d5c3aa842ea9ab046bd647a35132aebce870a"
+    },
+    {
+      "path": ".github/continuum/ccc1-envelope.mjs",
+      "gitBlob": "687e5b3f327fa4d6a0a61c4d2fcc209d41ec81ef",
+      "sha256": "74c040d9df6f77759da428e5df32fea1be171a8024c5bed57759f83a19cc36dc"
+    },
+    {
+      "path": ".github/continuum/cefr-dev-checkpoint.mjs",
+      "gitBlob": "9f601180bdcea29158dcc265450e34b739ee9b1c",
+      "sha256": "b8ab929c187f3d2a806317e6707586ceac1b1790daaec86b0558650b191cd064"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.test.mjs",
+      "gitBlob": "043eb0596c336e43a8f4307f28d61bfd95302187",
+      "sha256": "0ecaae8accfa4551c0c3b8b86f6cdfc0a2f939b77706d9c0a424ba642a6d43e8"
+    },
+    {
+      "path": ".github/continuum/ccc1-orchestrator.mjs",
+      "gitBlob": "23cd0780c4e8f885bf4ea04728954a381e9b461e",
+      "sha256": "d2bb41170b338a739add36d026c6d3598bf7decbaba25630720715eda52917ec"
+    },
+    {
+      "path": ".github/continuum/teamleader-review-handoff.mjs",
+      "gitBlob": "5e5bbccfb2d71555ab47504863fa13ef9eaaa2f4",
+      "sha256": "691a9fcb2ee6e75089ffd9f283d2f936ce149030e14d30e45586a8ee0e3f79da"
+    },
+    {
+      "path": ".github/continuum/development-planner.mjs",
+      "gitBlob": "03f6b4c88bf6507cf22ad96fcfb1e10fee56183e",
+      "sha256": "0c2b5f05aeb80dfef1f4927611a20db45d6adc4fb953f4ae6a11bb4f3dc1d4da"
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "gitBlob": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "sha256": "21b472c0dc965f4896e42e967a362baaf156ccf3b67f5a79ec0c59439de6aa12"
+    },
+    {
+      "path": ".github/continuum/risk-file-ranker.mjs",
+      "gitBlob": "9f80f0dde1eab44c5ea4193e404ea09d90d0aeb0",
+      "sha256": "87f1cdf165f26726c0857bb44d88f2ace6d7d7df87917c7c51d351c380d9008e"
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.test.mjs",
+      "gitBlob": "f85576a51b61515f3c7b4096e1d5eee1d5b4f7c0",
+      "sha256": "5937fe85ad755a2ec19cbd0a3a3e34228ff1b846218cf03750a371beb7e12625"
+    },
+    {
+      "path": ".github/continuum/ccc1-experience.mjs",
+      "gitBlob": "395e359bf9432d6fab53a0301707a46cea43ae53",
+      "sha256": "81e27f07d92a183cdd6d87d0fe3e834e48f16db9b55c7ee76056cc9c04cc3b1d"
+    },
+    {
+      "path": ".github/continuum/backlog-repair-worker.mjs",
+      "gitBlob": "05a5ac8efc427e0147fdc41218eb08506041326a",
+      "sha256": "c491edc2f95dcd17474845e70eae574c42336e4a2b57bc107f2a2aa84251c268"
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "gitBlob": "baf1eeb8c68f80f2e508738a6b3b71f3bdc1f88d",
+      "sha256": "82c85fc68ed5fbdf21daa78c0bad448906d6d7a8407d0f906ba9011ba1e4184a"
+    },
+    {
+      "path": ".github/continuum/ccc1-technical-recall.mjs",
+      "gitBlob": "ab0d5464c64beb26491da3f2c8a4b04f44e6eb9d",
+      "sha256": "b37f88b38e4ccb6cb787e5609f1653a1c0dbb604995839ef2044e448b7fc75d6"
+    },
+    {
+      "path": ".github/continuum/contract-test-template.mjs",
+      "gitBlob": "f8a9fa5b05abdee2b608b9fccaac47ad66003a41",
+      "sha256": "c8902b34fe9835287cf8f95f932cdeaa3b860cc780f8780cda413a7cadc88e30"
+    },
+    {
+      "path": ".github/continuum/coding-provider.mjs",
+      "gitBlob": "b481ca578a10c22743e57c8d27d7fab1e6240998",
+      "sha256": "15b59137c396fe1544ba36336c1e9925fb35700b585e4eb2d15344af646a80e8"
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "gitBlob": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+      "sha256": "a33c7afd51ea2cbc7213d18140b34c7e9917bc68209d041e4f01741c7a7ca438"
+    },
+    {
+      "path": ".github/continuum/backlog-cli.mjs",
+      "gitBlob": "64d6dd3a48d769c475d919c1828da926fae9ad08",
+      "sha256": "cca0682632da6b3a3a0bf1aca0aac848877888aff2f15ada7830ad481f2105ea"
+    },
+    {
+      "path": ".github/continuum/ccc1-local-preflight.mjs",
+      "gitBlob": "be1cdd32e990b5e6ff439a273ab8a17e5d7d7eab",
+      "sha256": "1cb3ac3b322677c56d98d0f79d2d0cfe3e8347b1b50418d575c480a55c9d55f4"
+    },
+    {
+      "path": ".github/continuum/cefr-shadow-benchmark.mjs",
+      "gitBlob": "0b8bd68fc1bbec89e2caab239c84620dea54bf9d",
+      "sha256": "8e1a7044ed5c33527509903f35bdfdcb46b49c53df23c563f9b6fe2fe458752a"
+    },
+    {
+      "path": ".github/continuum/coding-service-store.mjs",
+      "gitBlob": "00baf139506f79b6c31b314064cac1ac6d7b3a20",
+      "sha256": "7be02a65dc53187ae0817bb4cc110b1ac71310481d54da04ac9af602b861b21b"
+    },
+    {
+      "path": ".github/continuum/coding-agent-loop.mjs",
+      "gitBlob": "c31689ce331db9ecc3180439a3daf865505dbdc6",
+      "sha256": "c5743cd6e5866b97b9ff04a9449e4d22d5687d115f9b0a39ecf54570057f5ce1"
+    },
+    {
+      "path": ".github/continuum/teamleader-mcp-preflight.mjs",
+      "gitBlob": "8cba1914419649ceac72b7360df38b5965924b55",
+      "sha256": "606543e8f4f7bb0db4efdf892efa7dca4c3bf874f2c75a5d8db03e966eaf8527"
+    },
+    {
+      "path": ".github/continuum/backlog-investigator.mjs",
+      "gitBlob": "ee9c9ef4a38d1cf7b394c086019c4a8d45c31e24",
+      "sha256": "78d616781d3045a7a7dbc39bf952e9a5af221f09c179fa42b82c41e55d657e86"
+    },
+    {
+      "path": ".github/continuum/repair-publish.mjs",
+      "gitBlob": "cf7b447147f32e21acd2586b3ea929882e3b03ec",
+      "sha256": "ed35b61aab80d7740e4a607bdc456255ac6a9b2707c280d74c555030128bda35"
+    },
+    {
+      "path": ".github/continuum/candidate-kotlin-syntax.mjs",
+      "gitBlob": "6623e100c28ff5f189d7e449b07a7df52cd2d135",
+      "sha256": "479934efbd7b77696d4d1b768860977461bd49d8e453181090e3f2f55dbdc7c7"
+    },
+    {
+      "path": ".github/continuum/code-index.mjs",
+      "gitBlob": "f7c7999a6f69b4ec4a05f95f11cd89be31d28caa",
+      "sha256": "ca1c169d116c1bf36fc54ce998fe0541b3a59ac8dbbbc00ee610ce0b4a15ae03"
+    },
+    {
+      "path": ".github/continuum/ccc1-redgreen-verifier.mjs",
+      "gitBlob": "54c2c3cedf150b3690580f7989ab3bad7f3c1a2c",
+      "sha256": "527c3a72d6cc803e0690ec2cb0f9f47ea59201a18ce3131221a2f864d8a476eb"
+    },
+    {
+      "path": ".github/continuum/coding-task.mjs",
+      "gitBlob": "51c3f19832f6d0e72c316dbc0e27a0257e66b6a9",
+      "sha256": "02b903a6e9a33d55b7433f29e08286761994e5c7c3537fd30828684e18651b6b"
+    },
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "gitBlob": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "sha256": "410329c1f13e4b76eb1dbb8e242c4c3269313150de5577be698720a627a882d8"
+    },
+    {
+      "path": ".github/continuum/ansk-lab-contract.mjs",
+      "gitBlob": "14cc73f75ab06de8f182c0e7db6278d50aa6f6e8",
+      "sha256": "ebf8e07bbde8c9602e4e8f641e8e358183cea01fe50a688514e4f8cf3d4590c7"
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "gitBlob": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+      "sha256": "1e4e3741624f861a2807e0c1bc7674235944ad33df52247ccbaede8af6f4e19e"
+    },
+    {
+      "path": ".github/continuum/kotlin-tokenizer.mjs",
+      "gitBlob": "1e5baf93f750da0b2c2418d355f927e2669fa9e1",
+      "sha256": "9c92cfe7d63ed9312a4c27b41085d8fe4fd79d11ca4c3a9049128c3032c5cf8e"
+    },
+    {
+      "path": ".github/continuum/teamleader-handoffs.mjs",
+      "gitBlob": "64e3074bc0ef2fb7c19835102f56e4e62bfd1818",
+      "sha256": "c1d8f99ebdcbdfdf6b7de1893aee53b0c93b4916e3da30ae8c79318c637fc5e6"
+    },
+    {
+      "path": ".github/continuum/isolated-executor.mjs",
+      "gitBlob": "e1a50061683de286db8edf20ecb1acaa76ba22e1",
+      "sha256": "7dda3445ade45c8a484a312e3a30f5e6c5200f80f9333a96970c52eefcce3594"
+    },
+    {
+      "path": ".github/continuum/repair-ledger.mjs",
+      "gitBlob": "3bc9107ef05a1da77db48d1bdacaf731cb7f7606",
+      "sha256": "a0e57266c079c4a71f24dbcbe8cbeb08fa003a7ad2747e46226a0f10ef3e9216"
+    },
+    {
+      "path": ".github/continuum/repair-engine.mjs",
+      "gitBlob": "5d2a1e3109b972d1d2fabe95f0c0c7681c621385",
+      "sha256": "61bd02696fab51ddf1f1e03f591538044ada420c736ed93ad0f2adc942d4bb32"
+    },
+    {
+      "path": ".github/continuum/isolated-profile-runner.mjs",
+      "gitBlob": "5de11f1dacddc2e8eadeffa4b49f486a5db76098",
+      "sha256": "34b5ce6e061ce8c86f115a34902f92198b5488ed9c8b0f8f00f8a22fefbc685c"
+    },
+    {
+      "path": ".github/continuum/coding-service.test.mjs",
+      "gitBlob": "c62bf55e5aef37605ddef210a6c0d713f4676ac3",
+      "sha256": "c741740288a23f9e8001d0ad406c7c37bc5a093cf4db2bb53e5757efec31799f"
+    },
+    {
+      "path": ".github/continuum/autonomous-teamleader.mjs",
+      "gitBlob": "3921067b0e23f8fddd66fb65724bfb374fc0416b",
+      "sha256": "57d2680c3173e92b987294041e3ac323a235f76b8954fafb2a7ef3b60e04c869"
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.mjs",
+      "gitBlob": "b94013980ebef24d0dc3e3455a3a1131b91d04ab",
+      "sha256": "3d14fd26f228723ee38a52b86686addd3436f758a5dc0e6dc2e26746aac66572"
+    },
+    {
+      "path": "scripts/continuum-owned-process.mjs",
+      "gitBlob": "38ab306d3ea96bf3514309444d42bb2f964b1369",
+      "sha256": "0548ba638e76a71b41ce0ee6bc20a7aa14dc1c2fc0ffff6c7a6f1d2f77a1354a"
+    },
+    {
+      "path": "scripts/continuum-local-model-observation.mjs",
+      "gitBlob": "33dc2b6ef30c72407cc35ab43ba397d8edbd0ca5",
+      "sha256": "1e9222b80220efbed50a75a07467dc27c20238c39ed340283a0c93381e0e9cf5"
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "gitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "sha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43"
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.test.mjs",
+      "gitBlob": "c3a130d17624e213e8e73b35dc41bef1a63a540f",
+      "sha256": "7895085fd127f81038fdd337980fba0c4047787f1df57f49a468dcae61de6700"
+    },
+    {
+      "path": "scripts/continuum-local-model-job.mjs",
+      "gitBlob": "441ec43cddb5d4d5d0713a8c2df652b57aa32ab1",
+      "sha256": "b288e6a945e673a9608c730211e1121c6ecfa55ddc236b13763d4b8ab8f65ae0"
+    },
+    {
+      "path": "scripts/continuum-m2-model-preflight.mjs",
+      "gitBlob": "bbfd4ffc4e5f6c6c623e1ae6317f1d1e66d74fa2",
+      "sha256": "1078c0d16476445b768b1a70f196747ac7318383cdcafaa3ed54a29aded37429"
+    },
+    {
+      "path": "scripts/continuum-local-model-pins.mjs",
+      "gitBlob": "5c15d69e618800a70787f0a27620d0b2696cd22e",
+      "sha256": "dd8807c91a25bc1397562acca65ab6258993ebb4e0856ebc230d3b4dec1d64b5"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "gitBlob": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+      "sha256": "73adec4366e5f3bf734f81f6618cdc0e374bf93ed4b8ab9a8526bc842cdeb0a2"
+    },
+    {
+      "path": "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+      "gitBlob": "211950224981a09f9b4ea128b47c89e42b008fdb",
+      "sha256": "503a9e1478aebfba7d9183bacdbbc7fe31c3e6e8fbb93fd4b2c00e2058636c9f"
+    },
+    {
+      "path": "scripts/continuum-deepseek-tier-plan.mjs",
+      "gitBlob": "fa5b423e182ded0de80fbc3b83b2da42a2ab6c85",
+      "sha256": "e5e06bd22f737605c27fba7ca51df8833f90cd285da6059adf4d51488e2de449"
+    },
+    {
+      "path": "scripts/continuum-typed-coding-bridge.mjs",
+      "gitBlob": "b901deac48b0c3e781bb91e750bf371ced24eb83",
+      "sha256": "adbe3bb5560dfb1004fc9ba7406a9260f92e43a1a8922d93051768802cae6ce2"
+    },
+    {
+      "path": "scripts/continuum-mobile-coding.mjs",
+      "gitBlob": "71006a6517701b2bd36dcdf18875541de6a77405",
+      "sha256": "f116fdffd33d3282608340af373d703d29d6b8cb9ef71f4356087fee0c01466d"
+    },
+    {
+      "path": "scripts/continuum-gguf.mjs",
+      "gitBlob": "82bdb06b50548db083ceb2c02915617abdd0f16c",
+      "sha256": "a173ec4436562c6643293777ebe80617be3d17b10163b559994cd0bf2569c63f"
+    },
+    {
+      "path": "scripts/continuum-isolation-kotlin-fixture.sh",
+      "gitBlob": "9586934c661b9baa1db1a34d359879a1b47dc749",
+      "sha256": "d9fa2962c483e14265eb29a09ac899969d985351ca5a85e2a340b5ea23ec2e98"
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "gitBlob": "ee7fb58a9503d6137b52116b64e350876abf2325",
+      "sha256": "4900ef97b3bf2f2c0234571db2acd3005af925c05eafac53e063dc8027a72a62"
+    },
+    {
+      "path": "scripts/continuum-deepseek-bridge.mjs",
+      "gitBlob": "d6f18f4a19ee0d2144f3061035fd249a81891996",
+      "sha256": "67e2c846b2e46d6fb0109d037c31bcf54d7fcd39ff65abc8e6133e50a71bd29e"
+    },
+    {
+      "path": "scripts/continuum-project-plan.mjs",
+      "gitBlob": "f3d3510975c1a7a141947d2a44dc89d6f618648f",
+      "sha256": "557be26fe203c122a746132da12b10bc45631b9c2526c5c036651548a6275c67"
+    },
+    {
+      "path": "scripts/continuum-gguf-preflight.mjs",
+      "gitBlob": "3b7471cf69983adc8b41f5e6a902b9d150cab08d",
+      "sha256": "6a19082faae8e76146fc60fbae0699e589387bb707f473999757770437408751"
+    },
+    {
+      "path": "scripts/continuum-local-brain.mjs",
+      "gitBlob": "6c3b23d264f664c06d8a80eb7f5d26c7d972e15c",
+      "sha256": "b01891ed0916151dfc90890246bb4293da59cf2a21f15a4b130721426259406a"
+    }
+  ],
+  "unchangedAfterTests": true
+}

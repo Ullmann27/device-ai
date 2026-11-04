@@ -1,0 +1,631 @@
+{
+  "sourceCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+  "count": 104,
+  "allMatched": true,
+  "checks": [
+    {
+      "path": ".github/continuum/m4-junit-evidence.mjs",
+      "expected": "a78817d35759598b4dfae31325811972fe5f2f4f",
+      "actual": "a78817d35759598b4dfae31325811972fe5f2f4f",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-experience.mjs",
+      "expected": "eccbc10cb5a4670a1f55b23d3f692d82a2df7c10",
+      "actual": "eccbc10cb5a4670a1f55b23d3f692d82a2df7c10",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/step-watchdog.mjs",
+      "expected": "3839160d2d5c90d2d3cb8219cf250f1ecedf2c2d",
+      "actual": "3839160d2d5c90d2d3cb8219cf250f1ecedf2c2d",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "expected": "64f798d5cf86ec7b541bd5135972f30fef1be746",
+      "actual": "64f798d5cf86ec7b541bd5135972f30fef1be746",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop-source-preflight.test.mjs",
+      "expected": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "actual": "13c5661432115c883fc2b64161757aad9d1128f4",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/kotlin-delegate-acceptance.mjs",
+      "expected": "3c43a2279be535775ec84e4b4764cd07e52f9ea0",
+      "actual": "3c43a2279be535775ec84e4b4764cd07e52f9ea0",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.mjs",
+      "expected": "155553b2f21fa283655385aa59a297d9b7eb8ce3",
+      "actual": "155553b2f21fa283655385aa59a297d9b7eb8ce3",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.mjs",
+      "expected": "10154b536a4a18624d5897b357a2bdc4c5bf2b70",
+      "actual": "10154b536a4a18624d5897b357a2bdc4c5bf2b70",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-verifier.mjs",
+      "expected": "3860fd7c58480ca7b125fe7c26ddb50f91f10c0a",
+      "actual": "3860fd7c58480ca7b125fe7c26ddb50f91f10c0a",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.mjs",
+      "expected": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "actual": "98697dbc54189796b9fb3c1ffa6b2d849e6271b3",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.test.mjs",
+      "expected": "5db1808f67bebaa497b7a6a99e0ec3d65102da1b",
+      "actual": "5db1808f67bebaa497b7a6a99e0ec3d65102da1b",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-diagnostics.mjs",
+      "expected": "ecc826ef24804524c10394d5889830de9d1dc936",
+      "actual": "ecc826ef24804524c10394d5889830de9d1dc936",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/owned-project-evidence.mjs",
+      "expected": "6e1d4aacac12c2dbf87b1272842b6dcc4dd7ce88",
+      "actual": "6e1d4aacac12c2dbf87b1272842b6dcc4dd7ce88",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-strategies.mjs",
+      "expected": "53631d4b6cb0896e78e749310d501926f6dd9af2",
+      "actual": "53631d4b6cb0896e78e749310d501926f6dd9af2",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/owner-contract-worker.mjs",
+      "expected": "44a47c9a5952670459b09d49bf896c589647b3ef",
+      "actual": "44a47c9a5952670459b09d49bf896c589647b3ef",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-worker.mjs",
+      "expected": "bbd3f2ecc0122b62b7a0d27e57eb789d21085a57",
+      "actual": "bbd3f2ecc0122b62b7a0d27e57eb789d21085a57",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-research-verifier.mjs",
+      "expected": "262a03351919f43e8a9cf0eb496a4c97cd7aed3e",
+      "actual": "262a03351919f43e8a9cf0eb496a4c97cd7aed3e",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-context.mjs",
+      "expected": "512e608c4e181c93a5a9bf5acbbe1482d591600a",
+      "actual": "512e608c4e181c93a5a9bf5acbbe1482d591600a",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/behaviour-probe.mjs",
+      "expected": "7d353a415b531dc8ce9cf64f299b162dde649938",
+      "actual": "7d353a415b531dc8ce9cf64f299b162dde649938",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/mcp-adapter.mjs",
+      "expected": "74bf88d961d9631e8cd84783fa01d68e7beb45fd",
+      "actual": "74bf88d961d9631e8cd84783fa01d68e7beb45fd",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-cycle-safety.mjs",
+      "expected": "a2a9ea34fa58793edba950c816b6004a4189945f",
+      "actual": "a2a9ea34fa58793edba950c816b6004a4189945f",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/cre-encoder.mjs",
+      "expected": "3b8e88d8b7a0d967689307c45e4f8db43bcaac5d",
+      "actual": "3b8e88d8b7a0d967689307c45e4f8db43bcaac5d",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "expected": "f40fec66618c1315e4144cf0e6d196a16afd3409",
+      "actual": "f40fec66618c1315e4144cf0e6d196a16afd3409",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-workspace.mjs",
+      "expected": "3fe7a31db1f334be917303ade6cc477d2e63f688",
+      "actual": "3fe7a31db1f334be917303ade6cc477d2e63f688",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/shared-build-lease.mjs",
+      "expected": "0ae4599e6fe897c8c8392a2d604e82b9aafaa945",
+      "actual": "0ae4599e6fe897c8c8392a2d604e82b9aafaa945",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-gate.mjs",
+      "expected": "d6ac7c7c053055edbc7ab3007b0d9f67a531a962",
+      "actual": "d6ac7c7c053055edbc7ab3007b0d9f67a531a962",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/local-numeric-patch.mjs",
+      "expected": "ccc85b7b60e6635958a7798557cd4dc20510569f",
+      "actual": "ccc85b7b60e6635958a7798557cd4dc20510569f",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator.mjs",
+      "expected": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "actual": "31f7a598d4d560e0374b9e8656446b30c512e611",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-journal.mjs",
+      "expected": "1a2ffbfc932b2ec59d5522b220ea92bfe7ccb384",
+      "actual": "1a2ffbfc932b2ec59d5522b220ea92bfe7ccb384",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-service-reader.mjs",
+      "expected": "eef34b205f791e1b8e82871020635400addfbde4",
+      "actual": "eef34b205f791e1b8e82871020635400addfbde4",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.test.mjs",
+      "expected": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+      "actual": "d325c114c5a35a5d1ce21969f5aa58d53cf4ad56",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-interpreter.mjs",
+      "expected": "f1e9c6876732afbc10b53ac7335eb2c8c92cc916",
+      "actual": "f1e9c6876732afbc10b53ac7335eb2c8c92cc916",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/local-teamleader-loop.mjs",
+      "expected": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "actual": "e9520fc95ecce6aa3864d36ef4da660f194dd2d7",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-cli.mjs",
+      "expected": "715d63179fd5174d8b5444819c4e2226dcc87878",
+      "actual": "715d63179fd5174d8b5444819c4e2226dcc87878",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-path-policy.mjs",
+      "expected": "5e7502d39634acbd3fcd8135f997f96d9227cc23",
+      "actual": "5e7502d39634acbd3fcd8135f997f96d9227cc23",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ansk-baseline-triage.mjs",
+      "expected": "698e34ea07db12b8cc43b70ec0bdd01b02518567",
+      "actual": "698e34ea07db12b8cc43b70ec0bdd01b02518567",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/code-analyzer.mjs",
+      "expected": "5c245dd38b0758db246a161812dcc96b53fd1acd",
+      "actual": "5c245dd38b0758db246a161812dcc96b53fd1acd",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/cefr-repair-ranker.mjs",
+      "expected": "30843cb4fd447195ec9e46a8f68ef8c1dcf91277",
+      "actual": "30843cb4fd447195ec9e46a8f68ef8c1dcf91277",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/relational-memory-data.mjs",
+      "expected": "f4632fa2343ec97415b88918272a76004e5262c2",
+      "actual": "f4632fa2343ec97415b88918272a76004e5262c2",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-recovery.mjs",
+      "expected": "76a2b3d9af5f54bd4bf4e54995aa7502138eb8e6",
+      "actual": "76a2b3d9af5f54bd4bf4e54995aa7502138eb8e6",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/branch-discovery.test.mjs",
+      "expected": "50d76399ede405fc436aee30b912fbead4d57da7",
+      "actual": "50d76399ede405fc436aee30b912fbead4d57da7",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-service.mjs",
+      "expected": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8",
+      "actual": "3ed14b5f495a4a306d3706aa70755aa1fa0c5db8",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/node-contract-synthesizer.mjs",
+      "expected": "3461f542a7bfa72ae7364abaeb130215e713e324",
+      "actual": "3461f542a7bfa72ae7364abaeb130215e713e324",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-service-worker.mjs",
+      "expected": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "actual": "0d3097bd2b9422993849fb6882868e1d431b65b6",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/local-integration-status.mjs",
+      "expected": "50b38c5b6f1b93de4245aecee9ca647378f6d283",
+      "actual": "50b38c5b6f1b93de4245aecee9ca647378f6d283",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-envelope.mjs",
+      "expected": "687e5b3f327fa4d6a0a61c4d2fcc209d41ec81ef",
+      "actual": "687e5b3f327fa4d6a0a61c4d2fcc209d41ec81ef",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/cefr-dev-checkpoint.mjs",
+      "expected": "9f601180bdcea29158dcc265450e34b739ee9b1c",
+      "actual": "9f601180bdcea29158dcc265450e34b739ee9b1c",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-assignment.test.mjs",
+      "expected": "043eb0596c336e43a8f4307f28d61bfd95302187",
+      "actual": "043eb0596c336e43a8f4307f28d61bfd95302187",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-orchestrator.mjs",
+      "expected": "23cd0780c4e8f885bf4ea04728954a381e9b461e",
+      "actual": "23cd0780c4e8f885bf4ea04728954a381e9b461e",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/teamleader-review-handoff.mjs",
+      "expected": "5e5bbccfb2d71555ab47504863fa13ef9eaaa2f4",
+      "actual": "5e5bbccfb2d71555ab47504863fa13ef9eaaa2f4",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/development-planner.mjs",
+      "expected": "03f6b4c88bf6507cf22ad96fcfb1e10fee56183e",
+      "actual": "03f6b4c88bf6507cf22ad96fcfb1e10fee56183e",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+      "expected": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "actual": "8ebcc0900571c78fdf279038a40fff7706a491be",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/risk-file-ranker.mjs",
+      "expected": "9f80f0dde1eab44c5ea4193e404ea09d90d0aeb0",
+      "actual": "9f80f0dde1eab44c5ea4193e404ea09d90d0aeb0",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-bot-report.test.mjs",
+      "expected": "f85576a51b61515f3c7b4096e1d5eee1d5b4f7c0",
+      "actual": "f85576a51b61515f3c7b4096e1d5eee1d5b4f7c0",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-experience.mjs",
+      "expected": "395e359bf9432d6fab53a0301707a46cea43ae53",
+      "actual": "395e359bf9432d6fab53a0301707a46cea43ae53",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/backlog-repair-worker.mjs",
+      "expected": "05a5ac8efc427e0147fdc41218eb08506041326a",
+      "actual": "05a5ac8efc427e0147fdc41218eb08506041326a",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "expected": "baf1eeb8c68f80f2e508738a6b3b71f3bdc1f88d",
+      "actual": "baf1eeb8c68f80f2e508738a6b3b71f3bdc1f88d",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-technical-recall.mjs",
+      "expected": "ab0d5464c64beb26491da3f2c8a4b04f44e6eb9d",
+      "actual": "ab0d5464c64beb26491da3f2c8a4b04f44e6eb9d",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/contract-test-template.mjs",
+      "expected": "f8a9fa5b05abdee2b608b9fccaac47ad66003a41",
+      "actual": "f8a9fa5b05abdee2b608b9fccaac47ad66003a41",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-provider.mjs",
+      "expected": "b481ca578a10c22743e57c8d27d7fab1e6240998",
+      "actual": "b481ca578a10c22743e57c8d27d7fab1e6240998",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "expected": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+      "actual": "ce3ba2c97935e68933648838a68a0bf191b00c82",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/backlog-cli.mjs",
+      "expected": "64d6dd3a48d769c475d919c1828da926fae9ad08",
+      "actual": "64d6dd3a48d769c475d919c1828da926fae9ad08",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-local-preflight.mjs",
+      "expected": "be1cdd32e990b5e6ff439a273ab8a17e5d7d7eab",
+      "actual": "be1cdd32e990b5e6ff439a273ab8a17e5d7d7eab",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/cefr-shadow-benchmark.mjs",
+      "expected": "0b8bd68fc1bbec89e2caab239c84620dea54bf9d",
+      "actual": "0b8bd68fc1bbec89e2caab239c84620dea54bf9d",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-service-store.mjs",
+      "expected": "00baf139506f79b6c31b314064cac1ac6d7b3a20",
+      "actual": "00baf139506f79b6c31b314064cac1ac6d7b3a20",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-agent-loop.mjs",
+      "expected": "c31689ce331db9ecc3180439a3daf865505dbdc6",
+      "actual": "c31689ce331db9ecc3180439a3daf865505dbdc6",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/teamleader-mcp-preflight.mjs",
+      "expected": "8cba1914419649ceac72b7360df38b5965924b55",
+      "actual": "8cba1914419649ceac72b7360df38b5965924b55",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/backlog-investigator.mjs",
+      "expected": "ee9c9ef4a38d1cf7b394c086019c4a8d45c31e24",
+      "actual": "ee9c9ef4a38d1cf7b394c086019c4a8d45c31e24",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-publish.mjs",
+      "expected": "cf7b447147f32e21acd2586b3ea929882e3b03ec",
+      "actual": "cf7b447147f32e21acd2586b3ea929882e3b03ec",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/candidate-kotlin-syntax.mjs",
+      "expected": "6623e100c28ff5f189d7e449b07a7df52cd2d135",
+      "actual": "6623e100c28ff5f189d7e449b07a7df52cd2d135",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/code-index.mjs",
+      "expected": "f7c7999a6f69b4ec4a05f95f11cd89be31d28caa",
+      "actual": "f7c7999a6f69b4ec4a05f95f11cd89be31d28caa",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ccc1-redgreen-verifier.mjs",
+      "expected": "54c2c3cedf150b3690580f7989ab3bad7f3c1a2c",
+      "actual": "54c2c3cedf150b3690580f7989ab3bad7f3c1a2c",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-task.mjs",
+      "expected": "51c3f19832f6d0e72c316dbc0e27a0257e66b6a9",
+      "actual": "51c3f19832f6d0e72c316dbc0e27a0257e66b6a9",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/teamleader-cli.mjs",
+      "expected": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "actual": "1937f58b8cb8a4a123e1bd9c8ef1e712d0d0d13a",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/ansk-lab-contract.mjs",
+      "expected": "14cc73f75ab06de8f182c0e7db6278d50aa6f6e8",
+      "actual": "14cc73f75ab06de8f182c0e7db6278d50aa6f6e8",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "expected": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+      "actual": "3ebb541477ff4b817a922a4fec01d6ee0b031721",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/kotlin-tokenizer.mjs",
+      "expected": "1e5baf93f750da0b2c2418d355f927e2669fa9e1",
+      "actual": "1e5baf93f750da0b2c2418d355f927e2669fa9e1",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/teamleader-handoffs.mjs",
+      "expected": "64e3074bc0ef2fb7c19835102f56e4e62bfd1818",
+      "actual": "64e3074bc0ef2fb7c19835102f56e4e62bfd1818",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/isolated-executor.mjs",
+      "expected": "e1a50061683de286db8edf20ecb1acaa76ba22e1",
+      "actual": "e1a50061683de286db8edf20ecb1acaa76ba22e1",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-ledger.mjs",
+      "expected": "3bc9107ef05a1da77db48d1bdacaf731cb7f7606",
+      "actual": "3bc9107ef05a1da77db48d1bdacaf731cb7f7606",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/repair-engine.mjs",
+      "expected": "5d2a1e3109b972d1d2fabe95f0c0c7681c621385",
+      "actual": "5d2a1e3109b972d1d2fabe95f0c0c7681c621385",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/isolated-profile-runner.mjs",
+      "expected": "5de11f1dacddc2e8eadeffa4b49f486a5db76098",
+      "actual": "5de11f1dacddc2e8eadeffa4b49f486a5db76098",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/coding-service.test.mjs",
+      "expected": "c62bf55e5aef37605ddef210a6c0d713f4676ac3",
+      "actual": "c62bf55e5aef37605ddef210a6c0d713f4676ac3",
+      "match": true
+    },
+    {
+      "path": ".github/continuum/autonomous-teamleader.mjs",
+      "expected": "3921067b0e23f8fddd66fb65724bfb374fc0416b",
+      "actual": "3921067b0e23f8fddd66fb65724bfb374fc0416b",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.mjs",
+      "expected": "b94013980ebef24d0dc3e3455a3a1131b91d04ab",
+      "actual": "b94013980ebef24d0dc3e3455a3a1131b91d04ab",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-owned-process.mjs",
+      "expected": "38ab306d3ea96bf3514309444d42bb2f964b1369",
+      "actual": "38ab306d3ea96bf3514309444d42bb2f964b1369",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-local-model-observation.mjs",
+      "expected": "33dc2b6ef30c72407cc35ab43ba397d8edbd0ca5",
+      "actual": "33dc2b6ef30c72407cc35ab43ba397d8edbd0ca5",
+      "match": true
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "expected": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "actual": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.test.mjs",
+      "expected": "c3a130d17624e213e8e73b35dc41bef1a63a540f",
+      "actual": "c3a130d17624e213e8e73b35dc41bef1a63a540f",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-local-model-job.mjs",
+      "expected": "441ec43cddb5d4d5d0713a8c2df652b57aa32ab1",
+      "actual": "441ec43cddb5d4d5d0713a8c2df652b57aa32ab1",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-m2-model-preflight.mjs",
+      "expected": "bbfd4ffc4e5f6c6c623e1ae6317f1d1e66d74fa2",
+      "actual": "bbfd4ffc4e5f6c6c623e1ae6317f1d1e66d74fa2",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-local-model-pins.mjs",
+      "expected": "5c15d69e618800a70787f0a27620d0b2696cd22e",
+      "actual": "5c15d69e618800a70787f0a27620d0b2696cd22e",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "expected": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+      "actual": "c8ea91d51aac83d43d71103b3cba86c7ee483aeb",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+      "expected": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+      "actual": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-deepseek-tier-plan.mjs",
+      "expected": "fa5b423e182ded0de80fbc3b83b2da42a2ab6c85",
+      "actual": "fa5b423e182ded0de80fbc3b83b2da42a2ab6c85",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-typed-coding-bridge.mjs",
+      "expected": "b901deac48b0c3e781bb91e750bf371ced24eb83",
+      "actual": "b901deac48b0c3e781bb91e750bf371ced24eb83",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-mobile-coding.mjs",
+      "expected": "71006a6517701b2bd36dcdf18875541de6a77405",
+      "actual": "71006a6517701b2bd36dcdf18875541de6a77405",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-gguf.mjs",
+      "expected": "82bdb06b50548db083ceb2c02915617abdd0f16c",
+      "actual": "82bdb06b50548db083ceb2c02915617abdd0f16c",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-isolation-kotlin-fixture.sh",
+      "expected": "9586934c661b9baa1db1a34d359879a1b47dc749",
+      "actual": "9586934c661b9baa1db1a34d359879a1b47dc749",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "expected": "ee7fb58a9503d6137b52116b64e350876abf2325",
+      "actual": "ee7fb58a9503d6137b52116b64e350876abf2325",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-deepseek-bridge.mjs",
+      "expected": "d6f18f4a19ee0d2144f3061035fd249a81891996",
+      "actual": "d6f18f4a19ee0d2144f3061035fd249a81891996",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-project-plan.mjs",
+      "expected": "f3d3510975c1a7a141947d2a44dc89d6f618648f",
+      "actual": "f3d3510975c1a7a141947d2a44dc89d6f618648f",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-gguf-preflight.mjs",
+      "expected": "3b7471cf69983adc8b41f5e6a902b9d150cab08d",
+      "actual": "3b7471cf69983adc8b41f5e6a902b9d150cab08d",
+      "match": true
+    },
+    {
+      "path": "scripts/continuum-local-brain.mjs",
+      "expected": "6c3b23d264f664c06d8a80eb7f5d26c7d972e15c",
+      "actual": "6c3b23d264f664c06d8a80eb7f5d26c7d972e15c",
+      "match": true
+    }
+  ]
+}

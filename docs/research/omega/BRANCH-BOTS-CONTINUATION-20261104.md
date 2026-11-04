@@ -1,5 +1,7 @@
 # Branch integration bots: continuation
 
+Historical 183-test checkpoint. The later five-step serial continuation and current 202-test evidence are in [BRANCH-BOTS-NIGHT-20261104.md](BRANCH-BOTS-NIGHT-20261104.md). Results below remain bound to their original source.
+
 Status: selected integration changes implemented and independently reviewed. The final combined targeted suite passed **183/183 tests, 0 failures, 0 skips**. This continuation starts from PR #515 commit `572e12ecc4ce5f7c79f2634a5b5773047b6d674f`. The prior 138-test result remains historical evidence for that checkpoint. APK and device acceptance remain NOT_RUN.
 
 ## Bounded tasks

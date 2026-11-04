@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "672924e4650b-night-20261104",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "FINAL_INTAKE_VERIFICATION",
+  "phase": "COMPLETED_VERIFIED_CHECKPOINT",
   "milestones": [
     {
       "id": "M1",
@@ -86,11 +86,58 @@
         "pass": 37,
         "fail": 0,
         "skip": 0
-      }
+      },
+      "commit": "c216ebcd4726fefd221a6ee347699c9a1280fc47"
     }
   ],
   "androidCompilation": "NOT_RUN",
   "deviceTest": "NOT_RUN",
   "apk": "NOT_RUN",
-  "parallelAgents": 0
+  "parallelAgents": 0,
+  "latestVerifiedCodeCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+  "changedPaths": [
+    ".github/continuum/branch-bots-cli.mjs",
+    ".github/continuum/branch-bots-cli.test.mjs",
+    ".github/continuum/branch-discovery.mjs",
+    ".github/continuum/branch-discovery.test.mjs",
+    ".github/continuum/local-teamleader-loop.mjs",
+    "scripts/continuum-release-host-preflight.mjs",
+    "scripts/continuum-release-host-preflight.test.mjs"
+  ],
+  "validation": {
+    "targetedNode": {
+      "tests": 202,
+      "pass": 202,
+      "fail": 0,
+      "skip": 0,
+      "sourceUnchanged": true
+    },
+    "selectedIntakeNode": {
+      "upstreamCommit": "ca80459a3f6695c8fecff4a217fbe93318452121",
+      "overlayCommit": "c216ebcd4726fefd221a6ee347699c9a1280fc47",
+      "tests": 202,
+      "pass": 202,
+      "fail": 0,
+      "skip": 0,
+      "sourceUnchanged": true
+    },
+    "publishedCodeBlobsMatched": 104,
+    "syntaxChecksPassed": 7,
+    "wholeRepositoryGate": "NOT_RUN",
+    "androidCompilation": "NOT_RUN",
+    "deviceTest": "NOT_RUN",
+    "apk": "NOT_RUN"
+  },
+  "nextTasks": [
+    "Check whether the current C1 / #527 intake has adopted the five bounded source commits or the exact seven-file integration-delta.patch; preserve newer source and existing one-pass backlog selection.",
+    "Inspect actual full Android QA evidence on the current shared candidate through the already authorized environment; do not transfer these Node results to Android or sign/install/release.",
+    "Choose the next free, reproduced integration defect only after reading the current shared handoff; do not repeat completed tests or change another team's active source."
+  ],
+  "scheduledContinuation": {
+    "enabled": true,
+    "cadence": "HOURLY",
+    "timezone": "Europe/Vienna",
+    "scope": "Separate scheduled development turns, not an always-running Android worker",
+    "activeCheckpointMustNotBeModified": true
+  }
 }

@@ -1,6 +1,8 @@
 # Branch integration bots — 4 November 2026
 
-Status: implemented and independently reviewed for the documented local scope. **183 targeted Node tests passed, 0 failed, 0 skipped. APK: NOT_RUN.**
+Status: five serial follow-up milestones are SOURCE_INTEGRATED / REVIEW_READY. **202 targeted Node tests passed, 0 failed, 0 skipped** on code commit `c216ebcd4726fefd221a6ee347699c9a1280fc47`. The same 202 cases also pass on a selected #527 compatibility overlay. APK/device: NOT_RUN. The earlier independent 183-test review remains historical; no separate agent reviewed the new serial round.
+
+Current continuation, commands, source pins and remaining gates: [Night continuation](BRANCH-BOTS-NIGHT-20261104.md). Finite loops now persist source-bound scan pages; `--once --continue-scan` resumes one page. Reports are byte-bounded, partial coverage stays explicit, and the APK source audit reuses the existing guarded Git reader.
 
 Repository: `Ullmann27/device-ai`. Product baseline: `e101e393dd6c80803ac9d9ac91fccd9812c4a18d` (`codex/astra-jarvis-takeover-20261104`). Integration branch: `codex/continuum-branch-integration-bots-20261104`. Draft PR: [#515](https://github.com/Ullmann27/device-ai/pull/515), based on the takeover branch.
 
