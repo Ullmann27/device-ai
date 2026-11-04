@@ -1,13 +1,13 @@
 {
   "schema": "continuum-branch-bots-development-continuation",
   "version": 1,
-  "status": "ACTIVE",
+  "status": "READY_FOR_NEXT_ITERATION",
   "repository": "Ullmann27/device-ai",
   "branch": "codex/continuum-branch-integration-bots-20261104",
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "scheduled-20261104-2313-candidate-review",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "VERIFY_CURRENT_INTAKE_AND_FREE_NEXT_SLICE",
+  "phase": "CURRENT_INTAKE_READBACK_COMPLETE",
   "milestones": [
     {
       "id": "M1",
@@ -88,6 +88,19 @@
         "skip": 0
       },
       "commit": "c216ebcd4726fefd221a6ee347699c9a1280fc47"
+    },
+    {
+      "id": "M6",
+      "status": "PINNED_SOURCE_REVIEWED",
+      "change": "7/7 current #527 integration preimages unchanged; seven night deltas remain unadopted",
+      "commit": "EVIDENCE_IN_THIS_COMMIT",
+      "testsExecuted": 0
+    },
+    {
+      "id": "M7",
+      "status": "CURRENT_GATE_TRIAGED",
+      "change": "Current #527 Android gate still red in recorded 3011-case run; C1 UI test fixes active under separate ownership",
+      "testsExecuted": 0
     }
   ],
   "androidCompilation": "NOT_RUN",
@@ -129,9 +142,9 @@
     "apk": "NOT_RUN"
   },
   "nextTasks": [
-    "Check whether the current C1 / #527 intake has adopted the five bounded source commits or the exact seven-file integration-delta.patch; preserve newer source and existing one-pass backlog selection.",
-    "Inspect actual full Android QA evidence on the current shared candidate through the already authorized environment; do not transfer these Node results to Android or sign/install/release.",
-    "Choose the next free, reproduced integration defect only after reading the current shared handoff; do not repeat completed tests or change another team's active source."
+    "C1 must independently decide to apply only the seven-source integration patch against its current exact tree; do not blanket-import #515 or override #527.",
+    "Keep the recorded #527 eight Android failures as FAIL until same-source full suite passes; C1 UI020 remains owner of active Shell fixes.",
+    "Next iteration: inspect the newly updated published C1/#527 status, then find a free reproduced issue not owned by active UI, memory, avatar or release teams. No duplicate agent or tests."
   ],
   "scheduledContinuation": {
     "enabled": true,
@@ -141,8 +154,10 @@
     "activeCheckpointMustNotBeModified": true
   },
   "currentIntake": {
-    "c1": "0d8a3d46c409e5918c49b6f3407bb63f3519b846",
+    "c1": "4d74de6c5ca04582ff455356440046e9148acbb0",
     "integration": "a6b314d3e8fac796ce7059a336bf5e79eb622ede",
-    "comparison": "7 night source/test blobs differ from current integration, no code import yet"
+    "preimagesVerified": 7,
+    "nightDeltaNotAdopted": 7,
+    "conflictsAgainstExactPreimages": 0
   }
 }
