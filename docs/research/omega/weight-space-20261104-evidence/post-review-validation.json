@@ -1,0 +1,16 @@
+{
+  "kind": "POST_EXPERIMENT_HARDENING_VALIDATION",
+  "originalModelExperimentRerun": false,
+  "originalResultFilesUnchanged": true,
+  "capacitySourceSha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+  "finalJarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+  "orchestratorSha256": "6b14f23ef9b595008099b16d81f1121783fea0bb67e7f3d942e44eed6405e425",
+  "compileExitCode": 0,
+  "compileOutputEmpty": true,
+  "baselineSmokePass": true,
+  "summaryUsesMaximumObservedHwm": true,
+  "observedHwmKiB": 80716,
+  "selectionMutationFixturesPassed": 2,
+  "inputReproductionByteIdenticalFiles": 80,
+  "inputPathsSha256": "bfbb448a46eade19bf947a69e9f35ba5f190b621c460708103ae08e0b13b5e9d"
+}

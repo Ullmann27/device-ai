@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "rescale",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "l1.n1",
+    "0.75",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "rescale",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "l1.n1",
+    "0.75",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 0.2646399220029707,
+  "logSha256": "26ab6fb1e5fe3e0ba1c4adb7a5b924b670b2cb3588e74d49e45b3bb863c715f5"
+}

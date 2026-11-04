@@ -434,7 +434,9 @@ class Experiment:
         if (self.out / "final.json").exists():
             return
         frozen = self.out / "frozen-selection.json"
-        selection = json.loads(frozen.read_text())
+        frozen_bytes = frozen.read_bytes()
+        selection_sha = hashlib.sha256(frozen_bytes).hexdigest()
+        selection = json.loads(frozen_bytes)
         if selection["holdoutSha256"] != sha(self.holdout):
             raise ValueError("holdout changed after selection")
         results = []
@@ -444,7 +446,9 @@ class Experiment:
             results.append(copy)
         if sha(self.base) != BASE_SHA or sha(self.tokenizer) != TOKENIZER_SHA:
             raise ValueError("original inputs changed")
-        write_new(self.out / "final.json", {"selectionSha256": sha(frozen), "holdoutSha256": sha(self.holdout),
+        if sha(frozen) != selection_sha:
+            raise RuntimeError("frozen selection changed during final evaluation")
+        write_new(self.out / "final.json", {"selectionSha256": selection_sha, "holdoutSha256": sha(self.holdout),
                                           "results": results, "originalsUnchanged": True,
                                           "androidValidation": "NOT_RUN", "appIntegration": "NOT_PERFORMED"})
         shutil.copyfile(self.holdout, self.out / "holdout-after-freeze.txt")

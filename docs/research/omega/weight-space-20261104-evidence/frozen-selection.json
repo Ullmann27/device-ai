@@ -1,0 +1,223 @@
+{
+  "frozenUtc": "2026-11-04T10:21:38Z",
+  "holdoutSha256": "d5a5858f0eaff24495cd98c337fc662271c4a1b41027b1142764735c244942af",
+  "holdoutOpened": false,
+  "orchestratorSha256": "609215b0f2671e2407c8b81867255bd1ce60680626c081fd91b0a12d14f62deb",
+  "developmentSha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+  "trainingSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+  "candidates": [
+    {
+      "label": "baseline",
+      "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": 132160,
+      "bytes": 529297,
+      "devBpb": 2.3525414158359124,
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "parameters": "132160",
+        "loadMs": "60.965034",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "6.144873",
+        "maxGeneration32CallMs": "13.537797",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "82728",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true
+    },
+    {
+      "label": "depth-5",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312.lm1",
+      "sha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+      "parameters": 16011776,
+      "bytes": 64048511,
+      "parity": [
+        {
+          "kind": "PARITY",
+          "maxLogitDelta": "2.47955322265625E-5",
+          "maxProbabilityDelta": "1.1622905731201172E-6",
+          "maxStepwiseLogitDelta": "1.52587890625E-5",
+          "identicalGenerations": "3",
+          "originalParameters": "132160",
+          "expandedParameters": "16011776"
+        }
+      ],
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "true",
+        "reasons": "NONE",
+        "checkpointSha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+        "parameters": "16011776",
+        "loadMs": "564.377548",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "505.048452",
+        "maxGeneration32CallMs": "755.396291",
+        "firstTokenObservations": "3",
+        "full32TokenObservations": "3",
+        "vmHwmKiB": "262548",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 0,
+        "processTimedOut": false
+      },
+      "capacityEligible": true,
+      "devBpb": 2.352541414133888
+    },
+    {
+      "label": "continued-small",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e.lm1",
+      "sha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+      "parameters": 132160,
+      "bytes": 529659,
+      "training": {
+        "kind": "TRAIN_RESULT",
+        "steps": "16",
+        "tokens": "3255",
+        "changedWeights": "132159",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "replicaEmbeddingMaxDelta": "0.0",
+        "millis": "758"
+      },
+      "trainingInput": {
+        "kind": "TRAIN_INPUT",
+        "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+      },
+      "devBpb": 2.35250680129539,
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "false",
+        "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+        "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+        "parameters": "132160",
+        "loadMs": "52.209904",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "6.614223",
+        "maxGeneration32CallMs": "6.956777",
+        "firstTokenObservations": "0",
+        "full32TokenObservations": "0",
+        "vmHwmKiB": "71580",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 1,
+        "processTimedOut": false
+      },
+      "capacityEligible": false
+    },
+    {
+      "label": "continued-expanded",
+      "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/70479b077b634439085673217efa667040191db0eaac4138fe8165440dfba731.lm1",
+      "sha256": "70479b077b634439085673217efa667040191db0eaac4138fe8165440dfba731",
+      "parameters": 16011776,
+      "bytes": 64048720,
+      "training": {
+        "kind": "TRAIN_RESULT",
+        "steps": "16",
+        "tokens": "3255",
+        "changedWeights": "16011740",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "replicaEmbeddingMaxDelta": "8.942335844039917E-4",
+        "millis": "52765"
+      },
+      "trainingInput": {
+        "kind": "TRAIN_INPUT",
+        "datasetSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+        "scheduleSha256": "346e93c510dafe5e12ee6a0e54ae94a0f0d099e7c0fc8c6f8973e5ff9a6b5066",
+        "tokenScheduleSha256": "8e0d6ef53de6c84e48c74ecc4dbd4b70e25632caadc624f31ad0ac4aad681fee",
+        "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+      },
+      "devBpb": 2.4633614382348035,
+      "capacity": {
+        "kind": "CAPACITY_RESULT",
+        "pass": "false",
+        "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+        "checkpointSha256": "70479b077b634439085673217efa667040191db0eaac4138fe8165440dfba731",
+        "parameters": "16011776",
+        "loadMs": "507.972747",
+        "measuredRepeats": "3",
+        "maxFirstTokenCallMs": "394.334076",
+        "maxGeneration32CallMs": "421.087062",
+        "firstTokenObservations": "0",
+        "full32TokenObservations": "0",
+        "vmHwmKiB": "274120",
+        "failure": "UNAVAILABLE",
+        "processReturncode": 1,
+        "processTimedOut": false
+      },
+      "capacityEligible": false
+    }
+  ],
+  "developmentPreferred": {
+    "label": "baseline",
+    "path": "/workspace/scratch/0549bca61ccf/inputs/lm1-baseline.lm1",
+    "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "parameters": 132160,
+    "bytes": 529297,
+    "devBpb": 2.3525414158359124,
+    "capacity": {
+      "kind": "CAPACITY_RESULT",
+      "pass": "true",
+      "reasons": "NONE",
+      "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "parameters": "132160",
+      "loadMs": "60.965034",
+      "measuredRepeats": "3",
+      "maxFirstTokenCallMs": "6.144873",
+      "maxGeneration32CallMs": "13.537797",
+      "firstTokenObservations": "3",
+      "full32TokenObservations": "3",
+      "vmHwmKiB": "82728",
+      "failure": "UNAVAILABLE",
+      "processReturncode": 0,
+      "processTimedOut": false
+    },
+    "capacityEligible": true
+  },
+  "selectionStatus": "SELECTED",
+  "matchedTrainingInputs": true,
+  "lastCapacityPassed": {
+    "label": "depth-5",
+    "path": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312.lm1",
+    "sha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+    "parameters": 16011776,
+    "bytes": 64048511,
+    "parity": [
+      {
+        "kind": "PARITY",
+        "maxLogitDelta": "2.47955322265625E-5",
+        "maxProbabilityDelta": "1.1622905731201172E-6",
+        "maxStepwiseLogitDelta": "1.52587890625E-5",
+        "identicalGenerations": "3",
+        "originalParameters": "132160",
+        "expandedParameters": "16011776"
+      }
+    ],
+    "capacity": {
+      "kind": "CAPACITY_RESULT",
+      "pass": "true",
+      "reasons": "NONE",
+      "checkpointSha256": "93728796b1bfc3cadb7625e5f4ecc9651e82a14d5d340dbb6dcc6df2f2725312",
+      "parameters": "16011776",
+      "loadMs": "564.377548",
+      "measuredRepeats": "3",
+      "maxFirstTokenCallMs": "505.048452",
+      "maxGeneration32CallMs": "755.396291",
+      "firstTokenObservations": "3",
+      "full32TokenObservations": "3",
+      "vmHwmKiB": "262548",
+      "failure": "UNAVAILABLE",
+      "processReturncode": 0,
+      "processTimedOut": false
+    },
+    "capacityEligible": true
+  },
+  "trainingFailures": [],
+  "selectionRule": "minimum development BPB among completed eligible candidates; within 0.00001 BPB prefer fewer parameters"
+}

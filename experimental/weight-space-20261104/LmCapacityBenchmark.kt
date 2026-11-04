@@ -23,6 +23,7 @@ object LmCapacityBenchmark {
     private const val WARMUPS = 1
     private const val REPEATS = 3
     private const val NEW_TOKENS = 32
+    private var observedPeakHwmKiB: Long? = null
     private const val PROMPT = "Ein kurzer Bericht beschreibt den Ablauf einer Prüfung. " +
         "Zuerst wird die Aufgabe gelesen, danach wird das Ergebnis geprüft."
 
@@ -86,6 +87,8 @@ object LmCapacityBenchmark {
     }
 
     private fun reportMemory(phase: String): Memory = memory().also {
+        // Retain the largest observation; /proc samples in the original run decreased slightly.
+        it.vmHwmKiB?.let { sample -> observedPeakHwmKiB = maxOf(observedPeakHwmKiB ?: sample, sample) }
         report("CAPACITY_MEMORY", "phase" to phase, "vmHwmKiB" to it.vmHwmKiB, "vmRssKiB" to it.vmRssKiB,
             "heapUsedBytes" to it.heapUsed, "heapCommittedBytes" to it.heapCommitted, "heapMaxBytes" to it.heapMax)
     }
@@ -121,6 +124,7 @@ object LmCapacityBenchmark {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        observedPeakHwmKiB = null
         report("CAPACITY_PROTOCOL", "firstTokenLimitMs" to FIRST_TOKEN_LIMIT_MS,
             "generation32LimitMs" to GENERATION_LIMIT_MS, "vmHwmLimitKiB" to RSS_LIMIT_KIB,
             "requestMaxMillis" to REQUEST_MAX_MILLIS, "warmups" to WARMUPS, "measuredRepeats" to REPEATS,
@@ -195,13 +199,14 @@ object LmCapacityBenchmark {
         if (full32Observations != REPEATS) reasons += "INCOMPLETE_32_TOKEN_WORKLOAD"
         if (firstTimes.any { !it.isFinite() || it > FIRST_TOKEN_LIMIT_MS }) reasons += "FIRST_TOKEN_LIMIT"
         if (generationTimes.any { !it.isFinite() || it > GENERATION_LIMIT_MS }) reasons += "GENERATION_32_LIMIT"
-        val hwm = finalMemory?.vmHwmKiB
+        val hwm = observedPeakHwmKiB
         if (hwm == null) reasons += "PROCESS_RSS_UNAVAILABLE" else if (hwm > RSS_LIMIT_KIB) reasons += "PROCESS_RSS_LIMIT"
         report("CAPACITY_RESULT", "pass" to reasons.isEmpty(), "reasons" to reasons.joinToString(",").ifEmpty { "NONE" },
             "checkpointSha256" to checkpointSha, "parameters" to parameters, "loadMs" to loadMs,
             "measuredRepeats" to completed, "maxFirstTokenCallMs" to firstTimes.maxOrNull(),
             "maxGeneration32CallMs" to generationTimes.maxOrNull(), "firstTokenObservations" to firstTokenObservations,
-            "full32TokenObservations" to full32Observations, "vmHwmKiB" to hwm, "failure" to failure)
+            "full32TokenObservations" to full32Observations, "vmHwmKiB" to hwm,
+            "finalVmHwmKiB" to finalMemory.vmHwmKiB, "rssMethod" to "MAXIMUM_OBSERVED_VMHWM", "failure" to failure)
         if (reasons.isNotEmpty()) exitProcess(1)
     }
 }

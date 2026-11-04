@@ -1,0 +1,27 @@
+{
+  "arguments": [
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/91bb39d2aba66769a87e9b68d7cefb14f478b0c6699cb00b4f75aca43081954a.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx1g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment.jar",
+    "at.heinz.deviceai.learning.lm.LmCapacityBenchmark",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/91bb39d2aba66769a87e9b68d7cefb14f478b0c6699cb00b4f75aca43081954a.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 120,
+  "wallSeconds": 4.231767794997722,
+  "logSha256": "24714bbff75516209326793272fdb60075d0611d288e4000cf2e91ed1c33d74b",
+  "inputHashes": {
+    "checkpointSha256": "91bb39d2aba66769a87e9b68d7cefb14f478b0c6699cb00b4f75aca43081954a",
+    "tokenizerSha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+  },
+  "orchestratorSha256": "609215b0f2671e2407c8b81867255bd1ce60680626c081fd91b0a12d14f62deb",
+  "identityValidationFailure": null
+}

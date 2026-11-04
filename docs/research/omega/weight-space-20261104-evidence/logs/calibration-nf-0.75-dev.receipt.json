@@ -1,0 +1,25 @@
+{
+  "arguments": [
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/development.txt"
+  ],
+  "command": [
+    "java",
+    "-Xms64m",
+    "-Xmx3g",
+    "-cp",
+    "/workspace/scratch/0549bca61ccf/build/lm-weight-experiment.jar",
+    "at.heinz.deviceai.learning.lm.LmWeightExperiment",
+    "evaluate",
+    "/workspace/scratch/0549bca61ccf/results/weight-space-20261104/checkpoints/f53a05ec0e51fe4b2147de9f504205902bbba8f6d54ce2a427588b22768bfb37.lm1",
+    "/workspace/scratch/0549bca61ccf/inputs/lm1-tokenizer.lmbp",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/development.txt"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "timeoutSeconds": 180,
+  "wallSeconds": 0.47018024000135483,
+  "logSha256": "c27bb02731c9ddf603ad1fe210ee75b5bbaa580213e188ea0bdd18bc97248184"
+}

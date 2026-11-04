@@ -61,7 +61,7 @@ abschließenden Versuchsbericht getrennt auszuweisen.
 ## 4. Tatsächlich geprüfte eigene SWB1-Sicherung
 
 Prüfquelle dieses Arbeitslaufs:
-`/workspace/scratch/0549bca61ccf/evidence/swb1-baseline.json`.
+[swb1-baseline.json](weight-space-20261104-evidence/swb1-baseline.json).
 
 | Merkmal | Festgestellter Wert |
 |---|---|

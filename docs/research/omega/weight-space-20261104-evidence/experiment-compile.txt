@@ -1,0 +1,3 @@
+experimental/weight-space-20261104/LmCapacityBenchmark.kt:198:30: warning: unnecessary safe call on a non-null receiver of type 'LmCapacityBenchmark.Memory'.
+        val hwm = finalMemory?.vmHwmKiB
+                             ^^
