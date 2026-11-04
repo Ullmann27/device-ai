@@ -168,3 +168,25 @@ Originalquellen zu prüfen. Für eine kausale EOS-Diagnose nutzt #508 bereits
 Wahrscheinlichkeiten/Margen und getrennte Loss-Anteile; weitere doppelte
 LR-Versuche sind aus dieser Prüfung nicht entstanden. Ohne belegte Ursache
 wird keine Änderung am produktiven Trainer oder Decoder vorgeschlagen.
+
+## Späterer Quellabgleich während der Veröffentlichung
+
+PR #508 ist während unseres Abschlusses auf
+`fc2eb797210bee25091caf734aacbfd694a3372e` weitergegangen. Dieser Snapshot
+publiziert für die erste Intent-Runde `NO_DEVELOPMENT_SIGNAL` und
+`testEvaluated: false` und registriert eine gesonderte 512-Schritt-Runde.
+Dies sind veröffentlichte Fremdbefunde; wir haben dafür keine Modellläufe
+oder vollständige Ergebnisprüfung durchgeführt.
+
+Der ursprüngliche Runner ist weiterhin bytegleich mit der dynamisch geprüften
+Fixture. Im neuen `long-study/run_registered_study.py` sind die beiden
+entscheidenden Funktionen `freeze_evidence` und `freeze` unverändert; auch
+dort werden Nach-Kapazitätsbelege nicht zur Pflichtabhängigkeit der Auswahl.
+Die neuen Controller-Tests erzeugen nur Vorher-Kapazitätsbelege. Root und der
+unabhängige Helfer haben dies statisch abgeglichen; es ist kein zusätzlicher
+dynamischer Test des neuen Runners.
+
+[`latest-source-check.json`](latest-source-check.json) hält die beiden neuen
+Git-Blob-/SHA-256-Identitäten und den AST-Vergleich fest. Der oben beschriebene
+Reparaturbedarf besteht für diese geprüften Quellen weiter. Spätere fremde
+Commits sind von dieser versionsgebundenen Aussage nicht automatisch erfasst.
