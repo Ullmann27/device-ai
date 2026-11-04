@@ -11,7 +11,7 @@ import at.heinz.deviceai.ui.ContinuumHomeLayout.Slot
  * the shell is shifted so its NAV_RAIL ends exactly where that rail ends.
  *
  *  TOP_BAR            → BRAND · top tabs (Gedächtnis, Agenten, Bots, System, Netz, Lernstand) · SEARCH/NOTIFICATIONS/PROFILE
- *  COCKPIT_PRIMARY    → MODEL ("KI-Gehirn") · PROCESSES ("Aktuelle Prozesse") · LIVE_DIALOG
+ *  DIALOG (left col.)  → MODEL ("KI-Gehirn") · PROCESSES ("Aktuelle Prozesse") · LIVE_DIALOG
  *  AVATAR             → VIEW_* presentation pills · HERO = **avatar slot** (Jarvis Avatar plugs in via the avatar contract)
  *  COCKPIT_SECONDARY  → SYSTEM_STATUS · WORKERS ("Aktive Agenten")
  *  INPUT              → COMPOSER
@@ -49,20 +49,25 @@ object ContinuumLandscapeCockpitLayout {
             .let { Box(it.left + dx, it.top, it.right + dx, it.bottom) }
         val g = JarvisDesign.Metrics.gap
         val boxes = linkedMapOf<Slot, Box>()
-        val top = s(JarvisShellLayout.Slot.TOP_BAR)
+        val shellTop = s(JarvisShellLayout.Slot.TOP_BAR)
+        // The Activity rail owns the left edge; the cockpit top bar starts after it.
+        val top = Box(maxOf(shellTop.left, rail + g), shellTop.top, shellTop.right, shellTop.bottom)
         val margin = JarvisDesign.Metrics.margin
         // Column proportions come from the shell's FOLD_OPEN composition (ref5 = ref1/ref3 three columns), also on
         // tablets, so the cockpit keeps the reference arrangement while Welten-Optik owns the numbers.
         val ref = JarvisShellLayout.create(800f, 700f, fontScale)
-        val refTop = requireNotNull(ref[JarvisShellLayout.Slot.TOP_BAR])
+        val refLeft = requireNotNull(ref[JarvisShellLayout.Slot.DIALOG]).left
+        val refRight = requireNotNull(ref[JarvisShellLayout.Slot.COCKPIT_SECONDARY]).right
         fun frac(slot: JarvisShellLayout.Slot): Pair<Float, Float> = requireNotNull(ref[slot]).let {
-            (it.left - refTop.left) / refTop.width to (it.right - refTop.left) / refTop.width
+            (it.left - refLeft) / (refRight - refLeft) to (it.right - refLeft) / (refRight - refLeft)
         }
         fun xs(f: Pair<Float, Float>) = top.left + top.width * f.first to top.left + top.width * f.second
-        val (pl, pr) = xs(frac(JarvisShellLayout.Slot.COCKPIT_PRIMARY))
+        // FOLD_OPEN shell (#479 c617e1ab): DIALOG left | AVATAR | COCKPIT_SECONDARY right.
+        val (pl, pr) = xs(frac(JarvisShellLayout.Slot.DIALOG))
         val (al, ar) = xs(frac(JarvisShellLayout.Slot.AVATAR))
         val (sl, sr) = xs(frac(JarvisShellLayout.Slot.COCKPIT_SECONDARY))
-        val (il, ir) = xs(frac(JarvisShellLayout.Slot.INPUT))
+        val il = pl
+        val ir = ar
         val inputHeight = JarvisDesign.Metrics.inputBarHeight
         val bar = Box(top.left, height - margin - ACTION_BAR_HEIGHT, top.right, height - margin)
         val input = Box(il, bar.top - g - inputHeight, ir, bar.top - g)
