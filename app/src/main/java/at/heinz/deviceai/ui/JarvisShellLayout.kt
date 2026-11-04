@@ -123,8 +123,39 @@ object JarvisShellLayout {
                includeBottomNavigation: Boolean = false, compactPresentation: Boolean = false): Shell {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 160f)
         val profile = JarvisWindowProfile.resolve(widthDp, heightDp, fontScale, foldRail)
-        return if (profile.referenceComposition && !compactPresentation) reference(widthDp, heightDp, profile, foldRail)
-            else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+        return if (profile.referenceComposition) reference(widthDp, heightDp, profile, foldRail).let {
+            if (compactPresentation) compactReference(it) else it
+        } else reflow(widthDp, heightDp, profile, foldRail, includeBottomNavigation, compactPresentation)
+    }
+
+    private fun compactReference(shell: Shell): Shell {
+        val avatar = shell.boxes.getValue(Slot.AVATAR)
+        val dialog = shell.boxes.getValue(Slot.DIALOG)
+        val gap = shell.tileGap
+        val delta = minOf(avatar.height - 112f,
+            dialog.top - shell.boxes.getValue(Slot.TOP_BAR).bottom - gap,
+            shell.boxes.getValue(Slot.TILES).top - shell.boxes.getValue(Slot.COCKPIT_SECONDARY).bottom - gap)
+            .coerceAtLeast(0f)
+        if (delta == 0f) return shell
+        fun raised(box: Box) = box.copy(top = box.top - delta, bottom = box.bottom - delta)
+        val raisedSlots = setOf(Slot.DIALOG, Slot.TILES, Slot.ROW_AGENTS, Slot.ROW_TASKS,
+            Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+        val boxes = shell.boxes.mapValues { (slot, box) -> when {
+            slot in raisedSlots -> raised(box)
+            slot == Slot.AVATAR || slot == Slot.NAV_RAIL -> box.copy(bottom = box.bottom - delta)
+            else -> box
+        } }
+        val raisedAreas = setOf(Area.DIALOG, Area.TILES, Area.ROW_AGENTS, Area.ROW_TASKS,
+            Area.ROW_MEMORY, Area.ROW_MODEL, Area.STATUS)
+        val grid = shell.grid?.let { original -> original.copy(height = original.height - delta,
+            areas = original.areas.mapValues { (area, box) -> when {
+                area in raisedAreas -> raised(box)
+                area == Area.HEAD || area == Area.ORB || area == Area.RAIL -> box.copy(bottom = box.bottom - delta)
+                else -> box
+            } }) }
+        return shell.copy(height = shell.height - delta, boxes = boxes, grid = grid,
+            headBounds = shell.headBounds?.let { it.copy(bottom = it.bottom - delta) },
+            orbBounds = shell.orbBounds?.let { it.copy(bottom = it.bottom - delta) })
     }
 
     private fun reference(w: Float, h: Float, profile: JarvisWindowProfile, rail: Rail): Shell {
@@ -164,16 +195,13 @@ object JarvisShellLayout {
         val head: Box
         val orb: Box
         if (compactPresentation) {
-            // Opt-in only: the same original orb uses a shorter live surface; later controls move upward.
-            // Keep disjoint head/orb regions for the existing renderer contract even while the head is disabled.
-            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
-            y = b.getValue(Slot.CONTINUUM_HEADER).bottom + gap
-            val split = left + room * .5f
-            head = Box(left, y, split - gap / 2f, y + 120f)
-            orb = Box(split + gap / 2f, y, right, y + 120f)
+            orb = Box(left, y, right, y + 112f)
+            head = orb
             y = orb.bottom + gap
             b[Slot.DIALOG] = Box(left, y, right, y + 128f * font)
             y = b.getValue(Slot.DIALOG).bottom + gap
+            b[Slot.CONTINUUM_HEADER] = Box(left, y, right, y + 70f * font)
+            y += 70f * font + gap
         } else if (compact) {
             val headH = maxOf(300f, minOf(room * 1.08f, 440f))
             head = Box(left, y, right, y + headH)
@@ -223,9 +251,9 @@ object JarvisShellLayout {
         if (!compact) b[Slot.NAV_RAIL] = Box(margin, top + gap, p.railWidthDp, b.getValue(Slot.STATUS).top - gap)
         return Shell(formFactor(w, viewport), w, maxOf(viewport, y), b, p.tileColumns, rows,
             if (compact) null else rail,
-            if (compactPresentation) emptySet()
-                else if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
+            if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
                 else setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
-            viewportHeight = viewport, profile = p, tileGap = gap, headBounds = head, orbBounds = orb)
+            viewportHeight = viewport, profile = p, tileGap = gap,
+            headBounds = if (compactPresentation) null else head, orbBounds = orb)
     }
 }

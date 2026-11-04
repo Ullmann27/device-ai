@@ -712,7 +712,6 @@ class AgentActivity : Activity() {
     override fun onDestroy() {
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
-        hologramView?.onAppearanceChanged = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cockpitSubscriptions = emptyList()
@@ -1026,9 +1025,6 @@ class AgentActivity : Activity() {
         home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
-        liveHologram.onAppearanceChanged = {
-            if (!isFinishing && !isDestroyed) homeView?.refreshPresentation()
-        }
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
@@ -1150,9 +1146,12 @@ class AgentActivity : Activity() {
     }
 
     /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
-    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.JarvisMenuRail.widthDp(
-        renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat(),
-        renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()) * resources.displayMetrics.density)
+    private fun railWidthPx(): Int {
+        val widthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
+        val railWidthDp = if (widthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(widthDp) else 0f
+        return Math.round(railWidthDp * resources.displayMetrics.density)
+    }
 
     /** Real device status for the rail header (ref5 top left): user device name, system clock and date. */
     private fun currentDeviceStatus(): at.heinz.deviceai.ui.JarvisDeviceStatus {
@@ -1971,7 +1970,10 @@ class AgentActivity : Activity() {
                                history: at.heinz.deviceai.chief.ChiefBotConversationHistory) {
         history.turns.forEach { turn ->
             addBubble(turn.request, true)
-            addBubble("${profile.displayName} · ${turn.response}", false)
+            val feedback = turn.practiceFeedback?.presentation()
+            val answer = if (feedback == null) turn.response
+                else turn.response + "\n\nProgrammauswertung\n" + feedback
+            addBubble("${profile.displayName} · $answer", false)
         }
         if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
     }
@@ -2088,7 +2090,9 @@ class AgentActivity : Activity() {
                 check(generated.response.isNotBlank()) { "BOT_EMPTY_RESPONSE" }
                 check(botConversation.complete(turn, generated.response, localRuntime.loadedModel, sessionId)) { "BOT_STALE_TURN" }
                 check(botConversation.isCurrent(turn, localRuntime.loadedModel, sessionId)) { "BOT_STALE_PRESENTATION" }
-                generated.response
+                val practiceFeedback = botConversation.presentationFeedback(turn)
+                if (practiceFeedback == null) generated.response
+                else generated.response + "\n\nProgrammauswertung\n" + practiceFeedback
             }
             runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result) }
         } } catch (_: java.util.concurrent.RejectedExecutionException) {
@@ -2120,7 +2124,10 @@ class AgentActivity : Activity() {
             addToolActivity("${profile.displayName} · Modellantwort gespeichert; keine unabhängig geprüfte Werkzeugleistung")
         }, {
             rememberBotTaskStatus(profile.agentId, "Privater Dialog nicht abgeschlossen")
-            addBubble("${profile.displayName} · Dialog nicht abgeschlossen. Keine Werkzeugaktion ausgeführt.", false)
+            val message = if (it.message == "BOT_PRACTICE_NUMBER_OUT_OF_RANGE") {
+                "Bitte wähle eine Fachübung mit Training 1 bis Training 6."
+            } else "Dialog nicht abgeschlossen. Keine Werkzeugaktion ausgeführt."
+            addBubble("${profile.displayName} · $message", false)
             addToolActivity("Bot-Dialog fehlgeschlagen · ${it.javaClass.simpleName}")
         })
     }
@@ -5290,12 +5297,21 @@ class AgentActivity : Activity() {
             setSingleLine(true)
             setPadding(dp(16),dp(12),dp(16),dp(12))
         }
+        // One panel preserves button space.
+        val content=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL
+            addView(TextView(context).apply {
+                setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
+                text="Suche in gespeicherten, quellengebundenen Auszügen. "+
+                    "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
+                    "Ungeprüfte Aussagen werden niemals zu Besitzerfakten."
+                setPadding(dp(16),0,dp(16),dp(12))
+            },matchWidth())
+            addView(query,matchWidth())
+        }
         AlertDialog.Builder(this)
             .setTitle("Continuum · lokales Wissensarchiv")
-            .setMessage("Suche in gespeicherten, quellengebundenen Auszügen. "+
-                "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
-                "Ungeprüfte Aussagen werden niemals zu Besitzerfakten.")
-            .setView(query)
+            .setView(ScrollView(this).apply { addView(content) })
             .setNegativeButton("Schließen",null)
             .setPositiveButton("LOKAL SUCHEN") { _, _ ->
                 val text=query.text.toString().trim()

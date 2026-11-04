@@ -32,11 +32,11 @@ class JarvisShellView(context: Context) : View(context) {
     private var layoutInset = Float.NaN
     private var layoutViewport = Float.NaN
     private var layoutCompact = false
-    /** Explicit compact-avatar choice; ordinary phone/reference geometry keeps its existing default. */
     var compactPresentation = false
         set(value) {
             if (field == value) return
             field = value
+            shell = null
             invalidate()
         }
     /** Stable visible height, independent of this View's larger scrolling content height. */
@@ -78,12 +78,10 @@ class JarvisShellView(context: Context) : View(context) {
         if (w < 240f || h < 160f) return
         val font = resources.configuration.fontScale
         val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
-        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail &&
-            layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
+        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp && layoutCompact == compactPresentation }
             ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp,
                 compactPresentation = compactPresentation).also {
-                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport
-                layoutCompact = compactPresentation
+                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport; layoutCompact = compactPresentation
             }
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()

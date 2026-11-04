@@ -285,6 +285,11 @@ class ContinuumBotRosterDialog(
             body.addView(label(persona.tagline))
             body.addView(ui.label("ARBEITSWEISE", 12f, ui.accent(profile)))
             body.addView(label(persona.approach))
+            if (at.heinz.deviceai.chief.ChiefBotPractice.supports(profile.agentId)) {
+                body.addView(label("Fachübungen: Öffne das Gespräch mit ${profile.displayName} und schreibe " +
+                    "Training 1 bis Training 6. Die Antwort wird bewertet; eine Korrektur hilft bei der nächsten Übung. " +
+                    "Die letzten beiden Aufgaben prüfen die Anwendung auf andere Fälle."))
+            }
             body.addView(statusLabel(profile, "REGISTRIERT · Kein aktueller Auftrag\n" +
                 "Geprüfte Fähigkeiten: noch keine\nLetztes bestätigtes Arbeitsergebnis: noch keines"))
             onSelect?.let { select -> body.addView(action("Mit ${profile.displayName} sprechen") {

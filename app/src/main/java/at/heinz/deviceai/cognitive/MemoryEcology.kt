@@ -187,9 +187,9 @@ class MemoryWritePolicy(private val minimumConfidence: Double = 0.6) {
     fun decide(context: MemoryWriteContext): MemoryWriteDecision {
         require(context.confidence.isFinite() && context.confidence in 0.0..1.0)
         val privacy = when {
+            context.containsSensitiveInformation -> PrivacyClass.SENSITIVE
             context.containsDeviceInformation || context.provenance == ProvenanceType.DEVICE_OBSERVATION ->
                 PrivacyClass.DEVICE_LOCAL_ONLY
-            context.containsSensitiveInformation -> PrivacyClass.SENSITIVE
             context.containsPersonalInformation || context.provenance == ProvenanceType.USER_PROVIDED ->
                 PrivacyClass.PRIVATE
             else -> PrivacyClass.PUBLIC

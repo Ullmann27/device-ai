@@ -7,17 +7,20 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisMotion
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -64,6 +67,15 @@ class ContinuumReferenceCockpitUiTest {
         }
     }
 
+    private val legacyActionNames = listOf(
+        "LABEL_THINKING", "ACTION_MEMORY", "LABEL_ANALYSING", "LABEL_DEVELOPING",
+        "ACTION_AGENTS", "ACTION_BOTS", "ACTION_TASK", "LABEL_LEARNING", "ACTION_DEVICE", "LABEL_CONNECTED"
+    )
+    private val legacyTargetNames = legacyActionNames + listOf(
+        "COMPOSER", "LABEL_EVOLVING", "SEARCH", "NOTIFICATIONS", "PROFILE",
+        "VIEW_AVATAR", "VIEW_ORB", "VIEW_COMPACT"
+    )
+
     private val tileTargets = listOf(
         "chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"
     )
@@ -81,59 +93,22 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun settle() = advanceFrames(40)
 
+    private fun settleSceneTransition(root: View) {
+        val homes = descendants(root).filterIsInstance<ContinuumHomeView>()
+            .filter { it.isAttachedToWindow && it.isShown }
+        if (homes.none { it.scaleX != 1f || it.scaleY != 1f || it.alpha != 1f }) return
+        advanceFrames(JarvisMotion.Durations.SCENE_Z + 32L)
+        homes.filter { it.isAttachedToWindow && it.isShown }.forEach { home ->
+            assertEquals("Scene transition restores horizontal scale: ${geometry(home)}", 1f, home.scaleX, 0f)
+            assertEquals("Scene transition restores vertical scale: ${geometry(home)}", 1f, home.scaleY, 0f)
+            assertEquals("Scene transition restores opacity: ${geometry(home)}", 1f, home.alpha, 0f)
+        }
+    }
+
     private fun measure(root: View, width: Int, height: Int) {
         fun exact(value: Int) = View.MeasureSpec.makeMeasureSpec(value, View.MeasureSpec.EXACTLY)
         root.measure(exact(width), exact(height))
         root.layout(0, 0, width, height)
-    }
-
-    private fun recreateWithBoundedTraversal(controller: ActivityController<AgentActivity>) {
-        val previous = controller.get()
-        val application = previous.application
-        val handler = Handler.createAsync(Looper.getMainLooper())
-        var pulseScheduled = false
-        var pulses = 0
-        val traversalPulse = Runnable {
-            assertEquals("Recreation permits exactly one bounded VSync pulse", 0, pulses)
-            val recreated = controller.get()
-            assertTrue("The pulse belongs to the new Activity", recreated !== previous)
-            assertNotNull("The new decor must be added before VSync", recreated.window.decorView.parent)
-            pulses = 1
-            // Keep VSync paused. The outer visible() drain dispatches the actual
-            // async frame posted by this one clock advance; no nested idle loop.
-            ShadowSystemClock.advanceBy(Duration.ofMillis(16))
-        }
-        val callbacks = object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityResumed(activity: Activity) {
-                if (activity !== previous && activity === controller.get()) {
-                    assertFalse("Schedule a traversal pulse only once", pulseScheduled)
-                    pulseScheduled = true
-                    assertTrue("Queue the bounded pulse past traversal sync barriers", handler.post(traversalPulse))
-                }
-            }
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
-            override fun onActivityStarted(activity: Activity) = Unit
-            override fun onActivityPaused(activity: Activity) = Unit
-            override fun onActivityStopped(activity: Activity) = Unit
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
-            override fun onActivityDestroyed(activity: Activity) = Unit
-        }
-        application.registerActivityLifecycleCallbacks(callbacks)
-        try {
-            // 4.14.1 resume/postResume do not drain; visible() drains after
-            // makeVisible. Keep its real flags, retained instances and lifecycle.
-            controller.recreate()
-            assertTrue("The recreated Activity must schedule its pulse", pulseScheduled)
-            assertEquals("The original recreate path consumes one pulse", 1, pulses)
-            assertTrue("Original recreation preserves configuration-change teardown", previous.isChangingConfigurations)
-            assertTrue("Original recreation destroys the previous Activity", previous.isDestroyed)
-            assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
-            assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
-            assertTrue("Original recreation restores real window focus", controller.get().hasWindowFocus())
-        } finally {
-            try { application.unregisterActivityLifecycleCallbacks(callbacks) }
-            finally { handler.removeCallbacks(traversalPulse) }
-        }
     }
 
     private fun withActivity(width: Int, height: Int, font: Float, body: (AgentActivity, View, org.robolectric.android.controller.ActivityController<AgentActivity>) -> Unit) {
@@ -164,13 +139,107 @@ class ContinuumReferenceCockpitUiTest {
             settle()
             measure(root, width, height)
             assertEquals("A hidden test window is not a screenshot", View.VISIBLE, root.windowVisibility)
+            assertTrue("The Activity must expose its current shell", (field(activity, "homeView") as ContinuumHomeView).jarvisShellStage)
             body(activity, root, controller)
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
-            runCatching { controller.pause() }
-            runCatching { controller.stop() }
-            runCatching { controller.destroy() }
+            runCatching { controller.close() }
             RuntimeEnvironment.setFontScale(previousFont)
+        }
+    }
+
+    // Explicit legacy presentation only.
+    private fun withLegacyReferencePresentation(body: (AgentActivity, View) -> Unit) =
+        withActivity(412, 915, 1f) { activity, root, _ ->
+            val home = field(activity, "homeView") as ContinuumHomeView
+            home.setJarvisShellStage(false)
+            measure(root, 412, 915)
+            settle()
+            measure(root, 412, 915)
+            assertFalse("Legacy presentation is not the current shell", home.jarvisShellStage)
+            assertLegacyReferenceTargets(home)
+            body(activity, root)
+            assertLegacyReferenceTargets(home)
+        }
+
+    private fun legacySlot(home: ContinuumHomeView, name: String): ContinuumHomeView.ElementView {
+        val view = (0 until home.childCount).map { home.getChildAt(it) }
+            .filterIsInstance<ContinuumHomeView.ElementView>().singleOrNull { it.slot.name == name }
+        assertNotNull("The actual Activity must expose $name", view)
+        return requireNotNull(view)
+    }
+
+    private fun assertLegacyReferenceTargets(home: ContinuumHomeView) {
+        assertFalse("Legacy controls require their explicit presentation", home.jarvisShellStage)
+        val targets = legacyTargetNames.map { name ->
+            legacySlot(home, name).also { view ->
+                assertTrue("$name must be a real clickable, focusable control", view.isClickable && view.isFocusable)
+                assertTrue("$name must belong to the shown composition", view.isShown)
+                assertTrue("$name needs an accessible description", !view.contentDescription.isNullOrBlank())
+                assertMinimumTarget(view, name)
+                val content = view.parent as ViewGroup
+                assertTrue("$name is outside the content width", view.left >= 0 && view.right <= content.width)
+                assertTrue("$name is outside scrollable content", view.top >= 0 && view.bottom <= content.height)
+            }
+        }
+        for (siblings in targets.groupBy { it.parent }.values) {
+            for (i in siblings.indices) for (j in i + 1 until siblings.size) {
+                val first = siblings[i]; val second = siblings[j]
+                assertFalse("Actual legacy touch bounds overlap: ${first.tag}/${second.tag}",
+                    first.left < second.right && second.left < first.right &&
+                        first.top < second.bottom && second.top < first.bottom)
+            }
+        }
+    }
+
+    private fun recreateWithBoundedTraversal(controller: ActivityController<AgentActivity>) {
+        val previous = controller.get()
+        val application = previous.application
+        val handler = Handler.createAsync(Looper.getMainLooper())
+        var pulseScheduled = false
+        var pulses = 0
+        val traversalPulse = Runnable {
+            assertEquals("Recreation permits exactly one bounded VSync pulse", 0, pulses)
+            val recreated = controller.get()
+            assertTrue("The pulse belongs to the new Activity", recreated !== previous)
+            assertNotNull("The new decor must be added before VSync", recreated.window.decorView.parent)
+            pulses = 1
+            // Advance exactly one paused frame.
+            ShadowSystemClock.advanceBy(Duration.ofMillis(16))
+        }
+        val callbacks = object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) {
+                if (activity !== previous && activity === controller.get()) {
+                    assertFalse("Schedule a traversal pulse only once", pulseScheduled)
+                    pulseScheduled = true
+                    assertTrue("Queue the bounded pulse past traversal sync barriers", handler.post(traversalPulse))
+                }
+            }
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+            override fun onActivityStarted(activity: Activity) = Unit
+            override fun onActivityPaused(activity: Activity) = Unit
+            override fun onActivityStopped(activity: Activity) = Unit
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+            override fun onActivityDestroyed(activity: Activity) = Unit
+        }
+        application.registerActivityLifecycleCallbacks(callbacks)
+        try {
+            // Preserve the original recreation lifecycle.
+            controller.recreate()
+            assertTrue("The recreated Activity must schedule its pulse", pulseScheduled)
+            assertEquals("The original recreate path consumes one pulse", 1, pulses)
+            assertTrue("Original recreation preserves configuration-change teardown", previous.isChangingConfigurations)
+            assertTrue("Original recreation destroys the previous Activity", previous.isDestroyed)
+            assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
+            assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
+            controller.windowFocusChanged(true)
+            advanceFrames(32)
+            assertTrue("Original recreation restores real window focus: " +
+                "decorFocus=${controller.get().window.decorView.hasWindowFocus()}; ${geometry(controller.get().window.decorView)}",
+                controller.get().hasWindowFocus())
+        } finally {
+            try { application.unregisterActivityLifecycleCallbacks(callbacks) }
+            finally { handler.removeCallbacks(traversalPulse) }
         }
     }
 
@@ -201,18 +270,68 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertMinimumTarget(view: View, name: String) {
         val density = view.resources.displayMetrics.density
-        assertTrue("$name actual width ${view.width / density}dp", view.width / density >= 48f)
-        assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
+        assertTrue("$name actual width ${view.width / density}dp; " +
+            (if (view.width / density < 48f) geometry(view) else ""), view.width / density >= 48f)
+        assertTrue("$name actual height ${view.height / density}dp; " +
+            (if (view.height / density < 48f) geometry(view) else ""), view.height / density >= 48f)
+    }
+
+    private fun boundsInParent(view: View): RectF =
+        RectF(0f, 0f, view.width.toFloat(), view.height.toFloat()).also {
+            view.matrix.mapRect(it)
+            it.offset(view.left.toFloat(), view.top.toFloat())
+        }
+
+    private fun geometry(view: View): String =
+        "density=${view.resources.displayMetrics.density}, font=${view.resources.configuration.fontScale}: " +
+            generateSequence(view) { it.parent as? View }.joinToString(" <- ") { node ->
+                val visible = Rect()
+                val shown = node.getGlobalVisibleRect(visible)
+                val childHeights = (node as? ViewGroup)?.let { group ->
+                    (0 until group.childCount).map { group.getChildAt(it).height }
+                }
+                "${node.javaClass.simpleName}[id=${node.id}, tag=${node.tag}, text=${(node as? TextView)?.text}, " +
+                    "local=${Rect(node.left, node.top, node.right, node.bottom)}, " +
+                    "global=$visible, visible=$shown, scroll=${node.scrollX}/${node.scrollY}, " +
+                    "matrix=${node.matrix.toShortString()}, attached=${node.isAttachedToWindow}, " +
+                    "layoutRequested=${node.isLayoutRequested}, layoutParams=${node.layoutParams?.width}x${node.layoutParams?.height}, " +
+                    "childHeights=$childHeights]"
+            }
+
+    private fun assertRailViewportDoesNotOverlapShell(home: ContinuumHomeView) {
+        if (!home.jarvisShellStage || !home.wide) return
+        val railContent = tagged(home, "jarvis-rail:home").parent as View
+        val viewport = railContent.parent as ScrollView
+        val railBounds = Rect()
+        assertTrue("The shell rail viewport must be visible", viewport.getGlobalVisibleRect(railBounds))
+        for (target in shellControls(home).filter { it.parent === home }) {
+            val visibleBounds = Rect()
+            if (target.getGlobalVisibleRect(visibleBounds)) {
+                assertFalse("Rail viewport overlaps the visible shell target ${target.tag}: rail=$railBounds, target=$visibleBounds; " +
+                    (if (Rect.intersects(railBounds, visibleBounds)) "${geometry(viewport)}; ${geometry(target)}" else ""),
+                    Rect.intersects(railBounds, visibleBounds))
+            }
+        }
     }
 
     private fun assertVisibleShellControlsDoNotOverlap(root: View) {
+        descendants(root).filterIsInstance<ContinuumHomeView>().filter { it.isShown }
+            .forEach(::assertRailViewportDoesNotOverlapShell)
         val visible = shellControls(root).mapNotNull { view ->
             val rect = Rect()
             if (view.getGlobalVisibleRect(rect)) view to rect else null
         }
         for (i in visible.indices) for (j in i + 1 until visible.size) {
-            assertFalse("Actual visible touch bounds overlap: ${visible[i].first.tag}/${visible[j].first.tag}",
-                Rect.intersects(visible[i].second, visible[j].second))
+            val (first, firstGlobal) = visible[i]
+            val (second, secondGlobal) = visible[j]
+            val firstParentBounds = boundsInParent(first)
+            val secondParentBounds = boundsInParent(second)
+            val sharedParent = first.parent === second.parent
+            val overlap = if (sharedParent) RectF.intersects(firstParentBounds, secondParentBounds)
+                else Rect.intersects(firstGlobal, secondGlobal)
+            assertFalse("Actual visible touch bounds overlap: ${first.tag}/${second.tag}; " +
+                "global=$firstGlobal/$secondGlobal, sharedParent=$sharedParent, parent=$firstParentBounds/$secondParentBounds; " +
+                (if (overlap) "${geometry(first)}; ${geometry(second)}" else ""), overlap)
         }
     }
 
@@ -261,6 +380,7 @@ class ContinuumReferenceCockpitUiTest {
             val row = list.getChildAt(position - list.firstVisiblePosition)
             assertNotNull("The selected native list row must be laid out", row)
             tap(root, requireNotNull(row))
+            advanceFrames(ViewConfiguration.getPressedStateDuration().toLong())
         } else {
             val actions = descendants(root).filterIsInstance<TextView>()
                 .filter { it.isClickable && it.isShown && it.text.toString() == label }
@@ -322,29 +442,44 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun returnHomeThroughDecor(activity: AgentActivity) {
         val root = activity.window.decorView
-        // Size the newly visible native chat rail in this manually sized window.
+        // Traverse the newly visible rail.
         val width = root.width
         val height = root.height
         measure(root, width, height)
         settle()
         measure(root, width, height)
-        val back = descendants(root).firstOrNull {
-            it.isShown && it.isClickable && (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
-                it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
+        val railViewport = field(activity, "conversationRail") as? View
+        val layoutOwner = railViewport?.parent as? View ?: root
+        val beforeFollowup = geometry(layoutOwner)
+        layoutOwner.requestLayout()
+        advanceFrames(32)
+        val rail = field(activity, "railView") as? View
+        val navigation = if (rail != null) {
+            assertTrue("The current conversation rail must be attached and shown: ${geometry(rail)}",
+                rail.isAttachedToWindow && rail.isShown && descendants(root).contains(rail))
+            requireNotNull(rail.parent as? ViewGroup)
+        } else {
+            (field(activity, "bottomWorkAreaBar") as? View)?.takeIf { it.isShown }
+                ?: requireNotNull(field(activity, "keyboardTitle") as? View)
         }
-        assertNotNull("Chat needs a real reachable route back to the cockpit", back)
-        tap(root, requireNotNull(back))
+        val candidates = descendants(navigation).filter {
+            it.isAttachedToWindow && it.isShown && it.isClickable &&
+                (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
+                    it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
+        }
+        val viewport = "${field(activity, "renderedWindowWidthDp")}x${field(activity, "renderedWindowHeightDp")}"
+        assertEquals("Chat needs one current route back to the cockpit: viewport=$viewport; ${geometry(navigation)}",
+            1, candidates.size)
+        val back = candidates.single()
+        assertTrue("The current return route belongs to this decor", descendants(root).contains(back))
+        assertMinimumTarget(back, "Current Home return at $viewport; beforeFollowup=$beforeFollowup")
+        tap(root, back)
         measure(root, root.width, root.height)
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         currentHome(activity)
     }
 
-    /** Scroll the actual ancestor, then dispatch through the decor tree so a
-     * foreground overlay or wrong hit target cannot be hidden by performClick. */
-    private fun tap(root: View, target: View) {
-        val label = target.contentDescription?.toString() ?: target.tag?.toString()
-            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
-        assertMinimumTarget(target, label)
+    private fun scrollTargetIntoView(target: View) {
         var parent = target.parent
         while (parent is View) {
             if (parent is ScrollView) {
@@ -355,10 +490,27 @@ class ContinuumReferenceCockpitUiTest {
             parent = parent.parent
         }
         target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+    }
+
+    /** Scroll, traverse, then dispatch touch. */
+    private fun tap(root: View, target: View) {
         settle()
+        settleSceneTransition(root)
+        val label = target.contentDescription?.toString() ?: target.tag?.toString()
+            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
+        assertMinimumTarget(target, label)
+        val beforeScroll = geometry(target)
+        scrollTargetIntoView(target)
+        val afterScroll = geometry(target)
+        settle()
+        val afterTraversal = geometry(target)
+        scrollTargetIntoView(target)
         val visible = Rect()
-        assertTrue("Target must be visibly scroll reachable: ${target.contentDescription}", target.getGlobalVisibleRect(visible))
-        assertTrue("Target must not be a clipped sliver", visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
+        assertTrue("Target must be visibly scroll reachable: $label; ${geometry(target)}", target.getGlobalVisibleRect(visible))
+        assertTrue("Target must not be a clipped sliver: $label, global=$visible, local=${target.width}x${target.height}; " +
+            "beforeScroll=$beforeScroll; afterScroll=$afterScroll; afterTraversal=$afterTraversal; " +
+            "afterRescroll=${geometry(target)}; root=${geometry(root)}",
+            visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
         assertVisibleShellControlsDoNotOverlap(root)
         val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
         val x = visible.exactCenterX() - rootPosition[0]
@@ -374,6 +526,7 @@ class ContinuumReferenceCockpitUiTest {
             up.recycle()
         }
         settle()
+        settleSceneTransition(root)
     }
 
     private fun assertDialog(title: String): AlertDialog {
@@ -479,6 +632,69 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun legacyReferencePresentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withLegacyReferencePresentation { activity, root ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        val avatar = field(activity, "hologramView") as ContinuumHologramView
+        val originalHeight = avatar.height
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse(avatar.isNative3dEnabled())
+        tap(root, legacySlot(home, "VIEW_ORB"))
+        measure(root, 412, 915)
+        assertFalse("Orb selection must render the preserved original orb", avatar.isNativeHeadEnabled())
+        assertTrue(legacySlot(home, "VIEW_ORB").isSelected)
+        capture(root, "legacy-phone-412x915-original-orb", 412, 915)
+        tap(root, legacySlot(home, "VIEW_COMPACT"))
+        measure(root, 412, 915)
+        assertTrue("Compact frees vertical room for conversation", avatar.height < originalHeight)
+        assertTrue(legacySlot(home, "VIEW_COMPACT").isSelected)
+        assertTrue(activity.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+            .getBoolean("compact", false))
+        capture(root, "legacy-phone-412x915-compact", 412, 915)
+        tap(root, legacySlot(home, "VIEW_AVATAR"))
+        measure(root, 412, 915)
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse("Restore the owner's 2D fallback preference", avatar.isNative3dEnabled())
+        assertEquals(originalHeight, avatar.height)
+        assertTrue(legacySlot(home, "VIEW_AVATAR").isSelected)
+        assertSame(avatar, field(activity, "hologramView"))
+        assertSame(home, avatar.parent)
+        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+        assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
+    }
+
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun shellAppearanceChooserReusesTheLiveAvatarAndPersistsTheChoice() = withActivity(412, 915, 1f) { activity, root, _ ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        val avatar = field(activity, "hologramView") as ContinuumHologramView
+        val appearance = activity.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+        fun choose(label: String, selectedBefore: Int) {
+            tap(root, shellControl(activity, "jarvis-dialog:avatar-appearance"))
+            val dialog = assertDialog("Continuum · Darstellung")
+            assertEquals(selectedBefore, dialog.listView.checkedItemPosition)
+            val decor = requireNotNull(dialog.window).decorView
+            val option = descendants(decor).filterIsInstance<TextView>().single { it.text.toString() == label }
+            tap(decor, option)
+            // Deliver delayed ListView selection.
+            advanceFrames(ViewConfiguration.getPressedStateDuration().toLong())
+            assertFalse("A real selection closes its chooser", dialog.isShowing)
+            measure(root, 412, 915)
+        }
+        choose("Kugel · Original", 1)
+        assertFalse("The current chooser selects the original orb", avatar.isNativeHeadEnabled())
+        assertFalse(appearance.getBoolean("native-head", true))
+        choose("Kopf · Native 2D-Vorschau", 0)
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse(avatar.isNative3dEnabled())
+        assertTrue(appearance.getBoolean("native-head", false))
+        assertFalse(appearance.getBoolean("native-head-3d", true))
+        assertSame(avatar, field(activity, "hologramView"))
+        assertSame(home, avatar.parent)
+        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+        assertTrue("Appearance selection retains the current shell", home.jarvisShellStage)
+        assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
+    }
+
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
     fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root, controller ->
         val home = currentHome(activity)
         val avatar = field(activity, "hologramView") as ContinuumHologramView
@@ -528,29 +744,28 @@ class ContinuumReferenceCockpitUiTest {
 
         chooseAppearance(activity, "Kompakt · Kugel")
         recreateWithBoundedTraversal(controller)
-        advanceFrames(16)
-        assertTrue(controller.get().window.decorView.isAttachedToWindow)
-        controller.windowFocusChanged(true)
-        val resumed = controller.get()
-        val resumedRoot = resumed.window.decorView
-        val resumedAvatar = field(resumed, "hologramView") as ContinuumHologramView
-        resumedAvatar.setAnimationsEnabled(false)
-        (field(resumed, "homeView") as ContinuumHomeView).setForegroundActive(false)
-        settle(); measure(resumedRoot, 412, 915); settle(); measure(resumedRoot, 412, 915)
-        assertFalse("Restored compact preference keeps the original orb", resumedAvatar.isNativeHeadEnabled())
-        assertTrue("A recreated active shell retains the smaller avatar", resumedAvatar.height < originalHeight)
-        assertTrue(resumed.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).getBoolean("compact", false))
-        appearanceDialog(resumed).also {
-            assertEquals(3, it.listView.checkedItemPosition)
-            closeDialogThroughDecor(it)
+        settle()
+        controller.get().let { resumed ->
+            val resumedRoot = resumed.window.decorView
+            val resumedAvatar = field(resumed, "hologramView") as ContinuumHologramView
+            resumedAvatar.setAnimationsEnabled(false)
+            (field(resumed, "homeView") as ContinuumHomeView).setForegroundActive(false)
+            settle(); measure(resumedRoot, 412, 915); settle(); measure(resumedRoot, 412, 915)
+            assertFalse("Restored compact preference keeps the original orb", resumedAvatar.isNativeHeadEnabled())
+            assertTrue("A recreated active shell retains the smaller avatar", resumedAvatar.height < originalHeight)
+            assertTrue(resumed.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).getBoolean("compact", false))
+            appearanceDialog(resumed).also {
+                assertEquals(3, it.listView.checkedItemPosition)
+                closeDialogThroughDecor(it)
+            }
+            chooseAppearance(resumed, "Kopf · Native 2D-Vorschau")
+            assertEquals(originalHeight, resumedAvatar.height)
+            assertTrue(resumedAvatar.isNativeHeadEnabled())
+            assertFalse(resumedAvatar.isNative3dEnabled())
+            assertSame(resumedAvatar, field(resumed, "hologramView"))
+            assertEquals(1, descendants(resumedRoot).count { it is ContinuumHologramView })
+            assertFalse(field(resumed, "busy") as Boolean)
         }
-        chooseAppearance(resumed, "Kopf · Native 2D-Vorschau")
-        assertEquals(originalHeight, resumedAvatar.height)
-        assertTrue(resumedAvatar.isNativeHeadEnabled())
-        assertFalse(resumedAvatar.isNative3dEnabled())
-        assertSame(resumedAvatar, field(resumed, "hologramView"))
-        assertEquals(1, descendants(resumedRoot).count { it is ContinuumHologramView })
-        assertFalse(field(resumed, "busy") as Boolean)
     }
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
@@ -576,10 +791,11 @@ class ContinuumReferenceCockpitUiTest {
         assertFalse(field(activity, "busy") as Boolean)
         recreateWithBoundedTraversal(controller)
         settle()
-        val resumed = controller.get()
-        assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
-        assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
-        assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)
+        controller.get().let { resumed ->
+            assertEquals(draft, (field(resumed, "input") as EditText).text.toString())
+            assertEquals(ContinuumWorkArea.CHAT, field(resumed, "activeWorkArea"))
+            assertFalse("Rotation cannot submit the retained draft", field(resumed, "busy") as Boolean)
+        }
     }
 
     @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
@@ -701,5 +917,72 @@ class ContinuumReferenceCockpitUiTest {
         assertEquals(1, descendants(activity.window.decorView).count { it is ContinuumHologramView })
         assertFalse(field(activity, "busy") as Boolean)
         capture(activity.window.decorView, "fold-short-840x320-font200-rail", 840, 320)
+    }
+
+    @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
+    fun foldLandscapeCompactChooserRestoresExact2dGeometry() = checkWideCompactPresentation(840, 649)
+
+    @Test @Config(qualifiers = "w840dp-h1050dp-port-mdpi")
+    fun foldPortraitCompactChooserRestoresExact2dGeometry() = checkWideCompactPresentation(840, 1050)
+
+    private fun checkWideCompactPresentation(width: Int, height: Int) {
+        fun bounds(view: View) = Rect(view.left, view.top, view.right, view.bottom)
+        for (font in listOf(1f, 1.5f, 2f)) withActivity(width, height, font) { activity, root, _ ->
+            val profile = "$width x $height, font=$font"
+            val home = currentHome(activity)
+            val avatar = field(activity, "hologramView") as ContinuumHologramView
+            val originalAvatarBounds = bounds(avatar)
+            val originalSlot = home.avatarSlotRect
+            val originalDialogBounds = bounds(shellControl(activity, "jarvis-dialog:conversation"))
+            val originalContentWidth = home.width
+            val originalContentHeight = home.height
+            assertTrue("$profile starts with the existing 2D head", avatar.isNativeHeadEnabled())
+            assertFalse("$profile uses no native 3D fixture", avatar.isNative3dEnabled())
+            assertRealTargets(activity)
+
+            chooseAppearance(activity, "Kompakt · Kugel")
+            val compactHome = currentHome(activity)
+            assertSame("$profile compact must preserve the live surface", avatar, field(activity, "hologramView"))
+            assertSame("$profile compact retains the current host", compactHome, avatar.parent)
+            assertTrue("$profile compact surface remains visible", avatar.isShown)
+            assertFalse("$profile compact renders the original orb", avatar.isNativeHeadEnabled())
+            assertTrue("$profile compact shrinks the actual surface", avatar.height < originalAvatarBounds.height())
+            assertTrue("$profile compact moves conversation upward",
+                shellControl(activity, "jarvis-dialog:conversation").top < originalDialogBounds.top)
+            assertTrue("$profile compact shortens actual content", compactHome.height < originalContentHeight)
+            assertEquals("$profile renderer follows the smaller slot", avatar.height, compactHome.avatarSlotRect.height())
+            assertTrue("$profile compact choice is persisted", activity.getSharedPreferences(
+                "continuum-cockpit-presentation", Context.MODE_PRIVATE).getBoolean("compact", false))
+            appearanceDialog(activity).also {
+                assertEquals("$profile selects the actual fourth native choice", 3, it.listView.checkedItemPosition)
+                closeDialogThroughDecor(it)
+            }
+            assertEquals("$profile compact retains one surface", 1, descendants(root).count { it is ContinuumHologramView })
+            assertFalse("$profile compact must not start a task", field(activity, "busy") as Boolean)
+            assertRealTargets(activity)
+
+            chooseAppearance(activity, "Kopf · Native 2D-Vorschau")
+            val restoredHome = currentHome(activity)
+            assertSame("$profile restore preserves the live surface", avatar, field(activity, "hologramView"))
+            assertSame("$profile restore retains the current host", restoredHome, avatar.parent)
+            assertTrue("$profile restores the original 2D head", avatar.isNativeHeadEnabled())
+            assertFalse("$profile restore does not enable 3D", avatar.isNative3dEnabled())
+            assertEquals("$profile restores exact avatar bounds", originalAvatarBounds, bounds(avatar))
+            assertEquals("$profile restores exact renderer bounds", originalSlot, restoredHome.avatarSlotRect)
+            assertEquals("$profile restores exact conversation bounds", originalDialogBounds,
+                bounds(shellControl(activity, "jarvis-dialog:conversation")))
+            assertEquals("$profile restores exact content width", originalContentWidth, restoredHome.width)
+            assertEquals("$profile restores exact content height", originalContentHeight, restoredHome.height)
+            assertFalse("$profile restore clears compact preference", activity.getSharedPreferences(
+                "continuum-cockpit-presentation", Context.MODE_PRIVATE).getBoolean("compact", true))
+            appearanceDialog(activity).also {
+                assertEquals("$profile restores the native 2D choice", 1, it.listView.checkedItemPosition)
+                closeDialogThroughDecor(it)
+            }
+            assertTrue("$profile restored surface remains visible", avatar.isShown)
+            assertEquals("$profile restore retains one surface", 1, descendants(root).count { it is ContinuumHologramView })
+            assertFalse("$profile restore must not start a task", field(activity, "busy") as Boolean)
+            assertRealTargets(activity)
+        }
     }
 }

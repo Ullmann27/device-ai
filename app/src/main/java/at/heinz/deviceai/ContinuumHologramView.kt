@@ -53,9 +53,6 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarRenderer = ContinuumAvatarRenderer()
     private val avatarPose = AvatarPoseReducer()
     private val appearancePrefs = context.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
-    private val cockpitPresentationPrefs = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
-    /** Existing host refreshes its current layout after an explicit owner appearance choice. */
-    var onAppearanceChanged: (() -> Unit)? = null
     private val hasSavedAppearance = appearancePrefs.contains("native-head") || appearancePrefs.contains("native-head-3d")
     // New installations use the requested 3D cockpit. An existing explicit orb
     // or 2D choice is preserved; this never requests camera/audio permissions.
@@ -362,18 +359,15 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     fun showAppearanceChooser() {
-        val compact = cockpitPresentationPrefs.getBoolean("compact", false)
-        val selected = if (compact) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
+        val presentation = context.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE)
+        val selected = if (presentation.getBoolean("compact", false)) 3 else if (head3dEnabled) 2 else if (headEnabled) 1 else 0
         AlertDialog.Builder(context).setTitle("Continuum · Darstellung")
-            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau",
-                "Kompakt · Kugel"), selected) { dialog, item ->
-                val presentation = cockpitPresentationPrefs.edit().putBoolean("compact", item == 3)
-                // Keep the existing legacy return preference in the same store, including an explicit 2D choice.
-                if (headEnabled) presentation.putBoolean("avatar-3d", head3dEnabled)
-                if (item == 1 || item == 2) presentation.putBoolean("avatar-3d", item == 2)
+            .setSingleChoiceItems(arrayOf("Kugel · Original", "Kopf · Native 2D-Vorschau", "Kopf · Native 3D-Vorschau", "Kompakt · Kugel"), selected) { dialog, item ->
+                val choice = presentation.edit().putBoolean("compact", item == 3)
+                if (headEnabled) choice.putBoolean("avatar-3d", head3dEnabled)
+                if (item == 1 || item == 2) choice.putBoolean("avatar-3d", item == 2)
                 if (item == 2) setNative3dEnabled(true) else setNativeHeadEnabled(item == 1)
-                presentation.apply()
-                onAppearanceChanged?.invoke()
+                choice.apply()
                 dialog.dismiss()
             }
             .setNeutralButton("Bewegung prüfen") { _, _ ->

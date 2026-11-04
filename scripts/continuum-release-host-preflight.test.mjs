@@ -37,6 +37,25 @@ test('host with existing incompatible Java detects JDK17 requirement',()=>{
   assert.equal(r.hostReadyToAttemptQa,false);
   assert.ok(r.blockers.some(x=>x.startsWith('JDK')||x.startsWith('SDK')));
 });
+test('host probes receive the explicit environment without mutating process.env',t=>{
+  const home=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-preflight-env-'));
+  t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
+  const bin=path.join(home,'bin'),sdk=path.join(home,'sdk');
+  fs.mkdirSync(bin);fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+  fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');
+  const guard='#!/bin/sh\n[ -n "$JAVA_HOME" ] && [ "$PATH" = "$JAVA_HOME/bin" ] || exit 71\n';
+  for(const [name,version] of [['java','printf \'openjdk version "17.0.1"\\n\' >&2'],
+    ['javac','printf \'javac 17.0.1\\n\''],['gradle','printf \'Gradle 8.11.1\\n\'']]){
+    fs.writeFileSync(path.join(bin,name),guard+`printf '%s\\n' '${name}' >> "$JAVA_HOME/probes.log"\n`+version+'\n',{mode:0o700});
+  }
+  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'fixture only');
+  const env={JAVA_HOME:home,PATH:bin,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),CONTINUUM_AAPT2_PATH:aapt2};
+  const before={...process.env},input={...env},r=inspectHostEnvironment(env);
+  assert.deepEqual(r.blockers,[]);assert.equal(r.hostReadyToAttemptQa,true);
+  assert.equal(fs.readFileSync(path.join(home,'probes.log'),'utf8'),'java\njavac\ngradle\n');
+  assert.equal(r.androidCompilationExecuted,false);assert.equal(r.androidTestExecuted,false);assert.equal(r.apkSigned,false);
+  assert.deepEqual({...process.env},before);assert.deepEqual(env,input);
+});
 function fixture(work){
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-preflight-repo-'));
   const git=(...args)=>{const x=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(x.status,0,x.stderr);return x.stdout.trim();};

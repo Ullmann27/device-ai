@@ -8,6 +8,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import at.heinz.deviceai.chief.ChiefBotProfileStore
+import at.heinz.deviceai.chief.ChiefBotConversationCodec
+import at.heinz.deviceai.chief.ChiefBotConversationEntry
+import at.heinz.deviceai.chief.ChiefBotConversationHistory
+import at.heinz.deviceai.chief.ChiefBotPractice
 import at.heinz.deviceai.chief.ChiefBotTaskMode
 import at.heinz.deviceai.chief.ChiefBotTaskRequest
 import org.junit.Assert.*
@@ -57,6 +61,37 @@ class ContinuumBotTaskRoutingUiTest {
     private fun flush(a: AgentActivity) {
         (get(a, "backlogExecutor") as ExecutorService).submit {}.get(5, TimeUnit.SECONDS)
         shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    @Test fun reopenedPracticeHistoryShowsOriginalAnswerAndSeparateProgramFeedback() = withActivity { a, store ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        val exercise = requireNotNull(ChiefBotPractice.select(profile.agentId, "Training 1"))
+        val response = "Absichtlich ungültige Testantwort."
+        val feedback = ChiefBotPractice.evaluate(exercise, response)
+        val original = ChiefBotConversationHistory(listOf(ChiefBotConversationEntry(
+            "Training 1", response, "fixture-model", "v1", "a".repeat(64), feedback)))
+        val reopened = ChiefBotConversationCodec.decode(profile, ChiefBotConversationCodec.encode(profile, original))
+        call(a, "showBotHistory", profile, reopened)
+        val labels = descendants(get(a, "chatContainer") as View).filterIsInstance<TextView>()
+            .map { it.text.toString() }
+        assertEquals(listOf("Training 1", "${profile.displayName} · $response\n\nProgrammauswertung\n" +
+            feedback.presentation()), labels)
+        assertEquals(response, reopened.turns.single().response)
+        assertTrue(profile.verifiedCapabilities.isEmpty())
+        assertNull(get(a, "localRuntime"))
+    }
+
+    @Test fun ordinaryHistoryDoesNotGainPracticeFeedback() = withActivity { a, store ->
+        val profile = requireNotNull(store.get("bot-kora"))
+        val history = ChiefBotConversationHistory(listOf(ChiefBotConversationEntry(
+            "Hallo", "Normale Antwort.", "fixture-model", "v1", "b".repeat(64))))
+        val reopened = ChiefBotConversationCodec.decode(profile, ChiefBotConversationCodec.encode(profile, history))
+        call(a, "showBotHistory", profile, reopened)
+        val labels = descendants(get(a, "chatContainer") as View).filterIsInstance<TextView>()
+            .map { it.text.toString() }
+        assertEquals(listOf("Hallo", "${profile.displayName} · Normale Antwort."), labels)
+        assertNull(reopened.turns.single().practiceFeedback)
+        assertNull(get(a, "localRuntime"))
     }
 
     @Test fun unknownNaturalSelectionsReachTheOrdinaryInputPath() {

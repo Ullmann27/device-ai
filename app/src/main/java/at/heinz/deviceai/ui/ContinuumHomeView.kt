@@ -30,6 +30,23 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var externalBottomBarHeightDp = 0f
     private var configuredWide = false
     private var configuredNavigation = false
+    private val presentationUpdate = Runnable {
+        if (isAttachedToWindow) refreshPresentationPreference()
+    }
+    private val presentationListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "compact") post(presentationUpdate)
+    }
+
+    private fun refreshPresentationPreference() {
+        val compact = presentationPrefs.getBoolean("compact", false)
+        if (compactPresentation == compact) return
+        compactPresentation = compact
+        if (configuredWidth > 0f) configure(configuredWidth, configuredWide, offset, configuredNavigation,
+            configuredHeight, externalBottomBarHeightDp)
+        else jarvisShell.compactPresentation = compact
+        views.values.forEach { it.refresh() }
+        requestLayout()
+    }
 
     /** Presentation reuses the same live view and its existing original orb/3D lifecycle. */
     private fun selectPresentation(slot: Slot) {
@@ -49,14 +66,6 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         views.values.forEach { it.refresh() }
         views[slot]?.requestFocus()
     }
-    /** Reuse the existing owner preference after any entry into the same appearance chooser. */
-    fun refreshPresentation() {
-        compactPresentation = presentationPrefs.getBoolean("compact", false)
-        configure(configuredWidth, configuredWide, offset, configuredNavigation, configuredHeight, externalBottomBarHeightDp)
-        views.values.forEach { it.refresh() }
-        requestLayout()
-    }
-
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
@@ -111,13 +120,19 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        presentationPrefs.registerOnSharedPreferenceChangeListener(presentationListener)
+        refreshPresentationPreference()
         slotRegistration?.close()
-        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post { applyAvatarSlot() } }
+        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post(avatarSlotUpdate) }
+        post(avatarSlotUpdate)
         updateWaveAnimation()
     }
 
     override fun onDetachedFromWindow() {
+        presentationPrefs.unregisterOnSharedPreferenceChangeListener(presentationListener)
+        removeCallbacks(presentationUpdate)
         slotRegistration?.close(); slotRegistration = null
+        removeCallbacks(avatarSlotUpdate)
         dockedRenderer?.let { runCatching { it.detach() } }
         dockedRenderer = null
         removeCallbacks(waveFrame)
@@ -221,6 +236,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val avatarPlaceholder = AvatarSlotPlaceholder(context)
     private var dockedRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? = null
     private val avatarRect = android.graphics.Rect()
+    private val avatarSlotUpdate = Runnable {
+        if (isAttachedToWindow) applyAvatarSlot()
+    }
 
     val avatarRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? get() = dockedRenderer
     /** Pixel rect of the avatar slot (cockpit modes). */
@@ -230,7 +248,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun applyAvatarSlot() {
         val owns = ownsAvatarSlot
-        val wanted = if (owns && hologram.parent === this) at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer else null
+        val registered = at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer
+        val compatible = registered !is at.heinz.deviceai.avatar.JarvisHoloAvatar || registered.canAttachTo(this)
+        val wanted = if (owns && isAttachedToWindow && hologram.parent === this && compatible) registered else null
         if (wanted !== dockedRenderer) {
             dockedRenderer?.let { runCatching { it.detach() } }
             dockedRenderer = null
@@ -280,12 +300,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         avatarPlaceholder.measure(MeasureSpec.makeMeasureSpec(right - left, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.EXACTLY))
         avatarPlaceholder.layout(left, top, right, bottom)
-        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post { applyAvatarSlot() } }
+        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post(avatarSlotUpdate) }
         else if (changed) dockedRenderer?.let { r ->
             r.onSlotChanged(android.graphics.Rect(avatarRect))
             // The live adapter handles resize in place. Preserve compatibility with other slot implementations.
             if (r !is at.heinz.deviceai.avatar.JarvisHoloAvatar) {
-                post { if (dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
+                post { if (isAttachedToWindow && dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
             }
         }
         if (hologram.parent === this) hologram.layout(left, top, right, bottom)
@@ -452,7 +472,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         jarvisShell.viewportHeightDp = viewport.coerceAtLeast(160f)
         val h = if (jarvisShellStage && width / density >= 240f)
             (JarvisShellLayout.forContent(width / density, jarvisShell.viewportHeightDp,
-                resources.configuration.fontScale, jarvisShell.foldRail, offset, compactPresentation = compactPresentation).height * density).toInt()
+                resources.configuration.fontScale, jarvisShell.foldRail, offset,
+                compactPresentation = compactPresentation).height * density).toInt()
             else maxOf(contentHeight, suggestedMinimumHeight)
         jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
         shellForeground.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
@@ -546,7 +567,13 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         panelTargets.forEach { (slot, target) ->
             val label = if (target == "model-management") "Lokales Modell und Gerät"
                 else JarvisTiles.railNav.first { it.target == target }.label
-            add("panel:$slot", target, label, shell[slot])
+            val touchBox = shell[slot]?.let { box ->
+                val minimumHeight = kotlin.math.ceil(48f * density) / density
+                // Status uses unused bottom gutter.
+                if (slot == JarvisShellLayout.Slot.STATUS && box.height < minimumHeight)
+                    box.copy(bottom = Math.nextUp(box.top + minimumHeight)) else box
+            }
+            add("panel:$slot", target, label, touchBox)
         }
         shell.grid?.areas?.get(JarvisCockpitGrid.Area.BRAND)?.let { box ->
             val h = maxOf(48f, box.height)
@@ -581,10 +608,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             view.refresh()
             val px = spec.box.width * density
             val py = spec.box.height * density
-            // The reference status strip may paint below 48dp; keep its native action reachable.
-            val minHeightPx = if (spec.key == "panel:STATUS") kotlin.math.ceil(48f * density).toInt() else 1
             view.measure(MeasureSpec.makeMeasureSpec(px.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(minHeightPx), MeasureSpec.EXACTLY))
+                MeasureSpec.makeMeasureSpec(py.toInt().coerceAtLeast(1), MeasureSpec.EXACTLY))
         }
         shellRailBounds = shell[JarvisShellLayout.Slot.NAV_RAIL]
         shellRailScroll.visibility = if (shellRailBounds != null) View.VISIBLE else View.GONE
@@ -598,14 +623,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     private fun layoutShellActions() {
         shellActionBounds.forEach { (key, box) ->
-            shellActions[key]?.let { view ->
-                val top = (box.top * density).toInt()
-                // Extend only STATUS downward into its existing footer space; painted geometry is unchanged.
-                val bottom = if (key == "panel:STATUS")
-                    maxOf((box.bottom * density).toInt(), top + view.measuredHeight)
-                else (box.bottom * density).toInt()
-                view.layout((box.left * density).toInt(), top, (box.right * density).toInt(), bottom)
-            }
+            shellActions[key]?.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
         }
         shellRailBounds?.let { box ->
             shellRailScroll.layout((box.left * density).toInt(), (box.top * density).toInt(),
