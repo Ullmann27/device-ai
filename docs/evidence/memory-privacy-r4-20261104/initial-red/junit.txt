@@ -1,0 +1,110 @@
+JUnit version 4.13.2
+.E..E.E.E.E.E..E..E.E.E.E.E.E.E..E.E
+Time: 0.459
+There were 16 failures:
+1) authorizationBearerAssignmentsRemoveCompleteCredentials(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError: Authorization: Bearer
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.authorizationBearerAssignmentsRemoveCompleteCredentials(ContextCredentialBoundaryTest.kt:16)
+2) quotedKeysAndValuesRemoveCompleteCredentials(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError: password "
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.quotedKeysAndValuesRemoveCompleteCredentials(ContextCredentialBoundaryTest.kt:43)
+3) quotedMultiwordSecretsDoNotLeakTheirSuffix(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.quotedMultiwordSecretsDoNotLeakTheirSuffix(ContextCredentialBoundaryTest.kt:52)
+4) concurrentCompilesDoNotShareInputOrReplacementState(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.concurrentCompilesDoNotShareInputOrReplacementState(ContextCredentialBoundaryTest.kt:118)
+5) explicitAuthorizationDoesNotAssumeAMinimumTokenLength(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.explicitAuthorizationDoesNotAssumeAMinimumTokenLength(ContextCredentialBoundaryTest.kt:32)
+6) escapedQuotesStayInsideTheRedactedValue(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.escapedQuotesStayInsideTheRedactedValue(ContextCredentialBoundaryTest.kt:62)
+7) allContextEvidencePathsApplyTheBoundary(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError: R4_REQUEST_KEY
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.allContextEvidencePathsApplyTheBoundary(ContextCredentialBoundaryTest.kt:89)
+8) basicAndProxyAuthorizationRemoveTheEncodedValue(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError: Authorization: Basic
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.basicAndProxyAuthorizationRemoveTheEncodedValue(ContextCredentialBoundaryTest.kt:25)
+9) reusedCompilerKeepsOnlyCurrentContext(at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertFalse(Assert.java:65)
+	at org.junit.Assert.assertFalse(Assert.java:75)
+	at at.heinz.deviceai.cognitive.ContextCredentialBoundaryTest.reusedCompilerKeepsOnlyCurrentContext(ContextCredentialBoundaryTest.kt:99)
+10) proofCarryingMutationAcceptsTheSensitiveClassification(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.IllegalArgumentException: Mutation privacy class must match MemoryWritePolicy decision.
+	at at.heinz.deviceai.cognitive.ProofCarryingMemoryMutation$Companion.create(ProofCarryingMemory.kt:75)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.mutation(MemoryPrivacyPrecedenceTest.kt:90)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.proofCarryingMutationAcceptsTheSensitiveClassification(MemoryPrivacyPrecedenceTest.kt:59)
+11) classificationMatrixPreservesEveryOtherClass(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError: DIRECT_OBSERVATION mask=3 expected:<SENSITIVE> but was:<DEVICE_LOCAL_ONLY>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.classificationMatrixPreservesEveryOtherClass(MemoryPrivacyPrecedenceTest.kt:37)
+12) deviceProvenanceCannotWeakenSensitivePrivacy(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError: expected:<SENSITIVE> but was:<DEVICE_LOCAL_ONLY>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.deviceProvenanceCannotWeakenSensitivePrivacy(MemoryPrivacyPrecedenceTest.kt:21)
+13) classifiedSensitiveDeviceRecordStaysOutOfDefaultContext(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.classifiedSensitiveDeviceRecordStaysOutOfDefaultContext(MemoryPrivacyPrecedenceTest.kt:46)
+14) explicitSensitivePolicyStillAllowsTheSameEvidence(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError: expected:<[sensitive-device]> but was:<[]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.explicitSensitivePolicyStillAllowsTheSameEvidence(MemoryPrivacyPrecedenceTest.kt:54)
+15) proofCarryingMutationRejectsDeviceClassDowngrade(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.proofCarryingMutationRejectsDeviceClassDowngrade(MemoryPrivacyPrecedenceTest.kt:68)
+16) sensitiveDeviceFlagCannotWeakenPrivacy(at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest)
+java.lang.AssertionError: expected:<SENSITIVE> but was:<DEVICE_LOCAL_ONLY>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryPrivacyPrecedenceTest.sensitiveDeviceFlagCannotWeakenPrivacy(MemoryPrivacyPrecedenceTest.kt:16)
+
+FAILURES!!!
+Tests run: 20,  Failures: 16
+

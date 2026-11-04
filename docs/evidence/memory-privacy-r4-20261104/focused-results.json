@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "run": "initial-red",
+      "sourceLocal": "cbb528c963ef83613b5385ef43a6f7106bb4f325",
+      "sourcePublic": "b40a3d8061203bcab5be7c6846f6ad39cadca508",
+      "tree": "51553e4228982649f59f64b17010011f5f49b28d",
+      "tests": 20,
+      "failures": 16,
+      "passed": 4,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 1,
+      "files": {
+        "manifest.json": "5bf738996ef0438df71af5b2ad2563e1367e4091432643d5d169843801d95ad5",
+        "result.json": "b8afe9f254c4e70b589f45c23077a6cd4a2824bb21be58ac695e123fbbfd9fed",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "2630b3172b74c6165c4b649aa05186680c39247d1cbbe85538d5cdc2ec9d5ec0"
+      }
+    },
+    {
+      "run": "credential-green",
+      "sourceLocal": "9ff5e25b706ef40be0696ea2c33871da34874d3d",
+      "sourcePublic": "03b1333d96d36eba5ffc9537a58b489e9c8d5ff5",
+      "tree": "c9f068bdacdb4fbb5f346b75ee6e23ada30b0629",
+      "tests": 35,
+      "failures": 0,
+      "passed": 35,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "b6ce6774f577433fa4145bb6b287079edc2d244bc70e239fd77c99505909b475",
+        "result.json": "2e22833a9fad10fff7ab42df4e3776148bfea82218d8980638059cc8a570cbb0",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "08ffdc8c9788cf82186b4ba8b2e24a06531a80ebfb86eceb1315df41d1e8e9f0"
+      }
+    },
+    {
+      "run": "privacy-green",
+      "sourceLocal": "edd5468fa777b13e38f0e4fa6f3917b3240bca97",
+      "sourcePublic": "5f9ea0e532d52f819bd69cc8a61189f5ee064474",
+      "tree": "f418994a3aed2e2fd605c76c701fb65ddbdf111d",
+      "tests": 53,
+      "failures": 0,
+      "passed": 53,
+      "skipped": 0,
+      "compileExit": 0,
+      "junitExit": 0,
+      "files": {
+        "manifest.json": "c25840675db43c24f98099dde4761fa22ac329d8f778545e3f1e1d58b0a3f95a",
+        "result.json": "4f0038a14c6e622b09cc01f2cb791e323ea1da9f08762a3d10dcb00ecf90e139",
+        "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "junit.txt": "a162c41fd3dda4ad2ed60db29bf1daee9d5fc6ace1029478b17ff03eabcd43ea"
+      }
+    }
+  ],
+  "scope": "Actual-source host Kotlin/JUnit; not Android framework or AndroidKeyStore. Groups overlap; do not add counts.",
+  "rawLogs": "Copied byte-for-byte from .log to .txt; SHA-256 values above."
+}
