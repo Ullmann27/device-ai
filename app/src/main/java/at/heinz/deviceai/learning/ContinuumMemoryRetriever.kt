@@ -20,7 +20,8 @@ interface ContinuumMemoryRetriever {
 
     companion object {
         /** Winner of the M2.9 experiment (docs/evidence/m2-retrieval-20261104). */
-        fun default(zone:ZoneId=ZoneId.of("Europe/Vienna")):ContinuumMemoryRetriever = CharNgramHashRetriever(TemporalCue(zone))
+        fun default(zone:ZoneId=ZoneId.of("Europe/Vienna"), appDirectory:java.io.File?=null):ContinuumMemoryRetriever =
+            CharNgramHashRetriever(TemporalCue(zone)).let { if(appDirectory==null) it else EventEmittingRetriever(it,appDirectory) }
     }
 }
 

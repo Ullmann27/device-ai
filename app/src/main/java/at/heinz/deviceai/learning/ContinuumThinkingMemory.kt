@@ -36,7 +36,7 @@ data class ThinkingRun(val runId:String, val goal:String, val lessons:List<Strin
  * confirmed owner fact and never activates a skill. Promotion requires the owner's own statement via the normal
  * confirmOwnerFact path (outside this class).
  */
-class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearningCore,
+class ContinuumThinkingMemory(private val appDirectory:File, private val core:ContinuumLearningCore,
                               private val nowMillis:()->Long = System::currentTimeMillis) {
     private val file = File(File(appDirectory, "learning-core-v2"), FILE_NAME)
     private val layers = ContinuumMemoryLayers(core)
@@ -58,7 +58,7 @@ class ContinuumThinkingMemory(appDirectory:File, private val core:ContinuumLearn
         val reflections = read().filter { it.kind == ThinkingEntryKind.REFLECTION }
         if (q.isNotEmpty() && reflections.isNotEmpty()) {
             val byId = reflections.associateBy { "${it.runId}#${it.stepIndex}" }
-            val retriever = ContinuumMemoryRetriever.default()
+            val retriever = ContinuumMemoryRetriever.default(appDirectory = appDirectory)
             retriever.index(byId.map { (id, e) -> MemoryDoc(id, e.text, e.atMillis, confirmed = false) })
             retriever.search(query, now, MAX_RECALL).filter { it.score >= MIN_REFLECTION_SCORE }.forEach { h ->
                 items += RecalledMemory(RecallSource.HYPOTHESIS, h.doc.id, h.doc.text.take(MAX_TEXT), h.doc.atMillis, false)

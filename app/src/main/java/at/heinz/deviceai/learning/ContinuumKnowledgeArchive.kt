@@ -111,6 +111,8 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             writeDurably(temp,payload)
             moveNew(temp,target)
         } finally { temp.delete() }
+        ContinuumMemoryEventHub.forApp(root.parentFile ?: root)
+            .emit(DocumentLearned(record.id,kind.name,1,collectedAt)) // M2.11: IDs only, never title/text
         record
     }
 
@@ -285,6 +287,8 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             writeDurably(temporary,manifest)
             moveNew(temporary,File(pendingImport,"manifest.v1"))
             recoverPendingImport()
+            ContinuumMemoryEventHub.forApp(root.parentFile ?: root).emit(DocumentLearned(
+                digest(additions.joinToString("\n") { it.id }),"ARCHIVE_IMPORT",additions.size,System.currentTimeMillis()))
         }
         staged.size
     }

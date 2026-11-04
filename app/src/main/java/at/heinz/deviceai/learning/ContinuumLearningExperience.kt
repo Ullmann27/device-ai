@@ -381,7 +381,19 @@ class FileLearningExperienceStore(private val directory:File) {
     private fun intentKey(text:String)=text.lowercase(Locale.ROOT)
         .replace(Regex("[^\\p{L}\\p{N}]+")," ").trim()
 
+    private val events get()=ContinuumMemoryEventHub.forApp(directory.parentFile ?: directory)
+
+    /** Writes, then emits [MemoryStored] for each new/changed record (IDs + status only; async dispatch). */
     private fun save(items:List<LearningExperience>) {
+        val hub=events
+        if(!hub.hasListeners()) { saveInner(items);return }
+        val previous=if(primary.exists()) runCatching { loadState().items.associateBy { it.id } }.getOrNull() ?: emptyMap() else emptyMap()
+        saveInner(items)
+        items.filter { previous[it.id]!=it }.forEach {
+            hub.emit(MemoryStored(it.id,ContinuumMemoryEventHub.statusOf(it),it.updatedAt)) }
+    }
+
+    private fun saveInner(items:List<LearningExperience>) {
         require(items.size<=MAX_RECORDS && items.map { it.id }.distinct().size==items.size)
         if(!directory.exists() && !directory.mkdirs())throw IOException("Cannot create learning-core directory")
         val state=if(primary.exists()) runCatching { loadState() }.getOrNull() else null
