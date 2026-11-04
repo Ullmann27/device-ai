@@ -12,6 +12,89 @@ const codeOf=fn=>{try{fn();return null;}catch(e){if(e instanceof B.BacklogError)
 const withDir=fn=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'backlog-test-'));try{return fn(dir);}finally{fs.rmSync(dir,{recursive:true,force:true});}};
 const propose=(id,at=1)=>({op:'propose',actor:'test',at,task:{id,title:'Aufgabe '+id,kind:'TEST',source:'cli'}});
 
+function selectionDocument(overrides){
+  const template=B.applyOp(B.emptyDocument(0,'test'),propose('task-template')).doc.tasks[0];
+  const tasks=overrides.map(task=>({...structuredClone(template),state:'READY',...task}));
+  tasks.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
+  const doc={...B.emptyDocument(1000,'test'),tasks};
+  B.validateDocument(doc);
+  const freeze=value=>{
+    if(value!==null&&typeof value==='object'){
+      for(const child of Object.values(value))freeze(child);
+      Object.freeze(value);
+    }
+    return value;
+  };
+  return freeze(doc);
+}
+
+test('nextEligible retains task identity and priority, oldest-first and id tie breaks without mutation',()=>{
+  const doc=selectionDocument([
+    {id:'task-aaa',priority:999,createdAt:0},
+    {id:'task-bbb',priority:1000,createdAt:1},
+    {id:'task-ccc',priority:1000,createdAt:0},
+    {id:'task-ddd',priority:1000,createdAt:0}
+  ]);
+  const before=B.canonical(doc);
+  assert.strictEqual(B.nextEligible(doc),doc.tasks[2]);
+  assert.equal(B.canonical(doc),before);
+  assert.strictEqual(B.nextEligible(selectionDocument([])),null);
+  const single=selectionDocument([{id:'task-only'}]);
+  assert.strictEqual(B.nextEligible(single),single.tasks[0]);
+});
+
+test('nextEligible combines every optional scope and respects empty filters and null subjects',()=>{
+  const doc=selectionDocument([
+    {id:'task-aaa',priority:1000,kind:'REPAIR',source:'owner',subject:{base:'old',operation:'REPAIR'}},
+    {id:'task-bbb',priority:900,kind:'TEST',source:'owner',subject:{base:'head',operation:'ASSERT_NODE_EXPORT'}},
+    {id:'task-ccc',priority:800,kind:'TEST',source:'cli',subject:{base:'head',operation:'ASSERT_NODE_EXPORT'}},
+    {id:'task-ddd',priority:700,kind:'TEST',source:'owner',subject:{base:'head',operation:'OTHER'}},
+    {id:'task-eee',priority:600,kind:'TEST',source:'owner',subject:null}
+  ]);
+  const choose=(index,...filters)=>assert.strictEqual(B.nextEligible(doc,...filters),index===null?null:doc.tasks[index]);
+  choose(0);choose(1,['TEST']);choose(2,null,['cli']);choose(1,null,null,'head');
+  choose(4,null,null,null,'task-eee');choose(3,null,null,null,null,'OTHER');
+  choose(1,['TEST'],['owner'],'head','task-bbb','ASSERT_NODE_EXPORT');
+  choose(null,['TEST'],['owner'],'head','task-ccc','ASSERT_NODE_EXPORT');
+  choose(null,[]);choose(null,null,[]);choose(null,['UNKNOWN']);choose(null,null,['unknown']);
+  choose(null,null,null,'missing');choose(null,null,null,null,'task-missing');
+  choose(null,null,null,null,null,'MISSING');
+  choose(null,null,null,'head','task-eee');
+});
+
+test('nextEligible checks eligibility before kinds and sources, retaining filter short circuit order',()=>{
+  const doc=selectionDocument([
+    {id:'task-aaa',state:'PROPOSED',kind:'PROPOSED'},
+    {id:'task-bbb',kind:'WAITING',dependsOn:['task-aaa']},
+    {id:'task-ccc',kind:'EXHAUSTED',attempts:3},
+    {id:'task-ddd',kind:'REPAIR',source:'cli'},
+    {id:'task-eee',kind:'TEST',source:'owner'}
+  ]);
+  const calls=[],kinds=['TEST'],sources=['owner'];
+  kinds.includes=value=>{calls.push('kind:'+value);return Array.prototype.includes.call(kinds,value);};
+  sources.includes=value=>{calls.push('source:'+value);return Array.prototype.includes.call(sources,value);};
+  assert.strictEqual(B.nextEligible(doc,kinds,sources),doc.tasks[4]);
+  assert.deepEqual(calls,['kind:REPAIR','kind:TEST','source:owner']);
+  assert.strictEqual(B.nextEligible(doc,['PROPOSED','WAITING','EXHAUSTED']),null);
+});
+
+test('nextEligible releases dependent tasks only after matching completed-task evidence',()=>{
+  let doc=B.emptyDocument(0,'test');
+  const run=op=>{doc=B.applyOp(doc,{actor:'test',...op}).doc;};
+  run({...propose('task-dependency'),at:1});run({op:'accept',at:2,id:'task-dependency'});
+  run({op:'propose',at:3,task:{id:'task-waiting',title:'Waiting',kind:'TEST',source:'owner',priority:1000,dependsOn:['task-dependency']}});
+  run({op:'accept',at:4,id:'task-waiting'});
+  const token='a'.repeat(32),sha='b'.repeat(64);
+  run({op:'claim',at:5,id:'task-dependency',owner:'test',token,leaseMs:60000});
+  assert.strictEqual(B.nextEligible(doc),null);
+  run({op:'submit',at:6,id:'task-dependency',token,artifact:{type:'REPORT',sha256:sha}});
+  assert.strictEqual(B.nextEligible(doc),null);
+  run({op:'complete',at:7,id:'task-dependency',evidence:{type:'TEST_RUN',taskId:'task-dependency',
+    submissionToken:token,artifactSha256:sha,chain:'test',commit:'c'.repeat(40),at:7,by:'test',repair:null,
+    profiles:[{profile:'node-continuum',passed:true,executed:1,failed:0,skipped:0}]}});
+  assert.strictEqual(B.nextEligible(doc),doc.tasks[1]);
+});
+
 test('conformance vectors: every step and final state as recorded (shared with Kotlin)',()=>{
   const recorded=JSON.parse(fixture('conformance.json'));
   assert.equal(recorded.cases.length,5);

@@ -1,0 +1,17 @@
+[
+  "at.heinz.deviceai.learning.lm.LmSamplingTest",
+  "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+  "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+  "at.heinz.deviceai.cognitive.AiContextByteBudgetTest",
+  "at.heinz.deviceai.cognitive.AiContextIntegrityTest",
+  "at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest",
+  "at.heinz.deviceai.cognitive.MemoryContextBoundaryTest",
+  "at.heinz.deviceai.cognitive.MemoryContextIdentityTest",
+  "at.heinz.deviceai.cognitive.MemoryRecallObservationTest",
+  "at.heinz.deviceai.cognitive.AgentContextFallbackTest",
+  "at.heinz.deviceai.chief.ChiefBotConversationTest",
+  "at.heinz.deviceai.cockpit.CompiledMemoryOrbIntegrationTest",
+  "at.heinz.deviceai.MemoryRecallActivityUiTest",
+  "at.heinz.deviceai.ContinuumBotPersonalityUiTest",
+  "at.heinz.deviceai.avatar3d.AvatarIdleMotionBoundaryTest"
+]
