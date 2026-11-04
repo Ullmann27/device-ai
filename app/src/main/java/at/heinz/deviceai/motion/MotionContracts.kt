@@ -42,13 +42,22 @@ fun interface AudioLevelSource { fun levelAt(timeMs: Long): Float }
 /** Optional: viseme index only if the TTS engine provides phonemes; null = none. */
 fun interface VisemeHintSource { fun visemeAt(timeMs: Long): Int? }
 
-/** Registration point; null = cockpit defaults. */
+/**
+ * Registration point; null = cockpit defaults. Defaults are the Mathematik presets (approved by Kern).
+ *
+ * [audioLevel] stays a constant 0 (silence → mouth at rest, no invented signal) until Kern installs the real
+ * TTS/mic RMS source; [visemeHint] stays null until the TTS engine provides phonemes. [faceWeights] reads both
+ * properties on every frame, so whatever Kern assigns later drives the face without re-registering it.
+ */
 object MotionLibrary {
     /** Production instance set by the app from TtsHologramSignal (clock: SystemClock.elapsedRealtime). */
     @Volatile var audioLevel: AudioLevelSource = AudioLevelSource { 0f }
     @Volatile var visemeHint: VisemeHintSource? = null
-    @Volatile var easing: Easing? = null
-    @Volatile var spring: SpringCurve? = null
-    @Volatile var stagger: Stagger? = null
-    @Volatile var faceWeights: FaceWeightsSource? = null
+    @Volatile var easing: Easing? = MotionPresets.flyInEasing
+    @Volatile var spring: SpringCurve? = MotionPresets.widgetSpring
+    @Volatile var stagger: Stagger? = MotionPresets.panelStagger
+    @Volatile var faceWeights: FaceWeightsSource? = LipSyncFaceSource(
+        AudioLevelSource { audioLevel.levelAt(it) },
+        VisemeHintSource { visemeHint?.visemeAt(it) },
+    )
 }
