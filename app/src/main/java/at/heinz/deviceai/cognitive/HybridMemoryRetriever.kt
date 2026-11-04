@@ -77,19 +77,7 @@ object HybridMemoryRetriever {
         // An evidence ID must identify one complete record. Check the whole input
         // before privacy filtering: a visible alias must not hide a conflicting
         // private version. Conflicts never reach tokenization or caller scorers.
-        val identities = linkedMapOf<String, MemoryRecord>()
-        val conflictingIds = hashSetOf<String>()
-        records.forEach { memory ->
-            if (memory.id in conflictingIds) return@forEach
-            val existing = identities[memory.id]
-            if (existing == null) {
-                identities[memory.id] = memory
-            } else if (existing != memory) {
-                identities.remove(memory.id)
-                conflictingIds.add(memory.id)
-            }
-        }
-        val candidates = identities.values.filter { it.privacyClass in allowedPrivacy }
+        val candidates = unambiguousRecords(records).filter { it.privacyClass in allowedPrivacy }
         if (candidates.isEmpty()) return emptyList()
 
         val documents = candidates.map { memory ->
@@ -180,6 +168,23 @@ object HybridMemoryRetriever {
         // Relevant contradicted/stale memories remain visible with a low score so
         // the agent can reason about conflicts instead of silently forgetting them.
         return best.sortedWith(SCORE_ORDER)
+    }
+
+    /** Resolve identity before any caller-specific status or privacy projection. */
+    internal fun unambiguousRecords(records: Collection<MemoryRecord>): Collection<MemoryRecord> {
+        val identities = linkedMapOf<String, MemoryRecord>()
+        val conflictingIds = hashSetOf<String>()
+        records.forEach { memory ->
+            if (memory.id in conflictingIds) return@forEach
+            val existing = identities[memory.id]
+            if (existing == null) {
+                identities[memory.id] = memory
+            } else if (existing != memory) {
+                identities.remove(memory.id)
+                conflictingIds.add(memory.id)
+            }
+        }
+        return identities.values
     }
 
     private data class PreparedDocument(

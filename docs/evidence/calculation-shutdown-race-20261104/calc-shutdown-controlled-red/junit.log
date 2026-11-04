@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+.E
+Time: 0.066
+There was 1 failure:
+1) idleCannotPromiseWorkerTerminationBeforeTheWorkerReacquiresItsMonitor(at.heinz.deviceai.cockpit.ShutdownRaceProofTest)
+java.lang.AssertionError: Idle returned before the notified worker could terminate expected null, but was:<Thread[continuum-calc-events-013b6d03,5,main]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at at.heinz.deviceai.cockpit.ShutdownRaceProofTest.idleCannotPromiseWorkerTerminationBeforeTheWorkerReacquiresItsMonitor(ShutdownRaceProofTest.kt:22)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+

@@ -1,0 +1,23 @@
+{
+  "base_commit": "bfc427c6d76f08bbe56513c330342be3be997900",
+  "production_edits": false,
+  "original_failure": {
+    "tests": 2442,
+    "failures": 1,
+    "skipped": 19
+  },
+  "diagnostic": "DETERMINISTIC_OLD_IDLE_EQUALS_TERMINATION_ASSUMPTION_REJECTED",
+  "fixed_suite_repetitions": 25,
+  "fixed_tests_passed": 100,
+  "full_gradle_rerun": "PARENT_GATE_PENDING",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt",
+      "sha256": "361a437bd8a3b635e10ec7306c9f62bd882f1ee441da6b87b1a23198cc973658"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/RetrievalCalculationSourceTest.kt",
+      "sha256": "14ab4c88d782150f611917a31a01218d110f09ac0b05a2df25fa036614953aef"
+    }
+  ]
+}

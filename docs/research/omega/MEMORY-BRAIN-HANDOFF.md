@@ -72,3 +72,29 @@ new isolated checkout or revert selected feature commits in that integration
 branch; never reset a foreign branch, delete owner data or rewrite main. Existing
 ledger schemas, model weights, package/signature and update channel are retained.
 Public project publication is explicitly owner-authorized; see AGENTS.md rule 5.
+
+## Later checkpoint: review and app integration
+
+The compiler status-projection gap is now fixed at bfc427c6, with 3 additional
+cases (RED 2 failures; GREEN 47 relevant tests including the unchanged holdout).
+The actual compiler→hub→mapper→orb chain passed 9/9 tests. A disconnected-observer
+negative control fails exactly three cases, so the integration check detects a
+missing producer.
+
+Complete Android source/test compilation succeeded. The first full suite ran
+2,442 cases with one old idle-versus-thread-termination assertion race and 19
+existing skips. The corrected test adds a bounded join of the actual worker,
+keeps all old assertions, and passed a fixed 100-case repeat run. See
+`docs/evidence/calculation-shutdown-race-20261104` and the retained original run.
+
+The isolated combined branch integration/continuum-memory-avatar-hooks-20261104
+contains actual lazy Activity initialization and factory delegation. Its exact
+avatar/recovery input is f14ce8e9; weights remain unchanged. It is a provisional
+snapshot: other chats' later frozen heads still need reconciliation. Factory
+regressions passed 14/14; source contracts 3/3. The prepared two-case Robolectric
+Activity/Handler test remains NOT_RUN until the queued build gate executes.
+
+The independent static review found no confirmed unaddressed blocking issue in
+its reviewed scope; explicit partial-review limits and build-lock attempts are
+in `docs/evidence/memory-brain-20261104/final-review/REVIEW.md`. Final full combined
+Gradle/lint, device and APK gates remain open. This is not release acceptance.

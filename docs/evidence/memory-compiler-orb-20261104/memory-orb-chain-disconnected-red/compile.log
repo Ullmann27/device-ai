@@ -1,0 +1,4 @@
+[0.001s][warning][perf,memops] Cannot use file /tmp/hsperfdata_agent/6 because it is locked by another process (errno = 11)
+qa/memory-orb-chain-green/src/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt:34:24: warning: this class is not recommended for use in Kotlin. Use 'kotlin.Any' instead.
+    private val lock = Object()
+                       ^^^^^^

@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+..E.E
+Time: 0.161
+There were 2 failures:
+1) aPrivateHistoricalConflictCannotSurviveAsAPublicCurrentRecord(at.heinz.deviceai.cognitive.MemoryContextIdentityTest)
+java.lang.AssertionError: expected:<[]> but was:<[privacy-dispute]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryContextIdentityTest.aPrivateHistoricalConflictCannotSurviveAsAPublicCurrentRecord(MemoryContextIdentityTest.kt:28)
+2) aFilteredHistoricalAliasCannotHideAnAmbiguousCurrentIdentity(at.heinz.deviceai.cognitive.MemoryContextIdentityTest)
+java.lang.AssertionError: expected:<[safe]> but was:<[disputed, safe]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.MemoryContextIdentityTest.aFilteredHistoricalAliasCannotHideAnAmbiguousCurrentIdentity(MemoryContextIdentityTest.kt:16)
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+

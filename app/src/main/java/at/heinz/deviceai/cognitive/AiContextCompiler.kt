@@ -145,8 +145,9 @@ class AiContextCompiler(
         val scored = HybridMemoryRetriever.retrieve(
             query = input.userRequest,
             // Current-answer context must not promote superseded or contradicted
-            // memories. Historical evidence remains stored for explicit audit.
-            records = input.memories.filterNot {
+            // memories. Resolve identity first so an excluded historical/private
+            // alias cannot hide a conflict. Historical evidence stays stored.
+            records = HybridMemoryRetriever.unambiguousRecords(input.memories).filterNot {
                 it.validationState == ValidationState.CONTRADICTED ||
                     it.validationState == ValidationState.STALE
             },
