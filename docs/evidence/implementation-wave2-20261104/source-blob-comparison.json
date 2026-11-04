@@ -1,0 +1,1856 @@
+[
+  {
+    "pr": 490,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoop.kt",
+    "ref": "8d7b560ede4623c110f94138da183189991ed4a5",
+    "blob": "d9b47db526bb0179ed286f7d80b822fb5d3b08b4",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 490,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopCockpitBridge.kt",
+    "ref": "8d7b560ede4623c110f94138da183189991ed4a5",
+    "blob": "6ce348e8ba123796e14530319cac18c28bb14759",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 490,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopContracts.kt",
+    "ref": "8d7b560ede4623c110f94138da183189991ed4a5",
+    "blob": "c098bdf9d834329fd7992711d3def5814c7cb421",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 490,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/loop/CognitiveLoopGatePorts.kt",
+    "ref": "8d7b560ede4623c110f94138da183189991ed4a5",
+    "blob": "56052b55af5d268c71d0e12b01b2cb1ec66f516d",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "error": false,
+    "integrated_blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "error": false,
+    "integrated_blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "error": false,
+    "integrated_blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "error": false,
+    "integrated_blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "error": false,
+    "integrated_blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "error": false,
+    "integrated_blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "e4abba5b14ab66589934ea8a700aabbed1f16fbf",
+    "error": false,
+    "integrated_blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "718b044d2e0d0c1aa16e583fe5e36aa0a0f92b57",
+    "error": false,
+    "integrated_blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 489,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "bc2416abcb7f0a5d05219902588180b9b01c1313",
+    "blob": "8903eb31ebd254a3703034e894a4a3f0e5b3793e",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "b5ac4eae6ce16e159d24db29c479fc8fdaaa7848",
+    "error": false,
+    "integrated_blob": "9c0badbc838ec0b70bf6bbc47031f35cd2a6344e",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "6b7e9fb2a8514c2a4d6e4321171ad7aa20c63362",
+    "error": false,
+    "integrated_blob": "e1505ee18ffbdf91257118d4b63b85d97f59d3e0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "25b8181ce12bd3965228339a891ff79971e3ed02",
+    "error": false,
+    "integrated_blob": "8e456b71daa7768be91ea4754cef0e5a5a110f48",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "4b8828623674bc5611bca2ed70e1193c0ab60cc0",
+    "error": false,
+    "integrated_blob": "4bff9e83e91f414fd9266cbb7d69394a38183878",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "8693cfffa64c4b3bdd18166e82b5d4b18b97ea46",
+    "error": false,
+    "integrated_blob": "546832d4c4b7248fb865154879744eeb0be9ab05",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "82e6a0878a11e3cf983aca3846c44b7e4a1e878c",
+    "error": false,
+    "integrated_blob": "d64f6c74fa631f25d425853d07b99091b08a7a32",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "721a2176c52baebdf4d2898eddfcf59fa26840ef",
+    "error": false,
+    "integrated_blob": "d927e45c83ea075e78d2296c1c534eea5b2ab378",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "c84fe45f255fd9d07c02ad5c920b510fade1b0ef",
+    "error": false,
+    "integrated_blob": "c84fe45f255fd9d07c02ad5c920b510fade1b0ef",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "526eff82cea5c99456f0fef998a64c9c6a7c6bc0",
+    "error": false,
+    "integrated_blob": "526eff82cea5c99456f0fef998a64c9c6a7c6bc0",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "88f10a336a230a7a7e3c9c8a973830c6a8c833e6",
+    "error": false,
+    "integrated_blob": "602ab96b32e0886f0bad4d511d8cdbc9ef07822c",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitTimeline.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "7ab6e1af61d8515434c7664860427a95180a0ace",
+    "error": false,
+    "integrated_blob": "7ab6e1af61d8515434c7664860427a95180a0ace",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/KeyguardOwnerRecognitionSource.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "5ae4118625c1d33886b0ebaa7fa4d927a84c02ac",
+    "error": false,
+    "integrated_blob": "5ae4118625c1d33886b0ebaa7fa4d927a84c02ac",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "1725b957d5953feb3b9d3d70d4704a85e303d7dc",
+    "error": false,
+    "integrated_blob": "98e19b678a48b448738009db1d1322efd1e49440",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryStats.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "error": false,
+    "integrated_blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "error": false,
+    "integrated_blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "error": false,
+    "integrated_blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "error": false,
+    "integrated_blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "error": false,
+    "integrated_blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "error": false,
+    "integrated_blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "error": false,
+    "integrated_blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "error": false,
+    "integrated_blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "error": false,
+    "integrated_blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "f199128a534be1277dae0052e954e01927e8af8f",
+    "error": false,
+    "integrated_blob": "940dc5ab3644fe3c015936da2083daf0d37373db",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "error": false,
+    "integrated_blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "2dca8ba31c3c03ed8f7f6ff272768aab5032b913",
+    "error": false,
+    "integrated_blob": "de95e3e8c9bf6021b1a6d5cec62f5d640e136d65",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "d007ed9a7b7763ac400941708683359524928f67",
+    "error": false,
+    "integrated_blob": "d007ed9a7b7763ac400941708683359524928f67",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "3081ea1edb0b418de6357e53fe560002f407bc12",
+    "error": false,
+    "integrated_blob": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "8454277fb42603312e032d941825c0a38adbb68f",
+    "error": false,
+    "integrated_blob": "c161fff16bd91ae62c43937f80dfa2179109054d",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "b2eb9deb0d97752945b2629a3be2b27d4c6223a8",
+    "error": false,
+    "integrated_blob": "0052c24095dee7a11b498254bfc426294cc198b3",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElements.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "error": false,
+    "integrated_blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "error": false,
+    "integrated_blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceElements.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "18922ded58cda34a9f107e55c063eb7061cc2d8e",
+    "error": false,
+    "integrated_blob": "7ae8adb1aa1ac59b558646575f007326a3cb0448",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+    "error": false,
+    "integrated_blob": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisBloomPass.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "58b0380a4473415112ee19251f4bb3abed594689",
+    "error": false,
+    "integrated_blob": "fb0640fcf098070ad065a4b25b2b7681c3da7c92",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "2218a38a24971aa080897e1c9408939dbfa26545",
+    "error": false,
+    "integrated_blob": "717aee7ec7d841286c76c89e4a6eada0a00d5667",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "35b9aafb432a4bac4b01549736ebc71ff2ac63d6",
+    "error": false,
+    "integrated_blob": "b6f36ccdcafdd61248d5da258f4694cc7798591e",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDepthViews.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "bd5178069b6ac56adc433e982222d5b1c71c691a",
+    "error": false,
+    "integrated_blob": "bd5178069b6ac56adc433e982222d5b1c71c691a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "0382b2557fdb37dab9cab1e690cff425022477d1",
+    "error": false,
+    "integrated_blob": "d9756a5d82793c970b59b215150619472f8e6b69",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisGlassRenderer.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "417af19524929643c5d310bec0c1510a1782f833",
+    "error": false,
+    "integrated_blob": "ed4f109f6f135a93f4a47317260a17f2c4ea156f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "12d87194c7fffff2756bb3a9be5568ecde70f6aa",
+    "error": false,
+    "integrated_blob": "65ec533da173649d59a1ca1c2873ee95bf3c78c0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "b6c787906f717467202df96d8b3516c6a8822201",
+    "error": false,
+    "integrated_blob": "7190a00bc6c83aeb5bdcb1f019d6f068223719a8",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "baad1f65689bbbe2a0c3afd64f4704eb4cdb4aad",
+    "error": false,
+    "integrated_blob": "15f73ccc2a980a7177022504374bb772bfd612e2",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "868b6ca539b447d768576c74e45b532ec0e6cde1",
+    "error": false,
+    "integrated_blob": "15b42870e750b3c97177b46fdd202dd1689bb955",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "f55a14ffa78a1640f7654df0070f1c132019e3fe",
+    "error": false,
+    "integrated_blob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "ecac1cf917881f278ce3789646db86c27dc628c0",
+    "error": false,
+    "integrated_blob": "bb4e0a5cc54a241d003eecf5654542cb259c74ed",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "c6cc4635a1fbcb3d578cb9f919c525c7209366a8",
+    "error": false,
+    "integrated_blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 481,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+    "ref": "9db93c2e9e62aad7e2bcd9b67bdbbf52412d3b3c",
+    "blob": "620bef54a63bf229f8359addbc7c3150a0b0ac07",
+    "error": false,
+    "integrated_blob": "aecc68c386bb1bad3c70a8b314032c09bd7e0b9a",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "error": false,
+    "integrated_blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "error": false,
+    "integrated_blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "error": false,
+    "integrated_blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "error": false,
+    "integrated_blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "error": false,
+    "integrated_blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "error": false,
+    "integrated_blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "error": false,
+    "integrated_blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "8903eb31ebd254a3703034e894a4a3f0e5b3793e",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/JarvisGreetingCard.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "b6b05a71181a2df29140b5df4b4b563d4afa6072",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/JarvisUserCard.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "381e2e8dd75580dc57f90e294fe07d0fa149b2f9",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3AlarmScene.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "82ec6c440a7b7e08fa4ee4a2c9f3cc4edf2e8423",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3CalmNotice.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "4a4773f9e252672ee7338e32ef28cab2147233e7",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Contracts.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "08013088ca88143a06cb26fd5a29967c1b2ba6c2",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Curves.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "0331e4bd444769ff4da62ecf152977dbaf5a6aac",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3Pills.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "90fa81ed6df661a8b8204aff87b8c724102f9166",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 487,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/video3/Video3WarpScene.kt",
+    "ref": "85a0562d02542ff3cea020690d4d7f38bece2783",
+    "blob": "2bd5ab15507b524c3527a5f6e2fed3b2cd99c1da",
+    "error": false,
+    "integrated_blob": null,
+    "status": "ABSENT"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/RetrievalCalculationSource.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "a0d3a5147dfade3a7f16374c79266f33ce150bd1",
+    "error": false,
+    "integrated_blob": "b29da91abc5b65c2fe202ce5fdf3f62daf01fddc",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "7377f9b88f3e97d16139c400cca4600ac1ae222d",
+    "error": false,
+    "integrated_blob": "e6fea57dc6f4c0433fce7ce8bf1939eb992ac3d3",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "1e2b07adb1429c1524967f07d8621bba6122871d",
+    "error": false,
+    "integrated_blob": "1e2b07adb1429c1524967f07d8621bba6122871d",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "e273aa49d336e22ebc3de6e8d4c30151113045d0",
+    "error": false,
+    "integrated_blob": "e273aa49d336e22ebc3de6e8d4c30151113045d0",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "49c5a77c3193c8904fbda86108a7818ef0e8d413",
+    "error": false,
+    "integrated_blob": "a6182160fe41bb8bf0bf921478dc2d6c7a02d1a9",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "dc937be94786f0055e75af6b6aa4004f35e454ae",
+    "error": false,
+    "integrated_blob": "72b746b83dcfe490abdf525bce416dd734eeece2",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 484,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "ref": "7c5facb2a6cc4d415809796746f737219738bcec",
+    "blob": "8f4004a244aea31406199cfd3fd15c8c8c33726e",
+    "error": false,
+    "integrated_blob": "7190a00bc6c83aeb5bdcb1f019d6f068223719a8",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "6deae1b5aab3a3044f540075036943312a57fc99",
+    "error": false,
+    "integrated_blob": "9c0badbc838ec0b70bf6bbc47031f35cd2a6344e",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "d8c4ccb8262a2e2b067afdf799d9ebee25f60b6a",
+    "error": false,
+    "integrated_blob": "d8c4ccb8262a2e2b067afdf799d9ebee25f60b6a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "7fec90c29f6a68698c9acf7b3fe28660cb51b139",
+    "error": false,
+    "integrated_blob": "7fec90c29f6a68698c9acf7b3fe28660cb51b139",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/ToolOutputCap.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "1f66e274643d2a7877210ef18d1b48f8fa78eb04",
+    "error": false,
+    "integrated_blob": "1f66e274643d2a7877210ef18d1b48f8fa78eb04",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "ba66eef635ea8beb83b36cb3372e6b923e9b7a9f",
+    "error": false,
+    "integrated_blob": "ba66eef635ea8beb83b36cb3372e6b923e9b7a9f",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumLocalAgentModel.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "eb8a093c7e603560b05c0c956077a5b7199fe00e",
+    "error": false,
+    "integrated_blob": "eb8a093c7e603560b05c0c956077a5b7199fe00e",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/ExternalContentActionGuard.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "16f2ac908edf6ae49b24269640cc7290fa07f895",
+    "error": false,
+    "integrated_blob": "5da6aa17e839e4abb2c04083e09face46a4bcec3",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechInputPolicy.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "31bae66b06a1e9da439f4b9206f9b0288f18100a",
+    "error": false,
+    "integrated_blob": "32e6aa473def84a79889936bea02481823e39532",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelLoadAdmission.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "bc304354ca22f6bffd52f0b24509f93bb7eaa43e",
+    "error": false,
+    "integrated_blob": "bc304354ca22f6bffd52f0b24509f93bb7eaa43e",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolContinuation.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "13c1d349f6d7ef08659187d4f321ff34646728c0",
+    "error": false,
+    "integrated_blob": "13c1d349f6d7ef08659187d4f321ff34646728c0",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 372,
+    "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalTurnModelBinding.kt",
+    "ref": "86f59e68ffc4d31ee9451418f574226ba48b1470",
+    "blob": "46cde51ad00e665944b3176ebd8dd1a980059fc6",
+    "error": false,
+    "integrated_blob": "46cde51ad00e665944b3176ebd8dd1a980059fc6",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "eff16cb313d18976ba8c18000b0e99cd1b42e1b0",
+    "error": false,
+    "integrated_blob": "9c0badbc838ec0b70bf6bbc47031f35cd2a6344e",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "b6a8fbb247b59223e49ae368877d17b4f1188b1f",
+    "error": false,
+    "integrated_blob": "eed9082a47de7612267bdfa7d57e478d626ca530",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumBotRosterDialog.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "10e32e05ceb1e7db9b15af913dc0141c156f9339",
+    "error": false,
+    "integrated_blob": "0a17ef7da5f33a6503981604720c9401d42c9574",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "b213e1235c46d422ca0b9140b4bc47e8dc6d941b",
+    "error": false,
+    "integrated_blob": "e1505ee18ffbdf91257118d4b63b85d97f59d3e0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "daf6da7641f70890c14dfe4ee41cdeab3b2d61e9",
+    "error": false,
+    "integrated_blob": "8181cd16e241481837d6489d3fe35acac7ad6c7c",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarGlbContract.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "b7260f964d6a991b98213f852f751a30344bb7fc",
+    "error": false,
+    "integrated_blob": "ba4cc5c77e1c67fb8882f17ebf0b7b39bd0770d9",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "7d6f068f3958fdbd23d6dd23641f159e59c0a104",
+    "error": false,
+    "integrated_blob": "d64f6c74fa631f25d425853d07b99091b08a7a32",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefBotProfileStore.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "824e1455982be5b1c252e9b4c3ca5751dd6a1da2",
+    "error": false,
+    "integrated_blob": "824e1455982be5b1c252e9b4c3ca5751dd6a1da2",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "721a2176c52baebdf4d2898eddfcf59fa26840ef",
+    "error": false,
+    "integrated_blob": "d927e45c83ea075e78d2296c1c534eea5b2ab378",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "987e650d8940284ead3fda7fdbbd0bbf648befb9",
+    "error": false,
+    "integrated_blob": "c84fe45f255fd9d07c02ad5c920b510fade1b0ef",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "ce0c18b002537afc30023a1ddb74906a0e849204",
+    "error": false,
+    "integrated_blob": "526eff82cea5c99456f0fef998a64c9c6a7c6bc0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "7789a1d5f7d92e35f2c8dc85310b5dae39370c9a",
+    "error": false,
+    "integrated_blob": "602ab96b32e0886f0bad4d511d8cdbc9ef07822c",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "1725b957d5953feb3b9d3d70d4704a85e303d7dc",
+    "error": false,
+    "integrated_blob": "98e19b678a48b448738009db1d1322efd1e49440",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechInputPolicy.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "12625cb3f72c47f6fb057d02d1fb5aacab8f4cf1",
+    "error": false,
+    "integrated_blob": "32e6aa473def84a79889936bea02481823e39532",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalSpeechSession.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "a8ae96185268ca25ad7cd481beec3b8d99b78a3c",
+    "error": false,
+    "integrated_blob": "a8ae96185268ca25ad7cd481beec3b8d99b78a3c",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/cognitive/OwnerCapabilityReply.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "5c52f132be3c71fddd3e5a790c1e25648c9c16a8",
+    "error": false,
+    "integrated_blob": "5c52f132be3c71fddd3e5a790c1e25648c9c16a8",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryStats.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "error": false,
+    "integrated_blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "976dfee69bf6340899d7ec210d4243a53f95df76",
+    "error": false,
+    "integrated_blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "29cfdcf858ea687bd4007f5f9631c508921a7a74",
+    "error": false,
+    "integrated_blob": "940dc5ab3644fe3c015936da2083daf0d37373db",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "error": false,
+    "integrated_blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "11ac55e93de09d621756f44a21b1397659fde1f2",
+    "error": false,
+    "integrated_blob": "de95e3e8c9bf6021b1a6d5cec62f5d640e136d65",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "6980a15508a9204a561fb7151add80f4a98cdcde",
+    "error": false,
+    "integrated_blob": "d007ed9a7b7763ac400941708683359524928f67",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "8dfe6400c71afc2fa8d5f291a5a1a961d4cb5bc4",
+    "error": false,
+    "integrated_blob": "8dfe6400c71afc2fa8d5f291a5a1a961d4cb5bc4",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "3081ea1edb0b418de6357e53fe560002f407bc12",
+    "error": false,
+    "integrated_blob": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "8454277fb42603312e032d941825c0a38adbb68f",
+    "error": false,
+    "integrated_blob": "c161fff16bd91ae62c43937f80dfa2179109054d",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "527216365a5508e34c83381f765b5616c5d7b50f",
+    "error": false,
+    "integrated_blob": "0052c24095dee7a11b498254bfc426294cc198b3",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElements.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "error": false,
+    "integrated_blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "error": false,
+    "integrated_blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceElements.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "e442e845785e289f9e60b542576f8da9133ff3c3",
+    "error": false,
+    "integrated_blob": "7ae8adb1aa1ac59b558646575f007326a3cb0448",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "d4be3c2ee3ea03b824be4b75fe0996b1013a31f5",
+    "error": false,
+    "integrated_blob": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSurfaces.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "01e10c3dbfc8377b0304648426c680771ba7978b",
+    "error": false,
+    "integrated_blob": "01e10c3dbfc8377b0304648426c680771ba7978b",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumTheme.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "684699818cc387d845681955fae2b7316a44f922",
+    "error": false,
+    "integrated_blob": "684699818cc387d845681955fae2b7316a44f922",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumWideElements.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "4eebe9097a1f7f5f7fdebbd35f1e143a715ed79f",
+    "error": false,
+    "integrated_blob": "4eebe9097a1f7f5f7fdebbd35f1e143a715ed79f",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisBloomPass.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "fb0640fcf098070ad065a4b25b2b7681c3da7c92",
+    "error": false,
+    "integrated_blob": "fb0640fcf098070ad065a4b25b2b7681c3da7c92",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "2379e22a107ee165baf06404b3900fa3460e2252",
+    "error": false,
+    "integrated_blob": "d9756a5d82793c970b59b215150619472f8e6b69",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisGlassRenderer.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "b182a28120fa19e4f407a3d8db3dea9cdf0d1c80",
+    "error": false,
+    "integrated_blob": "ed4f109f6f135a93f4a47317260a17f2c4ea156f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "b713b6eea6e8d8cba333ddd0d24e3c12fa39b074",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "1d5c5733de91bd0a5f4e442ebd4a07cb114d479f",
+    "error": false,
+    "integrated_blob": "65ec533da173649d59a1ca1c2873ee95bf3c78c0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "6f9a02b34eef744c1982b4f2adc057ae64a6bfbe",
+    "error": false,
+    "integrated_blob": "15b42870e750b3c97177b46fdd202dd1689bb955",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "801e4fb239a93f6131be8e37ca27d3215230a143",
+    "error": false,
+    "integrated_blob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "39d55fafe949b529a18efcf8c142988f3f43b845",
+    "error": false,
+    "integrated_blob": "bb4e0a5cc54a241d003eecf5654542cb259c74ed",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "c6cc4635a1fbcb3d578cb9f919c525c7209366a8",
+    "error": false,
+    "integrated_blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 479,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+    "ref": "34d3488b3444a34e08f46f858b099adcff9cfd17",
+    "blob": "6dde6f9d9fc2ba5e0cadb69e81f2de26ffa26b49",
+    "error": false,
+    "integrated_blob": "aecc68c386bb1bad3c70a8b314032c09bd7e0b9a",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "7e96b114c915eba01bdc260a8b992d7a1ecfc84e",
+    "error": false,
+    "integrated_blob": "f08fb269dfa84857a761a990f535fb4e0c9b572f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "78d916288d5d903d0c71c75a96a5f4604380197a",
+    "error": false,
+    "integrated_blob": "2477653cf478bf379d8181c2c4c16e6cafc62066",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "8e51c6780fb719745c61fce7b2cf6be3ca70529c",
+    "error": false,
+    "integrated_blob": "b4473ca763402caa66d19142507ea9fa65bf62fd",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryEvents.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "e6fea57dc6f4c0433fce7ce8bf1939eb992ac3d3",
+    "error": false,
+    "integrated_blob": "e6fea57dc6f4c0433fce7ce8bf1939eb992ac3d3",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryLayers.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "e1ebe8ecc7efe47633cb04877fc0aa734a66b798",
+    "error": false,
+    "integrated_blob": "e1ebe8ecc7efe47633cb04877fc0aa734a66b798",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "ee0a2c7bcd8e6145a50acdf2cfdb10d9eeba8e6c",
+    "error": false,
+    "integrated_blob": "1e2b07adb1429c1524967f07d8621bba6122871d",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryStats.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "fd2892016726587cac3310b5e141ed54840a8cbf",
+    "error": false,
+    "integrated_blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSkillLibrary.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "c2a2261a9ae087029be6e68395dcfd69be46bde9",
+    "error": false,
+    "integrated_blob": "c2a2261a9ae087029be6e68395dcfd69be46bde9",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemory.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "55a91c13dbea469270dc978720386b5eca4f4404",
+    "error": false,
+    "integrated_blob": "6e036bfc7a6cb71e6145eb35ed146b212baccd5b",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumTemporalMemorySpecialist.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "c76ffa3d4cc51a578cc7ea2b4bf91eb4c7cdec06",
+    "error": false,
+    "integrated_blob": "c76ffa3d4cc51a578cc7ea2b4bf91eb4c7cdec06",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumThinkingMemory.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "057b1f2fb919082b8ce501f040431bdb4fd4bda5",
+    "error": false,
+    "integrated_blob": "d652bc7eb46a46f7880569b4e530ebd67b0eb598",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/OwnerStatementModality.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "89816254adbbf5a906bf603a24b42efb6a05480c",
+    "error": false,
+    "integrated_blob": "89816254adbbf5a906bf603a24b42efb6a05480c",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/PersonalLearningTransfer.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "f0102f716a1e82f3ce255d84ef0cef3ce7859363",
+    "error": false,
+    "integrated_blob": "3a9af4f99645818374143f65818bd5f12ba99caf",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 371,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/SignedOwnerCorrectionJournal.kt",
+    "ref": "8948d2d6ee74916c68bbd1631f8f899831406612",
+    "blob": "6277c8977f73bb1a9675317ca0564d4c75b42aae",
+    "error": false,
+    "integrated_blob": "6277c8977f73bb1a9675317ca0564d4c75b42aae",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "eff16cb313d18976ba8c18000b0e99cd1b42e1b0",
+    "error": false,
+    "integrated_blob": "9c0badbc838ec0b70bf6bbc47031f35cd2a6344e",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "b213e1235c46d422ca0b9140b4bc47e8dc6d941b",
+    "error": false,
+    "integrated_blob": "e1505ee18ffbdf91257118d4b63b85d97f59d3e0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "ae5244662af31c75975366186e229eb2bb67151b",
+    "error": false,
+    "integrated_blob": "8e456b71daa7768be91ea4754cef0e5a5a110f48",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar/JarvisHoloAvatar.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "4b8828623674bc5611bca2ed70e1193c0ab60cc0",
+    "error": false,
+    "integrated_blob": "4bff9e83e91f414fd9266cbb7d69394a38183878",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "8693cfffa64c4b3bdd18166e82b5d4b18b97ea46",
+    "error": false,
+    "integrated_blob": "546832d4c4b7248fb865154879744eeb0be9ab05",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "82e6a0878a11e3cf983aca3846c44b7e4a1e878c",
+    "error": false,
+    "integrated_blob": "d64f6c74fa631f25d425853d07b99091b08a7a32",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "721a2176c52baebdf4d2898eddfcf59fa26840ef",
+    "error": false,
+    "integrated_blob": "d927e45c83ea075e78d2296c1c534eea5b2ab378",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "987e650d8940284ead3fda7fdbbd0bbf648befb9",
+    "error": false,
+    "integrated_blob": "c84fe45f255fd9d07c02ad5c920b510fade1b0ef",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationTriggers.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "ce0c18b002537afc30023a1ddb74906a0e849204",
+    "error": false,
+    "integrated_blob": "526eff82cea5c99456f0fef998a64c9c6a7c6bc0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "7789a1d5f7d92e35f2c8dc85310b5dae39370c9a",
+    "error": false,
+    "integrated_blob": "602ab96b32e0886f0bad4d511d8cdbc9ef07822c",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "1725b957d5953feb3b9d3d70d4704a85e303d7dc",
+    "error": false,
+    "integrated_blob": "98e19b678a48b448738009db1d1322efd1e49440",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryStats.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "error": false,
+    "integrated_blob": "d091e9ad46b05eb0e2478b70933c8670f078d394",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "error": false,
+    "integrated_blob": "9484eb024197dec84ca6632e3c5683d32d50bc9a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/DampedSpring.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "error": false,
+    "integrated_blob": "bd86f2c7c74c215bb5e03b7b4e7d0e9d2dc6664d",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Easings.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "error": false,
+    "integrated_blob": "cd7d3bbff80b6c26028f8ea84a69b14a0160f67b",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "error": false,
+    "integrated_blob": "737e3f472eb5db73afa541e2441d21186c8844aa",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "976dfee69bf6340899d7ec210d4243a53f95df76",
+    "error": false,
+    "integrated_blob": "d1bc2337c1385a7b4aee853a44d7decda345a1bb",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/MotionPresets.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "error": false,
+    "integrated_blob": "bf8d9c4e7439d3813f18d57d7761852618739633",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/Staggers.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "error": false,
+    "integrated_blob": "5144a759bf2cb858e7f9af26e8ac22235cc3405f",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/motion/TrackTimeline.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "error": false,
+    "integrated_blob": "96cb497bb2dc4ff7fc5f668e383ed20cf856a140",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/CockpitAnimationPresenter.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "29cfdcf858ea687bd4007f5f9631c508921a7a74",
+    "error": false,
+    "integrated_blob": "940dc5ab3644fe3c015936da2083daf0d37373db",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumCockpitPresentation.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "error": false,
+    "integrated_blob": "581a7129aae6068acc8a9f8596aea0d83ac89d42",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "11ac55e93de09d621756f44a21b1397659fde1f2",
+    "error": false,
+    "integrated_blob": "de95e3e8c9bf6021b1a6d5cec62f5d640e136d65",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "d007ed9a7b7763ac400941708683359524928f67",
+    "error": false,
+    "integrated_blob": "d007ed9a7b7763ac400941708683359524928f67",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "3081ea1edb0b418de6357e53fe560002f407bc12",
+    "error": false,
+    "integrated_blob": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeScreen.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "8454277fb42603312e032d941825c0a38adbb68f",
+    "error": false,
+    "integrated_blob": "c161fff16bd91ae62c43937f80dfa2179109054d",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "527216365a5508e34c83381f765b5616c5d7b50f",
+    "error": false,
+    "integrated_blob": "0052c24095dee7a11b498254bfc426294cc198b3",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElements.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "error": false,
+    "integrated_blob": "7525fb1a1d728c31c2c425e41dc06be7cdcfca32",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "error": false,
+    "integrated_blob": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "d4be3c2ee3ea03b824be4b75fe0996b1013a31f5",
+    "error": false,
+    "integrated_blob": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisBloomPass.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "58b0380a4473415112ee19251f4bb3abed594689",
+    "error": false,
+    "integrated_blob": "fb0640fcf098070ad065a4b25b2b7681c3da7c92",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDepthViews.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "bd5178069b6ac56adc433e982222d5b1c71c691a",
+    "error": false,
+    "integrated_blob": "bd5178069b6ac56adc433e982222d5b1c71c691a",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "0382b2557fdb37dab9cab1e690cff425022477d1",
+    "error": false,
+    "integrated_blob": "d9756a5d82793c970b59b215150619472f8e6b69",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisGlassRenderer.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "417af19524929643c5d310bec0c1510a1782f833",
+    "error": false,
+    "integrated_blob": "ed4f109f6f135a93f4a47317260a17f2c4ea156f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "IDENTICAL"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "12d87194c7fffff2756bb3a9be5568ecde70f6aa",
+    "error": false,
+    "integrated_blob": "65ec533da173649d59a1ca1c2873ee95bf3c78c0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "b6c787906f717467202df96d8b3516c6a8822201",
+    "error": false,
+    "integrated_blob": "7190a00bc6c83aeb5bdcb1f019d6f068223719a8",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceView.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "baad1f65689bbbe2a0c3afd64f4704eb4cdb4aad",
+    "error": false,
+    "integrated_blob": "15f73ccc2a980a7177022504374bb772bfd612e2",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellContent.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "6f9a02b34eef744c1982b4f2adc057ae64a6bfbe",
+    "error": false,
+    "integrated_blob": "15b42870e750b3c97177b46fdd202dd1689bb955",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "801e4fb239a93f6131be8e37ca27d3215230a143",
+    "error": false,
+    "integrated_blob": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "ecac1cf917881f278ce3789646db86c27dc628c0",
+    "error": false,
+    "integrated_blob": "bb4e0a5cc54a241d003eecf5654542cb259c74ed",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "c6cc4635a1fbcb3d578cb9f919c525c7209366a8",
+    "error": false,
+    "integrated_blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 482,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisTiles.kt",
+    "ref": "e9659ff553ce90e1248123767930e3447e63380c",
+    "blob": "6dde6f9d9fc2ba5e0cadb69e81f2de26ffa26b49",
+    "error": false,
+    "integrated_blob": "aecc68c386bb1bad3c70a8b314032c09bd7e0b9a",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/AndroidOnDeviceSpeechInput.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "c99f1eb9c7017ec3a03300176ed12c223b8c0e4f",
+    "error": false,
+    "integrated_blob": "eed9082a47de7612267bdfa7d57e478d626ca530",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/cockpit/SafePillActionGate.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "eb2cd8569f1cff471327c3691dd2bae3ac4f339f",
+    "error": false,
+    "integrated_blob": "dc530380e967ce9826a774d61a50e9d48a8b589c",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisBloomPass.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "ab4517e5762d1e223b67145a40d9c5fed5834639",
+    "error": false,
+    "integrated_blob": "fb0640fcf098070ad065a4b25b2b7681c3da7c92",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "0382b2557fdb37dab9cab1e690cff425022477d1",
+    "error": false,
+    "integrated_blob": "d9756a5d82793c970b59b215150619472f8e6b69",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisGlassRenderer.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "417af19524929643c5d310bec0c1510a1782f833",
+    "error": false,
+    "integrated_blob": "ed4f109f6f135a93f4a47317260a17f2c4ea156f",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisMotion.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "743e005b31f31594f28c2a9f938556e02259ecdd",
+    "error": false,
+    "integrated_blob": "aafe2aad5552cbb1f96f435ca73cd52ce581f1ee",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisNeon.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "bf046d0188da8cd9806dd184edb08fb0fd6754d2",
+    "error": false,
+    "integrated_blob": "65ec533da173649d59a1ca1c2873ee95bf3c78c0",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisSequenceEffects.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "182d81b6500cb4c2360d2f5474e9343078196612",
+    "error": false,
+    "integrated_blob": "7190a00bc6c83aeb5bdcb1f019d6f068223719a8",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellRenderer.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "ecac1cf917881f278ce3789646db86c27dc628c0",
+    "error": false,
+    "integrated_blob": "bb4e0a5cc54a241d003eecf5654542cb259c74ed",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisShellView.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "c6cc4635a1fbcb3d578cb9f919c525c7209366a8",
+    "error": false,
+    "integrated_blob": "891319e0cbb4a59225702e41083f5bf3925df1ec",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  },
+  {
+    "pr": 485,
+    "path": "app/src/main/java/at/heinz/deviceai/ui/LocalModelStatusPresentation.kt",
+    "ref": "cee730429e2d2c183e085811a3b0ca43795b23eb",
+    "blob": "d77dd55903cc567bbd090ba1a39f600cb8537919",
+    "error": false,
+    "integrated_blob": "7a786f9978d46008cbdfc885ac672e2bf4a8dcdc",
+    "status": "DIFFERENT_REQUIRES_SEMANTIC_REVIEW"
+  }
+]
