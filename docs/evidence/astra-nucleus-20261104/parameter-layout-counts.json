@@ -1,0 +1,1618 @@
+{
+  "source_repository": "Ullmann27/device-ai",
+  "source_commit": "ee5779725690c573d3310c061c6e2e6faf5f0a8b",
+  "source_file": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+  "method": "Independent enumeration of every tensor in the MINGRU branch of LmConfig.layout(); tied output projection counted once. Arithmetic executed by coordinator; no model or training run.",
+  "formula": "V*D + D + L*(4*D^2 + 2*D*M + M + 4*D)",
+  "checkpoint_bytes_inspected": false,
+  "quality_measured": false,
+  "fold7_measured": false,
+  "counts": [
+    {
+      "vocab": 512,
+      "dim": 64,
+      "layers": 2,
+      "mlp": 256,
+      "tensor_count": 24,
+      "architecture_parameters": 132160,
+      "float32_payload_bytes": 528640,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 64
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l0.wz",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l0.wc",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l0.wg",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l0.wo",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l0.w1",
+          "rows": 64,
+          "cols": 256
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l0.w2",
+          "rows": 256,
+          "cols": 64
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l1.wz",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l1.wc",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l1.wg",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l1.wo",
+          "rows": 64,
+          "cols": 64
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "l1.w1",
+          "rows": 64,
+          "cols": 256
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l1.w2",
+          "rows": 256,
+          "cols": 64
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 64
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 64
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 128,
+      "layers": 2,
+      "mlp": 512,
+      "tensor_count": 24,
+      "architecture_parameters": 460928,
+      "float32_payload_bytes": 1843712,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 128
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l0.wz",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l0.wc",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l0.wg",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l0.wo",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l0.w1",
+          "rows": 128,
+          "cols": 512
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w2",
+          "rows": 512,
+          "cols": 128
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l1.wz",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l1.wc",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l1.wg",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l1.wo",
+          "rows": 128,
+          "cols": 128
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "l1.w1",
+          "rows": 128,
+          "cols": 512
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w2",
+          "rows": 512,
+          "cols": 128
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 128
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 128
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 256,
+      "layers": 2,
+      "mlp": 1024,
+      "tensor_count": 24,
+      "architecture_parameters": 1708288,
+      "float32_payload_bytes": 6833152,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 256
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l0.wz",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l0.wc",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l0.wg",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l0.wo",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l0.w1",
+          "rows": 256,
+          "cols": 1024
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 1024
+        },
+        {
+          "name": "l0.w2",
+          "rows": 1024,
+          "cols": 256
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l1.wz",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l1.wc",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l1.wg",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l1.wo",
+          "rows": 256,
+          "cols": 256
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "l1.w1",
+          "rows": 256,
+          "cols": 1024
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 1024
+        },
+        {
+          "name": "l1.w2",
+          "rows": 1024,
+          "cols": 256
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 256
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 256
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 512,
+      "layers": 2,
+      "mlp": 2048,
+      "tensor_count": 24,
+      "architecture_parameters": 6562304,
+      "float32_payload_bytes": 26249216,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l0.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l1.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 512
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 512,
+      "layers": 3,
+      "mlp": 2048,
+      "tensor_count": 35,
+      "architecture_parameters": 9712128,
+      "float32_payload_bytes": 38848512,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l0.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l1.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l2.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l2.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l2.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 512
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 512,
+      "layers": 4,
+      "mlp": 2048,
+      "tensor_count": 46,
+      "architecture_parameters": 12861952,
+      "float32_payload_bytes": 51447808,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l0.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l1.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l2.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l2.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l2.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l3.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l3.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l3.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 512
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 512,
+      "layers": 5,
+      "mlp": 2048,
+      "tensor_count": 57,
+      "architecture_parameters": 16011776,
+      "float32_payload_bytes": 64047104,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l0.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l1.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l2.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l2.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l2.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l3.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l3.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l3.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l4.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l4.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l4.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 512
+        }
+      ]
+    },
+    {
+      "vocab": 512,
+      "dim": 512,
+      "layers": 6,
+      "mlp": 2048,
+      "tensor_count": 68,
+      "architecture_parameters": 19161600,
+      "float32_payload_bytes": 76646400,
+      "formula_agrees": true,
+      "tensors": [
+        {
+          "name": "tok",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l0.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l0.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l0.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l0.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l0.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l1.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l1.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l1.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l1.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l1.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l2.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l2.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l2.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l2.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l2.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l3.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l3.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l3.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l3.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l3.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l4.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l4.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l4.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l4.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l4.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l5.n1",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l5.wz",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l5.bz",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l5.wc",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l5.wg",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l5.wo",
+          "rows": 512,
+          "cols": 512
+        },
+        {
+          "name": "l5.n2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "l5.w1",
+          "rows": 512,
+          "cols": 2048
+        },
+        {
+          "name": "l5.b1",
+          "rows": 1,
+          "cols": 2048
+        },
+        {
+          "name": "l5.w2",
+          "rows": 2048,
+          "cols": 512
+        },
+        {
+          "name": "l5.b2",
+          "rows": 1,
+          "cols": 512
+        },
+        {
+          "name": "nf",
+          "rows": 1,
+          "cols": 512
+        }
+      ]
+    }
+  ]
+}
