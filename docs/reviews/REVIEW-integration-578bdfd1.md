@@ -21,7 +21,7 @@ Reviewed: `578bdfd12f896cc990bf1a043bc1b248ba3adb6d` (verified via fresh detache
 - Manifest vs my 59344fa4: `CAMERA` + two `uses-feature required=false` – from 46b71e06 (2026-11-03 21:39 Wien, already in dcde4b6e), not from #486.
 - AgentActivity (merge diff vs first parent): rail rebuilt on `JarvisMenuNavigator`, camera drift add/close, landscape action bar → `JarvisCockpitActions.perform`, which only calls `navigator.navigate(target)` (`JarvisMenu.kt:119-122`); unknown target → no-op (`:95`). No tool execution, network or permission added. STOP paths untouched by the merge (`devStopButton` `AgentActivity.kt:456`, send-button stop `:3402`, `voiceEngine?.stop()` sites). Fold handling present (`:775-853`, rail on open Fold7).
 - CockpitAnimationPresenter: constructor kept (#481) + optional `drift`; UI only.
-- No secrets/keys/URLs in the merge diff (grep of diff: none found by reading).
+- No secrets/keys/URLs in the merge diff (grep `api_key|secret|token|password|http(s)://` on added lines: only design-token/colour comments, no credentials, no URLs).
 - After 249a939d only `578bdfd1` (docs/BOT-HANDOFF.md, 7 lines).
 
 ### 3) Tests actually run (worktree @578bdfd1, targeted only, no full suite, no lint, no assemble)
