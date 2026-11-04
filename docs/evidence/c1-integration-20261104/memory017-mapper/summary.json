@@ -1,0 +1,91 @@
+{
+  "taskId": "C1-MEMORY-017B",
+  "baseLocal": "57656c6a5287c37a8f4357dabe6d066e63aec235",
+  "baseRemote": "f13578bdab05279720fe4a3d6ae0126a208c8465",
+  "baseTree": "440f395289756ac6ec4f6c26f661c38895e24e12",
+  "source": {
+    "pr": 522,
+    "currentPublicHead": "eadc72bac95f8b1a554a59e5baff624977b09f73",
+    "publicTestedCommit": "3704b62585c6ce6881ab0dfe0c9947cddd1531c2",
+    "localTestedCommit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+    "testedTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+    "localEvidenceCommit": "61b961bfcd63cf572a06a7d5b31bf2fe622e7ae3",
+    "evidenceTree": "187aab3fe44a94b9b01451a867589c8e967cc641",
+    "testedAndEvidenceAppTree": "befaef97b94b38ebeba65c0160e332d747dafd7a",
+    "evidenceOnlyFinalDelta": true,
+    "testsFrozenBeforeRepair": {
+      "public": "33706d166afafe8f93d3b9aa1db34190f950eb68",
+      "local": "10ecc70a926c6ddb22673cabc4e53d880cf48b52",
+      "tree": "b07ec801de64912f12610d86d11f93c1fa5b89b9"
+    },
+    "canonicalHandoffUrl": "https://github.com/Ullmann27/device-ai/blob/eadc72bac95f8b1a554a59e5baff624977b09f73/docs/research/omega/MEMORY-BRAIN-R3-HANDOFF-20261104.md"
+  },
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "action": "modify",
+      "base": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "98e19b678a48b448738009db1d1322efd1e49440",
+        "sha256": "4dff8d890a476cf92d7bfbc0e13f30cc8e99036f8f284a46a03863b572762181",
+        "bytes": 4248
+      },
+      "target": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "42f4714c72ee057566be54171f01703f39d48aaf",
+        "sha256": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81",
+        "bytes": 4815
+      },
+      "targetSourceUrl": "https://github.com/Ullmann27/device-ai/blob/3704b62585c6ce6881ab0dfe0c9947cddd1531c2/app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "finalSourceIdentical": true,
+      "baseMatchesOriginalRepairBase": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+      "action": "add",
+      "base": null,
+      "target": {
+        "mode": "100644",
+        "kind": "blob",
+        "blob": "b8803c074ad56c6b51d1b587818ae4bc5e1003dd",
+        "sha256": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690",
+        "bytes": 8428
+      },
+      "targetSourceUrl": "https://github.com/Ullmann27/device-ai/blob/3704b62585c6ce6881ab0dfe0c9947cddd1531c2/app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+      "finalSourceIdentical": true,
+      "baseMatchesOriginalRepairBase": true
+    }
+  ],
+  "patch": {
+    "path": "C1-MEMORY-017-mapper.patch",
+    "sha256": "9dd1d877b0f24ce710118a3907728318482f910305dda60c4248da797a238d3b",
+    "bytes": 11850,
+    "files": [
+      "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+      "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt"
+    ],
+    "inMemoryExactReconstruction": true
+  },
+  "ownApplyCheckExit": 0,
+  "ownApplyExit": 0,
+  "ownRuntime": "PENDING_ACTUAL_ANDROID_MAPPER_SOURCE_FACTORY_ACTIVITY_FOCUS",
+  "expectedClassesBySource": {
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest": 4,
+    "at.heinz.deviceai.cockpit.MemoryEventSourceTest": 2,
+    "at.heinz.deviceai.cockpit.RealMemoryEventSourceTest": 3,
+    "at.heinz.deviceai.cockpit.MemoryEventFactoryIntegrationTest": 2,
+    "at.heinz.deviceai.cockpit.ContinuumMemoryEventSourceIntegrationTest": 10,
+    "at.heinz.deviceai.MemoryRecallActivityUiTest": 2
+  },
+  "completeOriginalIntakeSha256": "d56a8b3a541e02903a201bd26987b3662c8f4eb9d61f8985f541b47fb86c8d27",
+  "boundaries": [
+    "Atomic immutable stored event/count pair; Int.MAX_VALUE saturates",
+    "Callback detach prevents subsequent emissions, not an already-begun global bus callback",
+    "No mapper lock spans bus callbacks",
+    "No demonstrated ledger data loss or real-model/device claim",
+    "Factory/interface/Activity unchanged"
+  ],
+  "rollback": "Revert only MemoryEventSource mapper region and new lifecycle test, preserving017A and all negative evidence."
+}

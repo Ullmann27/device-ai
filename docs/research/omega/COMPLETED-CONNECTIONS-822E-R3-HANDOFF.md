@@ -38,8 +38,6 @@ The memory agent independently reviewed the bounded practice/Activity integratio
 
 New practice histories require the V3-capable reader once used; ordinary histories remain V2. No app-data migration or deletion is performed by source integration. The inherited avatar rig-window disagreement and prior unrelated secret-redaction edge remain outside these bounded fixes.
 
-## Continuation and rollback
-
 ## First actual common gate and bounded follow-up
 
 Frozen local `f3e70a45469a03df7032ce6d71c91a7525b91eb2` equals published `d2aedf2c272bfa20d4e1930a0f65277c3f02be0f`, complete tree `fdae24c1778b456509ab588120b8abdcf9f93aa8`. Both common Node profiles completed with unchanged source: critical **135 PASS / 0 FAIL / 0 SKIP**, full-node **2,362 PASS / 0 FAIL / 31 SKIP**. These overlap and are not added.
@@ -55,5 +53,19 @@ The three agents then delivered bounded responses to the actual stacks:
 - One stale avatar-slot failure: cancel the named callback on detach, recheck window attachment and the registered adapter's live-surface parent before docking. The direct ownership rejection stays intact. Three new UI cases cover stale callbacks, foreign ownership and positive redocking. The originally failing AdaptiveCockpit test remains unchanged.
 
 The original node PASS applies to the first frozen source. Fresh Android and appropriate Node gates are required on the repaired combined source; no result is inherited across these changes.
+
+## Second actual canonical gate
+
+Frozen local `a6fac1f8be82bdef9c34aff726d20ebc949e575b` equals published `ca80459a3f6695c8fecff4a217fbe93318452121`, complete tree `28ccf4d90f5e58926b24c35d360a36dad26d0e04`. The configured Android Unit/UI run used the canonical standalone-QA flags, code41 only as a compilation/test parameter, and no class filters: **3,011 total / 2,984 PASS / 8 FAIL / 19 SKIP**, exit1. All 531 fresh XML reports are retained. NewApi lint was not reached after the test failure. All eleven mandatory suites and five minimum-case requirements passed without skips.
+
+Both fresh Node profiles passed on this same unchanged source: critical **135 PASS / 0 FAIL / 0 SKIP**, full-node **2,362 PASS / 0 FAIL / 31 SKIP**. Original commands, actual compiler identity, source manifests and 561 raw evidence files are preserved in `coordinator/second-run-evidence.tar.xz`; adjacent manifest and summary bind every file and result to this source. Counts overlap and are never added.
+
+The earlier avatar ownership failure, all three added avatar lifecycle cases, Shell/window-focus cases and both tool-caller cases now pass. The eight remaining failures are all in `ContinuumReferenceCockpitUiTest`: it still selects hidden pre-Shell controls, an old eight-entry rail and the hidden conversation rail. Two independent source inspections confirmed that the current Activity activates the Shell and intentionally hides the legacy ElementViews. Updating these fixtures must preserve actual decor-dispatched taps, minimum touch sizes, visibility, draft preservation and current destination identities. Legacy-only compact presentation must be identified explicitly; it is not an attached current-Shell feature.
+
+## C1 reconciliation before final freeze
+
+C1 subsequently published `a6135f24629ba9151bbc06888bc977325d95e6f1`, matching local `59d8d7e25a5936403e8579373883fa04bec5c37f` and tree `90d68760d9a0533c169697902b61eda126e9b20b`. Coordinator merged that completed checkpoint locally as `4ca999bf9893479575b1723d8b29a6570df0357a`. Its memory and landscape production imports are already present byte-for-byte, apart from the deliberately retained existing #523 byte-counter optimization. The merge preserves our production files unchanged, both histories, C1 evidence and all three added real-decor attachment assertions. Original patch evidence keeps its exact whitespace. No foreign WIP or unfrozen UI proposal was imported.
+
+## Continuation and rollback
 
 Read the latest version of this handoff and exact remote branch ref. Review each agent's bounded diff, combine serially, freeze source, then execute actual checks. Revert individual R3 commits to withdraw a slice; the two frozen parent histories and all previous evidence remain available. No force update, main merge, release, signing or installation is included.

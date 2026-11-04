@@ -61,6 +61,7 @@ class JarvisShellStageUiTest {
         try {
             controller.setup().visible()
             advanceFrames(16)
+            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
             controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
@@ -153,6 +154,7 @@ class JarvisAvatarSlotUiTest {
         try {
             controller.setup().visible()
             advanceFrames(16)
+            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
             controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView

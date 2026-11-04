@@ -68,6 +68,11 @@ class ContinuumReferenceCockpitUiTest {
         "VIEW_AVATAR", "VIEW_ORB", "VIEW_COMPACT"
     )
 
+    private val shellTileTargets = listOf(
+        "chat", "memory", "logic", "research", "agents", "tasks", "web", "learning", "device", "system"
+    )
+    private val railTargets = listOf("home") + shellTileTargets
+
     private fun field(activity: AgentActivity, name: String): Any? = AgentActivity::class.java
         .getDeclaredField(name).apply { isAccessible = true }.get(activity)
 
@@ -98,6 +103,7 @@ class ContinuumReferenceCockpitUiTest {
         try {
             controller.setup().visible()
             advanceFrames(16)
+            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
             controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
@@ -110,12 +116,33 @@ class ContinuumReferenceCockpitUiTest {
             settle()
             measure(root, width, height)
             assertEquals("A hidden test window is not a screenshot", View.VISIBLE, root.windowVisibility)
+            assertTrue("The Activity must expose its current shell", (field(activity, "homeView") as ContinuumHomeView).jarvisShellStage)
             body(activity, root, controller)
         } finally {
             ShadowAlertDialog.getLatestAlertDialog()?.takeIf { it.isShowing }?.dismiss()
             runCatching { controller.close() }
             RuntimeEnvironment.setFontScale(previousFont)
         }
+    }
+
+    // Legacy presentation, explicitly separate fixture.
+    private fun withReferencePresentation(body: (AgentActivity, View) -> Unit) =
+        withActivity(412, 915, 1f) { activity, root, _ ->
+            val home = field(activity, "homeView") as ContinuumHomeView
+            home.setJarvisShellStage(false)
+            measure(root, 412, 915)
+            settle()
+            measure(root, 412, 915)
+            assertFalse("Legacy presentation is not the current shell", home.jarvisShellStage)
+            assertRealTargets(home)
+            body(activity, root)
+            assertRealTargets(home)
+        }
+
+    private fun shellControl(home: ContinuumHomeView, key: String): View {
+        val controls = descendants(home).filter { it.tag == "jarvis-$key" }
+        assertEquals("The current shell must expose $key exactly once", 1, controls.size)
+        return controls.single()
     }
 
     private fun slot(home: ContinuumHomeView, name: String): ContinuumHomeView.ElementView {
@@ -127,20 +154,40 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertRealTargets(home: ContinuumHomeView) {
         val density = home.resources.displayMetrics.density
-        val targets = targetNames.map { name -> slot(home, name).also { view ->
+        val namedTargets = if (home.jarvisShellStage) {
+            val required = shellTileTargets.map { "tile:$it" } + listOf(
+                "dialog:conversation", "dialog:voice-input", "dialog:camera-settings",
+                "dialog:avatar-appearance", "header:notifications", "header:settings")
+            required.forEach { shellControl(home, it) }
+            val direct = (0 until home.childCount).map { home.getChildAt(it) }.filter {
+                val key = it.tag?.toString().orEmpty()
+                key.startsWith("jarvis-") && key != "jarvis-foreground"
+            }
+            assertEquals("All ten current destinations remain present", shellTileTargets,
+                direct.mapNotNull { it.tag?.toString()?.takeIf { key -> key.startsWith("jarvis-tile:") }
+                    ?.removePrefix("jarvis-tile:") })
+            val rail = if (home.wide) railTargets.map { shellControl(home, "rail:$it") } else emptyList()
+            (direct + rail).map { it.tag.toString() to it }
+        } else targetNames.map { it to slot(home, it) }
+        val targets = namedTargets.map { (name, view) ->
             assertTrue("$name must be a real clickable, focusable control", view.isClickable && view.isFocusable)
+            assertTrue("$name must belong to the shown composition", view.isShown)
             assertTrue("$name needs an accessible description", !view.contentDescription.isNullOrBlank())
             assertTrue("$name actual width ${view.width / density}dp", view.width / density >= 48f)
             assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
-            assertTrue("$name is outside the content width", view.left >= 0 && view.right <= home.width)
-            assertTrue("$name is outside scrollable content", view.top >= 0 && view.bottom <= home.height)
-        } }
-        for (i in targets.indices) for (j in i + 1 until targets.size) {
-            val first = targets[i]
-            val second = targets[j]
-            assertFalse("Actual touch bounds overlap: ${first.slot}/${second.slot}",
-                first.left < second.right && second.left < first.right &&
-                    first.top < second.bottom && second.top < first.bottom)
+            val content = view.parent as ViewGroup
+            assertTrue("$name is outside the content width", view.left >= 0 && view.right <= content.width)
+            assertTrue("$name is outside scrollable content", view.top >= 0 && view.bottom <= content.height)
+            view
+        }
+        for (siblings in targets.groupBy { it.parent }.values) {
+            for (i in siblings.indices) for (j in i + 1 until siblings.size) {
+                val first = siblings[i]
+                val second = siblings[j]
+                assertFalse("Actual touch bounds overlap: ${first.tag}/${second.tag}",
+                    first.left < second.right && second.left < first.right &&
+                        first.top < second.bottom && second.top < first.bottom)
+            }
         }
     }
 
@@ -224,19 +271,19 @@ class ContinuumReferenceCockpitUiTest {
             capture(root, "$tag-home", width, height)
 
             for ((name, title) in listOf(
-                "ACTION_MEMORY" to "Gedächtniszentrum",
-                "ACTION_AGENTS" to "Team · Bots",
-                "ACTION_BOTS" to "Team · Bots",
-                "ACTION_TASK" to "CODING-AUFTRAG ENTWERFEN",
-                "ACTION_DEVICE" to "Systemstatus"
+                "tile:memory" to "Gedächtniszentrum",
+                "tile:agents" to "Team · Bots",
+                "panel:ROW_AGENTS" to "Team · Bots",
+                "tile:tasks" to "Entwicklungsaufgaben",
+                "tile:device" to "Systemstatus"
             )) {
-                tap(root, slot(home, name))
+                tap(root, shellControl(home, name))
                 assertDialog(title).dismiss()
                 settle()
                 assertFalse("Opening a destination must not start a model task", field(activity, "busy") as Boolean)
             }
             capture(root, "$tag-actions", width, height)
-            tap(root, slot(home, "COMPOSER"))
+            tap(root, shellControl(home, "dialog:conversation"))
             measure(root, width, height)
             val input = field(activity, "input") as EditText
             assertTrue("Composer must reach the real visible editor", input.isShown && input.hasFocus())
@@ -261,7 +308,7 @@ class ContinuumReferenceCockpitUiTest {
             capture(root, "$tag-chat", width, height)
 
             val back = descendants(root).firstOrNull {
-                it.tag == ContinuumWorkArea.START && it.isShown && it.isClickable
+                (it.tag == ContinuumWorkArea.START || it.tag == "home") && it.isShown && it.isClickable
             } ?: descendants(root).firstOrNull {
                 it.isShown && it.isClickable && it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen"
             }
@@ -277,7 +324,7 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
-    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withActivity(412, 915, 1f) { activity, root, _ ->
+    fun presentationControlsReuseTheLiveAvatarAndPersistCompactChoice() = withReferencePresentation { activity, root ->
         val home = field(activity, "homeView") as ContinuumHomeView
         val avatar = field(activity, "hologramView") as ContinuumHologramView
         val originalHeight = avatar.height
@@ -308,8 +355,38 @@ class ContinuumReferenceCockpitUiTest {
     }
 
     @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
+    fun shellAppearanceChooserReusesTheLiveAvatarAndPersistsTheChoice() = withActivity(412, 915, 1f) { activity, root, _ ->
+        val home = field(activity, "homeView") as ContinuumHomeView
+        val avatar = field(activity, "hologramView") as ContinuumHologramView
+        val appearance = activity.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE)
+        fun choose(label: String, selectedBefore: Int) {
+            tap(root, shellControl(home, "dialog:avatar-appearance"))
+            val dialog = assertDialog("Continuum · Darstellung")
+            assertEquals(selectedBefore, dialog.listView.checkedItemPosition)
+            val decor = requireNotNull(dialog.window).decorView
+            val option = descendants(decor).filterIsInstance<TextView>().single { it.text.toString() == label }
+            tap(decor, option)
+            assertFalse("A real selection closes its chooser", dialog.isShowing)
+            measure(root, 412, 915)
+        }
+        choose("Kugel · Original", 1)
+        assertFalse("The current chooser selects the original orb", avatar.isNativeHeadEnabled())
+        assertFalse(appearance.getBoolean("native-head", true))
+        choose("Kopf · Native 2D-Vorschau", 0)
+        assertTrue(avatar.isNativeHeadEnabled())
+        assertFalse(avatar.isNative3dEnabled())
+        assertTrue(appearance.getBoolean("native-head", false))
+        assertFalse(appearance.getBoolean("native-head-3d", true))
+        assertSame(avatar, field(activity, "hologramView"))
+        assertSame(home, avatar.parent)
+        assertEquals(1, descendants(root).count { it is ContinuumHologramView })
+        assertTrue("Appearance selection retains the current shell", home.jarvisShellStage)
+        assertFalse("Presentation selection must never submit a task", field(activity, "busy") as Boolean)
+    }
+
+    @Test @Config(qualifiers = "w412dp-h915dp-mdpi")
     fun composerDraftSurvivesActualWindowReflowAndActivityRecreation() = withActivity(412, 915, 1f) { activity, root, controller ->
-        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
+        tap(root, shellControl(field(activity, "homeView") as ContinuumHomeView, "dialog:conversation"))
         val draft = "Nicht gesendeter Entwurf\nZweite Zeile bleibt erhalten."
         val input = field(activity, "input") as EditText
         input.setText(draft)
@@ -335,6 +412,7 @@ class ContinuumReferenceCockpitUiTest {
         try {
             recreated.setup(savedState).visible()
             advanceFrames(16)
+            assertTrue("The recreated window must attach decor before focus", recreated.get().window.decorView.isAttachedToWindow)
             recreated.windowFocusChanged(true)
             settle()
             val resumed = recreated.get()
@@ -348,7 +426,7 @@ class ContinuumReferenceCockpitUiTest {
 
     @Test @Config(qualifiers = "w280dp-h720dp-mdpi")
     fun narrowLargeTypeSendTargetSubmitsReadOnlyCapabilitiesThroughDecor() = withActivity(280, 720, 2f) { activity, root, _ ->
-        tap(root, slot(field(activity, "homeView") as ContinuumHomeView, "COMPOSER"))
+        tap(root, shellControl(field(activity, "homeView") as ContinuumHomeView, "dialog:conversation"))
         val input = field(activity, "input") as EditText
         input.setText("Was kannst du?")
         measure(root, 280, 720)
@@ -382,6 +460,8 @@ class ContinuumReferenceCockpitUiTest {
     @Test @Config(qualifiers = "w840dp-h649dp-land-mdpi")
     fun shortenedWideWindowKeepsEveryRailTargetScrollableAndClickable() = withActivity(840, 649, 2f) { activity, root, _ ->
         val avatar = field(activity, "hologramView") as ContinuumHologramView
+        tap(root, shellControl(field(activity, "homeView") as ContinuumHomeView, "dialog:conversation"))
+        assertEquals("The IME scenario uses the visible conversation rail", ContinuumWorkArea.CHAT, field(activity, "activeWorkArea"))
         val rail = field(activity, "railView") as View
         val frame = rail.parent as ViewGroup
         val scroll = frame.parent as ScrollView
@@ -390,7 +470,8 @@ class ContinuumReferenceCockpitUiTest {
         measure(root, 840, 320)
         assertSame("A height-only IME change must not rebuild the avatar", avatar, field(activity, "hologramView"))
         val controls = (0 until frame.childCount).map { frame.getChildAt(it) }.filter { it.isClickable }
-        assertEquals("No rail destination may disappear under the IME", 8, controls.size)
+        assertEquals("No rail destination may disappear under the IME", railTargets, controls.map { it.tag })
+        assertTrue("The current conversation rail must be shown", scroll.isShown)
         val density = root.resources.displayMetrics.density
         controls.forEach { target ->
             assertTrue("Actual rail touch width", target.width / density >= 48f)
@@ -399,9 +480,9 @@ class ContinuumReferenceCockpitUiTest {
         }
         for (i in 1 until controls.size) assertTrue("Rail targets cannot overlap", controls[i - 1].bottom <= controls[i].top)
         assertTrue("Short window must scroll instead of shrinking targets", frame.height > scroll.height)
-        val more = controls.single { it.contentDescription?.toString() == "Mehr" }
-        tap(root, more)
-        assertDialog("Weitere Arbeitsbereiche").dismiss()
+        val last = controls.single { it.tag == "system" }
+        tap(root, last)
+        assertDialog("Systemstatus").dismiss()
         capture(root, "fold-short-840x320-font200-rail", 840, 320)
     }
 }
