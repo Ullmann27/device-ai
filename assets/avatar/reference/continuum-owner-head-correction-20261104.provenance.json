@@ -1,0 +1,12 @@
+{
+  "sourceKind": "OWNER_SUPPLIED_VISUAL_CORRECTION",
+  "sha256": "f70460e42e7b89db5dd4c1f94228d3b7afa7c54a06774ebd57132ab27ecad7a4",
+  "dimensions": [
+    1536,
+    1152
+  ],
+  "selectedRegion": "Right Nachher panel; labels and border excluded from surface mapping",
+  "use": "Head surface correction of actual packaged animated GLB",
+  "imageGenerationPerformedInThisRevision": false,
+  "scope": "Head and narrow jaw-neck blend; torso, rig, animation and app flow preserved"
+}
