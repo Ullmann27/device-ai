@@ -315,7 +315,7 @@ class AiContextCompiler(
 
     private fun redactSecrets(text: String): String {
         val assignments = Regex(
-            """(?i)(?<![\p{L}\p{N}_-])(["']?)(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\1[ \t]*[:=][ \t]*"""
+            """(?i)(?<![\p{L}\p{N}_])(["']?)(password|passwd|token|secret|credential|(?:proxy-)?authorization|api[_-]?key)\1[ \t]*[:=][ \t]*"""
         )
         val out = StringBuilder(text.length)
         var copiedUntil = 0
