@@ -1,0 +1,157 @@
+{
+  "status": "DEVELOPMENT_CHOICE_BEFORE_TEST",
+  "testEvaluated": false,
+  "rule": "Wide Dev exact descending, answer NLL ascending, then retain v2",
+  "candidates": {
+    "v2": {
+      "status": "ELIGIBLE",
+      "freezePayload": {
+        "status": "FROZEN_BEFORE_TEST",
+        "arms": {
+          "S0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1.lm1",
+            "checkpointSha256": "6ad41c9c11003d8e9724e67d342d3a5e957ecea3c272f88b35594cb262fa3ba1",
+            "step": 0
+          },
+          "S1": {
+            "checkpointSha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+            "step": "256",
+            "devCorrect": "13",
+            "devTotal": "24",
+            "devAnswerNll": "1.353088923177873",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-small/checkpoints/c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309.lm1"
+          },
+          "W0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e.lm1",
+            "checkpointSha256": "61ac5a3fad0523d5ad5df8e6b87df5dec893230c30b87b72324e1b970794947e",
+            "step": 0
+          },
+          "W1": {
+            "checkpointSha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+            "step": "128",
+            "devCorrect": "13",
+            "devTotal": "24",
+            "devAnswerNll": "1.7133914955007874",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/intent-wide/checkpoints/7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2.lm1"
+          }
+        },
+        "sourceCommit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+        "registrationSha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+        "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+        "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+        "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+      }
+    },
+    "v3": {
+      "status": "ELIGIBLE",
+      "freezePayload": {
+        "status": "FROZEN_BEFORE_TEST",
+        "arms": {
+          "S0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+            "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+            "step": 0
+          },
+          "S1": {
+            "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+            "step": "512",
+            "devCorrect": "13",
+            "devTotal": "24",
+            "devAnswerNll": "1.635475808193661",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+          },
+          "W0": {
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+            "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+            "step": 0
+          },
+          "W1": {
+            "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+            "step": "128",
+            "devCorrect": "16",
+            "devTotal": "24",
+            "devAnswerNll": "1.652808382948238",
+            "testRead": "false",
+            "inputsUnchanged": "true",
+            "generalModelPromotion": "NOT_PERMITTED",
+            "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+            "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+          }
+        },
+        "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+        "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+        "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+        "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+        "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+      }
+    }
+  },
+  "schedules": {
+    "v2": {
+      "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+      "tokenScheduleSha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c"
+    },
+    "v3": {
+      "scheduleSha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+      "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3"
+    }
+  },
+  "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+  "selectedStudy": "v3",
+  "selectedFreezePayload": {
+    "status": "FROZEN_BEFORE_TEST",
+    "arms": {
+      "S0": {
+        "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435.lm1",
+        "checkpointSha256": "70cb6ed4020042c4ced21bf0c58dab1b83ee2a51655fdbec41279cd961234435",
+        "step": 0
+      },
+      "S1": {
+        "checkpointSha256": "90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f",
+        "step": "512",
+        "devCorrect": "13",
+        "devTotal": "24",
+        "devAnswerNll": "1.635475808193661",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+        "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-small/checkpoints/90b58fb58e048bd4eac967f2b0b131373170201660de7a3d330b393a6c8d820f.lm1"
+      },
+      "W0": {
+        "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d.lm1",
+        "checkpointSha256": "af617cf6d223a3e53b44bc3c0578b6924e9c73d8b92f558a981af22990cad04d",
+        "step": 0
+      },
+      "W1": {
+        "checkpointSha256": "0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c",
+        "step": "128",
+        "devCorrect": "16",
+        "devTotal": "24",
+        "devAnswerNll": "1.652808382948238",
+        "testRead": "false",
+        "inputsUnchanged": "true",
+        "generalModelPromotion": "NOT_PERMITTED",
+        "postTrainingCapacity": "REQUIRES_SEPARATE_BENCHMARK",
+        "path": "/workspace/scratch/3112c86b5191/training-recovery-study-v3/intent-wide/checkpoints/0f2b5481cf60d6c6021e9e24d1e5ba70d303da274c18933de29c48a47489cf8c.lm1"
+      }
+    },
+    "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+    "registrationSha256": "04392b366746b1e6fca78eb66758e8c99e94b8392dbe013a02d2b416e2184728",
+    "tokenScheduleSha256": "9e06273da0661c5fc12b8b92ca1701d437e01f4946b0aa19351f3f6b570d6fb3",
+    "testSha256": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+    "rule": "Dev exact descending, answer NLL ascending, fewer steps; development threshold passed"
+  }
+}

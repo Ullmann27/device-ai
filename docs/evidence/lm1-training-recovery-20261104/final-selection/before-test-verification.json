@@ -1,0 +1,8 @@
+{
+  "choiceSha256": "1325d06208d8850e6ce3aa5969d68f37cdaa3e26c46c50f66743ddd3dc442cac",
+  "freezeSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+  "selectedStudy": "v3",
+  "selectedSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "allFinalTestLogsAbsent": true,
+  "choiceMatchesFreezeExactly": true
+}
