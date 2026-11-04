@@ -37,12 +37,12 @@ stores, bot profiles and avatar renderers stay with their current owners.
 | 04 | Test coding-service lifecycle and active recovery | COMPLETE: BLOCKED by three missing fixture prerequisites |
 | 05 | Check model artifact and evidence contracts for the weights team | COMPLETE: resume-integrity finding, independently reproduced and sent to #492 |
 | 06 | Check brain/retrieval integration boundaries and evidence | COMPLETE: bounded read-only review, no demonstrated residual defect |
-| 07 | Check avatar/design integration and asset contracts | RUNNING |
+| 07 | Check avatar/design integration and asset contracts | COMPLETE: 8 validator tests PASS, real asset contract FAIL, handed to #491 |
 | 08 | Check update identity, source binding and version monotonicity | RUNNING |
 | 09 | Check immutable tool scope at worker admission/adapters | RUNNING, exclusive ChiefWorkerPool.kt and new admission test |
-| 10 | Independently review fixes, regressions and integration conflicts | QUEUED |
+| 10 | Independently review fixes, regressions and integration conflicts | RUNNING, read-only review of committed support changes |
 
-Nine separate agents have actually been dispatched at this checkpoint. Reports
+Ten separate agents have actually been dispatched at this checkpoint. Reports
 and raw evidence are in `docs/evidence/ten-bot-support-20261104/`. Queued roles are
 not counted as agents that already ran.
 
@@ -69,6 +69,10 @@ not counted as agents that already ran.
   an owner-workstream handoff, not an applied weight-runner change.
 - Bot 06 independently reviewed the brain team's committed context/snapshot
   corrections; that review's inherited test counts are excluded from our totals.
+- Bot 07 passed the existing validator's 8 unit tests. The real unchanged GLB
+  failed the metre-scale eye/jaw pivot contract; its bytes match the avatar
+  workstream. The exact numeric finding was sent to #491 for source/contract
+  adjudication. It is not a screenshot or device-rendering verdict.
 
 ## Execution and evidence rules
 

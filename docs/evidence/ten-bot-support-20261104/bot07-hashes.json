@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-11-04T10:44:49.385266+00:00",
+  "support_before": {
+    "path": "/workspace/scratch/fd4940f23688/device-ai-support/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "exists": true,
+    "bytes": 10165644,
+    "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
+  },
+  "support_after": {
+    "path": "/workspace/scratch/fd4940f23688/device-ai-support/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "exists": true,
+    "bytes": 10165644,
+    "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
+  },
+  "foreign_checkout": {
+    "path": "/workspace/scratch/b3170a7ae924/device-ai-avatar/app/src/main/assets/avatar3d/continuum-avatar.glb",
+    "exists": true,
+    "bytes": 10165644,
+    "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3"
+  },
+  "support_unchanged": true,
+  "identical": true
+}
