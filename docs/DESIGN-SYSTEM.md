@@ -83,3 +83,20 @@ GESCHÄTZT:
 - Bekannte Grenze: Die Transparenz wirkt auf den Kartenrand, nicht auf fremden Inhalt, weil der Painter keinen Ebenen-Alphawert hat.
 - Reduzierte Bewegung: `animatorScale` = `Settings.Global.ANIMATOR_DURATION_SCALE` übergeben. Bei 0 kommt sofort der Endzustand `REST`. Andere Werte strecken die Zeiten.
 - Treiber: Der Aufrufer (View/`ValueAnimator`/`Choreographer`) liefert `elapsedMs` und invalidiert. Die API hält keinen eigenen Zustand.
+
+## Review 1 (Kreativdirektor, 4.11.)
+- **Glas:**
+  - Panels #0A1128 @50 %, 1 px Cyan-Rand @40 %, Radius 14 dp.
+  - `JarvisGlassRenderer` (nur Android) ist das `GlassBackend` von `JarvisShellRenderer`:
+    - **API 31+ (Hardware-Canvas):** Backdrop-Blur über `RenderEffect.createBlurEffect` (24 dp, geschätzt) auf einer RenderNode-Kopie des Hintergrunds, je Panel per Clip.
+    - **API 33+:** Hintergrund als **ein** AGSL-`RuntimeShader` (Verlauf, unscharfes Cyan-Raster, Scanlines, Violett-Schleier) plus Bokeh; Rand-Glow als AGSL-SDF-Shader.
+    - **minSdk 26–30 und Software-Canvas:** portabler Fallback (halbtransparentes Glas, additive Rand-Striche).
+  - Die JVM-Vorschau kompiliert ohne Android-Klassen und zeigt **nur den Fallback**, also keinen Blur und kein AGSL.
+- **Hintergrund:** Verlauf #050814 → #0A1128, Raster 48 dp, Bokeh-Staub (deterministisch).
+- **Frame-Zeit:** Mit `JarvisShellView.frameLogging = true` (nur Debug) loggt die View alle 120 Frames unter dem Log-Tag `JarvisFrames` den Mittelwert und das Maximum des Frame-Abstands sowie die onDraw-Dauer. **Die Messung auf dem Fold7 steht noch aus.**
+- **Fold7 offen:** 3 Spalten 20/55/25 – beschriftete Navigation, Avatar mit Dialog und Kacheln 4 × 2, rechts System-Status, Agenten, Ablauf, Gedächtnis und Modell. Darunter eine Statusleiste über die volle Breite.
+- **Kacheln:**
+  - `JarvisTile(target, label, subtitle, icon, displayText?)` ist ein **reines Darstellungsmodell** und keine Datenschnittstelle.
+  - `JarvisTiles.reference` enthält die 8 Kacheln aus ref5. Navigation: `JarvisTiles.railNav` (Leiste aus ref5) und `bottomNav` (ref4).
+  - In schmalen Kacheln steht das Icon über dem Label.
+  - Die Vorschau zeigt nur Labels und Untertitel, keine Werte.

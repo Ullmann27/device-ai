@@ -10,3 +10,7 @@
 ## Prüfbericht-Auflagen und VIDEO-SPEC (4.11.2026)
 - `./gradlew :app:testDebugUnitTest --tests 'at.heinz.deviceai.ui.Jarvis*'` (inkl. compileDebugKotlin, also auch JarvisShellView): **JarvisMotionTest 12/12, JarvisShellLayoutTest 7/7 grün**.
 - Vorschau: `scripts/jarvis-design-preview.sh` (Java2D, Platzhalter-Inhalte). Ergebnis: `docs/design-screenshots/phone-hochformat-412x915.png`, `fold7-offen-884x760.png`, `tablet-quer-1280x800.png`, `phone-einflug-250ms.png` (Einflug-Zwischenstand), daneben ref2/ref4/ref5. Annäherung; kein Gerät/Emulator.
+
+## Review 1 (4.11.2026)
+- `--tests 'at.heinz.deviceai.ui.Jarvis*'` (inkl. compileDebugKotlin mit JarvisGlassRenderer/AGSL): **JarvisMotionTest 12/12, JarvisShellLayoutTest 8/8 grün**.
+- Vorschau neu gerendert (`docs/design-screenshots/`). Das ist der Java2D-**Fallback-Pfad**: Blur und AGSL-Glow sind darin NICHT sichtbar und nur angenähert. Frame-Zeit auf dem Gerät nicht gemessen (kein Fold7).

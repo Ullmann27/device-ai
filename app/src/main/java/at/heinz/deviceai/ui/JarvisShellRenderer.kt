@@ -54,6 +54,8 @@ object JarvisShellRenderer {
                 if (f.glow > .5f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL, f.glow > .5f, f.alpha, native)
             when {
                 slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
+                slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
+                slot == Slot.BOTTOM_NAV -> JarvisTiles.drawBottomNav(p, box)
                 slot != null -> header(p, box, label(slot))
                 tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
             }
