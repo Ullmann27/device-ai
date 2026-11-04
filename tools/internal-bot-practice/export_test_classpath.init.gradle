@@ -1,0 +1,28 @@
+import groovy.json.JsonOutput
+
+// Resolve the existing Android unit-test classpath without compiling or running tests.
+gradle.projectsEvaluated {
+    def app = gradle.rootProject.project(':app')
+    def unitTest = app.tasks.named('testDebugUnitTest').get()
+    gradle.rootProject.tasks.register('exportInternalBotTestClasspath') {
+        doLast {
+            def requested = System.getProperty('continuum.bot.classpathOutput')
+            if (requested == null || requested.isBlank()) {
+                throw new GradleException('An explicit classpath output file is required')
+            }
+            def output = new File(requested)
+            if (!output.isAbsolute() || output.exists()) {
+                throw new GradleException('Classpath output must be a fresh absolute file')
+            }
+            output.parentFile.mkdirs()
+            def payload = [
+                schema: 'continuum-existing-gradle-unit-test-classpath',
+                version: 1,
+                classpath: unitTest.classpath.files.collect { it.canonicalPath },
+                testClassesDirs: unitTest.testClassesDirs.files.collect { it.canonicalPath }
+            ]
+            output.setText(JsonOutput.prettyPrint(JsonOutput.toJson(payload)) + '\n', 'UTF-8')
+            println('Exported the existing unit-test classpath; no compilation or tests performed.')
+        }
+    }
+}

@@ -2,7 +2,8 @@
   "schema": "continuum-internal-bot-practice-evidence",
   "version": 1,
   "files": {
-    "README.md": "7f3ad8190bb4cd9631a3772a8589d98484e5c6d8e83e60db8b82fc6f9819826b",
+    "README.md": "2f2ac5e1f883048b55f51b9f517fc8c4562e407a2728c19823e77bc80defe463",
+    "baseline-gradle-classpath.json": "cd9ae9a6cd787ff86e4094ef0bbdf45af9acef0f1b6dffee369044f917b6d59f",
     "run-01/TEST-at.heinz.deviceai.chief.ChiefAvatarPracticeCurriculumTest.xml": "a2daf09c369b3334e91ac13f54027a620bbbf8ccc7c3a59ae409030135fc095c",
     "run-01/TEST-at.heinz.deviceai.chief.ChiefBotConversationTest.xml": "84ecfdc545b075b539a280a330b39317f8d35df2d76c4fd2dc81bb4735b61a38",
     "run-01/TEST-at.heinz.deviceai.chief.ChiefBotPracticeConversationTest.xml": "99b050eb0aae7b84a203070d7e1c783aae032b41e88618bdb2508caa3e797f46",
@@ -27,6 +28,12 @@
     "run-03/java-version.txt": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
     "run-03/result.json": "93ce8bdf6dd361f09dbb13e35833eb88643e6ca5a6d6fa04669bd89111ffbf59",
     "run-03/source-after.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d",
-    "run-03/source-before.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d"
+    "run-03/source-before.json": "705b653c9f2cdc2ba0bc1886b8c42e87d2be1f858f1bbae4e648c98db0a9da6d",
+    "run-04/command.json": "a0eee345bee179e4af2d8eb546290af6f9c529a848a97c067a0887b2f45c1508",
+    "run-04/gradle.log": "901ab35bb55d41fa1a045c3cdce83d849f4f2cfaf14fca1ee007dcb7b6842352",
+    "run-04/java-version.txt": "8ffd2d05de22acb2a1f82845905d499e807c7595cf7c3e7f2a2cab7e576a26de",
+    "run-04/result.json": "17265c49dd8abf0ec368ae0cd947483d6ae52b723544d0ae8800e75bb18df081",
+    "run-04/source-after.json": "630d3f2fdfc212c405d9527a14d0caadc5ab41eb5b8e33a4f76e0d5c1478d34d",
+    "run-04/source-before.json": "630d3f2fdfc212c405d9527a14d0caadc5ab41eb5b8e33a4f76e0d5c1478d34d"
   }
 }

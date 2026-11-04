@@ -1,6 +1,6 @@
 # Interne Continuum-Bots: fachliche Übungen und Korrekturrückmeldung
 
-Stand 04.11.2026. Status: Implementierung veröffentlicht; endgültige Offline-Abnahme nach zwei unerklärten Gradle-Prozessabbrüchen offen. Echte Bot-Modellversuche: **0 / NOT_RUN**. Gewichtsänderungen: **0**.
+Stand 04.11.2026. Status: Implementierung veröffentlicht; endgültige vollständige Android-Abnahme nach drei unerklärten Gradle-Prozessabbrüchen offen. Echte Bot-Modellversuche: **0 / NOT_RUN**. Gewichtsänderungen: **0**.
 
 ## Korrigierter Besitzerauftrag
 Heinz meint die bereits vorhandenen internen Bots seiner Continuum-Architektur. Sie sollen Reparatur-, Implementierungs- und Avatar-Aufgaben üben und aus überprüfbaren Ergebnissen lernen. Die frühere Interpretation als Verbindungs-/Geräteproblem war zu eng.
@@ -11,6 +11,7 @@ Heinz meint die bereits vorhandenen internen Bots seiner Continuum-Architektur. 
 - Eigener Branch: `codex/continuum-internal-bot-training-20261104`, [Draft-PR #516](https://github.com/Ullmann27/device-ai/pull/516) auf dem Bot-Branch; kein Main-Merge.
 - Erster Anschluss: [b1701e7e3bf52047efff05ae33f0ba602dcc3d4b](https://github.com/Ullmann27/device-ai/commit/b1701e7e3bf52047efff05ae33f0ba602dcc3d4b).
 - Endgültiger Quellstand einschließlich V2-Kompatibilität: [90cc7373b2c3bac1d7b9f77e582958e359d00b20](https://github.com/Ullmann27/device-ai/commit/90cc7373b2c3bac1d7b9f77e582958e359d00b20).
+- Unveränderte App-Quellen plus begrenzter Build-Runner und archivierte Vorläufe: [55ac3e9315de24bfc4d1ad589e565cf5b2622ff6](https://github.com/Ullmann27/device-ai/commit/55ac3e9315de24bfc4d1ad589e565cf5b2622ff6).
 - Experimente: EXP-07 Worker Academy und EXP-11 Fachbots; bestehende Laufzeit gemäß EXP-05.
 
 Drei Helfer bearbeiteten getrennt Reparatur-/Implementierungsfälle, den vorhandenen Botdialog-Anschluss und Avatarfälle. Anschließend erfolgten gegenseitige Quellprüfungen. Der dabei gefundene Verlust der sichtbaren Bewertung beim erneuten Öffnen eines Botdialogs ist behoben; normale Gespräche behalten zudem ihr bisheriges Speicherformat.
@@ -43,7 +44,9 @@ Diese Änderung wurde nicht als APK gebaut, signiert oder auf einem Gerät insta
 
 Erster Offline-Lauf am Quellstand `b1701e7e`: **70 Tests, 0 Fehler, 0 übersprungen**, vollständige Android-Kotlin-/Java- und Unit-Test-Kompilierung, 135,626 Sekunden. Die anschließende Kompatibilitätskorrektur erweitert den bestehenden Codec-Test um bytegenaue V2-Ausgabe und gemischte V3-Verläufe.
 
-Der zweite Lauf auf `90cc7373` endete nach 134,048 Sekunden mit `Gradle build daemon disappeared unexpectedly` während `compileDebugKotlin`: Exit 1, kein Timeout, Quellen unverändert, keine konkrete Compiler-/OOM-/JVM-Crashdiagnose. Der identische dritte Lauf endete nach 171,402 Sekunden mit demselben Prozessverlust. In beiden Läufen wurden alle sieben älteren XML-Berichte als `STALE_RESULT_REJECTED` verworfen; beide belegen **0 aktuelle Tests**. Die Ursache des Prozessverlustes ist nicht gesichert. Der nächste vollständige Offline-Lauf verwendet deshalb einen Gradle-Worker und 1.536 MiB Java-Heap statt zwei Workern und 2 GiB. Es werden weiterhin dieselben tatsächlichen Quellen und sieben Klassen mit `--rerun-tasks` geprüft. Die endgültige Abnahme wird hier nach Abschluss ergänzt.
+Der zweite Lauf auf `90cc7373` endete nach 134,048 Sekunden mit `Gradle build daemon disappeared unexpectedly` während `compileDebugKotlin`: Exit 1, kein Timeout, Quellen unverändert, keine konkrete Compiler-/OOM-/JVM-Crashdiagnose. Der identische dritte Lauf endete nach 171,402 Sekunden mit demselben Prozessverlust. Ein vierter vollständiger Lauf auf `55ac3e93` mit einem Gradle-Worker und 1.536 MiB Java-Heap statt zwei Workern und 2 GiB endete nach 92,070 Sekunden erneut mit diesem Prozessverlust. Es wurden weiterhin dieselben tatsächlichen Quellen und sieben Klassen mit `--rerun-tasks` angefordert. In allen drei fehlgeschlagenen Läufen wurden die älteren XML-Berichte als `STALE_RESULT_REJECTED` verworfen; sie belegen jeweils **0 aktuelle Tests**. Die Ursache des Prozessverlustes ist nicht gesichert. Der vollständige Android-Build des letzten Quellstands bleibt damit **BLOCKED / UNVERIFIED**.
+
+Die aktuelle Quelländerung gegenüber dem vollständig kompilierten Lauf01 betrifft ausschließlich `ChiefBotConversation.kt` und seinen Übungsgesprächstest. Die echten Gradle-App-JARs und Unit-Testklassen aus Lauf01 sind erhalten. Eine gesondert als `DELTA_JVM_GATE` bezeichnete gezielte Nachprüfung ist vorbereitet: beide geänderten Quellen frisch mit Kotlin 2.4 kompilieren, ihre tatsächlichen geladenen Klassenpfade prüfen und die unveränderten übrigen Testklassen gegen diesen Stand erneut ausführen. Das ist kein Ersatzbeleg für den blockierten vollständigen Android-Build.
 
 Der Runner `tools/internal-bot-practice/run_checks.py` verwendet eine bereits vorhandene Gradle-/JDK-/Android-Toolchain vollständig offline. Er kompiliert die tatsächlichen Quellen ohne Stubs oder Quellausschlüsse und führt sieben ausgewählte Klassen aus. Frische XML-Zeitstempel, alle ausgewählten Klassen, Testzahlen und unveränderte Quell-Hashes vor/nach dem Lauf sind erforderlich; ein alter Testbericht kann einen fehlgeschlagenen Build nicht ersetzen.
 
@@ -69,3 +72,5 @@ Keine neue Warteschlange, Modelllaufzeit, Memory-Datenbank oder Receipt-Pipeline
 ## Nächster tatsächlicher Nachweis
 
 Nach Integration und regulärer App-Abnahme die 18 Aufgaben über die vorhandene lokale Modelllaufzeit ausführen. Erst reale Antworten erlauben eine Aussage über Formatbefolgung, Regelanwendung und Nutzung früherer Korrekturen. Der hier vorbereitete Pfad ist kontextbasiertes Üben mit privatem Feedback; ob die Bots dadurch besser werden, ist noch ungemessen. Neuronales Gewichtstraining ist nicht Bestandteil dieser Änderung.
+
+Der konkrete Produktweg ist `LocalModelHost.get(Context)` mit dem Android-Modellkatalog unter `app.filesDir/local-models`, eine geprüfte importierte `.litertlm`-Datei, `LiteRtLmLocalModelRuntime.load()` und der Zustand `READY` vor `streamThinking()`. In den geprüften vorhandenen Host-Werkzeugen ist kein ausführbarer Adapter für diese neuen privaten Bot-Übungen enthalten. Die bekannten historischen `known-u03`-Modell-/Laufzeitpfade sind in diesem Arbeitsbereich nicht vorhanden; der damalige CCC1-Runner ist ohnehin kein Adapter für `ChiefBotConversation`. Ein historischer Reparaturbeleg ersetzt daher keinen aktuellen Modellversuch. Der Gesprächs-Test übergibt bewusst Antwortfixtures direkt an `complete()` und initialisiert keine Inferenz-Engine.
