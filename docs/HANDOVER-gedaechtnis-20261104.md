@@ -39,3 +39,9 @@
 - 5e171d8b3f6dd7019437ce625f7b6c3922c56691: Merge #481-Head 5a1076ca (enthält c4071b7a), konfliktfrei.
 - Tests auf 5e171d8b: ContinuumAdaptiveCockpitLayoutTest 3/3, ContinuumCoreMirrorTest 6/6, JarvisMemoryActivityPanelTest 3/3, BrainOrbSignalsTest 5/5 grün.
 - ROT: RetrievalCalculationSourceTest.nothingAfterCloseAndThrowingListenerIsIsolated (3/4), zweimal reproduziert: „expected:<null> but was:<Thread[continuum-calc-events-…]>“ – Event-Thread lebt nach close() noch. Calc-Source-Code durch den Merge unverändert; Ursache ungeklärt (Verdacht: Test wartet nicht auf Thread-Ende bzw. Timing). Nächster Schritt: Thread nach letztem close() joinen oder Test mit Zeitlimit auf Thread-Ende warten lassen.
+
+## Nachtrag Phase 1 (Event-Thread nach close)
+- Ursache: Bug (Race). close() hat nur notifyAll() gerufen; der Worker setzte worker=null erst später auf seinem eigenen Thread, awaitIdleForTest kehrte bei leerer Queue sofort zurück → Thread lebte noch.
+- Fix in 7403142e59c998290cb30a95cb801efd2dd62ab6: letzter close() leert die Queue, löst den Worker unter dem Lock ab (worker=null) und joint ihn (max. 1 s, nie vom Worker selbst); der Worker endet, sobald er nicht mehr der aktuelle ist. Gleiches Muster in ContinuumMemoryEventHub angeglichen. Test unverändert.
+- Tests: RetrievalCalculationSourceTest 10/10 Läufe grün (je 4/4); auf 7403142e59c998290cb30a95cb801efd2dd62ab6 grün: RetrievalCalculationSourceTest 4/4, ContinuumMemoryEventQueueTest 3/3, BrainOrbSignalsTest 5/5, JarvisMemoryActivityPanelTest 3/3.
+- #371 (continuum/m2-cognitive-memory @de333693) hat im ContinuumMemoryEventHub dieselbe Race; dort nicht geändert.
