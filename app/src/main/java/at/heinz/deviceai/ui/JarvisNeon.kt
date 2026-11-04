@@ -89,8 +89,11 @@ object JarvisNeon {
         if (intensity <= 0f || radius <= 0f) return
         p.setAdditive(true)
         p.fillCircle(cx, cy, radius * 2.4f, Fill.Radial(cx, cy, radius * 2.4f, intArrayOf(Argb.withAlpha(Colors.violet, .10f * intensity), 0)))
-        p.fillCircle(cx, cy, radius * 1.3f, Fill.Radial(cx, cy, radius * 1.3f, intArrayOf(Argb.withAlpha(color, .28f * intensity), 0)))
-        p.fillCircle(cx, cy, radius * .45f, Fill.Radial(cx, cy, radius * .45f, intArrayOf(Argb.withAlpha(Colors.activeWhite, .30f * intensity), 0)))
+        // ref5 core→halo: bright inner stop near glowCore, outer bloomHalo (stop positions estimated, not measured).
+        p.fillCircle(cx, cy, radius * 1.3f, Fill.Radial(cx, cy, radius * 1.3f,
+            intArrayOf(Argb.withAlpha(Colors.glowCore, .42f * intensity), Argb.withAlpha(Colors.bloomHalo, .30f * intensity), 0),
+            floatArrayOf(0f, .45f, 1f)))
+        p.fillCircle(cx, cy, radius * .45f, Fill.Radial(cx, cy, radius * .45f, intArrayOf(Argb.withAlpha(Colors.activeWhite, .38f * intensity), 0)))
         p.setAdditive(false)
     }
 
@@ -136,12 +139,20 @@ object JarvisNeon {
     fun interface IconPainter { fun draw(p: ContinuumPainter, left: Float, top: Float, size: Float, color: Int) }
 
     /** Shared body of tile, button and pill: fill, optional glow, 1 dp rim (ref5 measurements in [style]). */
-    fun component(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, style: ComponentStyle, active: Boolean = false) {
+    fun component(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, style: ComponentStyle, active: Boolean = false,
+                  centerLift: Boolean = false) {
         val radius = minOf(style.radius, (b - t) / 2f)
         val rim = style.rimEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.rim, it)) } ?: Fill.Solid(style.rim)
         if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f,
             if (active) Fill.Solid(Colors.bloomHalo) else rim)
-        p.fillRoundRect(l, t, r, b, radius, style.fillEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.fill, it)) } ?: Fill.Solid(style.fill))
+        val fill = when {
+            // ref5 active button: brighter toward the middle (navSurface edges → lifted navSurfaceActive centre; lift estimated).
+            centerLift -> Fill.Linear(l, t, r, t, intArrayOf(Colors.navSurface, Argb.mix(style.fill, Colors.cyan, .12f), Colors.navSurface),
+                floatArrayOf(0f, .5f, 1f))
+            style.fillEnd != null -> Fill.Linear(l, t, r, t, intArrayOf(style.fill, style.fillEnd))
+            else -> Fill.Solid(style.fill)
+        }
+        p.fillRoundRect(l, t, r, b, radius, fill)
         p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, rim)
         if (active) p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(Colors.glowCore), .6f)
     }
@@ -154,8 +165,6 @@ object JarvisNeon {
              icon: IconPainter? = null, iconColor: Int = Colors.cyanSoft, active: Boolean = false, chevron: Boolean = true) {
         val st = Styles.tile
         component(p, l, t, r, b, st, active)
-        if (chevron) ContinuumIcons.draw(p, ContinuumIcons.Icon.CHEVRON_RIGHT, r - Styles.chevronInset, t + (b - t) / 2f,
-            Styles.chevronSize, Fill.Solid(Colors.chevron))
         val iconTop = t + (b - t - st.iconSize) / 2f
         icon?.draw(p, l + st.padH, iconTop, st.iconSize, iconColor)
         val x = l + st.padH + st.iconSize + st.iconGap
@@ -163,6 +172,9 @@ object JarvisNeon {
         val block = p.capHeight(Type.tileLabel) + lines.size * Type.subtitleLineHeight
         var y = t + (b - t - block) / 2f + p.capHeight(Type.tileLabel)
         p.drawText(title, x, y, Type.tileLabel, Fill.Solid(Colors.text))
+        // ref5: chevron on title height, not vertically centred.
+        if (chevron) ContinuumIcons.draw(p, ContinuumIcons.Icon.CHEVRON_RIGHT, r - Styles.chevronInset, y - p.capHeight(Type.tileLabel) / 2f,
+            Styles.chevronSize, Fill.Solid(Colors.chevron))
         lines.forEach { y += Type.subtitleLineHeight; p.drawText(it, x, y, Type.subtitle, Fill.Solid(Colors.textSecondary)) }
     }
 
@@ -170,7 +182,7 @@ object JarvisNeon {
     fun button(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, label: String, icon: IconPainter? = null,
                active: Boolean = false) {
         val st = if (active) Styles.buttonActive else Styles.button
-        component(p, l, t, r, b, st, active)
+        component(p, l, t, r, b, st, active, centerLift = active)
         icon?.draw(p, l + st.padH, t + (b - t - st.iconSize) / 2f, st.iconSize, if (active) Colors.cyan else Colors.cyanSoft)
         val x = l + st.padH + (if (icon != null) st.iconSize + st.iconGap else 0f)
         p.drawText(label, x, t + (b - t + p.capHeight(Type.nav)) / 2f, Type.nav, Fill.Solid(Colors.text))

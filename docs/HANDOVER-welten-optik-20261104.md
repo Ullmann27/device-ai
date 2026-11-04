@@ -29,3 +29,7 @@
 
 ## Nächster Schritt
 Punkte 1–4 schließen, jeweils mit Vergleichsbild in kontrolle-3. Danach baut Kern `JarvisShellView` über die #481-Verträge in `ContinuumHomeView` ein, dann die Geräte-Checks.
+
+## Sprint 10:05 (04.11.2026)
+- Erledigt: Bloom-Kern→Hof-Verlauf (glowCore innen → bloomHalo außen, Stopps geschätzt), Kachel-Chevron auf Titelhöhe, aktiver Button mit zur Mitte hellerem Verlauf (navSurface → aufgehelltes navSurfaceActive, Aufhellung geschätzt). Jarvis*-Unit-Tests grün.
+- Offen: Stopps/Aufhellung in ref5 nachmessen, Vergleichsbild kontrolle-3 nicht erstellt, Staub/Raster, Gerätetest, Lint in AndroidOnDeviceSpeechInput.kt (fremd).
