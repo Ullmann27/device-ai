@@ -8,6 +8,9 @@ const activity = fs.readFileSync(
 const client = fs.readFileSync(
   new URL("../../app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt", import.meta.url), "utf8"
 );
+const protocol = fs.readFileSync(
+  new URL("../../app/src/main/java/at/heinz/deviceai/RemoteMentorProtocol.kt", import.meta.url), "utf8"
+);
 const backend = fs.readFileSync(new URL("../../backend/src/server.js", import.meta.url), "utf8");
 
 test("external mentor has an explicit per-request consent UI", () => {
@@ -25,15 +28,17 @@ test("Android only sends bounded question text to the private backend", () => {
   const end = client.indexOf("private fun request(", start);
   assert.ok(start >= 0 && end > start);
   const body = client.slice(start, end);
-  assert.match(body, /put\("consent", true\)/);
+  assert.match(body, /RemoteMentorProtocol\.request\(provider, question\)/);
+  assert.match(protocol, /put\("consent", true\)/);
   assert.match(body, /externalMentor\(question, "GROQ", callback\)/);
-  assert.match(body, /require\(provider == "GROQ" \|\| provider == "OPENROUTER"\)/);
-  assert.match(body, /put\("provider", provider\)/);
-  assert.match(body, /put\("question", question\.trim\(\)\)/);
-  assert.doesNotMatch(body, /Build\.MODEL|shizuku_ready|manufacturer|sendDevice|put\("memory"|put\("device"/);
+  assert.match(protocol, /provider == "GROQ" \|\| provider == "OPENROUTER" \|\| provider == "INWORLD"/);
+  assert.match(protocol, /put\("provider", provider\)/);
+  assert.match(protocol, /put\("question", question\.trim\(\)\)/);
+  assert.doesNotMatch(body + protocol, /Build\.MODEL|shizuku_ready|manufacturer|sendDevice|put\("memory"|put\("device"/);
   assert.match(body, /"POST", "\$base\/v1\/mentor\/answer"/);
-  assert.match(body, /UNVERIFIED_EXTERNAL/);
-  assert.match(body, /\.take\(4200\)/);
+  assert.match(body, /RemoteMentorProtocol\.answer\(provider, JSONObject\(raw\)\)/);
+  assert.match(protocol, /UNVERIFIED_EXTERNAL/);
+  assert.match(protocol, /message\.length <= 4200/);
   assert.doesNotMatch(body, /json\.optString\("message"\)\.trim\(\)\.take\(1800\)/);
 });
 
@@ -49,8 +54,8 @@ test("server never accepts mentor request without owner grant and bearer authent
 
 test("external reply is labelled unverified and cannot write memory or perform tools", () => {
   assert.match(activity, /EXTERNER KI-MENTOR · GROQ · UNBESTÄTIGT/);
-  assert.match(client, /json\.optJSONArray\("tool_calls"\)\?\.length\(\) == 0/);
-  assert.match(client, /!json\.optBoolean\("memory_written", true\)/);
+  assert.match(protocol, /json\.optJSONArray\("tool_calls"\)\?\.length\(\) == 0/);
+  assert.match(protocol, /json\.opt\("memory_written"\) == false/);
   assert.doesNotMatch(
     activity.slice(activity.indexOf("private fun showGroqMentorDialog("),
       activity.indexOf("private fun showCloudSettings()")),

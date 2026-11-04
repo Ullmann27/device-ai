@@ -298,42 +298,28 @@ class AgentBackendClient(private val context: Context) {
     fun openRouterMentor(question: String, callback: (Result<String>) -> Unit) =
         externalMentor(question, "OPENROUTER", callback)
 
+    fun inworldMentor(question: String, callback: (Result<String>) -> Unit) =
+        externalMentor(question, "INWORLD", callback)
+
     private fun externalMentor(
         question: String,
         provider: String,
         callback: (Result<String>) -> Unit
     ) {
-        require(provider == "GROQ" || provider == "OPENROUTER")
+        val payload = runCatching { RemoteMentorProtocol.request(provider, question) }
+            .getOrElse { callback(Result.failure(it)); return }
         val base = backendUrl()
         val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
         if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
             callback(Result.failure(IllegalStateException("Mentor-Gerätefreigabe oder Device-Token fehlt.")))
             return
         }
-        if (question.trim().length !in 3..1800) {
-            callback(Result.failure(IllegalArgumentException("Mentorfrage muss zwischen 3 und 1800 Zeichen lang sein.")))
-            return
-        }
         Thread({
             val outcome = runCatching {
-                val payload = JSONObject().apply {
-                    put("consent", true)
-                    put("provider", provider)
-                    put("question", question.trim())
-                }
                 val raw = mentorRequestWithOneAuthRecovery(
                     "POST", "$base/v1/mentor/answer", payload.toString(), base
                 )
-                val json = JSONObject(raw)
-                require(json.optString("provider") == provider &&
-                    json.optString("trust") == "UNVERIFIED_EXTERNAL" &&
-                    !json.optBoolean("memory_written", true) &&
-                    json.optJSONArray("tool_calls")?.length() == 0) {
-                    "Ungültige oder nicht isolierte Mentorantwort."
-                }
-                json.optString("message").trim().take(4200)
-                    .takeIf { it.isNotBlank() }
-                    ?: throw IllegalStateException("Leere Mentorantwort.")
+                RemoteMentorProtocol.answer(provider, JSONObject(raw))
             }
             mainHandler.post { callback(outcome) }
         }, "continuum-remote-mentor").apply { isDaemon = true; start() }

@@ -47,7 +47,7 @@ test('retry of pairing probe is bounded and never silently duplicates Groq quest
   assert.doesNotMatch(challenge,/pairing\/redeem|mentor\/answer|consent/);
 
   const mentor=between(client,'fun groqMentor(', 'private fun request(');
-  assert.match(mentor,/put\("consent", true\)/);
+  assert.match(mentor,/RemoteMentorProtocol\.request\(provider, question\)/);
   assert.match(mentor,/mentorRequestWithOneAuthRecovery\(/);
   assert.doesNotMatch(mentor,/Thread\.sleep|while\s*\(|retryOnTimeout|retryOnRateLimit/);
 });
