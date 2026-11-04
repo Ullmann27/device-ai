@@ -1,0 +1,20 @@
+--- a/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt
++++ b/app/src/main/java/at/heinz/deviceai/chief/ChiefWorkerPool.kt
+@@ -94,7 +94,7 @@
+             if (!slot.reported.compareAndSet(false, true)) return
+             val ms = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started)
+             slots.remove(slot.brief.id)
+-            runCatching { slot.onReport(WorkerReport(slot.brief.id, status, summary.take(4_000), ms)) }
++            runCatching { slot.onReport(WorkerReport(slot.brief.id, status, at.heinz.deviceai.ToolOutputCap.cap(summary), ms)) }
+         }
+         if (slot.cancelled.get()) return report(WorkerStatus.CANCELLED, "Abgebrochen, bevor der Auftrag startete.")
+         try {
+@@ -125,7 +125,7 @@
+     fun runner(brief: WorkerBrief, delegate: ToolRunner): ToolRunner = ToolRunner { call ->
+         if (call.name !in brief.allowedTools)
+             throw ToolBackendFailure(ToolExecutionStatus.FAILED, "Werkzeug ${call.name} ist für Auftrag ${brief.id} nicht freigegeben.")
+-        delegate.execute(call)
++        at.heinz.deviceai.ToolOutputCap.cap(delegate.execute(call))
+     }
+ 
+     fun model(brief: WorkerBrief, delegate: AgentModel): AgentModel = AgentModel { task, memories, reflection, observations ->

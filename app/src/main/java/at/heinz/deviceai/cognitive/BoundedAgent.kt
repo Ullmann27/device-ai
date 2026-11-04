@@ -363,6 +363,15 @@ class BoundedAgentOrchestrator(
                             transition(AgentState.GATED_EXECUTION, "Tool policy gate evaluated.")
                             usedTools += proposal.toolName
                             val risk = ToolRegistry.get(proposal.toolName)!!.risk
+                            // S4: tool results are untrusted data; they cannot create owner intent.
+                            ExternalContentActionGuard.refusal(task, proposal.toolName, risk, proposal.arguments,
+                                untrustedObservationsSeen = toolObservations.isNotEmpty())?.let { refused ->
+                                lastRecord = ToolExecutionRecord("$callIdPrefix-$calls", proposal.toolName, risk, emptyMap(),
+                                    refused, ToolExecutionStatus.REJECTED, 0)
+                                transition(AgentState.OBSERVE_RESULT, "Tool proposal derived from external content refused.")
+                                emit(CognitiveWorkState.BLOCKED)
+                                return AgentRunResult(refused, AgentState.OBSERVE_RESULT, audit.toList(), null, refused, proof())
+                            }
                             val invocation = proposal.invocation("$callIdPrefix-$calls")
                             val priorReceipt = toolGate.recordProposal(invocation)
                             val requiresReview = priorReceipt != null &&
@@ -404,7 +413,11 @@ class BoundedAgentOrchestrator(
                             if (lastRecord.outcomeUncertain || requiresReview || execution.replayed) {
                                 // Do not let a model reissue an unresolved effect under
                                 // a new call id or turn a replay into fresh experience.
-                                val blocked = if(lastRecord.outcomeUncertain)
+                                val blocked = if(lastRecord.outcomeUncertain && execution.journalUnavailableBeforeDispatch)
+                                    "Werkzeugjournal nicht lesbar: In diesem Durchlauf wurde nichts ausgeführt. " +
+                                        "Ob diese Aufruf-ID früher bereits ausgeführt wurde, ist unbekannt. " +
+                                        "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
+                                else if(lastRecord.outcomeUncertain)
                                     "Werkzeugausgang UNKNOWN: Eine bereits ausgelöste Wirkung kann fortbestehen. " +
                                         "Weitere Aktionen sind bis zur Besitzerprüfung blockiert."
                                 else "Gespeicherte Quittung: keine neue Ausführung oder frische Beobachtung. " +

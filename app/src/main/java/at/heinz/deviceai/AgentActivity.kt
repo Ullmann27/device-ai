@@ -104,7 +104,10 @@ import at.heinz.deviceai.localmodel.LocalInferenceEvent
 import at.heinz.deviceai.localmodel.LocalModelBackend
 import at.heinz.deviceai.localmodel.LocalModelCatalog
 import at.heinz.deviceai.localmodel.LocalModelRuntime
+import at.heinz.deviceai.localmodel.LocalModelLoadAdmission
+import at.heinz.deviceai.localmodel.localModelResourceSnapshot
 import at.heinz.deviceai.localmodel.LocalModelState
+import at.heinz.deviceai.localmodel.LocalTurnModelBinding
 import at.heinz.deviceai.localmodel.LocalToolResponse
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -5403,7 +5406,8 @@ class AgentActivity : Activity() {
 
     private fun speakBootstrap(message: String) {
         if (!voiceEnabled || !voiceReady || !foregroundLearningActive ||
-            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired)) return
+            !at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.maySpeak(voiceEngine?.voice?.isNetworkConnectionRequired,
+                microphoneActive = voiceListening)) return
         stopVoiceAnimation()
         val id = "device-ai-" + UUID.randomUUID()
         voiceUtteranceId = id
@@ -6403,6 +6407,8 @@ class AgentActivity : Activity() {
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, rawObservations ->
                 cancellation.throwIfCancelled()
+                // M6: every step runs on the model this turn started with (owner may swap it during an approval dialog).
+                check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 check(at.heinz.deviceai.cognitive.ScreenObservationPrompt.grantCurrent(screenGrant.get(),ScreenObservationBus.grantEpoch())) {"SCREEN_PERMISSION_CHANGED"}
                 val hasScreen=rawObservations.any { it.toolName=="read_app_screen" }
                 if(hasScreen)ephemeralScreenRun.set(true)
@@ -6584,6 +6590,7 @@ class AgentActivity : Activity() {
                     }
                     generation.failure?.let { error(it) }
                 }
+                check(LocalTurnModelBinding.stillBound(imported, localRuntime.loadedModel)) { LocalTurnModelBinding.CHANGED }
                 AgentModelOutput(
                     "litertlm:${imported.id}@${imported.version}",
                     generation.response,
@@ -7668,8 +7675,17 @@ class AgentActivity : Activity() {
         resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
-        scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
-        localRuntime.load(model.id, model.version) { result ->
+        // M4: no multi-GB native load without measured RAM/thermal admission.
+        // A refusal is transient and therefore does NOT disable Gemma restore.
+        LocalModelLoadAdmission.loadIfAdmitted(localRuntime, model, localModelResourceSnapshot(),
+            onRefused = { refused ->
+                localRuntimeError = refused.exceptionOrNull()?.message
+                Toast.makeText(this, LocalModelLoadAdmission.ownerMessage(localRuntimeError), Toast.LENGTH_LONG).show()
+                refreshLocalModelUi()
+            },
+            onAdmitted = {
+                scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
+            }) { result ->
             runOnUiThread {
                 clearLifecycleTimeout()
                 if (isFinishing || isDestroyed) return@runOnUiThread
@@ -8625,7 +8641,9 @@ class AgentActivity : Activity() {
             if(activeLocalRequest)cancelLocalRequest()
             else { Toast.makeText(this,"Bitte die laufende Aufgabe zuerst über Stopp beenden.",Toast.LENGTH_LONG).show();return }
         }
+        // Barge-in: silence voice AND avatar mouth now; the TTS onStop callback is asynchronous.
         voiceEngine?.stop()
+        stopVoiceAnimation()
         val scopeGeneration=++speechScopeGeneration
         val scopeSession=sessionId
         val scopeDialog=devDialog
@@ -8658,7 +8676,15 @@ class AgentActivity : Activity() {
             if(devDialog?.isShowing==true){
                 val safe=spoken.take(400);devGoalInput?.setText(safe);devController.setGoal(safe);refreshDevelopmentUi()
             }
-        }else {input.setText(spoken);input.setSelection(spoken.length)}
+        }else {
+            // Keep a typed/restored draft: dictation continues at the owner's cursor instead of
+            // replacing it. Without composer focus the cursor is not the owner's, so append.
+            val focused=input.hasFocus()
+            val merged=at.heinz.deviceai.cognitive.LocalSpeechInputPolicy.mergeDictation(
+                input.text.toString(),if(focused)input.selectionStart else -1,
+                if(focused)input.selectionEnd else -1,spoken)
+            input.setText(merged.text);input.setSelection(merged.cursor.coerceIn(0,input.text.length))
+        }
         // Recognition only fills the composer. Sending/actions remain an explicit owner gesture.
     }
 

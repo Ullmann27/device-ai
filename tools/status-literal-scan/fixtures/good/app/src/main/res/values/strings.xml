@@ -1,0 +1,5 @@
+<resources>
+    <string name="cpu_fmt">CPU %1$d %%</string>
+    <string name="na">nicht verfügbar</string>
+    <dimen name="gap">12dp</dimen>
+</resources>

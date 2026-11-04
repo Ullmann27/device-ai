@@ -1,0 +1,45 @@
+package at.heinz.deviceai.chief
+
+import org.junit.Assert.*
+import org.junit.Test
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicInteger
+
+/** Reviewer-local stress test (NOT pushed to the integration branch). */
+class ChiefWorkerPoolStressReviewTest {
+    @Test fun exactlyOneReportPerJobUnderLoadAndAwaitIdleSeesAllReports() {
+        repeat(20) { round ->
+            val reports = ConcurrentHashMap<String, AtomicInteger>()
+            val pool = ChiefWorkerPool(maxConcurrent = 4, maxQueued = 16) { b -> WorkerJob {
+                when (b.id.hashCode() % 4) { 0 -> throw IllegalStateException("x"); 1 -> Thread.sleep(2); else -> Unit }; "ok" } }
+            var accepted = 0
+            for (i in 0 until 20) {
+                val id = "r${round}j$i"
+                if (pool.submit(WorkerBrief(id, "g", emptySet())) { r -> Thread.sleep(1); reports.getOrPut(r.id) { AtomicInteger() }.incrementAndGet() }) {
+                    accepted++
+                    if (i % 5 == 0) pool.cancel(id)
+                }
+            }
+            assertTrue(pool.awaitIdle(10_000))
+            assertEquals(accepted, reports.size)
+            assertTrue(reports.values.all { it.get() == 1 })
+            pool.shutdown()
+        }
+    }
+
+    @Test fun reentrantResubmitOfSameIdFromCallbackIsRejectedWhileDelivering() {
+        val pool = ChiefWorkerPool(1, 1) { WorkerJob { "ok" } }
+        val resubmitted = java.util.concurrent.CompletableFuture<Boolean>()
+        pool.submit(WorkerBrief("same", "g", emptySet())) { resubmitted.complete(pool.submit(WorkerBrief("same", "g", emptySet())) {}) }
+        println("REVIEW reentrant same-id resubmit accepted=" + resubmitted.get(5, java.util.concurrent.TimeUnit.SECONDS))
+        assertTrue(pool.awaitIdle(5_000)); pool.shutdown()
+    }
+
+    @Test fun awaitIdleCalledFromInsideTheCallbackCannotSucceed() {
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "ok" } }
+        val inner = java.util.concurrent.CompletableFuture<Boolean>()
+        pool.submit(WorkerBrief("a", "g", emptySet())) { inner.complete(pool.awaitIdle(300)) }
+        println("REVIEW awaitIdle inside callback=" + inner.get(5, java.util.concurrent.TimeUnit.SECONDS))
+        assertTrue(pool.awaitIdle(5_000)); pool.shutdown()
+    }
+}

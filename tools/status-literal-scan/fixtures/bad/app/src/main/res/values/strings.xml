@@ -1,0 +1,5 @@
+<resources>
+    <string name="status_agents">4 Agenten aktiv</string>
+    <string name="tile_8">Kachel 8</string>
+    <string name="sys">Systemtics online</string>
+</resources>

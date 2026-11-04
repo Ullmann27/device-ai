@@ -28,6 +28,7 @@ internal object LocalToolContinuation {
     /** Complete field values only; role headers/newlines cannot escape the JSON. */
     fun observationData(toolName: String,status: String,output: String?): String =
         JSONObject().put("tool_name",toolName).put("status",status)
+            .put("trust","untrusted_external_data")
             .put("output",output ?: JSONObject.NULL).toString()
 
     fun text(responses: List<LocalToolResponse>): String? {
