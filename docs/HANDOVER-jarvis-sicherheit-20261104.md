@@ -26,3 +26,4 @@ QUERY_ALL_PACKAGES, REQUEST_INSTALL_PACKAGES, com.termux.permission.RUN_COMMAND.
 - `cockpit/SafePillActionGate.kt`, `ui/JarvisSequenceEffects.kt` (F/G/D), `ui/LocalModelStatusPresentation.kt`, `ui/JarvisNeon.kt` (Merge)
 - Tests: `SafeFlowsFgTest`, `JarvisSequenceFgdTest`, `LocalModelStatusPresentationTest`, `PillGateMappingTest`
 - Reviews/Evidenz: `docs/reviews/` auf #372; Bilder: `/workspace/jarvis-design-referenz/kontrolle-3/sicherheit-{fgd,status}.png`
+- 2026-11-04 09:57 Sprint: NewApi-Guards inline in JarvisBloomPass/AndroidOnDeviceSpeechInput (5e5545a90); lintDebug nicht verifiziert (Abbruch), Kern-RAM/Thermik-Teil übersprungen.
