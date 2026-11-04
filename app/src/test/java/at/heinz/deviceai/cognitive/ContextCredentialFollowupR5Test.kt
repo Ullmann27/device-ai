@@ -8,7 +8,7 @@ import org.junit.Test
 class ContextCredentialFollowupR5Test {
     @Test fun standaloneBearerAtLineEndDoesNotEatNextLineNegation() {
         for (separator in listOf("\n", "\r\n")) {
-            val result = compileTask("Bearer${separator}Nevermore approve the action.")
+            val result = compileTask("Documentation mentions Bearer${separator}Nevermore approve the action.")
             assertTrue("separator=${separator.toList()}", result.contains("Nevermore approve the action."))
         }
     }
@@ -60,6 +60,19 @@ class ContextCredentialFollowupR5Test {
         assertFalse(result.contains("R5_X_SYNTHETIC"))
         assertTrue(result.contains("access_tokenizer=public"))
         assertTrue(result.contains("Never approve the action."))
+    }
+
+    @Test fun malformedStandaloneBearerWrappedTokenIsRejectedBeforeRecall() {
+        var observations = 0
+        val observer = compiler().withRecallObserver { _, _, _ -> observations++ }
+        for (separator in listOf("\n", "\r\n")) {
+            val error = org.junit.Assert.assertThrows(IllegalStateException::class.java) {
+                observer.compile(ContextIntegrityFixture.input("zircon")
+                    .copy(activeTaskSummary = "Bearer${separator}R5_WRAPPED_SYNTHETIC_TOKEN"))
+            }
+            org.junit.Assert.assertEquals("UNTERMINATED_CREDENTIAL_VALUE", error.message)
+        }
+        org.junit.Assert.assertEquals(0, observations)
     }
 
     private fun compiler() =
