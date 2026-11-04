@@ -1,0 +1,16 @@
+{
+  "schema": "continuum-branch-bots-development-continuation",
+  "version": 1,
+  "status": "ACTIVE",
+  "repository": "Ullmann27/device-ai",
+  "branch": "codex/continuum-branch-integration-bots-20261104",
+  "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
+  "ownerSession": "672924e4650b-night-20261104",
+  "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
+  "phase": "REPRODUCE_AND_IMPLEMENT",
+  "milestones": [],
+  "androidCompilation": "NOT_RUN",
+  "deviceTest": "NOT_RUN",
+  "apk": "NOT_RUN",
+  "parallelAgents": 0
+}
