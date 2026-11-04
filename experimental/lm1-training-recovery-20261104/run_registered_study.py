@@ -202,9 +202,221 @@ class Study:
         result["path"] = str(checkpoint)
         return result
 
+    def post_capacity_evidence(self, variant: str, selected: dict) -> dict:
+        """Validate saved, complete capacity evidence; a measured FAIL stays a FAIL.
+
+        This reads existing evidence only. Missing/invalid evidence is not an
+        ordinary capacity FAIL and must never authorize a frozen test selection.
+        """
+        label = "intent-" + variant + "-capacity-after"
+
+        def require(condition: bool, message: str) -> None:
+            if not condition:
+                raise ValueError(message)
+
+        def unique(pairs: list[tuple[str, object]]) -> dict:
+            result = {}
+            for key, value in pairs:
+                require(key not in result, "duplicate field: " + key)
+                result[key] = value
+            return result
+
+        def number(value: str) -> float:
+            result = float(value)
+            require(math.isfinite(result) and result >= 0, "invalid nonnegative measurement")
+            return result
+
+        def integer(value: str) -> int:
+            require(isinstance(value, str) and re.fullmatch(r"0|[1-9][0-9]*", value) is not None,
+                    "invalid nonnegative integer")
+            return int(value)
+
+        def optional_integer(value: str):
+            return None if value == "UNAVAILABLE" else integer(value)
+
+        try:
+            self.verify()
+            require(variant in ("small", "wide"), "unknown capacity variant")
+            checkpoint = Path(selected["path"])
+            tokenizer = self.inputs / "lm1-tokenizer.lmbp"
+            checkpoint_sha = selected["checkpointSha256"]
+            require(sha(checkpoint) == checkpoint_sha, "selected checkpoint changed")
+            log = self.logs / (label + ".tsv")
+            receipt_path = self.logs / (label + ".receipt.json")
+            raw_log, raw_receipt = log.read_bytes(), receipt_path.read_bytes()
+            log_sha = hashlib.sha256(raw_log).hexdigest()
+            receipt_sha = hashlib.sha256(raw_receipt).hexdigest()
+            receipt = json.loads(raw_receipt, object_pairs_hook=unique)
+            require(set(receipt) == set("label command startedUtc wallSeconds returncode timeout timeoutSeconds "
+                    "sourceCommit registrationSha256 jarSha256 logSha256 registeredBytesUnchanged".split()),
+                    "incomplete or unexpected capacity receipt fields")
+            expected_command = ["java", "-Xms64m", "-Xmx1g", "-cp",
+                                str(self.jar) + os.pathsep + str(self.stdlib), PACKAGE + "LmCapacityBenchmark",
+                                str(checkpoint), str(tokenizer)]
+            require(receipt["label"] == label and receipt["command"] == expected_command,
+                    "capacity process identity mismatch")
+            require(receipt["timeout"] is False and receipt["registeredBytesUnchanged"] is True
+                    and type(receipt["timeoutSeconds"]) is int and receipt["timeoutSeconds"] == 120
+                    and type(receipt["returncode"]) is int and receipt["returncode"] in (0, 1),
+                    "capacity process did not complete under the registered budget")
+            require(type(receipt["wallSeconds"]) in (int, float)
+                    and 0 <= number(str(receipt["wallSeconds"])) <= 120, "capacity wall budget mismatch")
+            started = datetime.datetime.fromisoformat(receipt["startedUtc"])
+            require(started.utcoffset() == datetime.timedelta(0), "capacity start time is not UTC")
+            require(receipt["sourceCommit"] == self.args.source_commit
+                    and receipt["registrationSha256"] == self.registration_sha
+                    and receipt["jarSha256"] == self.registration["jarSha256"]
+                    and receipt["logSha256"] == log_sha, "unbound capacity receipt")
+
+            records = []
+            require(raw_log.endswith(b"\n"), "truncated capacity log")
+            for line in raw_log.decode("utf-8").splitlines():
+                fields = line.split("\t")
+                require(len(fields) > 1 and all("=" in field for field in fields[1:]),
+                        "malformed capacity record")
+                records.append((fields[0], unique([tuple(field.split("=", 1)) for field in fields[1:]])))
+
+            def one(kind: str) -> dict:
+                found = [record for name, record in records if name == kind]
+                require(len(found) == 1, "missing or duplicate " + kind)
+                return found[0]
+
+            protocol = one("CAPACITY_PROTOCOL")
+            require(protocol == {"firstTokenLimitMs": "1500.0", "generation32LimitMs": "5000.0",
+                    "vmHwmLimitKiB": "786432", "requestMaxMillis": "30000", "warmups": "1",
+                    "measuredRepeats": "3", "ttftMethod": "SEPARATE_ONE_TOKEN_CALL_UPPER_BOUND",
+                    "processTimeoutRequired": "true",
+                    "promptSha256": "9c7bfc2a17f395c0219273f50652181d825c4712715339083daa71717e6ff495"},
+                    "capacity protocol changed")
+            model = one("CAPACITY_MODEL")
+            require(set(model) == set("checkpointPath checkpointSha256 checkpointBytes tokenizerPath tokenizerSha256 "
+                    "tokenizerBytes parameters parameterBytes arch vocab dim layers heads context mlp loadMs promptTokens "
+                    "promptIncludesBos fullLayoutLoaded finiteWeights".split()), "incomplete capacity model fields")
+            require(model["arch"] == "MINGRU"
+                    and all(integer(model[key]) > 0 for key in ("vocab", "dim", "layers", "heads", "context", "mlp")),
+                    "invalid capacity model configuration")
+            manifests = rows(self.logs / ("intent-" + variant + ".tsv"), "MANIFEST")
+            expected_parameters = 132160 if variant == "small" else 6562304
+            require(len(manifests) == 1 and manifests[0]["variant"] == variant
+                    and integer(manifests[0]["parameters"]) == expected_parameters,
+                    "training parameter identity mismatch")
+            require(model["checkpointPath"] == str(checkpoint) and model["checkpointSha256"] == checkpoint_sha
+                    and integer(model["checkpointBytes"]) == checkpoint.stat().st_size
+                    and 0 < checkpoint.stat().st_size <= 64 * 1024 * 1024
+                    and model["tokenizerPath"] == str(tokenizer)
+                    and model["tokenizerSha256"] == self.registration["inputs"]["lm1-tokenizer.lmbp"]
+                    and integer(model["tokenizerBytes"]) == tokenizer.stat().st_size
+                    and 0 < tokenizer.stat().st_size <= 100000
+                    and integer(model["parameters"]) == expected_parameters
+                    and integer(model["parameterBytes"]) == 4 * expected_parameters
+                    and model["fullLayoutLoaded"] == "true" and model["finiteWeights"] == "true"
+                    and integer(model["promptTokens"]) == 64 and model["promptIncludesBos"] == "false"
+                    and integer(model["context"]) >= 97,
+                    "capacity model/checkpoint/tokenizer identity mismatch")
+            number(model["loadMs"])
+            trials = [record for name, record in records if name == "CAPACITY_TRIAL"]
+            memories = [record for name, record in records if name == "CAPACITY_MEMORY"]
+            expected_trials = [(phase, trial, requested) for phase, count in (("warmup", 1), ("measured", 3))
+                               for trial in range(1, count + 1) for requested in (1, 32)]
+            require([(r["phase"], integer(r["trial"]), integer(r["requestedNewTokens"])) for r in trials]
+                    == expected_trials, "missing, duplicate or reordered capacity trials")
+            expected_memory = ["before_load", "after_load"] + [
+                f"{phase}_{trial}_{'first' if requested == 1 else 'generation'}"
+                for phase, trial, requested in expected_trials] + ["final"]
+            require([r["phase"] for r in memories] == expected_memory, "incomplete capacity memory observations")
+            expected_order = ["CAPACITY_PROTOCOL", "CAPACITY_MEMORY", "CAPACITY_MODEL", "CAPACITY_MEMORY"]
+            expected_order += [kind for _ in expected_trials for kind in ("CAPACITY_TRIAL", "CAPACITY_MEMORY")]
+            expected_order += ["CAPACITY_MEMORY", "CAPACITY_RESULT"]
+            require([name for name, _ in records] == expected_order, "incomplete or unexpected capacity log")
+            reasons = set()
+            for record, (_, _, requested) in zip(trials, expected_trials):
+                require(set(record) == set("phase trial requestedNewTokens actualNewTokens promptTokens promptTruncated "
+                        "stop elapsedMs runtimeMillis ttftUpperBoundMs textSha256".split()), "incomplete capacity trial fields")
+                elapsed, actual = number(record["elapsedMs"]), integer(record["actualNewTokens"])
+                require(actual <= requested, "invalid actual capacity token count")
+                require(integer(record["runtimeMillis"]) <= elapsed, "runtime duration exceeds complete call duration")
+                require(re.fullmatch(r"[a-f0-9]{64}", record["textSha256"]) is not None, "invalid output hash")
+                require(record["stop"] in {"EOS", "MAX_TOKENS", "CONTEXT", "TIME", "CANCELLED"}
+                        and record["promptTruncated"] in {"true", "false"}, "invalid generation status")
+                if requested == 1 and actual == 1:
+                    require(number(record["ttftUpperBoundMs"]) == elapsed, "first-token measurement mismatch")
+                else:
+                    require(record["ttftUpperBoundMs"] == "UNAVAILABLE", "unobserved first token claimed")
+                if record["stop"] in {"TIME", "CANCELLED"}:
+                    reasons.add("GENERATION_" + record["stop"])
+                if record["promptTruncated"] == "true" or integer(record["promptTokens"]) != 64:
+                    reasons.add("PROMPT_CHANGED_OR_TRUNCATED")
+                if record["stop"] == "CONTEXT":
+                    reasons.add("INSUFFICIENT_CONTEXT")
+                if record["stop"] == "MAX_TOKENS" and actual != requested:
+                    reasons.add("INCOMPLETE_MAX_TOKENS_RESULT")
+            measured = [r for r in trials if r["phase"] == "measured"]
+            first = [r for r in measured if r["requestedNewTokens"] == "1"]
+            generation = [r for r in measured if r["requestedNewTokens"] == "32"]
+            first_observations = sum(integer(r["actualNewTokens"]) == 1 for r in first)
+            full_observations = sum(integer(r["actualNewTokens"]) == 32 for r in generation)
+            first_max = max(number(r["elapsedMs"]) for r in first)
+            generation_max = max(number(r["elapsedMs"]) for r in generation)
+            if first_observations != 3:
+                reasons.add("NO_FIRST_TOKEN_OBSERVATION")
+            if full_observations != 3:
+                reasons.add("INCOMPLETE_32_TOKEN_WORKLOAD")
+            if first_max > 1500:
+                reasons.add("FIRST_TOKEN_LIMIT")
+            if generation_max > 5000:
+                reasons.add("GENERATION_32_LIMIT")
+            require(number(model["loadMs"]) + sum(number(r["elapsedMs"]) for r in trials)
+                    <= 1000 * number(str(receipt["wallSeconds"])) + 1,
+                    "capacity measurements exceed recorded process duration")
+            hwm_samples = []
+            for record in memories:
+                require(set(record) == set("phase vmHwmKiB vmRssKiB heapUsedBytes heapCommittedBytes heapMaxBytes".split()),
+                        "incomplete capacity memory fields")
+                hwm = optional_integer(record["vmHwmKiB"])
+                optional_integer(record["vmRssKiB"])
+                require(0 <= integer(record["heapUsedBytes"]) <= integer(record["heapCommittedBytes"])
+                        <= integer(record["heapMaxBytes"]) <= 1024 ** 3 and integer(record["heapMaxBytes"]) > 0,
+                        "capacity heap contract mismatch")
+                if hwm is not None:
+                    hwm_samples.append(hwm)
+            peak_hwm = max(hwm_samples, default=None)
+            if peak_hwm is None:
+                reasons.add("PROCESS_RSS_UNAVAILABLE")
+            elif peak_hwm > 768 * 1024:
+                reasons.add("PROCESS_RSS_LIMIT")
+            result = one("CAPACITY_RESULT")
+            require(set(result) == set("pass reasons checkpointSha256 parameters loadMs measuredRepeats maxFirstTokenCallMs "
+                    "maxGeneration32CallMs firstTokenObservations full32TokenObservations vmHwmKiB finalVmHwmKiB rssMethod "
+                    "failure".split()), "incomplete capacity summary fields")
+            require(result["checkpointSha256"] == checkpoint_sha and integer(result["parameters"]) == expected_parameters
+                    and number(result["loadMs"]) == number(model["loadMs"])
+                    and integer(result["measuredRepeats"]) == 3
+                    and integer(result["firstTokenObservations"]) == first_observations
+                    and integer(result["full32TokenObservations"]) == full_observations
+                    and number(result["maxFirstTokenCallMs"]) == first_max
+                    and number(result["maxGeneration32CallMs"]) == generation_max
+                    and optional_integer(result["vmHwmKiB"]) == peak_hwm
+                    and optional_integer(result["finalVmHwmKiB"]) == optional_integer(memories[-1]["vmHwmKiB"])
+                    and result["rssMethod"] == "MAXIMUM_OBSERVED_VMHWM" and result["failure"] == "UNAVAILABLE",
+                    "capacity summary does not match the complete measurements")
+            reported_reasons = [] if result["reasons"] == "NONE" else result["reasons"].split(",")
+            require(len(reported_reasons) == len(set(reported_reasons)) and set(reported_reasons) == reasons
+                    and result["pass"] == ("false" if reasons else "true")
+                    and receipt["returncode"] == (1 if reasons else 0), "capacity verdict mismatch")
+            self.verify()
+            require(sha(checkpoint) == checkpoint_sha and sha(log) == log_sha and sha(receipt_path) == receipt_sha,
+                    "capacity evidence changed while verifying")
+            return {"status": "FAIL" if reasons else "PASS", "logSha256": log_sha, "receiptSha256": receipt_sha,
+                    "receipt": receipt, "protocol": protocol, "model": model, "result": result,
+                    "stdlibSha256": self.registration["stdlibSha256"]}
+        except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
+            raise RuntimeError("INVALID_POST_CAPACITY_EVIDENCE: " + label + ": " + str(exc)) from exc
+
     def freeze_evidence(self) -> dict:
         self.verify()
         selected = {variant: self.selection(variant) for variant in ["small", "wide"]}
+        post_capacity = {arm: self.post_capacity_evidence(variant, selected[variant])
+                         for variant, arm in (("small", "S1"), ("wide", "W1"))}
         wide_scores = rows(self.logs / "intent-wide.tsv", "SCORE")
         wide_initial = next(s for s in wide_scores if s["split"] == "dev" and s["step"] == "0")
         if int(selected["wide"]["devCorrect"]) < 12 or int(selected["wide"]["devCorrect"]) < int(wide_initial["correct"]) + 4:
@@ -224,7 +436,7 @@ class Study:
             schedules.append(manifest[0]["tokenScheduleSha256"])
         if len(set(schedules)) != 1:
             raise RuntimeError("UNEQUAL_TRAINING_SCHEDULES")
-        return {"status": "FROZEN_BEFORE_TEST", "arms": arms,
+        return {"status": "FROZEN_BEFORE_TEST", "arms": arms, "postTrainingCapacity": post_capacity,
                   "sourceCommit": self.args.source_commit, "registrationSha256": self.registration_sha,
                   "tokenScheduleSha256": schedules[0], "testSha256": self.registration["files"][
                   "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv"],
@@ -252,6 +464,8 @@ class Study:
             raise RuntimeError("INVALID_TEST_AUTHORIZATION")
         outputs = {}
         for arm in ["S0", "W0", "S1", "W1"]:
+            if selection != self.freeze_evidence():
+                raise RuntimeError("INVALID_TEST_AUTHORIZATION")
             value = selection["arms"][arm]
             if sha(Path(value["path"])) != value["checkpointSha256"] or sha(frozen) != frozen_sha:
                 raise RuntimeError("FROZEN_CHECKPOINT_CHANGED")
@@ -266,12 +480,13 @@ class Study:
             if len(score) != 1 or score[0]["total"] != "48":
                 raise RuntimeError("INVALID_TEST_RESULT")
             outputs[arm] = score[0]
-        if sha(frozen) != frozen_sha:
+        if sha(frozen) != frozen_sha or selection != self.freeze_evidence():
             raise RuntimeError("FREEZE_CHANGED_DURING_TEST")
         w = outputs["W1"]
         limited = int(w["correct"]) >= 36 and min(map(int, w["classCorrect"].split(","))) >= 8
         limited = limited and all(int(w["correct"]) >= int(outputs[a]["correct"]) + 8 for a in ["S0", "W0"])
         write_new(self.out / "intent-summary.json", {"selectionSha256": frozen_sha, "scores": outputs,
+                  "postTrainingCapacity": selection["postTrainingCapacity"],
                   "limitedBenchmarkLearningCriterionPassed": limited,
                   "widerSelectedCheckpointHasFourCaseAdvantage": int(w["correct"]) >= int(outputs["S1"]["correct"]) + 4,
                   "generalIntelligenceClaim": False, "modelPromotion": False, "androidValidation": "NOT_RUN"})

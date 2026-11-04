@@ -1,0 +1,29 @@
+{"S0": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "W0": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "S1": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "W1": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}}
+PASS valid_pass_kept_in_freeze_and_summary
+{"S0": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "W0": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "S1": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}, "W1": {"total": "48", "correct": "0", "classCorrect": "0,0,0,0"}}
+PASS valid_fail_kept_in_freeze_and_summary
+PASS freeze_missing_log
+PASS freeze_missing_receipt
+PASS freeze_corrupt_receipt
+PASS freeze_foreign_source
+PASS freeze_foreign_registration
+PASS freeze_foreign_jar
+PASS freeze_false_log_hash
+PASS freeze_untrusted_command
+PASS freeze_timeout
+PASS freeze_false_exit
+PASS freeze_truncated_log
+PASS test_missing_log
+PASS test_missing_receipt
+PASS test_corrupt_receipt
+PASS test_foreign_source
+PASS test_foreign_registration
+PASS test_foreign_jar
+PASS test_false_log_hash
+PASS test_untrusted_command
+PASS test_timeout
+PASS test_false_exit
+PASS test_truncated_log
+PASS sealed_hash_changed_before_dispatch
+PASS selected_checkpoint_changed_before_dispatch
+checks=26 passed=26 failed=0
