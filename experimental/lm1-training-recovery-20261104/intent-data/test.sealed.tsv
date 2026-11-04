@@ -1,0 +1,49 @@
+id	label	prompt
+test-0001	0	Recherchiere über lokale Suchindizes. Ich nehme den Auftrag zurück; führe nichts aus.
+test-0002	2	Ich brauche Hintergründe über rekursive Funktionen; finde etwas dazu heraus.
+test-0003	3	Ich möchte diese Information behalten: Die Abnahme findet am Mittwoch statt. Lege eine Notiz an.
+test-0004	3	Halte diese Angabe für später fest: Der Werkzeugkasten steht im Nebenraum.
+test-0005	2	Die Datei Uebergabe.txt bleibt zu. Besorge nur Wissen über Speicherverwaltung.
+test-0006	2	Öffne Messbericht.txt. Diesen Auftrag ersetze ich: Bitte über rekursive Funktionen nachforschen.
+test-0007	2	Beschaffe mir Auskünfte zum Thema lokale Suchindizes.
+test-0008	0	Die Datei Uebergabe.txt soll ungeöffnet bleiben. Sonst bitte nichts tun.
+test-0009	3	Recherchiere über Speicherverwaltung. Das ersetze ich durch: Notiz anlegen: Der Werkzeugkasten steht im Nebenraum.
+test-0010	2	Die Datei Messbericht.txt bleibt zu. Besorge nur Wissen über rekursive Funktionen.
+test-0011	0	Diese Angabe bitte nicht behalten: Der Werkzeugkasten steht im Nebenraum.
+test-0012	0	Diese Angabe bitte nicht behalten: Die Abnahme findet am Mittwoch statt.
+test-0013	1	Die Recherche über rekursive Funktionen entfällt; rufe lediglich Messbericht.txt auf.
+test-0014	0	Über rekursive Funktionen sollst du gerade keine Informationen beschaffen.
+test-0015	3	Recherchiere über lokale Suchindizes. Das ersetze ich durch: Notiz anlegen: Der nächste Prüfschritt betrifft die Oberfläche.
+test-0016	0	Recherchiere über Speicherverwaltung. Ich nehme den Auftrag zurück; führe nichts aus.
+test-0017	1	Ich will Uebergabe.txt lesen; rufe die Datei bitte auf.
+test-0018	3	Die Datei Bauteilliste.txt bleibt geschlossen. Behalte stattdessen diese Angabe: Der nächste Prüfschritt betrifft die Oberfläche.
+test-0019	0	Recherchiere über rekursive Funktionen. Ich nehme den Auftrag zurück; führe nichts aus.
+test-0020	3	Ich möchte diese Information behalten: Der Werkzeugkasten steht im Nebenraum. Lege eine Notiz an.
+test-0021	3	Die Datei Messbericht.txt bleibt geschlossen. Behalte stattdessen diese Angabe: Die Abnahme findet am Mittwoch statt.
+test-0022	2	Öffne Uebergabe.txt. Diesen Auftrag ersetze ich: Bitte über Speicherverwaltung nachforschen.
+test-0023	2	Beschaffe mir Auskünfte zum Thema Speicherverwaltung.
+test-0024	1	Zur Ansicht brauche ich jetzt die Datei Bauteilliste.txt.
+test-0025	1	Ich will Messbericht.txt lesen; rufe die Datei bitte auf.
+test-0026	0	Über Speicherverwaltung sollst du gerade keine Informationen beschaffen.
+test-0027	3	Ich möchte diese Information behalten: Der nächste Prüfschritt betrifft die Oberfläche. Lege eine Notiz an.
+test-0028	2	Beschaffe mir Auskünfte zum Thema rekursive Funktionen.
+test-0029	1	Zur Ansicht brauche ich jetzt die Datei Uebergabe.txt.
+test-0030	0	Die Datei Messbericht.txt soll ungeöffnet bleiben. Sonst bitte nichts tun.
+test-0031	1	Die Recherche über lokale Suchindizes entfällt; rufe lediglich Bauteilliste.txt auf.
+test-0032	2	Ich brauche Hintergründe über lokale Suchindizes; finde etwas dazu heraus.
+test-0033	3	Recherchiere über rekursive Funktionen. Das ersetze ich durch: Notiz anlegen: Die Abnahme findet am Mittwoch statt.
+test-0034	2	Die Datei Bauteilliste.txt bleibt zu. Besorge nur Wissen über lokale Suchindizes.
+test-0035	1	Merke dir: Die Abnahme findet am Mittwoch statt. Ich ändere den Auftrag: Nur Messbericht.txt öffnen.
+test-0036	0	Die Datei Bauteilliste.txt soll ungeöffnet bleiben. Sonst bitte nichts tun.
+test-0037	1	Merke dir: Der Werkzeugkasten steht im Nebenraum. Ich ändere den Auftrag: Nur Uebergabe.txt öffnen.
+test-0038	3	Die Datei Uebergabe.txt bleibt geschlossen. Behalte stattdessen diese Angabe: Der Werkzeugkasten steht im Nebenraum.
+test-0039	1	Die Recherche über Speicherverwaltung entfällt; rufe lediglich Uebergabe.txt auf.
+test-0040	2	Ich brauche Hintergründe über Speicherverwaltung; finde etwas dazu heraus.
+test-0041	1	Ich will Bauteilliste.txt lesen; rufe die Datei bitte auf.
+test-0042	1	Merke dir: Der nächste Prüfschritt betrifft die Oberfläche. Ich ändere den Auftrag: Nur Bauteilliste.txt öffnen.
+test-0043	3	Halte diese Angabe für später fest: Die Abnahme findet am Mittwoch statt.
+test-0044	0	Über lokale Suchindizes sollst du gerade keine Informationen beschaffen.
+test-0045	0	Diese Angabe bitte nicht behalten: Der nächste Prüfschritt betrifft die Oberfläche.
+test-0046	1	Zur Ansicht brauche ich jetzt die Datei Messbericht.txt.
+test-0047	3	Halte diese Angabe für später fest: Der nächste Prüfschritt betrifft die Oberfläche.
+test-0048	2	Öffne Bauteilliste.txt. Diesen Auftrag ersetze ich: Bitte über lokale Suchindizes nachforschen.

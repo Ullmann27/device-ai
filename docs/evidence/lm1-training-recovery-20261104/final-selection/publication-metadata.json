@@ -1,0 +1,21 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "commitSha": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "treeSha": "7739e84307ab2a8026a67399dea8b203fa1877d2",
+  "commitUrl": "https://github.com/Ullmann27/device-ai/commit/9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "authorDate": "2026-11-04T19:31:51Z",
+  "committerDate": "2026-11-04T19:31:51Z",
+  "parents": [
+    "e3c5aeadd6336f843bd625d56431208d3a03b5ad"
+  ],
+  "message": "evidence: freeze Dev-selected suffix models and publish all development results before final test [skip ci]",
+  "commitSigned": false,
+  "rootObservedSequence": [
+    "successful expected-SHA branch update",
+    "remote freeze file fetched and compared byte-for-byte with local freeze",
+    "only then final test process started"
+  ],
+  "observationScope": "Commit metadata retrieved from GitHub; action ordering recorded by root tool execution.",
+  "firstFinalTestStartedUtc": "2026-11-04T19:31:59.698108+00:00",
+  "commitDatePrecedesTest": true
+}

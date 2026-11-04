@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "scope": "RESEARCH_SHADOW",
+  "protocols": [
+    "DIAGNOSTIC_PROTOCOL.md",
+    "INTENT_PROTOCOL.md"
+  ],
+  "files": {
+    "experimental/lm1-training-recovery-20261104/run_registered_study.py": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+    "experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+    "experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+    "experimental/lm1-training-recovery-20261104/make_intent_data.py": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudy.kt": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+    "experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+    "experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+    "experimental/lm1-training-recovery-20261104/intent-data/dev.tsv": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+    "experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+    "experimental/lm1-training-recovery-20261104/intent-data/train.tsv": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+    "experimental/lm1-training-recovery-20261104/intent-data/manifest.json": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "experimental/weight-space-20261104/LmWeightSurgery.kt": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+    "experimental/weight-space-20261104/development.txt": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+  },
+  "inputs": {
+    "lm1-baseline.lm1": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+    "lm1-tokenizer.lmbp": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+    "train.txt": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9"
+  },
+  "jarSha256": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+  "stdlibSha256": "fb169596659a518357c4b2c16f43dc75ab1c4980565ed4b4a317a050e5e39006",
+  "compilerVersion": "2.0.20",
+  "jvmTarget": 17,
+  "trainingProcessSeconds": 600,
+  "capacityProcessSeconds": 120,
+  "studyTrainingStarted": false
+}

@@ -1,0 +1,66 @@
+{
+  "selectionSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+  "scores": {
+    "S0": {
+      "split": "test",
+      "step": "0",
+      "correct": "0",
+      "total": "48",
+      "answerNll": "4.332935463711269",
+      "eosNll": "8.03145657669588",
+      "prematureEos": "0",
+      "classCorrect": "0,0,0,0",
+      "classTotal": "12,12,12,12",
+      "meanFirstEosProbability": "1.812078186655223E-4",
+      "missingEos": "48",
+      "generatedTokens": "192"
+    },
+    "W0": {
+      "split": "test",
+      "step": "0",
+      "correct": "0",
+      "total": "48",
+      "answerNll": "4.332935254016776",
+      "eosNll": "8.03145638742694",
+      "prematureEos": "0",
+      "classCorrect": "0,0,0,0",
+      "classTotal": "12,12,12,12",
+      "meanFirstEosProbability": "1.812079702479726E-4",
+      "missingEos": "48",
+      "generatedTokens": "192"
+    },
+    "S1": {
+      "split": "test",
+      "step": "512",
+      "correct": "31",
+      "total": "48",
+      "answerNll": "0.9777143339565054",
+      "eosNll": "0.005596800070208537",
+      "prematureEos": "0",
+      "classCorrect": "7,12,10,2",
+      "classTotal": "12,12,12,12",
+      "meanFirstEosProbability": "1.8158556787758093E-4",
+      "missingEos": "0",
+      "generatedTokens": "48"
+    },
+    "W1": {
+      "split": "test",
+      "step": "128",
+      "correct": "25",
+      "total": "48",
+      "answerNll": "1.0642731289654288",
+      "eosNll": "0.017161896102407075",
+      "prematureEos": "0",
+      "classCorrect": "6,9,7,3",
+      "classTotal": "12,12,12,12",
+      "meanFirstEosProbability": "2.9706054739619958E-5",
+      "missingEos": "0",
+      "generatedTokens": "48"
+    }
+  },
+  "limitedBenchmarkLearningCriterionPassed": false,
+  "widerSelectedCheckpointHasFourCaseAdvantage": false,
+  "generalIntelligenceClaim": false,
+  "modelPromotion": false,
+  "androidValidation": "NOT_RUN"
+}

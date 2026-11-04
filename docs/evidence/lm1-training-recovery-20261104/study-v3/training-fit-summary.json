@@ -1,0 +1,39 @@
+{
+  "scope": "POST_SELECTION_TRAIN_FIT_ONLY",
+  "dataset": "TRAIN",
+  "datasetSha256": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+  "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "selectionSha256": "6c069dd1ab21d792b9985333b14b2d6a0c51b66affbc8a90de0f37092c5a49f4",
+  "affectsSelection": false,
+  "independentGeneralizationEvidence": false,
+  "scores": {
+    "S1": {
+      "split": "test",
+      "step": "512",
+      "correct": "120",
+      "total": "128",
+      "answerNll": "0.2727521809383773",
+      "eosNll": "0.00549908925090771",
+      "prematureEos": "0",
+      "classCorrect": "24,32,32,32",
+      "classTotal": "32,32,32,32",
+      "meanFirstEosProbability": "3.5232661169892765E-5",
+      "missingEos": "0",
+      "generatedTokens": "128"
+    },
+    "W1": {
+      "split": "test",
+      "step": "128",
+      "correct": "120",
+      "total": "128",
+      "answerNll": "0.23034212651151337",
+      "eosNll": "0.01713448568096576",
+      "prematureEos": "0",
+      "classCorrect": "24,32,32,32",
+      "classTotal": "32,32,32,32",
+      "meanFirstEosProbability": "3.245449370048448E-5",
+      "missingEos": "0",
+      "generatedTokens": "128"
+    }
+  }
+}

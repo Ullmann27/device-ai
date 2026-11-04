@@ -1,0 +1,10 @@
+{
+  "filename": "LM1_Training_Research_20261104.zip",
+  "bytes": 51103436,
+  "sha256": "428d62b308e308afd9c971ff4974981e96b9dc8a783d80e3653c226983dcc016",
+  "manifestSha256": "23783270c359e7c0c50ff5ed74f2dc2ef076a0fd30341a2be0c2c10f75c550b6",
+  "membersVerified": 10,
+  "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "freezePublicationCommit": "9ceffc26a2159c8dc726c1f13d2882119159c130",
+  "modelPromotion": false
+}

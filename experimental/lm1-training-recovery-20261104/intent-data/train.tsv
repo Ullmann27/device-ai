@@ -1,0 +1,129 @@
+id	label	prompt
+train-0001	1	Notiere jetzt nichts. Öffne stattdessen Arbeitsliste.txt.
+train-0002	1	Tu nichts. Korrektur: Öffne doch die Datei Projektplan.txt.
+train-0003	2	Merke dir nichts. Recherchiere zum Thema automatische Tests.
+train-0004	0	Öffne Arbeitsliste.txt. Korrektur: Führe den Auftrag nicht aus.
+train-0005	0	Lass die Datei Fehlerbericht.txt geschlossen und tue nichts.
+train-0006	0	Merke dir: Der Prüflauf beginnt am Dienstag. Nein, vergiss diesen Auftrag.
+train-0007	0	Merke dir: Die Sitzung endet am Freitag. Nein, vergiss diesen Auftrag.
+train-0008	1	Kannst du die Datei Projektplan.txt öffnen?
+train-0009	2	Recherchiere bitte zum Thema lokale Datensicherung.
+train-0010	1	Zeige mir die Datei Arbeitsliste.txt.
+train-0011	0	Stopp. Führe die Suche über lokale Datensicherung nicht aus.
+train-0012	2	Öffne Fehlerbericht.txt nicht; suche Informationen über Versionskontrolle.
+train-0013	1	Suche nach lokale Datensicherung. Korrektur: Öffne nur Testplan.txt.
+train-0014	3	Speichere als Notiz: Der Prüflauf beginnt am Dienstag.
+train-0015	2	Tu nichts. Korrektur: Suche doch nach Informationen über Versionskontrolle.
+train-0016	1	Notiere jetzt nichts. Öffne stattdessen Projektplan.txt.
+train-0017	2	Öffne Fehlerbericht.txt. Korrektur: Suche nur Informationen über Versionskontrolle.
+train-0018	1	Zeige mir die Datei Testplan.txt.
+train-0019	1	Suche nicht nach automatische Tests; öffne Arbeitsliste.txt.
+train-0020	2	Recherchiere bitte zum Thema Dateiverschlüsselung.
+train-0021	1	Mach bitte Testplan.txt auf.
+train-0022	0	Speichere diese Notiz nicht: Die Aufgaben werden abends geprüft.
+train-0023	0	Brich den Auftrag zur Datei Fehlerbericht.txt ab.
+train-0024	2	Tu nichts. Korrektur: Suche doch nach Informationen über automatische Tests.
+train-0025	2	Merke dir nichts. Recherchiere zum Thema Dateiverschlüsselung.
+train-0026	2	Öffne Testplan.txt. Korrektur: Suche nur Informationen über lokale Datensicherung.
+train-0027	3	Speichere als Notiz: Die Sitzung endet am Freitag.
+train-0028	1	Mach bitte Fehlerbericht.txt auf.
+train-0029	0	Suche keine Informationen über lokale Datensicherung.
+train-0030	1	Kannst du die Datei Fehlerbericht.txt öffnen?
+train-0031	0	Merke dir: Die Aufgaben werden abends geprüft. Nein, vergiss diesen Auftrag.
+train-0032	1	Notiere jetzt nichts. Öffne stattdessen Testplan.txt.
+train-0033	0	Speichere diese Notiz nicht: Der Prüflauf beginnt am Dienstag.
+train-0034	2	Tu nichts. Korrektur: Suche doch nach Informationen über Dateiverschlüsselung.
+train-0035	1	Kannst du die Datei Testplan.txt öffnen?
+train-0036	1	Zeige mir die Datei Fehlerbericht.txt.
+train-0037	0	Brich den Auftrag zur Datei Testplan.txt ab.
+train-0038	2	Merke dir nichts. Recherchiere zum Thema Versionskontrolle.
+train-0039	0	Brich den Auftrag zur Datei Projektplan.txt ab.
+train-0040	2	Suche Informationen über Dateiverschlüsselung.
+train-0041	0	Suche keine Informationen über Dateiverschlüsselung.
+train-0042	1	Öffne die Datei Arbeitsliste.txt.
+train-0043	2	Merke dir nichts. Recherchiere zum Thema lokale Datensicherung.
+train-0044	2	Kannst du Informationen über Versionskontrolle suchen?
+train-0045	3	Öffne Fehlerbericht.txt nicht. Merke dir: Der Schlüssel liegt im Schrank.
+train-0046	2	Kannst du Informationen über automatische Tests suchen?
+train-0047	0	Stopp. Führe die Suche über Versionskontrolle nicht aus.
+train-0048	1	Mach bitte Arbeitsliste.txt auf.
+train-0049	0	Öffne die Datei Testplan.txt nicht.
+train-0050	1	Mach bitte Projektplan.txt auf.
+train-0051	2	Öffne Projektplan.txt. Korrektur: Suche nur Informationen über Dateiverschlüsselung.
+train-0052	0	Stopp. Führe die Suche über Dateiverschlüsselung nicht aus.
+train-0053	1	Tu nichts. Korrektur: Öffne doch die Datei Fehlerbericht.txt.
+train-0054	0	Öffne die Datei Arbeitsliste.txt nicht.
+train-0055	2	Öffne Arbeitsliste.txt nicht; suche Informationen über automatische Tests.
+train-0056	0	Merke dir: Der Schlüssel liegt im Schrank. Nein, vergiss diesen Auftrag.
+train-0057	3	Öffne Projektplan.txt nicht. Merke dir: Die Aufgaben werden abends geprüft.
+train-0058	2	Kannst du Informationen über lokale Datensicherung suchen?
+train-0059	2	Öffne Arbeitsliste.txt. Korrektur: Suche nur Informationen über automatische Tests.
+train-0060	2	Recherchiere bitte zum Thema automatische Tests.
+train-0061	3	Öffne Projektplan.txt. Korrektur: Notiere nur: Die Aufgaben werden abends geprüft.
+train-0062	2	Tu nichts. Korrektur: Suche doch nach Informationen über lokale Datensicherung.
+train-0063	2	Suche Informationen über Versionskontrolle.
+train-0064	0	Speichere diese Notiz nicht: Der Schlüssel liegt im Schrank.
+train-0065	3	Suche keine Informationen. Notiere nur: Der Prüflauf beginnt am Dienstag.
+train-0066	1	Suche nicht nach Versionskontrolle; öffne Fehlerbericht.txt.
+train-0067	3	Tu nichts. Korrektur: Merke dir doch: Der Schlüssel liegt im Schrank.
+train-0068	3	Notiere bitte: Die Aufgaben werden abends geprüft.
+train-0069	3	Öffne Arbeitsliste.txt. Korrektur: Notiere nur: Die Sitzung endet am Freitag.
+train-0070	2	Kannst du Informationen über Dateiverschlüsselung suchen?
+train-0071	1	Suche nach Versionskontrolle. Korrektur: Öffne nur Fehlerbericht.txt.
+train-0072	3	Kannst du dir das merken: Der Prüflauf beginnt am Dienstag?
+train-0073	2	Öffne Projektplan.txt nicht; suche Informationen über Dateiverschlüsselung.
+train-0074	3	Merke dir: Die Aufgaben werden abends geprüft.
+train-0075	3	Merke dir: Der Schlüssel liegt im Schrank.
+train-0076	3	Öffne Testplan.txt nicht. Merke dir: Der Prüflauf beginnt am Dienstag.
+train-0077	2	Öffne Testplan.txt nicht; suche Informationen über lokale Datensicherung.
+train-0078	0	Öffne Fehlerbericht.txt. Korrektur: Führe den Auftrag nicht aus.
+train-0079	0	Lass die Datei Arbeitsliste.txt geschlossen und tue nichts.
+train-0080	3	Suche keine Informationen. Notiere nur: Der Schlüssel liegt im Schrank.
+train-0081	3	Merke dir: Die Sitzung endet am Freitag.
+train-0082	3	Suche keine Informationen. Notiere nur: Die Aufgaben werden abends geprüft.
+train-0083	3	Tu nichts. Korrektur: Merke dir doch: Die Sitzung endet am Freitag.
+train-0084	1	Öffne die Datei Fehlerbericht.txt.
+train-0085	0	Öffne die Datei Projektplan.txt nicht.
+train-0086	3	Öffne Fehlerbericht.txt. Korrektur: Notiere nur: Der Schlüssel liegt im Schrank.
+train-0087	3	Suche keine Informationen. Notiere nur: Die Sitzung endet am Freitag.
+train-0088	3	Notiere bitte: Der Prüflauf beginnt am Dienstag.
+train-0089	1	Zeige mir die Datei Projektplan.txt.
+train-0090	1	Öffne die Datei Testplan.txt.
+train-0091	1	Öffne die Datei Projektplan.txt.
+train-0092	0	Öffne Projektplan.txt. Korrektur: Führe den Auftrag nicht aus.
+train-0093	0	Brich den Auftrag zur Datei Arbeitsliste.txt ab.
+train-0094	1	Suche nach automatische Tests. Korrektur: Öffne nur Arbeitsliste.txt.
+train-0095	2	Recherchiere bitte zum Thema Versionskontrolle.
+train-0096	1	Suche nach Dateiverschlüsselung. Korrektur: Öffne nur Projektplan.txt.
+train-0097	2	Suche Informationen über lokale Datensicherung.
+train-0098	3	Kannst du dir das merken: Die Aufgaben werden abends geprüft?
+train-0099	0	Suche keine Informationen über automatische Tests.
+train-0100	1	Kannst du die Datei Arbeitsliste.txt öffnen?
+train-0101	2	Finde Wissen zum Thema Dateiverschlüsselung.
+train-0102	0	Suche keine Informationen über Versionskontrolle.
+train-0103	3	Notiere bitte: Die Sitzung endet am Freitag.
+train-0104	0	Lass die Datei Testplan.txt geschlossen und tue nichts.
+train-0105	1	Suche nicht nach Dateiverschlüsselung; öffne Projektplan.txt.
+train-0106	3	Tu nichts. Korrektur: Merke dir doch: Die Aufgaben werden abends geprüft.
+train-0107	3	Speichere als Notiz: Der Schlüssel liegt im Schrank.
+train-0108	1	Suche nicht nach lokale Datensicherung; öffne Testplan.txt.
+train-0109	0	Speichere diese Notiz nicht: Die Sitzung endet am Freitag.
+train-0110	1	Tu nichts. Korrektur: Öffne doch die Datei Arbeitsliste.txt.
+train-0111	3	Tu nichts. Korrektur: Merke dir doch: Der Prüflauf beginnt am Dienstag.
+train-0112	0	Öffne die Datei Fehlerbericht.txt nicht.
+train-0113	1	Tu nichts. Korrektur: Öffne doch die Datei Testplan.txt.
+train-0114	0	Stopp. Führe die Suche über automatische Tests nicht aus.
+train-0115	3	Merke dir: Der Prüflauf beginnt am Dienstag.
+train-0116	3	Öffne Arbeitsliste.txt nicht. Merke dir: Die Sitzung endet am Freitag.
+train-0117	2	Suche Informationen über automatische Tests.
+train-0118	2	Finde Wissen zum Thema lokale Datensicherung.
+train-0119	2	Finde Wissen zum Thema automatische Tests.
+train-0120	3	Öffne Testplan.txt. Korrektur: Notiere nur: Der Prüflauf beginnt am Dienstag.
+train-0121	1	Notiere jetzt nichts. Öffne stattdessen Fehlerbericht.txt.
+train-0122	3	Notiere bitte: Der Schlüssel liegt im Schrank.
+train-0123	3	Speichere als Notiz: Die Aufgaben werden abends geprüft.
+train-0124	2	Finde Wissen zum Thema Versionskontrolle.
+train-0125	0	Öffne Testplan.txt. Korrektur: Führe den Auftrag nicht aus.
+train-0126	3	Kannst du dir das merken: Die Sitzung endet am Freitag?
+train-0127	0	Lass die Datei Projektplan.txt geschlossen und tue nichts.
+train-0128	3	Kannst du dir das merken: Der Schlüssel liegt im Schrank?

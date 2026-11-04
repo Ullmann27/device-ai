@@ -1,0 +1,560 @@
+{
+  "schema_version": 1,
+  "metric": "online_answer_and_eos_nll_nats_per_supervised_target",
+  "aggregation": "Arithmetic mean of 32 consecutive logged pre-update minibatch losses. Every minibatch has 8 supervised targets, so this is also target-weighted. Parameters change between minibatches; these are neither fixed-checkpoint losses nor generalization scores.",
+  "schedule_caution": "V1 has a 128-step cosine horizon; V2 has a 512-step cosine horizon. Both restart from original weights. Even the first 128 learning-rate values are not identical after warmup.",
+  "source_scope": "Completed V1/V2 raw logs, receipts, initial capacity logs and selection TSVs only; no model execution or final-test data access.",
+  "runs": [
+    {
+      "version": 1,
+      "arm": "small",
+      "parameters": 132160,
+      "source_commit": "def5acf9cbba82ee51a53cc06fecc52e9cd0324d",
+      "registration_sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "jar_sha256": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+      "raw_log_path": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/logs/intent-small.tsv",
+      "archived_log_path": "study-v1/logs/intent-small.tsv",
+      "raw_log_sha256": "7853830f25752e9b959ea190d242be987b1a605bd091ba8f35bd4a1d6da6f2ef",
+      "schedule_sha256": "653f41488a28238eddd4d65a38168b4ed0879b65641108bb0ad96e5447d87d2b",
+      "token_schedule_sha256": "169f1e1e0338393f9100e5719c4d2cd75d72e90b4942a875b6de36574b732aad",
+      "steps": 128,
+      "supervised_targets": 1024,
+      "wall_seconds": 7.361384626000472,
+      "last_logged_training_elapsed_milliseconds": 5141,
+      "process_limit_seconds": 600,
+      "selected_step": 128,
+      "selected_dev_correct": 8,
+      "selected_checkpoint_sha256": "cc17532290695f4559ad1ed26dcbdb8dd968bea0df0ede852404a19b5aa98820",
+      "epochs": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 2.911616800352931,
+          "minimum_minibatch_nll": 0.9775431603193283,
+          "maximum_minibatch_nll": 7.815855860710144
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.9487578449770808,
+          "minimum_minibatch_nll": 0.7148477137088776,
+          "maximum_minibatch_nll": 1.263998493552208
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.7880973587743938,
+          "minimum_minibatch_nll": 0.7151390761137009,
+          "maximum_minibatch_nll": 0.8547907471656799
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.7557630534283817,
+          "minimum_minibatch_nll": 0.7119166105985641,
+          "maximum_minibatch_nll": 0.7944721728563309
+        }
+      ]
+    },
+    {
+      "version": 1,
+      "arm": "wide",
+      "parameters": 6562304,
+      "source_commit": "def5acf9cbba82ee51a53cc06fecc52e9cd0324d",
+      "registration_sha256": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "jar_sha256": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+      "raw_log_path": "/workspace/scratch/3112c86b5191/training-recovery-study-v1/logs/intent-wide.tsv",
+      "archived_log_path": "study-v1/logs/intent-wide.tsv",
+      "raw_log_sha256": "27737b8fdb7f2cff4d2d8cb990b897c4a3e34a081a07c97f9b6f10d95646f0e9",
+      "schedule_sha256": "653f41488a28238eddd4d65a38168b4ed0879b65641108bb0ad96e5447d87d2b",
+      "token_schedule_sha256": "169f1e1e0338393f9100e5719c4d2cd75d72e90b4942a875b6de36574b732aad",
+      "steps": 128,
+      "supervised_targets": 1024,
+      "wall_seconds": 200.0754812690002,
+      "last_logged_training_elapsed_milliseconds": 171603,
+      "process_limit_seconds": 600,
+      "selected_step": 128,
+      "selected_dev_correct": 10,
+      "selected_checkpoint_sha256": "bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1",
+      "epochs": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 1.452461565611884,
+          "minimum_minibatch_nll": 0.6557972878217697,
+          "maximum_minibatch_nll": 7.815855264663696
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.7896605054847896,
+          "minimum_minibatch_nll": 0.4608350992202759,
+          "maximum_minibatch_nll": 1.245318353176117
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.5020715571008623,
+          "minimum_minibatch_nll": 0.2519588768482208,
+          "maximum_minibatch_nll": 0.9360853116959333
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.31706387735903263,
+          "minimum_minibatch_nll": 0.056372083723545074,
+          "maximum_minibatch_nll": 1.068591669201851
+        }
+      ]
+    },
+    {
+      "version": 2,
+      "arm": "small",
+      "parameters": 132160,
+      "source_commit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+      "registration_sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "jar_sha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+      "raw_log_path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/logs/intent-small.tsv",
+      "archived_log_path": "study-v2/logs/intent-small.tsv",
+      "raw_log_sha256": "a6ce3a1c31b2faa398abf2a0d5ba1c80015c9bb01ad52a0a4faeca5ab075f154",
+      "schedule_sha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+      "token_schedule_sha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+      "steps": 512,
+      "supervised_targets": 4096,
+      "wall_seconds": 14.775973357000112,
+      "last_logged_training_elapsed_milliseconds": 13043,
+      "process_limit_seconds": 900,
+      "selected_step": 256,
+      "selected_dev_correct": 13,
+      "selected_checkpoint_sha256": "c129e5e902020943da8d8bc902c4bcf7ed92ce746324231fd41a02d6acae5309",
+      "epochs": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 2.901693088468164,
+          "minimum_minibatch_nll": 0.9512661248445511,
+          "maximum_minibatch_nll": 7.815855860710144
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.930811065249145,
+          "minimum_minibatch_nll": 0.7018011659383774,
+          "maximum_minibatch_nll": 1.2589188814163208
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.7620484926737845,
+          "minimum_minibatch_nll": 0.6906845420598984,
+          "maximum_minibatch_nll": 0.8213369399309158
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.6738925722893327,
+          "minimum_minibatch_nll": 0.426674522459507,
+          "maximum_minibatch_nll": 0.8759578466415405
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.48741400393191725,
+          "minimum_minibatch_nll": 0.2469773180782795,
+          "maximum_minibatch_nll": 0.8110405281186104
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.4102515026170295,
+          "minimum_minibatch_nll": 0.11656585149466991,
+          "maximum_minibatch_nll": 1.0595032423734665
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.33346901735058054,
+          "minimum_minibatch_nll": 0.10560155566781759,
+          "maximum_minibatch_nll": 0.747251957654953
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.28426479958579876,
+          "minimum_minibatch_nll": 0.07658362668007612,
+          "maximum_minibatch_nll": 0.7662518918514252
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.25448068212426733,
+          "minimum_minibatch_nll": 0.03583206469193101,
+          "maximum_minibatch_nll": 1.0561960879713297
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.2220144453458488,
+          "minimum_minibatch_nll": 0.03314610291272402,
+          "maximum_minibatch_nll": 0.8288252633064985
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.21299069006636273,
+          "minimum_minibatch_nll": 0.03049423359334469,
+          "maximum_minibatch_nll": 1.1420157863758504
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.21116678744874662,
+          "minimum_minibatch_nll": 0.02262626215815544,
+          "maximum_minibatch_nll": 0.9705859804525971
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.20585101086180657,
+          "minimum_minibatch_nll": 0.016665196977555752,
+          "maximum_minibatch_nll": 1.1967460219748318
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.19554947491997154,
+          "minimum_minibatch_nll": 0.01623678021132946,
+          "maximum_minibatch_nll": 1.2959923995658755
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.18158934413077077,
+          "minimum_minibatch_nll": 0.01495296647772193,
+          "maximum_minibatch_nll": 0.7287604082375765
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.1767951859656023,
+          "minimum_minibatch_nll": 0.013781080255284905,
+          "maximum_minibatch_nll": 0.93827501591295
+        }
+      ]
+    },
+    {
+      "version": 2,
+      "arm": "wide",
+      "parameters": 6562304,
+      "source_commit": "fc2eb797210bee25091caf734aacbfd694a3372e",
+      "registration_sha256": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "jar_sha256": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+      "raw_log_path": "/workspace/scratch/3112c86b5191/training-recovery-study-v2/logs/intent-wide.tsv",
+      "archived_log_path": "study-v2/logs/intent-wide.tsv",
+      "raw_log_sha256": "3538ebc9857a8f2d10f184b6c03ab4179e9b17dffb54959c3fd84deb8318ac57",
+      "schedule_sha256": "0c977d357e9a3c19496890faf9f3f593169064380475a171a3553ba30364ff48",
+      "token_schedule_sha256": "56fe2778eaccc2e29e13e629295452199ba19f94211c10fbae07cd4b6f3f375c",
+      "steps": 512,
+      "supervised_targets": 4096,
+      "wall_seconds": 653.7896026090002,
+      "last_logged_training_elapsed_milliseconds": 628021,
+      "process_limit_seconds": 900,
+      "selected_step": 128,
+      "selected_dev_correct": 13,
+      "selected_checkpoint_sha256": "7c39f7c522192db2a5f85a54bbcc407ca1224251077a432b836b631e6e405ab2",
+      "epochs": [
+        {
+          "epoch": 1,
+          "first_step": 1,
+          "last_step": 32,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 256,
+          "mean_online_nll": 1.4522977371234447,
+          "minimum_minibatch_nll": 0.6493197381496429,
+          "maximum_minibatch_nll": 7.815855264663696
+        },
+        {
+          "epoch": 2,
+          "first_step": 33,
+          "last_step": 64,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 512,
+          "mean_online_nll": 0.775301312096417,
+          "minimum_minibatch_nll": 0.4305862784385681,
+          "maximum_minibatch_nll": 1.2523243427276611
+        },
+        {
+          "epoch": 3,
+          "first_step": 65,
+          "last_step": 96,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 768,
+          "mean_online_nll": 0.3798819837975316,
+          "minimum_minibatch_nll": 0.08378091547638178,
+          "maximum_minibatch_nll": 0.9047005102038383
+        },
+        {
+          "epoch": 4,
+          "first_step": 97,
+          "last_step": 128,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1024,
+          "mean_online_nll": 0.1721902195349685,
+          "minimum_minibatch_nll": 0.013749581994488835,
+          "maximum_minibatch_nll": 0.761537451762706
+        },
+        {
+          "epoch": 5,
+          "first_step": 129,
+          "last_step": 160,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1280,
+          "mean_online_nll": 0.12383673914155224,
+          "minimum_minibatch_nll": 0.01159569201990962,
+          "maximum_minibatch_nll": 0.7104881079867482
+        },
+        {
+          "epoch": 6,
+          "first_step": 161,
+          "last_step": 192,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1536,
+          "mean_online_nll": 0.09668578059427091,
+          "minimum_minibatch_nll": 0.007579426630400121,
+          "maximum_minibatch_nll": 0.8817320689558983
+        },
+        {
+          "epoch": 7,
+          "first_step": 193,
+          "last_step": 224,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 1792,
+          "mean_online_nll": 0.07441136390116299,
+          "minimum_minibatch_nll": 0.005475715617649257,
+          "maximum_minibatch_nll": 0.520042747608386
+        },
+        {
+          "epoch": 8,
+          "first_step": 225,
+          "last_step": 256,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2048,
+          "mean_online_nll": 0.06688001689326484,
+          "minimum_minibatch_nll": 0.004083710955455899,
+          "maximum_minibatch_nll": 0.4819896979024634
+        },
+        {
+          "epoch": 9,
+          "first_step": 257,
+          "last_step": 288,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2304,
+          "mean_online_nll": 0.03511189813070814,
+          "minimum_minibatch_nll": 0.0030024595907889307,
+          "maximum_minibatch_nll": 0.476814791909419
+        },
+        {
+          "epoch": 10,
+          "first_step": 289,
+          "last_step": 320,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2560,
+          "mean_online_nll": 0.00717349201295292,
+          "minimum_minibatch_nll": 0.003178368031512946,
+          "maximum_minibatch_nll": 0.014386720256879926
+        },
+        {
+          "epoch": 11,
+          "first_step": 321,
+          "last_step": 352,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 2816,
+          "mean_online_nll": 0.005576932591793593,
+          "minimum_minibatch_nll": 0.0026312241388950497,
+          "maximum_minibatch_nll": 0.008487357175908983
+        },
+        {
+          "epoch": 12,
+          "first_step": 353,
+          "last_step": 384,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3072,
+          "mean_online_nll": 0.0049169397871082765,
+          "minimum_minibatch_nll": 0.001955839601578191,
+          "maximum_minibatch_nll": 0.009816937730647624
+        },
+        {
+          "epoch": 13,
+          "first_step": 385,
+          "last_step": 416,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3328,
+          "mean_online_nll": 0.004472630988857418,
+          "minimum_minibatch_nll": 0.0018376607331447303,
+          "maximum_minibatch_nll": 0.00832165649626404
+        },
+        {
+          "epoch": 14,
+          "first_step": 417,
+          "last_step": 448,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3584,
+          "mean_online_nll": 0.004155189863922715,
+          "minimum_minibatch_nll": 0.002265548100695014,
+          "maximum_minibatch_nll": 0.006433811970055103
+        },
+        {
+          "epoch": 15,
+          "first_step": 449,
+          "last_step": 480,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 3840,
+          "mean_online_nll": 0.0039061002298694802,
+          "minimum_minibatch_nll": 0.001733875833451748,
+          "maximum_minibatch_nll": 0.005566575942793861
+        },
+        {
+          "epoch": 16,
+          "first_step": 481,
+          "last_step": 512,
+          "minibatches": 32,
+          "supervised_targets": 256,
+          "cumulative_supervised_targets": 4096,
+          "mean_online_nll": 0.0037078357381687965,
+          "minimum_minibatch_nll": 0.0013516241451725364,
+          "maximum_minibatch_nll": 0.006900553125888109
+        }
+      ]
+    }
+  ],
+  "common_input_bindings_from_logs": [
+    {
+      "filename": "dev.tsv",
+      "sha256": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+    },
+    {
+      "filename": "lm1-baseline.lm1",
+      "sha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
+    },
+    {
+      "filename": "lm1-tokenizer.lmbp",
+      "sha256": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    {
+      "filename": "train.tsv",
+      "sha256": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b"
+    }
+  ],
+  "audit_checks": "Sequential steps and cumulative targets; finite losses and norms; fixed dev identities; exact digit+EOS scoring; per-case aggregates; selection priority; initial gate log SHA; training and capacity receipt SHA; source/JAR/registration agreement; archived raw-log equality; declared time limits; selected checkpoint capacity identity. EOS per-case probability strings were reconstructed as Float32 before summation, matching the Kotlin Float-to-Double accumulator."
+}

@@ -1,0 +1,12 @@
+test_actual_test_input_identity_must_match_freeze (test_study_controller.StudyControllerTests.test_actual_test_input_identity_must_match_freeze) ... ok
+test_changed_freeze_hash_schedule_or_source_is_rejected (test_study_controller.StudyControllerTests.test_changed_freeze_hash_schedule_or_source_is_rejected) ... ok
+test_changed_registered_bytes_block_test_before_run (test_study_controller.StudyControllerTests.test_changed_registered_bytes_block_test_before_run) ... ok
+test_existing_freeze_does_not_bypass_lost_development_signal (test_study_controller.StudyControllerTests.test_existing_freeze_does_not_bypass_lost_development_signal) ... ok
+test_foreign_initial_control_is_rejected_before_any_test (test_study_controller.StudyControllerTests.test_foreign_initial_control_is_rejected_before_any_test) ... ok
+test_missing_or_invalid_freeze_is_rejected_before_any_test (test_study_controller.StudyControllerTests.test_missing_or_invalid_freeze_is_rejected_before_any_test) ... ok
+test_valid_freeze_allows_exactly_four_mock_test_runs (test_study_controller.StudyControllerTests.test_valid_freeze_allows_exactly_four_mock_test_runs) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.221s
+
+OK

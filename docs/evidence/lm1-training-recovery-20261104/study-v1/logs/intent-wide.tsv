@@ -1,0 +1,242 @@
+MANIFEST	variant=wide	scope=RESEARCH_SHADOW	parameters=6562304	steps=128	batch=4	learningRate=1.0E-4	warmup=4	weightDecay=0.01	seed=20261104	workers=2	scheduleSha256=653f41488a28238eddd4d65a38168b4ed0879b65641108bb0ad96e5447d87d2b	tokenScheduleSha256=169f1e1e0338393f9100e5719c4d2cd75d72e90b4942a875b6de36574b732aad	objective=ANSWER_AND_EOS_ONLY	testReadDuringTraining=false
+INPUT	path=/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-baseline.lm1	sha256=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd
+INPUT	path=/workspace/scratch/3112c86b5191/training-recovery-inputs/lm1-tokenizer.lmbp	sha256=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+INPUT	path=/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data/train.tsv	sha256=a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b
+INPUT	path=/workspace/scratch/3112c86b5191/device-ai-training-research/experimental/lm1-training-recovery-20261104/intent-data/dev.tsv	sha256=c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe
+INITIAL_PARITY	id=dev-0001	probabilityDelta=1.341104507446289E-6
+INITIAL_PARITY	id=dev-0002	probabilityDelta=2.0712614059448242E-6
+INITIAL_PARITY	id=dev-0003	probabilityDelta=1.1026859283447266E-6
+CHECKPOINT	step=0	sha256=5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3	path=/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3.lm1
+INITIAL_CAPACITY_GATE	pass=true	checkpointSha256=5d2cbcbc993cd1a6268bca92ba686f9a9df2d43493a8ecd9507e761c9b24edd3	logSha256=5f463ca8eeecd5445dcb6264d822f3be3479d94cf99fd4152b7e972ff35d65e7
+CASE	split=dev	step=0	id=dev-0001	expected=2	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.67734804100012	eosNll=4.9334690894084545	firstEosProbability=0.14675283
+CASE	split=dev	step=0	id=dev-0002	expected=2	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.589125720362166	eosNll=4.930435184092641	firstEosProbability=0.14419207
+CASE	split=dev	step=0	id=dev-0003	expected=0	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.10180195975565	eosNll=5.692500953824984	firstEosProbability=0.15298073
+CASE	split=dev	step=0	id=dev-0004	expected=1	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.703818247689448	eosNll=9.443129470350069	firstEosProbability=0.15161854
+CASE	split=dev	step=0	id=dev-0005	expected=1	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.70859316242526	eosNll=9.431717396620344	firstEosProbability=0.15149425
+CASE	split=dev	step=0	id=dev-0006	expected=0	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.133075601548152	eosNll=5.838512290103523	firstEosProbability=0.15034467
+CASE	split=dev	step=0	id=dev-0007	expected=2	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.624825426563616	eosNll=5.005442903718118	firstEosProbability=0.15259825
+CASE	split=dev	step=0	id=dev-0008	expected=3	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.906654327824844	eosNll=5.873600375518244	firstEosProbability=0.14663236
+CASE	split=dev	step=0	id=dev-0009	expected=1	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.684774608187304	eosNll=9.31624775799629	firstEosProbability=0.14494738
+CASE	split=dev	step=0	id=dev-0010	expected=3	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.810479330059652	eosNll=5.928366383401466	firstEosProbability=0.14475831
+CASE	split=dev	step=0	id=dev-0011	expected=2	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.663187175631379	eosNll=4.978316885746574	firstEosProbability=0.14874956
+CASE	split=dev	step=0	id=dev-0012	expected=1	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.627244006360575	eosNll=9.261112091138665	firstEosProbability=0.14831707
+CASE	split=dev	step=0	id=dev-0013	expected=0	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.18483475637084	eosNll=5.688258899327819	firstEosProbability=0.14491975
+CASE	split=dev	step=0	id=dev-0014	expected=3	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.863918110125439	eosNll=5.865135667372796	firstEosProbability=0.14888577
+CASE	split=dev	step=0	id=dev-0015	expected=3	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.81213510016198	eosNll=5.922768737374218	firstEosProbability=0.14424078
+CASE	split=dev	step=0	id=dev-0016	expected=1	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.626544716587956	eosNll=9.18010069796507	firstEosProbability=0.14530887
+CASE	split=dev	step=0	id=dev-0017	expected=2	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.592370247770482	eosNll=4.964316335177768	firstEosProbability=0.14680395
+CASE	split=dev	step=0	id=dev-0018	expected=3	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.86397172996762	eosNll=5.863556416762023	firstEosProbability=0.14875284
+CASE	split=dev	step=0	id=dev-0019	expected=2	textBase64=KiogYDxo	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=8.683649644529398	eosNll=4.947821680447529	firstEosProbability=0.15036888
+CASE	split=dev	step=0	id=dev-0020	expected=0	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.166695515077308	eosNll=5.701070779378771	firstEosProbability=0.14565301
+CASE	split=dev	step=0	id=dev-0021	expected=1	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.683604007280925	eosNll=9.336447441895325	firstEosProbability=0.14513648
+CASE	split=dev	step=0	id=dev-0022	expected=0	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.29962080143872	eosNll=5.688844811064765	firstEosProbability=0.14512506
+CASE	split=dev	step=0	id=dev-0023	expected=0	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=9.29500382036327	eosNll=5.689231269557121	firstEosProbability=0.14536658
+CASE	split=dev	step=0	id=dev-0024	expected=3	textBase64=KiogRGllcw==	tokens=4	stop=MAX_TOKENS	correct=false	answerNll=7.906258101219889	eosNll=5.866254936909321	firstEosProbability=0.14613834
+SCORE	split=dev	step=0	correct=0	total=24	answerNll=8.84206392326258	eosNll=6.47277743563133	prematureEos=0	classCorrect=0,0,0,0	classTotal=6,6,6,6	meanFirstEosProbability=0.14750359704097113	missingEos=24	generatedTokens=96
+TRAIN_STEP	step=1	answerEosNll=7.815855264663696	gradientNormBeforeClip=50.427753199548185	supervisedTargets=8	millis=1903
+TRAIN_STEP	step=2	answerEosNll=5.588053584098816	gradientNormBeforeClip=45.13689405994264	supervisedTargets=16	millis=3805
+TRAIN_STEP	step=3	answerEosNll=4.216314256191254	gradientNormBeforeClip=30.69152932715752	supervisedTargets=24	millis=5197
+TRAIN_STEP	step=4	answerEosNll=2.1420790553092957	gradientNormBeforeClip=13.786787830100636	supervisedTargets=32	millis=6970
+TRAIN_STEP	step=5	answerEosNll=2.469966411590576	gradientNormBeforeClip=14.389177860697568	supervisedTargets=40	millis=8307
+TRAIN_STEP	step=6	answerEosNll=1.8464206755161285	gradientNormBeforeClip=11.160682510669586	supervisedTargets=48	millis=9507
+TRAIN_STEP	step=7	answerEosNll=1.1734991371631622	gradientNormBeforeClip=7.360891919057518	supervisedTargets=56	millis=11423
+TRAIN_STEP	step=8	answerEosNll=1.299221009016037	gradientNormBeforeClip=9.470036636629532	supervisedTargets=64	millis=12823
+TRAIN_STEP	step=9	answerEosNll=1.268219605088234	gradientNormBeforeClip=9.925314758828824	supervisedTargets=72	millis=14935
+TRAIN_STEP	step=10	answerEosNll=0.9633929878473282	gradientNormBeforeClip=4.273891931226591	supervisedTargets=80	millis=16371
+TRAIN_STEP	step=11	answerEosNll=0.9444237798452377	gradientNormBeforeClip=5.030479141461009	supervisedTargets=88	millis=17694
+TRAIN_STEP	step=12	answerEosNll=1.0361139625310898	gradientNormBeforeClip=6.7021237830943985	supervisedTargets=96	millis=19319
+TRAIN_STEP	step=13	answerEosNll=0.9202374964952469	gradientNormBeforeClip=2.756449340912517	supervisedTargets=104	millis=20699
+TRAIN_STEP	step=14	answerEosNll=0.7435182332992554	gradientNormBeforeClip=2.1549419658787103	supervisedTargets=112	millis=21837
+TRAIN_STEP	step=15	answerEosNll=0.9329270571470261	gradientNormBeforeClip=4.8688483931256465	supervisedTargets=120	millis=22896
+TRAIN_STEP	step=16	answerEosNll=0.7557531595230103	gradientNormBeforeClip=4.022415954916851	supervisedTargets=128	millis=24068
+TRAIN_STEP	step=17	answerEosNll=0.9103226959705353	gradientNormBeforeClip=5.737855382845592	supervisedTargets=136	millis=25248
+TRAIN_STEP	step=18	answerEosNll=0.8293326199054718	gradientNormBeforeClip=6.626840401123451	supervisedTargets=144	millis=26299
+TRAIN_STEP	step=19	answerEosNll=0.6950003802776337	gradientNormBeforeClip=2.0948672904727528	supervisedTargets=152	millis=27563
+TRAIN_STEP	step=20	answerEosNll=0.9471599161624908	gradientNormBeforeClip=5.234197176733484	supervisedTargets=160	millis=28684
+TRAIN_STEP	step=21	answerEosNll=0.6585077494382858	gradientNormBeforeClip=6.709643661111545	supervisedTargets=168	millis=30070
+TRAIN_STEP	step=22	answerEosNll=0.8485202044248581	gradientNormBeforeClip=2.3372349662528826	supervisedTargets=176	millis=31156
+TRAIN_STEP	step=23	answerEosNll=0.907047376036644	gradientNormBeforeClip=3.912949816418752	supervisedTargets=184	millis=32316
+TRAIN_STEP	step=24	answerEosNll=0.6952655911445618	gradientNormBeforeClip=3.302531698594964	supervisedTargets=192	millis=33526
+TRAIN_STEP	step=25	answerEosNll=0.7901816368103027	gradientNormBeforeClip=2.7694927333352712	supervisedTargets=200	millis=34563
+TRAIN_STEP	step=26	answerEosNll=0.7477759718894958	gradientNormBeforeClip=2.623118154731701	supervisedTargets=208	millis=35697
+TRAIN_STEP	step=27	answerEosNll=0.8554982095956802	gradientNormBeforeClip=4.213918516484138	supervisedTargets=216	millis=36884
+TRAIN_STEP	step=28	answerEosNll=0.7433601915836334	gradientNormBeforeClip=2.6450325952485025	supervisedTargets=224	millis=38025
+TRAIN_STEP	step=29	answerEosNll=0.6557972878217697	gradientNormBeforeClip=3.0644734786991896	supervisedTargets=232	millis=39038
+TRAIN_STEP	step=30	answerEosNll=0.6770931333303452	gradientNormBeforeClip=2.221137638662747	supervisedTargets=240	millis=40090
+TRAIN_STEP	step=31	answerEosNll=0.6694154590368271	gradientNormBeforeClip=4.4177700703669	supervisedTargets=248	millis=41142
+TRAIN_STEP	step=32	answerEosNll=0.7324960008263588	gradientNormBeforeClip=3.1180062953528043	supervisedTargets=256	millis=42344
+CHECKPOINT	step=32	sha256=6f889a22caf31db3805a87cf82bd049dff4301030ca4115c9319224e6571f029	path=/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/6f889a22caf31db3805a87cf82bd049dff4301030ca4115c9319224e6571f029.lm1
+CASE	split=dev	step=32	id=dev-0001	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.785412970880545	eosNll=0.05973314544164943	firstEosProbability=1.7186243E-4
+CASE	split=dev	step=32	id=dev-0002	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.784223987218983	eosNll=0.05966472308808157	firstEosProbability=1.76658E-4
+CASE	split=dev	step=32	id=dev-0003	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.7321585102819235	eosNll=0.05940537887403963	firstEosProbability=1.8478886E-4
+CASE	split=dev	step=32	id=dev-0004	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.038430659957374	eosNll=0.05799396568995796	firstEosProbability=1.7575291E-4
+CASE	split=dev	step=32	id=dev-0005	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.041171273560268	eosNll=0.05799061679246442	firstEosProbability=1.767016E-4
+CASE	split=dev	step=32	id=dev-0006	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.7612557882027549	eosNll=0.059607546194159866	firstEosProbability=1.663631E-4
+CASE	split=dev	step=32	id=dev-0007	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.7819030213279365	eosNll=0.060124649410445485	firstEosProbability=1.7013219E-4
+CASE	split=dev	step=32	id=dev-0008	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.538001010590813	eosNll=0.06124543791180059	firstEosProbability=1.7188991E-4
+CASE	split=dev	step=32	id=dev-0009	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.046606758641806	eosNll=0.05769981079143349	firstEosProbability=1.7547829E-4
+CASE	split=dev	step=32	id=dev-0010	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.522419773435953	eosNll=0.06136867236511634	firstEosProbability=1.7470973E-4
+CASE	split=dev	step=32	id=dev-0011	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.7856547305590613	eosNll=0.05993929639262063	firstEosProbability=1.6896783E-4
+CASE	split=dev	step=32	id=dev-0012	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.034290791445768	eosNll=0.05765844724811231	firstEosProbability=1.8493482E-4
+CASE	split=dev	step=32	id=dev-0013	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.7343342436689468	eosNll=0.059469891882537596	firstEosProbability=1.8606015E-4
+CASE	split=dev	step=32	id=dev-0014	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.54112050976679	eosNll=0.061242507010858205	firstEosProbability=1.8560792E-4
+CASE	split=dev	step=32	id=dev-0015	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.5223678559598746	eosNll=0.06135431415329329	firstEosProbability=1.745581E-4
+CASE	split=dev	step=32	id=dev-0016	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.0586144940880207	eosNll=0.057564162274836406	firstEosProbability=1.9848213E-4
+CASE	split=dev	step=32	id=dev-0017	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.783283948775173	eosNll=0.059756430661815685	firstEosProbability=1.7468426E-4
+CASE	split=dev	step=32	id=dev-0018	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.541131226452043	eosNll=0.061240408896384935	firstEosProbability=1.8565443E-4
+CASE	split=dev	step=32	id=dev-0019	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.7846987126455875	eosNll=0.05982091562934144	firstEosProbability=1.7157443E-4
+CASE	split=dev	step=32	id=dev-0020	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.7349063715943576	eosNll=0.05949676408240734	firstEosProbability=1.856887E-4
+CASE	split=dev	step=32	id=dev-0021	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.035002540129268	eosNll=0.05772654222085727	firstEosProbability=1.7116511E-4
+CASE	split=dev	step=32	id=dev-0022	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.737559874809758	eosNll=0.05907410119039369	firstEosProbability=1.7758008E-4
+CASE	split=dev	step=32	id=dev-0023	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.7370768792606786	eosNll=0.059098701896378	firstEosProbability=1.7771349E-4
+CASE	split=dev	step=32	id=dev-0024	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=2.53803953710354	eosNll=0.061242008818457094	firstEosProbability=1.7205288E-4
+SCORE	split=dev	step=32	correct=6	total=24	answerNll=1.7749860612648842	eosNll=0.05956326828822678	prematureEos=0	classCorrect=6,0,0,0	classTotal=6,6,6,6	meanFirstEosProbability=1.774608881532913E-4	missingEos=0	generatedTokens=24
+TRAIN_STEP	step=33	answerEosNll=0.8755024299025536	gradientNormBeforeClip=3.4949373432307747	supervisedTargets=264	millis=52753
+TRAIN_STEP	step=34	answerEosNll=0.46642159670591354	gradientNormBeforeClip=1.6170279180602583	supervisedTargets=272	millis=53766
+TRAIN_STEP	step=35	answerEosNll=1.245318353176117	gradientNormBeforeClip=6.557298653439542	supervisedTargets=280	millis=54789
+TRAIN_STEP	step=36	answerEosNll=0.7056880667805672	gradientNormBeforeClip=1.9420642607959986	supervisedTargets=288	millis=55962
+TRAIN_STEP	step=37	answerEosNll=0.4608350992202759	gradientNormBeforeClip=3.739300523365215	supervisedTargets=296	millis=56984
+TRAIN_STEP	step=38	answerEosNll=1.1707610562443733	gradientNormBeforeClip=4.701737593002098	supervisedTargets=304	millis=58147
+TRAIN_STEP	step=39	answerEosNll=1.2041997909545898	gradientNormBeforeClip=5.075301883700055	supervisedTargets=312	millis=59408
+TRAIN_STEP	step=40	answerEosNll=1.1615101099014282	gradientNormBeforeClip=4.991954198503792	supervisedTargets=320	millis=60545
+TRAIN_STEP	step=41	answerEosNll=1.064891278743744	gradientNormBeforeClip=4.567478371077174	supervisedTargets=328	millis=61739
+TRAIN_STEP	step=42	answerEosNll=0.8959620520472527	gradientNormBeforeClip=3.3538662271043136	supervisedTargets=336	millis=63152
+TRAIN_STEP	step=43	answerEosNll=0.5887972116470337	gradientNormBeforeClip=2.1909308461865	supervisedTargets=344	millis=64203
+TRAIN_STEP	step=44	answerEosNll=0.884226992726326	gradientNormBeforeClip=3.7987199228865487	supervisedTargets=352	millis=65619
+TRAIN_STEP	step=45	answerEosNll=0.7061061263084412	gradientNormBeforeClip=3.6142313036936726	supervisedTargets=360	millis=66800
+TRAIN_STEP	step=46	answerEosNll=0.71836818754673	gradientNormBeforeClip=2.1980126342575192	supervisedTargets=368	millis=67783
+TRAIN_STEP	step=47	answerEosNll=0.7963239848613739	gradientNormBeforeClip=2.9966978907564474	supervisedTargets=376	millis=68852
+TRAIN_STEP	step=48	answerEosNll=0.7862149029970169	gradientNormBeforeClip=4.720201253092324	supervisedTargets=384	millis=70004
+TRAIN_STEP	step=49	answerEosNll=0.8202753663063049	gradientNormBeforeClip=3.016785868761263	supervisedTargets=392	millis=71064
+TRAIN_STEP	step=50	answerEosNll=0.8121689558029175	gradientNormBeforeClip=3.2922874565753166	supervisedTargets=400	millis=72199
+TRAIN_STEP	step=51	answerEosNll=0.6705812811851501	gradientNormBeforeClip=4.229177785013879	supervisedTargets=408	millis=73211
+TRAIN_STEP	step=52	answerEosNll=0.8152113407850266	gradientNormBeforeClip=4.074655304940068	supervisedTargets=416	millis=74279
+TRAIN_STEP	step=53	answerEosNll=0.6188651472330093	gradientNormBeforeClip=3.197638590446771	supervisedTargets=424	millis=75298
+TRAIN_STEP	step=54	answerEosNll=0.7254187017679214	gradientNormBeforeClip=2.070807042789419	supervisedTargets=432	millis=76358
+TRAIN_STEP	step=55	answerEosNll=0.6701910197734833	gradientNormBeforeClip=3.1001930170916254	supervisedTargets=440	millis=77519
+TRAIN_STEP	step=56	answerEosNll=0.8306196331977844	gradientNormBeforeClip=3.802779709924441	supervisedTargets=448	millis=78357
+TRAIN_STEP	step=57	answerEosNll=0.8295525759458542	gradientNormBeforeClip=4.266228332689844	supervisedTargets=456	millis=79418
+TRAIN_STEP	step=58	answerEosNll=0.8162851780653	gradientNormBeforeClip=3.0918004539517154	supervisedTargets=464	millis=80386
+TRAIN_STEP	step=59	answerEosNll=0.692699745297432	gradientNormBeforeClip=2.869374435101654	supervisedTargets=472	millis=81454
+TRAIN_STEP	step=60	answerEosNll=0.6598304957151413	gradientNormBeforeClip=2.9173878998692087	supervisedTargets=480	millis=82571
+TRAIN_STEP	step=61	answerEosNll=0.6165194511413574	gradientNormBeforeClip=1.7914313912906124	supervisedTargets=488	millis=83713
+TRAIN_STEP	step=62	answerEosNll=0.6156717538833618	gradientNormBeforeClip=1.5055056275639078	supervisedTargets=496	millis=84920
+TRAIN_STEP	step=63	answerEosNll=0.5747089460492134	gradientNormBeforeClip=2.3710837268904283	supervisedTargets=504	millis=85879
+TRAIN_STEP	step=64	answerEosNll=0.7694093436002731	gradientNormBeforeClip=4.0813759340649	supervisedTargets=512	millis=87095
+CHECKPOINT	step=64	sha256=26d5188ddf73b726799ac31a1dd12c348173e962bf90ac8a4d3d6b2b132ff8aa	path=/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/26d5188ddf73b726799ac31a1dd12c348173e962bf90ac8a4d3d6b2b132ff8aa.lm1
+CASE	split=dev	step=64	id=dev-0001	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.7265789615375553	eosNll=0.04024092937594226	firstEosProbability=8.573479E-4
+CASE	split=dev	step=64	id=dev-0002	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.7517112628269764	eosNll=0.04029660175435268	firstEosProbability=9.779452E-4
+CASE	split=dev	step=64	id=dev-0003	expected=0	textBase64=MQ==	tokens=1	stop=EOS	correct=false	answerNll=1.9083259009808806	eosNll=0.04128078517990197	firstEosProbability=5.109647E-4
+CASE	split=dev	step=64	id=dev-0004	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.4781022946858542	eosNll=0.04064235011128936	firstEosProbability=4.4942414E-4
+CASE	split=dev	step=64	id=dev-0005	expected=1	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.4808338484216126	eosNll=0.0406450242012788	firstEosProbability=4.5026554E-4
+CASE	split=dev	step=64	id=dev-0006	expected=0	textBase64=MQ==	tokens=1	stop=EOS	correct=false	answerNll=1.9413822570528705	eosNll=0.04140392441798291	firstEosProbability=4.9247924E-4
+CASE	split=dev	step=64	id=dev-0007	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.6636449697534008	eosNll=0.04039191033288958	firstEosProbability=6.0023705E-4
+CASE	split=dev	step=64	id=dev-0008	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.5512656323598648	eosNll=0.04085585973387573	firstEosProbability=0.0011066569
+CASE	split=dev	step=64	id=dev-0009	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=1.2099706279377234	eosNll=0.040446208076796	firstEosProbability=4.2183828E-4
+CASE	split=dev	step=64	id=dev-0010	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.3950448690870463	eosNll=0.04096094796883065	firstEosProbability=7.946642E-4
+CASE	split=dev	step=64	id=dev-0011	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.6733812903771081	eosNll=0.04034962358335825	firstEosProbability=6.3979765E-4
+CASE	split=dev	step=64	id=dev-0012	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.9526220101409777	eosNll=0.04050522076094687	firstEosProbability=4.927023E-4
+CASE	split=dev	step=64	id=dev-0013	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.6743491614450914	eosNll=0.04055568501460094	firstEosProbability=0.0013262145
+CASE	split=dev	step=64	id=dev-0014	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.7469744575076742	eosNll=0.04129206111729822	firstEosProbability=0.0028118805
+CASE	split=dev	step=64	id=dev-0015	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.384737666579742	eosNll=0.04095054440363732	firstEosProbability=7.570126E-4
+CASE	split=dev	step=64	id=dev-0016	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.9644317177652724	eosNll=0.040492129819071465	firstEosProbability=5.1084254E-4
+CASE	split=dev	step=64	id=dev-0017	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.7195883897418422	eosNll=0.04031804966681207	firstEosProbability=8.316282E-4
+CASE	split=dev	step=64	id=dev-0018	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.746987495917331	eosNll=0.041292361688762824	firstEosProbability=0.0028120463
+CASE	split=dev	step=64	id=dev-0019	expected=2	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.7242122193784688	eosNll=0.040251241144948935	firstEosProbability=8.479308E-4
+CASE	split=dev	step=64	id=dev-0020	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.6771939857265838	eosNll=0.040567126382601515	firstEosProbability=0.0013090186
+CASE	split=dev	step=64	id=dev-0021	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=1.1861904539546941	eosNll=0.04046590823129037	firstEosProbability=4.1790135E-4
+CASE	split=dev	step=64	id=dev-0022	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.5993397734374639	eosNll=0.040527315664567354	firstEosProbability=0.001988605
+CASE	split=dev	step=64	id=dev-0023	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.5981910359180649	eosNll=0.0405298841689703	firstEosProbability=0.002009598
+CASE	split=dev	step=64	id=dev-0024	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.5532489945898789	eosNll=0.040860016610928085	firstEosProbability=0.001116057
+SCORE	split=dev	step=64	correct=8	total=24	answerNll=1.387846219880166	eosNll=0.04067173789212227	prematureEos=0	classCorrect=4,4,0,0	classTotal=6,6,6,6	meanFirstEosProbability=0.001022210771528383	missingEos=0	generatedTokens=24
+TRAIN_STEP	step=65	answerEosNll=0.4992857724428177	gradientNormBeforeClip=3.0366823195865753	supervisedTargets=520	millis=100548
+TRAIN_STEP	step=66	answerEosNll=0.6147425398230553	gradientNormBeforeClip=3.268829812804677	supervisedTargets=528	millis=101960
+TRAIN_STEP	step=67	answerEosNll=0.7042463347315788	gradientNormBeforeClip=3.4018762688174244	supervisedTargets=536	millis=103194
+TRAIN_STEP	step=68	answerEosNll=0.8723230361938477	gradientNormBeforeClip=3.767603037807439	supervisedTargets=544	millis=104669
+TRAIN_STEP	step=69	answerEosNll=0.5567621923983097	gradientNormBeforeClip=3.072793444275294	supervisedTargets=552	millis=105844
+TRAIN_STEP	step=70	answerEosNll=0.5151967480778694	gradientNormBeforeClip=1.7979589245195127	supervisedTargets=560	millis=106863
+TRAIN_STEP	step=71	answerEosNll=0.5142369084060192	gradientNormBeforeClip=1.5425440036242797	supervisedTargets=568	millis=108009
+TRAIN_STEP	step=72	answerEosNll=0.5461100786924362	gradientNormBeforeClip=2.365673038238906	supervisedTargets=576	millis=108985
+TRAIN_STEP	step=73	answerEosNll=0.48471828550100327	gradientNormBeforeClip=2.7006698905264552	supervisedTargets=584	millis=110104
+TRAIN_STEP	step=74	answerEosNll=0.6147662997245789	gradientNormBeforeClip=1.7621507104139174	supervisedTargets=592	millis=111309
+TRAIN_STEP	step=75	answerEosNll=0.4346122331917286	gradientNormBeforeClip=2.4173272209319148	supervisedTargets=600	millis=112334
+TRAIN_STEP	step=76	answerEosNll=0.6039282381534576	gradientNormBeforeClip=2.18592314971082	supervisedTargets=608	millis=113285
+TRAIN_STEP	step=77	answerEosNll=0.4018880929797888	gradientNormBeforeClip=2.555218816203773	supervisedTargets=616	millis=114309
+TRAIN_STEP	step=78	answerEosNll=0.5441917926073074	gradientNormBeforeClip=1.597351169930383	supervisedTargets=624	millis=115430
+TRAIN_STEP	step=79	answerEosNll=0.46364096738398075	gradientNormBeforeClip=3.7730614770033304	supervisedTargets=632	millis=116509
+TRAIN_STEP	step=80	answerEosNll=0.44373955205082893	gradientNormBeforeClip=1.8069501098924043	supervisedTargets=640	millis=117762
+TRAIN_STEP	step=81	answerEosNll=0.4230932407081127	gradientNormBeforeClip=2.272577963382875	supervisedTargets=648	millis=118865
+TRAIN_STEP	step=82	answerEosNll=0.25861963257193565	gradientNormBeforeClip=2.5540976231440946	supervisedTargets=656	millis=119896
+TRAIN_STEP	step=83	answerEosNll=0.773034792393446	gradientNormBeforeClip=3.2665941682125466	supervisedTargets=664	millis=121086
+TRAIN_STEP	step=84	answerEosNll=0.4503806196153164	gradientNormBeforeClip=2.0244959957666695	supervisedTargets=672	millis=122150
+TRAIN_STEP	step=85	answerEosNll=0.8722712397575378	gradientNormBeforeClip=3.4955866960694997	supervisedTargets=680	millis=123244
+TRAIN_STEP	step=86	answerEosNll=0.4141971915960312	gradientNormBeforeClip=2.9660982673972205	supervisedTargets=688	millis=124387
+TRAIN_STEP	step=87	answerEosNll=0.3635628744959831	gradientNormBeforeClip=2.2534813013807455	supervisedTargets=696	millis=125441
+TRAIN_STEP	step=88	answerEosNll=0.2519588768482208	gradientNormBeforeClip=1.6762311501071552	supervisedTargets=704	millis=126574
+TRAIN_STEP	step=89	answerEosNll=0.289892228320241	gradientNormBeforeClip=1.6178049996827555	supervisedTargets=712	millis=127603
+TRAIN_STEP	step=90	answerEosNll=0.3478488028049469	gradientNormBeforeClip=2.114771994683844	supervisedTargets=720	millis=128646
+TRAIN_STEP	step=91	answerEosNll=0.30558206886053085	gradientNormBeforeClip=2.9823282212467466	supervisedTargets=728	millis=129526
+TRAIN_STEP	step=92	answerEosNll=0.38243165984749794	gradientNormBeforeClip=1.3565974955013846	supervisedTargets=736	millis=130654
+TRAIN_STEP	step=93	answerEosNll=0.4095004014670849	gradientNormBeforeClip=2.5013540586553997	supervisedTargets=744	millis=131847
+TRAIN_STEP	step=94	answerEosNll=0.9360853116959333	gradientNormBeforeClip=4.69068463631506	supervisedTargets=752	millis=132825
+TRAIN_STEP	step=95	answerEosNll=0.42456401139497757	gradientNormBeforeClip=3.268830627050518	supervisedTargets=760	millis=134133
+TRAIN_STEP	step=96	answerEosNll=0.34887780249118805	gradientNormBeforeClip=1.7084186168519144	supervisedTargets=768	millis=135268
+TRAIN_STEP	step=97	answerEosNll=0.26388106122612953	gradientNormBeforeClip=1.9649678460259077	supervisedTargets=776	millis=136193
+TRAIN_STEP	step=98	answerEosNll=1.068591669201851	gradientNormBeforeClip=6.662288280585576	supervisedTargets=784	millis=137120
+TRAIN_STEP	step=99	answerEosNll=0.3668240010738373	gradientNormBeforeClip=1.417773438102075	supervisedTargets=792	millis=138197
+TRAIN_STEP	step=100	answerEosNll=0.32336802035570145	gradientNormBeforeClip=2.3324496726498696	supervisedTargets=800	millis=139337
+TRAIN_STEP	step=101	answerEosNll=0.2917590066790581	gradientNormBeforeClip=2.4765113654963473	supervisedTargets=808	millis=140478
+TRAIN_STEP	step=102	answerEosNll=0.1912879552692175	gradientNormBeforeClip=1.3196104407111093	supervisedTargets=816	millis=141748
+TRAIN_STEP	step=103	answerEosNll=0.15179662965238094	gradientNormBeforeClip=1.2677954222556922	supervisedTargets=824	millis=142774
+TRAIN_STEP	step=104	answerEosNll=0.32556495256721973	gradientNormBeforeClip=2.0633796883735602	supervisedTargets=832	millis=143794
+TRAIN_STEP	step=105	answerEosNll=0.323831494897604	gradientNormBeforeClip=3.5869370967281444	supervisedTargets=840	millis=145190
+TRAIN_STEP	step=106	answerEosNll=0.4865151569247246	gradientNormBeforeClip=3.5793473598289633	supervisedTargets=848	millis=146359
+TRAIN_STEP	step=107	answerEosNll=0.3685113098472357	gradientNormBeforeClip=2.0181654952962074	supervisedTargets=856	millis=147773
+TRAIN_STEP	step=108	answerEosNll=0.187981684692204	gradientNormBeforeClip=1.4475597678311112	supervisedTargets=864	millis=148897
+TRAIN_STEP	step=109	answerEosNll=0.1883039716631174	gradientNormBeforeClip=1.5244991970634698	supervisedTargets=872	millis=150345
+TRAIN_STEP	step=110	answerEosNll=0.2825932167470455	gradientNormBeforeClip=2.2361507273327255	supervisedTargets=880	millis=151538
+TRAIN_STEP	step=111	answerEosNll=0.6798868514597416	gradientNormBeforeClip=4.156772915622302	supervisedTargets=888	millis=152690
+TRAIN_STEP	step=112	answerEosNll=0.22822650894522667	gradientNormBeforeClip=2.3075545690097625	supervisedTargets=896	millis=153734
+TRAIN_STEP	step=113	answerEosNll=0.22543054446578026	gradientNormBeforeClip=1.9988747563980152	supervisedTargets=904	millis=154754
+TRAIN_STEP	step=114	answerEosNll=0.18663082644343376	gradientNormBeforeClip=1.4405990778853306	supervisedTargets=912	millis=156071
+TRAIN_STEP	step=115	answerEosNll=0.21387562528252602	gradientNormBeforeClip=1.644708990615729	supervisedTargets=920	millis=157090
+TRAIN_STEP	step=116	answerEosNll=0.056372083723545074	gradientNormBeforeClip=0.8371430731553573	supervisedTargets=928	millis=158233
+TRAIN_STEP	step=117	answerEosNll=0.2538650156930089	gradientNormBeforeClip=2.0206337843521776	supervisedTargets=936	millis=159489
+TRAIN_STEP	step=118	answerEosNll=0.28245034720748663	gradientNormBeforeClip=2.5645389308157385	supervisedTargets=944	millis=160693
+TRAIN_STEP	step=119	answerEosNll=0.13354721385985613	gradientNormBeforeClip=1.8208792027809386	supervisedTargets=952	millis=161691
+TRAIN_STEP	step=120	answerEosNll=0.4732307456433773	gradientNormBeforeClip=2.4138521910239787	supervisedTargets=960	millis=162650
+TRAIN_STEP	step=121	answerEosNll=0.08558009751141071	gradientNormBeforeClip=0.9479587214569537	supervisedTargets=968	millis=163690
+TRAIN_STEP	step=122	answerEosNll=0.38633888959884644	gradientNormBeforeClip=2.0511416701904612	supervisedTargets=976	millis=164679
+TRAIN_STEP	step=123	answerEosNll=0.6971901468932629	gradientNormBeforeClip=4.941375881420185	supervisedTargets=984	millis=165759
+TRAIN_STEP	step=124	answerEosNll=0.24684322252869606	gradientNormBeforeClip=1.79267313284136	supervisedTargets=992	millis=166764
+TRAIN_STEP	step=125	answerEosNll=0.12174874916672707	gradientNormBeforeClip=0.8472208127542178	supervisedTargets=1000	millis=167794
+TRAIN_STEP	step=126	answerEosNll=0.6115425582975149	gradientNormBeforeClip=4.709269686904442	supervisedTargets=1008	millis=168846
+TRAIN_STEP	step=127	answerEosNll=0.21047301962971687	gradientNormBeforeClip=1.675918917049391	supervisedTargets=1016	millis=170147
+TRAIN_STEP	step=128	answerEosNll=0.23200149834156036	gradientNormBeforeClip=1.839622173900394	supervisedTargets=1024	millis=171603
+CHECKPOINT	step=128	sha256=bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1	path=/workspace/scratch/3112c86b5191/training-recovery-study-v1/intent-wide/checkpoints/bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1.lm1
+CASE	split=dev	step=128	id=dev-0001	expected=2	textBase64=Mg==	tokens=1	stop=EOS	correct=true	answerNll=1.0686183449090372	eosNll=0.031102537788274986	firstEosProbability=9.707136E-5
+CASE	split=dev	step=128	id=dev-0002	expected=2	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.7210482111848666	eosNll=0.03149435006551293	firstEosProbability=1.341722E-4
+CASE	split=dev	step=128	id=dev-0003	expected=0	textBase64=MQ==	tokens=1	stop=EOS	correct=false	answerNll=4.420873649452563	eosNll=0.0318980086380094	firstEosProbability=1.0336292E-4
+CASE	split=dev	step=128	id=dev-0004	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.4941441955427397	eosNll=0.031356922257316455	firstEosProbability=7.120276E-5
+CASE	split=dev	step=128	id=dev-0005	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.4850695080555756	eosNll=0.03136138316121517	firstEosProbability=7.0975744E-5
+CASE	split=dev	step=128	id=dev-0006	expected=0	textBase64=MQ==	tokens=1	stop=EOS	correct=false	answerNll=4.4634566131189555	eosNll=0.032018139986480065	firstEosProbability=9.714939E-5
+CASE	split=dev	step=128	id=dev-0007	expected=2	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.137446585897969	eosNll=0.03142839260592467	firstEosProbability=8.2485465E-5
+CASE	split=dev	step=128	id=dev-0008	expected=3	textBase64=Mg==	tokens=1	stop=EOS	correct=false	answerNll=2.0249677421999763	eosNll=0.03189348317038565	firstEosProbability=1.7230028E-4
+CASE	split=dev	step=128	id=dev-0009	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.07334282642839796	eosNll=0.03126609805448233	firstEosProbability=5.5226737E-5
+CASE	split=dev	step=128	id=dev-0010	expected=3	textBase64=Mg==	tokens=1	stop=EOS	correct=false	answerNll=1.1850496066051228	eosNll=0.03150888245549055	firstEosProbability=1.1477859E-4
+CASE	split=dev	step=128	id=dev-0011	expected=2	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.1202218153913979	eosNll=0.03121744477640398	firstEosProbability=7.79E-5
+CASE	split=dev	step=128	id=dev-0012	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.07106535953524862	eosNll=0.03150235139644586	firstEosProbability=9.025528E-5
+CASE	split=dev	step=128	id=dev-0013	expected=0	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.145465186967467	eosNll=0.030769833340851704	firstEosProbability=1.751749E-4
+CASE	split=dev	step=128	id=dev-0014	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.0867925260042455	eosNll=0.03126534593325481	firstEosProbability=1.7419652E-4
+CASE	split=dev	step=128	id=dev-0015	expected=3	textBase64=Mg==	tokens=1	stop=EOS	correct=false	answerNll=1.199826884626141	eosNll=0.03151197709428999	firstEosProbability=1.1710793E-4
+CASE	split=dev	step=128	id=dev-0016	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.07035237939798833	eosNll=0.031500745716455114	firstEosProbability=9.725573E-5
+CASE	split=dev	step=128	id=dev-0017	expected=2	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.7555809973665593	eosNll=0.03158413937152993	firstEosProbability=1.3101372E-4
+CASE	split=dev	step=128	id=dev-0018	expected=3	textBase64=MA==	tokens=1	stop=EOS	correct=false	answerNll=1.0864618297890694	eosNll=0.03126528380185256	firstEosProbability=1.742563E-4
+CASE	split=dev	step=128	id=dev-0019	expected=2	textBase64=Mg==	tokens=1	stop=EOS	correct=true	answerNll=1.0557648582681374	eosNll=0.031143263699204837	firstEosProbability=9.3885705E-5
+CASE	split=dev	step=128	id=dev-0020	expected=0	textBase64=Mw==	tokens=1	stop=EOS	correct=false	answerNll=1.204662257938848	eosNll=0.030761284668111344	firstEosProbability=1.7225504E-4
+CASE	split=dev	step=128	id=dev-0021	expected=1	textBase64=MQ==	tokens=1	stop=EOS	correct=true	answerNll=0.07423097827537539	eosNll=0.03125379874846956	firstEosProbability=5.377368E-5
+CASE	split=dev	step=128	id=dev-0022	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.49101809482864667	eosNll=0.031092274239393092	firstEosProbability=2.7911642E-4
+CASE	split=dev	step=128	id=dev-0023	expected=0	textBase64=MA==	tokens=1	stop=EOS	correct=true	answerNll=0.4923896700936421	eosNll=0.03109370733316119	firstEosProbability=2.7851612E-4
+CASE	split=dev	step=128	id=dev-0024	expected=3	textBase64=Mg==	tokens=1	stop=EOS	correct=false	answerNll=2.033096423341828	eosNll=0.03189434904345845	firstEosProbability=1.7409147E-4
+SCORE	split=dev	step=128	correct=10	total=24	answerNll=1.2483727727174918	eosNll=0.031382666556082274	prematureEos=0	classCorrect=2,6,2,0	classTotal=6,6,6,6	meanFirstEosProbability=1.2864684337425084E-4	missingEos=0	generatedTokens=24
+SELECTION	checkpointSha256=bfe65614d7d2891b23276cd2bdd21b797772e08fd75aee742b4dd714b96944b1	step=128	devCorrect=10	devTotal=24	devAnswerNll=1.2483727727174918	testRead=false	inputsUnchanged=true	generalModelPromotion=NOT_PERMITTED	postTrainingCapacity=REQUIRES_SEPARATE_BENCHMARK

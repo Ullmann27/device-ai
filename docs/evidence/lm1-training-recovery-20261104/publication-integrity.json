@@ -1,0 +1,595 @@
+{
+  "scope": "FINAL_PUBLICATION_INTEGRITY_ONLY_NO_MODEL_EXECUTION",
+  "createdUtc": "2026-11-04T19:51:47.838289+00:00",
+  "allPassed": true,
+  "checkCount": 98,
+  "checks": [
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "passed": true,
+      "actual": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "expected": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+      "passed": true,
+      "actual": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "expected": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+      "passed": true,
+      "actual": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "expected": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/make_intent_data.py",
+      "passed": true,
+      "actual": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+      "expected": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+      "passed": true,
+      "actual": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "expected": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+      "passed": true,
+      "actual": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "expected": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+      "passed": true,
+      "actual": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "expected": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+      "passed": true,
+      "actual": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+      "expected": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+      "passed": true,
+      "actual": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "expected": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+      "passed": true,
+      "actual": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+      "expected": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b"
+    },
+    {
+      "label": "v1/experimental/lm1-training-recovery-20261104/intent-data/manifest.json",
+      "passed": true,
+      "actual": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf",
+      "expected": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "passed": true,
+      "actual": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "expected": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "passed": true,
+      "actual": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "expected": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "passed": true,
+      "actual": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "expected": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "passed": true,
+      "actual": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "expected": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "passed": true,
+      "actual": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "expected": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "label": "v1/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "passed": true,
+      "actual": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "expected": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "label": "v1/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "passed": true,
+      "actual": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "expected": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "label": "v1/experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "passed": true,
+      "actual": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "expected": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68"
+    },
+    {
+      "label": "v1/experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "passed": true,
+      "actual": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "expected": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "label": "v1/experimental/weight-space-20261104/development.txt",
+      "passed": true,
+      "actual": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+      "expected": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+    },
+    {
+      "label": "v1/input/lm1-baseline.lm1",
+      "passed": true,
+      "actual": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "expected": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
+    },
+    {
+      "label": "v1/input/lm1-tokenizer.lmbp",
+      "passed": true,
+      "actual": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "expected": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    {
+      "label": "v1/input/train.txt",
+      "passed": true,
+      "actual": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+      "expected": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9"
+    },
+    {
+      "label": "v1/jar",
+      "passed": true,
+      "actual": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911",
+      "expected": "901b94e4c4d9b54c5ba422a5fa3b00bd9f28f187b68ab0b79f7f9b8fc6b62911"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "passed": true,
+      "actual": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "expected": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+      "passed": true,
+      "actual": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "expected": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+      "passed": true,
+      "actual": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "expected": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/make_intent_data.py",
+      "passed": true,
+      "actual": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+      "expected": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+      "passed": true,
+      "actual": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "expected": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+      "passed": true,
+      "actual": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "expected": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+      "passed": true,
+      "actual": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "expected": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+      "passed": true,
+      "actual": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+      "expected": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+      "passed": true,
+      "actual": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "expected": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+      "passed": true,
+      "actual": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+      "expected": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/intent-data/manifest.json",
+      "passed": true,
+      "actual": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf",
+      "expected": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "passed": true,
+      "actual": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "expected": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "passed": true,
+      "actual": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "expected": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "passed": true,
+      "actual": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "expected": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "passed": true,
+      "actual": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "expected": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "passed": true,
+      "actual": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "expected": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "label": "long-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "passed": true,
+      "actual": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "expected": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "label": "long-study/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "passed": true,
+      "actual": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "expected": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "label": "long-study/experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "passed": true,
+      "actual": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "expected": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68"
+    },
+    {
+      "label": "long-study/experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "passed": true,
+      "actual": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "expected": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "label": "long-study/experimental/weight-space-20261104/development.txt",
+      "passed": true,
+      "actual": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+      "expected": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt",
+      "passed": true,
+      "actual": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4",
+      "expected": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt",
+      "passed": true,
+      "actual": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6",
+      "expected": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/registration.json",
+      "passed": true,
+      "actual": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "expected": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md",
+      "passed": true,
+      "actual": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "expected": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "passed": true,
+      "actual": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "expected": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b"
+    },
+    {
+      "label": "long-study/experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py",
+      "passed": true,
+      "actual": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95",
+      "expected": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95"
+    },
+    {
+      "label": "long-study/input/lm1-baseline.lm1",
+      "passed": true,
+      "actual": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "expected": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
+    },
+    {
+      "label": "long-study/input/lm1-tokenizer.lmbp",
+      "passed": true,
+      "actual": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "expected": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    {
+      "label": "long-study/input/train.txt",
+      "passed": true,
+      "actual": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+      "expected": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9"
+    },
+    {
+      "label": "long-study/jar",
+      "passed": true,
+      "actual": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d",
+      "expected": "d92acf410494bba98ad5299b0abfe13bdac3bb508dd9dd7bbf25f96a3ba5a20d"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "passed": true,
+      "actual": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "expected": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/LmRecoveryDiagnostic.kt",
+      "passed": true,
+      "actual": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3",
+      "expected": "4eb3eb594f03a30ad00b750a31ea899c8a937f0783473b71f70a576648f7f4e3"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/DIAGNOSTIC_PROTOCOL.md",
+      "passed": true,
+      "actual": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614",
+      "expected": "e8027ce981be5b27a20542353c5aa2803ce09589c230041b2d2bc1c3ab584614"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/make_intent_data.py",
+      "passed": true,
+      "actual": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c",
+      "expected": "4682b2d34d7fcf09dc87918e123c2a08f24833928c2df11f5f319dee6445ea6c"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/LmIntentStudy.kt",
+      "passed": true,
+      "actual": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d",
+      "expected": "0fb9552ad0d8cc4d2f6cc43ad8700374da27ae9ca2e794f1765fca45c11c2e9d"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/LmIntentStudyChecks.kt",
+      "passed": true,
+      "actual": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4",
+      "expected": "6275790deb920139ff3eb627200a7dc502b427dee357576ba9d471341dc71aa4"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/INTENT_PROTOCOL.md",
+      "passed": true,
+      "actual": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5",
+      "expected": "0be368ff103e284a225d0cd30a0da0cd3a70be9ffdf3bc47b1900f8cac96a0d5"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/intent-data/dev.tsv",
+      "passed": true,
+      "actual": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe",
+      "expected": "c70f7e3ffac4a6f3c42ebfd29becacfe2cc4eb446fb86187298c5f264e367dfe"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/intent-data/test.sealed.tsv",
+      "passed": true,
+      "actual": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a",
+      "expected": "cb75fb0be812116d8bbde95fbe5f82cf8c175d09ba0c49c51090c6cbb3d18a6a"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/intent-data/train.tsv",
+      "passed": true,
+      "actual": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b",
+      "expected": "a474d13be70162fb5c8452df43777f06681fec91ba1d4498ea10d453180a718b"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/intent-data/manifest.json",
+      "passed": true,
+      "actual": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf",
+      "expected": "40a1b8d53e73b0715aac091ece0b16b4c7516639547591efcbd4b9fc54cacccf"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "passed": true,
+      "actual": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e",
+      "expected": "fcff707a5a1679244cffbb6583e1594b6084e941c7e918f834d71499029b628e"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "passed": true,
+      "actual": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17",
+      "expected": "09bf68c1c765b6ed625d71672a2aa836fedc3f587546e9197d4b21ee0e446b17"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "passed": true,
+      "actual": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4",
+      "expected": "f6b0d0bbb9ee0e082b82e60ab7a39113cbf7d996fe60b363ee25c39a1b4930b4"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "passed": true,
+      "actual": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+      "expected": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "passed": true,
+      "actual": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+      "expected": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2"
+    },
+    {
+      "label": "suffix-study/app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "passed": true,
+      "actual": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+      "expected": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab"
+    },
+    {
+      "label": "suffix-study/experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+      "passed": true,
+      "actual": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+      "expected": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c"
+    },
+    {
+      "label": "suffix-study/experimental/weight-space-20261104/LmWeightExperiment.kt",
+      "passed": true,
+      "actual": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+      "expected": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68"
+    },
+    {
+      "label": "suffix-study/experimental/weight-space-20261104/LmWeightSurgery.kt",
+      "passed": true,
+      "actual": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e",
+      "expected": "f1bc63a0b1cd65af53306b96317266347d7763aab858b3e87adb1fe37119c62e"
+    },
+    {
+      "label": "suffix-study/experimental/weight-space-20261104/development.txt",
+      "passed": true,
+      "actual": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+      "expected": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudy.kt",
+      "passed": true,
+      "actual": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4",
+      "expected": "e1d469e0d702041a12cf250ac86bd5fcde18351347ba05a4824566c79b846fe4"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/LmIntentLongStudyChecks.kt",
+      "passed": true,
+      "actual": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6",
+      "expected": "2316beddd404f311a866191b749e9d8ae4825a44ea519a0d858e208abafc23e6"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/registration.json",
+      "passed": true,
+      "actual": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992",
+      "expected": "540f646e6963bcc9902a362f77d963fd39aa76513837125b86085768af8b8992"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/INTENT_LONG_PROTOCOL.md",
+      "passed": true,
+      "actual": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800",
+      "expected": "150ce71af4239563ce8142163e5e456f0554cf1263f4e6c2ad61bb842cc87800"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "passed": true,
+      "actual": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "expected": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/test_study_controller.py",
+      "passed": true,
+      "actual": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95",
+      "expected": "9948d55f3aaf9fbcc2f3a0b9c02badebb6d8605b91581569ef688d6c118d9d95"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudy.kt",
+      "passed": true,
+      "actual": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89",
+      "expected": "2ca026da5ecebb79f9fcbb0d49d39cc6c1485b0d31b19fe10118cb4ff711ef89"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/LmIntentSuffixStudyChecks.kt",
+      "passed": true,
+      "actual": "8c5eeac72c6fb6c2d97be0f0ff1a87cc9790a361e258bc56c98b31bf81522497",
+      "expected": "8c5eeac72c6fb6c2d97be0f0ff1a87cc9790a361e258bc56c98b31bf81522497"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/long-study/registration.json",
+      "passed": true,
+      "actual": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6",
+      "expected": "7f87a5a6582f23cdf1d647dba4daed8c494afa970f5224329a78bc0337b854e6"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix_probe.py",
+      "passed": true,
+      "actual": "57bfd97df92dc1f795f83c8adc8f81e3f398b5b54586417bbb8b7caf71ecb7b2",
+      "expected": "57bfd97df92dc1f795f83c8adc8f81e3f398b5b54586417bbb8b7caf71ecb7b2"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/SUFFIX_PROTOCOL.md",
+      "passed": true,
+      "actual": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4",
+      "expected": "176cd8a63462822b67bde234f60c57d90c8fe4066c6461eee18c0474b98359d4"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/choose_development_study.py",
+      "passed": true,
+      "actual": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+      "expected": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "passed": true,
+      "actual": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "expected": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68"
+    },
+    {
+      "label": "suffix-study/experimental/lm1-training-recovery-20261104/suffix-study/test_study_controller.py",
+      "passed": true,
+      "actual": "2ffbe1a8514bf5591578d386c0e881821b533bd41439065240a4dc4074e659cd",
+      "expected": "2ffbe1a8514bf5591578d386c0e881821b533bd41439065240a4dc4074e659cd"
+    },
+    {
+      "label": "suffix-study/input/lm1-baseline.lm1",
+      "passed": true,
+      "actual": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+      "expected": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd"
+    },
+    {
+      "label": "suffix-study/input/lm1-tokenizer.lmbp",
+      "passed": true,
+      "actual": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f",
+      "expected": "94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f"
+    },
+    {
+      "label": "suffix-study/input/train.txt",
+      "passed": true,
+      "actual": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+      "expected": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9"
+    },
+    {
+      "label": "suffix-study/jar",
+      "passed": true,
+      "actual": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950",
+      "expected": "8075d799b42f3b4f23f2f154af09685f52074503b0a4103ba336a618a3be1950"
+    },
+    {
+      "label": "Publication-only link normalization: final-independent-review.md",
+      "passed": true,
+      "originalSha256": "a4e558f35434633d34b154f13d9547dbc9bf34f9c95b1026d173b698080328ad",
+      "publishedSha256": "a379033ff81f39be1f66b247eaf3b54c0b202ed303c3269526e2013009c22234",
+      "semanticChanges": false
+    },
+    {
+      "label": "RESULTS.md local relative links resolve",
+      "passed": true
+    },
+    {
+      "label": "final audit failed checks",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    }
+  ]
+}
