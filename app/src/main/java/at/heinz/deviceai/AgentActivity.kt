@@ -6554,8 +6554,8 @@ class AgentActivity : Activity() {
             override fun onStart(utteranceId: String?) {
                 runOnUiThread {
                     if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
+                    if (!avatarDirector.speechStarted(utteranceId, voiceAvatarText)) return@runOnUiThread
                     voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
-                    avatarDirector.speechStarted(utteranceId, voiceAvatarText)
                     if (utteranceId == readinessVoiceSampleId && readinessDialog?.isShowing == true) {
                         readinessVoiceSampleStarted = true
                         readinessVoiceResult = "Die Sprachausgabe läuft. Bestätige selbst, ob du sie klar hörst."
@@ -6576,8 +6576,9 @@ class AgentActivity : Activity() {
             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
                 runOnUiThread {
                     if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
-                    voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
-                    avatarDirector.wordRange(utteranceId, start, end)
+                    if (avatarDirector.wordRange(utteranceId, start, end, frame)) {
+                        voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+                    }
                 }
             }
             override fun onDone(utteranceId: String?) = finish(utteranceId)

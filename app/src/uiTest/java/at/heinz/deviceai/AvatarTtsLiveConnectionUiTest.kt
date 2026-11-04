@@ -322,7 +322,9 @@ class AvatarTtsLiveConnectionUiTest {
     }
 
     @Test fun chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks() = withSpeechShell { f ->
-        startPendingSpeech(f, "moving", "A")
+        startPendingSpeech(f, "moving", "A A", reportRange = false)
+        f.listener.onRangeStart("moving", 0, 1, 0)
+        advance(170)
         assertTrue(pose(f).speakEnergy > .35f)
 
         set(f.activity, "conversationActive", true)
@@ -334,7 +336,7 @@ class AvatarTtsLiveConnectionUiTest {
         assertEquals(1, descendants(f.activity.window.decorView).count { it is ContinuumHologramView })
         // Reparenting clears transient geometry. Fresh real callbacks must reach the reattached
         // live view in Chat even when the Home's docked wrapper is detached.
-        f.listener.onRangeStart("moving", 0, 1, 0)
+        f.listener.onRangeStart("moving", 2, 3, 0)
         advance(170)
         assertEquals(Viseme.AA, pose(f).viseme)
         assertTrue(pose(f).speakEnergy > .35f)
