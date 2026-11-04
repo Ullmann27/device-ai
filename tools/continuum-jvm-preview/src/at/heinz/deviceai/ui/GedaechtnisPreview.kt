@@ -18,5 +18,11 @@ object GedaechtnisPreview {
             p.fillRect(0f, 0f, 300f, 315f, Fill.Linear(0f, 0f, 0f, 315f, intArrayOf(JarvisDesign.Colors.background, JarvisDesign.Colors.backgroundBottom)))
             ContinuumBrainOrbRenderer().draw(p, 190f, 140f, 110f)
         }
+        // Vorschau ohne Gedächtnis-Anbindung: so sieht die Karte auf einem frischen Gerät aus (keine erfundenen Zahlen).
+        shot("mem", 254, 167) { p ->
+            p.fillRect(0f, 0f, 254f, 167f, Fill.Solid(JarvisDesign.Colors.background))
+            p.scale(254f / JarvisMemoryActivityPanel.REF_W, 254f / JarvisMemoryActivityPanel.REF_W)
+            JarvisMemoryActivityPanel.draw(p, 1f, 1f, JarvisMemoryActivityPanel.REF_W - 1f, JarvisMemoryActivityPanel.REF_H - 1f, MemoryActivitySnapshot.OFFLINE)
+        }
     }
 }
