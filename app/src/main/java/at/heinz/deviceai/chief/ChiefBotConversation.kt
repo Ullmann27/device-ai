@@ -302,14 +302,18 @@ class ChiefBotConversation(
 internal object ChiefBotConversationCodec {
     const val MAX_BYTES = 64 * 1024
     fun encode(profile: ChiefBotProfile, history: ChiefBotConversationHistory): ByteArray = ByteArrayOutputStream().also { buffer ->
+        // Ordinary histories retain their exact legacy format. A practice entry requires V3
+        // until it leaves the bounded history, including after an ordinary follow-up reply.
+        val hasPracticeFeedback = history.turns.any { it.practiceFeedback != null }
         DataOutputStream(buffer).use { out ->
-            out.writeUTF("BOT_CONVERSATION_V3"); out.writeUTF(profile.agentId); out.writeUTF(profile.memoryNamespace)
+            out.writeUTF(if (hasPracticeFeedback) "BOT_CONVERSATION_V3" else "BOT_CONVERSATION_V2")
+            out.writeUTF(profile.agentId); out.writeUTF(profile.memoryNamespace)
             out.writeBoolean(profile.contextObjectId != null); profile.contextObjectId?.let(out::writeUTF)
             out.writeLong(history.discardedTurns); out.writeInt(history.turns.size)
             history.turns.forEach { entry ->
                 writeText(out, entry.request); writeText(out, entry.response); out.writeUTF(entry.modelId)
                 out.writeUTF(entry.modelVersion); out.writeUTF(entry.modelSha256)
-                out.writeBoolean(entry.practiceFeedback != null)
+                if (hasPracticeFeedback) out.writeBoolean(entry.practiceFeedback != null)
                 entry.practiceFeedback?.let { feedback ->
                     require(feedback.agentId == profile.agentId) { "BOT_PRACTICE_AGENT_MISMATCH" }
                     writeText(out, feedback.exerciseId); writeText(out, feedback.agentId); writeText(out, feedback.title)

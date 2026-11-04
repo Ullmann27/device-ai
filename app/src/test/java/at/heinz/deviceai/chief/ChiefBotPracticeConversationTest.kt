@@ -216,6 +216,8 @@ class ChiefBotPracticeConversationTest {
             assertEquals(listOf(legacy), decoded.turns)
             assertEquals(2, decoded.discardedTurns)
             assertNull(decoded.turns.single().practiceFeedback)
+            if (version == 2) assertArrayEquals("Ordinary history must remain byte-compatible with the legacy format",
+                bytes, ChiefBotConversationCodec.encode(profile, decoded))
         }
         val task = ChiefBotPractice.select(profile.agentId, "Training 1")!!
         val response = answer(task)
@@ -224,6 +226,10 @@ class ChiefBotPracticeConversationTest {
         val encoded = ChiefBotConversationCodec.encode(profile, ChiefBotConversationHistory(listOf(entry)))
         DataInputStream(ByteArrayInputStream(encoded)).use { assertEquals("BOT_CONVERSATION_V3", it.readUTF()) }
         assertEquals(entry, ChiefBotConversationCodec.decode(profile, encoded).turns.single())
+        val followedByOrdinaryReply = ChiefBotConversationHistory(listOf(entry, legacy))
+        val mixed = ChiefBotConversationCodec.encode(profile, followedByOrdinaryReply)
+        DataInputStream(ByteArrayInputStream(mixed)).use { assertEquals("BOT_CONVERSATION_V3", it.readUTF()) }
+        assertEquals(followedByOrdinaryReply.turns, ChiefBotConversationCodec.decode(profile, mixed).turns)
         rejects { ChiefBotConversationCodec.encode(store.get("bot-link")!!, ChiefBotConversationHistory(listOf(entry))) }
         rejects { ChiefBotConversationEntry("Training 1", "Andere Antwort", model.id, model.version, model.sha256, feedback) }
         rejects { ChiefBotConversationEntry("Training 1", response, model.id, model.version, model.sha256,
