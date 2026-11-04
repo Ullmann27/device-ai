@@ -1,0 +1,6 @@
+{
+  "published_source_commit": "dbb8e2f7085b0140ed437502b27fac5f988ac834",
+  "source_files_compared": 1009,
+  "mismatches": [],
+  "method": "One Git tree inventory; Git blob hash of every actual working-source file compared to tree entry."
+}

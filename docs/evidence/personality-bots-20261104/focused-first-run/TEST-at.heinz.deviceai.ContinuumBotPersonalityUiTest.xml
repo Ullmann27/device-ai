@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotPersonalityUiTest" tests="12" skipped="0" failures="3" errors="0" timestamp="2026-11-04T10:47:09" hostname="8c129114cae4" time="10.012">
+  <properties/>
+  <testcase name="renderActualPhoneRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="4.381">
+    <failure message="java.lang.IllegalArgumentException: List has more than one element." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: List has more than one element.
+	at kotlin.collections.CollectionsKt___CollectionsKt.single(_Collections.kt:621)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderWidgets(ContinuumBotPersonalityUiTest.kt:292)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderActualPhoneRosterAndComposer(ContinuumBotPersonalityUiTest.kt:263)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="renderActualFoldRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.758">
+    <failure message="java.lang.IllegalArgumentException: List has more than one element." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: List has more than one element.
+	at kotlin.collections.CollectionsKt___CollectionsKt.single(_Collections.kt:621)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderWidgets(ContinuumBotPersonalityUiTest.kt:292)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderActualFoldRosterAndComposer(ContinuumBotPersonalityUiTest.kt:267)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="searchFindsOwnerEditedProfileBeyondFirstPageByNameRoleAndStyle" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.875"/>
+  <testcase name="exampleOnlyFillsEditableDraftAndFinalExplicitHandoffIsOneShot" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.631"/>
+  <testcase name="renderActualNarrowWidgetsWithLargeType" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.629">
+    <failure message="java.lang.IllegalArgumentException: List has more than one element." type="java.lang.IllegalArgumentException">java.lang.IllegalArgumentException: List has more than one element.
+	at kotlin.collections.CollectionsKt___CollectionsKt.single(_Collections.kt:621)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderWidgets(ContinuumBotPersonalityUiTest.kt:292)
+	at at.heinz.deviceai.ContinuumBotPersonalityUiTest.renderActualNarrowWidgetsWithLargeType(ContinuumBotPersonalityUiTest.kt:271)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="throwingHandoffKeepsDraftButNeverOffersAnUnconfirmedDuplicate" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.492"/>
+  <testcase name="cancelledOrDestroyedComposerControlsCannotSubmitLater" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.741"/>
+  <testcase name="replacingComposerMakesOldControlsInert" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.178"/>
+  <testcase name="overLimitUnicodeAndCodingTextStayWholeWithoutDispatch" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.4"/>
+  <testcase name="rejectedHandoffPreservesCompleteDraftAndAllowsExplicitRetry" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.385"/>
+  <testcase name="rosterDisplaysDistinctWorkingMethodAndRealRuntimeState" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.271"/>
+  <testcase name="rapidSearchRendersOnlyTheLatestQuery" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.269"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:47:21" hostname="8c129114cae4" time="0.034">
+  <properties/>
+  <testcase name="threeIdentitiesAndPrivateNotesSurviveRestartAndRename" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.003"/>
+  <testcase name="loweredCapacityAndOversizedNotesCannotDamageCommittedData" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.002"/>
+  <testcase name="staleUpdatesAndDuplicateIdsDoNotOverwriteAcceptedData" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.001"/>
+  <testcase name="unsafePathsAndSymlinksFailClosed" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.001"/>
+  <testcase name="parallelInstancesSerializeAcceptedCreates" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.015"/>
+  <testcase name="corruptAndUnknownSchemaStayUnmodified" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.001"/>
+  <testcase name="optionalTwentySeedsStayMetadataAndPaginationIsDeterministic" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.002"/>
+  <testcase name="profileBackedCoordinatorStillRequiresTrustedRuntimeApproval" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.004"/>
+  <testcase name="existingObjectCorruptionBlocksReadAndIsNotSilentlyHealed" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.003"/>
+  <testcase name="systemParentAliasKeepsRosterDurable" classname="at.heinz.deviceai.chief.ChiefBotProfileStoreTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

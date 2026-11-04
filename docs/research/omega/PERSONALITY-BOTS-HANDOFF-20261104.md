@@ -10,8 +10,9 @@ active development conversations.
 - Base: PR #483, `578bdfd12f896cc990bf1a043bc1b248ba3adb6d`.
 - Branch: `feat/continuum-personality-bots-20261104`.
 - Delivery: draft PR #493, `https://github.com/Ullmann27/device-ai/pull/493`.
-- Current status: implementation complete for host verification; final GREEN/review pending.
-  Physical Fold7/native model/release APK: **NOT_RUN**.
+- Source checkpoint: `dbb8e2f7085b0140ed437502b27fac5f988ac834`.
+- Current status: **implementation complete; focused/full-unit/configured-API gates GREEN; independent source review complete**.
+  Broad all-widget run: **interrupted / UNVERIFIED**. Physical Fold7/native model/release APK: **NOT_RUN**.
 - Actual current code already contains 20 persisted profiles, private local bot
   dialogue, address routing, ChiefWorkerPool, typed delegation and CCC1 contracts.
   A private bot dialogue currently cannot dispatch tools. A profile is neither a
@@ -127,11 +128,18 @@ Unknown explicit @-names do not silently fall back to a different selected bot.
 | Activity assignment RED | 5 tests/5 missing-route failures; prior unsupported dialog overload corrected before this run | `activity-red` |
 | First combined implementation | 114 tests, 3 render-fixture failures; remaining 111 pass | `focused-first-run` |
 | Current focused GREEN | **114 tests, 0 failures, 0 errors, 0 skipped** | `focused-green` |
-| Complete unit/widget suite + configured NewApi lint | RUNNING | `full-verification` |
+| Broad all-unit/all-widget attempt | Interrupted after more than 9 minutes without visible progress; no final summary; not counted as passing | `all-widget-suite-interrupted` |
+| Full regular unit suite | **2,402 total, 2,383 pass, 19 skipped, 0 failures/errors** | `full-verification` |
+| Configured Android lint | **0 NewApi issues**, Gradle exit 0 | `full-verification` |
+| Independent source review | No concrete important/blocking defect found in scoped source; no separate test execution by reviewer | `independent-review.md` |
 
 All evidence paths are below `docs/evidence/personality-bots-20261104/`.
 The source manifest binds the working-source bytes, not merely the old local
-HEAD printed by the shared build wrapper. Host fixtures use synthetic text only.
+HEAD printed by the shared build wrapper. All 1,009 application/build/test inputs
+match the published source commit by Git blob hash, with no mismatches. The
+focused 114 tests include 31 Android-widget/Activity tests; unit cases overlap
+the full suite and must not be summed as distinct tests. There are 52 added test
+cases: 31 unit and 21 widget/Activity cases. Host fixtures use synthetic text only.
 
 Review corrections already included: fixed an invalid owner-context compiler
 configuration before a ready-model assignment; guarded old composer cancel
@@ -151,15 +159,21 @@ bot now reports the shared lane as occupied while a task is running.
 - Existing bot/menu/team entry points already reach `showBotRoster()`.
 - Latest inspected sibling worktrees at 2026-11-04: avatar `09e235070cb87ed6ff3dd8d327a01659ced0d396`,
   memory-brain `8a98ea4d10126041b1a43cb7623c0f324ab18ec1`, combined avatar/memory
-  `f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b`. These are observations, not acknowledgements
-  or combined acceptance. Recheck exact heads before merging; AgentActivity overlaps
-  the avatar workstream. Do not replace its complete file from this older base.
+  `fab5f094862c5abae259196f6be1d7a8bc80a75b`. These are observations, not acknowledgements
+  or combined acceptance. Git merge-tree previews with the pinned avatar and
+  combined avatar/memory heads completed without textual conflicts (recorded
+  in `integration-preview.json`). No branch was merged, no sibling worktree
+  changed and no combined build was tested. Recheck exact heads before merging;
+  AgentActivity overlaps the avatar workstream. Do not replace its complete file
+  from this older base.
 
-## Remaining acceptance
+## Delivery and remaining acceptance
 
-Focused host/widget tests and visual inspection of actual native widget renders
-are complete. Finish the full unit/widget suite and configured NewApi lint, resolve
-independent review findings, and publish the source-bound evidence to PR #493. No physical
+The bot implementation, source-bound evidence and handoff are delivered through
+draft PR #493. Focused host/widget tests, full regular unit tests, configured
+NewApi lint, independent source review and visual inspection are complete.
+The broad all-widget attempt did not complete and is not a passing gate; its
+cause was not established. Combined integration needs its own acceptance. No physical
 Fold7, native LiteRT inference/quality, speech, GPU, installation or combined
 release acceptance is asserted by these host tests.
 

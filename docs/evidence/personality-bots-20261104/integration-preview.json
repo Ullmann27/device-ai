@@ -1,0 +1,22 @@
+[
+  {
+    "name": "avatar",
+    "ref": "codex/astra-avatar-wiring-20261104",
+    "head": "09e235070cb87ed6ff3dd8d327a01659ced0d396",
+    "bot_source_commit": "dbb8e2f7085b0140ed437502b27fac5f988ac834",
+    "exit_code": 0,
+    "output": "9147c0e9f79c78a9a9e440748385171138edfa33\n\nAuto-merging app/src/main/java/at/heinz/deviceai/AgentActivity.kt\n",
+    "stderr": "",
+    "claim": "Git textual merge preview only; no branch/worktree mutation, compilation or combined acceptance."
+  },
+  {
+    "name": "combined_memory_avatar",
+    "ref": "integration/continuum-memory-avatar-hooks-20261104",
+    "head": "fab5f094862c5abae259196f6be1d7a8bc80a75b",
+    "bot_source_commit": "dbb8e2f7085b0140ed437502b27fac5f988ac834",
+    "exit_code": 0,
+    "output": "bd90e38835756a7b1c434d2650255447555ce25d\n\nAuto-merging app/src/main/java/at/heinz/deviceai/AgentActivity.kt\n",
+    "stderr": "",
+    "claim": "Git textual merge preview only; no branch/worktree mutation, compilation or combined acceptance."
+  }
+]

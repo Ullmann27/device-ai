@@ -73,7 +73,7 @@ existing task callback. Coding handoff remains visibly a draft until accepted.
 - [x] Add typed intake and Activity connections to existing private/local/coding paths.
 - [x] Keep private profile budgets unchanged; explicit owner tasks admit at most four model calls, four tools and two minutes, with lower profile tool/time limits respected.
 - [x] Add cancellation/current-session checks and truthful task status labels.
-- [ ] Complete independent review and publish after the full verification gate. Focused task/widget regressions passed.
+- [x] Independent source review complete; focused task/widget gate and full regular unit/configured-API gate passed; publish source-bound evidence with the interrupted broad-widget limit retained.
 
 ## Task 3: Modern bot roster and assignment composer
 
@@ -98,7 +98,10 @@ use actual bounded stored profiles and preserve pagination behavior.
 - Baseline: **62 PASS, 0 FAIL, 0 SKIP**, actual application source #483. Evidence
   in `docs/evidence/personality-bots-20261104/baseline`.
 - RED/GREEN runs: recorded in the handoff; current focused gate **114 PASS, 0 FAIL, 0 SKIP**. Three first-run render-fixture failures and their corrections are retained as evidence.
-- Whole-branch unit/widget/configured NewApi lint: running. Application/test compilation passed in the focused gate.
+- Full regular unit suite: **2,402 total, 2,383 pass, 19 skip, 0 fail/error**; configured NewApi lint **0 issues**; Gradle exit 0.
+- Broad all-unit/all-widget attempt: interrupted without a final summary; **UNVERIFIED**, not counted as passing. Targeted widget/Activity gate passed separately.
+- Independent source review: no concrete important/blocking issue found; no separate reviewer test execution.
+- Textual integration preview: clean against pinned avatar `09e23507` and combined avatar/memory `fab5f094`; no combined build or actual branch merge.
 - Physical Fold7 / native model / release: NOT_RUN.
 
 ## Decisions

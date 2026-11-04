@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:51:15" hostname="8c129114cae4" time="0.07">
+  <properties/>
+  <testcase name="cancelingSharedModelWorkerMustNotPoisonModelForNextJob" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.034"/>
+  <testcase name="chiefJobCancelPropagatesIntoTheUnderlyingCancellableModel" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.012"/>
+  <testcase name="agentJobRunsOrchestratorWithMemoryAndJobScopedToolsOnly" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.012"/>
+  <testcase name="confirmedFactsAndUnconfirmedHypothesesAreRecalledHonestly" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.0"/>
+  <testcase name="brokenMemoryFailsClosedToEmpty" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.001"/>
+  <testcase name="blockedJobIsReportedAsBlocked" classname="at.heinz.deviceai.chief.ChiefMemoryAndJobTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

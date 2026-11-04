@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.chief.ChiefBotPersonasTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:51:15" hostname="8c129114cae4" time="0.02">
+  <properties/>
+  <testcase name="ordinaryMaximumLengthUnicodeMetadataFitsButExpandedControlsFailWhole" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.006"/>
+  <testcase name="oneConsumerCannotMutateAnotherBotsSharedStarterRequests" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.002"/>
+  <testcase name="allTwentyExistingIdentitiesHaveDistinctApproachesAndUsableRequests" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.003"/>
+  <testcase name="promptMetadataIsQuotedDataAndCannotInjectProfileFieldsOrControlMarkers" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.002"/>
+  <testcase name="customIdentityUsesItsActualRoleAndStyleWithoutBorrowingADefaultBot" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.003"/>
+  <testcase name="renamedAndEditedBotKeepsItsIdentityWhileOwnerMetadataWinsAfterRestart" classname="at.heinz.deviceai.chief.ChiefBotPersonasTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
