@@ -33,12 +33,15 @@ object JarvisNeon {
      */
     fun glassCard(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float,
                   radius: Float = JarvisDesign.Metrics.radiusCard, glow: Glow = Glow.NORMAL,
-                  active: Boolean = false, glowBoost: Float = 1f, nativeGlass: Boolean = false) {
-        if (!nativeGlass) rimGlow(p, l, t, r, b, radius, glow, glowBoost * (if (active) 1.4f else .6f), Fill.Solid(Colors.cyan))
+                  active: Boolean = false, glowBoost: Float = 1f, nativeGlass: Boolean = false,
+                  rimEnd: Int = Colors.cardRimEnd) {
+        // ref5: outer halo 5 px off the rim is faint (#011526 median) → resting glow .4 (factor estimated from that).
+        val rimFill = Fill.Linear(l, t, r, t, intArrayOf(Colors.cardRimStart, rimEnd))
+        if (!nativeGlass) rimGlow(p, l, t, r, b, radius, glow, glowBoost * (if (active) 1.4f else .4f), rimFill)
         p.fillRoundRect(l, t, r, b, radius, Fill.Linear(l, t, r, b, intArrayOf(Colors.surface, Colors.surfaceLow)))
         p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .35f, radius - 1f,
             Fill.Linear(0f, t, 0f, t + (b - t) * .35f, intArrayOf(Argb.of(18, 0, 255, 255), 0)))
-        p.strokeRoundRect(l, t, r, b, radius, 1f, Fill.Solid(Colors.rim))
+        p.strokeRoundRect(l, t, r, b, radius, 1f, rimFill)
         if (active) {
             bloomRoundRect(p, l, t, r, b, radius, Colors.cyan, glowBoost)
             p.strokeRoundRect(l, t, r, b, radius, 1.4f, Fill.Solid(Colors.activeWhite), .5f)
@@ -196,8 +199,8 @@ object JarvisNeon {
 
     /** ref5 pill ("JARVIS Mode", "Local · Private", "Online"); [rim] e.g. [Colors.violetRim] or [Colors.ok]. */
     fun pill(p: ContinuumPainter, l: Float, t: Float, label: String, icon: IconPainter? = null, rim: Int = Styles.pill.rim,
-             iconColor: Int = Colors.cyanSoft): Float {
-        val st = Styles.pill.copy(rim = rim)
+             iconColor: Int = Colors.cyanSoft, fill: Int = Styles.pill.fill): Float {
+        val st = Styles.pill.copy(rim = rim, fill = fill)
         val r = l + pillWidth(p, label, icon != null)
         component(p, l, t, r, t + st.height, st)
         icon?.draw(p, l + st.padH, t + (st.height - st.iconSize) / 2f, st.iconSize, iconColor)
@@ -219,6 +222,7 @@ object JarvisNeon {
      */
     fun headerChips(p: ContinuumPainter, l: Float, t: Float, gap: Float = 8f, jarvisIcon: IconPainter? = null): Float {
         val r = pill(p, l, t, "JARVIS Mode", jarvisIcon)
-        return pill(p, r + gap, t, "Local · Private · On-Device First", dotIcon, rim = Colors.ok, iconColor = Colors.ok)
+        return pill(p, r + gap, t, "Local · Private · On-Device First", dotIcon, rim = Colors.ok, iconColor = Colors.ok,
+            fill = Colors.chipLocalSurface)
     }
 }
