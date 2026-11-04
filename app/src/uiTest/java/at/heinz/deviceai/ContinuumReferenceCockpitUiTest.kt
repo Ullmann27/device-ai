@@ -20,6 +20,7 @@ import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.ui.ContinuumHomeView
+import at.heinz.deviceai.ui.JarvisMotion
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -91,6 +92,18 @@ class ContinuumReferenceCockpitUiTest {
     } else emptyList()
 
     private fun settle() = advanceFrames(40)
+
+    private fun settleSceneTransition(root: View) {
+        val homes = descendants(root).filterIsInstance<ContinuumHomeView>()
+            .filter { it.isAttachedToWindow && it.isShown }
+        if (homes.none { it.scaleX != 1f || it.scaleY != 1f || it.alpha != 1f }) return
+        advanceFrames(JarvisMotion.Durations.SCENE_Z + 32L)
+        homes.filter { it.isAttachedToWindow && it.isShown }.forEach { home ->
+            assertEquals("Scene transition restores horizontal scale: ${geometry(home)}", 1f, home.scaleX, 0f)
+            assertEquals("Scene transition restores vertical scale: ${geometry(home)}", 1f, home.scaleY, 0f)
+            assertEquals("Scene transition restores opacity: ${geometry(home)}", 1f, home.alpha, 0f)
+        }
+    }
 
     private fun measure(root: View, width: Int, height: Int) {
         fun exact(value: Int) = View.MeasureSpec.makeMeasureSpec(value, View.MeasureSpec.EXACTLY)
@@ -219,6 +232,7 @@ class ContinuumReferenceCockpitUiTest {
             assertTrue("Original recreation destroys the previous Activity", previous.isDestroyed)
             assertTrue("Original recreation constructs a new Activity", controller.get() !== previous)
             assertTrue("Real traversal attaches the recreated decor", controller.get().window.decorView.isAttachedToWindow)
+            controller.windowFocusChanged(true)
             assertTrue("Original recreation restores real window focus", controller.get().hasWindowFocus())
         } finally {
             try { application.unregisterActivityLifecycleCallbacks(callbacks) }
@@ -253,8 +267,10 @@ class ContinuumReferenceCockpitUiTest {
 
     private fun assertMinimumTarget(view: View, name: String) {
         val density = view.resources.displayMetrics.density
-        assertTrue("$name actual width ${view.width / density}dp", view.width / density >= 48f)
-        assertTrue("$name actual height ${view.height / density}dp", view.height / density >= 48f)
+        assertTrue("$name actual width ${view.width / density}dp; " +
+            (if (view.width / density < 48f) geometry(view) else ""), view.width / density >= 48f)
+        assertTrue("$name actual height ${view.height / density}dp; " +
+            (if (view.height / density < 48f) geometry(view) else ""), view.height / density >= 48f)
     }
 
     private fun boundsInParent(view: View): RectF =
@@ -275,7 +291,8 @@ class ContinuumReferenceCockpitUiTest {
                     "local=${Rect(node.left, node.top, node.right, node.bottom)}, " +
                     "global=$visible, visible=$shown, scroll=${node.scrollX}/${node.scrollY}, " +
                     "matrix=${node.matrix.toShortString()}, attached=${node.isAttachedToWindow}, " +
-                    "layoutRequested=${node.isLayoutRequested}, childHeights=$childHeights]"
+                    "layoutRequested=${node.isLayoutRequested}, layoutParams=${node.layoutParams?.width}x${node.layoutParams?.height}, " +
+                    "childHeights=$childHeights]"
             }
 
     private fun assertRailViewportDoesNotOverlapShell(home: ContinuumHomeView) {
@@ -428,24 +445,33 @@ class ContinuumReferenceCockpitUiTest {
         measure(root, width, height)
         settle()
         measure(root, width, height)
-        val back = descendants(root).firstOrNull {
-            it.isShown && it.isClickable && (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
-                it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
+        val rail = field(activity, "railView") as? View
+        val navigation = if (rail != null) {
+            assertTrue("The current conversation rail must be attached and shown: ${geometry(rail)}",
+                rail.isAttachedToWindow && rail.isShown && descendants(root).contains(rail))
+            requireNotNull(rail.parent as? ViewGroup)
+        } else {
+            (field(activity, "bottomWorkAreaBar") as? View)?.takeIf { it.isShown }
+                ?: requireNotNull(field(activity, "keyboardTitle") as? View)
         }
-        assertNotNull("Chat needs a real reachable route back to the cockpit", back)
-        tap(root, requireNotNull(back))
+        val candidates = descendants(navigation).filter {
+            it.isAttachedToWindow && it.isShown && it.isClickable &&
+                (it.tag == ContinuumWorkArea.START || it.tag == "home" ||
+                    it.contentDescription?.toString() == "Zur Startseite mit allen KI-Bereichen")
+        }
+        val viewport = "${field(activity, "renderedWindowWidthDp")}x${field(activity, "renderedWindowHeightDp")}"
+        assertEquals("Chat needs one current route back to the cockpit: viewport=$viewport; ${geometry(navigation)}",
+            1, candidates.size)
+        val back = candidates.single()
+        assertTrue("The current return route belongs to this decor", descendants(root).contains(back))
+        assertMinimumTarget(back, "Current Home return at $viewport")
+        tap(root, back)
         measure(root, root.width, root.height)
         assertEquals(ContinuumWorkArea.START, field(activity, "activeWorkArea"))
         currentHome(activity)
     }
 
-    /** Scroll the actual ancestor, then dispatch through the decor tree so a
-     * foreground overlay or wrong hit target cannot be hidden by performClick. */
-    private fun tap(root: View, target: View) {
-        val label = target.contentDescription?.toString() ?: target.tag?.toString()
-            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
-        assertMinimumTarget(target, label)
-        val beforeScroll = geometry(target)
+    private fun scrollTargetIntoView(target: View) {
         var parent = target.parent
         while (parent is View) {
             if (parent is ScrollView) {
@@ -456,12 +482,26 @@ class ContinuumReferenceCockpitUiTest {
             parent = parent.parent
         }
         target.requestRectangleOnScreen(Rect(0, 0, target.width, target.height), true)
+    }
+
+    /** Scroll, traverse, then dispatch touch. */
+    private fun tap(root: View, target: View) {
+        settle()
+        settleSceneTransition(root)
+        val label = target.contentDescription?.toString() ?: target.tag?.toString()
+            ?: (target as? TextView)?.text?.toString() ?: target.javaClass.simpleName
+        assertMinimumTarget(target, label)
+        val beforeScroll = geometry(target)
+        scrollTargetIntoView(target)
         val afterScroll = geometry(target)
         settle()
+        val afterTraversal = geometry(target)
+        scrollTargetIntoView(target)
         val visible = Rect()
         assertTrue("Target must be visibly scroll reachable: $label; ${geometry(target)}", target.getGlobalVisibleRect(visible))
         assertTrue("Target must not be a clipped sliver: $label, global=$visible, local=${target.width}x${target.height}; " +
-            "beforeScroll=$beforeScroll; afterScroll=$afterScroll; afterTraversal=${geometry(target)}; root=${geometry(root)}",
+            "beforeScroll=$beforeScroll; afterScroll=$afterScroll; afterTraversal=$afterTraversal; " +
+            "afterRescroll=${geometry(target)}; root=${geometry(root)}",
             visible.width() >= target.width - 1 && visible.height() >= target.height - 1)
         assertVisibleShellControlsDoNotOverlap(root)
         val rootPosition = IntArray(2).also { root.getLocationOnScreen(it) }
@@ -478,6 +518,7 @@ class ContinuumReferenceCockpitUiTest {
             up.recycle()
         }
         settle()
+        settleSceneTransition(root)
     }
 
     private fun assertDialog(title: String): AlertDialog {

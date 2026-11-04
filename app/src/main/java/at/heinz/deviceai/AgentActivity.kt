@@ -1146,9 +1146,12 @@ class AgentActivity : Activity() {
     }
 
     /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
-    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.JarvisMenuRail.widthDp(
-        renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat(),
-        renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()) * resources.displayMetrics.density)
+    private fun railWidthPx(): Int {
+        val widthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
+        val railWidthDp = if (widthDp >= at.heinz.deviceai.ui.JarvisWindowProfile.MEDIUM_MIN_DP)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(widthDp) else 0f
+        return Math.round(railWidthDp * resources.displayMetrics.density)
+    }
 
     /** Real device status for the rail header (ref5 top left): user device name, system clock and date. */
     private fun currentDeviceStatus(): at.heinz.deviceai.ui.JarvisDeviceStatus {

@@ -253,6 +253,7 @@ object JarvisShellLayout {
             if (compact) null else rail,
             if (compact) setOf(Slot.AVATAR to Slot.DIALOG, Slot.AVATAR to Slot.CONTINUUM_HEADER)
                 else setOf(Slot.AVATAR to Slot.CONTINUUM_HEADER),
-            viewportHeight = viewport, profile = p, tileGap = gap, headBounds = head, orbBounds = orb)
+            viewportHeight = viewport, profile = p, tileGap = gap,
+            headBounds = if (compactPresentation) null else head, orbBounds = orb)
     }
 }

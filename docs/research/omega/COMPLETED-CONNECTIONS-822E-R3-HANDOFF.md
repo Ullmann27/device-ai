@@ -90,6 +90,16 @@ C1 then published `08370482c609537b5b8d0d8370d2b4a933d4e35d`, matching local `5f
 
 Agent `fde273a1ccd76fb940805ed7b1d82dda20dd0b20` resolves the fixture merge while preserving all12 cases and all original acceptance. Visible siblings are compared as exact transformed RectF bounds in their common parent; different-parent controls retain clipped global comparisons. There is no new pixel tolerance. Full-target visibility stays strict, with raw scroll/layout/matrix diagnostics for the unresolved dialog-close failure. No production file changes in this reconciliation. New source-bound gates remain PENDING.
 
+## Measured Compact and short-window product repairs
+
+The v3-focused run on local `8818685e7327cf7a72f8e3c1fcbc261563f43f34`, published `0cb7c333301d6e0654ed2fc087d157bcac8299b5`, tree `f0586dfd16804d340c08c4938e1a28c369c0b763`, again produced **12 total / 3 PASS / 9 FAIL / 0 SKIP**, but reached distinct deeper checks. Its original XML and raw diagnostic geometry are preserved. Null labels and rounded sibling comparisons no longer fail. Three Compact cases expose the actual renderer guard: the Compact reflow supplied identical active head/orb bounds. Short-wide navigation exposes a second product mismatch: Activity selects a wide rail from width alone while the old width helper returns zero for a height below480dp.
+
+Bounded product repairs:
+- Agent `00a9ddaaed269525067cea8b16a28ab30eadf335`, imported as `5f3f284`: Compact reflow omits the inactive head region. The existing Home null-region path restores the existing full-slot orb; the strict overlap guard and normal/reference layout stay unchanged.
+- Agent `78e53956ad3e0cd36522b3594f61ee0436318835`, imported as `f71b64e`: Activity rail width follows the same MEDIUM_MIN_DP width decision as its navigation owner, then uses the existing width calculation and one pixel rounding. Narrow phone width remains zero; low height no longer removes the active chat rail.
+
+Agent `a5ed4d6d49982b65c08ac4066199a957d4f46da7` retains all12 test methods byte-for-byte while delivering real focus after verified recreation attachment, awaiting an observed SceneDepth transition for its actual800ms duration, and re-scrolling after a measured asynchronous dialog traversal. The measured close button moved from448 to588px after the prior scroll; strict full visibility remains. Scene scale/opacity are asserted exactly restored, never force-set. Return Home uses the active rail without an alternative button. Fresh combined acceptance is PENDING.
+
 ## Continuation and rollback
 
 Read the latest version of this handoff and exact remote branch ref. Review each agent's bounded diff, combine serially, freeze source, then execute actual checks. Revert individual R3 commits to withdraw a slice; the two frozen parent histories and all previous evidence remain available. No force update, main merge, release, signing or installation is included.
