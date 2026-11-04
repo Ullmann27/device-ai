@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:35:14" hostname="04c8b0ba7ea6" time="0.015">
+  <properties/>
+  <testcase name="nativeToolCatalogShrinksTheCompiledContextButKeepsEveryToolName" classname="at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest" time="0.005"/>
+  <testcase name="timeAnchorIsInTheRequiredTailNotInTheStaticPrefix" classname="at.heinz.deviceai.cognitive.LocalPromptSizeAndStabilityTest" time="0.009"/>
+  <system-out><![CDATA[PROMPT-MESSUNG compiledContext FULL=2910 B, NATIVE=1267 B, Ersparnis=1643 B
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

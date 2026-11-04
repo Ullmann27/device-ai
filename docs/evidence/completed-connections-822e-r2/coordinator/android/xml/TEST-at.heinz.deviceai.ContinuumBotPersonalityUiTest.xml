@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotPersonalityUiTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:35:00" hostname="04c8b0ba7ea6" time="13.618">
+  <properties/>
+  <testcase name="renderActualPhoneRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="6.148"/>
+  <testcase name="renderActualFoldRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.673"/>
+  <testcase name="searchFindsOwnerEditedProfileBeyondFirstPageByNameRoleAndStyle" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="2.571"/>
+  <testcase name="exampleOnlyFillsEditableDraftAndFinalExplicitHandoffIsOneShot" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.723"/>
+  <testcase name="renderActualNarrowWidgetsWithLargeType" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.645"/>
+  <testcase name="throwingHandoffKeepsDraftButNeverOffersAnUnconfirmedDuplicate" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.537"/>
+  <testcase name="cancelledOrDestroyedComposerControlsCannotSubmitLater" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.819"/>
+  <testcase name="replacingComposerMakesOldControlsInert" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.196"/>
+  <testcase name="overLimitUnicodeAndCodingTextStayWholeWithoutDispatch" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.459"/>
+  <testcase name="rejectedHandoffPreservesCompleteDraftAndAllowsExplicitRetry" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.338"/>
+  <testcase name="rosterDisplaysDistinctWorkingMethodAndRealRuntimeState" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.265"/>
+  <testcase name="rapidSearchRendersOnlyTheLatestQuery" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.242"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
