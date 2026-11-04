@@ -5,9 +5,6 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -29,34 +26,83 @@ interface ContinuumMemoryEvents {
 // ---- end of contract ----
 
 /**
- * Producer side. Events carry only IDs/hashes. Dispatch runs on one daemon thread per app directory, so emitters
- * (ledger, archive, retriever) never block on listeners; listener exceptions are caught and logged.
+ * Producer side. Events carry only IDs/hashes. Dispatch runs on one named daemon thread per app directory that exists
+ * only while listeners are registered; the queue is bounded (drop-oldest, counted), so emitters never block.
+ * Listener exceptions are caught and logged.
  */
 internal class ContinuumMemoryEventHub private constructor(private val appDirectory: File) : ContinuumMemoryEvents {
+    private val lock = Object()
     private val listeners = CopyOnWriteArrayList<ContinuumMemoryEventListener>()
-    private val executor: ExecutorService by lazy {
-        Executors.newSingleThreadExecutor { r -> Thread(r, "continuum-memory-events").apply { isDaemon = true } }
-    }
+    private val queue = ArrayDeque<ContinuumMemoryEvent>()
+    private var worker: Thread? = null
+    private var inFlight = false
+    private val threadName = "continuum-memory-events-" + MessageDigest.getInstance("SHA-256")
+        .digest(appDirectory.path.toByteArray(Charsets.UTF_8)).take(4).joinToString("") { "%02x".format(it) }
     private val salt: ByteArray by lazy { loadSalt() }
 
+    /** Max queued events; overflow drops the OLDEST and counts it. Injectable for tests. */
+    @Volatile internal var queueCapacity: Int = DEFAULT_QUEUE_CAPACITY
+    /** Diagnostics: events dropped because the queue was full. */
+    @Volatile internal var droppedEvents: Long = 0L
+        private set
+
     override fun addListener(listener: ContinuumMemoryEventListener): AutoCloseable {
-        listeners += listener
-        return AutoCloseable { listeners.remove(listener) }
+        synchronized(lock) { listeners += listener; ensureWorker() }
+        return AutoCloseable {
+            synchronized(lock) {
+                if (listeners.remove(listener) && listeners.isEmpty()) { queue.clear(); lock.notifyAll() }
+            }
+        }
     }
 
     fun hasListeners() = listeners.isNotEmpty()
 
+    /** Never blocks on listeners: O(1) enqueue under a short lock. */
     fun emit(event: ContinuumMemoryEvent) {
         if (listeners.isEmpty()) return
-        runCatching {
-            executor.execute {
+        synchronized(lock) {
+            if (listeners.isEmpty()) return
+            while (queue.size >= queueCapacity.coerceAtLeast(1)) { queue.removeFirst(); droppedEvents++ }
+            queue.addLast(event)
+            ensureWorker()
+            lock.notifyAll()
+        }
+    }
+
+    /** Caller holds [lock]. A worker that saw "no listeners" has already cleared [worker] under the same lock. */
+    private fun ensureWorker() {
+        if (worker != null) return
+        worker = Thread({ runWorker() }, threadName).apply { isDaemon = true; start() }
+    }
+
+    private fun runWorker() {
+        while (true) {
+            val event: ContinuumMemoryEvent
+            synchronized(lock) {
+                while (queue.isEmpty() && listeners.isNotEmpty()) lock.wait()
+                if (listeners.isEmpty()) { worker = null; queue.clear(); lock.notifyAll(); return }
+                event = queue.removeFirst(); inFlight = true
+            }
+            try {
                 for (l in listeners) { // re-read at dispatch time: a closed listener receives nothing
                     try { l.onMemoryEvent(event) } catch (t: Throwable) {
                         LOG.log(Level.WARNING, "memory event listener failed: ${t.javaClass.simpleName}")
                     }
                 }
+            } finally { synchronized(lock) { inFlight = false; lock.notifyAll() } }
+        }
+    }
+
+    internal fun queuedForTest(): Int = synchronized(lock) { queue.size }
+    internal fun dispatchThreadForTest(): Thread? = synchronized(lock) { worker }
+    internal fun awaitIdle(timeoutMs: Long) {
+        val end = System.currentTimeMillis() + timeoutMs
+        synchronized(lock) {
+            while ((queue.isNotEmpty() || inFlight) && worker != null) {
+                val left = end - System.currentTimeMillis(); check(left > 0) { "event queue not idle" }
+                lock.wait(left)
             }
-        }.onFailure { LOG.log(Level.WARNING, "memory event dispatch rejected") }
+        }
     }
 
     /** SHA-256 hex of (per-install salt ‖ query). The salt never leaves the app directory. */
@@ -86,11 +132,13 @@ internal class ContinuumMemoryEventHub private constructor(private val appDirect
             else -> MemoryEntryStatus.UNCONFIRMED
         }
 
+        const val DEFAULT_QUEUE_CAPACITY = 256
+
+        /** Diagnostics without touching the public contract. */
+        internal fun droppedEventCount(appDirectory: File): Long = forApp(appDirectory).droppedEvents
+
         /** Test hook: waits until all events queued so far were dispatched. */
-        internal fun awaitIdleForTest(appDirectory: File) {
-            val hub = forApp(appDirectory)
-            hub.executor.submit {}.get(5, TimeUnit.SECONDS)
-        }
+        internal fun awaitIdleForTest(appDirectory: File) = forApp(appDirectory).awaitIdle(5_000)
     }
 }
 
