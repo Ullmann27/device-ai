@@ -1,0 +1,43 @@
+{
+  "helper_original": "7859d5d212d61829fabc7dfdbd3ca7587852388d",
+  "avatar_target": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "reconciled_source": "5e2a0c2b26d1e2978b19d70878f30c98c36d94e9",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "blob": "d9a0f6b1d72d2b9107d620526e311e41007a573d",
+      "sha256": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2",
+      "identical_on_all_inputs": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "blob": "546832d4c4b7248fb865154879744eeb0be9ab05",
+      "sha256": "8c3768c6e0dfc488a924b29fb1c38c2125acbe25efbf4b6dbb24b7b8fd7b60bd",
+      "identical_on_all_inputs": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "blob": "602ab96b32e0886f0bad4d511d8cdbc9ef07822c",
+      "sha256": "c343aa99e33b50794c7d6ce2fdffa012086971010ca7858e046b18871dc1fdde",
+      "identical_on_all_inputs": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "blob": "b577331fafabfd4d7ba5fd17786f283dfe311ca0",
+      "sha256": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1",
+      "identical_on_all_inputs": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "blob": "c1ae70968dc617a5f1cae349d2239c043223bd10",
+      "sha256": "a4f85ebb9af7d260e2f963a12f4d193d575db2f944fccda3541f1918e352ffd6",
+      "identical_on_all_inputs": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/JarvisAvatarDispatchRegressionTest.kt",
+      "blob": "d4a7bb9550f1e7b34178ac65efd17890629576f2",
+      "sha256": "a0ce879f34f301f0a18fb95b82a42cb5799c021bb215a7b6192df39f21ed6b14",
+      "identical_on_all_inputs": true
+    }
+  ]
+}

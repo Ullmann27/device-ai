@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" tests="3" skipped="0" failures="3" errors="0" timestamp="2026-11-04T18:43:05" hostname="04c8b0ba7ea6" time="5.976">
+  <properties/>
+  <testcase name="installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="5.195">
+    <failure message="java.lang.AssertionError: PCM must reach the visible reducer through the Activity's scheduled voiceFrame" type="java.lang.AssertionError">java.lang.AssertionError: PCM must reach the visible reducer through the Activity's scheduled voiceFrame
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish$lambda$0(AvatarTtsLiveConnectionUiTest.kt:187)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:113)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish(AvatarTtsLiveConnectionUiTest.kt:178)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.454">
+    <failure message="java.lang.AssertionError: expected:&lt;O&gt; but was:&lt;SIL&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;O&gt; but was:&lt;SIL&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface$lambda$0(AvatarTtsLiveConnectionUiTest.kt:206)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:113)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface(AvatarTtsLiveConnectionUiTest.kt:200)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <testcase name="chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.327">
+    <failure message="java.lang.AssertionError" type="java.lang.AssertionError">java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertTrue(Assert.java:53)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks$lambda$0(AvatarTtsLiveConnectionUiTest.kt:232)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.withSpeechShell(AvatarTtsLiveConnectionUiTest.kt:113)
+	at at.heinz.deviceai.AvatarTtsLiveConnectionUiTest.chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks(AvatarTtsLiveConnectionUiTest.kt:230)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:502)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:285)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:104)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+	Suppressed: org.robolectric.android.internal.AndroidTestEnvironment$UnExecutedRunnablesException: Main looper has queued unexecuted runnables. This might be the cause of the test failure. You might need a shadowOf(Looper.getMainLooper()).idle() call.
+</failure>
+  </testcase>
+  <system-out><![CDATA[TTS_CLOCK phase=before-start:current wall=1793817790457 elapsed=185 uptime=185 audioAt=-9223372036854775808 eventAt=1793817788655 energy=0.0 viseme=SIL
+TTS_CLOCK phase=after-170:current wall=1793817790516 elapsed=356 uptime=356 audioAt=1793817790516 eventAt=1793817790516 energy=0.32 viseme=SIL
+TTS_CLOCK phase=before-start:previous wall=1793817791244 elapsed=185 uptime=185 audioAt=-9223372036854775808 eventAt=1793817790932 energy=0.0 viseme=SIL
+TTS_CLOCK phase=after-170:previous wall=1793817791268 elapsed=356 uptime=356 audioAt=1793817791268 eventAt=1793817791268 energy=0.32 viseme=SIL
+TTS_CLOCK phase=before-start:current wall=1793817791275 elapsed=357 uptime=357 audioAt=-9223372036854775808 eventAt=1793817791271 energy=0.0 viseme=SIL
+TTS_CLOCK phase=after-170:current wall=1793817791287 elapsed=528 uptime=528 audioAt=1793817791287 eventAt=1793817791287 energy=0.2 viseme=SIL
+TTS_CLOCK phase=before-start:moving wall=1793817791599 elapsed=185 uptime=185 audioAt=-9223372036854775808 eventAt=1793817791380 energy=0.0 viseme=SIL
+TTS_CLOCK phase=after-170:moving wall=1793817791609 elapsed=356 uptime=356 audioAt=1793817791609 eventAt=1793817791609 energy=0.32 viseme=SIL
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,17 @@
+{
+  "source_commit": "7859d5d212d61829fabc7dfdbd3ca7587852388d",
+  "scope": "Host JVM probes against compiled production classes; synthetic inputs; no Android views or GPU.",
+  "compile_exit_code": 0,
+  "probes": [
+    {
+      "class": "AvatarBaselineProbe",
+      "exit_code": 0,
+      "output_file": "after.txt"
+    },
+    {
+      "class": "AvatarDispatchProbe",
+      "exit_code": 0,
+      "output_file": "dispatch-after.txt"
+    }
+  ]
+}

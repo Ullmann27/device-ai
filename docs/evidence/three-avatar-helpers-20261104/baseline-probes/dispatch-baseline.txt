@@ -1,0 +1,2 @@
+REGISTRY_FAILURE escaped=true renderer_callbacks_queued=0
+OBSOLETE_RENDERER old_deliveries=1 current_deliveries=0

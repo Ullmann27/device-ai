@@ -1,0 +1,213 @@
+{
+  "sourceCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+  "sourceTree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+  "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+  "unitTestResult": "PASS: all selected XML suites complete; Gradle advanced from testDebugUnitTest into lint analysis",
+  "overallProcessExitCode": 1,
+  "total": {
+    "tests": 168,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.ContinuumAdaptiveAvatarNavigationUiTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.JarvisLiveAvatarWiringUiTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechAcceptanceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechClockTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.AvatarArticulationBoundaryTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.AvatarIdleMotionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.CockpitAnimationTriggersTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.CockpitContractsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.CockpitTimelineTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.MemoryEventSourceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.PillGateMappingTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.RetrievalCalculationSourceTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.cockpit.SafeFlowsFgTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.motion.LipSyncFaceSourceTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.motion.MotionCurvesTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.motion.MotionLibraryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "lint": "INCOMPLETE: Gradle daemon disappeared during lintAnalyzeDebug; separate unchanged-source retry required",
+  "daemonFailureCause": "UNCONFIRMED; no usable cgroup memory counters or JVM crash artifact found in the inspected task directories"
+}

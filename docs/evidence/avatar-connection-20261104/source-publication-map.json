@@ -1,0 +1,14 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "pullRequest": 495,
+  "targetInputCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "executedLocalCommit": "17d9704cd3f5f3c774a7053b5aca03624ca6cde9",
+  "publishedSourceCommit": "32466a2559721762a9b6745890ea286d1c2730c5",
+  "identicalCompleteTree": "5394ce13bf5c3b692f58aa284d9f8a89e6be882e",
+  "testBlob": "932f92c6f2eabfc7c60a7617d132b72a399ec817",
+  "testSha256": "f067041dfbb12e29abf4c5b004acd7de2bb94d2a70cb3f96403549e6d02a96b6",
+  "publicationMethod": "GitHub connector create_tree, create_commit and leased update_ref",
+  "treeEqualityVerified": true,
+  "productionDiffFromTargetInput": [],
+  "executionCommitNote": "GitHub commit metadata differs from the local commit metadata. The complete Git tree is identical. Build logs correctly identify the actually executed local commit. A subsequent direct git fetch was cancelled before network approval, so no claim is made that the local HEAD became the published commit."
+}

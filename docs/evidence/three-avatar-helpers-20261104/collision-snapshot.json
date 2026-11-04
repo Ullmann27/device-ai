@@ -1,0 +1,60 @@
+{
+  "observed_at_utc": "2026-11-04T10:51:41.155255+00:00",
+  "scope": "Read-only local file snapshot; other active checkouts were not frozen or modified.",
+  "files": [
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-takeover",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "identical_to_our_base": true,
+      "sha256": "ecac61c0dc53d7cbbcb6723f4374f8082e4fd446dbd9d838e6245f2c0d54996a"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-takeover",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "identical_to_our_base": true,
+      "sha256": "02c3207d712c8a618bb7ab03577d8351fe55198b162b2c0170faa6354c2e5f4c"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-takeover",
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "identical_to_our_base": true,
+      "sha256": "80e7dbc861ded4a2d19092fcca025ac94b04a8f363596b5bc6e3f4a3146c2b78"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-avatar",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "identical_to_our_base": true,
+      "sha256": "ecac61c0dc53d7cbbcb6723f4374f8082e4fd446dbd9d838e6245f2c0d54996a"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-avatar",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "identical_to_our_base": true,
+      "sha256": "02c3207d712c8a618bb7ab03577d8351fe55198b162b2c0170faa6354c2e5f4c"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-avatar",
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "identical_to_our_base": true,
+      "sha256": "80e7dbc861ded4a2d19092fcca025ac94b04a8f363596b5bc6e3f4a3146c2b78"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-integration",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "identical_to_our_base": true,
+      "sha256": "ecac61c0dc53d7cbbcb6723f4374f8082e4fd446dbd9d838e6245f2c0d54996a"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-integration",
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "identical_to_our_base": true,
+      "sha256": "02c3207d712c8a618bb7ab03577d8351fe55198b162b2c0170faa6354c2e5f4c"
+    },
+    {
+      "checkout": "/workspace/scratch/b3170a7ae924/device-ai-integration",
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "identical_to_our_base": true,
+      "sha256": "80e7dbc861ded4a2d19092fcca025ac94b04a8f363596b5bc6e3f4a3146c2b78"
+    }
+  ]
+}

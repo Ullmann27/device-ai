@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.avatar.AvatarDirectorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T18:40:27" hostname="04c8b0ba7ea6" time="0.064">
+  <properties/>
+  <testcase name="speechProducesStartVisemesLevelsAndEndForTheCurrentUtteranceOnly" classname="at.heinz.deviceai.avatar.AvatarDirectorTest" time="0.06"/>
+  <testcase name="runtimeFlagsMapToOneStateWithPriorityAndNoDuplicates" classname="at.heinz.deviceai.avatar.AvatarDirectorTest" time="0.001"/>
+  <testcase name="germanGraphemesMapToCoarseVisemes" classname="at.heinz.deviceai.avatar.AvatarDirectorTest" time="0.001"/>
+  <testcase name="aFailingSinkNeverBreaksTheAppAndNoOpIsDefault" classname="at.heinz.deviceai.avatar.AvatarDirectorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

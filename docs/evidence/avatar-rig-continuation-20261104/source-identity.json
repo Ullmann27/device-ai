@@ -1,0 +1,139 @@
+{
+  "localSourceCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+  "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+  "fullTree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+  "productionTree": "9b4749059448e194819f8f089cf18890757bf941",
+  "previousProductionTree": "eaeda092326c11676543385eedd2ac86e0e4f194",
+  "productionFilesChanged": [
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt"
+  ],
+  "appFilesChanged": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "gitBlob": "5c86a3f565318165a3644fdd73a6e84e6a5a4fc9",
+      "sha256": "4cd6a71cd0f8c8848f19f45bd723e6e8b340e7951ba79021560516bd76530c4f",
+      "bytes": 603410
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "gitBlob": "156f4de1cb935ef7ada9e131ae7e3796ca5cf218",
+      "sha256": "aa6c9d7299ac4e36290e1ab6ba35cd11a267a991caa43d4880e4a761306483ae",
+      "bytes": 11019
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt",
+      "gitBlob": "deff0509e195e22c47e150da82792bee768def81",
+      "sha256": "7cdbfb1d4f20bbe5dc87c905bff7929772f1e7cad85f3c6d4222f126acb06884",
+      "bytes": 9401
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+      "gitBlob": "31801578f47f6a677c58283a408bc2840297de6d",
+      "sha256": "e68e8044e04d3506686fde2b98512550bceeb5316832b196aa718c36739d1b16",
+      "bytes": 3884
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "gitBlob": "d1961d03d43652ab52deb0a2676c4de8dc285889",
+      "sha256": "27f619196873eff007eefc3169ac732d4b757feeaadb371dd866f05972d1fe59",
+      "bytes": 5533
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+      "gitBlob": "15fe1e9cdf33ed41f598116bf8b0e4dfcc0a83e5",
+      "sha256": "4c962590a49dca664330d9a878e9fbc6ebb49dad8816354a8d6b96ff501f3f1d",
+      "bytes": 6237
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAcceptanceTest.kt",
+      "gitBlob": "baa3f63f431f680d525f9870ad72cda04895eb92",
+      "sha256": "8c8eb8cf9fa62f8679e4c6568098ded4b7f5486299ee94574effcbab86a85809",
+      "bytes": 1848
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechBoundaryTest.kt",
+      "gitBlob": "61ede947d9a95a4ff77d045abd9ed57d79e34f1d",
+      "sha256": "261d9b464eadf1ccb9e097e69a976c1c6edcb8a48142d6c0ae6b534bcadaa396",
+      "bytes": 4585
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechClockTest.kt",
+      "gitBlob": "92315e3ea7783102f9cf944658538150727b1b3a",
+      "sha256": "715d88e73472dd7c73b88df6e82575aa5352adab592b150017822413614b78e7",
+      "bytes": 2035
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "gitBlob": "61ad57e32acf45f3730ed998ef79295727c1fced",
+      "sha256": "5422856d01d829f24c028c539b05013833436182161ede4d00750d622201cadc",
+      "bytes": 7864
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "gitBlob": "ad30277acb517e0228a28ee54b602b3a8dd07b7a",
+      "sha256": "32261f6c6b8adc189f73032fbef49fe7c584db5427225a602bec161f5c9f3553",
+      "bytes": 12000
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarArticulationBoundaryTest.kt",
+      "gitBlob": "2147bb19d626eed138038c92623e6ad5ddb69a4f",
+      "sha256": "48cf6c5bd6353dd9da54e9c418caaf35ec8ec862e5a887cb881d41c3b525fd25",
+      "bytes": 3024
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionTest.kt",
+      "gitBlob": "054f05f7383622d6b43ea2ea84430d666ee759b5",
+      "sha256": "9bc94544696e553362251173dec22837e0bab76848c229fe5218a6668d96d39c",
+      "bytes": 5356
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "gitBlob": "2b6748562fe8e361fc5010f85f467347d549961a",
+      "sha256": "80b1e2d21c586b44b3745ad9093c7428bb83145cf03b99e08d62ac73427255ac",
+      "bytes": 6755
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/motion/LipSyncFaceSourceTest.kt",
+      "gitBlob": "5a2940901430ba3ea3af77cca10c982cc90246da",
+      "sha256": "ee96442525613edb4e301024cf87599f1cbfcfc378410ebe4c270cbec1e5b207",
+      "bytes": 8153
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt",
+      "gitBlob": "ddaa156974f47e63e179117edc72e36844e691c0",
+      "sha256": "1caef8445ba2eda65f516d3ff7d402d786a4558e11d69edc21db4eb5466efa30",
+      "bytes": 17079
+    }
+  ],
+  "unchangedHingeInputs": [
+    {
+      "path": "tools/epsilon-avatar-contract/validate_glb.py",
+      "sha256": "4550fb6deaa92d92401f482baad1dff80636c71d6e516cb46a7dc4fdc8fc445e",
+      "gitBlob": "008acbf58a170820db3e41e9b53e9b78b8cac682"
+    },
+    {
+      "path": "tools/jarvis-reference-review/validate_hinge_v2.py",
+      "sha256": "27ca004de5691c18f3c10f5e3dc98aec06ec7d98b9fbd01f526276fb1bc8f6d9",
+      "gitBlob": "70ab1d6382e0a9e40c1ad96ca4a41ce9f2918e94"
+    },
+    {
+      "path": "tools/jarvis-reference-review/test_hinge_v2.py",
+      "sha256": "b39d53c7b1df9fd4ddfdba6fbdde4e0f30888ac25f62e094da6ea0b947464142",
+      "gitBlob": "c8ca851f982967aab24e99b46f308af46287b13f"
+    },
+    {
+      "path": "assets/avatar/jarvis-runtime-v1.glb",
+      "sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+      "gitBlob": "bb873a13082e557c01deb545408a4e1aa253a970"
+    },
+    {
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "gitBlob": "3d58ca55faa680d0e5d1108b83ceb63a81ce5541"
+    }
+  ]
+}

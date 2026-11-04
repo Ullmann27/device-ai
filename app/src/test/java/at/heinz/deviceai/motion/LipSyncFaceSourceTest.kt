@@ -67,11 +67,58 @@ class LipSyncFaceSourceTest {
     }
 
     @Test fun sharedOpeningMatchesAvatarMorphMapper() {
-        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
         for (v in Viseme.entries) {
+            // Each viseme is an independent sample, not a repeated timestamp in one running blend.
+            val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
             mapper.update(AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, 0f, 0f, 1f, v, 1f, 1f), 1f, true)
-            assertEquals(v.name, 1f - FaceChannels.SHARED_OPENING[v.ordinal], mapper.weights[jaw], 1e-5f)
+            val expected = FloatArray(names.size)
+            if (v != Viseme.SIL) expected[names.indexOf(v.name)] = 1f
+            // Authored opening coefficients are unchanged. Active PP additionally seals the lips.
+            expected[jaw] = if (v == Viseme.PP) 0f else 1f - FaceChannels.SHARED_OPENING[v.ordinal]
+            assertArrayEquals(v.name, expected, mapper.weights, 1e-5f)
+            assertEquals("${v.name} inner jaw", if (v == Viseme.PP) 0f else 12f, mapper.jawPitch, 1e-5f)
         }
+    }
+
+    @Test fun sourcePoseBridgePreservesMeasuredAudioWhileMapperClosesBilabialOnset() {
+        var hint = Viseme.AA
+        val source = LipSyncFaceSource(AudioLevelSource { .8f }, VisemeHintSource { hint.ordinal })
+        val out = FloatArray(names.size)
+        val base = AvatarPose(AvatarState.SPEAKING, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
+        val mapper = AvatarMorphMapper(AvatarGlbContract.TARGETS)
+        source.weightsAt(0, out)
+        source.weightsAt(300, out)
+
+        val vowel = source.applyTo(base)
+        assertEquals(Viseme.AA, vowel.viseme)
+        assertEquals(1f, vowel.visemeWeight, 0f)
+        assertEquals(1f, vowel.jawOpen, 0f)
+        assertEquals(source.envelope, vowel.speakEnergy, 0f)
+        mapper.update(vowel, 1f, true)
+        val expectedVowel = FloatArray(names.size)
+        expectedVowel[names.indexOf("AA")] = 1f
+        expectedVowel[jaw] = 1f - FaceChannels.SHARED_OPENING[Viseme.AA.ordinal]
+        assertArrayEquals(expectedVowel, mapper.weights, 1e-5f)
+        assertEquals(out[jaw], mapper.weights[jaw], 1e-5f)
+        assertEquals(12f, mapper.jawPitch, 1e-5f)
+
+        hint = Viseme.PP
+        source.weightsAt(400, out)
+        val bilabial = source.applyTo(base)
+        assertEquals(Viseme.PP, bilabial.viseme)
+        assertEquals(1f, bilabial.visemeWeight, 0f)
+        assertEquals(1f, bilabial.jawOpen, 0f)
+        assertEquals(source.envelope, bilabial.speakEnergy, 0f)
+        assertTrue(bilabial.speakEnergy > .79f)
+        assertEquals(1f, out[jaw], 0f)
+
+        // The bridge retains measured audio; the renderer owns PP's immediate closure,
+        // including when the presentation clock has not advanced since the vowel.
+        mapper.update(bilabial, 1f, true)
+        val expectedClosure = FloatArray(names.size)
+        expectedClosure[names.indexOf("PP")] = 1f
+        assertArrayEquals(expectedClosure, mapper.weights, 0f)
+        assertEquals(0f, mapper.jawPitch, 0f)
     }
 
     @Test fun blinkDurationAndGapsDeterministic() {

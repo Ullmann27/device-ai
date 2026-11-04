@@ -1,0 +1,2 @@
+AA_TO_PP rendered_AA=0.7714281 extra_jaw=0.0 shared_opening=0.6267853 total_common_opening=0.6267853
+STALE_AUDIO energy_before=0.25599998 after_replay=0.25599998

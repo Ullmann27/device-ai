@@ -1,0 +1,52 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "pullRequest": 495,
+  "branch": "codex/continuum-three-avatar-helpers-20261104",
+  "basePullRequest": 491,
+  "baseCommit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "publicationMethod": "GitHub connector tree/commit/ref with expected_sha and force=false; complete local/published Git trees matched before update. Local and public commit IDs differ.",
+  "phases": [
+    {
+      "phase": "prior_connection_handoff",
+      "localCommit": "ac2ca364b3e21655fa249d3db943c26751e92bd5",
+      "publishedCommit": "0e2b9ea59e71255e36580d695b16220d1d2974c6",
+      "tree": "79a1eb7d4cb0018dacb21e5587132b8574dce88b"
+    },
+    {
+      "phase": "continuation_registration",
+      "localCommit": "cc79315007d56735081a9b2de678c3b623db58b9",
+      "publishedCommit": "089ae7d77947628741f5a7eb3dbaf703834cbb86",
+      "tree": "85a80504f7390966e474219768bb331b4147a071"
+    },
+    {
+      "phase": "callback_regressions_before_fix",
+      "localCommit": "3198d0f7a52b438be7d4c3fe51de9e1e85db023c",
+      "publishedCommit": "c7053e50463e5d731c757a7706721e60eb77b1a8",
+      "tree": "133d0a65fdfe6ed30bc013ee9971e1f81605a5cb",
+      "evidence": "callback-baseline/summary.json"
+    },
+    {
+      "phase": "speech_callbacks_connected",
+      "localCommit": "67ea15145510df5f41781ba019ea559df8491dbf",
+      "publishedCommit": "3eb39a7023d14afd9cadcc318a61a64d41f02b65",
+      "tree": "6a3cbbe27d8ee649a274dba864798dc8146439bc",
+      "evidence": "callback-connected/summary.json"
+    },
+    {
+      "phase": "combined_before_motion_source_reconciliation",
+      "localCommit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "publishedCommit": "9ef9bd16848fea1fcc6f9c9832ad65c5fc05fb7f",
+      "tree": "ed60146974061c2789ab57043571543c30e4dd26",
+      "rendererHelperCommit": "0be6f579c0dd60ffa1266c3ab7866360d1a0e8e2",
+      "evidence": "combined-initial/summary.json"
+    },
+    {
+      "phase": "final_combined_source",
+      "localCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+      "publishedCommit": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+      "tree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+      "rendererContractHelperCommit": "04e92598f2bee9eb327a77d057b808d3f5ac687d",
+      "evidence": "combined-final/summary.json"
+    }
+  ]
+}

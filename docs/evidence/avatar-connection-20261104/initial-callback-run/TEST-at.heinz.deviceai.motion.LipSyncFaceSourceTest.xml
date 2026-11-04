@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.motion.LipSyncFaceSourceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T18:40:27" hostname="04c8b0ba7ea6" time="0.017">
+  <properties/>
+  <testcase name="breathAndPoseBridge" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.002"/>
+  <testcase name="blinkDurationAndGapsDeterministic" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.004"/>
+  <testcase name="attackAndReleaseEnvelope" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.002"/>
+  <testcase name="visemeCrossfadeAndJawCompensation" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.0"/>
+  <testcase name="channelsAreTheRendererOrder" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.002"/>
+  <testcase name="deterministicReplayAndBackwardTimeResets" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.003"/>
+  <testcase name="sharedOpeningMatchesAvatarMorphMapper" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.0"/>
+  <testcase name="rmsOnlyMovesJawOnly" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.0"/>
+  <testcase name="silenceKeepsMouthClosed" classname="at.heinz.deviceai.motion.LipSyncFaceSourceTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

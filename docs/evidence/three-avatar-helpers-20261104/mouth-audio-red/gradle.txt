@@ -1,0 +1,87 @@
+Source: /workspace/scratch/b6ee64d418cf/device-ai-helpers @ cce9ae9bcd11d06e7798632b3e886ded11268f16
+Command: ./gradlew --no-daemon --max-workers=1 --console=plain -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest --tests at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest --tests at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest FAILED
+
+AvatarSpeechOrderingRegressionTest > repeatedTimestampIsIdempotent FAILED
+    java.lang.AssertionError at AvatarSpeechOrderingRegressionTest.kt:40
+
+AvatarSpeechOrderingRegressionTest > rejectedAudioCannotRewindOrAdvanceTheDefaultPoseClock FAILED
+    java.lang.AssertionError at AvatarSpeechOrderingRegressionTest.kt:66
+
+AvatarSpeechOrderingRegressionTest > olderAudioCannotResmoothTheCurrentEnvelope FAILED
+    java.lang.AssertionError at AvatarSpeechOrderingRegressionTest.kt:18
+
+AvatarSpeechOrderingRegressionTest > olderAudioCannotMoveTheLatestSamplesExpiry FAILED
+    java.lang.AssertionError at AvatarSpeechOrderingRegressionTest.kt:27
+
+AvatarMorphTransitionTest > vowelTransitionCompensatesBothVisibleOpeningComponents FAILED
+    java.lang.AssertionError at AvatarMorphTransitionTest.kt:103
+
+AvatarMorphTransitionTest > outgoingVowelDoesNotAddItsOpeningToTheMeasuredJaw FAILED
+    java.lang.AssertionError at AvatarMorphTransitionTest.kt:103
+
+AvatarMorphTransitionTest > outgoingVowelKeepsTheInnerJawAlignedWithoutMeasuredAudio FAILED
+    java.lang.AssertionError at AvatarMorphTransitionTest.kt:104
+
+AvatarMorphTransitionTest > incomingVowelDoesNotPrematurelyRemoveMeasuredJawOpening FAILED
+    java.lang.AssertionError at AvatarMorphTransitionTest.kt:103
+
+14 tests completed, 8 failed
+[Incubating] Problems report is available at: file:///workspace/scratch/b6ee64d418cf/device-ai-helpers/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/scratch/b6ee64d418cf/device-ai-helpers/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 20s
+25 actionable tasks: 2 executed, 23 up-to-date
+
+EXIT_CODE=1

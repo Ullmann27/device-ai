@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "17d9704cd3f5f3c774a7053b5aca03624ca6cde9",
+  "sourceTree": "5394ce13bf5c3b692f58aa284d9f8a89e6be882e",
+  "worktreeClean": true,
+  "result": "PASS",
+  "exitCode": 0,
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ]
+}

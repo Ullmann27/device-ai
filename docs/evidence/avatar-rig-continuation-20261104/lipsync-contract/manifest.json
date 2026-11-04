@@ -1,0 +1,53 @@
+{
+  "integration_red_source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+  "published_integration_head_reported_by_root": "9ef9bd1",
+  "patch_commit": "04e92598f2bee9eb327a77d057b808d3f5ac687d",
+  "patch_parent": "0be6f579c0dd60ffa1266c3ab7866360d1a0e8e2",
+  "changed_file": "app/src/test/java/at/heinz/deviceai/motion/LipSyncFaceSourceTest.kt",
+  "original_test_sha256": "f94f7a0bee1374c2558a958f8e3eb00c766798b3d0ebc2debe5770f7c4d8cbf3",
+  "corrected_test_sha256": "ee96442525613edb4e301024cf87599f1cbfcfc378410ebe4c270cbec1e5b207",
+  "junit_methods_before": 9,
+  "junit_methods_after": 10,
+  "original_red_class_xml_copied": true,
+  "source_files_reviewed": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/FaceMotion.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "061c1b425a9c960c522faca28361592baa02c8c1994287cedec05dfa232b237b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/AvatarPoseBridge.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "819a4cf72c1ee953123a6b44a67f6fd3d1d3ed08238d101e7bbf90a5c1069446"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/motion/MotionContracts.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "de75dd1bd97e11ab27c97a63e9ad9012eab265340bf2fe066fd445d99f775d88"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "98d8a643d10ea0ce192757165a12c0f148fa5457a237f7e61be52a09eac3ee9c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/FilamentAvatarRenderer.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "a9bc7d64624e3ed10a6f4440b813d5ca1171ce464f6489b7731ad494bf1d642d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "source_commit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+      "sha256": "4cd6a71cd0f8c8848f19f45bd723e6e8b340e7951ba79021560516bd76530c4f"
+    }
+  ],
+  "production_changes": false,
+  "root_worktree_modified": false,
+  "gradle_or_junit_run_by_child": false,
+  "root_reported_red_suite": {
+    "tests": 167,
+    "failures": 1,
+    "failing_test": "at.heinz.deviceai.motion.LipSyncFaceSourceTest.sharedOpeningMatchesAvatarMorphMapper"
+  },
+  "git_diff_check": "PASS"
+}

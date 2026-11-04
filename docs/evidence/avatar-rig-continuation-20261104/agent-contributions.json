@@ -1,0 +1,46 @@
+{
+  "round": "2026-11-04 avatar rig, motion and speech continuation",
+  "requestedHelpers": 3,
+  "helpers": [
+    {
+      "name": "avatar_rig_contract",
+      "completed": true,
+      "baseCommit": "ac2ca364b3e21655fa249d3db943c26751e92bd5",
+      "productionChange": false,
+      "contribution": "Exact original asset recovered from existing repository file; current V1 failure and separate V2 PASS reproduced without changing asset or validators.",
+      "evidence": "rig-helper/"
+    },
+    {
+      "name": "avatar_render_motion",
+      "completed": true,
+      "commits": [
+        "0be6f579c0dd60ffa1266c3ab7866360d1a0e8e2",
+        "04e92598f2bee9eb327a77d057b808d3f5ac687d"
+      ],
+      "contribution": "Six-file motion integration and signed-zero correction, one-file cross-mapper regression correction, direct Kotlin probe, static live-caller and lint configuration review.",
+      "evidence": [
+        "signed-zero/",
+        "lipsync-contract/",
+        "lint-local-review.md"
+      ]
+    },
+    {
+      "name": "avatar_independent_review",
+      "completed": true,
+      "commit": "3b6e69fcd905b6642dda44db252d230c4ab7b932",
+      "reviewedDiff": [
+        "7dc53797669f8621ea0be557ed2fb8b6936632c9",
+        "67ea15145510df5f41781ba019ea559df8491dbf"
+      ],
+      "contribution": "No blocking static findings in callback correction; actual V1 failure and eight checker self-tests retained.",
+      "evidence": "independent-review/"
+    }
+  ],
+  "coordinator": {
+    "productionCorrection": "Activity PCM anchoring follows Director acceptance and forwards range frames; numeric ordering remains accepted without invented visemes.",
+    "validation": "Selected actual Gradle suites, separate configured lint, current-asset V2 and 16 existing adversarial cases, source-compatible publication.",
+    "finalLocalSource": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+    "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4"
+  },
+  "liveContinuumAppBotActivation": "NOT_CLAIMED: these were development helpers for the authorized round"
+}

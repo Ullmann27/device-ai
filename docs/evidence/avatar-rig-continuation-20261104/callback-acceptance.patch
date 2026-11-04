@@ -1,0 +1,152 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+index 7e3ffcf..5c86a3f 100644
+--- a/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
++++ b/app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+@@ -6554,8 +6554,8 @@ class AgentActivity : Activity() {
+             override fun onStart(utteranceId: String?) {
+                 runOnUiThread {
+                     if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
++                    if (!avatarDirector.speechStarted(utteranceId, voiceAvatarText)) return@runOnUiThread
+                     voiceSignal.anchor(utteranceId,0, android.os.SystemClock.elapsedRealtime())
+-                    avatarDirector.speechStarted(utteranceId, voiceAvatarText)
+                     if (utteranceId == readinessVoiceSampleId && readinessDialog?.isShowing == true) {
+                         readinessVoiceSampleStarted = true
+                         readinessVoiceResult = "Die Sprachausgabe läuft. Bestätige selbst, ob du sie klar hörst."
+@@ -6576,8 +6576,9 @@ class AgentActivity : Activity() {
+             override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
+                 runOnUiThread {
+                     if(utteranceId == null || utteranceId != voiceUtteranceId || !foregroundLearningActive) return@runOnUiThread
+-                    voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
+-                    avatarDirector.wordRange(utteranceId, start, end)
++                    if (avatarDirector.wordRange(utteranceId, start, end, frame)) {
++                        voiceSignal.anchor(utteranceId,frame, android.os.SystemClock.elapsedRealtime())
++                    }
+                 }
+             }
+             override fun onDone(utteranceId: String?) = finish(utteranceId)
+diff --git a/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt b/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
+index c6873d9..deff050 100644
+--- a/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
++++ b/app/src/main/java/at/heinz/deviceai/avatar/AvatarDirector.kt
+@@ -55,8 +55,9 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+ 
+     @Synchronized fun clearObservedGaze() = emit(AvatarEvent.GazeCleared(clock()))
+ 
+-    @Synchronized fun speechStarted(utteranceId: String, text: String) {
+-        if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return
++    /** True only for a newly accepted request; callers must not restart playback on a replay. */
++    @Synchronized fun speechStarted(utteranceId: String, text: String): Boolean {
++        if (utteranceId.isBlank() || utteranceId == utterance || utteranceId in retiredUtterances) return false
+         utterance?.let(::retireUtterance)
+         utterance = utteranceId
+         lastRangeAt = Long.MIN_VALUE
+@@ -65,26 +66,29 @@ class AvatarDirector(private var sink: AvatarSink = NoOpAvatarSink, private val
+         lastRangeAudioFrame = -1
+         this.text = text.take(MAX_TEXT)
+         emit(AvatarEvent.SpeechStarted(utteranceId, this.text, clock()))
++        return true
+     }
+ 
+-    /** Android TTS text range; the optional audio frame orders callbacks, not phonemes. */
+-    @Synchronized fun wordRange(utteranceId: String, start: Int, end: Int, audioFrame: Int? = null) {
+-        if (utteranceId != utterance || start < 0 || end <= start || end > text.length) return
+-        if (start < lastRangeStart || (start == lastRangeStart && end <= lastRangeEnd)) return
++    /** True for an accepted TTS range, including numeric text without a letter viseme.
++     * The optional audio frame orders callbacks; it is not a phoneme timestamp. */
++    @Synchronized fun wordRange(utteranceId: String, start: Int, end: Int, audioFrame: Int? = null): Boolean {
++        if (utteranceId != utterance || start < 0 || end <= start || end > text.length) return false
++        if (start < lastRangeStart || (start == lastRangeStart && end <= lastRangeEnd)) return false
+         // Some engines assign one audio marker to adjacent text ranges. Text ordering
+         // resolves those ties; only a genuinely backward audio marker is stale.
+-        if (audioFrame != null && (audioFrame < 0 || audioFrame < lastRangeAudioFrame)) return
++        if (audioFrame != null && (audioFrame < 0 || audioFrame < lastRangeAudioFrame)) return false
+         val visemes = GermanVisemeApproximation.visemes(text.substring(start, end))
+-        if (visemes.isEmpty()) return
+-        val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
+-        val at = clock()
+-        lastRangeAt = at
+         lastRangeStart = start
+         lastRangeEnd = end
+         if (audioFrame != null) lastRangeAudioFrame = audioFrame
++        if (visemes.isEmpty()) return true
++        val per = (WORD_MS / visemes.size).coerceAtLeast(MIN_VISEME_MS)
++        val at = clock()
++        lastRangeAt = at
+         visemes.forEachIndexed { i, v ->
+             emit(AvatarEvent.VisemeCue(utteranceId, v, if (v == Viseme.SIL) 0f else 1f, per, at + i * per))
+         }
++        return true
+     }
+ 
+     @Synchronized fun audioLevel(utteranceId: String, level: Float) {
+diff --git a/app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAcceptanceTest.kt b/app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAcceptanceTest.kt
+new file mode 100644
+index 0000000..baa3f63
+--- /dev/null
++++ b/app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechAcceptanceTest.kt
+@@ -0,0 +1,41 @@
++package at.heinz.deviceai.avatar
++
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertTrue
++import org.junit.Test
++
++class AvatarSpeechAcceptanceTest {
++    @Test fun acceptanceDistinguishesNewDuplicateAndRetiredRequests() {
++        val events = mutableListOf<AvatarEvent>()
++        val director = AvatarDirector(AvatarSink(events::add)) { 1_000L }
++
++        assertTrue(director.speechStarted("a", "A"))
++        val started = events.toList()
++        assertFalse(director.speechStarted("a", "Replacement text"))
++        assertEquals(started, events)
++        director.speechEnded("a", true)
++        val stopped = events.toList()
++        assertFalse(director.speechStarted("a", "A"))
++        assertEquals(stopped, events)
++        assertTrue(director.speechStarted("b", "O"))
++    }
++
++    @Test fun numericPlaybackRangeIsAcceptedWithoutInventingLetterVisemes() {
++        val events = mutableListOf<AvatarEvent>()
++        val director = AvatarDirector(AvatarSink(events::add)) { 1_000L }
++        assertTrue(director.speechStarted("a", "A 42 O"))
++        assertFalse(director.wordRange("a", 0, 1, audioFrame = -1))
++        assertTrue(director.wordRange("a", 0, 1, audioFrame = 100))
++        val letterEvents = events.toList()
++
++        assertTrue(director.wordRange("a", 2, 4, audioFrame = 120))
++        assertEquals("Numeric audio timing must not fabricate a letter-based cue", letterEvents, events)
++        assertFalse(director.wordRange("a", 2, 4, audioFrame = 120))
++        assertFalse(director.wordRange("a", 5, 6, audioFrame = 110))
++        assertFalse(director.wordRange("other", 5, 6, audioFrame = 200))
++        assertEquals(letterEvents, events)
++        assertTrue(director.wordRange("a", 5, 6, audioFrame = 200))
++        assertEquals(Viseme.O, (events.last() as AvatarEvent.VisemeCue).viseme)
++    }
++}
+diff --git a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+index 832e6bc..ddaa156 100644
+--- a/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
++++ b/app/src/uiTest/java/at/heinz/deviceai/AvatarTtsLiveConnectionUiTest.kt
+@@ -322,7 +322,9 @@ class AvatarTtsLiveConnectionUiTest {
+     }
+ 
+     @Test fun chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks() = withSpeechShell { f ->
+-        startPendingSpeech(f, "moving", "A")
++        startPendingSpeech(f, "moving", "A A", reportRange = false)
++        f.listener.onRangeStart("moving", 0, 1, 0)
++        advance(170)
+         assertTrue(pose(f).speakEnergy > .35f)
+ 
+         set(f.activity, "conversationActive", true)
+@@ -334,7 +336,7 @@ class AvatarTtsLiveConnectionUiTest {
+         assertEquals(1, descendants(f.activity.window.decorView).count { it is ContinuumHologramView })
+         // Reparenting clears transient geometry. Fresh real callbacks must reach the reattached
+         // live view in Chat even when the Home's docked wrapper is detached.
+-        f.listener.onRangeStart("moving", 0, 1, 0)
++        f.listener.onRangeStart("moving", 2, 3, 0)
+         advance(170)
+         assertEquals(Viseme.AA, pose(f).viseme)
+         assertTrue(pose(f).speakEnergy > .35f)

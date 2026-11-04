@@ -1,0 +1,84 @@
+{
+  "source_commit": "a65cfcac63c794ea9953034349989b4a45f6ac73",
+  "production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "exit_code": 0,
+  "totals": {
+    "tests": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarExistingContractRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarNativeRegressionTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarObservedGazeTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar.AvatarPortedPartsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.motion.LipSyncFaceSourceTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.motion.MotionCurvesTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.motion.MotionLibraryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "device": "NOT_RUN"
+}

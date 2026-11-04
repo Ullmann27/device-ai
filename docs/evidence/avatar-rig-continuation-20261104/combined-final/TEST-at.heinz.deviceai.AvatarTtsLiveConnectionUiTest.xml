@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:51:24" hostname="04c8b0ba7ea6" time="5.66">
+  <properties/>
+  <testcase name="installedInterruptedStopClearsSpeechAndCannotStopItsSuccessor" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="4.079"/>
+  <testcase name="installedListenerAndScheduledPcmFramesDriveTheVisibleMouthAndFinish" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.353"/>
+  <testcase name="previousAndFinishedUtteranceCallbacksCannotMutateTheCurrentSurface" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.304"/>
+  <testcase name="chatReparentKeepsTheSameSpeechSurfaceAndPauseRejectsLateCallbacks" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.419"/>
+  <testcase name="installedRangeOrderingProtectsBothVisemesAndThePlaybackAnchor" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.26"/>
+  <testcase name="repeatedInstalledStartDoesNotRewindPlaybackOrClearTheCurrentPose" classname="at.heinz.deviceai.AvatarTtsLiveConnectionUiTest" time="0.243"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

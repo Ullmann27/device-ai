@@ -1,0 +1,12 @@
+{
+  "source_commit": "47275f5c137fa76cabc15d344bc68761e12f0dd8",
+  "production_base": "d352bab6855db2a44def0bbf60fd93202b4e3066",
+  "totals": {
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "device": "NOT_RUN"
+}

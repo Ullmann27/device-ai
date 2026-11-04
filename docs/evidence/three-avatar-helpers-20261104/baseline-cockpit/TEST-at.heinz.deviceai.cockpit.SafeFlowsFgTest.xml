@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cockpit.SafeFlowsFgTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-04T10:28:44" hostname="8c129114cae4" time="0.022">
+  <properties/>
+  <testcase name="disabledOrForgedPillsNeverReachToolGateOrTheOwner" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.004"/>
+  <testcase name="onlyPillsWithARealRegisteredToolAreEnabled" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.0"/>
+  <testcase name="productionSourceHasNoAccountToolsAndCloseRemovesTheListener" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.002"/>
+  <testcase name="pillMotionHasNoFade" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.002"/>
+  <testcase name="injectedSendOrCallInTheDocumentCausesNoExecutionAndNoPrompt" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.0"/>
+  <testcase name="accountCardOnlyAfterAnApprovedSuccessfulAccountCall" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.003"/>
+  <testcase name="withoutOwnerYesNothingExecutes" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.002"/>
+  <testcase name="withOwnerYesExactlyOneExecutionThroughToolGate" classname="at.heinz.deviceai.cockpit.SafeFlowsFgTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

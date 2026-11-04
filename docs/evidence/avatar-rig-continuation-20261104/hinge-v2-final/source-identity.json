@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "dccd0901b2f300fde268d35e533d18b79664f20e",
+  "sourceTree": "ed60146974061c2789ab57043571543c30e4dd26",
+  "worktreeClean": true,
+  "files": [
+    {
+      "path": "tools/epsilon-avatar-contract/validate_glb.py",
+      "sha256": "4550fb6deaa92d92401f482baad1dff80636c71d6e516cb46a7dc4fdc8fc445e",
+      "gitBlob": "008acbf58a170820db3e41e9b53e9b78b8cac682"
+    },
+    {
+      "path": "tools/jarvis-reference-review/validate_hinge_v2.py",
+      "sha256": "27ca004de5691c18f3c10f5e3dc98aec06ec7d98b9fbd01f526276fb1bc8f6d9",
+      "gitBlob": "70ab1d6382e0a9e40c1ad96ca4a41ce9f2918e94"
+    },
+    {
+      "path": "tools/jarvis-reference-review/test_hinge_v2.py",
+      "sha256": "b39d53c7b1df9fd4ddfdba6fbdde4e0f30888ac25f62e094da6ea0b947464142",
+      "gitBlob": "c8ca851f982967aab24e99b46f308af46287b13f"
+    },
+    {
+      "path": "assets/avatar/jarvis-runtime-v1.glb",
+      "sha256": "f39a89fc8b119487ab983151f8e56203c4adaa6b3aa9c5edbd0b937d1318f84e",
+      "gitBlob": "bb873a13082e557c01deb545408a4e1aa253a970"
+    },
+    {
+      "path": "app/src/main/assets/avatar3d/continuum-avatar.glb",
+      "sha256": "5f49eface4c828bb7f7564acee751e4d1f232a6e574b5038c6a564de69c9a4a3",
+      "gitBlob": "3d58ca55faa680d0e5d1108b83ceb63a81ce5541"
+    }
+  ]
+}

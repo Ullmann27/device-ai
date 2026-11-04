@@ -1,0 +1,39 @@
+{
+  "source_repo_commit": "e101e393dd6c80803ac9d9ac91fccd9812c4a18d",
+  "pins_from": [
+    "scripts/render-continuum-integration-qa.sh",
+    "gradle/wrapper/gradle-wrapper.properties"
+  ],
+  "archive_checks": [
+    {
+      "filename": "jdk17.tar.gz",
+      "sha256": "3808d1d15e3ec6bd5b84057fb5d84c33d8a1536a258146bcea2e603fc726e08e",
+      "matches_repository_pin": true
+    },
+    {
+      "filename": "android-cli.zip",
+      "sha256": "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee",
+      "matches_repository_pin": true
+    },
+    {
+      "filename": "gradle-8.11.1-bin.zip",
+      "sha256": "f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6",
+      "matches_repository_pin": true
+    }
+  ],
+  "packages": [
+    "platforms;android-36",
+    "build-tools;35.0.0",
+    "platform-tools"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "installed": {
+    "platforms/android-36/android.jar": true,
+    "build-tools/35.0.0/aapt2": true,
+    "build-tools/35.0.0/aidl": true,
+    "platform-tools/adb": true
+  },
+  "log": "/workspace/scratch/b6ee64d418cf/toolchain/logs/sdk-install.txt",
+  "outcome": "READY"
+}

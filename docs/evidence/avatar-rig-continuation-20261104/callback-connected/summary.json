@@ -1,0 +1,55 @@
+{
+  "sourceCommit": "67ea15145510df5f41781ba019ea559df8491dbf",
+  "sourceTree": "6a3cbbe27d8ee649a274dba864798dc8146439bc",
+  "exitCode": 0,
+  "total": {
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "class": "at.heinz.deviceai.AvatarTtsLiveConnectionUiTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarDirectorTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechAcceptanceTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechBoundaryTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechClockTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "class": "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}

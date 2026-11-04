@@ -11,7 +11,8 @@ class AvatarSpeechOrderingRegressionTest {
         reducer.apply(AvatarEvent.AudioLevel("current", .9f, 200))
         reducer.apply(AvatarEvent.AudioLevel("current", .1f, 250))
         val beforeReplay = reducer.pose(260)
-        assertEquals(.256f, beforeReplay.speakEnergy, .000001f)
+        // The second sample is 50 ms later; smoothing preserves the 33 ms reference response.
+        assertEquals(.21990544f, beforeReplay.speakEnergy, .000001f)
 
         reducer.apply(AvatarEvent.AudioLevel("current", .9f, 200))
 
@@ -24,7 +25,7 @@ class AvatarSpeechOrderingRegressionTest {
         reducer.apply(AvatarEvent.AudioLevel("current", .1f, 250))
         reducer.apply(AvatarEvent.AudioLevel("current", .9f, 200))
 
-        assertEquals(.256f, reducer.pose(500).speakEnergy, .000001f)
+        assertEquals(.21990544f, reducer.pose(500).speakEnergy, .000001f)
         assertTrue(reducer.pose(500).jawOpen > 0f)
         assertEquals(0f, reducer.pose(501).speakEnergy, 0f)
         assertEquals(0f, reducer.pose(501).jawOpen, 0f)

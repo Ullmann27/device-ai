@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "f5dc6e08acb88b30273410b8efcc7e0db446020b",
+  "sourceTree": "58dc99f0145272775e0a2554d7d8a4ccc7d6be4a",
+  "publishedEquivalent": "df3caae21c1729de2b73a688241d3d53ef3783d4",
+  "exitCode": 0,
+  "status": "PASS",
+  "configuredRule": "NewApi",
+  "issueCount": 0,
+  "analysisTasksExecuted": [
+    "lintAnalyzeDebug",
+    "lintAnalyzeDebugAndroidTest",
+    "lintAnalyzeDebugUnitTest"
+  ],
+  "reportTaskOutcome": "UP-TO-DATE: unchanged no-issue reports reused after successful current-source analysis",
+  "requested": [
+    "-Dorg.gradle.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=384m -XX:ReservedCodeCacheSize=128m -XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -Xlog:gc+heap=info:file=/workspace/scratch/b6ee64d418cf/toolchain/logs/avatar-round2-lint-bounded-gc.txt:uptime,level,tags -Dfile.encoding=UTF-8",
+    "-PcontinuumUiWidgetTests=true",
+    ":app:lintDebug"
+  ],
+  "reports": [
+    {
+      "file": "lint-results-debug.xml",
+      "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+      "bytes": 87,
+      "sourceMtimeSeconds": 1793818253.2768202
+    },
+    {
+      "file": "lint-results-debug.txt",
+      "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+      "bytes": 17,
+      "sourceMtimeSeconds": 1793818253.2677393
+    }
+  ],
+  "earlierDaemonFailureCause": "UNCONFIRMED; the bounded JVM run succeeded, without proving why the two earlier processes disappeared"
+}
