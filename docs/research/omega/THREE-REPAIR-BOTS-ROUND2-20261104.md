@@ -31,3 +31,11 @@ Drei echte Unteragenten wurden in getrennten Arbeitsbäumen gestartet. Es werden
 ## Abschluss und Rücknahme
 
 Die nächsten Commits müssen konkrete Änderungen, Quellidentitäten, Testbefehle/Exitcodes, unerreichte Prüfungen und verbleibende Nachteile nennen. Nutzbare Schritte werden früh in diesem offiziellen PR gesichert. Jede Produktionsteiländerung bleibt einzeln rücknehmbar; der veröffentlichte Ausgangsstand ist die Rückfallreferenz. Ohne neue echte Gerätebelege bleibt die Fold7-Abnahme offen.
+
+## Verifizierter Zwischenstand: Android-Belege aus der Integration
+
+Der Koordinator hat #512 bei `f9267a3743a87a77bf6421011c014b2ca2d6b0d6` direkt gelesen. Dessen Quellcheckpoint `52fbfc624c9a2846c1da571d330327c7874b1639` enthält alle drei Produktionsdateien der ersten Reparaturrunde byte-identisch. Der Bericht nennt 305 bestandene Tests in 45 Klassen auf diesem kombinierten Stand sowie NewApi-Lint ohne Befund.
+
+Für unsere übernommenen Regressionen wurden die originalen XML-Dateien persönlich überprüft: **11/11 `JarvisSequenceTurnLifecycleUiTest` in echtem Robolectric und 15/15 `TemporalCueCalendarTest` bestanden**. Testfallzahlen, null Fehler/Übersprünge, Quellidentitäten und die Hashes von XML, Zusammenfassung und Gradle-Protokoll stimmen mit dem veröffentlichten Manifest überein. Der ursprüngliche `NOT_RUN`-Status dieser elf UI-Fälle ist damit auf dem genannten kombinierten Integrationsstand überholt.
+
+Das ist ein Abgleich fremder veröffentlichter Laufbelege, keine neue Ausführung unseres Koordinators. Die Gesamtzahl 305 wurde mit dem Receipt abgeglichen; die beiden eigenen importierten XML-Suiten wurden einzeln geprüft. Neue Quellen der zweiten Runde, Fold7, Filament/GPU, hörbare Sprache und APK-Abnahme sind dadurch nicht geprüft. [Maschinenlesbarer Abgleich](../../evidence/three-repair-bots-round2-20261104/coordinator/integration-512-reconciliation.json).
