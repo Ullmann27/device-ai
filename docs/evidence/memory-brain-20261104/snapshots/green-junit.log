@@ -1,0 +1,7 @@
+JUnit version 4.13.2
+..............................CONTINUUM MOCK A/B (NOT A REAL MODEL BENCHMARK): tasks=10, A_accepted_text=10, B_accepted_text=10, A_hint_seen=0, B_hint_seen=10, A_model_calls=10, B_model_calls=10, A_added_experiences=10, B_added_experiences=10, A_elapsed_ns=7409895, B_elapsed_ns=17953787. Elapsed wall-clock on a test host is not Fold7 energy, inference latency, or cognitive gain.
+.....
+Time: 0.375
+
+OK (35 tests)
+

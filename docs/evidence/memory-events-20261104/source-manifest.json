@@ -1,0 +1,18 @@
+{
+  "base_commit": "ca31eb8b24b65d084750f0ea10290dc0d6be6733",
+  "compiled_original_app_source_sha": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+  "production_status": "HOST_TESTED_ADAPTER_ONLY_NOT_ACTIVITY_ACTIVATED",
+  "complete_android_suite": "NOT_RUN_BY_SUBTASK",
+  "apk": "NOT_RUN",
+  "device": "NOT_RUN",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSource.kt",
+      "sha256": "ffe1a3e6a3f71a1ce441f39107a3382a9c616ec974b45536d91fb7ecb1fb9806"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/ContinuumMemoryEventSourceIntegrationTest.kt",
+      "sha256": "00c5f3e02dc35c946e5b917208919c5e6c29bf09ebb28d67dbfa0d84725e3224"
+    }
+  ]
+}

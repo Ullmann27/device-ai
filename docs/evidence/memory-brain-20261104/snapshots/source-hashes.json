@@ -1,0 +1,37 @@
+{
+  "red": {
+    "source_commit": "6d2fe2d011d7af9599c07e7cbbf8398fa90d2174",
+    "files": [
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/MemoryStoreSnapshotTest.kt",
+        "sha256": "1725afa44d610274837f4c4c17b46ea50b85faa0593c6998078d31694ee05ddb"
+      }
+    ],
+    "junit_exit": 1,
+    "tests": [
+      "at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest"
+    ]
+  },
+  "green": {
+    "source_commit": "6d2fe2d011d7af9599c07e7cbbf8398fa90d2174",
+    "files": [
+      {
+        "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+        "sha256": "5c44fde6c65ac53c41ab989fd65fd03491b74c2b1168c3ac7a5ac057446302af"
+      },
+      {
+        "path": "app/src/test/java/at/heinz/deviceai/cognitive/MemoryStoreSnapshotTest.kt",
+        "sha256": "1725afa44d610274837f4c4c17b46ea50b85faa0593c6998078d31694ee05ddb"
+      }
+    ],
+    "junit_exit": 0,
+    "tests": [
+      "at.heinz.deviceai.cognitive.MemoryStoreSnapshotTest",
+      "at.heinz.deviceai.cognitive.MemoryEcologyTest",
+      "at.heinz.deviceai.cognitive.CognitivePersistenceTest",
+      "at.heinz.deviceai.cognitive.AgentExperienceRecallTest",
+      "at.heinz.deviceai.cognitive.AgentExperiencePairedBenchmarkTest",
+      "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test"
+    ]
+  }
+}

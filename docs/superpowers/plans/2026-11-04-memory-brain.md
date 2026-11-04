@@ -36,10 +36,10 @@ the current memory hub. Preserve the current ledger, local model and UI owners.
 Files: `cognitive/AiContextCompiler.kt`, new `MemoryContextBoundaryTest.kt`.
 Interface remains `compile(AiContextInput): CompiledAiContext`.
 
-- [ ] Reproduce raw memory role/control-token injection and missing evidence frame.
-- [ ] Encode memory metadata/content using the existing complete sanitizer and
+- [x] Reproduce raw memory role/control-token injection and missing evidence frame.
+- [x] Encode memory metadata/content using the existing complete sanitizer and
   explicit evidence framing, preserving whole-group budgeting and source IDs.
-- [ ] Check late corrections, Unicode, privacy, secret redaction and byte limits
+- [x] Check late corrections, Unicode, privacy, secret redaction and byte limits
   with existing ContextCompiler/ContextIntegrity tests; commit local checkpoint.
 
 ## Task 2 — Retrieval and store integrity
@@ -48,21 +48,21 @@ Files: `cognitive/HybridMemoryRetriever.kt`, `cognitive/MemoryEcology.kt`, focus
 new tests and the existing memory research gate/challenge caller.
 Public retrieve/store signatures stay source-compatible.
 
-- [ ] Reproduce confirmed audit findings before production changes.
-- [ ] Make ambiguous IDs fail closed and stored evidence/experience snapshots
+- [x] Reproduce confirmed audit findings before production changes.
+- [x] Make ambiguous IDs fail closed and stored evidence/experience snapshots
   independent from caller mutations; preserve validation and ranking contracts.
-- [ ] Optimize only behavior-preserving retrieval work verified against a
+- [x] Optimize only behavior-preserving retrieval work verified against a
   deterministic reference and measured synthetic corpus.
-- [ ] Run unchanged relevant suites and record actual before/after metrics.
+- [x] Run unchanged relevant suites and record actual before/after metrics.
 
 ## Task 3 — Actual memory source for the avatar
 
 Files: new `cockpit/ContinuumMemoryEventSource.kt`, focused integration tests.
 Consumes `ContinuumMemoryEvents`; produces existing `MemoryEventSource`.
 
-- [ ] Test actual hub recall/storage/document dispatch with main-thread mapping,
+- [x] Test actual hub recall/storage/document dispatch with main-thread mapping,
   listener failures, close/race/isolation and no source-text exposure.
-- [ ] Implement small lifecycle-bound adapter; use actual finite counts/scores.
+- [x] Implement small lifecycle-bound adapter; use actual finite counts/scores.
 - [ ] Provide the exact factory/hook contract to the visual integrator and
   validate the combined path once its source is available.
 
