@@ -43,6 +43,56 @@ Suite bindet ihren Bericht an die tatsächlich gelesenen Quell- und Testhashes.
 Ein optionaler erster Dateiparameter erlaubt denselben Vergleich gegen eine
 unveränderte historische Quelldatei.
 
+## Registrierte Folgeforschung mit 6–10 Millionen Parametern
+
+[CORE_6_10M_PLAN.md](CORE_6_10M_PLAN.md) registriert zwei getrennte Profile:
+`core-6562304` und `core-9712128`. Jedes besitzt einen eigenen kleinen
+Kontrolllauf. Beide Profilauswahlen müssen abgeschlossen und gemeinsam
+eingefroren sein, bevor eine Schlussauswertung auf dem neuen Holdout möglich ist.
+Der Budgetabschluss erhöht keine Ressourcen- oder Qualitätsgrenze. Bei einem
+verfehlten Ziel darf kein kleineres Zwischenmodell als Ersatz weitertrainiert
+werden. Der neutrale Qualitätssieger darf weiterhin das kleine Original sein.
+
+Die zusätzlichen synthetischen Profil- und Wiederaufnahmeprüfungen laufen ohne
+Modellprozesse:
+
+```bash
+python3 experimental/weight-space-20261104/tests/registered_profiles_gate.py
+```
+
+Für die exakte Reproduktion des registrierten Versuchs ist die freigegebene
+JAR-Datei mit SHA-256
+`1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba`
+erforderlich. Ein neu gebautes JAR kann trotz gleichen Quelltexts wegen
+Build-Metadaten einen anderen Hash besitzen und wird für diese Registrierung
+nicht automatisch freigegeben. Den ursprünglichen TRAIN-Korpus rekonstruiert
+weiterhin `prepare_inputs.py`. Der neue 32-Absatz-Holdout ist durch den im Plan
+angegebenen Hash gebunden.
+
+Die Aufrufreihenfolge ist für beide Profile verbindlich:
+
+1. Je Profil `calibration` und `ladder` abschließen.
+2. Je Profil `continuation` abschließen.
+3. Einmal `study-freeze` aufrufen; die Phase prüft beide vollständigen Profile.
+4. Je Profil `final` aufrufen.
+
+Alle Aufrufe erhalten dieselben `--inputs`, `--jar`, `--holdout` und
+`--study-root`. Zusätzlich sind `--profile core-6562304` mit
+`--output <study-root>/core-6562304` beziehungsweise `--profile core-9712128`
+mit `--output <study-root>/core-9712128` nötig. Der Studienordner muss neu sein.
+`study-freeze` darf über eines der beiden Profile aufgerufen werden. Ein
+einzelner vorzeitig gestarteter `all`-Aufruf scheitert an der gemeinsamen
+Holdout-Sperre. Vorhandene eingefrorene Studien dürfen nur verifiziert
+wiederaufgenommen werden.
+
+Nach beiden Schlussauswertungen prüft `tests/audit_completed_profiles.py`
+unabhängig vom Driver die vollständigen LM1C-Dateien, tatsächlichen
+Gewichtsänderungen, Rohmessungen und Auswahlentscheidungen. Dieser separate
+Binärdateiprüfer benötigt NumPy; die synthetischen Gate-Suiten benötigen nur
+Python. Sein `--historical-root` bezeichnet den Arbeitsordner mit den in
+`g1-evidence/historical-artifacts-manifest.json` aufgeführten unveränderten
+Originaldateien. Er startet keine Modelle.
+
 ## Werkzeuge bauen
 
 Aus dem Repository-Stamm, mit `kotlinc` und Java auf dem Suchpfad:

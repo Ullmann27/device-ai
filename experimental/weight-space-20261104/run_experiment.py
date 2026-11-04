@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -24,11 +25,24 @@ RESOURCE_LIMITS = {"firstTokenCallMs": 1500, "generation32Ms": 5000, "vmHwmKiB":
 # Published ee577972 executed the original receipt-bound experiment. Its immutable
 # Kotlin/JAR and protocol identities are still verified before legacy proof reuse.
 HISTORICAL_ORCHESTRATOR_SHA = "609215b0f2671e2407c8b81867255bd1ce60680626c081fd91b0a12d14f62deb"
+CORE_HOLDOUT_SHA = "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd"
+CORE_JAR_SHA = "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba"
+CORE_PROFILES = {
+    "core-6562304": {"parameterBudget": 6562304, "targetLabel": "width-8", "targetParameters": 6562304,
+                     "nextLabel": "depth-3", "nextParameters": 9712128},
+    "core-9712128": {"parameterBudget": 10000000, "targetLabel": "depth-3", "targetParameters": 9712128,
+                     "nextLabel": "depth-4", "nextParameters": 12861952},
+}
 
 
 def sha(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def path_present(path: Path) -> bool:
+    """A dangling marker is still present and must never reopen a closed phase."""
+    return path.exists() or path.is_symlink()
 
 
 def write_new(path: Path, value: dict) -> None:
@@ -49,24 +63,43 @@ def records(path: Path) -> list[dict]:
 
 class Experiment:
     def __init__(self, args: argparse.Namespace):
+        self.profile = getattr(args, "profile", "historical")
+        if self.profile not in {"historical", *CORE_PROFILES}:
+            raise ValueError("unknown registered research profile")
         self.inputs = args.inputs.resolve()
+        self.requested_out = Path(os.path.abspath(args.output))
         self.out = args.output.resolve()
         self.jar = args.jar.resolve()
         self.holdout = args.holdout.resolve()
         self.source = Path(__file__).resolve().parent
+        self.orchestrator_path = Path(__file__).resolve()
         self.orchestrator_sha = sha(Path(__file__).resolve())
         self.tokenizer = self.inputs / "lm1-tokenizer.lmbp"
         self.base = self.inputs / "lm1-baseline.lm1"
         self.development = self.source / "development.txt"
         self.store = self.out / "checkpoints"
         self.logs = self.out / "logs"
+        study_root = getattr(args, "study_root", None)
+        if self.is_core_study:
+            if study_root is None:
+                raise ValueError("registered core profiles require --study-root")
+            self.study_root = Path(study_root).resolve()
+            if self.out != self.study_root / self.profile:
+                raise ValueError("profile output must be its named directory under the study root")
+            if path_present(self.study_frozen) and not (self.out / "environment.json").is_file():
+                raise RuntimeError("a frozen study cannot recreate a missing child experiment")
+        elif study_root is not None:
+            raise ValueError("the historical profile does not use a study root")
+        self.verify_output_scope()
         self.logs.mkdir(parents=True, exist_ok=True)
         self.store.mkdir(parents=True, exist_ok=True)
         if sha(self.base) != BASE_SHA or sha(self.tokenizer) != TOKENIZER_SHA:
             raise ValueError("input checkpoint/tokenizer hash mismatch")
         # Hashing bytes does not expose the sealed holdout text to selection.
-        if sha(self.holdout) != HOLDOUT_SHA:
+        if sha(self.holdout) != self.holdout_sha:
             raise ValueError("sealed holdout hash mismatch")
+        if self.is_core_study:
+            self.study_registration(allow_create=True)
         if not (self.out / "environment.json").exists():
             write_new(self.out / "environment.json", {
                 "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -74,23 +107,173 @@ class Experiment:
                 "javaVersion": subprocess.run(["java", "-version"], capture_output=True, text=True).stderr,
                 "jarSha256": sha(self.jar), "protocolSha256": sha(self.source / "PROTOCOL.md"),
                 "orchestratorSha256": self.orchestrator_sha,
-                "developmentSha256": sha(self.development), "holdoutSha256": HOLDOUT_SHA,
+                "developmentSha256": sha(self.development), "holdoutSha256": self.holdout_sha,
                 "baseSha256": BASE_SHA, "tokenizerSha256": TOKENIZER_SHA,
                 "sourceHashes": {p.name: sha(p) for p in sorted(self.source.glob("*.kt"))},
                 "trainingHeap": "3g", "benchmarkHeap": "1g", "inferenceThreads": 1,
                 "limits": {"firstTokenCallMs": 1500, "generation32Ms": 5000, "vmHwmKiB": 768 * 1024,
                            "benchmarkProcessSeconds": 120, "trainingProcessSeconds": 600},
+                **self.profile_identity(),
             })
         else:
             previous = json.loads((self.out / "environment.json").read_text())
             if previous["jarSha256"] != sha(self.jar) or previous["protocolSha256"] != sha(self.source / "PROTOCOL.md"):
                 raise ValueError("compiled program or frozen protocol changed; use a new experiment directory")
         self.environment = json.loads((self.out / "environment.json").read_text())
+        if self.is_core_study:
+            self.runtime_identity()
         self.development_sha = self.environment["developmentSha256"]
         if sha(self.development) != self.development_sha:
             raise ValueError("frozen development data changed")
         if (self.logs / "prepare-corpus.receipt.json").exists():
             self.training_hash()
+
+    @property
+    def is_core_study(self) -> bool:
+        return getattr(self, "profile", "historical") in CORE_PROFILES
+
+    @property
+    def holdout_sha(self) -> str:
+        return CORE_HOLDOUT_SHA if self.is_core_study else HOLDOUT_SHA
+
+    @property
+    def study_frozen(self) -> Path:
+        return self.study_root / "study-frozen-selection.json"
+
+    def verify_output_scope(self) -> None:
+        for output in {self.out, getattr(self, "requested_out", self.out)}:
+            parent = output.parent
+            if (output.name in CORE_PROFILES
+                    and any(path_present(parent / name) for name in
+                            ("study-registration.json", "study-frozen-selection.json"))
+                    and (not self.is_core_study or self.profile != output.name
+                         or getattr(self, "study_root", None) != parent.resolve())):
+                raise RuntimeError("registered study child output cannot be reopened under another profile")
+
+    def profile_descriptor(self, profile: str) -> dict:
+        return {"profileId": profile, **CORE_PROFILES[profile],
+                "studyPlanSha256": sha(self.source / "CORE_6_10M_PLAN.md")}
+
+    @staticmethod
+    def document_sha(value: dict) -> str:
+        return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+    def study_registration(self, *, allow_create: bool = False) -> str:
+        """Register this fixed study once; never adopt edited or missing prior identity."""
+        if sha(self.orchestrator_path) != self.orchestrator_sha or sha(self.jar) != CORE_JAR_SHA:
+            raise RuntimeError("registered research source or approved experiment JAR changed")
+        expected = {
+            "schemaVersion": 1, "studyId": "G1-INTEGRATE-WEIGHT-002-CORE-6-10M",
+            "studyRoot": str(self.study_root), "inputs": str(self.inputs), "jar": str(self.jar),
+            "holdout": str(self.holdout), "holdoutSha256": self.holdout_sha,
+            "orchestratorSha256": self.orchestrator_sha, "jarSha256": CORE_JAR_SHA,
+            "protocolSha256": sha(self.source / "PROTOCOL.md"),
+            "studyPlanSha256": sha(self.source / "CORE_6_10M_PLAN.md"),
+            "baseSha256": BASE_SHA, "tokenizerSha256": TOKENIZER_SHA,
+            "developmentSha256": sha(self.development), "limits": RESOURCE_LIMITS,
+            "profiles": {name: {**self.profile_descriptor(name),
+                                 "profileSha256": self.document_sha(self.profile_descriptor(name)),
+                                 "output": str(self.study_root / name)} for name in CORE_PROFILES},
+        }
+        path = self.study_root / "study-registration.json"
+        if not path_present(path):
+            if (not allow_create or path_present(self.study_frozen)
+                    or any((self.study_root / name / "environment.json").exists() for name in CORE_PROFILES)):
+                raise RuntimeError("required original study registration is missing")
+            write_new(path, expected)
+        snapshot = path.read_bytes()
+        if json.loads(snapshot) != expected:
+            raise RuntimeError("registered study source, profiles, data or runtime changed")
+        return hashlib.sha256(snapshot).hexdigest()
+
+    def profile_identity(self) -> dict[str, str]:
+        if not self.is_core_study:
+            return {}
+        descriptor = self.profile_descriptor(self.profile)
+        return {"profileId": self.profile, "profileSha256": self.document_sha(descriptor),
+                "studyPlanSha256": descriptor["studyPlanSha256"],
+                "studyRegistrationSha256": self.study_registration()}
+
+    def verify_profile_manifest(self, value: dict) -> None:
+        if any(value.get(key) != expected for key, expected in self.profile_identity().items()):
+            raise RuntimeError("manifest does not belong to the registered research profile")
+
+    def budget_stop(self, label: str, parameters: int) -> dict | None:
+        if not self.is_core_study or parameters <= CORE_PROFILES[self.profile]["parameterBudget"]:
+            return None
+        profile = CORE_PROFILES[self.profile]
+        if (label, parameters) != (profile["nextLabel"], profile["nextParameters"]):
+            raise RuntimeError("budget stop is not the next registered ladder stage")
+        return {"label": label, "parameters": parameters, "parameterBytes": parameters * 4,
+                "status": "PREFLIGHT_REJECTED", "reason": "BUDGET_LIMIT",
+                "parameterLimit": profile["parameterBudget"], **self.profile_identity()}
+
+    def study_snapshot(self) -> dict:
+        """Validate both completed children without opening data or starting a process."""
+        if not self.is_core_study:
+            raise RuntimeError("the historical experiment has no joint study freeze")
+        registration = self.study_registration()
+        selections = {}
+        candidates = []
+        datasets = set()
+        training_schedules = set()
+        for profile in CORE_PROFILES:
+            child = copy.copy(self)
+            child.profile = profile
+            child.out = self.study_root / profile
+            child.requested_out = child.out
+            child.store = child.out / "checkpoints"
+            child.logs = child.out / "logs"
+            child.environment = json.loads((child.out / "environment.json").read_bytes())
+            child.development_sha = child.environment["developmentSha256"]
+            frozen, frozen_sha = child.verify_frozen_selection(*child.continuation_preflight())
+            if frozen.get("matchedTrainingInputs") is not True or frozen.get("trainingFailures") != []:
+                raise RuntimeError("both study profiles require completed matched training pairs")
+            for candidate in frozen["candidates"]:
+                if "trainingInput" not in candidate:
+                    continue
+                training = candidate["training"]
+                inputs = candidate["trainingInput"]
+                if (int(training["steps"]) != 16 or int(training["tokens"]) <= 0
+                        or training["scheduleSha256"] != inputs["scheduleSha256"]):
+                    raise RuntimeError("study training did not complete the registered schedule")
+                training_schedules.add((inputs["datasetSha256"], inputs["tokenizerSha256"],
+                                        inputs["tokenScheduleSha256"], inputs["scheduleSha256"],
+                                        int(training["tokens"])))
+            datasets.add(frozen["trainingSha256"])
+            selections[profile] = {"selectionSha256": frozen_sha, **child.profile_identity()}
+            candidates.extend({**candidate, "studyProfileId": profile} for candidate in frozen["candidates"])
+        if len(datasets) != 1 or len(training_schedules) != 1:
+            raise RuntimeError("study profiles did not use the same registered training data and token schedule")
+        preferred = self.preferred_candidate(candidates)
+        if preferred is None:
+            raise RuntimeError("joint study has no capacity-eligible development candidate")
+        result = {"schemaVersion": 1, "studyRegistrationSha256": registration,
+                  "orchestratorSha256": self.orchestrator_sha, "holdoutSha256": self.holdout_sha,
+                  "holdoutOpenedAtFreeze": False, "profiles": selections,
+                  "developmentPreferred": {key: preferred[key] for key in
+                      ("studyProfileId", "label", "path", "sha256", "parameters", "bytes", "devBpb")}}
+        if (self.study_registration() != registration
+                or any(sha(self.study_root / profile / "frozen-selection.json") != entry["selectionSha256"]
+                       for profile, entry in selections.items())):
+            raise RuntimeError("study selection changed during joint freeze validation")
+        return result
+
+    def verify_study_freeze(self) -> str:
+        snapshot = self.study_frozen.read_bytes()
+        if json.loads(snapshot) != self.study_snapshot() or self.study_frozen.read_bytes() != snapshot:
+            raise RuntimeError("joint study freeze differs from the verified child selections")
+        return hashlib.sha256(snapshot).hexdigest()
+
+    def study_freeze(self) -> None:
+        if not self.is_core_study:
+            raise RuntimeError("study-freeze requires a registered core profile")
+        if path_present(self.study_frozen):
+            self.verify_study_freeze()
+            return
+        frozen = self.study_snapshot()
+        write_new(self.study_frozen, frozen)
+        self.verify_study_freeze()
 
     def training_hash(self) -> str:
         """The original successful corpus receipt seals the continuation dataset."""
@@ -104,6 +287,8 @@ class Experiment:
         expected = self.one(records(path), "CORPUS")["sha256"]
         if sha(self.out / "train.txt") != expected:
             raise RuntimeError("continuation data no longer matches the original CORPUS record")
+        if self.is_core_study:
+            self.cached_call("prepare-corpus", expected_arguments, benchmark=False, timeout=180, allow_failure=False)
         return expected
 
     def dataset_hash(self, path: Path) -> str:
@@ -113,7 +298,7 @@ class Experiment:
         elif path == (self.out / "train.txt").resolve():
             expected = self.training_hash()
         elif path == self.holdout:
-            expected = HOLDOUT_SHA
+            expected = self.holdout_sha
         else:
             raise ValueError("unregistered experiment dataset")
         if sha(path) != expected:
@@ -169,14 +354,23 @@ class Experiment:
                 raise RuntimeError("legacy parity receipt does not bind the comparison checkpoint; explicit review required")
 
     def runtime_identity(self) -> dict[str, str]:
+        self.verify_output_scope()
         if self.environment.get("limits") != RESOURCE_LIMITS:
             raise RuntimeError("registered resource limits changed")
         identity = {"jarSha256": sha(self.jar), "protocolSha256": sha(self.source / "PROTOCOL.md")}
         if any(identity[key] != self.environment.get(key) for key in identity):
             raise RuntimeError("compiled program or registered protocol changed")
+        if self.is_core_study:
+            identity.update(self.profile_identity())
+            if (any(identity[key] != self.environment.get(key) for key in identity)
+                    or self.environment.get("orchestratorSha256") != self.orchestrator_sha
+                    or self.environment.get("holdoutSha256") != self.holdout_sha):
+                raise RuntimeError("registered research profile or source environment changed")
         return identity
 
     def valid_orchestrator(self, value: object) -> bool:
+        if self.is_core_study:
+            return value == self.orchestrator_sha == self.environment.get("orchestratorSha256")
         return isinstance(value, str) and value in {
             self.orchestrator_sha, self.environment.get("orchestratorSha256"),
             HISTORICAL_ORCHESTRATOR_SHA,
@@ -205,6 +399,8 @@ class Experiment:
         if type(saved.get("returncode")) is not int or type(saved.get("timeout")) is not bool:
             raise RuntimeError(f"incomplete execution status: {label}")
         modern = "inputHashes" in saved or "orchestratorSha256" in saved
+        if self.is_core_study and (not modern or saved.get("runtimeIdentity") != identity):
+            raise RuntimeError(f"registered profile requires a complete bound invocation receipt: {label}")
         if modern and (saved.get("inputHashes") != inputs
                        or not self.valid_orchestrator(saved.get("orchestratorSha256"))):
             raise RuntimeError(f"invocation input or orchestrator binding changed: {label}")
@@ -411,6 +607,7 @@ class Experiment:
 
     def load_calibration(self, *, cache_only: bool = False) -> dict:
         calibration = json.loads((self.out / "calibration.json").read_text())
+        self.verify_profile_manifest(calibration)
         for candidate in calibration["candidates"]:
             if not (self.logs / f"{candidate['label']}-dev.receipt.json").exists():
                 raise RuntimeError("completed calibration lacks a development receipt")
@@ -473,6 +670,7 @@ class Experiment:
         ladder_path = self.out / "ladder.json"
         ladder_bytes = ladder_path.read_bytes()
         ladder = json.loads(ladder_bytes)
+        self.verify_profile_manifest(ladder)
         # A saved failure is terminal, including contradictory stale success flags.
         if ladder.get("stop") == "BASELINE_GATE" or not isinstance(ladder.get("lastPassed"), dict):
             raise RuntimeError("BASELINE_GATE: continuation has no authorized starting checkpoint")
@@ -502,6 +700,12 @@ class Experiment:
         for index, stored in enumerate(stages):
             if not isinstance(stored, dict):
                 raise RuntimeError("invalid ladder stage")
+            budget = self.budget_stop(*expected[index]) if index < len(expected) else None
+            if budget is not None:
+                if stored != budget or index != len(stages) - 1:
+                    raise RuntimeError("budget rejection differs from the next registered stage")
+                terminal = "BUDGET_LIMIT"
+                break
             if index == len(expected):
                 if (index != len(stages) - 1 or stored.get("label") != "depth-6"
                         or stored.get("parameters") != 19161600
@@ -541,6 +745,11 @@ class Experiment:
             verified[stage["label"]] = stage
         if terminal is None or ladder.get("stop") != terminal or last is None:
             raise RuntimeError("ladder is incomplete or has a contradictory stop reason")
+        if self.is_core_study:
+            profile = CORE_PROFILES[self.profile]
+            if (terminal != "BUDGET_LIMIT" or (last["label"], last["parameters"])
+                    != (profile["targetLabel"], profile["targetParameters"])):
+                raise RuntimeError("registered profile target did not pass; no continuation is authorized")
         if self.candidate_identity(ladder["lastPassed"]) != self.candidate_identity(last):
             raise RuntimeError("lastPassed is not the last independently verified passing stage")
         if ladder["lastPassed"].get("capacityEligible") is not True:
@@ -558,8 +767,11 @@ class Experiment:
         return targets
 
     def authorize_training_call(self, label: str, arguments: list[str], timeout: int) -> tuple[dict, dict]:
+        self.verify_output_scope()
+        if self.is_core_study and path_present(self.study_frozen):
+            raise RuntimeError("joint study freeze permanently closes continuation training")
         _, selected, expanded = self.continuation_preflight()
-        if (self.out / "frozen-selection.json").exists():
+        if path_present(self.out / "frozen-selection.json"):
             raise RuntimeError("frozen selection does not authorize further continuation")
         targets = self.training_targets(selected, expanded)
         target = targets.get(label.removesuffix("-train")) if label.endswith("-train") else None
@@ -577,8 +789,9 @@ class Experiment:
         path = self.out / "frozen-selection.json"
         frozen_bytes = path.read_bytes()
         frozen = json.loads(frozen_bytes)
+        self.verify_profile_manifest(frozen)
         if (not self.valid_orchestrator(frozen.get("orchestratorSha256"))
-                or frozen.get("holdoutSha256") != HOLDOUT_SHA or frozen.get("holdoutOpened") is not False
+                or frozen.get("holdoutSha256") != self.holdout_sha or frozen.get("holdoutOpened") is not False
                 or frozen.get("developmentSha256") != self.development_sha
                 or frozen.get("trainingSha256") != self.training_hash()
                 or self.candidate_identity(frozen["lastCapacityPassed"]) != self.candidate_identity(expanded)):
@@ -643,15 +856,19 @@ class Experiment:
                 candidates.append(candidate)
         selected = min(candidates, key=lambda c: (c["devBpb"], c["label"] != "baseline"))
         write_new(self.out / "calibration.json", {"candidates": candidates, "selected": selected,
-                                                 "rule": "minimum development BPB; identity wins exact tie"})
+                                                 "rule": "minimum development BPB; identity wins exact tie",
+                                                 **self.profile_identity()})
 
     def ladder(self) -> None:
         if (self.out / "ladder.json").exists():
+            if self.is_core_study:
+                self.continuation_preflight()
             return
         calibration = self.load_calibration()
         original = self.original_baseline(calibration)
         if not self.benchmark(original, require_existing=True):
-            write_new(self.out / "ladder.json", {"stages": [original], "lastPassed": None, "stop": "BASELINE_GATE"})
+            write_new(self.out / "ladder.json", {"stages": [original], "lastPassed": None,
+                                                "stop": "BASELINE_GATE", **self.profile_identity()})
             return
         selection = calibration["selected"]
         source = Path(selection["path"])
@@ -659,7 +876,8 @@ class Experiment:
         passed = []
         attempted = []
         if not self.benchmark(selected):
-            write_new(self.out / "ladder.json", {"stages": [selected], "lastPassed": None, "stop": "BASELINE_GATE"})
+            write_new(self.out / "ladder.json", {"stages": [selected], "lastPassed": None,
+                                                "stop": "BASELINE_GATE", **self.profile_identity()})
             return
         passed.append(selected)
         attempted.append(selected)
@@ -679,6 +897,11 @@ class Experiment:
             width8 = Path(passed[-1]["path"])
             for layers in [3, 4, 5, 6]:
                 parameters = 512 * 512 + 512 + layers * 3_149_824
+                budget = self.budget_stop(f"depth-{layers}", parameters)
+                if budget is not None:
+                    stop = "BUDGET_LIMIT"
+                    attempted.append(budget)
+                    break
                 if parameters * 4 > MAX_CHECKPOINT:
                     stop = "CHECKPOINT_64_MIB_CONTRACT"
                     attempted.append({"label": f"depth-{layers}", "parameters": parameters,
@@ -695,11 +918,16 @@ class Experiment:
                     stop = "PARITY_OR_CAPACITY_FAILURE"
                     break
                 passed.append(candidate)
-        write_new(self.out / "ladder.json", {"stages": attempted, "lastPassed": passed[-1], "stop": stop})
+        write_new(self.out / "ladder.json", {"stages": attempted, "lastPassed": passed[-1], "stop": stop,
+                                            **self.profile_identity()})
 
     def continuation(self) -> None:
+        self.verify_output_scope()
+        if (self.is_core_study and path_present(self.study_frozen)
+                and not path_present(self.out / "frozen-selection.json")):
+            raise RuntimeError("frozen study cannot resume training after child-selection loss")
         original, selected, expanded = self.continuation_preflight()
-        if (self.out / "frozen-selection.json").exists():
+        if path_present(self.out / "frozen-selection.json"):
             self.verify_frozen_selection(original, selected, expanded)
             return
         candidates = {c["sha256"]: dict(c) for c in [original, selected]}
@@ -729,9 +957,11 @@ class Experiment:
             self.invoke(candidate["label"] + "-probes", "probes", Path(candidate["path"]))
         preferred = self.preferred_candidate(list(candidates.values()))
         self.continuation_preflight()
+        if self.is_core_study and path_present(self.study_frozen):
+            raise RuntimeError("joint study was frozen before continuation could publish a selection")
         write_new(self.out / "frozen-selection.json", {
             "frozenUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            "holdoutSha256": HOLDOUT_SHA, "holdoutOpened": False,
+            "holdoutSha256": self.holdout_sha, "holdoutOpened": False,
             "orchestratorSha256": self.orchestrator_sha,
             "developmentSha256": self.development_sha, "trainingSha256": self.training_hash(),
             "candidates": list(candidates.values()), "developmentPreferred": preferred,
@@ -739,20 +969,24 @@ class Experiment:
             "matchedTrainingInputs": matched_training,
             "lastCapacityPassed": expanded, "trainingFailures": failures,
             "selectionRule": "minimum development BPB among completed eligible candidates; within 0.00001 BPB prefer fewer parameters",
+            **self.profile_identity(),
         })
         print("FROZEN_SELECTION " + sha(self.out / "frozen-selection.json"), flush=True)
 
     def final(self) -> None:
+        study_sha = self.verify_study_freeze() if self.is_core_study else None
         original, selected, expanded = self.continuation_preflight()
         selection, selection_sha = self.verify_frozen_selection(original, selected, expanded)
         frozen = self.out / "frozen-selection.json"
-        if (self.out / "final.json").exists():
+        if path_present(self.out / "final.json"):
             completed = json.loads((self.out / "final.json").read_bytes())
             if (completed.get("selectionSha256") != selection_sha
                     or completed.get("holdoutSha256") != selection["holdoutSha256"]
                     or completed.get("originalsUnchanged") is not True
                     or [self.candidate_identity(c) for c in completed["results"]]
                        != [self.candidate_identity(c) for c in selection["candidates"]]
+                    or (self.is_core_study and (completed.get("studySelectionSha256") != study_sha
+                                               or self.verify_study_freeze() != study_sha))
                     or sha(frozen) != selection_sha):
                 raise RuntimeError("completed final evaluation does not match the verified frozen selection")
             return
@@ -767,15 +1001,20 @@ class Experiment:
             raise ValueError("original inputs changed")
         if sha(frozen) != selection_sha:
             raise RuntimeError("frozen selection changed during final evaluation")
+        if self.is_core_study and self.verify_study_freeze() != study_sha:
+            raise RuntimeError("joint study selection changed during final evaluation")
         write_new(self.out / "final.json", {"selectionSha256": selection_sha, "holdoutSha256": sha(self.holdout),
                                           "results": results, "originalsUnchanged": True,
+                                          **({"studySelectionSha256": study_sha} if self.is_core_study else {}),
                                           "androidValidation": "NOT_RUN", "appIntegration": "NOT_PERFORMED"})
         shutil.copyfile(self.holdout, self.out / "holdout-after-freeze.txt")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("phase", choices=["calibration", "ladder", "continuation", "final", "all"])
+    parser.add_argument("phase", choices=["calibration", "ladder", "continuation", "study-freeze", "final", "all"])
+    parser.add_argument("--profile", choices=["historical", *CORE_PROFILES], default="historical")
+    parser.add_argument("--study-root", type=Path)
     parser.add_argument("--inputs", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jar", type=Path, required=True)
@@ -783,7 +1022,7 @@ def main() -> None:
     args = parser.parse_args()
     experiment = Experiment(args)
     for phase in (["calibration", "ladder", "continuation", "final"] if args.phase == "all" else [args.phase]):
-        getattr(experiment, phase)()
+        getattr(experiment, phase.replace("-", "_"))()
 
 
 if __name__ == "__main__":

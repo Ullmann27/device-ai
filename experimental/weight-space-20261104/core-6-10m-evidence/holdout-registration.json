@@ -1,0 +1,36 @@
+{
+  "schema": "CONTINUUM_G1_FRESH_HOLDOUT_METADATA_V1",
+  "sha256": "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd",
+  "bytes": 4997,
+  "paragraphs": 32,
+  "status": "SEALED_NO_QUALITY_EVALUATION",
+  "duplicateCheck": {
+    "performed": true,
+    "normalization": "Unicode NFKC, casefold, Unicode word tokens joined by single spaces",
+    "newParagraphsInternallyUnique": true,
+    "minimumNormalizedSentenceCharacters": 45,
+    "comparisons": [
+      {
+        "source": "TRAIN",
+        "sourceSha256": "27e67455e23dcc410855b2fd0f0292f9a00556d72d62aefb018e9eab4be034c9",
+        "exactNormalizedParagraphDuplicates": 0,
+        "exactNormalizedSentenceDuplicates": 0
+      },
+      {
+        "source": "Development",
+        "sourceSha256": "62da26a44f5c010c10e74b5edb8ac795160e3c62028292a2b9994a839a6fc111",
+        "exactNormalizedParagraphDuplicates": 0,
+        "exactNormalizedSentenceDuplicates": 0
+      },
+      {
+        "source": "PreviousHoldout",
+        "sourceSha256": "d5a5858f0eaff24495cd98c337fc662271c4a1b41027b1142764735c244942af",
+        "exactNormalizedParagraphDuplicates": 0,
+        "exactNormalizedSentenceDuplicates": 0
+      }
+    ]
+  },
+  "contentDisclosedInMessages": false,
+  "modelProcessesStarted": 0,
+  "qualityEvaluationPerformed": false
+}

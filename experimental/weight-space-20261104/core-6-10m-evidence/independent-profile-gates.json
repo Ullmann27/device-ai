@@ -1,0 +1,1379 @@
+{
+  "schemaVersion": 1,
+  "task": "G1-INTEGRATE-WEIGHT-002-CORE-6-10M",
+  "scope": "Independent synthetic integration gate tests; no real neural execution or holdout evaluation.",
+  "acceptedParentCommit": "8e2a2370a9392aeff6bb68a8e2b4b0c1caaa68b2",
+  "finalDriverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "finalPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "finalChecks": {
+    "passed": 75,
+    "failed": 0,
+    "registeredProfiles": 29,
+    "unchangedHistoricalRegressionCases": 46
+  },
+  "harnesses": {
+    "tests/adversarial_driver_gate.py": {
+      "sha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020",
+      "unchangedFromG1": true
+    },
+    "tests/targeted_final_creation_gate.py": {
+      "sha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f",
+      "unchangedFromG1": true
+    },
+    "tests/direct_dispatch_gate.py": {
+      "sha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281",
+      "unchangedFromG1": true
+    },
+    "tests/registered_profiles_gate.py": {
+      "sha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937",
+      "unchangedFromG1": false
+    }
+  },
+  "registeredProfiles": {
+    "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+    "sourceHashAfterRun": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+    "harnessSha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937",
+    "rawReportSha256": "bd9774adf3f6cc264ee2cd195f4d22a2764e9a47dbc320c4f640889b59a1e700",
+    "passed": 29,
+    "failed": 0,
+    "cases": [
+      {
+        "case": "valid_budget_6562304_direct_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 1,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "ProcessBlocked",
+          "message": "synthetic process boundary; no process launched"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "PROCESS_ATTEMPT_BLOCKED"
+        ]
+      },
+      {
+        "case": "valid_budget_9712128_direct_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 1,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "ProcessBlocked",
+          "message": "synthetic process boundary; no process launched"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "PROCESS_ATTEMPT_BLOCKED"
+        ]
+      },
+      {
+        "case": "valid_joint_freeze_then_final_6562304",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 1,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "HoldoutBlocked",
+          "message": "sealed synthetic scoring boundary reached; no evaluation executed"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "SYNTHETIC_HOLDOUT_BOUNDARY"
+        ]
+      },
+      {
+        "case": "valid_joint_freeze_then_final_9712128",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 1,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "HoldoutBlocked",
+          "message": "sealed synthetic scoring boundary reached; no evaluation executed"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "SYNTHETIC_HOLDOUT_BOUNDARY"
+        ]
+      },
+      {
+        "case": "unchanged_quality_rule_can_prefer_small_control",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 1,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "HoldoutBlocked",
+          "message": "sealed synthetic scoring boundary reached; no evaluation executed"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "SYNTHETIC_HOLDOUT_BOUNDARY"
+        ]
+      },
+      {
+        "case": "wrong_stop_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "ladder is incomplete or has a contradictory stop reason"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "wrong_target_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "lastPassed is not the last independently verified passing stage"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "wrong_budget_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "budget rejection differs from the next registered stage"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "wrong_profile_hash_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "manifest does not belong to the registered research profile"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "historical_receipt_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered profile requires a complete bound invocation receipt: baseline-capacity"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "foreign_profile_receipt_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered profile requires a complete bound invocation receipt: baseline-capacity"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "changed_plan_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered study source, profiles, data or runtime changed"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "changed_registration_blocks_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered study source, profiles, data or runtime changed"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "baseline_failure_blocks_direct_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "target_failure_blocks_small_control_train",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered profile target did not pass; no continuation is authorized"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "missing_global_freeze_blocks_final",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "FileNotFoundError",
+          "message": "[Errno 2] No such file or directory: '<synthetic-fixture>/study/study-frozen-selection.json'"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "malformed_global_freeze_blocks_final",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "JSONDecodeError",
+          "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "incomplete_global_freeze_blocks_final",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "joint study freeze differs from the verified child selections"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "missing_peer_child_blocks_study_freeze",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "FileNotFoundError",
+          "message": "[Errno 2] No such file or directory: '<synthetic-fixture>/study/core-9712128/frozen-selection.json'"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "changed_peer_nonwinner_blocks_final",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "frozen candidate does not match its verified execution evidence"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "PEER_NONWINNING_CHILD_MUTATED"
+        ]
+      },
+      {
+        "case": "global_freeze_blocks_train_after_child_loss",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "joint study freeze permanently closes continuation training"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "invalid_global_freeze_blocks_train_after_child_loss",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "joint study freeze permanently closes continuation training"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "global_freeze_blocks_missing_child_environment",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "a frozen study cannot recreate a missing child experiment"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "cached_final_requires_global_freeze",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "FileNotFoundError",
+          "message": "[Errno 2] No such file or directory: '<synthetic-fixture>/study/study-frozen-selection.json'"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "peer_child_change_during_final_prevents_publication",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 4,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "frozen candidate does not match its verified execution evidence"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "SYNTHETIC_HOLDOUT_BOUNDARY",
+          "PEER_NONWINNING_CHILD_MUTATED",
+          "SYNTHETIC_HOLDOUT_BOUNDARY",
+          "SYNTHETIC_HOLDOUT_BOUNDARY",
+          "SYNTHETIC_HOLDOUT_BOUNDARY"
+        ]
+      },
+      {
+        "case": "peer_child_change_during_cached_final_rejects",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "frozen candidate does not match its verified execution evidence"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB",
+          "PEER_NONWINNING_CHILD_MUTATED"
+        ]
+      },
+      {
+        "case": "global_freeze_blocks_historical_downgrade_after_child_loss",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered study child output cannot be reopened under another profile"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "dangling_global_freeze_blocks_train_after_child_loss",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "joint study freeze permanently closes continuation training"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      },
+      {
+        "case": "global_freeze_blocks_historical_downgrade_through_child_symlink",
+        "pass": true,
+        "fixtureSetupComplete": true,
+        "processAttemptsBlocked": 0,
+        "syntheticHoldoutBoundaryCalls": 0,
+        "returnedWithoutValidationError": false,
+        "exception": {
+          "type": "RuntimeError",
+          "message": "registered study child output cannot be reopened under another profile"
+        },
+        "eventKinds": [
+          "ENVIRONMENT_VERSION_STUB",
+          "ENVIRONMENT_VERSION_STUB"
+        ]
+      }
+    ]
+  },
+  "historicalRegressions": {
+    "historicalContinuation36": {
+      "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "sourceHashAfterRun": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "harnessSha256": "27abd1f9c223cc9c40daa8d27e3a9b48805b37ee5a9a07827d000f49bc789020",
+      "rawReportSha256": "d318de59a110f646d7e5cc5c1a3324b87f13ff81d3c6efc7809c56d18f56d488",
+      "passed": 36,
+      "failed": 0,
+      "cases": [
+        {
+          "case": "valid_gate_positive_control",
+          "pass": true,
+          "positiveControl": true,
+          "trainAttempts": 1,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          "eventKinds": [
+            "TRAIN_ATTEMPT_BLOCKED"
+          ]
+        },
+        {
+          "case": "valid_earlier_stage_after_later_failure",
+          "pass": true,
+          "positiveControl": true,
+          "trainAttempts": 1,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          "eventKinds": [
+            "TRAIN_ATTEMPT_BLOCKED"
+          ]
+        },
+        {
+          "case": "valid_fully_legacy_capacity_positive_control",
+          "pass": true,
+          "positiveControl": true,
+          "trainAttempts": 1,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "TrainingBlocked",
+            "message": "training trapped before dispatch"
+          },
+          "eventKinds": [
+            "TRAIN_ATTEMPT_BLOCKED"
+          ]
+        },
+        {
+          "case": "original_fails_even_selected_calibration_passes",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "original_reordered_fails_even_selected_passes",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "original_missing_from_calibration",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "calibration must contain exactly one canonical original baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "original_duplicated_in_calibration",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "calibration must contain exactly one canonical original baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "baseline_failed_lastpassed_null",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "baseline_failed_receipt_but_eligible_flags_true",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "lastpassed_null_but_baseline_passes",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "baseline_gate_stop_but_stale_lastpassed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_baseline_capacity_receipt",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "required completed invocation is missing: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_baseline_capacity_log",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "required completed invocation is missing: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "tampered_baseline_capacity_log",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_baseline_capacity_result",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "baseline_capacity_process_failed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "baseline_capacity_process_timed_out",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_wrong_checkpoint_in_log",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "CAPACITY_MODEL input identity mismatch"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_stale_checkpoint_input_hash",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation input or orchestrator binding changed: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_wrong_compiled_program",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_wrong_orchestrator_source",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation input or orchestrator binding changed: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_missing_input_binding",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation input or orchestrator binding changed: baseline-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_first_token_over_limit_but_pass_claimed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_generation_over_limit_but_pass_claimed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_intermediate_memory_over_limit_but_terminal_pass",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "capacity_nonfinite_latency_but_pass_claimed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: existing capacity proof failed for baseline"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "lastpassed_not_in_stages",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "lastPassed is not the last independently verified passing stage"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_lastpassed_capacity_receipt",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "required completed invocation is missing: depth-5-capacity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "tampered_lastpassed_checkpoint",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "candidate checkpoint changed: depth-5"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "stale_lastpassed_parity_binding",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation input or orchestrator binding changed: depth-5-parity"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "frozen_resume_malformed_json",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "JSONDecodeError",
+            "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "frozen_resume_stale_incomplete_record",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "frozen selection has stale source, data or starting-checkpoint identities"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_ladder_negative_control",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "FileNotFoundError",
+            "message": "[Errno 2] No such file or directory: '<synthetic-fixture>/results/ladder.json'"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "malformed_ladder_negative_control",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "JSONDecodeError",
+            "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_development_receipt_negative_control",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "completed calibration lacks a development receipt"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "changed_jar_negative_control",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "ValueError",
+            "message": "compiled program or frozen protocol changed; use a new experiment directory"
+          },
+          "eventKinds": []
+        }
+      ]
+    },
+    "finalAndCreation6": {
+      "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "sourceHashAfterRun": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "harnessSha256": "c7185a6edcf8a7f11a9684bf0c5febfc141fe32d7fd6a227aff5f7575f91921f",
+      "rawReportSha256": "d6b0362a6596aee1bf8416f18efb9fa8472310ef10d48c9466f3015f87e12c61",
+      "passed": 6,
+      "failed": 0,
+      "cases": [
+        {
+          "case": "direct_final_fresh_baseline_failure",
+          "pass": true,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "direct_final_cached_baseline_failure",
+          "pass": true,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "missing_width_creation_receipt",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "required completed invocation is missing: width-4-create"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "tampered_width_creation_parent",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: width-4-create"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "tampered_width_creation_noise",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: width-4-create"
+          },
+          "eventKinds": []
+        },
+        {
+          "case": "tampered_depth_creation_seed",
+          "pass": true,
+          "positiveControl": false,
+          "trainAttempts": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "invocation identity or execution contract changed: depth-3-create"
+          },
+          "eventKinds": []
+        }
+      ]
+    },
+    "directDispatch4": {
+      "sourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "sourceHashAfterRun": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "harnessSha256": "5dbab83c01eb95d87a102684964e9cd3d07ab40c5b611c76b17c062f10332281",
+      "rawReportSha256": "4bdf7369641563dea51e12a87f760d189419c553631354f06124b0ae22198f51",
+      "passed": 4,
+      "failed": 0,
+      "cases": [
+        {
+          "case": "valid_direct_call_reaches_process_boundary",
+          "pass": true,
+          "processAttemptsBlocked": 1,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "ProcessLaunchBlocked",
+            "message": "Popen intercepted; no process launched"
+          },
+          "checkpointMutatedOnlyInFixture": false,
+          "eventKinds": [
+            "PROCESS_ATTEMPT_BLOCKED"
+          ]
+        },
+        {
+          "case": "failed_baseline_blocks_direct_call",
+          "pass": true,
+          "processAttemptsBlocked": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "checkpointMutatedOnlyInFixture": false,
+          "eventKinds": []
+        },
+        {
+          "case": "failed_baseline_blocks_direct_cached_call",
+          "pass": true,
+          "processAttemptsBlocked": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "BASELINE_GATE: continuation has no authorized starting checkpoint"
+          },
+          "checkpointMutatedOnlyInFixture": false,
+          "eventKinds": []
+        },
+        {
+          "case": "expanded_checkpoint_swap_after_authorization",
+          "pass": true,
+          "processAttemptsBlocked": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "RuntimeError",
+            "message": "training inputs changed after source-bound authorization"
+          },
+          "checkpointMutatedOnlyInFixture": true,
+          "eventKinds": [
+            "SYNTHETIC_CHECKPOINT_CHANGED_AFTER_AUTHORIZATION"
+          ]
+        }
+      ]
+    }
+  },
+  "reviewHistory": {
+    "initial26BeforeConcreteReviewGaps": {
+      "sourceSha256": "8a11da08533496c14cd7a5ca60ce44f914aab50401609baa48955d7ae22e7e2b",
+      "sourceHashAfterRun": "8a11da08533496c14cd7a5ca60ce44f914aab50401609baa48955d7ae22e7e2b",
+      "harnessSha256": "6aa88816b4aa6de1e2af3c84c60682b8178aa1ec0774143d3dbb7a650ecd4684",
+      "rawReportSha256": "c0e437b02a69d716edd3ba182d757ad6841c3285bdfb7f154de4b4eb33f2494c",
+      "passed": 26,
+      "failed": 0,
+      "caseNames": [
+        "valid_budget_6562304_direct_train",
+        "valid_budget_9712128_direct_train",
+        "valid_joint_freeze_then_final_6562304",
+        "valid_joint_freeze_then_final_9712128",
+        "unchanged_quality_rule_can_prefer_small_control",
+        "wrong_stop_blocks_train",
+        "wrong_target_blocks_train",
+        "wrong_budget_blocks_train",
+        "wrong_profile_hash_blocks_train",
+        "historical_receipt_blocks_train",
+        "foreign_profile_receipt_blocks_train",
+        "changed_plan_blocks_train",
+        "changed_registration_blocks_train",
+        "baseline_failure_blocks_direct_train",
+        "target_failure_blocks_small_control_train",
+        "missing_global_freeze_blocks_final",
+        "malformed_global_freeze_blocks_final",
+        "incomplete_global_freeze_blocks_final",
+        "missing_peer_child_blocks_study_freeze",
+        "changed_peer_nonwinner_blocks_final",
+        "global_freeze_blocks_train_after_child_loss",
+        "invalid_global_freeze_blocks_train_after_child_loss",
+        "global_freeze_blocks_missing_child_environment",
+        "cached_final_requires_global_freeze",
+        "peer_child_change_during_final_prevents_publication",
+        "peer_child_change_during_cached_final_rejects"
+      ]
+    },
+    "downgradeAndDanglingMarkerRed": {
+      "sourceSha256": "8a11da08533496c14cd7a5ca60ce44f914aab50401609baa48955d7ae22e7e2b",
+      "sourceHashAfterRun": "8a11da08533496c14cd7a5ca60ce44f914aab50401609baa48955d7ae22e7e2b",
+      "harnessSha256": "0d8abccbb03f4d9efa3d43702f3728bf7c4169f73b457a29f328ac735a1db817",
+      "rawReportSha256": "1156c508063937328b30bb97b18a4fd6e35ba80b67f60cfaf574ffd60724385a",
+      "passed": 0,
+      "failed": 2,
+      "cases": [
+        {
+          "case": "global_freeze_blocks_historical_downgrade_after_child_loss",
+          "pass": false,
+          "fixtureSetupComplete": true,
+          "processAttemptsBlocked": 0,
+          "syntheticHoldoutBoundaryCalls": 0,
+          "returnedWithoutValidationError": true,
+          "exception": null,
+          "eventKinds": [
+            "ENVIRONMENT_VERSION_STUB",
+            "ENVIRONMENT_VERSION_STUB",
+            "ENVIRONMENT_VERSION_STUB"
+          ]
+        },
+        {
+          "case": "dangling_global_freeze_blocks_train_after_child_loss",
+          "pass": false,
+          "fixtureSetupComplete": true,
+          "processAttemptsBlocked": 1,
+          "syntheticHoldoutBoundaryCalls": 0,
+          "returnedWithoutValidationError": false,
+          "exception": {
+            "type": "ProcessBlocked",
+            "message": "synthetic process boundary; no process launched"
+          },
+          "eventKinds": [
+            "ENVIRONMENT_VERSION_STUB",
+            "ENVIRONMENT_VERSION_STUB",
+            "PROCESS_ATTEMPT_BLOCKED"
+          ]
+        }
+      ]
+    },
+    "extended28BeforeSymlinkPathReviewGap": {
+      "sourceSha256": "e69dd110b35208b6e056d68fa0d7dad6ded724f079aa89ca16bd494e206a93bc",
+      "sourceHashAfterRun": "e69dd110b35208b6e056d68fa0d7dad6ded724f079aa89ca16bd494e206a93bc",
+      "harnessSha256": "0d8abccbb03f4d9efa3d43702f3728bf7c4169f73b457a29f328ac735a1db817",
+      "rawReportSha256": "35e64a5a628ac32e149f3a97db67472e717573ca15d1cd10a568daa4487527e3",
+      "passed": 28,
+      "failed": 0,
+      "caseNames": [
+        "valid_budget_6562304_direct_train",
+        "valid_budget_9712128_direct_train",
+        "valid_joint_freeze_then_final_6562304",
+        "valid_joint_freeze_then_final_9712128",
+        "unchanged_quality_rule_can_prefer_small_control",
+        "wrong_stop_blocks_train",
+        "wrong_target_blocks_train",
+        "wrong_budget_blocks_train",
+        "wrong_profile_hash_blocks_train",
+        "historical_receipt_blocks_train",
+        "foreign_profile_receipt_blocks_train",
+        "changed_plan_blocks_train",
+        "changed_registration_blocks_train",
+        "baseline_failure_blocks_direct_train",
+        "target_failure_blocks_small_control_train",
+        "missing_global_freeze_blocks_final",
+        "malformed_global_freeze_blocks_final",
+        "incomplete_global_freeze_blocks_final",
+        "missing_peer_child_blocks_study_freeze",
+        "changed_peer_nonwinner_blocks_final",
+        "global_freeze_blocks_train_after_child_loss",
+        "invalid_global_freeze_blocks_train_after_child_loss",
+        "global_freeze_blocks_missing_child_environment",
+        "cached_final_requires_global_freeze",
+        "peer_child_change_during_final_prevents_publication",
+        "peer_child_change_during_cached_final_rejects",
+        "global_freeze_blocks_historical_downgrade_after_child_loss",
+        "dangling_global_freeze_blocks_train_after_child_loss"
+      ]
+    },
+    "symlinkOutputDowngradeRed": {
+      "sourceSha256": "e69dd110b35208b6e056d68fa0d7dad6ded724f079aa89ca16bd494e206a93bc",
+      "sourceHashAfterRun": "e69dd110b35208b6e056d68fa0d7dad6ded724f079aa89ca16bd494e206a93bc",
+      "harnessSha256": "e6afccf4ae5bf0c243ecd8e92452c0c25c928912d704bf6977d9018fda2fd937",
+      "rawReportSha256": "c6d0571aa930c3d993ec9ab9657f50856bb6091ebfecb23d0e4fda2baeb68fda",
+      "passed": 0,
+      "failed": 1,
+      "cases": [
+        {
+          "case": "global_freeze_blocks_historical_downgrade_through_child_symlink",
+          "pass": false,
+          "fixtureSetupComplete": true,
+          "processAttemptsBlocked": 0,
+          "syntheticHoldoutBoundaryCalls": 0,
+          "returnedWithoutValidationError": true,
+          "exception": null,
+          "eventKinds": [
+            "ENVIRONMENT_VERSION_STUB",
+            "ENVIRONMENT_VERSION_STUB",
+            "ENVIRONMENT_VERSION_STUB"
+          ]
+        }
+      ]
+    },
+    "scopeEvolution": "Original26 retained; exactly two concrete review cases appended, then one concrete symlink-output case. No historical test changes.",
+    "historicalRegressionExecutions": "The unchanged36+6+4 suites ran once each on the final8f2f source; not on intermediate profile candidates."
+  },
+  "redSourceReconstruction": {
+    "8a11da08533496c14cd7a5ca60ce44f914aab50401609baa48955d7ae22e7e2b": {
+      "baseSourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "lineSplices": [
+        {
+          "startLineZeroBased": 42,
+          "endLineExclusive": 47,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 69,
+          "endLineExclusive": 70,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 88,
+          "endLineExclusive": 89,
+          "replacement": "            if self.study_frozen.exists() and not (self.out / \"environment.json\").is_file():\n"
+        },
+        {
+          "startLineZeroBased": 92,
+          "endLineExclusive": 93,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 142,
+          "endLineExclusive": 152,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 178,
+          "endLineExclusive": 180,
+          "replacement": "        if not path.exists():\n            if (not allow_create or self.study_frozen.exists()\n"
+        },
+        {
+          "startLineZeroBased": 223,
+          "endLineExclusive": 224,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 270,
+          "endLineExclusive": 271,
+          "replacement": "        if self.study_frozen.exists():\n"
+        },
+        {
+          "startLineZeroBased": 356,
+          "endLineExclusive": 357,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 769,
+          "endLineExclusive": 771,
+          "replacement": "        if self.is_core_study and self.study_frozen.exists():\n"
+        },
+        {
+          "startLineZeroBased": 773,
+          "endLineExclusive": 774,
+          "replacement": "        if (self.out / \"frozen-selection.json\").exists():\n"
+        },
+        {
+          "startLineZeroBased": 924,
+          "endLineExclusive": 927,
+          "replacement": "        if (self.is_core_study and self.study_frozen.exists()\n                and not (self.out / \"frozen-selection.json\").exists()):\n"
+        },
+        {
+          "startLineZeroBased": 929,
+          "endLineExclusive": 930,
+          "replacement": "        if (self.out / \"frozen-selection.json\").exists():\n"
+        },
+        {
+          "startLineZeroBased": 959,
+          "endLineExclusive": 960,
+          "replacement": "        if self.is_core_study and self.study_frozen.exists():\n"
+        },
+        {
+          "startLineZeroBased": 980,
+          "endLineExclusive": 981,
+          "replacement": "        if (self.out / \"final.json\").exists():\n"
+        }
+      ]
+    },
+    "e69dd110b35208b6e056d68fa0d7dad6ded724f079aa89ca16bd494e206a93bc": {
+      "baseSourceSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+      "lineSplices": [
+        {
+          "startLineZeroBased": 69,
+          "endLineExclusive": 70,
+          "replacement": ""
+        },
+        {
+          "startLineZeroBased": 143,
+          "endLineExclusive": 151,
+          "replacement": "        parent = self.out.parent\n        if (self.out.name in CORE_PROFILES\n                and any(path_present(parent / name) for name in\n                        (\"study-registration.json\", \"study-frozen-selection.json\"))\n                and (not self.is_core_study or self.profile != self.out.name\n                     or getattr(self, \"study_root\", None) != parent)):\n            raise RuntimeError(\"registered study child output cannot be reopened under another profile\")\n"
+        },
+        {
+          "startLineZeroBased": 223,
+          "endLineExclusive": 224,
+          "replacement": ""
+        }
+      ]
+    }
+  },
+  "reconstructionInstructions": "Starting with finalDriverSha256, split source into lines preserving endings; apply each snapshot lineSplices in descending startLineZeroBased order; verify output SHA before use. Never overwrite the working driver.",
+  "safety": {
+    "realModelProcesses": 0,
+    "realTrainingRuns": 0,
+    "realHoldoutEvaluations": 0,
+    "productionDriverEditsByIndependentTester": 0,
+    "originalInputReadsByHarness": 0,
+    "fixtures": "Opaque nonexecutable checkpoints/tokenizer/JAR and synthetic corpus/development/holdouts only.",
+    "profileDecisionMethodsMocked": [],
+    "profileExecutionInstrumentation": [
+      "All Popen calls intercepted and blocked.",
+      "Only constructor java-version probes answered with a synthetic CompletedProcess.",
+      "Holdout scoring intercepted; ordinary scoring validates cached synthetic receipts.",
+      "Cached-final race uses tracing to change only a synthetic peer-child file after the real cache read.",
+      "Only BASE_SHA, TOKENIZER_SHA, HOLDOUT_SHA, CORE_HOLDOUT_SHA and CORE_JAR_SHA rebound to synthetic content."
+    ],
+    "profilePositiveControls": "Both valid budget targets reach the real central training dispatcher and blocked Popen. Both profiles reach the synthetic holdout boundary only after a valid two-child freeze.",
+    "limits": "This validates orchestration behavior against representative evidence, not model-format decoding, model quality, actual hardware latency, memory use or Android execution."
+  },
+  "reproduction": [
+    "python3 experimental/weight-space-20261104/tests/registered_profiles_gate.py",
+    "python3 experimental/weight-space-20261104/tests/adversarial_driver_gate.py",
+    "python3 experimental/weight-space-20261104/tests/targeted_final_creation_gate.py",
+    "python3 experimental/weight-space-20261104/tests/direct_dispatch_gate.py"
+  ],
+  "evidenceNotes": "Compact case records are copied from completed raw reports, with generated fixture path prefixes replaced by <synthetic-fixture> and events reduced to event kinds. Raw report digests are retained. Pass outcomes were not recomputed or invented."
+}

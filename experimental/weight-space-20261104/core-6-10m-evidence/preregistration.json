@@ -1,0 +1,19 @@
+{
+  "task": "G1-INTEGRATE-WEIGHT-002",
+  "stage": "PREREGISTERED_BEFORE_ANY_PROFILE_MODEL_RUN",
+  "registeredUtc": "2026-11-04T11:32:11Z",
+  "p0IntegrationCommit": "8e2a2370a9392aeff6bb68a8e2b4b0c1caaa68b2",
+  "driverSha256": "8f2f49bda56ce1f63e86fecf262229acff3d6f5d1ada1d97270b6c1731cda9be",
+  "studyPlanSha256": "abbc40f6128637072630b38685a933dab5528f2ec458696798ce5abba01750fd",
+  "jarSha256": "1b6d22ee57977a6e27ec2d0b72e57fab3a35fb8e694905c1270a4ffe87a2f9ba",
+  "freshHoldoutSha256": "a910f25ed4a54742e87c3e75c105472f0c882df2d4026e15a62ee3d48c90bbbd",
+  "holdoutMetadataSha256": "badd841c166763799082346db95eb7d30481f3abc2ca426405cfd8246d63cb23",
+  "profiles": [
+    "core-6562304",
+    "core-9712128"
+  ],
+  "studyRoot": "/workspace/scratch/0549bca61ccf/results/weight-space-20261104-core-6-10m",
+  "historicalManifestSha256": "8960faca71361ab6d09c8f1ef7474bbb157d96d205ff240ec8721da4d0c7d02d",
+  "productiveTraining": false,
+  "promotion": false
+}
