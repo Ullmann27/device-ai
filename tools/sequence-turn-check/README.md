@@ -18,6 +18,16 @@ or Fold7 acceptance. The actual Android test remains in
 `app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt`.
 The fixture records every renderer exception before the bus can swallow it;
 JUnit checks this error list after every scenario, outside the bus.
+The `Handler` stand-in is compile-only: constructing it stores no queue, and any
+attempt to call `post` throws. Background completion delivery is therefore
+covered only by the real Robolectric cases, never by a simulated host queue.
+
+The lifecycle cases cover completions received synchronously before and during
+a motion pause, stale command/worker/timeline callbacks, and unfinished or new
+work after the pause. The bounded recent-turn history remains a presentation
+cache, not a worker execution ledger. The host check does not simulate queued
+background delivery or View detach/reattach; those cases are defined only in the
+Robolectric test and require a separate real Android-platform test run.
 
 Run with an existing Kotlin 2.0.20 compiler dependency directory containing
 JUnit 4.13.2 and Hamcrest 1.3, for example Gradle 8.11.1's `lib` directory:

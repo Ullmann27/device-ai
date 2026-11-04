@@ -1,0 +1,73 @@
+{
+  "date_utc": "2026-11-04",
+  "candidate_source_commit": "3516f1cda681944cede74732dd68e5a47d991e3d",
+  "baseline_local_commit": "63dec3b1296b1d4257310296de3781d75b7a266a",
+  "baseline_production_blob": "bd943129a52c92ccb46022c0f083e328acbf24b9",
+  "candidate_production_blob": "e892cdc13a6dbc30e9b11275861a6826ffea978f",
+  "candidate_production_sha256": "f1925ff6492ee94377ba5e6396cdbbae9aaf18a7906543cfb0ae233463b1a210",
+  "candidate_robolectric_test_sha256": "d76272fe40c8ac815fa9901a7f208996be0c9890da2362aaa25c67a5dba94caf",
+  "phases": {
+    "baseline": {
+      "status": "PASS",
+      "total_tests": 20,
+      "failures": 0,
+      "exit_code": 0,
+      "compiled_production_sources": "Complete original files listed by tools/sequence-turn-check/run.sh",
+      "scope": "HOST_FIXTURE_ONLY; no Android, real Looper, rendering or View lifecycle",
+      "junit_log": "baseline/junit.log",
+      "junit_log_sha256": "24c4d54c6e58a2072a33a75650c99cfe94bdc46b1dc87b08c48b086ae883b013",
+      "inputs_manifest": "baseline/input-sha256.txt",
+      "integrity_log": "baseline/input-integrity.log"
+    },
+    "red": {
+      "status": "EXPECTED_RED",
+      "total_tests": 25,
+      "failures": 3,
+      "exit_code": 1,
+      "compiled_production_sources": "Complete original files listed by tools/sequence-turn-check/run.sh",
+      "scope": "HOST_FIXTURE_ONLY; no Android, real Looper, rendering or View lifecycle",
+      "junit_log": "red/junit.log",
+      "junit_log_sha256": "a1d7e12d4be737bc5f29198cb6db9affc11918546d2299307c2aede72ba538e4",
+      "inputs_manifest": "red/input-sha256.txt",
+      "integrity_log": "red/input-integrity.log"
+    },
+    "green": {
+      "status": "PASS",
+      "total_tests": 25,
+      "failures": 0,
+      "exit_code": 0,
+      "compiled_production_sources": "Complete original files listed by tools/sequence-turn-check/run.sh",
+      "scope": "HOST_FIXTURE_ONLY; no Android, real Looper, rendering or View lifecycle",
+      "junit_log": "green/junit.log",
+      "junit_log_sha256": "f7cf9a44b21a48662654e15e94556bdc0ce9553c4b33c26258e2111b922a2793",
+      "inputs_manifest": "green/input-sha256.txt",
+      "integrity_log": "green/input-integrity.log"
+    }
+  },
+  "red_failures": [
+    "completionReceivedWhileMotionIsPausedRejectsLateTimeline",
+    "unseenCompletionReceivedDuringPauseRejectsDelayedCommand",
+    "completionReceivedWhileMotionIsPausedRejectsLateWorker"
+  ],
+  "robolectric_candidate": {
+    "status": "NOT_RUN_BY_THIS_AGENT",
+    "test_count": 23,
+    "path": "app/src/uiTest/java/at/heinz/deviceai/ui/JarvisSequenceTurnLifecycleUiTest.kt",
+    "pending": "Parent coordinates independent actual Robolectric RED/GREEN using available Android cache."
+  },
+  "unchanged_host_regressions": {
+    "BrainOrbSignalsTest": 5,
+    "prior_sequence_lifecycle_cases": 15
+  },
+  "source_constraints": {
+    "retired_turn_limit": 24,
+    "execution_worker_changes": false,
+    "activity_or_avatar_changes": false,
+    "tool_gate_changes": false,
+    "model_changes": false,
+    "package_or_version_changes": false,
+    "exp07_exp11_exp12_policy_changes": false
+  },
+  "device_apk_release": "NOT_RUN / NOT_AUTHORIZED",
+  "publication": "LOCAL_ONLY until parent publishes to existing PR505; no own GitHub write"
+}

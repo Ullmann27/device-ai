@@ -1,0 +1,26 @@
+JUnit version 4.13.2
+....E...E...E...............
+Time: 0.091
+There were 3 failures:
+1) completionReceivedWhileMotionIsPausedRejectsLateTimeline(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A timeline cannot revive work completed during the pause expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.completionReceivedWhileMotionIsPausedRejectsLateTimeline(SequenceLifecycleHostTest.kt:184)
+2) unseenCompletionReceivedDuringPauseRejectsDelayedCommand(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A received end is authoritative even without a visible command expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.unseenCompletionReceivedDuringPauseRejectsDelayedCommand(SequenceLifecycleHostTest.kt:195)
+3) completionReceivedWhileMotionIsPausedRejectsLateWorker(at.heinz.deviceai.ui.SequenceLifecycleHostTest)
+java.lang.AssertionError: A received completion survives a visual pause expected:<0> but was:<1>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.ui.SequenceLifecycleHostTest.completionReceivedWhileMotionIsPausedRejectsLateWorker(SequenceLifecycleHostTest.kt:172)
+
+FAILURES!!!
+Tests run: 25,  Failures: 3
+

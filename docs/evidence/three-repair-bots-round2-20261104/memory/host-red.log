@@ -1,0 +1,87 @@
+HOST_JVM_ONLY: original retrieval source; compile-only, fail-fast event-decorator stand-in
+HEAD: 63dec3b1296b1d4257310296de3781d75b7a266a
+8d095be29157246c8f7dad09e2ae3960519ae816c428dfe399ebcdfe65463e1d  /workspace/scratch/7dcf5d78f2cb/round2-memory/app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryRetriever.kt
+1a25f175033f39dfffd8670503a05d62da76432304e80ca59c14d11dce65c0e9  /workspace/scratch/7dcf5d78f2cb/round2-memory/app/src/test/java/at/heinz/deviceai/learning/TemporalCueCalendarTest.kt
+d4209213a7ddd6df96e09ad73281ed942b1cf0459da6613a76cf99410acdb3f6  /workspace/scratch/7dcf5d78f2cb/round2-memory/app/src/test/java/at/heinz/deviceai/learning/TemporalCueDailyBoundaryTest.kt
+f278272a5c4cb9fef1a125481486f2c3ca7ddc25a963409d3aaaae1bd5c9d08e  /workspace/scratch/7dcf5d78f2cb/round2-memory/app/src/test/java/at/heinz/deviceai/learning/ContinuumRetrievalExperimentTest.kt
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)
+OpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)
+JUnit version 4.13.2
+.................E.E..E..E.E.E.E..E.M2-RETRIEVAL-MISSES A BM25-de: Wann ist mein Termin beim Zahnarzt? -> d0056(rank 0) | Wann muss ich zum Zahnartz? -> t20(rank 0) | Wo habe ich geparkt? -> null(rank 0) | Wo ist die Versicherungsnummer der Krankenkasse? -> null(rank 0) | An welchem Tag wird der Müll abgeholt? -> t12(rank 0) | Wo habe ich gestern Brot gekauft? -> t12(rank 2) | Was habe ich gestern mit Thomas gemacht? -> t14(rank 0) | Wohin ging ich letzten Monat mit Thomas? -> t18(rank 3) | Wie ist die Zahlenkombination vom Radschloss? -> null(rank 0) | Welche Pizza esse ich am liebsten? -> null(rank 0)
+M2-RETRIEVAL-MISSES A BM25-de + Zeit: Wann ist mein Termin beim Zahnarzt? -> d0056(rank 0) | Wann muss ich zum Zahnartz? -> t20(rank 0) | Wo habe ich geparkt? -> null(rank 0) | Wo ist die Versicherungsnummer der Krankenkasse? -> null(rank 0) | An welchem Tag wird der Müll abgeholt? -> t12(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wohin ging ich letzten Monat mit Thomas? -> h03(rank 2) | Wie ist die Zahlenkombination vom Radschloss? -> null(rank 0) | Welche Pizza esse ich am liebsten? -> null(rank 0)
+M2-RETRIEVAL-MISSES B Char-3-5-Gramm-Hash: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Wo habe ich gestern Brot gekauft? -> t12(rank 2) | Was habe ich gestern mit Thomas gemacht? -> d0855(rank 0) | Wohin ging ich letzten Monat mit Thomas? -> d0855(rank 0) | Was hat Mama gestern erzählt? -> d0840(rank 0) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+M2-RETRIEVAL-MISSES B Char-3-5-Gramm-Hash + Zeit: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wohin ging ich letzten Monat mit Thomas? -> d0855(rank 5) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+M2-RETRIEVAL | Variante | recall@1 | recall@3 | MRR | p95 ms | Index-Bytes | Indexaufbau ms |
+M2-RETRIEVAL | A BM25-de | 0.773 | 0.818 | 0.792 | 0.21 | 119380 | 55.2 |
+M2-RETRIEVAL | A BM25-de + Zeit | 0.795 | 0.841 | 0.818 | 0.26 | 119380 | 26.4 |
+M2-RETRIEVAL | B Char-3-5-Gramm-Hash | 0.841 | 0.909 | 0.871 | 1.64 | 624856 | 74.9 |
+M2-RETRIEVAL | B Char-3-5-Gramm-Hash + Zeit | 0.886 | 0.955 | 0.921 | 1.39 | 624856 | 58.9 |
+M2-RETRIEVAL-MISSES default: Welche Blumen mag Lisa? -> t17(rank 2) | Wo habe ich geparkt? -> d0335(rank 0) | Was habe ich gestern mit Thomas gemacht? -> d0391(rank 2) | Wohin ging ich letzten Monat mit Thomas? -> d0855(rank 5) | Wann war ich bei Mama in Linz? -> d0712(rank 3)
+.
+Time: 2.121
+There were 8 failures:
+1) yesterdayKeepsItsFirstHourWhenTodayHasMissingMidnight(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: First included millisecond: gestern at 2026-09-06T12:00:00Z in America/Santiago expected:<1788580800000> but was:<1788584400000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:29)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.yesterdayKeepsItsFirstHourWhenTodayHasMissingMidnight(TemporalCueDailyBoundaryTest.kt:45)
+2) yesterdayRetrievalIncludesItsFirstHourWithoutPromotingTrust(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+org.junit.ComparisonFailure: expected:<[inside-un]confirmed> but was:<[outside-]confirmed>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertBoundaryRetrieval(TemporalCueDailyBoundaryTest.kt:130)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.yesterdayRetrievalIncludesItsFirstHourWithoutPromotingTrust(TemporalCueDailyBoundaryTest.kt:100)
+3) spelledDayCountsKeepEachTargetsActualMidnights(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: First included millisecond: vor zwei Tagen at 2026-09-06T12:00:00Z in America/Santiago expected:<1788494400000> but was:<1788498000000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:29)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.spelledDayCountsKeepEachTargetsActualMidnights(TemporalCueDailyBoundaryTest.kt:59)
+4) approximateMonthAgoKeepsItsExistingDayOffsetsAndActualMidnights(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: First included millisecond: vor einem Monat at 2026-09-06T12:00:00Z in America/Santiago expected:<1784779200000> but was:<1784782800000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:29)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.approximateMonthAgoKeepsItsExistingDayOffsetsAndActualMidnights(TemporalCueDailyBoundaryTest.kt:78)
+5) todayRetrievalExcludesTheNextDaysFirstHourWithoutPromotingTrust(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+org.junit.ComparisonFailure: expected:<[inside-un]confirmed> but was:<[outside-]confirmed>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertBoundaryRetrieval(TemporalCueDailyBoundaryTest.kt:130)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.todayRetrievalExcludesTheNextDaysFirstHourWithoutPromotingTrust(TemporalCueDailyBoundaryTest.kt:108)
+6) dayBeforeYesterdayKeepsBothMidnightsWhenTodayHasMissingMidnight(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: First included millisecond: vorgestern at 2026-09-06T12:00:00Z in America/Santiago expected:<1788494400000> but was:<1788498000000>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:29)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.dayBeforeYesterdayKeepsBothMidnightsWhenTodayHasMissingMidnight(TemporalCueDailyBoundaryTest.kt:49)
+7) todayWithMissingMidnightEndsAtTheNextDaysActualStart(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: Last included millisecond: heute at 2026-09-06T04:00:00Z in America/Santiago expected:<1788749999999> but was:<1788753599999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:30)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.todayWithMissingMidnightEndsAtTheNextDaysActualStart(TemporalCueDailyBoundaryTest.kt:40)
+8) numericDayCountsIncludingZeroKeepEachTargetsActualMidnights(at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest)
+java.lang.AssertionError: Last included millisecond: vor 0 Tagen at 2026-09-06T12:00:00Z in America/Santiago expected:<1788749999999> but was:<1788753599999>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:647)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow(TemporalCueDailyBoundaryTest.kt:30)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.assertWindow$default(TemporalCueDailyBoundaryTest.kt:16)
+	at at.heinz.deviceai.learning.TemporalCueDailyBoundaryTest.numericDayCountsIncludingZeroKeepEachTargetsActualMidnights(TemporalCueDailyBoundaryTest.kt:72)
+
+FAILURES!!!
+Tests run: 29,  Failures: 8
+

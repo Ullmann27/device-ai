@@ -100,6 +100,18 @@ for (const mode of ['0', '1']) {
       assert.doesNotMatch(result.stdout, /PRESIGN_QA_PASS|SIGNED_STAGED/);
     });
   }
+  for (const key of signingKeys) {
+    test(name + ' QA rejects ' + key + ' before setup or downloads', t => {
+      const result = runPreflight(t, {
+        mode, version: '42', overrides: {[key]: 'fixture-not-signing-material'}
+      });
+      assert.equal(result.status, 69, result.stderr);
+      assert.match(result.stderr, /CONTINUUM_QA_BLOCKED: Signing material forbidden in QA/);
+      assert.equal(result.downloadAttempted, false, key + ' reached a download');
+      assert.equal(result.workspaceCreated, false, key + ' created a build workspace');
+      assert.equal(result.logsCreated, false, key + ' created QA output');
+    });
+  }
 }
 
 for (const [name, mode, overrides, message] of [
@@ -107,8 +119,7 @@ for (const [name, mode, overrides, message] of [
   ['owner publisher', '1', {RENDER_SERVICE_NAME: 'wrong-service'}, /Owner QA requires/],
   ['owner pinned host', '1', {CONTINUUM_RELEASE_HOST: 'example.invalid'}, /Owner QA requires/],
   ['ordinary isolated service', '0', {RENDER_SERVICE_NAME: 'wrong-service'}, /Only isolated QA service/],
-  ['QA mode', '2', {}, /Invalid owner QA mode/],
-  ['QA signing exclusion', '0', {CONTINUUM_LOCAL_SIGNING_FILE: 'fixture-not-a-key'}, /Signing material forbidden/]
+  ['QA mode', '2', {}, /Invalid owner QA mode/]
 ]) {
   test(name + ' gate remains enforced for a valid version', t => {
     const result = runPreflight(t, {mode, version: '42', overrides});

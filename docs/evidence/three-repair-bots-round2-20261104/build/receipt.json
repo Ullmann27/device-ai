@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-11-04T19:43:53.901663+00:00",
+  "worktreeBaseCommit": "63dec3b1296b1d4257310296de3781d75b7a266a",
+  "reviewedFix": {
+    "officialCommit": "84cd8cfc05dedef5d4feb28ecfa103530e95f7ff",
+    "localCommit": "e0714c5f2999346ef4e258e2ffaf224d58cfdc9a",
+    "scriptGitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+    "scriptSha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43",
+    "baselineScriptSha256": "9673936c27c789c66ba2cd55a9fbd95479d66c5a24b6c1e0c4e6d2ce7fe3d2e3"
+  },
+  "testSha256": "0b310d51369d087bc2ed132608e9e9a976664bd6b25fd75975e286cb0159d341",
+  "environment": {
+    "node": "v24.22.1",
+    "git": "git version 2.52.0",
+    "bash": "GNU bash, version 5.2.37(1)-release (x86_64-pc-linux-gnu)"
+  },
+  "red": {
+    "command": "node --test --test-reporter=tap scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+    "exitCode": 1,
+    "tests": 43,
+    "passed": 41,
+    "failed": 2,
+    "skipped": 0,
+    "failedCases": [
+      "ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads",
+      "owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads"
+    ],
+    "productionSource": "unchanged worktree HEAD"
+  },
+  "green": {
+    "command": "node --test --test-reporter=tap scripts/continuum-owner-continuous-qa-preflight.test.mjs scripts/continuum-owner-catalog-contract.test.mjs scripts/continuum-owner-continuous-release.test.mjs scripts/continuum-one-tap-updater-contract.test.mjs scripts/continuum-owner-v38-release.test.mjs scripts/continuum-release-host-preflight.test.mjs",
+    "exitCode": 0,
+    "tests": 81,
+    "passed": 81,
+    "failed": 0,
+    "skipped": 0,
+    "preflightCases": 43,
+    "signingCases": 12,
+    "productionSource": "exact script blob from reviewed local fix; copied into own worktree only for the green run and restored afterward"
+  },
+  "independentReview": {
+    "verdict": "PASS",
+    "productionChange": "Exactly one additional signing environment key in the existing fail-closed loop.",
+    "checks": [
+      "All six signing variables in both QA modes are rejected with exit 69 and the signing-specific error.",
+      "Rejected signing inputs do not reach curl or create build workspace or QA logs.",
+      "Only harmless fixture text is injected; inherited signing variables are removed.",
+      "Existing canonical version acceptance, invalid version rejection and owner/service/host/SHA restrictions pass unchanged.",
+      "Production diff does not change versions, package, signer, update channel, owner authorization or execution commands."
+    ],
+    "openFindings": []
+  },
+  "android": {
+    "status": "NOT_RUN_IN_THIS_WORKTREE",
+    "workingPriorToolchain": "/workspace/scratch/822e72396ed9/build-env",
+    "dependencyModulesBytesReported": "841 MiB",
+    "gradleVersionCacheBytesReported": "616 MiB",
+    "freeSpaceAtCheck": "1.8 GiB",
+    "reflinkProbeExitCode": 1,
+    "reflinkProbeResult": "Operation not supported",
+    "cacheCopied": false,
+    "foreignWorktreesOrCachesWritten": false,
+    "reason": "The successful source-bound PR512 evidence is independently retained by the coordinator. A second cache/build needs a separate storage budget; no cache duplication or use of an actively writable foreign cache as an immutable cache was attempted."
+  },
+  "limitations": {
+    "realNetworkDownloads": "NOT_RUN",
+    "render": "NOT_RUN",
+    "gradle": "NOT_RUN",
+    "androidDevice": "NOT_RUN",
+    "signing": "NOT_RUN",
+    "release": "NOT_RUN",
+    "installation": "NOT_RUN"
+  },
+  "preservedExperiments": [
+    "EXP-00",
+    "EXP-07",
+    "EXP-08"
+  ],
+  "evidenceSha256": {
+    "reflink-probe.json": "4db5cc9e14102fe7a33567e8601266142ce14b4515ee52d2043d5d0f6ed898c7",
+    "signing-green.tap": "242fd61a62975bcfc8cc1fd5a60c1059efff0d9df7a6428c0e72331f4fc26a0d",
+    "signing-red.tap": "3aa6b464b85b870c01127f117529c03f1289d5bc749cf05a117f720421228a10"
+  },
+  "rawCaptureSha256": {
+    "signing-red.tap": "b49d12a96eeb721dccf99713f076c2c2e93b4ba1636e1e7f9ffcb6d0e2b0961d"
+  },
+  "evidenceNormalization": "Only trailing whitespace stripped from signing-red.tap for repository hygiene. Raw capture SHA-256 retained separately; test output content and results unchanged."
+}

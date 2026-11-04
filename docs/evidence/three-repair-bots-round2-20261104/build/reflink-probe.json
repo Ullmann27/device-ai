@@ -1,0 +1,8 @@
+{
+  "source": "/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/gradle/8.10.0/17bb1a87438ee832f8902c84b9791adf196d904d/gradle-8.10.0.jar",
+  "sourceExists": true,
+  "sourceBytes": 12970721,
+  "destination": "/workspace/scratch/7dcf5d78f2cb/round2-reflink-2wkaek7r/agp.jar",
+  "exitCode": 1,
+  "stderr": "cp: failed to clone '/workspace/scratch/7dcf5d78f2cb/round2-reflink-2wkaek7r/agp.jar' from '/workspace/scratch/822e72396ed9/build-env/gradle-cache/caches/modules-2/files-2.1/com.android.tools.build/gradle/8.10.0/17bb1a87438ee832f8902c84b9791adf196d904d/gradle-8.10.0.jar': Operation not supported"
+}

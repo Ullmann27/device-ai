@@ -2,6 +2,7 @@ package at.heinz.deviceai.ui
 
 import android.content.Context
 import android.graphics.Canvas
+import android.os.Handler
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
@@ -25,6 +26,8 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     /** Injected clock for tests; defaults to the system monotonic clock. */
     var clock: () -> Long = { SystemClock.uptimeMillis() }
     private val memoryRenderer = BrainOrbAnimationRenderer(effects) { clock() }
+    // Unlike View.post, the main Handler does not defer delivery until this View attaches.
+    private val completionHandler = Handler(android.os.Looper.getMainLooper())
     @Volatile private var deliveryGeneration = 0L
     @Volatile private var detached = false
     @Volatile private var motionAllowed = true
@@ -64,20 +67,17 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     /** Called on the emitting thread; hops to the UI thread. */
     override fun render(event: CockpitAnimationEvent) {
-        if (detached || !motionAllowed) return
+        // Completion is presentation history, not an animation. Keep a completion this
+        // subscriber received even when its visual state is cleared before UI delivery.
+        val completion = event is CockpitAnimationEvent.TurnEnded
+        if (!completion && (detached || !motionAllowed)) return
         val generation = deliveryGeneration
         if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) apply(event)
+        else if (completion) completionHandler.post { apply(event) }
         else post { if (generation == deliveryGeneration) apply(event) }
     }
 
     internal fun apply(event: CockpitAnimationEvent) {
-        if (detached || !motionAllowed) return
-        // Ledger/retrieval events have their own stream and must not be rejected by the current conversation id.
-        if (event is CockpitAnimationEvent.DocumentLearned || event is CockpitAnimationEvent.MemoryStored ||
-            event is CockpitAnimationEvent.RecallHits) {
-            if (event.turnId == MEMORY_TURN) { memoryRenderer.render(event); kick() }
-            return
-        }
         if (event is CockpitAnimationEvent.TurnEnded) {
             // Remember completion even if another command already replaced this turn on screen.
             retireTurn(event.turnId)
@@ -85,6 +85,13 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
                 effects.dismissAll(clock()); effects.clearPills(); effects.closeEnvelope()
                 stepStates.clear(); turn = null; kick()
             }
+            return
+        }
+        if (detached || !motionAllowed) return
+        // Ledger/retrieval events have their own stream and must not be rejected by the current conversation id.
+        if (event is CockpitAnimationEvent.DocumentLearned || event is CockpitAnimationEvent.MemoryStored ||
+            event is CockpitAnimationEvent.RecallHits) {
+            if (event.turnId == MEMORY_TURN) { memoryRenderer.render(event); kick() }
             return
         }
         if (event is CockpitAnimationEvent.Extension) {

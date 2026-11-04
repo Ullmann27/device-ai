@@ -1,0 +1,496 @@
+TAP version 13
+# Subtest: same original owner app, update activity in full production manifest
+ok 1 - same original owner app, update activity in full production manifest
+  ---
+  duration_ms: 1.176967
+  type: 'test'
+  ...
+# Subtest: one owner tap checks then downloads: never requires a second in-app button
+ok 2 - one owner tap checks then downloads: never requires a second in-app button
+  ---
+  duration_ms: 0.466891
+  type: 'test'
+  ...
+# Subtest: update comes from pinned HTTPS and never bypasses Android installer
+ok 3 - update comes from pinned HTTPS and never bypasses Android installer
+  ---
+  duration_ms: 0.373851
+  type: 'test'
+  ...
+# Subtest: local release builder guards source, original certificate and interactive owner secret
+ok 4 - local release builder guards source, original certificate and interactive owner secret
+  ---
+  duration_ms: 0.61297
+  type: 'test'
+  ...
+# Subtest: pinned Android app accepts exact signed and approved owner-release schema
+ok 5 - pinned Android app accepts exact signed and approved owner-release schema
+  ---
+  duration_ms: 2.464068
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses additional status metadata
+ok 6 - owner-channel refuses additional status metadata
+  ---
+  duration_ms: 0.670297
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses candidate channel
+ok 7 - owner-channel refuses candidate channel
+  ---
+  duration_ms: 0.196906
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses not approved
+ok 8 - owner-channel refuses not approved
+  ---
+  duration_ms: 0.184446
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses incorrect original signer
+ok 9 - owner-channel refuses incorrect original signer
+  ---
+  duration_ms: 0.22652
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses fractional version
+ok 10 - owner-channel refuses fractional version
+  ---
+  duration_ms: 0.221002
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses wrong APK URL
+ok 11 - owner-channel refuses wrong APK URL
+  ---
+  duration_ms: 0.258548
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses wrong size
+ok 12 - owner-channel refuses wrong size
+  ---
+  duration_ms: 0.189344
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses mismatched APK sha
+ok 13 - owner-channel refuses mismatched APK sha
+  ---
+  duration_ms: 0.723537
+  type: 'test'
+  ...
+# Subtest: owner-channel refuses wrong versionName
+ok 14 - owner-channel refuses wrong versionName
+  ---
+  duration_ms: 0.328854
+  type: 'test'
+  ...
+# Subtest: missing required field fails closed
+ok 15 - missing required field fails closed
+  ---
+  duration_ms: 0.438048
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects missing version before setup or downloads
+ok 16 - ordinary QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 50.005172
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects empty version before setup or downloads
+ok 17 - ordinary QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 41.712083
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects below the supported range version before setup or downloads
+ok 18 - ordinary QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 26.869473
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects above the supported range version before setup or downloads
+ok 19 - ordinary QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 27.657175
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects fractional version before setup or downloads
+ok 20 - ordinary QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 25.026637
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects negative version before setup or downloads
+ok 21 - ordinary QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 28.9989
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects leading zero version before setup or downloads
+ok 22 - ordinary QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 25.970348
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects whitespace version before setup or downloads
+ok 23 - ordinary QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 25.5511
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects non-numeric version before setup or downloads
+ok 24 - ordinary QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 25.454669
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects overflowing shell integer version before setup or downloads
+ok 25 - ordinary QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 26.065277
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 39 to setup
+ok 26 - ordinary QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 60.109219
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 42 to setup
+ok 27 - ordinary QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 53.182084
+  type: 'test'
+  ...
+# Subtest: ordinary QA still admits canonical version 9999 to setup
+ok 28 - ordinary QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 56.429129
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 29 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 38.188585
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 30 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 69.745503
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 31 - ordinary QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 59.963339
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 32 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 56.283757
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 33 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 70.904292
+  type: 'test'
+  ...
+# Subtest: ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 34 - ordinary QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 87.878193
+  type: 'test'
+  ...
+# Subtest: owner QA rejects missing version before setup or downloads
+ok 35 - owner QA rejects missing version before setup or downloads
+  ---
+  duration_ms: 27.805828
+  type: 'test'
+  ...
+# Subtest: owner QA rejects empty version before setup or downloads
+ok 36 - owner QA rejects empty version before setup or downloads
+  ---
+  duration_ms: 35.964956
+  type: 'test'
+  ...
+# Subtest: owner QA rejects below the supported range version before setup or downloads
+ok 37 - owner QA rejects below the supported range version before setup or downloads
+  ---
+  duration_ms: 39.426201
+  type: 'test'
+  ...
+# Subtest: owner QA rejects above the supported range version before setup or downloads
+ok 38 - owner QA rejects above the supported range version before setup or downloads
+  ---
+  duration_ms: 22.550951
+  type: 'test'
+  ...
+# Subtest: owner QA rejects fractional version before setup or downloads
+ok 39 - owner QA rejects fractional version before setup or downloads
+  ---
+  duration_ms: 33.510681
+  type: 'test'
+  ...
+# Subtest: owner QA rejects negative version before setup or downloads
+ok 40 - owner QA rejects negative version before setup or downloads
+  ---
+  duration_ms: 22.382137
+  type: 'test'
+  ...
+# Subtest: owner QA rejects leading zero version before setup or downloads
+ok 41 - owner QA rejects leading zero version before setup or downloads
+  ---
+  duration_ms: 32.185658
+  type: 'test'
+  ...
+# Subtest: owner QA rejects whitespace version before setup or downloads
+ok 42 - owner QA rejects whitespace version before setup or downloads
+  ---
+  duration_ms: 27.093869
+  type: 'test'
+  ...
+# Subtest: owner QA rejects non-numeric version before setup or downloads
+ok 43 - owner QA rejects non-numeric version before setup or downloads
+  ---
+  duration_ms: 26.243995
+  type: 'test'
+  ...
+# Subtest: owner QA rejects overflowing shell integer version before setup or downloads
+ok 44 - owner QA rejects overflowing shell integer version before setup or downloads
+  ---
+  duration_ms: 21.258615
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 39 to setup
+ok 45 - owner QA still admits canonical version 39 to setup
+  ---
+  duration_ms: 45.273233
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 42 to setup
+ok 46 - owner QA still admits canonical version 42 to setup
+  ---
+  duration_ms: 52.618945
+  type: 'test'
+  ...
+# Subtest: owner QA still admits canonical version 9999 to setup
+ok 47 - owner QA still admits canonical version 9999 to setup
+  ---
+  duration_ms: 47.319991
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+ok 48 - owner QA rejects CONTINUUM_LOCAL_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 31.668667
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+ok 49 - owner QA rejects CONTINUUM_LOCAL_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 31.655597
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+ok 50 - owner QA rejects CONTINUUM_LOCAL_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 45.458827
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+ok 51 - owner QA rejects CONTINUUM_MENTOR_SIGNING_FILE before setup or downloads
+  ---
+  duration_ms: 39.189793
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+ok 52 - owner QA rejects CONTINUUM_MENTOR_SIGNING_PASSWORD before setup or downloads
+  ---
+  duration_ms: 40.626714
+  type: 'test'
+  ...
+# Subtest: owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+ok 53 - owner QA rejects CONTINUUM_MENTOR_SIGNING_P12_BASE64 before setup or downloads
+  ---
+  duration_ms: 54.956153
+  type: 'test'
+  ...
+# Subtest: owner source approval gate remains enforced for a valid version
+ok 54 - owner source approval gate remains enforced for a valid version
+  ---
+  duration_ms: 29.389647
+  type: 'test'
+  ...
+# Subtest: owner publisher gate remains enforced for a valid version
+ok 55 - owner publisher gate remains enforced for a valid version
+  ---
+  duration_ms: 28.039038
+  type: 'test'
+  ...
+# Subtest: owner pinned host gate remains enforced for a valid version
+ok 56 - owner pinned host gate remains enforced for a valid version
+  ---
+  duration_ms: 28.115108
+  type: 'test'
+  ...
+# Subtest: ordinary isolated service gate remains enforced for a valid version
+ok 57 - ordinary isolated service gate remains enforced for a valid version
+  ---
+  duration_ms: 29.372996
+  type: 'test'
+  ...
+# Subtest: QA mode gate remains enforced for a valid version
+ok 58 - QA mode gate remains enforced for a valid version
+  ---
+  duration_ms: 36.291111
+  type: 'test'
+  ...
+# Subtest: original publisher retains syntax and persistent code39+ entrypoint
+ok 59 - original publisher retains syntax and persistent code39+ entrypoint
+  ---
+  duration_ms: 17.011305
+  type: 'test'
+  ...
+# Subtest: all future releases require exact owner approval and original signer
+ok 60 - all future releases require exact owner approval and original signer
+  ---
+  duration_ms: 0.281843
+  type: 'test'
+  ...
+# Subtest: dynamic manifest is understood by the installed Android parser for code39,40,41
+ok 61 - dynamic manifest is understood by the installed Android parser for code39,40,41
+  ---
+  duration_ms: 275.231098
+  type: 'test'
+  ...
+# Subtest: without the owner freeze-lift no signer or host publish operation starts
+ok 62 - without the owner freeze-lift no signer or host publish operation starts
+  ---
+  duration_ms: 10.086886
+  type: 'test'
+  ...
+# Subtest: v38 owner release recipe has valid shell syntax and original package identity
+ok 63 - v38 owner release recipe has valid shell syntax and original package identity
+  ---
+  duration_ms: 8.634341
+  type: 'test'
+  ...
+# Subtest: P0 freeze denies even an exact SHA without owner-specific freeze lift
+ok 64 - P0 freeze denies even an exact SHA without owner-specific freeze lift
+  ---
+  duration_ms: 12.592603
+  type: 'test'
+  ...
+# Subtest: owner-approved release retains original signing and exact-SHA gates
+ok 65 - owner-approved release retains original signing and exact-SHA gates
+  ---
+  duration_ms: 0.441783
+  type: 'test'
+  ...
+# Subtest: generated live latest.json matches exact shipped Android owner-parser schema
+ok 66 - generated live latest.json matches exact shipped Android owner-parser schema
+  ---
+  duration_ms: 107.276561
+  type: 'test'
+  ...
+# Subtest: valid sources grant only permission to attempt the QA build
+ok 67 - valid sources grant only permission to attempt the QA build
+  ---
+  duration_ms: 2.270829
+  type: 'test'
+  ...
+# Subtest: wrong exact source HEAD fails
+ok 68 - wrong exact source HEAD fails
+  ---
+  duration_ms: 0.30657
+  type: 'test'
+  ...
+# Subtest: dirty checkout fails
+ok 69 - dirty checkout fails
+  ---
+  duration_ms: 0.117977
+  type: 'test'
+  ...
+# Subtest: main, production and release branch variants fail
+ok 70 - main, production and release branch variants fail
+  ---
+  duration_ms: 0.139189
+  type: 'test'
+  ...
+# Subtest: untrusted or missing remote fails
+ok 71 - untrusted or missing remote fails
+  ---
+  duration_ms: 0.109915
+  type: 'test'
+  ...
+# Subtest: old app package fails
+ok 72 - old app package fails
+  ---
+  duration_ms: 0.107451
+  type: 'test'
+  ...
+# Subtest: QA without sign exclusion fails
+ok 73 - QA without sign exclusion fails
+  ---
+  duration_ms: 0.106359
+  type: 'test'
+  ...
+# Subtest: runner without actual QA flag fails
+ok 74 - runner without actual QA flag fails
+  ---
+  duration_ms: 0.243185
+  type: 'test'
+  ...
+# Subtest: wrong signing release lane fails
+ok 75 - wrong signing release lane fails
+  ---
+  duration_ms: 0.175294
+  type: 'test'
+  ...
+# Subtest: host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+ok 76 - host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+  ---
+  duration_ms: 0.628553
+  type: 'test'
+  ...
+# Subtest: host with existing incompatible Java detects JDK17 requirement
+ok 77 - host with existing incompatible Java detects JDK17 requirement
+  ---
+  duration_ms: 0.147942
+  type: 'test'
+  ...
+# Subtest: read-only admission accepts a clean synthetic Git checkout with exact SHA
+ok 78 - read-only admission accepts a clean synthetic Git checkout with exact SHA
+  ---
+  duration_ms: 78.780787
+  type: 'test'
+  ...
+# Subtest: read-only admission reports dirty synthetic checkout
+ok 79 - read-only admission reports dirty synthetic checkout
+  ---
+  duration_ms: 43.694488
+  type: 'test'
+  ...
+# Subtest: refuses symlinked release source
+ok 80 - refuses symlinked release source
+  ---
+  duration_ms: 31.737696
+  type: 'test'
+  ...
+# Subtest: refuses parent directory rather than exact repository root
+ok 81 - refuses parent directory rather than exact repository root
+  ---
+  duration_ms: 27.674296
+  type: 'test'
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 81
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1864.706651

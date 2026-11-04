@@ -159,4 +159,62 @@ class SequenceLifecycleHostTest {
         worker("active")
         assertEquals("The active job may report again after a visual pause", 1, view.effects.cardCount)
     }
+
+    @Test fun completionReceivedWhileMotionIsPausedRejectsLateWorker() {
+        worker("completed")
+        view.setMotionAllowed(false)
+        end("completed")
+        assertFalse(view.effects.isAnimating(1_000L))
+        view.setMotionAllowed(true)
+
+        worker("completed")
+
+        assertEquals("A received completion survives a visual pause", 0, view.effects.cardCount)
+    }
+
+    @Test fun completionReceivedWhileMotionIsPausedRejectsLateTimeline() {
+        command("completed")
+        timeline("completed")
+        view.setMotionAllowed(false)
+        end("completed")
+        view.setMotionAllowed(true)
+
+        timeline("completed")
+
+        assertEquals("A timeline cannot revive work completed during the pause", 0, view.effects.cardCount)
+    }
+
+    @Test fun unseenCompletionReceivedDuringPauseRejectsDelayedCommand() {
+        view.setMotionAllowed(false)
+        end("never-visible")
+        view.setMotionAllowed(true)
+
+        command("never-visible")
+        timeline("never-visible")
+
+        assertEquals("A received end is authoritative even without a visible command", 0, view.effects.cardCount)
+    }
+
+    @Test fun unrelatedCompletionDuringPauseDoesNotRetireLiveWork() {
+        worker("still-active")
+        view.setMotionAllowed(false)
+        end("different-completed-turn")
+        view.setMotionAllowed(true)
+
+        worker("still-active")
+
+        assertEquals("Only the completed turn is retired", 1, view.effects.cardCount)
+    }
+
+    @Test fun newWorkStartsAfterCompletionReceivedDuringPause() {
+        view.setMotionAllowed(false)
+        end("completed")
+        assertEquals(0, view.effects.cardCount)
+        assertFalse(view.effects.isAnimating(1_000L))
+        view.setMotionAllowed(true)
+
+        worker("new-worker")
+
+        assertEquals("Completion bookkeeping does not acquire a work slot", 1, view.effects.cardCount)
+    }
 }
