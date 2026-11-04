@@ -1,6 +1,6 @@
 # Branch integration bots — 4 November 2026
 
-Status: implemented and independently reviewed for the documented local scope. **138 targeted Node tests passed, 0 failed, 0 skipped. APK: NOT_RUN.**
+Status: implemented and independently reviewed for the documented local scope. **183 targeted Node tests passed, 0 failed, 0 skipped. APK: NOT_RUN.**
 
 Repository: `Ullmann27/device-ai`. Product baseline: `e101e393dd6c80803ac9d9ac91fccd9812c4a18d` (`codex/astra-jarvis-takeover-20261104`). Integration branch: `codex/continuum-branch-integration-bots-20261104`. Draft PR: [#515](https://github.com/Ullmann27/device-ai/pull/515), based on the takeover branch.
 
@@ -14,10 +14,18 @@ The new entry point, `.github/continuum/branch-bots-cli.mjs`, coordinates bounde
 | Separate already present work | Compare committed blobs and modes against the common ancestor and target. Distinguish inherited commits, identical trees, copied changes, missing paths, divergent edits and source deletions. |
 | Prepare integration work | Use the existing `BacklogStore` to create idempotent `PROPOSED` / `BRANCH_REVIEW` tasks. A report does not create execution permission. Protected paths remain review-only. |
 | Repeat locally | Reuse `runTeamleaderLoop` with its lock, checkpoint, restart and failure semantics. The CLI requires an explicit finite cycle budget. |
-| Check APK prerequisites | Call the existing `inspectHostEnvironment()`. Report the actual host blockers while keeping `apk: NOT_RUN`. |
+| Check APK prerequisites | Resolve the existing Termux tool paths and call `inspectHostEnvironment()` with that environment. Report actual host blockers while keeping `apk: NOT_RUN`. |
 | Preserve negative outcomes | A strictly rejected, canonically journaled `ABSTAINED` attempt may write its permitted ECHO report and authenticated public snapshot. The original error and UNKNOWN service result remain. |
 
 The development agents used in this session investigated sources, implemented isolated patches and independently reviewed them. That is separate from activating a persistent model worker on Heinz's Android device. No reachable live owner worker was activated here.
+
+## Continuation: existing APK checks connected
+
+The continuation selectively adopts the two-file QA preflight correction from PR #505 at `8b72db66e5338fbc3a791adc30254f4ca77007ad`. Both QA modes validate canonical version codes before setup/downloads and reject the omitted mentor P12 Base64 signing variable. The old script reproduced 14 failures among 43 cases; the adopted version passed all 43. This does not automatically increase an APK version or authorize publication.
+
+Two additional red regressions established the Android environment gap. The Bot CLI now reuses `resolveTermuxEnvironment()`, and the three existing Java/Javac/Gradle probes receive the selected environment explicitly. The targeted suite passed 61/61, also in independent review. Inputs, process environment, source checks, report integrity and proposed-only queue authority are preserved.
+
+The final combined suite passed 183/183. The tests use actual temporary subprocess fixtures and a simulated ARM64 discriminator; no Android execution is inferred. Details, pinned branch overlaps and the current build-host boundary are in `BRANCH-BOTS-CONTINUATION-20261104.md` and `docs/evidence/branch-bots-continuation-20261104/`.
 
 ## Start on a complete, clean local checkout
 
@@ -53,7 +61,7 @@ The scanner refuses a dirty source, state writes inside source, redirected/symli
 
 The scanner checks the configuration immediately before its status reads. The existing scheduler now accepts a trusted asynchronous `sourcePreflight` callback and awaits it at initial checkpoint open and before/after each work callback. The CLI binds the same source policy at those boundaries. A deterministic reviewer probe changed fsmonitor during the wait between cycles: the next check stopped with `DISCOVERY_FSMONITOR_UNSUPPORTED`, no hook marker was written, only one cycle completed and the persisted checkpoint became `ERROR`.
 
-This is a source/configuration boundary on a trusted local host, not an operating-system sandbox against a hostile process racing filesystem changes. The APK diagnostic probes trusted installed Java/Javac/Gradle tools and inherits the process environment. Its AAPT2 check is existence-only. It does not prove dependency-cache completeness, native ABI compatibility, compilation or device behaviour. The older `inspectReleaseCheckout()` release/version contract is deliberately not invoked.
+This is a source/configuration boundary on a trusted local host, not an operating-system sandbox against a hostile process racing filesystem changes. The APK diagnostic probes trusted installed Java/Javac/Gradle tools using the explicitly resolved environment; it does not mutate `process.env`. Its AAPT2 check is existence-only. It does not prove dependency-cache completeness, native ABI compatibility, compilation or device behaviour. The older `inspectReleaseCheckout()` release/version contract is deliberately not invoked.
 
 Negative ECHO reporting uses the actual canonical attempt, reporter assignment, source identity and matching journal head. A blocked writer or old successful journal cannot supply the negative report. No rejected inference is promoted into success, experience or training. The unresolved older S01 resource barrier remains intact.
 
@@ -72,7 +80,7 @@ No unverified Kotlin feature patch was copied into this Node integration change.
 
 ## Verification and remaining APK gates
 
-The final combined run executed the 11 test files named in `node-tests.json`: **138 PASS, 0 FAIL, 0 SKIP**, Node 24.22.1 and Git 2.52.0. All 11 changed/new JavaScript files passed `node --check`; `git diff --check` passed. `node-tests.tap` contains the actual output, and `patch-manifest.json` binds the checked code to file hashes.
+The final continuation run executed the 12 test files named in `docs/evidence/branch-bots-continuation-20261104/node-tests.json`: **183 PASS, 0 FAIL, 0 SKIP**, Node 24.22.1 and Git 2.52.0. The five JavaScript files changed in this continuation passed `node --check`; the shell script passed `bash -n`; `git diff --check` passed. The continuation `node-tests.tap` contains the actual output, and its `patch-manifest.json` binds the six changed source/test files to exact hashes. The original 138-test log and original manifest remain historical evidence for the earlier PR515 checkpoint.
 
 Tests include real temporary Git repositories, canonical backlog transitions, real canonical journal/report/grant stores and process-level CLI/restart/lock behavior. External model/Docker/JVM boundaries and existing mobile build/signature cases use test fixtures where documented. Those fixtures are not model inference, Docker isolation, Android compilation, APK signing or device evidence.
 

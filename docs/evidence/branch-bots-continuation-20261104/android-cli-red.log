@@ -1,0 +1,36 @@
+✖ CLI restores installed Termux paths for diagnosis and keeps missing tools blocked (474.936879ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 603.920753
+
+✖ failing tests:
+
+test at .github/continuum/branch-bots-cli.test.mjs:42:1
+✖ CLI restores installed Termux paths for diagnosis and keeps missing tools blocked (474.936879ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'JDK17_REQUIRED',
+  +   'SDK36_NOT_FOUND',
+  +   'GRADLE8111_NOT_FOUND'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///tmp/continuum-android-bot-connection-672924e4650b/.github/continuum/branch-bots-cli.test.mjs:61:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'JDK17_REQUIRED', 'SDK36_NOT_FOUND', 'GRADLE8111_NOT_FOUND' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

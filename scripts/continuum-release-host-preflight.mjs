@@ -70,8 +70,8 @@ export function inspectHostEnvironment(env=process.env) {
   if(!env.JAVA_HOME||!fs.existsSync(path.join(env.JAVA_HOME,'bin','javac')))
     blockers.push('EXPLICIT_JDK_NOT_FOUND');
   else {
-    const java=spawnSync(path.join(env.JAVA_HOME,'bin','java'),['-version'],{encoding:'utf8',timeout:5000});
-    const javac=spawnSync(path.join(env.JAVA_HOME,'bin','javac'),['-version'],{encoding:'utf8',timeout:5000});
+    const java=spawnSync(path.join(env.JAVA_HOME,'bin','java'),['-version'],{env,encoding:'utf8',timeout:5000});
+    const javac=spawnSync(path.join(env.JAVA_HOME,'bin','javac'),['-version'],{env,encoding:'utf8',timeout:5000});
     if(java.status!==0||!/version "17\./.test(java.stderr)||javac.status!==0||!/javac 17\./.test(javac.stdout+ ' '+javac.stderr))
       blockers.push('JDK17_REQUIRED');
   }
@@ -81,7 +81,7 @@ export function inspectHostEnvironment(env=process.env) {
   const gradle=env.CONTINUUM_GRADLE_PATH;
   if(!gradle||!fs.existsSync(gradle))blockers.push('GRADLE8111_NOT_FOUND');
   else {
-    const x=spawnSync(gradle,['--version'],{encoding:'utf8',timeout:6000,maxBuffer:20000});
+    const x=spawnSync(gradle,['--version'],{env,encoding:'utf8',timeout:6000,maxBuffer:20000});
     if(x.status!==0||!x.stdout.includes('Gradle 8.11.1'))blockers.push('GRADLE8111_INVALID');
   }
   const aapt2=env.CONTINUUM_AAPT2_PATH || (sdk?path.join(sdk,'build-tools','35.0.0','aapt2'):null);

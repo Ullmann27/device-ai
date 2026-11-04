@@ -1,6 +1,6 @@
 # Continuum branch integration bots
 
-Status: implemented for the documented local Node scope; 138 targeted tests passed, independent review completed. APK and device acceptance remain NOT_RUN. Owner request: discover unexplored, hidden and completed but unconnected branches, connect useful existing technology and progress towards a verifiable Android APK.
+Status: implemented for the documented local Node scope; 183 targeted tests passed, independent review completed. APK and device acceptance remain NOT_RUN. Owner request: discover unexplored, hidden and completed but unconnected branches, connect useful existing technology and progress towards a verifiable Android APK.
 
 ## Existing architecture and source
 
@@ -39,3 +39,7 @@ A second independent bot scheduler/task store would conflict with the existing c
 ## Implemented review refinements
 
 The scanner rejects configurations that could execute clean/process filters or nested submodule status helpers and checks them immediately before status operations. A trusted awaited source-preflight hook is bound at all existing scheduler identity boundaries. The CLI adds the existing `inspectHostEnvironment()` diagnostic to the immutable scan artifact; exact saved bytes define its SHA-256. Tool availability remains separate from actual APK build evidence. Full operating instructions, pinned source findings and limitations are in the handoff.
+
+## Android-first continuation
+
+The CLI reuses the existing Termux environment resolver before the existing APK inspector; version probes receive the selected environment explicitly. The current PR505 QA entry-gate correction is adopted selectively with its original regression tests. These changes preserve the same single backlog, repair pipeline, source authority and release gates. Two fresh environment regressions and the prior QA failures were observed before their corresponding corrections; final targeted combined acceptance is 183/183. APK and device gates remain NOT_RUN.

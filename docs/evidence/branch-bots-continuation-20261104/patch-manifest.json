@@ -1,0 +1,100 @@
+{
+  "schema": "continuum-branch-bots-continuation-manifest-v1",
+  "productBaseline": "572e12ecc4ce5f7c79f2634a5b5773047b6d674f",
+  "adoptedQaSourcePr": 505,
+  "adoptedQaSourceCommit": "8b72db66e5338fbc3a791adc30254f4ca77007ad",
+  "files": [
+    {
+      "path": ".github/continuum/branch-bots-cli.mjs",
+      "gitBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+      "sha256": "bb72b6fe2996ef9d991277cc31a578d26681cd89960c915b788ecc526af44edd",
+      "bytes": 7410
+    },
+    {
+      "path": ".github/continuum/branch-bots-cli.test.mjs",
+      "gitBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+      "sha256": "aea4e360de127e2836713f57b36da459de2385a21150bbf8cd2d00122b27e677",
+      "bytes": 8703
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.mjs",
+      "gitBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+      "sha256": "6275c4b6da0003f36501070ae0dbe266d117961151ca45f9294c70cf9d9dcbee",
+      "bytes": 5805
+    },
+    {
+      "path": "scripts/continuum-release-host-preflight.test.mjs",
+      "gitBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+      "sha256": "e6ccb984f7b7640220faa26c0e9883132742ea237e55a39f2ef5563e46558fba",
+      "bytes": 6446
+    },
+    {
+      "path": "scripts/render-continuum-owner-continuous-qa.sh",
+      "gitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+      "sha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43",
+      "bytes": 17500
+    },
+    {
+      "path": "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+      "gitBlob": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+      "sha256": "0b310d51369d087bc2ed132608e9e9a976664bd6b25fd75975e286cb0159d341",
+      "bytes": 6321
+    }
+  ],
+  "syntaxChecks": [
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-bots-cli.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        ".github/continuum/branch-bots-cli.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/continuum-release-host-preflight.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/continuum-release-host-preflight.test.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "bash",
+        "-n",
+        "scripts/render-continuum-owner-continuous-qa.sh"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "scripts/continuum-owner-continuous-qa-preflight.test.mjs"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "gitDiffCheckExitCode": 0,
+  "testEvidence": "node-tests.json",
+  "partialSourceSnapshot": true,
+  "androidCompilationExecuted": false,
+  "apkCreated": false,
+  "deviceAcceptanceExecuted": false
+}

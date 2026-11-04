@@ -9,6 +9,7 @@ import {runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs
 import {privateDirectory,plainBytes,writePrivateJson} from './coding-service-store.mjs';
 import {discoverBranches,proposeBranchReviews,branchStateDirectory,assertBranchStateFile,assertBranchSourceSafe} from './branch-discovery.mjs';
 import {inspectHostEnvironment} from '../../scripts/continuum-release-host-preflight.mjs';
+import {resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
 
 const NUMBERS={maxSources:[1,5000,1000],maxChanges:[1,2000,200],timeoutMs:[1,300000,60000],
  maxProposals:[1,100,20],intervalMinutes:[1,1440,60],maxCycles:[1,1000,null]};
@@ -61,7 +62,7 @@ export async function runBranchBotCycle({root,stateDir,targetRef='HEAD',maxSourc
  if(signal?.aborted)return {outcome:'INTERRUPTED',complete:false,detail:'Stopped after read-only branch discovery'};
  // Reuse the existing host profile. Tool availability never proves a build,
  // dependency-cache completeness, device behaviour or release acceptance.
- const apkEnvironment=inspectHostEnvironment();
+ const apkEnvironment=inspectHostEnvironment(resolveTermuxEnvironment());
  await checkpoint();
  if(signal?.aborted)return {outcome:'INTERRUPTED',complete:false,detail:'Stopped after APK environment diagnosis'};
  const state=branchStateDirectory(root,stateDir);privateDirectory(state);

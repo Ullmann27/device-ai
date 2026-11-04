@@ -1,0 +1,90 @@
+{
+  "schema": "continuum-branch-bots-integration-review-v1",
+  "qaFix": {
+    "reviewer": "integration_frontier_scan",
+    "sourceCommit": "8b72db66e5338fbc3a791adc30254f4ca77007ad",
+    "files": [
+      {
+        "path": "scripts/render-continuum-owner-continuous-qa.sh",
+        "gitBlob": "9ea8eae2011504b5283a0cf4e62231f0aaa7c39b",
+        "sha256": "62f6a7cf0168390d98a7b28c7916bfe96bff7284cf755654daf1b07add850f43",
+        "bytes": 17500
+      },
+      {
+        "path": "scripts/continuum-owner-continuous-qa-preflight.test.mjs",
+        "gitBlob": "fe2278df7b543ceb2bd51f22188bd9e361805782",
+        "sha256": "0b310d51369d087bc2ed132608e9e9a976664bd6b25fd75975e286cb0159d341",
+        "bytes": 6321
+      }
+    ],
+    "independentTests": {
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0
+    },
+    "rootBaseline": {
+      "passed": 29,
+      "failed": 14,
+      "skipped": 0
+    },
+    "concreteProductFindingsRemaining": 0
+  },
+  "androidEnvironment": {
+    "reviewer": "apk_host_route",
+    "files": [
+      {
+        "path": ".github/continuum/branch-bots-cli.mjs",
+        "gitBlob": "d9174f55c45013bd6a0db2b979eff3033d95cc9b",
+        "sha256": "bb72b6fe2996ef9d991277cc31a578d26681cd89960c915b788ecc526af44edd",
+        "bytes": 7410
+      },
+      {
+        "path": ".github/continuum/branch-bots-cli.test.mjs",
+        "gitBlob": "b1f85c32abce041b595f34fa34a724824cfbd3a5",
+        "sha256": "aea4e360de127e2836713f57b36da459de2385a21150bbf8cd2d00122b27e677",
+        "bytes": 8703
+      },
+      {
+        "path": "scripts/continuum-release-host-preflight.mjs",
+        "gitBlob": "c273b39943047b2b1e658eabe4c77646de9c77c8",
+        "sha256": "6275c4b6da0003f36501070ae0dbe266d117961151ca45f9294c70cf9d9dcbee",
+        "bytes": 5805
+      },
+      {
+        "path": "scripts/continuum-release-host-preflight.test.mjs",
+        "gitBlob": "783cbb7bd26fcd2bb1b56d9ff32869e4318d9d35",
+        "sha256": "e6ccb984f7b7640220faa26c0e9883132742ea237e55a39f2ef5563e46558fba",
+        "bytes": 6446
+      }
+    ],
+    "independentTests": {
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0
+    },
+    "separateRedRegressionTests": 2,
+    "concreteProductFindingsRemaining": 0,
+    "limitations": "Real subprocess fixtures; simulated ARM64 discriminator; no actual Android/Termux build."
+  },
+  "pinnedBranchOverlap": [
+    {
+      "pr": 506,
+      "commit": "8abea828833d8833d40e3d3d36feaa6d3685b82e",
+      "scriptBlob": "0657f316822429a946779ab9d19faa1ea8a19758",
+      "state": "MISSING_BOTH_QA_FIXES"
+    },
+    {
+      "pr": 513,
+      "commit": "28b228698aef8c52e46c72b71fdd5e1915d6e76c",
+      "scriptBlob": "696d553af4b4af8af27a60d18b1258e9f696f030",
+      "state": "VERSION_FIX_ONLY"
+    },
+    {
+      "pr": 517,
+      "commit": "46e5fa6b09454ad6f6862e80478eb0f2d5545149",
+      "scriptBlob": "696d553af4b4af8af27a60d18b1258e9f696f030",
+      "state": "VERSION_FIX_ONLY"
+    }
+  ],
+  "provenanceCorrection": "A moving PR517 file-list response belonged to f69cfef3230e7a5a8abcacef0103feb39e325a51, not the earlier metadata head 46e5fa6b09454ad6f6862e80478eb0f2d5545149. The final overlap above was verified by direct pinned file reads; no current-head completeness is inferred."
+}

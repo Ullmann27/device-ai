@@ -1,0 +1,20 @@
+{
+  ".github/continuum/branch-bots-cli.mjs": {
+    "baselineSha256": "ca01894379f4bfbe74d0a9472eaeb66b6380c1c31b1c1589f37f3e3c6dbe1f85",
+    "sha256": "bb72b6fe2996ef9d991277cc31a578d26681cd89960c915b788ecc526af44edd"
+  },
+  ".github/continuum/branch-bots-cli.test.mjs": {
+    "baselineSha256": "35d9ffcf7a6f42a46ee77750d34235aad8b4ccb346d28326f5b238e06a035a4b",
+    "sha256": "aea4e360de127e2836713f57b36da459de2385a21150bbf8cd2d00122b27e677"
+  },
+  "scripts/continuum-release-host-preflight.mjs": {
+    "baselineSha256": "dfe30f7691b27f084353763f6c754f4d65991dcbf89fc4b262362c8c5c79bb7e",
+    "sha256": "6275c4b6da0003f36501070ae0dbe266d117961151ca45f9294c70cf9d9dcbee"
+  },
+  "scripts/continuum-release-host-preflight.test.mjs": {
+    "baselineSha256": "5a1dea278e1605f89d1d3100c78b8bfc4ee3671a855cfabc04ab64696a489d80",
+    "sha256": "e6ccb984f7b7640220faa26c0e9883132742ea237e55a39f2ef5563e46558fba"
+  },
+  "sourcePatchSha256": "4fee866eb91aebe5fdf940e3145f1529c0931576f9a278740810aa04c7d6c7f7",
+  "transferNote": "Private transfer patch hash; the committed full source/test files are authoritative."
+}

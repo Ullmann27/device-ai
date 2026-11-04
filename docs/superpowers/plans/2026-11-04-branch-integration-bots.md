@@ -63,3 +63,15 @@ Files: existing `.github/continuum/coding-orchestrator.mjs`, new `.github/contin
 ## Final evidence
 
 The implemented Node scope passed 138 targeted tests with no failures or skips. The existing scheduler gained a trusted source-preflight hook; the CLI binds it before all scheduler source checks. The existing read-only APK host inspector is attached to each cycle. Independent review rechecked every concrete reported flaw. Android compilation, device acceptance and live owner-worker activation remain unavailable. Read `docs/research/omega/BRANCH-INTEGRATION-BOTS-HANDOFF-20261104.md` and the exact evidence under `docs/evidence/branch-integration-bots-20261104/`. Unverified Kotlin candidates remain observations rather than merged patches.
+
+## Task 5: Android-first and existing QA connections — continuation
+
+- [x] Compare exact current repair/integration source blobs; keep moving PR metadata separate from pinned source content.
+- [x] Reproduce the missing PR505 preflight connection: 14 failures among 43 actual shell-entry fixture cases.
+- [x] Adopt the exact two-file version/signing-preflight correction; 43/43 pass and independent review pass.
+- [x] Reproduce two Android environment regressions, reuse the existing Termux resolver and pass explicit env to existing probes.
+- [x] Independently repeat the 61-test environment/CLI/builder suite.
+- [x] Run combined targeted acceptance: 183/183, no failures/skips; preserve the separate APK/device NOT_RUN boundary.
+- [x] Record the unchanged local toolchain gap and the historical Render QA source without retargeting or deploying that shared service.
+
+Current continuation evidence: `docs/evidence/branch-bots-continuation-20261104/`. Complete source and actual Android/Gradle/device execution remain required before APK acceptance.

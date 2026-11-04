@@ -1,0 +1,43 @@
+{
+  "schema": "continuum-branch-bots-build-availability-v1",
+  "observedAt": "2026-11-04T20:29:41.794988+00:00",
+  "localProbeCommand": [
+    "node",
+    "--input-type=module",
+    "-e",
+    "import {inspectHostEnvironment} from \"./scripts/continuum-release-host-preflight.mjs\"; import {resolveTermuxEnvironment} from \"./scripts/continuum-mobile-builder.mjs\"; console.log(JSON.stringify(inspectHostEnvironment(resolveTermuxEnvironment()),null,2));"
+  ],
+  "localProbeExitCode": 0,
+  "localResult": {
+    "hostReadyToAttemptQa": false,
+    "blockers": [
+      "EXPLICIT_JDK_NOT_FOUND",
+      "SDK36_NOT_FOUND",
+      "GRADLE8111_NOT_FOUND",
+      "NATIVE_AAPT2_NOT_FOUND"
+    ],
+    "androidCompilationExecuted": false,
+    "androidTestExecuted": false,
+    "apkSigned": false
+  },
+  "apk": "NOT_RUN",
+  "existingRenderQaObservation": {
+    "reportedBy": "apk_host_route",
+    "service": "continuum-m8-android-qa-20261031",
+    "serviceId": "srv-dbispec9v7es738gj0ug",
+    "branch": "research/continuum-m8-operational-model-20261031",
+    "lastObservedDeploy": "dep-dbispsflk1mc73fkrk00",
+    "lastObservedDeployState": "live",
+    "lastObservedSource": "861d2faed694fc1869050cf5ed81a593701801f5",
+    "lastObservedFinishedAt": "2026-10-31T11:18:48Z",
+    "currentPr515Acceptance": false,
+    "remoteShellOrToolchainAvailabilityEstablished": false,
+    "serviceConfigurationChanged": false,
+    "deploymentTriggered": false
+  },
+  "limitations": [
+    "No full local Android checkout",
+    "No local verified JDK compiler, SDK36, Gradle8.11.1 or native AAPT2",
+    "Historical service LIVE is not acceptance of the current source"
+  ]
+}

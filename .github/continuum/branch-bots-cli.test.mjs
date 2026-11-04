@@ -39,6 +39,39 @@ test('one-shot bot persists genuine source differences and only canonical propos
  assert.equal(JSON.parse(replay.stdout).cycle.report,result.cycle.report);
 });
 
+test('CLI restores installed Termux paths for diagnosis and keeps missing tools blocked',t=>{
+ const f=fixture(t),home=path.join(path.dirname(f.root),'owner-home'),java=path.join(home,'jdk'),sdk=path.join(home,'android-sdk');
+ const gradle=path.join(home,'continuum-toolchains','gradle-8.11.1','bin','gradle'),aapt2=path.join(home,'aapt2');
+ fs.mkdirSync(path.join(java,'bin'),{recursive:true});fs.mkdirSync(path.dirname(gradle),{recursive:true});
+ fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+ fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');fs.writeFileSync(aapt2,'fixture only');
+ const guard='#!/bin/sh\ncase "$PATH" in "$JAVA_HOME/bin:"*) ;; *) exit 71 ;; esac\n';
+ fs.writeFileSync(path.join(java,'bin','java'),guard+'printf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
+ fs.writeFileSync(path.join(java,'bin','javac'),guard+'printf \'javac 17.0.1\\n\'\n',{mode:0o700});
+ fs.writeFileSync(gradle,guard+'[ "$ANDROID_HOME" = "$HOME/android-sdk" ] && [ "$ANDROID_SDK_ROOT" = "$ANDROID_HOME" ] || exit 72\nprintf \'Gradle 8.11.1\\n\'\n',{mode:0o700});
+ // Only the architecture discriminator is simulated; these fixtures never build Android.
+ const preload=path.join(home,'termux-arch.mjs');fs.writeFileSync(preload,"Object.defineProperty(process,'arch',{value:'arm64'});\n");
+ const env={...process.env,HOME:home,PREFIX:'/data/data/com.termux/files/usr',JAVA_HOME:java,CONTINUUM_AAPT2_PATH:aapt2};
+ delete env.ANDROID_HOME;delete env.ANDROID_SDK_ROOT;delete env.CONTINUUM_GRADLE_PATH;
+ const before={...process.env},input={...env};
+ const run=toolEnv=>spawnSync(process.execPath,['--import',preload,cli,'--root',f.root,'--state',f.state,'--once'],{
+  encoding:'utf8',timeout:15000,env:toolEnv});
+ const r=run(env);assert.equal(r.status,0,r.stderr);
+ const cycle=JSON.parse(r.stdout).cycle,reportBytes=fs.readFileSync(cycle.report),report=JSON.parse(reportBytes);
+ assert.deepEqual(cycle.apkEnvironment.blockers,[]);assert.equal(cycle.apkEnvironment.hostReadyToAttemptQa,true);
+ assert.equal(cycle.apk,'NOT_RUN');assert.equal(cycle.executedTests,0);assert.equal(cycle.approvedForMerge,false);
+ assert.equal(cycle.apkEnvironment.androidCompilationExecuted,false);assert.equal(cycle.apkEnvironment.androidTestExecuted,false);
+ assert.equal(cycle.apkEnvironment.apkSigned,false);assert.deepEqual(report.apkEnvironment,cycle.apkEnvironment);
+ assert.equal(createHash('sha256').update(reportBytes).digest('hex'),cycle.reportSha256);
+ assert.equal(new BacklogStore(path.join(f.state,'development-backlog.json')).read().doc.tasks[0].state,'PROPOSED');
+ const missing=run({...env,HOME:path.join(home,'missing-tools')});assert.equal(missing.status,0,missing.stderr);
+ const unavailable=JSON.parse(missing.stdout).cycle.apkEnvironment;
+ assert.equal(unavailable.hostReadyToAttemptQa,false);
+ assert.ok(unavailable.blockers.includes('SDK36_NOT_FOUND'));assert.ok(unavailable.blockers.includes('GRADLE8111_NOT_FOUND'));
+ assert.equal(f.git('status','--porcelain'),'');assert.equal(f.git('rev-parse','HEAD'),f.base);
+ assert.deepEqual({...process.env},before);assert.deepEqual(env,input);
+});
+
 test('finite loop uses the existing durable scheduler and stops at the approved budget',t=>{
  const f=fixture(t),r=f.run('--loop','--max-cycles','1','--interval-minutes','1');assert.equal(r.status,0,r.stderr);
  const result=JSON.parse(r.stdout);assert.equal(result.loop.cycles,1);assert.equal(result.loop.state,'LIMIT_REACHED');
