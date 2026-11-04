@@ -3,6 +3,7 @@ package at.heinz.deviceai
 import android.app.ActivityManager
 import android.app.job.JobScheduler
 import android.os.BatteryManager
+import at.heinz.deviceai.ui.ContinuumCockpitPresentation
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -183,7 +184,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
             system = ContinuumDashboardState.SystemStatus(
                 appCpuPercent = cpu, batteryPercent = batteryCapacity(), memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
-                activity = cpuSeries.toList(), openIssues = openIssues
+                activity = cpuSeries.toList(), temperatureC = batteryTemperatureC(), openIssues = openIssues
             ),
             core = ContinuumDashboardState.CoreStatus(
                 connected = when {
@@ -244,6 +245,16 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
     private fun batteryCapacity(): Int? = runCatching {
         val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
         manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY).takeIf { it in 0..100 }
+    }.getOrNull()
+
+    /**
+     * Battery temperature from the sticky ACTION_BATTERY_CHANGED broadcast (tenths of °C). Only plausible
+     * readings are shown; Android exposes no public CPU/SoC temperature to apps, so none is claimed.
+     */
+    private fun batteryTemperatureC(): Float? = runCatching {
+        val intent = context.registerReceiver(null, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
+        val tenths = intent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Int.MIN_VALUE) ?: Int.MIN_VALUE
+        ContinuumCockpitPresentation.batteryTemperature(tenths)
     }.getOrNull()
 
     /** App CPU share since the previous sample, device RAM in use, validated internet connection. */
