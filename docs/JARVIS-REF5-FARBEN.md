@@ -36,6 +36,22 @@ Methoden: `median` (flache Fläche), `dark` (Median der dunkelsten 30 %, Fläche
 | `glow.core` | `#ABF8FF` | peak | `(92, 205, 100, 240)` |
 | `glow.halo` | `#012539` | median | `(82, 205, 90, 240)` |
 
+### Nachtrag Review 3 (Verläufe, Chevron)
+
+| Rolle | Wert | Methode | Box |
+|---|---|---|---|
+| `tile.fill.left` | `#013F51` | dark | `(295, 615, 312, 640)` |
+| `tile.fill.right` | `#0A1E38` | dark | `(500, 615, 535, 640)` |
+| `tile.rim.left` | `#01DAE8` | peak | `(287, 585, 292, 630)` |
+| `tile.rim.right` | `#2E5289` | peak | `(541, 585, 547, 630)` |
+| `tile.chevron` | `#51ADC5` | peak | `(520, 585, 535, 605)` (1-px-Strich, antialiased → echte Farbe heller) |
+| `pill.rim.left` | `#2AEAFC` | peak | `(762, 112, 768, 135)` |
+| `pill.rim.right` | `#CC94EF` | peak | `(911, 112, 917, 135)` |
+
+Kachel: Füllung und Rand als horizontaler Verlauf links → rechts (Füllung @80 % über `bg.top` aufgelöst). Der frühere
+`tile.rim` (#17687F) stammte nur von der Oberkante und unterschätzte den Rand. Pille: Rand Cyan → Violett.
+`backdropBlur` (24 dp) ist GESCHÄTZT, in ref5 nicht messbar.
+
 ## Ehrliche Grenzen
 
 - ref5 ist ein KI-gerendertes, JPEG-artig komprimiertes Bild. Text, 1-px-Ränder und Icons sind antialiased:

@@ -11,7 +11,7 @@ import javax.imageio.ImageIO
 /**
  * §11 comparison sheet: Java2D preview (left) next to the same ref5 crop (right), both in ref5 pixels.
  * Scale: 1 ref5 px = 0.642 dp (docs/JARVIS-REF5-FARBEN.md), so the preview draws with density 1 / 0.642.
- * Usage: JarvisRef5Compare <repoRoot> <ref5.png> <out.png> <komponenten|bloom-staub>
+ * Usage: JarvisRef5Compare <repoRoot> <ref5.png> <out.png> <tokens|bloom-glas-partikel>
  */
 object JarvisRef5Compare {
     private const val DENSITY = 1f / 0.642f
@@ -45,7 +45,7 @@ object JarvisRef5Compare {
 
     @JvmStatic fun main(args: Array<String>) {
         val root = File(args[0]); val ref = ImageIO.read(File(args[1])); val out = File(args[2])
-        val rows = if (args.getOrElse(3) { "komponenten" } == "bloom-staub") bloomStaub() else komponenten()
+        val rows = if (args.getOrElse(3) { "tokens" } == "tokens") komponenten() else bloomStaub()
         val gap = 8
         val w = rows.maxOf { it.box[2] - it.box[0] } * 2 + gap * 3
         val h = rows.sumOf { it.box[3] - it.box[1] + gap } + gap

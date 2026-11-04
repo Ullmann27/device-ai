@@ -135,9 +135,10 @@ object JarvisNeon {
     /** Shared body of tile, button and pill: fill, optional glow, 1 dp rim (ref5 measurements in [style]). */
     fun component(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, style: ComponentStyle, active: Boolean = false) {
         val radius = minOf(style.radius, (b - t) / 2f)
-        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f, Fill.Solid(style.rim))
-        p.fillRoundRect(l, t, r, b, radius, Fill.Solid(style.fill))
-        p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(style.rim))
+        val rim = style.rimEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.rim, it)) } ?: Fill.Solid(style.rim)
+        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f, rim)
+        p.fillRoundRect(l, t, r, b, radius, style.fillEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.fill, it)) } ?: Fill.Solid(style.fill))
+        p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, rim)
         if (active) p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(Colors.glowCore), .6f)
     }
 
@@ -146,9 +147,11 @@ object JarvisNeon {
      * Height follows [Styles.tile] unless the caller's bounds are larger.
      */
     fun tile(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, title: String, subtitle: List<String> = emptyList(),
-             icon: IconPainter? = null, iconColor: Int = Colors.cyanSoft, active: Boolean = false) {
+             icon: IconPainter? = null, iconColor: Int = Colors.cyanSoft, active: Boolean = false, chevron: Boolean = true) {
         val st = Styles.tile
         component(p, l, t, r, b, st, active)
+        if (chevron) ContinuumIcons.draw(p, ContinuumIcons.Icon.CHEVRON_RIGHT, r - Styles.chevronInset, t + (b - t) / 2f,
+            Styles.chevronSize, Fill.Solid(Colors.chevron))
         val iconTop = t + (b - t - st.iconSize) / 2f
         icon?.draw(p, l + st.padH, iconTop, st.iconSize, iconColor)
         val x = l + st.padH + st.iconSize + st.iconGap
