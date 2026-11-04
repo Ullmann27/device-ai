@@ -89,6 +89,9 @@ class AvatarPoseReducer {
     private val cues = ArrayList<AvatarEvent.VisemeCue>()
 
     fun apply(event: AvatarEvent) {
+        // Rejected/replayed audio must not resmooth the envelope or change the default pose clock.
+        if (event is AvatarEvent.AudioLevel && (event.utteranceId != utterance ||
+                !event.level.isFinite() || event.atMillis <= lastAudioMillis)) return
         lastEventMillis = event.atMillis
         when (event) {
             is AvatarEvent.StateChanged -> {
@@ -106,7 +109,7 @@ class AvatarPoseReducer {
                 clearSpeech()
                 utterance = event.utteranceId
             }
-            is AvatarEvent.AudioLevel -> if (event.utteranceId == utterance && event.level.isFinite()) {
+            is AvatarEvent.AudioLevel -> {
                 energy += (event.level.coerceIn(0f, 1f) - energy) * 0.4f
                 lastAudioMillis = event.atMillis
             }
@@ -140,6 +143,13 @@ class AvatarPoseReducer {
 
     /** Supply the event clock at render time; future word cues must never play immediately. */
     fun pose(atMillis: Long = lastEventMillis): AvatarPose {
+        if (lastAudioMillis > atMillis) {
+            // The render clock exposes invalid future audio. Drop its smoothing contribution and
+            // reject queued callbacks through this frame, even before any frame confirmed audio.
+            if (lastEventMillis == lastAudioMillis) lastEventMillis = atMillis
+            energy = 0f
+            lastAudioMillis = atMillis
+        }
         cues.removeAll { atMillis >= it.atMillis && atMillis - it.atMillis >= it.durationMs }
         val cue = cues.lastOrNull { it.atMillis <= atMillis }
         viseme = cue?.viseme ?: Viseme.SIL

@@ -15,7 +15,8 @@ import kotlin.math.sqrt
  */
 class ContinuumBrainOrbRenderer {
     /** [pulse] 0..1 (MemoryStored), [recall] 0..1 (RecallHits), [hypothesis] Marker sichtbar, [phase] 0..1 Netzdrift. */
-    data class Signals(val pulse: Float = 0f, val recall: Float = 0f, val hypothesis: Boolean = false, val phase: Float = 0f)
+    data class Signals(val pulse: Float = 0f, val recall: Float = 0f, val hypothesis: Boolean = false, val phase: Float = 0f,
+                       val processing: Boolean = false, val particles: Int = 70, val orbitSegments: Int = 96)
 
     var label1 = "Continuum"
     var label2 = "Brain"
@@ -24,7 +25,7 @@ class ContinuumBrainOrbRenderer {
     fun draw(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals = Signals()) {
         val C = JarvisDesign.Colors
         drawPedestal(p, cx, cy + r * 1.0f, r)
-        drawOrbits(p, cx, cy, r, back = true)
+        drawOrbits(p, cx, cy, r, s, back = true)
         // Glaskörper
         p.fillCircle(cx, cy, r, Fill.Radial(cx, cy - r * .25f, r * 1.05f,
             intArrayOf(C.cyanDeep, C.backgroundHaze, C.pillSurface, Argb.withAlpha(C.pillSurface, .9f)), floatArrayOf(0f, .45f, .8f, 1f)), .92f)
@@ -43,22 +44,51 @@ class ContinuumBrainOrbRenderer {
         p.strokeArc(cx - r * .86f, cy - r * .86f, cx + r * .86f, cy + r * .86f, 210f, 40f, r * .015f, Fill.Solid(C.activeWhite), .45f)
         p.fillCircle(cx - r * .55f, cy - r * .58f, r * .05f, Fill.Radial(cx - r * .55f, cy - r * .58f, r * .05f, intArrayOf(Argb.withAlpha(C.activeWhite, .8f), 0)))
         p.setAdditive(false)
-        drawDust(p, cx, cy, r)
-        drawOrbits(p, cx, cy, r, back = false)
+        drawDust(p, cx, cy, r, s.particles)
+        drawOrbits(p, cx, cy, r, s, back = false)
         drawLabel(p, cx, cy, r)
     }
 
-    /** Zwei geneigte Orbitringe (ref5: links/unten aus der Kugel heraus), hinterer und vorderer Teil getrennt. */
-    private fun drawOrbits(p: ContinuumPainter, cx: Float, cy: Float, r: Float, back: Boolean) {
-        val C = JarvisDesign.Colors
+    /** Three independent 3D ring planes, projected with depth. Hidden segments are painted before the globe. */
+    private fun drawOrbits(p: ContinuumPainter, cx: Float, cy: Float, r: Float, s: Signals, back: Boolean) {
+        val c = JarvisDesign.Colors
+        val segments = s.orbitSegments.coerceIn(32, 128)
+        val inclinations = floatArrayOf(.24f, -.49f, .78f)
+        val azimuths = floatArrayOf(-.20f, .27f, -.42f)
         p.setAdditive(true)
-        for ((tilt, k) in listOf(-14f to 1.32f, 9f to 1.18f)) {
-            p.save(); p.rotate(tilt, cx, cy + r * .25f)
-            val l = cx - r * k; val rr = cx + r * k; val t = cy + r * .25f - r * .3f; val b = cy + r * .25f + r * .3f
-            val start = if (back) 180f else 0f
-            p.strokeArc(l, t, rr, b, start, 180f, r * .03f, Fill.Solid(C.violet), .18f)
-            p.strokeArc(l, t, rr, b, start, 180f, r * .01f, Fill.Linear(l, 0f, rr, 0f, intArrayOf(C.violetSoft, C.cyan, C.violetRim)), if (back) .45f else .8f)
-            p.restore()
+        for (ring in 0 until 3) {
+            val tilt = inclinations[ring]
+            val yaw = azimuths[ring] + s.phase * (.07f + ring * .013f)
+            val size = 1.25f + ring * .07f
+            fun point(angle: Float): FloatArray {
+                val x = cos(angle) * size
+                val y = sin(angle) * sin(tilt) * size
+                val z = sin(angle) * cos(tilt) * size
+                val xx = x * cos(yaw) - y * sin(yaw)
+                val yy = x * sin(yaw) + y * cos(yaw)
+                val perspective = 3.8f / (3.8f - z * .15f)
+                return floatArrayOf(cx + xx * r * perspective, cy + (yy + .10f) * r * perspective, z)
+            }
+            var a = point(0f)
+            for (i in 1..segments) {
+                val b = point((2.0 * PI * i / segments).toFloat())
+                val behind = (a[2] + b[2]) < 0f
+                if (behind == back) {
+                    val alpha = if (behind) .28f else .70f
+                    val color = if ((i + ring * 13) % segments < segments / 2) c.cyan else c.violetRim
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .040f, Fill.Solid(color), alpha * .12f)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .012f, Fill.Solid(color), alpha)
+                    p.drawLine(a[0], a[1], b[0], b[1], r * .004f, Fill.Solid(c.glowCore), alpha)
+                }
+                a = b
+            }
+            // An orbit light is decoration; event intensity is supplied separately by real memory/turn state.
+            val bead = point(s.phase * (.91f + ring * .11f) + ring * 2.1f)
+            if ((bead[2] < 0f) == back) {
+                val color = if (ring == 1) c.violetRim else c.cyan
+                JarvisNeon.halo(p, bead[0], bead[1], r * .09f, color, .35f)
+                p.fillCircle(bead[0], bead[1], r * .014f, Fill.Solid(c.glowCore))
+            }
         }
         p.setAdditive(false)
     }
@@ -107,7 +137,7 @@ class ContinuumBrainOrbRenderer {
     private fun drawBrain(p: ContinuumPainter, bx: Float, by: Float, r: Float, s: Signals) {
         val C = JarvisDesign.Colors
         val hw = r * .68f; val hh = r * .46f
-        val glow = .75f + .25f * s.pulse
+        val glow = .65f + .25f * s.pulse.coerceIn(0f, 1f) + if (s.processing) .1f else 0f
         p.setAdditive(true)
         p.fillOval(bx - hw * 1.25f, by - hh * 1.4f, bx + hw * 1.25f, by + hh * 1.4f,
             Fill.Radial(bx, by, hw * 1.25f, intArrayOf(Argb.withAlpha(C.violetSoft, .35f * glow), Argb.withAlpha(C.cyanDeep, .12f), 0)), 1f)
@@ -157,10 +187,10 @@ class ContinuumBrainOrbRenderer {
     }
 
     /** Funkelpartikel im Netz und um die Kugel: feste, deterministische Lage (keine Datenanzeige). */
-    private fun drawDust(p: ContinuumPainter, cx: Float, cy: Float, r: Float) {
+    private fun drawDust(p: ContinuumPainter, cx: Float, cy: Float, r: Float, count: Int) {
         val C = JarvisDesign.Colors
         p.setAdditive(true)
-        for (i in 0 until 70) {
+        for (i in 0 until count.coerceIn(0, 70)) {
             val a = hash(i, 11) * 2f * PI.toFloat(); val d = r * (.2f + 1.35f * hash(i, 23))
             val x = cx + cos(a) * d; val y = cy + sin(a) * d * .9f
             if (kotlin.math.abs(x - cx) < r * .45f && y > cy && y < cy + r * .85f) continue

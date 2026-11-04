@@ -16,8 +16,8 @@ import at.heinz.deviceai.ui.JarvisDesign.Type
  * - device status block: device name baseline 10 dp, clock baseline 44 dp, date baseline 58 dp, text x 24 dp
  * - rail panel top 120 px = 77 dp, first button top 153 px = 98 dp, button pitch 54.7 px = 35 dp
  *   (Styles.button 32 dp + Styles.buttonGap 6 dp ≈ 38 dp)
- * Deliberate deviation: the hit row stays [MIN_ROW] = 48 dp (Android touch target), so the visual 32 dp buttons sit
- * in 48 dp rows (gap 16 dp instead of 6 dp). Everything else uses the ref5 values.
+ * The owner requested adjoining visible buttons. Each button fills its independent 48 dp touch row; outlines and
+ * their soft light can meet without ambiguous or overlapping hit targets. The first visible button stays at 98 dp.
  */
 object JarvisMenuRail {
     enum class Mode { SIDE_RAIL, BOTTOM_BAR }
@@ -27,7 +27,7 @@ object JarvisMenuRail {
     const val MIN_WIDTH = MARGIN + 108f // margin + Styles.button width (108 dp)
     const val MAX_WIDTH = 168f         // = JarvisDesign.Metrics.railLabelled (tablets)
     const val HEADER = 77f             // ref5: device status block above the panel
-    const val FIRST_ROW = 90f          // ref5 first button top 98 dp minus (48 − 32) / 2
+    const val FIRST_ROW = 98f          // first visible button top; its touch row shares the same bounds
     const val PAD = 10f                // panel bottom padding
     const val MIN_ROW = 48f            // touch target
 
@@ -51,10 +51,9 @@ object JarvisMenuRail {
 
     fun hit(y: Float, heightDp: Float): Int = rows(heightDp).indexOfFirst { (t, b) -> y >= t && y < b }
 
-    /** Button (left, top, right, bottom) inside row [i]: Styles.button height, centred in the 48 dp row. */
+    /** Adjoining visual surface shares its row bounds; glow may extend beyond these hit boundaries. */
     fun button(w: Float, row: Pair<Float, Float>): FloatArray {
-        val cy = (row.first + row.second) / 2f; val h = Styles.button.height
-        return floatArrayOf(MARGIN, cy - h / 2f, w, cy + h / 2f)
+        return floatArrayOf(MARGIN, row.first, w, row.second)
     }
 }
 

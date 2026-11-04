@@ -1,0 +1,20 @@
+{
+  "source_commit": "41433ff0eafebde1240d09dacec2eea3f9db5100",
+  "baseline_application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/ContinuumAvatarRenderer.kt",
+      "sha256": "507b4b41cd9f46d883c4217fb55f7fe4571c239ef437c3f92de0df57fd66d224",
+      "original_sha256": "507b4b41cd9f46d883c4217fb55f7fe4571c239ef437c3f92de0df57fd66d224"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGridContent.kt",
+      "sha256": "3525e42136fa4095903f5b72ce33a483ee4c6098c0684d57126a533f551a89c3",
+      "original_sha256": "3525e42136fa4095903f5b72ce33a483ee4c6098c0684d57126a533f551a89c3"
+    }
+  ],
+  "graphics_override": null,
+  "classpath_prefix": [
+    "/workspace/scratch/b3170a7ae924/direct-tests/combined-ui-e19/classes"
+  ]
+}

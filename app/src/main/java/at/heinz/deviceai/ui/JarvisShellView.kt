@@ -15,7 +15,10 @@ import android.view.View
  */
 class JarvisShellView(context: Context) : View(context) {
     private val painter = AndroidContinuumPainter(context.assets)
+    private val textPainter = JarvisTextScalePainter(painter)
     private val glass = JarvisGlassRenderer(painter)
+    /** The separate foreground layer follows this layer's invalidation without owning an animation clock. */
+    var onFrameDrawn: (() -> Unit)? = null
     var content: Map<JarvisShellLayout.Slot, JarvisShellRenderer.SlotContent> = emptyMap()
         set(value) { field = value; invalidate() }
     /** Presentation model of the action tiles (label/icon/target, optional display text from Kern). */
@@ -26,9 +29,27 @@ class JarvisShellView(context: Context) : View(context) {
     private var startMs = -1L
     private var layoutFont = 0f
     private var layoutRail: JarvisShellLayout.Rail? = null
+    private var layoutInset = Float.NaN
+    private var layoutViewport = Float.NaN
+    /** Stable visible height, independent of this View's larger scrolling content height. */
+    var viewportHeightDp = 0f
+        set(value) {
+            require(value.isFinite() && value >= 0f)
+            if (field == value) return
+            field = value
+            invalidate()
+        }
+    /** Width already occupied by the Activity's functional rail, in window dp. */
+    var contentRailInsetDp = 0f
+        set(value) {
+            require(value.isFinite() && value >= 0f)
+            if (field == value) return
+            field = value
+            invalidate()
+        }
 
-    /** Continuous camera drift / dolly / dust. Off: static composition (also off for reduced motion). */
-    var ambientMotionEnabled = true
+    /** Optional decorative refresh. Native head/orb own their frame clock; static HUD needs no continuous redraw. */
+    var ambientMotionEnabled = false
         set(value) { field = value; invalidate() }
 
     private fun ambientMotion(scale: Float) = ambientMotionEnabled && scale > 0f && isShown &&
@@ -46,21 +67,38 @@ class JarvisShellView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         val d = resources.displayMetrics.density
         val w = width / d; val h = height / d
-        if (w < 240f || h < 320f) return
+        if (w < 240f || h < 160f) return
         val font = resources.configuration.fontScale
-        val s = shell?.takeIf { it.width == w && it.height == h && layoutFont == font && layoutRail == foldRail }
-            ?: JarvisShellLayout.create(w, h, font, foldRail).also { shell = it; layoutFont = font; layoutRail = foldRail }
+        val viewport = viewportHeightDp.takeIf { it >= 160f } ?: h
+        val s = shell?.takeIf { it.width == w && layoutViewport == viewport && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp }
+            ?: JarvisShellLayout.forContent(w, viewport, font, foldRail, contentRailInsetDp).also {
+                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp; layoutViewport = viewport
+            }
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
         val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs
         painter.begin(canvas); glass.begin(canvas, d, width, height)
+        textPainter.fontScale = font
         canvas.save(); canvas.scale(d, d)
-        JarvisShellRenderer.draw(painter, s, content, elapsed, scale, tiles, glass, now)
+        JarvisShellRenderer.draw(textPainter, s, content, elapsed, scale, tiles, glass, now, deferForeground = true)
         canvas.restore()
+        onFrameDrawn?.invoke()
         val total = JarvisMotion.groupDurationMs(JarvisMotion.Presets.panelLeft, s.boxes.size + s.tileBoxes().size, animatorScale = scale)
-        // Camera never static (drift + dolly): keep ticking while visible and animators are enabled.
+        // Invalidate only for an explicit entrance/decorative mode. Status updates invalidate through state setters.
         if ((startMs >= 0 && elapsed < total) || ambientMotion(scale)) postInvalidateOnAnimation()
         if (frameLogging) frames.onDrawn(SystemClock.elapsedRealtimeNanos() - drawStart(now))
+    }
+
+    /** Same geometry and text metrics, rendered above the transparent native avatar but below its hit targets. */
+    fun drawForeground(canvas: Canvas) {
+        val s = shell ?: return
+        val d = resources.displayMetrics.density
+        painter.begin(canvas)
+        textPainter.fontScale = resources.configuration.fontScale
+        val save = canvas.save()
+        canvas.scale(d, d)
+        JarvisShellRenderer.drawForeground(textPainter, s, content)
+        canvas.restoreToCount(save)
     }
 
     // --- Debug: frame-time measurement (Fold7 measurement still pending on device) ---

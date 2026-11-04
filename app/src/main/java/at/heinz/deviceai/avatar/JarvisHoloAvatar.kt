@@ -14,35 +14,45 @@ import android.graphics.Rect
  * (existing [ContinuumHologramView] with [ContinuumAvatarRenderer] / ContinuumHologramRenderer) and the sequence
  * overlay ([JarvisSequenceView]: fly-in, data flight, envelope, pills, alarm).
  *
- * TODO(Kern #481): add `: at.heinz.deviceai.cockpit.JarvisAvatarRenderer` and `override` once the interface is on
- * origin; methods already match its exact signature (attach(ViewGroup, Rect px) / onAvatarState(AvatarState) /
- * onAnimationEvent / detach). Register via `JarvisAvatarSlot.register(JarvisHoloAvatar())`.
- * Speech/visemes/gaze/audio level need the full AvatarContract stream: feed [onAvatarEvent].
+ * The Activity supplies its existing signal-bearing [liveSurface]. The adapter only installs the cockpit
+ * overlay; it never replaces the Director's surface, changes the saved appearance or starts another avatar clock.
+ * A standalone host can omit [liveSurface] and owns the resulting stage itself.
  */
-class JarvisHoloAvatar : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
+class JarvisHoloAvatar(private val liveSurface: ContinuumHologramView? = null) : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
     private var host: ViewGroup? = null
     private var stage: FrameLayout? = null
     var hologram: ContinuumHologramView? = null; private set
     var sequence: JarvisSequenceView? = null; private set
 
     override fun attach(host: ViewGroup, slot: Rect) {
+        if (this.host === host && isAttached) { onSlotChanged(slot); return }
         detach()
-        val s = FrameLayout(host.context)
-        val holo = ContinuumHologramView(host.context).apply {
-            setGeometry(ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
-            setNativeHeadEnabled(true)
-        }
+        val holo = liveSurface ?: ContinuumHologramView(host.context)
+        if (liveSurface != null) require(holo.parent === host) { "The Activity owns the live avatar's parent" }
+        holo.setGeometry(ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT)
         val seq = JarvisSequenceView(host.context)
-        s.addView(holo, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        s.addView(seq, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-        host.addView(s, ViewGroup.MarginLayoutParams(slot.width(), slot.height()))
-        s.x = slot.left.toFloat(); s.y = slot.top.toFloat()
-        this.host = host; stage = s; hologram = holo; sequence = seq
+        holo.setCockpitSequence(seq)
+        if (liveSurface == null) {
+            val s = FrameLayout(host.context)
+            s.addView(holo, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            host.addView(s, ViewGroup.MarginLayoutParams(slot.width(), slot.height()))
+            stage = s
+        }
+        this.host = host; hologram = holo; sequence = seq
+        onSlotChanged(slot)
+    }
+
+    /** Bounds changes preserve the surface, pose, speech stream and overlay. */
+    override fun onSlotChanged(slot: Rect) {
+        stage?.let { s ->
+            s.layoutParams = s.layoutParams.apply { width = slot.width(); height = slot.height() }
+            s.x = slot.left.toFloat(); s.y = slot.top.toFloat()
+        }
     }
 
     /** Kern's slot: coarse state → head (expression/gaze stay as last reported). */
     override fun onAvatarState(state: AvatarState) {
-        hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, android.os.SystemClock.uptimeMillis()))
+        hologram?.onAvatarEvent(AvatarEvent.StateChanged(state, AvatarExpression.NEUTRAL, GazeTarget.OWNER, System.currentTimeMillis()))
     }
 
     /** Full AvatarContract stream (speech, visemes, gaze, audio level) → the head. */
@@ -52,13 +62,14 @@ class JarvisHoloAvatar : at.heinz.deviceai.cockpit.JarvisAvatarRenderer {
     override fun onAnimationEvent(event: CockpitAnimationEvent) { sequence?.render(event) }
 
     override fun detach() {
-        hologram?.setNativeHeadEnabled(false)
-        sequence?.clear()
+        hologram?.setCockpitSequence(null)
+        if (liveSurface == null) hologram?.setForegroundActive(false)
         stage?.let { host?.removeView(it) }
         host = null; stage = null; hologram = null; sequence = null
     }
 
-    val isAttached: Boolean get() = stage?.parent != null && stage?.visibility == View.VISIBLE
+    val isAttached: Boolean get() = stage?.let { it.parent === host && it.visibility == View.VISIBLE }
+        ?: (host != null && hologram?.parent === host)
 
     companion object {
         /**

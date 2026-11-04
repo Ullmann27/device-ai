@@ -137,7 +137,7 @@ class ReferenceMetricCard(private val slot: Slot, textScale: Float) : ContinuumE
         Slot.STORAGE -> listOf("Gerät belegt" to ContinuumDashboardState.percent(s.storage.usedPercent),
             "Archiv-Einträge" to ContinuumDashboardState.count(s.storage.activeSources),
             "Eigene Dateien" to ContinuumDashboardState.bytes(s.storage.segments.firstOrNull {
-                it.label == "App: eigene Dateien" }?.bytes), "Quellenstatus" to s.storage.syncLabel)
+                it.label == "App: eigene Dateien" }?.bytes), "Quellenstatus" to s.storage.researchLabel)
         Slot.LEARNING -> listOf("Protokollereignisse heute" to ContinuumDashboardState.count(s.learning.today),
             "Lernprozess" to s.core.learning,
             "Letzter Eintrag" to (s.learning.recent.firstOrNull()?.title ?: UNKNOWN))

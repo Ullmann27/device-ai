@@ -34,13 +34,29 @@ object JarvisShellRenderer {
         else -> JarvisMotion.Depth.Layer.FAR
     }
 
-    private val bare = setOf(Slot.AVATAR, Slot.TOP_BAR)
+    private val foregroundSlots = setOf(Slot.TOP_BAR, Slot.CONTINUUM_HEADER, Slot.DIALOG,
+        Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY)
+    private val bare = setOf(Slot.AVATAR) + foregroundSlots
+
+    /** Drawn above the transparent native head. Keeps speech and status readable over the 3D silhouette. */
+    fun drawForeground(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent>) {
+        for (slot in foregroundSlots) {
+            val box = shell[slot] ?: continue
+            if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
+                JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
+                    if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+            }
+            content[slot]?.draw(p, box)
+        }
+    }
 
     fun draw(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent> = emptyMap(),
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
-             tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L) {
-        if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) background(p, shell.width, shell.height)
-        val dolly = JarvisMotion.Depth.dolly(timeMs, animatorScale)
+             tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L,
+             deferForeground: Boolean = false) {
+        background(p, shell.width, shell.height)
+        JarvisReferenceHud.backdrop(p, shell.width, shell.height)
+        val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
         val tileBoxes = shell.tileBoxes()
@@ -48,31 +64,40 @@ object JarvisShellRenderer {
         val cx = shell.width / 2f
         val ranks = JarvisMotion.centerFirstRanks(cards.map { it.centerX }, cx)
         shell[Slot.AVATAR]?.let { box ->
-            val dy = JarvisMotion.idleOffset(timeMs, animatorScale = animatorScale)
+            val dy = 0f
             p.save(); p.translate(0f, dy)
             (content[Slot.AVATAR] ?: SlotContent(::avatarStandIn)).draw(p, box)
             p.restore()
         }
-        shell[Slot.TOP_BAR]?.let { (content[Slot.TOP_BAR] ?: SlotContent(::topBar)).draw(p, it) }
         cards.forEachIndexed { i, box ->
             val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
                 elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
             if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
-            val depth = JarvisMotion.Depth.state(layerOf(slot), box.centerX, box.centerY(), shell.width, shell.height, timeMs, animatorScale)
+            val depth = JarvisMotion.Depth.FLAT
             p.save()
             p.translate(f.dx + depth.dx, f.dy + depth.dy)
             val k = f.scale * depth.scale
             p.scale(k, k, box.centerX, box.centerY())
-            val depthNative = glass?.beginDepth(box, depth) == true
-            val r = JarvisDesign.Metrics.radiusCard
-            val native = glass?.drawPanelGlass(box, r, f.glow) == true
-            if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
-                q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
+            val depthNative = false
+            val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
+            val ownsSurface = content[slot] != null &&
+                slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
+            if (tile != null) {
+                JarvisTiles.drawSurface(p, box, tile, f.glow > .5f)
+            } else if (!ownsSurface) {
+                val r = JarvisDesign.Metrics.radiusCard
+                // Static HUD panels do not need repeated full-screen backdrop-blur copies.
+                val native = false
+                if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
+                    q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
+                }
+                JarvisNeon.glassCard(p, box.left, box.top, box.right, box.bottom, r,
+                    if (f.glow > .5f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL,
+                    f.glow > .5f, f.alpha, native,
+                    rimEnd = if (slot == Slot.COCKPIT_SECONDARY) Colors.cardRimEndViolet else Colors.cardRimEnd)
             }
-            JarvisNeon.glassCard(p, box.left, box.top, box.right, box.bottom, r,
-                if (f.glow > .5f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL, f.glow > .5f, f.alpha, native)
             when {
                 slot != null && content[slot] != null -> content[slot]!!.draw(p, box)
                 slot == Slot.NAV_RAIL -> JarvisTiles.drawRail(p, box, labelled = shell.rail != JarvisShellLayout.Rail.ICONS)
@@ -84,18 +109,20 @@ object JarvisShellRenderer {
             p.restore()
         }
         p.restore()
+        JarvisReferenceHud.frame(p, shell.width, shell.height)
+        if (!deferForeground) drawForeground(p, shell, content)
     }
 
     private fun Box.centerY() = (top + bottom) / 2f
 
-    /** Portable background: #050814→#0A1128, soft cyan grid, bokeh dust (deterministic). */
+    /** Portable ref5 background: near-black navy, faint lower-edge haze and deterministic dust. */
     fun background(p: ContinuumPainter, w: Float, h: Float) {
         p.fillRect(0f, 0f, w, h, Fill.Linear(0f, 0f, 0f, h, intArrayOf(Colors.background, Colors.backgroundBottom)))
-        JarvisNeon.halo(p, w / 2f, h * .35f, maxOf(w, h) * .55f, Colors.violet, .10f)
+        JarvisNeon.halo(p, w * .45f, h * .92f, maxOf(w, h) * .70f, Colors.backgroundHaze, .65f)
         val step = 48f
         p.setAdditive(true)
-        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, 3f, Fill.Solid(Colors.cyan), .018f); p.drawLine(x, 0f, x, h, .6f, Fill.Solid(Colors.cyan), .035f); x += step }
-        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, 3f, Fill.Solid(Colors.cyan), .018f); p.drawLine(0f, y, w, y, .6f, Fill.Solid(Colors.cyan), .035f); y += step }
+        var x = 0f; while (x <= w) { p.drawLine(x, 0f, x, h, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(x, 0f, x, h, .6f, Fill.Solid(Colors.cyan), .008f); x += step }
+        var y = 0f; while (y <= h) { p.drawLine(0f, y, w, y, 3f, Fill.Solid(Colors.cyan), .004f); p.drawLine(0f, y, w, y, .6f, Fill.Solid(Colors.cyan), .008f); y += step }
         p.setAdditive(false)
         bokeh(p, w, h)
     }
@@ -157,7 +184,9 @@ object JarvisShellRenderer {
 
     private fun topBar(p: ContinuumPainter, b: Box) {
         val s = JarvisDesign.Type.brand
-        JarvisNeon.text(p, "CONTINUUM", b.centerX, b.top + b.height / 2f + p.capHeight(s) / 2f, s, Colors.cyan, TextAlign.CENTER)
+        JarvisNeon.text(p, "CONTINUUM", b.left + b.width * .17f, b.top + b.height / 2f + p.capHeight(s) / 2f, s, Colors.cyan, TextAlign.LEFT)
+        // ref5: chips start at 52.7 % of the width, vertically centred in the header slot.
+        JarvisNeon.headerChips(p, b.left + b.width * .527f, b.top + (b.height - JarvisDesign.Styles.pill.height) / 2f)
     }
 
     /** Stand-in until Jarvis Avatar draws AVATAR: tilted atom rings, head halo, brain orb (no fake data). */

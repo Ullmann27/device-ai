@@ -1,0 +1,13 @@
+{
+  "commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "application_code_equivalent_to": "578bdfd12f896cc990bf1a043bc1b248ba3adb6d",
+  "at_utc": "2026-11-04T10:03:14.770297+00:00",
+  "suites": 424,
+  "tests": 2371,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 19,
+  "gradle_exit": 0,
+  "log": "build-logs/baseline-unit-retry.log",
+  "passed": 2352
+}

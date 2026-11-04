@@ -1,0 +1,18 @@
+{
+  "source_commit": "09e235070cb87ed6ff3dd8d327a01659ced0d396",
+  "baseline_application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "files": [
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/BootstrapRecoveryCallerUiTest.kt",
+      "sha256": "16bf6d81beb8c2a068d70e5d4b691970e7cf855c5afbcd9178ac878d92c0e6b4",
+      "original_sha256": "16bf6d81beb8c2a068d70e5d4b691970e7cf855c5afbcd9178ac878d92c0e6b4"
+    }
+  ],
+  "graphics_override": null,
+  "classpath_prefix": [
+    "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/tmp/kotlin-classes/debug"
+  ],
+  "runtime_application_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "runtime_classpath_file": "/workspace/scratch/b3170a7ae924/combined-worker-ui-classpath.txt",
+  "runtime_test_overlay_only": true
+}

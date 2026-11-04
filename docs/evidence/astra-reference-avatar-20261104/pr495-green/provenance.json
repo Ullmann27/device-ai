@@ -1,0 +1,73 @@
+{
+  "source_commit": "9f1f68591b7178822da794edf4eede1a51fd8447",
+  "baseline_application_commit": "ad2fa70bd84988c79b9bd13319cf1a178f99ab3b",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarMorphMapper.kt",
+      "sha256": "8c3768c6e0dfc488a924b29fb1c38c2125acbe25efbf4b6dbb24b7b8fd7b60bd",
+      "original_sha256": "8c3768c6e0dfc488a924b29fb1c38c2125acbe25efbf4b6dbb24b7b8fd7b60bd"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt",
+      "sha256": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2",
+      "original_sha256": "8706a1b0adc7db80cb70da053d2afa779f4e160c6217a762a7a6eaebe01f54e2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt",
+      "sha256": "c343aa99e33b50794c7d6ce2fdffa012086971010ca7858e046b18871dc1fdde",
+      "original_sha256": "c343aa99e33b50794c7d6ce2fdffa012086971010ca7858e046b18871dc1fdde"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMorphTransitionTest.kt",
+      "sha256": "a4f85ebb9af7d260e2f963a12f4d193d575db2f944fccda3541f1918e352ffd6",
+      "original_sha256": "a4f85ebb9af7d260e2f963a12f4d193d575db2f944fccda3541f1918e352ffd6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarSpeechOrderingRegressionTest.kt",
+      "sha256": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1",
+      "original_sha256": "770be6647a49d0c1a65f87b7d5e8690986aa5aeff7b4aaa4be1039419b1f33d1"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cockpit/JarvisAvatarDispatchRegressionTest.kt",
+      "sha256": "a0ce879f34f301f0a18fb95b82a42cb5799c021bb215a7b6192df39f21ed6b14",
+      "original_sha256": "a0ce879f34f301f0a18fb95b82a42cb5799c021bb215a7b6192df39f21ed6b14"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/Avatar3dContractTest.kt",
+      "sha256": "2e6fac5d837ed5f252372f2066c7cd5df736f79146a835e17ccdde7dbddd38b2",
+      "original_sha256": "2e6fac5d837ed5f252372f2066c7cd5df736f79146a835e17ccdde7dbddd38b2"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarMouthCouplingTest.kt",
+      "sha256": "51e6c9e7ebd605673718203ddd49946b163765ce0aa1f36c6be77f6a4137fca3",
+      "original_sha256": "51e6c9e7ebd605673718203ddd49946b163765ce0aa1f36c6be77f6a4137fca3"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/avatar/AvatarDirectorTest.kt",
+      "sha256": "c95308990bf4e280a997db7125d46ecba201628247d24a336e8cbe60cb29d4d7",
+      "original_sha256": "c95308990bf4e280a997db7125d46ecba201628247d24a336e8cbe60cb29d4d7"
+    },
+    {
+      "path": "tools/epsilon-avatar-contract/ValidateAvatarGlb.kt",
+      "sha256": "48a20ce0a90881ecd50136efd10d895ef24b48a83275e66ce156ce75c31f7089",
+      "original_sha256": "48a20ce0a90881ecd50136efd10d895ef24b48a83275e66ce156ce75c31f7089"
+    }
+  ],
+  "graphics_override": null,
+  "classpath_prefix": [
+    "/workspace/scratch/b3170a7ae924/device-ai-qa-f14/app/build/tmp/kotlin-classes/debug"
+  ],
+  "runtime_application_commit": "f14ce8e9d6a3864117a9cea3d325024ab4ff8d9b",
+  "runtime_overlay_commit": "9f1f68591b7178822da794edf4eede1a51fd8447",
+  "runtime_classpath_file": "/workspace/scratch/b3170a7ae924/combined-worker-unit-classpath.txt",
+  "junit_exit": 0,
+  "contract_exit": 0,
+  "selections": [
+    "at.heinz.deviceai.avatar3d.AvatarMorphTransitionTest",
+    "at.heinz.deviceai.avatar.AvatarSpeechOrderingRegressionTest",
+    "at.heinz.deviceai.cockpit.JarvisAvatarDispatchRegressionTest",
+    "at.heinz.deviceai.avatar3d.Avatar3dContractTest",
+    "at.heinz.deviceai.avatar3d.AvatarMouthCouplingTest",
+    "at.heinz.deviceai.avatar.AvatarDirectorTest"
+  ]
+}

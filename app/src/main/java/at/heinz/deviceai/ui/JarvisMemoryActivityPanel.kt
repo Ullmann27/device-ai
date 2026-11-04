@@ -84,47 +84,41 @@ object JarvisMemoryActivityPanel {
     const val REF_H = 105f
 
     fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, snap: MemoryActivitySnapshot) {
-        val C = JarvisDesign.Colors
-        val k = (r - l) / REF_W
-        val rad = 6f * k
-        p.fillRoundRect(l, t, r, b, rad, Fill.Solid(C.surface))
-        p.strokeRoundRect(l, t, r, b, rad, 1f, Fill.Solid(C.panelRim), .9f)
-        // Ebenen-Icon
-        val ix = l + 12f * k; val iy = t + 13f * k; val iw = 12f * k
-        for (j in 0 until 3) {
-            val y = iy + j * 3.2f * k
-            val path = VectorPath().moveTo(ix, y).lineTo(ix + iw / 2, y - 2.6f * k).lineTo(ix + iw, y).lineTo(ix + iw / 2, y + 2.6f * k).close()
-            p.strokePath(path, 1.1f * k, Fill.Solid(C.cyanSoft), if (j == 0) 1f else .8f)
-        }
-        val titleStyle = JarvisDesign.Type.heading.copy(size = JarvisDesign.Type.heading.size * k * .95f)
-        p.drawText(TITLE, l + 33f * k, t + 18f * k, titleStyle, Fill.Solid(C.text))
-        val cx = r - 12f * k; val cy = t + 14f * k
-        p.drawLine(cx - 2.5f * k, cy - 3.5f * k, cx + 1f * k, cy, 1.2f * k, Fill.Solid(C.cyanSoft))
-        p.drawLine(cx + 1f * k, cy, cx - 2.5f * k, cy + 3.5f * k, 1.2f * k, Fill.Solid(C.cyanSoft))
-        // Balken
-        val bl = l + 12f * k; val br = r - 12f * k; val base = t + 41f * k; val maxH = 14f * k
+        val c = JarvisDesign.Colors
+        val type = JarvisDesign.Type
+        val box = JarvisShellLayout.Box(l, t, r, b)
+        JarvisReferenceHud.surface(p, box, 13f, c.cyan, c.violetRim)
+        val titleY = t + 10f + p.capHeight(type.heading)
+        ContinuumIcons.draw(p, ContinuumIcons.Icon.DATABASE, l + 18f, titleY - p.capHeight(type.heading) / 2f,
+            17f, Fill.Solid(c.cyanSoft))
+        p.drawText(JarvisShellRenderer.fit(p, TITLE, type.heading, box.width - 46f), l + 33f,
+            titleY, type.heading, Fill.Solid(c.text))
+        val barsTop = titleY + 10f
+        val barHeight = minOf(24f, box.height * .17f)
+        val baseline = barsTop + barHeight
         val bars = snap.hourly
-        // Ohne Ereignisquelle: 24 gedimmte leere Balken (kein Wert, keine "offline"-Zeile).
         val n = bars?.size?.takeIf { it > 0 } ?: 24
         val peak = bars?.maxOrNull()?.coerceAtLeast(1) ?: 1
-        val step = (br - bl) / n; val bw = step * .55f
+        val step = (box.width - 24f) / n
         for (i in 0 until n) {
-            val v = bars?.getOrNull(i) ?: 0
-            val x = bl + i * step + (step - bw) / 2
-            if (bars == null || v <= 0) { p.fillRect(x, base - 1.5f * k, x + bw, base, Fill.Solid(C.rim), .45f); continue }
-            val h = maxOf(2f * k, maxH * v / peak)
-            val col = Fill.Linear(0f, base - maxH, 0f, base, intArrayOf(if (i % 3 == 0) C.cyan else C.violetRim, C.violet))
-            p.fillRect(x, base - h, x + bw, base, col)
+            val value = bars?.getOrNull(i) ?: 0
+            val x = l + 12f + step * (i + .2f)
+            val h = if (value <= 0) 1.2f else barHeight * value / peak
+            val color = if (value <= 0) c.rim else if (i < n / 2) c.cyan else c.violetRim
+            p.fillRect(x, baseline - h, x + step * .6f, baseline, Fill.Solid(color), if (value <= 0) .4f else .95f)
         }
-        // Zeilen
-        val rowStyle = JarvisDesign.Type.body.copy(size = 8.5f * k); val valStyle = rowStyle.copy(weight = 500)
-        val top = t + 46f * k; val pitch = 14.2f * k
-        for ((i, row) in snap.rows().withIndex()) {
-            val y = top + i * pitch
-            if (i > 0) p.drawLine(l + 8f * k, y, r - 8f * k, y, .8f, Fill.Solid(C.rim), .6f)
-            val ty = y + pitch / 2 + p.capHeight(rowStyle) / 2
-            p.drawText(row.first, l + 12f * k, ty, valStyle, Fill.Solid(C.text))
-            p.drawText(row.second, l + 49f * k, ty, rowStyle, Fill.Solid(C.textSecondary))
+        // Bars count observed events since this Activity started, not a fabricated 24-hour history.
+        val noteY = baseline + p.capHeight(type.status) + 4f
+        p.drawText(if (bars == null) "Ereignisse: —" else "Ereignisse seit Start", l + 12f,
+            noteY, type.status, Fill.Solid(c.textMuted))
+        val rowsTop = noteY + 5f
+        val pitch = ((b - 7f - rowsTop) / 4f).coerceAtLeast(p.capHeight(type.caption) + 3f)
+        snap.rows().forEachIndexed { index, row ->
+            val y = rowsTop + (index + .5f) * pitch + p.capHeight(type.caption) / 2f
+            if (y > b - 4f) return@forEachIndexed
+            p.drawText(row.first, l + 12f, y, type.caption, Fill.Solid(c.text))
+            p.drawText(JarvisShellRenderer.fit(p, row.second, type.caption, box.width - 63f), l + 51f,
+                y, type.caption, Fill.Solid(c.textSecondary))
         }
     }
 }

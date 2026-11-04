@@ -118,17 +118,20 @@ data class ContinuumLearningStatus(
  * bounded prior experiences, measures frozen holdouts and commits candidate
  * weights only when regression gates pass. A rejected candidate is discarded.
  */
-class ContinuumLearningCore(
+class ContinuumLearningCore private constructor(
     baseDirectory:File,
     /** M2.3: when set, every owner-fact mutation is also appended as a signed ProofCarryingMemory mutation to a
      * sidecar journal (the LEX2 ledger format is unchanged). Null = previous behaviour. */
     private val correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
-    private val nowMillis:()->Long
+    private val nowMillis:()->Long,
+    automaticRecovery:Boolean
 ) {
-    constructor(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):this(baseDirectory,null,nowMillis)
+    constructor(baseDirectory:File, correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+                nowMillis:()->Long):this(baseDirectory,correctionSigner,nowMillis,false)
+    constructor(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):this(baseDirectory,null,nowMillis,false)
 
     private val directory=File(baseDirectory,"learning-core-v2")
-    private val store=FileLearningExperienceStore(directory)
+    private val store=FileLearningExperienceStore(directory,automaticRecovery)
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
@@ -661,11 +664,12 @@ class ContinuumLearningCore(
     /**
      * Mirrors the Android owner memory into the ledger with one read and at most
      * one write. Like [recordOwnerFact] it never re-activates a revoked fact, so a
-     * revocation is not undone by facts that are still listed elsewhere.
+     * revocation is not undone by facts that are still listed elsewhere. After
+     * recovery, missing historical facts are not imported as new confirmations.
      */
     fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) { signedOwnerMutation {
         quarantineUnconfirmableOwnerFacts()
-        store.appendMissing(facts.map(::ownerFact))
+        store.appendHistoricalOwnerFacts(facts.map(::ownerFact))
     } }
 
     /**
@@ -683,11 +687,23 @@ class ContinuumLearningCore(
         }
         if(store.append(item))return OwnerFactChange.ADDED
         val existing=store.all().first { it.id==item.id }
+        if(existing.id in store.pendingOwnerReconfirmation())return OwnerFactChange.HELD_UNCONFIRMED
         if(existing.status!=LearningStatus.REVOKED && existing.status!=LearningStatus.REJECTED)
             return OwnerFactChange.ALREADY_ACTIVE
         check(store.updateStatus(item.id,LearningStatus.CONFIRMED,nowMillis())) { "Owner fact vanished" }
         return OwnerFactChange.REACTIVATED
     }
+
+    /** Display these concrete statements before collecting an owner decision. No model/tool can supply a yes. */
+    fun recoveredOwnerFactsForReview():OwnerRecoveryReview = synchronized(CORE_LOCK) { store.ownerRecoveryReview() }
+
+    /** The proof binds an explicit displayed subset and the current ledger/consent revision. No bulk default. */
+    fun reconfirmRecoveredOwnerFacts(review:OwnerRecoveryReview,proof:OwnerReconfirmationProof?):Set<String> =
+        synchronized(CORE_LOCK) { signedOwnerMutation {
+            val ids=store.reconfirmRecoveredOwnerFacts(review,proof)
+            if(ids.isNotEmpty())dialogue.clear()
+            ids
+        } }
 
     private val correctionJournal=correctionSigner?.let { SignedOwnerCorrectionJournal(directory,it) }
 
@@ -1136,6 +1152,14 @@ class ContinuumLearningCore(
     }
 
     companion object {
+        /** Explicit owner-approved recovery policy; existing constructors retain strict integrity reads. */
+        fun withAutomaticRecovery(baseDirectory:File, nowMillis:()->Long=System::currentTimeMillis):ContinuumLearningCore =
+            ContinuumLearningCore(baseDirectory,null,nowMillis,true)
+
+        fun withAutomaticRecovery(baseDirectory:File, correctionSigner:at.heinz.deviceai.cognitive.IdentitySigner?,
+                                  nowMillis:()->Long=System::currentTimeMillis):ContinuumLearningCore =
+            ContinuumLearningCore(baseDirectory,correctionSigner,nowMillis,true)
+
         /** Ledger-view cache: key = canonical directory + zone, value = (content fingerprint, ledger-only view).
          * Bounded LRU; entries are immutable views, so sharing them across instances is safe. */
         private const val VIEW_CACHE_MAX=8

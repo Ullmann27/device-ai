@@ -32,6 +32,9 @@ class JarvisShellStageUiTest {
         val app = RuntimeEnvironment.getApplication()
         app.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE).edit().putBoolean("voice_enabled", false).commit()
         app.getSharedPreferences("continuum-readiness", Context.MODE_PRIVATE).edit().putBoolean("introduced", true).commit()
+        // Native host Canvas capture; optional Android Filament rendering is checked on the device separately.
+        app.getSharedPreferences("continuum-avatar-appearance", Context.MODE_PRIVATE).edit()
+            .putBoolean("native-head", true).putBoolean("native-head-3d", false).commit()
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear()
             .putBoolean("jarvis-shell", true).commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
@@ -57,14 +60,19 @@ class JarvisShellStageUiTest {
             root.draw(Canvas(bitmap))
             val shell = requireNotNull(home.jarvisShell.shell) { "shell drawn" }
             val d = home.resources.displayMetrics.density
-            // Fold7 ref5 grid: the head gets the HEAD area (orb right of it belongs to Gedächtnis); else shell AVATAR.
-            val box = shell.grid?.get(at.heinz.deviceai.ui.JarvisCockpitGrid.Area.HEAD) ?: requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
-            assertEquals("ONE avatar slot = head box", (box.left * d).toInt(), home.avatarSlotRect.left)
+            // Heinz's takeover request: retain the original live head AND orb in the ref5 composite stage.
+            val box = requireNotNull(shell[JarvisShellLayout.Slot.AVATAR])
+            assertEquals("ONE live stage = head plus orb", (box.left * d).toInt(), home.avatarSlotRect.left)
             assertEquals((box.top * d).toInt(), home.avatarSlotRect.top)
+            assertEquals((box.right * d).toInt(), home.avatarSlotRect.right)
+            assertEquals((box.bottom * d).toInt(), home.avatarSlotRect.bottom)
             assertTrue("the real head is registered by the activity",
                 at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
             assertTrue("head docked in the slot", home.avatarSlotShown && home.avatarRenderer is at.heinz.deviceai.avatar.JarvisHoloAvatar)
-            assertEquals("no own head/orb in the cockpit", View.GONE, avatar.visibility)
+            assertTrue("The docked head must be the existing Activity signal surface",
+                (home.avatarRenderer as at.heinz.deviceai.avatar.JarvisHoloAvatar).hologram === avatar)
+            assertEquals("The signal surface must remain visible", View.VISIBLE, avatar.visibility)
+            assertEquals(home, avatar.parent)
             System.getProperty("continuum.ui.evidenceDir")?.let { dir ->
                 File(dir).mkdirs()
                 File(dir, "$label.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }

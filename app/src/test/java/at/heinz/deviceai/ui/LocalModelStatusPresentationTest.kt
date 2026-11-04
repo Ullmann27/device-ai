@@ -43,4 +43,14 @@ class LocalModelStatusPresentationTest {
         val noThermal = LocalModelStatusPresentation.rows(ContinuumDashboardState(), LocalModelResourceSnapshot(1, 1, false, null))
         assertEquals(na, v(noThermal, "Thermal"))
     }
+
+    @Test fun ref5RowsPresentAndModeHasNoInventedValue() {
+        val r = LocalModelStatusPresentation.rows(ContinuumDashboardState(
+            model = ContinuumDashboardState.ModelStatus(name = "gemma-3n · 2", online = true, stateLabel = "BEREIT")),
+            LocalModelResourceSnapshot(8L shl 30, 2L shl 30, false, 0))
+        listOf("Model", "Mode", "Status", "RAM").forEach { l -> assertEquals(1, r.count { it.label == l }) }
+        assertEquals(LocalModelStatusPresentation.MISSING, v(r, "Mode"))
+        assertEquals(0.75f, r.single { it.label == "RAM" }.fraction!!, 1e-4f)
+        assertEquals(null, LocalModelStatusPresentation.rows(ContinuumDashboardState()).single { it.label == "RAM" }.fraction)
+    }
 }

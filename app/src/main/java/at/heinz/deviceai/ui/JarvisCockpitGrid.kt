@@ -3,112 +3,99 @@ package at.heinz.deviceai.ui
 import at.heinz.deviceai.ui.JarvisShellLayout.Box
 
 /**
- * Jarvis Kern: the Fold7-open cockpit grid measured from ref5 (§11, "pixelgenau wie ref5"). Pure dp geometry.
- * Horizontal positions are fractions of the window width read from ref5 (screen area 735 × 538 px in the
- * reference image); the fixed bands (header, tiles, bottom panels, status bar) use the same ref5 heights scaled by
- * [unit], and the head stage takes the remaining height so that EVERYTHING of ref5 is visible at once.
- * The user card uses Lückenfüller's measured fractions (left .157, top .123, w .149, h .194).
- * The navigation rail ([Area.RAIL]) and the header device status ([Area.DEVICE_STATUS]) are slots for
- * Integration (#486); the head ([Area.HEAD]) belongs to Avatar (#482), the orb ([Area.ORB]) to Gedächtnis (#484).
+ * Regions measured from the owner's 1536 × 1024 reference (01-59477, 4 November 2026).
+ *
+ * Coordinates are layout constraints, never a transform applied to text or the 3D scene. Horizontal positions
+ * follow the available window; extra height is shared by the hero and information row. Each renderer receives
+ * its own bounds and preserves its aspect ratio. The background still paints the entire available window.
  */
 object JarvisCockpitGrid {
     enum class Area {
         HEADER, DEVICE_STATUS, BRAND, MODE_PILL, PRIVACY_PILL, ICONS,
         RAIL, USER_CARD, HEAD, ORB, DIALOG, MODULES, TILES,
-        ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, STATUS
+        ROW_AGENTS, ROW_TASKS, ROW_MEMORY, ROW_MODEL, STATUS,
+        TAGLINE, CONTINUUM_HEADER, CAMERA_STATUS
     }
 
-    /** Areas drawn on top of a larger one (container to inner); every other pair must not overlap. */
+    /**
+     * Intentional layers in the reference. The transparent head stage extends behind the header's lower edge;
+     * its visible mesh, rather than its rectangular viewport, determines occlusion. USER_CARD remains an API
+     * name for older compositions, but the new reference has no owner-card overlay on the face.
+     */
     val overlays: Set<Pair<Area, Area>> = setOf(
-        Area.HEAD to Area.USER_CARD, Area.HEAD to Area.DIALOG,
+        Area.HEAD to Area.DIALOG,
         Area.HEADER to Area.DEVICE_STATUS, Area.HEADER to Area.BRAND, Area.HEADER to Area.MODE_PILL,
-        Area.HEADER to Area.PRIVACY_PILL, Area.HEADER to Area.ICONS,
+        Area.HEADER to Area.PRIVACY_PILL, Area.HEADER to Area.ICONS, Area.HEADER to Area.TAGLINE,
+        Area.HEADER to Area.HEAD, Area.HEAD to Area.BRAND, Area.HEAD to Area.TAGLINE,
+        Area.HEADER to Area.CONTINUUM_HEADER, Area.HEADER to Area.CAMERA_STATUS
     )
 
     data class Grid(val width: Float, val height: Float, val unit: Float, val areas: Map<Area, Box>) {
         operator fun get(a: Area): Box = areas.getValue(a)
     }
 
-    /** ref5 screen area in reference pixels. */
-    const val REF_W = 735f
-    const val REF_H = 538f
+    const val REF_W = 1536f
+    const val REF_H = 1024f
+    const val TILE_COLUMNS = 5
+    const val TILE_ROWS = 2
+    const val MIN_TOUCH_DP = 48f
+    /** Heading, companion line, a real two-line reply and the unchanged 48dp action row. */
+    const val MIN_DIALOG_DP = 144f
 
-    // ref5 fractions of the width (x - 48) / 735
-    private const val CONTENT_LEFT = .157f      // = user card left (Lückenfüller)
-    private const val HEAD_RIGHT = .547f
-    private const val ORB_RIGHT = .819f
-    private const val MODULES_LEFT = .833f
-    private const val BRAND_LEFT = .125f
-    private const val BRAND_RIGHT = .40f
-    private const val MODE_LEFT = .522f
-    private const val MODE_RIGHT = .642f
-    private const val PRIVACY_LEFT = .662f
-    private const val PRIVACY_RIGHT = .874f
-    private const val ICONS_LEFT = .888f
-    private const val DIALOG_RIGHT = .370f
-    private const val CARD_TOP = .123f
-    private const val CARD_W = .149f
-    private const val CARD_H = .194f
-    /** Bottom panels Active Agents / Task Flow / Memory Activity / Local Model (ref5 widths 158:132:139:159). */
-    private val ROW_WEIGHTS = floatArrayOf(158f, 132f, 139f, 159f)
-
-    /** Applies on the open Fold7 (FOLD_OPEN) with normal font sizes; larger fonts keep the scrolling-free legacy grid. */
+    /** Both open-Fold orientations and wide tablets retain the same five-column composition. */
     fun applies(widthDp: Float, heightDp: Float, fontScale: Float): Boolean =
-        JarvisShellLayout.formFactor(widthDp, heightDp) == JarvisShellLayout.FormFactor.FOLD_OPEN && fontScale <= 1.3f
+        widthDp.isFinite() && heightDp.isFinite() && widthDp > 0f && heightDp > 0f &&
+            JarvisWindowProfile.resolve(widthDp, heightDp, fontScale).referenceComposition
 
     fun unit(widthDp: Float, heightDp: Float): Float = minOf(widthDp / REF_W, heightDp / REF_H)
 
-    fun create(widthDp: Float, heightDp: Float): Grid {
-        require(widthDp.isFinite() && widthDp > 0f && heightDp.isFinite() && heightDp > 0f)
-        val W = widthDp; val H = heightDp
-        val u = unit(W, H)
-        val m = 6f * u; val g = 6f * u
+    fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f): Grid {
+        require(widthDp.isFinite() && widthDp >= 600f && heightDp.isFinite() && heightDp >= 480f)
+        require(fontScale.isFinite() && fontScale > 0f)
+        val u = unit(widthDp, heightDp)
+        val extraHeight = heightDp - REF_H * u
+        val gap = 12f * u
+        // Small windows get real touch targets and readable panel rows before decorative space.
+        val tileExtra = (2f * MIN_TOUCH_DP * maxOf(1f, fontScale) + gap - 182f * u).coerceAtLeast(0f)
+        val rowExtra = (120f * maxOf(1f, fontScale) - (191f * u + extraHeight * .2f)).coerceAtLeast(0f)
+        val heroExtension = extraHeight * .8f - tileExtra - rowExtra
+        fun x(referenceX: Float) = referenceX / REF_W * widthDp
+        fun b(left: Float, top: Float, right: Float, bottom: Float) = Box(x(left), top, x(right), bottom)
         val a = linkedMapOf<Area, Box>()
-        val right = W - m
-        val cl = W * CONTENT_LEFT
-        // Header: ref5 56 px, never below the user card top.
-        val cardTop = H * CARD_TOP
-        val headerBottom = minOf(56f * u, cardTop - g)
-        a[Area.HEADER] = Box(m, 0f, right, headerBottom)
-        val pillH = minOf(20f * u, headerBottom - 8f)
-        val pillTop = (headerBottom - pillH) / 2f
-        a[Area.DEVICE_STATUS] = Box(m, 4f, W * BRAND_LEFT - g, headerBottom - 4f)
-        a[Area.BRAND] = Box(W * BRAND_LEFT, 4f, W * BRAND_RIGHT, headerBottom - 4f)
-        a[Area.MODE_PILL] = Box(W * MODE_LEFT, pillTop, W * MODE_RIGHT, pillTop + pillH)
-        a[Area.PRIVACY_PILL] = Box(W * PRIVACY_LEFT, pillTop, W * PRIVACY_RIGHT, pillTop + pillH)
-        a[Area.ICONS] = Box(W * ICONS_LEFT, pillTop, right, pillTop + pillH)
 
-        // Bands from the bottom: status 26 px, bottom panels 95 px, tiles 2 × 45 px + 5 px (ref5).
-        val statusH = 26f * u
-        val statusTop = H - m - statusH
-        a[Area.STATUS] = Box(m, statusTop, right, H - m)
-        val rowBottom = statusTop - g
-        val rowTop = rowBottom - 95f * u
-        val tilesBottom = rowTop - g
-        val tilesTop = tilesBottom - 95f * u
-        a[Area.TILES] = Box(cl, tilesTop, right, tilesBottom)
-        val rows = listOf(Area.ROW_AGENTS, Area.ROW_TASKS, Area.ROW_MEMORY, Area.ROW_MODEL)
-        val rowRoom = right - cl - (rows.size - 1) * g
-        var x = cl
-        rows.forEachIndexed { i, area ->
-            val w = rowRoom * ROW_WEIGHTS[i] / ROW_WEIGHTS.sum()
-            val r = if (i == rows.lastIndex) right else x + w
-            a[area] = Box(x, rowTop, r, rowBottom); x = r + g
-        }
-        a[Area.RAIL] = Box(m, headerBottom + g, cl - g, rowBottom)
+        a[Area.HEADER] = b(8f, 6f * u, 1522f, 94f * u)
+        a[Area.DEVICE_STATUS] = b(16f, 10f * u, 172f, 90f * u)
+        a[Area.BRAND] = b(190f, 5f * u, 466f, 83f * u)
+        a[Area.TAGLINE] = b(494f, 13f * u, 793f, 78f * u)
+        a[Area.MODE_PILL] = b(817f, 17f * u, 1001f, 61f * u)
+        a[Area.PRIVACY_PILL] = b(1021f, 18f * u, 1280f, 59f * u)
+        a[Area.ICONS] = b(1291f, 14f * u, 1517f, 62f * u)
 
-        // Head stage between header and tiles: head (Avatar), orb (Gedächtnis), modules column.
-        val stageTop = headerBottom + g
-        val stageBottom = tilesTop - g
-        val stageH = stageBottom - stageTop
-        a[Area.HEAD] = Box(cl, stageTop, W * HEAD_RIGHT - g / 2f, stageBottom)
-        a[Area.ORB] = Box(W * HEAD_RIGHT + g / 2f, stageTop, W * ORB_RIGHT, stageBottom)
-        a[Area.MODULES] = Box(W * MODULES_LEFT, stageTop + stageH * .15f, right, stageTop + stageH * .74f)
-        val cardBottom = minOf(cardTop + H * CARD_H, stageTop + stageH * .52f)
-        a[Area.USER_CARD] = Box(cl, maxOf(cardTop, stageTop), cl + W * CARD_W, cardBottom)
-        // ref5: the bubble is ~93 px (≈ 100 u) tall; a taller window gives it at most 30 % of the stage.
-        val dialogTop = maxOf(cardBottom + g, stageBottom - maxOf(100f * u, stageH * .30f))
-        a[Area.DIALOG] = Box(cl, dialogTop, W * DIALOG_RIGHT, stageBottom)
-        return Grid(W, H, u, a)
+        val heroBottom = 497f * u + heroExtension
+        a[Area.HEAD] = b(250f, 70f * u, 800f, heroBottom)
+        a[Area.ORB] = b(805f, 183f * u, 1212f, heroBottom)
+        a[Area.CONTINUUM_HEADER] = b(805f, 80f * u, 1194f, 180f * u)
+        val headerActionBottom = maxOf(48f, a.getValue(Area.ICONS).centerY + 24f)
+        val cameraTop = maxOf(83f * u, headerActionBottom + 6f * u)
+        val cameraBottom = cameraTop + maxOf(58f * u, MIN_TOUCH_DP)
+        a[Area.CAMERA_STATUS] = b(1199f, cameraTop, 1520f, cameraBottom)
+        a[Area.MODULES] = b(1219f, maxOf(156f * u, cameraBottom + 8f * u), 1520f,
+            minOf(heroBottom - 8f * u, 405f * u + heroExtension * .6f))
+        val dialogBottom = heroBottom - 5f * u
+        val dialogHeight = maxOf(194f * u, MIN_DIALOG_DP * maxOf(1f, fontScale))
+        a[Area.DIALOG] = b(256f, maxOf(a.getValue(Area.HEAD).top + 8f * u, dialogBottom - dialogHeight),
+            640f, dialogBottom)
+
+        a[Area.TILES] = b(258f, 503f * u + heroExtension, 1520f,
+            685f * u + extraHeight * .8f - rowExtra)
+        val rowTop = 697f * u + extraHeight * .8f - rowExtra
+        val rowBottom = 888f * u + extraHeight
+        a[Area.ROW_AGENTS] = b(258f, rowTop, 548f, rowBottom)
+        a[Area.ROW_TASKS] = b(560f, rowTop, 836f, rowBottom)
+        a[Area.ROW_MEMORY] = b(848f, rowTop, 1152f, rowBottom)
+        a[Area.ROW_MODEL] = b(1164f, rowTop, 1520f, rowBottom)
+        a[Area.RAIL] = b(12f, 97f * u, 243f, 896f * u + extraHeight)
+        a[Area.STATUS] = b(16f, 906f * u + extraHeight, 1520f, 978f * u + extraHeight)
+        return Grid(widthDp, heightDp, u, a)
     }
 }
