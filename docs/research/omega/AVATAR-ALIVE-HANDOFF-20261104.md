@@ -1,6 +1,8 @@
 # Avatar alive — implementation checkpoint
 
-Status: HOST_BUILD_AND_POSE_REPLAY_VERIFIED / REFERENCE_ALIGNMENT_IN_PROGRESS / FOLD7_NOT_RUN. Owner instruction on 2026-11-04: animate the approved corrected Continuum avatar through the existing application path.
+Status: HOST_UNIT_UI_LINT_APK_PASS / REFERENCE_IMPLEMENTATION_PARTIAL / FOLD7_NOT_RUN. Owner instruction on 2026-11-04: animate the approved corrected Continuum avatar through the existing application path.
+
+**Latest clean-source gate:** GitHub `d2eaa6d8ff8b2bdc4ed277a9987e8efa7c40d39b`, exact tree `4aa6b68d74901eb839b877cc66807ca57a34f835`. Full unit suite: **2,620 passed, 19 skipped, 0 failures/errors** (2,639 total). Selected Android UI suite: **40/40 passed**. Lint: **0 issues**. Debug APK built and its approved GLB/NOTICE verified byte-for-byte. Evidence: `avatar-alive-20261104/final/`. Earlier pending/failed checkpoints below are retained as history and are superseded for these listed host gates. Full video equivalence, native Fold7 rendering and audible synchronization remain open.
 
 ## Pinned starting point
 
@@ -35,7 +37,7 @@ No main merge, release, installation, paid API, model training or APK signature 
 - `FilamentAvatarRenderer` passes the validated portrait azimuth into its mapper. Owner gaze now points toward the existing -22-degree camera; framing is preserved. Canonical zero-camera callers retain their existing gaze contract.
 - Imported the signed-zero/full-negative-cycle correction from #520, source commit `9094032b05257ef12f882e37cefd7dd8f7ebc203`, production blob `31801578f47f6a677c58283a408bc2840297de6d`.
 - Baseline: 86 JUnit + 26 motion checks passed. New behavioral cases then reproduced 5 failures: two negative-time crashes, two camera-relative gaze failures, missing idle smile. The constructor parameter was introduced without behavior for this red run.
-- Current host gate: **101 JUnit tests + 26 motion checks passed**, including actual PCM envelope -> Director -> reducer -> mapper, vowel-to-bilabial closure, interruption and stale callback rejection.
+- First functional host gate: **101 JUnit tests + 26 motion checks passed**, including actual PCM envelope -> Director -> reducer -> mapper, vowel-to-bilabial closure, interruption and stale callback rejection.
 - Raw baseline/red/green outputs: `avatar-alive-20261104/`. Synthetic test PCM is not evidence of audible device synchronization.
 - `ExportAvatarAlive.kt` uses the actual audio signal, Director, reducer and mapper to export a 12-second synthetic runtime sequence. The Blender replay checks canonical control matrices and skinned vertices before rendering. Video/render and Android gates are pending at this checkpoint.
 - Native Fold7 visual/lifecycle/performance, audible TTS and owner-camera checks remain OPEN. The earlier rear-head texture/protrusion findings are not repaired by this motion change.
@@ -81,3 +83,30 @@ Production source: GitHub `6cab1b9add227c2e0e615191210014d445040567`, local exec
 - **Broader UI, full unit, lint and APK revalidation remain pending at this test-fixture checkpoint.** No Fold7, native Filament, audible speech or performance result is implied by host Canvas.
 
 The bounded combined UI run then completed: **36 passed, 4 failed during native fixture window setup**. All speech/range, reattachment, navigation, sizing, head-effect and layout assertions passed. The four setup failures were `ActivityController.windowFocusChanged` receiving a missing ViewRoot after the clock was paused. Advancing the controlled clock 40 ms between `visible()` and `windowFocusChanged(true)` allows the actual simulated window to attach. The unchanged slot/phone/fold/tablet assertions then all passed (**4/4**). `ui-clock-first.*` and `shell-window-green.*` preserve both outcomes. No production scheduling was changed to make these fixtures pass. The final clean-source combined gate follows this checkpoint.
+
+## Final verified host checkpoint
+
+All following gates ran on a clean worktree at local commit `5a85676afdc44524306a982dba79659e4c029117`, byte-identical tree `4aa6b68d74901eb839b877cc66807ca57a34f835` to official GitHub commit `d2eaa6d8ff8b2bdc4ed277a9987e8efa7c40d39b`. Final evidence-only additions do not change this tested production or test source.
+
+| Gate | Actual result | Evidence |
+|---|---|---|
+| Full Android unit suite | 2,639 total; 2,620 passed; 19 skipped; 0 failures/errors | `final/full.json`, `final/full.txt` |
+| Avatar/audio subset within full suite | 107 tests, 0 failures/errors | Per-suite entries in `final/full.json` |
+| Selected Android UI/Canvas suite | 40 passed; 0 skipped/failures/errors | `final/ui.json`, `final/ui.txt` |
+| Lint | 0 issues | `final/lint.xml` |
+| Debug APK | Build PASS; 89,752,346 bytes; no installation | `final/package.json` |
+| Approved asset and NOTICE | Packaged bytes equal repository bytes; GLB runtime pin agrees | `final/package.json` |
+| Device availability | 0 devices listed; no native/device execution | `final/device-availability.json` |
+
+The UI gate includes four layout cases that also belong to the ordinary unit suite; do not add the two totals as unique tests. Toolchain: JDK17, Gradle8.11.1, Kotlin2.4.0, Android compile SDK36/build tools35.0.0; Robolectric4.14.1/SDK28 for UI cases. Raw log headers preserve exact task arguments and source identities. Existing compiler/plugin deprecation warnings are separate from the clean lint result.
+
+APK SHA-256: `f79a049992a76e0c2d9f80c1c57674a603bb6db91121448b11d034e63dbf47ee`. This is the existing default **debug QA** package `at.heinz.deviceai`, versionCode4/versionName0.3.1, not the owner's `Continuum Lokal` release/update. No original signing key, installed package or release metadata was changed. Approved GLB remains `c8b88385c73fa01596a5734d20859440b1ecaef06cb1abea6cd7a47e62b08b9a`, 12,038,416 bytes.
+
+### Remaining acceptance and next entry point
+
+1. Keep the reviewed head identity and original orb. Review this draft on parent #521; do not merge main or install/sign an owner update automatically.
+2. Obtain native device evidence for the exact integrated source: actual Filament pixels, speech audio/STOP, navigation/fold transitions, thermal/performance and permitted camera behavior. Current ADB has no device; the disposable emulator failed its disk gate. Host Canvas and Blender are not substitutes.
+3. Continue the reference matrix: exact phoneme timing/audio audition, depth/shrink startup cues, full-body/orb scene, general document intake and actionable answer choices, real account/weather/calendar sources. The connected head burst closes one concrete gap; it does not implement all ten videos.
+4. Inspect the existing rear texture/stretch and nape findings before claiming all-view likeness. Do not silently replace the owner's approved face to hide them.
+
+The 12-second silent pose replay remains a separately pinned earlier milestone at source `0a79c703be62f4ade6737eaa9d13fea1dc35c5bb`, not a recording of the final Android build. Its input poses, asset, replay errors and video hash are preserved in `video-provenance.json` and `render-summary.json`.
