@@ -283,8 +283,16 @@ object LmEval {
     }
 
     fun sample(p: FloatArray, temperature: Double, topK: Int, rnd: Random): Int {
+        if (temperature <= 0.0) {
+            topK.coerceIn(1, p.size)
+            var best = 0
+            for (i in 1 until p.size) {
+                // Match the stable sort's Float ordering, including NaN and signed zero.
+                if (p[i].compareTo(p[best]) > 0) best = i
+            }
+            return best
+        }
         val order = p.indices.sortedByDescending { p[it] }.take(topK.coerceIn(1, p.size))
-        if (temperature <= 0.0) return order.first()
         val w = order.map { exp(ln(p[it].toDouble().coerceAtLeast(1e-30)) / temperature) }
         var r = rnd.nextDouble() * w.sum()
         for ((i, id) in order.withIndex()) { r -= w[i]; if (r <= 0) return id }

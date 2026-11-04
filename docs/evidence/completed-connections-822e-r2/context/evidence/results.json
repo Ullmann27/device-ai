@@ -1,0 +1,59 @@
+{
+  "sourceProvenanceAndPatchPreservation": {
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "java": {
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "compilerVersion": {
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "initialHostCompile": {
+    "status": "FAILED_MISSING_SOURCE_DEPENDENCIES",
+    "exitCode": 1,
+    "resolution": "Included unchanged real Lex3LearningExperienceStore.kt and OwnerMemoryRecovery.kt in host source graph"
+  },
+  "finalHostCompile": {
+    "status": "PASS",
+    "exitCode": 0,
+    "sourceManifestCount": 47,
+    "generatedAdditionalSources": 5,
+    "unchangedParityOracleSources": 1
+  },
+  "baselineJUnit": {
+    "status": "PASS",
+    "exitCode": 0,
+    "tests": 21
+  },
+  "candidateJUnit": {
+    "status": "PASS",
+    "exitCode": 0,
+    "tests": 21
+  },
+  "parity": {
+    "status": "PASS",
+    "exitCode": 0,
+    "cases": 462,
+    "successfulContexts": 408,
+    "identicalExceptions": 54
+  },
+  "checkRunner": {
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "gradleAndroid": {
+    "status": "NOT_RUN",
+    "reason": "Parent coordinates shared Android build lock and combined-source selected tests"
+  },
+  "deviceInferenceAndPerformance": {
+    "status": "NOT_RUN",
+    "reason": "Outside accepted-byte connection slice"
+  },
+  "benchmarkAndControl": {
+    "status": "NOT_RUN",
+    "reason": "No new benchmark requested or needed"
+  }
+}
