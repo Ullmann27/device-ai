@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "R6_PREREGISTERED_AFTER_TWO_REJECTED_CANDIDATES",
-  "owner": "tuning-automation-r4-20261104T2224Z",
-  "leaseExpiresAtUtc": "2026-11-04T23:09:12.992Z",
-  "updatedAtUtc": "2026-11-04T22:30:18.300Z",
+  "status": "READY_FOR_NEXT_RUN",
+  "owner": null,
+  "leaseExpiresAtUtc": null,
+  "updatedAtUtc": "2026-11-04T22:42:57.870Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -58,7 +58,7 @@
       "publishedCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4"
     }
   ],
-  "next": "Inspect encodeWord, compile source-bound original, freeze paired host cases, first A/A control, then one behavior-preserving candidate, parity and one A/B timing; archive any negative result",
+  "next": "New independent source-bound hypothesis only. Do not repeat R4 encodeWord, R5 decode, or R6 pretokenize candidates without explaining earlier unfavorable CPU/allocation controls. Check fresh PR head and foreign lease; measure real caller profile before preregistering new scenario. Fold7/device unavailable in this round.",
   "limits": [
     "no main merge",
     "no APK/install",
@@ -67,8 +67,8 @@
     "no other-team branch mutation",
     "no repeated favorable-sample search"
   ],
-  "lastOwner": "tuning-root-59ad19c6d3b7-r3",
-  "completedRound": "R3",
+  "lastOwner": "tuning-automation-r4-20261104T2224Z",
+  "completedRound": "R6",
   "lastPublishedProductionCommit": "2aab7c3392b5205262575ae6ee1cddf4ec0a81b4",
   "completedMilestones": 4,
   "verification": {
@@ -82,19 +82,19 @@
   },
   "queue": [
     {
-      "target": "LmBpeTokenizer.encodeWord temporary allocations",
+      "target": "Profile actual LM1 caller allocation and demand shape",
       "status": "NOT_YET_INVESTIGATED",
-      "gate": "Inspect current code and callers; preregister a new source-bound hypothesis before measurement; preserve merge/cache/vocabulary behavior"
+      "gate": "Profile actual use and determine whether component is on active Gemma/LiteRT inference path; no extrapolation from synthetic Kotlin-host microbenchmarks; coordinate with other PR owners."
     },
     {
-      "target": "Remaining local-inference allocation sites",
+      "target": "Find a new optimizer from measured actual caller profile",
       "status": "NOT_YET_INVESTIGATED",
-      "gate": "Use fresh source and actual caller profile; coordinate ownership; no architecture or weight changes"
+      "gate": "Preregister distinct source-bound hypothesis and controls with stop rule; do not retest R4-R6 alternatives opportunistically."
     },
     {
-      "target": "Android/Fold7 component and end-to-end profiling",
+      "target": "Android/Fold7 A/B component profile",
       "status": "WAITING_FOR_AVAILABLE_TARGET",
-      "gate": "Only when an authorized target exists; do not substitute host results or install/release automatically"
+      "gate": "Require authorized target, no silent APK build, signing or install; use DEVICE_NOT_RUN otherwise."
     }
   ],
   "stopRules": [
@@ -107,7 +107,7 @@
   "activeRound": "R4",
   "r4": {
     "target": "LmBpeTokenizer.encodeWord",
-    "stage": "REJECTED_ARCHIVE_PENDING",
+    "stage": "REJECTED_ARCHIVED",
     "sourceHeadAtAcquisition": "2cee96fbe849d0fd79d055af56dcb7286c718377",
     "sourceBlobSha": "2e773ac829a29f8c1567c5e5632960ae25b5a2d5",
     "hypothesis": "Replace mutable boxed-Int lists and per-merge ArrayLists with a fixed primitive IntArray plus stable in-place left-to-right compaction, retaining rank/tie/UTF-8/cache and serialized vocabulary identity.",
@@ -134,12 +134,15 @@
       "rawFilePaths": [
         "/mnt/data/continuum-r4/aa.csv",
         "/mnt/data/continuum-r4/ab.csv"
-      ]
+      ],
+      "archivePublished": true,
+      "remoteEvidencePath": "docs/evidence/tuning-r4-r6-20261104",
+      "completeReport": "docs/research/omega/TUNING-R4-R6-20261104.md"
     }
   },
   "r5": {
     "target": "LmBpeTokenizer.decode",
-    "stage": "REJECTED_ARCHIVE_PENDING",
+    "stage": "REJECTED_ARCHIVED",
     "hypothesis": "Eliminate ByteArrayOutputStream intermediate growth and duplicate copy with a checked two-pass byte-length calculation and one exact ByteArray, preserving behavior of negative, BOS/EOS and out-of-bounds IDs.",
     "comparison": "Current public tokenizer unchanged versus one candidate; Kotlin-host source-bound parity and A/A then one A/B; 4 warmup + 9 alternating pairs; no favorable timing retries.",
     "scenarios": [
@@ -162,12 +165,13 @@
       "ab": "8 scenarios x 9 pairs",
       "allocation": "All 8 cases lower in AB, -32.5% to -53.9%",
       "rejection": "Material CPU regression in tiny byte +77.4% (0/9 wins), single word +141.4% (0/9 wins), mostly ignored +19.6% (1/9 win), despite improvements in large cases",
-      "timingRetry": false
+      "timingRetry": false,
+      "archivePublished": true
     }
   },
   "r6": {
     "target": "LmBpeTokenizer.pretokenize",
-    "stage": "PREREGISTERED",
+    "stage": "REJECTED_ARCHIVED",
     "hypothesis": "Remove Kotlin sequence map/toList layers by collecting Regex.findAll matches directly in one ArrayList; preserve empty input singleton, full token order and exact Unicode output.",
     "implementationScope": "One companion method; no regex or vocabulary/cache change",
     "design": "No preallocated size, no regex precompile change, no training/weights",
@@ -184,6 +188,46 @@
     "batch": "For each scenario, 120 pretokenize calls, 4 alternating warmup pairs, exactly 9 alternating measure pairs; source-bound A/A before candidate and one A/B after; fixed fixtures and same Kotlin/JDK21 host",
     "correctness": "Exact strings and boundaries against original for deterministic + seeded fuzz (>= 2000), no mutated return/cache or changed serialization, full source-compilation",
     "adoption": "Require allocation reduction on meaningful many-token cases, no material regression on empty/single-token and no strong CPU regression on controls. Otherwise archive/reject.",
-    "otherPRs": "#527 touches LmModel but not tokenizer; no source edits to others."
+    "otherPRs": "#527 touches LmModel but not tokenizer; no source edits to others.",
+    "results": {
+      "baselineFileBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "sourceParity": "3960 PASS",
+      "aa": "8 scenarios x 9 pairs x 2 arms",
+      "ab": "8 scenarios x 9 pairs x 2 arms",
+      "allocation": "No observed allocation reduction across all eight controls",
+      "cpuRegressions": "Whitespace +14.4% CPU median, only 2/9 favorable pairs",
+      "decision": "REJECTED: candidate not adopted; no timing repetitions",
+      "archivePublished": true
+    }
+  },
+  "lastResearchHead": "97c5047c7af4a3929137a32e08f1e7acb151c889",
+  "lastRejectedCandidateCount": 3,
+  "archive": {
+    "name": "R4-R6-evidence.tar.xz",
+    "githubDirectory": "docs/evidence/tuning-r4-r6-20261104",
+    "partNames": [
+      "evidence-part-00.b64",
+      "evidence-part-01.b64",
+      "evidence-part-02.b64",
+      "evidence-part-03.b64",
+      "evidence-part-04.b64",
+      "evidence-part-05.b64"
+    ],
+    "partGitBlobSha": [
+      "7cf1b371822caed5d0648e31c0827039de7758bf",
+      "fb174d3ab8f5dcfa901b43c2bd0df5c8bd9e6b77",
+      "b6815c82e849313a9989790e56daa0bcba5cea1e",
+      "8563beb2776982da4e96e028044537b9533b793a",
+      "342f05e1cbd62de50acc91125f66f40b3e5f7b01",
+      "1add813bdccfa9a203adfca951a50da9d3c41f78"
+    ],
+    "sha256": "ec96bfc54efc0262950dadf7bc7a388bc99db827e3b6b9f5cd8c69b5162b2f7e",
+    "allRemoteBlobHashesMatched": true,
+    "remoteAssembledTarVerification": "NOT_RUN",
+    "localArchiveVerified": true,
+    "measuredRows": 864,
+    "warmupRows": 384,
+    "sourceFileOnly": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+    "productionSourceChanged": false
   }
 }
