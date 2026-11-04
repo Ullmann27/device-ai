@@ -53,3 +53,8 @@ compile only – NOT verifiable on host (no GPU); needs device check.
 ## Step 7 (head check 2: spun glass, 3 rings, bloom, envelope from depth, JarvisAvatarSlot) – rerun
 compileDebugKotlin + avatar.*, avatar3d.*, ui.Jarvis*, cockpit.*, ContinuumAvatarNativeUiTest: BUILD SUCCESSFUL, all green
 (incl. new JarvisAvatarSlotUiTest). JarvisNeon extended (bloomSegments, bloomPoint, laserSparks) – additions only.
+
+## Step 8 (merge Kern @86263a81; B1 Z-levels/camera drift, B2 panel bloom, B3 German tiles without invented text) – rerun
+compileDebugKotlin + ui.*, avatar.*, cockpit.*, ContinuumAvatarNativeUiTest: only the 3 pre-existing base failures
+(AdaptiveCockpit 48 dp, 2× CoreMirror). The 3 landscape failures of step 6 are fixed by Kern's 86263a81.
+New: JarvisMotionDepthTest green; JarvisShellLayoutTest.referenceTilesFromRef5 now expects German titles and no subtitles.

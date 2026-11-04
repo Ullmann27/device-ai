@@ -75,8 +75,9 @@ class JarvisShellLayoutTest {
     }
 
     @Test fun referenceTilesFromRef5() {
-        assertEquals(listOf("Chat", "Memory", "Logic", "Research", "Agents", "Learning", "Device Control", "System Status"),
+        assertEquals(listOf("Chat", "Gedächtnis", "Denken", "Forschung", "Agenten", "Lernen", "Gerätesteuerung", "Systemstatus"),
             JarvisTiles.reference.map { it.label })
+        assertTrue("no invented English descriptions", JarvisTiles.reference.all { it.subtitle == null })
         assertTrue(JarvisTiles.reference.all { it.displayText == null })
         assertEquals(JarvisTiles.reference.size, JarvisShellLayout.create(884f, 760f).tileBoxes().size)
     }

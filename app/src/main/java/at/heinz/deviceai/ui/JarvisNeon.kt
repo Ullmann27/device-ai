@@ -135,4 +135,15 @@ object JarvisNeon {
         }
         p.setAdditive(false)
     }
+
+    /** Active-state bloom for panels/cards (same look as the head bloom): wide additive rim passes. */
+    fun panelBloom(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float, strength: Float,
+                   color: Int = Colors.cyan) {
+        if (strength <= 0f) return
+        val fill = Fill.Solid(color)
+        p.setAdditive(true)
+        p.strokeRoundRect(l, t, r, b, radius, 14f, fill, .05f * strength)
+        p.strokeRoundRect(l, t, r, b, radius, 6f, fill, .12f * strength)
+        p.setAdditive(false)
+    }
 }
