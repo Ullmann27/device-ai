@@ -1,0 +1,40 @@
+{
+  "taskId": "C1-AVATAR-005",
+  "baseLocal": "eb736544e0864f8f1a58a891d9cd0dce2904dcc2",
+  "baseRemote": "8557ef2813b54654ff3a70d979e7ee8e8eefedd8",
+  "baseTree": "f1dc7958b05f0bd819d4503c1b0079abbeae815a",
+  "upstream": "PR517 archive at46e5fa6b09454ad6f6862e80478eb0f2d5545149",
+  "patchSha256": "f689bb8cd5ffd999a16a2f15d97e2726bf6fc9b794a6e5cc527dca1a8932bb1d",
+  "paths": [
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionBoundaryTest.kt"
+  ],
+  "sourceHashes": {
+    "app/src/main/java/at/heinz/deviceai/avatar3d/AvatarIdleMotion.kt": "a0c638fc847b4c1b3f010201a8a3bdc0b0b0c00a581475f8a111b553d545771d",
+    "app/src/test/java/at/heinz/deviceai/avatar3d/AvatarIdleMotionBoundaryTest.kt": "66e85d2ab1b13486e2aa9218ab77765ea061b5e973621f532a6ec900886eafe7"
+  },
+  "red": {
+    "compilerExit": 0,
+    "junitExit": 1,
+    "tests": 2,
+    "fail": 1,
+    "exception": "ArrayIndexOutOfBoundsException: Index -1 out of bounds for length116"
+  },
+  "green": {
+    "compilerExit": 0,
+    "junitExit": 0,
+    "tests": 2,
+    "fail": 0
+  },
+  "independentReview": {
+    "agent": "/root/repair_review",
+    "status": "STATIC_APPROVED",
+    "ordinaryNonzeroCalculationUnchanged": true,
+    "testExecutionByReviewer": false
+  },
+  "limits": [
+    "No Android/GPU/device/model execution",
+    "Subnormal boundary test proves finite outputs only, not amplitude bounds"
+  ],
+  "rollback": "Revert only the two avatar005 files; retain RED/GREEN evidence."
+}

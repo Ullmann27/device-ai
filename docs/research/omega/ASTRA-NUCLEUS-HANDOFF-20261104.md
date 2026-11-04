@@ -20,7 +20,7 @@ Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Boa
 | C1-QA-SOURCE-002 | C1 | Begrenzter 16-MiB-Git-Puffer, vollständiger Quellenbestand; remote `1a5302c504a78a50d5e64ca727f2915529bf2b06` | 30 gezielte PASS, unabhängiger statischer Review positiv; kanonische Gesamtgates führen jetzt Tests aus |
 | C1-CONTRACTS-003 | C1, Lieferant #517 | Vier Archivpatches bei `46e5fa6b09454ad6f6862e80478eb0f2d5545149`, sieben Testdateien | 48 PASS / 0 FAIL / 0 SKIP; 9/9 Negativkontrollen erkannt; statisch unabhängig befürwortet |
 | C1-APK-CHANNEL-004 | C1 / apk_readiness | Gradle-Konfiguration, #475, tatsächlicher Kanalversuch und Toolchain-Dateien | Aktueller Kanal UNVERIFIED: Web-Tool kann URL nicht abrufen; historische41 nicht als aktuell ausgeben |
-| C1-AVATAR-005 | C1, Lieferant #517 | Signed-zero-Patch AvatarIdleMotion + zwei Grenztests aus demselben Archiv | Statisch unabhängig befürwortet; eigener Kotlin RED/GREEN vor Einbau offen |
+| C1-AVATAR-005 | C1, Lieferant #517 | Signed-zero-Patch AvatarIdleMotion + zwei Grenztests aus demselben Archiv | TARGETED_KOTLIN_PASS; echter ArrayIndexOutOfBounds-RED, danach 2/2 GREEN; unabhängiger statischer Review positiv |
 | C1-ROUTING-006 | C1, begrenzter Patch von source_audit | routeBotInput; unbekannte natürliche Select-Formulierungen | PREPARING; bekannte/mehrdeutige/explizite Adressen und Storefehler getrennt erhalten |
 | C1-UI-CONTRACT-007 | C1 / apk_readiness read-only | Vorhandenes UI-Vertragspaket des laufenden Teams #517 | REVIEWING; kein ungeprüftes Gesamtbranch-Merge |
 | C1-C2-REVIEW-001 | externer C2 | Exakter gemeinsamer Endstand und Rohbelege | PENDING_HANDOFF / ACK_NOT_OBSERVED; C1-Unteragenten ersetzen C2 nicht |
@@ -35,7 +35,7 @@ Dieser Abschnitt führt den direkten Besitzerauftrag auf demselben zentralen Boa
 
 Enthalten: #491-Grundintegration, #506 Bot-/Recall-/Scope-Anschlüsse, #512 Cockpit-Lifecycle/Kalender/QA-Vorprüfung, #513 Sprachcaller/Reattach und #502/#503-Motion. Hinzu kamen genau der negative #515-ECHO-Slice und die getrennte QA-Manifestkorrektur. Branch-Discovery/Scheduler aus #515 bleiben separat.
 
-Fehlend: Nachgewiesene Behandlung unbekannter natürlicher Botwechsel-Sätze, Signed-zero-Randfall und vollständige aktuelle Quellvertragsabnahme. Neueste #493-Routerbytes enthalten den abgefangenen Normaltextfehler weiterhin. #517 arbeitet separat an UI-Fallback/Testhänger; dessen roter Gesamtstand wird nicht als Abnahme übernommen.
+Fehlend: Nachgewiesene Behandlung unbekannter natürlicher Botwechsel-Sätze und vollständige aktuelle Quellvertragsabnahme. Der Signed-zero-Randfall ist inzwischen im eigenen Kotlin RED/GREEN behoben. Neueste #493-Routerbytes enthalten den abgefangenen Normaltextfehler weiterhin. #517 arbeitet separat an UI-Fallback/Testhänger; dessen roter Gesamtstand wird nicht als Abnahme übernommen.
 
 Widersprüchlich/überholt: #506s initiales UNVERIFIED-Handoff, alte starre UI-/Aufrufer-Strings in Tests, historische AGENTS-Releaseangaben. Der Avatar-Vertrag belegt die angeschlossene Live-Hologrammfläche; dauerhaftes Fan-out an sämtliche Registry-Empfänger ist dadurch nicht bewiesen.
 
