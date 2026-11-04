@@ -49,7 +49,11 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
             turn = event.turnId
             command(event.commandPreview); return
         }
-        if (event is CockpitAnimationEvent.Extension) return
+        if (event is CockpitAnimationEvent.Extension) {
+            // Proposal for Kern: Extension("alarm") for overload/threat → Muster H. Unknown kinds are ignored.
+            if (event.kind == "alarm") { effects.alarm(clock()); kick() }
+            return
+        }
         if (turn == null) turn = event.turnId
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
@@ -72,10 +76,17 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
                 stepStates[id] = s.state
             }
             is CockpitAnimationEvent.AccountCardFlyIn ->
-                card(key("acc.${event.provider}"), JarvisSequenceEffects.Kind.ACCOUNT, event.provider, event.accountLabel)
-            is CockpitAnimationEvent.DocumentQuestion ->
-                card(key("doc"), JarvisSequenceEffects.Kind.DOCUMENT, event.documentName, event.question)
-            is CockpitAnimationEvent.TurnEnded -> { effects.dismissAll(clock()); stepStates.clear(); turn = null; kick() }
+                if (event.provider.contains("mail", ignoreCase = true)) {
+                    // Muster F; follow-up labels: TODO(Kern) supply the real next actions on the event.
+                    effects.envelope(event.accountLabel, emptyList(), clock()); kick()
+                } else card(key("acc.${event.provider}"), JarvisSequenceEffects.Kind.ACCOUNT, event.provider, event.accountLabel)
+            is CockpitAnimationEvent.DocumentQuestion -> {
+                effects.closeEnvelope()
+                card(key("doc"), JarvisSequenceEffects.Kind.DOCUMENT, event.documentName, null)
+                // Muster G; TODO(Kern): DocumentQuestion carries one question, the pills need the answer options.
+                effects.questionPills(listOf(event.question), clock()); kick()
+            }
+            is CockpitAnimationEvent.TurnEnded -> { effects.dismissAll(clock()); effects.clearPills(); effects.closeEnvelope(); stepStates.clear(); turn = null; kick() }
             else -> Unit
         }
     }

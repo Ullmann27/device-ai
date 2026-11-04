@@ -34,6 +34,40 @@ class JarvisSequenceEffects {
     private var flightAt = -1L
     private var flightCount = 0
 
+    private class Envelope(val label: String, val targets: List<String>, val at: Long)
+    private class Pills(val items: List<String>, val at: Long)
+    private var envelope: Envelope? = null
+    private var pills: Pills? = null
+    private var alarmAt = -1L
+    private var alarmMs = 0L
+
+    /** Avatar centre for the question pills, as fractions of the overlay. */
+    var avatarX = .5f
+    var avatarY = .40f
+
+    /**
+     * Muster F: 3-D mail envelope out of depth (0.5 s), flap opens (0.3 s), the document slides up and laser lines
+     * (Muster D) draw to one label per real follow-up action in [targets] (max 4), e.g. "Gmail analysieren".
+     */
+    fun envelope(label: String, targets: List<String>, nowMillis: Long) {
+        envelope = Envelope(clip(label, 40), targets.take(4).map { clip(it, 28) }, nowMillis); lastNow = nowMillis
+    }
+    fun closeEnvelope() { envelope = null }
+
+    /** Muster G: answer options fly from the screen edges to the avatar, no fade, hard deceleration, then float. */
+    fun questionPills(options: List<String>, nowMillis: Long) {
+        pills = Pills(options.take(6).map { clip(it, 32) }, nowMillis); lastNow = nowMillis
+    }
+    fun clearPills() { pills = null }
+
+    /** Muster H: alarm (overload/threat) – 2 px shake, glow x3, binary cascade. Host may apply [shakeOffsetX]/[shakeOffsetY]. */
+    fun alarm(nowMillis: Long, durationMs: Long = 2400L) { alarmAt = nowMillis; alarmMs = durationMs.coerceIn(300L, 10_000L) }
+    fun alarmActive(nowMillis: Long) = alarmAt >= 0 && nowMillis - alarmAt < alarmMs
+    /** Glow multiplier for other renderers (avatar/orb) while the alarm runs: up to 3. */
+    fun glowBoost(nowMillis: Long) = if (alarmActive(nowMillis)) 3f else 1f
+    fun shakeOffsetX(nowMillis: Long) = if (alarmActive(nowMillis)) sin(nowMillis * .09f) * 2f else 0f
+    fun shakeOffsetY(nowMillis: Long) = if (alarmActive(nowMillis)) cos(nowMillis * .113f) * 2f else 0f
+
     /** Brain-orb target of the data flight, as fractions of the overlay (default: hub). Set to the real orb centre. */
     var orbTargetX = .5f
     var orbTargetY = .30f
@@ -80,11 +114,12 @@ class JarvisSequenceEffects {
 
     fun dismissAll(nowMillis: Long) { for (c in cards) if (c.leavingAt < 0) c.leavingAt = nowMillis }
 
-    fun clear() { cards.clear(); command = null; flightAt = -1L }
+    fun clear() { cards.clear(); command = null; flightAt = -1L; envelope = null; pills = null; alarmAt = -1L }
 
     /** True while something moves; the host may stop invalidating when false. */
     fun isAnimating(nowMillis: Long): Boolean {
         if (flightAt >= 0 && nowMillis - flightAt < flightDuration()) return true
+        if (envelope != null || pills != null || alarmActive(nowMillis)) return true
         command?.let { if (nowMillis - it.at < COMMAND_MS) return true }
         return cards.any { nowMillis - it.at < FLY_MS + 200 || it.leavingAt >= 0 || it.live ||
             nowMillis - it.outcomeAt < 500 }
@@ -100,6 +135,11 @@ class JarvisSequenceEffects {
         val hubX = width / 2f; val hubY = height * .30f
         drawCommand(p, width, height, hubX, hubY, now)
         drawFlight(p, width, height, now)
+        drawAlarm(p, width, height, now)
+        p.save(); p.translate(shakeOffsetX(now), shakeOffsetY(now))
+        drawEnvelope(p, width, height, now)
+        drawPills(p, width, height, now)
+        p.restore()
         val cw = min(width - 32f, 340f); val ch = 58f; val gap = 10f
         var slot = 0
         for (c in cards) {
@@ -259,6 +299,116 @@ class JarvisSequenceEffects {
                 p.setAdditive(false)
             }
         }
+    }
+
+    private val mailRed = Fill.Solid(0xffea4335.toInt())
+    private val paper = Fill.Solid(0xfff2f6fb.toInt())
+    private val paperShade = Fill.Solid(0xffcfd8e6.toInt())
+    private val flapPath = VectorPath()
+
+    private fun drawEnvelope(p: ContinuumPainter, w: Float, h: Float, now: Long) {
+        val env = envelope ?: return
+        val el = now - env.at
+        val fin = JarvisMotion.frame(JarvisMotion.Presets.envelope, el)
+        val scale = if (fin.done) 1f else fin.scale
+        val flap = JarvisMotion.envelopeFlap(el)
+        val cx = w / 2f; val bob = sin(el / 650f) * 3f                       // floats after arrival
+        val cy = h * .42f + bob
+        val ew = min(w * .42f, 150f); val eh = ew * .68f
+        p.setAdditive(true); JarvisNeon.halo(p, cx, cy, ew * 1.1f * scale, JarvisDesign.Colors.cyan, .3f); p.setAdditive(false)
+        p.save(); p.scale(scale, scale, cx, cy)
+        val l = cx - ew / 2f; val r = cx + ew / 2f; val t = cy - eh / 2f; val b = cy + eh / 2f
+        // document slides up out of the open envelope (after the flap)
+        val docT = ((el - JarvisMotion.Durations.ENVELOPE_IN - JarvisMotion.Durations.ENVELOPE_FLAP) / 450f).coerceIn(0f, 1f)
+        val docY = t + eh * .15f - JarvisMotion.Easing.easeOutCubic(docT) * eh * .85f
+        if (docT > 0f) {
+            p.fillRoundRect(l + ew * .14f, docY, r - ew * .14f, docY + eh * .8f, 3f, paper)
+            for (k in 0..3) p.drawLine(l + ew * .22f, docY + 10f + k * 8f, r - ew * (.22f + (k % 2) * .12f), docY + 10f + k * 8f, 1.4f, paperShade)
+        }
+        p.fillRoundRect(l, t, r, b, 6f, paper)
+        // red M (two diagonals meeting at the centre) and red side bars
+        p.drawLine(l + 6f, t + 8f, cx, cy + 2f, 5f, mailRed); p.drawLine(r - 6f, t + 8f, cx, cy + 2f, 5f, mailRed)
+        p.drawLine(l + 6f, t + 8f, l + 6f, b - 6f, 6f, mailRed); p.drawLine(r - 6f, t + 8f, r - 6f, b - 6f, 6f, mailRed)
+        // flap: X-rotation as vertical scale through the top edge (cos), flips above the envelope when open
+        val fy = cos(flap * PI.toFloat()) * eh * .55f
+        flapPath.reset().moveTo(l, t).lineTo(cx, t + fy).lineTo(r, t).close()
+        p.fillPath(flapPath, if (fy >= 0f) paper else paperShade)
+        p.strokePath(flapPath, 1f, paperShade)
+        p.restore()
+        // Muster D: lasers from the document to the target labels
+        if (docT >= 1f) {
+            val lt = el - JarvisMotion.Durations.ENVELOPE_IN - JarvisMotion.Durations.ENVELOPE_FLAP - 450L
+            env.targets.forEachIndexed { i, label ->
+                val left = i % 2 == 0
+                val tx = if (left) w * .14f else w * .86f
+                val ty = h * (.2f + .16f * (i / 2)) + (if (left) 0f else h * .08f)
+                val prog = JarvisMotion.laser(lt - i * JarvisMotion.Durations.STAGGER)
+                JarvisNeon.laser(p, cx, docY + 6f, tx, ty, prog)
+                if (prog >= 1f) {
+                    val style = JarvisDesign.Type.caption
+                    val pw = min(p.measureText(label, style) + 20f, w * .4f)
+                    val pl = if (left) (tx - pw / 2f).coerceAtLeast(4f) else (tx - pw / 2f).coerceAtMost(w - pw - 4f)
+                    JarvisNeon.glassCard(p, pl, ty - 13f, pl + pw, ty + 13f, 13f, JarvisDesign.Glow.NORMAL)
+                    p.drawText(label, pl + pw / 2f, ty + 4f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
+                }
+            }
+        }
+    }
+
+    private fun drawPills(p: ContinuumPainter, w: Float, h: Float, now: Long) {
+        val pl = pills ?: return
+        val ax = w * avatarX; val ay = h * avatarY
+        val style = JarvisDesign.Type.body
+        pl.items.forEachIndexed { i, text ->
+            val left = i % 2 == 0
+            val row = i / 2
+            val pw = min(p.measureText(text, style) + 28f, w * .44f)
+            // final positions: flanking the avatar, rows below each other, slightly staggered (video 1, 13-15 s)
+            val fx = if (left) ax - w * .2f - pw / 2f + row * 6f else ax + w * .2f + pw / 2f - row * 6f
+            val fy = ay - 40f + row * 46f + (if (left) 0f else 20f)
+            val fxc = fx.coerceIn(pw / 2f + 4f, w - pw / 2f - 4f)
+            val spec = JarvisMotion.Presets.pill(if (left) JarvisMotion.Direction.LEFT else JarvisMotion.Direction.RIGHT)
+            val el = now - pl.at - JarvisMotion.staggerStart(i)
+            if (el < 0) return@forEachIndexed
+            val t = (el.toFloat() / spec.durationMs).coerceIn(0f, 1f)
+            val e = spec.easing(t)
+            val startX = if (left) -pw else w + pw
+            val float = if (t >= 1f) sin(el / 700f + i * 1.7f) * 1f else 0f   // offset floating ~1 px
+            val x = startX + (fxc - startX) * e; val y = fy + float
+            JarvisNeon.glassCard(p, x - pw / 2f, y - 17f, x + pw / 2f, y + 17f, 17f,
+                if (t in .85f..1f) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.NORMAL)
+            p.drawText(text, x, y + 5f, style, Fill.Solid(JarvisDesign.Colors.text), TextAlign.CENTER)
+        }
+    }
+
+    private val cascadeStyle = ContinuumTheme.text(500, 11f)
+    private val alarmRed = 0xffff3b5c.toInt()
+
+    private fun drawAlarm(p: ContinuumPainter, w: Float, h: Float, now: Long) {
+        if (!alarmActive(now)) return
+        val el = now - alarmAt
+        val fade = (1f - el.toFloat() / alarmMs).coerceIn(0f, 1f).let { if (el < 200) el / 200f else it }
+        // glow x3: red/cyan edge vignette pulses
+        val pulse = .6f + .4f * sin(el / 90f)
+        p.setAdditive(true)
+        JarvisNeon.halo(p, 0f, h / 2f, h * .7f, alarmRed, .45f * fade * pulse)
+        JarvisNeon.halo(p, w, h / 2f, h * .7f, alarmRed, .45f * fade * pulse)
+        JarvisNeon.halo(p, w / 2f, h * .4f, w * .6f, JarvisDesign.Colors.cyan, .25f * fade)
+        p.setAdditive(false)
+        // binary cascade, falling in Y (decorative glyphs only, never values)
+        val cols = (w / 18f).toInt()
+        for (c in 0 until cols) {
+            val speed = 120f + (c * 37 % 90)
+            val head = ((el / 1000f) * speed + (c * 7919 % 997)) % (h + 120f)
+            for (k in 0 until 7) {
+                val y = head - k * 15f
+                if (y < 0f || y > h) continue
+                val glyph = if (((c * 7 + k * 3 + (el / 120).toInt()) and 1) == 0) "0" else "1"
+                p.drawText(glyph, c * 18f + 6f, y, cascadeStyle, Fill.Solid(if (k == 0) 0xffe6fdff.toInt() else JarvisDesign.Colors.cyan),
+                    TextAlign.LEFT)
+            }
+        }
+        if (fade > 0f) p.fillRect(0f, 0f, w, h, Fill.Solid(alarmRed), .05f * fade * pulse)
     }
 
     private fun backOut(t: Float): Float { val s = 1.7f; val u = t - 1f; return 1f + u * u * ((s + 1f) * u + s) }

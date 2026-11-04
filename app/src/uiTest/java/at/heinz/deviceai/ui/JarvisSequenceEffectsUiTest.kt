@@ -73,6 +73,21 @@ class JarvisSequenceEffectsUiTest {
         System.getProperty("continuum.ui.evidenceDir")?.let { path ->
             java.io.File(path, "orb-lightning-thinking.png").outputStream().use { a.compress(Bitmap.CompressFormat.PNG, 100, it) }
         }
+        fx.clear()
+        fx.envelope("Gmail-Konto", listOf("Gmail analysieren", "Nachrichten vorlesen", "PDF erfassen"), 10_000)
+        frame(fx, "seq-8-envelope-arrives", 10_250)
+        frame(fx, "seq-9-envelope-open-lasers", 11_900)
+        fx.closeEnvelope()
+        fx.questionPills(listOf("Direkt antworten?", "Ausarbeiten?", "Juristische Studie?", "Anrufen?"), 12_000)
+        val flying = frame(fx, "seq-10-pills-flying", 12_150)
+        val landed = frame(fx, "seq-11-pills-landed", 13_000)
+        assertFalse(flying.sameAs(landed))
+        fx.clearPills()
+        fx.alarm(14_000)
+        assertEquals(3f, fx.glowBoost(14_500), 0f)
+        assertTrue(kotlin.math.abs(fx.shakeOffsetX(14_500)) <= 2f)
+        frame(fx, "seq-12-alarm", 14_600)
+        assertFalse(fx.alarmActive(17_000))
         assertFalse("invalid ids are refused", fx.card("bad id with spaces", JarvisSequenceEffects.Kind.INFO, "x", null, 5100))
     }
 }
@@ -92,11 +107,12 @@ class JarvisSequenceViewDockingUiTest {
             at.heinz.deviceai.cockpit.ProcessStep("k1", "Gmail lesen", at.heinz.deviceai.cockpit.StepState.ACTIVE))))
         bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.AccountCardFlyIn("t1", 3, "Gmail", "Konto"))
         bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.AccountCardFlyIn("old", 3, "Gmail", "stale"))
-        assertEquals(2, view.effects.cardCount)
+        assertEquals("Gmail becomes the envelope (Muster F), not a card", 1, view.effects.cardCount)
+        assertTrue(view.effects.isAnimating(now))
         now = 1500
         bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.ProcessTimeline("t1", 4, listOf(
             at.heinz.deviceai.cockpit.ProcessStep("k1", "Gmail lesen", at.heinz.deviceai.cockpit.StepState.DONE))))
-        assertEquals(2, view.effects.cardCount)
+        assertEquals(1, view.effects.cardCount)
         bus.emit(at.heinz.deviceai.cockpit.CockpitAnimationEvent.TurnEnded("t1", 5, true))
         assertEquals(0, view.effects.cardCount)
     }
