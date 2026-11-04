@@ -12,7 +12,7 @@ import at.heinz.deviceai.ui.ContinuumCockpitPresentation.Tone
  *  - Akku-Temperatur                 <- ContinuumDashboardState.system.temperatureC (dashboard collector)
  *  - Agenten                         <- CockpitStatus.workers/workerCapacity (ChiefWorkerPool.snapshot)
  * A missing source renders [NOT_AVAILABLE] / [SOURCE_MISSING]. Left out on purpose (no allowed source):
- * VRAM/GPU memory, SoC/CPU temperature, tokens/s, "Mode Local (Private)".
+ * VRAM/GPU memory, SoC/CPU temperature, tokens/s; "Mode" is shown as [MISSING] (no routing-mode source).
  * Placement in the grid is Kern's (#481).
  */
 object LocalModelStatusPresentation {
@@ -31,6 +31,8 @@ object LocalModelStatusPresentation {
         val m = s.model
         val rows = mutableListOf(
             Row("Model", if (m.online) m.name else MISSING, null, if (m.online) Tone.OK else Tone.NEUTRAL),
+            // ref5 "Mode: Local (Private)" has no runtime source (no routing-mode field) -> always the placeholder.
+            Row("Mode", MISSING, null),
             Row("Status", m.stateLabel, null, if (m.online) Tone.OK else Tone.NEUTRAL),
             Row("Latency", m.latencyMs?.let { "$it ms" } ?: MISSING, null)
         )
@@ -55,33 +57,88 @@ object LocalModelStatusPresentation {
 }
 
 /**
- * ref5 "Local Model Status" tile: same slot size as Memory Activity / Task Flow (Kern's grid), title Type.heading,
- * Online/Offline pill top right, two-column label/value rows in Type.status/caption, no bullets.
+ * ref5 "Local Model Status" tile (Fold7 open): CPU icon + title + chevron; headline = answering core
+ * ([ContinuumDashboardState.ModelStatus.name]) with the Online/Offline pill on the right; isometric chip emblem left;
+ * label/value column right (Model, Mode, Status, RAM) and the RAM usage bar below. Only #479 tokens are used.
  */
-class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, ContinuumIcons.Icon.BRAIN) {
+class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, ContinuumIcons.Icon.CPU) {
     override fun title(s: ContinuumDashboardState) = "Local Model Status"
     override fun rows(s: ContinuumDashboardState) = LocalModelStatusPresentation.rows(s)
 
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
+        val c = JarvisDesign.Colors
+        val type = JarvisDesign.Type
         JarvisNeon.glassCard(p, 1f, 1f, w - 1f, h - 1f, glow = if (highlighted) JarvisDesign.Glow.STRONG else JarvisDesign.Glow.SUBTLE, active = highlighted)
-        val pad = JarvisDesign.Styles.tile.padH
-        p.drawText(title(s), pad, pad + p.capHeight(JarvisDesign.Type.heading), JarvisDesign.Type.heading, Fill.Solid(JarvisDesign.Colors.text))
+        val pad = JarvisDesign.Styles.tile.padH * .75f
+        // Title row: CPU icon, title, chevron.
+        val iconSize = JarvisDesign.Styles.pill.height * .7f
+        val titleMid = pad + iconSize / 2f
+        ContinuumIcons.draw(p, ContinuumIcons.Icon.CPU, pad + iconSize / 2f, titleMid, iconSize, Fill.Solid(c.cyanSoft), iconSize / 12f)
+        p.drawText(title(s), pad + iconSize + JarvisDesign.Styles.pill.iconGap, titleMid + p.capHeight(type.heading) / 2f, type.heading, Fill.Solid(c.text))
+        ContinuumSurfaces.chevron(p, w - pad - iconSize * .25f, titleMid, iconSize * .55f, c.cyan)
+        // Headline + connectivity pill.
         val (txt, tone) = LocalModelStatusPresentation.connectivity(s)
-        val st = JarvisDesign.Styles.pill.copy(rim = if (tone == ContinuumCockpitPresentation.Tone.OK) JarvisDesign.Colors.ok else JarvisDesign.Styles.pill.rim)
-        val pw = p.measureText(txt, JarvisDesign.Type.status) + 2f * st.padH * .6f
+        val ok = tone == ContinuumCockpitPresentation.Tone.OK
+        val st = JarvisDesign.Styles.pill.copy(rim = if (ok) c.ok else JarvisDesign.Styles.pill.rim)
         val ph = st.height * .8f
-        JarvisNeon.component(p, w - pad - pw, pad - 2f, w - pad, pad - 2f + ph, st)
-        p.drawText(txt, w - pad - pw / 2f, pad - 2f + (ph + p.capHeight(JarvisDesign.Type.status)) / 2f, JarvisDesign.Type.status,
-            Fill.Solid(if (tone == ContinuumCockpitPresentation.Tone.OK) JarvisDesign.Colors.ok else JarvisDesign.Colors.textSecondary), TextAlign.CENTER)
-        val top = pad + ph + 8f
-        val lineH = p.capHeight(JarvisDesign.Type.caption) * 2.1f
-        val rs = rows(s); val visible = ((h - top - pad / 2f) / lineH).toInt().coerceIn(0, rs.size)
-        rs.take(visible).forEachIndexed { i, r ->
-            val y = top + i * lineH + p.capHeight(JarvisDesign.Type.caption)
-            p.drawText(r.label, pad, y, JarvisDesign.Type.status, Fill.Solid(JarvisDesign.Colors.textSecondary))
-            val c = when (r.state) { ContinuumCockpitPresentation.Tone.OK -> JarvisDesign.Colors.ok; ContinuumCockpitPresentation.Tone.WARN -> JarvisDesign.Colors.warn
-                else -> if (r.value == LocalModelStatusPresentation.MISSING) JarvisDesign.Colors.textMuted else JarvisDesign.Colors.text }
-            p.drawText(ContinuumSurfaces.fit(p, r.value, JarvisDesign.Type.caption, w * .58f), w - pad, y, JarvisDesign.Type.caption, Fill.Solid(c), TextAlign.RIGHT)
+        val pw = p.measureText(txt, type.status) + 2f * st.padH
+        val pillTop = titleMid + iconSize / 2f + pad * .5f
+        JarvisNeon.component(p, w - pad - pw, pillTop, w - pad, pillTop + ph, st)
+        p.drawText(txt, w - pad - pw / 2f, pillTop + (ph + p.capHeight(type.status)) / 2f, type.status,
+            Fill.Solid(if (ok) c.ok else c.textSecondary), TextAlign.CENTER)
+        p.drawText(ContinuumSurfaces.fit(p, s.model.name, type.tileLabel, w - 3f * pad - pw), pad,
+            pillTop + (ph + p.capHeight(type.tileLabel)) / 2f, type.tileLabel, Fill.Solid(c.text))
+        // Body: emblem left, label/value rows right, RAM bar below.
+        val all = rows(s)
+        val shown = listOf("Model", "Mode", "Status", "RAM").mapNotNull { l -> all.firstOrNull { it.label == l } }
+        val bodyTop = pillTop + ph + pad * .6f
+        val barH = 4f
+        val barTop = h - pad - barH
+        val colX = w * .38f
+        val lineH = ((barTop - pad * .5f - bodyTop) / shown.size).coerceAtLeast(p.capHeight(type.caption) * 1.4f)
+        drawEmblem(p, pad, bodyTop, colX - pad * 1.5f, barTop + barH - bodyTop)
+        val labelW = shown.maxOf { p.measureText(it.label + ":", type.caption) } + JarvisDesign.Styles.pill.iconGap
+        shown.forEachIndexed { i, r ->
+            val y = bodyTop + i * lineH + (lineH + p.capHeight(type.caption)) / 2f
+            if (y > barTop) return@forEachIndexed
+            p.drawText(r.label + ":", colX, y, type.caption, Fill.Solid(c.textSecondary))
+            val col = when (r.state) {
+                ContinuumCockpitPresentation.Tone.WARN -> c.warn
+                else -> if (r.value == LocalModelStatusPresentation.MISSING) c.textMuted else c.text
+            }
+            p.drawText(ContinuumSurfaces.fit(p, r.value, type.caption, w - pad - colX - labelW), colX + labelW, y, type.caption, Fill.Solid(col))
         }
+        // RAM usage bar: track always, fill only with a measured fraction.
+        p.fillRoundRect(colX, barTop, w - pad, barTop + barH, barH / 2f, Fill.Solid(c.pillSurface))
+        p.strokeRoundRect(colX, barTop, w - pad, barTop + barH, barH / 2f, 1f, Fill.Solid(c.cyanDeep), .6f)
+        val frac = shown.firstOrNull { it.label == "RAM" }?.fraction
+        if (frac != null && frac > 0f) {
+            val r = colX + (w - pad - colX) * frac
+            JarvisNeon.bloomRoundRect(p, colX, barTop, r, barTop + barH, barH / 2f, c.cyan, .3f)
+            p.fillRoundRect(colX, barTop, r, barTop + barH, barH / 2f, Fill.Linear(colX, 0f, r, 0f, intArrayOf(c.cyanDeep, c.cyan)))
+        }
+    }
+
+    /** Isometric chip emblem of ref5: stacked glowing plates with a bright core, cyan to violet edge light. */
+    private fun drawEmblem(p: ContinuumPainter, l: Float, t: Float, w: Float, h: Float) {
+        val c = JarvisDesign.Colors
+        val cx = l + w / 2f
+        val rx = minOf(w / 2f, h * .95f) * .9f
+        val ry = rx * .5f
+        val cy = t + h / 2f
+        JarvisNeon.halo(p, cx, cy, rx * 1.1f, c.cyan, .25f)
+        val path = VectorPath()
+        fun plate(dy: Float, k: Float, fill: Fill, rim: Int, rimAlpha: Float) {
+            val x = rx * k; val y = ry * k
+            path.reset().moveTo(cx, cy + dy - y).lineTo(cx + x, cy + dy).lineTo(cx, cy + dy + y).lineTo(cx - x, cy + dy).close()
+            p.fillPath(path, fill)
+            p.strokePath(path, 1f, Fill.Solid(rim), rimAlpha)
+        }
+        plate(ry * .45f, 1f, Fill.Solid(c.pillSurface), c.violet, .9f)
+        plate(ry * .15f, .92f, Fill.Linear(cx - rx, cy, cx + rx, cy, intArrayOf(c.cyanDeep, c.violet)), c.cyan, .8f)
+        plate(-ry * .2f, .78f, Fill.Solid(c.surfaceLow), c.cyan, 1f)
+        plate(-ry * .2f, .4f, Fill.Solid(c.cyanDeep), c.glowCore, .9f)
+        JarvisNeon.bloom(p, cx, cy - ry * .2f, rx * .35f, c.cyan, .8f)
+        p.fillCircle(cx, cy - ry * .2f, rx * .08f, Fill.Solid(c.glowCore))
     }
 }

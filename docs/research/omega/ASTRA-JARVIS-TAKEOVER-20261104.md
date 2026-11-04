@@ -14,8 +14,8 @@ The owner's latest M2.10 decision supersedes older undecided handoffs: automatic
 
 ## Execution ledger
 
-1. BASELINE — IN_PROGRESS: configure local Android toolchain; reproduce compile/unit/lint on the exact baseline before application edits.
-2. WIP RECOVERY — PENDING: compare all three saved branches against the baseline, preserve their work, integrate compatible changes on this branch with tests.
+1. BASELINE — IN_PROGRESS: official JDK 17 and Android SDK 36 configured; unchanged baseline Kotlin/Java compilation completed. The native Android-View screenshot tests are running before the full unit/lint/build gate. The original workspace remains unchanged while parallel candidate work uses separate worktrees.
+2. WIP RECOVERY — IN_PROGRESS: selected changes from all three saved branches are present in the candidate, not yet accepted. Imported source commits: `76469429`, `4d755c50`, `69b82313`, `34d3488b`, `c7fc330d`, `d1da1d1d`. The shared glow commit is imported once. Existing laser methods and Android 12 on-device speech restrictions are retained. Five new regressions await their RED run before additional fixes.
 3. COGNITIVE LOOP / MEMORY — PENDING: reuse existing local model, orchestrator and ToolGate; implement bounded lifecycle/ReasoningModel/LoopMemoryPort contracts and actual-event bridges. Review memory recovery persistence and reconfirmation-cache behavior; do not duplicate the existing ThinkingMemory implementation.
 4. MODEL PROVIDER — OWNER_GATED: no provider selected, no credentials requested or published, no external model calls. Existing local adapter work remains authorized.
 5. ACTION SCENES — PENDING: actual tool transitions, explicit confirmation including exact outbound search query (F1), calm failures and cancellation; no fabricated successes.
@@ -32,3 +32,14 @@ The owner's latest M2.10 decision supersedes older undecided handoffs: automatic
 ## Recovery / continuation
 
 Continue from this branch and its exact recorded tests. Existing bot branches remain unchanged. Preserve intermediate work as explicitly unverified checkpoints when necessary. Do not treat the old CLOSEOUT table or inherited test counts as current validation.
+
+## Parallel ownership and current visual check
+
+- Build/screenshot agent: untouched baseline and serial Gradle execution; exports the actual Activity's Android Canvas output. Host API 28 captures are not Fold7/Filament GPU evidence.
+- Avatar agent: original live view, HEAD/ORB geometry, resize and lifecycle, genuine memory-event effects. No replacement GLB or duplicated director.
+- Memory agent: explicit recovery adapter on the existing segment store; original strict readers, locking, bounded reads and tests remain. The incompatible flat-LEX3/LEX4 file is not substituted.
+- Root: selected WIP integration, dense navigation, material/glow and live card wiring, independent integration review.
+
+Owner steering: ref5 is the visual reference, including adjoining buttons and soft overlapping glow. Compare equivalent viewports and individual regions before accepting a change. Existing cached PNGs are historical and must not be labelled as new captures. No game-specific adapter is installed; the repository's existing Android capture harness is used.
+
+The navigation WIP is five unique commits ahead of the integration baseline (including two merge commits), not 42 missing development changes. Safety's API-31 guard already exists in the baseline; only its new presentation changes are imported. Old author messages containing test claims refer to their original source commits, not this candidate.

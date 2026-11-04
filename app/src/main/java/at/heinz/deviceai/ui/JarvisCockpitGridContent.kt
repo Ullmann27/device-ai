@@ -87,8 +87,11 @@ object JarvisCockpitGridContent {
         when (slot) {
             Slot.TOP_BAR -> header(p, grid, s)
             Slot.COCKPIT_SECONDARY -> modulesPanel(p, b, s)
-            Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL -> rowPanel(p, slot, b, s, now)
-            Slot.STATUS -> statusBar(p, b, s)
+            // Integration (#486): ref5 Active Agents / Current Task Flow / status bar.
+            Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
+            Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
+            Slot.ROW_MEMORY, Slot.ROW_MODEL -> rowPanel(p, slot, b, s, now)
+            Slot.STATUS -> JarvisCockpitPanels.drawStatusBar(p, b, s)
             Slot.DIALOG -> dialog(p, b, s)
             Slot.USER_CARD -> userCard(p, b)
             else -> return false
