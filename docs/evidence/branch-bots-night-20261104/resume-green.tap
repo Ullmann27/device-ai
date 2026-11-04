@@ -1,0 +1,376 @@
+TAP version 13
+# Subtest: one-shot bot persists genuine source differences and only canonical proposed work
+ok 1 - one-shot bot persists genuine source differences and only canonical proposed work
+  ---
+  duration_ms: 707.188464
+  type: 'test'
+  ...
+# Subtest: CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+ok 2 - CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+  ---
+  duration_ms: 685.577446
+  type: 'test'
+  ...
+# Subtest: finite loop uses the existing durable scheduler and stops at the approved budget
+ok 3 - finite loop uses the existing durable scheduler and stops at the approved budget
+  ---
+  duration_ms: 789.22975
+  type: 'test'
+  ...
+# Subtest: CLI refuses unknown, duplicate and unbounded modes before creating state
+ok 4 - CLI refuses unknown, duplicate and unbounded modes before creating state
+  ---
+  duration_ms: 1016.608006
+  type: 'test'
+  ...
+# Subtest: CLI incomplete coverage is nonzero and never reports a completed full inventory
+ok 5 - CLI incomplete coverage is nonzero and never reports a completed full inventory
+  ---
+  duration_ms: 364.806595
+  type: 'test'
+  ...
+# Subtest: resumable single passes reach later branches across process restarts
+ok 6 - resumable single passes reach later branches across process restarts
+  ---
+  duration_ms: 1621.336352
+  type: 'test'
+  ...
+# Subtest: finite scheduler records successful pages without declaring a full inventory
+ok 7 - finite scheduler records successful pages without declaring a full inventory
+  ---
+  duration_ms: 875.577864
+  type: 'test'
+  ...
+# Subtest: changed refs restart source paging while crash replay deduplicates proposals
+ok 8 - changed refs restart source paging while crash replay deduplicates proposals
+  ---
+  duration_ms: 1038.466231
+  type: 'test'
+  ...
+# Subtest: scan state rejects corruption, changed settings and altered report bytes
+ok 9 - scan state rejects corruption, changed settings and altered report bytes
+  ---
+  duration_ms: 870.28823
+  type: 'test'
+  ...
+# Subtest: scan state cannot follow links or steal a live existing scheduler lock
+ok 10 - scan state cannot follow links or steal a live existing scheduler lock
+  ---
+  duration_ms: 708.687857
+  type: 'test'
+  ...
+# Subtest: partial paths remain errors while subsequent pages keep progressing
+ok 11 - partial paths remain errors while subsequent pages keep progressing
+  ---
+  duration_ms: 761.586948
+  type: 'test'
+  ...
+# Subtest: proposal budget deferrals are recovered on the next source sweep
+ok 12 - proposal budget deferrals are recovered on the next source sweep
+  ---
+  duration_ms: 1060.132712
+  type: 'test'
+  ...
+# Subtest: termination during diagnosis leaves resumable state and queue unadvanced
+ok 13 - termination during diagnosis leaves resumable state and queue unadvanced
+  ---
+  duration_ms: 693.063901
+  type: 'test'
+  ...
+# Subtest: CLI cannot write through a state path into the source checkout
+ok 14 - CLI cannot write through a state path into the source checkout
+  ---
+  duration_ms: 202.524658
+  type: 'test'
+  ...
+# Subtest: CLI rejects a configuration mask before the existing scheduler can inspect source
+ok 15 - CLI rejects a configuration mask before the existing scheduler can inspect source
+  ---
+  duration_ms: 188.833636
+  type: 'test'
+  ...
+# Subtest: finds unconnected remote, archived and pull refs once per exact source commit
+ok 16 - finds unconnected remote, archived and pull refs once per exact source commit
+  ---
+  duration_ms: 205.201268
+  type: 'test'
+  ...
+# Subtest: distinguishes ancestry from copied changes without using branch names as quality evidence
+ok 17 - distinguishes ancestry from copied changes without using branch names as quality evidence
+  ---
+  duration_ms: 242.287089
+  type: 'test'
+  ...
+# Subtest: reports identical source trees even when commits differ
+ok 18 - reports identical source trees even when commits differ
+  ---
+  duration_ms: 134.141886
+  type: 'test'
+  ...
+# Subtest: detects divergent modifications and deletions without overwriting target files
+ok 19 - detects divergent modifications and deletions without overwriting target files
+  ---
+  duration_ms: 138.892222
+  type: 'test'
+  ...
+# Subtest: keeps tests, build files, symlinks and control plane work protected
+ok 20 - keeps tests, build files, symlinks and control plane work protected
+  ---
+  duration_ms: 108.981452
+  type: 'test'
+  ...
+# Subtest: labels unrelated history and never queues it as an integration candidate
+ok 21 - labels unrelated history and never queues it as an integration candidate
+  ---
+  duration_ms: 162.291095
+  type: 'test'
+  ...
+# Subtest: canonical backlog proposals are idempotent, source bound and never automatically accepted
+ok 22 - canonical backlog proposals are idempotent, source bound and never automatically accepted
+  ---
+  duration_ms: 518.273957
+  type: 'test'
+  ...
+# Subtest: serialized or stale discovery output cannot enqueue fresh review authority
+ok 23 - serialized or stale discovery output cannot enqueue fresh review authority
+  ---
+  duration_ms: 135.667368
+  type: 'test'
+  ...
+# Subtest: state inside the source or redirected into it is refused before writes
+ok 24 - state inside the source or redirected into it is refused before writes
+  ---
+  duration_ms: 238.125603
+  type: 'test'
+  ...
+# Subtest: bounded discovery exposes incomplete source and path coverage
+ok 25 - bounded discovery exposes incomplete source and path coverage
+  ---
+  duration_ms: 289.176854
+  type: 'test'
+  ...
+# Subtest: source pages eventually inspect every unique available commit
+ok 26 - source pages eventually inspect every unique available commit
+  ---
+  duration_ms: 879.879269
+  type: 'test'
+  ...
+# Subtest: page cursors reject malformed positions and changed source identity
+ok 27 - page cursors reject malformed positions and changed source identity
+  ---
+  duration_ms: 660.500722
+  type: 'test'
+  ...
+# Subtest: last page keeps omitted paths and partial inventory explicit
+ok 28 - last page keeps omitted paths and partial inventory explicit
+  ---
+  duration_ms: 411.694763
+  type: 'test'
+  ...
+# Subtest: invalid limits and option-like target references fail closed
+ok 29 - invalid limits and option-like target references fail closed
+  ---
+  duration_ms: 29.436913
+  type: 'test'
+  ...
+# Subtest: dirty checkouts and planted backlog symlinks are refused
+ok 30 - dirty checkouts and planted backlog symlinks are refused
+  ---
+  duration_ms: 206.733981
+  type: 'test'
+  ...
+# Subtest: branch bot control files are protected by the real coding and repair gates
+ok 31 - branch bot control files are protected by the real coding and repair gates
+  ---
+  duration_ms: 0.325389
+  type: 'test'
+  ...
+# Subtest: configured clean filters cannot execute during the cleanliness check
+ok 32 - configured clean filters cannot execute during the cleanliness check
+  ---
+  duration_ms: 61.360063
+  type: 'test'
+  ...
+# Subtest: preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+ok 33 - preflight rejects fsmonitor hooks and partial clones before inspecting worktree state
+  ---
+  duration_ms: 55.369541
+  type: 'test'
+  ...
+# Subtest: configuration mask cannot hide executable clean filters from discovery
+ok 34 - configuration mask cannot hide executable clean filters from discovery
+  ---
+  duration_ms: 49.809365
+  type: 'test'
+  ...
+# Subtest: current worktree gitlinks are rejected before nested worktree status
+ok 35 - current worktree gitlinks are rejected before nested worktree status
+  ---
+  duration_ms: 71.933579
+  type: 'test'
+  ...
+# Subtest: initial durable source preflight rejects fsmonitor before any Git status or checkpoint
+ok 36 - initial durable source preflight rejects fsmonitor before any Git status or checkpoint
+  ---
+  duration_ms: 58.994987
+  type: 'test'
+  ...
+# Subtest: configuration changed while waiting is rejected before the next scheduler status check
+ok 37 - configuration changed while waiting is rejected before the next scheduler status check
+  ---
+  duration_ms: 64.273093
+  type: 'test'
+  ...
+# Subtest: configuration changed during work is rejected before post-work Git filters or success acceptance
+ok 38 - configuration changed during work is rejected before post-work Git filters or success acceptance
+  ---
+  duration_ms: 48.097265
+  type: 'test'
+  ...
+# Subtest: an invalid preflight option fails closed before a source status or work callback
+ok 39 - an invalid preflight option fails closed before a source status or work callback
+  ---
+  duration_ms: 23.123214
+  type: 'test'
+  ...
+# Subtest: three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+ok 40 - three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+  ---
+  duration_ms: 3.678595
+  type: 'test'
+  ...
+# Subtest: failures stay failed, sleep with increasing backoff and eventually recover
+ok 41 - failures stay failed, sleep with increasing backoff and eventually recover
+  ---
+  duration_ms: 0.87843
+  type: 'test'
+  ...
+# Subtest: signal stopping terminates without another cycle or artificial success
+ok 42 - signal stopping terminates without another cycle or artificial success
+  ---
+  duration_ms: 0.344267
+  type: 'test'
+  ...
+# Subtest: invalid intervals, cycle limits and CLI mode combinations are rejected
+ok 43 - invalid intervals, cycle limits and CLI mode combinations are rejected
+  ---
+  duration_ms: 0.969115
+  type: 'test'
+  ...
+# Subtest: unverified repair and interruption increment failure counters, not successes
+ok 44 - unverified repair and interruption increment failure counters, not successes
+  ---
+  duration_ms: 0.646071
+  type: 'test'
+  ...
+# Subtest: unknown or unfinished worker result must fail closed
+ok 45 - unknown or unfinished worker result must fail closed
+  ---
+  duration_ms: 0.881504
+  type: 'test'
+  ...
+# Subtest: signal while waiting persists terminal STOPPED heartbeat
+ok 46 - signal while waiting persists terminal STOPPED heartbeat
+  ---
+  duration_ms: 0.448914
+  type: 'test'
+  ...
+# Subtest: one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+ok 47 - one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+  ---
+  duration_ms: 0.314262
+  type: 'test'
+  ...
+# Subtest: failure backoff never retries before a user configured interval
+ok 48 - failure backoff never retries before a user configured interval
+  ---
+  duration_ms: 0.695805
+  type: 'test'
+  ...
+# Subtest: a failing baseline without a code diagnostic remains a failed worker cycle
+ok 49 - a failing baseline without a code diagnostic remains a failed worker cycle
+  ---
+  duration_ms: 0.575414
+  type: 'test'
+  ...
+# Subtest: scheduler wait failure persists terminal ERROR rather than false WAITING
+ok 50 - scheduler wait failure persists terminal ERROR rather than false WAITING
+  ---
+  duration_ms: 1.03193
+  type: 'test'
+  ...
+# Subtest: saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+ok 51 - saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+  ---
+  duration_ms: 0.613081
+  type: 'test'
+  ...
+# Subtest: durable restart retains total cycle budget and pending backoff
+ok 52 - durable restart retains total cycle budget and pending backoff
+  ---
+  duration_ms: 94.273513
+  type: 'test'
+  ...
+# Subtest: durable cancellation during work records interruption and a stopped session
+ok 53 - durable cancellation during work records interruption and a stopped session
+  ---
+  duration_ms: 61.665517
+  type: 'test'
+  ...
+# Subtest: pre-aborted durable run writes STOPPED without executing work
+ok 54 - pre-aborted durable run writes STOPPED without executing work
+  ---
+  duration_ms: 45.615291
+  type: 'test'
+  ...
+# Subtest: durable state fails closed on corruption, changed budgets and changed source
+ok 55 - durable state fails closed on corruption, changed budgets and changed source
+  ---
+  duration_ms: 82.519634
+  type: 'test'
+  ...
+# Subtest: durable scheduling requires a finite budget and state outside source
+ok 56 - durable scheduling requires a finite budget and state outside source
+  ---
+  duration_ms: 26.56293
+  type: 'test'
+  ...
+# Subtest: durable integrity validation rejects plausible counter edits
+ok 57 - durable integrity validation rejects plausible counter edits
+  ---
+  duration_ms: 44.880898
+  type: 'test'
+  ...
+# Subtest: source drift while waiting terminates the saved cadence before another cycle
+ok 58 - source drift while waiting terminates the saved cadence before another cycle
+  ---
+  duration_ms: 58.14486
+  type: 'test'
+  ...
+# Subtest: source drift during a cycle cannot retain its reported verification success
+ok 59 - source drift during a cycle cannot retain its reported verification success
+  ---
+  duration_ms: 52.151618
+  type: 'test'
+  ...
+# Subtest: durable loop rejects a competing scheduler before its work executes
+ok 60 - durable loop rejects a competing scheduler before its work executes
+  ---
+  duration_ms: 53.011154
+  type: 'test'
+  ...
+# Subtest: SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+ok 61 - SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+  ---
+  duration_ms: 128.193102
+  type: 'test'
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 61
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11727.683048

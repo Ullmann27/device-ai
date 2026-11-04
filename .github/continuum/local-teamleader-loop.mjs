@@ -102,7 +102,7 @@ async function sourceIdentity(root,sourcePreflight){
  * creator may rename that directory, even when several dead-PID recoverers race.
  * Unknown hosts, live PIDs and incomplete lock metadata fail closed.
  */
-function acquireLoopLock(file){
+export function acquireLoopLock(file){
  const lock=file+'.lock';
  const payload=JSON.stringify({pid:process.pid,host:os.hostname(),
   nonce:crypto.randomBytes(16).toString('hex')});

@@ -30,3 +30,22 @@ Rollback: individually withdraw this round's bounded source changes; retain all 
 Reproduced the original starvation with five real Git fixture branches: three bounded passes repeatedly selected the same two sources. Three new regressions failed before the change; the full scanner/CLI subset now passes 27/27, zero failures/skips.
 
 The scanner returns a source-root/checkout/target/ref-snapshot-bound nextCursor. Resumed pages report their own range and remaining sources. Even the final partial page never claims a full inventory. Malformed, out-of-range and stale cursors are rejected. Serialized navigation is not proposal authority; existing in-process report admission remains unchanged. CLI persistence is the next milestone, not yet implemented at this checkpoint.
+
+## M2 — durable continuation
+
+Five initial continuation regressions failed before the connection. After implementation and three additional boundary checks, the scanner/CLI/scheduler/preflight subset passes 61/61, no failures/skips. This includes real child-process restarts and SIGTERM during diagnosis, retained live-lock ownership, malformed/changed state and report bytes, source-ref changes, path truncation and deferred proposals.
+
+Finite loops now save a private, hash-checked navigation cursor under the existing scheduler's lock implementation. The lock function is exported without changing its body or the scheduler's state/outcome vocabulary. Single invocations opt in with --once --continue-scan. Plain --once keeps its previous incomplete-inventory failure behavior.
+
+A successful page has pageComplete=true but complete=false unless the report itself covers the whole source inventory. Path truncation stays ERROR and advances to subsequent sources; proposals skipped only by the per-pass budget are revisited on later sweeps. A full canonical backlog remains a reported capacity limit. Every task remains PROPOSED; there is no automatic execution.
+
+The cursor is navigation only, not accumulated full-inventory or APK evidence. Ref/target drift restarts at the first page and records scanRestarted. Changed configuration, corruption and unsafe files fail closed. After a crash before cursor commit, canonical proposal identities deduplicate replay. Terminal scheduler budgets remain terminal; an explicit new single-pass command is a separate invocation, not a reset of an old budget.
+
+Example from a complete approved checkout:
+
+~~~sh
+node .github/continuum/branch-bots-cli.mjs --root "$PWD" --state "$HOME/.local/state/continuum-branch-scan" --once --continue-scan --max-sources 40
+node .github/continuum/branch-bots-cli.mjs --root "$PWD" --state "$HOME/.local/state/continuum-branch-scan" --loop --max-cycles 12 --interval-minutes 60 --max-sources 40
+~~~
+
+Use the same scan settings for the same private state directory. An exhausted loop session needs an explicitly separate session or a one-shot continuation; it does not silently acquire a new cycle budget. This session has not started such a device process.
