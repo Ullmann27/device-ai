@@ -1,0 +1,4 @@
+PASS strictRegression
+PASS legacyMatrix
+PASS unchangedHeroBounds
+checks=3 failed=0
