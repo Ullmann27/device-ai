@@ -1967,7 +1967,10 @@ class AgentActivity : Activity() {
                                history: at.heinz.deviceai.chief.ChiefBotConversationHistory) {
         history.turns.forEach { turn ->
             addBubble(turn.request, true)
-            addBubble("${profile.displayName} · ${turn.response}", false)
+            val feedback = turn.practiceFeedback?.presentation()
+            val answer = if (feedback == null) turn.response
+                else turn.response + "\n\nProgrammauswertung\n" + feedback
+            addBubble("${profile.displayName} · $answer", false)
         }
         if (history.discardedTurns > 0) addBubble("Ältere Dialogteile wurden aus dem begrenzten Arbeitskontext entfernt.", false)
     }
@@ -2084,7 +2087,9 @@ class AgentActivity : Activity() {
                 check(generated.response.isNotBlank()) { "BOT_EMPTY_RESPONSE" }
                 check(botConversation.complete(turn, generated.response, localRuntime.loadedModel, sessionId)) { "BOT_STALE_TURN" }
                 check(botConversation.isCurrent(turn, localRuntime.loadedModel, sessionId)) { "BOT_STALE_PRESENTATION" }
-                generated.response
+                val practiceFeedback = botConversation.presentationFeedback(turn)
+                if (practiceFeedback == null) generated.response
+                else generated.response + "\n\nProgrammauswertung\n" + practiceFeedback
             }
             runOnUiThread { finishBotDialogue(cancellation, profile, turnSession, result) }
         } } catch (_: java.util.concurrent.RejectedExecutionException) {
@@ -2116,7 +2121,10 @@ class AgentActivity : Activity() {
             addToolActivity("${profile.displayName} · Modellantwort gespeichert; keine unabhängig geprüfte Werkzeugleistung")
         }, {
             rememberBotTaskStatus(profile.agentId, "Privater Dialog nicht abgeschlossen")
-            addBubble("${profile.displayName} · Dialog nicht abgeschlossen. Keine Werkzeugaktion ausgeführt.", false)
+            val message = if (it.message == "BOT_PRACTICE_NUMBER_OUT_OF_RANGE") {
+                "Bitte wähle eine Fachübung mit Training 1 bis Training 6."
+            } else "Dialog nicht abgeschlossen. Keine Werkzeugaktion ausgeführt."
+            addBubble("${profile.displayName} · $message", false)
             addToolActivity("Bot-Dialog fehlgeschlagen · ${it.javaClass.simpleName}")
         })
     }
