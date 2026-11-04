@@ -253,7 +253,7 @@ class ContinuumAvatarRenderer {
                 val front2 = sin(ang) >= 0f
                 if (front2 != front) continue
                 val nx = cos(ang) * o.a; val ny = o.cy + sin(ang) * o.b
-                JarvisNeon.bloomPoint(p, nx, ny, 9f * pulse, o.color, k * bloom)
+                JarvisNeon.bloom(p, nx, ny, 4f * pulse, o.color, k * bloom)
                 p.fillCircle(nx, ny, 4.5f * pulse, fill, .22f * k)
                 p.fillCircle(nx, ny, 1.9f, orbitCore, .95f * k)
             }
@@ -379,7 +379,7 @@ class ContinuumAvatarRenderer {
             p.restore()
             // VIDEO-SPEC: eyes without pupils, cyan/white light; the light centre still follows the gaze
             p.fillOval(ex - w * .85f, ey - h * .8f, ex + w * .85f, ey + h * .8f, eyeLight, .75f)
-            JarvisNeon.bloomPoint(p, ix, iy, 11f, 0xff00ffff.toInt(), bloom * .8f)
+            JarvisNeon.bloom(p, ix, iy, 6f, 0xff00ffff.toInt(), bloom * .5f)
         } else p.drawLine(ex - w, ey, ex + w, ey, 1.1f, edge, .9f)
     }
 

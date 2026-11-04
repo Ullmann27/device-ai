@@ -76,3 +76,27 @@ class JarvisAvatarSlotUiTest {
         assertFalse(slot.isAttached); assertTrue(host.childCount == 0)
     }
 }
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class JarvisShellWithAvatarPreviewUiTest {
+    @Test fun shellPreviewUsesTheOneHeadInTheAvatarSlot() {
+        val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
+        val pose = AvatarPose(AvatarState.IDLE, AvatarExpression.NEUTRAL, 0f, 0f, 0f, Viseme.SIL, 0f, 0f)
+        val content = mapOf(at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR to JarvisAvatarSlot.slotContent({ pose }, { 1.2f }))
+        for ((name, w, h) in listOf(Triple("shell-phone-412x915-avatar", 412, 915), Triple("shell-fold-884x760-avatar", 884, 760))) {
+            val d = 2f
+            val bmp = Bitmap.createBitmap((w * d).toInt(), (h * d).toInt(), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bmp)
+            val p = AndroidContinuumPainter(activity.assets); p.begin(canvas); canvas.scale(d, d)
+            val shell = at.heinz.deviceai.ui.JarvisShellLayout.create(w.toFloat(), h.toFloat())
+            assertTrue(shell[at.heinz.deviceai.ui.JarvisShellLayout.Slot.AVATAR] != null)
+            at.heinz.deviceai.ui.JarvisShellRenderer.draw(p, shell, content)
+            System.getProperty("continuum.ui.evidenceDir")?.let { path ->
+                java.io.File(path).mkdirs()
+                java.io.File(path, "$name.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+            }
+        }
+    }
+}

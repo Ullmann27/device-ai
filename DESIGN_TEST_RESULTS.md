@@ -14,3 +14,7 @@
 ## Review 1 (4.11.2026)
 - `--tests 'at.heinz.deviceai.ui.Jarvis*'` (inkl. compileDebugKotlin mit JarvisGlassRenderer/AGSL): **JarvisMotionTest 12/12, JarvisShellLayoutTest 8/8 grün**.
 - Vorschau neu gerendert (`docs/design-screenshots/`). Das ist der Java2D-**Fallback-Pfad**: Blur und AGSL-Glow sind darin NICHT sichtbar und nur angenähert. Frame-Zeit auf dem Gerät nicht gemessen (kein Fold7).
+
+## Kontrollgang 2, Abschluss (4.11.2026)
+- `--tests 'at.heinz.deviceai.ui.Jarvis*'`: **JarvisMotionTest 13/13, JarvisShellLayoutTest 8/8 grün** (neu: Tiefen-Logik).
+- Vorschau neu gerendert (deutsche Texte, Fallback-Pfad).

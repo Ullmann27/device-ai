@@ -54,4 +54,27 @@ class JarvisAvatarSlot {
     }
 
     val isAttached: Boolean get() = stage?.parent != null && stage?.visibility == View.VISIBLE
+
+    companion object {
+        /**
+         * Painter-only content for JarvisShellRenderer's AVATAR slot (previews, JVM/host renders): the same head and
+         * orb renderers as the live views, head left ~62 %, brain orb on its pedestal right. [pose]/[seconds] from caller.
+         */
+        fun slotContent(pose: () -> AvatarPose, seconds: () -> Float): at.heinz.deviceai.ui.JarvisShellRenderer.SlotContent {
+            val head = ContinuumAvatarRenderer()
+            val orb = ContinuumHologramRenderer().apply { geometry = ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT; showBrand = false }
+            return at.heinz.deviceai.ui.JarvisShellRenderer.SlotContent { p, box ->
+                val portrait = box.height > box.width * .8f
+                val hw = if (portrait) box.width * .66f else box.width * .62f
+                p.save(); p.translate(box.left, box.top)
+                head.draw(p, hw, box.height, pose(), seconds(), true)
+                p.translate(hw - box.width * .04f, box.height * .12f)
+                val ow = box.width - hw + box.width * .04f; val oh = box.height * .7f
+                p.save(); p.clipRect(0f, 0f, ow, oh)
+                orb.layout(ow, oh)
+                orb.draw(p, ContinuumHologramRenderer.Frame.still(ContinuumHologramRenderer.Mode.READY, seconds()))
+                p.restore(); p.restore()
+            }
+        }
+    }
 }

@@ -145,6 +145,59 @@ object JarvisMotion {
     fun idleOffset(timeMs: Long, amplitudeDp: Float = 2.5f, animatorScale: Float = 1f): Float =
         if (off(animatorScale)) 0f else amplitudeDp * sin(2f * PI.toFloat() * (timeMs % Durations.IDLE_PERIOD) / Durations.IDLE_PERIOD)
 
+    /**
+     * Z-depth layers (VIDEO-ANALYSE Signatur 7 "UI schwebt in Z-Tiefe", 8 "Kamera nie statisch").
+     * Pure logic: depth → scale / blur / tilt / drift. Amplitudes and periods are GESCHÄTZT (Videos nennen keine Zahlen).
+     */
+    object Depth {
+        enum class Layer(val z: Int) { NEAR(0), MID(1), FAR(2) }
+
+        /** Android View cameraDistance in dp (multiply by density); GESCHÄTZT. */
+        const val CAMERA_DISTANCE_DP = 1600f
+        const val SCALE_PER_LAYER = .035f      // far panels slightly smaller
+        const val BLUR_PER_LAYER_DP = 1.2f     // depth of field; kept small for legibility
+        const val MAX_TILT_DEG = 4f            // "leichte Neigung", wenige Grad
+        const val DRIFT_PERIOD_MS = 14_000L    // slow camera drift
+        const val DRIFT_DP = 3f                // per layer factor (1 + z)
+
+        data class State(val scale: Float, val blurDp: Float, val rotationX: Float, val rotationY: Float,
+                         val dx: Float, val dy: Float)
+
+        val FLAT = State(1f, 0f, 0f, 0f, 0f, 0f)
+
+        fun scale(layer: Layer) = 1f - SCALE_PER_LAYER * layer.z
+        fun blurDp(layer: Layer) = BLUR_PER_LAYER_DP * layer.z
+
+        /** Tilt towards the screen centre: panels left of centre turn right (+Y) and vice versa. */
+        fun tiltY(cardCenterX: Float, screenWidth: Float): Float {
+            if (screenWidth <= 0f) return 0f
+            val n = ((cardCenterX - screenWidth / 2f) / (screenWidth / 2f)).coerceIn(-1f, 1f)
+            return -MAX_TILT_DEG * n
+        }
+
+        fun tiltX(cardCenterY: Float, screenHeight: Float): Float {
+            if (screenHeight <= 0f) return 0f
+            val n = ((cardCenterY - screenHeight / 2f) / (screenHeight / 2f)).coerceIn(-1f, 1f)
+            return MAX_TILT_DEG * .5f * n
+        }
+
+        /** Continuous drift (dx, dy in dp); deeper layers move more (parallax). 0 for reduced motion. */
+        fun drift(timeMs: Long, layer: Layer, animatorScale: Float = 1f): Pair<Float, Float> {
+            if (off(animatorScale)) return 0f to 0f
+            val ph = 2f * PI.toFloat() * (timeMs % DRIFT_PERIOD_MS) / DRIFT_PERIOD_MS
+            val a = DRIFT_DP * (1 + layer.z)
+            return a * sin(ph) to a * .6f * sin(2f * ph + 1f)
+        }
+
+        /** Full state; reduced motion keeps depth scale/blur (static composition) but no tilt drift animation. */
+        fun state(layer: Layer, cardCenterX: Float, cardCenterY: Float, width: Float, height: Float, timeMs: Long,
+                  animatorScale: Float = 1f): State {
+            val (dx, dy) = drift(timeMs, layer, animatorScale)
+            val wobble = if (off(animatorScale)) 0f else .6f * sin(2f * PI.toFloat() * (timeMs % DRIFT_PERIOD_MS) / DRIFT_PERIOD_MS)
+            return State(scale(layer), blurDp(layer), tiltX(cardCenterY, height) + wobble, tiltY(cardCenterX, width) + wobble, dx, dy)
+        }
+    }
+
     /** Draws a glass card in [f] state; [content] draws inside the transformed card. */
     fun drawCard(p: ContinuumPainter, f: Frame, l: Float, t: Float, r: Float, b: Float, content: (ContinuumPainter) -> Unit = {}) {
         if (f.alpha <= 0f || f.scale <= 0f) return
@@ -158,37 +211,4 @@ object JarvisMotion {
         p.restore()
     }
 
-    // ---- Z-levels + camera drift (Jarvis Avatar extension; VIDEO-SPEC 6-7 s "Kamera fährt durch") ---------------
-    /** Depth levels: 0 = avatar plane, 1 = near panels, 2 = side panels, 3 = far background. */
-    data class DepthFrame(val scale: Float, val dx: Float, val dy: Float, val tiltDeg: Float, val alpha: Float, val blurDp: Float)
-
-    /** Slow constant camera drift (never fully static): yaw/pitch in degrees, z in level units. 0 when reduced motion. */
-    data class Camera(val yawDeg: Float, val pitchDeg: Float, val z: Float)
-
-    fun cameraDrift(timeMs: Long, animatorScale: Float = 1f): Camera {
-        if (off(animatorScale)) return Camera(0f, 0f, 0f)
-        val t = timeMs / 1000f
-        return Camera(1.2f * sin(t * .23f), .6f * sin(t * .17f + 1f), .08f * sin(t * .11f))   // GESCHÄTZT
-    }
-
-    /**
-     * Perspective for a panel at [level] with centre ([cx],[cy]) around the screen centre ([sx],[sy]):
-     * scale = d / (d + z), parallax from the camera drift, slight tilt towards the edge, blur grows with depth.
-     */
-    fun depth(level: Int, cx: Float, cy: Float, sx: Float, sy: Float, timeMs: Long,
-              cameraDistance: Float = 8f, animatorScale: Float = 1f): DepthFrame {
-        val cam = cameraDrift(timeMs, animatorScale)
-        val z = level.coerceIn(0, 3) + cam.z
-        val scale = cameraDistance / (cameraDistance + z)
-        val par = z * 6f
-        val dx = (cx - sx) * (scale - 1f) + cam.yawDeg * par
-        val dy = (cy - sy) * (scale - 1f) - cam.pitchDeg * par
-        val tilt = ((cx - sx) / maxOf(sx, 1f)) * 4f * level.coerceIn(0, 3) / 3f + cam.yawDeg * .5f
-        return DepthFrame(scale, dx, dy, tilt, 1f - .12f * level.coerceIn(0, 3), 1.5f * level.coerceIn(0, 3))
-    }
-
-    /** Applies a [DepthFrame] to the painter for content centred at ([cx],[cy]); caller restores. */
-    fun applyDepth(p: ContinuumPainter, f: DepthFrame, cx: Float, cy: Float) {
-        p.translate(f.dx, f.dy); p.rotate(f.tiltDeg, cx, cy); p.scale(f.scale, f.scale, cx, cy)
-    }
 }

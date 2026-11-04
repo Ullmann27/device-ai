@@ -36,7 +36,10 @@ object JarvisNeon {
         p.fillRoundRect(l + 1f, t + 1f, r - 1f, t + (b - t) * .35f, radius - 1f,
             Fill.Linear(0f, t, 0f, t + (b - t) * .35f, intArrayOf(Argb.of(18, 0, 255, 255), 0)))
         p.strokeRoundRect(l, t, r, b, radius, 1f, Fill.Solid(Colors.rim))
-        if (active) p.strokeRoundRect(l, t, r, b, radius, 1.4f, Fill.Solid(Colors.activeWhite), .5f)
+        if (active) {
+            bloomRoundRect(p, l, t, r, b, radius, Colors.cyan, glowBoost)
+            p.strokeRoundRect(l, t, r, b, radius, 1.4f, Fill.Solid(Colors.activeWhite), .5f)
+        }
     }
 
     /** Neon line (light trail, laser connection, divider). */
@@ -69,6 +72,30 @@ object JarvisNeon {
         p.strokeOval(cx - rx, cy - ry, cx + rx, cy + ry, width, fill)
     }
 
+    /**
+     * Bloom: shared emissive light (VIDEO-ANALYSE Signatur 4 "starkes Bloom"), also for Jarvis Avatar.
+     * Three additive radial layers: white-hot core, colour body, wide violet veil. [intensity] 0..1 (>1 allowed for alarms).
+     */
+    fun bloom(p: ContinuumPainter, cx: Float, cy: Float, radius: Float, color: Int = Colors.cyan, intensity: Float = 1f) {
+        if (intensity <= 0f || radius <= 0f) return
+        p.setAdditive(true)
+        p.fillCircle(cx, cy, radius * 2.4f, Fill.Radial(cx, cy, radius * 2.4f, intArrayOf(Argb.withAlpha(Colors.violet, .10f * intensity), 0)))
+        p.fillCircle(cx, cy, radius * 1.3f, Fill.Radial(cx, cy, radius * 1.3f, intArrayOf(Argb.withAlpha(color, .28f * intensity), 0)))
+        p.fillCircle(cx, cy, radius * .45f, Fill.Radial(cx, cy, radius * .45f, intArrayOf(Argb.withAlpha(Colors.activeWhite, .30f * intensity), 0)))
+        p.setAdditive(false)
+    }
+
+    /** Bloom around a rounded rect (active panel / button). */
+    fun bloomRoundRect(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float, color: Int = Colors.cyan,
+                       intensity: Float = 1f) {
+        if (intensity <= 0f) return
+        p.setAdditive(true)
+        floatArrayOf(14f, 8f, 3f).forEachIndexed { i, s ->
+            p.strokeRoundRect(l, t, r, b, radius, s, Fill.Solid(color), (.05f + .07f * i) * intensity)
+        }
+        p.setAdditive(false)
+    }
+
     /** Radial light pool behind hero content (head, brain orb). */
     fun halo(p: ContinuumPainter, cx: Float, cy: Float, radius: Float, color: Int = Colors.cyan, strength: Float = .35f) =
         p.fillCircle(cx, cy, radius, Fill.Radial(cx, cy, radius, intArrayOf(Argb.withAlpha(color, strength), 0)))
@@ -78,7 +105,7 @@ object JarvisNeon {
      * No offset copies, so large system fonts stay single and sharp.
      */
     fun text(p: ContinuumPainter, s: String, x: Float, y: Float, style: TextStyle, color: Int = Colors.cyan,
-             align: TextAlign = TextAlign.LEFT, glow: Glow = Glow.SUBTLE) {
+             align: TextAlign = TextAlign.LEFT, glow: Glow = Glow.SUBTLE, active: Boolean = false) {
         if (glow != Glow.OFF && s.isNotEmpty()) {
             val w = p.measureText(s, style); val h = p.capHeight(style)
             val l = when (align) { TextAlign.LEFT -> x; TextAlign.CENTER -> x - w / 2f; TextAlign.RIGHT -> x - w }
@@ -88,7 +115,12 @@ object JarvisNeon {
                 Fill.Linear(0f, y - h - pad, 0f, y + pad, intArrayOf(0, Argb.withAlpha(color, glow.haloAlpha * .45f), 0)))
             p.setAdditive(false)
         }
-        p.drawText(s, x, y, style, Fill.Solid(color), align)
+        if (active && s.isNotEmpty()) {
+            val w = p.measureText(s, style)
+            val cx = when (align) { TextAlign.LEFT -> x + w / 2f; TextAlign.CENTER -> x; TextAlign.RIGHT -> x - w / 2f }
+            bloom(p, cx, y - p.capHeight(style) / 2f, maxOf(w * .45f, style.size), color, .6f)
+        }
+        p.drawText(s, x, y, style, Fill.Solid(if (active) Argb.mix(color, Colors.activeWhite, .35f) else color), align)
     }
 
     // ---- Active-state bloom (Jarvis Avatar extension, VIDEO-SPEC "starker Bloom") -------------------------------
@@ -102,14 +134,6 @@ object JarvisNeon {
         p.setAdditive(true)
         p.strokeSegments(points, count, width * 7f, fill, .035f * strength)
         p.strokeSegments(points, count, width * 3f, fill, .09f * strength)
-        p.setAdditive(false)
-    }
-
-    /** Soft round bloom for a bright point (eyes, nodes, orb core). */
-    fun bloomPoint(p: ContinuumPainter, x: Float, y: Float, radius: Float, color: Int, strength: Float) {
-        if (strength <= 0f || radius <= 0f) return
-        p.setAdditive(true)
-        p.fillCircle(x, y, radius, Fill.Radial(x, y, radius, intArrayOf(Argb.withAlpha(color, .55f * strength.coerceAtMost(1f)), 0)))
         p.setAdditive(false)
     }
 
@@ -133,17 +157,6 @@ object JarvisNeon {
             p.fillCircle(sx, sy, 4f, Fill.Radial(sx, sy, 4f, intArrayOf(Argb.withAlpha(color, .8f), 0)))
             p.fillCircle(sx, sy, 1.2f, Fill.Solid(0xffe6fdff.toInt()), .95f)
         }
-        p.setAdditive(false)
-    }
-
-    /** Active-state bloom for panels/cards (same look as the head bloom): wide additive rim passes. */
-    fun panelBloom(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float, strength: Float,
-                   color: Int = Colors.cyan) {
-        if (strength <= 0f) return
-        val fill = Fill.Solid(color)
-        p.setAdditive(true)
-        p.strokeRoundRect(l, t, r, b, radius, 14f, fill, .05f * strength)
-        p.strokeRoundRect(l, t, r, b, radius, 6f, fill, .12f * strength)
         p.setAdditive(false)
     }
 }
