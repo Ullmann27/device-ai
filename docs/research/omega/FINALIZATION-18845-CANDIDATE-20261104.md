@@ -32,3 +32,9 @@ Nach Veröffentlichung des ersten Kandidaten `f69cfef3230e7a5a8abcacef0103feb39e
 - Das zugehörige Sequence-Hostwerkzeug wird vollständig mit seinen originalen Test-Fixtures übernommen. Diese simulieren weder eine Android-Queue noch Grafik oder Gerätebetrieb; ein aufgerufener Host-Handler schlägt ausdrücklich fehl. Der vorhandene Temporal-Runner bindet den neuen Tagesgrenzentest ein.
 
 Der fokussierte Android-Lauf des ersten Kandidaten stoppte vor dem Start der UI-Tests wegen `ENOSPC` beim Kompilieren der Tests. Sein Quellstand blieb unverändert. Der parallel begonnene Node-Lauf wurde nach dem neuen Reparaturbefund kontrolliert beendet und gilt nicht als Gesamtabnahme. Der erweiterte Kandidat benötigt einen neuen, exakt gebundenen Prüflauf.
+
+## Korrektur des tatsächlichen UI-Testaufbaus
+
+Der gezielte Lauf auf `92f421fa81c57022d903e2c1ff45ae6279c77b22` führte alle 53 Fälle aus: 46 bestanden, sieben Avatar-/Hologrammprüfungen scheiterten. Alle 25 Sequence- und zwölf neuen Tagesgrenzenfälle bestanden. Vollständige Rohbelege dieses Standes sind in `checkpoint-92f421f.tar.gz` samt Hashmanifest gesichert.
+
+Die anschließend unabhängig geprüfte Korrektur betrifft ausschließlich drei bestehende UI-Testklassen. Der echte erste Fenster-Traversal und feste LayoutParams werden vor Foreground/Gaze geprüft; pausierte VSync-Zeit wird in maximal 16-ms-Schritten bei gleicher Gesamtdauer bewegt. Orbprüfungen wählen den vorhandenen Orb ausdrücklich aus. Der Sprachtest prüft LIVE vor allen Bildern und spielt seine acht PCM-Samples mit realen 33-ms-Abständen auf derselben Uhr wie Director und View ab. Sämtliche 13 Testmethoden und alle 78 bisherigen Assertion-Aufrufe bleiben erhalten; zusätzliche Vorbedingungen ergeben 100 Assertions. Die Produktionsquellen wurden dabei nicht geändert. Die erneute tatsächliche Ausführung entscheidet über das Ergebnis; aus dem Review wird kein Runtime-PASS abgeleitet.
