@@ -14,7 +14,7 @@ import androidx.annotation.RequiresApi
 
 /**
  * Android glass backend for [JarvisShellRenderer] (kept out of the JVM preview path).
- * - Background: API 33+ ONE AGSL shader (gradient #050814→#0A1128, soft cyan grid, scanlines, violet haze,
+ * - Background: API 33+ ONE AGSL shader (shared ref5 palette, faint cyan grid, lower-edge haze,
  *   procedural bokeh and dust – one particle per cell, so the cost is fixed per pixel). API 31–32: the portable
  *   painter background, recorded once per size and replayed (cached layer).
  * - Glass: API 31+ backdrop blur (RenderEffect on a RenderNode copy of the background, clipped per panel);
@@ -175,8 +175,17 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
         fun drawBackground(c: Canvas, w: Float, h: Float, density: Float, timeMs: Long) {
             bg.setFloatUniform("size", w, h); bg.setFloatUniform("density", density)
             bg.setFloatUniform("time", (timeMs % 600_000L) / 1000f)
+            colorUniform("topColor", JarvisDesign.Colors.background)
+            colorUniform("bottomColor", JarvisDesign.Colors.backgroundBottom)
+            colorUniform("hazeColor", JarvisDesign.Colors.backgroundHaze)
+            colorUniform("cyanColor", JarvisDesign.Colors.cyan)
+            colorUniform("violetColor", JarvisDesign.Colors.violet)
+            colorUniform("dustColor", JarvisDesign.Colors.dust)
             c.drawRect(0f, 0f, w, h, bgPaint)
         }
+
+        private fun colorUniform(name: String, color: Int) = bg.setFloatUniform(name,
+            Argb.red(color) / 255f, Argb.green(color) / 255f, Argb.blue(color) / 255f)
 
         fun drawRim(c: Canvas, b: JarvisShellLayout.Box, radius: Float, intensity: Float) {
             val spread = 10f
@@ -189,12 +198,14 @@ class JarvisGlassRenderer(private val painter: AndroidContinuumPainter) : Jarvis
 
     companion object {
         /**
-         * Pixel coordinates. Gradient #050814→#0A1128, blurred cyan grid (48 dp), scanlines, violet haze,
+         * Pixel coordinates. Shared ref5 palette, faint cyan grid (48 dp), lower-edge haze,
          * bokeh (cells of 120 dp, ≤1 disc each, ≤5 % per ref5) and dust (cells of 35 dp ≈ 1 per 1200 dp², r 0.65 dp,
          * colour #0F93C4 per ref5). Bokeh cell size and drift speed GESCHÄTZT.
          */
         const val BACKGROUND = """
 uniform float2 size; uniform float density; uniform float time;
+uniform float3 topColor; uniform float3 bottomColor; uniform float3 hazeColor;
+uniform float3 cyanColor; uniform float3 violetColor; uniform float3 dustColor;
 float hash(float2 p) { return fract(sin(dot(p, float2(127.1, 311.7))) * 43758.5453); }
 float particle(float2 p, float cell, float radius, float seed) {
   float2 id = floor(p / cell);
@@ -207,20 +218,19 @@ float particle(float2 p, float cell, float radius, float seed) {
 }
 half4 main(float2 p) {
   float2 uv = p / size;
-  half3 c = mix(half3(0.0196, 0.0314, 0.0784), half3(0.0392, 0.0667, 0.157), half(uv.y));
+  half3 c = half3(mix(topColor, bottomColor, uv.y));
   float stepPx = 48.0 * density;
   float2 g = abs(fract(p / stepPx - 0.5) - 0.5) * stepPx;
   float d = min(g.x, g.y);
   float soft = 1.6 * density; float core = 0.45 * density;
-  c += half3(0.0, 1.0, 1.0) * half(exp(-d * d / (2.0 * soft * soft)) * 0.05 + exp(-d * d / (2.0 * core * core)) * 0.05);
-  float r = distance(uv, float2(0.5, 0.35));
-  c += half3(0.541, 0.169, 0.886) * half(0.10 * (1.0 - smoothstep(0.0, 0.75, r)));
+  c += half3(cyanColor) * half(exp(-d * d / (2.0 * soft * soft)) * 0.004 + exp(-d * d / (2.0 * core * core)) * 0.008);
+  float r = distance(p, float2(size.x * 0.45, size.y * 0.92)) / (max(size.x, size.y) * 0.70);
+  c = mix(c, half3(hazeColor), half(0.65 * max(0.0, 1.0 - r)));
   float bokeh = particle(p, 120.0 * density, 7.0 * density, 3.0);
   float bokehV = particle(p + 60.0 * density, 120.0 * density, 6.0 * density, 9.0);
-  c += half3(0.0, 1.0, 1.0) * half(bokeh * 0.05) + half3(0.569, 0.298, 0.937) * half(bokehV * 0.05);
+  c += half3(cyanColor) * half(bokeh * 0.05) + half3(violetColor) * half(bokehV * 0.05);
   float2 dp = p + float2(0.0, time * 6.0 * density);
-  c += half3(0.059, 0.576, 0.769) * half(particle(dp, 35.0 * density, 0.65 * density, 17.0) * 2.2);
-  c *= half(1.0 - 0.03 * (0.5 + 0.5 * sin(p.y * 3.14159 / (1.5 * density))));
+  c += half3(dustColor) * half(particle(dp, 35.0 * density, 0.65 * density, 17.0) * 2.2);
   return half4(c, 1.0);
 }"""
 

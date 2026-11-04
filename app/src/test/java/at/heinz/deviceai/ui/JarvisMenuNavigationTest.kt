@@ -95,9 +95,9 @@ class JarvisMenuNavigationTest {
         for ((w, h) in listOf(412f to 915f, 360f to 780f, 915f to 412f)) { // phone, cover, phone landscape
             assertEquals(JarvisMenuRail.Mode.BOTTOM_BAR, JarvisMenuRail.mode(w, h)); assertEquals(0f, JarvisMenuRail.widthDp(w, h))
         }
-        // ref5: first button top 98 dp, 32 dp tall; hit rows 48 dp
+        // Owner-requested dense surfaces: first top retained, each visible button fills its independent hit row.
         val first = JarvisMenuRail.button(122f, JarvisMenuRail.rows(700f)[0])
-        assertEquals(98f, first[1], .001f); assertEquals(JarvisDesign.Styles.button.height, first[3] - first[1], .001f)
+        assertEquals(98f, first[1], .001f); assertEquals(48f, first[3] - first[1], .001f)
         assertEquals(3, JarvisMenuRail.hit(JarvisMenuRail.FIRST_ROW + 3 * 48f + 1f, 2000f))
         assertEquals(-1, JarvisMenuRail.hit(JarvisMenuRail.FIRST_ROW - 1f, 2000f)) // device status block is not a button
     }

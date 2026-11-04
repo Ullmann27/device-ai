@@ -12,6 +12,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.ContentObserver
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -30,6 +32,7 @@ import at.heinz.deviceai.avatar3d.FilamentAvatarRenderer
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
 import at.heinz.deviceai.ui.ContinuumTaskEffects
+import at.heinz.deviceai.ui.JarvisSequenceView
 import at.heinz.deviceai.ui.Fill
 import at.heinz.deviceai.ui.FontFamily
 import at.heinz.deviceai.ui.TextAlign
@@ -75,6 +78,11 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val avatarBrandStyle = TextStyle(FontFamily.DISPLAY, 700, 14f, letterSpacing = 2f)
     private val painter = AndroidContinuumPainter(context.assets)
     private val taskEffects = ContinuumTaskEffects()
+    private var cockpitSequence: JarvisSequenceView? = null
+    private var cockpitHeadBounds: Rect? = null
+    private var cockpitOrbBounds: Rect? = null
+    private val headDrawBounds = RectF()
+    private val orbDrawBounds = RectF()
     private var taskEffectsNotBeforeMs = SystemClock.uptimeMillis()
     private val audio = HologramAudioEnvelope()
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
@@ -177,6 +185,64 @@ class ContinuumHologramView @JvmOverloads constructor(
             avatarInvalidationPending.compareAndSet(false, true)) mainHandler.post(avatarInvalidation)
     }
 
+    /** The cockpit adapter adds effects to this existing surface; state, audio and 3D ownership remain here. */
+    fun setCockpitSequence(sequence: JarvisSequenceView?) {
+        if (cockpitSequence === sequence) return
+        require(sequence?.parent == null) { "Cockpit sequence already belongs to a view" }
+        cockpitSequence?.let { old -> old.clear(); removeView(old) }
+        cockpitSequence = sequence
+        sequence?.let {
+            it.setMotionAllowed(canAnimateFrame())
+            addView(it, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+            updateOrbTarget(width, height)
+        }
+    }
+
+    /** Ref5 HEAD and ORB in local pixels. Null restores the existing phone/legacy composition. */
+    fun setCockpitRegions(head: Rect?, orb: Rect?) {
+        require((head == null) == (orb == null)) { "Head and orb bounds must be supplied together" }
+        if (head != null && orb != null) {
+            require(!head.isEmpty && !orb.isEmpty && head.left >= 0 && head.top >= 0 && orb.left >= 0 && orb.top >= 0)
+            require(!Rect.intersects(head, orb)) { "Head and orb drawing regions must not overlap" }
+        }
+        if (cockpitHeadBounds == head && cockpitOrbBounds == orb) return
+        cockpitHeadBounds = head?.let(::Rect)
+        cockpitOrbBounds = orb?.let(::Rect)
+        updateOrbTarget(width, height)
+        requestLayout()
+        invalidate()
+    }
+
+    private fun resolveHeadBounds(widthPx: Int, heightPx: Int) {
+        val explicit = cockpitHeadBounds
+        if (explicit != null) headDrawBounds.set(explicit) else {
+            val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+            headDrawBounds.set(0f, 0f, widthPx * if (cockpit) .66f else 1f,
+                heightPx * if (cockpit) .92f else 1f)
+        }
+    }
+
+    private fun resolveOrbBounds(widthPx: Int, heightPx: Int) {
+        val explicit = cockpitOrbBounds
+        if (!headEnabled) orbDrawBounds.set(0f, 0f, widthPx.toFloat(), heightPx.toFloat())
+        else if (explicit != null) orbDrawBounds.set(explicit)
+        else {
+            val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+            val x = widthPx * if (cockpit) .57f else .72f
+            val y = heightPx * if (cockpit) .09f else .30f
+            orbDrawBounds.set(x, y, x + widthPx * if (cockpit) .43f else .28f,
+                y + heightPx * if (cockpit) .76f else .40f)
+        }
+    }
+
+    private fun updateOrbTarget(widthPx: Int, heightPx: Int) {
+        val sequence = cockpitSequence ?: return
+        if (widthPx <= 0 || heightPx <= 0) return
+        resolveOrbBounds(widthPx, heightPx)
+        sequence.effects.orbTargetX = (orbDrawBounds.centerX() / widthPx).coerceIn(0f, 1f)
+        sequence.effects.orbTargetY = ((orbDrawBounds.top + orbDrawBounds.height() * renderer.geometry.centerY) / heightPx).coerceIn(0f, 1f)
+    }
+
     /** Explicit local appearance preference; the original orb remains selectable. */
     fun setNativeHeadEnabled(enabled: Boolean) {
         headEnabled = enabled
@@ -258,7 +324,8 @@ class ContinuumHologramView @JvmOverloads constructor(
                     return true
                 }
             }
-            addView(texture, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+            // The sequence is an overlay, so a newly created 3D surface must remain below it.
+            addView(texture, 0, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         }
         ensure3dRenderer()
     }
@@ -371,6 +438,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        cockpitSequence?.setMotionAllowed(false)
         clearTaskEffects()
         release3d(clearAsset = true)
         mainHandler.removeCallbacks(avatarInvalidation)
@@ -448,6 +516,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             pendingAudioMs = 0L
             consumedAudioMs = 0L
         }
+        cockpitSequence?.setMotionAllowed(canAnimateFrame())
         update3d()
         invalidate()
         scheduleFrame()
@@ -463,11 +532,14 @@ class ContinuumHologramView @JvmOverloads constructor(
         val measuredWidth = resolveSize((412f * resources.displayMetrics.density).toInt(), widthMeasureSpec)
         val measuredHeight = resolveSize((307f * resources.displayMetrics.density).toInt(), heightMeasureSpec)
         // Keep the actual TextureView and Canvas composition on the same grid.
+        resolveHeadBounds(measuredWidth, measuredHeight)
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
-        nativeTexture?.layoutParams?.let {
-            it.width = (measuredWidth * if (cockpit) .66f else .72f).toInt()
-            it.height = if (cockpit) (measuredHeight * .92f).toInt() else LayoutParams.MATCH_PARENT
+        (nativeTexture?.layoutParams as? LayoutParams)?.let {
+            it.width = if (cockpitHeadBounds != null || cockpit) headDrawBounds.width().toInt() else (measuredWidth * .72f).toInt()
+            it.height = if (cockpitHeadBounds != null || cockpit) headDrawBounds.height().toInt() else LayoutParams.MATCH_PARENT
+            it.leftMargin = headDrawBounds.left.toInt(); it.topMargin = headDrawBounds.top.toInt()
         }
+        updateOrbTarget(measuredWidth, measuredHeight)
         super.onMeasure(MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY))
     }
@@ -476,6 +548,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     fun setGeometry(geometry: ContinuumHologramRenderer.Geometry) {
         val changed = renderer.geometry != geometry
         renderer.geometry = geometry
+        if (geometry != ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT) setCockpitRegions(null, null)
         if (changed) requestLayout()
         invalidate()
     }
@@ -492,6 +565,8 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.energy = energy
         renderFrame.audio = audioEnergy
         val cockpit = renderer.geometry == ContinuumHologramRenderer.Geometry.REFERENCE_COCKPIT
+        resolveHeadBounds(width, height)
+        updateOrbTarget(width, height)
         if (headEnabled) {
             val pose = synchronized(avatarPose) { avatarPose.pose(System.currentTimeMillis()) }
             if (canDisplay3d() && native3d != null) {
@@ -499,22 +574,27 @@ class ContinuumHologramView @JvmOverloads constructor(
                     .onSuccess { rendered -> if (rendered) { native3dDrawn = true; nativeTexture?.alpha = 1f } }
                     .onFailure { fail3d() }
             }
-            if (!native3dDrawn) avatarRenderer.draw(painter,
-                width / density * if (cockpit) .66f else 1f,
-                height / density * if (cockpit) .92f else 1f, pose, avatarSeconds, canAnimateFrame())
-            if (native3dDrawn || cockpit) {
+            if (!native3dDrawn) {
+                val headCanvas = canvas.save()
+                canvas.translate(headDrawBounds.left / density, headDrawBounds.top / density)
+                avatarRenderer.draw(painter, headDrawBounds.width() / density, headDrawBounds.height() / density,
+                    pose, avatarSeconds, canAnimateFrame())
+                canvas.restoreToCount(headCanvas)
+            }
+            if (native3dDrawn || cockpit || cockpitOrbBounds != null) {
                 // Same original orb, same actual app state and speech frame; no second animation loop.
-                val orbWidth = width / density * if (cockpit) .43f else .28f
-                val orbHeight = height / density * if (cockpit) .76f else .40f
+                resolveOrbBounds(width, height)
+                val orbWidth = orbDrawBounds.width() / density
+                val orbHeight = orbDrawBounds.height() / density
                 val orbCanvas = canvas.save()
-                canvas.translate(width / density * if (cockpit) .57f else .72f,
-                    height / density * if (cockpit) .09f else .30f)
+                canvas.translate(orbDrawBounds.left / density, orbDrawBounds.top / density)
                 canvas.clipRect(0f, 0f, orbWidth, orbHeight)
                 renderer.layout(orbWidth, orbHeight)
                 renderer.draw(painter, renderFrame)
                 canvas.restoreToCount(orbCanvas)
             }
-            if (cockpit) painter.drawText("JARVIS", width / density * .33f, height / density * .96f,
+            if (cockpit) painter.drawText("JARVIS", headDrawBounds.centerX() / density,
+                if (cockpitHeadBounds != null) (headDrawBounds.top + headDrawBounds.height() * .96f) / density else height / density * .96f,
                 avatarBrandStyle, avatarBrandFill, TextAlign.CENTER)
         } else {
             renderer.layout(width / density, height / density)

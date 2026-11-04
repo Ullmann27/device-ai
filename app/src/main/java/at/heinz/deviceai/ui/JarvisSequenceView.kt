@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import at.heinz.deviceai.cockpit.CockpitAnimationEvent
 import at.heinz.deviceai.cockpit.CockpitAnimationRenderer
+import at.heinz.deviceai.cockpit.MEMORY_TURN
 import at.heinz.deviceai.cockpit.StepState
 
 /**
@@ -23,6 +24,10 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     private val painter = AndroidContinuumPainter(context.assets)
     /** Injected clock for tests; defaults to the system monotonic clock. */
     var clock: () -> Long = { SystemClock.uptimeMillis() }
+    private val memoryRenderer = BrainOrbAnimationRenderer(effects) { clock() }
+    @Volatile private var deliveryGeneration = 0L
+    @Volatile private var detached = false
+    @Volatile private var motionAllowed = true
 
     init { isClickable = false; isFocusable = false; importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO }
 
@@ -33,17 +38,38 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     fun stepFinished(id: String, ok: Boolean) = effects.stepFinished(id, ok, clock()).also { kick() }
     fun result(id: String, title: String, subtitle: String? = null) = effects.result(id, title, subtitle, clock()).also { kick() }
     fun dismiss(id: String) = effects.dismiss(id, clock()).also { kick() }
-    fun clear() { effects.clear(); invalidate() }
+    fun clear() {
+        deliveryGeneration++
+        effects.clear(); stepStates.clear(); turn = null
+        invalidate()
+    }
+
+    /** The containing live surface supplies its foreground, visibility, thermal and reduced-motion policy. */
+    fun setMotionAllowed(allowed: Boolean) {
+        if (motionAllowed == allowed) return
+        motionAllowed = allowed
+        if (!allowed) clear() else kick()
+    }
 
     private var turn: String? = null
     private val stepStates = HashMap<String, StepState>()
 
     /** Called on the emitting thread; hops to the UI thread. */
     override fun render(event: CockpitAnimationEvent) {
-        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) apply(event) else post { apply(event) }
+        if (detached || !motionAllowed) return
+        val generation = deliveryGeneration
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) apply(event)
+        else post { if (generation == deliveryGeneration) apply(event) }
     }
 
     internal fun apply(event: CockpitAnimationEvent) {
+        if (detached || !motionAllowed) return
+        // Ledger/retrieval events have their own stream and must not be rejected by the current conversation id.
+        if (event is CockpitAnimationEvent.DocumentLearned || event is CockpitAnimationEvent.MemoryStored ||
+            event is CockpitAnimationEvent.RecallHits) {
+            if (event.turnId == MEMORY_TURN) { memoryRenderer.render(event); kick() }
+            return
+        }
         if (event is CockpitAnimationEvent.CommandFlyIn) {
             if (turn != event.turnId) { effects.clear(); stepStates.clear() }
             turn = event.turnId
@@ -60,8 +86,6 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         when (event) {
             is CockpitAnimationEvent.ActionStarted -> {
                 step(key("a.${event.action.name}"), event.detail)
-                if (event.action == at.heinz.deviceai.cockpit.CockpitAction.RESEARCH ||
-                    event.action == at.heinz.deviceai.cockpit.CockpitAction.LEARN) { effects.dataFlight(5, clock()); kick() }
             }
             is CockpitAnimationEvent.ProcessTimeline -> for (s in event.steps) {
                 val id = key("s.${s.key}")
@@ -94,9 +118,11 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
     private fun safeId(raw: String) = raw.map { if (it.isLetterOrDigit() && it.code < 128 || it in "._:-") it else '_' }
         .joinToString("").take(96)
 
-    private fun kick() { if (isAttachedToWindow) postInvalidateOnAnimation() else invalidate() }
+    private fun kick() { if (isAttachedToWindow && motionAllowed) postInvalidateOnAnimation() else invalidate() }
 
-    override fun onDetachedFromWindow() { effects.clear(); super.onDetachedFromWindow() }
+    override fun onAttachedToWindow() { super.onAttachedToWindow(); deliveryGeneration++; detached = false }
+
+    override fun onDetachedFromWindow() { detached = true; clear(); super.onDetachedFromWindow() }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -107,6 +133,6 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         canvas.scale(d, d)
         effects.draw(painter, width / d, height / d, now)
         canvas.restoreToCount(saved)
-        if (isAttachedToWindow && isShown && effects.isAnimating(now)) postInvalidateOnAnimation()
+        if (motionAllowed && isAttachedToWindow && isShown && effects.isAnimating(now)) postInvalidateOnAnimation()
     }
 }

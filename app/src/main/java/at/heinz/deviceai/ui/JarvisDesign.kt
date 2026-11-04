@@ -28,6 +28,11 @@ object JarvisDesign {
         val tileFillEnd = Argb.of(204, 0x0C, 0x23, 0x41)   // tile.fill.right composite #0A1E38 @80 %
         val tileRimStart = Argb.rgb(0x01, 0xDA, 0xE8)       // tile.rim.left #01DAE8
         val tileRimEnd = Argb.rgb(0x2E, 0x52, 0x89)         // tile.rim.right #2E5289
+        // Dark fill samples from the left/right of the two violet ref5 tiles; no activity/state is implied.
+        val memoryTileStart = Argb.rgb(0x19, 0x21, 0x4E)
+        val memoryTileEnd = Argb.rgb(0x08, 0x1E, 0x36)
+        val agentsTileStart = Argb.rgb(0x21, 0x20, 0x58)
+        val agentsTileEnd = Argb.rgb(0x0D, 0x1E, 0x3E)
         val chevron = Argb.rgb(0x51, 0xAD, 0xC5)            // tile.chevron #51ADC5 (antialiased 1 px stroke, true colour brighter)
         val pillRimStart = Argb.rgb(0x2A, 0xEA, 0xFC)       // pill.rim.left #2AEAFC
         val pillRimEnd = Argb.rgb(0xCC, 0x94, 0xEF)         // pill.rim.right #CC94EF
@@ -92,6 +97,11 @@ object JarvisDesign {
         /** Tile 258 x 79 px → 166 x 51 dp, corner 12 px, icon 39 px, inset 25 px, icon→text 26 px. */
         val tile = ComponentStyle(51f, 8f, 1f, Colors.tileFillStart, Colors.tileRimStart, 16f, 24f, 16f, Glow.SUBTLE,
             fillEnd = Colors.tileFillEnd, rimEnd = Colors.tileRimEnd)
+        val memoryTile = tile.copy(fill = Colors.memoryTileStart, fillEnd = Colors.memoryTileEnd,
+            rim = Colors.violetRim, rimEnd = Colors.tileRimEnd)
+        val agentsTile = tile.copy(fill = Colors.agentsTileStart, fillEnd = Colors.agentsTileEnd,
+            rim = Colors.violetRim, rimEnd = Colors.violetSoft)
+        val systemTile = tile.copy(rimEnd = Colors.violetRim)
         /** Tile chevron: glyph 8 px high, 22 px from the right edge → box 10 dp, inset 14 dp. */
         const val chevronSize = 10f
         const val chevronInset = 14f

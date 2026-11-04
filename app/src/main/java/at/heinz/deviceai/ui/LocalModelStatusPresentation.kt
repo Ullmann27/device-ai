@@ -25,6 +25,10 @@ object LocalModelStatusPresentation {
         true -> "Online" to Tone.OK; false -> "Offline" to Tone.WARN; null -> MISSING to Tone.NEUTRAL
     }
 
+    /** The model card reports its loaded local runtime, independently of internet connectivity. */
+    fun modelAvailability(s: ContinuumDashboardState): Pair<String, Tone> =
+        if (s.model.online) "Online" to Tone.OK else "Offline" to Tone.NEUTRAL
+
     /** [resources] = last load-time measurement; null = no state field yet -> [MISSING]. */
     fun rows(s: ContinuumDashboardState, resources: LocalModelResourceSnapshot? = null,
              admissionRefusal: String? = null): List<Row> {
@@ -77,7 +81,7 @@ class CockpitLocalModelCard(textScale: Float) : CockpitCard(textScale, Continuum
         p.drawText(title(s), pad + iconSize + JarvisDesign.Styles.pill.iconGap, titleMid + p.capHeight(type.heading) / 2f, type.heading, Fill.Solid(c.text))
         ContinuumSurfaces.chevron(p, w - pad - iconSize * .25f, titleMid, iconSize * .55f, c.cyan)
         // Headline + connectivity pill.
-        val (txt, tone) = LocalModelStatusPresentation.connectivity(s)
+        val (txt, tone) = LocalModelStatusPresentation.modelAvailability(s)
         val ok = tone == ContinuumCockpitPresentation.Tone.OK
         val st = JarvisDesign.Styles.pill.copy(rim = if (ok) c.ok else JarvisDesign.Styles.pill.rim)
         val ph = st.height * .8f

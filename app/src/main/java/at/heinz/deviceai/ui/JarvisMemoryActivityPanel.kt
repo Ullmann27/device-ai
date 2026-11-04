@@ -87,8 +87,7 @@ object JarvisMemoryActivityPanel {
         val C = JarvisDesign.Colors
         val k = (r - l) / REF_W
         val rad = 6f * k
-        p.fillRoundRect(l, t, r, b, rad, Fill.Solid(C.surface))
-        p.strokeRoundRect(l, t, r, b, rad, 1f, Fill.Solid(C.panelRim), .9f)
+        JarvisNeon.glassCard(p, l, t, r, b, rad, JarvisDesign.Glow.SUBTLE)
         // Ebenen-Icon
         val ix = l + 12f * k; val iy = t + 13f * k; val iw = 12f * k
         for (j in 0 until 3) {

@@ -16,6 +16,7 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
  */
 object JarvisCockpitGridContent {
     const val NONE = "—"
+    private val localModelCard = CockpitLocalModelCard(1f)
 
     /** ref5 tile subtitles (German), two short lines each. */
     val tileSubtitles: Map<String, List<String>> = mapOf(
@@ -90,7 +91,14 @@ object JarvisCockpitGridContent {
             // Integration (#486): ref5 Active Agents / Current Task Flow / status bar.
             Slot.ROW_AGENTS -> JarvisCockpitPanels.drawAgents(p, b, s)
             Slot.ROW_TASKS -> JarvisCockpitPanels.drawTaskFlow(p, b, s)
-            Slot.ROW_MEMORY, Slot.ROW_MODEL -> rowPanel(p, slot, b, s, now)
+            Slot.ROW_MEMORY -> JarvisMemoryActivityPanel.draw(p, b.left, b.top, b.right, b.bottom,
+                MemoryActivitySnapshot.from(s.memory, null))
+            Slot.ROW_MODEL -> {
+                p.save()
+                p.translate(b.left, b.top)
+                localModelCard.draw(p, b.width, b.height, s)
+                p.restore()
+            }
             Slot.STATUS -> JarvisCockpitPanels.drawStatusBar(p, b, s)
             Slot.DIALOG -> dialog(p, b, s)
             Slot.USER_CARD -> userCard(p, b)
@@ -205,8 +213,7 @@ object JarvisCockpitGridContent {
 
     private fun userCard(p: ContinuumPainter, b: Box) {
         if (at.heinz.deviceai.cockpit.JarvisUserCardSlot.renderer != null) return // the registered view draws itself
-        p.drawText(NONE, b.centerX, b.top + b.height / 2f + p.capHeight(Type.caption) / 2f, Type.caption,
-            Fill.Solid(Colors.textSecondary), TextAlign.CENTER)
+        JarvisOwnerCardContent.draw(p, b, at.heinz.deviceai.cockpit.JarvisUserCardSlot.latest)
     }
 
     /** Greedy word wrap. */
@@ -225,9 +232,11 @@ object JarvisCockpitGridContent {
         val st = JarvisDesign.Styles.tile
         val iconSize = minOf(st.iconSize, b.height * .5f)
         val ix = b.left + 12f + iconSize / 2f; val cy = b.top + b.height / 2f
-        p.strokeRoundRect(ix - iconSize * .7f, cy - iconSize * .7f, ix + iconSize * .7f, cy + iconSize * .7f, 6f, 1f, Fill.Solid(Colors.rim))
-        ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.iconCore))
-        val x = ix + iconSize * .7f + 9f; val room = b.right - 18f - x
+        val accent = if (tile.target in setOf("memory", "agents")) Colors.violetRim else Colors.cyan
+        JarvisNeon.halo(p, ix, cy, iconSize * .85f, accent, .20f)
+        if (!JarvisRailIcons.draw(p, tile.target, ix - iconSize / 2f, cy - iconSize / 2f, iconSize, Colors.iconCore))
+            ContinuumIcons.draw(p, tile.icon, ix, cy, iconSize, Fill.Solid(Colors.iconCore))
+        val x = ix + iconSize * .5f + 10f; val room = b.right - 18f - x
         val lines = subtitle.take(2)
         val capT = p.capHeight(Type.tileLabel)
         val lh = minOf(Type.subtitleLineHeight, (b.height - capT - 8f) / maxOf(1, lines.size))

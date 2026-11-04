@@ -964,7 +964,7 @@ class AgentActivity : Activity() {
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
-        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar())
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cameraDrift?.close()
         cameraDrift = at.heinz.deviceai.ui.JarvisCameraDrift(home)

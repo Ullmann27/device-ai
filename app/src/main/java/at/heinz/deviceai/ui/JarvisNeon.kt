@@ -9,22 +9,37 @@ import at.heinz.deviceai.ui.JarvisDesign.Glow
 /**
  * Reusable glow / neon primitives on the platform-neutral [ContinuumPainter]
  * (same drawing stack as PR #477 – Android Canvas on device, Java2D in JVM previews).
- * Glow = one soft light layer with falloff (3 additive strokes of growing width, decreasing alpha),
+ * Glow = one soft light layer with a sampled Gaussian falloff,
  * never offset copies of the shape or text, so it does not double at large font scales.
  */
 object JarvisNeon {
     private fun edge(l: Float, t: Float, r: Float, b: Float) = Fill.Linear(l, t, r, b, Colors.neonEdge)
     private val falloff = floatArrayOf(1f, .55f, .25f)
+    private const val HALO_STEPS = 16
+    // Nested strokes integrate to a smooth Gaussian profile instead of three visible concentric bands.
+    // Computed once; no per-frame arrays or blur bitmaps are needed by the portable drawing path.
+    private val haloWeights = FloatArray(HALO_STEPS) { i ->
+        val inner = i.toFloat() / HALO_STEPS
+        val outer = (i + 1f) / HALO_STEPS
+        (kotlin.math.exp(-4.5f * inner * inner) - kotlin.math.exp(-4.5f * outer * outer))
+    }
+
+    private fun softOutline(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float,
+                            reach: Float, fill: Fill, strength: Float) {
+        if (reach <= 0f || strength <= 0f || r <= l || b <= t) return
+        p.setAdditive(true)
+        for (i in HALO_STEPS - 1 downTo 0) {
+            val width = 2f * reach * (i + 1f) / HALO_STEPS
+            p.strokeRoundRect(l, t, r, b, radius, width, fill, haloWeights[i] * strength)
+        }
+        p.setAdditive(false)
+    }
 
     /** Soft halo along a rounded rect outline. */
     fun rimGlow(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float, glow: Glow, boost: Float = 1f,
                 fill: Fill = edge(l, t, r, b)) {
         if (glow == Glow.OFF) return
-        p.setAdditive(true)
-        falloff.forEachIndexed { i, k ->
-            p.strokeRoundRect(l, t, r, b, radius, glow.haloWidth * (i + 1) / falloff.size * 2f, fill, glow.haloAlpha * k * boost / 2f)
-        }
-        p.setAdditive(false)
+        softOutline(p, l, t, r, b, radius, glow.haloWidth, fill, glow.haloAlpha * boost)
     }
 
     /**
@@ -104,11 +119,7 @@ object JarvisNeon {
     fun bloomRoundRect(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float, color: Int = Colors.cyan,
                        intensity: Float = 1f) {
         if (intensity <= 0f) return
-        p.setAdditive(true)
-        floatArrayOf(14f, 8f, 3f).forEachIndexed { i, s ->
-            p.strokeRoundRect(l, t, r, b, radius, s, Fill.Solid(color), (.05f + .07f * i) * intensity)
-        }
-        p.setAdditive(false)
+        softOutline(p, l, t, r, b, radius, 9f, Fill.Solid(color), .34f * intensity)
     }
 
     /** Radial light pool behind hero content (head, brain orb). */
@@ -183,7 +194,7 @@ object JarvisNeon {
                   centerLift: Boolean = false) {
         val radius = minOf(style.radius, (b - t) / 2f)
         val rim = style.rimEnd?.let { Fill.Linear(l, t, r, t, intArrayOf(style.rim, it)) } ?: Fill.Solid(style.rim)
-        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.4f else 1f,
+        if (style.glow != Glow.OFF) rimGlow(p, l, t, r, b, radius, style.glow, if (active) 1.8f else 1f,
             if (active) Fill.Solid(Colors.bloomHalo) else rim)
         val fill = when {
             // ref5 active button: brighter toward the middle (navSurface edges → lifted navSurfaceActive centre; lift estimated).
@@ -193,6 +204,10 @@ object JarvisNeon {
             else -> Fill.Solid(style.fill)
         }
         p.fillRoundRect(l, t, r, b, radius, fill)
+        if (active && centerLift) {
+            // ref5 has a local light source at the left edge, rather than an equally bright frame everywhere.
+            bloom(p, l + radius * .45f, t + radius * .9f, minOf(10f, (b - t) * .22f), Colors.cyan, .6f)
+        }
         p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, rim)
         if (active) p.strokeRoundRect(l, t, r, b, radius, style.rimWidth, Fill.Solid(Colors.glowCore), .6f)
     }

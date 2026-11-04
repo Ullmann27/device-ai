@@ -62,6 +62,28 @@ object JarvisShellLayout {
         else -> FormFactor.TABLET_LANDSCAPE
     }
 
+    /**
+     * Geometry for the Activity's content pane when its real navigation rail already occupies the left edge.
+     * Measure against the whole window, then translate the content once. This avoids both a duplicate drawn rail
+     * and reserving its width a second time inside the home. The Activity remains the sole navigation owner.
+     */
+    fun forContent(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED,
+                   externalRailWidthDp: Float = 0f): Shell {
+        require(externalRailWidthDp.isFinite() && externalRailWidthDp >= 0f)
+        if (externalRailWidthDp == 0f) return create(widthDp, heightDp, fontScale, foldRail)
+        val full = create(widthDp + externalRailWidthDp, heightDp, fontScale, foldRail)
+        fun shift(box: Box): Box = Box(maxOf(0f, box.left - externalRailWidthDp), box.top,
+            maxOf(0f, box.right - externalRailWidthDp), box.bottom)
+        val boxes = full.boxes.filterKeys { it != Slot.NAV_RAIL }.mapValues { shift(it.value) }
+        val grid = full.grid?.let { original ->
+            val areas = original.areas.filterKeys {
+                it != JarvisCockpitGrid.Area.RAIL && it != JarvisCockpitGrid.Area.DEVICE_STATUS
+            }.mapValues { shift(it.value) }
+            original.copy(width = widthDp, areas = areas)
+        }
+        return full.copy(width = widthDp, boxes = boxes, grid = grid)
+    }
+
     fun create(widthDp: Float, heightDp: Float, fontScale: Float = 1f, foldRail: Rail = Rail.LABELLED): Shell {
         require(widthDp.isFinite() && widthDp >= 240f && heightDp.isFinite() && heightDp >= 320f)
         val font = if (fontScale.isFinite()) fontScale.coerceIn(.85f, 2f) else 1f

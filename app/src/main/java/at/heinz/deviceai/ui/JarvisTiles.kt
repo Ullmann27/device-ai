@@ -13,6 +13,24 @@ data class JarvisTile(val target: String, val label: String, val icon: Icon, val
                       val subtitle: List<String> = emptyList())
 
 object JarvisTiles {
+    /** ref5 uses two violet cards among the cyan cards. Colour describes the destination, never live status. */
+    fun style(target: String): JarvisDesign.ComponentStyle = when (target) {
+        "memory" -> JarvisDesign.Styles.memoryTile
+        "agents" -> JarvisDesign.Styles.agentsTile
+        "system" -> JarvisDesign.Styles.systemTile
+        else -> JarvisDesign.Styles.tile
+    }
+
+    fun drawSurface(p: ContinuumPainter, b: Box, tile: JarvisTile, highlighted: Boolean) {
+        val st = style(tile.target)
+        JarvisNeon.component(p, b.left, b.top, b.right, b.bottom, st, active = highlighted)
+        val radius = minOf(st.radius, b.height / 2f)
+        p.fillRoundRect(b.left + 1f, b.top + 1f, b.right - 1f, b.top + b.height * .30f, radius,
+            Fill.Linear(0f, b.top, 0f, b.top + b.height * .30f,
+                intArrayOf(Argb.withAlpha(st.rim, .12f), 0)))
+        JarvisNeon.halo(p, b.left + 16f, b.top + b.height / 2f, b.height * .42f, st.rim, .14f)
+    }
+
     /** The eight action tiles of ref5 (same order), titles translated to German. No invented subtitles. */
     val reference = listOf(
         JarvisTile("chat", "Chat", Icon.CHAT),

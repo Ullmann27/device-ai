@@ -26,6 +26,15 @@ class JarvisShellView(context: Context) : View(context) {
     private var startMs = -1L
     private var layoutFont = 0f
     private var layoutRail: JarvisShellLayout.Rail? = null
+    private var layoutInset = Float.NaN
+    /** Width already occupied by the Activity's functional rail, in window dp. */
+    var contentRailInsetDp = 0f
+        set(value) {
+            require(value.isFinite() && value >= 0f)
+            if (field == value) return
+            field = value
+            invalidate()
+        }
 
     /** Continuous camera drift / dolly / dust. Off: static composition (also off for reduced motion). */
     var ambientMotionEnabled = true
@@ -48,8 +57,10 @@ class JarvisShellView(context: Context) : View(context) {
         val w = width / d; val h = height / d
         if (w < 240f || h < 320f) return
         val font = resources.configuration.fontScale
-        val s = shell?.takeIf { it.width == w && it.height == h && layoutFont == font && layoutRail == foldRail }
-            ?: JarvisShellLayout.create(w, h, font, foldRail).also { shell = it; layoutFont = font; layoutRail = foldRail }
+        val s = shell?.takeIf { it.width == w && it.height == h && layoutFont == font && layoutRail == foldRail && layoutInset == contentRailInsetDp }
+            ?: JarvisShellLayout.forContent(w, h, font, foldRail, contentRailInsetDp).also {
+                shell = it; layoutFont = font; layoutRail = foldRail; layoutInset = contentRailInsetDp
+            }
         val scale = animatorScale()
         val now = SystemClock.uptimeMillis()
         val elapsed = if (startMs < 0) Long.MAX_VALUE / 4 else now - startMs
