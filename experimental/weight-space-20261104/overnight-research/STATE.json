@@ -3,8 +3,8 @@
   "phase": "OPEN_PATH_PARITY_FAIL_RESTORED",
   "parentCommit": "0af14f75b04e68ba849a92316b8be51041e8738b",
   "comparisonPr508Commit": "59891cfad6dd015f47c187cc688ea94b0026ad7d",
-  "ownerSession": "0549bca61ccf",
-  "leaseUntilUtc": "2026-11-04T23:30:00Z",
+  "ownerSession": null,
+  "leaseUntilUtc": null,
   "parallelAgents": 0,
   "newMeasurementsRun": true,
   "trainingPermitted": false,
@@ -17,9 +17,9 @@
     "6.56M/9.71M gradient access, chain-rule and twenty finite-difference checks"
   ],
   "next": [
-    "preserve failed-attempt evidence and exact binaries",
-    "publish handoff and final source/input/scope checks",
-    "continue source-level postmortem and gate integration without another model run"
+    "source-bound postmortem of the rejected path opening without a model run",
+    "review isolated capacity and candidate-choice repair against current PR 508",
+    "prepare a prospective retention and learning-rate study with unchanged acceptance gates"
   ],
   "acceptedResearchState": "M5_UNCHANGED",
   "newModelExperimentsPermittedThisRound": false,
@@ -35,7 +35,16 @@
     "exactRestorationVerified": true
   },
   "continuation": {
-    "status": "NOT_YET_SCHEDULED",
-    "scope": "source audit, gate repair and prospective study design only"
-  }
+    "status": "SCHEDULED_NOT_YET_EXECUTED",
+    "scope": "source audit, gate repair and prospective study design only",
+    "iterations": 8,
+    "frequency": "HOURLY",
+    "timezone": "Europe/Vienna",
+    "startLocal": "2026-11-05T00:30:00+01:00",
+    "timingMode": "flexible_schedule",
+    "executionEnvironmentConfirmed": false,
+    "nextRunTimestampReturned": false
+  },
+  "leaseReleasedAtUtc": "2026-11-04T22:30:38.987172+00:00",
+  "evidenceCommit": "1c3c26cf04d8a28059bbe0bba4ac30e2bef032c5"
 }
