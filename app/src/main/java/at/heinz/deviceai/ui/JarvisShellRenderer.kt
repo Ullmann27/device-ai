@@ -34,14 +34,28 @@ object JarvisShellRenderer {
         else -> JarvisMotion.Depth.Layer.FAR
     }
 
-    private val bare = setOf(Slot.AVATAR, Slot.TOP_BAR)
+    private val foregroundSlots = setOf(Slot.TOP_BAR, Slot.CONTINUUM_HEADER, Slot.DIALOG,
+        Slot.CAMERA_STATUS, Slot.COCKPIT_SECONDARY)
+    private val bare = setOf(Slot.AVATAR) + foregroundSlots
+
+    /** Drawn above the transparent native head. Keeps speech and status readable over the 3D silhouette. */
+    fun drawForeground(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent>) {
+        for (slot in foregroundSlots) {
+            val box = shell[slot] ?: continue
+            if (slot != Slot.TOP_BAR && slot != Slot.CONTINUUM_HEADER) {
+                JarvisReferenceHud.surface(p, box, 14f, Colors.cyan,
+                    if (slot == Slot.COCKPIT_SECONDARY || slot == Slot.CAMERA_STATUS) Colors.violetRim else Colors.cyanDeep)
+            }
+            content[slot]?.draw(p, box)
+        }
+    }
 
     fun draw(p: ContinuumPainter, shell: Shell, content: Map<Slot, SlotContent> = emptyMap(),
              elapsedMs: Long = Long.MAX_VALUE / 4, animatorScale: Float = 1f,
              tiles: List<JarvisTile> = JarvisTiles.reference, glass: GlassBackend? = null, timeMs: Long = 0L) {
-        if (glass?.drawBackground(shell.width, shell.height, timeMs) != true) background(p, shell.width, shell.height)
+        background(p, shell.width, shell.height)
         JarvisReferenceHud.backdrop(p, shell.width, shell.height)
-        val dolly = if (shell.ref5Grid) 1f else JarvisMotion.Depth.dolly(timeMs, animatorScale)
+        val dolly = 1f
         p.save(); p.scale(dolly, dolly, shell.width / 2f, shell.height / 2f)
         val cardSlots = shell.boxes.keys.filter { it !in bare && it != Slot.TILES }
         val tileBoxes = shell.tileBoxes()
@@ -49,34 +63,32 @@ object JarvisShellRenderer {
         val cx = shell.width / 2f
         val ranks = JarvisMotion.centerFirstRanks(cards.map { it.centerX }, cx)
         shell[Slot.AVATAR]?.let { box ->
-            val dy = JarvisMotion.idleOffset(timeMs, animatorScale = animatorScale)
+            val dy = 0f
             p.save(); p.translate(0f, dy)
             (content[Slot.AVATAR] ?: SlotContent(::avatarStandIn)).draw(p, box)
             p.restore()
         }
-        shell[Slot.TOP_BAR]?.let { (content[Slot.TOP_BAR] ?: SlotContent(::topBar)).draw(p, it) }
         cards.forEachIndexed { i, box ->
             val f = JarvisMotion.frame(JarvisMotion.panelSpecFor(box.centerX, cx),
                 elapsedMs - JarvisMotion.staggerStart(ranks[i], animatorScale = animatorScale), animatorScale)
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
             if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
-            val depth = if (shell.ref5Grid) JarvisMotion.Depth.FLAT else
-                JarvisMotion.Depth.state(layerOf(slot), box.centerX, box.centerY(), shell.width, shell.height, timeMs, animatorScale)
+            val depth = JarvisMotion.Depth.FLAT
             p.save()
             p.translate(f.dx + depth.dx, f.dy + depth.dy)
             val k = f.scale * depth.scale
             p.scale(k, k, box.centerX, box.centerY())
-            val depthNative = !shell.ref5Grid && glass?.beginDepth(box, depth) == true
+            val depthNative = false
             val tile = if (slot == null) tiles.getOrNull(tileIndex) else null
-            val ownsSurface = shell.ref5Grid && content[slot] != null &&
+            val ownsSurface = content[slot] != null &&
                 slot in setOf(Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS)
             if (tile != null) {
                 JarvisTiles.drawSurface(p, box, tile, f.glow > .5f)
             } else if (!ownsSurface) {
                 val r = JarvisDesign.Metrics.radiusCard
                 // Static HUD panels do not need repeated full-screen backdrop-blur copies.
-                val native = !shell.ref5Grid && glass?.drawPanelGlass(box, r, f.glow) == true
+                val native = false
                 if (f.glow > .5f) glass?.bloom(JarvisNeon.BLOOM_RADIUS_DP, f.glow) { q ->
                     q.strokeRoundRect(box.left, box.top, box.right, box.bottom, r, 2f, Fill.Solid(Colors.cyan))
                 }

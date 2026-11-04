@@ -337,8 +337,11 @@ class AgentActivity : Activity() {
     @Volatile private var activeChiefTurn: at.heinz.deviceai.chief.TurnLifecycle? = null
     private var lastChiefWorkerReport: at.heinz.deviceai.chief.WorkerReport? = null
     private val cockpitDialog = ArrayDeque<at.heinz.deviceai.ui.CockpitStatus.DialogLine>()
+    private val memoryActivityTracker = at.heinz.deviceai.ui.MemoryActivityTracker()
+    private var brainScene: at.heinz.deviceai.ui.ContinuumBrainSceneView? = null
     private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var railView: at.heinz.deviceai.ui.ContinuumElementView? = null
+    private var conversationRail: View? = null
     // Jarvis menu navigation (Integration): ref5 rail + action bar over Kern's JarvisNavigator / CockpitActionHandler.
     private val menuNavigator: at.heinz.deviceai.ui.JarvisMenuNavigator by lazy {
         at.heinz.deviceai.ui.JarvisMenuNavigator(cockpitTriggers, { slot -> openHomeSlot(slot, 0f, 0f) },
@@ -615,6 +618,7 @@ class AgentActivity : Activity() {
         hologramView?.setForegroundActive(true)
         homeView?.setForegroundActive(true)
         liveHardwareGauges?.setForegroundActive(true)
+        brainScene?.setForegroundActive(true)
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
@@ -659,6 +663,7 @@ class AgentActivity : Activity() {
         hologramView?.setForegroundActive(false)
         homeView?.setForegroundActive(false)
         liveHardwareGauges?.setForegroundActive(false)
+        brainScene?.setForegroundActive(false)
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
@@ -775,6 +780,7 @@ class AgentActivity : Activity() {
         bottomWorkAreaBar = null
         navigationView = null
         railView = null
+        conversationRail = null
         // The start pane must occupy the screen independently of its contents.
         // A weighted vertical LinearLayout previously collapsed the phone pane
         // on the owner's real Fold screen, placing the navigation at the top.
@@ -796,7 +802,11 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
-            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+            val rail = buildRail().also {
+                conversationRail = it
+                it.visibility = if (conversationActive || keyboardCompact) View.VISIBLE else View.GONE
+            }
+            wideContent.addView(rail, LinearLayout.LayoutParams(
                 railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
             ))
             wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
@@ -947,14 +957,14 @@ class AgentActivity : Activity() {
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         // Start screen of the owner's reference images: one view per measured slot, real values only
         // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
-        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also {
+        // Resizing changes layout ownership, not the dialog, model or avatar controller.
+        val liveHologram = (hologramView ?: ContinuumHologramView(this)).also {
+            (it.parent as? android.view.ViewGroup)?.removeView(it)
             hologramView = it
             avatarDirector.attach(it)
-            // The dashboard may be rebuilt while the Activity is already resumed
-            // (Fold layout or home/chat navigation). New views must inherit the
-            // current lifecycle immediately, not wait for another onResume().
             it.setForegroundActive(foregroundLearningActive)
-        }) { slot, x, y ->
+        }
+        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, liveHologram) { slot, x, y ->
             // Landscape action bar → Kern's CockpitActionHandler (same screens, plus the area-change event).
             val action = if (homeView?.landscapeCockpit == true) cockpitActionFor(slot) else null
             if (action != null && cockpitActions.availability(action).enabled) {
@@ -964,15 +974,18 @@ class AgentActivity : Activity() {
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
-        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
-            windowHeightDp = windowHeight)
+        home.configure(windowWidth, wide, railOffset = 0f, windowHeightDp = windowHeight,
+            externalBottomBarHeightDp = if (wide) 0f else at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT)
+        home.onNavigateTarget = ::navigateDashboardTarget
+        home.setJarvisShellStage(true)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
         // The ONE head (Jarvis Avatar, #482): docked into the cockpit's avatar slot.
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(at.heinz.deviceai.avatar.JarvisHoloAvatar(home.hologram))
         cockpitSubscriptions.forEach { runCatching { it.close() } }
         cameraDrift?.close()
-        cameraDrift = at.heinz.deviceai.ui.JarvisCameraDrift(home)
+        // Controls and their native hit targets stay fixed; motion belongs to the 3D scene.
+        cameraDrift = null
         cockpitSubscriptions = listOf(
             cockpitBus.subscribe(at.heinz.deviceai.ui.CockpitAnimationPresenter(home, cockpitBus, cockpitSessionId,
                 onGreeting = { line -> runOnUiThread { recordCockpitDialog(false, line) } }, drift = cameraDrift)),
@@ -1014,7 +1027,7 @@ class AgentActivity : Activity() {
         details.addView(activityText, matchWidth())
         dashboard.addView(details, matchWidth())
         val dashboardScroll = ScrollView(this).apply {
-            isFillViewport = false
+            isFillViewport = true
             clipToPadding = false
             isVerticalScrollBarEnabled = true
             isScrollbarFadingEnabled = false
@@ -1256,7 +1269,8 @@ class AgentActivity : Activity() {
             result.onSuccess { (state, open) ->
                 capabilityDashboard = state
                 capabilityDashboardAtElapsedMs = dashboardSnapshotAtElapsedMs
-                homeView?.state = state.copy(cockpit = cockpitStatus())
+                homeView?.state = state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+                    memoryActivity = memoryActivitySnapshot(state.memory))
                 if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
                 railView?.state = state
@@ -1303,7 +1317,9 @@ class AgentActivity : Activity() {
         val main = android.os.Handler(mainLooper)
         val mapper = at.heinz.deviceai.cockpit.MemoryEventMapper(cockpitBus) { d, r -> main.postDelayed(r, d) }
         val subscription = source.subscribe(mapper)
-        cockpitSubscriptions += AutoCloseable { mapper.detach(); subscription.close() }
+        val activity = at.heinz.deviceai.learning.ContinuumMemoryEvents.forApp(filesDir)
+            .addListener(memoryActivityTracker)
+        cockpitSubscriptions += AutoCloseable { mapper.detach(); subscription.close(); activity.close() }
     }
 
     private fun cockpitStatus(): at.heinz.deviceai.ui.CockpitStatus {
@@ -1315,8 +1331,23 @@ class AgentActivity : Activity() {
     private fun pushCockpitState() {
         val home = homeView ?: return
         if (isFinishing || isDestroyed) return
-        home.state = home.state.copy(cockpit = cockpitStatus())
+        home.state = home.state.copy(cockpit = cockpitStatus(), presentation = presentationStatus(),
+            memoryActivity = memoryActivitySnapshot(home.state.memory))
     }
+
+    private fun presentationStatus() = at.heinz.deviceai.ui.ContinuumDashboardState.PresentationStatus(
+        listening = voiceListening && foregroundLearningActive,
+        speaking = voiceSpeaking && foregroundLearningActive,
+        processing = busy,
+        cameraSessionActive = readinessCameraEnabled && foregroundLearningActive && readinessDialog?.isShowing == true,
+        cameraTracking = readinessCamera?.state == CameraTrackingState.TRACKING,
+        localOnly = internetConsent.mode.name == "OFF"
+    )
+
+    private fun memoryActivitySnapshot(stats: at.heinz.deviceai.learning.ContinuumMemoryStats?) =
+        at.heinz.deviceai.ui.MemoryActivitySnapshot.from(stats, memoryActivityTracker).copy(
+            // MemoryStored is a ledger write, not proof of a distinct context-update operation.
+            contextUpdates = null)
 
     private fun recordCockpitDialog(fromOwner: Boolean, text: String) {
         cockpitDialog.addLast(at.heinz.deviceai.ui.CockpitStatus.DialogLine(fromOwner, text.take(200)))
@@ -1615,7 +1646,6 @@ class AgentActivity : Activity() {
         when (activeWorkArea) {
             ContinuumWorkArea.START -> "home"
             ContinuumWorkArea.CHAT -> "chat"
-            ContinuumWorkArea.ENTWICKELN -> "development"
             else -> null
         }?.let { menuNavigator.syncCurrent(it); selectRail(it) }
         for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
@@ -1629,31 +1659,64 @@ class AgentActivity : Activity() {
         when (destination) {
             ContinuumWorkArea.START -> showHomeDashboard()
             ContinuumWorkArea.CHAT -> focusChatComposer()
-            ContinuumWorkArea.LERNEN -> showLearningCenter()
-            ContinuumWorkArea.ENTWICKELN -> showDevelopmentCenter()
+            ContinuumWorkArea.LERNEN -> showDashboardCategory("KI-System", ContinuumWorkAreaNavigationSpec.systemEntries)
+            ContinuumWorkArea.ENTWICKELN -> showDashboardCategory("Werkzeuge", ContinuumWorkAreaNavigationSpec.toolEntries)
             ContinuumWorkArea.MEHR -> showMoreWorkAreas()
         }
     }
 
-    private fun showMoreWorkAreas() {
-        val labels = arrayOf(
-            "Forschung & Quellen", "Lokale KI-Modelle", "Wissensspeicher",
-            "System & Sicherheit", "Handy-Builder · Termux", "Team · Bots"
-        )
+    private fun showMoreWorkAreas() =
+        showDashboardCategory("Mehr", ContinuumWorkAreaNavigationSpec.moreEntries)
+
+    private fun showDashboardCategory(title: String, entries: List<ContinuumWorkAreaNavigationSpec.CategoryEntry>) {
         AlertDialog.Builder(this)
-            .setTitle("Weitere Arbeitsbereiche")
-            .setItems(labels) { _, index ->
-                when (index) {
-                    0 -> showResearchModeDialog()
-                    1 -> showModelCenter()
-                    2 -> showMemoryCenter()
-                    3 -> showSystemCenter()
-                    4 -> openMobileBuilder()
-                    5 -> showBotRoster()
-                }
+            .setTitle(title)
+            .setItems(entries.map { it.title }.toTypedArray()) { _, index ->
+                navigateDashboardTarget(entries[index].target)
             }
             .setNegativeButton("Schließen", null)
             .show()
+    }
+
+    /** All responsive presentations enter the existing owner-gated routes through this one adapter. */
+    private fun navigateDashboardTarget(target: String) {
+        when (target) {
+            "voice-input" -> startVoiceInput()
+            "camera-settings" -> showReadinessGuide()
+            "avatar-appearance" -> hologramView?.showAppearanceChooser()
+            "notifications" -> showDiagnosticsCenter()
+            "settings" -> showNexusPersonalization()
+            "more" -> showMoreWorkAreas()
+            "model-management" -> showModelCenter()
+            "privacy" -> showResearchModeDialog()
+            "mobile-builder" -> openMobileBuilder()
+            "brain" -> showBrainScene()
+            else -> menuNavigator.navigate(target)
+        }
+    }
+
+    private fun showBrainScene() {
+        centerDialog?.dismiss()
+        val scene = at.heinz.deviceai.ui.ContinuumBrainSceneView(this).apply {
+            minimumHeight = dp(360)
+            setProcessing(busy)
+            setForegroundActive(foregroundLearningActive)
+        }
+        brainScene = scene
+        val subscription = cockpitBus.subscribe(scene)
+        val dialog = AlertDialog.Builder(this).setTitle("Continuum Brain")
+            .setView(scene).setNegativeButton("Schließen", null).create()
+        dialog.setOnDismissListener {
+            subscription.close()
+            scene.setForegroundActive(false)
+            if (brainScene === scene) brainScene = null
+            if (centerDialog === dialog) centerDialog = null
+        }
+        centerDialog = dialog
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(BG))
+        dialog.window?.setLayout(minOf(dp(720), resources.displayMetrics.widthPixels),
+            (resources.displayMetrics.heightPixels * .82f).toInt())
     }
 
     private fun showBotRoster() {
@@ -1887,6 +1950,7 @@ class AgentActivity : Activity() {
 
     private fun refreshConversationLayout() {
         val chat = conversationActive || keyboardCompact
+        conversationRail?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
         syncConversationAvatar(chat)
@@ -2650,6 +2714,7 @@ class AgentActivity : Activity() {
             if (state !in setOf(CameraTrackingState.STARTING, CameraTrackingState.TRACKING,
                     CameraTrackingState.NO_FACE, CameraTrackingState.AMBIGUOUS)) readinessCameraEnabled = false
             refreshReadinessGuide()
+            pushCockpitState()
         }).also { readinessCamera = it }
 
     private fun stopReadinessCamera() {
@@ -6383,6 +6448,8 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
+        brainScene?.setProcessing(busy)
+        pushCockpitState()
         avatarDirector.onRuntime(at.heinz.deviceai.avatar.AvatarRuntimeSignals(
             listening = voiceListening, speaking = voiceSpeaking,
             researching = state == ContinuumHologramView.State.RESEARCH,

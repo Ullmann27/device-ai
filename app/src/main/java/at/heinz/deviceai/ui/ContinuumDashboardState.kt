@@ -20,8 +20,27 @@ data class ContinuumDashboardState(
     /** Read-only memory ledger figures (ContinuumMemoryStatsReader, PR #371); null = not read / unreadable. */
     val memory: at.heinz.deviceai.learning.ContinuumMemoryStats? = null,
     /** Real pending items (curiosity question, receipts to review, web learning inbox); 0 hides the bell badge. */
-    val pendingNotifications: Int = 0
+    val pendingNotifications: Int = 0,
+    /** Actual foreground audio/camera/consent signals. Unknown is never an active status. */
+    val presentation: PresentationStatus = PresentationStatus(),
+    /** Event bars are session observations, separately labelled from the persistent ledger totals. */
+    val memoryActivity: MemoryActivitySnapshot? = null
 ) {
+    data class PresentationStatus(
+        val listening: Boolean = false,
+        val speaking: Boolean = false,
+        val processing: Boolean = false,
+        val cameraSessionActive: Boolean = false,
+        val cameraTracking: Boolean = false,
+        val localOnly: Boolean? = null,
+        /** Measured playback PCM envelope. null means no measured envelope; never synthetic speech energy. */
+        val audioLevel: Float? = null
+    ) {
+        val live: Boolean get() = listening || speaking || processing
+        val tracking: Boolean get() = cameraSessionActive && cameraTracking
+        val measuredAudio: Float? get() = audioLevel?.takeIf { it.isFinite() && it in 0f..1f }
+    }
+
     data class ModelStatus(
         /** Name of the core that currently answers in chat, e.g. the loaded local model or the start core. */
         val name: String = "Continuum-Kern",

@@ -11,7 +11,8 @@ import at.heinz.deviceai.ui.JarvisShellLayout.Slot
  */
 object JarvisShellContent {
     val filled = listOf(Slot.TOP_BAR, Slot.DIALOG, Slot.INPUT, Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY,
-        Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS, Slot.USER_CARD)
+        Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL, Slot.STATUS, Slot.USER_CARD,
+        Slot.AVATAR, Slot.CONTINUUM_HEADER, Slot.CAMERA_STATUS)
 
     fun title(slot: Slot, s: ContinuumDashboardState): String = when (slot) {
         Slot.TOP_BAR -> "CONTINUUM"
@@ -99,11 +100,12 @@ object JarvisShellContent {
 
     /** One SlotContent per filled slot; [state] is read at draw time so the map can be built once. */
     fun forState(state: () -> ContinuumDashboardState, clock: () -> Long = System::currentTimeMillis,
-                 grid: () -> JarvisCockpitGrid.Grid? = { null }):
+                 grid: () -> JarvisCockpitGrid.Grid? = { null },
+                 shell: () -> JarvisShellLayout.Shell? = { null }):
         Map<Slot, JarvisShellRenderer.SlotContent> = filled.associateWith { slot ->
         JarvisShellRenderer.SlotContent { p, box ->
             val g = grid()
-            if (g == null || !JarvisCockpitGridContent.draw(p, slot, box, g, state(), clock())) {
+            if (!JarvisCockpitGridContent.draw(p, slot, box, g, state(), clock(), shell())) {
                 if (slot != Slot.USER_CARD) draw(p, slot, box, state(), clock())
             }
         }

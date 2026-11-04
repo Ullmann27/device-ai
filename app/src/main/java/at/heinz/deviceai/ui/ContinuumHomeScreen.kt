@@ -8,7 +8,7 @@ import at.heinz.deviceai.ui.ContinuumIcons.Icon
  * preview draws the same map, so both show the identical composition. The hero slot is the hologram view.
  */
 object ContinuumHomeScreen {
-    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
+    val phoneNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BRAIN to "KI-System", Icon.GEAR to "Werkzeuge",
         Icon.DOTS_VERTICAL to "Mehr")
     val railNavigation = listOf(Icon.HOME to "Start", Icon.CHAT to "Chat", Icon.BOOK to "Lernen", Icon.CODE to "Entwickeln",
         Icon.CHART_UP to "Analysieren", Icon.DATABASE to "Speicher", Icon.GEAR to "System")

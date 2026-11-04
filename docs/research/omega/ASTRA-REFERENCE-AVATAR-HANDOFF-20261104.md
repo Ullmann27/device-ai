@@ -65,9 +65,17 @@ The incorrect initial runner spelling is preserved separately and is not RED.
 Raw evidence is in `docs/evidence/astra-reference-avatar-20261104/pr495-red/`.
 
 After this observed RED, the three minimal production repairs were imported
-from `7859d5d212d61829fabc7dfdbd3ca7587852388d`. Focused GREEN on the resulting
-candidate is **NOT_RUN** at this checkpoint. The original PR's green reports are
-provenance, not a new local test result.
+from `7859d5d212d61829fabc7dfdbd3ca7587852388d`. The resulting local source commit
+`9f1f68591b7178822da794edf4eede1a51fd8447` was independently compiled by the central
+builder. The unchanged 26 regressions plus existing `Avatar3dContractTest`,
+`AvatarMouthCouplingTest` and `AvatarDirectorTest` passed: **44/44, JUnit exit 0**.
+Evidence is in `docs/evidence/astra-reference-avatar-20261104/pr495-green/`.
+These are local JVM results, not a new full repository or device acceptance.
+
+The same builder also executed the actual Kotlin `ValidateAvatarGlbKt` on the
+unchanged packaged asset: **PASS / exit 0**, 21 targets, Face and NeuralThreads.
+The Python legacy contract failure therefore must not be reported as a proven
+Android asset-loader rejection. Native Filament/GPU execution remains separate.
 The real implementation files are `AvatarContract.kt` (contains
 `AvatarPoseReducer`), `AvatarMorphMapper.kt`, and `CockpitContracts.kt` (contains
 `JarvisAvatarSlot`). No surrounding layout changes are included.
