@@ -30,6 +30,49 @@ test('host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads',()=
   for(const name of ['EXPLICIT_JDK_NOT_FOUND','SDK36_NOT_FOUND','GRADLE8111_NOT_FOUND','NATIVE_AAPT2_NOT_FOUND'])
     assert.ok(r.blockers.includes(name),name);
 });
+function toolFixture(t){
+ const home=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-tool-profile-')),bin=path.join(home,'bin'),sdk=path.join(home,'sdk');
+ t.after(()=>fs.rmSync(home,{recursive:true,force:true}));
+ fs.mkdirSync(bin);fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
+ const jar=path.join(sdk,'platforms','android-36','android.jar'),gradle=path.join(bin,'gradle'),aapt2=path.join(bin,'aapt2');
+ fs.writeFileSync(jar,'fixture only');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
+ fs.writeFileSync(path.join(bin,'java'),'#!/bin/sh\nprintf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
+ fs.writeFileSync(path.join(bin,'javac'),'#!/bin/sh\nprintf \'javac 17.0.1\\n\'\n',{mode:0o700});
+ const version=output=>fs.writeFileSync(gradle,"#!/bin/sh\ncat <<'GRADLE_FIXTURE'\n"+output+'\nGRADLE_FIXTURE\n',{mode:0o700});
+ version('Gradle 8.11.1');
+ const env={JAVA_HOME:home,PATH:process.env.PATH,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:gradle,CONTINUUM_AAPT2_PATH:aapt2};
+ return {env,jar,aapt2,version};
+}
+test('Gradle admission requires one exact stable version line',t=>{
+ const f=toolFixture(t);
+ for(const output of ['Gradle 8.11.1','-----\r\nGradle 8.11.1\r\n-----']){
+  f.version(output);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true,output);
+ }
+ for(const output of ['Gradle 8.11.10','Gradle 8.11.1-rc-1','Gradle 8.11.1-nightly','Unavailable: Gradle 8.11.1',
+  'Gradle 8.11.2\nGradle 8.11.1','Gradle 8.11.1\nGradle 8.11.1']){
+  f.version(output);const result=inspectHostEnvironment(f.env);
+  assert.equal(result.hostReadyToAttemptQa,false,output);assert.ok(result.blockers.includes('GRADLE8111_INVALID'));
+ }
+});
+test('SDK platform admission requires a nonempty regular file',t=>{
+ const f=toolFixture(t);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true);
+ fs.unlinkSync(f.jar);fs.mkdirSync(f.jar);
+ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
+ fs.rmdirSync(f.jar);fs.writeFileSync(f.jar,'');
+ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
+ fs.unlinkSync(f.jar);fs.symlinkSync(f.jar,f.jar);
+ assert.ok(inspectHostEnvironment(f.env).blockers.includes('SDK36_NOT_FOUND'));
+});
+test('AAPT2 admission requires a nonempty executable regular file',t=>{
+ const f=toolFixture(t);assert.equal(inspectHostEnvironment(f.env).hostReadyToAttemptQa,true);
+ fs.chmodSync(f.aapt2,0o600);
+ assert.ok(inspectHostEnvironment(f.env).blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
+ fs.chmodSync(f.aapt2,0o700);fs.writeFileSync(f.aapt2,'');
+ assert.ok(inspectHostEnvironment(f.env).blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
+ fs.unlinkSync(f.aapt2);fs.mkdirSync(f.aapt2);
+ const result=inspectHostEnvironment(f.env);assert.ok(result.blockers.includes('NATIVE_AAPT2_NOT_FOUND'));
+ assert.equal(result.androidCompilationExecuted,false);assert.equal(result.androidTestExecuted,false);assert.equal(result.apkSigned,false);
+});
 test('host with existing incompatible Java detects JDK17 requirement',()=>{
   const home=process.env.JAVA_HOME;
   if(!home || !fs.existsSync(path.join(home,'bin','javac')))return;
@@ -48,7 +91,7 @@ test('host probes receive the explicit environment without mutating process.env'
     ['javac','printf \'javac 17.0.1\\n\''],['gradle','printf \'Gradle 8.11.1\\n\'']]){
     fs.writeFileSync(path.join(bin,name),guard+`printf '%s\\n' '${name}' >> "$JAVA_HOME/probes.log"\n`+version+'\n',{mode:0o700});
   }
-  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'fixture only');
+  const aapt2=path.join(bin,'aapt2');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
   const env={JAVA_HOME:home,PATH:bin,ANDROID_HOME:sdk,CONTINUUM_GRADLE_PATH:path.join(bin,'gradle'),CONTINUUM_AAPT2_PATH:aapt2};
   const before={...process.env},input={...env},r=inspectHostEnvironment(env);
   assert.deepEqual(r.blockers,[]);assert.equal(r.hostReadyToAttemptQa,true);

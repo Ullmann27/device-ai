@@ -1,0 +1,442 @@
+TAP version 13
+# Subtest: one-shot bot persists genuine source differences and only canonical proposed work
+ok 1 - one-shot bot persists genuine source differences and only canonical proposed work
+  ---
+  duration_ms: 1347.098014
+  type: 'test'
+  ...
+# Subtest: CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+ok 2 - CLI restores installed Termux paths for diagnosis and keeps missing tools blocked
+  ---
+  duration_ms: 1030.672018
+  type: 'test'
+  ...
+# Subtest: finite loop uses the existing durable scheduler and stops at the approved budget
+ok 3 - finite loop uses the existing durable scheduler and stops at the approved budget
+  ---
+  duration_ms: 1075.851419
+  type: 'test'
+  ...
+# Subtest: CLI refuses unknown, duplicate and unbounded modes before creating state
+ok 4 - CLI refuses unknown, duplicate and unbounded modes before creating state
+  ---
+  duration_ms: 1539.367938
+  type: 'test'
+  ...
+# Subtest: CLI incomplete coverage is nonzero and never reports a completed full inventory
+ok 5 - CLI incomplete coverage is nonzero and never reports a completed full inventory
+  ---
+  duration_ms: 580.921649
+  type: 'test'
+  ...
+# Subtest: resumable single passes reach later branches across process restarts
+ok 6 - resumable single passes reach later branches across process restarts
+  ---
+  duration_ms: 2509.186168
+  type: 'test'
+  ...
+# Subtest: finite scheduler records successful pages without declaring a full inventory
+ok 7 - finite scheduler records successful pages without declaring a full inventory
+  ---
+  duration_ms: 1261.699654
+  type: 'test'
+  ...
+# Subtest: changed refs restart source paging while crash replay deduplicates proposals
+ok 8 - changed refs restart source paging while crash replay deduplicates proposals
+  ---
+  duration_ms: 1671.82751
+  type: 'test'
+  ...
+# Subtest: scan state rejects corruption, changed settings and altered report bytes
+ok 9 - scan state rejects corruption, changed settings and altered report bytes
+  ---
+  duration_ms: 1152.650402
+  type: 'test'
+  ...
+# Subtest: scan state cannot follow links or steal a live existing scheduler lock
+ok 10 - scan state cannot follow links or steal a live existing scheduler lock
+  ---
+  duration_ms: 818.364915
+  type: 'test'
+  ...
+# Subtest: partial paths remain errors while subsequent pages keep progressing
+ok 11 - partial paths remain errors while subsequent pages keep progressing
+  ---
+  duration_ms: 870.924803
+  type: 'test'
+  ...
+# Subtest: proposal budget deferrals are recovered on the next source sweep
+ok 12 - proposal budget deferrals are recovered on the next source sweep
+  ---
+  duration_ms: 1435.940649
+  type: 'test'
+  ...
+# Subtest: termination during diagnosis leaves resumable state and queue unadvanced
+ok 13 - termination during diagnosis leaves resumable state and queue unadvanced
+  ---
+  duration_ms: 663.142491
+  type: 'test'
+  ...
+# Subtest: CLI cannot write through a state path into the source checkout
+ok 14 - CLI cannot write through a state path into the source checkout
+  ---
+  duration_ms: 260.879946
+  type: 'test'
+  ...
+# Subtest: CLI rejects a configuration mask before the existing scheduler can inspect source
+ok 15 - CLI rejects a configuration mask before the existing scheduler can inspect source
+  ---
+  duration_ms: 144.235353
+  type: 'test'
+  ...
+# Subtest: CLI supports only explicitly approved commands and flags
+ok 16 - CLI supports only explicitly approved commands and flags
+  ---
+  duration_ms: 3.646156
+  type: 'test'
+  ...
+# Subtest: Android runner requires Termux ARM64
+ok 17 - Android runner requires Termux ARM64
+  ---
+  duration_ms: 0.312089
+  type: 'test'
+  ...
+# Subtest: doctor without native toolchain reports unavailable
+ok 18 - doctor without native toolchain reports unavailable
+  ---
+  duration_ms: 2.770351
+  type: 'test'
+  ...
+# Subtest: state directory may not be inside source
+ok 19 - state directory may not be inside source
+  ---
+  duration_ms: 1.53795
+  type: 'test'
+  ...
+# Subtest: unavailable tools prevent Gradle invocation
+ok 20 - unavailable tools prevent Gradle invocation
+  ---
+  duration_ms: 2.204652
+  type: 'test'
+  ...
+# Subtest: uncommitted source blocks build before running Gradle
+ok 21 - uncommitted source blocks build before running Gradle
+  ---
+  duration_ms: 2.056529
+  type: 'test'
+  ...
+# Subtest: synthetic Gradle failure is not a successful build
+ok 22 - synthetic Gradle failure is not a successful build
+  ---
+  duration_ms: 1.972232
+  type: 'test'
+  ...
+# Subtest: unverified artifact is rejected and not published
+ok 23 - unverified artifact is rejected and not published
+  ---
+  duration_ms: 3.930313
+  type: 'test'
+  ...
+# Subtest: synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+ok 24 - synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+  ---
+  duration_ms: 21.709044
+  type: 'test'
+  ...
+# Subtest: owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+ok 25 - owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+  ---
+  duration_ms: 12.346793
+  type: 'test'
+  ...
+# Subtest: owner file created during a publication race is never overwritten
+ok 26 - owner file created during a publication race is never overwritten
+  ---
+  duration_ms: 3.787298
+  type: 'test'
+  ...
+# Subtest: a corrupted final Download copy is reported without deleting owner files
+ok 27 - a corrupted final Download copy is reported without deleting owner files
+  ---
+  duration_ms: 2.003949
+  type: 'test'
+  ...
+# Subtest: missing owner Download storage never fakes a published installer copy
+ok 28 - missing owner Download storage never fakes a published installer copy
+  ---
+  duration_ms: 2.123649
+  type: 'test'
+  ...
+# Subtest: unsafe symlink install folder is rejected without modifying the source project
+ok 29 - unsafe symlink install folder is rejected without modifying the source project
+  ---
+  duration_ms: 2.53005
+  type: 'test'
+  ...
+# Subtest: pre-existing conflicting APK is never overwritten by automatic publication
+ok 30 - pre-existing conflicting APK is never overwritten by automatic publication
+  ---
+  duration_ms: 2.015917
+  type: 'test'
+  ...
+# Subtest: rejected signature never generates an owner Download installation APK
+ok 31 - rejected signature never generates an owner Download installation APK
+  ---
+  duration_ms: 13.218432
+  type: 'test'
+  ...
+# Subtest: Gradle failure reports only fresh failing JVM tests, never a false build success
+ok 32 - Gradle failure reports only fresh failing JVM tests, never a false build success
+  ---
+  duration_ms: 1.765231
+  type: 'test'
+  ...
+# Subtest: JUnit diagnostics ignore stale files and symlinks
+ok 33 - JUnit diagnostics ignore stale files and symlinks
+  ---
+  duration_ms: 0.479159
+  type: 'test'
+  ...
+# Subtest: a changed HEAD during Gradle blocks APK publication
+ok 34 - a changed HEAD during Gradle blocks APK publication
+  ---
+  duration_ms: 6.182515
+  type: 'test'
+  ...
+# Subtest: a dirty checkout produced during Gradle blocks APK publication
+ok 35 - a dirty checkout produced during Gradle blocks APK publication
+  ---
+  duration_ms: 1.156066
+  type: 'test'
+  ...
+# Subtest: signature parser recognizes legacy and modern apksigner certificates only
+ok 36 - signature parser recognizes legacy and modern apksigner certificates only
+  ---
+  duration_ms: 0.194482
+  type: 'test'
+  ...
+# Subtest: modern apksigner result is accepted only after executable verification succeeds
+ok 37 - modern apksigner result is accepted only after executable verification succeeds
+  ---
+  duration_ms: 13.515118
+  type: 'test'
+  ...
+# Subtest: genuine apksigner rejection persists diagnostic without publishing APK
+ok 38 - genuine apksigner rejection persists diagnostic without publishing APK
+  ---
+  duration_ms: 1.62486
+  type: 'test'
+  ...
+# Subtest: Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+ok 39 - Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+  ---
+  duration_ms: 0.504498
+  type: 'test'
+  ...
+# Subtest: ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+ok 40 - ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+  ---
+  duration_ms: 0.373591
+  type: 'test'
+  ...
+# Subtest: real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+ok 41 - real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+  ---
+  duration_ms: 0.880542
+  type: 'test'
+  ...
+# Subtest: extra trailing separators do not prevent known Termux Java 21 normalization
+ok 42 - extra trailing separators do not prevent known Termux Java 21 normalization
+  ---
+  duration_ms: 0.308594
+  type: 'test'
+  ...
+# Subtest: Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+ok 43 - Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+  ---
+  duration_ms: 0.153611
+  type: 'test'
+  ...
+# Subtest: owner Java 17 is always first in PATH even if it appears after Java 21
+ok 44 - owner Java 17 is always first in PATH even if it appears after Java 21
+  ---
+  duration_ms: 3.577763
+  type: 'test'
+  ...
+# Subtest: missing Termux tools remain unavailable; never synthesize nonexistent binaries
+ok 45 - missing Termux tools remain unavailable; never synthesize nonexistent binaries
+  ---
+  duration_ms: 0.33977
+  type: 'test'
+  ...
+# Subtest: explicit owner toolchain settings are preserved, even when defaults exist
+ok 46 - explicit owner toolchain settings are preserved, even when defaults exist
+  ---
+  duration_ms: 0.242344
+  type: 'test'
+  ...
+# Subtest: non-Termux and non-ARM64 environments do not receive Android paths
+ok 47 - non-Termux and non-ARM64 environments do not receive Android paths
+  ---
+  duration_ms: 0.251137
+  type: 'test'
+  ...
+# Subtest: mobile build forwards resolved environment to doctor and Gradle without a shell
+ok 48 - mobile build forwards resolved environment to doctor and Gradle without a shell
+  ---
+  duration_ms: 26.485748
+  type: 'test'
+  ...
+# Subtest: status CLI returns successful query exit for historical failed or blocked build reports
+ok 49 - status CLI returns successful query exit for historical failed or blocked build reports
+  ---
+  duration_ms: 889.932492
+  type: 'test'
+  ...
+# Subtest: status CLI fails closed for corrupt report schema; missing report is a successful query
+ok 50 - status CLI fails closed for corrupt report schema; missing report is a successful query
+  ---
+  duration_ms: 302.810471
+  type: 'test'
+  ...
+# Subtest: a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+ok 51 - a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+  ---
+  duration_ms: 1.295666
+  type: 'test'
+  ...
+# Subtest: a correctly signed APK for the wrong package cannot be published as a Continuum preview
+ok 52 - a correctly signed APK for the wrong package cannot be published as a Continuum preview
+  ---
+  duration_ms: 1.037398
+  type: 'test'
+  ...
+# Subtest: malformed or failed package inspection cannot publish an APK
+ok 53 - malformed or failed package inspection cannot publish an APK
+  ---
+  duration_ms: 1.84462
+  type: 'test'
+  ...
+# Subtest: valid sources grant only permission to attempt the QA build
+ok 54 - valid sources grant only permission to attempt the QA build
+  ---
+  duration_ms: 2.717751
+  type: 'test'
+  ...
+# Subtest: wrong exact source HEAD fails
+ok 55 - wrong exact source HEAD fails
+  ---
+  duration_ms: 0.389896
+  type: 'test'
+  ...
+# Subtest: dirty checkout fails
+ok 56 - dirty checkout fails
+  ---
+  duration_ms: 0.177777
+  type: 'test'
+  ...
+# Subtest: main, production and release branch variants fail
+ok 57 - main, production and release branch variants fail
+  ---
+  duration_ms: 0.21916
+  type: 'test'
+  ...
+# Subtest: untrusted or missing remote fails
+ok 58 - untrusted or missing remote fails
+  ---
+  duration_ms: 4.372287
+  type: 'test'
+  ...
+# Subtest: old app package fails
+ok 59 - old app package fails
+  ---
+  duration_ms: 0.354853
+  type: 'test'
+  ...
+# Subtest: QA without sign exclusion fails
+ok 60 - QA without sign exclusion fails
+  ---
+  duration_ms: 0.243175
+  type: 'test'
+  ...
+# Subtest: runner without actual QA flag fails
+ok 61 - runner without actual QA flag fails
+  ---
+  duration_ms: 0.179209
+  type: 'test'
+  ...
+# Subtest: wrong signing release lane fails
+ok 62 - wrong signing release lane fails
+  ---
+  duration_ms: 0.287692
+  type: 'test'
+  ...
+# Subtest: host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+ok 63 - host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads
+  ---
+  duration_ms: 6.706022
+  type: 'test'
+  ...
+# Subtest: Gradle admission requires one exact stable version line
+ok 64 - Gradle admission requires one exact stable version line
+  ---
+  duration_ms: 156.595159
+  type: 'test'
+  ...
+# Subtest: SDK platform admission requires a nonempty regular file
+ok 65 - SDK platform admission requires a nonempty regular file
+  ---
+  duration_ms: 46.135438
+  type: 'test'
+  ...
+# Subtest: AAPT2 admission requires a nonempty executable regular file
+ok 66 - AAPT2 admission requires a nonempty executable regular file
+  ---
+  duration_ms: 74.682441
+  type: 'test'
+  ...
+# Subtest: host with existing incompatible Java detects JDK17 requirement
+ok 67 - host with existing incompatible Java detects JDK17 requirement
+  ---
+  duration_ms: 0.167371
+  type: 'test'
+  ...
+# Subtest: host probes receive the explicit environment without mutating process.env
+ok 68 - host probes receive the explicit environment without mutating process.env
+  ---
+  duration_ms: 13.627226
+  type: 'test'
+  ...
+# Subtest: read-only admission accepts a clean synthetic Git checkout with exact SHA
+ok 69 - read-only admission accepts a clean synthetic Git checkout with exact SHA
+  ---
+  duration_ms: 76.580411
+  type: 'test'
+  ...
+# Subtest: read-only admission reports dirty synthetic checkout
+ok 70 - read-only admission reports dirty synthetic checkout
+  ---
+  duration_ms: 108.132707
+  type: 'test'
+  ...
+# Subtest: refuses symlinked release source
+ok 71 - refuses symlinked release source
+  ---
+  duration_ms: 74.800097
+  type: 'test'
+  ...
+# Subtest: refuses parent directory rather than exact repository root
+ok 72 - refuses parent directory rather than exact repository root
+  ---
+  duration_ms: 65.675464
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16515.591745

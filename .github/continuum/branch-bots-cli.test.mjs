@@ -45,7 +45,7 @@ test('CLI restores installed Termux paths for diagnosis and keeps missing tools 
  const gradle=path.join(home,'continuum-toolchains','gradle-8.11.1','bin','gradle'),aapt2=path.join(home,'aapt2');
  fs.mkdirSync(path.join(java,'bin'),{recursive:true});fs.mkdirSync(path.dirname(gradle),{recursive:true});
  fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
- fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');fs.writeFileSync(aapt2,'fixture only');
+ fs.writeFileSync(path.join(sdk,'platforms','android-36','android.jar'),'fixture only');fs.writeFileSync(aapt2,'#!/bin/sh\nexit 0\n',{mode:0o700});
  const guard='#!/bin/sh\ncase "$PATH" in "$JAVA_HOME/bin:"*) ;; *) exit 71 ;; esac\n';
  fs.writeFileSync(path.join(java,'bin','java'),guard+'printf \'openjdk version "17.0.1"\\n\' >&2\n',{mode:0o700});
  fs.writeFileSync(path.join(java,'bin','javac'),guard+'printf \'javac 17.0.1\\n\'\n',{mode:0o700});

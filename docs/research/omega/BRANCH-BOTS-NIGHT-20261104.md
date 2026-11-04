@@ -49,3 +49,9 @@ node .github/continuum/branch-bots-cli.mjs --root "$PWD" --state "$HOME/.local/s
 ~~~
 
 Use the same scan settings for the same private state directory. An exhausted loop session needs an explicitly separate session or a one-shot continuation; it does not silently acquire a new cycle budget. This session has not started such a device process.
+
+## M3 — precise host tool profile
+
+Three new tests reproduced false host admission: Gradle 8.11.10 matched an 8.11.1 substring, a directory satisfied the SDK platform check, and a non-executable AAPT2 file passed. The corrected diagnostic requires one exact stable Gradle 8.11.1 line, a nonempty readable regular platform file, and a nonempty executable regular AAPT2 file. Near-match prereleases, contradictory/duplicate Gradle banners, empty files and symlink loops are covered.
+
+The relevant CLI/host/mobile-builder subset passes 72/72, no failures/skips. Existing positive fixture AAPT2 entries now have executable permissions. These shell fixtures are not real Android tooling. Executability does not prove AAPT2 ABI compatibility, SDK contents, dependency cache or successful compilation; hostReadyToAttemptQa remains only a preflight indication. The actual APK/device gates remain NOT_RUN.

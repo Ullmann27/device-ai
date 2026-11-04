@@ -11,6 +11,15 @@ const ORIGINS=new Set(['https://github.com/Ullmann27/device-ai',
  'git@github.com:Ullmann27/device-ai.git',
  'ssh://git@github.com/Ullmann27/device-ai.git']);
 const PROTECTED=/^(?:main|master|prod|production|release)(?:$|\/)/i;
+function availableFile(file,executable=false){
+  if(typeof file!=='string'||!file)return false;
+  try{
+    const stat=fs.statSync(file);
+    if(!stat.isFile()||stat.size===0)return false;
+    fs.accessSync(file,executable?fs.constants.X_OK:fs.constants.R_OK);
+    return true;
+  }catch{return false;}
+}
 const safePath=(root,rel)=>{
   let p=root;
   for(const part of rel.split('/')){
@@ -76,16 +85,17 @@ export function inspectHostEnvironment(env=process.env) {
       blockers.push('JDK17_REQUIRED');
   }
   const sdk=env.ANDROID_HOME || env.ANDROID_SDK_ROOT;
-  if(!sdk||!fs.existsSync(path.join(sdk,'platforms','android-36','android.jar')))
+  if(!sdk||!availableFile(path.join(sdk,'platforms','android-36','android.jar')))
     blockers.push('SDK36_NOT_FOUND');
   const gradle=env.CONTINUUM_GRADLE_PATH;
   if(!gradle||!fs.existsSync(gradle))blockers.push('GRADLE8111_NOT_FOUND');
   else {
     const x=spawnSync(gradle,['--version'],{env,encoding:'utf8',timeout:6000,maxBuffer:20000});
-    if(x.status!==0||!x.stdout.includes('Gradle 8.11.1'))blockers.push('GRADLE8111_INVALID');
+    const versions=(x.stdout??'').split(/\r?\n/).map(line=>line.trim()).filter(line=>line.startsWith('Gradle '));
+    if(x.status!==0||versions.length!==1||versions[0]!=='Gradle 8.11.1')blockers.push('GRADLE8111_INVALID');
   }
   const aapt2=env.CONTINUUM_AAPT2_PATH || (sdk?path.join(sdk,'build-tools','35.0.0','aapt2'):null);
-  if(!aapt2||!fs.existsSync(aapt2))blockers.push('NATIVE_AAPT2_NOT_FOUND');
+  if(!availableFile(aapt2,true))blockers.push('NATIVE_AAPT2_NOT_FOUND');
   return Object.freeze({hostReadyToAttemptQa:!blockers.length,blockers,
     androidCompilationExecuted:false,androidTestExecuted:false,apkSigned:false});
 }

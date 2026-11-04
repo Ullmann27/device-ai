@@ -7,7 +7,7 @@
   "baselineCommit": "5373ec7c1399cb34fb8896f7318fdfa5437fa283",
   "ownerSession": "672924e4650b-night-20261104",
   "sourceSnapshot": "SELECTED_104_CODE_FILES_VERIFIED",
-  "phase": "VERIFY_HOST_DIAGNOSTICS",
+  "phase": "AUDIT_READ_ONLY_SOURCE_CHECK",
   "milestones": [
     {
       "id": "M1",
@@ -36,6 +36,22 @@
       "green": {
         "tests": 61,
         "pass": 61,
+        "fail": 0,
+        "skip": 0
+      },
+      "commit": "9423d5fb6978496ec843d0f7bcbe8285ee63677f"
+    },
+    {
+      "id": "M3",
+      "status": "SOURCE_TESTED",
+      "change": "Exact Gradle profile and real file-shape admission",
+      "red": {
+        "tests": 3,
+        "fail": 3
+      },
+      "green": {
+        "tests": 72,
+        "pass": 72,
         "fail": 0,
         "skip": 0
       }
