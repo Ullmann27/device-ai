@@ -3,7 +3,7 @@
 ## Auftrag und Stand
 
 Besitzerfortsetzung vom 04.11.2026: „Weiter mit 3 bots“.
-Status: **RUNNER_PATCH_VERIFIED / V2_EVIDENCE_ADDENDUM_IN_PROGRESS**.
+Status: **REPAIR_ARTIFACT_VERIFIED / V2_RAW_EVIDENCE_REVIEW_COMPLETE**.
 Der frühe WIP-Checkpoint wurde separat als `fd91457efbb2b3d05ad962b25302ccc61e44f0f3`
 veröffentlicht; der folgende Stand ergänzt die tatsächlich abgeschlossenen Prüfungen.
 
@@ -122,6 +122,55 @@ Seine Aussage über damals fehlende V2-Rohbelege gilt genau für diesen Snapshot
 Während des Abschlusses veröffentlichte #508 den direkten Folgecommit
 `e3c5aeadd6336f843bd625d56431208d3a03b5ad` mit den fehlenden V2-Rohbelegen.
 Der [erneute Quellvergleich](latest-source-check.json) bestätigt alle drei
-Runner bytegleich zum geprüften Reparaturstand. Der dritte Helfer prüft diese
-neuen V2-Belege in einem getrennten, ausdrücklich auf `e3c5…` gebundenen Nachtrag.
-Historischer Bericht, Quittungen und Registrierungen werden dadurch nicht geändert.
+Runner bytegleich zum geprüften Reparaturstand. Der dritte Helfer hat diese
+neuen V2-Belege in einem getrennten, ausdrücklich auf `e3c5…` gebundenen
+[Nachtrag](result-review/V2_ADDENDUM.md) geprüft. Historischer Bericht,
+Quittungen und Registrierungen bleiben unverändert.
+
+Der Nachtrag rechnet 38 Textquellen, vier Receipt-/Log-Paare, alle 1.024 Updates
+über beide Arme, 192 veröffentlichte Dev-Einzelfälle und 32 Online-Epochenmittel
+nach. Die vorherige Summary-only-Lücke ist am neueren Commit aufgelöst. Root
+hat auch diese vollständige JSON-Ausgabe bytegleich reproduziert und zusätzlich
+die Zeit- und Speichermaxima aller vier V2-Kapazitätslogs aus den Rohzeilen
+neu berechnet: [V2-Root-Nachweis](root-verification/v2-verification.json).
+
+| V2-Befund | Small | Wide |
+|---|---:|---:|
+| Parameter | 132.160 | 6.562.304 |
+| Ausgewählter Trainingsschritt | 256 | 128 |
+| Frei generierte Dev-Antworten richtig | 13/24 | 13/24 |
+| Ersttoken-Beobachtungen nach Training | 0/3 | 3/3 |
+| Volle 32-Token-Ausgaben nach Training | 0/3 | 0/3 |
+
+Wide erzeugt am Kapazitätsprompt jetzt ein Token und danach EOS; das ist
+weiterhin ein Kapazitäts-FAIL. Im gepaarten Dev-Vergleich sind elf Fälle bei
+beiden richtig, zwei nur bei Small, zwei nur bei Wide und neun bei beiden
+falsch. Ein Nettovorteil der größeren Parameterzahl ist dort nicht belegt.
+Die ausgewählten Checkpoints enthalten außerdem unterschiedliche Trainingspräfixe.
+
+Der vollständige Wide-V2-Prozess benötigt 653,790 Sekunden. Das liegt innerhalb
+seines neu registrierten 900-Sekunden-Rahmens, aber über den früheren 600 Sekunden.
+Kapazitätsschwellen und Qualitätsschwellen bleiben unverändert. Gleiche
+Schrittnummern in V1 und V2 bedeuten wegen des geänderten Cosine-Nenners
+`STEPS - 4` keinen identischen bisherigen Lernratenverlauf.
+
+## Abschlussentscheidung und verbleibende Grenze
+
+Die geprüfte Reparatur wurde auf dem eigenen PR #492 als
+`86f51e38622bf46a72d95a5f76683e7d9637cb81` veröffentlicht. Die aktuellen
+Abschlussdateien ergänzen diesen Stand um den verifizierten V2-Nachtrag.
+Der Patch selbst bleibt exakt auf die geprüften Originalbytes gebunden.
+
+Eine tatsächliche Änderung der fremden Runnerpfade und ihre neue prospektive
+Registrierung stehen weiterhin aus. Die aktuell erlaubten Dateien schließen
+diese fremden Pfade nicht ein. Der bereitgestellte Patch ist konkret anwendbar;
+eine bereits erfolgte Übernahme in PR #508 wird nicht behauptet.
+
+Kein fehlgeschlagener Trainingskandidat wird übernommen. Die bestehenden
+G1-Schutzmechanismen, Checkpoints und frühere Forschungsstände bleiben erhalten.
+Die Ergebnisreviews prüfen veröffentlichte Text- und Hashketten; die tatsächlichen
+Modell-, JAR- und Tokenizerbytes wurden in dieser Runde nicht erneut geladen oder
+binär auf Integrität geprüft. Am abschließend geprüften Commit `e3c5…` fehlen
+weiterhin veröffentlichte V3-Studienresultate, Studienwahl-/Freeze-Quittungen und
+Finaltestbelege. Der Abschluss behauptet weder deren Ausführung noch eine
+allgemeine Qualitätsverbesserung, Android-Abnahme oder Modell-Promotion.

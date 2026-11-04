@@ -1,0 +1,58 @@
+{
+  "status": "V2_AUDIT_REPRODUCED_BYTE_IDENTICALLY_AND_RAW_RESOURCE_MAXIMA_VERIFIED",
+  "observedUtc": "2026-11-04T19:36:57.488825+00:00",
+  "reviewedCommit": "e3c5aeadd6336f843bd625d56431208d3a03b5ad",
+  "scriptSha256": "7f02e19ac4d465b96b231f6677c0dbe4274113d229e77287b958b699fd749e6c",
+  "reportSha256": "334c6f521c91bfd29433c50fc14a542f22e6c3b32102fbad04f908268082cc88",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/result-review/audit_published_v2.py",
+    "--repo",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit",
+    "--output",
+    "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/published-v2-results.json"
+  ],
+  "exitCode": 0,
+  "stdout": "PUBLISHED_V2_RAW_EVIDENCE_CONSISTENT_DEV_GATE_PASS_CAPACITY_FAIL_TEST_DEFERRED; 38 pinned text sources verified\n",
+  "pinnedTextSources": 38,
+  "casesRescored": 192,
+  "updatesChecked": 1024,
+  "receiptsChecked": 4,
+  "rawCapacityMetricChecks": {
+    "small-before": {
+      "rawLogSha256": "1663bf55b1f8903fe183a1423b6e245c2f58c52ca6014a811fc4d2cf0912d553",
+      "completeCalls": 8,
+      "recalculatedMaxFirstCallMs": 9.611214,
+      "recalculatedMax32CallMs": 18.168686,
+      "recalculatedPeakVmHwmKiB": 80300,
+      "resultPass": "true"
+    },
+    "small-after": {
+      "rawLogSha256": "9fbd48e66b7993ceaf3b82bcae5e32ed934ac1b2e2baf4d7f6faf7ee7c9d7eaf",
+      "completeCalls": 8,
+      "recalculatedMaxFirstCallMs": 8.803361,
+      "recalculatedMax32CallMs": 8.867207,
+      "recalculatedPeakVmHwmKiB": 72380,
+      "resultPass": "false"
+    },
+    "wide-before": {
+      "rawLogSha256": "de6e44608ed09ea99a97c2af6aadfce09114e94aa1a35607ed8340ec6904b08a",
+      "completeCalls": 8,
+      "recalculatedMaxFirstCallMs": 257.419595,
+      "recalculatedMax32CallMs": 386.784118,
+      "recalculatedPeakVmHwmKiB": 154156,
+      "resultPass": "true"
+    },
+    "wide-after": {
+      "rawLogSha256": "d5a178857895f3aa46792b70049899fcff5752271b270dee76fd1aea8e6d65a7",
+      "completeCalls": 8,
+      "recalculatedMaxFirstCallMs": 188.225062,
+      "recalculatedMax32CallMs": 202.460422,
+      "recalculatedPeakVmHwmKiB": 175512,
+      "resultPass": "false"
+    }
+  },
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "modelCheckpointBytesIndependentlyRehashed": false
+}

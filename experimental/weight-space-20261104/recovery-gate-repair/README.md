@@ -12,6 +12,15 @@ originalgetreue Textfixtures und unabhängige Kontrollflusstests. Der Patch ist
 geschriebenen Dateien liegen innerhalb von
 `experimental/weight-space-20261104/recovery-gate-repair/`.
 
+**Abgeschlossene Prüfung:** Der unabhängige Testbot und anschließend Root haben
+jeweils **165/165** Erwartungen an der Reparatur bestätigt: je 52 an den drei
+Runnern und neun am tatsächlichen v2/v3-Auswahlhelfer. Dieselben Erwartungen
+ergeben an den Originalen 33 bestandene Kontrollen und 132 reproduzierte
+Fehlverhalten, die auf die gemeinsame fehlende Abhängigkeit zurückgehen.
+Die Quellenbindung und exakte Patchanwendung wurden zusätzlich geprüft.
+Der vollständige Abschluss einschließlich der neuen V2-Rohbelege steht in
+[HANDOFF.md](HANDOFF.md).
+
 Die drei betroffenen Runner sind:
 
 | Variante | Originalpfad unter `experimental/lm1-training-recovery-20261104/` | Original-Git-Blob |
