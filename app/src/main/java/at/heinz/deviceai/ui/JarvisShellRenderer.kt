@@ -20,6 +20,16 @@ object JarvisShellRenderer {
         fun drawBackground(width: Float, height: Float, timeMs: Long): Boolean
         /** Draws blurred backdrop + rim glow for one panel in the current transform; true if done natively. */
         fun drawPanelGlass(box: Box, radius: Float, glow: Float): Boolean
+        /** Start a depth layer for one panel (Android: Camera rotationX/Y + RenderEffect depth blur). true if handled. */
+        fun beginDepth(box: Box, depth: JarvisMotion.Depth.State): Boolean = false
+        fun endDepth() {}
+    }
+
+    /** Depth layer per slot (Z-Ebenen). Tiles/dialog/input near, side panels mid, frame elements far. */
+    fun layerOf(slot: Slot?): JarvisMotion.Depth.Layer = when (slot) {
+        null, Slot.DIALOG, Slot.INPUT -> JarvisMotion.Depth.Layer.NEAR
+        Slot.COCKPIT_PRIMARY, Slot.COCKPIT_SECONDARY, Slot.ROW_AGENTS, Slot.ROW_TASKS, Slot.ROW_MEMORY, Slot.ROW_MODEL -> JarvisMotion.Depth.Layer.MID
+        else -> JarvisMotion.Depth.Layer.FAR
     }
 
     private val bare = setOf(Slot.AVATAR, Slot.TOP_BAR)
@@ -46,8 +56,12 @@ object JarvisShellRenderer {
             val slot = cardSlots.getOrNull(i)
             val tileIndex = i - cardSlots.size
             if (f.alpha <= 0f || f.scale <= 0f) return@forEachIndexed
+            val depth = JarvisMotion.Depth.state(layerOf(slot), box.centerX, box.centerY(), shell.width, shell.height, timeMs, animatorScale)
             p.save()
-            p.translate(f.dx, f.dy); p.scale(f.scale, f.scale, box.centerX, box.centerY())
+            p.translate(f.dx + depth.dx, f.dy + depth.dy)
+            val k = f.scale * depth.scale
+            p.scale(k, k, box.centerX, box.centerY())
+            val depthNative = glass?.beginDepth(box, depth) == true
             val r = JarvisDesign.Metrics.radiusCard
             val native = glass?.drawPanelGlass(box, r, f.glow) == true
             JarvisNeon.glassCard(p, box.left, box.top, box.right, box.bottom, r,
@@ -59,6 +73,7 @@ object JarvisShellRenderer {
                 slot != null -> header(p, box, label(slot))
                 tileIndex < tiles.size -> JarvisTiles.draw(p, box, tiles[tileIndex])
             }
+            if (depthNative) glass?.endDepth()
             p.restore()
         }
     }
@@ -94,9 +109,9 @@ object JarvisShellRenderer {
 
     fun label(slot: Slot) = when (slot) {
         Slot.NAV_RAIL, Slot.BOTTOM_NAV -> "Navigation"; Slot.DIALOG -> "JARVIS"
-        Slot.INPUT -> "Message Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
+        Slot.INPUT -> "Nachricht an Continuum …"; Slot.COCKPIT_PRIMARY -> "Kern-Status"; Slot.COCKPIT_SECONDARY -> "System-Status"
         Slot.ROW_AGENTS -> "Aktive Agenten"; Slot.ROW_TASKS -> "Aktueller Ablauf"; Slot.ROW_MEMORY -> "Gedächtnis-Aktivität"
-        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System & Continuum Status"; else -> slot.name
+        Slot.ROW_MODEL -> "Lokales Modell"; Slot.STATUS -> "System- & Continuum-Status"; else -> slot.name
     }
 
     /** Panel header (title only; values come from Kern via SlotContent). */

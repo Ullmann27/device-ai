@@ -252,7 +252,8 @@ class AgentActivity : Activity() {
     }
     private var voiceEngine: TextToSpeech? = null
     // M3 avatar preparation: rendering-free event contract (docs/CONTINUUM_AVATAR_CONTRACT.md).
-    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(at.heinz.deviceai.avatar.AvatarSinkRegistry.sink)
+    private val avatarDirector = at.heinz.deviceai.avatar.AvatarDirector(
+        at.heinz.deviceai.cockpit.JarvisAvatarSlot.fanOut { android.os.Handler(android.os.Looper.getMainLooper()).post(it) })
     @Volatile private var voiceAvatarText: String = ""
     // Avatar-only flags (no behaviour change): a tool approval dialog is open / the last turn was refused or blocked.
     private var avatarAwaitingApproval = false

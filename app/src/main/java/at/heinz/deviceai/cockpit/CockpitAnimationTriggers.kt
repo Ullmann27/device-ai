@@ -137,4 +137,11 @@ class CockpitAnimationTriggers(private val bus: CockpitAnimationBus, private val
         val RESEARCH_TOOLS = setOf("web_search", "web_read")
         fun clean(value: String, max: Int): String = value.filterNot { it.isISOControl() }.trim().take(max)
     }
+
+    /** Area/menu change from the rail, action bar or a panel (Jarvis Integration calls this). Blank target is ignored. */
+    fun areaChanged(from: String?, to: String, pattern: TransitionPattern) {
+        val target = clean(to, 64)
+        if (target.isEmpty()) return
+        bus.emit(CockpitAnimationEvent.AreaChanged(NAV_TURN, clock(), from?.let { clean(it, 64) }?.ifEmpty { null }, target, pattern))
+    }
 }

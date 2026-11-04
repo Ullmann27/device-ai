@@ -58,6 +58,15 @@ sealed class CockpitAnimationEvent {
     data class RecallHits(override val turnId: String, override val atMillis: Long, val queryHash: String,
                           val count: Int, val topScore: Float?) : CockpitAnimationEvent()
 
+    /** Pattern E: a real calculation with its steps and result; [chart] selects the live chart (NONE = numbers only). */
+    data class CalculationShown(override val turnId: String, override val atMillis: Long, val expression: String,
+                                val steps: List<CalcStep>, val result: Double, val unit: String?, val chart: ChartKind) :
+        CockpitAnimationEvent()
+
+    /** The ONE fly-in/scene-change logic: rail, action bar or panel switched area ([turnId] = [NAV_TURN]). */
+    data class AreaChanged(override val turnId: String, override val atMillis: Long, val fromTarget: String?,
+                           val toTarget: String, val pattern: TransitionPattern) : CockpitAnimationEvent()
+
     /**
      * Extension point for future event families, first of all the calculation / math visualisation of the
      * reference videos (e.g. `class MathVisualization(...) : CockpitAnimationEvent.Extension("math")`).
