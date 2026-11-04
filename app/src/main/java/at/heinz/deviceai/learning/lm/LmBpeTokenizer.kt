@@ -144,6 +144,18 @@ class LmBpeTokenizer private constructor(private val merges: List<Pair<Int, Int>
             LmBpeTokenizer(merges)
         }
 
-        fun hex(bytes: ByteArray) = bytes.joinToString("") { "%02x".format(it) }
+        fun hex(bytes: ByteArray): String {
+            if (bytes.isEmpty()) return ""
+            val length = bytes.size.toLong() * 2
+            if (length > Int.MAX_VALUE) throw OutOfMemoryError("Required string size too large")
+            val digits = "0123456789abcdef"
+            val out = CharArray(length.toInt())
+            for (i in bytes.indices) {
+                val value = bytes[i].toInt() and 255
+                out[i * 2] = digits[value ushr 4]
+                out[i * 2 + 1] = digits[value and 15]
+            }
+            return String(out)
+        }
     }
 }

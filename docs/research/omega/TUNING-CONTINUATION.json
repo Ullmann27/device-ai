@@ -3,8 +3,8 @@
   "scope": "existing-function tuning only",
   "status": "RUNNING",
   "owner": "tuning-root-59ad19c6d3b7-r3",
-  "leaseExpiresAtUtc": "2026-11-04T23:47:40.488197+00:00",
-  "updatedAtUtc": "2026-11-04T21:47:40.488197+00:00",
+  "leaseExpiresAtUtc": "2026-11-04T23:52:58.467208+00:00",
+  "updatedAtUtc": "2026-11-04T21:52:58.467208+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -51,10 +51,13 @@
       "id": "R3-M4",
       "target": "LmBpeTokenizer.hex",
       "hypothesis": "Replace per-byte Formatter calls with direct lowercase nibble encoding; preserve every byte and public string representation",
-      "status": "PLANNED"
+      "status": "ADOPTED_IN_DRAFT",
+      "tests": "26/26 PASS",
+      "evidence": "docs/evidence/tuning-r3-20261104/m4/RESULTS.md",
+      "registrationCommit": "40ba0479717c91a206fd55f8134fd610b3c077b2"
     }
   ],
-  "next": "M4 frozen hex A/A, one candidate, fixed six-case matrix; final runtime checks afterward",
+  "next": "Final actual baseline/candidate runtime caller checks and source/evidence audit; no further timing",
   "limits": [
     "no main merge",
     "no APK/install",
