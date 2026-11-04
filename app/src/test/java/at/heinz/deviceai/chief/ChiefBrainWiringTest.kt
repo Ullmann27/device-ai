@@ -101,4 +101,14 @@ class ChiefBrainWiringTest {
         assertEquals(AgentPriority.URGENT, woken.single().priority)
         assertTrue(woken.single().body.contains("Freigabe"))
     }
+
+    @Test fun rejectedRoutineReleasesItsBookClaimSoItCanRunLater() {
+        val book = RoutineBook().apply { add(Routine("putzen", "Räume Downloads auf", RoutineTrigger.OnEvent("laden"))) }
+        val pool = ChiefWorkerPool(1, 0) { WorkerJob { "ok" } }.apply { shutdown() }
+        val dispatcher = RoutineDispatcher(book, pool, AgentMailbox(), clock = { 5L })
+        assertEquals("a shut-down pool rejects the brief", 0, dispatcher.onEvent("laden"))
+        assertTrue(dispatcher.inFlight().isEmpty())
+        assertEquals("the rejected claim is released, not stuck in flight forever",
+            listOf("putzen"), book.triggered("laden").map { it.id })
+    }
 }
