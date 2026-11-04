@@ -316,7 +316,17 @@ class JarvisSequenceEffects {
         val cy = h * .42f + bob
         val ew = min(w * .42f, 150f); val eh = ew * .68f
         p.setAdditive(true); JarvisNeon.halo(p, cx, cy, ew * 1.1f * scale, JarvisDesign.Colors.cyan, .3f); p.setAdditive(false)
-        p.save(); p.scale(scale, scale, cx, cy)
+        // spatial entrance from depth: converging depth rings + tilt that straightens as it arrives
+        val e = scale.coerceIn(0f, 1f)
+        if (e < 1f) {
+            p.setAdditive(true)
+            for (k in 0..2) {
+                val rr = ew * (1.6f - e * 1.1f) * (1f + k * .35f)
+                JarvisNeon.ring(p, cx, cy, rr, rr * .32f, 1f, glow = JarvisDesign.Glow.SUBTLE)
+            }
+            p.setAdditive(false)
+        }
+        p.save(); p.scale(scale, scale * (.55f + .45f * e), cx, cy); p.rotate((1f - e) * -18f, cx, cy)
         val l = cx - ew / 2f; val r = cx + ew / 2f; val t = cy - eh / 2f; val b = cy + eh / 2f
         // document slides up out of the open envelope (after the flap)
         val docT = ((el - JarvisMotion.Durations.ENVELOPE_IN - JarvisMotion.Durations.ENVELOPE_FLAP) / 450f).coerceIn(0f, 1f)
@@ -343,7 +353,7 @@ class JarvisSequenceEffects {
                 val tx = if (left) w * .14f else w * .86f
                 val ty = h * (.2f + .16f * (i / 2)) + (if (left) 0f else h * .08f)
                 val prog = JarvisMotion.laser(lt - i * JarvisMotion.Durations.STAGGER)
-                JarvisNeon.laser(p, cx, docY + 6f, tx, ty, prog)
+                JarvisNeon.laserSparks(p, cx, docY + 6f, tx, ty, prog, now)
                 if (prog >= 1f) {
                     val style = JarvisDesign.Type.caption
                     val pw = min(p.measureText(label, style) + 20f, w * .4f)

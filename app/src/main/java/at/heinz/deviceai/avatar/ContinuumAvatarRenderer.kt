@@ -4,6 +4,7 @@ import at.heinz.deviceai.ui.Argb
 import at.heinz.deviceai.ui.ContinuumPainter
 import at.heinz.deviceai.ui.Fill
 import at.heinz.deviceai.ui.JarvisDesign
+import at.heinz.deviceai.ui.JarvisMotion
 import at.heinz.deviceai.ui.JarvisNeon
 import at.heinz.deviceai.ui.VectorPath
 import kotlin.math.PI
@@ -132,6 +133,7 @@ class ContinuumAvatarRenderer {
     }
 
     // Segment buckets: 3 hues (cyan/blue/violet by screen x) x 4 brightness levels.
+    private val hueColors = intArrayOf(0xff00ffff.toInt(), 0xff0088ff.toInt(), 0xff9a6bff.toInt())
     private val hueFills = arrayOf(Fill.Solid(0xff6fe9ff.toInt()), Fill.Solid(0xff7aa6ff.toInt()), Fill.Solid(0xffb48cff.toInt()))
     private val levelAlpha = floatArrayOf(.3f, .5f, .72f, 1f)
     private val buckets = Array(12) { FloatArray(SEG_CAPACITY) }
@@ -158,6 +160,7 @@ class ContinuumAvatarRenderer {
         return (.2f + rim * rim * .68f + key).coerceIn(0f, 1f)
     }
     private var yawRad = 0f
+    private var bloom = .5f
 
     private fun buildMesh(jaw: Float, flow: Float) {
         bucketCount.fill(0)
@@ -179,6 +182,20 @@ class ContinuumAvatarRenderer {
                 prevX = px; prevY = py; prevB = b
             }
         }
+        // spun-glass flow lines in two diagonal directions (theta drifts with height)
+        for (dir in intArrayOf(-1, 1)) for (m in 0..17) {
+            val theta0 = -1.7f + m * (3.4f / 17)
+            var prevX = 0f; var prevY = 0f; var prevB = -1f
+            for (s in 0..30) {
+                val y = -99f + s * (191f / 30)
+                val theta = theta0 + dir * (s / 30f) * 1.1f
+                if (theta < -1.9f || theta > 1.9f) { prevB = -1f; continue }
+                surface(theta, y, jaw)
+                val b = brightness(theta, y)
+                if (s > 0 && b >= 0f && prevB >= 0f) addSegment(prevX, prevY, px, py, (b + prevB) * .24f)
+                prevX = px; prevY = py; prevB = b
+            }
+        }
         // meridians (lighter, give the surface its curvature)
         val meridians = 16
         for (m in 0..meridians) {
@@ -196,18 +213,24 @@ class ContinuumAvatarRenderer {
 
     // ---- light orbits ------------------------------------------------------------------------------------------
     private class Orbit(val cy: Float, val a: Float, val b: Float, val tilt: Float, val speed: Float, val color: Int, val width: Float)
-    // VIDEO-SPEC 0-2 s: two orbit rings on crossed axes around the cranium, with travelling nodes.
-    private val orbits = arrayOf(
+    // Slanted orbit rings with bright nodes around the cranium. Creative review: 3 (default); VIDEO-SPEC video 1 shows 2.
+    private val allOrbits = arrayOf(
         Orbit(-58f, 108f, 24f, 13f, .16f, 0xff00e5ff.toInt(), 1.5f),
-        Orbit(-58f, 108f, 24f, -13f, -.13f, 0xff9a6bff.toInt(), 1.5f)
+        Orbit(-58f, 108f, 24f, -13f, -.13f, 0xff9a6bff.toInt(), 1.5f),
+        Orbit(-30f, 122f, 30f, 24f, .11f, 0xff3aa8ff.toInt(), 1.2f)
     )
-    private val orbitFills = orbits.map { Fill.Solid(it.color) }
+    /** Number of rings (1..3). */
+    var ringCount = 3
+        set(value) { field = value.coerceIn(1, allOrbits.size) }
+    private val orbits get() = allOrbits
+    private val orbitFills = allOrbits.map { Fill.Solid(it.color) }
     private val orbitCore = Fill.Solid(0xffeafcff.toInt())
     private val speakCyan = Fill.Solid(0xff00ffff.toInt())
 
     private fun drawOrbits(p: ContinuumPainter, front: Boolean, seconds: Float, pulse: Float, motion: Boolean) {
         p.setAdditive(true)
-        for ((i, o) in orbits.withIndex()) {
+        for (i in 0 until ringCount) {
+            val o = allOrbits[i]
             p.save(); p.rotate(o.tilt, 0f, o.cy)
             val l = -o.a; val t = o.cy - o.b; val r = o.a; val b = o.cy + o.b
             // screen-space ellipse: angles 0..180 are the lower (front) half
@@ -230,6 +253,7 @@ class ContinuumAvatarRenderer {
                 val front2 = sin(ang) >= 0f
                 if (front2 != front) continue
                 val nx = cos(ang) * o.a; val ny = o.cy + sin(ang) * o.b
+                JarvisNeon.bloomPoint(p, nx, ny, 9f * pulse, o.color, k * bloom)
                 p.fillCircle(nx, ny, 4.5f * pulse, fill, .22f * k)
                 p.fillCircle(nx, ny, 1.9f, orbitCore, .95f * k)
             }
@@ -249,9 +273,10 @@ class ContinuumAvatarRenderer {
         val speak = if (motion) pose.speakEnergy.coerceIn(0f, 1f) else 0f
         val jaw = if (motion) pose.jawOpen.coerceIn(0f, 1f) else 0f
         val pulse = 1f + speak * .9f
+        bloom = (.45f + speak * .55f) * (if (motion) 1f else .6f)
         p.save()
         // VIDEO-SPEC C: idle float, 4 s sine loop, Y +-2.5 px (screen units)
-        val float = if (motion) sin(seconds * (2f * PI.toFloat() / 4f)) * 2.5f else 0f
+        val float = if (motion) JarvisMotion.idleOffset((seconds * 1000f).toLong()) else 0f
         p.translate(width / 2f, height * .385f + float)
         p.scale(scale, scale)
 
@@ -303,6 +328,7 @@ class ContinuumAvatarRenderer {
         // wireframe surface
         val flow = if (motion) (seconds * .18f) % 1f else .35f
         buildMesh(jaw, flow)
+        for (b in 0 until 12) if (b % 4 >= 2) JarvisNeon.bloomSegments(p, buckets[b], bucketCount[b], .6f, hueColors[b / 4], bloom)
         p.setAdditive(true)
         for (b in 0 until 12) {
             val n = bucketCount[b]
@@ -349,11 +375,11 @@ class ContinuumAvatarRenderer {
             val ix = ex + pose.gazeX.coerceIn(-1f, 1f) * 5.5f
             val iy = ey - pose.gazeY.coerceIn(-1f, 1f) * 2.2f
             p.save(); p.translate(ix, iy); p.scale(9f, 9f * opening)
-            p.fillCircle(0f, 0f, 1f, irisGlow, .95f)
+            p.fillCircle(0f, 0f, 1f, irisGlow, .7f)
             p.restore()
             // VIDEO-SPEC: eyes without pupils, cyan/white light; the light centre still follows the gaze
             p.fillOval(ex - w * .85f, ey - h * .8f, ex + w * .85f, ey + h * .8f, eyeLight, .75f)
-            p.fillOval(ix - 5f, iy - 2.6f * opening, ix + 5f, iy + 2.6f * opening, white, .95f)
+            JarvisNeon.bloomPoint(p, ix, iy, 11f, 0xff00ffff.toInt(), bloom * .8f)
         } else p.drawLine(ex - w, ey, ex + w, ey, 1.1f, edge, .9f)
     }
 

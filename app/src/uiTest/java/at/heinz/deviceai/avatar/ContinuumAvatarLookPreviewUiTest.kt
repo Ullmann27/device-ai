@@ -59,3 +59,20 @@ class ContinuumAvatarLookPreviewUiTest {
         assertTrue("luminous pixels $bright", bright > 200)
     }
 }
+
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [28])
+class JarvisAvatarSlotUiTest {
+    @Test fun attachForwardsAndDetachRemoves() {
+        val activity = Robolectric.buildActivity(Activity::class.java).setup().get()
+        val host = android.widget.FrameLayout(activity); activity.setContentView(host)
+        val slot = JarvisAvatarSlot()
+        slot.attach(host, at.heinz.deviceai.ui.JarvisShellLayout.Box(0f, 0f, 300f, 300f))
+        assertTrue(slot.isAttached); assertTrue(host.childCount == 1)
+        slot.onAvatarState(AvatarEvent.SpeechStarted("u", "Hallo", 1))
+        slot.onAnimationEvent(at.heinz.deviceai.cockpit.CockpitAnimationEvent.CommandFlyIn("t", 2, "Hallo"))
+        assertTrue(slot.sequence!!.effects.isAnimating(slot.sequence!!.clock()))
+        slot.detach()
+        assertFalse(slot.isAttached); assertTrue(host.childCount == 0)
+    }
+}

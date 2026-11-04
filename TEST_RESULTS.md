@@ -49,3 +49,7 @@ compile only – NOT verifiable on host (no GPU); needs device check.
   Cause: Kern's landscape cockpit was fitted to #479 @c617e1ab; #479 @ba798359 changed JarvisShellLayout (Fold 20/55/25, compact tiles).
   → Question for Kern/Lumo: re-fit ContinuumLandscapeCockpitLayout to ba798359. Design files here are byte-identical to #479 ba798359.
 - All avatar / sequence / cockpit-bus tests green.
+
+## Step 7 (head check 2: spun glass, 3 rings, bloom, envelope from depth, JarvisAvatarSlot) – rerun
+compileDebugKotlin + avatar.*, avatar3d.*, ui.Jarvis*, cockpit.*, ContinuumAvatarNativeUiTest: BUILD SUCCESSFUL, all green
+(incl. new JarvisAvatarSlotUiTest). JarvisNeon extended (bloomSegments, bloomPoint, laserSparks) – additions only.
