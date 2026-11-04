@@ -3,7 +3,9 @@
 ## Auftrag und Stand
 
 Besitzerfortsetzung vom 04.11.2026: „Weiter mit 3 bots“.
-Status dieses frühen Checkpoints: **WIP / PATCH_IN_PROGRESS**.
+Status: **RUNNER_PATCH_VERIFIED / V2_EVIDENCE_ADDENDUM_IN_PROGRESS**.
+Der frühe WIP-Checkpoint wurde separat als `fd91457efbb2b3d05ad962b25302ccc61e44f0f3`
+veröffentlicht; der folgende Stand ergänzt die tatsächlich abgeschlossenen Prüfungen.
 
 Eigener Branch: `research/continuum-weight-space-audit-20261104`, PR #492.
 Ausgangscommit: `f9a594641f4f2101e84d46baa8dd87e85b5364cd`.
@@ -77,3 +79,49 @@ Rückfall: kein Kandidat und kein fremder Runner wird übernommen, wenn eine
 erforderliche Prüfung fehlschlägt. Der bisherige Forschungsstand bleibt bestehen.
 Der nächste Einstiegspunkt ist dieser versionierte Ordner und der jeweils
 tatsächlich geprüfte fremde Quellcommit, nicht ein veralteter PR-Beschreibungstext.
+
+## Tatsächlich abgeschlossener Reparaturnachweis
+
+Der [Reparaturpatch](pr508-post-capacity-gate.patch) ist implementiert und exakt
+an die drei Originalquellen gebunden. Der unabhängige Testbot und anschließend
+Root haben die echten Kontrollmethoden jeweils selbst ausgeführt:
+
+| Einstieg | Originale: erfüllte Erwartungen | Reparierte Quellen: erfüllte Erwartungen |
+|---|---:|---:|
+| Intent v1 | 10/52 | 52/52 |
+| Intent long | 10/52 | 52/52 |
+| Intent suffix | 10/52 | 52/52 |
+| Unveränderte v2/v3-Studienwahl mit diesen Controllern | 3/9 | 9/9 |
+
+Die negativen Originalresultate sind die beabsichtigte Fehlerreproduktion.
+Die Reparatur erfüllt insgesamt **165/165** geprüfte Erwartungen. Darunter:
+gültige PASS-/EOS-FAIL-/Latenz-FAIL-/RSS-FAIL-Fälle, fehlende oder beschädigte
+Nachweise, unplausible Zeitbudgets, beide trainierten Arme, korrekte Wiederaufnahme,
+Dev-Gleichstandsregel, sichtbare FAIL-Ergebnisse und Mutation nach Freeze bzw.
+zwischen Testarmen. Die älteren 50-Fall-Berichte sind als überholt gekennzeichnet.
+
+Root hat zusätzlich die Git-Blob- und SHA-256-Bindungen verglichen, den Patch auf
+frische temporäre Kopien exakt angewendet und die entstandenen Bytes mit den
+getesteten Fixtures verglichen. Der AST-Vergleich bestätigt: bestehende Trainings-,
+Optimierer-, Auswahl- und Prozessausführungsmethoden sind unverändert. Neu ist
+die Nachbelegvalidierung; angepasst sind nur `freeze_evidence()` und `test()`.
+
+Die [Root-Prüfung der Runner](root-verification/verification.json) und die
+[Root-Prüfung der Studienwahl](root-verification/selector-verification.json)
+enthalten Quellenhashes, Befehle und Ergebnisse. Ausschließlich die Prozessgrenze
+ist in den Tests abgefangen; Modellleistung und Android-Eignung sind damit nicht
+geprüft. Tatsächlich gestartete Modellprozesse und reale Holdoutzugriffe: **0**.
+
+## Neuer veröffentlichter Ergebnisstand während der Prüfung
+
+Der [unabhängige be4e-Ergebnisreview](result-review/README.md) wurde mit 64
+Textquellen, zwölf Receipt-/Log-Paaren und 192 veröffentlichten Dev-Einzelfällen
+abgeschlossen. Root hat seine vollständige JSON-Ausgabe bytegleich reproduziert.
+Seine Aussage über damals fehlende V2-Rohbelege gilt genau für diesen Snapshot.
+
+Während des Abschlusses veröffentlichte #508 den direkten Folgecommit
+`e3c5aeadd6336f843bd625d56431208d3a03b5ad` mit den fehlenden V2-Rohbelegen.
+Der [erneute Quellvergleich](latest-source-check.json) bestätigt alle drei
+Runner bytegleich zum geprüften Reparaturstand. Der dritte Helfer prüft diese
+neuen V2-Belege in einem getrennten, ausdrücklich auf `e3c5…` gebundenen Nachtrag.
+Historischer Bericht, Quittungen und Registrierungen werden dadurch nicht geändert.

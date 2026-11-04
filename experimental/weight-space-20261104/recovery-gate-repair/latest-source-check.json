@@ -1,0 +1,44 @@
+{
+  "observedUtc": "2026-11-04T19:32:20.685895+00:00",
+  "reviewedRepairSourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "newEvidenceCommit": "e3c5aeadd6336f843bd625d56431208d3a03b5ad",
+  "status": "THREE_RUNNER_SOURCES_UNCHANGED_AT_NEW_EVIDENCE_COMMIT",
+  "sources": {
+    "v1": {
+      "path": "experimental/lm1-training-recovery-20261104/run_registered_study.py",
+      "sha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "byteIdenticalToReviewedOriginal": true
+    },
+    "long": {
+      "path": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "sha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "byteIdenticalToReviewedOriginal": true
+    },
+    "suffix": {
+      "path": "experimental/lm1-training-recovery-20261104/suffix-study/run_registered_study.py",
+      "sha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "byteIdenticalToReviewedOriginal": true
+    }
+  },
+  "changedPaths": [
+    "docs/evidence/lm1-training-recovery-20261104/REPRODUCE.md",
+    "docs/evidence/lm1-training-recovery-20261104/intent-epoch-losses.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/capacity-before.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-small/selection.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/capacity-before.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/intent-wide/selection.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small-capacity-after.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-small.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide-capacity-after.tsv",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.receipt.json",
+    "docs/evidence/lm1-training-recovery-20261104/study-v2/logs/intent-wide.tsv",
+    "docs/research/omega/LM1-TRAINING-RECOVERY-HANDOFF-20261104.md"
+  ],
+  "newV2RawEvidencePublished": true,
+  "reviewScope": "Separate pinned V2 addendum; no later upstream results incorporated",
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false
+}

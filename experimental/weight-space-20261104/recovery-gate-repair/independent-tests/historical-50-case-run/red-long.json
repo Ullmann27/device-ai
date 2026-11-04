@@ -1,0 +1,848 @@
+{
+  "actualModelProcesses": 0,
+  "capacityFixture": "1 protocol, 1 model, 8 trials (1 warmup + 3 measured x 1/32 tokens), 11 memory, 1 result",
+  "cases": [
+    {
+      "actualProcessesStarted": 0,
+      "case": "valid_pass_authorizes",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "boundary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST aef692e49509dc83f4c198fc7c1861987a0d18d7089ea8d73a5ab11798476687\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "valid_eos_fail_authorizes",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "boundary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST d64c8d250c37d984754c9403d92a6c2deb5986965c4f8f134f3caae786c71b81\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "valid_resource_fail_authorizes",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "boundary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST d0ec3dffefd3568fc64ab2c801ece388e53cab4e60625f8307f839bfd8c70dad\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "earlier_dev_tie_winner_authorizes",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "boundary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": true,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST e6815eb9b94afb92d75e1485857198feca42f37c0ce4409ff824495b11711417\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "pass_preserved_in_real_method_summary",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": null,
+      "expected": "summary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 4,
+      "stdout": "FROZEN_BEFORE_TEST 0793406284dff940efb6e5c0d3659b0fa55f1464c6d720ad31ba8f03c9fd158c\nSTART test-S0\nFINISHED test-S0 exit 0 timeout False\nSTART test-W0\nFINISHED test-W0 exit 0 timeout False\nSTART test-S1\nFINISHED test-S1 exit 0 timeout False\nSTART test-W1\nFINISHED test-W1 exit 0 timeout False\n{\"S0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"S1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"32\", \"total\": \"48\", \"classCorrect\": \"8,8,8,8\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"40\", \"total\": \"48\", \"classCorrect\": \"10,10,10,10\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}}\n",
+      "summaryCreated": true
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "eos_fail_preserved_in_real_method_summary",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": null,
+      "expected": "summary",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 4,
+      "stdout": "FROZEN_BEFORE_TEST 6d219e979bbff645d3432a92a5856d8a6d1b5d5300ba101d3b6e7fd0ea0e1873\nSTART test-S0\nFINISHED test-S0 exit 0 timeout False\nSTART test-W0\nFINISHED test-W0 exit 0 timeout False\nSTART test-S1\nFINISHED test-S1 exit 0 timeout False\nSTART test-W1\nFINISHED test-W1 exit 0 timeout False\n{\"S0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"S1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"32\", \"total\": \"48\", \"classCorrect\": \"8,8,8,8\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"40\", \"total\": \"48\", \"classCorrect\": \"10,10,10,10\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}}\n",
+      "summaryCreated": true
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "no_development_signal_stays_blocked",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": null,
+      "expected": "no-signal",
+      "firstAttemptedMainAndMode": [],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "stdout": "NO_DEVELOPMENT_SIGNAL; sealed test not evaluated\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_receipt_can_resume_after_exact_completion",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "FileExistsError: [Errno 17] File exists: '<SYNTHETIC_ROOT>/output/selection-freeze.json'",
+      "expected": "resume",
+      "firstAttemptedMainAndMode": [],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 0,
+      "stdout": "FROZEN_BEFORE_TEST bd4ae333aef79e5916ab98c5d00e237da2df7487e4055ff7e653999ac5864344\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_receipt",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 4992125721ca2fd36a8e60dd78d04be977a8d68356a1edbbe9a92a258738a091\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_small_receipt",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 6316da17dee8f33d66d71f851547a4ec87689f2099112101e997c4b69c66741d\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_log",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 1682aa8af60699404b2817eeea52579afce0519aa4395de42e142cda5a4eb4a7\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "malformed_receipt",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 2928d50f56d881b501dcabadd256960511195585d608d0dec806758f53a46791\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "malformed_receipt_structure",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 2a5dadf9091b87cb4b1e2d9ec1e1017faa1bd7f9b8dadf41f94072a9f55e563f\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "truncated_log",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 6da07379af3cbac7969c337568a5d39180ec5fb986c2520fdc41a3b93e6b1bb0\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_log_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST be7f59dc1f3acf4d80a312490035f0081fbc3b8f58393c3099a223e7410515e4\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_source_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 90acc5c85fe269af20ea00ab6cf65cbe645b6bc2e4d386b8c5b15d2879cca092\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_registration_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST cbbee2be4313baf0ce81e6fa5a84b2bccfdd94dd89117561707d63f54f5f4881\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_jar_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 0e1957c9a974c52eb591e6ce546aefa2969c5a689f4c4fd16a25473e770959f9\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_label_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST f9f0db238f34e3c48745a616241da24d5ec01b3f14610b2cb2974682ccdf555d\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_registered_bytes_changed",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 00411b52245903e334c72156fdb465abbb9ad51df5cef7e4c538a4bfcc8b91e2\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_command_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 90c97e8364560473c5b8b86f54427de9be6ab3136120d25b6d57dcde40fc8268\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_timeout",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST cecdbd92c703aebda891dc28aa6884bc7aec1138a6f005c2fff6109b553009a6\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_wrong_budget",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST d2ebee428b1f1347edb9de9cef05e634010b1214a53c968426dec35517eefc04\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_over_budget",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 13ed520c3a40ddb706095b2dfafa365a760c9e23664f9c9c0498fede1bd4aa4b\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_nan_wall",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 2617143e75eabd3b46c9955a7a596a32fa1417dccbb93a90e3c711d8d09584ea\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_negative_wall",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 67a58b12fa2ba207f37098f76b1c81848ed9a99bc26001f1755954288a62735e\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_rc_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST d6c9ed8f5c3bae9a5a9a153197c61e4b47e5af35437fa8c230caada0995636e5\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "receipt_unexpected_rc",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 2a4cdc144083db00ec57affe0a3c98a21178b4c267a4de6c17a1ab23507caf64\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "model_checkpoint_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST d4ff76a8fa9d0fea0014246490ab2d8da178bead5ab9fd4980e587044c40d05b\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "result_checkpoint_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 906d70a5c1c05bb12720aeeaf030c648448ab9dc19f939dfc41908f000ff6886\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "model_tokenizer_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST a4906011ff1f54989e0b4bf2f62348a2d231f37e5176f9a008a14115e1278071\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "model_size_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST bb704fba7e79bc81d74cbb64849518d7828c367f19e0fea10dfa9e4f60038cd3\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "model_parameter_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 82e92dfad5485164349820e69826ec70ea7cba52b460d37ebaa4a1aaabe69c95\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "protocol_threshold_changed",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST e74bf85e04588d86328a8849adf35a1152f369985eedb52925c5c35d13240b17\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "missing_trial",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 19364e64944bbd3f1d63053af567200bb731168369b75cbf9b1aa9271f35735b\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "duplicate_trial",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST fde06286c99ae9b86454f1fcb2f2d4db7c3f6d1549ea4b707714662ea17faee8\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "duplicate_result_field",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST dcc3639751866c725ba850d3839b5d182236751d2f5d4a326a788ba6e8a2c37d\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "nonfinite_trial",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 18fc8e93dd6f56d9c6f733483946d712ee9a3c19bd0cc91a9f2c414559ad26cd\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "forged_memory_pass",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 87450085e737c5ad65ccd4302816b871d8ba6367df0eaeda6eb977c6bfcf7386\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "forged_trial_pass",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST c25a70eaeab4bd283e0c60330211f8f59da6b016bb439d2c68f605b993cc49ea\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "summary_max_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 07e16e660d2fc897b5cac03c31f29b6e745da6c07b5421b1ffbd5968facbab2e\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "unknown_failure_reason",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 26805a34006ddcd37ded4ae1b8d49921d09b570f430fecc9e32f84fa38e6ac78\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "selected_checkpoint_mutated",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "RuntimeError: CHECKPOINT_CHANGED",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "stdout": "",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "registered_source_mutated",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "RuntimeError: SOURCE_OR_DATA_CHANGED: experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "stdout": "",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "training_receipt_log_mismatch",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "RuntimeError: INVALID_TRAINING_RECEIPT",
+      "expected": "reject",
+      "firstAttemptedMainAndMode": [],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": false,
+      "passed": true,
+      "processBoundaryCalls": 0,
+      "stdout": "",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "frozen_receipt_removed_before_test",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject-after-freeze",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST b09962b80a086c3435d18cedc847a2c214721bf2aa2b3ecfade75b5793c0e5a3\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "frozen_valid_receipt_changed_before_test",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": "ProcessBoundaryReached: MODEL_PROCESS_BLOCKED_BY_INDEPENDENT_TEST",
+      "expected": "reject-after-freeze",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 1,
+      "stdout": "FROZEN_BEFORE_TEST 0a9532145377a5469c876591385a8ab2830b21b1cb9fe321236fc18e5d57286c\nSTART test-S0\n",
+      "summaryCreated": false
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "evidence_removed_after_first_arm",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": null,
+      "expected": "reject-during-test",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 4,
+      "stdout": "FROZEN_BEFORE_TEST 43d84ff2e170dfc6f1d9b485b46fc2c40e36fe7a8857233be736a6cef5615812\nSTART test-S0\nFINISHED test-S0 exit 0 timeout False\nSTART test-W0\nFINISHED test-W0 exit 0 timeout False\nSTART test-S1\nFINISHED test-S1 exit 0 timeout False\nSTART test-W1\nFINISHED test-W1 exit 0 timeout False\n{\"S0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"S1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"32\", \"total\": \"48\", \"classCorrect\": \"8,8,8,8\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"40\", \"total\": \"48\", \"classCorrect\": \"10,10,10,10\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}}\n",
+      "summaryCreated": true
+    },
+    {
+      "actualProcessesStarted": 0,
+      "case": "evidence_removed_before_summary",
+      "checkpointTrainingReceiptAndSourceBytesUnchangedByStudy": true,
+      "errorOrBoundary": null,
+      "expected": "reject-during-test",
+      "firstAttemptedMainAndMode": [
+        "at.heinz.deviceai.learning.lm.LmIntentLongStudy",
+        "test"
+      ],
+      "freezeBytesUnchangedByTest": true,
+      "freezeCreated": true,
+      "passed": false,
+      "processBoundaryCalls": 4,
+      "stdout": "FROZEN_BEFORE_TEST fc0004cb643c490e5e662ea4249c8addaa031206503748446d8d27119f98a74d\nSTART test-S0\nFINISHED test-S0 exit 0 timeout False\nSTART test-W0\nFINISHED test-W0 exit 0 timeout False\nSTART test-S1\nFINISHED test-S1 exit 0 timeout False\nSTART test-W1\nFINISHED test-W1 exit 0 timeout False\n{\"S0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W0\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"8\", \"total\": \"48\", \"classCorrect\": \"2,2,2,2\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"S1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"32\", \"total\": \"48\", \"classCorrect\": \"8,8,8,8\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}, \"W1\": {\"split\": \"test\", \"step\": \"0\", \"correct\": \"40\", \"total\": \"48\", \"classCorrect\": \"10,10,10,10\", \"classTotal\": \"12,12,12,12\", \"answerNll\": \"1.0\", \"eosNll\": \"1.0\", \"prematureEos\": \"0\", \"missingEos\": \"0\", \"generatedTokens\": \"48\"}}\n",
+      "summaryCreated": true
+    },
+    {
+      "case": "changed_source_rejected_before_compile",
+      "passed": true
+    }
+  ],
+  "exitCode": 1,
+  "failed": 41,
+  "fixtureContractSha256": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+  "fixtureContractSource": "experimental/weight-space-20261104/LmCapacityBenchmark.kt",
+  "mockedBoundary": "subprocess.Popen only; path constants relocated to synthetic fixture",
+  "observedUtc": "2026-11-04T19:27:03.825783+00:00",
+  "originalGitBlob": "30119435feed1728c5d22fec40830654a7a19861",
+  "originalSourcePath": "experimental/lm1-training-recovery-20261104/long-study/run_registered_study.py",
+  "originalSourceSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+  "passed": 9,
+  "probeSha256": "9d161d926e0c8a137e2d645dedb58d9cb8e3e5043f0e2c0ccf2e9a0bfa8d6123",
+  "publishedPr508Changed": false,
+  "realHoldoutRead": false,
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "schemaVersion": 1,
+  "scope": "SYNTHETIC_SOURCE_BOUND_POST_CAPACITY_CONTROL_FLOW_ONLY",
+  "status": "RED_REPRODUCED",
+  "syntheticReceiptsAreModelEvidence": false,
+  "testedSourceSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+  "variant": "long"
+}

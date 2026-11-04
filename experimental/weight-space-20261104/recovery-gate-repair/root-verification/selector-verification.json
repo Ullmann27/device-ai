@@ -1,0 +1,39 @@
+{
+  "observedUtc": "2026-11-04T19:32:37.291193+00:00",
+  "sourceCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "selectorSourceSha256": "307cc96bbf893bf5432f163b10f4eb1ef3573eabfddc902e4c2416416013a520",
+  "probeSha256": "9a359c885823407abc211300eb5103a57d6f9c73aeddd8187763f0ae5209614d",
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "checks": {
+    "original": {
+      "passed": 3,
+      "failed": 6,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_development_selector.py",
+        "--phase",
+        "original",
+        "--report",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/selector-original.json"
+      ],
+      "exitCode": 1,
+      "reportSha256": "035fe86edffbb9207537f79f075713019c992d55f8bd62e31403532c0d9fa57b"
+    },
+    "repaired": {
+      "passed": 9,
+      "failed": 0,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_development_selector.py",
+        "--phase",
+        "repaired",
+        "--report",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/selector-repaired.json"
+      ],
+      "exitCode": 0,
+      "reportSha256": "5cc3179a07b978c67cd8a6d36a499c0cdc204df50f5361fd4d7c2b6988a9b0ed"
+    }
+  },
+  "status": "SOURCE_BOUND_SELECTOR_REPAIR_VERIFIED"
+}

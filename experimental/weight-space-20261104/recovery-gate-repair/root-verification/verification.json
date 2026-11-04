@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "observedUtc": "2026-11-04T19:30:27.843583+00:00",
+  "reviewedCommit": "be4e49600fed1db4c697230bb8e42c150dbfbdaf",
+  "patchSha256": "c69cb427e4ba0624720380edef9f7f0ce3e418591c10bd0a35f56590ad67e38f",
+  "verifierSha256": "b15087fd7bf8654cd4907ce3037f2305be0a52b9647f55b9a665833280b55c5b",
+  "actualModelProcesses": 0,
+  "realHoldoutRead": false,
+  "foreignBranchModified": false,
+  "sourceChecks": {
+    "v1": {
+      "originalSha256": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+      "patchedSha256": "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+      "sourceGitBlob": "28908e07d6217f10882429047c853d1dd8667912",
+      "methodChanges": {
+        "added": [
+          "post_capacity_evidence"
+        ],
+        "changed": [
+          "freeze_evidence",
+          "test"
+        ],
+        "constructorVerifyRunBenchmarkTrainingSelectionAndFreezeMethodsUnchanged": true
+      }
+    },
+    "long": {
+      "originalSha256": "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+      "patchedSha256": "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+      "sourceGitBlob": "30119435feed1728c5d22fec40830654a7a19861",
+      "methodChanges": {
+        "added": [
+          "post_capacity_evidence"
+        ],
+        "changed": [
+          "freeze_evidence",
+          "test"
+        ],
+        "constructorVerifyRunBenchmarkTrainingSelectionAndFreezeMethodsUnchanged": true
+      }
+    },
+    "suffix": {
+      "originalSha256": "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+      "patchedSha256": "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067",
+      "sourceGitBlob": "417e4b3289bb692e72dc80398b51b67e106b8907",
+      "methodChanges": {
+        "added": [
+          "post_capacity_evidence"
+        ],
+        "changed": [
+          "freeze_evidence",
+          "test"
+        ],
+        "constructorVerifyRunBenchmarkTrainingSelectionAndFreezeMethodsUnchanged": true
+      }
+    }
+  },
+  "controlFlowChecks": {
+    "v1": {
+      "red": {
+        "passed": 10,
+        "failed": 42,
+        "report": "root-verification/red-v1.json",
+        "reportSha256": "97c9c023e87625f5ca169dfc1fcd5bcc359b3699915f965a00718ec491f15d4d",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "v1",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/v1/original_run_registered_study.py.txt",
+            "--expected-sha256",
+            "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/red-v1.json"
+          ],
+          "exitCode": 1,
+          "stdout": "{\"variant\": \"v1\", \"testedSourceSha256\": \"409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f\", \"status\": \"RED_REPRODUCED\", \"passed\": 10, \"failed\": 42, \"exitCode\": 1}\n",
+          "stderr": ""
+        }
+      },
+      "green": {
+        "passed": 52,
+        "failed": 0,
+        "report": "root-verification/green-v1.json",
+        "reportSha256": "9621f30615ee12c2b93f50bfe14a66f171824539b7cbcc7f101ebb249b5ce6ec",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "v1",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/v1/run_registered_study.py.txt",
+            "--expected-sha256",
+            "b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/green-v1.json"
+          ],
+          "exitCode": 0,
+          "stdout": "{\"variant\": \"v1\", \"testedSourceSha256\": \"b1bed4338bb187ae6d835a46368cc05773ae96143559af368361103b64a7b327\", \"status\": \"GREEN\", \"passed\": 52, \"failed\": 0, \"exitCode\": 0}\n",
+          "stderr": ""
+        }
+      }
+    },
+    "long": {
+      "red": {
+        "passed": 10,
+        "failed": 42,
+        "report": "root-verification/red-long.json",
+        "reportSha256": "4141565a94d192ea4f139fbf38d51ecc8a85667622308135b9351489dd60858c",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "long",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/long/original_run_registered_study.py.txt",
+            "--expected-sha256",
+            "90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/red-long.json"
+          ],
+          "exitCode": 1,
+          "stdout": "{\"variant\": \"long\", \"testedSourceSha256\": \"90877b90a7f138a9c469fb0350bd6c28ff56602b7afb61fe7ee05b1e11ab230b\", \"status\": \"RED_REPRODUCED\", \"passed\": 10, \"failed\": 42, \"exitCode\": 1}\n",
+          "stderr": ""
+        }
+      },
+      "green": {
+        "passed": 52,
+        "failed": 0,
+        "report": "root-verification/green-long.json",
+        "reportSha256": "177c34157f823df5c876a84b1b72ec3619ece4a3cbebb0302336e80a96dcfd38",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "long",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/long/run_registered_study.py.txt",
+            "--expected-sha256",
+            "638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/green-long.json"
+          ],
+          "exitCode": 0,
+          "stdout": "{\"variant\": \"long\", \"testedSourceSha256\": \"638d02eaded31c3d7be7d978d6bcf08319dda9db35e948f1e0142008c2d5d387\", \"status\": \"GREEN\", \"passed\": 52, \"failed\": 0, \"exitCode\": 0}\n",
+          "stderr": ""
+        }
+      }
+    },
+    "suffix": {
+      "red": {
+        "passed": 10,
+        "failed": 42,
+        "report": "root-verification/red-suffix.json",
+        "reportSha256": "b302d92c49dbbfb099c3b61f83a85b1bef2412296948050095966d49010c7634",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "suffix",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/suffix/original_run_registered_study.py.txt",
+            "--expected-sha256",
+            "276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/red-suffix.json"
+          ],
+          "exitCode": 1,
+          "stdout": "{\"variant\": \"suffix\", \"testedSourceSha256\": \"276b2fc27f566fdb3947c9f7fa13e7c9b10cc549354f90b478f16883e9bd4c68\", \"status\": \"RED_REPRODUCED\", \"passed\": 10, \"failed\": 42, \"exitCode\": 1}\n",
+          "stderr": ""
+        }
+      },
+      "green": {
+        "passed": 52,
+        "failed": 0,
+        "report": "root-verification/green-suffix.json",
+        "reportSha256": "14ebae016494614813000a4660cfbc1e3bdd1a005224ecb42ac003b75900a649",
+        "execution": {
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/independent-tests/probe_post_capacity_gate.py",
+            "--variant",
+            "suffix",
+            "--runner",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/fixtures/suffix/run_registered_study.py.txt",
+            "--expected-sha256",
+            "907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067",
+            "--report",
+            "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/green-suffix.json"
+          ],
+          "exitCode": 0,
+          "stdout": "{\"variant\": \"suffix\", \"testedSourceSha256\": \"907d1c9635dc0e375c8d0ef68afa6f85f6c27655758a1895281f74ae0cfc0067\", \"status\": \"GREEN\", \"passed\": 52, \"failed\": 0, \"exitCode\": 0}\n",
+          "stderr": ""
+        }
+      }
+    }
+  },
+  "artifactReproduction": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/build_patch.py"
+    ],
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"SOURCE_BOUND_ARTIFACTS_MATCH\",\n  \"sources\": 3,\n  \"outputs\": 5,\n  \"actualModelProcesses\": 0,\n  \"patchSha256\": \"c69cb427e4ba0624720380edef9f7f0ce3e418591c10bd0a35f56590ad67e38f\"\n}\n",
+    "stderr": ""
+  },
+  "exactPatchApplication": {
+    "status": "PASS",
+    "sources": 3,
+    "compiledWithoutExecution": true
+  },
+  "probeSha256": "4dddb6459c578c1feefbaee0bbff72eaad7a469eb799a01e078b8b4d33d51aec",
+  "publishedResultRepetition": {
+    "status": "PUBLISHED_V1_EVIDENCE_CONSISTENT_V2_RAW_EVIDENCE_MISSING",
+    "sourceCount": 64,
+    "scriptSha256": "def7392d9afbe3fa4e7086b42e1e4168d2b1b124c25d3f90f815a1bb633dab6b",
+    "reportSha256": "6f6cd60b94a5b3191b60d284eb0eb676d921379bd26c3c0e36083e9eb237384d",
+    "byteIdenticalToHelperReport": true,
+    "execution": {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/result-review/audit_published_results.py",
+        "--repo",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit",
+        "--output",
+        "/workspace/scratch/0549bca61ccf/device-ai-weight-audit/experimental/weight-space-20261104/recovery-gate-repair/root-verification/published-results.json"
+      ],
+      "exitCode": 0,
+      "stdout": "PUBLISHED_V1_EVIDENCE_CONSISTENT_V2_RAW_EVIDENCE_MISSING; 64 pinned text sources verified\n",
+      "stderr": ""
+    }
+  },
+  "status": "SOURCE_BOUND_REPAIR_VERIFIED_NOT_APPLIED_TO_PR508"
+}
