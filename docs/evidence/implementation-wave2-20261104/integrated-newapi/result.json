@@ -1,0 +1,19 @@
+{
+  "source": "fc4c6465d9e480d9fca936809b7ff0a2613ee72e",
+  "tree": "2bd438b542608f36b2895ebdddfa3ed4a6e95bdb",
+  "dirty": "?? docs/evidence/implementation-wave2-20261104/integrated-caller/",
+  "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss",
+  "args": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--max-workers=1",
+    "--console=plain",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    ":app:lintDebug"
+  ],
+  "started_at": "2026-11-04T19:26:47.188427+00:00",
+  "exit_code": 0,
+  "source_unchanged": true,
+  "finished_at": "2026-11-04T19:28:30.730294+00:00"
+}

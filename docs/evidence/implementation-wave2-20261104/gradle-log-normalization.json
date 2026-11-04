@@ -1,0 +1,56 @@
+[
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/baseline-gradle.txt",
+    "original_sha256": "15e18632cb735f8dad6cd41698034f82d438528c06d8dcbb5143020ab7f930c9",
+    "archived_sha256": "b87d6e5ee17c8425998b9176f6f0f9eedf3781425e71a62830c5b93d0ae49aeb",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/combined512-old-fixture/gradle.txt",
+    "original_sha256": "265751974e61ccfb821d6a3b3087b78ba6e51fccf9fbb11287e7d219809993b4",
+    "archived_sha256": "5e4a6697e002693e677de76335d050c39655747c4d9cb33122212e801a77a8ec",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/integrated-caller/gradle.txt",
+    "original_sha256": "d136e0265763e7938c067bd522eb289ee04e441fd86fba4e5e9a3efd1b62b43a",
+    "archived_sha256": "864cd96483facf6667a8652b28dd8a7118f917b40a49ddf98777bf3918405bbc",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/integrated-newapi/gradle.txt",
+    "original_sha256": "57a9f57184c9a841db323b73fa8d46b1be5f0eaab9d416ad7984d3d4e4e4835f",
+    "archived_sha256": "1a3ff4ecebeb649e803cf1480a298269c7ca188a21350bacf228a2b7066b7b17",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/range-original-red/gradle.txt",
+    "original_sha256": "d60b612df47d0230d0c2ec41a520b57d6e89c37fd43f38278a82c89be068f2fd",
+    "archived_sha256": "53fc1d1ce1fd5c2b6f74cc80e8023fad8347c5c6c508e0d9777c46abc8cf3741",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/range-six-red/gradle.txt",
+    "original_sha256": "c64c4cf27496855a4846a32e253c65ee4a65762fea024a01db40b304a354025e",
+    "archived_sha256": "b94b8f7ec599f343cd1c3a5bfe1148c29963798cb2728f59f367fc1a9fb67d84",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/range-unwired-control/gradle.txt",
+    "original_sha256": "3da3a8ed4f311ac640f226e992cc939f37bf0b792bd33e10291253d045599dd0",
+    "archived_sha256": "6589b0791cd6e4546c739aaa7ab35b1dcb39ad785dbaffb9c45c36e84d27c23e",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/combined-before-motion-fixture/gradle.txt",
+    "original_sha256": "197afd8beec78bb9d6dfce85f1f9db8eb46377570bde4efdf5063c5f3dcac1dd",
+    "archived_sha256": "751086ba4db87e48837c7d43b3feb53ed74ccfddda3c50709cb346a8717ca561",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  },
+  {
+    "path": "docs/evidence/implementation-wave2-20261104/combined-final/gradle.txt",
+    "original_sha256": "de544f4d9f8d0269dc3ce1f6c677489fb291086528bb2c7c32ec635ba9d29aa2",
+    "archived_sha256": "6a2475caad7ce66eb2d136d013a0cfa27880361ad2fec7eccf2b040b135ddec2",
+    "normalization": "Trailing horizontal whitespace only; line order and content otherwise unchanged."
+  }
+]

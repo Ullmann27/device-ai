@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotToolTaskUiTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:17:42" hostname="04c8b0ba7ea6" time="0.744">
+  <properties/>
+  <testcase name="cancellationKeepsSharedLaneBusyUntilNativeGenerationActuallyEnds" classname="at.heinz.deviceai.ContinuumBotToolTaskUiTest" time="0.395"/>
+  <testcase name="changedProfileOrSessionAfterInferenceStartsCannotAuthorizeItsToolProposal" classname="at.heinz.deviceai.ContinuumBotToolTaskUiTest" time="0.124"/>
+  <testcase name="lateInternetBanReachesToolGateAndRecoveriesShareTheFourCallOwnerBudget" classname="at.heinz.deviceai.ContinuumBotToolTaskUiTest" time="0.098"/>
+  <testcase name="readyTaskUsesCurrentPersonaAndCompleteOwnerTextWithoutPrivateContext" classname="at.heinz.deviceai.ContinuumBotToolTaskUiTest" time="0.127"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumBotPersonalityUiTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:17:33" hostname="04c8b0ba7ea6" time="8.697">
+  <properties/>
+  <testcase name="renderActualPhoneRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="1.259"/>
+  <testcase name="renderActualFoldRosterAndComposer" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.742"/>
+  <testcase name="searchFindsOwnerEditedProfileBeyondFirstPageByNameRoleAndStyle" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="2.3"/>
+  <testcase name="exampleOnlyFillsEditableDraftAndFinalExplicitHandoffIsOneShot" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.77"/>
+  <testcase name="renderActualNarrowWidgetsWithLargeType" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.579"/>
+  <testcase name="throwingHandoffKeepsDraftButNeverOffersAnUnconfirmedDuplicate" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.508"/>
+  <testcase name="cancelledOrDestroyedComposerControlsCannotSubmitLater" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.79"/>
+  <testcase name="replacingComposerMakesOldControlsInert" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.233"/>
+  <testcase name="overLimitUnicodeAndCodingTextStayWholeWithoutDispatch" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.529"/>
+  <testcase name="rejectedHandoffPreservesCompleteDraftAndAllowsExplicitRetry" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.428"/>
+  <testcase name="rosterDisplaysDistinctWorkingMethodAndRealRuntimeState" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.269"/>
+  <testcase name="rapidSearchRendersOnlyTheLatestQuery" classname="at.heinz.deviceai.ContinuumBotPersonalityUiTest" time="0.283"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

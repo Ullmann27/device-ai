@@ -1,6 +1,6 @@
 {"source": "12b023cc1b6e92990b2ce4dce0a35495659cfa27", "tree": "7ab2c31558aacc548f043cf5735d4dc80f0a05a3", "dirty": "", "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss", "args": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--max-workers=1", "--console=plain", "-Pkotlin.compiler.execution.strategy=in-process", ":app:testDebugUnitTest", "-PcontinuumUiWidgetTests=true", "--tests", "*ChiefBotTaskIntakeTest", "--tests", "*ChiefWorkerScopeAdmissionTest", "--tests", "*MemoryRecallActivityUiTest", "--tests", "*ContinuumBotToolTaskUiTest", "--tests", "*ContinuumAdaptiveAvatarNavigationUiTest"], "started_at": "2026-11-04T19:04:55.345768+00:00"}
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
-Daemon will be stopped at the end of the build 
+Daemon will be stopped at the end of the build
 
 > Configure project :app
 w: ⚠️ Deprecated Gradle Version
@@ -79,7 +79,7 @@ The generated 'copy()' will change its visibility in future releases.
 To suppress the warning do one of the following:
 - Annotate the data class with the '@ConsistentCopyVisibility' annotation.
 - Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
-- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+- Annotate the data class with the '@ExposedCopyVisibility' annotation
   (Discouraged, but can be used to keep binary compatibility).
 
 To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
@@ -111,7 +111,7 @@ The generated 'copy()' will change its visibility in future releases.
 To suppress the warning do one of the following:
 - Annotate the data class with the '@ConsistentCopyVisibility' annotation.
 - Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
-- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+- Annotate the data class with the '@ExposedCopyVisibility' annotation
   (Discouraged, but can be used to keep binary compatibility).
 
 To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.

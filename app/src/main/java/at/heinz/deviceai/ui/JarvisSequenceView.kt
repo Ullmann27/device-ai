@@ -53,6 +53,14 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private var turn: String? = null
     private val stepStates = HashMap<String, StepState>()
+    // Bounded presentation history, matching the producer's recent-turn window.
+    // A completed or displaced turn must not become visible again through a late callback.
+    private val retiredTurns = LinkedHashSet<String>()
+
+    private fun retireTurn(id: String) {
+        retiredTurns += id
+        while (retiredTurns.size > MAX_RETIRED_TURNS) retiredTurns.remove(retiredTurns.first())
+    }
 
     /** Called on the emitting thread; hops to the UI thread. */
     override fun render(event: CockpitAnimationEvent) {
@@ -70,16 +78,33 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
             if (event.turnId == MEMORY_TURN) { memoryRenderer.render(event); kick() }
             return
         }
-        if (event is CockpitAnimationEvent.CommandFlyIn) {
-            if (turn != event.turnId) { effects.clear(); stepStates.clear() }
-            turn = event.turnId
-            command(event.commandPreview); return
+        if (event is CockpitAnimationEvent.TurnEnded) {
+            // Remember completion even if another command already replaced this turn on screen.
+            retireTurn(event.turnId)
+            if (turn == event.turnId) {
+                effects.dismissAll(clock()); effects.clearPills(); effects.closeEnvelope()
+                stepStates.clear(); turn = null; kick()
+            }
+            return
         }
         if (event is CockpitAnimationEvent.Extension) {
-            // Proposal for Kern: Extension("alarm") for overload/threat → Muster H. Unknown kinds are ignored.
+            // Global extension effects do not acquire a conversation/worker slot.
             if (event.kind == "alarm") { effects.alarm(clock()); kick() }
             return
         }
+        if (event.turnId in retiredTurns) return
+        if (event is CockpitAnimationEvent.CommandFlyIn) {
+            if (turn != event.turnId) {
+                turn?.let(::retireTurn)
+                effects.clear(); stepStates.clear()
+            }
+            turn = event.turnId
+            command(event.commandPreview); return
+        }
+        // Boot, navigation, calculation and global status events have no work cards here.
+        // Letting them set `turn` would hide the next worker, which has no CommandFlyIn.
+        if (event !is CockpitAnimationEvent.ActionStarted && event !is CockpitAnimationEvent.ProcessTimeline &&
+            event !is CockpitAnimationEvent.AccountCardFlyIn && event !is CockpitAnimationEvent.DocumentQuestion) return
         if (turn == null) turn = event.turnId
         if (event.turnId != turn) return
         val key = { k: String -> safeId("${event.turnId}.$k") }
@@ -110,7 +135,6 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
                 // Muster G; TODO(Kern): DocumentQuestion carries one question, the pills need the answer options.
                 effects.questionPills(listOf(event.question), clock()); kick()
             }
-            is CockpitAnimationEvent.TurnEnded -> { effects.dismissAll(clock()); effects.clearPills(); effects.closeEnvelope(); stepStates.clear(); turn = null; kick() }
             else -> Unit
         }
     }
@@ -135,4 +159,6 @@ class JarvisSequenceView @JvmOverloads constructor(context: Context, attrs: Attr
         canvas.restoreToCount(saved)
         if (motionAllowed && isAttachedToWindow && isShown && effects.isAnimating(now)) postInvalidateOnAnimation()
     }
+
+    private companion object { const val MAX_RETIRED_TURNS = 24 }
 }

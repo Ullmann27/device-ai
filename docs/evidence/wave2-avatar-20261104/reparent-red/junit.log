@@ -26,4 +26,3 @@ java.lang.AssertionError: expected:<AA> but was:<SIL>
 
 FAILURES!!!
 Tests run: 80,  Failures: 3
-

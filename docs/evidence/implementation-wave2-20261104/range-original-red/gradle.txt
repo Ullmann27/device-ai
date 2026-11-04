@@ -1,6 +1,6 @@
 {"source": "2558c029021af6ad399910478c56c0c75ec506c5", "tree": "b581387a31c26a462e3219109b7293f040317cb2", "dirty": "?? app/src/uiTest/java/at/heinz/deviceai/AvatarRangeFrameConnectionUiTest.kt\n?? docs/evidence/implementation-wave2-20261104/baseline-gradle.txt", "checkout": "/workspace/scratch/d663e8444310/continuum-anschluss", "args": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--max-workers=1", "--console=plain", "-Pkotlin.compiler.execution.strategy=in-process", ":app:testDebugUnitTest", "-PcontinuumUiWidgetTests=true", "--tests", "*AvatarRangeFrameConnectionUiTest"], "started_at": "2026-11-04T19:16:27.857610+00:00"}
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
-Daemon will be stopped at the end of the build 
+Daemon will be stopped at the end of the build
 
 > Configure project :app
 w: ⚠️ Deprecated Gradle Version

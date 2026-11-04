@@ -1,5 +1,6 @@
 package at.heinz.deviceai.learning
 
+import java.time.DateTimeException
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -54,14 +55,34 @@ class TemporalCue(private val zone:ZoneId) {
         val today=Instant.ofEpochMilli(nowMillis).atZone(zone).truncatedTo(ChronoUnit.DAYS)
         fun days(from:Long,to:Long)=today.minusDays(from).toInstant().toEpochMilli() until today.minusDays(to-1).toInstant().toEpochMilli()
         Regex("vor (\\d+|zwei|drei|vier|fuenf) tagen").find(q)?.let { m ->
-            val n=m.groupValues[1].toLongOrNull() ?: listOf("zwei","drei","vier","fuenf").indexOf(m.groupValues[1]).toLong()+2
-            return days(n,n) }
+            val n=when(val count=m.groupValues[1]) {
+                "zwei" -> 2L
+                "drei" -> 3L
+                "vier" -> 4L
+                "fuenf" -> 5L
+                else -> count.toLongOrNull() ?: return null
+            }
+            // A valid Long can still exceed the calendar or epoch-millisecond range.
+            return try { days(n,n) }
+            catch (_:DateTimeException) { null }
+            catch (_:ArithmeticException) { null }
+        }
         return when {
             "vorgestern" in q -> days(2,2)
             "gestern" in q -> days(1,1)
             "heute" in q -> days(0,0)
-            Regex("letzte[nr]? woche|vorige[nr]? woche").containsMatchIn(q) -> days(13,6)
-            Regex("letzte[nr]? monat|voriger monat|vor einem monat").containsMatchIn(q) -> days(45,20)
+            Regex("letzte[nr]? woche|vorige[nr]? woche").containsMatchIn(q) -> {
+                val thisWeek=today.toLocalDate().minusDays(today.dayOfWeek.value.toLong()-1)
+                thisWeek.minusWeeks(1).atStartOfDay(zone).toInstant().toEpochMilli() until
+                    thisWeek.atStartOfDay(zone).toInstant().toEpochMilli()
+            }
+            Regex("letzte[nr]? monat|voriger monat").containsMatchIn(q) -> {
+                val thisMonth=today.toLocalDate().withDayOfMonth(1)
+                thisMonth.minusMonths(1).atStartOfDay(zone).toInstant().toEpochMilli() until
+                    thisMonth.atStartOfDay(zone).toInstant().toEpochMilli()
+            }
+            // Preserve the existing approximate cue; it is not a named calendar month.
+            "vor einem monat" in q -> days(45,20)
             else -> null
         }
     }

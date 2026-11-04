@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.TemporalCueCalendarTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-11-04T19:36:37" hostname="04c8b0ba7ea6" time="0.017">
+  <properties/>
+  <testcase name="lastMonthRetrievalRanksItsFinalDayAboveAnOlderIdenticalMemoryWithoutPromotingTrust" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.006"/>
+  <testcase name="previousWeekHasTheSameMondayToSundayBoundsThroughoutTheCurrentWeek" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.004"/>
+  <testcase name="aDayCountBeyondTheCalendarRangeDoesNotCrashRetrieval" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.002"/>
+  <testcase name="previousMonthCanCrossTheYearBoundary" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="aMidnightGapTodayDoesNotShiftPreviousMonthBoundaries" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.001"/>
+  <testcase name="previousMonthUsesFebruarysActualLengthInLeapAndOrdinaryYears" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="existingDailyCuesAndApproximateOneMonthAgoWindowRemainUnchanged" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.001"/>
+  <testcase name="previousWeekCanCrossTheYearBoundary" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="previousMonthKeepsLocalMidnightAcrossSpringDaylightSavingChange" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="previousMonthIncludesTheWholeCalendarMonth" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.001"/>
+  <testcase name="aDateBeyondEpochMillisecondRangeDoesNotCrashRetrieval" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.001"/>
+  <testcase name="previousWeekKeepsLocalMidnightAcrossBothDaylightSavingChanges" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="calendarBoundariesUseTheConfiguredZone" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.001"/>
+  <testcase name="aMidnightGapTodayDoesNotShiftPreviousWeekBoundaries" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <testcase name="aDayCountBeyondLongRangeDoesNotSilentlyMeanYesterday" classname="at.heinz.deviceai.learning.TemporalCueCalendarTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
