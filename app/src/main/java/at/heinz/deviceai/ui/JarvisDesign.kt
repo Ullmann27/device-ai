@@ -8,15 +8,22 @@ package at.heinz.deviceai.ui
  */
 object JarvisDesign {
     /** Colour roles: deep navy base, neon cyan and violet accents (ref2/ref4/ref5). */
+    /**
+     * Jarvis values from VIDEO-SPEC.md (Heinz' videos). Deliberately differ from ContinuumTheme (#477):
+     * background #050914→#0A1128 (#477: #000A1D), cyan #00FFFF (#477: #3EC8FF), violet #8A2BE2 (#477: #925CFF),
+     * glass rgba(10,15,26,.6) (#477: opaque navy). ContinuumTheme is left untouched.
+     */
     object Colors {
-        val background = ContinuumTheme.BACKGROUND          // Dunkelblau/Schwarz
+        val background = Argb.rgb(0x05, 0x09, 0x14)        // #050914 top of page gradient
+        val backgroundBottom = Argb.rgb(0x0A, 0x11, 0x28)  // #0A1128
         val backgroundHaze = ContinuumTheme.BACKGROUND_GLOW
-        val surface = ContinuumTheme.CARD_FILL_TOP
-        val surfaceLow = ContinuumTheme.CARD_FILL_BOTTOM
-        val navSurface = ContinuumTheme.NAV_FILL
-        val cyan = ContinuumTheme.CYAN                      // Neon-Cyan, aktive Elemente
-        val cyanSoft = ContinuumTheme.CYAN_SOFT
-        val violet = ContinuumTheme.VIOLET                  // Violett, zweiter Akzent
+        val surface = Argb.of(153, 10, 15, 26)              // rgba(10,15,26,0.6) glass
+        val surfaceLow = Argb.of(153, 6, 10, 20)
+        val navSurface = Argb.of(170, 8, 12, 24)
+        val cyan = Argb.rgb(0x00, 0xFF, 0xFF)               // #00FFFF Neon-Cyan
+        val cyanSoft = Argb.rgb(150, 255, 255)
+        val violet = Argb.rgb(0x8A, 0x2B, 0xE2)             // #8A2BE2 Violett
+        val activeWhite = Argb.rgb(255, 255, 255)
         val magenta = ContinuumTheme.MAGENTA
         val ok = ContinuumTheme.GREEN
         val warn = ContinuumTheme.AMBER
@@ -25,7 +32,7 @@ object JarvisDesign {
         val textSecondary = ContinuumTheme.TEXT_SECONDARY
         val textMuted = ContinuumTheme.TEXT_MUTED
         /** Cyan → violet edge light used by glass cards and neon lines. */
-        val neonEdge = intArrayOf(ContinuumTheme.BORDER_LEFT, ContinuumTheme.BLUE, ContinuumTheme.VIOLET)
+        val neonEdge = intArrayOf(Argb.rgb(0, 255, 255), Argb.rgb(40, 140, 255), Argb.rgb(0x8A, 0x2B, 0xE2))
         val brand = ContinuumTheme.brandGradientColors
     }
 
@@ -50,7 +57,8 @@ object JarvisDesign {
         const val inputBarHeight = 52f
         const val bottomNavHeight = ContinuumHomeLayout.PHONE_NAV_HEIGHT
         const val railCompact = 56f      // Fold7: icon-only rail
-        const val railLabelled = 168f    // tablet/desktop: icon + label
+        const val railLabelled = 168f    // tablet: icon + label
+        const val railFold = 124f        // Fold7 open: icon + label (ref5, Heinz-Entscheid)
     }
 
     /** Glow strength levels; [Level.OFF] for low-power / reduced-motion. */
