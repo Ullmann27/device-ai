@@ -102,10 +102,15 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        slotRegistration?.close()
+        slotRegistration = at.heinz.deviceai.cockpit.JarvisAvatarSlot.addListener { post { applyAvatarSlot() } }
         updateWaveAnimation()
     }
 
     override fun onDetachedFromWindow() {
+        slotRegistration?.close(); slotRegistration = null
+        dockedRenderer?.let { runCatching { it.detach() } }
+        dockedRenderer = null
         removeCallbacks(waveFrame)
         waveFramePending = false
         super.onDetachedFromWindow()
@@ -128,12 +133,133 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
             views.values.forEach { it.refresh() }
+            if (jarvisShellStage) jarvisShell.tiles = shellTiles(value)
             updateWaveAnimation()
         }
 
+    /**
+     * Welten-Optik's shell (#479) as the bottom layer. Opt-in stage ("jarvis-shell" preference or
+     * [setJarvisShellStage]): the shell draws phone/Fold7/tablet composition with real content from
+     * [JarvisShellContent]; the live avatar sits in its AVATAR slot. Off by default until the shell offers touch
+     * targets and tile destinations (docs/ARCHITEKTUR-JARVIS.md, "Fehlt an der Schnittstelle").
+     */
+    val jarvisShell = JarvisShellView(context)
+    var jarvisShellStage = presentationPrefs.getBoolean("jarvis-shell", false)
+        private set
+
+    fun setJarvisShellStage(enabled: Boolean) {
+        jarvisShellStage = enabled
+        presentationPrefs.edit().putBoolean("jarvis-shell", enabled).apply()
+        applyShellStage()
+        requestLayout()
+    }
+
+    private fun applyShellStage() {
+        jarvisShell.visibility = if (jarvisShellStage) View.VISIBLE else View.GONE
+        views.values.forEach { it.visibility = if (jarvisShellStage) View.GONE else View.VISIBLE }
+        applyAvatarSlot()
+    }
+
+    // --- The ONE avatar slot (JarvisAvatarRenderer, docs/ARCHITEKTUR-JARVIS.md) ---
+    /** Cockpit modes own the avatar slot: no head/orb of our own, only a docked renderer or the placeholder. */
+    val ownsAvatarSlot: Boolean get() = jarvisShellStage || landscapeCockpit
+    private val avatarPlaceholder = AvatarSlotPlaceholder(context)
+    private var dockedRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? = null
+    private val avatarRect = android.graphics.Rect()
+
+    val avatarRenderer: at.heinz.deviceai.cockpit.JarvisAvatarRenderer? get() = dockedRenderer
+    /** Pixel rect of the avatar slot (cockpit modes). */
+    val avatarSlotRect: android.graphics.Rect get() = android.graphics.Rect(avatarRect)
+    /** The slot is visibly held: docked renderer or the named placeholder. */
+    val avatarSlotShown: Boolean get() = dockedRenderer != null || avatarPlaceholder.isShown
+
+    private fun applyAvatarSlot() {
+        val owns = ownsAvatarSlot
+        val wanted = if (owns) at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer else null
+        if (wanted !== dockedRenderer) {
+            dockedRenderer?.let { runCatching { it.detach() } }
+            dockedRenderer = null
+            if (wanted != null && !avatarRect.isEmpty) { wanted.attach(this, android.graphics.Rect(avatarRect)); dockedRenderer = wanted }
+        }
+        // Only while the home hosts it: chat and other panes reparent the same avatar and keep it visible.
+        if (hologram.parent === this) hologram.visibility = if (owns) View.GONE else View.VISIBLE
+        avatarPlaceholder.visibility = if (owns && dockedRenderer == null) View.VISIBLE else View.GONE
+    }
+
+    private var slotRegistration: AutoCloseable? = null
+
+    /** Children added by a docked renderer (attach): sized to the slot; the renderer positions them via x/y. */
+    private fun isForeign(child: View) = child !== jarvisShell && child !== hologram && child !== avatarPlaceholder &&
+        child !== transientCard && child !in views.values
+
+    private fun layoutForeign() {
+        val w = avatarRect.width(); val h = avatarRect.height()
+        for (i in 0 until childCount) {
+            val c = getChildAt(i)
+            if (!isForeign(c)) continue
+            c.measure(MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+            c.layout(0, 0, w, h)
+        }
+    }
+
+    override fun onViewRemoved(child: View?) {
+        super.onViewRemoved(child)
+        if (child === hologram) child.visibility = View.VISIBLE
+    }
+
+    override fun onViewAdded(child: View?) {
+        super.onViewAdded(child)
+        if (child === hologram && views.isNotEmpty()) applyAvatarSlot()
+    }
+
+    private fun layoutAvatarSlot(left: Int, top: Int, right: Int, bottom: Int) {
+        val changed = avatarRect.left != left || avatarRect.top != top || avatarRect.right != right || avatarRect.bottom != bottom
+        avatarRect.set(left, top, right, bottom)
+        avatarPlaceholder.measure(MeasureSpec.makeMeasureSpec(right - left, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.EXACTLY))
+        avatarPlaceholder.layout(left, top, right, bottom)
+        if (dockedRenderer == null) { if (at.heinz.deviceai.cockpit.JarvisAvatarSlot.renderer != null) post { applyAvatarSlot() } }
+        else if (changed) dockedRenderer?.let { r ->
+            r.onSlotChanged(android.graphics.Rect(avatarRect))
+            // Renderers without onSlotChanged are re-attached (their attach() detaches first).
+            post { if (dockedRenderer === r) r.attach(this, android.graphics.Rect(avatarRect)) }
+        }
+        layoutForeign()
+    }
+
+    /** Empty, clearly named slot until Jarvis Avatar docks a renderer. Draws only a thin rim and the name. */
+    private class AvatarSlotPlaceholder(context: Context) : View(context) {
+        private val painter = AndroidContinuumPainter(context.assets)
+        init { importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES; contentDescription = NAME }
+        override fun onDraw(canvas: android.graphics.Canvas) {
+            val d = resources.displayMetrics.density
+            val w = width / d; val h = height / d
+            painter.begin(canvas); canvas.save(); canvas.scale(d, d)
+            val style = JarvisDesign.Type.caption
+            painter.strokeRoundRect(4f, 4f, w - 4f, h - 4f, 18f, 1f, Fill.Solid(JarvisDesign.Colors.rim))
+            painter.drawText(NAME, w / 2f, h / 2f, style, Fill.Solid(JarvisDesign.Colors.textSecondary), TextAlign.CENTER)
+            canvas.restore()
+        }
+        companion object { const val NAME = "Jarvis Avatar – Renderer nicht angedockt" }
+    }
+
     init {
         setWillNotDraw(false)
+        jarvisShell.content = JarvisShellContent.forState({ state }, grid = { jarvisShell.shell?.grid })
+        jarvisShell.tiles = shellTiles(state)
+        jarvisShell.setOnTouchListener { v, e ->
+            if (e.actionMasked == android.view.MotionEvent.ACTION_UP) {
+                val shell = jarvisShell.shell
+                val target = shell?.let { JarvisShellContent.hitTarget(it, jarvisShell.tiles, e.x / density, e.y / density) }
+                val route = target?.let { JarvisShellContent.routes[it] }
+                if (route != null) { v.performClick(); onSlot(route, 0f, 0f) }
+            }
+            true
+        }
+        addView(jarvisShell, 0)
         addView(hologram)
+        addView(avatarPlaceholder)
+        applyShellStage()
     }
 
     /**
@@ -165,12 +291,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             views[slot] = view
             addView(view)
         }
+        applyShellStage()
         requestLayout()
         updateWaveAnimation()
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
     val referenceCockpit: Boolean get() = layoutSpec?.referenceCockpit == true
+    val landscapeCockpit: Boolean get() = layoutSpec?.landscapeCockpit == true
+    /** The drawn view of [slot] (animation layer / tests); null if the composition has no such slot. */
+    fun viewFor(slot: Slot): View? = if (slot == ContinuumLandscapeCockpitLayout.AVATAR_SLOT) hologram else views[slot]
     /** Geometry belongs to the composition, not to the presence of an adaptive worker card. */
     val intendedGeometry: ContinuumHologramRenderer.Geometry
         get() {
@@ -188,6 +318,32 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     /** Height of a slot in dp (for tap zones inside an element). */
     fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
 
+    private var transientCard: ContinuumElementView? = null
+
+    /** Shows a transient notice card over the lower avatar stage (account/document scenes), then removes it. */
+    fun showTransientCard(title: String, lines: List<String>, animate: Boolean, durationMs: Long = 6_000L) {
+        transientCard?.let { removeView(it) }
+        val view = ContinuumElementView(context, CockpitNoticeCard(title, lines, textScale)) { _, _ ->
+            transientCard?.let { removeView(it) }; transientCard = null
+        }
+        view.state = state
+        transientCard = view
+        addView(view)
+        if (animate) {
+            view.translationX = 60f * density; view.alpha = 0f
+            view.animate().translationX(0f).alpha(1f).setDuration(300L).start()
+        }
+        postDelayed({ if (transientCard === view) { removeView(view); transientCard = null } }, durationMs)
+    }
+
+    private fun transientBox(): ContinuumHomeLayout.Box? {
+        val hero = layoutSpec?.get(Slot.HERO) ?: return null
+        val h = 84f
+        val l = hero.left + 12f - offset
+        val r = hero.right - 12f - offset
+        return ContinuumHomeLayout.Box(l, hero.bottom - h - 8f, r, hero.bottom - 8f)
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val spec = layoutSpec
@@ -198,16 +354,72 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             child.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
         }
-        setMeasuredDimension(width, maxOf(contentHeight, suggestedMinimumHeight))
+        // The shell stage is one window tall (no scrolling page underneath).
+        val h = if (jarvisShellStage && configuredHeight > 0f) (configuredHeight * density).toInt()
+            else maxOf(contentHeight, suggestedMinimumHeight)
+        jarvisShell.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY))
+        if (jarvisShellStage) shellAvatarBox(width, h)?.let { box ->
+            hologram.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.measure(MeasureSpec.makeMeasureSpec((box.width * density).toInt(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec((box.height * density).toInt(), MeasureSpec.EXACTLY))
+        } }
+        setMeasuredDimension(width, h)
+    }
+
+    /** Tiles with ref5 subtitles when the Fold7 grid is active (Kern, §11). */
+    private fun shellTiles(s: ContinuumDashboardState): List<JarvisTile> =
+        JarvisShellContent.tiles(s, System.currentTimeMillis(), subtitles = jarvisShell.shell?.ref5Grid == true)
+
+    /**
+     * Avatar slot of the shell for the given pixel size (dp geometry from JarvisShellLayout). In the ref5 grid
+     * (Fold7 open) the head renderer gets the HEAD area only; the brain orb right of it belongs to Gedächtnis.
+     */
+    private fun shellAvatarBox(widthPx: Int, heightPx: Int): JarvisShellLayout.Box? = shellGeometry(widthPx, heightPx)?.let { shell ->
+        shell.grid?.get(JarvisCockpitGrid.Area.HEAD) ?: shell[JarvisShellLayout.Slot.AVATAR]
+    }
+
+    private fun shellGeometry(widthPx: Int, heightPx: Int): JarvisShellLayout.Shell? {
+        val w = widthPx / density; val h = heightPx / density
+        if (w < 240f || h < 320f) return null
+        return JarvisShellLayout.create(w, h, resources.configuration.fontScale, jarvisShell.foldRail)
+    }
+
+    /** Publishes the ref5 user card bounds (window pixels) for Lückenfüller's view; null outside the grid. */
+    private fun publishUserCardBounds(widthPx: Int, heightPx: Int) {
+        val box = shellGeometry(widthPx, heightPx)?.get(JarvisShellLayout.Slot.USER_CARD)
+        at.heinz.deviceai.cockpit.JarvisUserCardSlot.bounds = box?.let {
+            android.graphics.Rect((it.left * density).toInt(), (it.top * density).toInt(), (it.right * density).toInt(), (it.bottom * density).toInt())
+        }
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        jarvisShell.layout(0, 0, r - l, b - t)
+        if (jarvisShellStage) {
+            publishUserCardBounds(r - l, b - t)
+            if (changed) jarvisShell.tiles = shellTiles(state)
+            shellAvatarBox(r - l, b - t)?.let { box ->
+                layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
+                    (box.right * density).toInt(), (box.bottom * density).toInt())
+            }
+            return
+        }
         for (child in listOf<View>(hologram) + views.values) {
             if (child.parent !== this) continue
             val box = boxOf(child) ?: continue
             child.layout((box.left * density).toInt(), (box.top * density).toInt(),
                 (box.right * density).toInt(), (box.bottom * density).toInt())
         }
+        if (ownsAvatarSlot) boxOf(hologram)?.let { box ->
+            layoutAvatarSlot((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        }
+        transientCard?.let { card -> transientBox()?.let { box ->
+            card.layout((box.left * density).toInt(), (box.top * density).toInt(),
+                (box.right * density).toInt(), (box.bottom * density).toInt())
+        } }
     }
 
     private fun boxOf(child: View): ContinuumHomeLayout.Box? {

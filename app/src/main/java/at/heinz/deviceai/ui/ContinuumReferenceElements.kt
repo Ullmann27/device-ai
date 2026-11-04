@@ -48,7 +48,7 @@ class ReferenceActionElement(private val slot: Slot, textScale: Float) : Continu
         Slot.ACTION_MEMORY -> "Gedächtnis"
         Slot.LABEL_ANALYSING -> "Forschung"
         Slot.LABEL_DEVELOPING -> "Entwicklung"
-        Slot.ACTION_AGENTS -> "Agents"
+        Slot.ACTION_AGENTS -> "Agenten"
         Slot.ACTION_BOTS -> "Bots"
         Slot.ACTION_TASK -> "Auftrag"
         Slot.LABEL_LEARNING -> "Lernen"
