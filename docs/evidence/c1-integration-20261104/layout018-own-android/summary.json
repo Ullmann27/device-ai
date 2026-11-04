@@ -1,0 +1,142 @@
+{
+  "taskId": "android-layout018-01",
+  "localSource": "59d8d7e25a5936403e8579373883fa04bec5c37f",
+  "remoteSource": "a6135f24629ba9151bbc06888bc977325d95e6f1",
+  "tree": "90d68760d9a0533c169697902b61eda126e9b20b",
+  "command": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle",
+    "--offline",
+    "--no-daemon",
+    "--no-build-cache",
+    "--max-workers=2",
+    "--console=plain",
+    "-Dorg.gradle.jvmargs=-Xmx1600m -XX:MaxMetaspaceSize=512m",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-PdeviceAiMentorPreview=true",
+    "-PcontinuumUiWidgetTests=true",
+    "-PcontinuumLocalStandaloneQa=true",
+    "-PcontinuumStandaloneVersionCode=41",
+    "-PcontinuumAuditProgressFile=/workspace/scratch/174c84456ee3/qa/android-layout018-01-active-test.json",
+    "-PcontinuumAuditTestClasses=at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest,at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+    "-I",
+    "/workspace/scratch/174c84456ee3/qa/observe-tests.init.gradle",
+    ":app:testDebugUnitTest"
+  ],
+  "startedAt": "2026-11-04T21:36:46.203154+00:00",
+  "finishedAt": "2026-11-04T21:37:06.999442+00:00",
+  "exitCode": 0,
+  "sourceUnchanged": true,
+  "counts": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "suites": {
+    "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest": 4,
+    "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest": 3
+  },
+  "cases": [
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "name": "everythingFitsOneScreenWithUsableTargetsAndNoOverlap",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "name": "compositionFollowsTheReferences",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "name": "freshStateDrawsNotAvailableNeverReferenceNumbers",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest",
+      "name": "landscapeWindowsUseTheCockpitAndPortraitOrLargeTypeDoNot",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+      "name": "fractionalTargetsRemainAtLeast48Dp",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+      "name": "legacyWindowsRetainStrictGeometry",
+      "status": "PASS",
+      "failure": null
+    },
+    {
+      "class": "at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest",
+      "name": "avatarBoundsRemainBitIdentical",
+      "status": "PASS",
+      "failure": null
+    }
+  ],
+  "caseStartEndIdentitiesMatch": true,
+  "scope": "ACTUAL_ANDROID_PROJECT_FOCUSED_JVM_OR_ROBOLECTRIC_CLASSES",
+  "limits": [
+    "Not a full Android or lint gate",
+    "No model, native GPU, physical device or APK acceptance",
+    "Overlapping prior and future test groups must not be added"
+  ],
+  "archive": {
+    "name": "android-layout018-01.tar.xz",
+    "bytes": 7168,
+    "sha256": "8eab7fdf35f9e9b7cddc54d0eb1dd774bac449db9b45db4c940642d7bbfcdbfa",
+    "members": [
+      {
+        "path": "android-layout018-01-active-test.json",
+        "bytes": 182,
+        "sha256": "34b2ea85aaa0a56845c9b1259538e41d2a6be1353f6ac32f3b846cc78f1da252"
+      },
+      {
+        "path": "android-layout018-01.log",
+        "bytes": 5687,
+        "sha256": "7310268f6d8487acd6848e64e901d57bcc29ef932b9224d246099e4c205279d0"
+      },
+      {
+        "path": "android-layout018-01.result.json",
+        "bytes": 1721,
+        "sha256": "a2b7ddb44cd8e110319f154fbb0bb56ef9493aad3986641bdac8ec8d150713bc"
+      },
+      {
+        "path": "archive_android_gate.py",
+        "bytes": 4561,
+        "sha256": "3ef7baedee1123ac7756a5cbc85b960dcb1fd2ae0a30fb55e2ca1806720b3acf"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeCockpitLayoutTest.xml",
+        "bytes": 942,
+        "sha256": "06301f6a8eea15a53cb8bc87800a8a1ac613b3405962c620f3592df910a335d6"
+      },
+      {
+        "path": "junit/TEST-at.heinz.deviceai.ui.ContinuumLandscapeTargetPrecisionTest.xml",
+        "bytes": 756,
+        "sha256": "abf7fcb4927ac61c21c74dcc91de59a54760f6beed41a67d50282e9a581a4838"
+      },
+      {
+        "path": "observe-tests.init.gradle",
+        "bytes": 1798,
+        "sha256": "5c2471c275872167f60a2ada33f018d01921bb1c563608de00014b568a66fdeb"
+      },
+      {
+        "path": "run_c1_gate_v3.py",
+        "bytes": 5722,
+        "sha256": "209e4fe8bcb66c48590a69ac743750ba2a1943076af37ea01eb8204d659e7cdd"
+      },
+      {
+        "path": "summary.json",
+        "bytes": 3114,
+        "sha256": "26822e477e62c6ba761bd20701489e32b212d4d5d3094bfe5d17e7af972bfa0c"
+      }
+    ]
+  }
+}

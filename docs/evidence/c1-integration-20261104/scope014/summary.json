@@ -1,0 +1,24 @@
+{
+  "sourceDirectory": "/workspace/scratch/174c84456ee3/source-audit/scope014",
+  "archive": "scope014.tar.xz",
+  "sha256": "fba8d1bdaf4cb6cc326027f95b868ac620db02d6e9acc5c743e2c909be3db3d8",
+  "scope": "READ_ONLY_REVIEW_OR_TEMPLATE; see exact source in members; not current full acceptance",
+  "members": [
+    {
+      "path": "C1-SCOPE-014-ADDENDUM-4da039d.json",
+      "sha256": "507839896e91b7a9c6c3f2d1bc0092d850472d27a4e6fe4f9e515075e5c38a33"
+    },
+    {
+      "path": "C1-SCOPE-014-ADDENDUM-4da039d.md",
+      "sha256": "659c20d14e35847cd9f0931528cc24072a51338d01f13590ac4a310687972f8f"
+    },
+    {
+      "path": "C1-SCOPE-014.json",
+      "sha256": "22ed47300253e132a80cd5df31a759753f5ac356c69573d0abbf9099277cafbf"
+    },
+    {
+      "path": "C1-SCOPE-014.md",
+      "sha256": "82be647c0d48c9bb4543383f9ce69a10a1dda8839a8bf4c50e71135501661c49"
+    }
+  ]
+}
