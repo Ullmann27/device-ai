@@ -139,10 +139,10 @@ class LmModel(val params: LmParams) {
         val tape = Tape(training = false)
         val logits = logits(tape, frozenNodes(tape), ids).value
         val v = logits.cols
-        val scratch = FloatArray(logits.data.size)
+        val scratch = FloatArray(v)
         return DoubleArray(ids.size) { t ->
             val y = targets[t]
-            if (y < 0) Double.NaN else Kernels.softmaxRow(logits.data, t * v, v, scratch) - logits.data[t * v + y]
+            if (y < 0) Double.NaN else Kernels.softmaxRow(logits.data, t * v, v, scratch, 0) - logits.data[t * v + y]
         }
     }
 

@@ -3,8 +3,8 @@
   "scope": "existing-function tuning only",
   "status": "RUNNING",
   "owner": "tuning-root-59ad19c6d3b7-r3",
-  "leaseExpiresAtUtc": "2026-11-04T23:25:56.567891+00:00",
-  "updatedAtUtc": "2026-11-04T21:25:56.567891+00:00",
+  "leaseExpiresAtUtc": "2026-11-04T23:35:22.903117+00:00",
+  "updatedAtUtc": "2026-11-04T21:35:22.903117+00:00",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -22,7 +22,9 @@
       "id": "R3-M1",
       "target": "LmModel.nll",
       "hypothesis": "Replace sequence-sized output scratch with one vocabulary row; preserve floating-point expression order",
-      "status": "PLANNED"
+      "status": "ADOPTED_IN_DRAFT",
+      "evidence": "docs/evidence/tuning-r3-20261104/m1/RESULTS.md",
+      "tests": "24/24 PASS"
     },
     {
       "id": "R3-M2",
@@ -37,7 +39,7 @@
       "status": "PLANNED"
     }
   ],
-  "next": "Record protocol and baseline checks, then implement/measure one milestone at a time",
+  "next": "R3-M2: direct next-distribution result; preserve R3-M1",
   "limits": [
     "no main merge",
     "no APK/install",
