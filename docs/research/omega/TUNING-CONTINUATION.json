@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "scope": "existing-function tuning only",
-  "status": "R5_PREREGISTERED_AFTER_R4_REJECTION",
+  "status": "R6_PREREGISTERED_AFTER_TWO_REJECTED_CANDIDATES",
   "owner": "tuning-automation-r4-20261104T2224Z",
   "leaseExpiresAtUtc": "2026-11-04T23:09:12.992Z",
-  "updatedAtUtc": "2026-11-04T22:28:11.600Z",
+  "updatedAtUtc": "2026-11-04T22:30:18.300Z",
   "branch": "tuning/continuum-three-bots-20261104",
   "pullRequest": 511,
   "publicBaselineCommit": "73b64ec299fd314dfdf07835fc7d8fc0d74b51a2",
@@ -139,7 +139,7 @@
   },
   "r5": {
     "target": "LmBpeTokenizer.decode",
-    "stage": "PREREGISTERED",
+    "stage": "REJECTED_ARCHIVE_PENDING",
     "hypothesis": "Eliminate ByteArrayOutputStream intermediate growth and duplicate copy with a checked two-pass byte-length calculation and one exact ByteArray, preserving behavior of negative, BOS/EOS and out-of-bounds IDs.",
     "comparison": "Current public tokenizer unchanged versus one candidate; Kotlin-host source-bound parity and A/A then one A/B; 4 warmup + 9 alternating pairs; no favorable timing retries.",
     "scenarios": [
@@ -154,6 +154,36 @@
     ],
     "repetitions": "Each scenario fixed 120 decode calls per pair; no JVM heap change; same fixed inputs in both arms; serialization and cached vocabulary hash parity.",
     "acceptance": "Exact decoded String including malformed UTF-8 replacements/invalid ids, same serialized bytes, unchanged encode; allocations decrease in major scenarios and no material CPU regression in control cases.",
-    "regressionLimits": "If controls materially regress or results cannot be attributed to exact source, reject and archive both arms; no Android claims."
+    "regressionLimits": "If controls materially regress or results cannot be attributed to exact source, reject and archive both arms; no Android claims.",
+    "results": {
+      "sourceGitBlob": "39faa03f2c5dc9d86422e5bffa7a6c563274f35e",
+      "parityCases": 3960,
+      "aa": "8 scenarios x 9 pairs",
+      "ab": "8 scenarios x 9 pairs",
+      "allocation": "All 8 cases lower in AB, -32.5% to -53.9%",
+      "rejection": "Material CPU regression in tiny byte +77.4% (0/9 wins), single word +141.4% (0/9 wins), mostly ignored +19.6% (1/9 win), despite improvements in large cases",
+      "timingRetry": false
+    }
+  },
+  "r6": {
+    "target": "LmBpeTokenizer.pretokenize",
+    "stage": "PREREGISTERED",
+    "hypothesis": "Remove Kotlin sequence map/toList layers by collecting Regex.findAll matches directly in one ArrayList; preserve empty input singleton, full token order and exact Unicode output.",
+    "implementationScope": "One companion method; no regex or vocabulary/cache change",
+    "design": "No preallocated size, no regex precompile change, no training/weights",
+    "scenarios": [
+      "empty",
+      "single-latin",
+      "single-unicode",
+      "many-ascii-words",
+      "many-unicode-words",
+      "punctuation-and-digits",
+      "long-no-separators",
+      "mixed-whitespace-control"
+    ],
+    "batch": "For each scenario, 120 pretokenize calls, 4 alternating warmup pairs, exactly 9 alternating measure pairs; source-bound A/A before candidate and one A/B after; fixed fixtures and same Kotlin/JDK21 host",
+    "correctness": "Exact strings and boundaries against original for deterministic + seeded fuzz (>= 2000), no mutated return/cache or changed serialization, full source-compilation",
+    "adoption": "Require allocation reduction on meaningful many-token cases, no material regression on empty/single-token and no strong CPU regression on controls. Otherwise archive/reject.",
+    "otherPRs": "#527 touches LmModel but not tokenizer; no source edits to others."
   }
 }
