@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumControlsTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-04T04:28:16" hostname="8c129114cae4" time="5.437">
+  <properties/>
+  <testcase name="dialogThemePreservesExplicitApprovalAndCancellation" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="4.163"/>
+  <testcase name="statusKeepsUnknownAndFailureTextAndDrawsAtLargeFont" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.202"/>
+  <testcase name="eventFormattingIncludesRecordedInterruptionsAndDeferralsWithoutChangingUnknownStates" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.035"/>
+  <testcase name="scrollingEditorKeepsItsNativeSelectionAndHasNoForegroundFrame" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.196"/>
+  <testcase name="measuredGridReflowsAtLargeFontAndRetainsEveryAction" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.063"/>
+  <testcase name="nativePanelsAndGaugesRemainReadableAtPhoneAndFoldWidths" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.359"/>
+  <testcase name="actionHasButtonSemanticsAndRealStateChangesWithoutLosingItsCallback" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.133"/>
+  <testcase name="glassHonoursDrawableAlphaAndControlsVisiblyChangeState" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.084"/>
+  <testcase name="statusDelimiterPreservesStandaloneUrlsClocksAndEmptyValues" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.044"/>
+  <testcase name="statusHistoryKeepsCompleteClockTimesInActualCards" classname="at.heinz.deviceai.ui.ContinuumControlsTest" time="0.155"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

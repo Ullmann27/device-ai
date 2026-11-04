@@ -1,0 +1,19 @@
+{
+  "observationType": "OWNER_SUPPLIED_PHYSICAL_DEVICE_SCREENSHOT",
+  "imageSha256": "3d7fad292078a722855ee185549c9c13578f2f60a59ae16f18c2c2d4a1f822b1",
+  "versionShown": "0.3.40",
+  "versionCodeShown": 41,
+  "observedResult": "App opened on owner device and status history now preserves full clock times, with no false heading at HH:mm",
+  "reportedStatus": {
+    "shizuku": "connected; Ready Shell UID diagnostic",
+    "model": "gemma4-e4b-it official-0b2a8980 READY",
+    "identity": "CONTINUUM generation 56 verified",
+    "storedReceipts": 33,
+    "offlineLastState": "FINISHED"
+  },
+  "limits": [
+    "Screenshot observation, not ADB or assistant-driven device test",
+    "Does not prove all owner data, every tool, inference quality, voice/GPU performance or autonomous coding acceptance"
+  ],
+  "assistantInstalledApk": false
+}

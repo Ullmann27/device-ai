@@ -119,6 +119,58 @@ class ContinuumControlsTest {
         bitmap.recycle()
     }
 
+    @Test fun statusHistoryKeepsCompleteClockTimesInActualCards() {
+        val timestamp = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY)
+            .parse("31.10.2026 19:59")!!.time
+        val pane = ContinuumBentoCockpit.statusPane(context(1.3f))
+        ContinuumBentoCockpit.updateStatus(pane,
+            "Shizuku: verbunden\nLetzte Lernläufe: $timestamp:RUNNING|$timestamp:FINISHED\n" +
+                "Beginn: 03.11.2026 20:02\nLetzter Zustand: FINISHED")
+        for (width in listOf(320, 720)) {
+            measure(pane, width)
+            val values = statusTexts(pane)
+            assertTrue(values.contains("31.10.2026 · 19:59 · RUNNING"))
+            assertTrue("a clock colon must not create a heading/value boundary",
+                values.contains("31.10.2026 · 19:59 · FINISHED"))
+            assertFalse(values.contains("31.10.2026 · 19"))
+            assertFalse(values.contains("59 · FINISHED"))
+            assertTrue(values.containsAll(listOf("Shizuku", "verbunden", "Letzte Lernläufe",
+                "Beginn", "03.11.2026 20:02", "Letzter Zustand", "FINISHED")))
+            capture(pane, "status-history-${width}dp-font130").recycle()
+        }
+    }
+
+    @Test fun statusDelimiterPreservesStandaloneUrlsClocksAndEmptyValues() {
+        val pane = ContinuumBentoCockpit.statusPane(context())
+        ContinuumBentoCockpit.updateStatus(pane,
+            "https://example.invalid:8443/status\n19:59\nFehler:\nHinweis:\tunbekannt\n" +
+                "Endpunkt: https://example.invalid:8443/status")
+        measure(pane, 320)
+        val values = statusTexts(pane)
+        assertEquals(2, values.count { it == "https://example.invalid:8443/status" })
+        assertTrue(values.containsAll(listOf("19:59", "Fehler", "—", "Hinweis", "unbekannt", "Endpunkt")))
+        assertFalse(values.contains("https"))
+        assertFalse(values.contains("19"))
+    }
+
+    @Test fun eventFormattingIncludesRecordedInterruptionsAndDeferralsWithoutChangingUnknownStates() {
+        val timestamp = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY)
+            .parse("03.11.2026 20:02")!!.time
+        val phases = listOf("RUNNING", "FINISHED", "FAILED", "CANCELLED", "INTERRUPTED",
+            "DEFERRED_BATTERY_LOW", "DEFERRED_BATTERY_UNKNOWN", "DEFERRED_THERMAL_LIMIT",
+            "DEFERRED_STORAGE_LOW", "DEFERRED_TIME_BUDGET")
+        for (phase in phases) assertEquals("03.11.2026 · 20:02 · $phase",
+            ContinuumBentoCockpit.formattedStatus("$timestamp:$phase"))
+        for (raw in listOf("$timestamp:FAILED_UNKNOWN", "$timestamp:DEFERRED_FUTURE",
+            "1${timestamp}:FINISHED")) assertEquals(raw, ContinuumBentoCockpit.formattedStatus(raw))
+    }
+
+    private fun statusTexts(view: View): List<String> = when (view) {
+        is TextView -> listOf(view.text.toString())
+        is ViewGroup -> (0 until view.childCount).flatMap { statusTexts(view.getChildAt(it)) }
+        else -> emptyList()
+    }
+
     @Test fun dialogThemePreservesExplicitApprovalAndCancellation() {
         val controller = Robolectric.buildActivity(android.app.Activity::class.java)
         controller.get().setTheme(R.style.AppTheme)
