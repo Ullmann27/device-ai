@@ -1,0 +1,26 @@
+✔ Bash parses and the entry point never mentions the historic builder (7.454003ms)
+✔ rejects invalid argument combinations before inspecting any keys (17.638947ms)
+✔ pinned Git HEAD rejects mismatches (34.954793ms)
+✔ refuses unofficial source remote (42.185977ms)
+✔ wrong package source is refused before any test (44.646081ms)
+✔ doctor is read-only and explicitly identifies Continuum Lokal (41.561311ms)
+✔ QA runs full tests, strips signer material, and never builds an APK (120.727529ms)
+✔ QA fail-closed on actual regression failure (55.149182ms)
+✔ signing refuses absent owner SHA approval and absent P12 (65.984015ms)
+✔ mentor signer is never accepted as Continuum Lokal (42.075737ms)
+✔ certificate pin and versionCode enforce Continuum Lokal identity (59.487498ms)
+✔ mocked approved owner lane runs full regression before ONLY local standalone build (53.122181ms)
+✔ owner refuses to sign when full regression fails (47.893093ms)
+✔ production branch is refused even with exact source hash (41.904485ms)
+✔ original publisher retains syntax and persistent code39+ entrypoint (10.598064ms)
+✔ all future releases require exact owner approval and original signer (0.314563ms)
+✔ dynamic manifest is understood by the installed Android parser for code39,40,41 (204.010486ms)
+✔ without the owner freeze-lift no signer or host publish operation starts (7.530726ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 767.936239
