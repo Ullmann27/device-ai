@@ -95,7 +95,10 @@ class ContinuumReferenceCockpitUiTest {
         app.getSharedPreferences("continuum-cockpit-presentation", Context.MODE_PRIVATE).edit().clear().commit()
         val controller = Robolectric.buildActivity(AgentActivity::class.java)
         try {
-            controller.setup().visible().windowFocusChanged(true)
+            controller.setup().visible()
+            advanceFrames(16)
+            assertTrue("The real window traversal must attach decor before focus", controller.get().window.decorView.isAttachedToWindow)
+            controller.windowFocusChanged(true)
             val activity = controller.get()
             val root = activity.window.decorView
             val avatar = field(activity, "hologramView") as ContinuumHologramView
