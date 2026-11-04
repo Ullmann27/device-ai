@@ -187,3 +187,19 @@ Produktionsumfang: `ContinuumHologramView.kt` rendert den vorhandenen2D-Kopf auc
 Externe Rohbelege: vorher46/53PASS mit7Avatarfehlern auf92f421, danach53/53auf f17ee62. Der ältere RED enthält bereits den Produktions-Fallback und beweist deshalb nicht allein dessen alten C1-Fehler. Der separate vollständige f17ee62-Lauf scheitert mit Exit143/180-Sekunden-Timeout in ReferenceCockpit; diese negative Evidenz bleibt ebenfalls im Paket. Aus allen externen PASS wird kein C1-PASS abgeleitet.
 
 Genaue Pfade, Quellen, Roharchive und Rollback: `docs/evidence/c1-integration-20261104/avatar009/`. **Status OWN_ANDROID_FOCUS_PENDING.** Nächster Schritt: sauberen Commit pinnen und die tatsächlichen drei Avatar-UI-Klassen unter beiden Locks ausführen. Bei Fehler den separat erhaltenen geprüften Routing-Stand verfügbar halten und nur diesen begrenzten Slice korrigieren/zurücknehmen. Keine APK-Freigabe.
+
+## C1-AVATAR-009 — eigener Android-Fokus bestanden
+
+Tatsächlich geprüft: lokal `53ca8b6e3284c27c9c06f1462c469c7cff300e7d`, remote `5d7ddf0762455b92353ba9a559546e8683ad82fe`, gleicher Tree `39cbcfbd0b5fd0e1f95360aba42f2fa650f9deae`. `qa/run_c1_gate.py android-avatar-01` führte mit echtem Gradle, Offline-Cache und normalem Klassenfilter genau die drei übernommenen UI-Klassen aus. Vollständiger echter Befehl und unveränderte Rohlogs liegen in `avatar009-own-android/`.
+
+Ergebnis20:51:19UTC: **Exit0,13 PASS/0 FAIL/0 SKIP** (4 Lifecycle,3 Native-UI,6 Motion), frische XML-Fallnamen und Zeitgrenzen unabhängig durch C1 geprüft. Beide Locks gehalten; Quellstand unverändert. App-/UI-Kotlin nach den Änderungen tatsächlich kompiliert; unveränderte übrige Buildaufgaben durften regulär wiederverwendet werden. Kein neuer Lint auf diesem Stand und keine Gesamtfreigabe. Die externen53 und eigenen13 überlappen und werden nicht addiert. Keine echte GPU-/TTS-/Modell-/Gerätebehauptung.
+
+Archiv SHA256 `14d433df4ec69b5c31fd5c23c490f3123bcbb2eafc55aa24f146eae36ca5fd0a`. Der vorige Routing-Android-PASS ist weiterhin separat an165fc9/401a5d gebunden.
+
+## C1-TEMPORAL-011 — abgeschlossene Tagesgrenzen reparieren
+
+Basis ist der oben gezielt geprüfte Avatar-Stand53ca8b6/5d7ddf. Quelle #505 `b2bc510a59e29d4ece478109e12b9785be11ee7d`; aktueller #505-Head e83f6ac hat identische App-/Scripts-/Tools-Unterbäume. Genau drei Pfade aus dem unabhängig geprüften Paket: `ContinuumMemoryRetriever.kt`, neuer `TemporalCueDailyBoundaryTest.kt` und bestehender ausführbarer `tools/temporal-cue-host-check/run.sh`. Patch SHA256 `476f92efe30e27ba31b60e5718b25f1c04b93da2df646a54276b6197639d1351`. Alle C1-Basisblobs, Zielblobs, Dateimodi und Hashes geprüft; `git apply --check`/Anwendung Exit0.
+
+Beide Tagesgrenzen werden separat aus dem jeweiligen lokalen Datum mit atStartOfDay(zone) bestimmt. Dadurch überträgt eine heutige Mitternachtslücke nicht deren verschobene Uhrzeit auf andere Tage. Wochen-/Monatsfenster, Ranking, Corpus, Trust und Hauptchat-Aktivierung bleiben erhalten. Zwölf feste Grenz-/Suchtests ergänzen17unveränderte Tests. Gelesene originale Quellenbelege:29Tests/8Fehler vor der Korrektur und29/0danach; bisher keine eigene C1-Ausführung dieses neuen Slices.
+
+Status **OWN_HOST_RUN_PENDING**. Nächster echter Befehl unter beiden Locks: `bash tools/temporal-cue-host-check/run.sh /workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/lib` mit vorhandenem JDK17. Der vorhandene Runner nutzt Kotlin2.0.20, JUnit4.13.2 und eine bewusst fehlschlagende Compilegrenze für den hier nicht ausgeführten Event-Decorator. Android wird separat mit Projektcompiler2.4geprüft. Keine42/44-Rankinggrenze aufgehoben, keine Modellpromotion. Belege: `daily011/`; Rücknahme nur der drei genannten Dateien, negativer Bestand erhalten.
