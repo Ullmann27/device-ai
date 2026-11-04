@@ -42,7 +42,7 @@ class LedgerFormatV3Test {
         val store=FileLearningExperienceStore(dir)
         assertEquals(1000,store.appendMissing(items))
         assertEquals(items,FileLearningExperienceStore(dir).all())
-        assertEquals(0x4c455833,magic(File(dir,"experiences-v2.bin")))
+        assertEquals(0x4c455834,magic(File(dir,"experiences-v2.bin")))
         val times=(0 until 40).map { val t=System.nanoTime();FileLearningExperienceStore(dir).all();(System.nanoTime()-t)/1e6 }.sorted()
         println("LEX3 1000 records: cold read p95=%.2f ms".format(times[(times.size*0.95).toInt()-1]))
         assertTrue(store.append(fact(1000)))
@@ -55,7 +55,7 @@ class LedgerFormatV3Test {
         val store=FileLearningExperienceStore(dir)
         assertEquals(old,store.all())
         assertTrue(store.append(fact(256)))
-        assertEquals(0x4c455833,magic(File(dir,"experiences-v2.bin")))
+        assertEquals(0x4c455834,magic(File(dir,"experiences-v2.bin")))
         assertEquals(old+fact(256),FileLearningExperienceStore(dir).all())
         assertEquals("LKG backup keeps the readable legacy generation",old,
             FileLearningExperienceStore.inspectSnapshot(File(dir,"experiences-v2.lkg").readBytes()))

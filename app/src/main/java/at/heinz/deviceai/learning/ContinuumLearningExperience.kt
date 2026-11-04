@@ -117,7 +117,7 @@ class FileLearningExperienceStore(private val directory:File) {
             val bytes=primary.readBytes()
             val fingerprint=java.security.MessageDigest.getInstance("SHA-256").digest(bytes)
                 .joinToString("") { "%02x".format(it) }
-            fingerprint to (if(fingerprint==knownFingerprint) null else LearningExperienceCodec.decode(bytes))
+            fingerprint to (if(fingerprint==knownFingerprint) null else loadState().items)
         }
 
     fun append(experience:LearningExperience):Boolean = synchronized(FILE_LOCK) {
@@ -247,7 +247,22 @@ class FileLearningExperienceStore(private val directory:File) {
         }
         // The previous generation can predate an owner revocation/correction.
         // Preserve it for diagnosis, but never restore stale consent silently.
-        return LearningExperienceCodec.decode(primary.readBytes())
+        return loadState().items
+    }
+
+    /** LEX4: cached replay state, validated by file length + tail chain hash; torn tail truncated in place. */
+    private fun loadState():LearningExperienceCodec.LogState {
+        val key=primary.absolutePath
+        val bytes=primary.readBytes()
+        val running=MessageDigest.getInstance("SHA-256").apply { update(bytes) }
+        val fingerprint=(running.clone() as MessageDigest).digest()
+        LOG_CACHE[key]?.let { c -> if(MessageDigest.isEqual(c.fileHash,fingerprint))return c }
+        if(!LearningExperienceCodec.isLog(bytes))
+            return LearningExperienceCodec.LogState(LearningExperienceCodec.decode(bytes),ByteArray(32),0,bytes.size.toLong(),legacy=true)
+        val state=LearningExperienceCodec.decodeLog(bytes,allowTornTail=true)
+        if(state.validLength<bytes.size) java.io.RandomAccessFile(primary,"rw").use { it.setLength(state.validLength);it.fd.sync() }
+        if(state.validLength==bytes.size.toLong()) { state.fileHash=fingerprint;state.running=running;LOG_CACHE[key]=state }
+        return state
     }
 
     /** Observations and audits cannot evict owner instructions or revocations.
@@ -269,11 +284,38 @@ class FileLearningExperienceStore(private val directory:File) {
     private fun save(items:List<LearningExperience>) {
         require(items.size<=MAX_RECORDS && items.map { it.id }.distinct().size==items.size)
         if(!directory.exists() && !directory.mkdirs())throw IOException("Cannot create learning-core directory")
+        val state=if(primary.exists()) runCatching { loadState() }.getOrNull() else null
+        if(state!=null && !state.legacy) {
+            val previous=state.items.associateBy { it.id }
+            val nextIds=items.mapTo(HashSet()) { it.id }
+            val dels=state.items.filter { it.id !in nextIds }.map { it.id }
+            val puts=items.filter { previous[it.id]!=it }
+            val simulated=LinkedHashMap(previous).apply { dels.forEach(::remove);puts.forEach { put(it.id,it) } }
+            val withinBudget=state.records+dels.size+puts.size<=maxOf(64,2*items.size)
+            if(simulated.values.toList()==items && withinBudget) {
+                if(dels.isEmpty() && puts.isEmpty())return
+                val (bytes,hash)=LearningExperienceCodec.encodeOps(state.chainHash,dels,puts)
+                java.io.FileOutputStream(primary,true).use { it.write(bytes);it.fd.sync() }
+                // Next read still re-hashes the whole file; the cache only skips re-decoding when content matches.
+                val running=state.running?.let { (it.clone() as MessageDigest).apply { update(bytes) } }
+                if(running==null) LOG_CACHE.remove(primary.absolutePath) else
+                    LOG_CACHE[primary.absolutePath]=LearningExperienceCodec.LogState(items,hash,
+                        state.records+dels.size+puts.size,state.validLength+bytes.size).also {
+                        it.fileHash=(running.clone() as MessageDigest).digest();it.running=running }
+                return
+            }
+        }
+        compact(items)
+    }
+
+    /** Full rewrite (migration from LEX2/LEX3 or churn compaction); previous readable generation -> LKG backup. */
+    private fun compact(items:List<LearningExperience>) {
+        LOG_CACHE.remove(primary.absolutePath)
         if(primary.exists()) {
             runCatching { LearningExperienceCodec.decode(primary.readBytes()) }
                 .onSuccess { writeAtomically(backup,primary.readBytes()) }
         }
-        writeAtomically(primary,LearningExperienceCodec.encode(items))
+        writeAtomically(primary,LearningExperienceCodec.encodeLog(items))
     }
 
     private fun writeAtomically(target:File,bytes:ByteArray) {
@@ -301,11 +343,12 @@ class FileLearningExperienceStore(private val directory:File) {
             LearningExperienceCodec.decode(bytes)
 
         private val FILE_LOCK=Any()
+        private val LOG_CACHE=HashMap<String,LearningExperienceCodec.LogState>()
         internal const val ABSENT_FINGERPRINT="absent"
     }
 }
 
-private object LearningExperienceCodec {
+internal object LearningExperienceCodec {
     private const val MAGIC_LEX2=0x4c455832
     /** LEX3 = LEX2 record layout + explicit format version int after the magic. */
     private const val MAGIC=0x4c455833
@@ -332,7 +375,87 @@ private object LearningExperienceCodec {
         return bytes
     }
 
+    // ---- LEX4: append-only log. Header = magic + version; record = [len][payload][sha256(prevHash||payload)].
+    private const val MAGIC_LEX4=0x4c455834
+    private const val MAX_RECORD=64*1024
+    private const val PUT:Byte=1
+    private const val DEL:Byte=2
+    class LogState(val items:List<LearningExperience>, val chainHash:ByteArray, val records:Int,
+                   val validLength:Long, val legacy:Boolean=false) { var fileHash:ByteArray=ByteArray(0);var running:MessageDigest?=null }
+
+    fun isLog(bytes:ByteArray)=bytes.size>=8 && java.nio.ByteBuffer.wrap(bytes,0,4).int==MAGIC_LEX4
+    private fun header()=java.nio.ByteBuffer.allocate(8).putInt(MAGIC_LEX4).putInt(4).array()
+    private fun seed()=MessageDigest.getInstance("SHA-256").digest(header())
+    private fun link(prev:ByteArray,payload:ByteArray)=MessageDigest.getInstance("SHA-256").run { update(prev);update(payload);digest() }
+
+    fun encodeLog(items:List<LearningExperience>):ByteArray {
+        val (body,_)=encodeOps(seed(),emptyList(),items)
+        return (header()+body).also { require(it.size<=MAX_BYTES) }
+    }
+
+    fun encodeOps(prev:ByteArray,dels:List<String>,puts:List<LearningExperience>):Pair<ByteArray,ByteArray> {
+        var hash=prev
+        val out=ByteArrayOutputStream()
+        val data=DataOutputStream(out)
+        fun emit(payload:ByteArray) {
+            require(payload.size in 1..MAX_RECORD)
+            hash=link(hash,payload);data.writeInt(payload.size);data.write(payload);data.write(hash)
+        }
+        dels.forEach { id -> emit(ByteArrayOutputStream().also { b -> DataOutputStream(b).use { it.writeByte(DEL.toInt());it.writeUTF(id) } }.toByteArray()) }
+        puts.forEach { e -> emit(ByteArrayOutputStream().also { b -> DataOutputStream(b).use { it.writeByte(PUT.toInt());writeRecord(it,e) } }.toByteArray()) }
+        data.flush()
+        return out.toByteArray() to hash
+    }
+
+    fun decodeLog(bytes:ByteArray,allowTornTail:Boolean):LogState {
+        require(isLog(bytes) && bytes.size<=MAX_BYTES) { "Invalid LEX4 ledger" }
+        require(java.nio.ByteBuffer.wrap(bytes,4,4).int==4) { "Unsupported ledger format version" }
+        val state=LinkedHashMap<String,LearningExperience>()
+        var hash=seed();var pos=8;var records=0
+        while(pos<bytes.size) {
+            val remaining=bytes.size-pos
+            val len=if(remaining>=4) java.nio.ByteBuffer.wrap(bytes,pos,4).int else -1
+            if(len!=-1) require(len in 1..MAX_RECORD) { "Corrupt LEX4 record length" }
+            if(len==-1 || remaining<4+len+32) {
+                require(allowTornTail) { "Truncated LEX4 ledger" }
+                break
+            }
+            val payload=bytes.copyOfRange(pos+4,pos+4+len)
+            val next=link(hash,payload)
+            require(MessageDigest.isEqual(next,bytes.copyOfRange(pos+4+len,pos+4+len+32))) { "LEX4 record checksum mismatch" }
+            try {
+                val input=DataInputStream(ByteArrayInputStream(payload))
+                when(input.readByte()) {
+                    PUT -> readRecord(input).let { state[it.id]=it }
+                    DEL -> require(state.remove(input.readUTF())!=null)
+                    else -> throw IllegalArgumentException("Unknown LEX4 op")
+                }
+                require(input.available()==0)
+            } catch(e:IOException) { throw IllegalArgumentException("Invalid LEX4 record",e) }
+            require(state.size<=FileLearningExperienceStore.MAX_RECORDS)
+            hash=next;pos+=4+len+32;records++
+        }
+        return LogState(state.values.toList(),hash,records,pos.toLong())
+    }
+
+    private fun writeRecord(out:DataOutputStream,e:LearningExperience) {
+        out.writeUTF(e.id)
+        out.writeUTF(e.type.name);out.writeUTF(e.provenance.name)
+        out.writeUTF(e.trust.name);out.writeUTF(e.status.name)
+        writeString(out,e.content)
+        writeNullable(out,e.annotation);writeNullable(out,e.sourceRef)
+        out.writeUTF(e.contentHash);out.writeLong(e.createdAt);out.writeLong(e.updatedAt)
+    }
+    private fun readRecord(input:DataInputStream)=LearningExperience(
+        id=input.readUTF(), type=LearningExperienceType.valueOf(input.readUTF()),
+        provenance=LearningProvenance.valueOf(input.readUTF()), trust=LearningTrustClass.valueOf(input.readUTF()),
+        status=LearningStatus.valueOf(input.readUTF()), content=readString(input),
+        annotation=readNullable(input), sourceRef=readNullable(input), contentHash=input.readUTF(),
+        createdAt=input.readLong(), updatedAt=input.readLong())
+
+    /** Decodes LEX2, LEX3 (snapshot) or LEX4 (strict: no torn tail accepted). */
     fun decode(bytes:ByteArray):List<LearningExperience> {
+        if(isLog(bytes))return decodeLog(bytes,allowTornTail=false).items
         require(bytes.size in 40..MAX_BYTES)
         val payload=bytes.copyOfRange(0,bytes.size-32)
         val checksum=bytes.copyOfRange(bytes.size-32,bytes.size)

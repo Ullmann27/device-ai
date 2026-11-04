@@ -93,6 +93,8 @@ class ContinuumOwnerFactTest {
     @Test fun corruptPrimaryCannotResurrectARevokedFactFromAnOlderBackup() = withCore { core, dir ->
         val fact="Mein Hund heißt Bello."
         core.confirmOwnerFact(fact)
+        // LEX4 appends without rewriting; an older generation (here: pre-revocation copy) is the LKG scenario.
+        ledger(dir).copyTo(File(dir,"learning-core-v2/experiences-v2.lkg"))
         core.revokeOwnerFact(fact)
         val backup=File(dir,"learning-core-v2/experiences-v2.lkg")
         val beforeBackup=backup.readBytes()
@@ -108,6 +110,8 @@ class ContinuumOwnerFactTest {
     @Test fun missingPrimaryWithAnOlderBackupCannotStartAnEmptyLedger() = withCore { core, dir ->
         val fact="Mein Hund heißt Bello."
         core.confirmOwnerFact(fact)
+        // LEX4 appends without rewriting; an older generation (here: pre-revocation copy) is the LKG scenario.
+        ledger(dir).copyTo(File(dir,"learning-core-v2/experiences-v2.lkg"))
         core.revokeOwnerFact(fact)
         assertTrue(File(dir,"learning-core-v2/experiences-v2.lkg").isFile)
         assertTrue(ledger(dir).delete())
