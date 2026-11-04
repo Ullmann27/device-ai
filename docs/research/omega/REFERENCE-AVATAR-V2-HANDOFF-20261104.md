@@ -42,6 +42,12 @@ Die Kugelwahl und vorhandene ausdrückliche Darstellungspräferenzen bleiben bes
 - Bekannter unabhängiger GLB-Befund `rig_hierarchy_orientation` bleibt offen. Eine Materialableitung darf ihn weder als behoben ausgeben noch die Prüfgrenzen lockern.
 - Native Filament-Pixel, Fold7 offen/geschlossen, hörbare Sprache/Lippensynchronität, Laufzeit unter Inferenz und Besitzerabnahme der Referenztreue: **NOT_RUN**.
 
+## Gesicherte zweidimensionale Gestaltungsquelle
+
+`assets/avatar/reference/continuum-neural-front-20261104.png` bewahrt die mit `image_gen.imagegen` anhand der Besitzervorlage erzeugte frontale Gestaltungsansicht als tatsächlichen Eingang für die geplante UV-Atlasableitung. Das PNG hat 1086 × 1448 Pixel, RGBA, 1.944.527 Bytes und SHA256 `0ca742ef92bb9db1bd012df7677594c37b58e77c40e4fc92a946e8e0fb886b1e`. PNG-Integrität und bytegleiche Übernahme wurden geprüft.
+
+Die benachbarte Datei `continuum-neural-front-20261104.provenance.json` dokumentiert Erzeugungsart, Besitzerreferenzhash und Verwendungszweck. Dies ist **erzeugte 2D-Gestaltung**, kein Render eines bereits gebauten 3D-Modells und keine Android-/Fold7-Abnahme. Die exakten Pixel sind als reproduzierbarer Ableitungseingang gesichert; eine identische erneute Bildgenerierung wird nicht vorausgesetzt. Das Runtime-Asset bleibt in diesem Checkpoint unverändert.
+
 ## Nächster konkreter Schritt
 
 1. Den von der Gestaltung gelieferten Kandidaten einfrieren: tatsächliche Dateigröße, SHA256, Geometrie-/Rig-/Morphherkunft und abweichende Materialien erfassen.
