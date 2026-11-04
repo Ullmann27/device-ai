@@ -1,0 +1,26 @@
+{
+  "base_commit": "9e84803cc1907d9618669ab039b1fd667ab5b207",
+  "fix_commit": "652e6e30e63a427546c6a30988906c351406be25",
+  "geometry_original_blobs": {
+    "ContinuumHomeLayout.kt": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+    "ContinuumLandscapeCockpitLayout.kt": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+    "ContinuumReferenceLayout.kt": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+    "JarvisCockpitGrid.kt": "717aee7ec7d841286c76c89e4a6eada0a00d5667",
+    "JarvisShellLayout.kt": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+    "JarvisWindowProfile.kt": "e875023c009128c865581fd3e8c3a18669e18c77"
+  },
+  "fixed_landscape_blob": "245c8c94abdadbe065138561d2c9a2901456b3c2",
+  "test_helper_blob": "5ca3700d084a3914fba23526ef9309b02cc3f0fc",
+  "junit_wrapper_blob": "cae7403e7291b61cf435679c03c4e6a0756a2503",
+  "geometry_configurations": 10,
+  "compared_boxes": 270,
+  "changed_bottom_edges": 3,
+  "avatar_boxes_identical": 10,
+  "red_precision_exit": 1,
+  "green_precision_exit": 0,
+  "red_checks": {"pass": 1, "fail": 2},
+  "green_checks": {"pass": 3, "fail": 0},
+  "android_suite": "NOT_RUN",
+  "configured_lint": "NOT_RUN",
+  "device": "NOT_RUN"
+}

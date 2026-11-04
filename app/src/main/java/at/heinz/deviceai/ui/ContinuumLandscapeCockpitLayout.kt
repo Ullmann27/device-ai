@@ -97,9 +97,13 @@ object ContinuumLandscapeCockpitLayout {
 
         // Centre: presentation pills on top, the avatar slot below them
         val pillWidth = (avatar.width - 2 * 6f) / 3f
+        // Round outward; preserve hero bounds.
+        val pillBottom = (avatar.top + TARGET).let { bottom ->
+            if (bottom - avatar.top < TARGET) Math.nextUp(bottom) else bottom
+        }
         listOf(Slot.VIEW_AVATAR, Slot.VIEW_ORB, Slot.VIEW_COMPACT).forEachIndexed { i, slot ->
             val l = avatar.left + i * (pillWidth + 6f)
-            boxes[slot] = Box(l, avatar.top, l + pillWidth, avatar.top + TARGET)
+            boxes[slot] = Box(l, avatar.top, l + pillWidth, pillBottom)
         }
         boxes[AVATAR_SLOT] = Box(avatar.left, avatar.top + TARGET + 6f, avatar.right, avatar.bottom)
         boxes[Slot.COMPOSER] = input

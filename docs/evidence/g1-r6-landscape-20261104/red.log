@@ -1,0 +1,4 @@
+FAIL strictRegression VIEW_AVATAR: Box(left=323.35333, top=51.487095, right=422.17148, bottom=99.48709)
+FAIL legacyMatrix 832.0/700.0/1.0 VIEW_AVATAR: Box(left=323.35333, top=51.487095, right=422.17148, bottom=99.48709)
+PASS unchangedHeroBounds
+checks=3 failed=2
