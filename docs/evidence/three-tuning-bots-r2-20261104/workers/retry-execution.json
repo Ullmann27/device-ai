@@ -1,0 +1,11 @@
+{
+  "startedAt": "2026-11-04T19:51:21.316447+00:00",
+  "loadBefore": "7.45 10.32 8.59 5/804 5",
+  "authorization": "one explicit root RETRY_START after host-load abort",
+  "sourceAndHarnessFrozen": true,
+  "exitCode": 0,
+  "finishedAt": "2026-11-04T19:51:36.987787+00:00",
+  "loadAfter": "6.85 10.05 8.52 4/887 17",
+  "stdoutBytes": 105765,
+  "stderrBytes": 0
+}

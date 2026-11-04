@@ -1,0 +1,14 @@
+{
+  "status": "PERFORMANCE_UNVERIFIED",
+  "exitCode": 1,
+  "observedLoad1": 17.8,
+  "unchangedMaxLoad": 9,
+  "stdoutBytes": 0,
+  "candidateSourceSha256": "7d807cbceb56ca56c12da2eca5466f0ad56aea1f1c0e86538e275d259c90b89d",
+  "harnessSha256": "94e7bffc3cbbaf9fcb1817018e021a8c5f4b81317ccc112c1364916b3f7f3b3c",
+  "fixturesSha256": "70b37c1439332a012bde48d7b126f6ecab58049f7167f8f2549ed453189408cc",
+  "timingAndCountingTailSha256": "dd082cf60a85378514f3e9cab98afce5cc054b8542610e3425709089dd0a62ac",
+  "timingAndCountingTailIdenticalTo": "612c64bac01c898a1c5862a55747e317cb5f767d",
+  "completedTimingRows": "not recoverable from empty buffered output",
+  "retryRequiresRootStart": true
+}
