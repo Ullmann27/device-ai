@@ -47,3 +47,9 @@ Stand: 2026-11-03 14:42 CET, Host-JVM (JDK 17.0.21, Gradle-Wrapper, --no-daemon)
 - Rollierende Sicherung bak1/bak2: bei jedem vollständig verifizierten Öffnen (Cache-Miss) und alle 256 Anhänge.
 - Schreib-p95 100/1000/4000: vorher 0,47–0,60 / 1,7–1,8 / 4,4–4,9 ms; nachher 1,04–4,25 / 1,97–4,52 / 6,0–8,2 ms (2 Läufe, starkes Rauschen; der Pro-Anhang-Pfad hat nur einen Zähler mehr).
 - Volle Unit-Suite: **1832 Tests, 0 Fehler, 5 übersprungen**.
+
+## Update 2026-11-04 (M2.11–M2.12)
+- M2.11 ContinuumMemoryEvents: RED 7 (Kompilier-RED, 74b73626) → GREEN 7/7 (63611a75): MemoryStored inkl. HYPOTHETICAL (Lotto), DocumentLearned (Knowledge-Archiv), RecallHits mit gesalzenem Hash, nichts nach close(), werfender Listener stört Ledger nicht, kein Klartext, Zustellung nicht auf Aufrufer-Thread, eine Instanz pro kanonischem Pfad.
+- M2.12: RED 3 (Kompilier-RED, 37e37676) → GREEN 3/3 (5a84142e): Report übersteht Neustart ohne Inhalte; Quarantäne-IO-Fehler → Laden klappt, Report vermerkt, Schreiben abgelehnt bis Reparatur; Sicherungs-IO-Fehler blockiert Öffnen nicht.
+- Schreib-p95 100/1000/4000: 1,41 / 2,09 / 4,56 ms (1 Lauf).
+- Volle Unit-Suite: **1842 Tests, 0 Fehler, 5 übersprungen**.

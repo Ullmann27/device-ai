@@ -213,3 +213,24 @@ class ContinuumMemoryStatsReader(appDirectory:File, clock:Clock = Clock.system(Z
 **LEX3:** Ledger-Format versioniert (Magic `LEX3` + Version 3), Kapazität 4096 statt 256, max. 48 MiB. LEX2-Dateien (≤256) werden verlustfrei gelesen und beim nächsten Schreiben nach LEX3 migriert; die LKG-Sicherung behält die alte LEX2-Generation. `PersonalLearningTransfer.inspectDocument` akzeptiert LEX2 und LEX3.
 
 **PR #477 (ChatGPT):** nur Docs (`REFERENCE-COCKPIT-HANDOFF-20261104.md`, `device-experience-20261104/PLAN.md`), kein Gedächtnis-Code; dort explizit „No parallel memory“. Keine Überschneidung/Konflikt; das Cockpit soll seine Gedächtniszahlen aus `ContinuumMemoryStatsReader` beziehen.
+
+## 12. Übergabe an Jarvis Kern: ContinuumMemoryEvents (M2.11)
+
+Signatur exakt nach Kern-Vorgabe in `learning/ContinuumMemoryEvents.kt` (neben `ContinuumMemoryStatsReader`), plus Companion `ContinuumMemoryEvents.forApp(appDirectory)` (kanonischer Pfad = Schlüssel, eine Instanz pro App-Verzeichnis).
+
+Auslöser (nur echte Aufrufe):
+| Ereignis | Ort | Inhalt |
+|---|---|---|
+| `MemoryStored` | `FileLearningExperienceStore.save` (alle Ledger-Schreibwege: append, appendMissing, updateStatus, Korrekturen, Recovery-Salvage) | `entryId` = Ledger-ID `lx-…`, Status, `atEpochMs` = `updatedAt` |
+| `DocumentLearned` | `ContinuumKnowledgeArchive.save` (neuer Quelltext, `kind` = Archiv-Kind, 1 Eintrag) und `importZip` (`kind` = `ARCHIVE_IMPORT`, `docId` = SHA-256 der neuen Record-IDs, Anzahl neu) | nur IDs |
+| `RecallHits` | `EventEmittingRetriever.search` (`ContinuumMemoryRetriever.default(appDirectory = …)`; ThinkingMemory nutzt das) | `queryHash` = SHA-256(Salt ‖ Frage), Salt 32 Byte zufällig in `learning-core-v2/.memory-event-salt`, nie im Ereignis; Rang ab 1 |
+
+Kein PDF-Importpfad im Repo gefunden; der echte Dokument-Import ist das Knowledge-Archiv. `learnFromSources` meldet über `MemoryStored`.
+Status: REVOKED/REJECTED → REVOKED; gehalten mit Modalität HYPOTHETICAL → HYPOTHETICAL; CONFIRMED nur bei Besitzer-Vertrauen; sonst UNCONFIRMED. Hypothesen nie CONFIRMED.
+Zustellung: eigener Daemon-Single-Thread pro App-Verzeichnis, nie auf dem Aufrufer-Thread; Listener-Exceptions werden gefangen und geloggt; nach `close()` keine Zustellung mehr (auch nicht für bereits eingereihte Ereignisse). Ohne Listener entstehen keine Kosten (kein Diff, keine Hash-Berechnung).
+
+## 13. Ledger-Recovery: Persistenz, IO-Fehler, offene Punkte (M2.10/M2.12)
+
+- `LedgerRecoveryReport` wird als `experiences-v2.recovery.properties` (nur Metadaten: Offsets, Zähler, Pfade, fester Grundtext, Fehlerklassen) neben dem Ledger abgelegt; `lastRecovery()` liest ihn nach Neustart wieder.
+- Scheitert Sicherung, Quarantäne oder Report-Datei (voll/schreibgeschützt), wird nur das geloggt bzw. in `sideEffectFailures` vermerkt; das Laden klappt trotzdem. Konnte die Quarantäne nicht geschrieben werden, bleiben die beschädigten Bytes in der Hauptdatei, und Schreibzugriffe werden mit `IOException` abgelehnt, bis die Quarantäne beim nächsten Öffnen gelingt (keine Beweise überschreiben).
+- Offen (nur dokumentiert): Quarantäne-Dateien werden nie automatisch aufgeräumt (Vorschlag: Owner-Aktion „Quarantäne prüfen/löschen“ mit Report-Anzeige); bei Wiederherstellung aus einer Sicherung gehen spätere Bestätigungen verloren (nur Widerrufe werden restriktiv übernommen); in einem lange laufenden Prozess wird die Sicherung nur alle 256 Anhänge erneuert; bei leerem gültigem Präfix ohne Sicherung startet das Gedächtnis leer (Daten nur in Quarantäne); Report hält nur die letzte Recovery.
