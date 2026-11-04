@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "observedUtc": "2026-11-04T19:00:04.307937+00:00",
+  "status": "INDEPENDENTLY_REPRODUCED_WITH_UPSTREAM_GATE_DEFECT",
+  "baselineSourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "publicationStartCommit": "57d939a390d6b5a2fd197681aa78606b4f8b8e18",
+  "newModelOrTrainingProcesses": 0,
+  "holdoutEvaluation": false,
+  "sourcesSha256": {
+    "analyze_archived_eos.py": "4167f655fe779d10f3ee690c9c6581fd59acb8292b886a8b8973e62cea4fa57a",
+    "training-input-audit/audit_training_inputs.py": "2f70417c95ce79d3e1ec257b25266cca360b2d01a2bba07f30e79bb831e0158b",
+    "independent-gate/probe_pr508_post_capacity.py": "2bae5a579fa2bd078f3c03780bed8057cc0da3c1d328077321adc16af09ed4dd",
+    "independent-gate/fixtures/pr508-def5acf9-run_registered_study.py.txt": "409f87f5a174804d7290c29972d6b4e2bbb19ad293ac1da027122c3f28d14d4f"
+  },
+  "results": [
+    {
+      "check": "archived_eos",
+      "exitCode": 0,
+      "pairs": 16,
+      "sameAsHelper": true
+    },
+    {
+      "check": "training_targets",
+      "exitCode": 0,
+      "sameAsHelperExceptObservationTime": true,
+      "targets": 3255,
+      "contentTargets": 3229,
+      "eosTargets": 26,
+      "bosTargets": 0
+    },
+    {
+      "check": "post_capacity_gate",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "status": "RED_REPRODUCED",
+      "positiveOrTamperControlsPassed": 4,
+      "missingOrMalformedGateCasesFailed": 2,
+      "sameAsHelperExceptObservationTimeAndTemporaryFixtureFreezeHashes": true
+    }
+  ],
+  "comparisonNote": "Initial exact JSON comparison exposed only independently generated observation timestamps and freeze hashes containing temporary fixture paths. These fields were explicitly normalized for comparison; all source identities, case outcomes and measurements match. No model process or additional test rerun was needed.",
+  "rawVerificationFilesSha256": {
+    "archive_eos.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive_eos.stdout.txt": "75e57c0aed6a2a77bfc9d5de8cca1cd7eaa3ab1fc07c56a96a9003e057098a88",
+    "post_capacity_gate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "post_capacity_gate.stdout.txt": "4e0b06f009e61fee2b0b6d5f03dac37cabef8d0aa02a30e1921bdc84e31ca8ec",
+    "root-gate-reproducer.json": "576eb7a4e49d8650b16b36079129addb602d750225201d38f50a26269654ea09",
+    "root-target-replay.json": "93385cf409735ae5324235bb3e2300aa1e2bd811eda11760b91076a85ce9091d",
+    "training_targets.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "training_targets.stdout.txt": "11fb0dd736cee9cd389a82c98d5fa5edf2011d97f8df14e7ceba64e7114c34f1"
+  },
+  "rawVerificationDirectory": "root-reproduction"
+}

@@ -1,0 +1,755 @@
+{
+  "schemaVersion": 1,
+  "scope": "RESEARCH_SHADOW",
+  "status": "VERIFIED_ARCHIVED_LOG_FINDINGS",
+  "sourceCommit": "30cd3a89810ed14fa84eca95236d3177e016118d",
+  "analyzerSha256": "4167f655fe779d10f3ee690c9c6581fd59acb8292b886a8b8973e62cea4fa57a",
+  "newModelProcesses": 0,
+  "newTrainingProcesses": 0,
+  "holdoutFilesRead": 0,
+  "checkpointBinariesRead": 0,
+  "archivedExecutionPairsChecked": 16,
+  "profiles": {
+    "core-6562304": {
+      "baseline": {
+        "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "parameters": 132160,
+        "capacity": {
+          "pass": true,
+          "reasons": "NONE",
+          "trials": 8,
+          "immediateEos": 0,
+          "completeWorkload": 8
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "width-8": {
+        "checkpointSha256": "4773ebb7c5f98b081a06abc54f7b73e302ccd563bb76b3bf394c04e6aad000bd",
+        "parameters": 6562304,
+        "capacity": {
+          "pass": true,
+          "reasons": "NONE",
+          "trials": 8,
+          "immediateEos": 0,
+          "completeWorkload": 8
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "continued-small": {
+        "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+        "parameters": 132160,
+        "capacity": {
+          "pass": false,
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "trials": 8,
+          "immediateEos": 8,
+          "completeWorkload": 0
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "continued-expanded": {
+        "checkpointSha256": "8fd24c8fcc273bb46faa4a994c31dcd6d0cf7e6964942ef33aa1c4c782d42384",
+        "parameters": 6562304,
+        "capacity": {
+          "pass": false,
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "trials": 8,
+          "immediateEos": 8,
+          "completeWorkload": 0
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    "core-9712128": {
+      "baseline": {
+        "checkpointSha256": "7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd",
+        "parameters": 132160,
+        "capacity": {
+          "pass": true,
+          "reasons": "NONE",
+          "trials": 8,
+          "immediateEos": 0,
+          "completeWorkload": 8
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "depth-3": {
+        "checkpointSha256": "5e2332b0c15646b574d9c3f8cf48378f13eed1daaed7e652328588eedae85950",
+        "parameters": 9712128,
+        "capacity": {
+          "pass": true,
+          "reasons": "NONE",
+          "trials": 8,
+          "immediateEos": 0,
+          "completeWorkload": 8
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "MAX_TOKENS",
+            "tokens": 32,
+            "correct": false,
+            "loggedTextSha256": "df94950e56efb701f94f403841e754eff9c11ac5fd52060aa7cc9b7d1632cbcf"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "continued-small": {
+        "checkpointSha256": "7e6d136d6b31b8f7e9839b344be39a38d0f00146286b315a04ecfb4c4997b91e",
+        "parameters": 132160,
+        "capacity": {
+          "pass": false,
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "trials": 8,
+          "immediateEos": 8,
+          "completeWorkload": 0
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "continued-expanded": {
+        "checkpointSha256": "49a6ef6d9e710cd1fcc407e1aa9b4a72a5a7a205be5bd8ccf9e2d2093e9568f0",
+        "parameters": 9712128,
+        "capacity": {
+          "pass": false,
+          "reasons": "NO_FIRST_TOKEN_OBSERVATION,INCOMPLETE_32_TOKEN_WORKLOAD",
+          "trials": 8,
+          "immediateEos": 8,
+          "completeWorkload": 0
+        },
+        "instructionProbes": [
+          {
+            "index": 0,
+            "prompt": "Berechne 17 mal 24. Antworte nur mit der Zahl.",
+            "expected": "408",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 1,
+            "prompt": "Berechne 2 plus 3. Antworte nur mit der Zahl.",
+            "expected": "5",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 2,
+            "prompt": "Antworte nur mit dem Wort Hallo.",
+            "expected": "Hallo",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 3,
+            "prompt": "Antworte nur mit dem Wort fertig.",
+            "expected": "fertig",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 4,
+            "prompt": "Welche Zahl folgt auf 9? Antworte nur mit der Zahl.",
+            "expected": "10",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "index": 5,
+            "prompt": "Schreibe das Wort Haus in Kleinbuchstaben. Antworte nur mit dem Wort.",
+            "expected": "haus",
+            "stop": "EOS",
+            "tokens": 0,
+            "correct": false,
+            "loggedTextSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "immediateEosProbeIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    }
+  },
+  "instructionTransitions": [
+    {
+      "profile": "core-6562304",
+      "before": "baseline",
+      "after": "continued-small",
+      "alreadyImmediateEos": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "afterImmediateEos": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "newImmediateEos": [
+        2,
+        3
+      ]
+    },
+    {
+      "profile": "core-6562304",
+      "before": "width-8",
+      "after": "continued-expanded",
+      "alreadyImmediateEos": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "afterImmediateEos": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "newImmediateEos": [
+        2,
+        3
+      ]
+    },
+    {
+      "profile": "core-9712128",
+      "before": "baseline",
+      "after": "continued-small",
+      "alreadyImmediateEos": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "afterImmediateEos": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "newImmediateEos": [
+        2,
+        3
+      ]
+    },
+    {
+      "profile": "core-9712128",
+      "before": "depth-3",
+      "after": "continued-expanded",
+      "alreadyImmediateEos": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "afterImmediateEos": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "newImmediateEos": [
+        2,
+        3
+      ]
+    }
+  ],
+  "established": [
+    "The original and expanded initial checkpoints already stop immediately on four of six instruction prompts.",
+    "All four trained candidates stop immediately on the fixed capacity prompt and on all six instruction prompts.",
+    "The small unexpanded control also changes the two previously nonempty instruction outputs to immediate EOS.",
+    "The observed failure therefore does not require width expansion."
+  ],
+  "notEstablished": [
+    "The training loss or EOS-target fraction caused the observed change.",
+    "Any particular optimizer or runtime defect caused the observed change.",
+    "The models stop immediately on every possible prompt.",
+    "EOS margins or probabilities before and after training; these are absent from the archived logs."
+  ],
+  "evidenceSha256": {
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt": "210606a253650d2268e642ab0edc876aedc90eba2adddc1ac7b8c35eb013e0c2",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt": "abb4b50cc443344aefe720844aad4a9ca3e3d967973cc31a4e45ca07b732f099",
+    "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt": "a5497f18d09be50f7afbd201d54d97f012f7508f8c53c834ff6c10ef278290ab",
+    "experimental/weight-space-20261104/LmWeightExperiment.kt": "5af9ba78209873de3588a3f18ab0e2e6e5d76d8bc85652c1b7fc82651bb0ff68",
+    "experimental/weight-space-20261104/LmCapacityBenchmark.kt": "d88541b436089b6df04f50035cffa79378b939dabbf03ef77a9ca1acd52bbd9c",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-capacity.tsv": "1833dcf27936335fc1517a60e3ead64c0352843018e5e9efdaa68ffd5eadaaa4",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-capacity.receipt.json": "47650a17ca07bb8b752f7fd83deaa548248e3415b1aeb71ac154be9b8861752c",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-probes.tsv": "394241dd1601a66d9d8f3cbd0d41466db56e7d34c680806d55252971b27cc84f",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/baseline-probes.receipt.json": "0654b0ec386c33c72f46ae86447f6fa17dad8a85e18ba30b5cc5b58cb895c990",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-capacity.tsv": "9adc01bcb5a86734c01ee321d5a68b899de684f53ce8fc9e6490c15f35c585a4",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-capacity.receipt.json": "7a2c88684561ead5f7028e0c86f78234c84d3f8ef984a9ea88226812b9a9c783",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-probes.tsv": "2b1e3463fa07d5c5c57dd3a449e16a2d08f349500276442b919115b0841b5420",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/width-8-probes.receipt.json": "3a27187b6a20ab673bf1a3a512a83471f8644aa332135b9a6c6d13fab625f007",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-capacity.tsv": "977a3da218f6e10ee2bbbb9533772b91c254323fea8d3c1d846b1090b1d1c0c2",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-capacity.receipt.json": "decdf7684c32dd21e39d01c15029926676bb27f5a5dbf13b3113b59c90879641",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-probes.tsv": "fa68c360ece12fa538e6afefa182e1ad66f82e6d8cb95126c431214ee6bb5bbc",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-small-probes.receipt.json": "1029c779b4de12b94a6cf2c9459e53536acd2c03044db0f08952f77ad3bb914e",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-capacity.tsv": "b182e6bbeb183a8f26680983ea8006e1562291f1c8ed4322197719e5fd27fd78",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-capacity.receipt.json": "6b7ec203ffe2b68d2533bc4f3291be0a6233db4931cfefeca0235dcaebee2066",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-probes.tsv": "7017bf32cab3897b2d67671a0ae0dbea72d5ae655e592ce0e983cf6a5216edec",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-6562304/logs/continued-expanded-probes.receipt.json": "7dc26964c4d14ab1f180952c1eafd3d9ed07eb7ceca51d03692a524975e47852",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-capacity.tsv": "2d08582f5bfaf2815cc3b2005e487853417ac78bf2708619808c2115520859e1",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-capacity.receipt.json": "3048d467ea28440eedebbc0a0a7cbdcd14ae13b9dd142a3156d7c124f9168961",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-probes.tsv": "9b2c06041c9368dc68fdb279bdbe8235b8f239659dd728b4dd78605c3ee9c8a8",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/baseline-probes.receipt.json": "fb1202f15df650e22b544e9e35b3ff54c0c8822429a0c1456115b9f61bbe5db6",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-capacity.tsv": "24716a365d0e848badfafb108bb1bde35d618e00b4ce62d3fb3a598f190cff6e",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-capacity.receipt.json": "8376da38b9a2223048936f5c53e53b4d5b0175dc0b6e81c95262902cab4ec719",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-probes.tsv": "6e27a2c7b3d3141597de4859597370ec44f34af56d699b2bcf4a61b47f302522",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/depth-3-probes.receipt.json": "c4ecac49b46419e85c88a7457a80a9deb839bc0f1babdd7fcb1c319c248c15e9",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-capacity.tsv": "36ac698d8260c67ce269d474d3dbde987331e884f8a3c05ded10c8932f8a8089",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-capacity.receipt.json": "6ec35a928cffc94f6e38206040589b6afb21ac7e713ee8ac1381c3868e4aba2e",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-probes.tsv": "8dd69508fc1e413350e17441fe41ec00c5c6a6ada58fed9c019a61dec44d88ce",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-small-probes.receipt.json": "c44818f6a29177fc3de7ca133dd7683041714ce1f3e41a3753c62ab8361a9406",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-capacity.tsv": "cbb7697d67f37bbce919d0f925e03d21f484fc2f82e1848a77448042174c9f47",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-capacity.receipt.json": "d8ba321acb03634f3de262e1d11e6d2fcebc3fa93fe8ef4b2485a3692dd71b1d",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-probes.tsv": "50aa28017eba4697e4fc95fd71b7b396f2ab6e7181caa6fe21106224baf73850",
+    "experimental/weight-space-20261104/core-6-10m-evidence/run/core-9712128/logs/continued-expanded-probes.receipt.json": "db263db8d350977b3206915d017f818ea191d5c555d353c91d5d659647531479"
+  }
+}
