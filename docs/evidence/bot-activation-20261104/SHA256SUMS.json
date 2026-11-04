@@ -1,0 +1,157 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 1896,
+    "sha256": "f9b64e0493cabd8771fb996c0f1b739423830100e72c06d710d36b0ebb0acac7"
+  },
+  {
+    "path": "avatar/AvatarCameraPolicyTest.command.json",
+    "bytes": 695,
+    "sha256": "8c6be47250bc75d3c4c22d671f80ecf4a5c243ec57fdc12c55aa156c4c878d19"
+  },
+  {
+    "path": "avatar/AvatarCameraPolicyTest.log",
+    "bytes": 67,
+    "sha256": "816b2c5b6f42d1518f970dc61037a6234ea923dca79befa279351dbbafca2afa"
+  },
+  {
+    "path": "avatar/AvatarDirectorTest.command.json",
+    "bytes": 688,
+    "sha256": "872d2df6f634a12e0b7c0964583699cafefe3dc9e2c942addc787da7efe82742"
+  },
+  {
+    "path": "avatar/AvatarDirectorTest.log",
+    "bytes": 53,
+    "sha256": "2b4c2b9109c954f6396f1d254a8544269a8d6790a0ecde7b997b97678b688ad7"
+  },
+  {
+    "path": "avatar/AvatarObservedGazeTest.command.json",
+    "bytes": 692,
+    "sha256": "230ba0acd4959d4373823ced2ddb7df827c33c76a4f1ddc0e27c392d112b9d3c"
+  },
+  {
+    "path": "avatar/AvatarObservedGazeTest.log",
+    "bytes": 62,
+    "sha256": "a92bafe239c07b2860fd063b44210447d0f22816fc93025abcea3bc2aeaef9a4"
+  },
+  {
+    "path": "avatar/AvatarPortedPartsTest.command.json",
+    "bytes": 691,
+    "sha256": "0c7b83e88fad38d6af779aa889842e9066675f878d570d199f7c2ebbb4eb945d"
+  },
+  {
+    "path": "avatar/AvatarPortedPartsTest.log",
+    "bytes": 52,
+    "sha256": "902fed7f78b229232f746a5a6c63a44bb578918695d062dae7cff4500347fb26"
+  },
+  {
+    "path": "avatar/AvatarSpeechOrderingRegressionTest.command.json",
+    "bytes": 704,
+    "sha256": "2d0faf49bf649cebe7cc795f5d313d9f0967a9941ab47eb06ea9ce94b1370d95"
+  },
+  {
+    "path": "avatar/AvatarSpeechOrderingRegressionTest.log",
+    "bytes": 60,
+    "sha256": "bfb960f85f50bcefa0c7f886c07b1c9b5ec37d3ca88bb31310a7a355721de929"
+  },
+  {
+    "path": "avatar/LipSyncFaceSourceTest.command.json",
+    "bytes": 691,
+    "sha256": "4fb71ad2eb1ed79b43109e6aeafc6ab9dc309cccaa3138cdb591bf3c4783f910"
+  },
+  {
+    "path": "avatar/LipSyncFaceSourceTest.log",
+    "bytes": 58,
+    "sha256": "ecf73396b5bf0dbf0baacdb1afe91368b1e216f4f5b0d8248c99366ceaaafa84"
+  },
+  {
+    "path": "avatar/MotionLibraryTest.command.json",
+    "bytes": 687,
+    "sha256": "0fcd1dbcbbe669c96b436b2da1301d68d13d03817d7f73f6d748f58e9461b234"
+  },
+  {
+    "path": "avatar/MotionLibraryTest.log",
+    "bytes": 51,
+    "sha256": "dd48bc1a3dc6419dc7a06bee99acac18d0e08ca48be76a39ad022c37e2756b82"
+  },
+  {
+    "path": "avatar/README.md",
+    "bytes": 5330,
+    "sha256": "6862030d1dee4046fefc6db0736e7b818ce52b89e76c72d234dbc5f0fc83b4e0"
+  },
+  {
+    "path": "avatar/compile.command.json",
+    "bytes": 3204,
+    "sha256": "14e847dbb4493b600d3f862bbb7dc253d6203bb0f8c8b62e3d8e81c7406b7bb9"
+  },
+  {
+    "path": "avatar/compile.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "avatar/result.json",
+    "bytes": 5021,
+    "sha256": "5853560e0c2f1fe3aa5ae43a9a9a15850b4c2967b0679b483730e71d3d015797"
+  },
+  {
+    "path": "avatar/run_existing_avatar_tests.py",
+    "bytes": 4753,
+    "sha256": "0da4f026de9f846c7b66f0a73ef94610f81538f70fb6c1202deb8da8ac3830a8"
+  },
+  {
+    "path": "coordinator/host-readiness.json",
+    "bytes": 2217,
+    "sha256": "9f2edf7467c4d74bbd0b1fae73f4f2a8d1df2c37acc6c8bbdc1ecc3fbd975ec1"
+  },
+  {
+    "path": "coordinator/source-and-output-crosscheck.json",
+    "bytes": 155,
+    "sha256": "b8ccc6c8120dd0dbe52b3cb576fda8e347f795715d05564782bf105e4f05e001"
+  },
+  {
+    "path": "coordinator/task-plan.json",
+    "bytes": 5072,
+    "sha256": "914374b3c9f82d0d0f4b581a42b67fe9e581ed71103bf9893ca0b2570fe7b29f"
+  },
+  {
+    "path": "historical-known-u03-review.json",
+    "bytes": 702,
+    "sha256": "36c2e09b910070567d1595423d214bc21e95e19d5e7bd0378cb0e4bc83cba0fa"
+  },
+  {
+    "path": "implementation/coding-service-and-teamleader.exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  {
+    "path": "implementation/coding-service-and-teamleader.raw.log",
+    "bytes": 2915,
+    "sha256": "d53efa02f36b0f41e7f4d5063a98028a990c583f9b6804fbb497c02bb9dc07c3"
+  },
+  {
+    "path": "implementation/coding-service-and-teamleader.result.json",
+    "bytes": 676,
+    "sha256": "17f93e49132b92cd29bebd9dfcb8e44ddfefe7f54b439f0fb51973b2bd60c83a"
+  },
+  {
+    "path": "repair/bot-assignment-report.exit.txt",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  {
+    "path": "repair/bot-assignment-report.metadata.json",
+    "bytes": 764,
+    "sha256": "9262488138eac18cf061c28c5bc8c7d8e6111d3d95feb761cff8f1aa359db5ac"
+  },
+  {
+    "path": "repair/bot-assignment-report.tap",
+    "bytes": 1604,
+    "sha256": "a2ff00fabfb45526200f78362bb1434829cd9c51f49e2fd3cf4aebd2ecbe2a0e"
+  },
+  {
+    "path": "summary.json",
+    "bytes": 1495,
+    "sha256": "7bb3b16c98657c7a3da7d3b6838e16f453d4ab1699afc56a7b77aa71cbfc356a"
+  }
+]
