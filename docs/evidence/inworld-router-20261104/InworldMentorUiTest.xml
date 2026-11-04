@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.InworldMentorUiTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-04T15:37:23" hostname="8c129114cae4" time="4.531">
+  <properties/>
+  <testcase name="cancellingQuestionDoesNotGrantAccessOrStartARequest" classname="at.heinz.deviceai.InworldMentorUiTest" time="3.661"/>
+  <testcase name="currentReplyIsLabelledExternalAndReleasesOnlyItsOwnRequest" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.126"/>
+  <testcase name="longQuestionKeepsItsTailVisibleAndCannotBeSilentlyTruncatedOrSent" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.162"/>
+  <testcase name="changedChatInvalidatesAnOpenConsentDialog" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.135"/>
+  <testcase name="lateResponseCannotClearAnotherSessionOrRequest" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.086"/>
+  <testcase name="oneQuestionDoesNotEnrolTopicsInAlreadyEnabledBackgroundResearch" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.183"/>
+  <testcase name="settingsEntryOpensInworldPairingWithoutAnApiKeyField" classname="at.heinz.deviceai.InworldMentorUiTest" time="0.177"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

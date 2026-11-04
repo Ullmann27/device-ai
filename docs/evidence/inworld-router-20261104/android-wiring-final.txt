@@ -1,0 +1,39 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (376.546803ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (875.112102ms)
+✔ background consolidation records failure without losing interrupted source trials (0.337657ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.471825ms)
+✔ activity request codes are unique and every one has a result handler (336.925161ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.894117ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (14.081315ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (948.399411ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (43.811695ms)
+✔ startup bootstrap training stops with the activity and is retried later (89.358007ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (172.962718ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (394.421763ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (174.492211ms)
+✔ Teamleader Android UI reports status without false success (59.262198ms)
+✔ live model status does not revert the beginner cockpit to English (51.793094ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (183.094886ms)
+✔ new visual start screen is local, accessible and honest about capabilities (161.925817ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (76.962095ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (1.156093ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.457924ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.524633ms)
+✔ mentor access remains encrypted on-device between app restarts (1.179437ms)
+✔ one 401 may renew a previously owner-approved pairing, never auto-enrol a new device (0.436874ms)
+✔ retry of pairing probe is bounded and never silently duplicates Groq questions (0.379599ms)
+✔ a new backend URL cannot inherit the previous backend bearer credential (0.164022ms)
+✔ development center gives an optional coding mentor with explicit question confirmation (0.993102ms)
+✔ responses and HTTP connections close without retrying failed work and secrets (0.25829ms)
+✔ external mentor has an explicit per-request consent UI (2.026145ms)
+✔ Android only sends bounded question text to the private backend (0.511954ms)
+✔ server never accepts mentor request without owner grant and bearer authentication (0.273983ms)
+✔ external reply is labelled unverified and cannot write memory or perform tools (0.628756ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4178.450118

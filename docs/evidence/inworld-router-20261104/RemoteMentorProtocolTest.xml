@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.RemoteMentorProtocolTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-04T15:37:27" hostname="8c129114cae4" time="0.017">
+  <properties/>
+  <testcase name="overlongQuestionsAreRejectedAsAWholeWithoutTruncation" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.003"/>
+  <testcase name="existingProvidersRetainTheSameRequestContract" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.003"/>
+  <testcase name="approvedQuestionIsTheOnlyPayloadBesidesProviderAndConsent" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.006"/>
+  <testcase name="toolAndMemoryPrivilegesAreRejectedIncludingCoercedBooleans" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.002"/>
+  <testcase name="unknownProviderNeverGetsARequestOrResponse" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.0"/>
+  <testcase name="onlyTheMatchingUnverifiedTextResponseIsPresented" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.0"/>
+  <testcase name="missingEmptyNontextAndOversizedAnswersFailClosed" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.0"/>
+  <testcase name="shortOrControlCharacterInputIsRejected" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.001"/>
+  <testcase name="wrongProviderOrTrustNeverReachesTheUser" classname="at.heinz.deviceai.RemoteMentorProtocolTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

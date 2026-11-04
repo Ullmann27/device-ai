@@ -387,6 +387,7 @@ class AgentActivity : Activity() {
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
     private var sessionId = UUID.randomUUID().toString()
+    private var activeInworldRequestId: String? = null
     private val sessionResetLifetime = java.util.concurrent.atomic.AtomicBoolean(true)
     private var busy = false
     private var activeLocalRequest = false
@@ -699,6 +700,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        activeInworldRequestId = null
         ownerRecoveryReview?.close()
         ownerRecoveryReview = null
         at.heinz.deviceai.cockpit.JarvisAvatarSlot.register(null)
@@ -2256,6 +2258,7 @@ class AgentActivity : Activity() {
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
             CenterAction("KI-MENTOR · OPENROUTER (EXTERN, OPTIONAL)") { showOpenRouterMentorDialog() },
+            CenterAction("INWORLD · EINZELFRAGE") { showInworldMentorDialog() },
             CenterAction("OPENROUTER · API-KEY VERWALTEN") { showOpenRouterApiKeyDialog() },
             CenterAction("INTERNET · LERNSTOFF PRÜFEN") { showWebLearningInbox() },
             CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
@@ -5543,6 +5546,10 @@ class AgentActivity : Activity() {
         box.addView(cockpit.action(this, "OPENROUTER · EINZELFRAGE") {
             modelCenterDialog?.dismiss()
             showOpenRouterMentorDialog()
+        }, matchWidth(top = 5))
+        box.addView(cockpit.action(this, "INWORLD · EINZELFRAGE") {
+            modelCenterDialog?.dismiss()
+            showInworldMentorDialog()
         }, matchWidth(top = 5))
 
         val advanced = LinearLayout(this).apply {
@@ -9526,6 +9533,110 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    /** One owner-approved question through the paired backend; no model/tool-mode switch. */
+    private fun showInworldMentorDialog(suggested: String = input.text.toString().trim()) {
+        if (isFinishing || isDestroyed) return
+        if (busy) {
+            Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        backend.ensureMentorBackend()
+        val ownerSession = sessionId
+        if (!backend.hasMentorAccess()) {
+            showMentorPairingDialog(providerName = "Inworld") {
+                if (!isFinishing && !isDestroyed && sessionId == ownerSession) {
+                    showInworldMentorDialog(suggested)
+                }
+            }
+            return
+        }
+        showInworldQuestionDialog(suggested)
+    }
+
+    private fun showInworldQuestionDialog(suggested: String) {
+        val ownerSession = sessionId
+        val approvedBackend = backend.backendUrl()
+        val question = EditText(this).apply {
+            hint = "Welche einzelne Frage soll Inworld beantworten?"
+            // Keep the whole draft visible: a truncated tail could remove an owner's restriction.
+            setText(suggested)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            maxLines = 6
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Inworld · einmalige externe Anfrage")
+            .setMessage(
+                "Nur die folgende Frage geht über dein gekoppeltes Backend an Inworld. " +
+                    "Der API-Schlüssel bleibt auf dem Server. Keine Chat-Historie, Erinnerungen, " +
+                    "Geräteinformationen, Bilder, Audiodaten oder Toolrechte. " +
+                    "Die Anfrage kann Kosten verursachen. Die Antwort bleibt ungeprüft " +
+                    "und wird nicht automatisch als Wissen übernommen."
+            )
+            .setView(question)
+            .setNegativeButton("LOKAL BLEIBEN", null)
+            .setPositiveButton("EINMALIG SENDEN", null)
+            .create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if (isFinishing || isDestroyed || sessionId != ownerSession || busy ||
+                backend.backendUrl() != approvedBackend) {
+                dialog.dismiss()
+                return@setOnClickListener
+            }
+            val content = runCatching {
+                RemoteMentorProtocol.request("INWORLD", question.text.toString()).getString("question")
+            }.getOrElse {
+                question.error = "Bitte eine Frage mit 3 bis 1800 Zeichen ohne Steuerzeichen eingeben."
+                return@setOnClickListener
+            }
+            val requestId = UUID.randomUUID().toString()
+            activeInworldRequestId = requestId
+            dialog.dismiss()
+            addUserMessage(content, allowLearningHints = false)
+            setBusy(true)
+            addToolActivity("INWORLD · einzelne externe Frage freigegeben")
+            backend.inworldMentor(content) { result ->
+                result.fold(
+                    onSuccess = { completeInworldMentor(requestId, ownerSession, it, null) },
+                    onFailure = { completeInworldMentor(requestId, ownerSession, null, it.message) }
+                )
+            }
+        }
+    }
+
+    private fun completeInworldMentor(
+        requestId: String,
+        requestSession: String,
+        answer: String?,
+        error: String?
+    ) {
+        // An old response must neither enter a new chat nor clear another request's busy state.
+        if (isFinishing || isDestroyed || sessionId != requestSession ||
+            activeInworldRequestId != requestId) return
+        activeInworldRequestId = null
+        setBusy(false)
+        if (answer != null) {
+            addAssistantMessage("INWORLD · EXTERN · UNBESTÄTIGT\n\n" + answer +
+                "\n\nKeine automatische Gedächtnisübernahme.")
+            addToolActivity("INWORLD · externe Antwort empfangen")
+        } else {
+            val message = when (error) {
+                "DISABLED" -> "Inworld ist auf dem Backend noch nicht aktiviert oder eingerichtet."
+                "DAILY_LIMIT" -> "Das tägliche Anfragelimit dieses Backends ist erreicht."
+                "BUSY" -> "Eine andere Inworld-Anfrage läuft bereits."
+                "INWORLD_KEY_REJECTED" -> "Der Inworld-Zugang auf dem Backend wurde abgelehnt."
+                "INWORLD_MODEL_UNAVAILABLE" -> "Das eingestellte Inworld-Modell ist nicht verfügbar."
+                "UPSTREAM_LIMIT" -> "Inworld hat die Anfrage wegen eines Limits abgelehnt."
+                "UPSTREAM_TIMEOUT" -> "Inworld hat nicht innerhalb der Wartezeit geantwortet."
+                else -> "Die Verbindung oder Antwort konnte nicht bestätigt werden."
+            }
+            addAssistantMessage("Inworld-Anfrage beendet: $message\n\nEs wurde keine neue Anfrage automatisch gestartet.")
+            addToolActivity("INWORLD · Anfrage beendet")
+        }
+    }
+
     private fun showGroqMentorDialog(suggested: String = input.text.toString().trim()) {
         if (busy) {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
@@ -9593,13 +9704,17 @@ class AgentActivity : Activity() {
     }
 
     /**
-     * No Groq API key and no global Device token must ever be entered on Android.
+     * Provider API keys stay on the server; pairing needs no global Device token.
      * The fingerprint is public; only Render-owner approval permits mentor access.
      */
-    private fun showMentorPairingDialog() {
+    private fun showMentorPairingDialog(
+        providerName: String = "Groq",
+        onPaired: () -> Unit = { showGroqMentorDialog() }
+    ) {
         backend.ensureMentorBackend()
+        val ownerSession = sessionId
         AlertDialog.Builder(this)
-            .setTitle("Groq-Mentor · Gerät koppeln")
+            .setTitle("$providerName-Mentor · Gerät koppeln")
             .setMessage(
                 "Continuum erzeugt einen eigenen Geräteschlüssel im Android-Keystore. " +
                     "Nur der öffentliche Schlüssel wird zur einmaligen Freigabe gesendet. " +
@@ -9610,19 +9725,22 @@ class AgentActivity : Activity() {
             )
             .setNegativeButton("Später", null)
             .setPositiveButton("KOPPLUNG PRÜFEN") { _, _ ->
-                addToolActivity("GROQ · Gerätefreigabe wird geprüft …")
+                if (isFinishing || isDestroyed || sessionId != ownerSession) return@setPositiveButton
+                addToolActivity("$providerName · Gerätefreigabe wird geprüft …")
                 backend.pairMentor { result ->
-                    if (isFinishing || isDestroyed) return@pairMentor
+                    if (isFinishing || isDestroyed || sessionId != ownerSession) return@pairMentor
                     result.fold(
                         onSuccess = { pairing ->
                             if (pairing.approved) {
                                 updateCloudBadge()
-                                addToolActivity("✓ Groq-Mentor freigegeben · nur Textmentor, keine Gerätetools")
+                                addToolActivity("✓ $providerName-Mentor freigegeben · nur Textmentor, keine Gerätetools")
                                 AlertDialog.Builder(this)
-                                    .setTitle("Groq-Mentor verbunden")
+                                    .setTitle("$providerName-Mentor verbunden")
                                     .setMessage("Das Gerät ist jetzt einmalig freigegeben. " +
-                                        "Groq-API-Schlüssel oder Device-Token mussten nicht am Handy eingegeben werden.")
-                                    .setPositiveButton("Mentor öffnen") { _, _ -> showGroqMentorDialog() }
+                                        "API-Schlüssel oder Device-Token mussten nicht am Handy eingegeben werden.")
+                                    .setPositiveButton("Mentor öffnen") { _, _ ->
+                                        if (!isFinishing && !isDestroyed && sessionId == ownerSession) onPaired()
+                                    }
                                     .show()
                             } else {
                                 AlertDialog.Builder(this)
@@ -9634,11 +9752,11 @@ class AgentActivity : Activity() {
                                         "Bis dahin wird kein Zugangstoken ausgestellt.")
                                     .setPositiveButton("Schließen", null)
                                     .show()
-                                addToolActivity("GROQ · wartet auf einmalige Besitzerfreigabe")
+                                addToolActivity("$providerName · wartet auf einmalige Besitzerfreigabe")
                             }
                         },
                         onFailure = { error ->
-                            addToolActivity("GROQ · Kopplung fehlgeschlagen: " +
+                            addToolActivity("$providerName · Kopplung fehlgeschlagen: " +
                                 (error.message ?: "Verbindungsfehler").take(130))
                         }
                     )
@@ -9682,6 +9800,9 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 8))
         box.addView(actionButton("OPENROUTER · GESICHERTER BACKEND-MENTOR").apply {
             setOnClickListener { showOpenRouterBackendMentorDialog() }
+        }, matchWidth(top = 8))
+        box.addView(actionButton("INWORLD · EINZELFRAGE").apply {
+            setOnClickListener { showInworldMentorDialog() }
         }, matchWidth(top = 8))
         box.addView(actionButton("GROQ-GERÄT OHNE API-SCHLÜSSEL KOPPELN", accent = true).apply {
             setOnClickListener { showMentorPairingDialog() }
@@ -9812,12 +9933,13 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun addUserMessage(value: String) {
+    private fun addUserMessage(value: String, allowLearningHints: Boolean = true) {
         recordCockpitDialog(true, value)
         if (avatarBlocked) { avatarBlocked = false; refreshHologramState() }
         // Store only public, scrubbed topic labels when the owner has enabled
         // both ALWAYS_ON and recurring public study. Not the chat transcript.
-        if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+        if (allowLearningHints &&
+            internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
             val topic = at.heinz.deviceai.cognitive.PublicKnowledgeTopicRouter.topic(value)
             if (topic != null) {
                 onLearningIo({
@@ -9833,7 +9955,7 @@ class AgentActivity : Activity() {
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addBubble(value, user = true)
-        val radarEnabled = NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
+        val radarEnabled = allowLearningHints && NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
         if (radarEnabled && neuralCuriosityRadar.peek() == null) {
             // model restore and scoring read files: off the UI thread
             onLearningIo({

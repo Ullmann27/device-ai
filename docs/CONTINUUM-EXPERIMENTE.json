@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-27",
+  "updated": "2026-11-04",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "externalResearchIntegration": {
@@ -156,7 +156,7 @@
       "id": "EXP-10",
       "title": "Optional remote language mentor",
       "status": "SOURCE_INTEGRATED",
-      "present": "Opt-in untrusted text output; no privileged tools SolPR1542026-10-26 implementationa1d62830: opt-in authenticated HTTPS DeepSeek coding-teacher protocol with exact consent digest, revision/request identity, no-charge/privacy assertions, deadlines, typed output rejection and offline fallback;59focusedtests incl actual local TLS fixture. No authorized operator endpoint/real DeepSeek inference/GPU/deployment, adapter still required; per-job authorization does not arise from config. Branch2fb60460 preserved, canonical provider dependency216fa837 required.",
+      "present": "Opt-in untrusted text output; no privileged tools SolPR1542026-10-26 implementationa1d62830: opt-in authenticated HTTPS DeepSeek coding-teacher protocol with exact consent digest, revision/request identity, no-charge/privacy assertions, deadlines, typed output rejection and offline fallback;59focusedtests incl actual local TLS fixture. No authorized operator endpoint/real DeepSeek inference/GPU/deployment, adapter still required; per-job authorization does not arise from config. Branch2fb60460 preserved, canonical provider dependency216fa837 required. 2026-11-04 Inworld Router: optional paired backend text mentor with per-question consent, server-only Basic authentication, bounded no-retry request, unverified text-only response, Android session guards and no automatic topic discovery/learning. Offline host verification: 93 backend, 16 Android and 31 wiring tests PASS; no live Inworld call, deployment, signed APK or phone test. See docs/research/omega/INWORLD-ROUTER-HANDOFF.md and PR504. Owner clarification later on 2026-11-04: this text-mentor prototype is shelved, not approved for merge or activation; requested value is avatar/visualization, memory and building the app's AI. No benefit for those functions has been demonstrated by this prototype. See INWORLD-FIT-ASSESSMENT-20261104.md.",
       "entry": "docs/CONTINUUM-OPTIONAL-GROQ-MENTOR.md",
       "depends": "Owner consent, server-only keys",
       "gate": "Live paired phone reply, no private-data leakage"

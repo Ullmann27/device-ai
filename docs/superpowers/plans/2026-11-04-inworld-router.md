@@ -1,5 +1,7 @@
 # Inworld Router Integration Implementation Plan
 
+**SUPERSEDED BY OWNER CLARIFICATION:** The tested one-question mentor is shelved. The owner wants demonstrable value for avatar/visualization, memory or creation of the app's AI. No activation, key setup, deployment or further feature implementation is authorized by this old plan. See the final fit assessment and handoff.
+
 > **For agentic workers:** Execute the scoped tasks below with independent review. Preserve the existing EXP-10 mentor contract.
 
 **Goal:** Add the owner-requested Inworld Router as an optional, explicit one-question online mentor in Device AI Continuum.
@@ -41,29 +43,32 @@ The supplied markdown URLs were attempted; the browsing tool rejected text/markd
 
 ## Task 1: Backend provider and HTTP contract
 
-- [ ] Add failing tests for Basic credentials, exact endpoint/default model/effort, bounded text-only requests, provider-specific errors, missing configuration and no fallback.
-- [ ] Run the new tests on the baseline and record the expected failure.
-- [ ] Extend backend/src/groq-mentor.js and backend/src/server.js using the existing adapter/routes; add INWORLD_MENTOR_ENABLED, INWORLD_API_KEY, INWORLD_MENTOR_MODEL, INWORLD_MENTOR_REASONING_EFFORT and INWORLD_MENTOR_DAILY_LIMIT.
-- [ ] Verify actual Express HTTP auth/consent/strict-field handling with synthetic local upstream fixtures.
-- [ ] Run the full backend test suite and syntax check; publish a checkpoint.
+- [x] Add failing tests for Basic credentials, exact endpoint/default model/effort, bounded text-only requests, provider-specific errors, missing configuration and no fallback.
+- [x] Run the new tests on the baseline and record the expected failure.
+- [x] Extend backend/src/groq-mentor.js and backend/src/server.js using the existing adapter/routes; add INWORLD_MENTOR_ENABLED, INWORLD_API_KEY, INWORLD_MENTOR_MODEL, INWORLD_MENTOR_REASONING_EFFORT and INWORLD_MENTOR_DAILY_LIMIT.
+- [x] Verify actual Express HTTP auth/consent/strict-field handling with synthetic local upstream fixtures.
+- [x] Run the full backend test suite and syntax check; publish a checkpoint.
 
 ## Task 2: Android entry and protocol
 
-- [ ] Add focused failing tests for the Inworld request/response and explicit provider selection.
-- [ ] Extend AgentBackendClient and existing mentor UI so the owner can select Inworld without entering its provider key on Android.
-- [ ] Preserve device pairing, input bounds, lifecycle guards and explicit one-off approval.
-- [ ] Compile the Android app and run the relevant existing/new tests available in this host.
-- [ ] Report host tests separately from any physical-device validation.
+- [x] Add focused failing tests for the Inworld request/response and explicit provider selection.
+- [x] Extend AgentBackendClient and existing mentor UI so the owner can select Inworld without entering its provider key on Android.
+- [x] Preserve device pairing, input bounds, lifecycle guards and explicit one-off approval.
+- [x] Compile the Android app and run the relevant existing/new tests available in this host.
+- [x] Report host tests separately from any physical-device validation.
 
 ## Task 3: Configuration, independent review and handoff
 
-- [ ] Document backend-only configuration and a safe, explicitly invoked authenticated smoke check.
-- [ ] Add only necessary deployment variable declarations with provider disabled by default.
-- [ ] Independently review the final diff and resolve concrete defects.
-- [ ] Publish exact source, tests and observed evidence in the branch/Draft PR.
-- [ ] Check only whether INWORLD_API_KEY is present; never print it. If absent, ask the owner to configure it securely before live testing.
+- [x] Document backend-only configuration and a safe, explicitly invoked authenticated smoke check.
+- [x] Add only necessary deployment variable declarations with provider disabled by default.
+- [x] Independently review the final diff and resolve concrete defects.
+- [x] Publish exact source, tests and observed evidence in the branch/Draft PR.
+- [x] Check only whether INWORLD_API_KEY is present; never print it. If absent, ask the owner to configure it securely before live testing.
 
 ## Current verification status
 
-Implementation and new tests: NOT_RUN at this start checkpoint.
+Implementation complete. Final offline verification: backend 93/93, Android protocol 9/9, actual Robolectric UI 7/7, existing Node wiring 31/31; full Android main/test sources compiled. Independent review completed with no confirmed remaining blocker. The question-to-background-topic side effect was reproduced and fixed.
+
+Local execution environment: INWORLD_API_KEY absent. Live verification remains blocked until the owner configures the key securely in the backend environment.
 Live Inworld call, deployed backend, signed APK and Fold7 run: NOT_RUN.
+

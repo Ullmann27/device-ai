@@ -6,11 +6,20 @@ freigegebene einzelne Mentorfragen zu Groq, OpenRouter oder Inworld Router.
 
 ## Inworld Router: optionaler Online-Mentor (EXP-10)
 
+> **Zurückgestellter Prototyp:** Nach Präzisierung des Ziels (eigene KI, Avatar, Darstellung und Gedächtnis) wird diese reine Einzelfragen-Anbindung nicht zur Übernahme oder Aktivierung vorgeschlagen. Die folgende Beschreibung dokumentiert den getesteten Entwurf. Ein konkreter Nutzen für Avatar oder Gedächtnis ist damit noch nicht nachgewiesen. Siehe `docs/research/omega/INWORLD-FIT-ASSESSMENT-20261104.md`.
+
 Inworld verwendet den vorhandenen authentifizierten Mentorweg. In der Android-App
 öffnet **INWORLD · EINZELFRAGE** die Einmalfreigabe. Nur die dort freigegebene Frage
 wird über das Backend übertragen. Die Antwort bleibt als externe, unbestätigte
 Textausgabe gekennzeichnet. Sie erhält keine Geräte-, Werkzeug- oder
 Gedächtnisschreibrechte. Der lokale Dialog benötigt Inworld nicht.
+
+Der Eintrag ist im Lernzentrum, im Modellzentrum und unter **Cloud-KI einrichten**
+erreichbar. Ohne Gerätefreigabe führt er zuerst zur bestehenden Kopplung und
+anschließend wieder zur Inworld-Frage. Jede Frage benötigt eine eigene Bestätigung;
+zu lange Entwürfe werden vollständig angezeigt und abgelehnt, statt abgeschnitten.
+Die Frage startet auch bei bereits aktivierter Dauerforschung keine zusätzliche
+Themensuche oder Lernvormerkung. Modell und Denkstufe werden vom Backend gewählt.
 
 ### Backend-Konfiguration
 
@@ -69,6 +78,11 @@ cd backend
 npm test
 npm run check
 ```
+
+`test/inworld-api-integration.test.js` startet den echten Express-Dienst mit einem
+lokalen Inworld-Testdienst. Es prüft Authentifizierung, Freigabe, Basic-Header,
+Antwortformat, Fehlercodes, Parallelzugriffe und Tageslimit. Der Testprozess
+übernimmt keine Umgebungsschlüssel und blockiert andere ausgehende Fetch-Aufrufe.
 
 Erst nach sicherer Konfiguration des Backend-Secrets und ausdrücklicher Aktivierung
 ist ein echter, potenziell kostenpflichtiger Einzeltest vorgesehen:
