@@ -31,7 +31,9 @@ object ContinuumReferenceLayout {
         val boxes = linkedMapOf<Slot, Box>()
 
         val headerRows = room < 320f || (font > 1.1f && room < 420f)
-        val brandHeight = 56f + (font - 1f).coerceAtLeast(0f) * 24f
+        // Whole-dp header height: fractional font growth (e.g. 70.4 dp) made the 48 dp header
+        // targets 47.999992 dp in float space. Snapping up keeps every target exactly 48 dp.
+        val brandHeight = kotlin.math.ceil(56f + (font - 1f).coerceAtLeast(0f) * 24f)
         val headerBottom = if (headerRows) brandHeight + 62f else maxOf(72f, brandHeight + 8f)
         boxes[Slot.BRAND] = Box(left, 6f, if (headerRows) right else right - 168f, brandHeight + 6f)
         listOf(Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE).forEachIndexed { index, slot ->
@@ -71,7 +73,8 @@ object ContinuumReferenceLayout {
         val actionTop = composerTop + composerHeight + gap
         val actionColumns = when {
             room < 320f || largeType && room < 640f -> 1
-            room >= 640f && font <= 1.3f -> 4
+            // Ten equal actions: 5 columns give two complete rows aligned with the composer.
+            room >= 640f && font <= 1.3f -> 5
             else -> 2
         }
         val actionWidth = (room - (actionColumns - 1) * gap) / actionColumns
