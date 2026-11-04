@@ -1,0 +1,18 @@
+{
+  "public_input_commit": "b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+  "local_input_commit": "e19bf2768dc24b7c2ea1040538fdd661269a540c",
+  "input_tree": "aa439516d342a5410d4473275756a4fa85b4c981",
+  "tests_first_commit": "427e6d444a1a825722b51fc1ef5d57a0b205cdb0",
+  "runtime_tests": "NOT_RUN_BY_SUBAGENT",
+  "publication": "LOCAL_ONLY_NOT_PUSHED_BY_SUBAGENT",
+  "new_test_methods": 4,
+  "counter_workload_writes": 80000,
+  "counter_baseline_race_is_deterministic": false,
+  "git_diff_check": "PASS",
+  "factory_and_interface_prefix_unchanged": true,
+  "old_tests_changed": false,
+  "sha256": {
+    "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81",
+    "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690"
+  }
+}

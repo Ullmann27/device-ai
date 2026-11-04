@@ -1,0 +1,65 @@
+{
+  "source": "510aa5d3ec84f99370771009774c8c3c8bda5b34",
+  "tree": "e965a220365fdec384ce6a7ac90f905ef5afbd43",
+  "testSource": "427e6d444a1a825722b51fc1ef5d57a0b205cdb0",
+  "testPath": "app/src/test/java/at/heinz/deviceai/cockpit/MemoryEventMapperLifecycleRegressionTest.kt",
+  "testSha256": "3d490f43091ddff69dd264c5b9f48b73613d82c5bfbddcfc11defaf845be3690",
+  "sources": {
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitAnimationEvent.kt": "77569de5749e3fdf0b4e3adc7b9700ffe1c168af84878f15fe8ae899357fdf59",
+    "app/src/main/java/at/heinz/deviceai/cockpit/CockpitContracts.kt": "c343aa99e33b50794c7d6ce2fdffa012086971010ca7858e046b18871dc1fdde",
+    "app/src/main/java/at/heinz/deviceai/avatar/AvatarContract.kt": "02b04292e0cd3c9e46cfa8cdfe262e17ffee5eb7da7a29746adf1a4b561fba9d"
+  },
+  "dependencies": {
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar": "c2b25e8c1c93ec416ba4327f5e31eaec0f0c8847241b9353e294b8db9dce564f",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar": "196e8ecbf63daf477e34e67c2f871ee232ae7bf8b377432d876d1bbf9d273de3",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar": "66917335497f9ab75a36c34b3d90bad2bc8dc256c34b2413ecd0c9467fcf597d",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar": "383093af5e078435b60043d19bfa83eb6191be0f4d13a28fb1c8a0f3ab24fe66",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+    "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be",
+    "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35",
+    "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+    "/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar": "0ff0098f64407752c115bf2569a7cd3005c894ecb934e7fdbcd744037f398ce8",
+    "/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar": "b1050081b14bb7a3a7e55a4d3ef01b5dcfabc453b4573a4fc019767191d5f4e0",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar": "67543f0736fc422ae927ed0e504b98bc5e269fda0d3500579337cb713da28412"
+  },
+  "mapperExtraction": {
+    "sourcePath": "app/src/main/java/at/heinz/deviceai/cockpit/MemoryEventSource.kt",
+    "originalSha256": "6719544a62ec6c19442e2bcb2ecdd22cbf1cfee37d3d600c433b18f660c19a81",
+    "compiledSha256": "06a27d85983f450731bb1202d89af612f3c5e0f3e5fe2083bebcc9fcac7b6e0a",
+    "onlyOmission": "Unused MemoryEventSources factory; complete interfaces and mapper are unchanged."
+  },
+  "compileCommand": [
+    "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+    "-Xmx512m",
+    "-cp",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.4.0/f1a24af8bd111a83950236b1aec7a6d72a97e92c/kotlin-compiler-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.4.0/1de03f0ef3e208ab5f97ee6a587e9b8480447df6/kotlin-script-runtime-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.4.0/46429d5887df2d02f33fe11a0c8444c5be5fd8da/kotlin-build-tools-api-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.4.0/1ecabef3a8ba6a8e25654573d54edb7e4136e903/kotlin-daemon-embeddable-2.4.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlinx-coroutines-core-jvm-1.6.4.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar",
+    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+    "-no-stdlib",
+    "-no-reflect",
+    "-jvm-target",
+    "17",
+    "-classpath",
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+    "-d",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/classes",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/CockpitAnimationEvent.kt",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/CockpitContracts.kt",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/AvatarContract.kt",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/MemoryEventSource.kt",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/MemoryEventMapperLifecycleRegressionTest.kt"
+  ],
+  "junitCommand": [
+    "/workspace/scratch/b7d23de0e715/build-toolchain/jdk17/bin/java",
+    "-Xmx256m",
+    "-cp",
+    "/workspace/scratch/624aeb26d481/qa-r3/mapper-green/classes:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/junit-4.13.2.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/hamcrest-core-1.3.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/annotations-24.0.1.jar:/workspace/scratch/59ad19c6d3b7/memory-context-proof/litertlm-classes.jar:/workspace/scratch/b6ee64d418cf/toolchain/android-sdk/platforms/android-36/android.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar:/workspace/scratch/b6ee64d418cf/toolchain/gradle-cache/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.6.0/5600569133b7bdefe1daf9ec7f4abeb6d13e1786/okio-jvm-3.6.0.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest"
+  ],
+  "runnerSha256": "64e573d136a0e6997cc3680fcba0c6fce35ec510b6aeb6ef2dd497a347ea2fa4",
+  "androidFrameworkExecuted": false,
+  "activityExecuted": false
+}

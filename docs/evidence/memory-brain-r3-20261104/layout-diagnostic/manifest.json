@@ -1,0 +1,1377 @@
+{
+  "localSource": "ec2543bef908d7d346a9767f9b095e84254090d1",
+  "baselineSource": "e19bf2768dc24b7c2ea1040538fdd661269a540c",
+  "currentTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+  "baselineTree": "aa439516d342a5410d4473275756a4fa85b4c981",
+  "parentBuildReceipt": "/workspace/scratch/624aeb26d481/qa-r3/r3-full-unit-lint-retry1/result.json",
+  "parentBuildReceiptSha256": "c2a97b45df147ae3407846e5795119daab4e26419fd4e622a4b54bf3ed7c59cc",
+  "sourceBlobs": {
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.kt": {
+      "baseline": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+      "current": "6acb79eaf1b90d49037acdfd4a7245e1119a271c",
+      "sha256": "0854bc7a19eb97fbf6ff35b8a81394cf436bba4af69c510fc10344eb4c56bfeb"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt": {
+      "baseline": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+      "current": "074b2b80af3ba202c0e92a1fe6c2d88e75c7c294",
+      "sha256": "eeb83a88101eb8afcac26bd02395067e5bd5e67f4a13edb04a56965eeb091583"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumReferenceLayout.kt": {
+      "baseline": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+      "current": "bfca80b88de4fd2acabc59cc357171c3846f9d58",
+      "sha256": "4548332c8398453f4ebcbfa1e43d5a972dda90e24272f1716a7c8698a4de5bb6"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisShellLayout.kt": {
+      "baseline": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+      "current": "66212f59703e454eb2cc0b7ba98e8c6d6f493f76",
+      "sha256": "996c731c3ae69753d7e7ce604403180e4fcc2bb5811eaed6be180526c02c6302"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisDesign.kt": {
+      "baseline": "d9756a5d82793c970b59b215150619472f8e6b69",
+      "current": "d9756a5d82793c970b59b215150619472f8e6b69",
+      "sha256": "5b0f2cb6ce21ea08a27cb7bf8889d2af23213757549f958162d2eac661c04b41"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisCockpitGrid.kt": {
+      "baseline": "717aee7ec7d841286c76c89e4a6eada0a00d5667",
+      "current": "717aee7ec7d841286c76c89e4a6eada0a00d5667",
+      "sha256": "11bc47ff48b924e53edc81caa18ec8fb83c3b049b195649e96dbc25a9090ff5f"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisWindowProfile.kt": {
+      "baseline": "e875023c009128c865581fd3e8c3a18669e18c77",
+      "current": "e875023c009128c865581fd3e8c3a18669e18c77",
+      "sha256": "76ef62bd480f5177f8d341a0c9ab755346baf4c457db474bf62ba0904c68223d"
+    },
+    "app/src/main/java/at/heinz/deviceai/ui/JarvisMenuRail.kt": {
+      "baseline": "9d406be9a1e006f9799b91c13deb518365e4f61d",
+      "current": "9d406be9a1e006f9799b91c13deb518365e4f61d",
+      "sha256": "a9456e5ade8634698908c61567b20929d912188e7a3f84f5c9dc15965f3b1221"
+    },
+    "app/src/test/java/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.kt": {
+      "baseline": "6554c2ed59d79f2ac9626f32c5e8acee0499c1ca",
+      "current": "6554c2ed59d79f2ac9626f32c5e8acee0499c1ca",
+      "sha256": "a2e8de4febaf1336d93551bf5442f6cd8d9b2e6f500c6650d402251d68078be1"
+    }
+  },
+  "classSnapshot": {
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/AdaptiveHeaderBrandElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/AdaptiveHeaderBrandElement.class",
+      "sha256": "42c209d4ecdb30c39c76d6abfc7489e1fad9914677edde6f6db2d6902fefd9ab"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/AndroidContinuumPainter$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/AndroidContinuumPainter$Companion.class",
+      "sha256": "208843bf5a502ed1f06c5c624c14c8978ee7d1bd8ea094fab26a1b4a0f4a911e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/AndroidContinuumPainter$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/AndroidContinuumPainter$WhenMappings.class",
+      "sha256": "f4c75a1fe5fafba5b603e69e3ca0a5f9135e9febb165e6be4140ba2d608b3b2f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/AndroidContinuumPainter.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/AndroidContinuumPainter.class",
+      "sha256": "d89e9d1804239b10831fcb47b2db803d0dbb54fbf10c6926de15f51d7fd763be"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Argb.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Argb.class",
+      "sha256": "f92113718cc2a60b21dfb36f276a04a4f0d4b2edc57733ed6e304c86d34a1112"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/BarChart.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/BarChart.class",
+      "sha256": "a5c825012dfc76946fa4b3b8b1bb7836217aa7772fd07dac3cc68b7ae9f518b4"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/BottomNavElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/BottomNavElement.class",
+      "sha256": "f1d5f52d3a218a7b3d79f3b8570cff3e2b1bc9b05e7139ecccf5feddf122a903"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/BrainOrbAnimationRenderer.class",
+      "sha256": "4d76523dda82628c632cc5bba2e4482d5fac00cd502c5545d8cee68a8a05fdb9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitActionElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitActionElement$WhenMappings.class",
+      "sha256": "df5d38256638c575774e8a73c81d3c0df1514ee8d96221c787f7444a425d3772"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitActionElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitActionElement.class",
+      "sha256": "4bc5bd60d94160e4b29c1ea861bb76424b931cb4a23d70b450539952fe6a910f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitActionTile.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitActionTile.class",
+      "sha256": "3b7d905f7e1d2013599fe868596e305e4aa5a40cc55264cbe9f353ff446342db"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitAgentsCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitAgentsCard.class",
+      "sha256": "2875257fcb03c454e79964579452d15fbc1971406d5e23dbc7b4c09850a6c407"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitAnimationLabels.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitAnimationLabels.class",
+      "sha256": "932b11c259ab4b4ad8c1de822613254961ec6ba8936085d9ee1499e1ec7f2814"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitAnimationPresenter$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitAnimationPresenter$WhenMappings.class",
+      "sha256": "5387bcc17464eb4a4d0246cc57150bdf199afa816d81a7082dcadc338fc6fac6"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitAnimationPresenter.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitAnimationPresenter.class",
+      "sha256": "ad3dda42c24645bcea0e14b0ebaa32f107a58e2bd2b396efa6e6de41ff6ed554"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitBrainCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitBrainCard.class",
+      "sha256": "a9c488fc44d103dc052a4e022d29f471777cf6fa6a712071e4b3cf8dcfa7fa37"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitBrandElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitBrandElement.class",
+      "sha256": "b3725b168c19e5c7fd448058965057e5e568ec0112108e92f70c08e923db4d18"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitCard.class",
+      "sha256": "dc9a21b17623150ec45159f9be7773b969e830dc81995aff5aa127522d4a028f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitComposerElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitComposerElement.class",
+      "sha256": "3cfdee5966832a1753604a89e2ce08b703d3bdd3682c80d15393af45764f337a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitDialogCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitDialogCard.class",
+      "sha256": "52e17a6c3a610384a5e8ea90b63cb3f9db2f019676c9d413997b431a224e6603"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitLocalModelCard$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitLocalModelCard$WhenMappings.class",
+      "sha256": "c8acccfe0977bffabe3fcecd306bbee5eed959d1c72be38759b084cd6bd63340"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitLocalModelCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitLocalModelCard.class",
+      "sha256": "1b7ce718c3837a61be74d71927c459a88743e973d2d4813b53252d2a85c46ec2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitMetricCard$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitMetricCard$WhenMappings.class",
+      "sha256": "0374950c6d5285891d6711391c1b47cc181edaee7c0a5f4f3ce14d7d7aca72e2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitMetricCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitMetricCard.class",
+      "sha256": "7ab61363a3a5a00424cd2d0e53be443aed06d9558b3474f0da2dbd50c0862e25"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitNoticeCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitNoticeCard.class",
+      "sha256": "c4bcb2b25fa32f3c7c767bec4bbd075c4875f4f1463997217a56d80ec487fc55"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitProcessesCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitProcessesCard.class",
+      "sha256": "eb20ea3c4cdac2d0745624f63282a06268c34878fcd098e302f956c27676cbdb"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitStatus$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitStatus$Companion.class",
+      "sha256": "eefa806032b5da7e821e3e973d4d8185f2f4bf8ade1bac1e07ed135f8ffe6947"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitStatus$DialogLine.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitStatus$DialogLine.class",
+      "sha256": "15c33249ccdb5cd2782cd922d9943f46ee9360844c052dcfa6571f1fe876674d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitStatus.class",
+      "sha256": "69fff1d1a830c9ce1f660608cfe51a2d1e33e63a593221dda12d15191dfa6d8b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitSystemCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitSystemCard.class",
+      "sha256": "a74a5276926272f8d9ba0490e3076c93321ca5a2191108db0c9f2eb39bac5e8d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitTabElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitTabElement$WhenMappings.class",
+      "sha256": "de5b5d93d59f2f2d7602564aa70589c58d48086e6f58b80f09ca10fcf746b10c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitTabElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitTabElement.class",
+      "sha256": "d4025c604f7179676030a59e58ff785a435408d8f509f50dea06bea46b42182f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitTransitionHook.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitTransitionHook.class",
+      "sha256": "868d6572a5c0ec1757e731866d1deda722f172d8d59bf42c24695faef24249c7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CockpitTransitions.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CockpitTransitions.class",
+      "sha256": "edc37c6cba94ea9c72608076c09d42204e0e82e0a75222726b4e48c2a6f8460f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CognitiveWorkPresentation$Phase.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CognitiveWorkPresentation$Phase.class",
+      "sha256": "e28d21ec0e5e6d99533f6a1a445b30471335d917e27335660dc0c996d77a9a53"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CognitiveWorkPresentation.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CognitiveWorkPresentation.class",
+      "sha256": "97d2fdd241463c81f8177e693609c54108223875a6195153a30c5e437725f94f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumAdaptiveHomeLayout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumAdaptiveHomeLayout.class",
+      "sha256": "e3be45ca7aec87c92746e3aa83b1a6ce1a106d266e555323ea6d0c6bf457196e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBentoCockpit$AdaptiveGrid.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBentoCockpit$AdaptiveGrid.class",
+      "sha256": "b779edd70a727f01418ea4c8213c02ad39fcc75353a80177ceb76cc616aa7973"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBentoCockpit$Glass.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBentoCockpit$Glass.class",
+      "sha256": "5b3819c207ee09361849df3dc2b369295ca135fe5f1a686e718452a3e5109b19"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBentoCockpit$show$scroll$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBentoCockpit$show$scroll$1.class",
+      "sha256": "b92a61c80dbbee0bfe8d54fd9b3bd66168a65563114fff7cc25042901b4454f3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBentoCockpit.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBentoCockpit.class",
+      "sha256": "9e578a909a5d42eb0fe28208e54555a803c2f34a661d6f60d9db0f8640f25325"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer$Companion.class",
+      "sha256": "19de570059f7d5547cdb4ebc5a57e5b115af644f1716d2c8c64e539464ca0363"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer$Signals.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer$Signals.class",
+      "sha256": "b05b348aae75fd873c3c48c9297ac2ce0ddd92ebe60d9320b030603bb8d16d7a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBrainOrbRenderer.class",
+      "sha256": "c807e9453725abae754d6c345b4281c90df8e206888f8b5d1336250226b26538"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBrainSceneView$events$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBrainSceneView$events$1.class",
+      "sha256": "d53cc695f006e529cf6f8cb701552ae1362a1e7cad8d09e282d0103de5c43d73"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumBrainSceneView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumBrainSceneView.class",
+      "sha256": "2f11983bc8e963c965aaf65ef69b968a2820706c7a8cc4a603aa9dadbbb23aa9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumCockpitElementsKt.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumCockpitElementsKt.class",
+      "sha256": "08ff1525d2e7a9e15850f30ebdb486225d9d5e544121063186d0a0c37457596c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumCockpitPresentation$Row.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumCockpitPresentation$Row.class",
+      "sha256": "991cd9d04b56559da97bcb2d44d20f7e4419d8f36408054e134d538a76f9f400"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumCockpitPresentation$Tone.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumCockpitPresentation$Tone.class",
+      "sha256": "0ad2921026e26ba13e35ccf0315700cc633db58f9d907a20a8a951d7a5ce96b9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumCockpitPresentation$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumCockpitPresentation$WhenMappings.class",
+      "sha256": "5def447da46b480113adf1d055f28f4f4679ce4b15fff3b2dc15532abbc22d51"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumCockpitPresentation.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumCockpitPresentation.class",
+      "sha256": "153714fcee22ca6c60c59f0e43beef466e1d7e8cfb6a1fb8cecc5be2e9f75604"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumControls$button$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumControls$button$1.class",
+      "sha256": "cef30f071d57ec3fe68672fe389a30afc263270041d2fad4e175f049ed98d57d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumControls.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumControls.class",
+      "sha256": "4b5efd693e4ac7bf76fc2ec22699d9b3fc52c9637f605b8693298126c384650e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardMath.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardMath.class",
+      "sha256": "a32832e9a1381bfd4e7c4c78b3144d25fa931c74a805aa6331eb0a76008a1b18"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$Companion.class",
+      "sha256": "aafd4ba2d56120d4d00f24f1d729206b4e37fd62b5d7196a568f7bec3bac87ea"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$CoreStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$CoreStatus.class",
+      "sha256": "bea5487d9523afba0f1d8e4d7438e3132a2b1543d539152cce619d2f84cc7856"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$DevelopmentStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$DevelopmentStatus.class",
+      "sha256": "ef0ee77fe6daab839896c47c4b691127cad044e0be901d290f9d5642deebc7f5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$Event.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$Event.class",
+      "sha256": "54ef6907019af6a15099446a11e90687c3676c8494258975f5e0bcce8186286b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$LearningStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$LearningStatus.class",
+      "sha256": "aac04e506e36899af1299fad928df24338f219f7c52b6476e59802ce4e7f63f3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$ModelStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$ModelStatus.class",
+      "sha256": "82e4b3f41f577c86ba47d123086909b1c012727515603284f9a2d63d5dd5bd6d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$PresentationStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$PresentationStatus.class",
+      "sha256": "604d0c3d5e6622f99860b887e70b560cac4e503733bc44876fd5ff7c7ed89c37"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$Project.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$Project.class",
+      "sha256": "375dd60c4f00d2b72a88fd9127409310da80111f33d2797a6fe0b448b26f4a84"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$ProjectState.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$ProjectState.class",
+      "sha256": "d82bda830f5874bffd7ffa48f51ea99b4fd2b7a81df5b5fb8fe8f5331244c78c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$Segment.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$Segment.class",
+      "sha256": "0a9e7ee5c3615fae1f555ff8040d914096bbaf0c26d5055a99d85f322eb01d43"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$StorageStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$StorageStatus.class",
+      "sha256": "74f61af9bb1c8cecda15dbfae9c74a28bbfc794e738218fe7655f7c3a8399d48"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState$SystemStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState$SystemStatus.class",
+      "sha256": "c52f67cbe3fdf49718839405f72636bac7cd972eb2c60035b4bbfc59185405da"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumDashboardState.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumDashboardState.class",
+      "sha256": "d72142feb1cd2978e4863f7d4e722ab8ebe2859e8ec9465d14a816bf18acf62b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumElement.class",
+      "sha256": "a9dc6494244dabddd75956b612740736532328827ed02b3cbc54669a9fd45c3e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumElementView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumElementView.class",
+      "sha256": "78a093cfac8e533ecd91fa418551c0f2b218cad54755fa9e3e40ec434af3689d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumFonts.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumFonts.class",
+      "sha256": "f35dc7831364c60e1822bc6be48ec81cbf9efc3f56a89a5be68e5f6394fcb445"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumGridPolicy.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumGridPolicy.class",
+      "sha256": "8a0f6d4c9cd22179497a8b0b5ce8327b27c1f69ea03f55395772004ff191a420"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramPlexus$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramPlexus$Companion.class",
+      "sha256": "0e6878041fa2cec3bcbd825e3b9c63fed6740682e3ad20e4adac8021f82b61a5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramPlexus$Layer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramPlexus$Layer.class",
+      "sha256": "2e079609011e47e4ec72fb469bbbedc3d727ea13ab2a87fe38ca4639ed572411"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramPlexus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramPlexus.class",
+      "sha256": "2f66dd8d8b627fc4158694803b989637ea759b6260832e969dfe8b0b91601ed5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Companion.class",
+      "sha256": "dea7474f255d7489b6ded536487973bc3f531b0ffad65002908efde0c914ceb7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame$Companion$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame$Companion$WhenMappings.class",
+      "sha256": "2bc943dc857b6274e003ee2f25635dcbfa275eed6b9926e2c7fa7e04328ade30"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame$Companion.class",
+      "sha256": "f96f488eef155a2d3f06b686ba383ca8acbf39530721194c4c97ea8e1817ee34"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Frame.class",
+      "sha256": "783709f5cee776ee23cc424af8c2efa6ce4a6ad8a5b25c00b91425b38ed18086"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Geometry$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Geometry$Companion.class",
+      "sha256": "cbf4d17a2c8b636e33037761b694068a6639d26bd3f939dcc4f8f5ebc045cb29"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Geometry.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Geometry.class",
+      "sha256": "634a2135ebcc61df8c3d0bf12add9731f93d5a6a609c0580211da8fc3617e93e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Mode.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Mode.class",
+      "sha256": "bbdd17a5e368e33f6498d683199b0a64da5887ec4c58584f4556a50a7dfcf19c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Orbit.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Orbit.class",
+      "sha256": "3280a18bb4b9dd58f082bdb85225c13757ee640a868244e385ad7a20fe64774e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer$Star.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer$Star.class",
+      "sha256": "8ff1d79434366a4df25731092ecfab7317edd6dfffa4a7bbbb360cadbe72f78f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHologramRenderer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHologramRenderer.class",
+      "sha256": "0c87fe428100425ccf8ab1e09b6ad84f76a67af498a4279997b3e4db277bf974"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeLayout$Box.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeLayout$Box.class",
+      "sha256": "e0a6c3db3fd8a009579b2278249a69e22ad9b39779f77675c9765e904b2e3122"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeLayout$Layout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeLayout$Layout.class",
+      "sha256": "1697c9ddaa8e7e1419423c52096f396a6f75fed0b9a52ac2acf286a997d7842e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeLayout$Slot.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeLayout$Slot.class",
+      "sha256": "5c3667178e53664cc4b52916ab9bc435d71fb5080821f9f5c4f32fbf615dd673"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeLayout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeLayout.class",
+      "sha256": "942d2e2345b64930f88326864a9a0398ab9bdc1ec611f82706ea5a00d91eeed2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeScreen.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeScreen.class",
+      "sha256": "fef31a201a6316905e17100499d7791eed2d97adc65adc031dab95df8218684f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$AvatarSlotPlaceholder$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$AvatarSlotPlaceholder$Companion.class",
+      "sha256": "cf7f19ff484e04b43c356d8f76a1950c023233e36e466fad8628cc13f060ab4c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$AvatarSlotPlaceholder.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$AvatarSlotPlaceholder.class",
+      "sha256": "5d3f42a77467cf019dc8cbbaf923a7bb87050f491c93d6299c94dea30beec87e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$ElementView$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$ElementView$WhenMappings.class",
+      "sha256": "1b93e778f1e50c827be4a35c4ca30fb2c619071d826a1c99ff62a07e0ac38130"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$ElementView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$ElementView.class",
+      "sha256": "a9bdfd6ee90f2cd19f8efe4f9c29941e2599061a72b3c143af2bb8f156db92d2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$ShellActionSpec.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$ShellActionSpec.class",
+      "sha256": "6006823a5ef1bed0a65c9360ca0217a4c1653a5cac387dccef989fa58b973eb2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$ShellActionView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$ShellActionView.class",
+      "sha256": "1a14955e5f8ced02765b03e68564861cd03e68a3d2b297db8854a625f79cf69f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$ShellRailList.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$ShellRailList.class",
+      "sha256": "0f4ec60caaa63b0d374806e3bc474269c90187282866b886ee0c15fe8fcdc934"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$shellForeground$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$shellForeground$1.class",
+      "sha256": "eac1b07f070b1049a07e4e602d8c37f03245da9dce2e57e6ab168d372c942e08"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView$waveFrame$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView$waveFrame$1.class",
+      "sha256": "69556ee4a98420fc83b639b0ba48af5b7e296b4fa8fc337481fc34f5b6dc025a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumHomeView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumHomeView.class",
+      "sha256": "6029d38adbe063c2dbaa6eb75e56b09d35ae9d6788ea473048f426aed40534a2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumIcons$Icon.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumIcons$Icon.class",
+      "sha256": "a8b952340d8ff6a92677ad2001f89a357b92cb89797e609d23c3360999c91dc9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumIcons$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumIcons$WhenMappings.class",
+      "sha256": "ec02fee5ed9653572eb5dca20a374e6823bcf35c79e2c06923748d9be69c6b8b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumIcons.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumIcons.class",
+      "sha256": "3e8b2082f00e8f3143be47b4bd347111bf568c5e957bc3fa88ddf351eb9a7f2c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElementsKt$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElementsKt$WhenMappings.class",
+      "sha256": "f46ef6cbaa0e46b0af80a2598cd51ed45033e399fb137248418edec962341729"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElementsKt.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumLandscapeCockpitElementsKt.class",
+      "sha256": "63d7889c3ac379f45fb11b498fe97605e39e246f728d0e785e5824448ed5b8fa"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayout.class",
+      "sha256": "b5a98ca564a4ead6f6bfe9254c9d8e28c6b1106384cd80d2ddc491685c85ec1e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumMetricHistory.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumMetricHistory.class",
+      "sha256": "631314f535ef4b8dc5d784eaea0d5669a462f2d0f039861d4d9af1536868c40e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumOrbitalRing$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumOrbitalRing$Companion.class",
+      "sha256": "ab88b49c29b444752d63d8aee62fd975bd173ade9d3c851630b12c32565c670a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumOrbitalRing.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumOrbitalRing.class",
+      "sha256": "b7fe40a06c735bbb814272cda159a6a55f5c8815666593e2b1e67aa6b521f20f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumPainter$DefaultImpls.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumPainter$DefaultImpls.class",
+      "sha256": "ca721122826d79dd2b44a22159a35b15a458f851fce99f26837d6233f8f2af6f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumPainter.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumPainter.class",
+      "sha256": "f1744a350ce3d367a0bc10749fda73ad79cec15d60af96d37e554990e42be230"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumReferenceLayout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumReferenceLayout.class",
+      "sha256": "bc8a4262c29131d3ef73cc032b675dad0153a22ee4f8141ddaeba1d2207b5c9c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumSciFiEffects.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumSciFiEffects.class",
+      "sha256": "9f792138eba224e869d00ea83126ad9e680bfe20a056cdd7f9d7ead55cb3fc64"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumSurfaces.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumSurfaces.class",
+      "sha256": "3c983db5d97cef60985d7b8e4ed1c8f6bb73d49adba5f2ddaaef0874296dd2be"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumSystemGaugesView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumSystemGaugesView.class",
+      "sha256": "0fb87e0704f3dca6169ce6bee39d0075be77309325caea50b7ae6ac496270ced"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Active.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Active.class",
+      "sha256": "08d8e8513adf31ae9a1c2db48a3d6bcdfa256526f4bbe1c22f46ce9928063e23"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Finished.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Finished.class",
+      "sha256": "24f44ba7e0aef9cb155a2cb59f2fae83ce76fddbb572bb5da0669856d5da2b42"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Read.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Read.class",
+      "sha256": "d8ace8a24451461fee332393752fa85454548b7425d5182095e546631b6ff7d5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Started.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Event$Started.class",
+      "sha256": "31d03c81c192374fa30029795d0b9ca12d219859c1796c376842cdbd5808dc16"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Event.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Event.class",
+      "sha256": "807894922aa9473eb64a89549c61fd90c2315e8c4a9a52fe124cef19c58a3c05"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Kind.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Kind.class",
+      "sha256": "7274d47712c8c890ee41d0af43bfe28106d02cf51391ecdfc4fa4584158bc14b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects$Pulse.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects$Pulse.class",
+      "sha256": "56d4fb4c07b9dc65338a2cf34c6777382e6394ea651ade41882bdbc8b8e87a5a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTaskEffects.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTaskEffects.class",
+      "sha256": "3fad082a178d4e3eab5bdcfd42e562f5cfd501d6b0d76f3636a49ccc8ba6d20f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumTheme.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumTheme.class",
+      "sha256": "44d47c2b9f5de5cb9663cb1e3ecd012857a464826fea925a6ce749088a0626bf"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumUiFeedback$Cue.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumUiFeedback$Cue.class",
+      "sha256": "f845b9fd5935bf76bb5d6a177fbc43dba70a356e3ba86335667ee69c9bbb63f6"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumUiFeedback.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumUiFeedback.class",
+      "sha256": "7723db311dee6d9dff70e31c297db2fce91145a55bf39097940235fb1d9bdcdc"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumUiSnapshot$Saved.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumUiSnapshot$Saved.class",
+      "sha256": "7c3de05a66c140ea0a6fb6d8017de1879d0325b7cc96cfa3848279bb49431faa"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ContinuumUiSnapshot.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumUiSnapshot.class",
+      "sha256": "aad85f55f32c597862914384cd5d5f43310781013dcac39fd5f8d5fb4dab8875"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/CoreLabelElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/CoreLabelElement.class",
+      "sha256": "174b4d9b72beeb0c2bfff0fa8e0bd9b2bc07b8d9f93e3274ca3c2685f789fd70"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/DevelopmentCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/DevelopmentCardElement.class",
+      "sha256": "c83a7755f617189c9a72dca3ca9b9100501a2d93fc8ca4ad419792f9b4ac17a1"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Donut.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Donut.class",
+      "sha256": "a377bc156ab3be10123fba52ce745a872ceefc9f6bc866797a84cf03783345f3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/EventDot.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/EventDot.class",
+      "sha256": "71c2ce1f2e8aa47348832ca7ead1b9a30975040451cf68ac82007f7012767e72"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Fill$Linear.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Fill$Linear.class",
+      "sha256": "e9f52febb081130dceb3d1eea503255846c34226e44d944795eecf14fde00cb3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Fill$Radial.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Fill$Radial.class",
+      "sha256": "1ee1f4ee200db5e57eeaed95d553d3bb5a4426585fa1f90dd42452c7a1d59adf"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Fill$Solid.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Fill$Solid.class",
+      "sha256": "c1f803a49a76f5d307f8a388715012cda8d6b057cdf925027b35c374bd226ec9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Fill$Sweep.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Fill$Sweep.class",
+      "sha256": "c7c9887b0729856611874d969d94e0fdbae65e32c42b7470cdf51b224db30ee0"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/Fill.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/Fill.class",
+      "sha256": "8a560de10a5c06659c906d5f65695390ac4790716ececa249dc18a35af4e782f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/FontFamily.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/FontFamily.class",
+      "sha256": "26c222e42ca10e9f54fd53006232f59693b4683dedc25fa730acf0d9da2f1d04"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/HeaderBrandElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/HeaderBrandElement.class",
+      "sha256": "0e01a9f0d82c6de91c7afe3d50ae5105052533b4b860d652592fa76e8855e623"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/HeaderButtonElement$Kind.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/HeaderButtonElement$Kind.class",
+      "sha256": "77fac38082f06f751b0e63dd8545b019b4c4c450e6d8556b2294fd2a4c98387d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/HeaderButtonElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/HeaderButtonElement$WhenMappings.class",
+      "sha256": "87f9a18b47520638648124e924524a93187b2fb8ddc17fbfb135631227d0ce07"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/HeaderButtonElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/HeaderButtonElement.class",
+      "sha256": "7c504b1dd5243e517b141930e1ed97d488433847c388c2c00019eb98622c6495"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisBloomPass.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisBloomPass.class",
+      "sha256": "2f64d6aa67282b297cb40befab59b9e614a7f72ea8265aba8e436e81dfec5694"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCameraDrift$attach$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCameraDrift$attach$1.class",
+      "sha256": "8dc6b7b48ef53af26cd96778321563645131e377a635ecd5eae05e96509c4054"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCameraDrift.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCameraDrift.class",
+      "sha256": "59c2fa4c945700d215c394e96c73449e83d1a2d46f6b1d6ecdcf6d104d1afb4e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitActions.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitActions.class",
+      "sha256": "f712946559c01f15343d888cbfdf4f48120698b0f46596169321d0f745518a34"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGrid$Area.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGrid$Area.class",
+      "sha256": "43186c1b01477298250d5ddd32f73a3629e904e938ef0a765c610d81f0130aa9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGrid$Grid.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGrid$Grid.class",
+      "sha256": "f039729ade79d406094a9e8a7b8accbbe73443435c5773f28d0f9fae666a5f94"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGrid.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGrid.class",
+      "sha256": "b06c432e2884921461b6086b8d58685b2af85f82a8298c5d881d2c458c0bf7cd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGridContent$Module.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGridContent$Module.class",
+      "sha256": "c161787becef812989bb727d160b7093f07cecacf3b5a5755b375e3591c82cdf"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGridContent$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGridContent$WhenMappings.class",
+      "sha256": "819b88ddb2cafb709ab837980695900ef80888a44db5cbce5763f32661213199"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitGridContent.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitGridContent.class",
+      "sha256": "5d8bc99b62e824cb6aba1c7821dee4e5d9cb0cc9d21e9c7d00168efa1063e81b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitPanels$Seg.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitPanels$Seg.class",
+      "sha256": "d498362da954f9f5574513010c222402ba1d0a396278c76461d26bbd0ff126bd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitPanels$Segment.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitPanels$Segment.class",
+      "sha256": "83fdb3719a0742346aeebd781105f3caf805c6c8ec01f0449e0d763e9ade06d9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitPanels$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitPanels$WhenMappings.class",
+      "sha256": "03bafc83bef7c6f99f9eaef2555f171c67b297cbf8156173121642bfefb5b117"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisCockpitPanels.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisCockpitPanels.class",
+      "sha256": "ed6e4ed38e3afa344c1918b13d11bf30e91ed93c2ad28bc1d84ce097043be13e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisControlState.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisControlState.class",
+      "sha256": "ef7b78d6f9901e82b646d84225d225eee3756665a85fc8953e31fc8714cc37c4"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDepthViews.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDepthViews.class",
+      "sha256": "9a4afe0d44350d5f3e4a40b1054a8bc17a8de391ac6244e13be82527c990956c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$Colors.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$Colors.class",
+      "sha256": "905294f10643db333cfed7678d1dda3b763032106e960381ced92f7ce5362cc0"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$ComponentStyle.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$ComponentStyle.class",
+      "sha256": "c6b6a10ab512f72b85a1dd308db5ab1d00da02738e14fbdb932ea5ca039206e3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$Glow.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$Glow.class",
+      "sha256": "c299ff468c3ab93891046690fbd04cb0e715723537f5ec84b9da13a78c96e5d1"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$Metrics.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$Metrics.class",
+      "sha256": "7ebae09da996ecab9c986fa489f38dbba922fc3802e38210c8baa44a59743bb5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$Styles.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$Styles.class",
+      "sha256": "2af5e1d259dfd3125294f7c1b5fdecfdcc74850e78ec997aebdb6a1e9d38f0a0"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign$Type.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign$Type.class",
+      "sha256": "fa54730fa476f08ffad703f8c2ad7208bee01b0b297b59cf0701c82c7bc09716"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDesign.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDesign.class",
+      "sha256": "f124f7c9a18a4c9e21031242f82ec75e8a33ce23748a8d690a989d98912732c5"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDeviceStatus$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDeviceStatus$Companion.class",
+      "sha256": "32c087437dfc7f0caceb5adb702ebbb06fe423523d83996764683f0466a59f46"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisDeviceStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisDeviceStatus.class",
+      "sha256": "f9249af20b6d781f2d6c0b349f81312461e9ce12fa980971094a2db59f6ae893"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisGlassRenderer$Agsl.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisGlassRenderer$Agsl.class",
+      "sha256": "75001b3fff3d3f8434e9c4862e8933db620dda9cc1492456faef636e88ee3b67"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisGlassRenderer$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisGlassRenderer$Companion.class",
+      "sha256": "77281f6a6f67ddeb6569b68b689824596677b4e78dc26e4cdb45bd31c65e087f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisGlassRenderer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisGlassRenderer.class",
+      "sha256": "4b5381e3d84d0a2fdd50053342e28edd13c0196f730d85336702e63f77f7b72f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMemoryActivityPanel.class",
+      "sha256": "afd6b5fb016ce9bab561b4303017655e50c585e0a62d506736cbbf095e7843b0"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenu$Entry.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenu$Entry.class",
+      "sha256": "2752d95071b04494a8ec991827eab36c89198c1cd30b19555673636d24358693"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenu$Kind.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenu$Kind.class",
+      "sha256": "394fc5b5ad8797cd60d96db3ea71e5c9537981b16b6a43159485ce04a220f13e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenu.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenu.class",
+      "sha256": "53cb67beb6eb51892edf3ce5810f8e5d359ab90090248fb1008d96e8800abf11"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion$Camera$State.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion$Camera$State.class",
+      "sha256": "2c55c76824a0f1a8bc939a2c5f9a6e21740d7858fdbceeeddf35f6fdc6f6b100"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion$Camera.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion$Camera.class",
+      "sha256": "57f5a0fd7cb2a70e66622e483dde4edbe5e5ff74eb3c58e5d10ae56eb6b4b59c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion$PanelStep.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion$PanelStep.class",
+      "sha256": "af53895f7793311195c5715ef94a940b85a1434aca92531123f920f3463cb078"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion$PhoneScene$Frame.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion$PhoneScene$Frame.class",
+      "sha256": "89d594ee740c1275cb38a72db17c8720f2f08345714fbf8c2a50745e2a44b8cc"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion$PhoneScene.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion$PhoneScene.class",
+      "sha256": "0d8e8bd589d305bfd6b50186b1637f01dc47c6fe01d57c3026bd053f31ae1100"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuMotion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuMotion.class",
+      "sha256": "830230f872827fff29ba11b2aef7a5abc4e0d4f51309ca387441f6bd79652edd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuNavigator.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuNavigator.class",
+      "sha256": "0b5dd19cc6a22ecee3e20447fdacb89adc3d71d12397012cc317bf6fc271b9d3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuRail$Mode.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuRail$Mode.class",
+      "sha256": "c77d0d1dd2f325cfde0a082fea5978fbcb3d1f8ab278aa1e022339685ed95daa"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuRail.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuRail.class",
+      "sha256": "b5739b989e760107496dd093247cbd913f422e95a72aadd17fd8f8585592968d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMenuRailElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMenuRailElement.class",
+      "sha256": "5eb484bb0084e8d40ad1fa240f6b8ca7464ad7555ce56f110b072f00b134c8af"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Depth$Layer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Depth$Layer.class",
+      "sha256": "6edb332cd75f0f5b1acde897db447f638ab17540f42f7797846e3d529f20dab7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Depth$State.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Depth$State.class",
+      "sha256": "7671d2bf71e8d8c979ac11becc420d5e7a3b245049cf6f743a2ad20a4245a7ee"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Depth.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Depth.class",
+      "sha256": "62161ba074f6e21340627f00c76076fe944c8bc65b9a5000fbd3f80111386783"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Direction.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Direction.class",
+      "sha256": "d0f38d7a37932fb699199062dbe37accbbf8f80516695d92b994ed003f42549f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Durations.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Durations.class",
+      "sha256": "526074b35cd487f9c357f891539d0ca31bfe4c5c7353e6ce642f5ddce89b282a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInCubic$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInCubic$1.class",
+      "sha256": "01436bff338808f60637fe2eda193a7f2d058cf88d430609ac3e06049e107024"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInExpo$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInExpo$1.class",
+      "sha256": "67c64c9da2cd3c31ce1e02ccaff59121610b014caad55fab2ca663d6be5d76e4"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInOutCubic$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInOutCubic$1.class",
+      "sha256": "213df7899d32804dbacd819669dc39712ac22e9a07a4766f6f237bd2e87fd125"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInOutSine$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeInOutSine$1.class",
+      "sha256": "7d3d85bde1032752e476325b8bf1d8c6dd39600fd669bde855e33753ed9fb8a4"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutBack$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutBack$1.class",
+      "sha256": "f43d1ea061636229a4dc6ff35581da04fb52aa389c9ab56790a60836d0d74f38"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutCubic$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutCubic$1.class",
+      "sha256": "85dd66a71b02a0e2277089868808c5a1835dd6379c31edffe4bb17074394967f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutQuint$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$easeOutQuint$1.class",
+      "sha256": "739378e9ef430273db2260cf41155b7adfbc91f752a039a9821cb7f29f7acccd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing$linear$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing$linear$1.class",
+      "sha256": "11d6129eeb5c3785ddcf072b2a31425a49d42d19b9be76e4c39084e85f1c9d64"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Easing.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Easing.class",
+      "sha256": "84cb1d73b5c133819eb7d2aade5bb99777104998cc360edd25a3f2279d0a9f48"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$FlyIn.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$FlyIn.class",
+      "sha256": "5b648ab009915219271e8a1a3cbee176e591a87bcdf3f8fe5f0d214ea56fa3ff"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Frame.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Frame.class",
+      "sha256": "bb6f032a328f7f1d376bf6606108a3fb00f39186fc584658db23323b6c6c8966"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$Presets.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$Presets.class",
+      "sha256": "e4af8303f1d37459daa8adc27abf7eacb434587c42914160c294395b9fa60122"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$SceneFrame.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$SceneFrame.class",
+      "sha256": "664d163ceaa2a815e3d26b9da5a67e1e0d3bdc2bd567bc66229d018f2fa19c76"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion$centerFirstRanks$$inlined$sortedBy$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion$centerFirstRanks$$inlined$sortedBy$1.class",
+      "sha256": "120a2ad62e70b583a30d697c8e93d7928edc8b530826c74a7a4c90b3e79942d1"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisMotion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisMotion.class",
+      "sha256": "659b909322c232235ed41270869f5254b8c1a75da64f59e7d2a09b8d55e72482"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisNeon$IconPainter.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisNeon$IconPainter.class",
+      "sha256": "dfb5024157e22333a8c9fac964dcb2d1536e1d53e842558a8de05289a55f05bb"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisNeon$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisNeon$WhenMappings.class",
+      "sha256": "97a70c53de319a95ad9667a0eacd84d4c61bfa4b2ab61e68049491eb0598e4d2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisNeon.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisNeon.class",
+      "sha256": "d5a40503b36692f091d272277f7ab205eddfc230d0748da4153f972e2f98dfa7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisOwnerCardContent$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisOwnerCardContent$WhenMappings.class",
+      "sha256": "0844752b98e4fd7a47cf97ba58555bc58b4b81be5731d4301abf6c386bf0aeee"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisOwnerCardContent.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisOwnerCardContent.class",
+      "sha256": "dddf15d05814e20accc3d80299364cc42e8d995c3d1c390247fd71de54a30caa"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisRailIcons.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisRailIcons.class",
+      "sha256": "5877ae81f48b6e9abdbf791f36c1a13a728cfc05e1b385df7a84820af25fda9b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisReferenceHud$Interaction.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisReferenceHud$Interaction.class",
+      "sha256": "c1ce6210168c40dc4d2e58051f5cdd85d911f0fb608935d44bce453566ba0722"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisReferenceHud.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisReferenceHud.class",
+      "sha256": "dd31855a13f976f931efce7adeff113a32abe7c7dc149e163c8e199f62149bb7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisRenderQuality$Budget.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisRenderQuality$Budget.class",
+      "sha256": "a0ab4e70b9e13485d6119f775cd4805567b6a47f94b188c4bd9e34cd16b6b67c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisRenderQuality$Tier.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisRenderQuality$Tier.class",
+      "sha256": "87f0036b37527702e12149fc342b7a4e2645023da11b8cd64a9143a6f878bec2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisRenderQuality.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisRenderQuality.class",
+      "sha256": "f751f46b091a6de9ce39cfc3b4384562879b37587500ff549515e67a254392bf"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Card.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Card.class",
+      "sha256": "a4897b763f8375453eb4ff15b1447d9f9324a51aa1a15962554bfc1cec46ba3d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Command.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Command.class",
+      "sha256": "23b6ba2978f36535388b436ac010ebccf59f1869ceac3f2f22703c00d9063021"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion$EnvelopePose.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion$EnvelopePose.class",
+      "sha256": "7f59a77aedb1dfdc4899d7ff55eca5c094683a4840e2ea58dd97a7ff13287956"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion$ORB_EASE_IN$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion$ORB_EASE_IN$1.class",
+      "sha256": "74a45c44f02a7d004e36228a29579db9c72494e19cd5d6ec9c3fb60c2d1d9bbd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Companion.class",
+      "sha256": "de633851bc0377416d0a84c2e3c8e3fd7f208fa2f91c08534a6d1336c73e79db"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Envelope.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Envelope.class",
+      "sha256": "e769a6963a8be8b0887b892495c9d3d58e7c218e2924347682a320074772aa75"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Kind.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Kind.class",
+      "sha256": "4e67ad095dd4eb00779efa05da0df3d7c06d72e7aae03862e74f119df2fb6dae"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Outcome.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Outcome.class",
+      "sha256": "550abd8cb94db92d0ceac3f91288ed179bd4c52a29d2f4af1ae0312988a67b16"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$PillBox.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$PillBox.class",
+      "sha256": "056dc86e5cb4e3602d2ec5ccb28511add5ab4706fe2c9fcdedc55737255323b8"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$PillGeo.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$PillGeo.class",
+      "sha256": "ff9e5e8dd56d63d108c02cf5e7f94e81ba93f72bd7bdfba62de86b0d151f76f1"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$Pills.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$Pills.class",
+      "sha256": "52f8b895766eafe541da2014af13a7e0dd5ac2f444087adbcc877d37ad75523c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects$WhenMappings.class",
+      "sha256": "4a55f77e42fe443cd55d4917b9d0438504d2c0b7aa0d6a27c5ef7a22cfea943c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceEffects.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceEffects.class",
+      "sha256": "771892a4ad12d0e772b56199d5735e3501445ce0f4aaadb6fa8b986873f2a52a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceView$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceView$Companion.class",
+      "sha256": "c4a74db526af5c8d5c5f348726fc997591d88036d1678c3ea573c9e48a659f03"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceView$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceView$WhenMappings.class",
+      "sha256": "b5cef1e9cc1405332644e3f11ab1c2d277c0d3662e572a080991bfcfceca3219"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisSequenceView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisSequenceView.class",
+      "sha256": "f77feb45412f4df0bac527df16bf8436316189adf5b9497f7b99dd7c9d4d49f1"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellContent$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellContent$WhenMappings.class",
+      "sha256": "7cde88c72e8275262997a9920d04b9f3ae6b1c6e8f581174f2f2a5129b15b410"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellContent$forState$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellContent$forState$1.class",
+      "sha256": "67d6adeeab5d6640b83ae87ed47a9dbab99eb9d080b3e5c2bf7e7b460a7d09e7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellContent.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellContent.class",
+      "sha256": "008eed5ca40f7d5af0990f59b36e74e81ac38e652f5f51d9be0cb40f9aae685b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout$Box.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout$Box.class",
+      "sha256": "e610f704b8f04ff216d31284893bf065721f76fb8100877bab75a694cf921f31"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout$FormFactor.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout$FormFactor.class",
+      "sha256": "9be090323c8a6ae8320bc4c473aad3b74db36bd17a75bfeeb7f8c4da8a38db53"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout$Rail.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout$Rail.class",
+      "sha256": "f7af8d6ae6a2b59938816b0689883499dc68cfdcfe48625ad1ed2a467af35bd9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout$Shell.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout$Shell.class",
+      "sha256": "bba9366dc42b66f839b9e21b87f4fc9ba7e2ee133b7267a658ea7205263c85a6"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout$Slot.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout$Slot.class",
+      "sha256": "2435e29e32147a37e975ca6e0663c34babb4d21caa4b9bc132adac29b0565370"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellLayout.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellLayout.class",
+      "sha256": "3545566bb53554fb756b7b89fedf0f267dae993592a37739d433a5698d060c23"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer$GlassBackend$DefaultImpls.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer$GlassBackend$DefaultImpls.class",
+      "sha256": "c279ff6037f625c18fde22ff54d542120e2292b42545a994e6d3ae78e2612182"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer$GlassBackend.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer$GlassBackend.class",
+      "sha256": "c5f15a89ade69989d0dd56ee1aed0f5c9b35f9e5e50d0e0e0c05f993672ac37f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer$SlotContent.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer$SlotContent.class",
+      "sha256": "f791e7ff1cd64b097404cb41eea076ff248c7616be317b8885d2dee2cd68c965"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer$WhenMappings.class",
+      "sha256": "216e9dd9b4a355658b38ca76997e00e9e53a490b9d1cef648b9d22089aab0789"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer$draw$1$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer$draw$1$1.class",
+      "sha256": "3841e185d6123d87e2677826a2d350c54c9d4a1202ecefe959addbfacebcdff6"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellRenderer.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellRenderer.class",
+      "sha256": "2d8dd09105529595d4fdb81f1c6639c91ef8a27eadd4f19ab768be106772b075"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellView$frames$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellView$frames$1.class",
+      "sha256": "4239efb0190e4e2e9bb6669937d2ad08619b3f96d94a2a967912529f9223400f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisShellView.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisShellView.class",
+      "sha256": "d7eacbc0ac50a50e6f63c049a1754f782045bd28510e2418ddbed38516c0a9ae"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisTextScalePainter.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisTextScalePainter.class",
+      "sha256": "817706583ca659854510c889aaa9dee667471c1d9349815e925fae1c111d97ac"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisTile.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisTile.class",
+      "sha256": "bd4b486d927d51783445632931b9f07d5a10b5afc15187cc0dc0c85341647ff2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisTiles$NavItem.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisTiles$NavItem.class",
+      "sha256": "bc907a017fc2a319fe351660d5c93aaf69cd4545ce325ce9c9abc03cd3637e00"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisTiles.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisTiles.class",
+      "sha256": "a74886f2fc8db62721c8bd132735fa851047adad56b728a3f70df07212fca825"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisWindowProfile$Companion$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisWindowProfile$Companion$WhenMappings.class",
+      "sha256": "62e7f1bc31b91de109bc0c4e8b6cb4826462ace26b9582f8420005bfb367e5b2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisWindowProfile$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisWindowProfile$Companion.class",
+      "sha256": "c8bc507a6edc31a5534df49349a3b230265028facd3787bfd118601bf7118bdb"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisWindowProfile$WidthClass.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisWindowProfile$WidthClass.class",
+      "sha256": "3aa4d70bfe79dd4cb1582addc11fd5be5c8b565816b4731e41a45ad2d09e20a3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/JarvisWindowProfile.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/JarvisWindowProfile.class",
+      "sha256": "5696b06cf02b2b8eb733da5f68f412bef887e2e6ece541943c420177c06f30dd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/LearningCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/LearningCardElement.class",
+      "sha256": "9e190e784417b61e78189f32da299e51c0588415d9ae455f29c56228a88a920b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/LocalModelStatusPresentation.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/LocalModelStatusPresentation.class",
+      "sha256": "b79a292a9445b08dc6bc7455b20862bd352514bffa40998b0d6e15442c8d8afb"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/MemoryActivitySnapshot$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/MemoryActivitySnapshot$Companion.class",
+      "sha256": "748ca18cbb39a9d4e0cbc5e82a219c7f71987157b66829892f9ae64fd2134cd7"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/MemoryActivitySnapshot.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/MemoryActivitySnapshot.class",
+      "sha256": "c3173a97b0e80d93ad3f0838f57e838c2261ed0acac73d0e7bea69e05123a497"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/MemoryActivityTracker.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/MemoryActivityTracker.class",
+      "sha256": "7c5fca6702a6d714b6f0fd74e48c4cd15ea7afa2640abd3bab8ccb859963ec96"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ModelPillElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ModelPillElement.class",
+      "sha256": "600cd7d58df65ada9357929cc3630a6ea8f78f0e5d9fda67551d778b57d4a756"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ModelStatusCardElement$Companion.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ModelStatusCardElement$Companion.class",
+      "sha256": "3e79b57f9ece22122f6a69729554ab07efd7b2fa69eea814f7f13bece2516fc9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ModelStatusCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ModelStatusCardElement.class",
+      "sha256": "1b8c4f3fd95c6fc0a97ac3436b3516bd5d96381ad6dfc975b222e0dae0faf843"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog$Session$showReview$list$1$1.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog$Session$showReview$list$1$1.class",
+      "sha256": "d0fffcaab25e85b9c52f64dc4de04823035c05a16b1d68c1423f6fff97504320"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog$Session.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog$Session.class",
+      "sha256": "93def3bf23fbd88ac5b2bf5de2e49672e2e6470707c33ed8cbed0df7a5170b1c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/OwnerMemoryRecoveryDialog.class",
+      "sha256": "92c0b8d2bc537b578403281ca1011c18193b49380310b63ec86a2bf03532affe"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitActivityCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitActivityCard.class",
+      "sha256": "d567026cb1484b2ce94705cb5fab52db9487615d0c47e87f61c50cd9e9981469"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitDashboardCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitDashboardCard.class",
+      "sha256": "49be2388c008b3d07435068667810ace24cf91d88bceaf1ef442a712b7e6f423"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitDevelopmentCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitDevelopmentCard.class",
+      "sha256": "3416c0ce60e2a0552919d75af0a3f26da977daabf9e941f368198ccbc434194d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitLearningCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitLearningCard.class",
+      "sha256": "b6569ad28d006527c9f47d80aeea4bbe9e64dee423705cb508595d0f0deffcd3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitModelCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitModelCard.class",
+      "sha256": "1c1d5230766e82316d4a96848a28509e012994d00003f0a6c1ffda06933dc221"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitStorageCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitStorageCard.class",
+      "sha256": "5e5bb252b97ad67ad3752eed4906b1c21e9e0ecffd21cd76c2b8797048bde70d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitSystemStatus.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitSystemStatus.class",
+      "sha256": "a93b4fe3db7ea371360021234075a2bc39a430b963bee55c878963504e67d4b3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitSystemStatusStrip.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitSystemStatusStrip.class",
+      "sha256": "a94bebc4044e75ae5ca311160fd3fbb8a2d3c558144b9474ff32a78941fc1a7c"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/PortraitWorkersCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/PortraitWorkersCard.class",
+      "sha256": "14a5c34789e1288f18caa824ba79194d84ac539ad0ff6ffd2611ac38bbd303a3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/RailElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/RailElement.class",
+      "sha256": "a0ac7f429ccfe542b79d84e0d52032dd7f80ee4a38b76e888ef0a55b7cefb540"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceActionElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceActionElement$WhenMappings.class",
+      "sha256": "e1eae94c697a8636f57cbc92826a53e30452c85ac4a3f6a5450f256bc8feda0b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceActionElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceActionElement.class",
+      "sha256": "3fdc23fdef8bdb187cfe3e7ab14494b05a2cdceb18d8f3b6cafb9f6487e04905"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceBrandElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceBrandElement.class",
+      "sha256": "a9c56f50dc64b9574689a794de45e14af6655fe53c63728a75a27a36f53484aa"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceComposerElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceComposerElement.class",
+      "sha256": "96878aa2a796c2977347d1afba74cab33224571a7375e9e4c4081b9267dd3683"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceLearningStatusElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceLearningStatusElement.class",
+      "sha256": "b5e2f49f4b3adea784171aa32eeebb593e6b06609a301cdd99d298eb40c829c9"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceMetricCard$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceMetricCard$WhenMappings.class",
+      "sha256": "6d60393bcbf57ccf023d1e6d80957922128ca6991676b2095f5a8ac9dec666de"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceMetricCard.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceMetricCard.class",
+      "sha256": "b47b2a6eed681679189a82b53fc5231eecc6842bcaa19c3edbe16304abf92ad4"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceViewModeElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceViewModeElement$WhenMappings.class",
+      "sha256": "806e5e284aeffc5bf86b27e3dcfada6b8e7988140db6911a49f2029711006834"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ReferenceViewModeElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ReferenceViewModeElement.class",
+      "sha256": "6010726ed838ace21375ac7bfefbdee493626df31b279a9c5e37628db853571f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/StorageCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/StorageCardElement.class",
+      "sha256": "95ea2683859e038a440c6f167a992821de45298cc4698c0b9e2808d74a6266cd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/SystemActivityElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/SystemActivityElement.class",
+      "sha256": "fdd1b0110c6aec3839f27912f3e82afc8a5defed7311ae352fceb1060d04ba9b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/SystemStatusElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/SystemStatusElement.class",
+      "sha256": "7cbe40bb6da09744b12d19742a1bcf96942707c6a9325d1ef23ad7f2e692a34a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/TextAlign.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/TextAlign.class",
+      "sha256": "45bf2276ef0f50bd5f32276e90eb89eb27471bd1fe9a59db03c393fb2d635e7b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/TextStyle.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/TextStyle.class",
+      "sha256": "483774130768d780a8881103647891b36cba28305165fb921c80d04ce2bc1d1b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/ThrottledRead.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ThrottledRead.class",
+      "sha256": "147c2be892c16a3d6f259340bb8519cbef5e741471df4c2485f636ca3c25e62f"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op$Close.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op$Close.class",
+      "sha256": "d9f1fd2fa2553ff0bcd79f652cca5521a217af99df6b5aa18aeac2d78b20deb3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op$Cubic.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op$Cubic.class",
+      "sha256": "6db1093f134799c94e4d48a292cd71c4762c56d9de019f5f4177235f5b41996e"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op$Line.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op$Line.class",
+      "sha256": "c7590e982a8918ca49a87d252ec75afca17132f8e6783b24b0b142830dfde915"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op$Move.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op$Move.class",
+      "sha256": "f340f6f96554774802bcb0c5a738626dd0bb27dba1a48cb72fcbedc707dd56a3"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op$Quad.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op$Quad.class",
+      "sha256": "bc3c204bda1c7cc5f5434dc39820b311ef0d353cfb97c1e2ae6663165e07b31d"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath$Op.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath$Op.class",
+      "sha256": "ee7728ae71f69008f9babbfac5e74f7dda41c6b18a9f39e16c094d9adb1aad81"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/VectorPath.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/VectorPath.class",
+      "sha256": "b482107cf0668709cd20e48ae9a4dab83deb1fc54361739bf312171f74e42f72"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WaveChart.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WaveChart.class",
+      "sha256": "a444801ab6c7428a5e8862ee92d75b8728616efd050b4163cc0f42b0d82d84e2"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WideDevelopmentCardElement$WhenMappings.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WideDevelopmentCardElement$WhenMappings.class",
+      "sha256": "dd3ae795de58ccb109c218b806ea69ef0e78704f9f78c6d4c11bd01a14c863dd"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WideDevelopmentCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WideDevelopmentCardElement.class",
+      "sha256": "a0be0f686b1407e19cdfd9f792129792f91ed6d587e45cd29a56c3710db0999a"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WideLearningCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WideLearningCardElement.class",
+      "sha256": "8a027511e5d9db97b2292a1f45c7c478af919f9be309edb0e91cb6e3f753aa32"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WideModelCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WideModelCardElement.class",
+      "sha256": "c950388414caf1ea84cb3f02337ab7b8dcbf59a41ddddf1fb4e3d86c518d6f0b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debug/at/heinz/deviceai/ui/WideStorageCardElement.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/WideStorageCardElement.class",
+      "sha256": "fe5764f6337c2031892d58e496aafd5b1701f934aa364bc463f3b68b75986c4b"
+    },
+    "/workspace/scratch/624aeb26d481/continuum-brain-r3/app/build/tmp/kotlin-classes/debugUnitTest/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.class": {
+      "copy": "actual-compiled-classes/at/heinz/deviceai/ui/ContinuumLandscapeCockpitLayoutTest.class",
+      "sha256": "a709ccd2c66954434da8f86a71d2514a010c63c5c1b33cb5743d6c75e4cb91c6"
+    }
+  },
+  "newAndroidBuild": false,
+  "productionEdits": false,
+  "deviceOrPixelsClaimed": false,
+  "dependencies": {
+    "/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar": "ccb14ff83fabcb11458b798dbc9824748ccdffeec79c9aba789e6ed1cda86b1c",
+    "/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "compileCommand": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/javac",
+    "--release",
+    "17",
+    "-cp",
+    "/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/actual-compiled-classes:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+    "-d",
+    "/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/probe-classes",
+    "/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/LayoutDiagnostic.java"
+  ],
+  "compileExit": 0,
+  "junit": {
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+      "-Xmx256m",
+      "-XX:ActiveProcessorCount=2",
+      "-cp",
+      "/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/probe-classes:/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/actual-compiled-classes:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+      "LayoutDiagnostic",
+      "junit"
+    ],
+    "exitCode": 1,
+    "output": "original-junit.log",
+    "outputSha256": "868c7519e866a12e1e4b5fe7cf0e8300d42bc3d35a72475cc0a3a18c9ac34181"
+  },
+  "geometry": {
+    "command": [
+      "/workspace/scratch/b6ee64d418cf/toolchain/jdk17/bin/java",
+      "-Xmx256m",
+      "-XX:ActiveProcessorCount=2",
+      "-cp",
+      "/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/probe-classes:/workspace/scratch/624aeb26d481/qa-r3/layout-diagnostic/actual-compiled-classes:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/scratch/d663e8444310/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar",
+      "LayoutDiagnostic",
+      "geometry"
+    ],
+    "exitCode": 0,
+    "output": "geometry.tsv",
+    "outputSha256": "af6e37d3bb375a0cb36482f81489d4669bf2029abe725729d0c805b7c3235a55"
+  },
+  "fixtureSha256": "109cb1b00f4e8375272e2c9891fba4d802c39138ad159c418e460298e2125f8c",
+  "runnerSha256": "d784a135127a0b788d0f4c8750bd3a02ae6b8b44e09aaf3d8cac6bb97d51ee71",
+  "headUnchanged": true,
+  "violations": [
+    {
+      "width": "832.0",
+      "height": "700.0",
+      "font": "1.0",
+      "slot": "VIEW_AVATAR",
+      "left": "323.353332520",
+      "top": "51.487094879",
+      "right": "422.171478271",
+      "bottom": "99.487091064",
+      "boxWidth": "98.818145752",
+      "boxHeight": "47.999996185",
+      "strictTarget": "false",
+      "heightHex": "0x1.7ffffep5",
+      "topHex": "0x1.9be592p5",
+      "bottomHex": "0x1.8df2c8p6"
+    },
+    {
+      "width": "832.0",
+      "height": "700.0",
+      "font": "1.0",
+      "slot": "VIEW_ORB",
+      "left": "428.171478271",
+      "top": "51.487094879",
+      "right": "526.989624023",
+      "bottom": "99.487091064",
+      "boxWidth": "98.818145752",
+      "boxHeight": "47.999996185",
+      "strictTarget": "false",
+      "heightHex": "0x1.7ffffep5",
+      "topHex": "0x1.9be592p5",
+      "bottomHex": "0x1.8df2c8p6"
+    },
+    {
+      "width": "832.0",
+      "height": "700.0",
+      "font": "1.0",
+      "slot": "VIEW_COMPACT",
+      "left": "532.989624023",
+      "top": "51.487094879",
+      "right": "631.807739258",
+      "bottom": "99.487091064",
+      "boxWidth": "98.818115234",
+      "boxHeight": "47.999996185",
+      "strictTarget": "false",
+      "heightHex": "0x1.7ffffep5",
+      "topHex": "0x1.9be592p5",
+      "bottomHex": "0x1.8df2c8p6"
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "scope": "Read-only source comparison. Does not certify a newer commit.",
+  "comparison": {
+    "repository_full_name": "Ullmann27/device-ai",
+    "base": "b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+    "head": "1a5302c504a78a50d5e64ca727f2915529bf2b06",
+    "status": "ahead",
+    "ahead_by": 2,
+    "behind_by": 0,
+    "total_commits": 2,
+    "too_large": null,
+    "base_commit": {
+      "sha": "b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/b04daf5db2cbe40a9fa757499a0d295176a1bfce"
+    },
+    "merge_base_commit": {
+      "sha": "b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+      "url": "https://api.github.com/repos/Ullmann27/device-ai/commits/b04daf5db2cbe40a9fa757499a0d295176a1bfce",
+      "html_url": "https://github.com/Ullmann27/device-ai/commit/b04daf5db2cbe40a9fa757499a0d295176a1bfce"
+    },
+    "files": [
+      {
+        "filename": ".github/continuum/coding-orchestrator-failure-report.test.mjs",
+        "status": "added",
+        "additions": 240,
+        "deletions": 0,
+        "changes": 240,
+        "previous_filename": null
+      },
+      {
+        "filename": ".github/continuum/coding-orchestrator.mjs",
+        "status": "modified",
+        "additions": 30,
+        "deletions": 10,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": ".github/continuum/coding-service-reader.mjs",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 2,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": ".github/continuum/coding-service-worker.mjs",
+        "status": "modified",
+        "additions": 34,
+        "deletions": 6,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/baseline-contracts.command.json",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/baseline-contracts.result.json",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/baseline-contracts.txt",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0,
+        "changes": 35,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/echo-green.result.json",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/echo-green.tap",
+        "status": "added",
+        "additions": 322,
+        "deletions": 0,
+        "changes": 322,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/echo-import-manifest.json",
+        "status": "added",
+        "additions": 30,
+        "deletions": 0,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/echo-red.result.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/echo-red.tap",
+        "status": "added",
+        "additions": 33,
+        "deletions": 0,
+        "changes": 33,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/red-probe-original.mjs.txt",
+        "status": "added",
+        "additions": 96,
+        "deletions": 0,
+        "changes": 96,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/echo-slice/summary.json",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/node-critical-01.result.json",
+        "status": "added",
+        "additions": 28,
+        "deletions": 0,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/node-critical-01.txt",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/original-buffer-diagnostic.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/source-identity-green.result.json",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/source-identity-green.tap",
+        "status": "added",
+        "additions": 190,
+        "deletions": 0,
+        "changes": 190,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/source-identity-red.result.json",
+        "status": "added",
+        "additions": 14,
+        "deletions": 0,
+        "changes": 14,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/source-identity-red.tap",
+        "status": "added",
+        "additions": 32,
+        "deletions": 0,
+        "changes": 32,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/evidence/c1-integration-20261104/source-identity/summary.json",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/research/omega/ASTRA-NUCLEUS-HANDOFF-20261104.md",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 4,
+        "changes": 9,
+        "previous_filename": null
+      },
+      {
+        "filename": "docs/research/omega/C1-INTEGRATION-HANDOFF-20261104.md",
+        "status": "modified",
+        "additions": 26,
+        "deletions": 4,
+        "changes": 30,
+        "previous_filename": null
+      },
+      {
+        "filename": "scripts/continuum-reliability-qa.mjs",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 1,
+        "changes": 3,
+        "previous_filename": null
+      },
+      {
+        "filename": "scripts/continuum-reliability-source-identity.test.mjs",
+        "status": "added",
+        "additions": 65,
+        "deletions": 0,
+        "changes": 65,
+        "previous_filename": null
+      }
+    ]
+  }
+}

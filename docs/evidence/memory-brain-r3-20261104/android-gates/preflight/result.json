@@ -1,0 +1,36 @@
+{
+  "apkRequested": false,
+  "checkout": "/workspace/scratch/624aeb26d481/continuum-brain-r3",
+  "expectedCommit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+  "expectedTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+  "finishedAt": "2026-11-04T20:16:37.319585+00:00",
+  "freeBytesAfter": 0,
+  "freeBytesBefore": 0,
+  "gradleCache": "/workspace/scratch/d663e8444310/gradle-cache",
+  "gradleExitCode": null,
+  "lintRequested": true,
+  "lockWaitLimitSeconds": 45,
+  "locks": [
+    "/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock",
+    "/workspace/scratch/d663e8444310/qa/gradle.lock"
+  ],
+  "requestedAt": "2026-11-04T20:16:11.250492+00:00",
+  "runnerSha256": "c0332b570f9ae378eadb1afadd8c4748af981b2e36e8c7677febae568a88b394",
+  "schemaVersion": 1,
+  "sourceAfter": {
+    "commit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+    "dirty": "",
+    "tree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5"
+  },
+  "sourceBefore": {
+    "commit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+    "dirty": "",
+    "tree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5"
+  },
+  "sourceUnchanged": true,
+  "status": "NOT_RUN_LESS_THAN_1_GIB_FREE",
+  "taskId": "BRAIN-R3-ANDROID-GATE",
+  "testClasses": [],
+  "uiMode": false,
+  "wrapperExitCode": 75
+}

@@ -1,0 +1,108 @@
+{"schemaVersion": 1, "taskId": "BRAIN-R3-ANDROID-GATE", "requestedAt": "2026-11-04T20:24:09.722907+00:00", "checkout": "/workspace/scratch/624aeb26d481/continuum-brain-r3", "expectedCommit": "ec2543bef908d7d346a9767f9b095e84254090d1", "expectedTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5", "locks": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-build.lock", "/workspace/scratch/d663e8444310/qa/gradle.lock"], "lockWaitLimitSeconds": 45, "gradleCache": "/workspace/scratch/d663e8444310/gradle-cache", "runnerSha256": "c0332b570f9ae378eadb1afadd8c4748af981b2e36e8c7677febae568a88b394", "status": "RUNNING", "gradleExitCode": null, "apkRequested": false, "uiMode": true, "testClasses": ["at.heinz.deviceai.MemoryRecallActivityUiTest"], "lintRequested": true, "sourceBefore": {"commit": "ec2543bef908d7d346a9767f9b095e84254090d1", "tree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5", "dirty": ""}, "freeBytesBefore": 2372718592, "sourceManifestSha256": "4290dc007f67f68a99d6da49a6ca0ea548e914ebc47a69c41f0158ff85b3ee1e", "startedAt": "2026-11-04T20:24:09.841293+00:00", "command": ["/workspace/scratch/b6ee64d418cf/toolchain/gradle-8.11.1/bin/gradle", "--offline", "--no-daemon", "--no-build-cache", "--max-workers=1", "--console=plain", "-Pkotlin.compiler.execution.strategy=in-process", "-Pandroid.builder.sdkDownload=false", "-Dorg.gradle.jvmargs=-Xmx1536m -XX:ActiveProcessorCount=2 -XX:+UseSerialGC -Dfile.encoding=UTF-8", "--init-script", "/workspace/scratch/624aeb26d481/qa-r3/r3-actual-activity-lint/bounded-tests.init.gradle", "-PcontinuumUiWidgetTests=true", ":app:testDebugUnitTest", "--tests", "at.heinz.deviceai.MemoryRecallActivityUiTest", ":app:lintDebug"], "testTaskUpToDateDisabled": true, "buildCacheDisabled": true, "dependencyDownloadsPermitted": false}
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:65:61 No cast needed.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsCallerUiTest.kt:82:61 No cast needed.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ContinuumTaskEffectsUiTest.kt:35:13 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:33:17 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ContinuumUiFeedbackTest.kt:49:24 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Array<(out) CapturedType(*)!>?'.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:28:101 'static fun obtain(p0: AccessibilityNodeInfo!): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:34:61 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:50:115 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:60:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:63:63 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:119:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:120:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:128:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:129:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:143:72 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:144:97 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:152:56 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:153:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:155:38 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:156:59 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:162:61 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:163:89 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:170:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:171:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:179:42 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:180:67 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:187:44 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:188:71 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:190:43 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/NativeClickCandidateTest.kt:191:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:29:52 'static fun obtain(): AccessibilityNodeInfo!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:34:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:36:68 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:64:52 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:65:81 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:78:40 'static fun obtain(p0: Int): AccessibilityEvent!' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ScreenObservationRevisionTest.kt:79:69 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:82:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:prepareUiTestSdk
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/scratch/624aeb26d481/continuum-brain-r3/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 43s
+40 actionable tasks: 17 executed, 23 up-to-date
+
+EXIT_CODE=0

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-04T20:22:04" hostname="04c8b0ba7ea6" time="0.06">
+  <properties/>
+  <testcase name="aRendererCanWaitForAnotherProducerWithoutHoldingAMapperLock" classname="at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest" time="0.001"/>
+  <testcase name="detachingInTheStorageCallbackDropsThePendingRecall" classname="at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest" time="0.001"/>
+  <testcase name="detachingInTheDocumentCallbackDropsTheRemainingKindsInThatFlush" classname="at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest" time="0.0"/>
+  <testcase name="concurrentProducerAndFlushAccountForEveryWriteExactlyOnce" classname="at.heinz.deviceai.cockpit.MemoryEventMapperLifecycleRegressionTest" time="0.058"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

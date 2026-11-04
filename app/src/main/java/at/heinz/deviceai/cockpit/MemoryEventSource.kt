@@ -42,8 +42,9 @@ class MemoryEventMapper(
     private val postDelayed: (Long, Runnable) -> Unit,
 ) : MemoryEventSink {
     private val document = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.DocumentLearned?>()
+    // The latest write and its coalesced count must be replaced/consumed together. Separate
+    // atomics let a producer place the next write between the flush's two reads and lose a count.
     private val stored = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.MemoryStored?>()
-    private val storedCount = java.util.concurrent.atomic.AtomicInteger()
     private val recall = java.util.concurrent.atomic.AtomicReference<CockpitAnimationEvent.RecallHits?>()
     private val scheduled = java.util.concurrent.atomic.AtomicBoolean()
     private val detached = java.util.concurrent.atomic.AtomicBoolean()
@@ -59,8 +60,13 @@ class MemoryEventMapper(
 
     override fun memoryStored(entryId: String, status: String, atEpochMs: Long) {
         if (entryId.isBlank()) return
-        stored.set(CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status))
-        storedCount.incrementAndGet()
+        while (true) {
+            val previous = stored.get()
+            val count = previous?.count ?: 0
+            val next = CockpitAnimationEvent.MemoryStored(MEMORY_TURN, atEpochMs, entryId, status,
+                count = if (count == Int.MAX_VALUE) count else count + 1)
+            if (stored.compareAndSet(previous, next)) break
+        }
         schedule()
     }
 
@@ -79,9 +85,14 @@ class MemoryEventMapper(
     private fun flush() {
         scheduled.set(false)
         if (detached.get()) return
-        document.getAndSet(null)?.let(bus::emit)
-        val writes = storedCount.getAndSet(0)
-        stored.getAndSet(null)?.let { bus.emit(it.copy(count = writes.coerceAtLeast(1))) }
-        recall.getAndSet(null)?.let(bus::emit)
+        emitIfAttached(document.getAndSet(null))
+        emitIfAttached(stored.getAndSet(null))
+        emitIfAttached(recall.getAndSet(null))
+    }
+
+    private fun emitIfAttached(event: CockpitAnimationEvent?) {
+        // A renderer can synchronously detach this mapper while handling the preceding kind.
+        // Never hold a mapper lock across bus callbacks: cleanup may wait for a hub producer.
+        if (event != null && !detached.get()) bus.emit(event)
     }
 }

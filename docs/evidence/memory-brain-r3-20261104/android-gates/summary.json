@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "testedLocalCommit": "ec2543bef908d7d346a9767f9b095e84254090d1",
+  "sourceEquivalentPublicCommit": "3704b62585c6ce6881ab0dfe0c9947cddd1531c2",
+  "testedFullTree": "ed4984ba9ac873e081a66d7a7be871f029ef5be5",
+  "testedAppTree": "befaef97b94b38ebeba65c0160e332d747dafd7a",
+  "runs": {
+    "preflight": {
+      "status": "NOT_RUN_LESS_THAN_1_GIB_FREE",
+      "gradleExitCode": null,
+      "wrapperExitCode": 75,
+      "junit": null,
+      "lintIssues": null,
+      "sourceUnchanged": true,
+      "resultSha256": "458bb977b1f900514b21bf3b1d7cd1287d1265a6c74458219a4751fa5553a34c"
+    },
+    "full-unit": {
+      "status": "FAIL",
+      "gradleExitCode": 1,
+      "wrapperExitCode": 1,
+      "junit": {
+        "tests": 2638,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 19,
+        "suites": 467,
+        "passed": 2618
+      },
+      "lintIssues": null,
+      "sourceUnchanged": true,
+      "resultSha256": "c2a97b45df147ae3407846e5795119daab4e26419fd4e622a4b54bf3ed7c59cc"
+    },
+    "activity-lint": {
+      "status": "PASS",
+      "gradleExitCode": 0,
+      "wrapperExitCode": 0,
+      "junit": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "suites": 1,
+        "passed": 2
+      },
+      "lintIssues": 0,
+      "sourceUnchanged": true,
+      "resultSha256": "92bbf09da0e1fd84b5626334462b01c3195eb65a9031da832afca14b885fc2a4"
+    }
+  },
+  "lintConfiguration": {
+    "task": ":app:lintDebug",
+    "checkOnly": [
+      "NewApi"
+    ],
+    "allLintRulesClaimed": false
+  },
+  "completeAndroidSuiteStatus": "FAIL_LAYOUT_CONTRACT",
+  "newR3AndroidTests": {
+    "tests": 14,
+    "passed": 14,
+    "failures": 0,
+    "skipped": 0
+  },
+  "activityGateScope": "Real attached AgentActivity construction, compiler getter, subscription closures, memory hub, Handler/main looper and BrainOrbAnimationRenderer/JarvisSequenceEffects. No full onCreate/onDestroy, native GPU, model, microphone, TTS or physical device execution.",
+  "apkBuilt": false,
+  "fullDeviceDialogueTested": false
+}
