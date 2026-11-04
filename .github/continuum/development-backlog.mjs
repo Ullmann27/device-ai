@@ -616,12 +616,17 @@ export function applyOps(doc,ops,{stopOnError=true}={}){
  * avoid starvation by unrelated owner tasks pinned to older revisions.
  * No mutation: eligibility and deterministic priority ordering are unchanged. */
 export function nextEligible(doc,kinds=null,sources=null,base=null,taskId=null,operation=null){
-  return doc.tasks.filter(x=>eligible(doc,x)&&(!kinds||kinds.includes(x.kind))&&
-    (!sources||sources.includes(x.source))&&
-    (base===null||x.subject?.base===base)&&
-    (taskId===null||x.id===taskId)&&
-    (operation===null||x.subject?.operation===operation))
-    .sort((a,b)=>b.priority-a.priority||a.createdAt-b.createdAt||(a.id<b.id?-1:1))[0]??null;
+  let best=null;
+  for(const x of doc.tasks){
+    if(eligible(doc,x)&&(!kinds||kinds.includes(x.kind))&&
+      (!sources||sources.includes(x.source))&&
+      (base===null||x.subject?.base===base)&&
+      (taskId===null||x.id===taskId)&&
+      (operation===null||x.subject?.operation===operation)){
+      if(best===null||(best.priority-x.priority||x.createdAt-best.createdAt||(x.id<best.id?-1:1))<0)best=x;
+    }
+  }
+  return best;
 }
 
 export const newToken=()=>crypto.randomBytes(16).toString('hex');
