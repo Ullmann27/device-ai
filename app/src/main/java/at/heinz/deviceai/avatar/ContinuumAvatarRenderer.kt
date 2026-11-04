@@ -44,13 +44,13 @@ class ContinuumAvatarRenderer {
     private val irisGlow = Fill.Radial(0f, 0f, 1f, intArrayOf(0xff9ff6ff.toInt(), 0x6640c8ff, 0x00000000), floatArrayOf(0f, .35f, 1f))
 
     // Static silhouettes (allocated once). Face units: crown y=-100, chin y=92, half width ~66.
-    private val face = VectorPath().moveTo(0f, -102f)
-        .cubicTo(-50f, -104f, -72f, -74f, -70f, -34f)
-        .cubicTo(-69f, -8f, -64f, 22f, -54f, 44f)
+    private val face = VectorPath().moveTo(0f, -104f)
+        .cubicTo(-46f, -106f, -76f, -78f, -72f, -40f)
+        .cubicTo(-70f, -12f, -64f, 22f, -54f, 44f)
         .cubicTo(-45f, 66f, -27f, 89f, 0f, 93f)
         .cubicTo(27f, 89f, 45f, 66f, 54f, 44f)
-        .cubicTo(64f, 22f, 69f, -8f, 70f, -34f)
-        .cubicTo(72f, -74f, 50f, -104f, 0f, -102f).close()
+        .cubicTo(64f, 22f, 70f, -12f, 72f, -40f)
+        .cubicTo(76f, -78f, 46f, -106f, 0f, -104f).close()
     private val body = VectorPath().moveTo(-22f, 76f).cubicTo(-23f, 96f, -24f, 112f, -30f, 124f)
         .cubicTo(-70f, 132f, -118f, 138f, -136f, 182f).lineTo(136f, 182f)
         .cubicTo(118f, 138f, 70f, 132f, 30f, 124f).cubicTo(24f, 112f, 23f, 96f, 22f, 76f).close()
@@ -76,8 +76,8 @@ class ContinuumAvatarRenderer {
     }
 
     // ---- procedural head surface -------------------------------------------------------------------------------
-    private val profileY = floatArrayOf(-101f, -92f, -75f, -55f, -35f, -15f, 5f, 25f, 45f, 62f, 78f, 88f, 93f)
-    private val profileW = floatArrayOf(4f, 36f, 57f, 67f, 70f, 68f, 64f, 58f, 50f, 39f, 26f, 13f, 2f)
+    private val profileY = floatArrayOf(-104f, -97f, -86f, -70f, -50f, -30f, -10f, 15f, 40f, 60f, 77f, 88f, 93f)
+    private val profileW = floatArrayOf(2f, 30f, 52f, 66f, 72f, 71f, 66f, 58f, 49f, 39f, 26f, 13f, 2f)
 
     private fun halfWidth(y: Float): Float {
         if (y <= profileY[0]) return profileW[0]
@@ -139,15 +139,19 @@ class ContinuumAvatarRenderer {
     }
 
     // Segment buckets: 3 hues (cyan/blue/violet by screen x) x 4 brightness levels.
-    private val hueColors = intArrayOf(0xff00ffff.toInt(), 0xff0088ff.toInt(), 0xff9a6bff.toInt())
-    private val hueFills = arrayOf(Fill.Solid(0xff6fe9ff.toInt()), Fill.Solid(0xff7aa6ff.toInt()), Fill.Solid(0xffb48cff.toInt()))
+    // ref5 (#479 tokens): cranium top / back-left violet, face blue (cyan<->violet mix), lit right side cyan
+    private val hueColors = intArrayOf(JarvisDesign.Colors.violet,
+        Argb.mix(JarvisDesign.Colors.cyan, JarvisDesign.Colors.violet, .55f), JarvisDesign.Colors.cyan)
+    private val hueFills = arrayOf(Fill.Solid(Argb.mix(JarvisDesign.Colors.violet, JarvisDesign.Colors.glowCore, .25f)),
+        Fill.Solid(Argb.mix(JarvisDesign.Colors.cyan, JarvisDesign.Colors.violet, .5f)),
+        Fill.Solid(Argb.mix(JarvisDesign.Colors.cyan, JarvisDesign.Colors.glowCore, .3f)))
     private val levelAlpha = floatArrayOf(.3f, .5f, .72f, 1f)
     private val buckets = Array(12) { FloatArray(SEG_CAPACITY) }
     private val bucketCount = IntArray(12)
 
     private fun addSegment(x0: Float, y0: Float, x1: Float, y1: Float, bright: Float) {
-        val mx = (x0 + x1) * .5f
-        val hue = if (mx < -18f) 0 else if (mx > 18f) 2 else 1
+        val mx = (x0 + x1) * .5f; val my = (y0 + y1) * .5f
+        val hue = if (my < -42f + mx * .45f || mx < -44f) 0 else if (mx > 22f && my > -50f) 2 else 1
         val level = (bright * 3.99f).toInt().coerceIn(0, 3)
         val b = hue * 4 + level
         val n = bucketCount[b]
@@ -174,7 +178,7 @@ class ContinuumAvatarRenderer {
         val rows = 60
         val cols = 40
         for (r in 0 until rows) {
-            val y = -99f + r * (191f / (rows - 1))
+            val y = -103f + r * (195f / (rows - 1))
             var prevX = 0f; var prevY = 0f; var prevB = -1f
             for (c in 0..cols) {
                 val theta = -1.9f + c * (3.8f / cols)
@@ -229,6 +233,10 @@ class ContinuumAvatarRenderer {
     /** Number of rings (1..3). */
     var ringCount = 3
         set(value) { field = value.coerceIn(1, allOrbits.size) }
+    /** ref5 shows no orbit rings around the cranium: off by default, kept for video 1 (scene 1/2). */
+    var showOrbits = false
+    /** ref5 head composition: big HUD ring behind the head, face-tracking brackets, light/particle hair. */
+    var ref5Hud = true
     private val orbits get() = allOrbits
     private val orbitFills = allOrbits.map { Fill.Solid(it.color) }
     private val orbitCore = Fill.Solid(0xffeafcff.toInt())
@@ -321,6 +329,74 @@ class ContinuumAvatarRenderer {
         }
     }
 
+    // ---- ref5 light/particle hair: violet filaments streaming from the back-left of the cranium -------------------
+    private val hairY0 = FloatArray(HAIR_N) { i -> -92f + i * (118f / (HAIR_N - 1)) }
+    private val hairLen = FloatArray(HAIR_N) { i -> 5f + (i * 7 % 7) }
+    private val hairBuf = FloatArray(HAIR_N * HAIR_PTS * 4)
+    private val hairFill = Fill.Solid(Argb.mix(JarvisDesign.Colors.violet, JarvisDesign.Colors.glowCore, .2f))
+    private val hairCore = Fill.Solid(JarvisDesign.Colors.glowCore)
+    private val hudFill = Fill.Solid(JarvisDesign.Colors.cyan)
+    private val hudMagenta = Fill.Solid(JarvisDesign.Colors.violetRim)
+
+    private fun drawHair(p: ContinuumPainter, seconds: Float, motion: Boolean, speak: Float) {
+        var n = 0
+        val t = if (motion) seconds else 0f
+        for (i in 0 until HAIR_N) {
+            val y0 = hairY0[i]
+            var x = -halfWidth(y0) * .96f + sinYaw * 6f; var y = y0
+            val spread = .55f + (i % 4) * .22f
+            for (k in 1..HAIR_PTS) {
+                val nx = x - hairLen[i] * spread * (1.25f - k * .05f)
+                val ny = y + 1.1f + k * (.5f + (i % 5) * .25f) + sin(t * 1.3f + i * .9f + k * .5f) * 1.6f
+                if (n + 4 <= hairBuf.size) { hairBuf[n] = x; hairBuf[n + 1] = y; hairBuf[n + 2] = nx; hairBuf[n + 3] = ny; n += 4 }
+                x = nx; y = ny
+            }
+        }
+        p.setAdditive(true)
+        JarvisNeon.bloomSegments(p, hairBuf, n, .5f, JarvisDesign.Colors.violet, .6f + speak * .4f)
+        p.strokeSegments(hairBuf, n, .45f, hairFill, .55f)
+        // particles riding along the filaments
+        for (i in 0 until HAIR_N step 2) {
+            val k = (((if (motion) seconds * .6f else .3f) + i * .37f) % 1f * (HAIR_PTS - 1)).toInt()
+            val o = (i * HAIR_PTS + k) * 4
+            p.fillCircle(hairBuf[o + 2], hairBuf[o + 3], 1.1f, hairCore, .8f)
+        }
+        p.setAdditive(false)
+    }
+
+    /** ref5: thin HUD circle behind the head with segmented cyan ticks on the right and a violet arc lower left. */
+    private fun drawHudRing(p: ContinuumPainter, seconds: Float, motion: Boolean) {
+        val r = 150f; val cy = -10f
+        p.setAdditive(true)
+        p.strokeOval(-r, cy - r, r, cy + r, .7f, hudFill, .22f)
+        p.strokeOval(-r - 6f, cy - r - 6f, r + 6f, cy + r + 6f, 3f, hudFill, .04f)
+        val drift = if (motion) seconds * 2f else 0f
+        for (k in 0 until 9) {    // right-side segments
+            val a = -48f + k * 11f + drift % 11f
+            p.strokeArc(-r, cy - r, r, cy + r, a, 6f, 3.2f, hudFill, if (k % 3 == 1) .85f else .45f)
+        }
+        p.strokeArc(-r, cy - r, r, cy + r, 150f, 22f, 3f, hudFill, .55f)
+        p.strokeArc(-r, cy - r, r, cy + r, 128f, 9f, 3f, hudMagenta, .7f)
+        p.setAdditive(false)
+    }
+
+    /** ref5 face-tracking brackets (User Recognized): four cyan corners framing eyes to mouth. */
+    private fun drawBrackets(p: ContinuumPainter) {
+        val l = -52f + sinYaw * 30f; val r = 66f + sinYaw * 30f; val t = -46f; val b = 62f; val k = 14f
+        p.setAdditive(true)
+        for (pass in 0..1) {
+            val w = if (pass == 0) 4.5f else 1.6f; val a = if (pass == 0) .18f else .95f
+            p.drawLine(l, t, l + k, t, w, hudFill, a); p.drawLine(l, t, l, t + k, w, hudFill, a)
+            p.drawLine(r, t, r - k, t, w, hudFill, a); p.drawLine(r, t, r, t + k, w, hudFill, a)
+            p.drawLine(l, b, l + k, b, w, hudFill, a); p.drawLine(l, b, l, b - k, w, hudFill, a)
+            p.drawLine(r, b, r - k, b, w, hudFill, a); p.drawLine(r, b, r, b - k, w, hudFill, a)
+        }
+        p.setAdditive(false)
+    }
+
+    /** Muster C breathing: 0..1 over a 4.5 s cycle (cosmetic). */
+    internal fun breath(seconds: Float): Float = .5f - .5f * cos(seconds * (2f * PI.toFloat() / 4.5f))
+
     // fixed sparkle field around the bust (no random per frame)
     private val sparkX = FloatArray(36) { i -> sin(i * 2.399f) * (95f + (i * 37 % 50)) }
     private val sparkY = FloatArray(36) { i -> -40f + cos(i * 2.399f) * (85f + (i * 53 % 40)) }
@@ -339,14 +415,18 @@ class ContinuumAvatarRenderer {
         p.translate(width / 2f, height * .385f + float)
         p.scale(scale, scale)
 
+        val breathe = if (motion) breath(seconds) else .5f
+        if (ref5Hud) drawHudRing(p, seconds, motion)
         // background light pools (JarvisNeon halo, design-system colours)
         JarvisNeon.halo(p, 0f, -10f, 150f, JarvisDesign.Colors.cyan, .20f + speak * .08f)
         JarvisNeon.halo(p, 40f, -30f, 120f, JarvisDesign.Colors.violet, .16f)
         // projection platform under the bust
         JarvisNeon.ring(p, 0f, 182f, 136f, 16f, 1.2f, glow = JarvisDesign.Glow.NORMAL)
         JarvisNeon.ring(p, 0f, 182f, 104f, 11f, .8f, glow = JarvisDesign.Glow.SUBTLE)
-        drawOrbits(p, front = false, seconds, pulse, motion)
+        if (showOrbits) drawOrbits(p, front = false, seconds, pulse, motion)
 
+        // neck and shoulders rise slightly with the breath
+        p.save(); p.translate(0f, -breathe * 1.4f); p.scale(1f + breathe * .012f, 1f)
         // neck and shoulders: translucent glass with flowing contour lines
         p.fillPath(body, bodyGlass)
         p.setAdditive(true)
@@ -365,15 +445,19 @@ class ContinuumAvatarRenderer {
         }
         p.strokePath(body, .9f, edge, .55f)
         p.setAdditive(false)
+        p.restore()
 
         // head pose: gaze turns the head, speech adds a small nod/turn, idle a slow breath
         val idle = if (motion) sin(seconds * .7f) else 0f
         val nod = if (motion) speak * (sin(seconds * 5.1f) * 2.6f + sin(seconds * 8.3f) * 1.1f) else 0f
-        yawRad = ((pose.gazeX.coerceIn(-1f, 1f) * 12f + idle * 1.2f + speak * sin(seconds * 2.3f) * 2f) * PI / 180f).toFloat()
+        // ref5: head turned slightly to the viewer's right (+9 deg rest yaw)
+        yawRad = (((if (ref5Hud) 9f else 0f) + pose.gazeX.coerceIn(-1f, 1f) * 12f + idle * 1.2f + speak * sin(seconds * 2.3f) * 2f) * PI / 180f).toFloat()
         val pitchRad = ((-pose.gazeY.coerceIn(-1f, 1f) * 7f + nod) * PI / 180f).toFloat()
         cosYaw = cos(yawRad); sinYaw = sin(yawRad); cosPitch = cos(pitchRad); sinPitch = sin(pitchRad)
         p.save()
+        p.translate(0f, -breathe * .8f)
         p.rotate(idle * .6f, 0f, 85f)
+        if (ref5Hud) drawHair(p, seconds, motion, speak)
 
         // glass head volume and glow aura, shifted with the turn
         p.save(); p.translate(sinYaw * 10f, -sinPitch * 12f)
@@ -411,9 +495,10 @@ class ContinuumAvatarRenderer {
         drawNose(p)
         drawLips(p, pose, jaw, speak)
         p.setAdditive(false)
+        if (ref5Hud) drawBrackets(p)
         p.restore()
 
-        drawOrbits(p, front = true, seconds, pulse, motion)
+        if (showOrbits) drawOrbits(p, front = true, seconds, pulse, motion)
         if (motion) drawBurst(p, seconds)
         // sparkles
         p.setAdditive(true)
@@ -443,6 +528,11 @@ class ContinuumAvatarRenderer {
         val k = .8f + speak * .4f
         blob(p, -.15f, -66f, 44f, 30f, softLight, .32f * k)
         blob(p, .45f, -60f, 30f, 26f, softViolet, .22f * k)
+        if (ref5Hud) {   // ref5: violet cranium glow and the bright magenta-violet light on the left temple
+            blob(p, -.5f, -70f, 56f, 38f, softViolet, .6f * k)
+            blob(p, -.85f, -22f, 16f, 10f, softViolet, 1f * k)
+            blob(p, -.85f, -22f, 6f, 4f, softLight, .5f * k)
+        }
         blob(p, 0f, 2f, 6.5f, 25f, softLight, .45f * k)
         blob(p, -.62f, 5f, 17f, 9f, softLight, .3f * k); blob(p, .62f, 5f, 17f, 9f, softViolet, .28f * k)
         blob(p, 0f, 82f, 15f, 8f, softLight, .3f * k)
@@ -478,10 +568,10 @@ class ContinuumAvatarRenderer {
             val ix = ex + pose.gazeX.coerceIn(-1f, 1f) * 5.5f
             val iy = ey - pose.gazeY.coerceIn(-1f, 1f) * 2.2f
             p.save(); p.translate(ix, iy); p.scale(7f, 7f * opening)
-            p.fillCircle(0f, 0f, 1f, irisGlow, .7f)
+            p.fillCircle(0f, 0f, 1f, irisGlow, if (ref5Hud) .35f else .7f)
             p.restore()
             // VIDEO-SPEC: eyes without pupils, cyan/white light; the light centre still follows the gaze
-            p.fillOval(ex - w * .85f, ey - h * .8f, ex + w * .85f, ey + h * .8f, eyeLight, .6f)
+            p.fillOval(ex - w * .85f, ey - h * .8f, ex + w * .85f, ey + h * .8f, eyeLight, if (ref5Hud) .22f else .6f)
             JarvisNeon.bloom(p, ix, iy, 6f, 0xff00ffff.toInt(), bloom * .5f)
         } else p.drawLine(ex - w, ey, ex + w, ey, 1.1f, edge, .9f)
     }
@@ -539,6 +629,8 @@ class ContinuumAvatarRenderer {
 
     private companion object {
         const val SEG_CAPACITY = 4 * 2400
+        const val HAIR_N = 28
+        const val HAIR_PTS = 14
         const val BURST_ICONS = 9
         const val BURST_S = 1.5f
         const val BURST_STAGGER = .05f
