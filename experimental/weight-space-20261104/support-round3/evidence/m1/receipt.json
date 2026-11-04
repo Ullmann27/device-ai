@@ -1,0 +1,17 @@
+{
+  "status": "PASS_REPAIR",
+  "originalPassed": 10,
+  "originalFailed": 24,
+  "candidatePassed": 34,
+  "candidateFailed": 0,
+  "positiveUpdateFingerprintsByteIdentical": true,
+  "positiveCases": 10,
+  "invalidInputCases": 24,
+  "native16mTrainingRuns": 0,
+  "productionSourcesChanged": false,
+  "sourceSha256": {
+    "optimizer-atomic.patch": "38fb6a651c162796b687d47dd014771002b58d7aa8e204af1411ed4ada1130ba",
+    "LmSafetyChecks.kt": "ce5b261953c36c19f50044308780f1dd99c6a168efd8217c8a7bb79eda22859e",
+    "build_native.py": "4583447a46e5ff0188ea54e9094f48aab06fef979f62e1fec1e112ab1bd62618"
+  }
+}

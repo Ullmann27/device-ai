@@ -1,0 +1,2 @@
+Exception in thread "main" java.lang.IllegalStateException: 24 safety failures
+	at at.heinz.deviceai.learning.lm.LmSafetyChecks.main(LmSafetyChecks.kt:81)

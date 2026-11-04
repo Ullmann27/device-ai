@@ -1,0 +1,12 @@
+{
+  "command": [
+    "java",
+    "-Xmx1g",
+    "-XX:ActiveProcessorCount=1",
+    "-cp",
+    "/workspace/scratch/319f3e4563d9/r3-build/safety-candidate/checks.jar:/workspace/scratch/b7d23de0e715/build-toolchain/gradle-8.11.1/lib/kotlin-stdlib-2.0.20.jar",
+    "at.heinz.deviceai.learning.lm.LmSafetyChecks"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.25599491799948737
+}
